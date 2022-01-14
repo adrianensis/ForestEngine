@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Core/Core.hpp"
-
-class Scene;
-class Script;
-class GameObject;
+#include "Scenes/Scene.hpp"
+#include "Scenes/GameObject.hpp"
 
 class ScenesManager: public ObjectBase, public Singleton<ScenesManager>
 {

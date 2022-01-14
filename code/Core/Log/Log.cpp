@@ -49,7 +49,7 @@ void Log::echo(const std::string &message, bool newLine /*= true*/)
     }
 }
 
-void Log::custom_echo(const std::string &tag, const std::string &message, bool newLine /*= true*/)
+void Log::customEcho(const std::string &tag, const std::string &message, bool newLine /*= true*/)
 {
     if(newLine)
     {

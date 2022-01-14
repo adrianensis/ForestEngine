@@ -2,8 +2,6 @@
 
 #include "Core/Core.hpp"
 
-class Matrix4;
-
 class Shader: public ObjectBase
 {
     GENERATE_METADATA(Shader)

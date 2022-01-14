@@ -2,11 +2,8 @@
 
 #include "Core/Core.hpp"
 #include "Graphics/Mesh.hpp"
+#include "Graphics/Optimizations/Batch.hpp"
 #include "Graphics/Renderer.hpp"
-
-class Material;
-class RenderEngine;
-class Camera;
 
 class Batch: public ObjectBase
 {

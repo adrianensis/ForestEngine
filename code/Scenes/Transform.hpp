@@ -2,7 +2,6 @@
 
 #include "Scenes/Component.hpp"
 
-
 class Transform;
 
 class TransformState : public ObjectBase

@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
-#include "Core/Singleton.hpp"
-
-class Script;
+#include "Scripting/Script.hpp"
 
 class ScriptEngine: public ISubsystem, public Singleton<ScriptEngine>
 {

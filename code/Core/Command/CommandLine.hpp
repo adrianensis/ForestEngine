@@ -5,8 +5,6 @@
 #include "Core/Functor.hpp"
 #include "Core/Command/Command.hpp"
 
-class UIText;
-
 using CommandCallback = std::function<void(const Command& command)>;
 
 class CommandFunctor: public Functor<CommandCallback>

@@ -2,7 +2,6 @@
 
 #include "Scenes/Component.hpp"
 
-
 class GameObject;
 
 class Script: public Component

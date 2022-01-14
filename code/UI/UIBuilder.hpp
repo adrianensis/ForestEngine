@@ -11,9 +11,7 @@
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIStyle.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-
-class Material;
-class Scene;
+#include "Scenes/Scenes.hpp"
 
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
 	UIBuilder &set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \

@@ -3,11 +3,9 @@
 #include "Core/Core.hpp"
 #include "Graphics/Optimizations/BatchesMap.hpp"
 #include "Graphics/ShapeBatchRenderer.hpp"
-
-class Camera;
-class Renderer;
-class Chunk;
-class Vector3;
+#include "Graphics/Camera/Camera.hpp"
+#include "Graphics/Renderer.hpp"
+#include "Graphics/Optimizations/Chunk.hpp"
 
 class RenderEngine : public ISubsystem, public Singleton<RenderEngine>
 {
