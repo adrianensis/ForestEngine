@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Core/Core.hpp"
-
-class Renderer;
-class BatchesMap;
+#include "Graphics/Optimizations/BatchesMap.hpp"
+#include "Graphics/Renderer.hpp"
 
 class Chunk: public ObjectBase
 {

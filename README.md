@@ -1,10 +1,10 @@
 # README
 ---
-## New Engine
+## Forest Engine
 
 <!-- <img src="./forest.png" width=50%> -->
 
-> New Engine is a C++ / OpenGL Game Engine made from scratch with the only purpose of improving my gamedev and programming skills.
+> Forest Engine is a C++ / OpenGL Game Engine made from scratch with the only purpose of improving my gamedev and programming skills.
 
 ## Build
 

@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/Core.hpp"
-
-class Texture;
-class Material;
-class Renderer;
-class Mesh;
-class Shader;
-class Batch;
+#include "Graphics/Renderer.hpp"
+#include "Graphics/Optimizations/Batch.hpp"
+#include "Graphics/Material/Texture.hpp"
+#include "Graphics/Renderer.hpp"
+#include "Graphics/Material/Material.hpp"
+#include "Graphics/Mesh.hpp"
+#include "Graphics/Material/Shader.hpp"
 
 class BatchesMap: public ObjectBase
 {

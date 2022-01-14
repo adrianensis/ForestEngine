@@ -1,11 +1,22 @@
 #pragma once
 
-#include <string> // std::string
 #include "Core/BasicTypes.hpp"
 
-static const std::string emptyAssert = "?";
+class AssertUtils
+{
+	PRI inline static const std::string smEmptyAssert = "?";
 
-void assert_msg(bool condition, const std::string &file, u32 line, const std::string &function,
-				const std::string &message = emptyAssert);
+	PUB static void assertMsg(bool condition, const std::string &file, u32 line, const std::string &function,
+					const std::string &message = smEmptyAssert)
+	{
+		if (!condition)
+		{
+			std::cout << "ASSERT > [" << function << ":"
+					<< std::to_string(line) << "] > " << message << std::endl;
+			throw;
+			//abort();
+		}
+	}
+};
 
-#define ASSERT_MSG(condition, message) assert_msg((condition), __FILE__, __LINE__, __FUNCTION__, std::string("[ " #condition " ] ") + message);
+#define ASSERT_MSG(condition, message) AssertUtils::assertMsg((condition), __FILE__, __LINE__, __FUNCTION__, std::string("[ " #condition " ] ") + message);

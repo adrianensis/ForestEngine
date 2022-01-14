@@ -1,12 +1,5 @@
 #include "Graphics/Optimizations/BatchesMap.hpp"
 
-#include "Graphics/Optimizations/Batch.hpp"
-#include "Graphics/Material/Texture.hpp"
-#include "Graphics/Renderer.hpp"
-#include "Graphics/Material/Material.hpp"
-#include "Graphics/Mesh.hpp"
-#include "Graphics/Material/Shader.hpp"
-#include "Graphics/RenderEngine.hpp"
 #include "Scenes/Scenes.hpp"
 
 BatchesMap::~BatchesMap()
