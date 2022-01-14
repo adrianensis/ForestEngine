@@ -22,7 +22,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "druid build debug"
+            "preLaunchTask": "forest build debug"
         },
         {
             "name": "Release",
@@ -42,7 +42,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "druid build release"
+            "preLaunchTask": "forest build release"
         }
     ]
 }

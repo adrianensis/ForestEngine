@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# DRUID ENGINE
+# FOREST ENGINE
 # ----------------------------------------------------------------------------
 
 if(UNIX)
@@ -30,15 +30,15 @@ function(build_programs path prefix)
 
     set(PROGRAM_FINAL_NAME "${prefix}_${PROGRAM_NAME}" )
     add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES} )
-    target_link_libraries( ${PROGRAM_FINAL_NAME} ${DRUID})
+    target_link_libraries( ${PROGRAM_FINAL_NAME} ${FOREST})
     install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
   endforeach()
 endfunction()
 
 # project name
-set(DRUID druid)
-project(${DRUID})
+set(FOREST forest)
+project(${FOREST})
 
 # ----------------------------------------------------------------------------
 # CPP TARGETS
@@ -186,28 +186,28 @@ foreach(PACKAGE ${PACKAGES})
 endforeach()
 
 # ----------------------------------------------------------------------------
-# DRUID ENGINE LIBRARY
+# FOREST ENGINE LIBRARY
 # ----------------------------------------------------------------------------
 
 # single library
-add_library(${DRUID} ${OBJS} ${GLAD_SOURCE} ${DUKTAPE_SOURCE})
+add_library(${FOREST} ${OBJS} ${GLAD_SOURCE} ${DUKTAPE_SOURCE})
 
 # ----------------------------------------------------------------------------
 # LINK LIBRARIES
 # ----------------------------------------------------------------------------
 
-# link libraries with druid library
-target_link_libraries(${DRUID} ${OPENGL_gl_LIBRARY})
-target_link_libraries(${DRUID} ${OPENGL_glu_LIBRARY})
-target_link_libraries(${DRUID} glfw)
-target_link_libraries(${DRUID} nlohmann_json)
-target_link_libraries(${DRUID} libpng.so)
-#target_link_libraries(${DRUID} ${FREETYPE_LIBRARIES})
-#target_include_directories(${DRUID} PRIVATE ${FREETYPE_INCLUDE_DIRS})
-#target_link_libraries( ${DRUID} ${Python3_LIBRARIES})
+# link libraries with forest library
+target_link_libraries(${FOREST} ${OPENGL_gl_LIBRARY})
+target_link_libraries(${FOREST} ${OPENGL_glu_LIBRARY})
+target_link_libraries(${FOREST} glfw)
+target_link_libraries(${FOREST} nlohmann_json)
+target_link_libraries(${FOREST} libpng.so)
+#target_link_libraries(${FOREST} ${FREETYPE_LIBRARIES})
+#target_include_directories(${FOREST} PRIVATE ${FREETYPE_INCLUDE_DIRS})
+#target_link_libraries( ${FOREST} ${Python3_LIBRARIES})
 
 # SOIL
-#target_link_libraries( ${DRUID} SOIL )
+#target_link_libraries( ${FOREST} SOIL )
 
 # ----------------------------------------------------------------------------
 # TESTS

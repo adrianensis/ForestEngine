@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "druid build debug",
+			"label": "forest build debug",
 			"command": "python3",
 			"args": [
                 "-B",
@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "shell",
-			"label": "druid build release",
+			"label": "forest build release",
 			"command": "python3",
 			"args": [
                 "-B",
@@ -39,7 +39,7 @@
 		},
 		{
 			"type": "shell",
-			"label": "druid clean",
+			"label": "forest clean",
 			"command": "./scripts/clean.sh",
 			"group": "build"
 		}

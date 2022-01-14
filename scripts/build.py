@@ -88,7 +88,7 @@ elif system_name == "Darwin":
 elif system_name == "Windows":
     # Windows...
     # Requires msbuild added to the PATH
-    os.system('msbuild druid.sln')
+    os.system('msbuild forest.sln')
 # elif ANDROID:
 #     # Windows...
 #     pass
