@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.hpp"
+#include "Core/Module.hpp"
 #include "Graphics/Optimizations/BatchesMap.hpp"
 #include "Graphics/Renderer.hpp"
 

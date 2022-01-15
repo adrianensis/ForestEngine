@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.hpp"
+#include "Core/Module.hpp"
 #include "Graphics/Mesh.hpp"
 
 class MeshPrimitives: public ObjectBase, public Singleton<MeshPrimitives>

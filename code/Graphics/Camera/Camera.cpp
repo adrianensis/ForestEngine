@@ -1,6 +1,6 @@
 #include "Graphics/Camera/Camera.hpp"
 
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/RenderContext.hpp"
 

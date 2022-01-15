@@ -1,5 +1,5 @@
-#include "Scenes/Transform.hpp"
-#include "Scenes/GameObject.hpp"
+#include "Scene/Transform.hpp"
+#include "Scene/GameObject.hpp"
 
 TransformState::TransformState(const Transform& transform)
 {

@@ -6,7 +6,7 @@
 #include "Graphics/Mesh.hpp"
 #include "Graphics/Optimizations/BatchesMap.hpp"
 #include "Graphics/RenderEngine.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 Chunk::~Chunk()
 {

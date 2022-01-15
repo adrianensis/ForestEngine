@@ -1,7 +1,7 @@
-#include "Scenes/Scene.hpp"
-#include "Scenes/GameObject.hpp"
-#include "Scenes/Transform.hpp"
-#include "Graphics/Graphics.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/GameObject.hpp"
+#include "Scene/Transform.hpp"
+#include "Graphics/Module.hpp"
 #include "Core/EngineConfig.hpp"
 
 Scene::Scene()

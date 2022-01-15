@@ -10,7 +10,7 @@
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Animation/Animation.hpp"
 #include "Graphics/Optimizations/Chunk.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 Batch::~Batch()
 {

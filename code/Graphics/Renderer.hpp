@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Scenes/Component.hpp"
+#include "Scene/Component.hpp"
 
-#include "Scenes/Transform.hpp"
+#include "Scene/Transform.hpp"
 #include "Graphics/Animation/Animation.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh.hpp"

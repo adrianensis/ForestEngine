@@ -1,6 +1,6 @@
 #include "Core/Engine.hpp"
-#include "Scenes/Scenes.hpp"
-#include "Scripting/Scripting.hpp"
+#include "Scene/Module.hpp"
+#include "Scripting/Module.hpp"
 
 #include "Editor.hpp"
 

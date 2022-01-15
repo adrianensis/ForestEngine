@@ -6,7 +6,7 @@
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Material/Shader.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 #include "Core/EngineConfig.hpp"
 #include "Graphics/Optimizations/Chunk.hpp"
 #include "Graphics/ShapeBatchRenderer.hpp"

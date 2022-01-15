@@ -1,7 +1,7 @@
 #include "UI/UIPanel.hpp"
 
-#include "Graphics/Graphics.hpp"
-#include "Scenes/Transform.hpp"
+#include "Graphics/Module.hpp"
+#include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIStyle.hpp"
 

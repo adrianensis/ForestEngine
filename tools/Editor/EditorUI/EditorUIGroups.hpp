@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.hpp"
+#include "Core/Module.hpp"
 
 #define DECLARE_EDITOR_UIGROUP(GroupName)\
 	PUB inline static std::string sm##GroupName = #GroupName;

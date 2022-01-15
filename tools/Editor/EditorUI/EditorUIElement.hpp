@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Core.hpp"
-#include "UI/UI.hpp"
+#include "Core/Module.hpp"
+#include "UI/Module.hpp"
 
 class EditorController;
 

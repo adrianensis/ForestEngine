@@ -39,7 +39,7 @@ for folder in folders:
                             classes_defined_in_file.add(match.group(1))
 
                     if len(classes_defined_in_file) != 0:
-                        include_map["core"] = ClassDef("core", "code/Core/Core.hpp")
+                        include_map["core"] = ClassDef("core", "code/Core/Module.hpp")
 
                         for line in lines:
                             match_native_forward = re.search(r'\s*class\s*.*\s*;\s*', line)

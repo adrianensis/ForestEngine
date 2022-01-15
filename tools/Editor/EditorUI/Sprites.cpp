@@ -1,9 +1,9 @@
 #include "Sprites.hpp"
 #include "../EditorController.hpp"
 
-#include "Graphics/Graphics.hpp"
+#include "Graphics/Module.hpp"
 
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 #include "EditorUIGroups.hpp"
 

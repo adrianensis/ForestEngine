@@ -1,7 +1,7 @@
 
 #include "SpacePartition/KTree.hpp"
-#include "Graphics/Graphics.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Graphics/Module.hpp"
+#include "Scene/Module.hpp"
 
 void KTree::KTreeNode::init(const Rectangle& rectangle, const Vector3& minSize, KTree& tree)
 {

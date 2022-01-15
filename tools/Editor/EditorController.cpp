@@ -1,8 +1,8 @@
 #include "EditorController.hpp"
 #include "EditorCommands.hpp"
 
-#include "Scenes/Scenes.hpp"
-#include "Graphics/Graphics.hpp"
+#include "Scene/Module.hpp"
+#include "Graphics/Module.hpp"
 
 
 void EditorController::init()

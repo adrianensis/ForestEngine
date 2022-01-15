@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Scenes/Component.hpp"
+#include "Scene/Component.hpp"
 
-#include "Scenes/Transform.hpp"
+#include "Scene/Transform.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 
 class Camera: public Component

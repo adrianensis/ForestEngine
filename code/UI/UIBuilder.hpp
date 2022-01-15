@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.hpp"
+#include "Core/Module.hpp"
 #include "UI/UIElement.hpp"
 #include "UI/UIButton.hpp"
 #include "UI/UIEditableText.hpp"
@@ -11,7 +11,7 @@
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIStyle.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
 	UIBuilder& set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \

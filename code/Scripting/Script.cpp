@@ -1,6 +1,6 @@
 #include "Scripting/Script.hpp"
 
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 void Script::init()
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/Maths/Maths.hpp"
+#include "Core/Maths/Module.hpp"
 #include "Core/Serialization.hpp"
 #include "Core/ObjectBase.hpp"
 #include "Core/Singleton.hpp"

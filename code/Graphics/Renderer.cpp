@@ -10,7 +10,7 @@
 #include "Graphics/Animation/Animation.hpp"
 #include "Graphics/Optimizations/Chunk.hpp"
 #include "Graphics/Optimizations/Batch.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 Renderer::Renderer()
 {

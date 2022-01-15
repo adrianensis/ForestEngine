@@ -1,8 +1,8 @@
 #include "UI/UIManager.hpp"
 #include "UI/UIGroup.hpp"
 #include "UI/UIStyle.hpp"
-#include "Graphics/Graphics.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Graphics/Module.hpp"
+#include "Scene/Module.hpp"
 
 Vector2 UIManager::smDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
 

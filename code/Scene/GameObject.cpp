@@ -1,7 +1,7 @@
-#include "Scenes/GameObject.hpp"
+#include "Scene/GameObject.hpp"
 
-#include "Scenes/Component.hpp"
-#include "Scenes/Transform.hpp"
+#include "Scene/Component.hpp"
+#include "Scene/Transform.hpp"
 
 
 

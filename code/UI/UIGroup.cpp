@@ -1,6 +1,6 @@
 #include "UI/UIGroup.hpp"
 #include "UI/UIElement.hpp"
-#include "Scenes/Scene.hpp"
+#include "Scene/Scene.hpp"
 
 void UIGroup::init()
 {

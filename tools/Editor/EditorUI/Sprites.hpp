@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Core.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Core/Module.hpp"
+#include "Scene/Module.hpp"
 #include "EditorUI/Grid.hpp"
 #include "EditorUIElement.hpp"
 

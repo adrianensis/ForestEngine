@@ -1,6 +1,6 @@
 #include "Graphics/Optimizations/BatchesMap.hpp"
 
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 BatchesMap::~BatchesMap()
 {

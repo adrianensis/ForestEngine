@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.hpp"
+#include "Core/Module.hpp"
 #include "Scripting/Script.hpp"
 
 class ScriptEngine: public ISubsystem, public Singleton<ScriptEngine>

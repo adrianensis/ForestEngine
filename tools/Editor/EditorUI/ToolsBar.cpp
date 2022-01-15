@@ -2,7 +2,7 @@
 
 #include "EditorStyles.hpp"
 
-#include "Graphics/Graphics.hpp"
+#include "Graphics/Module.hpp"
 
 #include "../EditorController.hpp"
 #include "EditorUIGroups.hpp"

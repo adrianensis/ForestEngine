@@ -1,7 +1,7 @@
 #include "Scripting/ScriptEngine.hpp"
 
 #include "Scripting/Script.hpp"
-#include "Scenes/Scenes.hpp"
+#include "Scene/Module.hpp"
 
 void ScriptEngine::init()
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Core.hpp"
-#include "Scenes/Scene.hpp"
-#include "Scenes/GameObject.hpp"
+#include "Core/Module.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/GameObject.hpp"
 
 class ScenesManager: public ObjectBase, public Singleton<ScenesManager>
 {
