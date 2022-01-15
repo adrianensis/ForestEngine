@@ -47,9 +47,9 @@ PUB
 
 	void update();
 
-	const Matrix4 &getProjectionMatrix() const;
-	const Matrix4 &getViewMatrix() const;
-	const Matrix4 &getProjectionViewMatrix() const;
+	const Matrix4& getProjectionMatrix() const;
+	const Matrix4& getViewMatrix() const;
+	const Matrix4& getProjectionViewMatrix() const;
 
 	void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
 	void setPerspective(f32 near, f32 far, f32 aspect, f32 fov);

@@ -25,8 +25,8 @@ PUB
 	static const u32 smFaceSize = 3;
 
 	void init(u32 vertexCount, u32 facesCount);
-	Mesh *addVertex(const Vector3 &vec);
-	Mesh *addNormal(const Vector3 &vec);
+	Mesh *addVertex(const Vector3& vec);
+	Mesh *addNormal(const Vector3& vec);
 	Mesh *addTexCoord(f32 u, f32 v);
 	Mesh *addColor(f32 r, f32 g, f32 b, f32 a);
 	Mesh *addFace(u16 v1, u16 v2, u16 v3);

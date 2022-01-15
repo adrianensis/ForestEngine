@@ -29,10 +29,10 @@ PUB
 
 	// fonts
 
-	const Vector2 &getCharTextureCoordinates(char character);
-	const Vector2 &getFontTileTextureSize() const { return mFontTileTextureSize; }
+	const Vector2& getCharTextureCoordinates(char character);
+	const Vector2& getFontTileTextureSize() const { return mFontTileTextureSize; }
 	Material *getFontMaterial();
-	static const Vector2 &getDefaultFontSize() { return smDefaultFontSize; }
+	static const Vector2& getDefaultFontSize() { return smDefaultFontSize; }
 
 	// groups
 

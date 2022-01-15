@@ -124,7 +124,7 @@ void GameObject::destroy()
 	DELETE(mTransform);
 }
 
-void GameObject::serialize(JSON &json) const
+void GameObject::serialize(JSON& json) const
 {
 	//json["id"] = getObjectId();
 	DO_SERIALIZE("class", getClassName())
@@ -145,7 +145,7 @@ void GameObject::serialize(JSON &json) const
 	}
 }
 
-void GameObject::deserialize(const JSON &json)
+void GameObject::deserialize(const JSON& json)
 {
 	DO_DESERIALIZE("is_static", mIsStatic)
 	DO_DESERIALIZE("should_persist", mShouldPersist)
@@ -155,7 +155,7 @@ void GameObject::deserialize(const JSON &json)
 	DO_DESERIALIZE("transform", mTransform)
 
 	std::list<Component *> tmpList;
-	DO_DESERIALIZE_LIST("components", tmpList, [](const JSON &json)
+	DO_DESERIALIZE_LIST("components", tmpList, [](const JSON& json)
 	{
 		Component *component = INSTANCE_BY_NAME(json["class"], Component);
 		return component;

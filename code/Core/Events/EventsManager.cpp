@@ -39,7 +39,7 @@ void EventsManager::removeEventCallback(ClassId eventClassId, ObjectBase *eventO
 	mOwnersMap.at(eventOwner).at(eventClassId).erase(eventReceiver);
 }
 
-EventsManager::ReceiversFunctorMap &EventsManager::getReceiversFunctorMap(ObjectBase *eventOwner, ClassId eventClassId)
+EventsManager::ReceiversFunctorMap& EventsManager::getReceiversFunctorMap(ObjectBase *eventOwner, ClassId eventClassId)
 {
 	return mOwnersMap.at(eventOwner).at(eventClassId);
 }

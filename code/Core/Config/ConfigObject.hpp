@@ -21,8 +21,8 @@ PUB
 	void clear();
 	bool contains(std::string & key) const;
 
-	void readFromJsonFile(const std::string &path);
-	void writeToJsonFile(const std::string &path);
+	void readFromJsonFile(const std::string& path);
+	void writeToJsonFile(const std::string& path);
 
-	const JSON &at(const std::string &key) const { return mJson.at(key); }
+	const JSON& at(const std::string& key) const { return mJson.at(key); }
 };

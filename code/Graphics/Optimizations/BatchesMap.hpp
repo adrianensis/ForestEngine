@@ -27,7 +27,7 @@ class BatchesMap: public ObjectBase
 			mMesh = mesh;
 		}
 
-		PUB bool operator==(const BatchKey &otherBatchKey) const
+		PUB bool operator==(const BatchKey& otherBatchKey) const
 		{
 			return mTexture == otherBatchKey.mTexture && mShader == otherBatchKey.mShader && mMesh == otherBatchKey.mMesh;
 		}

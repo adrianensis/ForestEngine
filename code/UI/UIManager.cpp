@@ -138,7 +138,7 @@ void UIManager::init()
 	MAP_INSERT(mCharMap, '~', Vector2(14 / mFontTilesCount.x, 0 / mFontTilesCount.y));
 }
 
-const Vector2 &UIManager::getCharTextureCoordinates(char character)
+const Vector2& UIManager::getCharTextureCoordinates(char character)
 {
 	return mCharMap.at(character);
 }

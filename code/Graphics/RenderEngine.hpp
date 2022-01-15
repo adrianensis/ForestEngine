@@ -32,7 +32,7 @@ class RenderEngine : public ISubsystem, public Singleton<RenderEngine>
 
 	PUB virtual void addComponent(Component *component) override;
 	PUB Chunk *assignChunk(Renderer * renderer);
-	PUB bool frustumTestSphere(const Vector3 &center, f32 radius);
+	PUB bool frustumTestSphere(const Vector3& center, f32 radius);
 
 	PUB void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
 	PUB void drawRectangle2D(const Rectangle2D& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));

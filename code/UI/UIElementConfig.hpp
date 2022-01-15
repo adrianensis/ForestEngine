@@ -34,7 +34,7 @@ class UIElementConfig: public ObjectBase
 PUB
 	UIElementConfig();
 
-	void init(const Vector2 &position, const Vector2 &size, i32 layer, std::string text = std::string());
+	void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());
 
 	COPY(UIElementConfig)
 	{

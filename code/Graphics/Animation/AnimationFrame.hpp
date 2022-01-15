@@ -10,7 +10,7 @@ class AnimationFrame: public ObjectBase
 	PRI f32 mHeight = 0.0f; GET(Height)
 
 PUB
-	void init(const Vector2 &position, f32 width, f32 height);
+	void init(const Vector2& position, f32 width, f32 height);
 
     COPY(AnimationFrame)
     {
@@ -19,6 +19,6 @@ PUB
         DO_COPY(mHeight)
     }
 
-    virtual void serialize(JSON &json) const override;
-    virtual void deserialize(const JSON &json) override;
+    virtual void serialize(JSON& json) const override;
+    virtual void deserialize(const JSON& json) override;
 };

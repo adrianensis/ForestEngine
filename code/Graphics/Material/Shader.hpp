@@ -13,7 +13,7 @@ PRI
 	static Shader *msShaderDefault;
 	static Shader *msShaderDebug;
 
-	void initInternal(const std::string &vertex, const std::string &fragment);
+	void initInternal(const std::string& vertex, const std::string& fragment);
 
 PUB
 	Shader();
@@ -29,12 +29,12 @@ PUB
 	void enable();
 	void disable();
 
-	void addMatrix(const Matrix4 &matrix, const std::string &name);
-	void addInt(i32 value, const std::string &name);
-	void addUInt(u32 value, const std::string &name);
-	void addFloat(f32 value, const std::string &name);
-	void addVector4(const Vector4 &value, const std::string &name);
-	void addVector3(const Vector3 &value, const std::string &name);
-	void addVector2(const Vector2 &value, const std::string &name);
-	void addBool(bool value, const std::string &name);
+	void addMatrix(const Matrix4& matrix, const std::string& name);
+	void addInt(i32 value, const std::string& name);
+	void addUInt(u32 value, const std::string& name);
+	void addFloat(f32 value, const std::string& name);
+	void addVector4(const Vector4& value, const std::string& name);
+	void addVector3(const Vector3& value, const std::string& name);
+	void addVector2(const Vector2& value, const std::string& name);
+	void addBool(bool value, const std::string& name);
 };

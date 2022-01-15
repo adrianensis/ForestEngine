@@ -32,7 +32,7 @@ PUB
 
 	bool checkConnectionRequest();
 
-	void writeData(const std::string &data) const;
+	void writeData(const std::string& data) const;
 	std::string readData(u32 size = DEFAULT_SOCKET_READ_SIZE) const;
 
 	JSON readJSON() const;

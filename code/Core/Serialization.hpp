@@ -15,8 +15,8 @@ using JSON = nlohmann::ordered_json;
 class ISerializable
 {
 PUB
-	virtual void serialize(JSON &json) const {};
-	virtual void deserialize(const JSON &json) {};
+	virtual void serialize(JSON& json) const {};
+	virtual void deserialize(const JSON& json) {};
 };
 
 class SerializationUtils

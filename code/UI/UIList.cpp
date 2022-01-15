@@ -58,7 +58,7 @@ void UIList::onDestroy()
 	UIElement::onDestroy();
 }
 
-UIList &UIList::addOption(const std::string &label, UIElementCallback onPressedCallback)
+UIList& UIList::addOption(const std::string& label, UIElementCallback onPressedCallback)
 {
 	mEntries.push_back(UIListEntry(label, onPressedCallback));
 	return *this;
@@ -84,7 +84,7 @@ void UIList::toggle()
 
 		FOR_LIST(it, mEntries)
 		{
-			std::string &label = (*it).mLabel;
+			std::string& label = (*it).mLabel;
 			UIElementCallback onPressedCallback = (*it).mCallback;
 
 			uiBuilder.

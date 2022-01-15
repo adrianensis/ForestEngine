@@ -14,14 +14,14 @@
 #include "Scenes/Scenes.hpp"
 
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
-	UIBuilder &set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \
+	UIBuilder& set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \
 	{                                              \
 		mConfig.m##Name = new##Name;                   \
 		return *this;                               \
 	}
 
 #define UI_BUILDER_CONFIG_RESTORE(Name)   \
-	UIBuilder &restore##Name() \
+	UIBuilder& restore##Name() \
 	{                                              \
 		mConfig.m##Name = mDefaultConfig.m##Name;                   \
 		return *this;                               \
@@ -68,7 +68,7 @@ PUB
 
 	void restoreAll() { mConfig = mDefaultConfig; }
 
-	UIBuilder &setLayout(UILayout layout)
+	UIBuilder& setLayout(UILayout layout)
 	{
 		mCurrentLayout = layout;
 		mMakeRelativeToLastConfig = false; // reset
@@ -76,19 +76,19 @@ PUB
 		return *this;
 	}
 
-	UIBuilder &nextRow();
-	UIBuilder &nextColumn();
+	UIBuilder& nextRow();
+	UIBuilder& nextColumn();
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
-	UIBuilder &create()
+	UIBuilder& create()
 	{
 		return create(T::getClassNameStatic());
 	}
 
-	UIBuilder &create(const std::string &className);
+	UIBuilder& create(const std::string& className);
 
-	UIBuilder &saveData();
-	UIBuilder &restoreData();
+	UIBuilder& saveData();
+	UIBuilder& restoreData();
 
 	UIElement *getUIElement() const
 	{

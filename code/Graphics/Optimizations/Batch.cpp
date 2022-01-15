@@ -280,7 +280,7 @@ void Batch::addRenderer(Renderer& renderer)
 	mNewRendererAdded = true;
 }
 
-void Batch::internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::iterator &it)
+void Batch::internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::iterator& it)
 {
 	PROFILER_TIMEMARK_START()
 

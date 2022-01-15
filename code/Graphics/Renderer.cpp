@@ -54,7 +54,7 @@ bool Renderer::hasAnimations() const { return mAnimations.size() > 0; };
  * Set the animation, by name.
  * \param string name The name.
  */
-void Renderer::setAnimation(const std::string &name)
+void Renderer::setAnimation(const std::string& name)
 {
 	if (MAP_CONTAINS(mAnimations, name))
 	{
@@ -69,14 +69,14 @@ void Renderer::setAnimation(const std::string &name)
  * \param string name The name.
  * \param Animation animation The animation.
  */
-void Renderer::addAnimation(const std::string &name, const Animation& animation)
+void Renderer::addAnimation(const std::string& name, const Animation& animation)
 {
 	Animation animationCopy = animation;
     animationCopy.setName(name);
 	MAP_INSERT(mAnimations, name, animationCopy);
 };
 
-void Renderer::removeAnimation(const std::string &name)
+void Renderer::removeAnimation(const std::string& name)
 {
     if (MAP_CONTAINS(mAnimations, name))
 	{
@@ -102,14 +102,14 @@ void Renderer::updateAnimation()
 	}
 };
 
-void Renderer::setPositionOffset(const Vector3 &newPositionOffset)
+void Renderer::setPositionOffset(const Vector3& newPositionOffset)
 {
 	mPositionOffset = newPositionOffset;
 	mVerticesDirty = true;
 	mRenderereModelMatrixGenerated = false;
 };
 
-void Renderer::setColor(const Vector4 &color)
+void Renderer::setColor(const Vector4& color)
 {
 	mColor[0] = color.x;
 	mColor[1] = color.y;
@@ -180,7 +180,7 @@ void Renderer::onDestroy()
 	}
 }
 
-void Renderer::serialize(JSON &json) const
+void Renderer::serialize(JSON& json) const
 {
 	Component::serialize(json);
 
@@ -204,7 +204,7 @@ void Renderer::serialize(JSON &json) const
     DO_SERIALIZE_LIST("animations", tmpList)
 }
 
-void Renderer::deserialize(const JSON &json)
+void Renderer::deserialize(const JSON& json)
 {
 	std::string materialPath = "";
 	DO_DESERIALIZE("material", materialPath)
@@ -217,7 +217,7 @@ void Renderer::deserialize(const JSON &json)
 	mMesh = MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>();
 
     std::list<Animation> tmpList;
-    DO_DESERIALIZE_LIST("animations", tmpList, [](const JSON &json)
+    DO_DESERIALIZE_LIST("animations", tmpList, [](const JSON& json)
     {
         Animation animation;
         animation.deserialize(json);

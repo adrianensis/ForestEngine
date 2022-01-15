@@ -52,7 +52,7 @@ PUB
 	~TimerManager() override;
 	void init();
 	TimerHandle setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback);
-	void cancelTimer(const TimerHandle &timerHandle);
+	void cancelTimer(const TimerHandle& timerHandle);
 	void update();
 	void terminate();
 };

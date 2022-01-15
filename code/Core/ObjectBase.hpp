@@ -91,7 +91,7 @@ PUB
 	{
 	}
 
-	ObjectBase &operator=(const ObjectBase &other)
+	ObjectBase& operator=(const ObjectBase& other)
 	{
 		copy(&other);
 		return *this;

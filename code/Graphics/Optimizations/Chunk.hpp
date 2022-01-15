@@ -17,7 +17,7 @@ class Chunk: public ObjectBase
 PUB
 	~Chunk() override;
 	void init();
-	void set(const Vector3 &leftTop, f32 size);
+	void set(const Vector3& leftTop, f32 size);
 	void load();
 	void update(BatchesMap * batchesMap);
 	void unload();

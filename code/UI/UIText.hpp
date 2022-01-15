@@ -25,19 +25,19 @@ PUB
 	virtual void initFromConfig(const UIElementConfig& config) override;
 	virtual void onDestroy() override;
 
-	virtual void setText(const std::string &text) override;
+	virtual void setText(const std::string& text) override;
 
 	void setLayer(i32 layer)
 	{
 		mLayer = layer;
 	};
 
-	void setSize(const Vector2 &size)
+	void setSize(const Vector2& size)
 	{
 		mSize = size;
 	};
 
-	const std::string &getText() const
+	const std::string& getText() const
 	{
 		return mString;
 	};

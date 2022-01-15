@@ -49,7 +49,7 @@ void RenderEngine::init(f32 sceneSize)
 	mBatchesMap.init();
 }
 
-bool RenderEngine::frustumTestSphere(const Vector3 &center, f32 radius)
+bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
 {
 	return mCamera && mCamera->getFrustum().testSphere(center, radius);
 }

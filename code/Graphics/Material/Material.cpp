@@ -27,8 +27,8 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 
 	Camera *camera = RenderEngine::getInstance().getCamera();
 
-	const Matrix4 &projectionMatrix = camera->getProjectionMatrix();
-	const Matrix4 &viewMatrix = camera->getViewMatrix();
+	const Matrix4& projectionMatrix = camera->getProjectionMatrix();
+	const Matrix4& viewMatrix = camera->getViewMatrix();
 
 	mShader->addMatrix(isWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 	mShader->addMatrix(isWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
@@ -54,12 +54,12 @@ void Material::disable()
 	mShader->disable();
 };
 
-void Material::serialize(JSON &json) const
+void Material::serialize(JSON& json) const
 {
 	//DO_SERIALIZE("texture", mTexture)
 }
 
-void Material::deserialize(const JSON &json)
+void Material::deserialize(const JSON& json)
 {
 	//DO_DESERIALIZE("texture", mTexture)
 }

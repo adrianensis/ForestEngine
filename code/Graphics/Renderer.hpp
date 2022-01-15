@@ -16,8 +16,8 @@ class Renderer: public Component
 	
 	PUB Renderer();
 	PUB ~Renderer() override;
-	PUB virtual void serialize(JSON &json) const override;
-	PUB virtual void deserialize(const JSON &json) override;
+	PUB virtual void serialize(JSON& json) const override;
+	PUB virtual void deserialize(const JSON& json) override;
 	
 	PUB void init() override;
 	PUB void onComponentAdded() override;

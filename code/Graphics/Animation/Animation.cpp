@@ -21,7 +21,7 @@ u32 Animation::getNumberOfFrames() const
 	return mFrames.size();
 }
 
-Animation Animation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2 &startPosition, f32 width,
+Animation Animation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width,
 							 f32 height, f32 speed)
 {
 	// TODO: check if coordinates are > 1 and < 0 !!!!!
@@ -101,18 +101,18 @@ const AnimationFrame& Animation::getCurrentFrame() const
 	return mFrames.at(mCurrentFrameNumber);
 }
 
-void Animation::serialize(JSON &json) const
+void Animation::serialize(JSON& json) const
 {
     DO_SERIALIZE("name", mName);
     DO_SERIALIZE("speed", mSpeed);
     DO_SERIALIZE_LIST("frames", mFrames);
 }
 
-void Animation::deserialize(const JSON &json)
+void Animation::deserialize(const JSON& json)
 {
     DO_DESERIALIZE("name", mName);
     DO_DESERIALIZE("speed", mSpeed);
-    DO_DESERIALIZE_LIST("frames", mFrames, [](const JSON &json)
+    DO_DESERIALIZE_LIST("frames", mFrames, [](const JSON& json)
     {
         AnimationFrame frame;
         frame.deserialize(json);

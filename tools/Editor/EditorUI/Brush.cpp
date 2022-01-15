@@ -59,7 +59,7 @@ void Brush::onHold()
 	}
 }
 
-void Brush::applyOneTile(const Vector2 &worldPosition)
+void Brush::applyOneTile(const Vector2& worldPosition)
 {
 	Vector2 gridPosition = getEditorController()->getGrid().calculateGridPosition(worldPosition);
 				
@@ -233,7 +233,7 @@ void Brush::createBrushPreview()
 	onMouseMoved();
 }
 
-void Brush::createBrushPreviewOneTile(const Vector2 &brushPreviewIndex)
+void Brush::createBrushPreviewOneTile(const Vector2& brushPreviewIndex)
 {
 	if(mPaintData.mMaterial)
 	{
@@ -272,7 +272,7 @@ void Brush::removeBrushPreview()
 	mBrushPreview.clear();
 }
 
-void Brush::paintTile(const Vector2 &worldPosition, const Vector2 &gridPosition)
+void Brush::paintTile(const Vector2& worldPosition, const Vector2& gridPosition)
 {
 	if(getEditorController()->getGrid().hasTile(gridPosition))
 	{
@@ -289,7 +289,7 @@ void Brush::paintTile(const Vector2 &worldPosition, const Vector2 &gridPosition)
 	);
 }
 
-void Brush::removeTile(const Vector2 &gridPosition)
+void Brush::removeTile(const Vector2& gridPosition)
 {
 	if(getEditorController()->getGrid().hasTile(gridPosition))
 	{

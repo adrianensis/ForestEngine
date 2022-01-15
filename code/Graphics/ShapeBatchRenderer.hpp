@@ -31,7 +31,7 @@ PRI
 	void addColor(const Vector4& color);
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	void addSpecificShape(const T& shape, const Vector4 &color)
+	void addSpecificShape(const T& shape, const Vector4& color)
 	{
 
 	}
@@ -43,7 +43,7 @@ PUB
 	void init(bool isWorldSpace, u32 verticesPerShape);
 	void render();
 	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	void add(const T& shape, const Vector4 &color)
+	void add(const T& shape, const Vector4& color)
 	{
 		if(mShapesCounter < mMaxShapes)
 		{
@@ -55,7 +55,7 @@ PUB
 
 // Shape Batch Renderer Specialization
 template<>
-void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4 &color);
+void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color);
 
 // To handle different batches for different shapes
 class ShapeBatchRendererMap: public ObjectBase

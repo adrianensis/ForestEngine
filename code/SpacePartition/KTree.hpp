@@ -80,9 +80,9 @@ class QuadTree: public KTree
 
 		//PUB u32 getCollidersCount() const;
 
-		//PUB void rayCastQuery(const Vector3 &lineStart, const Vector3 &lineSnd, List<GameObject*> *outList);
+		//PUB void rayCastQuery(const Vector3& lineStart, const Vector3& lineSnd, List<GameObject*> *outList);
 	};
 
-	//PUB void rayCastQuery(const Vector3 &lineStart, const Vector3 &lineSnd, List<GameObject*> *outList);
+	//PUB void rayCastQuery(const Vector3& lineStart, const Vector3& lineSnd, List<GameObject*> *outList);
 
 };

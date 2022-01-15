@@ -43,16 +43,16 @@ PRI
 
 	Vector2 getMouseWorldPosition() const;
 	void onHold();
-	void applyOneTile(const Vector2 &worldPosition);
+	void applyOneTile(const Vector2& worldPosition);
 	void onMouseMoved();
 	void createSelector();
 	void setSelectorVisibility(bool visible);
 	void setBrushPreviewVisibility(bool visible);
-	void createBrushPreviewOneTile(const Vector2 &brushPreviewIndex);
+	void createBrushPreviewOneTile(const Vector2& brushPreviewIndex);
 	void createBrushPreview();
 	void removeBrushPreview();
-	void paintTile(const Vector2 &worldPosition, const Vector2 &gridPosition);
-	void removeTile(const Vector2 &gridPosition);
+	void paintTile(const Vector2& worldPosition, const Vector2& gridPosition);
+	void removeTile(const Vector2& gridPosition);
 
 PUB
 

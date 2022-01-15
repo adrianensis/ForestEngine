@@ -59,7 +59,7 @@ void ScriptEngine::update()
 	PROFILER_TIMEMARK_END()
 }
 
-void ScriptEngine::internalRemoveScript(std::list<Script *>::iterator &it)
+void ScriptEngine::internalRemoveScript(std::list<Script *>::iterator& it)
 {
 	Script *script = *it;
 

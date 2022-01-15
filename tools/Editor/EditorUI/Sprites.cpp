@@ -497,14 +497,14 @@ void Sprites::refreshFrames()
     }
 }
 
-void Sprites::serialize(JSON &json) const
+void Sprites::serialize(JSON& json) const
 {
     DO_SERIALIZE_LIST("sprites", mSprites);
 }
 
-void Sprites::deserialize(const JSON &json)
+void Sprites::deserialize(const JSON& json)
 {
-    DO_DESERIALIZE_LIST("sprites", mSprites, [](const JSON &json)
+    DO_DESERIALIZE_LIST("sprites", mSprites, [](const JSON& json)
     {
         GameObject *gameObject = INSTANCE_BY_NAME(json["class"], GameObject);
         gameObject->init();

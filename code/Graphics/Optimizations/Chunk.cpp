@@ -28,7 +28,7 @@ void Chunk::init()
 	mLeftTop.set(0, 0, 0);
 }
 
-void Chunk::set(const Vector3 &leftTop, f32 size)
+void Chunk::set(const Vector3& leftTop, f32 size)
 {
 	mLeftTop = leftTop;
 	mSize = size;

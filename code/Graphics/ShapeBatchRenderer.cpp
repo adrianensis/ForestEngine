@@ -70,8 +70,8 @@ void ShapeBatchRenderer::render()
 		RenderContext::enableProperty(0);
 		RenderContext::enableProperty(1);
 
-		const Matrix4 &projectionMatrix = RenderEngine::getInstance().getCamera()->getProjectionMatrix();
-		const Matrix4 &viewMatrix = RenderEngine::getInstance().getCamera()->getViewMatrix();
+		const Matrix4& projectionMatrix = RenderEngine::getInstance().getCamera()->getProjectionMatrix();
+		const Matrix4& viewMatrix = RenderEngine::getInstance().getCamera()->getViewMatrix();
 
 		mShaderLine->addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 		mShaderLine->addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
@@ -107,7 +107,7 @@ void ShapeBatchRenderer::addColor(const Vector4& color)
 }
 
 template<>
-void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4 &color)
+void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color)
 {
 	addPosition(shape.getStart());
 	addPosition(shape.getEnd());

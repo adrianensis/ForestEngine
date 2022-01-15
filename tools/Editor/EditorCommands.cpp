@@ -3,7 +3,7 @@
 
 void EditorCommands::registerEditorCommands(EditorController* editorController)
 {
-    CommandLine &cmd = CommandLine::getInstance();
+    CommandLine& cmd = CommandLine::getInstance();
 
     cmd.registerCommand("sprite", [&](const Command& command)
     {

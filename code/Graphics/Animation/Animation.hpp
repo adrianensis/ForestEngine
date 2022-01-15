@@ -29,12 +29,12 @@ PUB
 	* /param speed The speed of the animation.
 	* /returns The animation.
 	*/
-	static Animation create(u32 frameCount, bool horizontal, bool reverse, const Vector2 &startPosition, f32 width,
+	static Animation create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width,
 							 f32 height, f32 speed);
 
 	u32 getNumberOfFrames() const;
-	const AnimationFrame &getNextFrame();
-	const AnimationFrame &getCurrentFrame() const;
+	const AnimationFrame& getNextFrame();
+	const AnimationFrame& getCurrentFrame() const;
 
     COPY(Animation)
     {
@@ -46,6 +46,6 @@ PUB
         }
     }
 
-    virtual void serialize(JSON &json) const override;
-    virtual void deserialize(const JSON &json) override;
+    virtual void serialize(JSON& json) const override;
+    virtual void deserialize(const JSON& json) override;
 };

@@ -50,9 +50,9 @@ PUB
 	void update();
     void terminate();
 
-    void execute(const std::string &commandLine);
-    std::string autocomplete(const std::string &commandLine);
-    void registerCommand(const std::string &commandName, CommandCallback callback);
+    void execute(const std::string& commandLine);
+    std::string autocomplete(const std::string& commandLine);
+    void registerCommand(const std::string& commandName, CommandCallback callback);
 
 	void open();
 	void close();

@@ -30,7 +30,7 @@ PRI
 	void insertEventCallback(ClassId eventClassId, ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback);
 	void removeEventCallback(ClassId eventClassId, ObjectBase * eventOwner, ObjectBase * eventReceiver);
 
-	ReceiversFunctorMap &getReceiversFunctorMap(ObjectBase * eventOwner, ClassId eventClassId);
+	ReceiversFunctorMap& getReceiversFunctorMap(ObjectBase * eventOwner, ClassId eventClassId);
 
 	void removeMapContent();
 

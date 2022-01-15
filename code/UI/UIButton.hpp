@@ -16,7 +16,7 @@ PUB
 
 	void onLabelDestroy();
 
-	virtual void setText(const std::string &text) override;
+	virtual void setText(const std::string& text) override;
 	virtual void setVisibility(bool visibility) override;
 };
 

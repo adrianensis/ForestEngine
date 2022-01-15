@@ -99,7 +99,7 @@ PUB
 
 	bool isMouseCursorInsideElement();
 
-	virtual void setText(const std::string &text) { };
+	virtual void setText(const std::string& text) { };
 
 	void setOnPressedCallback(UIElementCallback callback)
 	{

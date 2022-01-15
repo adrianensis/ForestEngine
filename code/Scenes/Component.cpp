@@ -28,9 +28,9 @@ void Component::destroy()
 	}
 };
 
-void Component::serialize(JSON &json) const
+void Component::serialize(JSON& json) const
 {
 	DO_SERIALIZE("class", getClassName())
 };
 
-void Component::deserialize(const JSON &json) { };
+void Component::deserialize(const JSON& json) { };

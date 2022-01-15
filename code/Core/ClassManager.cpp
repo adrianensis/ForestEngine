@@ -3,7 +3,7 @@
 
 std::map<std::string, ClassRegisterCallback> ClassManager::smRegisters;
 
-ClassRegister::ClassRegister(const std::string &className, ClassRegisterCallback callback)
+ClassRegister::ClassRegister(const std::string& className, ClassRegisterCallback callback)
 {
     MAP_INSERT(ClassManager::smRegisters, className, callback);
 }
@@ -18,7 +18,7 @@ void ClassManager::init()
     }
 }
 
-void ClassManager::registerClassByName(const std::string &className, ClassRegisterCallback callback)
+void ClassManager::registerClassByName(const std::string& className, ClassRegisterCallback callback)
 {
     MAP_INSERT(mInstanceByNameMap, className, callback);
 }

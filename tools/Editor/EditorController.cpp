@@ -119,7 +119,7 @@ void EditorController::drawGrid()
 	}
 }
 
-GameObject* EditorController::createTile(const Vector2 &position, const Vector2 &size, Material *material, const Rectangle2D &region)
+GameObject* EditorController::createTile(const Vector2& position, const Vector2& size, Material *material, const Rectangle2D& region)
 {
 	GameObject *tile = NEW(GameObject);
 	tile->init();

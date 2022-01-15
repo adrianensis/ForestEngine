@@ -20,7 +20,7 @@ void Frustum::init(Camera *camera)
 
 //----------------------------------------------------------------------
 
-bool Frustum::testSphere(const Vector3 &center, f32 radius) const
+bool Frustum::testSphere(const Vector3& center, f32 radius) const
 {
 	bool result = true;
 
@@ -40,7 +40,7 @@ bool Frustum::testSphere(const Vector3 &center, f32 radius) const
 
 //----------------------------------------------------------------------
 
-bool Frustum::testPoint(const Vector3 &point) const
+bool Frustum::testPoint(const Vector3& point) const
 {
 	bool result = true;
 
@@ -55,7 +55,7 @@ bool Frustum::testPoint(const Vector3 &point) const
 
 //----------------------------------------------------------------------
 
-bool Frustum::testRectangle(const Vector3 &leftTop, f32 width, f32 height) const
+bool Frustum::testRectangle(const Vector3& leftTop, f32 width, f32 height) const
 {
 	return testPoint(leftTop) || testPoint(Vector3(leftTop.x, leftTop.y - height, 0)) || testPoint(Vector3(leftTop.x + width, leftTop.y - height, 0)) || testPoint(Vector3(leftTop.x + width, leftTop.y, 0));
 }

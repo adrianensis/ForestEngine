@@ -16,7 +16,7 @@ PUB
 	~MaterialManager() override;
 
 	void init();
-	Texture *loadTexture(const std::string &path);
-	Material *loadMaterial(const std::string &path);
+	Texture *loadTexture(const std::string& path);
+	Material *loadMaterial(const std::string& path);
 	Material *loadNoTextureMaterial();
 };

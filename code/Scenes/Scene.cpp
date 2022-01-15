@@ -68,7 +68,7 @@ void Scene::init()
 	mLoadSceneConfig.init();
 }
 
-void Scene::saveScene(const std::string &path)
+void Scene::saveScene(const std::string& path)
 {
 	mPath = path;
 
@@ -83,7 +83,7 @@ void Scene::saveScene(const std::string &path)
 	configMap.writeToJsonFile(path);
 }
 
-void Scene::loadScene(const std::string &path)
+void Scene::loadScene(const std::string& path)
 {
 	mPath = path;
 
@@ -103,7 +103,7 @@ void Scene::loadScene(const std::string &path)
 	deserialize(mLoadSceneConfig.getJson());
 }
 
-void Scene::serialize(JSON &json) const
+void Scene::serialize(JSON& json) const
 {
 	f32 maxSize = 0;
 
@@ -133,14 +133,14 @@ void Scene::serialize(JSON &json) const
 	DO_SERIALIZE("size", maxSize * 2.0f)
 }
 
-void Scene::deserialize(const JSON &json)
+void Scene::deserialize(const JSON& json)
 { 
 	DO_DESERIALIZE("size", mSize)
 
 	if(json.contains("objects"))
 	{
 		std::list<GameObject *> tmpList;
-		DO_DESERIALIZE_LIST("objects", tmpList, [](const JSON &json)
+		DO_DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
 		{
 			GameObject *gameObject = INSTANCE_BY_NAME(json["class"], GameObject);
 			return gameObject;

@@ -18,7 +18,7 @@ PUB
 		return mInstance != nullptr;
 	}
 
-	static T &getInstance()
+	static T& getInstance()
 	{
 		if (!existsInstance())
 		{

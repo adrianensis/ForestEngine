@@ -36,22 +36,22 @@ void Transform::init()
 	mModelMatrixGenerated = false;
 }
 
-void Transform::setLocalPosition(const Vector3 &vector)
+void Transform::setLocalPosition(const Vector3& vector)
 {
 	mLocalPosition = vector;
 }
 
-void Transform::setRotation(const Vector3 &vector)
+void Transform::setRotation(const Vector3& vector)
 {
 	mRotation = vector;
 }
 
-void Transform::setScale(const Vector3 &vector)
+void Transform::setScale(const Vector3& vector)
 {
 	mScale = vector;
 }
 
-const Vector3 &Transform::getWorldPosition() const
+const Vector3& Transform::getWorldPosition() const
 {
 	mWorldPosition = mLocalPosition;
 
@@ -71,7 +71,7 @@ const Vector3 &Transform::getWorldPosition() const
 	return mWorldPosition;
 }
 
-void Transform::translate(const Vector3 &vector)
+void Transform::translate(const Vector3& vector)
 {
 	if (vector.len() > 0.0f)
 	{
@@ -79,7 +79,7 @@ void Transform::translate(const Vector3 &vector)
 	}
 }
 
-void Transform::rotate(const Vector3 &vector)
+void Transform::rotate(const Vector3& vector)
 {
 	if (vector.len() > 0.0f)
 	{
@@ -87,7 +87,7 @@ void Transform::rotate(const Vector3 &vector)
 	}
 }
 
-void Transform::lookAt(const Vector3 &targetPosition)
+void Transform::lookAt(const Vector3& targetPosition)
 {
 	/*mIsDirtyRotation = true;
 
@@ -110,7 +110,7 @@ void Transform::lookAt(const Vector3 &targetPosition)
 	mRotation = q.toEuler();*/
 }
 
-const Matrix4 &Transform::getTranslationMatrix() const
+const Matrix4& Transform::getTranslationMatrix() const
 {
 	mTranslationMatrix.translation(getWorldPosition());
 
@@ -121,21 +121,21 @@ const Matrix4 &Transform::getTranslationMatrix() const
 	return mTranslationMatrix;
 }
 
-const Matrix4 &Transform::getRotationMatrix() const
+const Matrix4& Transform::getRotationMatrix() const
 {
 	mRotationMatrix.rotation(mRotation);
 
 	return mRotationMatrix;
 }
 
-const Matrix4 &Transform::getScaleMatrix() const
+const Matrix4& Transform::getScaleMatrix() const
 {
 	mScaleMatrix.scale(mScale);
 
 	return mScaleMatrix;
 }
 
-const Matrix4 &Transform::getModelMatrix(bool force /*= false*/)
+const Matrix4& Transform::getModelMatrix(bool force /*= false*/)
 {
 	if (!isStatic() || (isStatic() && !mModelMatrixGenerated) || force)
 	{
@@ -160,7 +160,7 @@ TransformState Transform::getTransformState() const
 }
 
 
-void Transform::serialize(JSON &json) const
+void Transform::serialize(JSON& json) const
 {
 	Component::serialize(json);
 
@@ -169,7 +169,7 @@ void Transform::serialize(JSON &json) const
 	DO_SERIALIZE("rotation", mRotation);
 }
 
-void Transform::deserialize(const JSON &json)
+void Transform::deserialize(const JSON& json)
 {
 	Component::deserialize(json);
 

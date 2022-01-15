@@ -21,7 +21,7 @@ class InfoBar: public EditorUIElement
 	INFO_BAR_MEMBER(BrushSize, u32)
 
 PRI
-	UIText* createInfoField(const std::string &name, UIBuilder& uiBuilder);
+	UIText* createInfoField(const std::string& name, UIBuilder& uiBuilder);
 
 PUB
 	void init(EditorController* editorController) override;

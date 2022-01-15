@@ -185,7 +185,7 @@ bool KTree::KTreeNode::isLeaf() const
 // 	return mColliders->getLength();
 // };
 
-// void QuadTree::Node::rayCastQuery(const Vector3 &lineStart, const Vector3 &lineEnd, List<GameObject*> *outList)
+// void QuadTree::Node::rayCastQuery(const Vector3& lineStart, const Vector3& lineEnd, List<GameObject*> *outList)
 // {
 
 // 	bool rayIntersectsNode = MathUtils::testLineSphereSimple(Vector2(lineStart), Vector2(lineEnd),
@@ -265,7 +265,7 @@ void KTree::update()
 // 	mRoot->addCollider(collider);
 // }
 
-// void QuadTree::rayCastQuery(const Vector3 &lineStart, const Vector3 &lineEnd, List<GameObject*> *outList)
+// void QuadTree::rayCastQuery(const Vector3& lineStart, const Vector3& lineEnd, List<GameObject*> *outList)
 // {
 // 	mRoot->rayCastQuery(lineStart, lineEnd, outList);
 // }

@@ -15,15 +15,15 @@ class Texture: public ObjectBase
 PUB
 	~Texture() override;
 
-	void init(const std::string &path);
+	void init(const std::string& path);
 	void bind();
 
-	void serialize(JSON &json) const override
+	void serialize(JSON& json) const override
 	{
 		//DO_SERIALIZE("path", mPath)
 	}
 
-	void deserialize(const JSON &json) override
+	void deserialize(const JSON& json) override
 	{
 		//mPath = json["path"];
 	}

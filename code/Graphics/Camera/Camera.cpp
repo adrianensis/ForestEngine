@@ -99,12 +99,12 @@ void Camera::onResize()
 	recalculatePerspectiveMatrix();
 }
 
-const Matrix4 &Camera::getProjectionMatrix() const
+const Matrix4& Camera::getProjectionMatrix() const
 {
 	return mProjectionMatrix;
 };
 
-const Matrix4 &Camera::getViewMatrix() const
+const Matrix4& Camera::getViewMatrix() const
 {
 	if(mViewMatrixNeedsUpdate)
 	{
@@ -118,7 +118,7 @@ const Matrix4 &Camera::getViewMatrix() const
 	return mViewMatrix;
 };
 
-const Matrix4 &Camera::getProjectionViewMatrix() const
+const Matrix4& Camera::getProjectionViewMatrix() const
 {
 	if(mProjectionViewMatrixNeedsUpdate)
 	{

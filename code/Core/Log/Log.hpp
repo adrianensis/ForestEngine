@@ -14,17 +14,17 @@ PUB
 	static void init();
 	static void terminate();
 
-	static void log(const std::string &str);
-    static void append(const std::string &str);
+	static void log(const std::string& str);
+    static void append(const std::string& str);
 
 	static void trace(const std::string file, u32 line, const std::string function, const std::string message = emptyMessage);
 
-	static void echo(const std::string &message, bool newLine = true);
+	static void echo(const std::string& message, bool newLine = true);
 
-    static void customEcho(const std::string &tag, const std::string &message, bool newLine = true);
+    static void customEcho(const std::string& tag, const std::string& message, bool newLine = true);
 
 	template <class T>
-	static void var(const std::string &varname, T var)
+	static void var(const std::string& varname, T var)
 	{
 		std::string valueStr;
 		if constexpr (std::is_same<T, std::string>::value)
@@ -40,7 +40,7 @@ PUB
 	};
 
 	template <class T>
-	static void val(const T &var)
+	static void val(const T& var)
 	{
 		std::string valueStr;
 		if constexpr (std::is_same<T, std::string>::value)
@@ -55,7 +55,7 @@ PUB
 		log("VAL > " + valueStr);
 	};
 
-	static void error(const std::string &message);
+	static void error(const std::string& message);
 
 	static void brline();
     static void backspace();
