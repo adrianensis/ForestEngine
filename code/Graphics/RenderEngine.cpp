@@ -211,21 +211,23 @@ void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorl
 	}
 }
 
-void RenderEngine::drawRectangle2D(const Rectangle2D& rectangle, f32 thickness, bool isWorldSpace, Vector4 color)
-{
-	Vector3 leftTop = rectangle.getLeftTop();
-	Vector3 size = rectangle.getSize();
-	drawLine(Line(Vector3(leftTop.x, leftTop.y,0), Vector3(leftTop.x, leftTop.y - size.y,0)), thickness, isWorldSpace, color);
-	drawLine(Line(Vector3(leftTop.x, leftTop.y - size.y,0), Vector3(leftTop.x + size.x, leftTop.y - size.y,0)), thickness, isWorldSpace, color);
-	drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y - size.y,0), Vector3(leftTop.x + size.x, leftTop.y,0)), thickness, isWorldSpace, color);
-	drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y,0), Vector3(leftTop.x, leftTop.y,0)), thickness, isWorldSpace, color);
-}
-
 void RenderEngine::drawRectangle(const Rectangle& rectangle, f32 thickness, bool isWorldSpace, Vector4 color)
 {
 	Vector3 leftTop = rectangle.getLeftTop();
 	Vector3 size = rectangle.getSize();
-	
-	drawRectangle2D(Rectangle2D(leftTop, size), thickness, isWorldSpace, color);
-	// TODO : draw 3D rectangle
+	drawLine(Line(Vector3(leftTop.x, leftTop.y, leftTop.z), Vector3(leftTop.x, leftTop.y - size.y, leftTop.z)), thickness, isWorldSpace, color);
+	drawLine(Line(Vector3(leftTop.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z)), thickness, isWorldSpace, color);
+	drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
+	drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y, leftTop.z), Vector3(leftTop.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
 }
+
+// void RenderEngine::drawRectangle(const Rectangle& rectangle, f32 thickness, bool isWorldSpace, Vector4 color)
+// {
+// 	Vector3 leftTopFront = rectangle.getLeftTop();
+// 	Vector3 leftTopBack = rectangle.getLeftTop() + Vector3(0,0,rectangle.getSize().z);
+// 	Vector3 size = rectangle.getSize();
+	
+// 	drawRectangle(Rectangle(leftTopFront, size), thickness, isWorldSpace, color);
+// 	drawRectangle(Rectangle(leftTopBack, size), thickness, isWorldSpace, color);
+// 	// TODO : draw 3D rectangle
+// }

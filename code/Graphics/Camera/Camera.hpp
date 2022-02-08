@@ -28,10 +28,10 @@ class Camera: public Component
 	PRI f32 mAspect = 0.0f;
 	PRI f32 mFov = 0.0f;
 	
-	PRI bool mIsOrtho = false;
+	PRI bool mIsOrtho = false; GET(IsOrtho)
 
 	PRI Frustum mFrustum; GETREF_CONST(Frustum)
-	PRI f32 mZoom = 0.0f; GET(Zoom)
+	PRI f32 mZoom = 1.0f; GET(Zoom)
 
 	PRI TransformState mTransformState;
 
@@ -43,7 +43,7 @@ PUB
 
 	void init() override;
 	void onComponentAdded() override;
-	void recalculatePerspectiveMatrix();
+	void recalculateProjectionMatrix();
 
 	void update();
 

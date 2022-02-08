@@ -195,7 +195,7 @@ void Brush::createSelector()
 
 	Renderer *renderer = NEW(Renderer);
 	renderer->init();
-	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>());
+	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
 	renderer->setMaterial(material);
 
 	selector->addComponent<Renderer>(renderer);
@@ -245,7 +245,7 @@ void Brush::createBrushPreviewOneTile(const Vector2& brushPreviewIndex)
 
 		Renderer *renderer = NEW(Renderer);
 		renderer->init();
-		renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>());
+		renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
 		renderer->setMaterial(mPaintData.mMaterial);
 		renderer->setRegion(mPaintData.mRegion);
 

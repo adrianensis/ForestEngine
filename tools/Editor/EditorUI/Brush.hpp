@@ -21,7 +21,7 @@ enum class BrushPaintMode
 class BrushPaintData: public ObjectBase
 {
     GENERATE_METADATA(BrushPaintData)
-	PUB Rectangle2D mRegion;
+	PUB Rectangle mRegion;
 	PUB Material* mMaterial = nullptr;
 };
 

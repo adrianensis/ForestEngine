@@ -34,4 +34,7 @@ class MeshPrimitives: public ObjectBase, public Singleton<MeshPrimitives>
 };
 
 template <>
-const Mesh* MeshPrimitives::createPrimitive<Rectangle2D>() const;
+const Mesh* MeshPrimitives::createPrimitive<Rectangle>() const;
+
+// template <>
+// const Mesh* MeshPrimitives::createPrimitive<Rectangle>() const;

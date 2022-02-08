@@ -210,7 +210,7 @@ void Sprites::createAtlas(Material* material)
 				getUIElement<UIButton>();
 
 			Renderer* renderer = tile->getRenderer();
-			renderer->setRegion(Rectangle2D(j / spritesSize.x, (spritesSize.y - i - 1) / spritesSize.y, spritesTextureSize.x, spritesTextureSize.y));
+			renderer->setRegion(Rectangle(j / spritesSize.x, (spritesSize.y - i - 1) / spritesSize.y, spritesTextureSize.x, spritesTextureSize.y));
 
 			tile->setOnPressedCallback([&](UIElement* uiElement)
 			{
@@ -312,7 +312,7 @@ void Sprites::refreshSpritePreview(GameObject* sprite)
         getUIElement<UIButton>()->
         setOnPressedCallback([&, sprite, renderer, animationName](UIElement* uiElement)
         {
-            renderer->setAnimation(animationName);
+            renderer->setCurrentAnimation(animationName);
 
             mCurrentAnimationName = animationName;
 
@@ -340,7 +340,7 @@ void Sprites::refreshSpritePreview(GameObject* sprite)
     }
 
     Renderer* previewRenderer = mSpritePreview->getFirstComponent<Renderer>();
-    previewRenderer->setAnimation(mCurrentAnimationName);
+    previewRenderer->setCurrentAnimation(mCurrentAnimationName);
 }
 
 void Sprites::addSprite()
@@ -353,7 +353,7 @@ void Sprites::addSprite()
 
         Renderer* renderer = NEW(Renderer);
         renderer->init();
-        renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>());
+        renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
         renderer->setMaterial(mCurrentAtlasMaterial);
 
         sprite->addComponent<Renderer>(renderer);

@@ -358,10 +358,10 @@ void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
 		mMeshBuilder.addTexCoord(textureCoord.x, textureCoord.y);
 
 		mMeshBuilder.addColor(
-			renderer.getColor()[0],
-			renderer.getColor()[1],
-			renderer.getColor()[2],
-			renderer.getColor()[3]);
+			renderer.getColor().x,
+			renderer.getColor().y,
+			renderer.getColor().z,
+			renderer.getColor().w);
 	}
 
 	PROFILER_TIMEMARK_END()

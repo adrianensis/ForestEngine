@@ -64,85 +64,91 @@ PUB
     }
 };
 
+// class Rectangle: public Shape
+// {
+//     GENERATE_METADATA(Rectangle)
+//     PRO Vector3 mLeftTop; GETREF_CONST_SET(LeftTop)
+//     PRO Vector3 mSize; GETREF_CONST_SET(Size)
+
+// PUB
+//     Rectangle() { mVerticesCount = 8; }
+
+//     Rectangle(f32 x, f32 y, f32 z, f32 w, f32 h, f32 l): Rectangle()
+//     {
+//         mLeftTop.set(x,y,z);
+//         mSize.set(w,h,l);
+//     }
+
+//     Rectangle(const Vector3& leftTop, f32 w, f32 h, f32 l): Rectangle()
+//     {
+//         mLeftTop.set(leftTop);
+//         mSize.set(w,h,l);
+//     }
+
+//     Rectangle(const Vector3& leftTop, const Vector3& size): Rectangle()
+//     {
+//         mLeftTop.set(leftTop);
+//         mSize.set(size);
+//     }
+
+//     COPY(Rectangle)
+//     {
+//         Shape::copy(other);
+//         DO_COPY(mLeftTop)
+//         DO_COPY(mSize)
+//     }
+
+//     virtual void serialize(JSON& json) const override
+//     {
+//         Shape::serialize(json);
+
+//         DO_SERIALIZE("left_top", mLeftTop)
+//         DO_SERIALIZE("size", mSize)
+//     }
+
+//     virtual void deserialize(const JSON& json) override
+//     {
+//         Shape::deserialize(json);
+
+//         DO_DESERIALIZE("left_top", mLeftTop);
+//         DO_DESERIALIZE("size", mSize);
+//     }
+// };
+
 class Rectangle: public Shape
 {
     GENERATE_METADATA(Rectangle)
     PRO Vector3 mLeftTop; GETREF_CONST_SET(LeftTop)
-    PRO Vector3 mSize; GETREF_CONST_SET(Size)
+    PRO Vector2 mSize; GETREF_CONST_SET(Size)
 
 PUB
-    Rectangle() { mVerticesCount = 8; }
+    Rectangle() { mVerticesCount = 4; }
 
-    Rectangle(f32 x, f32 y, f32 z, f32 w, f32 h, f32 l): Rectangle()
+    Rectangle(f32 x, f32 y, f32 w, f32 h): Rectangle()
+    {
+        mLeftTop.set(x,y,0);
+        mSize.set(w,h);
+    }
+
+    Rectangle(f32 x, f32 y, f32 z, f32 w, f32 h): Rectangle()
     {
         mLeftTop.set(x,y,z);
-        mSize.set(w,h,l);
+        mSize.set(w,h);
     }
 
-    Rectangle(const Vector3& leftTop, f32 w, f32 h, f32 l): Rectangle()
+    Rectangle(const Vector3& leftTop, f32 w, f32 h): Rectangle()
     {
         mLeftTop.set(leftTop);
-        mSize.set(w,h,l);
+        mSize.set(w,h);
     }
 
-    Rectangle(const Vector3& leftTop, const Vector3& size): Rectangle()
+    Rectangle(const Vector3& leftTop, const Vector2& size): Rectangle()
     {
         mLeftTop.set(leftTop);
         mSize.set(size);
     }
 
     COPY(Rectangle)
-    {
-        Shape::copy(other);
-        DO_COPY(mLeftTop)
-        DO_COPY(mSize)
-    }
-
-    virtual void serialize(JSON& json) const override
-    {
-        Shape::serialize(json);
-
-        DO_SERIALIZE("left_top", mLeftTop)
-        DO_SERIALIZE("size", mSize)
-    }
-
-    virtual void deserialize(const JSON& json) override
-    {
-        Shape::deserialize(json);
-
-        DO_DESERIALIZE("left_top", mLeftTop);
-        DO_DESERIALIZE("size", mSize);
-    }
-};
-
-class Rectangle2D: public Shape
-{
-    GENERATE_METADATA(Rectangle2D)
-    PRO Vector2 mLeftTop; GETREF_CONST_SET(LeftTop)
-    PRO Vector2 mSize; GETREF_CONST_SET(Size)
-
-PUB
-    Rectangle2D() { mVerticesCount = 4; }
-
-    Rectangle2D(f32 x, f32 y, f32 w, f32 h): Rectangle2D()
-    {
-        mLeftTop.set(x,y);
-        mSize.set(w,h);
-    }
-
-    Rectangle2D(const Vector2& leftTop, f32 w, f32 h): Rectangle2D()
-    {
-        mLeftTop.set(leftTop);
-        mSize.set(w,h);
-    }
-
-    Rectangle2D(const Vector2& leftTop, const Vector2& size): Rectangle2D()
-    {
-        mLeftTop.set(leftTop);
-        mSize.set(size);
-    }
-
-    COPY(Rectangle2D)
     {
         Shape::copy(other);
         DO_COPY(mLeftTop)

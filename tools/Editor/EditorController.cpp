@@ -119,7 +119,7 @@ void EditorController::drawGrid()
 	}
 }
 
-GameObject* EditorController::createTile(const Vector2& position, const Vector2& size, Material *material, const Rectangle2D& region)
+GameObject* EditorController::createTile(const Vector2& position, const Vector2& size, Material *material, const Rectangle& region)
 {
 	GameObject *tile = NEW(GameObject);
 	tile->init();
@@ -133,7 +133,7 @@ GameObject* EditorController::createTile(const Vector2& position, const Vector2&
 	Renderer *renderer = NEW(Renderer);
 	renderer->init();
 
-	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>());
+	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
 	renderer->setDepth(-1 * getLayer());
 
 	renderer->setMaterial(material);

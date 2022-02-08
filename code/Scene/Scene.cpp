@@ -55,8 +55,8 @@ void Scene::init()
 
 	f32 size = RenderContext::getWindowSize().y;
 	// TODO : use RenderContext::getWindowSize().x also? To keep the scaleproportions?
-	cameraComponent->setOrtho(-size, size, -size, size, 100, -100);
-	// cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 90);
+	cameraComponent->setOrtho(-size, size, -size, size, 1000, -1000);
+	//cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
 
 	cameraGameObject->addComponent<Camera>(cameraComponent);
 

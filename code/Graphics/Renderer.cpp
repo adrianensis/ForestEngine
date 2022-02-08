@@ -54,7 +54,7 @@ bool Renderer::hasAnimations() const { return mAnimations.size() > 0; };
  * Set the animation, by name.
  * \param string name The name.
  */
-void Renderer::setAnimation(const std::string& name)
+void Renderer::setCurrentAnimation(const std::string& name)
 {
 	if (MAP_CONTAINS(mAnimations, name))
 	{
@@ -107,14 +107,6 @@ void Renderer::setPositionOffset(const Vector3& newPositionOffset)
 	mPositionOffset = newPositionOffset;
 	mVerticesDirty = true;
 	mRenderereModelMatrixGenerated = false;
-};
-
-void Renderer::setColor(const Vector4& color)
-{
-	mColor[0] = color.x;
-	mColor[1] = color.y;
-	mColor[2] = color.z;
-	mColor[3] = color.w;
 };
 
 bool Renderer::getIsWorldSpace() const
@@ -214,7 +206,7 @@ void Renderer::deserialize(const JSON& json)
 	DO_DESERIALIZE("region", mRegion)
 	DO_DESERIALIZE("depth", mDepth)
 
-	mMesh = MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>();
+	mMesh = MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>();
 
     std::list<Animation> tmpList;
     DO_DESERIALIZE_LIST("animations", tmpList, [](const JSON& json)

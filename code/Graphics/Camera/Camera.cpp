@@ -6,8 +6,6 @@
 
 Camera::Camera()
 {
-	mIsOrtho = true;
-	mZoom = 1;
 }
 
 Camera::~Camera()
@@ -18,16 +16,17 @@ void Camera::init()
 {
 	TRACE()
 
+	mIsOrtho = true;
+	mZoom = 1;
+	
 	mViewMatrix.identity();
-
 	mInversePVMatrix.identity();
-
 	mFrustum.init(this);
 }
 
 void Camera::onComponentAdded()
 {
-	recalculatePerspectiveMatrix();
+	recalculateProjectionMatrix();
 
 	mTransformState = getGameObject()->getTransform()->getTransformState();
 }
@@ -51,7 +50,7 @@ void Camera::update()
 	PROFILER_TIMEMARK_END()
 }
 
-void Camera::recalculatePerspectiveMatrix()
+void Camera::recalculateProjectionMatrix()
 {
 	if (mIsOrtho)
 	{
@@ -91,12 +90,12 @@ void Camera::setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
 	mAspect = aspect;
 	mFov = fov;
 	
-	mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov);
+	mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov * mZoom);
 };
 
 void Camera::onResize()
 {
-	recalculatePerspectiveMatrix();
+	recalculateProjectionMatrix();
 }
 
 const Matrix4& Camera::getProjectionMatrix() const
@@ -157,7 +156,7 @@ void Camera::calculateInverseMatrix(bool force /*= false*/)
 void Camera::setZoom(f32 zoom)
 {
 	mZoom = zoom;
-	recalculatePerspectiveMatrix();
+	recalculateProjectionMatrix();
 }
 
 void Camera::zoomIn(f32 zoomDelta)

@@ -35,13 +35,13 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	Renderer* renderer = NEW(Renderer);
 	renderer->init();
 
-	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle2D>());
+	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
 	renderer->setMaterial(mConfig.mMaterial);
 	renderer->setColor(mConfig.mStyle->mBackgroundColor);
 	renderer->setDepth(mConfig.mLayer);
 	//renderer->setHasBorder(true);
 
-	//renderer->setClipRectangle(Rectangle2D(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y)));
+	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y)));
 	
 	addComponent<Renderer>(renderer);
 	
@@ -98,7 +98,7 @@ void UIList::toggle()
 			Transform *t = button->getTransform();
 			t->setParent(getTransform());
 
-			Rectangle2D clipRectangle(
+			Rectangle clipRectangle(
 						Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
 						Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y));
 
