@@ -33,7 +33,7 @@ PUB
 class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 {
 	GENERATE_METADATA(UIStyleManager)
-	PRI UIStyle mDefaultStyle; GETREF_CONST(DefaultStyle);
+	PRI UIStyle mDefaultStyle; GET_RC(DefaultStyle);
 	PRI std::map<ClassId, UIStyle*> mStyles;
 
 PUB

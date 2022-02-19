@@ -5,11 +5,11 @@
 class Mesh: public ObjectBase
 {
     GENERATE_METADATA(Mesh)
-	PRI std::vector<f32> mVertices; GETREF_CONST(Vertices)
-	PRI std::vector<f32> mNormals; GETREF_CONST(Normals)
-	PRI std::vector<f32> mTextureCoordinates; GETREF_CONST(TextureCoordinates)
-	PRI std::vector<f32> mColors; GETREF_CONST(Colors)
-	PRI std::vector<u16> mFaces; GETREF_CONST(Faces)
+	PRI std::vector<f32> mVertices; GET_RC(Vertices)
+	PRI std::vector<f32> mNormals; GET_RC(Normals)
+	PRI std::vector<f32> mTextureCoordinates; GET_RC(TextureCoordinates)
+	PRI std::vector<f32> mColors; GET_RC(Colors)
+	PRI std::vector<u16> mFaces; GET_RC(Faces)
 
 	PRI u32 mVertexCount = 0; GET(VertexCount)
 	PRI u32 mFacesCount = 0; GET(FacesCount)

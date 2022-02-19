@@ -8,7 +8,7 @@ class Texture: public ObjectBase
 	PRI byte* mData = nullptr; GET(Data)
 	PRI u32 mWidth = 0; GET(Width)
 	PRI u32 mHeight = 0; GET(Height)
-	PRI std::string mPath; GETREF_CONST(Path)
+	PRI std::string mPath; GET_RC(Path)
 
 	byte *readPNG();
 

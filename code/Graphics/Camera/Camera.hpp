@@ -30,7 +30,7 @@ class Camera: public Component
 	
 	PRI bool mIsOrtho = false; GET(IsOrtho)
 
-	PRI Frustum mFrustum; GETREF_CONST(Frustum)
+	PRI Frustum mFrustum; GET_RC(Frustum)
 	PRI f32 mZoom = 1.0f; GET(Zoom)
 
 	PRI TransformState mTransformState;

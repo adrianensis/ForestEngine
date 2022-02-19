@@ -29,10 +29,10 @@ class Renderer: public Component
 	PRI mutable bool mRenderereModelMatrixGenerated = false;
 	PRI mutable bool mVerticesDirty = true;
 	PRI mutable std::vector<Vector3> mVertices;
-	PRI Vector4 mColor; GETREF_CONST_SET(Color)
+	PRI Vector4 mColor; GET_RC_SET(Color)
 	PRI Vector3 mPositionOffset; GET(PositionOffset)
-	PRI Rectangle mRegion; GETREF_CONST_SET(Region)
-	PRI Rectangle mClipRectangle; GETREF_CONST_SET(ClipRectangle)
+	PRI Rectangle mRegion; GET_RC_SET(Region)
+	PRI Rectangle mClipRectangle; GET_RC_SET(ClipRectangle)
 	PRI const Mesh* mMesh = nullptr; GET_SET(Mesh)
 	PRI Material* mMaterial = nullptr; GET_SET(Material)
 	PRI bool mInvertAxisX = false; GET_SET(InvertAxisX)
@@ -51,7 +51,7 @@ class Renderer: public Component
 	PUB bool hasClipRectangle() const;
 
 	// Animation
-	PRI std::map<std::string, Animation> mAnimations; GETREF_CONST(Animations)
+	PRI std::map<std::string, Animation> mAnimations; GET_RC(Animations)
 	PRI Animation* mCurrentAnimation = nullptr; GET(CurrentAnimation)
 
 	PUB void setCurrentAnimation(const std::string& name);

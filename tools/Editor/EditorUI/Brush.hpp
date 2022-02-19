@@ -34,7 +34,7 @@ class Brush: public EditorUIElement
 	PRI BrushMode mMode;
 	PRI BrushPaintMode mPaintMode;
 
-	PRI BrushPaintData mPaintData; GETREF(PaintData)
+	PRI BrushPaintData mPaintData; GET_R(PaintData)
 
 	PRI u32 mBrushSize = 1; GET(BrushSize)
 	PRI const u32 mMaxBrushSize = 20;

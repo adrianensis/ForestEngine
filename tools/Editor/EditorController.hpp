@@ -21,16 +21,16 @@ using TileCallback = std::function<void(GameObject* tile)>;
 class EditorController: public ObjectBase
 {
     GENERATE_METADATA(EditorController)
-	PRI ConfigObject mEditorConfig; GETREF_CONST(EditorConfig)
+	PRI ConfigObject mEditorConfig; GET_RC(EditorConfig)
 
-	PRI Brush mBrush; GETREF(Brush)
-	PRI MenuBar mMenuBar; GETREF(MenuBar)
-	PRI InfoBar mInfoBar; GETREF(InfoBar)
-	PRI ToolsBar mToolsBar; GETREF(ToolsBar)
-	PRI LayersBar mLayersBar; GETREF(LayersBar)
-	PRI Sprites mSprites; GETREF(Sprites)
+	PRI Brush mBrush; GET_R(Brush)
+	PRI MenuBar mMenuBar; GET_R(MenuBar)
+	PRI InfoBar mInfoBar; GET_R(InfoBar)
+	PRI ToolsBar mToolsBar; GET_R(ToolsBar)
+	PRI LayersBar mLayersBar; GET_R(LayersBar)
+	PRI Sprites mSprites; GET_R(Sprites)
 
-	PRI std::list<GameObject*> mSelectedTiles; GETREF(SelectedTiles)
+	PRI std::list<GameObject*> mSelectedTiles; GET_R(SelectedTiles)
 
 	PRI u32 mLayer = 0; GET_SET(Layer)
 	PRI std::vector<Grid> mGrids;

@@ -22,8 +22,8 @@ PUB
 class Line: public Shape
 {
     GENERATE_METADATA(Line)
-    PRO Vector3 mStart; GETREF_CONST_SET(Start)
-    PRO Vector3 mEnd; GETREF_CONST_SET(End)
+    PRO Vector3 mStart; GET_RC_SET(Start)
+    PRO Vector3 mEnd; GET_RC_SET(End)
 
 PUB
     Line() { mVerticesCount = 2; }
@@ -67,8 +67,8 @@ PUB
 // class Rectangle: public Shape
 // {
 //     GENERATE_METADATA(Rectangle)
-//     PRO Vector3 mLeftTop; GETREF_CONST_SET(LeftTop)
-//     PRO Vector3 mSize; GETREF_CONST_SET(Size)
+//     PRO Vector3 mLeftTop; GET_RC_SET(LeftTop)
+//     PRO Vector3 mSize; GET_RC_SET(Size)
 
 // PUB
 //     Rectangle() { mVerticesCount = 8; }
@@ -118,8 +118,8 @@ PUB
 class Rectangle: public Shape
 {
     GENERATE_METADATA(Rectangle)
-    PRO Vector3 mLeftTop; GETREF_CONST_SET(LeftTop)
-    PRO Vector2 mSize; GETREF_CONST_SET(Size)
+    PRO Vector3 mLeftTop; GET_RC_SET(LeftTop)
+    PRO Vector2 mSize; GET_RC_SET(Size)
 
 PUB
     Rectangle() { mVerticesCount = 4; }

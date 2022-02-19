@@ -18,8 +18,8 @@ class Grid: public EditorUIElement
 {
     GENERATE_METADATA(Grid)
 	PRI std::vector<std::vector<CellGrid>> mCellsGrid;
-	PRI Vector2 mGridSize; GETREF_CONST(GridSize)
-	PRI Vector2 mTileSize; GETREF_CONST(TileSize)
+	PRI Vector2 mGridSize; GET_RC(GridSize)
+	PRI Vector2 mTileSize; GET_RC(TileSize)
 
 PUB
 

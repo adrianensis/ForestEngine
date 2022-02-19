@@ -116,24 +116,24 @@ void __customMain()
 #define GENERATE_GET(BaseName)        \
 	PUB GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
-#define GENERATE_GETREF(BaseName) \
+#define GENERATE_GET_R(BaseName) \
 	PUB ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; };
 
-#define GENERATE_GETREF_CONST(BaseName) \
+#define GENERATE_GET_RC(BaseName) \
 	PUB ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define GENERATE_SET(BaseName) \
 	PUB void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
 
 #define GET(BaseName) GENERATE_GET(BaseName)
-#define GETREF(BaseName) GENERATE_GETREF(BaseName)
-#define GETREF_CONST(BaseName) GENERATE_GETREF_CONST(BaseName)
+#define GET_R(BaseName) GENERATE_GET_R(BaseName)
+#define GET_RC(BaseName) GENERATE_GET_RC(BaseName)
 
 #define SET(BaseName) GENERATE_SET(BaseName)
 
 #define GET_SET(BaseName) GENERATE_GET(BaseName) GENERATE_SET(BaseName)
-#define GETREF_SET(BaseName) GENERATE_GETREF(BaseName) GENERATE_SET(BaseName)
-#define GETREF_CONST_SET(BaseName) GENERATE_GETREF_CONST(BaseName) GENERATE_SET(BaseName)
+#define GET_R_SET(BaseName) GENERATE_GET_R(BaseName) GENERATE_SET(BaseName)
+#define GET_RC_SET(BaseName) GENERATE_GET_RC(BaseName) GENERATE_SET(BaseName)
 
 /*
 #define FUNCTION_MEMBER(ReturnClassName, FuncName, VirtualMacro, ModifiersMacro, Visibility, ...)\

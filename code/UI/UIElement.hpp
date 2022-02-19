@@ -37,7 +37,7 @@ PUB
 class UIElement: public GameObject
 {
     GENERATE_METADATA(UIElement)
-	PRO UIElementConfig mConfig; GETREF_CONST_SET(Config)
+	PRO UIElementConfig mConfig; GET_RC_SET(Config)
 
 	PRO FunctorUIElement mOnPressedFunctor;
 	PRO FunctorUIElement mOnReleasedFunctor;

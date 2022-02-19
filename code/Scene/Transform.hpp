@@ -8,9 +8,9 @@ class TransformState : public ObjectBase
 {
     GENERATE_METADATA(TransformState)
 
-	PUB Vector3 mWorldPosition; GETREF_CONST(WorldPosition)
-	PUB Vector3 mRotation; GETREF_CONST(Rotation)
-	PUB Vector3 mScale; GETREF_CONST(Scale)
+	PUB Vector3 mWorldPosition; GET_RC(WorldPosition)
+	PUB Vector3 mRotation; GET_RC(Rotation)
+	PUB Vector3 mScale; GET_RC(Scale)
 
 	TransformState() = default;
 	TransformState(const Transform& transform);
@@ -38,9 +38,9 @@ class Transform: public Component
 	//Transform* mParent;
 	PRI Transform* mParent = nullptr; GET_SET(Parent);
 
-	PRI Vector3 mLocalPosition; GETREF_CONST(LocalPosition)
-	PRI Vector3 mRotation; GETREF_CONST(Rotation)
-	PRI Vector3 mScale; GETREF_CONST(Scale)
+	PRI Vector3 mLocalPosition; GET_RC(LocalPosition)
+	PRI Vector3 mRotation; GET_RC(Rotation)
+	PRI Vector3 mScale; GET_RC(Scale)
 	PRI bool mAffectedByProjection = false; GET_SET(AffectedByProjection)
 
 PUB
