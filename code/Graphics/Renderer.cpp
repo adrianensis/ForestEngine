@@ -45,7 +45,7 @@ void Renderer::onComponentAdded()
 	mTransformState = getGameObject()->getTransform()->getTransformState();
 
 	// Force vertices generatiin
-	getVertices(true);
+	update();
 }
 
 bool Renderer::hasAnimations() const { return mAnimations.size() > 0; };
@@ -114,10 +114,13 @@ bool Renderer::getIsWorldSpace() const
 	return getGameObject()->getTransform()->getAffectedByProjection();
 }
 
-const Matrix4& Renderer::getRendererModelMatrix(bool force /*= false*/) const
+void Renderer::update()
 {
 	TransformState currentTransformState = getGameObject()->getTransform()->getTransformState();
-	if (!currentTransformState.eq(mTransformState) || (!mRenderereModelMatrixGenerated) || force)
+
+	bool transformChanged = !currentTransformState.eq(mTransformState);
+
+	if (transformChanged || (!mRenderereModelMatrixGenerated))
 	{
 		mRenderereModelMatrix.translation(mPositionOffset);
 		mRenderereModelMatrix.mul(getGameObject()->getTransform()->getModelMatrix());
@@ -125,16 +128,8 @@ const Matrix4& Renderer::getRendererModelMatrix(bool force /*= false*/) const
 		mRenderereModelMatrixGenerated = true;
 	}
 
-	return mRenderereModelMatrix;
-}
-
-const std::vector<Vector3> &Renderer::getVertices(bool force /*= false*/) const
-{
-	TransformState currentTransformState = getGameObject()->getTransform()->getTransformState();
-	if (!currentTransformState.eq(mTransformState) || mVerticesDirty || force)
+	if (transformChanged || mVerticesDirty)
 	{
-		getRendererModelMatrix(force);
-
 		FOR_ARRAY(i, mVertices)
 		{
 			Vector3 vertexPosition(
@@ -152,10 +147,24 @@ const std::vector<Vector3> &Renderer::getVertices(bool force /*= false*/) const
 			mVertices[i] = vertexPosition;
 		}
 
-		mTransformState = currentTransformState;
 		mVerticesDirty = false;
 	}
 
+	if(transformChanged)
+	{
+		mTransformState = currentTransformState;
+	}
+
+	updateAnimation();
+}
+
+const Matrix4& Renderer::getRendererModelMatrix() const
+{
+	return mRenderereModelMatrix;
+}
+
+const std::vector<Vector3> &Renderer::getVertices() const
+{
 	return mVertices;
 }
 

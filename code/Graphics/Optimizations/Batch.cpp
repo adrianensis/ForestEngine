@@ -310,7 +310,7 @@ void Batch::internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::ite
 
 void Batch::addToVertexBuffer(Renderer& renderer)
 {
-	renderer.updateAnimation();
+	renderer.update();
 
 	if(getIsInstanced())
 	{

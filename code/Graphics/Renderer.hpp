@@ -22,13 +22,13 @@ class Renderer: public Component
 	PUB void init() override;
 	PUB void onComponentAdded() override;
 
-	PRI mutable TransformState mTransformState;
+	PRI TransformState mTransformState;
 
 	// Renderer Properties
-	PRI mutable Matrix4 mRenderereModelMatrix;
-	PRI mutable bool mRenderereModelMatrixGenerated = false;
-	PRI mutable bool mVerticesDirty = true;
-	PRI mutable std::vector<Vector3> mVertices;
+	PRI Matrix4 mRenderereModelMatrix;
+	PRI bool mRenderereModelMatrixGenerated = false;
+	PRI bool mVerticesDirty = true;
+	PRI std::vector<Vector3> mVertices;
 	PRI Vector4 mColor; GET_RC_SET(Color)
 	PRI Vector3 mPositionOffset; GET(PositionOffset)
 	PRI Rectangle mRegion; GET_RC_SET(Region)
@@ -44,10 +44,12 @@ class Renderer: public Component
 	PRI Chunk* mChunk = nullptr; GET_SET(Chunk)
 	PRI Batch* mBatch = nullptr; GET_SET(Batch)
 
+	PUB void update();
+
 	PUB void setPositionOffset (const Vector3& newPositionOffset);
 	PUB bool getIsWorldSpace() const;
-	PUB const Matrix4& getRendererModelMatrix(bool force = false) const;
-	PUB const std::vector<Vector3>& getVertices(bool force = false) const;
+	PUB const Matrix4& getRendererModelMatrix() const;
+	PUB const std::vector<Vector3>& getVertices() const;
 	PUB bool hasClipRectangle() const;
 
 	// Animation
