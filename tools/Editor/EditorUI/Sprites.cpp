@@ -210,7 +210,7 @@ void Sprites::createAtlas(Material* material)
 				getUIElement<UIButton>();
 
 			Renderer* renderer = tile->getRenderer();
-			renderer->setRegion(Rectangle(j / spritesSize.x, (spritesSize.y - i - 1) / spritesSize.y, spritesTextureSize.x, spritesTextureSize.y));
+			renderer->setTextureRegion(Rectangle(j / spritesSize.x, (spritesSize.y - i - 1) / spritesSize.y, spritesTextureSize.x, spritesTextureSize.y));
 
 			tile->setOnPressedCallback([&](UIElement* uiElement)
 			{
@@ -283,7 +283,7 @@ void Sprites::refreshSpritePreview(GameObject* sprite)
         create<UIPanel>().
         getUIElement<UIPanel>();
 
-    mSpritePreview->getRenderer()->setRegion(renderer->getRegion());
+    mSpritePreview->getRenderer()->setTextureRegion(renderer->getTextureRegion());
 
     uiBuilder.
     restoreAll();
@@ -420,9 +420,9 @@ void Sprites::addAnimation(const std::string& name)
             mFrames.size(),
             true,
             false,
-            firstFrameRenderer->getRegion().getLeftTop(),
-            firstFrameRenderer->getRegion().getSize().x,
-            firstFrameRenderer->getRegion().getSize().y,
+            firstFrameRenderer->getTextureRegion().getLeftTop(),
+            firstFrameRenderer->getTextureRegion().getSize().x,
+            firstFrameRenderer->getTextureRegion().getSize().y,
             6
         );
 
@@ -470,7 +470,7 @@ void Sprites::refreshFrames()
             setMaterial(renderer->getMaterial()).
             create<UIPanel>().
             getUIElement<UIPanel>()->
-            getRenderer()->setRegion(renderer->getRegion());
+            getRenderer()->setTextureRegion(renderer->getTextureRegion());
 
             uiBuilder.
             restoreMaterial().

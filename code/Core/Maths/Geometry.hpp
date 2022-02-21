@@ -10,8 +10,8 @@ class Shape: public ObjectBase
     
     PRO u32 mVerticesCount = 0; GET(VerticesCount)
 PUB
-    virtual void serialize(JSON& json) const override { }
-	virtual void deserialize(const JSON& json) override { }
+    void serialize(JSON& json) const override { }
+	void deserialize(const JSON& json) override { }
 
     COPY(Shape)
     {
@@ -47,7 +47,7 @@ PUB
         DO_COPY(mEnd)
     }
 
-    virtual void serialize(JSON& json) const override
+    void serialize(JSON& json) const override
     {
         Shape::serialize(json);
 
@@ -55,7 +55,7 @@ PUB
         DO_SERIALIZE("end", mEnd)
     }
 
-    virtual void deserialize(const JSON& json) override
+    void deserialize(const JSON& json) override
     {
         Shape::deserialize(json);
 
@@ -98,7 +98,7 @@ PUB
 //         DO_COPY(mSize)
 //     }
 
-//     virtual void serialize(JSON& json) const override
+//     void serialize(JSON& json) const override
 //     {
 //         Shape::serialize(json);
 
@@ -106,7 +106,7 @@ PUB
 //         DO_SERIALIZE("size", mSize)
 //     }
 
-//     virtual void deserialize(const JSON& json) override
+//     void deserialize(const JSON& json) override
 //     {
 //         Shape::deserialize(json);
 
@@ -155,7 +155,7 @@ PUB
         DO_COPY(mSize)
     }
 
-    virtual void serialize(JSON& json) const override
+    void serialize(JSON& json) const override
     {
         Shape::serialize(json);
 
@@ -163,7 +163,7 @@ PUB
         DO_SERIALIZE("size", mSize)
     }
 
-    virtual void deserialize(const JSON& json) override
+    void deserialize(const JSON& json) override
     {
         Shape::deserialize(json);
 

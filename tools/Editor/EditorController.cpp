@@ -137,7 +137,7 @@ GameObject* EditorController::createTile(const Vector2& position, const Vector2&
 	renderer->setDepth(-1 * getLayer());
 
 	renderer->setMaterial(material);
-	renderer->setRegion(region);
+	renderer->setTextureRegion(region);
 
 	tile->addComponent<Renderer>(renderer);
 	

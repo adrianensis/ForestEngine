@@ -177,7 +177,7 @@ void Brush::onMouseMoved()
 void Brush::onTileSelectedFromAtlas(GameObject* tile)
 {
 	Renderer* tileRenderer = tile->getFirstComponent<Renderer>();
-	mPaintData.mRegion = tileRenderer->getRegion();
+	mPaintData.mTextureRegion = tileRenderer->getTextureRegion();
 	mPaintData.mMaterial = tileRenderer->getMaterial();
 
 	setModePaint();
@@ -247,7 +247,7 @@ void Brush::createBrushPreviewOneTile(const Vector2& brushPreviewIndex)
 		renderer->init();
 		renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
 		renderer->setMaterial(mPaintData.mMaterial);
-		renderer->setRegion(mPaintData.mRegion);
+		renderer->setTextureRegion(mPaintData.mTextureRegion);
 
 		const UIStyleEditorBrushPreview& style = UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorBrushPreview>();
 		renderer->setColor(style.mBackgroundColor);
@@ -284,7 +284,7 @@ void Brush::paintTile(const Vector2& worldPosition, const Vector2& gridPosition)
 			getEditorController()->getGrid().calculateClampedPosition(worldPosition),
 			getEditorController()->getGrid().getTileSize(),
 			mPaintData.mMaterial,
-			mPaintData.mRegion
+			mPaintData.mTextureRegion
 		)
 	);
 }

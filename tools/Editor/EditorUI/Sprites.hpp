@@ -60,6 +60,6 @@ PUB
     
     void saveSprites();
 
-    virtual void serialize(JSON& json) const override;
-    virtual void deserialize(const JSON& json) override;
+    void serialize(JSON& json) const override;
+    void deserialize(const JSON& json) override;
 };

@@ -15,8 +15,8 @@
 Renderer::Renderer()
 {
 	// texture region
-	mRegion.setLeftTop(Vector2(0.0, 0.0));
-	mRegion.setSize(Vector2(1.0, 1.0));
+	mTextureRegion.setLeftTop(Vector2(0.0, 0.0));
+	mTextureRegion.setSize(Vector2(1.0, 1.0));
 
 	mRenderDistance = 1500; // TODO : move to settings?
 }
@@ -47,8 +47,6 @@ void Renderer::onComponentAdded()
 	// Force vertices generatiin
 	update();
 }
-
-bool Renderer::hasAnimations() const { return mAnimations.size() > 0; };
 
 /**
  * Set the animation, by name.
@@ -96,8 +94,8 @@ void Renderer::updateAnimation()
 		if (hasAnimations() && mCurrentAnimation && !mCurrentAnimation->getFrames().empty())
 		{
 			const AnimationFrame& frame = mCurrentAnimation->getNextFrame();
-			mRegion.setLeftTop(frame.getPosition());
-			mRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
+			mTextureRegion.setLeftTop(frame.getPosition());
+			mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
 		}
 	}
 };
@@ -106,7 +104,7 @@ void Renderer::setPositionOffset(const Vector3& newPositionOffset)
 {
 	mPositionOffset = newPositionOffset;
 	mVerticesDirty = true;
-	mRenderereModelMatrixGenerated = false;
+	mRendererModelMatrixGenerated = false;
 };
 
 bool Renderer::getIsWorldSpace() const
@@ -120,12 +118,12 @@ void Renderer::update()
 
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 
-	if (transformChanged || (!mRenderereModelMatrixGenerated))
+	if (transformChanged || (!mRendererModelMatrixGenerated))
 	{
-		mRenderereModelMatrix.translation(mPositionOffset);
-		mRenderereModelMatrix.mul(getGameObject()->getTransform()->getModelMatrix());
+		mRendererModelMatrix.translation(mPositionOffset);
+		mRendererModelMatrix.mul(getGameObject()->getTransform()->getModelMatrix());
 
-		mRenderereModelMatrixGenerated = true;
+		mRendererModelMatrixGenerated = true;
 	}
 
 	if (transformChanged || mVerticesDirty)
@@ -137,7 +135,7 @@ void Renderer::update()
 				mMesh->getVertices()[i * 3 + 1],
 				mMesh->getVertices()[i * 3 + 2]);
 
-			vertexPosition = mRenderereModelMatrix.mulVector(Vector4(vertexPosition, 1));
+			vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
 
 			if(mUseDepth)
 			{
@@ -156,21 +154,6 @@ void Renderer::update()
 	}
 
 	updateAnimation();
-}
-
-const Matrix4& Renderer::getRendererModelMatrix() const
-{
-	return mRenderereModelMatrix;
-}
-
-const std::vector<Vector3> &Renderer::getVertices() const
-{
-	return mVertices;
-}
-
-bool Renderer::hasClipRectangle() const 
-{
-	return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON;
 }
 
 void Renderer::onDestroy()
@@ -193,7 +176,7 @@ void Renderer::serialize(JSON& json) const
 	}
 
 	DO_SERIALIZE("material", materialPath)
-	DO_SERIALIZE("region", mRegion)
+	DO_SERIALIZE("region", mTextureRegion)
 	DO_SERIALIZE("depth", mDepth)
 
     std::list<Animation> tmpList;
@@ -212,7 +195,7 @@ void Renderer::deserialize(const JSON& json)
 
 	mMaterial = MaterialManager::getInstance().loadMaterial(materialPath);
 
-	DO_DESERIALIZE("region", mRegion)
+	DO_DESERIALIZE("region", mTextureRegion)
 	DO_DESERIALIZE("depth", mDepth)
 
 	mMesh = MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>();

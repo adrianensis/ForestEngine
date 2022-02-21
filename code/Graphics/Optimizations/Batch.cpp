@@ -199,15 +199,15 @@ bool Batch::processRenderers()
 
 						addToVertexBuffer(renderer);
 
-						mMaterial->getShader()->addVector2(renderer->getClipRectangle().getLeftTop(), "clipRegionLeftTop");
-						mMaterial->getShader()->addVector2(renderer->getClipRectangle().getSize(), "clipRegionSize");
+						mMaterial->getShader()->addVector2(renderer->getClipRectangle().getLeftTop(), "clipTextureRegionLeftTop");
+						mMaterial->getShader()->addVector2(renderer->getClipRectangle().getSize(), "clipTextureRegionSize");
 
 						drawCall();
 						resizeBuffers(renderers->size());
 
 						// TODO : comment this ↓↓↓↓ to test clip rectangle
-						mMaterial->getShader()->addVector2(Vector2(), "clipRegionLeftTop");
-						mMaterial->getShader()->addVector2(Vector2(), "clipRegionSize");*/
+						mMaterial->getShader()->addVector2(Vector2(), "clipTextureRegionLeftTop");
+						mMaterial->getShader()->addVector2(Vector2(), "clipTextureRegionSize");*/
 					}
 					else
 					{
@@ -338,8 +338,8 @@ void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
 			mMesh->getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
 			mMesh->getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
 
-		Vector2 regionSize = renderer.getRegion().getSize();
-		Vector2 regionPosition = renderer.getRegion().getLeftTop();
+		Vector2 regionSize = renderer.getTextureRegion().getSize();
+		Vector2 regionPosition = renderer.getTextureRegion().getLeftTop();
 
 		Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
 

@@ -13,25 +13,17 @@ class Batch;
 class Renderer: public Component
 {
     GENERATE_METADATA(Renderer)
-	
-	PUB Renderer();
-	PUB ~Renderer() override;
-	PUB virtual void serialize(JSON& json) const override;
-	PUB virtual void deserialize(const JSON& json) override;
-	
-	PUB void init() override;
-	PUB void onComponentAdded() override;
 
 	PRI TransformState mTransformState;
 
 	// Renderer Properties
-	PRI Matrix4 mRenderereModelMatrix;
-	PRI bool mRenderereModelMatrixGenerated = false;
+	PRI Matrix4 mRendererModelMatrix; GET_RC_SET(RendererModelMatrix)
+	PRI bool mRendererModelMatrixGenerated = false;
 	PRI bool mVerticesDirty = true;
-	PRI std::vector<Vector3> mVertices;
+	PRI std::vector<Vector3> mVertices; GET_RC_SET(Vertices)
 	PRI Vector4 mColor; GET_RC_SET(Color)
 	PRI Vector3 mPositionOffset; GET(PositionOffset)
-	PRI Rectangle mRegion; GET_RC_SET(Region)
+	PRI Rectangle mTextureRegion; GET_RC_SET(TextureRegion)
 	PRI Rectangle mClipRectangle; GET_RC_SET(ClipRectangle)
 	PRI const Mesh* mMesh = nullptr; GET_SET(Mesh)
 	PRI Material* mMaterial = nullptr; GET_SET(Material)
@@ -40,26 +32,28 @@ class Renderer: public Component
 	PRI i32 mDepth = 0; GET_SET(Depth)
 	PRI bool mUseDepth = true; GET_SET(UseDepth) // overrides Z with Depth
 	PRI f32 mRenderDistance = 0.0f; GET_SET(RenderDistance)
-	
 	PRI Chunk* mChunk = nullptr; GET_SET(Chunk)
 	PRI Batch* mBatch = nullptr; GET_SET(Batch)
-
+	PRI std::map<std::string, Animation> mAnimations; GET_RC(Animations)
+	PRI Animation* mCurrentAnimation = nullptr; GET(CurrentAnimation)
+	
+	PUB Renderer();
+	PUB ~Renderer() override;
+	PUB void serialize(JSON& json) const override;
+	PUB void deserialize(const JSON& json) override;
+	
+	PUB void init() override;
+	PUB void onComponentAdded() override;
 	PUB void update();
 
 	PUB void setPositionOffset (const Vector3& newPositionOffset);
 	PUB bool getIsWorldSpace() const;
-	PUB const Matrix4& getRendererModelMatrix() const;
-	PUB const std::vector<Vector3>& getVertices() const;
-	PUB bool hasClipRectangle() const;
-
-	// Animation
-	PRI std::map<std::string, Animation> mAnimations; GET_RC(Animations)
-	PRI Animation* mCurrentAnimation = nullptr; GET(CurrentAnimation)
+	PUB bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
 
 	PUB void setCurrentAnimation(const std::string& name);
 	PUB void addAnimation(const std::string& name, const Animation& animation);
     PUB void removeAnimation(const std::string& name);
-	PUB bool hasAnimations() const;
+	PUB bool hasAnimations() const { return mAnimations.size() > 0; };
 	PUB void updateAnimation();
 
 	PUB void onDestroy() override;
