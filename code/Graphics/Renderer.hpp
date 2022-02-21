@@ -16,7 +16,6 @@ class Renderer: public Component
 
 	PRI TransformState mTransformState;
 
-	// Renderer Properties
 	PRI Matrix4 mRendererModelMatrix; GET_RC_SET(RendererModelMatrix)
 	PRI bool mRendererModelMatrixGenerated = false;
 	PRI bool mVerticesDirty = true;
@@ -25,20 +24,19 @@ class Renderer: public Component
 	PRI Vector3 mPositionOffset; GET(PositionOffset)
 	PRI Rectangle mTextureRegion; GET_RC_SET(TextureRegion)
 	PRI Rectangle mClipRectangle; GET_RC_SET(ClipRectangle)
-	PRI const Mesh* mMesh = nullptr; GET_SET(Mesh)
-	PRI Material* mMaterial = nullptr; GET_SET(Material)
 	PRI bool mInvertAxisX = false; GET_SET(InvertAxisX)
 	PRI bool mIsLineMode = false; GET_SET(IsLineMode)
 	PRI i32 mDepth = 0; GET_SET(Depth)
 	PRI bool mUseDepth = true; GET_SET(UseDepth) // overrides Z with Depth
 	PRI f32 mRenderDistance = 0.0f; GET_SET(RenderDistance)
-	PRI Chunk* mChunk = nullptr; GET_SET(Chunk)
-	PRI Batch* mBatch = nullptr; GET_SET(Batch)
 	PRI std::map<std::string, Animation> mAnimations; GET_RC(Animations)
 	PRI Animation* mCurrentAnimation = nullptr; GET(CurrentAnimation)
+
+	PRI Chunk* mChunk = nullptr; GET_SET(Chunk)
+	PRI Batch* mBatch = nullptr; GET_SET(Batch)
+	PRI const Mesh* mMesh = nullptr; GET_SET(Mesh)
+	PRI Material* mMaterial = nullptr; GET_SET(Material)
 	
-	PUB Renderer();
-	PUB ~Renderer() override;
 	PUB void serialize(JSON& json) const override;
 	PUB void deserialize(const JSON& json) override;
 	

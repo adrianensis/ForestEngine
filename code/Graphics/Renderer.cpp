@@ -12,23 +12,15 @@
 #include "Graphics/Optimizations/Batch.hpp"
 #include "Scene/Module.hpp"
 
-Renderer::Renderer()
+void Renderer::init()
 {
+	// TRACE();
+
 	// texture region
 	mTextureRegion.setLeftTop(Vector2(0.0, 0.0));
 	mTextureRegion.setSize(Vector2(1.0, 1.0));
 
 	mRenderDistance = 1500; // TODO : move to settings?
-}
-
-Renderer::~Renderer()
-{
-	//MAP_DELETE_CONTENT(mAnimations)
-}
-
-void Renderer::init()
-{
-	// TRACE();
 
 	setColor(Vector4(0, 0, 0, 1));
 
