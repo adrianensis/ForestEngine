@@ -30,7 +30,7 @@ class RenderEngine : public ISubsystem, public Singleton<RenderEngine>
 	PUB void update();	  // render
 	PUB void terminate();
 
-	PUB virtual void addComponent(Component *component) override;
+	PUB void addComponent(Component *component) override;
 	PUB Chunk *assignChunk(Renderer * renderer);
 	PUB bool frustumTestSphere(const Vector3& center, f32 radius);
 

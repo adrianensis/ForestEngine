@@ -21,11 +21,11 @@ PRO
 PUB
     UIText();
 
-	virtual void init() override;
-	virtual void initFromConfig(const UIElementConfig& config) override;
-	virtual void onDestroy() override;
+	void init() override;
+	void initFromConfig(const UIElementConfig& config) override;
+	void onDestroy() override;
 
-	virtual void setText(const std::string& text) override;
+	void setText(const std::string& text) override;
 
 	void setLayer(i32 layer)
 	{
@@ -42,5 +42,5 @@ PUB
 		return mString;
 	};
 
-    virtual void setVisibility(bool visibility) override;
+    void setVisibility(bool visibility) override;
 };

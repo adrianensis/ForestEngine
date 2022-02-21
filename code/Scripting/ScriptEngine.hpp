@@ -13,7 +13,7 @@ class ScriptEngine: public ISubsystem, public Singleton<ScriptEngine>
 
 PUB
 	void init();
-	virtual void addComponent(Component *component) override;
+	void addComponent(Component *component) override;
 	void update();
 	void terminate();
 };

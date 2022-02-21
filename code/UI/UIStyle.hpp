@@ -38,7 +38,7 @@ class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 
 PUB
 
-	virtual ~UIStyleManager() override;
+	~UIStyleManager() override;
 	
 	void init();
 

@@ -19,7 +19,7 @@ class FunctorUIElement: public Functor<UIElementCallback>
 
 PUB
 
-	virtual void execute() override
+	void execute() override
 	{
 		if (mCallback)
 		{
@@ -89,7 +89,7 @@ PRO
 	void release(bool force = false);
 
 PUB
-	virtual void init() override;
+	void init() override;
 	virtual void initFromConfig(const UIElementConfig& config);
 	virtual void onDestroy();
 

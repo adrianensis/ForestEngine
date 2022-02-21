@@ -18,8 +18,8 @@ class UIEditableText: public UIText
 {
     GENERATE_METADATA(UIEditableText)
 PRO
-    virtual void setBackground(const UIElementConfig& config) override;
+    void setBackground(const UIElementConfig& config) override;
 
 PUB
-    virtual void init() override;
+    void init() override;
 };

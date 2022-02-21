@@ -10,7 +10,7 @@ class UIDropdownButton: public UIButton
     GENERATE_METADATA(UIDropdownButton)
 	PRI UIDropdown* mParentDropdown = nullptr; GET_SET(ParentDropdown)
 PUB
-	virtual void onPostReleased() override;
+	void onPostReleased() override;
 };
 
 class UIDropdown: public UIButton
@@ -41,10 +41,10 @@ PRI
 	void setEntriesVisibility(bool visible);
 
 PUB
-	virtual void init() override;
-	virtual void onDestroy() override;
+	void init() override;
+	void onDestroy() override;
 
-	virtual void onPostReleased() override;
+	void onPostReleased() override;
 
 	UIDropdown& addOption(const std::string & label, UIElementCallback onPressedCallback);
 	void toggle();

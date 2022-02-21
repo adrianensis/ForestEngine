@@ -27,7 +27,7 @@ class FunctorVoid: public Functor<std::function<void()>>
 {
 	GENERATE_METADATA(FunctorVoid)
 PUB	
-	virtual void execute() override
+	void execute() override
 	{
 		ASSERT_MSG(mCallback != nullptr, "Callback is null.");
 

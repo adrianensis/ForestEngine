@@ -10,19 +10,19 @@ class UIButton: public UIElement
 	PRI UIText* mText = nullptr; GET(Text)
 
 PUB
-	virtual void init() override;
-	virtual void initFromConfig(const UIElementConfig& config) override;
-	virtual void onDestroy() override;
+	void init() override;
+	void initFromConfig(const UIElementConfig& config) override;
+	void onDestroy() override;
 
 	void onLabelDestroy();
 
-	virtual void setText(const std::string& text) override;
-	virtual void setVisibility(bool visibility) override;
+	void setText(const std::string& text) override;
+	void setVisibility(bool visibility) override;
 };
 
 class UIToggleButton: public UIButton
 {
     GENERATE_METADATA(UIToggleButton)
 PUB
-	virtual void init() override;
+	void init() override;
 };

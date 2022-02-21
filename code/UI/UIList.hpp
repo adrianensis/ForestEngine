@@ -30,12 +30,12 @@ PRI
 	void setEntriesVisibility(bool visible);
 
 PUB
-	virtual void init() override;
-	virtual void initFromConfig(const UIElementConfig& config) override;
-	virtual void onDestroy() override;
+	void init() override;
+	void initFromConfig(const UIElementConfig& config) override;
+	void onDestroy() override;
 
 	UIList& addOption(const std::string & label, UIElementCallback onPressedCallback);
 
 	void toggle();
-	virtual void onScroll(f32 scroll) override;
+	void onScroll(f32 scroll) override;
 };
