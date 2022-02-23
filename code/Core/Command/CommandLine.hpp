@@ -11,7 +11,7 @@ class CommandFunctor: public Functor<CommandCallback>
 {
 	GENERATE_METADATA(CommandFunctor)
 	
-    PRI Command mCommand; GET_R_SET(Command);
+    PRI Command mCommand;
 
 public:
 
@@ -30,13 +30,14 @@ public:
         DO_COPY(mCommand)
 	}
 
+	GET_R_SET(Command)
 };
 
 class CommandLine: public ObjectBase, public Singleton<CommandLine>
 {
 	GENERATE_METADATA(CommandLine)
     PRI std::map<std::string, CommandFunctor> mCommandsMap;
-	PRI std::string mBuffer; GET_RC(Buffer)
+	PRI std::string mBuffer;
 
 	PRI std::list<std::string> mHistory;
 	PRI std::list<std::string>::iterator mHistoryIterator;
@@ -57,4 +58,6 @@ public:
 	void open();
 	void close();
     void toggle();
+
+	GET_RC(Buffer)
 };

@@ -9,10 +9,10 @@ class Component: public ObjectBase
 	PRI bool mIsActive = false;
 	PRI bool mIsStatic = false;
 
-	PRI GameObject* mGameObject; GET_SET(GameObject)
-	PRI bool mAlreadyAddedToEngine = false; GET_SET(AlreadyAddedToEngine)
-	PRI bool mIsPendingToBeDestroyed = false; GET(IsPendingToBeDestroyed)
-	PRI bool mIsDestroyed = false; GET(IsDestroyed)
+	PRI GameObject* mGameObject;
+	PRI bool mAlreadyAddedToEngine = false;
+	PRI bool mIsPendingToBeDestroyed = false;
+	PRI bool mIsDestroyed = false;
 
 public:
 	Component();
@@ -45,4 +45,9 @@ public:
 
 	void serialize(JSON& json) const override;
 	void deserialize(const JSON& json) override;
+
+	GET_SET(GameObject)
+	GET_SET(AlreadyAddedToEngine)
+	GET(IsPendingToBeDestroyed)
+	GET(IsDestroyed)
 };

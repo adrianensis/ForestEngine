@@ -8,9 +8,11 @@ class UIDropdown;
 class UIDropdownButton: public UIButton
 {
     GENERATE_METADATA(UIDropdownButton)
-	PRI UIDropdown* mParentDropdown = nullptr; GET_SET(ParentDropdown)
+	PRI UIDropdown* mParentDropdown = nullptr;
 public:
 	void onPostReleased() override;
+
+	GET_SET(ParentDropdown)
 };
 
 class UIDropdown: public UIButton

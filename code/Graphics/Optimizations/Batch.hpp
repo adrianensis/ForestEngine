@@ -11,9 +11,9 @@ class Batch: public ObjectBase
 
 	PRI std::list<ProxyObject<Renderer>> mProxyRenderers;
 
-	PRI Material* mMaterial = nullptr; GET(Material)
-	PRI const Mesh* mMesh = nullptr; GET(Mesh)
-	PRI bool mIsInstanced = false; GET(IsInstanced)
+	PRI Material* mMaterial = nullptr;
+	PRI const Mesh* mMesh = nullptr;
+	PRI bool mIsInstanced = false;
 	PRI std::vector<f32> mMatrices;
 
 	PRI Mesh mMeshBuilder;
@@ -31,8 +31,8 @@ class Batch: public ObjectBase
 
 	PRI bool mBinded = false;
 	PRI bool mDataSentToGPU = false;
-	PRI bool mIsWorldSpace = false; GET_SET(IsWorldSpace)
-	PRI bool mIsStatic = false; GET_SET(IsStatic)
+	PRI bool mIsWorldSpace = false;
+	PRI bool mIsStatic = false;
 
 	PRI bool mNewRendererAdded = false;
 	PRI bool mPendingDrawCall = false;
@@ -68,4 +68,10 @@ public:
 
 	void addRenderer(Renderer& renderer);
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
+
+	GET(Material)
+	GET(Mesh)
+	GET(IsInstanced)
+	GET_SET(IsWorldSpace)
+	GET_SET(IsStatic)
 };

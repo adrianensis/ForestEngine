@@ -6,8 +6,10 @@
 class EngineConfig: public ObjectBase, public Singleton<EngineConfig>
 {
 	GENERATE_METADATA(EngineConfig)
-	PRI ConfigObject mConfig; GET_RC(Config)
+	PRI ConfigObject mConfig;
 
 public:
 	void init();
+
+	GET_RC(Config)
 };

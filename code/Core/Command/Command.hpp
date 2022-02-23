@@ -5,8 +5,8 @@
 class CommandArgument: public ObjectBase
 {
     GENERATE_METADATA(CommandArgument)
-    PRI std::string mName; GET_RC_SET(Name);
-    PRI std::string mValue; GET_RC_SET(Value);
+    PRI std::string mName;
+    PRI std::string mValue;
 
 public:
 
@@ -15,14 +15,17 @@ public:
         DO_COPY(mName)
         DO_COPY(mValue)
     }
+
+    GET_RC_SET(Name)
+    GET_RC_SET(Value)
 };
 
 class Command: public ObjectBase
 {
     GENERATE_METADATA(Command)
-    PRI std::string mName; GET_RC_SET(Name);
-    PRI std::string mArgumentsString; GET_RC_SET(ArgumentsString);
-    PRI std::map<std::string, CommandArgument> mArguments; GET_RC(Arguments);
+    PRI std::string mName;
+    PRI std::string mArgumentsString;
+    PRI std::map<std::string, CommandArgument> mArguments;
 
     inline static const std::string smDefaultArgumentValue = ""; 
 
@@ -39,4 +42,8 @@ public:
         DO_COPY(mArguments)
         DO_COPY(mArgumentsString)
     }
+
+    GET_RC_SET(Name)
+    GET_RC_SET(ArgumentsString)
+    GET_RC(Arguments)
 };

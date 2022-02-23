@@ -35,7 +35,7 @@ class UIBuilder: public ObjectBase
 {
     GENERATE_METADATA(UIBuilder)
 	PRI UILayout mCurrentLayout;
-	PRI UIElementConfig mConfig; GET_RC_SET(Config)
+	PRI UIElementConfig mConfig;
 	PRI UIElementConfig mDefaultConfig;
 	PRI std::list<UIElementConfig> mConfigStack;
 	PRI UIElementConfig mLastConfig;
@@ -100,4 +100,6 @@ public:
 	{
 		return dynamic_cast<T *>(getUIElement());
 	}
+
+	GET_RC_SET(Config)
 };

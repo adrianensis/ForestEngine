@@ -9,9 +9,9 @@ class TransformState : public ObjectBase
     GENERATE_METADATA(TransformState)
 
 public:
-	Vector3 mWorldPosition; GET_RC(WorldPosition)
-	Vector3 mRotation; GET_RC(Rotation)
-	Vector3 mScale; GET_RC(Scale)
+	Vector3 mWorldPosition;
+	Vector3 mRotation;
+	Vector3 mScale;
 
 	TransformState() = default;
 	TransformState(const Transform& transform);
@@ -22,6 +22,10 @@ public:
 			mRotation.eq(rhs.mRotation, eps) &&
 			mScale.eq(rhs.mScale, eps);
 	}
+
+	GET_RC(WorldPosition)
+	GET_RC(Rotation)
+	GET_RC(Scale)
 };
 
 class Transform: public Component
@@ -37,12 +41,12 @@ class Transform: public Component
 	PRI bool mModelMatrixGenerated = false;
 
 	//Transform* mParent;
-	PRI Transform* mParent = nullptr; GET_SET(Parent);
+	PRI Transform* mParent = nullptr;
 
-	PRI Vector3 mLocalPosition; GET_RC(LocalPosition)
-	PRI Vector3 mRotation; GET_RC(Rotation)
-	PRI Vector3 mScale; GET_RC(Scale)
-	PRI bool mAffectedByProjection = false; GET_SET(AffectedByProjection)
+	PRI Vector3 mLocalPosition;
+	PRI Vector3 mRotation;
+	PRI Vector3 mScale;
+	PRI bool mAffectedByProjection = false;
 
 public:
 	static const Vector3 smRight;
@@ -89,4 +93,10 @@ public:
 
 	void serialize(JSON& json) const override;
 	void deserialize(const JSON& json) override;
+
+	GET_SET(Parent)
+	GET_RC(LocalPosition)
+	GET_RC(Rotation)
+	GET_RC(Scale)
+	GET_SET(AffectedByProjection)
 };

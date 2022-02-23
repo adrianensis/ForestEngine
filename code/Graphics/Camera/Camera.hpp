@@ -28,10 +28,10 @@ class Camera: public Component
 	PRI f32 mAspect = 0.0f;
 	PRI f32 mFov = 0.0f;
 	
-	PRI bool mIsOrtho = false; GET(IsOrtho)
+	PRI bool mIsOrtho = false;
 
-	PRI Frustum mFrustum; GET_RC(Frustum)
-	PRI f32 mZoom = 1.0f; GET(Zoom)
+	PRI Frustum mFrustum;
+	PRI f32 mZoom = 1.0f;
 
 	PRI TransformState mTransformState;
 
@@ -66,4 +66,8 @@ public:
 		mZoom = 1;
 		setZoom(mZoom);
 	};
+
+	GET(IsOrtho)
+	GET_RC(Frustum)
+	GET(Zoom)
 };

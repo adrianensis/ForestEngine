@@ -8,9 +8,9 @@ class UIGroup: public ObjectBase
     GENERATE_METADATA(UIGroup)
 
 public:
-	std::string mName; GET_RC(Name)
-	bool mVisible = false; GET(Visible)
-	std::list<UIElement *> mUIElements; GET_RC(UIElements);
+	std::string mName;
+	bool mVisible = false;
+	std::list<UIElement *> mUIElements;
 	
 	void init();
 
@@ -19,4 +19,8 @@ public:
     void destroyUIElement(UIElement * uiElement);
 	void destroyAllUIElements();
 	void setVisibility(bool visibility);
+
+	GET_RC(Name)
+	GET(Visible)
+	GET_RC(UIElements)
 };

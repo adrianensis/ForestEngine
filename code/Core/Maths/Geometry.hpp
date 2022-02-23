@@ -8,7 +8,7 @@ class Shape: public ObjectBase
 {
     GENERATE_METADATA(Shape)
     
-    PRO u32 mVerticesCount = 0; GET(VerticesCount)
+    PRO u32 mVerticesCount = 0;
 public:
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
@@ -17,13 +17,15 @@ public:
     {
         DO_COPY(mVerticesCount)
     }
+
+    GET(VerticesCount)
 };
 
 class Line: public Shape
 {
     GENERATE_METADATA(Line)
-    PRO Vector3 mStart; GET_RC_SET(Start)
-    PRO Vector3 mEnd; GET_RC_SET(End)
+    PRO Vector3 mStart;
+    PRO Vector3 mEnd;
 
 public:
     Line() { mVerticesCount = 2; }
@@ -62,6 +64,9 @@ public:
         DO_DESERIALIZE("start", mStart)
         DO_DESERIALIZE("end", mEnd)
     }
+
+    GET_RC_SET(Start)
+    GET_RC_SET(End)
 };
 
 // class Rectangle: public Shape
@@ -118,8 +123,8 @@ public:
 class Rectangle: public Shape
 {
     GENERATE_METADATA(Rectangle)
-    PRO Vector3 mLeftTop; GET_RC_SET(LeftTop)
-    PRO Vector2 mSize; GET_RC_SET(Size)
+    PRO Vector3 mLeftTop;
+    PRO Vector2 mSize;
 
 public:
     Rectangle() { mVerticesCount = 4; }
@@ -170,6 +175,9 @@ public:
         DO_DESERIALIZE("left_top", mLeftTop);
         DO_DESERIALIZE("size", mSize);
     }
+
+    GET_RC_SET(LeftTop)
+    GET_RC_SET(Size)
 };
 
 class Geometry

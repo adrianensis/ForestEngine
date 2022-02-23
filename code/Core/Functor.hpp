@@ -7,7 +7,8 @@ template <class T>
 class Functor: public ObjectBase
 {
 	GENERATE_METADATA(Functor<T>)
-	PRO T mCallback; SET(Callback)
+protected:
+	T mCallback; 
 
 public:
 	virtual void execute() = 0;
@@ -21,6 +22,8 @@ public:
 	/*bool operator== (const Functor& functor) const{
 	   return this == &functor;
 	}*/
+
+	SET(Callback)
 };
 
 class FunctorVoid: public Functor<std::function<void()>>

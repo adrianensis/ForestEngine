@@ -6,12 +6,12 @@ class GameObject;
 class Scene: public ObjectBase
 {
     GENERATE_METADATA(Scene)
-	PRI std::list<GameObject *> mGameObjects; GET(GameObjects);
-	PRI std::list<GameObject *> mNewGameObjects; GET(NewGameObjects);
-	PRI GameObject* mCameraGameObject; GET_SET(CameraGameObject)
+	PRI std::list<GameObject *> mGameObjects;
+	PRI std::list<GameObject *> mNewGameObjects;
+	PRI GameObject* mCameraGameObject;
 
-	PRI f32 mSize = 0.0f; GET(Size)
-	PRI std::string mPath; GET(Path)
+	PRI f32 mSize = 0.0f;
+	PRI std::string mPath;
 
 	PRI ConfigObject mLoadSceneConfig;
 
@@ -39,4 +39,10 @@ public:
 
 	bool thereAreNewGameObjects() const;
 	void flushNewGameObjects();
+
+	GET(GameObjects)
+	GET(NewGameObjects)
+	GET_SET(CameraGameObject)
+	GET(Size)
+	GET(Path)
 };

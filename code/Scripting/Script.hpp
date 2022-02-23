@@ -8,7 +8,7 @@ class Script: public Component
 {
     GENERATE_METADATA(Script)
 private:
-	bool mFirstUpdateDone = false; GET(FirstUpdateDone)
+	bool mFirstUpdateDone = false;
 
 public:
 	virtual void init();
@@ -24,4 +24,6 @@ public:
 	{
 		mFirstUpdateDone = true;
 	}
+
+	GET(FirstUpdateDone)
 };

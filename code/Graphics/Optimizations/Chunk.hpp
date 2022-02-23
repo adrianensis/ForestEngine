@@ -10,9 +10,9 @@ class Chunk: public ObjectBase
 	PRI std::list<Renderer *> * mRenderers;
 	PRI Vector3 mLeftTop;
 	PRI f32 mSize = 0.0f;
-	PRI bool mIsLoaded = false; GET(IsLoaded)
-	PRI Vector3 mCenter; GET(Center)
-	PRI f32 mRadius = 0.0f; GET(Radius)
+	PRI bool mIsLoaded = false;
+	PRI Vector3 mCenter;
+	PRI f32 mRadius = 0.0f;
 
 public:
 	~Chunk() override;
@@ -24,4 +24,8 @@ public:
 	bool containsRenderer(const Renderer *renderer, f32 epsilon = 0.0f) const;
 	bool containsRendererSphere(const Renderer *renderer) const;
 	void addRenderer(Renderer * renderer);
+
+	GET(IsLoaded)
+	GET(Center)
+	GET(Radius)
 };

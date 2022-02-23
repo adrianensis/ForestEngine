@@ -63,7 +63,7 @@ class ShapeBatchRendererMap: public ObjectBase
     GENERATE_METADATA(ShapeBatchRendererMap)
 	
 	PRI std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
-	PRI bool mIsWorldSpace = true; GET_SET(IsWorldSpace)
+	PRI bool mIsWorldSpace = true;
 
 public:
 	void render();
@@ -82,4 +82,6 @@ public:
 
 		mShapeBatchMap.at(shapeClassId)->add<T>(shape, color);
 	}
+
+	GET_SET(IsWorldSpace)
 };

@@ -114,16 +114,16 @@ void __customMain()
 #define SETTER_TYPE_FROM_VAR(Var) SETTER_TYPE(decltype(Var))
 
 #define GENERATE_GET(BaseName)        \
-	PUB GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
+	GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
 #define GENERATE_GET_R(BaseName) \
-	PUB ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; };
+	ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; };
 
 #define GENERATE_GET_RC(BaseName) \
-	PUB ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
+	ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define GENERATE_SET(BaseName) \
-	PUB void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
+	void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
 
 #define GET(BaseName) GENERATE_GET(BaseName)
 #define GET_R(BaseName) GENERATE_GET_R(BaseName)

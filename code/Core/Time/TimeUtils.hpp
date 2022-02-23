@@ -12,7 +12,7 @@ class TimeMark: public ObjectBase
 	PRI std::chrono::milliseconds mDeltaTimeChronoDuration;
 	PRI std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
 	PRI std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
-	PRI bool mIsStarted = false; GET(IsStarted)
+	PRI bool mIsStarted = false;
 
 public:
 	void init();
@@ -30,6 +30,8 @@ public:
 		DO_COPY(mStartTime)
 		DO_COPY(mLastTime)
 	}
+
+	GET(IsStarted)
 };
 
 class Time: public ObjectBase, public Singleton<Time>

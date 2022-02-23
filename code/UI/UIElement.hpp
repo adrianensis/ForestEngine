@@ -37,7 +37,7 @@ public:
 class UIElement: public GameObject
 {
     GENERATE_METADATA(UIElement)
-	PRO UIElementConfig mConfig; GET_RC_SET(Config)
+	PRO UIElementConfig mConfig;
 
 	PRO FunctorUIElement mOnPressedFunctor;
 	PRO FunctorUIElement mOnReleasedFunctor;
@@ -47,18 +47,17 @@ class UIElement: public GameObject
 	PRO FunctorUIElement mOnTextChangedFunctor;
 	PRO FunctorUIElement mOnFocusLostFunctor;
 
-	PRO Renderer* mRenderer = nullptr; GET(Renderer)
+	PRO Renderer* mRenderer = nullptr;
 	//PRI Collider* mCollider = nullptr; GET(Collider)
-	PRO std::string mInputString; GET(InputString)
-	PRO bool mConsumeInput = false; GET_SET(ConsumeInput)
-	PRO bool mPressed = false; GET(Pressed)
-	PRO bool mCanToggle = false; GET(CanToggle)
-	PRO bool mReleaseOnSameGroupPressed = false; GET_SET(ReleaseOnSameGroupPressed)
-	PRO bool mToggled = false; GET(Toggled)
-    PRO bool mOnlyReleaseOnClickOutside = false; GET(OnlyReleaseOnClickOutside)
+	PRO std::string mInputString;
+	PRO bool mConsumeInput = false;
+	PRO bool mPressed = false;
+	PRO bool mCanToggle = false;
+	PRO bool mReleaseOnSameGroupPressed = false;
+	PRO bool mToggled = false;
+    PRO bool mOnlyReleaseOnClickOutside = false;
 
-PRO
-
+protected:
     void subscribeToKeyEvents();
 	void subscribeToCharEvents();
 	void subscribeToMouseEvents();
@@ -129,4 +128,14 @@ public:
 
 	virtual void setVisibility(bool visibility);
 	bool isVisible();
+
+	GET_RC_SET(Config)
+	GET(Renderer)
+	GET(InputString)
+	GET_SET(ConsumeInput)
+	GET(Pressed)
+	GET(CanToggle)
+	GET_SET(ReleaseOnSameGroupPressed)
+	GET(Toggled)
+	GET(OnlyReleaseOnClickOutside)
 };

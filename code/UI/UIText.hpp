@@ -11,7 +11,7 @@ class UIText: public UIElement
 	PRI Vector2 mSize;
 	PRI std::string mString;
 	PRI std::vector<Renderer *> mFontRenderers;
-    PRI bool mIsEditable = false; GET(IsEditable)
+    PRI bool mIsEditable = false;
     PRO UIPanel* mBackground = nullptr;
 
 PRO
@@ -27,20 +27,10 @@ public:
 
 	void setText(const std::string& text) override;
 
-	void setLayer(i32 layer)
-	{
-		mLayer = layer;
-	};
-
-	void setSize(const Vector2& size)
-	{
-		mSize = size;
-	};
-
-	const std::string& getText() const
-	{
-		return mString;
-	};
-
     void setVisibility(bool visibility) override;
+
+	GET(IsEditable)
+	GET_RC(String)
+	SET(Size)
+	SET(Layer)
 };

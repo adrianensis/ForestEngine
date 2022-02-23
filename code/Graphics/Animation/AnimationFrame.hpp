@@ -5,9 +5,9 @@
 class AnimationFrame: public ObjectBase
 {
     GENERATE_METADATA(AnimationFrame)
-	PRI Vector2 mPosition; GET(Position)
-	PRI f32 mWidth = 0.0f; GET(Width)
-	PRI f32 mHeight = 0.0f; GET(Height)
+	PRI Vector2 mPosition;
+	PRI f32 mWidth = 0.0f;
+	PRI f32 mHeight = 0.0f;
 
 public:
 	void init(const Vector2& position, f32 width, f32 height);
@@ -21,4 +21,8 @@ public:
 
     void serialize(JSON& json) const override;
     void deserialize(const JSON& json) override;
+
+    GET(Position)
+    GET(Width)
+    GET(Height)
 };

@@ -35,7 +35,7 @@ class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 	GENERATE_METADATA(UIStyleManager)
 	
 private:
-	UIStyle mDefaultStyle; GET_RC(DefaultStyle);
+	UIStyle mDefaultStyle;
 	std::map<ClassId, UIStyle*> mStyles;
 
 public:
@@ -68,4 +68,6 @@ public:
 		
 		return getStyle<T>();
 	}
+
+	GET_RC(DefaultStyle)
 };

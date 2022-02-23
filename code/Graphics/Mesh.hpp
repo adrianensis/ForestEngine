@@ -5,14 +5,14 @@
 class Mesh: public ObjectBase
 {
     GENERATE_METADATA(Mesh)
-	PRI std::vector<f32> mVertices; GET_RC(Vertices)
-	PRI std::vector<f32> mNormals; GET_RC(Normals)
-	PRI std::vector<f32> mTextureCoordinates; GET_RC(TextureCoordinates)
-	PRI std::vector<f32> mColors; GET_RC(Colors)
-	PRI std::vector<u16> mFaces; GET_RC(Faces)
+	PRI std::vector<f32> mVertices;
+	PRI std::vector<f32> mNormals;
+	PRI std::vector<f32> mTextureCoordinates;
+	PRI std::vector<f32> mColors;
+	PRI std::vector<u16> mFaces;
 
-	PRI u32 mVertexCount = 0; GET(VertexCount)
-	PRI u32 mFacesCount = 0; GET(FacesCount)
+	PRI u32 mVertexCount = 0;
+	PRI u32 mFacesCount = 0;
 
 PRI
 	static Mesh *smRectangle;
@@ -39,4 +39,12 @@ public:
 	Mesh *copyFaces(const Mesh* other);
 
 	void clear();
+
+	GET_RC(Vertices)
+	GET_RC(Normals)
+	GET_RC(TextureCoordinates)
+	GET_RC(Colors)
+	GET_RC(Faces)
+	GET(VertexCount)
+	GET(FacesCount)
 };

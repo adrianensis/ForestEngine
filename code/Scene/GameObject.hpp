@@ -14,13 +14,13 @@ class GameObject: public ObjectBase
 	PRI std::map<ClassId, std::list<Component *> *> mComponentsMap;
 	PRI bool mIsActive = false;
 
-	PRI Scene* mScene = nullptr; GET_SET(Scene)
-	PRI bool mIsStatic = false; GET_SET(IsStatic)
-	PRI Transform* mTransform = nullptr; GET(Transform)
-	PRI std::string mTag; GET_SET(Tag)
-	PRI bool mIsPendingToBeDestroyed = false; GET(IsPendingToBeDestroyed)
-	PRI bool mIsDestroyed = false; GET(IsDestroyed)
-	PRI bool mShouldPersist = false; GET_SET(ShouldPersist)
+	PRI Scene* mScene = nullptr;
+	PRI bool mIsStatic = false;
+	PRI Transform* mTransform = nullptr;
+	PRI std::string mTag;
+	PRI bool mIsPendingToBeDestroyed = false;
+	PRI bool mIsDestroyed = false;
+	PRI bool mShouldPersist = false;
 
 PRI
 	const std::list<Component *> *getComponents(ClassId classId) const;
@@ -80,4 +80,12 @@ public:
 
 	void serialize(JSON& json) const override;
 	void deserialize(const JSON& json) override;
+
+	GET_SET(Scene)
+	GET_SET(IsStatic)
+	GET(Transform)
+	GET_SET(Tag)
+	GET(IsPendingToBeDestroyed)
+	GET(IsDestroyed)
+	GET_SET(ShouldPersist)
 };

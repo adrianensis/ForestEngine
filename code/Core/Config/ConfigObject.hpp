@@ -14,7 +14,7 @@
 class ConfigObject: public ObjectBase
 {
     GENERATE_METADATA(ConfigObject)
-	PRI JSON mJson; GET_RC_SET(Json);
+	PRI JSON mJson;
 
 public:
 	void init();
@@ -25,4 +25,6 @@ public:
 	void writeToJsonFile(const std::string& path);
 
 	const JSON& at(const std::string& key) const { return mJson.at(key); }
+
+	GET_RC_SET(Json)
 };

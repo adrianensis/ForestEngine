@@ -8,11 +8,11 @@ class Shader;
 class Material: public ObjectBase
 {
     GENERATE_METADATA(Material)
-	PRI Vector4 mColor; GET_SET(Color)
-	PRI Shader* mShader = nullptr; GET_SET(Shader);
-	PRI Texture* mTexture = nullptr; GET_SET(Texture);
-	PRI bool mAlphaEnabled = false; GET_SET(AlphaEnabled)
-	PRI bool mHasBorder = false; GET_SET(HasBorder)
+	PRI Vector4 mColor;
+	PRI Shader* mShader = nullptr;
+	PRI Texture* mTexture = nullptr;
+	PRI bool mAlphaEnabled = false;
+	PRI bool mHasBorder = false;
 
 public:
 	Material();
@@ -23,4 +23,10 @@ public:
 
 	void serialize(JSON& json) const override;
 	void deserialize(const JSON& json) override;
+
+	GET_SET(Color)
+	GET_SET(Shader)
+	GET_SET(Texture)
+	GET_SET(AlphaEnabled)
+	GET_SET(HasBorder)
 };

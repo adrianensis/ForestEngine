@@ -14,11 +14,15 @@ class Timer: public ObjectBase
 {
     GENERATE_METADATA(Timer)
 private:
-	f32 mDuration = 0.0f; GET(Duration)
-	f32 mTimeCounter = 0.0f; GET_SET(TimeCounter)
-	TimerDurationType mDurationType; GET(DurationType)
+	f32 mDuration = 0.0f;
+	f32 mTimeCounter = 0.0f;
+	TimerDurationType mDurationType;
 public:
 	FunctorVoid mFunctor;
+
+	GET(Duration)
+	GET_SET(TimeCounter)
+	GET(DurationType)
 
 public:
 	void init(f32 duration, TimerDurationType durationType, std::function<void()> callback);

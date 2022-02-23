@@ -4,11 +4,11 @@
 class Texture: public ObjectBase
 {
     GENERATE_METADATA(Texture)
-	PRI u32 mTextureId = -1; GET(TextureId)
-	PRI byte* mData = nullptr; GET(Data)
-	PRI u32 mWidth = 0; GET(Width)
-	PRI u32 mHeight = 0; GET(Height)
-	PRI std::string mPath; GET_RC(Path)
+	PRI u32 mTextureId = -1;
+	PRI byte* mData = nullptr;
+	PRI u32 mWidth = 0;
+	PRI u32 mHeight = 0;
+	PRI std::string mPath;
 
 	byte *readPNG();
 
@@ -27,4 +27,10 @@ public:
 	{
 		//mPath = json["path"];
 	}
+
+	GET(TextureId)
+	GET(Data)
+	GET(Width)
+	GET(Height)
+	GET_RC(Path)
 };

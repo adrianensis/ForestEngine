@@ -6,11 +6,11 @@
 class Animation: public ObjectBase
 {
     GENERATE_METADATA(Animation)
-    PRI std::string mName; GET_RC_SET(Name)
-	PRI std::vector<AnimationFrame> mFrames; GET_RC(Frames);
+    PRI std::string mName;
+	PRI std::vector<AnimationFrame> mFrames;
 	PRI u32 mCurrentFrameNumber = 0;
 	PRI f32 mTimeAccumulator = 0.0f;
-	PRI f32 mSpeed = 0.0f; GET_SET(Speed)
+	PRI f32 mSpeed = 0.0f;
 
 public:
 	Animation();
@@ -49,4 +49,8 @@ public:
 
     void serialize(JSON& json) const override;
     void deserialize(const JSON& json) override;
+
+	GET_RC_SET(Name)
+	GET_RC(Frames)
+	GET_SET(Speed)
 };
