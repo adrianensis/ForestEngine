@@ -1,11 +1,6 @@
 #include "Core/File/File.hpp"
 #include "Core/Log/Log.hpp"
 
-void File::init()
-{
-	TRACE()
-}
-
 void File::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
 {
 	std::ifstream file;

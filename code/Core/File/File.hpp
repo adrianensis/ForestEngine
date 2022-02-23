@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Core/ObjectBase.hpp"
+#include "Core/Module.hpp"
 
-class File: public ObjectBase
+class File
 {
-    GENERATE_METADATA(File)
 public:
 	static void init();
 	static void readFile(const std::string& path, std::function<void(std::ifstream & file)> callback);

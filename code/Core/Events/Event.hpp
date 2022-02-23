@@ -8,7 +8,7 @@ class Event: public ObjectBase
 {
     GENERATE_METADATA(Event)
 
-	public:
+public:
 	f32 mDelayAmount = 0.0f;
 	TimerDurationType mDelayType;
 	ObjectBase* mInstigator = nullptr;
