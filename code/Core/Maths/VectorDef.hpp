@@ -3,7 +3,7 @@
 #include "Core/Macros.hpp"
 
 #define VECTOR_BASE_DEFINITION(vectorLength) \
-PRI\
+private:\
     void checkBoundaries(u32 index) const\
     {\
         ASSERT_MSG(index >= 0 && index < vectorLength, "Index out of bounds.");\

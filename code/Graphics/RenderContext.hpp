@@ -9,7 +9,7 @@ class Camera;
 
 class RenderContext
 {
-PRI
+private:
 	static GLFWwindow *smWindow;
 
 	static Vector2 smWindowSize;

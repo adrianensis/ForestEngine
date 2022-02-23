@@ -33,7 +33,8 @@ class TimerHandle: public ObjectBase
     GENERATE_METADATA(TimerHandle)
 	friend class TimerManager;
 
-	PRI Timer* mTimerReference = nullptr;
+private:
+	Timer* mTimerReference = nullptr;
 
 public:
 	void init(Timer * timerReference)
@@ -50,7 +51,9 @@ public:
 class TimerManager: public ObjectBase, public Singleton<TimerManager>
 {
 	GENERATE_METADATA(TimerManager)
-	PRI std::list<Timer *> mTimers;
+	
+private:
+	std::list<Timer *> mTimers;
 
 	void endTimer(Timer * timer);
 

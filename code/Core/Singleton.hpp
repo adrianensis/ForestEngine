@@ -5,12 +5,11 @@
 template <class T>
 class Singleton
 {
-PRO
-	static T *mInstance;
+private:
+	inline static T *mInstance = nullptr;
 
 public:
 	Singleton() = default;
-
 	~Singleton() = default;
 
 	static bool existsInstance()
@@ -37,6 +36,3 @@ public:
 		}
 	}
 };
-
-template <class T>
-T *Singleton<T>::mInstance = nullptr;

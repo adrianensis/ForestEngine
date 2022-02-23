@@ -7,12 +7,13 @@
 class Chunk: public ObjectBase
 {
     GENERATE_METADATA(Chunk)
-	PRI std::list<Renderer *> * mRenderers;
-	PRI Vector3 mLeftTop;
-	PRI f32 mSize = 0.0f;
-	PRI bool mIsLoaded = false;
-	PRI Vector3 mCenter;
-	PRI f32 mRadius = 0.0f;
+private:
+	std::list<Renderer *> * mRenderers;
+	Vector3 mLeftTop;
+	f32 mSize = 0.0f;
+	bool mIsLoaded = false;
+	Vector3 mCenter;
+	f32 mRadius = 0.0f;
 
 public:
 	~Chunk() override;

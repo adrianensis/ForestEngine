@@ -5,17 +5,18 @@
 class Mesh: public ObjectBase
 {
     GENERATE_METADATA(Mesh)
-	PRI std::vector<f32> mVertices;
-	PRI std::vector<f32> mNormals;
-	PRI std::vector<f32> mTextureCoordinates;
-	PRI std::vector<f32> mColors;
-	PRI std::vector<u16> mFaces;
 
-	PRI u32 mVertexCount = 0;
-	PRI u32 mFacesCount = 0;
-
-PRI
+private:
 	static Mesh *smRectangle;
+	
+	std::vector<f32> mVertices;
+	std::vector<f32> mNormals;
+	std::vector<f32> mTextureCoordinates;
+	std::vector<f32> mColors;
+	std::vector<u16> mFaces;
+
+	u32 mVertexCount = 0;
+	u32 mFacesCount = 0;
 
 public:
 	static const u32 smVertexPositionSize = 3;

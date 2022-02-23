@@ -7,7 +7,9 @@ class UIText;
 class UIButton: public UIElement
 {
     GENERATE_METADATA(UIButton)
-	PRI UIText* mText = nullptr;
+	
+private:
+	UIText* mText = nullptr;
 
 public:
 	void init() override;

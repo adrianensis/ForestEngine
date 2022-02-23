@@ -8,7 +8,9 @@ class Shape: public ObjectBase
 {
     GENERATE_METADATA(Shape)
     
-    PRO u32 mVerticesCount = 0;
+protected: 
+    u32 mVerticesCount = 0;
+
 public:
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
@@ -24,8 +26,10 @@ public:
 class Line: public Shape
 {
     GENERATE_METADATA(Line)
-    PRO Vector3 mStart;
-    PRO Vector3 mEnd;
+
+protected: 
+    Vector3 mStart;
+    Vector3 mEnd;
 
 public:
     Line() { mVerticesCount = 2; }
@@ -72,8 +76,8 @@ public:
 // class Rectangle: public Shape
 // {
 //     GENERATE_METADATA(Rectangle)
-//     PRO Vector3 mLeftTop; GET_RC_SET(LeftTop)
-//     PRO Vector3 mSize; GET_RC_SET(Size)
+//     protected: Vector3 mLeftTop; GET_RC_SET(LeftTop)
+//     protected: Vector3 mSize; GET_RC_SET(Size)
 
 // public:
 //     Rectangle() { mVerticesCount = 8; }
@@ -123,8 +127,10 @@ public:
 class Rectangle: public Shape
 {
     GENERATE_METADATA(Rectangle)
-    PRO Vector3 mLeftTop;
-    PRO Vector2 mSize;
+
+protected: 
+    Vector3 mLeftTop;
+    Vector2 mSize;
 
 public:
     Rectangle() { mVerticesCount = 4; }

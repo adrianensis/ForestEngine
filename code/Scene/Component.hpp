@@ -6,13 +6,15 @@ class GameObject;
 class Component: public ObjectBase
 {
     GENERATE_METADATA(Component)
-	PRI bool mIsActive = false;
-	PRI bool mIsStatic = false;
+	
+private:
+	bool mIsActive = false;
+	bool mIsStatic = false;
 
-	PRI GameObject* mGameObject;
-	PRI bool mAlreadyAddedToEngine = false;
-	PRI bool mIsPendingToBeDestroyed = false;
-	PRI bool mIsDestroyed = false;
+	GameObject* mGameObject;
+	bool mAlreadyAddedToEngine = false;
+	bool mIsPendingToBeDestroyed = false;
+	bool mIsDestroyed = false;
 
 public:
 	Component();

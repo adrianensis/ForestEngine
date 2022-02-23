@@ -9,33 +9,34 @@ class Camera: public Component
 {
     GENERATE_METADATA(Camera)
 
-	PRI Matrix4 mProjectionMatrix;
-	PRI mutable Matrix4 mViewMatrix;
-	PRI mutable Matrix4 mProjectionViewMatrix;
-	PRI Matrix4 mInversePVMatrix; // used in screen to world calculations.
+private:
+	Matrix4 mProjectionMatrix;
+	mutable Matrix4 mViewMatrix;
+	mutable Matrix4 mProjectionViewMatrix;
+	Matrix4 mInversePVMatrix; // used in screen to world calculations.
 
-	PRI mutable bool mViewMatrixNeedsUpdate = true;
-	PRI mutable bool mProjectionViewMatrixNeedsUpdate = true;
-	PRI mutable bool mInversePVMatrixNeedsUpdate = true;
+	mutable bool mViewMatrixNeedsUpdate = true;
+	mutable bool mProjectionViewMatrixNeedsUpdate = true;
+	mutable bool mInversePVMatrixNeedsUpdate = true;
 
-	PRI f32 mLeft = 0.0f;
-	PRI f32 mRight = 0.0f;
-	PRI f32 mBottom = 0.0f;
-	PRI f32 mTop = 0.0f;
-	PRI f32 mNear = 0.0f;
-	PRI f32 mFar = 0.0f;
+	f32 mLeft = 0.0f;
+	f32 mRight = 0.0f;
+	f32 mBottom = 0.0f;
+	f32 mTop = 0.0f;
+	f32 mNear = 0.0f;
+	f32 mFar = 0.0f;
 
-	PRI f32 mAspect = 0.0f;
-	PRI f32 mFov = 0.0f;
+	f32 mAspect = 0.0f;
+	f32 mFov = 0.0f;
 	
-	PRI bool mIsOrtho = false;
+	bool mIsOrtho = false;
 
-	PRI Frustum mFrustum;
-	PRI f32 mZoom = 1.0f;
+	Frustum mFrustum;
+	f32 mZoom = 1.0f;
 
-	PRI TransformState mTransformState;
+	TransformState mTransformState;
 
-	PRI void calculateInverseMatrix(bool force = false);
+	void calculateInverseMatrix(bool force = false);
 
 public:
 	Camera();

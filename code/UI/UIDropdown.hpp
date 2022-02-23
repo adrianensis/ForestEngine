@@ -8,7 +8,10 @@ class UIDropdown;
 class UIDropdownButton: public UIButton
 {
     GENERATE_METADATA(UIDropdownButton)
-	PRI UIDropdown* mParentDropdown = nullptr;
+
+private:	
+	UIDropdown* mParentDropdown = nullptr;
+
 public:
 	void onPostReleased() override;
 
@@ -18,9 +21,9 @@ public:
 class UIDropdown: public UIButton
 {
     GENERATE_METADATA(UIDropdown)
-friend UIDropdownButton;
+	friend UIDropdownButton;
 
-PRI
+private:
 	class UIDropdownEntry: public ObjectBase
 	{
 		GENERATE_METADATA(UIDropdown::UIDropdownEntry)

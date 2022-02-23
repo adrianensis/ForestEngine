@@ -9,7 +9,7 @@ public:
 	const static u16 smColumnSize = 4;
 	const static u16 smMatrixSize = smColumnSize * smColumnSize;
 	
-PRI
+private:
 	static bool smIdentityCreated;
 	static Matrix4 smIdentity;
 

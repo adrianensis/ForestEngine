@@ -4,11 +4,12 @@
 class Texture: public ObjectBase
 {
     GENERATE_METADATA(Texture)
-	PRI u32 mTextureId = -1;
-	PRI byte* mData = nullptr;
-	PRI u32 mWidth = 0;
-	PRI u32 mHeight = 0;
-	PRI std::string mPath;
+private: 
+	u32 mTextureId = -1;
+	byte* mData = nullptr;
+	u32 mWidth = 0;
+	u32 mHeight = 0;
+	std::string mPath;
 
 	byte *readPNG();
 

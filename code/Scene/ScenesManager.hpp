@@ -7,12 +7,14 @@
 class ScenesManager: public ObjectBase, public Singleton<ScenesManager>
 {
 	GENERATE_METADATA(ScenesManager)
-	PRI std::vector<Scene *> mScenes;
-	PRI u32 mCurrentSceneIndex = 0;
 
-	PRI Scene* mCurrentScene = nullptr;
-	PRI bool mSceneHasChanged = false;
-	PRI GameObject* mGameObjectController = nullptr;
+private:
+	std::vector<Scene *> mScenes;
+	u32 mCurrentSceneIndex = 0;
+
+	Scene* mCurrentScene = nullptr;
+	bool mSceneHasChanged = false;
+	GameObject* mGameObjectController = nullptr;
 
 	void internalLoadScene();
 	void addScene(Scene * newScene);

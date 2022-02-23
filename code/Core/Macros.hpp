@@ -2,10 +2,6 @@
 
 #define NONE(...)
 
-#define PUB public:
-#define PRO protected:
-#define PRI private:
-
 #define REMOVE_REF(Class) typename std::remove_reference<Class>::type
 #define REMOVE_POINTER(Class) typename std::remove_pointer<Class>::type
 #define IS_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
@@ -62,10 +58,10 @@ void __customMain()
 	~ClassName() override = default;
 
 #define GENERATE_METADATA(...)                                                    \
-	PRI \
+	private: \
 		inline static std::string smClassName = std::string(#__VA_ARGS__);        \
 		inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName); \
-	PUB \
+	public: \
 		static ClassId getClassIdStatic()                                             \
 		{                                                                             \
 			return smClassId;                                                         \
@@ -85,7 +81,7 @@ void __customMain()
 		{                                                                             \
 			return __VA_ARGS__::getClassNameStatic();                                 \
 		};                                                                            \
-	PRI // NOTE: notice the last blank space " "
+	private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
@@ -135,27 +131,6 @@ void __customMain()
 #define GET_R_SET(BaseName) GENERATE_GET_R(BaseName) GENERATE_SET(BaseName)
 #define GET_RC_SET(BaseName) GENERATE_GET_RC(BaseName) GENERATE_SET(BaseName)
 
-/*
-#define FUNCTION_MEMBER(ReturnClassName, FuncName, VirtualMacro, ModifiersMacro, Visibility, ...)\
-Visibility:\
-VirtualMacro() ReturnClassName FuncName (__VA_ARGS__) ModifiersMacro();\
-Visibility:
-
-#define VIR() virtual
-#define OVR() override
-#define CONST() const
-#define CONST_OVR() const override
-
-#define PUB_F(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, NONE, NONE, public, __VA_ARGS__)
-#define PUB_FC(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, NONE, CONST, public, __VA_ARGS__)
-#define PUB_FO(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, NONE, OVR, public, __VA_ARGS__)
-#define PUB_FCO(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, NONE, CONST_OVR, public, __VA_ARGS__)
-#define PUB_VF(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, VIR, NONE, public, __VA_ARGS__)
-#define PUB_VFC(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, VIR, CONST, public, __VA_ARGS__)
-#define PUB_VFO(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, VIR, OVR, public, __VA_ARGS__)
-#define PUB_VFCO(ReturnClassName, FuncName, ...) FUNCTION_MEMBER(ReturnClassName, FuncName, VIR, CONST_OVR, public, __VA_ARGS__)
-*/
-
 // --------------------------------------------------------
 // COPY
 // --------------------------------------------------------
@@ -179,22 +154,6 @@ Visibility:
 // --------------------------------------------------------
 // SERIALIZATION
 // --------------------------------------------------------
-
-// DECLARATION AND IMPLEMENTATION
-
-#define DECL_SERIALIZATION()\
-PUB \
-void serialize(JSON& json) const override;\
-void deserialize(const JSON& json) override;
-
-#define IMPL_SERIALIZE(...)\
-void __VA_ARGS__::serialize(JSON& json) const
-
-#define IMPL_DESERIALIZE(...)\
-void __VA_ARGS__::deserialize(const JSON& json)
-
-#define IMPL_DEFAULT_SERIALIZATION(...)\
-IMPL_SERIALIZE(__VA_ARGS__) { }; IMPL_DESERIALIZE(__VA_ARGS__) { };
 
 // SERIALIZE
 

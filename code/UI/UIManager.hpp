@@ -11,17 +11,19 @@ class Scene;
 class UIManager: public ObjectBase, public Singleton<UIManager>
 {
 	GENERATE_METADATA(UIManager)
-	PRI std::map<std::string, UIGroup *> mGroups;
-	PRI std::map<char, Vector2> mCharMap;
-	PRI Vector2 mFontTilesCount;
-	PRI Vector2 mFontTileTextureSize;
-	PRI Material* mFontMaterial = nullptr;
+
+private:
+	std::map<std::string, UIGroup *> mGroups;
+	std::map<char, Vector2> mCharMap;
+	Vector2 mFontTilesCount;
+	Vector2 mFontTileTextureSize;
+	Material* mFontMaterial = nullptr;
 
 	static Vector2 smDefaultFontSize;
 
-	PRI UIBuilder mUIBuilder;
+	UIBuilder mUIBuilder;
 
-	PRI UIElement* mFocusedElement = nullptr;
+	UIElement* mFocusedElement = nullptr;
 
 public:
 	void init();

@@ -9,36 +9,36 @@ class Batch: public ObjectBase
 {
     GENERATE_METADATA(Batch)
 
-	PRI std::list<ProxyObject<Renderer>> mProxyRenderers;
+private:
+	std::list<ProxyObject<Renderer>> mProxyRenderers;
 
-	PRI Material* mMaterial = nullptr;
-	PRI const Mesh* mMesh = nullptr;
-	PRI bool mIsInstanced = false;
-	PRI std::vector<f32> mMatrices;
+	Material* mMaterial = nullptr;
+	const Mesh* mMesh = nullptr;
+	bool mIsInstanced = false;
+	std::vector<f32> mMatrices;
 
-	PRI Mesh mMeshBuilder;
+	Mesh mMeshBuilder;
 
-	PRI u32 mVAO = 0;
-	PRI u32 mVBOPosition = 0; // TODO: change u32 for GLuint
-	PRI u32 mVBOTexture = 0;
-	PRI u32 mVBOColor = 0;
-	PRI u32 mVBOMatrices = 0;
-	PRI u32 mEBO = 0;
+	u32 mVAO = 0;
+	u32 mVBOPosition = 0; // TODO: change u32 for GLuint
+	u32 mVBOTexture = 0;
+	u32 mVBOColor = 0;
+	u32 mVBOMatrices = 0;
+	u32 mEBO = 0;
 
-	PRI u32 mMaxMeshesThreshold = 0;
-	PRI const u32 mMaxMeshesIncrement = 100;
-	PRI u32 mMeshesIndex = 0;
+	u32 mMaxMeshesThreshold = 0;
+	const u32 mMaxMeshesIncrement = 100;
+	u32 mMeshesIndex = 0;
 
-	PRI bool mBinded = false;
-	PRI bool mDataSentToGPU = false;
-	PRI bool mIsWorldSpace = false;
-	PRI bool mIsStatic = false;
+	bool mBinded = false;
+	bool mDataSentToGPU = false;
+	bool mIsWorldSpace = false;
+	bool mIsStatic = false;
 
-	PRI bool mNewRendererAdded = false;
-	PRI bool mPendingDrawCall = false;
-	PRI bool mForceRegenerateBuffers = false;
+	bool mNewRendererAdded = false;
+	bool mPendingDrawCall = false;
+	bool mForceRegenerateBuffers = false;
 
-PRI
 	bool shouldRegenerateBuffers() const;
 
 	void addToVertexBuffer(Renderer& renderer);

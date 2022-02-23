@@ -37,25 +37,27 @@ public:
 class UIElement: public GameObject
 {
     GENERATE_METADATA(UIElement)
-	PRO UIElementConfig mConfig;
 
-	PRO FunctorUIElement mOnPressedFunctor;
-	PRO FunctorUIElement mOnReleasedFunctor;
+protected:
+	UIElementConfig mConfig;
 
-	PRO FunctorUIElement mOnScrollFunctor;
+	FunctorUIElement mOnPressedFunctor;
+	FunctorUIElement mOnReleasedFunctor;
 
-	PRO FunctorUIElement mOnTextChangedFunctor;
-	PRO FunctorUIElement mOnFocusLostFunctor;
+	FunctorUIElement mOnScrollFunctor;
 
-	PRO Renderer* mRenderer = nullptr;
+	FunctorUIElement mOnTextChangedFunctor;
+	FunctorUIElement mOnFocusLostFunctor;
+
+	Renderer* mRenderer = nullptr;
 	//PRI Collider* mCollider = nullptr; GET(Collider)
-	PRO std::string mInputString;
-	PRO bool mConsumeInput = false;
-	PRO bool mPressed = false;
-	PRO bool mCanToggle = false;
-	PRO bool mReleaseOnSameGroupPressed = false;
-	PRO bool mToggled = false;
-    PRO bool mOnlyReleaseOnClickOutside = false;
+	std::string mInputString;
+	bool mConsumeInput = false;
+	bool mPressed = false;
+	bool mCanToggle = false;
+	bool mReleaseOnSameGroupPressed = false;
+	bool mToggled = false;
+    bool mOnlyReleaseOnClickOutside = false;
 
 protected:
     void subscribeToKeyEvents();

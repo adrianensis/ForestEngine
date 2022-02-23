@@ -7,9 +7,10 @@ class Camera;
 class Frustum: public ObjectBase
 {
     GENERATE_METADATA(Frustum)
-	PRI Matrix4 mVPmatrix;
-	PRI Camera* mCamera = nullptr;
-	PRI std::array<Vector4, 6> mPlanes;
+private: 
+	Matrix4 mVPmatrix;
+	Camera* mCamera = nullptr;
+	std::array<Vector4, 6> mPlanes;
 
 public:
 	void init(Camera * camera);

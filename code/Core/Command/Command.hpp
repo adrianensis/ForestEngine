@@ -5,8 +5,10 @@
 class CommandArgument: public ObjectBase
 {
     GENERATE_METADATA(CommandArgument)
-    PRI std::string mName;
-    PRI std::string mValue;
+
+private:
+    std::string mName;
+    std::string mValue;
 
 public:
 
@@ -23,9 +25,11 @@ public:
 class Command: public ObjectBase
 {
     GENERATE_METADATA(Command)
-    PRI std::string mName;
-    PRI std::string mArgumentsString;
-    PRI std::map<std::string, CommandArgument> mArguments;
+
+private:
+    std::string mName;
+    std::string mArgumentsString;
+    std::map<std::string, CommandArgument> mArguments;
 
     inline static const std::string smDefaultArgumentValue = ""; 
 

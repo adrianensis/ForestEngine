@@ -24,9 +24,10 @@ protected:
 	{
 		GENERATE_METADATA(KTree::KTreeNode)
 
-		PRI std::vector<IKTreeElement*> mKTreeElements;
-		PRI void updateChildren();
-		PRI bool childNodeTestPartial(u32 index, IKTreeElement& element) const;
+	private:
+		std::vector<IKTreeElement*> mKTreeElements;
+		void updateChildren();
+		bool childNodeTestPartial(u32 index, IKTreeElement& element) const;
 
 	public:
 		Rectangle mRectangle;
@@ -65,7 +66,8 @@ class QuadTree: public KTree
 {
 	GENERATE_METADATA(QuadTree)
 
-	PRI class QuadTreeNode: public KTreeNode
+private:
+	class QuadTreeNode: public KTreeNode
 	{
 		GENERATE_METADATA(QuadTree::QuadTreeNode)
 	//private:

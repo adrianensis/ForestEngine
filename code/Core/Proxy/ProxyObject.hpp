@@ -6,13 +6,13 @@
 template <class T, typename = std::enable_if_t<std::is_base_of<ObjectBase, T>::value> >
 class ProxyObject
 {
-	PRO T* mObject = nullptr;
+protected:
+	T* mObject = nullptr;
 
-PRI 
+private: 
 	virtual void onDestroy() { mObject = nullptr; }
 
 public:
-
 	void init(T* object)
 	{
 		mObject = object;

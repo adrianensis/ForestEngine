@@ -10,8 +10,9 @@ using CommandCallback = std::function<void(const Command& command)>;
 class CommandFunctor: public Functor<CommandCallback>
 {
 	GENERATE_METADATA(CommandFunctor)
-	
-    PRI Command mCommand;
+
+private:
+	Command mCommand;
 
 public:
 
@@ -36,13 +37,15 @@ public:
 class CommandLine: public ObjectBase, public Singleton<CommandLine>
 {
 	GENERATE_METADATA(CommandLine)
-    PRI std::map<std::string, CommandFunctor> mCommandsMap;
-	PRI std::string mBuffer;
 
-	PRI std::list<std::string> mHistory;
-	PRI std::list<std::string>::iterator mHistoryIterator;
+private:
+	std::map<std::string, CommandFunctor> mCommandsMap;
+	std::string mBuffer;
 
-    PRI bool mIsOpen = false;
+	std::list<std::string> mHistory;
+	std::list<std::string>::iterator mHistoryIterator;
+
+    bool mIsOpen = false;
 
     void log(const std::string& line, bool newLine = true) const;
 

@@ -31,22 +31,24 @@ public:
 class Transform: public Component
 {
     GENERATE_METADATA(Transform)
-	PRI mutable Vector3 mWorldPosition;
+	
+private:
+	mutable Vector3 mWorldPosition;
 
-	PRI mutable Matrix4 mModelMatrix;
-	PRI mutable Matrix4 mTranslationMatrix;
-	PRI mutable Matrix4 mRotationMatrix;
-	PRI mutable Matrix4 mScaleMatrix;
+	mutable Matrix4 mModelMatrix;
+	mutable Matrix4 mTranslationMatrix;
+	mutable Matrix4 mRotationMatrix;
+	mutable Matrix4 mScaleMatrix;
 
-	PRI bool mModelMatrixGenerated = false;
+	bool mModelMatrixGenerated = false;
 
 	//Transform* mParent;
-	PRI Transform* mParent = nullptr;
+	Transform* mParent = nullptr;
 
-	PRI Vector3 mLocalPosition;
-	PRI Vector3 mRotation;
-	PRI Vector3 mScale;
-	PRI bool mAffectedByProjection = false;
+	Vector3 mLocalPosition;
+	Vector3 mRotation;
+	Vector3 mScale;
+	bool mAffectedByProjection = false;
 
 public:
 	static const Vector3 smRight;

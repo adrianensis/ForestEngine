@@ -8,9 +8,10 @@
 class MaterialManager: public ObjectBase, public Singleton<MaterialManager>
 {
 	GENERATE_METADATA(MaterialManager)
-	PRI std::map<std::string, class Texture *> mTexturesMap;
-	PRI std::map<std::string, class Material *> mMaterialsMap;
-	PRI Material* mNoTextureMaterial = nullptr;
+private:
+	std::map<std::string, class Texture *> mTexturesMap;
+	std::map<std::string, class Material *> mMaterialsMap;
+	Material* mNoTextureMaterial = nullptr;
 
 public:
 	~MaterialManager() override;

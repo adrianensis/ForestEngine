@@ -6,11 +6,13 @@
 class Animation: public ObjectBase
 {
     GENERATE_METADATA(Animation)
-    PRI std::string mName;
-	PRI std::vector<AnimationFrame> mFrames;
-	PRI u32 mCurrentFrameNumber = 0;
-	PRI f32 mTimeAccumulator = 0.0f;
-	PRI f32 mSpeed = 0.0f;
+
+private:
+	std::string mName;
+	std::vector<AnimationFrame> mFrames;
+	u32 mCurrentFrameNumber = 0;
+	f32 mTimeAccumulator = 0.0f;
+	f32 mSpeed = 0.0f;
 
 public:
 	Animation();

@@ -7,7 +7,7 @@ class UIList: public UIElement
 {
     GENERATE_METADATA(UIList)
 
-PRI
+private:
 	class UIListEntry: public ObjectBase
 	{
 		GENERATE_METADATA(UIList::UIListEntry)

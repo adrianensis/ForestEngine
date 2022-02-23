@@ -15,9 +15,10 @@ enum class ServerStatus
 class Server: public ObjectBase
 {
     GENERATE_METADATA(Server)
-	PRI ServerStatus mStatus;
 
-PRI
+private:
+	ServerStatus mStatus;
+	
 	int server_fd, new_socket;
 	struct sockaddr_in address;
 	int opt = 1;

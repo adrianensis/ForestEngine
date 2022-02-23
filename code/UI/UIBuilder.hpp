@@ -34,15 +34,17 @@
 class UIBuilder: public ObjectBase
 {
     GENERATE_METADATA(UIBuilder)
-	PRI UILayout mCurrentLayout;
-	PRI UIElementConfig mConfig;
-	PRI UIElementConfig mDefaultConfig;
-	PRI std::list<UIElementConfig> mConfigStack;
-	PRI UIElementConfig mLastConfig;
-	PRI bool mMakeRelativeToLastConfig = false; // used for layouts
-	PRI UIElementConfig mLayoutFirstUIElementConfig;
-	PRI bool mNewRowOrColumn = false;
-	PRI UIElement* mCurrentUIElement = nullptr;
+	
+private:
+	UILayout mCurrentLayout;
+	UIElementConfig mConfig;
+	UIElementConfig mDefaultConfig;
+	std::list<UIElementConfig> mConfigStack;
+	UIElementConfig mLastConfig;
+	bool mMakeRelativeToLastConfig = false; // used for layouts
+	UIElementConfig mLayoutFirstUIElementConfig;
+	bool mNewRowOrColumn = false;
+	UIElement* mCurrentUIElement = nullptr;
 
 private:
 	void registerUIElement(UIElement * uiElement);

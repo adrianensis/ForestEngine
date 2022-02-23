@@ -17,7 +17,7 @@ class Component;
 class ISubsystem: public ObjectBase
 {
     GENERATE_METADATA(ISubsystem)
-PRI
+private:
     std::set<ClassId> mAcceptedComponentClasses;
 
 public:
@@ -39,7 +39,7 @@ public:
 
 class SubsystemsManager : public Singleton<SubsystemsManager>
 {
-PRI
+private:
     std::list<ISubsystem *> mSubsystems;
 
 public:

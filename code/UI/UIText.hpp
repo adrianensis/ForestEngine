@@ -7,15 +7,18 @@ class UIPanel;
 class UIText: public UIElement
 {
     GENERATE_METADATA(UIText)
-	PRI i32 mLayer = 0;
-	PRI Vector2 mSize;
-	PRI std::string mString;
-	PRI std::vector<Renderer *> mFontRenderers;
-    PRI bool mIsEditable = false;
-    PRO UIPanel* mBackground = nullptr;
 
-PRO
-    void setIsEditable(bool editable);
+private:
+	i32 mLayer = 0;
+	Vector2 mSize;
+	std::string mString;
+	std::vector<Renderer *> mFontRenderers;
+    bool mIsEditable = false;
+
+protected:
+    UIPanel* mBackground = nullptr;
+    
+	void setIsEditable(bool editable);
     virtual void setBackground(const UIElementConfig& config) { };
 
 public:

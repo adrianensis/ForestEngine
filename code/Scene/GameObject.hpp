@@ -11,18 +11,19 @@ class EventOnDestroy: public Event { GENERATE_METADATA(EventOnDestroy) };
 class GameObject: public ObjectBase
 {
     GENERATE_METADATA(GameObject)
-	PRI std::map<ClassId, std::list<Component *> *> mComponentsMap;
-	PRI bool mIsActive = false;
+	
+private:
+	std::map<ClassId, std::list<Component *> *> mComponentsMap;
+	bool mIsActive = false;
 
-	PRI Scene* mScene = nullptr;
-	PRI bool mIsStatic = false;
-	PRI Transform* mTransform = nullptr;
-	PRI std::string mTag;
-	PRI bool mIsPendingToBeDestroyed = false;
-	PRI bool mIsDestroyed = false;
-	PRI bool mShouldPersist = false;
+	Scene* mScene = nullptr;
+	bool mIsStatic = false;
+	Transform* mTransform = nullptr;
+	std::string mTag;
+	bool mIsPendingToBeDestroyed = false;
+	bool mIsDestroyed = false;
+	bool mShouldPersist = false;
 
-PRI
 	const std::list<Component *> *getComponents(ClassId classId) const;
 	Component *getFirstComponent(ClassId classId) const;
 

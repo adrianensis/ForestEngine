@@ -12,14 +12,15 @@ class Profiler : public ObjectBase, public Singleton<Profiler>
 {
 	GENERATE_METADATA(Profiler)
 
-	PRI std::map<std::string, f32> mTimeMap;
-	PRI std::map<std::string, TimeMark> mTimeMarkMap;
+private:
+	std::map<std::string, f32> mTimeMap;
+	std::map<std::string, TimeMark> mTimeMarkMap;
 
-	PRI f32 mTotalTimeMillis = 0;
-	PRI u32 mFrameCounter = 0;
+	f32 mTotalTimeMillis = 0;
+	u32 mFrameCounter = 0;
 
-	PRI void printResult(const std::string& name, f32 time) const;
-	PRI void printResultAverage(const std::string& name, f32 time) const;
+	void printResult(const std::string& name, f32 time) const;
+	void printResultAverage(const std::string& name, f32 time) const;
 
 public:
 	Profiler();

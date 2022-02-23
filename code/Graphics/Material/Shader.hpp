@@ -5,10 +5,10 @@
 class Shader: public ObjectBase
 {
     GENERATE_METADATA(Shader)
-PRI
-	PRI u32 mVertexShader = 0;
-	PRI u32 mFragmentShader = 0;
-	PRI u32 mProgram = 0;
+private:
+	u32 mVertexShader = 0;
+	u32 mFragmentShader = 0;
+	u32 mProgram = 0;
 
 	static Shader *msShaderDefault;
 	static Shader *msShaderDebug;

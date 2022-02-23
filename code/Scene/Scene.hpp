@@ -6,16 +6,17 @@ class GameObject;
 class Scene: public ObjectBase
 {
     GENERATE_METADATA(Scene)
-	PRI std::list<GameObject *> mGameObjects;
-	PRI std::list<GameObject *> mNewGameObjects;
-	PRI GameObject* mCameraGameObject;
 
-	PRI f32 mSize = 0.0f;
-	PRI std::string mPath;
+private:
+	std::list<GameObject *> mGameObjects;
+	std::list<GameObject *> mNewGameObjects;
+	GameObject* mCameraGameObject;
 
-	PRI ConfigObject mLoadSceneConfig;
+	f32 mSize = 0.0f;
+	std::string mPath;
 
-PRI
+	ConfigObject mLoadSceneConfig;
+
 	void destroyGameObjects();
 
 public:

@@ -14,7 +14,8 @@
 class ConfigObject: public ObjectBase
 {
     GENERATE_METADATA(ConfigObject)
-	PRI JSON mJson;
+private:
+	JSON mJson;
 
 public:
 	void init();

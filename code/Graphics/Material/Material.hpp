@@ -8,11 +8,12 @@ class Shader;
 class Material: public ObjectBase
 {
     GENERATE_METADATA(Material)
-	PRI Vector4 mColor;
-	PRI Shader* mShader = nullptr;
-	PRI Texture* mTexture = nullptr;
-	PRI bool mAlphaEnabled = false;
-	PRI bool mHasBorder = false;
+private: 
+	Vector4 mColor;
+	Shader* mShader = nullptr;
+	Texture* mTexture = nullptr;
+	bool mAlphaEnabled = false;
+	bool mHasBorder = false;
 
 public:
 	Material();

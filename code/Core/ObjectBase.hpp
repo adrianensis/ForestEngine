@@ -18,18 +18,15 @@ namespace Hash
 
 class ObjectBase: public ISerializable, public ProxyOwner
 {
-PRI
-
+private:
 	ObjectId mObjectId = 0;
 	inline static std::string smClassName = "ObjectBase";
 	inline static ClassId smClassId = Hash::hashString(smClassName);
 
-
-PRO
+protected:
 	inline static ObjectId smObjectIdCounter = 0;
 
 public:
-
 	ObjectBase()
 	{
 		if (mObjectId == 0)

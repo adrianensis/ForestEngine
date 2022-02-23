@@ -6,25 +6,27 @@
 class ShapeBatchRenderer: public ObjectBase
 {
 	GENERATE_METADATA(ShapeBatchRenderer)
-	PRI Shader* mShaderLine = nullptr;
 
-	PRO u32 mMaxShapes = 0;
-	PRO u32 mShapesCounter = 0;
-	PRO u32 mVerticesPerShape = 0;
+protected:
+	u32 mMaxShapes = 0;
+	u32 mShapesCounter = 0;
+	u32 mVerticesPerShape = 0;
 
-	PRI u32 mVAO = 0;
-	PRI u32 mVBOPosition = 0;
-	PRI u32 mVBOColor = 0;
-	PRI u32 mEBO = 0;
-	PRI std::vector<f32> mPositionBuffer;
-	PRI std::vector<f32> mColorBuffer;
-	PRI std::vector<u16> mIndicesBuffer;
+private: 
+	Shader* mShaderLine = nullptr;
+	u32 mVAO = 0;
+	u32 mVBOPosition = 0;
+	u32 mVBOColor = 0;
+	u32 mEBO = 0;
+	std::vector<f32> mPositionBuffer;
+	std::vector<f32> mColorBuffer;
+	std::vector<u16> mIndicesBuffer;
 
-	PRI f32 mSize = 0.0f;
+	f32 mSize = 0.0f;
 
-	PRI bool mIsWorldSpace = true;
+	bool mIsWorldSpace = true;
 
-PRI
+private:
 	void bind();
 
 	void addPosition(const Vector3& position);
@@ -62,8 +64,9 @@ class ShapeBatchRendererMap: public ObjectBase
 {
     GENERATE_METADATA(ShapeBatchRendererMap)
 	
-	PRI std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
-	PRI bool mIsWorldSpace = true;
+private:
+	std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
+	bool mIsWorldSpace = true;
 
 public:
 	void render();
