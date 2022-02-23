@@ -13,22 +13,8 @@ class Batch;
 class Renderer: public Component
 {
     GENERATE_METADATA(Renderer)
-	DECL_SERIALIZATION()
 	
-	public:
-	void init() override;
-	void onComponentAdded() override;
-	void onDestroy() override;
-	void update();
-	void setPositionOffset (const Vector3& newPositionOffset);
-	bool getIsWorldSpace() const;
-	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
-	const Animation* getCurrentAnimation() const { return &mAnimations.at(mCurrentAnimationName); }
-
-	private:
-	void updateAnimation();
-
-	private:
+private:
 	TransformState mTransformState;
 	Matrix4 mRendererModelMatrix;
 	bool mRendererModelMatrixGenerated = false;
@@ -50,7 +36,22 @@ class Renderer: public Component
 	const Mesh* mMesh = nullptr;
 	Material* mMaterial = nullptr;
 
-	public:
+private:
+	void updateAnimation();
+
+public:
+	void init() override;
+	void onComponentAdded() override;
+	void onDestroy() override;
+	void update();
+	void setPositionOffset (const Vector3& newPositionOffset);
+	bool getIsWorldSpace() const;
+	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
+	const Animation* getCurrentAnimation() const { return &mAnimations.at(mCurrentAnimationName); }
+
+	void serialize(JSON& json) const override;
+	void deserialize(const JSON& json) override;
+
 	GET_RC_SET(RendererModelMatrix)
 	GET_RC_SET(Vertices)
 	GET_RC_SET(Color)

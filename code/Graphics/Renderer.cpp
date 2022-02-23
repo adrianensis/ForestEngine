@@ -123,7 +123,7 @@ void Renderer::onDestroy()
 	}
 }
 
-IMPL_SERIALIZE(Renderer)
+void Renderer::serialize(JSON& json) const
 {
 	Component::serialize(json);
 
@@ -147,7 +147,7 @@ IMPL_SERIALIZE(Renderer)
     DO_SERIALIZE_LIST("animations", tmpList)
 }
 
-IMPL_DESERIALIZE(Renderer)
+void Renderer::deserialize(const JSON& json)
 {
 	std::string materialPath = "";
 	DO_DESERIALIZE("material", materialPath)
