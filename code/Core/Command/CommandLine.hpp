@@ -13,7 +13,7 @@ class CommandFunctor: public Functor<CommandCallback>
 	
     PRI Command mCommand; GET_R_SET(Command);
 
-PUB
+public:
 
 	void execute() override
 	{
@@ -45,7 +45,7 @@ class CommandLine: public ObjectBase, public Singleton<CommandLine>
 
     void log(const std::string& line, bool newLine = true) const;
 
-PUB
+public:
     void init();
 	void update();
     void terminate();

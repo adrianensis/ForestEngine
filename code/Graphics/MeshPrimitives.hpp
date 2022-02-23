@@ -7,12 +7,14 @@ class MeshPrimitives: public ObjectBase, public Singleton<MeshPrimitives>
 {
 	GENERATE_METADATA(MeshPrimitives)
 
-	PRI std::map<ClassId, const Mesh*> mPrimitivesMap;
+private:
+	std::map<ClassId, const Mesh*> mPrimitivesMap;
 
-	PUB void init();
-	PUB void terminate();
+public:
+	void init();
+	void terminate();
 
-	PUB template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
 	const Mesh* getOrCreatePrimitive()
 	{
 		if(!MAP_CONTAINS(mPrimitivesMap, T::getClassIdStatic()))
@@ -25,7 +27,7 @@ class MeshPrimitives: public ObjectBase, public Singleton<MeshPrimitives>
 		return mPrimitivesMap.at(T::getClassIdStatic());
 	}
 
-	PUB template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
 	const Mesh* createPrimitive() const
 	{
 		ASSERT_MSG(false, "Mesh Primitive not implemented");

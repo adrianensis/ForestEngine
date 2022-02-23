@@ -8,7 +8,7 @@ class Singleton
 PRO
 	static T *mInstance;
 
-PUB
+public:
 	Singleton() = default;
 
 	~Singleton() = default;

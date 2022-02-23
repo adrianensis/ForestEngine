@@ -20,7 +20,7 @@ class ISubsystem: public ObjectBase
 PRI
     std::set<ClassId> mAcceptedComponentClasses;
 
-PUB
+public:
     void registerComponentClass(ClassId classId)
     {
         mAcceptedComponentClasses.insert(classId);
@@ -42,7 +42,7 @@ class SubsystemsManager : public Singleton<SubsystemsManager>
 PRI
     std::list<ISubsystem *> mSubsystems;
 
-PUB
+public:
     void addComponentToSubsystem(Component *component);
 
     void registerSubsystem(ISubsystem *subsystem)

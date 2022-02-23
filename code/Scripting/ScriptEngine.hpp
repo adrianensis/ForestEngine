@@ -6,12 +6,14 @@
 class ScriptEngine: public ISubsystem, public Singleton<ScriptEngine>
 {
 	GENERATE_METADATA(ScriptEngine)
-	PRI std::list<Script *> mScripts;
-	PRI Script* mController = nullptr;
+	
+private:
+	std::list<Script *> mScripts;
+	Script* mController = nullptr;
 
 	void internalRemoveScript(std::list<Script *>::iterator & it);
 
-PUB
+public:
 	void init();
 	void addComponent(Component *component) override;
 	void update();

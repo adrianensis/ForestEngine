@@ -11,7 +11,7 @@ class ProxyObject
 PRI 
 	virtual void onDestroy() { mObject = nullptr; }
 
-PUB
+public:
 
 	void init(T* object)
 	{

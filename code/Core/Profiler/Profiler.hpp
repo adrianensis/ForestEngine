@@ -21,7 +21,7 @@ class Profiler : public ObjectBase, public Singleton<Profiler>
 	PRI void printResult(const std::string& name, f32 time) const;
 	PRI void printResultAverage(const std::string& name, f32 time) const;
 
-PUB
+public:
 	Profiler();
 	~Profiler();
 

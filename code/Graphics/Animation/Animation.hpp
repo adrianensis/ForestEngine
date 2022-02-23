@@ -12,7 +12,7 @@ class Animation: public ObjectBase
 	PRI f32 mTimeAccumulator = 0.0f;
 	PRI f32 mSpeed = 0.0f; GET_SET(Speed)
 
-PUB
+public:
 	Animation();
 	~Animation() override;
 
@@ -38,6 +38,7 @@ PUB
 
     COPY(Animation)
     {
+		DO_COPY(mName);
         DO_COPY(mSpeed);
 
         FOR_LIST(it, other->mFrames)

@@ -7,18 +7,19 @@
 class Event: public ObjectBase
 {
     GENERATE_METADATA(Event)
-	PUB f32 mDelayAmount = 0.0f;
-	PUB TimerDurationType mDelayType;
-	PUB ObjectBase* mInstigator = nullptr;
 
-	PUB
-		// NOTE : Override in children!
-		COPY(Event)
-		{
-			DO_COPY(mInstigator)
-			DO_COPY(mDelayType)
-			DO_COPY(mDelayAmount)
-		}
+	public:
+	f32 mDelayAmount = 0.0f;
+	TimerDurationType mDelayType;
+	ObjectBase* mInstigator = nullptr;
+	
+	// NOTE : Override in children!
+	COPY(Event)
+	{
+		DO_COPY(mInstigator)
+		DO_COPY(mDelayType)
+		DO_COPY(mDelayAmount)
+	}
 };
 
 using EventCallback = std::function<void(const Event *)>;
@@ -27,11 +28,12 @@ template<class E>
 class EventFunctor: public Functor<EventCallback>
 {
 	GENERATE_METADATA(EventFunctor<E>)
-	PUB E* mEvent = nullptr;
-	PUB ClassId mEventClassId;
-	PUB ObjectBase* mEventReceiver = nullptr;
 
-PUB
+public:
+	E* mEvent = nullptr;
+	ClassId mEventClassId;
+	ObjectBase* mEventReceiver = nullptr;
+
 	void execute() override
 	{
 		if (mCallback)

@@ -17,7 +17,7 @@ class Mesh: public ObjectBase
 PRI
 	static Mesh *smRectangle;
 
-PUB
+public:
 	static const u32 smVertexPositionSize = 3;
 	static const u32 smVertexNormalSize = 3;
 	static const u32 smVertexTexCoordSize = 2;

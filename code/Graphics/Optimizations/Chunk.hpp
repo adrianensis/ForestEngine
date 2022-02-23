@@ -14,7 +14,7 @@ class Chunk: public ObjectBase
 	PRI Vector3 mCenter; GET(Center)
 	PRI f32 mRadius = 0.0f; GET(Radius)
 
-PUB
+public:
 	~Chunk() override;
 	void init();
 	void set(const Vector3& leftTop, f32 size);

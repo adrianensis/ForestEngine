@@ -37,7 +37,7 @@ class Camera: public Component
 
 	PRI void calculateInverseMatrix(bool force = false);
 
-PUB
+public:
 	Camera();
 	~Camera() override;
 

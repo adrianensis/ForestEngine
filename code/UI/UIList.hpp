@@ -11,10 +11,11 @@ PRI
 	class UIListEntry: public ObjectBase
 	{
 		GENERATE_METADATA(UIList::UIListEntry)
-		PUB std::string mLabel;
-		PUB UIElementCallback mCallback;
 
-	PUB
+	public:
+		std::string mLabel;
+		UIElementCallback mCallback;
+		
 		UIListEntry(const std::string& label, UIElementCallback callback);
 
 		COPY(UIListEntry)
@@ -29,7 +30,7 @@ PRI
 
 	void setEntriesVisibility(bool visible);
 
-PUB
+public:
 	void init() override;
 	void initFromConfig(const UIElementConfig& config) override;
 	void onDestroy() override;

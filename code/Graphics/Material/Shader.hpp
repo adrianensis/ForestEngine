@@ -15,7 +15,7 @@ PRI
 
 	void initInternal(const std::string& vertex, const std::string& fragment);
 
-PUB
+public:
 	Shader();
 	~Shader() override;
 

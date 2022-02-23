@@ -40,52 +40,19 @@ void Renderer::onComponentAdded()
 	update();
 }
 
-/**
- * Set the animation, by name.
- * \param string name The name.
- */
-void Renderer::setCurrentAnimation(const std::string& name)
-{
-	if (MAP_CONTAINS(mAnimations, name))
-	{
-		mCurrentAnimation = &mAnimations[name];
-	}
-};
-
-//----------------------------------------------------------------------
-
-/**
- * Add an animation, by name.
- * \param string name The name.
- * \param Animation animation The animation.
- */
-void Renderer::addAnimation(const std::string& name, const Animation& animation)
-{
-	Animation animationCopy = animation;
-    animationCopy.setName(name);
-	MAP_INSERT(mAnimations, name, animationCopy);
-};
-
-void Renderer::removeAnimation(const std::string& name)
-{
-    if (MAP_CONTAINS(mAnimations, name))
-	{
-		if(mCurrentAnimation == &mAnimations[name])
-        {
-            mCurrentAnimation = nullptr;
-        }
-	}
-
-    mAnimations.erase(name);
-}
-
 void Renderer::updateAnimation()
 {
 	if (mMaterial)
 	{
-		if (hasAnimations() && mCurrentAnimation && !mCurrentAnimation->getFrames().empty())
+		Animation* currentAnimation = nullptr;
+		if (MAP_CONTAINS(mAnimations, mCurrentAnimationName))
 		{
-			const AnimationFrame& frame = mCurrentAnimation->getNextFrame();
+			currentAnimation = &mAnimations[mCurrentAnimationName];
+		}
+
+		if (currentAnimation && !currentAnimation->getFrames().empty())
+		{
+			const AnimationFrame& frame = currentAnimation->getNextFrame();
 			mTextureRegion.setLeftTop(frame.getPosition());
 			mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
 		}
@@ -156,7 +123,7 @@ void Renderer::onDestroy()
 	}
 }
 
-void Renderer::serialize(JSON& json) const
+IMPL_SERIALIZE(Renderer)
 {
 	Component::serialize(json);
 
@@ -180,7 +147,7 @@ void Renderer::serialize(JSON& json) const
     DO_SERIALIZE_LIST("animations", tmpList)
 }
 
-void Renderer::deserialize(const JSON& json)
+IMPL_DESERIALIZE(Renderer)
 {
 	std::string materialPath = "";
 	DO_DESERIALIZE("material", materialPath)

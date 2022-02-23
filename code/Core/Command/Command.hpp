@@ -8,7 +8,7 @@ class CommandArgument: public ObjectBase
     PRI std::string mName; GET_RC_SET(Name);
     PRI std::string mValue; GET_RC_SET(Value);
 
-PUB
+public:
 
     COPY(CommandArgument)
     {
@@ -26,7 +26,7 @@ class Command: public ObjectBase
 
     inline static const std::string smDefaultArgumentValue = ""; 
 
-PUB
+public:
 
     void clearArguments() { mArguments.clear(); };
     void addArgument(const CommandArgument& arg) { MAP_INSERT(mArguments, arg.getName(), arg); };

@@ -6,7 +6,7 @@ class AssertUtils
 {
 	PRI inline static const std::string smEmptyAssert = "?";
 
-	PUB static void assertMsg(bool condition, const std::string& file, u32 line, const std::string& function,
+	public: static void assertMsg(bool condition, const std::string& file, u32 line, const std::string& function,
 					const std::string& message = smEmptyAssert)
 	{
 		if (!condition)

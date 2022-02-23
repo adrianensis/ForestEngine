@@ -6,12 +6,12 @@
 class UIStyle: public ObjectBase
 {
     GENERATE_METADATA(UIStyle)
-    PUB Vector4 mTextColor;
-	PUB Vector4 mBackgroundColor;
-	PUB Vector4 mColorPressed;
-	PUB Vector4 mColorHovered;
 
-PUB
+public:
+    Vector4 mTextColor;
+	Vector4 mBackgroundColor;
+	Vector4 mColorPressed;
+	Vector4 mColorHovered;
 
 	UIStyle()
 	{
@@ -33,10 +33,12 @@ PUB
 class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 {
 	GENERATE_METADATA(UIStyleManager)
-	PRI UIStyle mDefaultStyle; GET_RC(DefaultStyle);
-	PRI std::map<ClassId, UIStyle*> mStyles;
+	
+private:
+	UIStyle mDefaultStyle; GET_RC(DefaultStyle);
+	std::map<ClassId, UIStyle*> mStyles;
 
-PUB
+public:
 
 	~UIStyleManager() override;
 	

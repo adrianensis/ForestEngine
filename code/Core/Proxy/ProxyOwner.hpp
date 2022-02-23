@@ -4,10 +4,12 @@
 
 class ProxyOwner
 {
-    PUB using ProxyCallback = std::function<void()>;
-    PRI ProxyCallback mCallback = nullptr;
+public:
+    using ProxyCallback = std::function<void()>;
+private:
+    ProxyCallback mCallback = nullptr;
 
-PUB
+public:
     void setProxyCallback(ProxyCallback callback)
     {
         mCallback = callback;

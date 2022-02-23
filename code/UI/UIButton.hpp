@@ -9,7 +9,7 @@ class UIButton: public UIElement
     GENERATE_METADATA(UIButton)
 	PRI UIText* mText = nullptr; GET(Text)
 
-PUB
+public:
 	void init() override;
 	void initFromConfig(const UIElementConfig& config) override;
 	void onDestroy() override;
@@ -23,6 +23,6 @@ PUB
 class UIToggleButton: public UIButton
 {
     GENERATE_METADATA(UIToggleButton)
-PUB
+public:
 	void init() override;
 };

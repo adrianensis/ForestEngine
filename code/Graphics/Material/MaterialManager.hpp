@@ -12,7 +12,7 @@ class MaterialManager: public ObjectBase, public Singleton<MaterialManager>
 	PRI std::map<std::string, class Material *> mMaterialsMap;
 	PRI Material* mNoTextureMaterial = nullptr;
 
-PUB
+public:
 	~MaterialManager() override;
 
 	void init();

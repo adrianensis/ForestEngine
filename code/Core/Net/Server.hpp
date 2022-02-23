@@ -27,7 +27,7 @@ PRI
 
 	JSON readSimpleJSON(u32 size = DEFAULT_SOCKET_READ_SIZE) const;
 
-PUB
+public:
 	void init(u16 port);
 
 	bool checkConnectionRequest();

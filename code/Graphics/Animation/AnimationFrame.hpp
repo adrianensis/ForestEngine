@@ -9,7 +9,7 @@ class AnimationFrame: public ObjectBase
 	PRI f32 mWidth = 0.0f; GET(Width)
 	PRI f32 mHeight = 0.0f; GET(Height)
 
-PUB
+public:
 	void init(const Vector2& position, f32 width, f32 height);
 
     COPY(AnimationFrame)

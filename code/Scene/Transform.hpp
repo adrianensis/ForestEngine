@@ -8,9 +8,10 @@ class TransformState : public ObjectBase
 {
     GENERATE_METADATA(TransformState)
 
-	PUB Vector3 mWorldPosition; GET_RC(WorldPosition)
-	PUB Vector3 mRotation; GET_RC(Rotation)
-	PUB Vector3 mScale; GET_RC(Scale)
+public:
+	Vector3 mWorldPosition; GET_RC(WorldPosition)
+	Vector3 mRotation; GET_RC(Rotation)
+	Vector3 mScale; GET_RC(Scale)
 
 	TransformState() = default;
 	TransformState(const Transform& transform);
@@ -43,7 +44,7 @@ class Transform: public Component
 	PRI Vector3 mScale; GET_RC(Scale)
 	PRI bool mAffectedByProjection = false; GET_SET(AffectedByProjection)
 
-PUB
+public:
 	static const Vector3 smRight;
 	static const Vector3 smUp;
 	static const Vector3 smForward;

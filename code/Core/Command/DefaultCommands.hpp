@@ -4,6 +4,6 @@
 
 class DefaultCommands
 {
-PUB
+public:
     static void registerDefaultCommands();
 };

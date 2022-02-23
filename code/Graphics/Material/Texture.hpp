@@ -12,7 +12,7 @@ class Texture: public ObjectBase
 
 	byte *readPNG();
 
-PUB
+public:
 	~Texture() override;
 
 	void init(const std::string& path);

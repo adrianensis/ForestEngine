@@ -36,7 +36,7 @@ PRI
 
 	}
 
-PUB
+public:
 	ShapeBatchRenderer() { }
 	~ShapeBatchRenderer() override;
 
@@ -65,7 +65,7 @@ class ShapeBatchRendererMap: public ObjectBase
 	PRI std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
 	PRI bool mIsWorldSpace = true; GET_SET(IsWorldSpace)
 
-PUB
+public:
 	void render();
 	void terminate();
 

@@ -9,7 +9,7 @@ class Functor: public ObjectBase
 	GENERATE_METADATA(Functor<T>)
 	PRO T mCallback; SET(Callback)
 
-PUB
+public:
 	virtual void execute() = 0;
 
 	// NOTE : Override in children if needed!
@@ -26,7 +26,7 @@ PUB
 class FunctorVoid: public Functor<std::function<void()>>
 {
 	GENERATE_METADATA(FunctorVoid)
-PUB	
+public:	
 	void execute() override
 	{
 		ASSERT_MSG(mCallback != nullptr, "Callback is null.");

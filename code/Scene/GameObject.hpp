@@ -28,7 +28,7 @@ PRI
 
 	void addComponentToSubsystem(Component* component);
 
-PUB
+public:
 	GameObject();
 	~GameObject() override;
 

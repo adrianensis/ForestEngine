@@ -7,7 +7,7 @@
 
 class Memory
 {
-PUB
+public:
 	static std::map<std::string, i32> mAllocationsCounter;
 
 	static void init();

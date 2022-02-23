@@ -5,6 +5,6 @@
 class UIPanel: public UIElement
 {
     GENERATE_METADATA(UIPanel)
-    PUB
-        void initFromConfig(const UIElementConfig& config) override;
+public:
+    void initFromConfig(const UIElementConfig& config) override;
 };

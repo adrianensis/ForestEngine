@@ -58,7 +58,7 @@ PRI
 	void drawCall();
 
 	void internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::iterator & it);
-PUB
+public:
 	~Batch() override;
 
 	void init(const Mesh *mesh, Material *material);

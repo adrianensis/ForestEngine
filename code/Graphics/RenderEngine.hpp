@@ -11,30 +11,32 @@ class RenderEngine : public ISubsystem, public Singleton<RenderEngine>
 {
 	GENERATE_METADATA(RenderEngine)
 
-	PRI BatchesMap mBatchesMap;
+private:
+	BatchesMap mBatchesMap;
 
-	PRI ShapeBatchRendererMap mShapeBatchRendererMap;
-	PRI ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
+	ShapeBatchRendererMap mShapeBatchRendererMap;
+	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
 
-	PRI Camera* mCamera = nullptr; GET_SET(Camera)
-	PRI bool mCameraDirtyTranslation = false; GET(CameraDirtyTranslation)
+	Camera* mCamera = nullptr; GET_SET(Camera)
+	bool mCameraDirtyTranslation = false; GET(CameraDirtyTranslation)
 
-	PRI f32 mMinChunkDrawDistance = 0.0f; GET(MinChunkDrawDistance)
-	PRI std::vector<Chunk *> mChunks;
+	f32 mMinChunkDrawDistance = 0.0f; GET(MinChunkDrawDistance)
+	std::vector<Chunk *> mChunks;
 
-	PRI void checkChunks();
-	PRI void renderBatches();
-	PRI void swap();
+	void checkChunks();
+	void renderBatches();
+	void swap();
 
-	PUB void init(f32 sceneSize);
-	PUB void update();	  // render
-	PUB void terminate();
+public:
+	void init(f32 sceneSize);
+	void update();	  // render
+	void terminate();
 
-	PUB void addComponent(Component *component) override;
-	PUB Chunk *assignChunk(Renderer * renderer);
-	PUB bool frustumTestSphere(const Vector3& center, f32 radius);
+	void addComponent(Component *component) override;
+	Chunk *assignChunk(Renderer * renderer);
+	bool frustumTestSphere(const Vector3& center, f32 radius);
 
-	PUB void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
-	PUB void drawRectangle(const Rectangle& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
-	//PUB void drawRectangle(const Rectangle& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
+	void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
+	void drawRectangle(const Rectangle& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
+	//public: void drawRectangle(const Rectangle& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
 };

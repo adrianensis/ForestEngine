@@ -9,7 +9,7 @@ class Vector4;
 
 class Vector3
 {
-PUB
+public:
 
 	f32 x = 0;
 	f32 y = 0;

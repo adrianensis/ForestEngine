@@ -18,7 +18,7 @@ PRI
 
 	static void onResize(GLFWwindow *window, int width, int height);
 
-PUB
+public:
 	friend class Input;
 
 	static Vector2 getWindowSize();

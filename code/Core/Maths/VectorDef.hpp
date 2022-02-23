@@ -18,7 +18,7 @@ PRI\
         checkBoundaries(index);\
         return *(&x + index);\
     }\
-PUB\
+public:\
     Vector##vectorLength& set(const Vector##vectorLength& rhs);\
     Vector##vectorLength& add(const Vector##vectorLength& rhs);\
     Vector##vectorLength& sub(const Vector##vectorLength& rhs);\

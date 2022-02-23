@@ -15,9 +15,9 @@ using UIElementCallback = std::function<void(UIElement *uiElement)>;
 class FunctorUIElement: public Functor<UIElementCallback>
 {
 	GENERATE_METADATA(FunctorUIElement)
-	PUB UIElement* mUIElement = nullptr;
 
-PUB
+public:
+	UIElement* mUIElement = nullptr;
 
 	void execute() override
 	{
@@ -88,7 +88,7 @@ PRO
 	void executePressAndRelease(bool force = false);
 	void release(bool force = false);
 
-PUB
+public:
 	void init() override;
 	virtual void initFromConfig(const UIElementConfig& config);
 	virtual void onDestroy();

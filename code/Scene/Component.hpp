@@ -14,7 +14,7 @@ class Component: public ObjectBase
 	PRI bool mIsPendingToBeDestroyed = false; GET(IsPendingToBeDestroyed)
 	PRI bool mIsDestroyed = false; GET(IsDestroyed)
 
-PUB
+public:
 	Component();
 
 	virtual void init() = 0;

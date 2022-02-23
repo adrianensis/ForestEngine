@@ -7,7 +7,7 @@
 class UIStyleEditableTextBackground: public UIStyle
 {
     GENERATE_METADATA(UIStyleEditableTextBackground)
-PUB
+public:
 	UIStyleEditableTextBackground()
 	{
 		mBackgroundColor = Vector4(0, 0, 0.2f, 1);
@@ -17,9 +17,9 @@ PUB
 class UIEditableText: public UIText
 {
     GENERATE_METADATA(UIEditableText)
-PRO
+protected:
     void setBackground(const UIElementConfig& config) override;
 
-PUB
+public:
     void init() override;
 };

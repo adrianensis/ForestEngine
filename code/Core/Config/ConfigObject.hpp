@@ -16,7 +16,7 @@ class ConfigObject: public ObjectBase
     GENERATE_METADATA(ConfigObject)
 	PRI JSON mJson; GET_RC_SET(Json);
 
-PUB
+public:
 	void init();
 	void clear();
 	bool contains(std::string & key) const;

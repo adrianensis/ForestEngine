@@ -37,7 +37,7 @@ PRI
 	void subscribe(ClassId eventClassId, ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback);
 	void unsubscribe(ClassId eventClassId, ObjectBase * eventOwner, ObjectBase * eventReceiver);
 
-PUB
+public:
 	void init();
 	void terminate();
 

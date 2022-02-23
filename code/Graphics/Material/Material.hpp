@@ -14,7 +14,7 @@ class Material: public ObjectBase
 	PRI bool mAlphaEnabled = false; GET_SET(AlphaEnabled)
 	PRI bool mHasBorder = false; GET_SET(HasBorder)
 
-PUB
+public:
 	Material();
 	void init();
 	void bind(bool isWorldSpace, bool isInstanced);

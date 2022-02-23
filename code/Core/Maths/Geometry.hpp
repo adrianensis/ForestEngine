@@ -9,7 +9,7 @@ class Shape: public ObjectBase
     GENERATE_METADATA(Shape)
     
     PRO u32 mVerticesCount = 0; GET(VerticesCount)
-PUB
+public:
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
 
@@ -25,7 +25,7 @@ class Line: public Shape
     PRO Vector3 mStart; GET_RC_SET(Start)
     PRO Vector3 mEnd; GET_RC_SET(End)
 
-PUB
+public:
     Line() { mVerticesCount = 2; }
 
     Line(f32 xStart, f32 yStart, f32 xEnd, f32 yEnd): Line()
@@ -70,7 +70,7 @@ PUB
 //     PRO Vector3 mLeftTop; GET_RC_SET(LeftTop)
 //     PRO Vector3 mSize; GET_RC_SET(Size)
 
-// PUB
+// public:
 //     Rectangle() { mVerticesCount = 8; }
 
 //     Rectangle(f32 x, f32 y, f32 z, f32 w, f32 h, f32 l): Rectangle()
@@ -121,7 +121,7 @@ class Rectangle: public Shape
     PRO Vector3 mLeftTop; GET_RC_SET(LeftTop)
     PRO Vector2 mSize; GET_RC_SET(Size)
 
-PUB
+public:
     Rectangle() { mVerticesCount = 4; }
 
     Rectangle(f32 x, f32 y, f32 w, f32 h): Rectangle()
@@ -174,7 +174,7 @@ PUB
 
 class Geometry
 {
-PUB
+public:
     // Geometry tests
     static bool testRectanglePoint(const Vector2& leftTop, f32 width, f32 height, const Vector2& point, f32 eps);
     static bool testRectangleSphere(const Vector3& leftTop, f32 width, f32 height, f32 length, const Vector3& center, f32 radius, f32 eps);

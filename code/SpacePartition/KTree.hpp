@@ -6,8 +6,9 @@ class IKTreeElement: public ObjectBase
 {
 	GENERATE_METADATA(IKTreeElement)
 
-	PUB virtual Vector3 getKTreeElementCenter() const = 0;
-	PUB virtual f32 getKTreeElementRadius() const = 0;
+public:
+	virtual Vector3 getKTreeElementCenter() const = 0;
+	virtual f32 getKTreeElementRadius() const = 0;
 };
 
 // Parent class for QuadTree and OcTree
@@ -15,44 +16,49 @@ class KTree: public ObjectBase
 {
 	GENERATE_METADATA(KTree)
 
-    PUB ~KTree() override {};
+public:
+	~KTree() override {};
 
-    PRO class KTreeNode: public ObjectBase
+protected:
+	class KTreeNode: public ObjectBase
 	{
 		GENERATE_METADATA(KTree::KTreeNode)
 
 		PRI std::vector<IKTreeElement*> mKTreeElements;
-
-        PUB Rectangle mRectangle;
-        PUB f32 mRadius = 0;
-        PUB Vector3 mHalfSize;
-		PUB bool mIsDivisible = false;
-
-		PUB std::vector<KTreeNode> mChildren;
-
-
-        PUB void init(const Rectangle& rectangle, const Vector3& minSize, KTree& tree);
-		PUB void addKTreeElement(IKTreeElement& element);
-		PUB void update();
 		PRI void updateChildren();
 		PRI bool childNodeTestPartial(u32 index, IKTreeElement& element) const;
+
+	public:
+		Rectangle mRectangle;
+        f32 mRadius = 0;
+        Vector3 mHalfSize;
+		bool mIsDivisible = false;
+
+		std::vector<KTreeNode> mChildren;
+
+
+        void init(const Rectangle& rectangle, const Vector3& minSize, KTree& tree);
+		void addKTreeElement(IKTreeElement& element);
+		void update();
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
 
-		PUB bool isLeaf() const;
+		bool isLeaf() const;
     };
 
-    PRI KTreeNode mRoot;
+private:
+	KTreeNode mRoot;
 
-	PUB Vector3 mSize;
+public:
+	Vector3 mSize;
 
 	//DE_M_GET_SET(Status, ColliderStatus)
 
 
-	PUB void init(f32 size);
+	void init(f32 size);
 
-	//PUB void addCollider(Collider *collider);
-	PUB void update();
+	//void addCollider(Collider *collider);
+	void update();
 };
 
 class QuadTree: public KTree
@@ -78,11 +84,11 @@ class QuadTree: public KTree
 
 		//DE_CLASS(Node)
 
-		//PUB u32 getCollidersCount() const;
+		//public: u32 getCollidersCount() const;
 
-		//PUB void rayCastQuery(const Vector3& lineStart, const Vector3& lineSnd, List<GameObject*> *outList);
+		//public: void rayCastQuery(const Vector3& lineStart, const Vector3& lineSnd, List<GameObject*> *outList);
 	};
 
-	//PUB void rayCastQuery(const Vector3& lineStart, const Vector3& lineSnd, List<GameObject*> *outList);
+	//public: void rayCastQuery(const Vector3& lineStart, const Vector3& lineSnd, List<GameObject*> *outList);
 
 };

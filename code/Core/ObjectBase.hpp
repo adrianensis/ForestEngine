@@ -28,7 +28,7 @@ PRI
 PRO
 	inline static ObjectId smObjectIdCounter = 0;
 
-PUB
+public:
 
 	ObjectBase()
 	{

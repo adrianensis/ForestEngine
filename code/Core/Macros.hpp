@@ -180,6 +180,22 @@ Visibility:
 // SERIALIZATION
 // --------------------------------------------------------
 
+// DECLARATION AND IMPLEMENTATION
+
+#define DECL_SERIALIZATION()\
+PUB \
+void serialize(JSON& json) const override;\
+void deserialize(const JSON& json) override;
+
+#define IMPL_SERIALIZE(...)\
+void __VA_ARGS__::serialize(JSON& json) const
+
+#define IMPL_DESERIALIZE(...)\
+void __VA_ARGS__::deserialize(const JSON& json)
+
+#define IMPL_DEFAULT_SERIALIZATION(...)\
+IMPL_SERIALIZE(__VA_ARGS__) { }; IMPL_DESERIALIZE(__VA_ARGS__) { };
+
 // SERIALIZE
 
 #define DO_SERIALIZE(Name, Var)\

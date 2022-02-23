@@ -18,7 +18,7 @@ PRO
     void setIsEditable(bool editable);
     virtual void setBackground(const UIElementConfig& config) { };
 
-PUB
+public:
     UIText();
 
 	void init() override;

@@ -17,7 +17,7 @@ PRI
 	static void scrollCallback(GLFWwindow * window, double xoffset, double yoffset);
 	static void charCallback(GLFWwindow * window, unsigned int codepoint);
 
-PUB
+public:
 	Vector2 smMouseCoordinates;
 	u32 smLastMouseButtonPressed;
 	u32 smLastKeyPressed;

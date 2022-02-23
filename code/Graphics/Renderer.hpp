@@ -13,46 +13,59 @@ class Batch;
 class Renderer: public Component
 {
     GENERATE_METADATA(Renderer)
-
-	PRI TransformState mTransformState;
-
-	PRI Matrix4 mRendererModelMatrix; GET_RC_SET(RendererModelMatrix)
-	PRI bool mRendererModelMatrixGenerated = false;
-	PRI bool mVerticesDirty = true;
-	PRI std::vector<Vector3> mVertices; GET_RC_SET(Vertices)
-	PRI Vector4 mColor; GET_RC_SET(Color)
-	PRI Vector3 mPositionOffset; GET(PositionOffset)
-	PRI Rectangle mTextureRegion; GET_RC_SET(TextureRegion)
-	PRI Rectangle mClipRectangle; GET_RC_SET(ClipRectangle)
-	PRI bool mInvertAxisX = false; GET_SET(InvertAxisX)
-	PRI bool mIsLineMode = false; GET_SET(IsLineMode)
-	PRI i32 mDepth = 0; GET_SET(Depth)
-	PRI bool mUseDepth = true; GET_SET(UseDepth) // overrides Z with Depth
-	PRI f32 mRenderDistance = 0.0f; GET_SET(RenderDistance)
-	PRI std::map<std::string, Animation> mAnimations; GET_RC(Animations)
-	PRI Animation* mCurrentAnimation = nullptr; GET(CurrentAnimation)
-
-	PRI Chunk* mChunk = nullptr; GET_SET(Chunk)
-	PRI Batch* mBatch = nullptr; GET_SET(Batch)
-	PRI const Mesh* mMesh = nullptr; GET_SET(Mesh)
-	PRI Material* mMaterial = nullptr; GET_SET(Material)
+	DECL_SERIALIZATION()
 	
-	PUB void serialize(JSON& json) const override;
-	PUB void deserialize(const JSON& json) override;
-	
-	PUB void init() override;
-	PUB void onComponentAdded() override;
-	PUB void update();
+	public:
+	void init() override;
+	void onComponentAdded() override;
+	void onDestroy() override;
+	void update();
+	void setPositionOffset (const Vector3& newPositionOffset);
+	bool getIsWorldSpace() const;
+	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
+	const Animation* getCurrentAnimation() const { return &mAnimations.at(mCurrentAnimationName); }
 
-	PUB void setPositionOffset (const Vector3& newPositionOffset);
-	PUB bool getIsWorldSpace() const;
-	PUB bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
+	private:
+	void updateAnimation();
 
-	PUB void setCurrentAnimation(const std::string& name);
-	PUB void addAnimation(const std::string& name, const Animation& animation);
-    PUB void removeAnimation(const std::string& name);
-	PUB bool hasAnimations() const { return mAnimations.size() > 0; };
-	PUB void updateAnimation();
+	private:
+	TransformState mTransformState;
+	Matrix4 mRendererModelMatrix;
+	bool mRendererModelMatrixGenerated = false;
+	bool mVerticesDirty = true;
+	std::vector<Vector3> mVertices;
+	Vector4 mColor;
+	Vector3 mPositionOffset;
+	Rectangle mTextureRegion;
+	Rectangle mClipRectangle;
+	bool mInvertAxisX = false;
+	bool mIsLineMode = false;
+	i32 mDepth = 0;
+	bool mUseDepth = true; // overrides Z with Depth
+	f32 mRenderDistance = 0.0f;
+	std::map<std::string, Animation> mAnimations;
+	std::string mCurrentAnimationName;
+	Chunk* mChunk = nullptr;
+	Batch* mBatch = nullptr;
+	const Mesh* mMesh = nullptr;
+	Material* mMaterial = nullptr;
 
-	PUB void onDestroy() override;
+	public:
+	GET_RC_SET(RendererModelMatrix)
+	GET_RC_SET(Vertices)
+	GET_RC_SET(Color)
+	GET(PositionOffset)
+	GET_RC_SET(TextureRegion)
+	GET_RC_SET(ClipRectangle)
+	GET_SET(InvertAxisX)
+	GET_SET(IsLineMode)
+	GET_SET(Depth)
+	GET_SET(UseDepth)
+	GET_SET(RenderDistance)
+	GET_R(Animations)
+	GET_SET(CurrentAnimationName)
+	GET_SET(Chunk)
+	GET_SET(Batch)
+	GET_SET(Mesh)
+	GET_SET(Material)
 };

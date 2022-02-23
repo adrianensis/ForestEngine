@@ -23,7 +23,7 @@ class UIManager: public ObjectBase, public Singleton<UIManager>
 
 	PRI UIElement* mFocusedElement = nullptr;
 
-PUB
+public:
 	void init();
 	void terminate();
 

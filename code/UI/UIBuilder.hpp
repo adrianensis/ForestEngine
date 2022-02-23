@@ -44,13 +44,13 @@ class UIBuilder: public ObjectBase
 	PRI bool mNewRowOrColumn = false;
 	PRI UIElement* mCurrentUIElement = nullptr;
 
-PRI
+private:
 	void registerUIElement(UIElement * uiElement);
 	UILayout getOppositeLayout(UILayout layout);
 	Vector2 calculateNextElementOffset(UILayout layout);
 	void calculateConfig();
 
-PUB
+public:
 	UIBuilder();
 
 	UI_BUILDER_CONFIG_METHODS(IsAffectedByLayout)

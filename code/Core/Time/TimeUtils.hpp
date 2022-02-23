@@ -14,7 +14,7 @@ class TimeMark: public ObjectBase
 	PRI std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
 	PRI bool mIsStarted = false; GET(IsStarted)
 
-PUB
+public:
 	void init();
 	void start();
 	void end();
@@ -37,7 +37,7 @@ class Time: public ObjectBase, public Singleton<Time>
 	GENERATE_METADATA(Time)	
 	PRI TimeMark mInternalTimeMark;
 
-PUB
+public:
 
 	void init(){mInternalTimeMark.init();}
 	void startFrame() { mInternalTimeMark.start(); }

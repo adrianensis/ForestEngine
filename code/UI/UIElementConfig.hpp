@@ -16,22 +16,23 @@ enum class UILayout
 class UIElementConfig: public ObjectBase
 {
     GENERATE_METADATA(UIElementConfig)
-	PUB const UIStyle* mStyle = nullptr;
-	PUB ClassId mUIElementClassId;
-	PUB Vector2 mPosition;
-	PUB Vector2 mDisplayPosition;
-	PUB Vector2 mSize;
-	PUB Vector2 mTextSize;
-	PUB std::string mText;
-	PUB bool mAdjustSizeToText = false;
-	PUB i32 mLayer = 0;
-	PUB bool mIsAffectedByLayout = false;
-	PUB Material* mMaterial = nullptr;
-	PUB std::string mGroup;
-	PUB GameObject* mParent = nullptr;
-	PUB f32 mSeparatorSize = 0.0f;
 
-PUB
+public:
+	const UIStyle* mStyle = nullptr;
+	ClassId mUIElementClassId;
+	Vector2 mPosition;
+	Vector2 mDisplayPosition;
+	Vector2 mSize;
+	Vector2 mTextSize;
+	std::string mText;
+	bool mAdjustSizeToText = false;
+	i32 mLayer = 0;
+	bool mIsAffectedByLayout = false;
+	Material* mMaterial = nullptr;
+	std::string mGroup;
+	GameObject* mParent = nullptr;
+	f32 mSeparatorSize = 0.0f;
+	
 	UIElementConfig();
 
 	void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());

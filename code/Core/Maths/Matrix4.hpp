@@ -5,8 +5,9 @@
 
 class Matrix4
 {
-	PUB const static u16 smColumnSize = 4;
-	PUB const static u16 smMatrixSize = smColumnSize * smColumnSize;
+public:
+	const static u16 smColumnSize = 4;
+	const static u16 smMatrixSize = smColumnSize * smColumnSize;
 	
 PRI
 	static bool smIdentityCreated;
@@ -19,7 +20,7 @@ PRI
 	void setRows(u32 n);
 	void setRows(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3);
 
-PUB
+public:
 
 	static const Matrix4& getIdentity();
 

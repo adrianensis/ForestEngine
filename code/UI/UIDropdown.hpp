@@ -9,7 +9,7 @@ class UIDropdownButton: public UIButton
 {
     GENERATE_METADATA(UIDropdownButton)
 	PRI UIDropdown* mParentDropdown = nullptr; GET_SET(ParentDropdown)
-PUB
+public:
 	void onPostReleased() override;
 };
 
@@ -22,10 +22,11 @@ PRI
 	class UIDropdownEntry: public ObjectBase
 	{
 		GENERATE_METADATA(UIDropdown::UIDropdownEntry)
-		PUB std::string mLabel;
-		PUB UIElementCallback mCallback;
 
-	PUB
+	public:
+		std::string mLabel;
+		UIElementCallback mCallback;
+		
 		UIDropdownEntry(const std::string& label, UIElementCallback callback);
 
 		COPY(UIDropdownEntry)
@@ -40,7 +41,7 @@ PRI
 
 	void setEntriesVisibility(bool visible);
 
-PUB
+public:
 	void init() override;
 	void onDestroy() override;
 

@@ -17,7 +17,7 @@ class ScenesManager: public ObjectBase, public Singleton<ScenesManager>
 	void internalLoadScene();
 	void addScene(Scene * newScene);
 
-PUB
+public:
 	ScenesManager();
 	~ScenesManager() override;
 

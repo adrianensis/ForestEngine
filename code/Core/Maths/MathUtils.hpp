@@ -10,7 +10,7 @@
 
 class MathUtils
 {
-PUB
+public:
 	static f32 FLOAT_EPSILON;
 
 	static f32 PI;

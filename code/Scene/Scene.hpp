@@ -18,7 +18,7 @@ class Scene: public ObjectBase
 PRI
 	void destroyGameObjects();
 
-PUB
+public:
 	Scene();
 	~Scene() override;
 

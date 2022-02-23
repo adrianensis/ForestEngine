@@ -11,7 +11,7 @@ class Frustum: public ObjectBase
 	PRI Camera* mCamera = nullptr;
 	PRI std::array<Vector4, 6> mPlanes;
 
-PUB
+public:
 	void init(Camera * camera);
 
 	/**

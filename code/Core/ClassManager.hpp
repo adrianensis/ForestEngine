@@ -24,24 +24,22 @@ using ClassRegisterCallback = std::function<ObjectBase*()>;
 
 class ClassRegister
 {
-    PRI        
-        std::string mClassName;
-        ClassRegisterCallback mCallback;
-    PUB
-        ClassRegister(const std::string& className, ClassRegisterCallback callback);
+private:        
+    std::string mClassName;
+    ClassRegisterCallback mCallback;
+public:
+    ClassRegister(const std::string& className, ClassRegisterCallback callback);
 };
 
 class ClassManager: public Singleton<ClassManager>
 {
-friend ClassRegister;
-PRI
-
+    friend ClassRegister;
+    
+private:
     static std::map<std::string, ClassRegisterCallback> smRegisters;
-
     std::map<std::string, ClassRegisterCallback> mInstanceByNameMap;
 
-PUB
-
+public:
     void init();
 
     void registerClassByName(const std::string& className, ClassRegisterCallback callback);

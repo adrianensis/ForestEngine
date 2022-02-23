@@ -4,7 +4,7 @@
 
 class Log
 {
-PUB
+public:
 	static const std::string emptyMessage;
 	static std::ofstream logFile;
 
