@@ -7,8 +7,6 @@ class Mesh: public ObjectBase
     GENERATE_METADATA(Mesh)
 
 private:
-	static Mesh *smRectangle;
-	
 	std::vector<f32> mVertices;
 	std::vector<f32> mNormals;
 	std::vector<f32> mTextureCoordinates;
@@ -19,25 +17,25 @@ private:
 	u32 mFacesCount = 0;
 
 public:
-	static const u32 smVertexPositionSize = 3;
-	static const u32 smVertexNormalSize = 3;
-	static const u32 smVertexTexCoordSize = 2;
-	static const u32 smVertexColorSize = 4;
-	static const u32 smFaceSize = 3;
+	inline static const u32 smVertexPositionSize = 3;
+	inline static const u32 smVertexNormalSize = 3;
+	inline static const u32 smVertexTexCoordSize = 2;
+	inline static const u32 smVertexColorSize = 4;
+	inline static const u32 smFaceSize = 3;
 
 	void init(u32 vertexCount, u32 facesCount);
-	Mesh *addVertex(const Vector3& vec);
-	Mesh *addNormal(const Vector3& vec);
-	Mesh *addTexCoord(f32 u, f32 v);
-	Mesh *addColor(f32 r, f32 g, f32 b, f32 a);
-	Mesh *addFace(u16 v1, u16 v2, u16 v3);
-	Mesh *addFaceIndex(u16 v1);
+	void addVertex(const Vector3& vec);
+	void addNormal(const Vector3& vec);
+	void addTexCoord(f32 u, f32 v);
+	void addColor(f32 r, f32 g, f32 b, f32 a);
+	void addFace(u16 v1, u16 v2, u16 v3);
+	void addFaceIndex(u16 v1);
 
-	Mesh *copyVertices(const Mesh* other);
-	Mesh *copyNormals(const Mesh* other);
-	Mesh *copyTextureCoordinates(const Mesh* other);
-	Mesh *copyColors(const Mesh* other);
-	Mesh *copyFaces(const Mesh* other);
+	void copyVertices(const Mesh* other);
+	void copyNormals(const Mesh* other);
+	void copyTextureCoordinates(const Mesh* other);
+	void copyColors(const Mesh* other);
+	void copyFaces(const Mesh* other);
 
 	void clear();
 
