@@ -39,8 +39,6 @@ private:
 	void calculateInverseMatrix(bool force = false);
 
 public:
-	Camera();
-	~Camera() override;
 
 	void init() override;
 	void onComponentAdded() override;

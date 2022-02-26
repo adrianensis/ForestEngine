@@ -2,15 +2,7 @@
 
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Frustum.hpp"
-#include "Graphics/RenderContext.hpp"
-
-Camera::Camera()
-{
-}
-
-Camera::~Camera()
-{
-}
+#include "Graphics/RenderEngine.hpp"
 
 void Camera::init()
 {
@@ -46,6 +38,11 @@ void Camera::update()
 
 		mTransformState = currentTransformState;
 	}
+
+	Vector3 localPosition = getGameObject()->getTransform()->getLocalPosition();
+	RenderEngine::getInstance().drawLine(Line(localPosition, Vector3(localPosition.x + 0.1f ,localPosition.y,localPosition.z)), 1, false, Vector4(1,0,0,1));
+	RenderEngine::getInstance().drawLine(Line(localPosition, Vector3(localPosition.x,localPosition.y + 0.1f ,localPosition.z)), 1, false, Vector4(0,1,0,1));
+	RenderEngine::getInstance().drawLine(Line(localPosition, Vector3(localPosition.x,localPosition.y,localPosition.z + 0.1f )), 1, false, Vector4(0,0,1,1));
 
 	PROFILER_TIMEMARK_END()
 }
