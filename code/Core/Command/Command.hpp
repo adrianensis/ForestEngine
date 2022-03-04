@@ -18,8 +18,8 @@ public:
         DO_COPY(mValue)
     }
 
-    GET_RC_SET(Name)
-    GET_RC_SET(Value)
+    CRGET_SET(Name)
+    CRGET_SET(Value)
 };
 
 class Command: public ObjectBase
@@ -47,7 +47,7 @@ public:
         DO_COPY(mArgumentsString)
     }
 
-    GET_RC_SET(Name)
-    GET_RC_SET(ArgumentsString)
-    GET_RC(Arguments)
+    CRGET_SET(Name)
+    CRGET_SET(ArgumentsString)
+    CRGET(Arguments)
 };

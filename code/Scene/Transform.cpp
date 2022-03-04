@@ -8,19 +8,6 @@ TransformState::TransformState(const Transform& transform)
 	mScale = transform.getScale();
 }
 
-Transform::Transform()
-{
-	mParent = nullptr;
-
-	mAffectedByProjection = true;
-	mModelMatrixGenerated = false;
-}
-
-Transform::~Transform()
-{
-	mParent = nullptr;
-}
-
 void Transform::init()
 {
 	// TRACE();
@@ -34,21 +21,6 @@ void Transform::init()
 	mScale = Vector3(1.0f, 1.0f, 1.0f);
 
 	mModelMatrixGenerated = false;
-}
-
-void Transform::setLocalPosition(const Vector3& vector)
-{
-	mLocalPosition = vector;
-}
-
-void Transform::setRotation(const Vector3& vector)
-{
-	mRotation = vector;
-}
-
-void Transform::setScale(const Vector3& vector)
-{
-	mScale = vector;
 }
 
 const Vector3& Transform::getWorldPosition() const
@@ -69,22 +41,6 @@ const Vector3& Transform::getWorldPosition() const
 	}
 
 	return mWorldPosition;
-}
-
-void Transform::translate(const Vector3& vector)
-{
-	if (vector.len() > 0.0f)
-	{
-		setLocalPosition(mLocalPosition.add(vector));
-	}
-}
-
-void Transform::rotate(const Vector3& vector)
-{
-	if (vector.len() > 0.0f)
-	{
-		setRotation(mRotation.add(vector));
-	}
 }
 
 void Transform::lookAt(const Vector3& targetPosition)
@@ -119,14 +75,12 @@ const Matrix4& Transform::getTranslationMatrix() const
 const Matrix4& Transform::getRotationMatrix() const
 {
 	mRotationMatrix.rotation(mRotation);
-
 	return mRotationMatrix;
 }
 
 const Matrix4& Transform::getScaleMatrix() const
 {
 	mScaleMatrix.scale(mScale);
-
 	return mScaleMatrix;
 }
 
@@ -146,14 +100,6 @@ const Matrix4& Transform::getModelMatrix(bool force /*= false*/)
 
 	return mModelMatrix;
 }
-
-TransformState Transform::getTransformState() const
-{
-	TransformState transformState(*this);
-
-	return transformState;
-}
-
 
 void Transform::serialize(JSON& json) const
 {

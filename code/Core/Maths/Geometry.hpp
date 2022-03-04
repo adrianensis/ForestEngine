@@ -69,15 +69,15 @@ public:
         DO_DESERIALIZE("end", mEnd)
     }
 
-    GET_RC_SET(Start)
-    GET_RC_SET(End)
+    CRGET_SET(Start)
+    CRGET_SET(End)
 };
 
 // class Rectangle: public Shape
 // {
 //     GENERATE_METADATA(Rectangle)
-//     protected: Vector3 mLeftTop; GET_RC_SET(LeftTop)
-//     protected: Vector3 mSize; GET_RC_SET(Size)
+//     protected: Vector3 mLeftTop; CRGET_SET(LeftTop)
+//     protected: Vector3 mSize; CRGET_SET(Size)
 
 // public:
 //     Rectangle() { mVerticesCount = 8; }
@@ -182,8 +182,8 @@ public:
         DO_DESERIALIZE("size", mSize);
     }
 
-    GET_RC_SET(LeftTop)
-    GET_RC_SET(Size)
+    CRGET_SET(LeftTop)
+    CRGET_SET(Size)
 };
 
 class Geometry

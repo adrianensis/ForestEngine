@@ -131,7 +131,7 @@ public:
 	virtual void setVisibility(bool visibility);
 	bool isVisible();
 
-	GET_RC_SET(Config)
+	CRGET_SET(Config)
 	GET(Renderer)
 	GET(InputString)
 	GET_SET(ConsumeInput)

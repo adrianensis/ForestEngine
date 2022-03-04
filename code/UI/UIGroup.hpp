@@ -20,7 +20,7 @@ public:
 	void destroyAllUIElements();
 	void setVisibility(bool visibility);
 
-	GET_RC(Name)
+	CRGET(Name)
 	GET(Visible)
-	GET_RC(UIElements)
+	CRGET(UIElements)
 };

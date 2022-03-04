@@ -33,7 +33,7 @@ public:
     void setVisibility(bool visibility) override;
 
 	GET(IsEditable)
-	GET_RC(String)
+	CRGET(String)
 	SET(Size)
 	SET(Layer)
 };

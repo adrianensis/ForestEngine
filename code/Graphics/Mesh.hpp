@@ -39,11 +39,11 @@ public:
 
 	void clear();
 
-	GET_RC(Vertices)
-	GET_RC(Normals)
-	GET_RC(TextureCoordinates)
-	GET_RC(Colors)
-	GET_RC(Faces)
+	CRGET(Vertices)
+	CRGET(Normals)
+	CRGET(TextureCoordinates)
+	CRGET(Colors)
+	CRGET(Faces)
 	GET(VertexCount)
 	GET(FacesCount)
 };

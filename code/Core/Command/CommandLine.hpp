@@ -31,7 +31,7 @@ public:
         DO_COPY(mCommand)
 	}
 
-	GET_R_SET(Command)
+	RGET_SET(Command)
 };
 
 class CommandLine: public ObjectBase, public Singleton<CommandLine>
@@ -62,5 +62,5 @@ public:
 	void close();
     void toggle();
 
-	GET_RC(Buffer)
+	CRGET(Buffer)
 };

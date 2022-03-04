@@ -52,7 +52,7 @@ public:
     void serialize(JSON& json) const override;
     void deserialize(const JSON& json) override;
 
-	GET_RC_SET(Name)
-	GET_RC(Frames)
+	CRGET_SET(Name)
+	CRGET(Frames)
 	GET_SET(Speed)
 };

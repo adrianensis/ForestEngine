@@ -6,6 +6,9 @@ class Editor: public Script
 {
     GENERATE_METADATA(Editor)
 
+private:
+	f32 rotation = 0;
+
 public:
 	void init() override;
 	void firstUpdate() override;

@@ -34,7 +34,7 @@ void Renderer::init()
 
 void Renderer::onComponentAdded()
 {
-	mTransformState = getGameObject()->getTransform()->getTransformState();
+	mTransformState = TransformState(*getGameObject()->getTransform());
 
 	// Force vertices generatiin
 	update();
@@ -73,7 +73,7 @@ bool Renderer::getIsWorldSpace() const
 
 void Renderer::update()
 {
-	TransformState currentTransformState = getGameObject()->getTransform()->getTransformState();
+	TransformState currentTransformState = TransformState(*getGameObject()->getTransform());
 
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 

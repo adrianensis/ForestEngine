@@ -103,5 +103,5 @@ public:
 		return dynamic_cast<T *>(getUIElement());
 	}
 
-	GET_RC_SET(Config)
+	CRGET_SET(Config)
 };

@@ -46,7 +46,6 @@ public:
 
 	void update();
 
-	const Matrix4& getProjectionMatrix() const;
 	const Matrix4& getViewMatrix() const;
 	const Matrix4& getProjectionViewMatrix() const;
 
@@ -58,6 +57,7 @@ public:
 	Vector3 screenToWorld(const Vector2& screenPosition);
 
 	void setZoom(f32 zoom);
+
 	void zoomIn(f32 zoomDelta);
 	void zoomOut(f32 zoomDelta);
 	void resetZoom()
@@ -66,7 +66,8 @@ public:
 		setZoom(mZoom);
 	};
 
+	CRGET(ProjectionMatrix)
 	GET(IsOrtho)
-	GET_RC(Frustum)
+	CRGET(Frustum)
 	GET(Zoom)
 };

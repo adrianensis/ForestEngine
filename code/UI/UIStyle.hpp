@@ -69,5 +69,5 @@ public:
 		return getStyle<T>();
 	}
 
-	GET_RC(DefaultStyle)
+	CRGET(DefaultStyle)
 };

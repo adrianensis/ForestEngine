@@ -12,5 +12,5 @@ private:
 public:
 	void init();
 
-	GET_RC(Config)
+	CRGET(Config)
 };

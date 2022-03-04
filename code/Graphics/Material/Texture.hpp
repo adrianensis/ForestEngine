@@ -33,5 +33,5 @@ public:
 	GET(Data)
 	GET(Width)
 	GET(Height)
-	GET_RC(Path)
+	CRGET(Path)
 };

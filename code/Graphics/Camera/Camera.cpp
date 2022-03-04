@@ -20,14 +20,14 @@ void Camera::onComponentAdded()
 {
 	recalculateProjectionMatrix();
 
-	mTransformState = getGameObject()->getTransform()->getTransformState();
+	mTransformState = TransformState(*getGameObject()->getTransform());
 }
 
 void Camera::update()
 {
 	PROFILER_TIMEMARK_START()
 
-	TransformState currentTransformState = getGameObject()->getTransform()->getTransformState();
+	TransformState currentTransformState(*getGameObject()->getTransform());
 	if(!currentTransformState.eq(mTransformState))
 	{
 		mFrustum.build();
@@ -38,11 +38,6 @@ void Camera::update()
 
 		mTransformState = currentTransformState;
 	}
-
-	Vector3 localPosition = getGameObject()->getTransform()->getLocalPosition();
-	RenderEngine::getInstance().drawLine(Line(localPosition, Vector3(localPosition.x + 0.1f ,localPosition.y,localPosition.z)), 1, false, Vector4(1,0,0,1));
-	RenderEngine::getInstance().drawLine(Line(localPosition, Vector3(localPosition.x,localPosition.y + 0.1f ,localPosition.z)), 1, false, Vector4(0,1,0,1));
-	RenderEngine::getInstance().drawLine(Line(localPosition, Vector3(localPosition.x,localPosition.y,localPosition.z + 0.1f )), 1, false, Vector4(0,0,1,1));
 
 	PROFILER_TIMEMARK_END()
 }
@@ -94,11 +89,6 @@ void Camera::onResize()
 {
 	recalculateProjectionMatrix();
 }
-
-const Matrix4& Camera::getProjectionMatrix() const
-{
-	return mProjectionMatrix;
-};
 
 const Matrix4& Camera::getViewMatrix() const
 {

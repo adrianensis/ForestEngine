@@ -27,5 +27,5 @@ public:
 
 	const JSON& at(const std::string& key) const { return mJson.at(key); }
 
-	GET_RC_SET(Json)
+	CRGET_SET(Json)
 };

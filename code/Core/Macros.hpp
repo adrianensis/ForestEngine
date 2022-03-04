@@ -112,24 +112,24 @@ void __customMain()
 #define GENERATE_GET(BaseName)        \
 	GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
-#define GENERATE_GET_R(BaseName) \
+#define GENERATE_RGET(BaseName) \
 	ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; };
 
-#define GENERATE_GET_RC(BaseName) \
+#define GENERATE_CRGET(BaseName) \
 	ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define GENERATE_SET(BaseName) \
 	void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
 
 #define GET(BaseName) GENERATE_GET(BaseName)
-#define GET_R(BaseName) GENERATE_GET_R(BaseName)
-#define GET_RC(BaseName) GENERATE_GET_RC(BaseName)
+#define RGET(BaseName) GENERATE_RGET(BaseName)
+#define CRGET(BaseName) GENERATE_CRGET(BaseName)
 
 #define SET(BaseName) GENERATE_SET(BaseName)
 
 #define GET_SET(BaseName) GENERATE_GET(BaseName) GENERATE_SET(BaseName)
-#define GET_R_SET(BaseName) GENERATE_GET_R(BaseName) GENERATE_SET(BaseName)
-#define GET_RC_SET(BaseName) GENERATE_GET_RC(BaseName) GENERATE_SET(BaseName)
+#define RGET_SET(BaseName) GENERATE_RGET(BaseName) GENERATE_SET(BaseName)
+#define CRGET_SET(BaseName) GENERATE_CRGET(BaseName) GENERATE_SET(BaseName)
 
 // --------------------------------------------------------
 // COPY
