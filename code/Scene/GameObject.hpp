@@ -27,7 +27,7 @@ private:
 	const std::list<Component *> *getComponents(ClassId classId) const;
 	Component *getFirstComponent(ClassId classId) const;
 
-	void addComponentToSubsystem(Component* component);
+	void addComponentToEngineSystem(Component* component);
 
 public:
 	GameObject();

@@ -9,7 +9,7 @@ private:
 
 public:
 	void init();
-	void initSubsystems();
+	void initEngineSystems();
 	void terminateSubSystems();
 	void run();
 	void terminate();

@@ -15,9 +15,9 @@ void RenderEngine::init(f32 sceneSize)
 {
 	TRACE()
 
-	ISubsystem::init();
+	IEngineSystem::init();
 
-	REGISTER_COMPONENT_CLASS_IN_SUBSYSTEM(Renderer)
+	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Renderer)
 
 	mCameraDirtyTranslation = true;
 
@@ -139,9 +139,9 @@ void RenderEngine::terminate()
 	LIST_DELETE_CONTENT(mChunks);
 }
 
-void RenderEngine::addComponent(Component *component)
+void RenderEngine::addComponent(IEngineSystemComponent *component)
 {
-	ISubsystem::addComponent(component);
+	IEngineSystem::addComponent(component);
 
 	if(component->getClassId() == Renderer::getClassIdStatic())
 	{

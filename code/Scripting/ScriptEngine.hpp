@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 #include "Scripting/Script.hpp"
 
-class ScriptEngine: public ISubsystem, public Singleton<ScriptEngine>
+class ScriptEngine: public IEngineSystem, public Singleton<ScriptEngine>
 {
 	GENERATE_METADATA(ScriptEngine)
 	
@@ -15,7 +15,7 @@ private:
 
 public:
 	void init();
-	void addComponent(Component *component) override;
+	void addComponent(IEngineSystemComponent *component) override;
 	void update();
 	void terminate();
 };

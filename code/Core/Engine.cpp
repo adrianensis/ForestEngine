@@ -31,7 +31,7 @@ void Engine::init()
 	CommandLine::getInstance().init();
 }
 
-void Engine::initSubsystems()
+void Engine::initEngineSystems()
 {
 	f32 sceneSize = ScenesManager::getInstance().getCurrentScene()->getSize();
 	RenderEngine::getInstance().init(sceneSize);
@@ -63,7 +63,7 @@ void Engine::run()
 		{
 			terminateSubSystems();
 			ScenesManager::getInstance().loadCurrentScene();
-			initSubsystems();
+			initEngineSystems();
 		}
 
 		Input::getInstance().pollEvents();
@@ -122,7 +122,7 @@ void Engine::terminate()
 
 	EngineConfig::deleteInstance();
 
-	SubsystemsManager::deleteInstance();
+	EngineSystemsManager::deleteInstance();
 
 	Profiler::getInstance().terminate();
 

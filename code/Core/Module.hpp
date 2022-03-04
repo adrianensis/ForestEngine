@@ -8,7 +8,7 @@
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory.hpp"
 #include "Core/ClassManager.hpp"
-#include "Core/Subsystem.hpp"
+#include "Core/EngineSystem.hpp"
 #include "Core/Proxy/ProxyObject.hpp"
 #include "Core/Functor.hpp"
 #include "Core/File/File.hpp"

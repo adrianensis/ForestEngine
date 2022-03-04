@@ -7,7 +7,7 @@
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Optimizations/Chunk.hpp"
 
-class RenderEngine : public ISubsystem, public Singleton<RenderEngine>
+class RenderEngine : public IEngineSystem, public Singleton<RenderEngine>
 {
 	GENERATE_METADATA(RenderEngine)
 
@@ -32,7 +32,7 @@ public:
 	void update();	  // render
 	void terminate();
 
-	void addComponent(Component *component) override;
+	void addComponent(IEngineSystemComponent *component) override;
 	Chunk *assignChunk(Renderer * renderer);
 	bool frustumTestSphere(const Vector3& center, f32 radius);
 

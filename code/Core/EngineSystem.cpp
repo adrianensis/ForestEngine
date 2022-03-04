@@ -1,25 +1,24 @@
-#include "Core/Subsystem.hpp"
-#include "Scene/Component.hpp"
+#include "Core/EngineSystem.hpp"
 
-void ISubsystem::init()
+void IEngineSystem::init()
 {
-    REGISTER_SUBSYSTEM(this);
+    REGISTER_ENGINE_SYSTEM(this);
 }
 
-void ISubsystem::addComponent(Component *component)
+void IEngineSystem::addComponent(IEngineSystemComponent* component)
 {
     component->setAlreadyAddedToEngine(true);
 }
 
-void SubsystemsManager::addComponentToSubsystem(Component *component)
+void EngineSystemsManager::addComponentToEngineSystem(IEngineSystemComponent* component)
 {
     if (component && !component->getAlreadyAddedToEngine())
     {
         ClassId componentClassId = component->getClassId();
         bool added = false;
-        FOR_LIST_COND(itSubsytem, mSubsystems, !added)
+        FOR_LIST_COND(itEngineSystem, mEngineSystems, !added)
         {
-            ISubsystem *sub = (*itSubsytem);
+            IEngineSystem *sub = (*itEngineSystem);
             if (sub->isComponentClassAccepted(componentClassId))
             {
                 sub->addComponent(component);

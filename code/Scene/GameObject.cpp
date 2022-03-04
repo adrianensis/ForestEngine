@@ -30,7 +30,7 @@ void GameObject::addComponent(Component *component, ClassId classId)
 	component->setGameObject(this);
 	component->onComponentAdded();
 
-	ADD_COMPONENT_TO_SUBSYSTEM(component);
+	ADD_COMPONENT_TO_ENGINE_SYSTEM(component);
 }
 
 void GameObject::removeComponent(Component *component, ClassId classId)

@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 class GameObject;
 
-class Component: public ObjectBase
+class Component: public IEngineSystemComponent
 {
     GENERATE_METADATA(Component)
 	
@@ -12,7 +12,7 @@ private:
 	bool mIsStatic = false;
 
 	GameObject* mGameObject;
-	bool mAlreadyAddedToEngine = false;
+	
 	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
 
@@ -49,7 +49,6 @@ public:
 	void deserialize(const JSON& json) override;
 
 	GET_SET(GameObject)
-	GET_SET(AlreadyAddedToEngine)
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 };
