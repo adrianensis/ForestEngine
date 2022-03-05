@@ -2,6 +2,19 @@
 
 #define NONE(...)
 
+// --------------------------------------------------------
+// CPP
+// --------------------------------------------------------
+
+// These macros are intended to be parsed by Python scripts
+
+#define CPP
+#define CPP_INCLUDE
+
+// --------------------------------------------------------
+// TYPE TRAITS
+// --------------------------------------------------------
+
 #define REMOVE_REF(Class) typename std::remove_reference<Class>::type
 #define REMOVE_POINTER(Class) typename std::remove_pointer<Class>::type
 #define IS_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
