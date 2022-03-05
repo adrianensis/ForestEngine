@@ -136,7 +136,7 @@ void RenderEngine::terminate()
 	mShapeBatchRendererMap.terminate();
 	mShapeBatchRendererMapScreenSpace.terminate();
 
-	LIST_DELETE_CONTENT(mChunks);
+	DELETE_CONTENT(mChunks);
 }
 
 void RenderEngine::addComponent(IEngineSystemComponent *component)
@@ -147,7 +147,7 @@ void RenderEngine::addComponent(IEngineSystemComponent *component)
 	{
 		Renderer *renderer = static_cast<Renderer*>(component);
 
-		/*if(!MAP_CONTAINS(mDepthsData, renderer->getDepth()))
+		/*if(!CONTAINS(mDepthsData, renderer->getDepth()))
 		{
 			DepthData DepthData;
 			DepthData.mDepthNumber = renderer->getDepth();

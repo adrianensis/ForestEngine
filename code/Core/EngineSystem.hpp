@@ -38,7 +38,6 @@ public:
     bool isComponentClassAccepted(ClassId classId)
     {
         return mAcceptedEngineSystemComponentClasses.find(classId) != mAcceptedEngineSystemComponentClasses.end();
-        ;
     }
 
     virtual void init();
@@ -56,7 +55,10 @@ public:
 
     void registerEngineSystem(IEngineSystem *engineSystem)
     {
-        mEngineSystems.push_back(engineSystem);
+        if(!CONTAINS(mEngineSystems, engineSystem))
+        {
+            mEngineSystems.push_back(engineSystem);
+        }
     }
 
     const std::list<IEngineSystem *> &getEngineSystems() const

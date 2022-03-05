@@ -12,7 +12,7 @@ ScenesManager::ScenesManager()
 
 ScenesManager::~ScenesManager()
 {
-	LIST_DELETE_CONTENT(mScenes)
+	DELETE_CONTENT(mScenes)
 
 	mGameObjectController->destroy();
 	DELETE(mGameObjectController);

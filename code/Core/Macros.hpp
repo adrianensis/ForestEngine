@@ -248,8 +248,8 @@ void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const JSON& js
 // STD CONTAINERS
 // --------------------------------------------------------
 
-#define MAP_CONTAINS(map, key) ((map).find(key) != (map).end())
 #define MAP_INSERT(map, key, value) (map).insert_or_assign((key), (value));
+#define MAP_CONTAINS(map, key) ((map).find(key) != (map).end())
 
 #define MAP_DELETE_CONTENT(map)           \
 	FOR_MAP(_internal_it, map)            \
@@ -259,6 +259,8 @@ void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const JSON& js
 	}                                     \
 	(map).clear();
 
-#define LIST_DELETE_CONTENT(list)                       \
-FOR_LIST(_internal_it, list) { DELETE(*_internal_it); } \
-	(list).clear();
+#define DELETE_CONTENT(container)                       \
+FOR_LIST(_internal_it, container) { DELETE(*_internal_it); } \
+	(container).clear();
+
+#define CONTAINS(container, element) (std::find((container).begin(), (container).end(), (element)) != (container).end())
