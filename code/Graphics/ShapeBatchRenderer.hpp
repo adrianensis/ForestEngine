@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Core/Module.hpp"
 #include "Graphics/Material/Shader.hpp"
 

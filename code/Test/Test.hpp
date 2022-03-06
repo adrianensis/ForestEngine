@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include <iomanip>
 #include <sstream>
 #include <chrono>

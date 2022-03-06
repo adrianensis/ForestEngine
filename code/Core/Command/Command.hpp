@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Core/ObjectBase.hpp"
 
 class CommandArgument: public ObjectBase

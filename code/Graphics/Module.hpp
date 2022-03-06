@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 

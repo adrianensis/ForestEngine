@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include <cstdint> // std::uintptr_t
 
 #include <vector>

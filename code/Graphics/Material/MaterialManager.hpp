@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Core/Module.hpp"
 #include "Core/Singleton.hpp"
 #include "Graphics/Material/Material.hpp"

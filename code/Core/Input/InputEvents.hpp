@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Core/Events/Event.hpp"
 
 #define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &Input::getInstance(), event);

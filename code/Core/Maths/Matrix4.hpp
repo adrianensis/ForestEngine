@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Vector4.hpp"
 

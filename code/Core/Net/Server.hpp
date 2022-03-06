@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Core/Module.hpp"
 #include <netinet/in.h>
 

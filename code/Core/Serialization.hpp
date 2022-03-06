@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "json.hpp"
 
 #include <algorithm>

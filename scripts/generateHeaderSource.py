@@ -21,6 +21,7 @@ os.mkdir(generated_code_dirname)
 
 MACRO_FUNCTION = "CPP"
 MACRO_PLAIN_TEXT = "CPP_INCLUDE"
+MACRO_IGNORE = "CPP_IGNORE"
 
 cpp_plain_text_found = False
 cpp_function_found = False
@@ -29,6 +30,7 @@ body_open = False
 waiting_for_body = True
 function_data = None
 match_class = None
+ignore_file = False
 
 header_lines = []
 source_lines = []
@@ -153,6 +155,13 @@ def process_line(line):
     else:
         header_lines += line
 
+def should_ignore(line):
+    global ignore_file
+    # detect IGNORE macro
+    match_ignore = re.search(r'\/\/\s*'+MACRO_IGNORE, line)
+    if match_ignore:
+        ignore_file = True
+
 for folder in folders:
     path = cwd+"/"+folder
     for root,d_names,f_names in os.walk(path):
@@ -166,6 +175,9 @@ for folder in folders:
         os.makedirs(generated_final_folder)
 
         for f in f_names:
+            
+            ignore_file = False
+
             file_name = os.path.join(root, f)
             if ".hpp" in file_name and "Macros" not in file_name:
                 with open(file_name, 'r') as file:
@@ -173,21 +185,25 @@ for folder in folders:
 
                     header_lines = []
                     source_lines = []
+                    function_data = None
+                    match_class = None
 
                     file_name_we, _ = os.path.splitext(f)
 
                     if len(lines) != 0:
 
-                        function_data = None
-                        match_class = None
-
                         for line in lines:
-                            process_line(line)
+                            should_ignore(line)
+                            if ignore_file:
+                                break
+                            else:
+                                process_line(line)
 
-                    with open(os.path.join(generated_final_folder,file_name_we+".hpp"), "w") as file:
-                        for line in header_lines:
-                            file.write(line)
+                    if not ignore_file:
+                        with open(os.path.join(generated_final_folder,file_name_we+".hpp"), "w") as file:
+                            for line in header_lines:
+                                file.write(line)
 
-                    with open(os.path.join(generated_final_folder, file_name_we+".cpp"), "w") as file:
-                        for line in source_lines:
-                            file.write(line)
+                        with open(os.path.join(generated_final_folder, file_name_we+".cpp"), "w") as file:
+                            for line in source_lines:
+                                file.write(line)

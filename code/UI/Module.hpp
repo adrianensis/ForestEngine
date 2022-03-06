@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "UI/UIManager.hpp"
 
 #include "UI/UIStyle.hpp"

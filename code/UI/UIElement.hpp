@@ -1,5 +1,7 @@
 #pragma once
 
+// CPP_IGNORE
+
 #include "Scene/Module.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "UI/UIElementConfig.hpp"
