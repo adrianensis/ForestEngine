@@ -57,7 +57,8 @@ class FunctionData:
         return self.previous + "\n" + self.pre_return_type + " " + self.return_type + " " + self.name + self.params + ";"
 
     def getImplementation(self):
-        return self.previous + "\n" + self.pre_return_type + " " + self.return_type + " " + self.declaration_class + "::" + self.name + self.params + self.body
+        filteredParams = self.params.replace('override', '')
+        return self.previous + "\n" + self.pre_return_type + " " + self.return_type + " " + self.declaration_class + "::" + self.name + filteredParams + self.body
 
 def countBraces(line):
     global braces_count
@@ -90,7 +91,7 @@ def process_line(line):
 
     # detect CPP macro
     if not cpp_plain_text_found:
-        match_cpp = re.search(r''+MACRO_PLAIN_TEXT, line)
+        match_cpp = re.search(r'#if\s+'+MACRO_PLAIN_TEXT, line)
         if match_cpp:
             cpp_plain_text_found = True
             
@@ -109,7 +110,7 @@ def process_line(line):
     # process each case
     if cpp_plain_text_found:
         # ignore last CPP_... line
-        match_cpp = re.search(r''+MACRO_PLAIN_TEXT, line)
+        match_cpp = re.search(r'#endif', line)
         if match_cpp:
             cpp_plain_text_found = False
             source_lines += "\n"

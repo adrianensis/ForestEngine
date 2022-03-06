@@ -9,7 +9,7 @@
 // These macros are intended to be parsed by Python scripts
 
 #define CPP
-#define CPP_INCLUDE
+#define CPP_INCLUDE 1
 
 // --------------------------------------------------------
 // TYPE TRAITS
