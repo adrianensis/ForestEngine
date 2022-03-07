@@ -17,8 +17,8 @@
 // #include "Graphics/Material/MaterialManager.hpp"
 // #include "Graphics/MeshPrimitives.hpp"
 // #include "Graphics/Animation/Animation.hpp"
-// #include "Graphics/Optimizations/Chunk.hpp"
-// #include "Graphics/Optimizations/Batch.hpp"
+// #include "Graphics/Batch/Chunk.hpp"
+// #include "Graphics/Batch/Batch.hpp"
 // #include "Scene/Module.hpp"
 // CPP_INCLUDE
 

@@ -1,4 +1,4 @@
-#include "Graphics/Optimizations/BatchesMap.hpp"
+#include "Graphics/Batch/BatchesMap.hpp"
 
 #include "Scene/Module.hpp"
 

@@ -1,10 +1,10 @@
-#include "Graphics/Optimizations/Chunk.hpp"
+#include "Graphics/Batch/Chunk.hpp"
 
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh.hpp"
-#include "Graphics/Optimizations/BatchesMap.hpp"
+#include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Scene/Module.hpp"
 

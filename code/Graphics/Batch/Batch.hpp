@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh.hpp"
-#include "Graphics/Optimizations/Batch.hpp"
+#include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Renderer.hpp"
 
 class Batch: public ObjectBase

@@ -1,5 +1,5 @@
 #include "Graphics/RenderEngine.hpp"
-#include "Graphics/Optimizations/Batch.hpp"
+#include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh.hpp"
@@ -8,7 +8,7 @@
 #include "Graphics/Material/Shader.hpp"
 #include "Scene/Module.hpp"
 #include "Core/EngineConfig.hpp"
-#include "Graphics/Optimizations/Chunk.hpp"
+#include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/ShapeBatchRenderer.hpp"
 
 void RenderEngine::init(f32 sceneSize)

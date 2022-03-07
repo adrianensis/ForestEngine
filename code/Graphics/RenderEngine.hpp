@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Optimizations/BatchesMap.hpp"
+#include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer.hpp"
-#include "Graphics/Optimizations/Chunk.hpp"
+#include "Graphics/Batch/Chunk.hpp"
 
 class RenderEngine : public IEngineSystem, public Singleton<RenderEngine>
 {

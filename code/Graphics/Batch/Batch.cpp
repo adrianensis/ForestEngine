@@ -1,4 +1,4 @@
-#include "Graphics/Optimizations/Batch.hpp"
+#include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Renderer.hpp"
@@ -9,7 +9,7 @@
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Animation/Animation.hpp"
-#include "Graphics/Optimizations/Chunk.hpp"
+#include "Graphics/Batch/Chunk.hpp"
 #include "Scene/Module.hpp"
 
 Batch::~Batch()

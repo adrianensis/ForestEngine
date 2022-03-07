@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Optimizations/BatchesMap.hpp"
+#include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/Renderer.hpp"
 
 class Chunk: public ObjectBase
