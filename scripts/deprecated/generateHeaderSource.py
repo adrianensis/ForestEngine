@@ -22,6 +22,7 @@ os.mkdir(generated_code_dirname)
 MACRO_FUNCTION = "CPP"
 MACRO_PLAIN_TEXT = "CPP_INCLUDE"
 MACRO_IGNORE = "CPP_IGNORE"
+MACRO_GENERATE_CPP_ONLY = "GENERATE_CPP"
 
 cpp_plain_text_found = False
 cpp_function_found = False
@@ -60,7 +61,21 @@ class FunctionData:
 
     def getImplementation(self):
         filteredParams = self.params.replace('override', '')
-        return self.previous + "\n" + self.pre_return_type + " " + self.return_type + " " + self.declaration_class + "::" + self.name + filteredParams + self.body
+
+        default_parameters_list = re.findall(r'\s*(=\s*[\w\d_<>:]+)', filteredParams)
+        for default_param in default_parameters_list:
+            if default_param:
+                filteredParams = filteredParams.replace(default_param, '')
+
+        # filteredParams = filteredParams.replace('virtual', '')
+        # filteredParams = filteredParams.replace('static', '')
+
+        filteredPreReturnType = self.pre_return_type.replace('static', '')
+
+        return self.previous + "\n" + filteredPreReturnType + " " + self.return_type + " " + self.declaration_class + "::" + self.name + filteredParams + self.body
+
+def searchClassGenerateCPP(line):
+    return re.search(r'^\s*GENERATE_CPP\s*\(\s*(\w+)\s*\)\s*', line)
 
 def countBraces(line):
     global braces_count
@@ -87,9 +102,19 @@ def process_line(line):
     global header_lines
     global source_lines
 
+    match_pragma_once = re.search(r'#pragma\s+once', line)
+    if match_pragma_once:
+        # ignore pragma once line
+        return
+
     # detect class
-    if not match_class:
-        match_class = searchClassDefinition(line)
+    current_match_class = searchClassDefinition(line)
+
+    if not current_match_class:
+        current_match_class = searchClassGenerateCPP(line)
+
+    if current_match_class:
+        match_class = current_match_class
 
     # detect CPP macro
     if not cpp_plain_text_found:
@@ -101,13 +126,14 @@ def process_line(line):
             return
 
         elif not cpp_function_found:
-            match_cpp = re.search(r''+MACRO_FUNCTION, line)
-            if match_cpp:
-                cpp_function_found = True
-                waiting_for_body = True
+            if not MACRO_GENERATE_CPP_ONLY in line:
+                match_cpp = re.search(r''+MACRO_FUNCTION, line)
+                if match_cpp:
+                    cpp_function_found = True
+                    waiting_for_body = True
 
-                # reset function_data
-                function_data = FunctionData()
+                    # reset function_data
+                    function_data = FunctionData()
     
     # process each case
     if cpp_plain_text_found:
@@ -125,7 +151,7 @@ def process_line(line):
 
         #print(line)
         if waiting_for_body:
-            match_function = re.search(r'(.*)\s+([\w\d_<>:]+)\s+([\w\d_]+)(\(.*)', line)
+            match_function = re.search(r'([\w\d_\s]*)\s+([\w\d_<>&\*:]+)\s+([\w\d_]+)(\(.*)', line)
             if match_function:
                 if match_class:
                     function_data.declaration_class = match_class.group(1)
@@ -149,7 +175,7 @@ def process_line(line):
             cpp_function_found = False
             # print("function closed")
             function_data.addBodyLine(line)
-            function_data.print()
+            #function_data.print()
 
             source_lines += function_data.getImplementation()
     else:
@@ -199,10 +225,13 @@ for folder in folders:
                             else:
                                 process_line(line)
 
-                    if not ignore_file:
+                    if not ignore_file and match_class:
                         with open(os.path.join(generated_final_folder,file_name_we+".hpp"), "w") as file:
+                            file.write("#ifndef " + file_name_we.upper() + "\n")
+                            file.write("#define " + file_name_we.upper() + "\n")
                             for line in header_lines:
                                 file.write(line)
+                            file.write("\n\n#endif")
 
                         with open(os.path.join(generated_final_folder, file_name_we+".cpp"), "w") as file:
                             for line in source_lines:

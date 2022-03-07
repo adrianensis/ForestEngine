@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include <cmath> /* ceil, max */
 #include <algorithm>
 #include "Core/BasicTypes.hpp"

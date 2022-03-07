@@ -1,8 +1,7 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include <cstdint> // std::uintptr_t
+#include <cstring>
 
 #include <vector>
 #include <list>
@@ -14,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <regex>
 
 #include <type_traits>
 #include <functional>

@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 

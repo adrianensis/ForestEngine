@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/Module.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"

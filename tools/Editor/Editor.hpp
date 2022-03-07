@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Scripting/Script.hpp"
 
 class Editor: public Script

@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/Module.hpp"
 
 class Shader: public ObjectBase

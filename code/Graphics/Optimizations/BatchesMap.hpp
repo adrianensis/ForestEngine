@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/Module.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Optimizations/Batch.hpp"

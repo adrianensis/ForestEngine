@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/BasicTypes.hpp"
 
 #include "Core/Macros.hpp"

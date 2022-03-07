@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #define NONE(...)
 
 // --------------------------------------------------------
@@ -12,9 +10,9 @@
 
 #define CPP
 #define CPP_INCLUDE 1
+#define GENERATE_CPP(...)
 
 // This comment-macro will make script to ignore the file 
-// CPP_IGNORE
 
 // --------------------------------------------------------
 // TYPE TRAITS

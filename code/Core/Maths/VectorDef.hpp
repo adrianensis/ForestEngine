@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/Macros.hpp"
 
 #define VECTOR_BASE_DEFINITION(vectorLength) \

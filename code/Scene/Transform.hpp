@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Scene/Component.hpp"
 
 class Transform;

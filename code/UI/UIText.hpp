@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "UI/UIElement.hpp"
 
 class UIPanel;

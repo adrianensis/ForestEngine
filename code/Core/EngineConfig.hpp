@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/Config/ConfigObject.hpp"
 #include "Core/Singleton.hpp"
 

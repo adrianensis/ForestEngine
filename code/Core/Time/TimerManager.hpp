@@ -1,7 +1,5 @@
 #pragma once
 
-// CPP_IGNORE
-
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Functor.hpp"
 
