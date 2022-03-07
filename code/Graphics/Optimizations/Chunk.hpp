@@ -8,7 +8,7 @@ class Chunk: public ObjectBase
 {
     GENERATE_METADATA(Chunk)
 private:
-	std::list<Renderer *> * mRenderers;
+	std::list<Renderer *> mRenderers;
 	Vector3 mLeftTop;
 	f32 mSize = 0.0f;
 	bool mIsLoaded = false;

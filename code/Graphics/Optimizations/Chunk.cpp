@@ -10,20 +10,18 @@
 
 Chunk::~Chunk()
 {
-	FOR_LIST(it, *mRenderers)
+	FOR_LIST(it, mRenderers)
 	{
 		(*it)->finallyDestroy();
 		DELETE((*it));
 	}
-
-	DELETE(mRenderers);
 }
 
 void Chunk::init()
 {
 	//TRACE();
 
-	mRenderers = NEW(std::list<Renderer *>);
+	mRenderers.clear();
 
 	mLeftTop.set(0, 0, 0);
 }
@@ -42,7 +40,7 @@ void Chunk::update(BatchesMap *batchesMap)
 {
 	//RenderEngine::getInstance().drawRectangle(Rectangle(mLeftTop, mSize, mSize));
 
-	FOR_LIST(it, *mRenderers)
+	FOR_LIST(it, mRenderers)
 	{
 		Renderer *renderer = *it;
 
@@ -82,7 +80,7 @@ void Chunk::update(BatchesMap *batchesMap)
 
 		if (removeFromList)
 		{
-			it = mRenderers->erase(it);
+			it = mRenderers.erase(it);
 			--it;
 		}
 	}
@@ -105,7 +103,7 @@ void Chunk::unload()
 
 void Chunk::addRenderer(Renderer *renderer)
 {
-	mRenderers->push_back(renderer);
+	mRenderers.push_back(renderer);
 }
 
 bool Chunk::containsRenderer(const Renderer *renderer, f32 epsilon /*= 0.0f*/) const
