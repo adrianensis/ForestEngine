@@ -7,27 +7,28 @@ void MeshPrimitives::init()
 
 void MeshPrimitives::terminate()
 {
-	MAP_DELETE_CONTENT(mPrimitivesMap);
+	//MAP_DELETE_CONTENT(mPrimitivesMap);
+	mPrimitivesMap.clear();
 }
 
 template <>
-const Mesh* MeshPrimitives::createPrimitive<Rectangle>() const
+OwnerRef<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
-	Mesh* mesh = NEW(Mesh);
-	mesh->init(4, 2);
+	OwnerRef<Mesh> mesh = OwnerRef<Mesh>(NEW(Mesh));
+	mesh.get().init(4, 2);
 
-	mesh->addVertex(Vector3(-0.5f, 0.5f, 0.0f)); // top left
-	mesh->addVertex(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
-	mesh->addVertex(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
-	mesh->addVertex(Vector3(0.5f, 0.5f, 0.0f)); // top right
+	mesh.get().addVertex(Vector3(-0.5f, 0.5f, 0.0f)); // top left
+	mesh.get().addVertex(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
+	mesh.get().addVertex(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
+	mesh.get().addVertex(Vector3(0.5f, 0.5f, 0.0f)); // top right
 
-	mesh->addTexCoord(0.0f, 1.0f); // top left
-	mesh->addTexCoord(0.0f, 0.0f); // bottom left
-	mesh->addTexCoord(1.0f, 0.0f); // bottom right
-	mesh->addTexCoord(1.0f, 1.0f); // top right
+	mesh.get().addTexCoord(0.0f, 1.0f); // top left
+	mesh.get().addTexCoord(0.0f, 0.0f); // bottom left
+	mesh.get().addTexCoord(1.0f, 0.0f); // bottom right
+	mesh.get().addTexCoord(1.0f, 1.0f); // top right
 
-	mesh->addFace(0, 1, 3);
-	mesh->addFace(1, 2, 3);
+	mesh.get().addFace(0, 1, 3);
+	mesh.get().addFace(1, 2, 3);
 
 	return mesh;
 }

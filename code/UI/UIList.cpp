@@ -35,7 +35,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	Renderer* renderer = NEW(Renderer);
 	renderer->init();
 
-	renderer->setMesh(MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>());
+	renderer->setMesh(MeshPrimitives::getInstance().getPrimitive<Rectangle>());
 	renderer->setMaterial(mConfig.mMaterial);
 	renderer->setColor(mConfig.mStyle->mBackgroundColor);
 	renderer->setDepth(mConfig.mLayer);

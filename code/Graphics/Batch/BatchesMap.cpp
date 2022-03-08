@@ -20,9 +20,9 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	// Create a temporary key for searching purposes
 	BatchKey tmpBatchKey;
 	tmpBatchKey.init(
-		renderer.getMaterial()->getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
-		renderer.getMaterial()->getShader(),
-		renderer.getMesh()
+		&renderer.getMaterial().get().getTexture().get(), // NOTE : Texture can be nullptr as a valid hash key.
+		renderer.getMaterial().get().getShader(),
+		&renderer.getMesh().get()
 	);
 
 	// Find if batch key already exists
@@ -38,9 +38,9 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	{
 		foundBatchKey = &(mBatchKeys.emplace_back(tmpBatchKey));
 		foundBatchKey->init(
-			renderer.getMaterial()->getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
-			renderer.getMaterial()->getShader(),
-			renderer.getMesh()
+			&renderer.getMaterial().get().getTexture().get(), // NOTE : Texture can be nullptr as a valid hash key.
+			renderer.getMaterial().get().getShader(),
+			&renderer.getMesh().get()
 		);
 	}
 
@@ -60,7 +60,7 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
 	{
 		Batch *batch = NEW(Batch);
-		batch->init(renderer.getMesh(), renderer.getMaterial());
+		batch->init(&renderer.getMesh().get(), &renderer.getMaterial().get());
 		batch->setIsStatic(transform->isStatic());
 		batch->setIsWorldSpace(transform->getAffectedByProjection());
 

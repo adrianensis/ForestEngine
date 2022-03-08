@@ -72,6 +72,8 @@
         "mutex": "cpp",
         "stop_token": "cpp",
         "cfenv": "cpp",
-        "*.generated": "cpp"
+        "*.generated": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp"
     }
 }

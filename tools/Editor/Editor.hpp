@@ -9,6 +9,7 @@ class Editor: public Script
 private:
 	f32 rotation = 0;
 
+	void createSprite(const Vector3& v);
 public:
 	void init() override;
 	void firstUpdate() override;

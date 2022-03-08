@@ -9,7 +9,6 @@
 Material::Material()
 {
 	mShader = nullptr;
-	mTexture = nullptr;
 	mAlphaEnabled = true;
 	mHasBorder = false;
 }
@@ -22,7 +21,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 {
 	if (mTexture)
 	{
-		mTexture->bind();
+		mTexture.get().bind();
 	}
 
 	Camera *camera = RenderEngine::getInstance().getCamera();
@@ -35,7 +34,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 
 	mShader->addBool(isInstanced, "isInstanced");
 
-	mShader->addBool(mTexture != nullptr, "hasTexture");
+	mShader->addBool(mTexture.isValid(), "hasTexture");
 	mShader->addBool(mAlphaEnabled, "alphaEnabled");
 	mShader->addBool(mHasBorder, "hasBorder");
 

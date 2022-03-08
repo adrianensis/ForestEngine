@@ -42,17 +42,17 @@ void Renderer::onComponentAdded()
 
 void Renderer::updateAnimation()
 {
-	if (mMaterial)
+	if (mMaterial.isValid())
 	{
-		Animation* currentAnimation = nullptr;
+		Ref<Animation> currentAnimation;
 		if (MAP_CONTAINS(mAnimations, mCurrentAnimationName))
 		{
-			currentAnimation = &mAnimations[mCurrentAnimationName];
+			currentAnimation = mAnimations[mCurrentAnimationName];
 		}
 
-		if (currentAnimation && !currentAnimation->getFrames().empty())
+		if (currentAnimation && !currentAnimation.get().getFrames().empty())
 		{
-			const AnimationFrame& frame = currentAnimation->getNextFrame();
+			const AnimationFrame& frame = currentAnimation.get().getNextFrame();
 			mTextureRegion.setLeftTop(frame.getPosition());
 			mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
 		}
@@ -90,9 +90,9 @@ void Renderer::update()
 		FOR_ARRAY(i, mVertices)
 		{
 			Vector3 vertexPosition(
-				mMesh->getVertices()[i * 3 + 0],
-				mMesh->getVertices()[i * 3 + 1],
-				mMesh->getVertices()[i * 3 + 2]);
+				mMesh.get().getVertices()[i * 3 + 0],
+				mMesh.get().getVertices()[i * 3 + 1],
+				mMesh.get().getVertices()[i * 3 + 2]);
 
 			vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
 
@@ -117,9 +117,9 @@ void Renderer::update()
 
 void Renderer::onDestroy()
 {
-	if(mBatch)
+	if(mBatch.isValid())
 	{
-		mBatch->forceRegenerateBuffers();
+		mBatch.get().forceRegenerateBuffers();
 	}
 }
 
@@ -129,22 +129,22 @@ void Renderer::serialize(JSON& json) const
 
 	std::string materialPath = "";
 
-	if(mMaterial->getTexture())
+	if(mMaterial.get().getTexture())
 	{
-		materialPath = mMaterial->getTexture()->getPath();
+		materialPath = mMaterial.get().getTexture().get().getPath();
 	}
 
 	DO_SERIALIZE("material", materialPath)
 	DO_SERIALIZE("region", mTextureRegion)
 	DO_SERIALIZE("depth", mDepth)
 
-    std::list<Animation> tmpList;
-    FOR_MAP(it, mAnimations)
-    {
-        tmpList.push_back(it->second);
-    }
+    // std::list<Animation> tmpList;
+    // FOR_MAP(it, mAnimations)
+    // {
+    //     tmpList.push_back(it->second);
+    // }
 
-    DO_SERIALIZE_LIST("animations", tmpList)
+    // DO_SERIALIZE_LIST("animations", tmpList)
 }
 
 void Renderer::deserialize(const JSON& json)
@@ -157,18 +157,18 @@ void Renderer::deserialize(const JSON& json)
 	DO_DESERIALIZE("region", mTextureRegion)
 	DO_DESERIALIZE("depth", mDepth)
 
-	mMesh = MeshPrimitives::getInstance().getOrCreatePrimitive<Rectangle>();
+	//mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
 
-    std::list<Animation> tmpList;
-    DO_DESERIALIZE_LIST("animations", tmpList, [](const JSON& json)
-    {
-        Animation animation;
-        animation.deserialize(json);
-        return animation;
-    });
+    // std::list<Animation> tmpList;
+    // DO_DESERIALIZE_LIST("animations", tmpList, [](const JSON& json)
+    // {
+    //     Animation animation;
+    //     animation.deserialize(json);
+    //     return animation;
+    // });
 
-    FOR_LIST(it, tmpList)
-    {
-        MAP_INSERT(mAnimations, (*it).getName(), *it)
-    }
+    // FOR_LIST(it, tmpList)
+    // {
+    //     MAP_INSERT(mAnimations, (*it).getName(), RefRaw<Animation>(*it))
+    // }
 }

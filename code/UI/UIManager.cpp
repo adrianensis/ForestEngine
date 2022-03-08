@@ -6,7 +6,7 @@
 
 Vector2 UIManager::smDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
 
-Material *UIManager::getFontMaterial()
+Ref<Material> UIManager::getFontMaterial()
 {
 	if (!mFontMaterial)
 	{

@@ -79,11 +79,11 @@ void Batch::bind()
 
 	mEBO = RenderContext::createEBO();
 	
-	Texture *texture = mMaterial->getTexture();
+	Ref<Texture> texture = mMaterial->getTexture();
 
 	if (texture)
 	{
-		texture->bind();
+		texture.get().bind();
 	}
 	
 	RenderContext::enableVAO(0);
@@ -246,8 +246,8 @@ bool Batch::processRenderers()
 
 bool Batch::isChunkOk(Renderer& renderer) const
 {
-	const Chunk *chunk = renderer.getChunk();
-	return (!chunk) || (chunk && chunk->getIsLoaded()); // !chunk means -> Screen Space case
+	RefRaw<Chunk> chunk = renderer.getChunk();
+	return (!chunk) || (chunk && chunk.get().getIsLoaded()); // !chunk means -> Screen Space case
 }
 
 void Batch::drawCall()
@@ -347,11 +347,11 @@ void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
 		{
 			textureCoord.x = 1.0f - textureCoord.x;
 
-			const Animation *animation = renderer.getCurrentAnimation();
+			Ref<const Animation> animation = renderer.getCurrentAnimation();
 
 			if (animation)
 			{
-				textureCoord.x = textureCoord.x - (1.0f - (animation->getNumberOfFrames() * regionSize.x));
+				textureCoord.x = textureCoord.x - (1.0f - (animation.get().getNumberOfFrames() * regionSize.x));
 			}
 		}
 

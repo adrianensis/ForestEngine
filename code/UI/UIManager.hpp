@@ -17,7 +17,7 @@ private:
 	std::map<char, Vector2> mCharMap;
 	Vector2 mFontTilesCount;
 	Vector2 mFontTileTextureSize;
-	Material* mFontMaterial = nullptr;
+	Ref<Material> mFontMaterial;
 
 	static Vector2 smDefaultFontSize;
 
@@ -33,7 +33,7 @@ public:
 
 	const Vector2& getCharTextureCoordinates(char character);
 	const Vector2& getFontTileTextureSize() const { return mFontTileTextureSize; }
-	Material *getFontMaterial();
+	Ref<Material> getFontMaterial();
 	static const Vector2& getDefaultFontSize() { return smDefaultFontSize; }
 
 	// groups

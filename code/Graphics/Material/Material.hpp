@@ -11,7 +11,7 @@ class Material: public ObjectBase
 private: 
 	Vector4 mColor;
 	Shader* mShader = nullptr;
-	Texture* mTexture = nullptr;
+	Ref<Texture> mTexture;
 	bool mAlphaEnabled = false;
 	bool mHasBorder = false;
 
@@ -27,7 +27,7 @@ public:
 
 	GET_SET(Color)
 	GET_SET(Shader)
-	GET_SET(Texture)
+	RGET_SET(Texture)
 	GET_SET(AlphaEnabled)
 	GET_SET(HasBorder)
 };

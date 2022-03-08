@@ -3,13 +3,13 @@
 
 MaterialManager::~MaterialManager()
 {
-	MAP_DELETE_CONTENT(mTexturesMap)
-	MAP_DELETE_CONTENT(mMaterialsMap)
+	//MAP_DELETE_CONTENT(mTexturesMap)
+	//MAP_DELETE_CONTENT(mMaterialsMap)
 
-	if (mNoTextureMaterial)
-	{
-		DELETE(mNoTextureMaterial);
-	}
+	// if (mNoTextureMaterial)
+	// {
+	// 	DELETE(mNoTextureMaterial);
+	// }
 
 	Shader::freeStaticShaders();
 }
@@ -17,51 +17,39 @@ MaterialManager::~MaterialManager()
 void MaterialManager::init(){
 	TRACE()}
 
-Texture *MaterialManager::loadTexture(const std::string& path)
+Ref<Texture> MaterialManager::loadTexture(const std::string& path)
 {
-	Texture *texture = nullptr;
-
-	if (MAP_CONTAINS(mTexturesMap, path))
+	if (!MAP_CONTAINS(mTexturesMap, path))
 	{
-		texture = mTexturesMap.at(path);
-	}
-	else
-	{
-		texture = NEW(Texture);
-		texture->init(path);
+		OwnerRef<Texture> texture = OwnerRef<Texture>(NEW(Texture));
+		texture.get().init(path);
 		MAP_INSERT(mTexturesMap, path, texture);
 	}
 
-	return texture;
+	return mTexturesMap.at(path);
 }
 
-Material *MaterialManager::loadMaterial(const std::string& path)
+Ref<Material> MaterialManager::loadMaterial(const std::string& path)
 {
-	Material *material = nullptr;
-
-	if (MAP_CONTAINS(mMaterialsMap, path))
+	if (!MAP_CONTAINS(mMaterialsMap, path))
 	{
-		material = mMaterialsMap.at(path);
-	}
-	else
-	{
-		material = NEW(Material);
-		material->init();
-		material->setTexture(loadTexture(path));
-		material->setShader(Shader::getDefaultShader());
+		OwnerRef<Material> material = OwnerRef<Material>(NEW(Material));
+		material.get().init();
+		material.get().setTexture(loadTexture(path));
+		material.get().setShader(Shader::getDefaultShader());
 		MAP_INSERT(mMaterialsMap, path, material);
 	}
 
-	return material;
+	return mMaterialsMap.at(path);
 }
 
-Material *MaterialManager::loadNoTextureMaterial()
+Ref<Material> MaterialManager::loadNoTextureMaterial()
 {
 	if (!mNoTextureMaterial)
 	{
-		mNoTextureMaterial = NEW(Material);
-		mNoTextureMaterial->init();
-		mNoTextureMaterial->setShader(Shader::getDefaultShader());
+		mNoTextureMaterial = OwnerRef<Material>(NEW(Material));
+		mNoTextureMaterial.get().init();
+		mNoTextureMaterial.get().setShader(Shader::getDefaultShader());
 	}
 
 	return mNoTextureMaterial;

@@ -8,35 +8,34 @@ class MeshPrimitives: public ObjectBase, public Singleton<MeshPrimitives>
 	GENERATE_METADATA(MeshPrimitives)
 
 private:
-	std::map<ClassId, const Mesh*> mPrimitivesMap;
+	std::map<ClassId, OwnerRef<Mesh>> mPrimitivesMap;
 
+	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	OwnerRef<Mesh> createPrimitive() const
+	{
+		ASSERT_MSG(false, "Mesh Primitive not implemented");
+		return OwnerRef<Mesh>();
+	}
 public:
 	void init();
 	void terminate();
 
 	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	const Mesh* getOrCreatePrimitive()
+	Ref<const Mesh> getPrimitive()
 	{
 		if(!MAP_CONTAINS(mPrimitivesMap, T::getClassIdStatic()))
 		{
-			const Mesh* mesh = createPrimitive<T>();
+			OwnerRef<Mesh> mesh = createPrimitive<T>();
 
 			MAP_INSERT(mPrimitivesMap, T::getClassIdStatic(), mesh);
 		}
 		
-		return mPrimitivesMap.at(T::getClassIdStatic());
-	}
-
-	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	const Mesh* createPrimitive() const
-	{
-		ASSERT_MSG(false, "Mesh Primitive not implemented");
-		return nullptr;
+		return Ref<Mesh>(mPrimitivesMap.at(T::getClassIdStatic()));
 	}
 };
 
 template <>
-const Mesh* MeshPrimitives::createPrimitive<Rectangle>() const;
+OwnerRef<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
 
 // template <>
 // const Mesh* MeshPrimitives::createPrimitive<Rectangle>() const;
