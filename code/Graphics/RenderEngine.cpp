@@ -51,7 +51,7 @@ void RenderEngine::init(f32 sceneSize)
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
 {
-	return mCamera && mCamera->getFrustum().testSphere(center, radius);
+	return mCamera && mCamera.get().getFrustum().testSphere(center, radius);
 }
 
 void RenderEngine::update()
@@ -60,7 +60,7 @@ void RenderEngine::update()
 
 	if (mCamera)
 	{
-		mCamera->update();
+		mCamera.get().update();
 	}
 
 	renderBatches();
@@ -107,7 +107,7 @@ void RenderEngine::checkChunks()
 	{
 		Ref<Chunk> chunk = mChunks.at(i);
 
-		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera->getGameObject()->getTransform().get().getWorldPosition());
+		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera.get().getGameObject()->getTransform().get().getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
 		
 		if (chunkInDistance && !chunk.get().getIsLoaded())

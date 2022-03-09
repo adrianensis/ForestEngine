@@ -17,7 +17,7 @@ private:
 	ShapeBatchRendererMap mShapeBatchRendererMap;
 	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
 
-	Camera* mCamera = nullptr;
+	Ref<Camera> mCamera;
 	bool mCameraDirtyTranslation = false;
 
 	f32 mMinChunkDrawDistance = 0.0f;
@@ -40,7 +40,7 @@ public:
 	void drawRectangle(const Rectangle& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
 	//public: void drawRectangle(const Rectangle& rectangle, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));
 
-	GET_SET(Camera)
+	RGET_SET(Camera)
 	GET(CameraDirtyTranslation)
 	GET(MinChunkDrawDistance)
 };

@@ -23,10 +23,10 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 		mTexture.get().bind();
 	}
 
-	Camera *camera = RenderEngine::getInstance().getCamera();
+	Ref<Camera> camera = RenderEngine::getInstance().getCamera();
 
-	const Matrix4& projectionMatrix = camera->getProjectionMatrix();
-	const Matrix4& viewMatrix = camera->getViewMatrix();
+	const Matrix4& projectionMatrix = camera.get().getProjectionMatrix();
+	const Matrix4& viewMatrix = camera.get().getViewMatrix();
 
 	mShader.get().addMatrix(isWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 	mShader.get().addMatrix(isWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");

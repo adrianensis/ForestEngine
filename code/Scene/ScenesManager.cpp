@@ -30,7 +30,7 @@ void ScenesManager::internalLoadScene()
 	}
 
 	mGameObjectController->setScene(mCurrentScene);
-	RenderEngine::getInstance().setCamera(&mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>().get());
+	RenderEngine::getInstance().setCamera(mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
 }
 
 void ScenesManager::init()

@@ -409,7 +409,7 @@ bool UIElement::isMouseCursorInsideElement()
 
 	if(getTransform().get().getAffectedByProjection())
 	{
-		mousePosition = RenderEngine::getInstance().getCamera()->screenToWorld(Input::getInstance().getMousePosition());
+		mousePosition = RenderEngine::getInstance().getCamera().get().screenToWorld(Input::getInstance().getMousePosition());
 	}
 
 	return Geometry::testRectanglePoint(
