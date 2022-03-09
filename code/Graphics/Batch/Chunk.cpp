@@ -10,11 +10,13 @@
 
 Chunk::~Chunk()
 {
-	FOR_LIST(it, mRenderers)
-	{
-		(*it)->finallyDestroy();
-		DELETE((*it));
-	}
+	// FOR_LIST(it, mRenderers)
+	// {
+	// 	(*it)->finallyDestroy();
+	// 	DELETE((*it));
+	// }
+
+	mRenderers.clear();
 }
 
 void Chunk::init()
@@ -42,18 +44,18 @@ void Chunk::update(BatchesMap *batchesMap)
 
 	FOR_LIST(it, mRenderers)
 	{
-		Renderer *renderer = *it;
+		Ref<Renderer> renderer = *it;
 
 		bool removeFromList = false;
 
-		if (renderer->isActive())
+		if (renderer.get().isActive())
 		{
-			if (getIsLoaded() && !renderer->getBatch())
+			if (getIsLoaded() && !renderer.get().getBatch())
 			{
-				batchesMap->addRenderer(*renderer);
+				batchesMap->addRenderer(renderer);
 			}
 
-			if (!renderer->isStatic() && !containsRenderer(renderer))
+			if (!renderer.get().isStatic() && !containsRenderer(renderer))
 			{
 				Ref<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
 
@@ -67,14 +69,14 @@ void Chunk::update(BatchesMap *batchesMap)
 			}
 		}
 
-		if (renderer->getIsPendingToBeDestroyed())
+		if (renderer.get().getIsPendingToBeDestroyed())
 		{
-			renderer->finallyDestroy();
+			renderer.get().finallyDestroy();
 		}
 
-		if (renderer->getIsDestroyed())
+		if (renderer.get().getIsDestroyed())
 		{
-			DELETE(renderer);
+			//DELETE(renderer);
 			removeFromList = true;
 		}
 
@@ -101,21 +103,21 @@ void Chunk::unload()
 	}
 }
 
-void Chunk::addRenderer(Renderer *renderer)
+void Chunk::addRenderer(Ref<Renderer> renderer)
 {
 	mRenderers.push_back(renderer);
 }
 
-bool Chunk::containsRenderer(const Renderer *renderer, f32 epsilon /*= 0.0f*/) const
+bool Chunk::containsRenderer(Ref<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
 {
-	Vector3 rendererPosition = renderer->getGameObject()->getTransform()->getWorldPosition();
+	Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
 	bool contains = Geometry::testRectanglePoint(mLeftTop, mSize, mSize, rendererPosition, epsilon);
 	return contains; // TODO : move to settings ?
 }
 
-bool Chunk::containsRendererSphere(const Renderer *renderer) const
+bool Chunk::containsRendererSphere(Ref<const Renderer> renderer) const
 {
-	Vector3 rendererPosition = renderer->getGameObject()->getTransform()->getWorldPosition();
+	Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
 	return Geometry::testSphereSphere(mCenter, rendererPosition, mRadius,
-									  renderer->getGameObject()->getTransform()->getScale().y * 2.0f, 0);
+									  renderer.get().getGameObject()->getTransform().get().getScale().y * 2.0f, 0);
 }

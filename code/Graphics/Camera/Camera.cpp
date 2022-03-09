@@ -20,14 +20,14 @@ void Camera::onComponentAdded()
 {
 	recalculateProjectionMatrix();
 
-	mTransformState = TransformState(*getGameObject()->getTransform());
+	mTransformState = TransformState(getGameObject()->getTransform().get());
 }
 
 void Camera::update()
 {
 	PROFILER_TIMEMARK_START()
 
-	TransformState currentTransformState(*getGameObject()->getTransform());
+	TransformState currentTransformState(getGameObject()->getTransform().get());
 	if(!currentTransformState.eq(mTransformState))
 	{
 		mFrustum.build();
@@ -94,9 +94,9 @@ const Matrix4& Camera::getViewMatrix() const
 {
 	if(mViewMatrixNeedsUpdate)
 	{
-		const Vector3& position = getGameObject()->getTransform()->getWorldPosition();
+		const Vector3& position = getGameObject()->getTransform().get().getWorldPosition();
 		mViewMatrix.translation(position * -1);
-		mViewMatrix.mul(getGameObject()->getTransform()->getRotationMatrix());
+		mViewMatrix.mul(getGameObject()->getTransform().get().getRotationMatrix());
 
 		mViewMatrixNeedsUpdate = false;
 	}

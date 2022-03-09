@@ -27,9 +27,9 @@ void Scene::destroyGameObjects()
 
 	if (mCameraGameObject)
 	{
-		Camera *cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+		Ref<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
 		mCameraGameObject->removeComponent<Camera>(cameraComponent);
-		DELETE(cameraComponent);
+		//DELETE(cameraComponent);
 		mCameraGameObject->destroy();
 		DELETE(mCameraGameObject);
 	}
@@ -47,8 +47,8 @@ void Scene::init()
 	GameObject *cameraGameObject = NEW(GameObject);
 	cameraGameObject->init();
 
-	// cameraGameObject->getTransform()->setLocalPosition(Vector3(0, 0, -100.0f));
-	cameraGameObject->getTransform()->setLocalPosition(Vector3(0, 0, 0));
+	// cameraGameObject->getTransform().get().setLocalPosition(Vector3(0, 0, -100.0f));
+	cameraGameObject->getTransform().get().setLocalPosition(Vector3(0, 0, 0));
 
 	Camera *cameraComponent = NEW(Camera);
 	cameraComponent->init();
@@ -114,7 +114,7 @@ void Scene::serialize(JSON& json) const
 		{
 			if (obj->getShouldPersist())
 			{
-				Transform *t = obj->getTransform();
+				Transform *t = &obj->getTransform().get();
 				Vector3 worldPosition = t->getWorldPosition();
 				Vector3 scale = t->getScale();
 

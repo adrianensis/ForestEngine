@@ -28,9 +28,9 @@ void UIList::initFromConfig(const UIElementConfig& config)
 {
 	UIElement::initFromConfig(config);
 
-	getTransform()->setLocalPosition(mConfig.mDisplayPosition);
-	getTransform()->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
-	getTransform()->setAffectedByProjection(false);
+	getTransform().get().setLocalPosition(mConfig.mDisplayPosition);
+	getTransform().get().setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
+	getTransform().get().setAffectedByProjection(false);
 
 	Renderer* renderer = NEW(Renderer);
 	renderer->init();
@@ -69,7 +69,7 @@ void UIList::toggle()
 	// TODO : Temporary
 	if (mButtons.empty())
 	{
-		Vector3 scale = getTransform()->getScale();
+		Vector3 scale = getTransform().get().getScale();
 		scale.x = scale.x * RenderContext::getAspectRatio();
 
 		UIBuilder uiBuilder;
@@ -95,8 +95,8 @@ void UIList::toggle()
 			button->setOnPressedCallback(onPressedCallback);
 			button->setVisibility(false);
 
-			Transform *t = button->getTransform();
-			t->setParent(getTransform());
+			Transform *t = &button->getTransform().get();
+			t->setParent(&getTransform().get());
 
 			Rectangle clipRectangle(
 						Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
@@ -105,9 +105,9 @@ void UIList::toggle()
 			button->getRenderer()->setClipRectangle(clipRectangle);
 
 			// Set clip rectangle for UIText label also
-			FOR_LIST(itRenderer, *button->getText()->getComponents<Renderer>())
+			FOR_LIST(itRenderer, button->getText()->getComponents<Renderer>())
 			{
-				(*itRenderer)->setClipRectangle(clipRectangle);
+				(*itRenderer).get().setClipRectangle(clipRectangle);
 			}
 
 			mButtons.push_back(button);
@@ -133,7 +133,7 @@ void UIList::setEntriesVisibility(bool visible)
 			std::string& label = it.get().mLabel;
 			UIElementCallback onPressedCallback = it.get().mCallback;
 
-			Vector3 scale = getTransform()->getScale();
+			Vector3 scale = getTransform().get().getScale();
 			scale.x = scale.x * RenderContext::getAspectRatio();
 
 			UIManager::getInstance().getBuilder()->saveData()->
@@ -183,7 +183,7 @@ void UIList::onScroll(f32 scroll)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				(*it)->getTransform()->translate(Vector2(0,0.005f * -scroll));
+				(*it)->getTransform().get().translate(Vector2(0,0.005f * -scroll));
 			}
 		}
 	}

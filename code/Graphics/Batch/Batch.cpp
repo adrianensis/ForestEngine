@@ -186,7 +186,7 @@ bool Batch::processRenderers()
 				{
 					/*Transform* transform = renderer->getGameObject()->getTransform();
 					const Vector3& position = transform->getWorldPosition();
-					f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform()->getWorldPosition());
+					f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform().get().getWorldPosition());
 					if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 					
 					if(renderer->hasClipRectangle())

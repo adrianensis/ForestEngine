@@ -32,8 +32,8 @@ public:
 	void update();	  // render
 	void terminate();
 
-	void addComponent(IEngineSystemComponent *component) override;
-	Ref<Chunk> assignChunk(Renderer * renderer);
+	void addComponent(Ref<IEngineSystemComponent> component) override;
+	Ref<Chunk> assignChunk(Ref<Renderer> renderer);
 	bool frustumTestSphere(const Vector3& center, f32 radius);
 
 	void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));

@@ -15,14 +15,14 @@ void BatchesMap::init()
 	//TRACE();
 }
 
-void BatchesMap::addRenderer(Renderer& renderer)
+void BatchesMap::addRenderer(Ref<Renderer> renderer)
 {
 	// Create a temporary key for searching purposes
 	BatchKey tmpBatchKey;
 	tmpBatchKey.init(
-		renderer.getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
-		renderer.getMaterial().get().getShader(),
-		renderer.getMesh()
+		renderer.get().getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
+		renderer.get().getMaterial().get().getShader(),
+		renderer.get().getMesh()
 	);
 
 	// Find if batch key already exists
@@ -38,36 +38,36 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	{
 		foundBatchKey = &(mBatchKeys.emplace_back(tmpBatchKey));
 		foundBatchKey->init(
-			renderer.getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
-			renderer.getMaterial().get().getShader(),
-			renderer.getMesh()
+			renderer.get().getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
+			renderer.get().getMaterial().get().getShader(),
+			renderer.get().getMesh()
 		);
 	}
 
-	Transform* transform = renderer.getGameObject()->getTransform();
+	Ref<Transform> transform = renderer.get().getGameObject()->getTransform();
 
 	InternalBatchesMap* batchesMap = nullptr;
 	
-	if(transform->isStatic())
+	if(transform.get().isStatic())
 	{
-		batchesMap = &(transform->getAffectedByProjection() ?  mBatchesStatic : mBatchesStaticScreenSpace);
+		batchesMap = &(transform.get().getAffectedByProjection() ?  mBatchesStatic : mBatchesStaticScreenSpace);
 	}
 	else
 	{
-		batchesMap = &(transform->getAffectedByProjection() ?  mBatchesDynamic : mBatchesDynamicScreenSpace);
+		batchesMap = &(transform.get().getAffectedByProjection() ?  mBatchesDynamic : mBatchesDynamicScreenSpace);
 	}
 
 	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
 	{
 		OwnerRef<Batch> batch = OwnerRef<Batch>(NEW(Batch));
-		batch.get().init(renderer.getMesh(), renderer.getMaterial());
-		batch.get().setIsStatic(transform->isStatic());
-		batch.get().setIsWorldSpace(transform->getAffectedByProjection());
+		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial());
+		batch.get().setIsStatic(transform.get().isStatic());
+		batch.get().setIsWorldSpace(transform.get().getAffectedByProjection());
 
 		MAP_INSERT(*batchesMap, foundBatchKey, batch);
 	}
 
-	(*batchesMap).at(foundBatchKey).get().addRenderer(renderer);
+	(*batchesMap).at(foundBatchKey).get().addRenderer(renderer.get());
 }
 
 void BatchesMap::render()

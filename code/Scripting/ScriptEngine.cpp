@@ -12,11 +12,11 @@ void ScriptEngine::init()
 	mController = ScenesManager::getInstance().getGameObjectController()->getFirstComponent<Script>();
 }
 
-void ScriptEngine::addComponent(IEngineSystemComponent *component)
+void ScriptEngine::addComponent(Ref<IEngineSystemComponent> component)
 {
-	if(component->getClassId() == Script::getClassIdStatic())
+	if(component.get().getClassId() == Script::getClassIdStatic())
 	{
-		Script* script = static_cast<Script*>(component);
+		Ref<Script> script = Ref<Script>::Cast(component);
 		mScripts.push_back(script);
 	}
 }
@@ -27,30 +27,30 @@ void ScriptEngine::update()
 	
 	if (mController)
 	{
-		if (!mController->getFirstUpdateDone())
+		if (!mController.get().getFirstUpdateDone())
 		{
-			mController->firstUpdate();
-			mController->firstUpdateDone();
+			mController.get().firstUpdate();
+			mController.get().firstUpdateDone();
 		}
 
-		mController->update();
+		mController.get().update();
 	}
 
 	FOR_LIST(it, mScripts)
 	{
-		Script *script = *it;
+		Ref<Script> script = *it;
 
-		if (script->isActive())
+		if (script.get().isActive())
 		{
-			if (!script->getFirstUpdateDone())
+			if (!script.get().getFirstUpdateDone())
 			{
-				script->firstUpdate();
-				script->firstUpdateDone();
+				script.get().firstUpdate();
+				script.get().firstUpdateDone();
 			}
 
-			script->update();
+			script.get().update();
 		}
-		else if (script->getIsPendingToBeDestroyed())
+		else if (script.get().getIsPendingToBeDestroyed())
 		{
 			internalRemoveScript(it);
 		}
@@ -59,13 +59,13 @@ void ScriptEngine::update()
 	PROFILER_TIMEMARK_END()
 }
 
-void ScriptEngine::internalRemoveScript(std::list<Script *>::iterator& it)
+void ScriptEngine::internalRemoveScript(std::list<Ref<Script>>::iterator& it)
 {
-	Script *script = *it;
+	Ref<Script> script = *it;
 
-	script->terminate();
-	script->finallyDestroy();
-	DELETE(script);
+	script.get().terminate();
+	script.get().finallyDestroy();
+	//DELETE(script);
 
 	it = mScripts.erase(it);
 	--it;
@@ -75,16 +75,16 @@ void ScriptEngine::terminate()
 {
 	TRACE()
 
-	if (mController)
-	{
-		mController->terminate();
-		DELETE(mController);
-	}
+	// if (mController)
+	// {
+	// 	mController->terminate();
+	// 	DELETE(mController);
+	// }
 
-	FOR_LIST(it, mScripts)
-	{
-		Script *script = *it;
-		script->terminate();
-		DELETE(script);
-	}
+	// FOR_LIST(it, mScripts)
+	// {
+	// 	Script *script = *it;
+	// 	script->terminate();
+	// 	DELETE(script);
+	// }
 }

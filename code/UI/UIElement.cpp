@@ -388,7 +388,7 @@ void UIElement::onScroll(f32 scroll)
 
 void UIElement::setComponentsCache()
 {
-	mRenderer = getFirstComponent<Renderer>();
+	mRenderer = &getFirstComponent<Renderer>().get();
 	//mCollider = getFirstComponent<Collider>();
 }
 
@@ -407,7 +407,7 @@ bool UIElement::isMouseCursorInsideElement()
 	//collider->getBoundingBox(true); // force regenerate bounding box
 	Vector2 mousePosition = Input::getInstance().getMousePosition();
 
-	if(getTransform()->getAffectedByProjection())
+	if(getTransform().get().getAffectedByProjection())
 	{
 		mousePosition = RenderEngine::getInstance().getCamera()->screenToWorld(Input::getInstance().getMousePosition());
 	}

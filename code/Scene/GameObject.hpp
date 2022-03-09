@@ -13,19 +13,22 @@ class GameObject: public ObjectBase
     GENERATE_METADATA(GameObject)
 	
 private:
-	std::map<ClassId, std::list<Component *> *> mComponentsMap;
+
+	inline static std::list<OwnerRef<Component>> smEmptyList;
+
+	std::map<ClassId, std::list<OwnerRef<Component>>> mComponentsMap;
 	bool mIsActive = false;
 
 	Scene* mScene = nullptr;
 	bool mIsStatic = false;
-	Transform* mTransform = nullptr;
+	OwnerRef<Transform> mTransform;
 	std::string mTag;
 	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
 	bool mShouldPersist = false;
 
-	const std::list<Component *> *getComponents(ClassId classId) const;
-	Component *getFirstComponent(ClassId classId) const;
+	const std::list<OwnerRef<Component>>& getComponents(ClassId classId) const;
+	Ref<Component> getFirstComponent(ClassId classId) const;
 
 	void addComponentToEngineSystem(Component* component);
 
@@ -35,31 +38,31 @@ public:
 
 	virtual void init();
 
-	void addComponent(Component * component, ClassId classId);
-	void removeComponent(Component * component, ClassId classId);
+	void addComponent(OwnerRef<Component> component, ClassId classId);
+	void removeComponent(Ref<Component> component, ClassId classId);
 
 	template <class T>
-	void addComponent(T * component)
+	void addComponent(OwnerRef<T> component)
 	{
-		GameObject::addComponent(component, T::getClassIdStatic());
+		GameObject::addComponent(OwnerRef<Component>::Cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
-	void removeComponent(T * component)
+	void removeComponent(Ref<T> component)
 	{
-		GameObject::removeComponent(component, T::getClassIdStatic());
+		GameObject::removeComponent(Ref<Component>::Cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
-	const std::list<T *> *getComponents() const
+	const std::list<OwnerRef<T>>& getComponents() const
 	{
-		return reinterpret_cast<const std::list<T *> *>(GameObject::getComponents(T::getClassIdStatic()));
+		return reinterpret_cast<const std::list<OwnerRef<T>>&>(GameObject::getComponents(T::getClassIdStatic()));
 	}
 
 	template <class T>
-	T *getFirstComponent() const
+	Ref<T> getFirstComponent() const
 	{
-		return dynamic_cast<T *>(GameObject::getFirstComponent(T::getClassIdStatic()));
+		return Ref<T>::Cast(GameObject::getFirstComponent(T::getClassIdStatic()));
 	}
 
 	bool isActive() const

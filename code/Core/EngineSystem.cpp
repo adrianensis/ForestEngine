@@ -5,16 +5,16 @@ void IEngineSystem::init()
     REGISTER_ENGINE_SYSTEM(this);
 }
 
-void IEngineSystem::addComponent(IEngineSystemComponent* component)
+void IEngineSystem::addComponent(Ref<IEngineSystemComponent> component)
 {
-    component->setAlreadyAddedToEngine(true);
+    component.get().setAlreadyAddedToEngine(true);
 }
 
-void EngineSystemsManager::addComponentToEngineSystem(IEngineSystemComponent* component)
+void EngineSystemsManager::addComponentToEngineSystem(Ref<IEngineSystemComponent> component)
 {
-    if (component && !component->getAlreadyAddedToEngine())
+    if (component && !component.get().getAlreadyAddedToEngine())
     {
-        ClassId componentClassId = component->getClassId();
+        ClassId componentClassId = component.get().getClassId();
         bool added = false;
         FOR_LIST_COND(itEngineSystem, mEngineSystems, !added)
         {

@@ -107,7 +107,7 @@ void RenderEngine::checkChunks()
 	{
 		Ref<Chunk> chunk = mChunks.at(i);
 
-		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera->getGameObject()->getTransform()->getWorldPosition());
+		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera->getGameObject()->getTransform().get().getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
 		
 		if (chunkInDistance && !chunk.get().getIsLoaded())
@@ -140,13 +140,13 @@ void RenderEngine::terminate()
 	mChunks.clear();
 }
 
-void RenderEngine::addComponent(IEngineSystemComponent *component)
+void RenderEngine::addComponent(Ref<IEngineSystemComponent> component)
 {
 	IEngineSystem::addComponent(component);
 
-	if(component->getClassId() == Renderer::getClassIdStatic())
+	if(component.get().getClassId() == Renderer::getClassIdStatic())
 	{
-		Renderer *renderer = static_cast<Renderer*>(component);
+		Ref<Renderer> renderer = Ref<Renderer>::Cast(component);
 
 		/*if(!CONTAINS(mDepthsData, renderer->getDepth()))
 		{
@@ -155,7 +155,7 @@ void RenderEngine::addComponent(IEngineSystemComponent *component)
 			MAP_INSERT(mDepthsData, renderer->getDepth(), DepthData);
 		}*/
 
-		if (renderer->getIsWorldSpace())
+		if (renderer.get().getIsWorldSpace())
 		{
 			Ref<Chunk> chunk = assignChunk(renderer);
 			if (chunk)
@@ -170,12 +170,12 @@ void RenderEngine::addComponent(IEngineSystemComponent *component)
 		else
 		{
 			// UI Case!
-			mBatchesMap.addRenderer(*renderer);
+			mBatchesMap.addRenderer(renderer);
 		}
 	}
 }
 
-Ref<Chunk> RenderEngine::assignChunk(Renderer *renderer)
+Ref<Chunk> RenderEngine::assignChunk(Ref<Renderer> renderer)
 {
 	//TRACE();
 	bool found = false;
@@ -188,7 +188,7 @@ Ref<Chunk> RenderEngine::assignChunk(Renderer *renderer)
 		chunkTmp = mChunks.at(i);
 		if (chunkTmp.get().containsRenderer /*Sphere*/ (renderer))
 		{
-			renderer->setChunk(chunkTmp);
+			renderer.get().setChunk(chunkTmp);
 
 			// if(! renderer->isStatic()){
 			found = true;

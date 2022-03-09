@@ -34,7 +34,7 @@ void Renderer::init()
 
 void Renderer::onComponentAdded()
 {
-	mTransformState = TransformState(*getGameObject()->getTransform());
+	mTransformState = TransformState(getGameObject()->getTransform().get());
 
 	// Force vertices generatiin
 	update();
@@ -68,19 +68,19 @@ void Renderer::setPositionOffset(const Vector3& newPositionOffset)
 
 bool Renderer::getIsWorldSpace() const
 {
-	return getGameObject()->getTransform()->getAffectedByProjection();
+	return getGameObject()->getTransform().get().getAffectedByProjection();
 }
 
 void Renderer::update()
 {
-	TransformState currentTransformState = TransformState(*getGameObject()->getTransform());
+	TransformState currentTransformState = TransformState(getGameObject()->getTransform().get());
 
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 
 	if (transformChanged || (!mRendererModelMatrixGenerated))
 	{
 		mRendererModelMatrix.translation(mPositionOffset);
-		mRendererModelMatrix.mul(getGameObject()->getTransform()->getModelMatrix());
+		mRendererModelMatrix.mul(getGameObject()->getTransform().get().getModelMatrix());
 
 		mRendererModelMatrixGenerated = true;
 	}

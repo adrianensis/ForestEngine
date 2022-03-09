@@ -13,9 +13,9 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 	size.z = 1;
 	size.x = size.x / RenderContext::getAspectRatio();
 
-	getTransform()->setLocalPosition(mConfig.mDisplayPosition);
-	getTransform()->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize)));
-	getTransform()->setAffectedByProjection(false);
+	getTransform().get().setLocalPosition(mConfig.mDisplayPosition);
+	getTransform().get().setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize)));
+	getTransform().get().setAffectedByProjection(false);
 
 	Renderer *renderer = NEW(Renderer);
 	renderer->init();

@@ -50,7 +50,7 @@ public:
 
 	void init();
 	void render();
-	void addRenderer(Renderer& renderer);
+	void addRenderer(Ref<Renderer> renderer);
 
 	void forceRegenerateBuffers();
 };

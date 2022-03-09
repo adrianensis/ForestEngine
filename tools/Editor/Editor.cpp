@@ -37,8 +37,8 @@ void Editor::createSprite(const Vector3& v)
 {
     GameObject* gameObject = NEW(GameObject);
     gameObject->init();
-	gameObject->getTransform()->setLocalPosition(v);
-	gameObject->getTransform()->setScale(Vector3(100.0f,100.0f,1.0f));
+	gameObject->getTransform().get().setLocalPosition(v);
+	gameObject->getTransform().get().setScale(Vector3(100.0f,100.0f,1.0f));
 
 	Renderer *renderer = NEW(Renderer);
 	renderer->init();

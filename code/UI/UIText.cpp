@@ -22,14 +22,14 @@ void UIText::initFromConfig(const UIElementConfig& config)
 
 	Vector3 textSize = Vector3(UIUtils::correctAspectRatio_X(mConfig.mTextSize), 1);
 
-	getTransform()->setLocalPosition(mConfig.mDisplayPosition);
-	getTransform()->setScale(textSize);
-	getTransform()->setAffectedByProjection(false);
+	getTransform().get().setLocalPosition(mConfig.mDisplayPosition);
+	getTransform().get().setScale(textSize);
+	getTransform().get().setAffectedByProjection(false);
 
 	if (mConfig.mParent)
 	{
-		getTransform()->setParent(mConfig.mParent->getTransform());
-		getTransform()->setLocalPosition(Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0));
+		getTransform().get().setParent(&mConfig.mParent->getTransform().get());
+		getTransform().get().setLocalPosition(Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0));
 	}
 
 	setSize(mConfig.mTextSize);
@@ -59,7 +59,7 @@ void UIText::setText(const std::string& text)
 			{
 				FOR_ARRAY(i, mFontRenderers)
 				{
-					removeComponent(mFontRenderers[i]);
+					//removeComponent(mFontRenderers[i]);
 				}
 
 				mFontRenderers.clear();
@@ -71,7 +71,7 @@ void UIText::setText(const std::string& text)
 				{
 					FOR_RANGE(i, text.length(), mString.length())
 					{
-						removeComponent(mFontRenderers[i]);
+						//removeComponent(mFontRenderers[i]);
 					}
 
 					std::vector<Renderer *> copyVector = mFontRenderers;

@@ -10,8 +10,8 @@
 #define REGISTER_ENGINE_SYSTEM(engineSystem) \
     EngineSystemsManager::getInstance().registerEngineSystem(engineSystem);
 
-#define ADD_COMPONENT_TO_ENGINE_SYSTEM(EngineSystemComponent) \
-    EngineSystemsManager::getInstance().addComponentToEngineSystem(EngineSystemComponent);
+#define ADD_COMPONENT_TO_ENGINE_SYSTEM(engineSystemComponent) \
+    EngineSystemsManager::getInstance().addComponentToEngineSystem(engineSystemComponent);
 
 class IEngineSystemComponent: public ObjectBase
 {
@@ -43,7 +43,7 @@ public:
 
     virtual void init();
 
-    virtual void addComponent(IEngineSystemComponent* component);
+    virtual void addComponent(Ref<IEngineSystemComponent> component);
 };
 
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
@@ -52,7 +52,7 @@ private:
     std::list<IEngineSystem *> mEngineSystems;
 
 public:
-    void addComponentToEngineSystem(IEngineSystemComponent* component);
+    void addComponentToEngineSystem(Ref<IEngineSystemComponent> component);
 
     void registerEngineSystem(IEngineSystem *engineSystem)
     {
