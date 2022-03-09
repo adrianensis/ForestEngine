@@ -8,7 +8,6 @@
 
 Material::Material()
 {
-	mShader = nullptr;
 	mAlphaEnabled = true;
 	mHasBorder = false;
 }
@@ -29,28 +28,28 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 	const Matrix4& projectionMatrix = camera->getProjectionMatrix();
 	const Matrix4& viewMatrix = camera->getViewMatrix();
 
-	mShader->addMatrix(isWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
-	mShader->addMatrix(isWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
+	mShader.get().addMatrix(isWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
+	mShader.get().addMatrix(isWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
 
-	mShader->addBool(isInstanced, "isInstanced");
+	mShader.get().addBool(isInstanced, "isInstanced");
 
-	mShader->addBool(mTexture.isValid(), "hasTexture");
-	mShader->addBool(mAlphaEnabled, "alphaEnabled");
-	mShader->addBool(mHasBorder, "hasBorder");
+	mShader.get().addBool(mTexture.isValid(), "hasTexture");
+	mShader.get().addBool(mAlphaEnabled, "alphaEnabled");
+	mShader.get().addBool(mHasBorder, "hasBorder");
 
-	mShader->addFloat(Time::getInstance().getDeltaTimeSeconds(), "time");
+	mShader.get().addFloat(Time::getInstance().getDeltaTimeSeconds(), "time");
 
-	mShader->addVector2(RenderContext::getWindowSize(), "windowSize");
+	mShader.get().addVector2(RenderContext::getWindowSize(), "windowSize");
 }
 
 void Material::enable()
 {
-	mShader->enable();
+	mShader.get().enable();
 };
 
 void Material::disable()
 {
-	mShader->disable();
+	mShader.get().disable();
 };
 
 void Material::serialize(JSON& json) const

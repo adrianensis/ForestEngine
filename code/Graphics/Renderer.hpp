@@ -31,8 +31,8 @@ private:
 	f32 mRenderDistance = 0.0f;
 	std::map<std::string, Ref<Animation>> mAnimations;
 	std::string mCurrentAnimationName;
-	RefRaw<Chunk> mChunk = nullptr;
-	RefRaw<Batch> mBatch = nullptr;
+	Ref<Chunk> mChunk;
+	Ref<Batch> mBatch;
 	Ref<const Mesh> mMesh;
 	Ref<Material> mMaterial;
 

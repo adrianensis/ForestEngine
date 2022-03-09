@@ -19,6 +19,7 @@
 #include <functional>
 #include <future> // std::async, std::future
 #include <thread>
+#include <memory>
 
 #include "Core/Macros.hpp"
 

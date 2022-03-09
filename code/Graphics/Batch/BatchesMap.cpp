@@ -4,10 +4,10 @@
 
 BatchesMap::~BatchesMap()
 {
-	MAP_DELETE_CONTENT(mBatchesDynamic)
-	MAP_DELETE_CONTENT(mBatchesDynamicScreenSpace)
-	MAP_DELETE_CONTENT(mBatchesStatic)
-	MAP_DELETE_CONTENT(mBatchesStaticScreenSpace)
+	// MAP_DELETE_CONTENT(mBatchesDynamic)
+	// MAP_DELETE_CONTENT(mBatchesDynamicScreenSpace)
+	// MAP_DELETE_CONTENT(mBatchesStatic)
+	// MAP_DELETE_CONTENT(mBatchesStaticScreenSpace)
 }
 
 void BatchesMap::init()
@@ -20,9 +20,9 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	// Create a temporary key for searching purposes
 	BatchKey tmpBatchKey;
 	tmpBatchKey.init(
-		&renderer.getMaterial().get().getTexture().get(), // NOTE : Texture can be nullptr as a valid hash key.
+		renderer.getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
 		renderer.getMaterial().get().getShader(),
-		&renderer.getMesh().get()
+		renderer.getMesh()
 	);
 
 	// Find if batch key already exists
@@ -38,15 +38,15 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	{
 		foundBatchKey = &(mBatchKeys.emplace_back(tmpBatchKey));
 		foundBatchKey->init(
-			&renderer.getMaterial().get().getTexture().get(), // NOTE : Texture can be nullptr as a valid hash key.
+			renderer.getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
 			renderer.getMaterial().get().getShader(),
-			&renderer.getMesh().get()
+			renderer.getMesh()
 		);
 	}
 
 	Transform* transform = renderer.getGameObject()->getTransform();
 
-	std::map<BatchKey*, Batch*>* batchesMap = nullptr;
+	InternalBatchesMap* batchesMap = nullptr;
 	
 	if(transform->isStatic())
 	{
@@ -59,15 +59,15 @@ void BatchesMap::addRenderer(Renderer& renderer)
 
 	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
 	{
-		Batch *batch = NEW(Batch);
-		batch->init(&renderer.getMesh().get(), &renderer.getMaterial().get());
-		batch->setIsStatic(transform->isStatic());
-		batch->setIsWorldSpace(transform->getAffectedByProjection());
+		OwnerRef<Batch> batch = OwnerRef<Batch>(NEW(Batch));
+		batch.get().init(&renderer.getMesh().get(), &renderer.getMaterial().get());
+		batch.get().setIsStatic(transform->isStatic());
+		batch.get().setIsWorldSpace(transform->getAffectedByProjection());
 
 		MAP_INSERT(*batchesMap, foundBatchKey, batch);
 	}
 
-	(*batchesMap).at(foundBatchKey)->addRenderer(renderer);
+	(*batchesMap).at(foundBatchKey).get().addRenderer(renderer);
 }
 
 void BatchesMap::render()
@@ -78,11 +78,11 @@ void BatchesMap::render()
 	renderBatchesMap(mBatchesDynamicScreenSpace);
 }
 
-void BatchesMap::renderBatchesMap(std::map<BatchKey*, Batch*>& batchesMap)
+void BatchesMap::renderBatchesMap(InternalBatchesMap& batchesMap)
 {
 	FOR_MAP(it, batchesMap)
 	{
-		it->second->render();
+		it->second.get().render();
 	}
 }
 
@@ -90,6 +90,6 @@ void BatchesMap::forceRegenerateBuffers()
 {
 	FOR_MAP(it, mBatchesStatic)
 	{
-		it->second->forceRegenerateBuffers();
+		it->second.get().forceRegenerateBuffers();
 	}
 }

@@ -1,8 +1,6 @@
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
-#include <fstream> // std::ifstream
 
-Shader *Shader::msShaderDefault = nullptr;
 Shader *Shader::msShaderDebug = nullptr;
 
 Shader::Shader()
@@ -14,13 +12,14 @@ Shader::Shader()
 
 Shader::~Shader() = default;
 
-Shader *Shader::getDefaultShader()
+Ref<Shader> Shader::getDefaultShader()
 {
 	if (!msShaderDefault)
 	{
-		msShaderDefault = NEW(Shader);
-		msShaderDefault->init();
+		msShaderDefault = OwnerRef<Shader>(NEW(Shader));
+		msShaderDefault.get().init();
 	}
+
 	return msShaderDefault;
 }
 
@@ -36,10 +35,10 @@ Shader *Shader::getDebugShader()
 
 void Shader::freeStaticShaders()
 {
-	if (msShaderDefault)
-	{
-		DELETE(msShaderDefault);
-	}
+	// if (msShaderDefault)
+	// {
+	// 	DELETE(msShaderDefault);
+	// }
 
 	if (msShaderDebug)
 	{

@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/ObjectBase.hpp"
+#include "Core/Metadata.hpp"
 #include "Core/Assert/Assert.hpp"
-
 
 class Memory
 {
@@ -20,7 +19,7 @@ public:
 
 		std::string className;
 
-		if constexpr (std::is_base_of<ObjectBase, T>::value)
+		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
 			className = object->getClassName();
 		}
@@ -47,7 +46,7 @@ public:
 		ASSERT_MSG(pointer != nullptr, "pointer is nullptr");
 
 		std::string className;
-		if constexpr (std::is_base_of<ObjectBase, T>::value)
+		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
 			className = pointer->getClassName();
 		}

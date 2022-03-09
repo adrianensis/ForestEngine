@@ -3,18 +3,6 @@
 #define NONE(...)
 
 // --------------------------------------------------------
-// CPP
-// --------------------------------------------------------
-
-// These macros are intended to be parsed by Python scripts
-
-#define CPP
-#define CPP_INCLUDE 1
-#define GENERATE_CPP(...)
-
-// This comment-macro will make script to ignore the file 
-
-// --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
 
@@ -97,6 +85,11 @@ void __customMain()
 		{                                                                             \
 			return __VA_ARGS__::getClassNameStatic();                                 \
 		};                                                                            \
+	private:                                                                          \
+		Ref<__VA_ARGS__> getRefToThis()                                               \
+		{                                                                             \
+			return Ref<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
+		}                                                                             \
 	private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------

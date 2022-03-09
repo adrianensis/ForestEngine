@@ -21,7 +21,7 @@ private:
 	bool mCameraDirtyTranslation = false;
 
 	f32 mMinChunkDrawDistance = 0.0f;
-	std::vector<Chunk *> mChunks;
+	std::vector<OwnerRef<Chunk>> mChunks;
 
 	void checkChunks();
 	void renderBatches();
@@ -33,7 +33,7 @@ public:
 	void terminate();
 
 	void addComponent(IEngineSystemComponent *component) override;
-	Chunk *assignChunk(Renderer * renderer);
+	Ref<Chunk> assignChunk(Renderer * renderer);
 	bool frustumTestSphere(const Vector3& center, f32 radius);
 
 	void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));

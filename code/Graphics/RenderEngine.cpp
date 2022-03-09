@@ -38,9 +38,9 @@ void RenderEngine::init(f32 sceneSize)
 	{
 		for (i32 j = chunksGridSizeHalf; j > -chunksGridSizeHalf; --j)
 		{
-			Chunk *chunk = NEW(Chunk);
-			chunk->init();
-			chunk->set(Vector2(i * chunkSize, j * chunkSize), chunkSize);
+			OwnerRef<Chunk> chunk = OwnerRef<Chunk>(NEW(Chunk));
+			chunk.get().init();
+			chunk.get().set(Vector2(i * chunkSize, j * chunkSize), chunkSize);
 
 			mChunks.push_back(chunk);
 		}
@@ -105,24 +105,24 @@ void RenderEngine::checkChunks()
 
 	FOR_ARRAY(i, mChunks)
 	{
-		Chunk *chunk = mChunks.at(i);
+		Ref<Chunk> chunk = mChunks.at(i);
 
-		f32 chunkToCameraDistance = chunk->getCenter().dst(mCamera->getGameObject()->getTransform()->getWorldPosition());
+		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera->getGameObject()->getTransform()->getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
 		
-		if (chunkInDistance && !chunk->getIsLoaded())
+		if (chunkInDistance && !chunk.get().getIsLoaded())
 		{
-			chunk->load();
+			chunk.get().load();
 		}
-		else if (!chunkInDistance && chunk->getIsLoaded())
+		else if (!chunkInDistance && chunk.get().getIsLoaded())
 		{
 			mBatchesMap.forceRegenerateBuffers();
 
-			chunk->unload();
+			chunk.get().unload();
 		}
 
 		//if (chunk->getIsLoaded()) {
-		chunk->update(&mBatchesMap);
+		chunk.get().update(&mBatchesMap);
 		//}
 	}
 
@@ -136,7 +136,8 @@ void RenderEngine::terminate()
 	mShapeBatchRendererMap.terminate();
 	mShapeBatchRendererMapScreenSpace.terminate();
 
-	DELETE_CONTENT(mChunks);
+	//DELETE_CONTENT(mChunks);
+	mChunks.clear();
 }
 
 void RenderEngine::addComponent(IEngineSystemComponent *component)
@@ -156,10 +157,10 @@ void RenderEngine::addComponent(IEngineSystemComponent *component)
 
 		if (renderer->getIsWorldSpace())
 		{
-			Chunk *chunk = assignChunk(renderer);
+			Ref<Chunk> chunk = assignChunk(renderer);
 			if (chunk)
 			{
-				chunk->addRenderer(renderer);
+				chunk.get().addRenderer(renderer);
 			}
 			else
 			{
@@ -174,18 +175,18 @@ void RenderEngine::addComponent(IEngineSystemComponent *component)
 	}
 }
 
-Chunk *RenderEngine::assignChunk(Renderer *renderer)
+Ref<Chunk> RenderEngine::assignChunk(Renderer *renderer)
 {
 	//TRACE();
 	bool found = false;
-	Chunk *chunkTmp = nullptr;
-	Chunk *chunkFound = nullptr;
+	Ref<Chunk> chunkTmp;
+	Ref<Chunk> chunkFound;
 	// FOR_ARRAY_COND(i, mChunks, !found) {
 	for (i32 i = 0; (i < (i32)(mChunks.size())) && (!found); ++i)
 	{
 		// FOR_ARRAY(i, mChunks){
 		chunkTmp = mChunks.at(i);
-		if (chunkTmp->containsRenderer /*Sphere*/ (renderer))
+		if (chunkTmp.get().containsRenderer /*Sphere*/ (renderer))
 		{
 			renderer->setChunk(chunkTmp);
 

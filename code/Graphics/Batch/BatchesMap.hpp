@@ -18,11 +18,11 @@ private:
 	class BatchKey
 	{
 	public:
-		const Texture* mTexture = nullptr;
-		const Shader* mShader = nullptr;
-		const Mesh* mMesh = nullptr;
+		Ref<const Texture> mTexture;
+		Ref<const Shader> mShader;
+		Ref<const Mesh> mMesh;
 
-		void init(const Texture* texture, const Shader* shader, const Mesh* mesh)
+		void init(Ref<const Texture> texture, Ref<const Shader> shader, Ref<const Mesh> mesh)
 		{
 			mTexture = texture;
 			mShader = shader;
@@ -37,12 +37,13 @@ private:
 
 	std::vector<BatchKey> mBatchKeys;
 
-	std::map<BatchKey*, Batch*> mBatchesDynamic;
-	std::map<BatchKey*, Batch*> mBatchesDynamicScreenSpace;
-	std::map<BatchKey*, Batch*> mBatchesStatic;
-	std::map<BatchKey*, Batch*> mBatchesStaticScreenSpace;
+	using InternalBatchesMap = std::map<BatchKey*, OwnerRef<Batch>>;
+	InternalBatchesMap mBatchesDynamic;
+	InternalBatchesMap mBatchesDynamicScreenSpace;
+	InternalBatchesMap mBatchesStatic;
+	InternalBatchesMap mBatchesStaticScreenSpace;
 
-	void renderBatchesMap(std::map<BatchKey*, Batch*>& batchesMap);
+	void renderBatchesMap(InternalBatchesMap& batchesMap);
 
 public:
 	~BatchesMap() override;

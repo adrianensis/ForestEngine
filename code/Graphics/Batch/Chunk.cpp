@@ -55,13 +55,13 @@ void Chunk::update(BatchesMap *batchesMap)
 
 			if (!renderer->isStatic() && !containsRenderer(renderer))
 			{
-				Chunk *newChunk = RenderEngine::getInstance().assignChunk(renderer);
+				Ref<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
 
 				// Only remove the renderer from this chunk if another chunk is found.
 				// If not, keep the renderer here until a new chunk is found.
-				if (newChunk && newChunk != this)
+				if (newChunk && newChunk != getRefToThis())
 				{
-					newChunk->addRenderer(renderer);
+					newChunk.get().addRenderer(renderer);
 					removeFromList = true;
 				}
 			}

@@ -246,7 +246,7 @@ bool Batch::processRenderers()
 
 bool Batch::isChunkOk(Renderer& renderer) const
 {
-	RefRaw<Chunk> chunk = renderer.getChunk();
+	Ref<Chunk> chunk = renderer.getChunk();
 	return (!chunk) || (chunk && chunk.get().getIsLoaded()); // !chunk means -> Screen Space case
 }
 
@@ -275,7 +275,7 @@ void Batch::addRenderer(Renderer& renderer)
 
 	mProxyRenderers.back().init(&renderer);
 
-	renderer.setBatch(this);
+	renderer.setBatch(getRefToThis());
 
 	mNewRendererAdded = true;
 }
@@ -291,7 +291,7 @@ void Batch::internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::ite
 	if(proxy.isValid())
 	{
 		Renderer* renderer = proxy.getObject();
-		renderer->setBatch(nullptr);
+		renderer->setBatch(Ref<Batch>());
 
 		// NOTE: UI CASE
 		// UI is not deleted in Chunk so it has to be deleted here.

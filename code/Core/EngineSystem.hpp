@@ -2,6 +2,7 @@
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Singleton.hpp"
+#include "Core/ObjectBase.hpp"
 
 #define REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(...) \
     registerComponentClass(__VA_ARGS__::getClassIdStatic());

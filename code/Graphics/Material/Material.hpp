@@ -10,7 +10,7 @@ class Material: public ObjectBase
     GENERATE_METADATA(Material)
 private: 
 	Vector4 mColor;
-	Shader* mShader = nullptr;
+	Ref<Shader> mShader;
 	Ref<Texture> mTexture;
 	bool mAlphaEnabled = false;
 	bool mHasBorder = false;
@@ -26,7 +26,7 @@ public:
 	void deserialize(const JSON& json) override;
 
 	GET_SET(Color)
-	GET_SET(Shader)
+	RGET_SET(Shader)
 	RGET_SET(Texture)
 	GET_SET(AlphaEnabled)
 	GET_SET(HasBorder)

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/ObjectBase.hpp"
 #include "Core/Memory.hpp"
 
 template<class T>
@@ -84,6 +83,16 @@ public:
     {
         return this->isValid();
     }
+
+    bool operator==(const OwnerRef<T>& otherRef) const
+	{
+		return this->mReference == otherRef.mReference;
+	}
+
+    bool operator!=(const OwnerRef<T>& otherRef) const
+	{
+		return (*this == otherRef);
+	}
 };
 
 template<class T>
@@ -106,7 +115,7 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    T& get() const { return *mReference.lock().get(); }
+    T& get() const { return mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
 
     Ref& operator=(const Ref<T>& rhs)
