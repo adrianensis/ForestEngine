@@ -115,7 +115,7 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    T& get() const { return mReference.lock().get(); }
+    T& get() const { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
 
     Ref& operator=(const Ref<T>& rhs)

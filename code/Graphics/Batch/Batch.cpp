@@ -34,7 +34,7 @@ Batch::~Batch()
 	glDeleteBuffers(1, &mEBO);
 }
 
-void Batch::init(const Mesh *mesh, Material *material)
+void Batch::init(Ref<const Mesh> mesh, Ref<Material> material)
 {
 	// TRACE();
 
@@ -53,7 +53,7 @@ void Batch::bind()
 	mVBOPosition = RenderContext::createVBO(Mesh::smVertexPositionSize, 0);
 	mVBOTexture = RenderContext::createVBO(Mesh::smVertexTexCoordSize, 1);
 	mVBOColor = RenderContext::createVBO(Mesh::smVertexColorSize, 2);
-	//mVBONormal = RenderContext::createVBO(mMesh->getNormals(), 3, 3);
+	//mVBONormal = RenderContext::createVBO(mMesh.get().getNormals(), 3, 3);
 
 	if(getIsInstanced())
 	{
@@ -79,7 +79,7 @@ void Batch::bind()
 
 	mEBO = RenderContext::createEBO();
 	
-	Ref<Texture> texture = mMaterial->getTexture();
+	Ref<Texture> texture = mMaterial.get().getTexture();
 
 	if (texture)
 	{
@@ -97,9 +97,9 @@ void Batch::render()
 	{
 		RenderContext::enableVAO(mVAO);
 
-		mMaterial->enable();
+		mMaterial.get().enable();
 
-		mMaterial->bind(getIsWorldSpace(), getIsInstanced());
+		mMaterial.get().bind(getIsWorldSpace(), getIsInstanced());
 
 		if(shouldRegenerateBuffers())
 		{
@@ -115,7 +115,7 @@ void Batch::render()
 			drawCall(); // flush all the previous rendereres
 		}
 
-		mMaterial->disable();
+		mMaterial.get().disable();
 
 		RenderContext::enableVAO(0);
 	}
@@ -141,7 +141,7 @@ void Batch::resizeBuffers()
 
 		u32 meshesAmount = getIsInstanced() ? 1 : mMaxMeshesThreshold; 
 
-		mMeshBuilder.init(mMesh->getVertexCount() * meshesAmount, mMesh->getFacesCount() * meshesAmount);
+		mMeshBuilder.init(mMesh.get().getVertexCount() * meshesAmount, mMesh.get().getFacesCount() * meshesAmount);
 
 		mMatrices.reserve(Matrix4::smMatrixSize * mMaxMeshesThreshold);
 
@@ -154,7 +154,7 @@ void Batch::resizeBuffers()
 		mMeshBuilder.copyTextureCoordinates(mMesh);
 		//mMeshBuilder.copyColors(mMesh);
 
-		FOR_RANGE(i, 0, mMesh->getVertexCount())
+		FOR_RANGE(i, 0, mMesh.get().getVertexCount())
 		{
 			mMeshBuilder.addColor(0,0,0,1);
 		}
@@ -257,7 +257,7 @@ void Batch::drawCall()
 	{
 		sendDataToBuffers();
 
-		RenderContext::drawElements(mMesh->getFaces().size(), mMeshesIndex, getIsInstanced());
+		RenderContext::drawElements(mMesh.get().getFaces().size(), mMeshesIndex, getIsInstanced());
 	}
 
 	mNewRendererAdded = false;
@@ -330,13 +330,13 @@ void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
 
 	const std::vector<Vector3> &vertexPositions = renderer.getVertices();
 
-	FOR_RANGE(i, 0, mMesh->getVertexCount())
+	FOR_RANGE(i, 0, mMesh.get().getVertexCount())
 	{
 		mMeshBuilder.addVertex(vertexPositions[i]);
 
 		Vector2 vertexTexture(
-			mMesh->getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
-			mMesh->getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
+			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
+			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
 
 		Vector2 regionSize = renderer.getTextureRegion().getSize();
 		Vector2 regionPosition = renderer.getTextureRegion().getLeftTop();
@@ -398,11 +398,11 @@ void Batch::generateFacesData(u32 meshesCount)
 	// Create Faces once and send to GPU once.
 	FOR_RANGE(i, 0, meshesCount)
 	{
-		u32 offset = (i * mMesh->getVertexCount());
+		u32 offset = (i * mMesh.get().getVertexCount());
 		
-		FOR_RANGE(faceIndex, 0, mMesh->getFaces().size())
+		FOR_RANGE(faceIndex, 0, mMesh.get().getFaces().size())
 		{
-			mMeshBuilder.addFaceIndex(mMesh->getFaces()[faceIndex] + offset);
+			mMeshBuilder.addFaceIndex(mMesh.get().getFaces()[faceIndex] + offset);
 		}
 	}
 

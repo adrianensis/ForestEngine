@@ -12,8 +12,8 @@ class Batch: public ObjectBase
 private:
 	std::list<ProxyObject<Renderer>> mProxyRenderers;
 
-	Material* mMaterial = nullptr;
-	const Mesh* mMesh = nullptr;
+	Ref<Material> mMaterial;
+	Ref<const Mesh> mMesh;
 	bool mIsInstanced = false;
 	std::vector<f32> mMatrices;
 
@@ -61,7 +61,7 @@ private:
 public:
 	~Batch() override;
 
-	void init(const Mesh *mesh, Material *material);
+	void init(Ref<const Mesh> mesh, Ref<Material> material);
 	void bind();
 
 	void render();
@@ -69,8 +69,8 @@ public:
 	void addRenderer(Renderer& renderer);
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
 
-	GET(Material)
-	GET(Mesh)
+	RGET(Material)
+	RGET(Mesh)
 	GET(IsInstanced)
 	GET_SET(IsWorldSpace)
 	GET_SET(IsStatic)

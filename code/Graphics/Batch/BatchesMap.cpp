@@ -60,7 +60,7 @@ void BatchesMap::addRenderer(Renderer& renderer)
 	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
 	{
 		OwnerRef<Batch> batch = OwnerRef<Batch>(NEW(Batch));
-		batch.get().init(&renderer.getMesh().get(), &renderer.getMaterial().get());
+		batch.get().init(renderer.getMesh(), renderer.getMaterial());
 		batch.get().setIsStatic(transform->isStatic());
 		batch.get().setIsWorldSpace(transform->getAffectedByProjection());
 

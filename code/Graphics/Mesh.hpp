@@ -31,11 +31,11 @@ public:
 	void addFace(u16 v1, u16 v2, u16 v3);
 	void addFaceIndex(u16 v1);
 
-	void copyVertices(const Mesh* other);
-	void copyNormals(const Mesh* other);
-	void copyTextureCoordinates(const Mesh* other);
-	void copyColors(const Mesh* other);
-	void copyFaces(const Mesh* other);
+	void copyVertices(Ref<const Mesh> other);
+	void copyNormals(Ref<const Mesh> other);
+	void copyTextureCoordinates(Ref<const Mesh> other);
+	void copyColors(Ref<const Mesh> other);
+	void copyFaces(Ref<const Mesh> other);
 
 	void clear();
 

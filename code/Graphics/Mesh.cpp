@@ -51,29 +51,29 @@ void Mesh::addFaceIndex(u16 i)
 	mFaces.push_back(i);
 }
 
-void Mesh::copyVertices(const Mesh* other)
+void Mesh::copyVertices(Ref<const Mesh> other)
 {
-	std::copy(other->getVertices().begin(), other->getVertices().end(), back_inserter(mVertices));
+	std::copy(other.get().getVertices().begin(), other.get().getVertices().end(), back_inserter(mVertices));
 }
 
-void Mesh::copyNormals(const Mesh* other)
+void Mesh::copyNormals(Ref<const Mesh> other)
 {
-	std::copy(other->getNormals().begin(), other->getNormals().end(), back_inserter(mNormals));
+	std::copy(other.get().getNormals().begin(), other.get().getNormals().end(), back_inserter(mNormals));
 }
 
-void Mesh::copyTextureCoordinates(const Mesh* other)
+void Mesh::copyTextureCoordinates(Ref<const Mesh> other)
 {
-	std::copy(other->getTextureCoordinates().begin(), other->getTextureCoordinates().end(), back_inserter(mTextureCoordinates));
+	std::copy(other.get().getTextureCoordinates().begin(), other.get().getTextureCoordinates().end(), back_inserter(mTextureCoordinates));
 }
 
-void Mesh::copyColors(const Mesh* other)
+void Mesh::copyColors(Ref<const Mesh> other)
 {
-	std::copy(other->getColors().begin(), other->getColors().end(), back_inserter(mColors));
+	std::copy(other.get().getColors().begin(), other.get().getColors().end(), back_inserter(mColors));
 }
 
-void Mesh::copyFaces(const Mesh* other)
+void Mesh::copyFaces(Ref<const Mesh> other)
 {
-	std::copy(other->getFaces().begin(), other->getFaces().end(), back_inserter(mFaces));
+	std::copy(other.get().getFaces().begin(), other.get().getFaces().end(), back_inserter(mFaces));
 }
 
 void Mesh::clear()
