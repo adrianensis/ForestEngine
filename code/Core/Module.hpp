@@ -10,7 +10,6 @@
 #include "Core/Memory.hpp"
 #include "Core/ClassManager.hpp"
 #include "Core/EngineSystem.hpp"
-#include "Core/Proxy/ProxyObject.hpp"
 #include "Core/Functor.hpp"
 #include "Core/File/File.hpp"
 #include "Core/Log/Log.hpp"

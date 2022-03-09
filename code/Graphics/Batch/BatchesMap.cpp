@@ -67,7 +67,7 @@ void BatchesMap::addRenderer(Ref<Renderer> renderer)
 		MAP_INSERT(*batchesMap, foundBatchKey, batch);
 	}
 
-	(*batchesMap).at(foundBatchKey).get().addRenderer(renderer.get());
+	(*batchesMap).at(foundBatchKey).get().addRenderer(renderer);
 }
 
 void BatchesMap::render()

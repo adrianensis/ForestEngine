@@ -14,16 +14,16 @@
 
 Batch::~Batch()
 {
-	FOR_LIST(it, mProxyRenderers)
-	{
-		if (it->isValid())
-		{
-			it->disconnectFromOwner();
-			DELETE(it->getObject());
-		}
-	}
+	// FOR_LIST(it, mRenderers)
+	// {
+	// 	if (it->isValid())
+	// 	{
+	// 		it->disconnectFromOwner();
+	// 		DELETE(it->getObject());
+	// 	}
+	// }
 
-	mProxyRenderers.clear();
+	mRenderers.clear();
 
 	glDeleteVertexArrays(1, &mVAO);
 	glDeleteBuffers(1, &mVBOPosition);
@@ -93,7 +93,7 @@ void Batch::render()
 {
 	PROFILER_TIMEMARK_START()
 
-	if (!mProxyRenderers.empty())
+	if (!mRenderers.empty())
 	{
 		RenderContext::enableVAO(mVAO);
 
@@ -134,7 +134,7 @@ void Batch::resizeBuffers()
 		mMatrices.clear();
 	}
 	
-	u32 newSize = mProxyRenderers.size();
+	u32 newSize = mRenderers.size();
 	if (newSize > mMaxMeshesThreshold)
 	{
 		mMaxMeshesThreshold += mMaxMeshesIncrement;
@@ -173,23 +173,23 @@ bool Batch::processRenderers()
 
 	bool pendingDrawCall = false;
 	
-	FOR_LIST(it, mProxyRenderers)
+	FOR_LIST(it, mRenderers)
 	{
 		bool toRemove = false;
 
 		if(it->isValid())
 		{
-			Renderer *renderer = it->getObject();
-			if (renderer->isActive())
+			Ref<Renderer> renderer = *it;
+			if (renderer.get().isActive())
 			{
-				if (isChunkOk(*renderer))
+				if (isChunkOk(renderer))
 				{
 					/*Transform* transform = renderer->getGameObject()->getTransform();
 					const Vector3& position = transform->getWorldPosition();
 					f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform().get().getWorldPosition());
 					if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 					
-					if(renderer->hasClipRectangle())
+					if(renderer.get().hasClipRectangle())
 					{
 						/*if(pendingDrawCall)
 						{
@@ -211,7 +211,7 @@ bool Batch::processRenderers()
 					}
 					else
 					{
-						addToVertexBuffer(*renderer);
+						addToVertexBuffer(renderer);
 						pendingDrawCall = true;
 					}
 				}
@@ -222,7 +222,7 @@ bool Batch::processRenderers()
 			}
 			else
 			{
-				if (renderer->getIsPendingToBeDestroyed())
+				if (renderer.get().getIsPendingToBeDestroyed())
 				{
 					toRemove = true;
 				}
@@ -244,9 +244,9 @@ bool Batch::processRenderers()
 	return pendingDrawCall;
 }
 
-bool Batch::isChunkOk(Renderer& renderer) const
+bool Batch::isChunkOk(Ref<Renderer> renderer) const
 {
-	Ref<Chunk> chunk = renderer.getChunk();
+	Ref<Chunk> chunk = renderer.get().getChunk();
 	return (!chunk) || (chunk && chunk.get().getIsLoaded()); // !chunk means -> Screen Space case
 }
 
@@ -267,50 +267,42 @@ void Batch::drawCall()
 	PROFILER_TIMEMARK_END()
 }
 
-void Batch::addRenderer(Renderer& renderer)
+void Batch::addRenderer(Ref<Renderer> renderer)
 {
-	ProxyObject<Renderer> proxy;
-
-	mProxyRenderers.push_back(proxy);
-
-	mProxyRenderers.back().init(&renderer);
-
-	renderer.setBatch(getRefToThis());
+	mRenderers.push_back(renderer);
+	renderer.get().setBatch(getRefToThis());
 
 	mNewRendererAdded = true;
 }
 
-void Batch::internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::iterator& it)
+void Batch::internalRemoveRendererFromList(std::list<Ref<Renderer>>::iterator& it)
 {
 	PROFILER_TIMEMARK_START()
 
-	ProxyObject<Renderer>& proxy = *it;
+	Ref<Renderer> renderer = *it;
 
-	proxy.disconnectFromOwner();
-
-	if(proxy.isValid())
+	if(renderer)
 	{
-		Renderer* renderer = proxy.getObject();
-		renderer->setBatch(Ref<Batch>());
+		renderer.get().setBatch(Ref<Batch>());
 
 		// NOTE: UI CASE
 		// UI is not deleted in Chunk so it has to be deleted here.
 		if (!getIsWorldSpace())
 		{
-			renderer->finallyDestroy();
-			DELETE(renderer);
+			renderer.get().finallyDestroy();
+			//DELETE(renderer);
 		}
 	}
 
-	it = mProxyRenderers.erase(it);
+	it = mRenderers.erase(it);
 	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
 
 	PROFILER_TIMEMARK_END()
 }
 
-void Batch::addToVertexBuffer(Renderer& renderer)
+void Batch::addToVertexBuffer(Ref<Renderer> renderer)
 {
-	renderer.update();
+	renderer.get().update();
 
 	if(getIsInstanced())
 	{
@@ -324,11 +316,11 @@ void Batch::addToVertexBuffer(Renderer& renderer)
 	mMeshesIndex++;
 }
 
-void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
+void Batch::addToVertexBufferNotInstanced(Ref<Renderer> renderer)
 {
 	PROFILER_TIMEMARK_START()
 
-	const std::vector<Vector3> &vertexPositions = renderer.getVertices();
+	const std::vector<Vector3> &vertexPositions = renderer.get().getVertices();
 
 	FOR_RANGE(i, 0, mMesh.get().getVertexCount())
 	{
@@ -338,16 +330,16 @@ void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
 			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
 			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
 
-		Vector2 regionSize = renderer.getTextureRegion().getSize();
-		Vector2 regionPosition = renderer.getTextureRegion().getLeftTop();
+		Vector2 regionSize = renderer.get().getTextureRegion().getSize();
+		Vector2 regionPosition = renderer.get().getTextureRegion().getLeftTop();
 
 		Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
 
-		if (renderer.getInvertAxisX())
+		if (renderer.get().getInvertAxisX())
 		{
 			textureCoord.x = 1.0f - textureCoord.x;
 
-			Ref<const Animation> animation = renderer.getCurrentAnimation();
+			Ref<const Animation> animation = renderer.get().getCurrentAnimation();
 
 			if (animation)
 			{
@@ -358,20 +350,20 @@ void Batch::addToVertexBufferNotInstanced(Renderer& renderer)
 		mMeshBuilder.addTexCoord(textureCoord.x, textureCoord.y);
 
 		mMeshBuilder.addColor(
-			renderer.getColor().x,
-			renderer.getColor().y,
-			renderer.getColor().z,
-			renderer.getColor().w);
+			renderer.get().getColor().x,
+			renderer.get().getColor().y,
+			renderer.get().getColor().z,
+			renderer.get().getColor().w);
 	}
 
 	PROFILER_TIMEMARK_END()
 }
 
-void Batch::addToVertexBufferInstanced(Renderer& renderer)
+void Batch::addToVertexBufferInstanced(Ref<Renderer> renderer)
 {
 	PROFILER_TIMEMARK_START()
 
-	const Matrix4& rendererModelMatrix = renderer.getRendererModelMatrix();
+	const Matrix4& rendererModelMatrix = renderer.get().getRendererModelMatrix();
 	std::copy(rendererModelMatrix.getData(), rendererModelMatrix.getData() + Matrix4::smMatrixSize, back_inserter(mMatrices));
 
 	PROFILER_TIMEMARK_END()

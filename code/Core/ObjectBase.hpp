@@ -3,10 +3,9 @@
 #include "Core/Metadata.hpp"
 #include "Core/Macros.hpp"
 #include "Core/Serialization.hpp"
-#include "Core/Proxy/ProxyOwner.hpp"
 #include "Core/Reference.hpp"
 
-class ObjectBase: public ObjectMeta, public ISerializable, public ProxyOwner, public std::enable_shared_from_this<ObjectBase>
+class ObjectBase: public ObjectMeta, public ISerializable, public std::enable_shared_from_this<ObjectBase>
 {
 private:
 	GENERATE_METADATA(ObjectBase)
@@ -28,7 +27,7 @@ public:
 
 	virtual ~ObjectBase()
 	{
-		notifyProxy();
+
 	};
 
 	ObjectId getObjectId()

@@ -10,7 +10,7 @@ class Batch: public ObjectBase
     GENERATE_METADATA(Batch)
 
 private:
-	std::list<ProxyObject<Renderer>> mProxyRenderers;
+	std::list<Ref<Renderer>> mRenderers;
 
 	Ref<Material> mMaterial;
 	Ref<const Mesh> mMesh;
@@ -41,23 +41,23 @@ private:
 
 	bool shouldRegenerateBuffers() const;
 
-	void addToVertexBuffer(Renderer& renderer);
+	void addToVertexBuffer(Ref<Renderer> renderer);
 
 	void generateFacesData(u32 meshesCount);
 	void invalidateAndReallocateBuffers();
 	void sendDataToBuffers();
 
-	void addToVertexBufferNotInstanced(Renderer& renderer);
-	void addToVertexBufferInstanced(Renderer& renderer);
+	void addToVertexBufferNotInstanced(Ref<Renderer> renderer);
+	void addToVertexBufferInstanced(Ref<Renderer> renderer);
 
 	void resizeBuffers();
-	bool isChunkOk(Renderer& renderer) const;
+	bool isChunkOk(Ref<Renderer> renderer) const;
 
 	bool processRenderers();
 
 	void drawCall();
 
-	void internalRemoveRendererFromList(std::list<ProxyObject<Renderer>>::iterator & it);
+	void internalRemoveRendererFromList(std::list<Ref<Renderer>>::iterator & it);
 public:
 	~Batch() override;
 
@@ -66,7 +66,7 @@ public:
 
 	void render();
 
-	void addRenderer(Renderer& renderer);
+	void addRenderer(Ref<Renderer> renderer);
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
 
 	RGET(Material)
