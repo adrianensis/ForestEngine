@@ -3,45 +3,6 @@
 #include "Core/Memory.hpp"
 
 template<class T>
-class RefRaw
-{
-private:
-	T* mReference = nullptr;
-
-    void setReference(T* reference) { mReference = reference; }
-public:
-    RefRaw() = default;
-    RefRaw(const RefRaw<T>& other) { setReference(other.mReference); }
-    RefRaw(T* reference) { setReference(reference); }
-    RefRaw(const std::shared_ptr<T>& sharedPtr) { setReference(sharedPtr.get()); }
-
-    operator RefRaw<const T>() const
-    {
-        return RefRaw<const T>( static_cast<const T*>(mReference));
-    }
-
-    T& get() const { return *mReference; }
-    bool isValid() const { return mReference != nullptr; }
-
-    RefRaw& operator=(const RefRaw<T>& rhs)
-	{
-        setReference(rhs.mReference);
-		return *this;
-	}
-
-    RefRaw& operator=(T* rhs)
-	{
-        setReference(rhs);
-		return *this;
-	}
-
-    operator bool() const
-    {
-        return this->isValid();
-    }
-};
-
-template<class T>
 class Ref;
 
 template<class T>
