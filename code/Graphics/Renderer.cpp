@@ -6,7 +6,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/MeshPrimitives.hpp"
+#include "Graphics/Mesh/MeshPrimitives.hpp"
 #include "Graphics/Animation/Animation.hpp"
 #include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/Batch/Batch.hpp"
@@ -121,6 +121,49 @@ void Renderer::onDestroy()
 	{
 		mBatch.get().forceRegenerateBuffers();
 	}
+}
+
+const Mesh& Renderer::generateMeshInstance()
+{
+	const std::vector<Vector3> &vertexPositions = getVertices();
+
+	mMeshInstance.init(mMesh.get().getVertexCount(), mMesh.get().getFacesCount());
+
+	FOR_RANGE(i, 0, mMesh.get().getVertexCount())
+	{
+		mMeshInstance.addVertex(vertexPositions[i]);
+
+		Vector2 vertexTexture(
+			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
+			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
+
+		Vector2 regionSize = getTextureRegion().getSize();
+		Vector2 regionPosition = getTextureRegion().getLeftTop();
+
+		Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
+
+		if (getInvertAxisX())
+		{
+			textureCoord.x = 1.0f - textureCoord.x;
+
+			Ref<const Animation> animation = getCurrentAnimation();
+
+			if (animation)
+			{
+				textureCoord.x = textureCoord.x - (1.0f - (animation.get().getNumberOfFrames() * regionSize.x));
+			}
+		}
+
+		mMeshInstance.addTexCoord(textureCoord.x, textureCoord.y);
+
+		mMeshInstance.addColor(
+			getColor().x,
+			getColor().y,
+			getColor().z,
+			getColor().w);
+	}
+
+	return mMeshInstance;
 }
 
 void Renderer::serialize(JSON& json) const

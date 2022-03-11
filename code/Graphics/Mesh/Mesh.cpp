@@ -1,4 +1,4 @@
-#include "Graphics/Mesh.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 #include "Core/Memory.hpp"
 
 #include <algorithm>
@@ -49,6 +49,31 @@ void Mesh::addFace(u16 v1, u16 v2, u16 v3)
 void Mesh::addFaceIndex(u16 i)
 {
 	mFaces.push_back(i);
+}
+
+void Mesh::addVertices(const std::vector<f32> vec)
+{
+	mVertices.insert(mVertices.end(), vec.begin(), vec.end());
+}
+
+void Mesh::addNormals(const std::vector<f32> vec)
+{
+	mNormals.insert(mNormals.end(), vec.begin(), vec.end());
+}
+
+void Mesh::addTextureCoordinates(const std::vector<f32> vec)
+{
+	mTextureCoordinates.insert(mTextureCoordinates.end(), vec.begin(), vec.end());
+}
+
+void Mesh::addColors(const std::vector<f32> vec)
+{
+	mColors.insert(mColors.end(), vec.begin(), vec.end());
+}
+
+void Mesh::addFaces(const std::vector<u16> vec)
+{
+	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }
 
 void Mesh::copyVertices(Ref<const Mesh> other)

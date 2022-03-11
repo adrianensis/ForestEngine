@@ -31,6 +31,12 @@ public:
 	void addFace(u16 v1, u16 v2, u16 v3);
 	void addFaceIndex(u16 v1);
 
+	void addVertices(const std::vector<f32> vec);
+	void addNormals(const std::vector<f32> vec);
+	void addTextureCoordinates(const std::vector<f32> vec);
+	void addColors(const std::vector<f32> vec);
+	void addFaces(const std::vector<u16> vec);
+
 	void copyVertices(Ref<const Mesh> other);
 	void copyNormals(Ref<const Mesh> other);
 	void copyTextureCoordinates(Ref<const Mesh> other);

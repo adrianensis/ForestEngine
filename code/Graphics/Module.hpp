@@ -3,8 +3,8 @@
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 
-#include "Graphics/Mesh.hpp"
-#include "Graphics/MeshPrimitives.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/Mesh/MeshPrimitives.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 

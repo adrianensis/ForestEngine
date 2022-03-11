@@ -1,4 +1,4 @@
-#include "Graphics/MeshPrimitives.hpp"
+#include "Graphics/Mesh/MeshPrimitives.hpp"
 
 void MeshPrimitives::init()
 {

@@ -60,9 +60,8 @@ void BatchesMap::addRenderer(Ref<Renderer> renderer)
 	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
 	{
 		OwnerRef<Batch> batch = OwnerRef<Batch>(NEW(Batch));
-		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial());
-		batch.get().setIsStatic(transform.get().isStatic());
-		batch.get().setIsWorldSpace(transform.get().getAffectedByProjection());
+		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial(),
+		transform.get().isStatic(), transform.get().getAffectedByProjection());
 
 		MAP_INSERT(*batchesMap, foundBatchKey, batch);
 	}

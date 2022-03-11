@@ -6,7 +6,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Mesh.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/Shader.hpp"
 
 class BatchesMap: public ObjectBase

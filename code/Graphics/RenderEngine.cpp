@@ -2,7 +2,7 @@
 #include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Mesh.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Material/Shader.hpp"

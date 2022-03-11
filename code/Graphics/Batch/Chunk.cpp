@@ -3,7 +3,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Mesh.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Scene/Module.hpp"

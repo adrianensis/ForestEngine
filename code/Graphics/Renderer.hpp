@@ -5,7 +5,7 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Animation/Animation.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Mesh.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 
 class Chunk;
 class Batch;
@@ -34,6 +34,7 @@ private:
 	Ref<Chunk> mChunk;
 	Ref<Batch> mBatch;
 	Ref<const Mesh> mMesh;
+	Mesh mMeshInstance;
 	Ref<Material> mMaterial;
 
 private:
@@ -48,6 +49,8 @@ public:
 	bool getIsWorldSpace() const;
 	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
 	Ref<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
+
+	const Mesh& generateMeshInstance();
 
 	void serialize(JSON& json) const override;
 	void deserialize(const JSON& json) override;
