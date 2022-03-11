@@ -38,7 +38,7 @@ void RenderEngine::init(f32 sceneSize)
 	{
 		for (i32 j = chunksGridSizeHalf; j > -chunksGridSizeHalf; --j)
 		{
-			OwnerRef<Chunk> chunk = OwnerRef<Chunk>(NEW(Chunk));
+			OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>(NEW(Chunk));
 			chunk.get().init();
 			chunk.get().set(Vector2(i * chunkSize, j * chunkSize), chunkSize);
 
@@ -105,7 +105,7 @@ void RenderEngine::checkChunks()
 
 	FOR_ARRAY(i, mChunks)
 	{
-		Ref<Chunk> chunk = mChunks.at(i);
+		Ptr<Chunk> chunk = mChunks.at(i);
 
 		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera.get().getGameObject()->getTransform().get().getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
@@ -140,13 +140,13 @@ void RenderEngine::terminate()
 	mChunks.clear();
 }
 
-void RenderEngine::addComponent(Ref<IEngineSystemComponent> component)
+void RenderEngine::addComponent(Ptr<IEngineSystemComponent> component)
 {
 	IEngineSystem::addComponent(component);
 
 	if(component.get().getClassId() == Renderer::getClassIdStatic())
 	{
-		Ref<Renderer> renderer = Ref<Renderer>::Cast(component);
+		Ptr<Renderer> renderer = Ptr<Renderer>::Cast(component);
 
 		/*if(!CONTAINS(mDepthsData, renderer->getDepth()))
 		{
@@ -157,7 +157,7 @@ void RenderEngine::addComponent(Ref<IEngineSystemComponent> component)
 
 		if (renderer.get().getIsWorldSpace())
 		{
-			Ref<Chunk> chunk = assignChunk(renderer);
+			Ptr<Chunk> chunk = assignChunk(renderer);
 			if (chunk)
 			{
 				chunk.get().addRenderer(renderer);
@@ -175,12 +175,12 @@ void RenderEngine::addComponent(Ref<IEngineSystemComponent> component)
 	}
 }
 
-Ref<Chunk> RenderEngine::assignChunk(Ref<Renderer> renderer)
+Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
 {
 	//TRACE();
 	bool found = false;
-	Ref<Chunk> chunkTmp;
-	Ref<Chunk> chunkFound;
+	Ptr<Chunk> chunkTmp;
+	Ptr<Chunk> chunkFound;
 	// FOR_ARRAY_COND(i, mChunks, !found) {
 	for (i32 i = 0; (i < (i32)(mChunks.size())) && (!found); ++i)
 	{

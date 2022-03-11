@@ -10,7 +10,7 @@ private:
 	u32 mFragmentShader = 0;
 	u32 mProgram = 0;
 
-	inline static OwnerRef<Shader> msShaderDefault;
+	inline static OwnerPtr<Shader> msShaderDefault;
 	static Shader *msShaderDebug;
 
 	void initInternal(const std::string& vertex, const std::string& fragment);
@@ -19,7 +19,7 @@ public:
 	Shader();
 	~Shader() override;
 
-	static Ref<Shader> getDefaultShader();
+	static Ptr<Shader> getDefaultShader();
 	static Shader *getDebugShader();
 
 	static void freeStaticShaders();

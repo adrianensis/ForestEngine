@@ -44,7 +44,7 @@ void Renderer::updateAnimation()
 {
 	if (mMaterial.isValid())
 	{
-		Ref<Animation> currentAnimation;
+		Ptr<Animation> currentAnimation;
 		if (MAP_CONTAINS(mAnimations, mCurrentAnimationName))
 		{
 			currentAnimation = mAnimations[mCurrentAnimationName];
@@ -146,7 +146,7 @@ const Mesh& Renderer::generateMeshInstance()
 		{
 			textureCoord.x = 1.0f - textureCoord.x;
 
-			Ref<const Animation> animation = getCurrentAnimation();
+			Ptr<const Animation> animation = getCurrentAnimation();
 
 			if (animation)
 			{

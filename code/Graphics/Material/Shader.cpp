@@ -12,11 +12,11 @@ Shader::Shader()
 
 Shader::~Shader() = default;
 
-Ref<Shader> Shader::getDefaultShader()
+Ptr<Shader> Shader::getDefaultShader()
 {
 	if (!msShaderDefault)
 	{
-		msShaderDefault = OwnerRef<Shader>(NEW(Shader));
+		msShaderDefault = OwnerPtr<Shader>(NEW(Shader));
 		msShaderDefault.get().init();
 	}
 

@@ -12,9 +12,9 @@ void MeshPrimitives::terminate()
 }
 
 template <>
-OwnerRef<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
+OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
-	OwnerRef<Mesh> mesh = OwnerRef<Mesh>(NEW(Mesh));
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
 	mesh.get().init(4, 2);
 
 	mesh.get().addVertex(Vector3(-0.5f, 0.5f, 0.0f)); // top left

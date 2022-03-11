@@ -12,11 +12,11 @@ void ScriptEngine::init()
 	mController = ScenesManager::getInstance().getGameObjectController()->getFirstComponent<Script>();
 }
 
-void ScriptEngine::addComponent(Ref<IEngineSystemComponent> component)
+void ScriptEngine::addComponent(Ptr<IEngineSystemComponent> component)
 {
 	if(component.get().getClassId() == Script::getClassIdStatic())
 	{
-		Ref<Script> script = Ref<Script>::Cast(component);
+		Ptr<Script> script = Ptr<Script>::Cast(component);
 		mScripts.push_back(script);
 	}
 }
@@ -38,7 +38,7 @@ void ScriptEngine::update()
 
 	FOR_LIST(it, mScripts)
 	{
-		Ref<Script> script = *it;
+		Ptr<Script> script = *it;
 
 		if (script.get().isActive())
 		{
@@ -59,9 +59,9 @@ void ScriptEngine::update()
 	PROFILER_TIMEMARK_END()
 }
 
-void ScriptEngine::internalRemoveScript(std::list<Ref<Script>>::iterator& it)
+void ScriptEngine::internalRemoveScript(std::list<Ptr<Script>>::iterator& it)
 {
-	Ref<Script> script = *it;
+	Ptr<Script> script = *it;
 
 	script.get().terminate();
 	script.get().finallyDestroy();

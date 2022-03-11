@@ -10,9 +10,9 @@ class Batch: public ObjectBase
     GENERATE_METADATA(Batch)
 
 private:
-	std::list<Ref<Renderer>> mRenderers;
+	std::list<Ptr<Renderer>> mRenderers;
 
-	Ref<Material> mMaterial;
+	Ptr<Material> mMaterial;
 	bool mIsInstanced = false;
 
 	MeshBatcher mMeshBatcher;
@@ -26,21 +26,21 @@ private:
 
 	bool shouldRegenerateBuffers() const;
 
-	void addToVertexBuffer(Ref<Renderer> renderer);
+	void addToVertexBuffer(Ptr<Renderer> renderer);
 
-	bool isChunkOk(Ref<Renderer> renderer) const;
+	bool isChunkOk(Ptr<Renderer> renderer) const;
 
 	bool processRenderers();
 
-	void internalRemoveRendererFromList(std::list<Ref<Renderer>>::iterator & it);
+	void internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator & it);
 public:
 	~Batch() override;
 
-	void init(Ref<const Mesh> mesh, Ref<Material> material, bool isStatic, bool isWorldSpace);
+	void init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace);
 
 	void render();
 
-	void addRenderer(Ref<Renderer> renderer);
+	void addRenderer(Ptr<Renderer> renderer);
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
 
 	RGET(Material)

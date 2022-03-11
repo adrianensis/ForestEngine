@@ -67,7 +67,7 @@ class MeshBatcher: public ObjectBase
     GENERATE_METADATA(MeshBatcher)
 
 private:
-	Ref<const Mesh> mPrototypeMesh;
+	Ptr<const Mesh> mPrototypeMesh;
 	Mesh mMeshBuilder;
 	MeshBuffer mMeshBuffer;
 
@@ -85,7 +85,7 @@ private:
 public:
 	MeshBatcher() = default;
 	~MeshBatcher() override;
-	void init(Ref<const Mesh> prototypeMesh, bool isStatic, bool isInstanced);
+	void init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced);
 	void terminate();
 	void resize(u32 size);
 	void addInstanceMatrix(const Matrix4& modelMatrix);

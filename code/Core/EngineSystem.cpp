@@ -5,12 +5,12 @@ void IEngineSystem::init()
     REGISTER_ENGINE_SYSTEM(this);
 }
 
-void IEngineSystem::addComponent(Ref<IEngineSystemComponent> component)
+void IEngineSystem::addComponent(Ptr<IEngineSystemComponent> component)
 {
     component.get().setAlreadyAddedToEngine(true);
 }
 
-void EngineSystemsManager::addComponentToEngineSystem(Ref<IEngineSystemComponent> component)
+void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent> component)
 {
     if (component && !component.get().getAlreadyAddedToEngine())
     {

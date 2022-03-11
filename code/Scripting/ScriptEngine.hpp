@@ -8,14 +8,14 @@ class ScriptEngine: public IEngineSystem, public Singleton<ScriptEngine>
 	GENERATE_METADATA(ScriptEngine)
 	
 private:
-	std::list<Ref<Script>> mScripts;
-	Ref<Script> mController;
+	std::list<Ptr<Script>> mScripts;
+	Ptr<Script> mController;
 
-	void internalRemoveScript(std::list<Ref<Script>>::iterator & it);
+	void internalRemoveScript(std::list<Ptr<Script>>::iterator & it);
 
 public:
 	void init();
-	void addComponent(Ref<IEngineSystemComponent> component) override;
+	void addComponent(Ptr<IEngineSystemComponent> component) override;
 	void update();
 	void terminate();
 };

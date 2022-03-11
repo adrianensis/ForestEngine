@@ -8,7 +8,7 @@ class Chunk: public ObjectBase
 {
     GENERATE_METADATA(Chunk)
 private:
-	std::list<Ref<Renderer>> mRenderers;
+	std::list<Ptr<Renderer>> mRenderers;
 	Vector3 mLeftTop;
 	f32 mSize = 0.0f;
 	bool mIsLoaded = false;
@@ -22,9 +22,9 @@ public:
 	void load();
 	void update(BatchesMap * batchesMap);
 	void unload();
-	bool containsRenderer(Ref<const Renderer> renderer, f32 epsilon = 0.0f) const;
-	bool containsRendererSphere(Ref<const Renderer> renderer) const;
-	void addRenderer(Ref<Renderer> renderer);
+	bool containsRenderer(Ptr<const Renderer> renderer, f32 epsilon = 0.0f) const;
+	bool containsRendererSphere(Ptr<const Renderer> renderer) const;
+	void addRenderer(Ptr<Renderer> renderer);
 
 	GET(IsLoaded)
 	GET(Center)

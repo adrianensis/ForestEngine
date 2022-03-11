@@ -86,9 +86,9 @@ void __customMain()
 			return __VA_ARGS__::getClassNameStatic();                                 \
 		};                                                                            \
 	private:                                                                          \
-		Ref<__VA_ARGS__> getRefToThis()                                               \
+		Ptr<__VA_ARGS__> getRefToThis()                                               \
 		{                                                                             \
-			return Ref<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
+			return Ptr<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
 		}                                                                             \
 	private: // NOTE: notice the last blank space " "
 

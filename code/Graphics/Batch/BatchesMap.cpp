@@ -15,7 +15,7 @@ void BatchesMap::init()
 	//TRACE();
 }
 
-void BatchesMap::addRenderer(Ref<Renderer> renderer)
+void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 {
 	// Create a temporary key for searching purposes
 	BatchKey tmpBatchKey;
@@ -44,7 +44,7 @@ void BatchesMap::addRenderer(Ref<Renderer> renderer)
 		);
 	}
 
-	Ref<Transform> transform = renderer.get().getGameObject()->getTransform();
+	Ptr<Transform> transform = renderer.get().getGameObject()->getTransform();
 
 	InternalBatchesMap* batchesMap = nullptr;
 	
@@ -59,7 +59,7 @@ void BatchesMap::addRenderer(Ref<Renderer> renderer)
 
 	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
 	{
-		OwnerRef<Batch> batch = OwnerRef<Batch>(NEW(Batch));
+		OwnerPtr<Batch> batch = OwnerPtr<Batch>(NEW(Batch));
 		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial(),
 		transform.get().isStatic(), transform.get().getAffectedByProjection());
 

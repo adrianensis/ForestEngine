@@ -27,7 +27,7 @@ void Scene::destroyGameObjects()
 
 	if (mCameraGameObject)
 	{
-		Ref<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
 		mCameraGameObject->removeComponent<Camera>(cameraComponent);
 		//DELETE(cameraComponent);
 		mCameraGameObject->destroy();

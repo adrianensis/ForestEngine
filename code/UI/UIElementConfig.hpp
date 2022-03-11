@@ -28,7 +28,7 @@ public:
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = false;
-	Ref<Material> mMaterial;
+	Ptr<Material> mMaterial;
 	std::string mGroup;
 	GameObject* mParent = nullptr;
 	f32 mSeparatorSize = 0.0f;

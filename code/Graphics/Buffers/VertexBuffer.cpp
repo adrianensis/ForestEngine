@@ -169,7 +169,7 @@ MeshBatcher::~MeshBatcher()
 {
 }
 
-void MeshBatcher::init(Ref<const Mesh> prototypeMesh, bool isStatic, bool isInstanced)
+void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced)
 {
 	terminate();
 	mMeshBuffer.init(isStatic, isInstanced);

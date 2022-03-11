@@ -3,16 +3,16 @@
 #include "Core/Memory.hpp"
 
 template<class T>
-class Ref;
+class Ptr;
 
 template<class T>
-class OwnerRef
+class OwnerPtr
 {
-friend Ref<T>;
+friend Ptr<T>;
 private:
 
     // Custom Deleter
-    struct OwnerRefCustomDeleter
+    struct OwnerPtrCustomDeleter
     {
         // TODO : Debug WHY a nullptr is reaching this
         void operator()(T* p) const { if(p != nullptr) { DELETE(p);} }
@@ -22,30 +22,30 @@ private:
 
     void setReference(const std::shared_ptr<T> reference) { mReference = reference; }
 
-    OwnerRef(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
+    OwnerPtr(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
 
 public:
     
     template <class OtherClass>
-    static OwnerRef<T> Cast(const OwnerRef<OtherClass>& other)
+    static OwnerPtr<T> Cast(const OwnerPtr<OtherClass>& other)
     {
-        return OwnerRef<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
+        return OwnerPtr<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
     }
 
-    OwnerRef() = default;
-    OwnerRef(const OwnerRef<T>& other) { setReference(other.mReference); }
-    OwnerRef(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerRefCustomDeleter())); }
+    OwnerPtr() = default;
+    OwnerPtr(const OwnerPtr<T>& other) { setReference(other.mReference); }
+    OwnerPtr(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerPtrCustomDeleter())); }
 
-    operator OwnerRef<const T>() const
+    operator OwnerPtr<const T>() const
     {
-        return OwnerRef<const T>( static_cast<std::shared_ptr<const T>>(mReference));
+        return OwnerPtr<const T>( static_cast<std::shared_ptr<const T>>(mReference));
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
     T& get() const { return *mReference.get(); }
     bool isValid() const { return mReference != nullptr; }
 
-    OwnerRef<T>& operator=(const OwnerRef<T>& rhs)
+    OwnerPtr<T>& operator=(const OwnerPtr<T>& rhs)
 	{
         setReference(rhs.mReference);
 		return *this;
@@ -56,12 +56,12 @@ public:
         return this->isValid();
     }
 
-    bool operator==(const OwnerRef<T>& otherRef) const
+    bool operator==(const OwnerPtr<T>& otherRef) const
 	{
 		return this->mReference == otherRef.mReference;
 	}
 
-    bool operator!=(const OwnerRef<T>& otherRef) const
+    bool operator!=(const OwnerPtr<T>& otherRef) const
 	{
 		return (*this == otherRef);
 	}
@@ -70,7 +70,7 @@ public:
 };
 
 template<class T>
-class Ref
+class Ptr
 {
 private:
 	std::weak_ptr<T> mReference;
@@ -79,38 +79,38 @@ private:
 public:
 
     template <class OtherClass>
-    static Ref<T> Cast(const Ref<OtherClass>& other)
+    static Ptr<T> Cast(const Ptr<OtherClass>& other)
     {
-        return Ref<T>(std::dynamic_pointer_cast<T>(other.getWeakPtr().lock()));
+        return Ptr<T>(std::dynamic_pointer_cast<T>(other.getWeakPtr().lock()));
     }
 
     template <class OtherClass>
-    static Ref<T> Cast(const OwnerRef<OtherClass>& other)
+    static Ptr<T> Cast(const OwnerPtr<OtherClass>& other)
     {
-        return Ref<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
+        return Ptr<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
     }
 
-    Ref() = default;
-    Ref(const Ref<T>& other) { setReference(other.mReference); }
-    Ref(const std::weak_ptr<T> weakPtr) { setReference(weakPtr); }
-    Ref(const std::shared_ptr<T> sharedPtr) { setReference(std::weak_ptr<T>(sharedPtr)); }
-    Ref(const OwnerRef<T>& owner) { setReference(std::weak_ptr<T>(owner.mReference)); }
+    Ptr() = default;
+    Ptr(const Ptr<T>& other) { setReference(other.mReference); }
+    Ptr(const std::weak_ptr<T> weakPtr) { setReference(weakPtr); }
+    Ptr(const std::shared_ptr<T> sharedPtr) { setReference(std::weak_ptr<T>(sharedPtr)); }
+    Ptr(const OwnerPtr<T>& owner) { setReference(std::weak_ptr<T>(owner.mReference)); }
 
-    operator Ref<const T>() const
+    operator Ptr<const T>() const
     {
-        return Ref<const T>(static_cast<std::weak_ptr<const T>>(mReference));
+        return Ptr<const T>(static_cast<std::weak_ptr<const T>>(mReference));
     }
 
-    operator OwnerRef<T>() const
+    operator OwnerPtr<T>() const
     {
-        return OwnerRef<T>(mReference);
+        return OwnerPtr<T>(mReference);
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
     T& get() const { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
 
-    Ref<T>& operator=(const Ref<T>& rhs)
+    Ptr<T>& operator=(const Ptr<T>& rhs)
 	{
         setReference(rhs.mReference);
 		return *this;

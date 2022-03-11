@@ -29,13 +29,13 @@ private:
 	i32 mDepth = 0;
 	bool mUseDepth = true; // overrides Z with Depth
 	f32 mRenderDistance = 0.0f;
-	std::map<std::string, Ref<Animation>> mAnimations;
+	std::map<std::string, Ptr<Animation>> mAnimations;
 	std::string mCurrentAnimationName;
-	Ref<Chunk> mChunk;
-	Ref<Batch> mBatch;
-	Ref<const Mesh> mMesh;
+	Ptr<Chunk> mChunk;
+	Ptr<Batch> mBatch;
+	Ptr<const Mesh> mMesh;
 	Mesh mMeshInstance;
-	Ref<Material> mMaterial;
+	Ptr<Material> mMaterial;
 
 private:
 	void updateAnimation();
@@ -48,7 +48,7 @@ public:
 	void setPositionOffset (const Vector3& newPositionOffset);
 	bool getIsWorldSpace() const;
 	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
-	Ref<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
+	Ptr<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
 
 	const Mesh& generateMeshInstance();
 

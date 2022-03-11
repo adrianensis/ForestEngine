@@ -44,7 +44,7 @@ void Chunk::update(BatchesMap *batchesMap)
 
 	FOR_LIST(it, mRenderers)
 	{
-		Ref<Renderer> renderer = *it;
+		Ptr<Renderer> renderer = *it;
 
 		bool removeFromList = false;
 
@@ -57,7 +57,7 @@ void Chunk::update(BatchesMap *batchesMap)
 
 			if (!renderer.get().isStatic() && !containsRenderer(renderer))
 			{
-				Ref<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
+				Ptr<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
 
 				// Only remove the renderer from this chunk if another chunk is found.
 				// If not, keep the renderer here until a new chunk is found.
@@ -103,19 +103,19 @@ void Chunk::unload()
 	}
 }
 
-void Chunk::addRenderer(Ref<Renderer> renderer)
+void Chunk::addRenderer(Ptr<Renderer> renderer)
 {
 	mRenderers.push_back(renderer);
 }
 
-bool Chunk::containsRenderer(Ref<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
+bool Chunk::containsRenderer(Ptr<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
 {
 	Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
 	bool contains = Geometry::testRectanglePoint(mLeftTop, mSize, mSize, rendererPosition, epsilon);
 	return contains; // TODO : move to settings ?
 }
 
-bool Chunk::containsRendererSphere(Ref<const Renderer> renderer) const
+bool Chunk::containsRendererSphere(Ptr<const Renderer> renderer) const
 {
 	Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
 	return Geometry::testSphereSphere(mCenter, rendererPosition, mRadius,

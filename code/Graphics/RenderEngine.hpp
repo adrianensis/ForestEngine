@@ -17,11 +17,11 @@ private:
 	ShapeBatchRendererMap mShapeBatchRendererMap;
 	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
 
-	Ref<Camera> mCamera;
+	Ptr<Camera> mCamera;
 	bool mCameraDirtyTranslation = false;
 
 	f32 mMinChunkDrawDistance = 0.0f;
-	std::vector<OwnerRef<Chunk>> mChunks;
+	std::vector<OwnerPtr<Chunk>> mChunks;
 
 	void checkChunks();
 	void renderBatches();
@@ -32,8 +32,8 @@ public:
 	void update();	  // render
 	void terminate();
 
-	void addComponent(Ref<IEngineSystemComponent> component) override;
-	Ref<Chunk> assignChunk(Ref<Renderer> renderer);
+	void addComponent(Ptr<IEngineSystemComponent> component) override;
+	Ptr<Chunk> assignChunk(Ptr<Renderer> renderer);
 	bool frustumTestSphere(const Vector3& center, f32 radius);
 
 	void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1, 1, 1, 1));

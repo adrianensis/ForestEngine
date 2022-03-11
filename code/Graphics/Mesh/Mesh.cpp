@@ -76,27 +76,27 @@ void Mesh::addFaces(const std::vector<u16> vec)
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }
 
-void Mesh::copyVertices(Ref<const Mesh> other)
+void Mesh::copyVertices(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getVertices().begin(), other.get().getVertices().end(), back_inserter(mVertices));
 }
 
-void Mesh::copyNormals(Ref<const Mesh> other)
+void Mesh::copyNormals(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getNormals().begin(), other.get().getNormals().end(), back_inserter(mNormals));
 }
 
-void Mesh::copyTextureCoordinates(Ref<const Mesh> other)
+void Mesh::copyTextureCoordinates(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getTextureCoordinates().begin(), other.get().getTextureCoordinates().end(), back_inserter(mTextureCoordinates));
 }
 
-void Mesh::copyColors(Ref<const Mesh> other)
+void Mesh::copyColors(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getColors().begin(), other.get().getColors().end(), back_inserter(mColors));
 }
 
-void Mesh::copyFaces(Ref<const Mesh> other)
+void Mesh::copyFaces(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getFaces().begin(), other.get().getFaces().end(), back_inserter(mFaces));
 }

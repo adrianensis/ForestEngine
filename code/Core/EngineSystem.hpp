@@ -43,7 +43,7 @@ public:
 
     virtual void init();
 
-    virtual void addComponent(Ref<IEngineSystemComponent> component);
+    virtual void addComponent(Ptr<IEngineSystemComponent> component);
 };
 
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
@@ -52,7 +52,7 @@ private:
     std::list<IEngineSystem *> mEngineSystems;
 
 public:
-    void addComponentToEngineSystem(Ref<IEngineSystemComponent> component);
+    void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component);
 
     void registerEngineSystem(IEngineSystem *engineSystem)
     {

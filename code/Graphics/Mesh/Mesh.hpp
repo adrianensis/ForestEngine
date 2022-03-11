@@ -37,11 +37,11 @@ public:
 	void addColors(const std::vector<f32> vec);
 	void addFaces(const std::vector<u16> vec);
 
-	void copyVertices(Ref<const Mesh> other);
-	void copyNormals(Ref<const Mesh> other);
-	void copyTextureCoordinates(Ref<const Mesh> other);
-	void copyColors(Ref<const Mesh> other);
-	void copyFaces(Ref<const Mesh> other);
+	void copyVertices(Ptr<const Mesh> other);
+	void copyNormals(Ptr<const Mesh> other);
+	void copyTextureCoordinates(Ptr<const Mesh> other);
+	void copyColors(Ptr<const Mesh> other);
+	void copyFaces(Ptr<const Mesh> other);
 
 	void clear();
 

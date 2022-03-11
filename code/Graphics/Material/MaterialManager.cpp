@@ -17,11 +17,11 @@ MaterialManager::~MaterialManager()
 void MaterialManager::init(){
 	TRACE()}
 
-Ref<Texture> MaterialManager::loadTexture(const std::string& path)
+Ptr<Texture> MaterialManager::loadTexture(const std::string& path)
 {
 	if (!MAP_CONTAINS(mTexturesMap, path))
 	{
-		OwnerRef<Texture> texture = OwnerRef<Texture>(NEW(Texture));
+		OwnerPtr<Texture> texture = OwnerPtr<Texture>(NEW(Texture));
 		texture.get().init(path);
 		MAP_INSERT(mTexturesMap, path, texture);
 	}
@@ -29,11 +29,11 @@ Ref<Texture> MaterialManager::loadTexture(const std::string& path)
 	return mTexturesMap.at(path);
 }
 
-Ref<Material> MaterialManager::loadMaterial(const std::string& path)
+Ptr<Material> MaterialManager::loadMaterial(const std::string& path)
 {
 	if (!MAP_CONTAINS(mMaterialsMap, path))
 	{
-		OwnerRef<Material> material = OwnerRef<Material>(NEW(Material));
+		OwnerPtr<Material> material = OwnerPtr<Material>(NEW(Material));
 		material.get().init();
 		material.get().setTexture(loadTexture(path));
 		material.get().setShader(Shader::getDefaultShader());
@@ -43,11 +43,11 @@ Ref<Material> MaterialManager::loadMaterial(const std::string& path)
 	return mMaterialsMap.at(path);
 }
 
-Ref<Material> MaterialManager::loadNoTextureMaterial()
+Ptr<Material> MaterialManager::loadNoTextureMaterial()
 {
 	if (!mNoTextureMaterial)
 	{
-		mNoTextureMaterial = OwnerRef<Material>(NEW(Material));
+		mNoTextureMaterial = OwnerPtr<Material>(NEW(Material));
 		mNoTextureMaterial.get().init();
 		mNoTextureMaterial.get().setShader(Shader::getDefaultShader());
 	}

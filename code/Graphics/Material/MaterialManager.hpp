@@ -12,15 +12,15 @@ class MaterialManager: public ObjectBase, public Singleton<MaterialManager>
 {
 	GENERATE_METADATA(MaterialManager)
 private:
-	std::map<std::string, OwnerRef<Texture>> mTexturesMap;
-	std::map<std::string, OwnerRef<Material>> mMaterialsMap;
-	OwnerRef<Material> mNoTextureMaterial;
+	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;
+	std::map<std::string, OwnerPtr<Material>> mMaterialsMap;
+	OwnerPtr<Material> mNoTextureMaterial;
 
 public:
 	~MaterialManager() override;
 
 	void init();
-	Ref<Texture> loadTexture(const std::string& path);
-	Ref<Material> loadMaterial(const std::string& path);
-	Ref<Material> loadNoTextureMaterial();
+	Ptr<Texture> loadTexture(const std::string& path);
+	Ptr<Material> loadMaterial(const std::string& path);
+	Ptr<Material> loadNoTextureMaterial();
 };

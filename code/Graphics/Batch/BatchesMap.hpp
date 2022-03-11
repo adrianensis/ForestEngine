@@ -18,11 +18,11 @@ private:
 	class BatchKey
 	{
 	public:
-		Ref<const Texture> mTexture;
-		Ref<const Shader> mShader;
-		Ref<const Mesh> mMesh;
+		Ptr<const Texture> mTexture;
+		Ptr<const Shader> mShader;
+		Ptr<const Mesh> mMesh;
 
-		void init(Ref<const Texture> texture, Ref<const Shader> shader, Ref<const Mesh> mesh)
+		void init(Ptr<const Texture> texture, Ptr<const Shader> shader, Ptr<const Mesh> mesh)
 		{
 			mTexture = texture;
 			mShader = shader;
@@ -37,7 +37,7 @@ private:
 
 	std::vector<BatchKey> mBatchKeys;
 
-	using InternalBatchesMap = std::map<BatchKey*, OwnerRef<Batch>>;
+	using InternalBatchesMap = std::map<BatchKey*, OwnerPtr<Batch>>;
 	InternalBatchesMap mBatchesDynamic;
 	InternalBatchesMap mBatchesDynamicScreenSpace;
 	InternalBatchesMap mBatchesStatic;
@@ -50,7 +50,7 @@ public:
 
 	void init();
 	void render();
-	void addRenderer(Ref<Renderer> renderer);
+	void addRenderer(Ptr<Renderer> renderer);
 
 	void forceRegenerateBuffers();
 };

@@ -14,21 +14,21 @@ class GameObject: public ObjectBase
 	
 private:
 
-	inline static std::list<OwnerRef<Component>> smEmptyList;
+	inline static std::list<OwnerPtr<Component>> smEmptyList;
 
-	std::map<ClassId, std::list<OwnerRef<Component>>> mComponentsMap;
+	std::map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
 	bool mIsActive = false;
 
 	Scene* mScene = nullptr;
 	bool mIsStatic = false;
-	OwnerRef<Transform> mTransform;
+	OwnerPtr<Transform> mTransform;
 	std::string mTag;
 	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
 	bool mShouldPersist = false;
 
-	const std::list<OwnerRef<Component>>& getComponents(ClassId classId) const;
-	Ref<Component> getFirstComponent(ClassId classId) const;
+	const std::list<OwnerPtr<Component>>& getComponents(ClassId classId) const;
+	Ptr<Component> getFirstComponent(ClassId classId) const;
 
 	void addComponentToEngineSystem(Component* component);
 
@@ -38,31 +38,31 @@ public:
 
 	virtual void init();
 
-	void addComponent(OwnerRef<Component> component, ClassId classId);
-	void removeComponent(Ref<Component> component, ClassId classId);
+	void addComponent(OwnerPtr<Component> component, ClassId classId);
+	void removeComponent(Ptr<Component> component, ClassId classId);
 
 	template <class T>
-	void addComponent(OwnerRef<T> component)
+	void addComponent(OwnerPtr<T> component)
 	{
-		GameObject::addComponent(OwnerRef<Component>::Cast(component), T::getClassIdStatic());
+		GameObject::addComponent(OwnerPtr<Component>::Cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
-	void removeComponent(Ref<T> component)
+	void removeComponent(Ptr<T> component)
 	{
-		GameObject::removeComponent(Ref<Component>::Cast(component), T::getClassIdStatic());
+		GameObject::removeComponent(Ptr<Component>::Cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
-	const std::list<OwnerRef<T>>& getComponents() const
+	const std::list<OwnerPtr<T>>& getComponents() const
 	{
-		return reinterpret_cast<const std::list<OwnerRef<T>>&>(GameObject::getComponents(T::getClassIdStatic()));
+		return reinterpret_cast<const std::list<OwnerPtr<T>>&>(GameObject::getComponents(T::getClassIdStatic()));
 	}
 
 	template <class T>
-	Ref<T> getFirstComponent() const
+	Ptr<T> getFirstComponent() const
 	{
-		return Ref<T>::Cast(GameObject::getFirstComponent(T::getClassIdStatic()));
+		return Ptr<T>::Cast(GameObject::getFirstComponent(T::getClassIdStatic()));
 	}
 
 	bool isActive() const

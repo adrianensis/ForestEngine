@@ -10,8 +10,8 @@ class Material: public ObjectBase
     GENERATE_METADATA(Material)
 private: 
 	Vector4 mColor;
-	Ref<Shader> mShader;
-	Ref<Texture> mTexture;
+	Ptr<Shader> mShader;
+	Ptr<Texture> mTexture;
 	bool mAlphaEnabled = false;
 	bool mHasBorder = false;
 

@@ -23,7 +23,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 		mTexture.get().bind();
 	}
 
-	Ref<Camera> camera = RenderEngine::getInstance().getCamera();
+	Ptr<Camera> camera = RenderEngine::getInstance().getCamera();
 
 	const Matrix4& projectionMatrix = camera.get().getProjectionMatrix();
 	const Matrix4& viewMatrix = camera.get().getViewMatrix();
