@@ -4,6 +4,8 @@
 
 #define CPP
 #define CPP_INCLUDE
+#define CPP_GENERATE
+#define CPP_IGNORE
 
 // --------------------------------------------------------
 // TYPE TRAITS

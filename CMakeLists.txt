@@ -155,11 +155,12 @@ endforeach()
 # PACKAGES INCLUDE DIRECTORIES
 # ----------------------------------------------------------------------------
 
-include_directories("code")
+#include_directories("code")
 
 # needed for generated code
-include_directories(".")
+#include_directories(".")
 include_directories("generated-code")
+include_directories("generated-code/final")
 include_directories("generated-code/final/code")
 
 # file(GLOB INCLUDE_PATHS "code/*")
@@ -177,7 +178,7 @@ include_directories("generated-code/final/code")
 # Alternative: CMakeLists.txt with this code into source directory.
 # add_subdirectory(source)
 foreach(PACKAGE ${PACKAGES})
-  file(GLOB_RECURSE PACKAGE_SOURCE "code/${PACKAGE}/*")
+  file(GLOB_RECURSE PACKAGE_SOURCE "generated-code/final/code/${PACKAGE}/*")
   add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCE})
 endforeach()
 
@@ -232,11 +233,11 @@ endif(BUILD_INTEGRATION_TESTS)
 # ----------------------------------------------------------------------------
 
 if(BUILD_TOOLS)
-  build_programs("tools/*" "tool")
+  build_programs("generated-code/final/tools/*" "tool")
 endif(BUILD_TOOLS)
 
 # ----------------------------------------------------------------------------
 # GAMES
 # ----------------------------------------------------------------------------
 
-build_programs("games/*" "games")
+build_programs("generated-code/final/games/*" "games")

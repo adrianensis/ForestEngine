@@ -75,9 +75,10 @@ for keyFolder, folder in foldersMap.items():
             file.write("#pragma once\n")
             
             # code dependencies
-            file.write("#include \""+os.path.join(generated_code_dirname, os.path.join(foldersMap[keyFolder_code], "includes.generated"))+"\"\n")
+            file.write("#include \""+os.path.join(foldersMap[keyFolder_code], "includes.generated")+"\"\n")
+            #file.write("#include \""+os.path.join(generated_code_dirname, os.path.join(foldersMap[keyFolder_code], "includes.generated"))+"\"\n")
             
-            relative_include = class_manager_includes_generated_file_path.replace(cwd+"/", '')
+            relative_include = class_manager_includes_generated.replace(cwd+"/", '')
             file.write("#include \""+relative_include+"\"\n")
 
             file.write("class " + classManagerName +"\n")
@@ -87,9 +88,10 @@ for keyFolder, folder in foldersMap.items():
             file.write("{\n")
 
             # code dependencies
-            file.write("#include \""+os.path.join(generated_code_dirname, os.path.join(foldersMap[keyFolder_code], "generated"))+"\"\n")
+            file.write("#include \""+os.path.join(foldersMap[keyFolder_code], "generated")+"\"\n")
+            #file.write("#include \""+os.path.join(generated_code_dirname, os.path.join(foldersMap[keyFolder_code], "generated"))+"\"\n")
 
-            relative_include = class_manager_generated_file_path.replace(cwd+"/", '')
+            relative_include = class_manager_includes_generated.replace(cwd+"/", '')
             file.write("#include \""+relative_include+"\"\n")
 
             file.write("}\n")

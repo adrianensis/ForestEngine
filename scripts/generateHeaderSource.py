@@ -1,6 +1,7 @@
 import os  
 import re
 import shutil
+import filecmp
 
 from generateClassList import *
 
@@ -13,16 +14,19 @@ os.chdir(cwd)
 folders = ["code", "tools", "games"]
 
 generated_code_dirname = "generated-code/final"
+generated_code_dirname_tmp = "generated-code/tmp/final"
 
-if os.path.isdir(generated_code_dirname):
-    shutil.rmtree(generated_code_dirname)
+if not os.path.isdir(generated_code_dirname):
+    os.makedirs(generated_code_dirname)
 
-os.mkdir(generated_code_dirname)
+if os.path.isdir(generated_code_dirname_tmp):
+    shutil.rmtree(generated_code_dirname_tmp)
+os.makedirs(generated_code_dirname_tmp)
 
 MACRO_FUNCTION = "CPP"
 MACRO_PLAIN_TEXT = "CPP_INCLUDE"
 MACRO_IGNORE = "CPP_IGNORE"
-MACRO_GENERATE_CPP_ONLY = "GENERATE_CPP"
+MACRO_GENERATE_CPP = "CPP_GENERATE"
 MACRO_ACCESS_MODIFIER = "(public|private|protected)\:"
 
 cpp_plain_text_found = False
@@ -145,7 +149,7 @@ def process_line(line):
             return
 
         elif not cpp_function_found:
-            if not MACRO_GENERATE_CPP_ONLY in line:
+            if not MACRO_GENERATE_CPP in line:
                 match_cpp = re.search(r''+MACRO_FUNCTION, line)
                 if match_cpp:
                     cpp_function_found = True
@@ -180,7 +184,7 @@ def process_line(line):
                 function_data.return_type = match_function.group(2)
                 function_data.name = match_function.group(3)
                 function_data.params = match_function.group(4)
-                function_data.print()
+                #function_data.print()
 
                 header_lines += function_data.getDeclaration()
             else:
@@ -201,31 +205,73 @@ def process_line(line):
     else:
         header_lines += line
 
-def should_ignore(line):
+def should_ignore(lines):
     global ignore_file
+    ignore_file = True
     # detect IGNORE macro
-    match_ignore = re.search(r'\/\/\s*'+MACRO_IGNORE, line)
-    if match_ignore:
-        ignore_file = True
+    for line in lines:
+        match_macro_generate = re.search(r''+MACRO_GENERATE_CPP, line)
+        match_macro_ignore = re.search(r''+MACRO_IGNORE, line)
+        if match_macro_ignore:
+            ignore_file = True
+            break
+        elif match_macro_generate:
+            ignore_file = False
+
+def same_file(fileA, fileB):
+    return filecmp.cmp(fileA, fileB, shallow=True)
+
+def are_different_files(fileA, fileB):
+    return not same_file(fileA, fileB)
+
+def write_file(new_file_path, lines):
+    with open(new_file_path, "w") as new_file:
+        for line in lines:
+            new_file.write(line)
+            
+def write_file_if_different(original_file_path, new_file_path, lines):
+    should_write_file = False
+    
+    if os.path.isfile(new_file_path):
+        should_write_file = not filecmp.cmp(original_file_path, new_file_path, shallow=True)
+    else:
+        should_write_file = True 
+
+    if should_write_file:
+        write_file(new_file_path, lines)
+
+def write_file_if_new_changes(folder, tmp_folder, relative_file_path, lines):
+    new_file_path = os.path.join(folder,relative_file_path)
+    new_file_path_tmp = os.path.join(tmp_folder,relative_file_path)
+    write_file(new_file_path_tmp, lines)
+    write_file_if_different(new_file_path_tmp, new_file_path, lines)
 
 for folder in folders:
     path = cwd+"/"+folder
     for root,d_names,f_names in os.walk(path):
 
-        file_folder = root.split("../")[1];
-        generated_final_folder = os.path.join(generated_code_dirname,file_folder);
+        file_folder = root.split("../")[1]
 
-        if os.path.isdir(generated_final_folder):
-            shutil.rmtree(generated_final_folder)
+        generated_final_folder = os.path.join(generated_code_dirname,file_folder)
+        if not os.path.isdir(generated_final_folder):
+            os.makedirs(generated_final_folder)
 
-        os.makedirs(generated_final_folder)
+        generated_final_folder_tmp = os.path.join(generated_code_dirname_tmp,file_folder)
+        if os.path.isdir(generated_final_folder_tmp):
+            shutil.rmtree(generated_final_folder_tmp)
+        os.makedirs(generated_final_folder_tmp)
 
         for f in f_names:
             
             ignore_file = False
 
             file_name = os.path.join(root, f)
-            if ".hpp" in file_name and "Macros" not in file_name:
+            if f == "main.cpp":
+                main_file_cpp_path = os.path.join(root,file_name)
+                with open(main_file_cpp_path, 'r') as file_cpp:
+                    lines_cpp = file_cpp.readlines()
+                    write_file_if_new_changes(generated_final_folder, generated_final_folder_tmp, f, lines_cpp)
+            elif ".hpp" in file_name:
                 with open(file_name, 'r') as file:
                     lines = file.readlines()
 
@@ -238,21 +284,28 @@ for folder in folders:
 
                     if len(lines) != 0:
 
-                        for line in lines:
-                            should_ignore(line)
-                            if ignore_file:
-                                break
-                            else:
+                        should_ignore(lines)
+
+                        if "Macros" in file_name:
+                            ignore_file = True
+                        
+                        if not ignore_file:
+                            for line in lines:
                                 process_line(line)
 
-                    if not ignore_file and match_class:
-                        with open(os.path.join(generated_final_folder,file_name_we+".hpp"), "w") as file:
-                            file.write("#ifndef " + file_name_we.upper() + "\n")
-                            file.write("#define " + file_name_we.upper() + "\n")
-                            for line in header_lines:
-                                file.write(line)
-                            file.write("\n\n#endif")
+                            header_lines = ["#ifndef " + file_name_we.upper() + "\n"] + ["#define " + file_name_we.upper() + "\n"] + header_lines
+                            header_lines = header_lines + ["\n\n#endif"]
 
-                        with open(os.path.join(generated_final_folder, file_name_we+".cpp"), "w") as file:
-                            for line in source_lines:
-                                file.write(line)
+                    if ignore_file:
+                        write_file_if_new_changes(generated_final_folder, generated_final_folder_tmp, file_name_we+".hpp", lines)
+
+                        file_cpp_path = os.path.join(root,file_name_we+".cpp")
+                        if os.path.isfile(file_cpp_path):
+                            with open(file_cpp_path, 'r') as file_cpp:
+                                lines_cpp = file_cpp.readlines()
+                                write_file_if_new_changes(generated_final_folder, generated_final_folder_tmp, file_name_we+".cpp", lines_cpp)
+
+
+                    elif not ignore_file and match_class:
+                        write_file_if_new_changes(generated_final_folder, generated_final_folder_tmp, file_name_we+".hpp", header_lines)
+                        write_file_if_new_changes(generated_final_folder, generated_final_folder_tmp, file_name_we+".cpp", source_lines)
