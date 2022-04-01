@@ -23,6 +23,7 @@ MACRO_FUNCTION = "CPP"
 MACRO_PLAIN_TEXT = "CPP_INCLUDE"
 MACRO_IGNORE = "CPP_IGNORE"
 MACRO_GENERATE_CPP_ONLY = "GENERATE_CPP"
+MACRO_ACCESS_MODIFIER = "(public|private|protected)\:"
 
 cpp_plain_text_found = False
 cpp_function_found = False
@@ -30,6 +31,7 @@ braces_count = 0
 body_open = False
 waiting_for_body = True
 function_data = None
+current_access_modifier = "private"
 match_class = None
 ignore_file = False
 
@@ -37,6 +39,7 @@ header_lines = []
 source_lines = []
 
 class FunctionData:
+    access_modifier = ""
     declaration_class = ""
     previous = "" # everything that goes previous to the function declaration, like tamplates
     pre_return_type = "" # everything that goes previous to return type, like macros
@@ -56,8 +59,14 @@ class FunctionData:
     def addPreviousLine(self, newLine):
         self.previous += newLine;
 
+    def getAccessModifier(self):
+        if self.access_modifier:
+            return self.access_modifier + ": "
+        else:
+            return ""
+
     def getDeclaration(self):
-        return self.previous + "\n" + self.pre_return_type + " " + self.return_type + " " + self.name + self.params + ";"
+        return self.getAccessModifier().strip() + self.previous.strip() + " " + self.pre_return_type.strip() + " " + self.return_type.strip() + " " + self.name.strip() + self.params.strip() + ";\n"
 
     def getImplementation(self):
         filteredParams = self.params.replace('override', '')
@@ -76,6 +85,13 @@ class FunctionData:
 
 def searchClassGenerateCPP(line):
     return re.search(r'^\s*GENERATE_CPP\s*\(\s*(\w+)\s*\)\s*', line)
+
+def searchAccessModifier(line):
+    match_access_modifier = re.search(r'\s*'+MACRO_ACCESS_MODIFIER, line)
+    if match_access_modifier:
+        return match_access_modifier.group(1)
+    else:
+        return current_access_modifier
 
 def countBraces(line):
     global braces_count
@@ -98,6 +114,7 @@ def process_line(line):
     global body_open
     global waiting_for_body
     global function_data
+    global current_access_modifier
     global match_class
     global header_lines
     global source_lines
@@ -106,6 +123,8 @@ def process_line(line):
     if match_pragma_once:
         # ignore pragma once line
         return
+
+    current_access_modifier = searchAccessModifier(line)
 
     # detect class
     current_match_class = searchClassDefinition(line)
@@ -118,7 +137,7 @@ def process_line(line):
 
     # detect CPP macro
     if not cpp_plain_text_found:
-        match_cpp = re.search(r'#if\s+'+MACRO_PLAIN_TEXT, line)
+        match_cpp = re.search(r'#\s*ifdef\s+'+MACRO_PLAIN_TEXT, line)
         if match_cpp:
             cpp_plain_text_found = True
             
@@ -138,7 +157,7 @@ def process_line(line):
     # process each case
     if cpp_plain_text_found:
         # ignore last CPP_... line
-        match_cpp = re.search(r'#endif', line)
+        match_cpp = re.search(r'#\s*endif', line)
         if match_cpp:
             cpp_plain_text_found = False
             source_lines += "\n"
@@ -151,11 +170,12 @@ def process_line(line):
 
         #print(line)
         if waiting_for_body:
-            match_function = re.search(r'([\w\d_\s]*)\s+([\w\d_<>&\*:]+)\s+([\w\d_]+)(\(.*)', line)
+            match_function = re.search(r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\w\d_]+)(\(.*)', line)
             if match_function:
                 if match_class:
                     function_data.declaration_class = match_class.group(1)
 
+                function_data.access_modifier = current_access_modifier
                 function_data.pre_return_type = match_function.group(1)
                 function_data.return_type = match_function.group(2)
                 function_data.name = match_function.group(3)
