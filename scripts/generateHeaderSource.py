@@ -26,11 +26,19 @@ os.makedirs(generated_code_dirname_tmp)
 MACRO_FUNCTION = "CPP"
 MACRO_PLAIN_TEXT = "CPP_INCLUDE"
 MACRO_IGNORE = "CPP_IGNORE"
-MACRO_GENERATE_CPP = "CPP_GENERATE"
+MACRO_GENERATE_CPP = "GENERATE_CPP"
 MACRO_ACCESS_MODIFIER = "(public|private|protected)\:"
+
+REGEX_ANY = r'[\w\d_\<\s\t\>\&\*\.:\[\]\(\),=;\"\'\\]'
+
+REGEX_FUNCTION = r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\~\w\d_]+)(\('+REGEX_ANY+'*)'
+
+REGEX_INLINE_FUNCTION = REGEX_FUNCTION+'\{('+REGEX_ANY+'*)'
+REGEX_FULL_INLINE_FUNCTION = REGEX_FUNCTION+'\{('+REGEX_ANY+'*)\}'
 
 cpp_plain_text_found = False
 cpp_function_found = False
+waiting_for_function_declaration = False
 braces_count = 0
 body_open = False
 waiting_for_body = True
@@ -51,21 +59,43 @@ class FunctionData:
     name = ""
     params = ""
     body = ""
-    
+
+    inline_open_brace = False
+    inline_close_brace = False
+    has_declaration = False
+
     def print(self):
         print(self.previous)
         print(self.pre_return_type + " " + self.return_type + " " + self.name + self.params)
         print(self.body)
 
     def addBodyLine(self, newLine):
-        self.body += newLine;
+        self.body += newLine
 
     def addPreviousLine(self, newLine):
-        self.previous += newLine;
+        self.previous += newLine
 
     def getAccessModifier(self):
         if self.access_modifier:
             return self.access_modifier + ": "
+        else:
+            return ""
+
+    def getDeclarationClass(self):
+        if self.declaration_class:
+            return self.declaration_class + "::"
+        else:
+            return ""
+
+    def getInlineOpenBrace(self):
+        if self.inline_open_brace:
+            return "{\n"
+        else:
+            return ""
+
+    def getInlineCloseBrace(self):
+        if self.inline_open_brace:
+            return "\n}"
         else:
             return ""
 
@@ -75,20 +105,34 @@ class FunctionData:
     def getImplementation(self):
         filteredParams = self.params.replace('override', '')
 
-        default_parameters_list = re.findall(r'\s*(=\s*[\w\d_<>:]+)', filteredParams)
+        default_parameters_list = re.findall(r'\s*(=\s*[\w\d_\.\*\&<>:]+)', filteredParams)
         for default_param in default_parameters_list:
             if default_param:
-                filteredParams = filteredParams.replace(default_param, '')
+                filteredParams = filteredParams.replace(default_param, '/*'+default_param+'*/')
 
         # filteredParams = filteredParams.replace('virtual', '')
         # filteredParams = filteredParams.replace('static', '')
 
-        filteredPreReturnType = self.pre_return_type.replace('static', '')
+        
+        filteredPrevious = self.previous.replace('static', '')
+        filteredPrevious = filteredPrevious.replace('virtual', '')
+        filteredPrevious = filteredPrevious.replace(MACRO_FUNCTION, '')
 
-        return self.previous + "\n" + filteredPreReturnType + " " + self.return_type + " " + self.declaration_class + "::" + self.name + filteredParams + self.body
+        filteredPreReturnType = self.pre_return_type.replace('static', '')
+        filteredPreReturnType = filteredPreReturnType.replace('virtual', '')
+        filteredPreReturnType = filteredPreReturnType.replace(MACRO_FUNCTION, '')
+
+        filteredReturnType = self.return_type.replace('static', '')
+        filteredReturnType = filteredReturnType.replace('virtual', '')
+        filteredReturnType = filteredReturnType.replace(MACRO_FUNCTION, '')
+
+        return filteredPrevious + "\n" + filteredPreReturnType + " " + filteredReturnType + " " + self.getDeclarationClass() + self.name + filteredParams + self.getInlineOpenBrace() + self.body + self.getInlineCloseBrace()
 
 def searchClassGenerateCPP(line):
     return re.search(r'^\s*GENERATE_CPP\s*\(\s*(\w+)\s*\)\s*', line)
+
+def searchCommonClassDeclaration(line):
+    return re.search(r'^\s*class\s+(\w+)\s*', line)
 
 def searchAccessModifier(line):
     match_access_modifier = re.search(r'\s*'+MACRO_ACCESS_MODIFIER, line)
@@ -96,6 +140,12 @@ def searchAccessModifier(line):
         return match_access_modifier.group(1)
     else:
         return current_access_modifier
+
+def findCharInLine(char, line):
+    for c in line:
+        if c == char:
+            return True
+    return False
 
 def countBraces(line):
     global braces_count
@@ -114,6 +164,7 @@ def countBraces(line):
 
 def process_line(line):
     global cpp_function_found
+    global waiting_for_function_declaration
     global cpp_plain_text_found
     global body_open
     global waiting_for_body
@@ -136,7 +187,12 @@ def process_line(line):
     if not current_match_class:
         current_match_class = searchClassGenerateCPP(line)
 
+    if not current_match_class:
+        current_match_class = searchCommonClassDeclaration(line)
+
     if current_match_class:
+        print("---------------------------------------------")
+        print(current_match_class.group(1))
         match_class = current_match_class
 
     # detect CPP macro
@@ -171,10 +227,20 @@ def process_line(line):
     elif cpp_function_found:
         
         countBraces(line)
+        
+        inline_open_brace_found = False
+        inline_close_brace_found = False
+        match_inline_function = None
+        if not function_data.has_declaration:
+            inline_open_brace_found = findCharInLine('{', line)
 
-        #print(line)
-        if waiting_for_body:
-            match_function = re.search(r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\w\d_]+)(\(.*)', line)
+            if inline_open_brace_found:
+                match_inline_function = re.search(REGEX_FULL_INLINE_FUNCTION, line)
+                if match_inline_function:
+                    inline_close_brace_found = True
+
+        if waiting_for_body or (not function_data.has_declaration and inline_open_brace_found):
+            match_function = re.search(REGEX_FUNCTION, line)
             if match_function:
                 if match_class:
                     function_data.declaration_class = match_class.group(1)
@@ -184,6 +250,19 @@ def process_line(line):
                 function_data.return_type = match_function.group(2)
                 function_data.name = match_function.group(3)
                 function_data.params = match_function.group(4)
+                function_data.inline_open_brace = inline_open_brace_found
+
+                if inline_close_brace_found:
+                    function_data.inline_close_brace = inline_close_brace_found
+                    function_data.addBodyLine(match_inline_function.group(5))
+                    body_open = False
+                    waiting_for_body = False
+                    header_lines += function_data.getDeclaration()
+                    source_lines += function_data.getImplementation()
+                    cpp_function_found = False
+                    return
+
+                function_data.has_declaration = True
                 #function_data.print()
 
                 header_lines += function_data.getDeclaration()
@@ -191,17 +270,18 @@ def process_line(line):
                 match_cpp = re.search(r''+MACRO_FUNCTION, line)
                 if not match_cpp:
                     function_data.addPreviousLine(line)
+  
+        if not inline_open_brace_found and function_data.has_declaration:
+            if body_open:
+                # save line
+                function_data.addBodyLine(line)
+            elif not waiting_for_body:
+                cpp_function_found = False
+                # print("function closed")
+                function_data.addBodyLine(line)
+                #function_data.print()
 
-        if body_open:
-            # save line
-            function_data.addBodyLine(line)
-        elif not waiting_for_body:
-            cpp_function_found = False
-            # print("function closed")
-            function_data.addBodyLine(line)
-            #function_data.print()
-
-            source_lines += function_data.getImplementation()
+                source_lines += function_data.getImplementation()
     else:
         header_lines += line
 
@@ -210,13 +290,16 @@ def should_ignore(lines):
     ignore_file = True
     # detect IGNORE macro
     for line in lines:
-        match_macro_generate = re.search(r''+MACRO_GENERATE_CPP, line)
-        match_macro_ignore = re.search(r''+MACRO_IGNORE, line)
-        if match_macro_ignore:
-            ignore_file = True
-            break
-        elif match_macro_generate:
+        match_macro_plain_text = re.search(r''+MACRO_PLAIN_TEXT, line)
+        #match_macro_generate = re.search(r''+MACRO_GENERATE_CPP, line)
+        #match_macro_ignore = re.search(r''+MACRO_IGNORE, line)
+        # if match_macro_ignore:
+        #     ignore_file = True
+        #     break
+        # el
+        if match_macro_plain_text:
             ignore_file = False
+            break
 
 def same_file(fileA, fileB):
     return filecmp.cmp(fileA, fileB, shallow=True)
@@ -293,7 +376,7 @@ for folder in folders:
                             for line in lines:
                                 process_line(line)
 
-                            header_lines = ["#ifndef " + file_name_we.upper() + "\n"] + ["#define " + file_name_we.upper() + "\n"] + header_lines
+                            header_lines = ["#ifndef " + file_name_we.upper() + "_HPP\n"] + ["#define " + file_name_we.upper() + "_HPP\n"] + header_lines
                             header_lines = header_lines + ["\n\n#endif"]
 
                     if ignore_file:
