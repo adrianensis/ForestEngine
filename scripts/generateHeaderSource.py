@@ -41,11 +41,36 @@ cpp_function_found = False
 waiting_for_function_declaration = False
 braces_count = 0
 body_open = False
-waiting_for_body = True
+waiting_for_body = False
 function_data = None
 current_access_modifier = "private"
 match_class = None
 ignore_file = False
+
+def reset():
+    global cpp_function_found
+    global waiting_for_function_declaration
+    global cpp_plain_text_found
+    global body_open
+    global waiting_for_body
+    global function_data
+    global current_access_modifier
+    global match_class
+    global header_lines
+    global source_lines
+    global braces_count
+    global ignore_file
+
+    cpp_plain_text_found = False
+    cpp_function_found = False
+    waiting_for_function_declaration = False
+    braces_count = 0
+    body_open = False
+    waiting_for_body = False
+    function_data = None
+    current_access_modifier = "private"
+    match_class = None
+    ignore_file = False
 
 header_lines = []
 source_lines = []
@@ -105,7 +130,7 @@ class FunctionData:
     def getImplementation(self):
         filteredParams = self.params.replace('override', '')
 
-        default_parameters_list = re.findall(r'\s*(=\s*[\w\d_\.\*\&<>:]+)', filteredParams)
+        default_parameters_list = re.findall(r'\s*(=\s*[\w\d_\.,\*\&<\(\)>:]+)\s*[,\)]', filteredParams)
         for default_param in default_parameters_list:
             if default_param:
                 filteredParams = filteredParams.replace(default_param, '/*'+default_param+'*/')
@@ -174,6 +199,11 @@ def process_line(line):
     global header_lines
     global source_lines
 
+    match_comment = re.search(r'^\s*\/\/.*', line)
+    if match_comment:
+        # ignore single line comments
+        return
+
     match_pragma_once = re.search(r'#pragma\s+once', line)
     if match_pragma_once:
         # ignore pragma once line
@@ -191,8 +221,6 @@ def process_line(line):
         current_match_class = searchCommonClassDeclaration(line)
 
     if current_match_class:
-        print("---------------------------------------------")
-        print(current_match_class.group(1))
         match_class = current_match_class
 
     # detect CPP macro
@@ -211,6 +239,7 @@ def process_line(line):
                     cpp_function_found = True
                     waiting_for_body = True
 
+                    #print(line)
                     # reset function_data
                     function_data = FunctionData()
     
@@ -231,6 +260,7 @@ def process_line(line):
         inline_open_brace_found = False
         inline_close_brace_found = False
         match_inline_function = None
+
         if not function_data.has_declaration:
             inline_open_brace_found = findCharInLine('{', line)
 
@@ -271,6 +301,7 @@ def process_line(line):
                 if not match_cpp:
                     function_data.addPreviousLine(line)
   
+        #print(function_data.name)
         if not inline_open_brace_found and function_data.has_declaration:
             if body_open:
                 # save line
@@ -356,6 +387,9 @@ for folder in folders:
                     write_file_if_new_changes(generated_final_folder, generated_final_folder_tmp, f, lines_cpp)
             elif ".hpp" in file_name:
                 with open(file_name, 'r') as file:
+
+                    reset()
+
                     lines = file.readlines()
 
                     header_lines = []
