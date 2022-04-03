@@ -7,8 +7,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-CPP_GENERATE
-
 #ifdef CPP_INCLUDE
 #include "Graphics/Renderer.hpp"
 
@@ -77,19 +75,9 @@ private:
 		}
 	};
 public:
-	// void init() override;
-	// void onComponentAdded() override;
-	// void onDestroy() override;
-	// void update();
-	// void setPositionOffset (const Vector3& newPositionOffset);
-	// bool getIsWorldSpace() const;
+
 	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
 	Ptr<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
-
-	// const Mesh& generateMeshInstance();
-
-	// void serialize(JSON& json) const override;
-	// void deserialize(const JSON& json) override;
 
 	CRGET_SET(RendererModelMatrix)
 	CRGET_SET(Vertices)

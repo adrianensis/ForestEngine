@@ -1,6 +1,13 @@
 #pragma once
 
 #include "Core/Module.hpp"
+
+#ifdef CPP_INCLUDE
+#include "UI/UIGroup.hpp"
+#include "UI/UIElement.hpp"
+#include "Scene/Scene.hpp"
+#endif
+
 class UIElement;
 
 class UIGroup: public ObjectBase
@@ -12,13 +19,56 @@ public:
 	bool mVisible = false;
 	std::list<UIElement *> mUIElements;
 	
-	void init();
+	CPP void init()
+	{
+		mName = "";
+	}
 
-	void addUIElement(UIElement * uiElement);
-	void removeUIElement(UIElement * uiElement);
-    void destroyUIElement(UIElement * uiElement);
-	void destroyAllUIElements();
-	void setVisibility(bool visibility);
+	CPP void addUIElement(UIElement *uiElement)
+	{
+		if (uiElement)
+		{
+			mUIElements.push_back(uiElement);
+		}
+	}
+
+	CPP void removeUIElement(UIElement *uiElement)
+	{
+		if (uiElement)
+		{
+			mUIElements.remove(uiElement);
+		}
+	}
+
+	CPP void destroyUIElement(UIElement *uiElement)
+	{
+		if (uiElement)
+		{
+			removeUIElement(uiElement);
+			uiElement->getScene()->removeGameObject(uiElement);
+		}
+	}
+
+	CPP void destroyAllUIElements()
+	{
+		FOR_LIST(it, mUIElements)
+		{
+			UIElement *element = *it;
+			element->getScene()->removeGameObject(element);
+		}
+
+		mUIElements.clear();
+	}
+
+	CPP void setVisibility(bool visibility)
+	{
+		mVisible = visibility;
+
+		FOR_LIST(it, mUIElements)
+		{
+			(*it)->setVisibility(mVisible);
+		}
+	}
 
 	CRGET(Name)
 	GET(Visible)

@@ -5,6 +5,14 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 
+#ifdef CPP_INCLUDE
+#include "Graphics/Camera/Camera.hpp"
+
+#include "Scene/Module.hpp"
+#include "Graphics/Camera/Frustum.hpp"
+#include "Graphics/RenderEngine.hpp"
+#endif
+
 class Camera: public Component
 {
     GENERATE_METADATA(Camera)
@@ -36,31 +44,169 @@ private:
 
 	TransformState mTransformState;
 
-	void calculateInverseMatrix(bool force = false);
+	CPP void calculateInverseMatrix(bool force = false)
+	{
+		if(mInversePVMatrixNeedsUpdate || force)
+		{
+			Matrix4 inverseProjectionMatrix;
+			mInversePVMatrix.init(getProjectionViewMatrix());		
+			mInversePVMatrix.invert();
+
+			mInversePVMatrixNeedsUpdate = false;
+		}
+	}
 
 public:
 
-	void init() override;
-	void onComponentAdded() override;
-	void recalculateProjectionMatrix();
+	CPP void init()
+	{
+		TRACE()
 
-	void update();
+		mIsOrtho = true;
+		mZoom = 1;
+		
+		mViewMatrix.identity();
+		mInversePVMatrix.identity();
+		mFrustum.init(this);
+	}
 
-	const Matrix4& getViewMatrix() const;
-	const Matrix4& getProjectionViewMatrix() const;
+	CPP void onComponentAdded()
+	{
+		recalculateProjectionMatrix();
 
-	void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
-	void setPerspective(f32 near, f32 far, f32 aspect, f32 fov);
+		mTransformState = TransformState(getGameObject()->getTransform().get());
+	}
 
-	void onResize();
+	CPP void update()
+	{
+		PROFILER_TIMEMARK_START()
 
-	Vector3 screenToWorld(const Vector2& screenPosition);
+		TransformState currentTransformState(getGameObject()->getTransform().get());
+		if(!currentTransformState.eq(mTransformState))
+		{
+			mFrustum.build();
 
-	void setZoom(f32 zoom);
+			mInversePVMatrixNeedsUpdate = true;
+			mViewMatrixNeedsUpdate = true;
+			mProjectionViewMatrixNeedsUpdate = true;
 
-	void zoomIn(f32 zoomDelta);
-	void zoomOut(f32 zoomDelta);
-	void resetZoom()
+			mTransformState = currentTransformState;
+		}
+
+		PROFILER_TIMEMARK_END()
+	}
+
+	CPP void recalculateProjectionMatrix()
+	{
+		if (mIsOrtho)
+		{
+			setOrtho(mLeft, mRight, mBottom, mTop, mNear, mFar);
+		}
+		else
+		{
+			setPerspective(mNear, mFar, mAspect, mFov);
+		}
+
+		mProjectionViewMatrixNeedsUpdate = true;
+		calculateInverseMatrix(true);
+		mFrustum.build();
+	}
+
+	CPP void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far)
+	{
+		mIsOrtho = true;
+		
+		mLeft = left;
+		mRight = right;
+		mBottom = bottom;
+		mTop = top;
+		mNear = near;
+		mFar = far;
+
+		mProjectionMatrix.ortho(mLeft * RenderContext::getAspectRatio() * mZoom, mRight * RenderContext::getAspectRatio() * mZoom, mBottom* mZoom,
+								mTop* mZoom, mNear, mFar);
+	};
+
+	CPP void setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
+	{
+		mIsOrtho = false;
+
+		mNear = near;
+		mFar = far;
+		mAspect = aspect;
+		mFov = fov;
+		
+		mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov * mZoom);
+	};
+
+	CPP void onResize()
+	{
+		recalculateProjectionMatrix();
+	}
+
+	CPP const Matrix4& getViewMatrix() const
+	{
+		if(mViewMatrixNeedsUpdate)
+		{
+			const Vector3& position = getGameObject()->getTransform().get().getWorldPosition();
+			mViewMatrix.translation(position * -1);
+			mViewMatrix.mul(getGameObject()->getTransform().get().getRotationMatrix());
+
+			mViewMatrixNeedsUpdate = false;
+		}
+
+		return mViewMatrix;
+	};
+
+	CPP const Matrix4& getProjectionViewMatrix() const
+	{
+		if(mProjectionViewMatrixNeedsUpdate)
+		{
+			mProjectionViewMatrix.init(getProjectionMatrix());
+			mProjectionViewMatrix.mul(getViewMatrix());
+			mProjectionViewMatrixNeedsUpdate = false;
+		}
+
+		return mProjectionViewMatrix;
+	}
+
+	CPP Vector3 screenToWorld(const Vector2& screenPosition)
+	{	
+		calculateInverseMatrix();
+		Vector4 v = mInversePVMatrix.mulVector(Vector4(screenPosition.x, screenPosition.y, 0, 1.0));
+
+		v.x = v.x / v.w;
+		v.y = v.y / v.w;
+		v.z = v.z / v.w;
+
+		return v;
+	}
+
+	CPP void setZoom(f32 zoom)
+	{
+		mZoom = zoom;
+		recalculateProjectionMatrix();
+	}
+
+	CPP void zoomIn(f32 zoomDelta)
+	{
+		f32 newZoom = mZoom - zoomDelta;
+
+		if(newZoom < 0)
+		{
+			newZoom = 0;
+		}
+
+		setZoom(newZoom);
+	}
+
+	CPP void zoomOut(f32 zoomDelta)
+	{
+		f32 newZoom = mZoom + zoomDelta;
+		setZoom(newZoom);
+	}
+
+	CPP void resetZoom()
 	{
 		mZoom = 1;
 		setZoom(mZoom);

@@ -6,6 +6,11 @@
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory.hpp"
 
+#ifdef CPP_INCLUDE
+#include "ClassManager.hpp"
+#include "Core/Log/Log.hpp"
+#endif
+
 #define REGISTER_CLASS_BY_NAME(...) \
     ClassRegister __classRegister ## _ ## __VA_ARGS__ = ClassRegister(#__VA_ARGS__, []() { \
         __VA_ARGS__ *object = nullptr;\
@@ -28,7 +33,11 @@ private:
     std::string mClassName;
     ClassRegisterCallback mCallback;
 public:
-    ClassRegister(const std::string& className, ClassRegisterCallback callback);
+    CPP ClassRegister(const std::string& className, ClassRegisterCallback callback)
+    {
+        MAP_INSERT(ClassManager::smRegisters, className, callback);
+    }
+
 };
 
 class ClassManager: public Singleton<ClassManager>
@@ -36,13 +45,24 @@ class ClassManager: public Singleton<ClassManager>
     friend ClassRegister;
     
 private:
-    static std::map<std::string, ClassRegisterCallback> smRegisters;
+    inline static std::map<std::string, ClassRegisterCallback> smRegisters;
     std::map<std::string, ClassRegisterCallback> mInstanceByNameMap;
 
 public:
-    void init();
+    CPP void init()
+    {
+        TRACE()
+        
+        FOR_MAP(it, smRegisters)
+        {
+            registerClassByName(it->first, it->second);
+        }
+    }
 
-    void registerClassByName(const std::string& className, ClassRegisterCallback callback);
+    CPP void registerClassByName(const std::string& className, ClassRegisterCallback callback)
+    {
+        MAP_INSERT(mInstanceByNameMap, className, callback);
+    }
 
     template<class T, typename = std::enable_if_t<std::is_base_of<ObjectBase, T>::value> >
     T* instanceByName(const std::string& className)

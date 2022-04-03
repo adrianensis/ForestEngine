@@ -4,6 +4,10 @@
 #include "Core/Singleton.hpp"
 #include "Core/ObjectBase.hpp"
 
+#ifdef CPP_INCLUDE
+#include "Core/EngineSystem.hpp"
+#endif
+
 #define REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(...) \
     registerComponentClass(__VA_ARGS__::getClassIdStatic());
 
@@ -31,19 +35,25 @@ private:
     std::set<ClassId> mAcceptedEngineSystemComponentClasses;
 
 public:
-    void registerComponentClass(ClassId classId)
+    CPP void registerComponentClass(ClassId classId)
     {
         mAcceptedEngineSystemComponentClasses.insert(classId);
     }
 
-    bool isComponentClassAccepted(ClassId classId)
+    CPP bool isComponentClassAccepted(ClassId classId)
     {
         return mAcceptedEngineSystemComponentClasses.find(classId) != mAcceptedEngineSystemComponentClasses.end();
     }
 
-    virtual void init();
+    CPP virtual void init()
+    {
+        REGISTER_ENGINE_SYSTEM(this);
+    }
 
-    virtual void addComponent(Ptr<IEngineSystemComponent> component);
+    CPP virtual void addComponent(Ptr<IEngineSystemComponent> component)
+    {
+        component.get().setAlreadyAddedToEngine(true);
+    }
 };
 
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
@@ -52,9 +62,26 @@ private:
     std::list<IEngineSystem *> mEngineSystems;
 
 public:
-    void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component);
+    CPP void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component)
+    {
+        if (component && !component.get().getAlreadyAddedToEngine())
+        {
+            ClassId componentClassId = component.get().getClassId();
+            bool added = false;
+            FOR_LIST_COND(itEngineSystem, mEngineSystems, !added)
+            {
+                IEngineSystem *sub = (*itEngineSystem);
+                if (sub->isComponentClassAccepted(componentClassId))
+                {
+                    sub->addComponent(component);
+                    added = true;
+                }
+            }
+        }
+    }
 
-    void registerEngineSystem(IEngineSystem *engineSystem)
+
+    CPP void registerEngineSystem(IEngineSystem *engineSystem)
     {
         if(!CONTAINS(mEngineSystems, engineSystem))
         {
@@ -62,8 +89,9 @@ public:
         }
     }
 
-    const std::list<IEngineSystem *> &getEngineSystems() const
+    CPP const std::list<IEngineSystem *>& getEngineSystems() const
     {
         return mEngineSystems;
     }
+    
 };

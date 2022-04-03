@@ -2,6 +2,9 @@
 
 #include "Core/Module.hpp"
 
+#ifdef CPP_INCLUDE
+#include "UI/UIStyle.hpp"
+#endif
 
 class UIStyle: public ObjectBase
 {
@@ -39,10 +42,18 @@ private:
 	std::map<ClassId, UIStyle*> mStyles;
 
 public:
+	CPP ~UIStyleManager() override
+	{
+		MAP_DELETE_CONTENT(mStyles)
+	}
 
-	~UIStyleManager() override;
-	
-	void init();
+	CPP void init()
+	{
+		mDefaultStyle.mTextColor = Vector4(0.0f, 0.0f, 0.0f, 1);
+		mDefaultStyle.mBackgroundColor = Vector4(0.5f, 0.5f, 0.5f, 1);
+		mDefaultStyle.mColorPressed = Vector4(0.3f, 0.3f, 0.3f, 1);
+		mDefaultStyle.mColorHovered = Vector4(0.7f, 0.7f, 0.7f, 1);
+	}
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
 	void addStyle()

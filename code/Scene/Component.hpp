@@ -1,6 +1,12 @@
 #pragma once
 
 #include "Core/Module.hpp"
+
+#ifdef CPP_INCLUDE
+#include "Scene/Component.hpp"
+#include "Scene/GameObject.hpp"
+#endif
+
 class GameObject;
 
 class Component: public IEngineSystemComponent
@@ -9,7 +15,7 @@ class Component: public IEngineSystemComponent
 	
 private:
 	bool mIsActive = false;
-	bool mIsStatic = false;
+	mutable bool mIsStatic = false;
 
 	GameObject* mGameObject;
 	
@@ -17,36 +23,64 @@ private:
 	bool mIsDestroyed = false;
 
 public:
-	Component();
+	CPP Component()
+	{
+		mIsActive = true;
+		mIsDestroyed = false;
+		mIsStatic = false;
+	}
 
 	virtual void init() = 0;
 
-	virtual void onComponentAdded() { };
+	virtual void onComponentAdded()
+	{
 
-	bool isStatic();
+	}
 
-	bool isActive() const
+	CPP bool isStatic() const
+	{
+		if (mGameObject)
+		{
+			mIsStatic = mGameObject->getIsStatic();
+		}
+
+		return mIsStatic;
+	}
+
+	CPP bool isActive() const
 	{
 		return (mIsDestroyed || mIsPendingToBeDestroyed || !mGameObject) ? false : mIsActive;
-	};
+	}
 
-	void setIsActive(bool isActive)
+	CPP void setIsActive(bool isActive)
 	{
 		mIsActive = (mIsDestroyed || mIsPendingToBeDestroyed || !mGameObject) ? false : isActive;
-	};
+	}
 
-	void finallyDestroy()
+	CPP void finallyDestroy()
 	{
 		mIsDestroyed = true;
 		mIsPendingToBeDestroyed = false;
-	};
+	}
 
-	void destroy();
+	CPP void destroy()
+	{
+		if (!(getIsDestroyed() || getIsPendingToBeDestroyed()))
+		{
+			mIsPendingToBeDestroyed = true;
+			mIsActive = false;
+			onDestroy();
+		}
+	}
 
-	virtual void onDestroy(){};
+	CPP virtual void onDestroy(){}
 
-	void serialize(JSON& json) const override;
-	void deserialize(const JSON& json) override;
+	CPP void serialize(JSON& json) const override
+	{
+		DO_SERIALIZE("class", getClassName())
+	}
+
+	CPP void deserialize(const JSON& json) override { };
 
 	GET_SET(GameObject)
 	GET(IsPendingToBeDestroyed)

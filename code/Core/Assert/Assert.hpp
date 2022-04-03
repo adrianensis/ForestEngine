@@ -16,7 +16,6 @@ public:
 			std::cout << "ASSERT > [" << function << ":"
 					<< std::to_string(line) << "] > " << message << std::endl;
 			throw;
-			//abort();
 		}
 	}
 };

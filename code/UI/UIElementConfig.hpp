@@ -2,6 +2,13 @@
 
 #include "Core/Module.hpp"
 
+#ifdef CPP_INCLUDE
+#include "UI/UIElementConfig.hpp"
+#include "UI/UIManager.hpp"
+#include "UI/UIStyle.hpp"
+#include "Graphics/Module.hpp"
+#endif
+
 class Material;
 class Scene;
 class GameObject;
@@ -27,15 +34,29 @@ public:
 	std::string mText;
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
-	bool mIsAffectedByLayout = false;
+	bool mIsAffectedByLayout = true;
 	Ptr<Material> mMaterial;
 	std::string mGroup;
 	GameObject* mParent = nullptr;
 	f32 mSeparatorSize = 0.0f;
-	
-	UIElementConfig();
 
-	void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());
+	CPP void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string())
+	{
+		mStyle = &UIStyleManager::getInstance().getDefaultStyle();
+		mUIElementClassId = 0;
+		mPosition = position;
+		mDisplayPosition = Vector2(0, 0);
+		mSize = size;
+		mText = text;
+		mLayer = layer;
+		mTextSize = UIManager::getDefaultFontSize(); // TODO : move to config?
+		mAdjustSizeToText = false;
+		mIsAffectedByLayout = true;
+		mMaterial = MaterialManager::getInstance().loadNoTextureMaterial();
+		mGroup = "";
+		mParent = nullptr;
+		mSeparatorSize = 0.01f;
+	}
 
 	COPY(UIElementConfig)
 	{
