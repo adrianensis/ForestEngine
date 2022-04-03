@@ -17,23 +17,6 @@ class Profiler : public ObjectBase, public Singleton<Profiler>
 {
 	GENERATE_METADATA(Profiler)
 
-private:
-	std::map<std::string, f32> mTimeMap;
-	std::map<std::string, TimeMark> mTimeMarkMap;
-
-	f32 mTotalTimeMillis = 0;
-	u32 mFrameCounter = 0;
-
-	CPP void printResult(const std::string& name, f32 time)  const
-	{
-		ECHO(name + " : " + std::to_string(time) + "ms ")
-	}
-
-	CPP void printResultAverage(const std::string& name, f32 time)  const
-	{
-		printResult(std::string("(Avg) ") + name, time / mFrameCounter);
-	} 
-
 public:
 	CPP Profiler() {}
 	CPP ~Profiler() override
@@ -93,5 +76,22 @@ public:
 			mTimeMarkMap.at(name).end();
 			MAP_INSERT(mTimeMap, name, mTimeMap.at(name) + mTimeMarkMap.at(name).getDeltaTimeMillis());
 		}
+	}
+
+private:
+	std::map<std::string, f32> mTimeMap;
+	std::map<std::string, TimeMark> mTimeMarkMap;
+
+	f32 mTotalTimeMillis = 0;
+	u32 mFrameCounter = 0;
+
+	CPP void printResult(const std::string& name, f32 time)  const
+	{
+		ECHO(name + " : " + std::to_string(time) + "ms ")
+	}
+
+	CPP void printResultAverage(const std::string& name, f32 time)  const
+	{
+		printResult(std::string("(Avg) ") + name, time / mFrameCounter);
 	}
 };

@@ -17,17 +17,6 @@ class Camera;
 
 class RenderContext
 {
-private:
-	inline static GLFWwindow *smWindow = nullptr;
-	inline static Vector2 smWindowSize;
-	inline static Camera *mCamera = nullptr;
-
-	CPP static void onResize(GLFWwindow *window, int width, int height)
-	{
-		smWindowSize.set(width, height);
-		glViewport(0, 0, smWindowSize.x, smWindowSize.y);
-		RenderEngine::getInstance().getCamera().get().onResize();
-	}
 
 public:
 	friend class Input;
@@ -193,4 +182,17 @@ public:
 	{
 		glDrawElements(GL_LINES, linesCount * 2, GL_UNSIGNED_SHORT, 0);
 	}
+
+private:
+	CPP static void onResize(GLFWwindow *window, int width, int height)
+	{
+		smWindowSize.set(width, height);
+		glViewport(0, 0, smWindowSize.x, smWindowSize.y);
+		RenderEngine::getInstance().getCamera().get().onResize();
+	}
+	
+private:
+	inline static GLFWwindow *smWindow = nullptr;
+	inline static Vector2 smWindowSize;
+	inline static Camera *mCamera = nullptr;
 };

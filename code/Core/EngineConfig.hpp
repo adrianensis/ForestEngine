@@ -10,14 +10,15 @@
 class EngineConfig: public ObjectBase, public Singleton<EngineConfig>
 {
 	GENERATE_METADATA(EngineConfig)
-private:
-	ConfigObject mConfig;
-
 public:
 	CPP void init()
 	{
 		mConfig.readFromJsonFile("config/engine.json");
 	}
 
+private:
+	ConfigObject mConfig;
+
+public:
 	CRGET(Config)
 };

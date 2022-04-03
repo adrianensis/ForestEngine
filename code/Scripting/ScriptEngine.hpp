@@ -11,22 +11,6 @@
 class ScriptEngine: public IEngineSystem, public Singleton<ScriptEngine>
 {
 	GENERATE_METADATA(ScriptEngine)
-	
-private:
-	std::list<Ptr<Script>> mScripts;
-	Ptr<Script> mController;
-
-	CPP void internalRemoveScript(std::list<Ptr<Script>>::iterator & it)
-	{
-		Ptr<Script> script = *it;
-
-		script.get().terminate();
-		script.get().finallyDestroy();
-		//DELETE(script);
-
-		it = mScripts.erase(it);
-		--it;
-	}
 
 public:
 
@@ -103,4 +87,21 @@ public:
 		// 	DELETE(script);
 		// }
 	}
+
+private:
+	CPP void internalRemoveScript(std::list<Ptr<Script>>::iterator & it)
+	{
+		Ptr<Script> script = *it;
+
+		script.get().terminate();
+		script.get().finallyDestroy();
+		//DELETE(script);
+
+		it = mScripts.erase(it);
+		--it;
+	}
+
+private:
+	std::list<Ptr<Script>> mScripts;
+	Ptr<Script> mController;
 };

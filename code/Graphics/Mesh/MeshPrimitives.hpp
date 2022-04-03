@@ -11,17 +11,7 @@ class MeshPrimitives: public ObjectBase, public Singleton<MeshPrimitives>
 {
 	GENERATE_METADATA(MeshPrimitives)
 
-private:
-	std::map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
-
-	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	OwnerPtr<Mesh> createPrimitive() const
-	{
-		ASSERT_MSG(false, "Mesh Primitive not implemented");
-		return OwnerPtr<Mesh>();
-	}
 public:
-
 	CPP void init()
 	{
 
@@ -45,6 +35,17 @@ public:
 		
 		return Ptr<Mesh>(mPrimitivesMap.at(T::getClassIdStatic()));
 	}
+
+private:
+	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	OwnerPtr<Mesh> createPrimitive() const
+	{
+		ASSERT_MSG(false, "Mesh Primitive not implemented");
+		return OwnerPtr<Mesh>();
+	}
+
+private:
+	std::map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
 };
 
 template <>

@@ -18,9 +18,6 @@ class UIDropdownButton: public UIButton
 {
     GENERATE_METADATA(UIDropdownButton)
 
-private:	
-	UIDropdown* mParentDropdown = nullptr;
-
 public:
 	CPP void onPostReleased() override
 	{
@@ -28,6 +25,9 @@ public:
 		mParentDropdown->setEntriesVisibility(false);
 	}
 
+private:	
+	UIDropdown* mParentDropdown = nullptr;
+public:
 	GET_SET(ParentDropdown)
 };
 
@@ -36,9 +36,6 @@ class UIDropdownEntry: public ObjectBase
 	GENERATE_METADATA(UIDropdownEntry)
 
 public:
-	std::string mLabel;
-	UIElementCallback mCallback;
-
 	UIDropdownEntry() = default;
 	
 	CPP UIDropdownEntry(const std::string& label, UIElementCallback callback)
@@ -52,18 +49,46 @@ public:
 		DO_COPY(mLabel)
 		DO_COPY(mCallback)
 	}
+
+public:
+	std::string mLabel;
+	UIElementCallback mCallback;
 };
 
 class UIDropdown: public UIButton
 {
     GENERATE_METADATA(UIDropdown)
 	friend UIDropdownButton;
+public:
+	CPP void init() override
+	{
+		UIButton::init();
+	}
+
+	CPP void onDestroy() override
+	{
+		UIButton::onDestroy();
+	}
+
+	CPP void onPostReleased() override
+	{
+		UIButton::onPostReleased();
+		toggle();
+	}
+
+	CPP UIDropdown& addOption(const std::string& label, UIElementCallback onPressedCallback)
+	{
+		mEntries.push_back(UIDropdownEntry(label, onPressedCallback));
+		return *this;
+	}
+
+	CPP void toggle()
+	{
+		// TODO : If I want to create-remove buttons, I have to implement TIMER NEXT FRAME!
+		setEntriesVisibility(mButtons.empty() ? true : !mButtons.front()->isActive());
+	}
 
 private:
-
-	std::list<UIDropdownButton *> mButtons;
-	std::list<UIDropdownEntry> mEntries;
-
 	CPP void setEntriesVisibility(bool visible)
 	{
 		if(visible)
@@ -120,32 +145,8 @@ private:
 		}
 	}
 
-public:
-	CPP void init() override
-	{
-		UIButton::init();
-	}
+private:
+	std::list<UIDropdownButton *> mButtons;
+	std::list<UIDropdownEntry> mEntries;
 
-	CPP void onDestroy() override
-	{
-		UIButton::onDestroy();
-	}
-
-	CPP void onPostReleased() override
-	{
-		UIButton::onPostReleased();
-		toggle();
-	}
-
-	CPP UIDropdown& addOption(const std::string& label, UIElementCallback onPressedCallback)
-	{
-		mEntries.push_back(UIDropdownEntry(label, onPressedCallback));
-		return *this;
-	}
-
-	CPP void toggle()
-	{
-		// TODO : If I want to create-remove buttons, I have to implement TIMER NEXT FRAME!
-		setEntriesVisibility(mButtons.empty() ? true : !mButtons.front()->isActive());
-	}
 };

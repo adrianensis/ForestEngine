@@ -12,13 +12,6 @@ class VertexBuffer: public ObjectBase
 {
     GENERATE_METADATA(VertexBuffer)
 
-private:
-	bool mGenerated = false;
-
-	bool mIsStatic = false;
-	u32 mVBO = 0; // TODO: change u32 for GLuint
-	u32 mAttribPointerIndex = 0;
-
 public:
 	VertexBuffer() = default;
 	CPP ~VertexBuffer() override
@@ -53,27 +46,19 @@ public:
 	{
 		RenderContext::setDataVBO(mVBO, data);
 	}
+
+private:
+	bool mGenerated = false;
+
+	bool mIsStatic = false;
+	u32 mVBO = 0; // TODO: change u32 for GLuint
+	u32 mAttribPointerIndex = 0;
 };
 
 // Buffers data for a mesh
 class MeshBuffer: public ObjectBase
 {
     GENERATE_METADATA(MeshBuffer)
-
-private:
-	bool mGenerated = false;
-
-	bool mIsStatic = false;
-
-	u32 mVBOMatrices = 0;
-	bool mIsInstanced = false;
-	std::vector<f32> mMatrices;
-	
-	u32 mVAO = 0;
-	VertexBuffer mVBOPosition;
-	VertexBuffer mVBOTexture;
-	VertexBuffer mVBOColor;
-	u32 mEBO = 0;
 
 public:
 	MeshBuffer() = default;
@@ -204,6 +189,22 @@ public:
 		RenderContext::enableVAO(0);
 	}
 
+
+private:
+	bool mGenerated = false;
+
+	bool mIsStatic = false;
+
+	u32 mVBOMatrices = 0;
+	bool mIsInstanced = false;
+	std::vector<f32> mMatrices;
+	
+	u32 mVAO = 0;
+	VertexBuffer mVBOPosition;
+	VertexBuffer mVBOTexture;
+	VertexBuffer mVBOColor;
+	u32 mEBO = 0;
+public:
 	GET(IsInstanced)
 };
 
@@ -211,49 +212,6 @@ public:
 class MeshBatcher: public ObjectBase
 {
     GENERATE_METADATA(MeshBatcher)
-
-private:
-	Ptr<const Mesh> mPrototypeMesh;
-	Mesh mMeshBuilder;
-	MeshBuffer mMeshBuffer;
-
-	u32 mMaxMeshesThreshold = 0;
-	const u32 mMaxMeshesIncrement = 100;
-
-	u32 mMeshesIndex = 0;
-
-	bool mDataSentToGPU = false;
-
-	CPP void clear()
-	{
-		mMeshBuilder.clear();
-		mMeshBuffer.clear();
-	}
-
-	CPP void generateFacesData(u32 meshesCount)
-	{
-		// Create Faces once and send to GPU once.
-		FOR_RANGE(i, 0, meshesCount)
-		{
-			u32 offset = (i * mPrototypeMesh.get().getVertexCount());
-			
-			FOR_RANGE(faceIndex, 0, mPrototypeMesh.get().getFaces().size())
-			{
-				mMeshBuilder.addFaceIndex(mPrototypeMesh.get().getFaces()[faceIndex] + offset);
-			}
-		}
-
-		mMeshBuffer.setIndexesData(mMeshBuilder);
-	}
-
-	CPP void sendDataToGPU()
-	{
-		if(!mDataSentToGPU)
-		{
-			mMeshBuffer.setData(mMeshBuilder);
-			mDataSentToGPU = true;
-		}
-	}
 
 public:
 	MeshBatcher() = default;
@@ -346,5 +304,50 @@ public:
 		mMeshBuffer.disable();
 	}
 
+private:
+	CPP void clear()
+	{
+		mMeshBuilder.clear();
+		mMeshBuffer.clear();
+	}
+
+	CPP void generateFacesData(u32 meshesCount)
+	{
+		// Create Faces once and send to GPU once.
+		FOR_RANGE(i, 0, meshesCount)
+		{
+			u32 offset = (i * mPrototypeMesh.get().getVertexCount());
+			
+			FOR_RANGE(faceIndex, 0, mPrototypeMesh.get().getFaces().size())
+			{
+				mMeshBuilder.addFaceIndex(mPrototypeMesh.get().getFaces()[faceIndex] + offset);
+			}
+		}
+
+		mMeshBuffer.setIndexesData(mMeshBuilder);
+	}
+
+	CPP void sendDataToGPU()
+	{
+		if(!mDataSentToGPU)
+		{
+			mMeshBuffer.setData(mMeshBuilder);
+			mDataSentToGPU = true;
+		}
+	}
+	
+private:
+	Ptr<const Mesh> mPrototypeMesh;
+	Mesh mMeshBuilder;
+	MeshBuffer mMeshBuffer;
+
+	u32 mMaxMeshesThreshold = 0;
+	const u32 mMaxMeshesIncrement = 100;
+
+	u32 mMeshesIndex = 0;
+
+	bool mDataSentToGPU = false;
+
+public:
 	RGET(MeshBuilder)
 };

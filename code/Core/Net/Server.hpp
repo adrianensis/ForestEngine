@@ -26,35 +26,6 @@ class Server: public ObjectBase
 {
     GENERATE_METADATA(Server)
 
-private:
-	ServerStatus mStatus;
-	
-	int server_fd, new_socket;
-	struct sockaddr_in address;
-	int opt = 1;
-	int addrlen = sizeof(address);
-
-	mutable std::string buffer;
-
-	CPP JSON readSimpleJSON(u32 size  = DEFAULT_SOCKET_READ_SIZE) const
-	{
-		JSON json;
-		std::string data = readData(size);
-
-		if (!data.empty())
-		{
-			ECHO(data);
-
-			json = JSON::parse(data);
-
-			if (!json.empty())
-			{
-				ECHO(json.dump());
-			}
-		}
-
-		return json;
-	}
 public:
 	CPP void init(u16 port)
 	{
@@ -189,6 +160,36 @@ public:
 	{
 	}
 
+private:
+	ServerStatus mStatus;
+	
+	int server_fd, new_socket;
+	struct sockaddr_in address;
+	int opt = 1;
+	int addrlen = sizeof(address);
 
+	mutable std::string buffer;
+
+	CPP JSON readSimpleJSON(u32 size  = DEFAULT_SOCKET_READ_SIZE) const
+	{
+		JSON json;
+		std::string data = readData(size);
+
+		if (!data.empty())
+		{
+			ECHO(data);
+
+			json = JSON::parse(data);
+
+			if (!json.empty())
+			{
+				ECHO(json.dump());
+			}
+		}
+
+		return json;
+	}
+	
+public:
 	GET(Status)
 };

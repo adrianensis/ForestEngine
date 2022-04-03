@@ -17,41 +17,6 @@ class UIText: public UIElement
 {
     GENERATE_METADATA(UIText)
 
-private:
-	i32 mLayer = 0;
-	Vector2 mSize;
-	std::string mString;
-	std::vector<Renderer *> mFontRenderers;
-    bool mIsEditable = false;
-
-protected:
-    UIPanel* mBackground = nullptr;
-    
-	CPP void setIsEditable(bool editable)
-	{
-		if(editable && !getIsEditable())
-		{
-			subscribeToMouseEvents();
-			subscribeToEnterEvent();
-			subscribeToEscEvent();
-			subscribeToCharEvents();
-			mOnlyReleaseOnClickOutside = true;
-		}
-
-		if(!editable && getIsEditable())
-		{
-			UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
-			UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);
-			UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
-			UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
-			UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
-			UNSUBSCRIBE_TO_EVENT(InputEventKeyEsc, nullptr, this);
-			mOnlyReleaseOnClickOutside = true;
-		}
-	}
-
-    virtual void setBackground(const UIElementConfig& config) { };
-
 public:
 	CPP UIText()
 	{
@@ -179,8 +144,43 @@ public:
 			mBackground->setVisibility(visibility);
 		}
 	}
+protected:
+	CPP void setIsEditable(bool editable)
+	{
+		if(editable && !getIsEditable())
+		{
+			subscribeToMouseEvents();
+			subscribeToEnterEvent();
+			subscribeToEscEvent();
+			subscribeToCharEvents();
+			mOnlyReleaseOnClickOutside = true;
+		}
 
+		if(!editable && getIsEditable())
+		{
+			UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
+			UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);
+			UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
+			UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
+			UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
+			UNSUBSCRIBE_TO_EVENT(InputEventKeyEsc, nullptr, this);
+			mOnlyReleaseOnClickOutside = true;
+		}
+	}
 
+    virtual void setBackground(const UIElementConfig& config) { };
+
+private:
+	i32 mLayer = 0;
+	Vector2 mSize;
+	std::string mString;
+	std::vector<Renderer *> mFontRenderers;
+    bool mIsEditable = false;
+
+protected:
+    UIPanel* mBackground = nullptr;
+
+public:
 	GET(IsEditable)
 	CRGET(String)
 	SET(Size)

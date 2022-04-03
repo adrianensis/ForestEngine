@@ -19,13 +19,6 @@
 class Chunk: public ObjectBase
 {
     GENERATE_METADATA(Chunk)
-private:
-	std::list<Ptr<Renderer>> mRenderers;
-	Vector3 mLeftTop;
-	f32 mSize = 0.0f;
-	bool mIsLoaded = false;
-	Vector3 mCenter;
-	f32 mRadius = 0.0f;
 
 public:
 	CPP ~Chunk() override
@@ -142,6 +135,14 @@ public:
 										renderer.get().getGameObject()->getTransform().get().getScale().y * 2.0f, 0);
 	}
 
+private:
+	std::list<Ptr<Renderer>> mRenderers;
+	Vector3 mLeftTop;
+	f32 mSize = 0.0f;
+	bool mIsLoaded = false;
+	Vector3 mCenter;
+	f32 mRadius = 0.0f;
+public:
 	GET(IsLoaded)
 	GET(Center)
 	GET(Radius)

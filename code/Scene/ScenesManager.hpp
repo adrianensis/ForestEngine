@@ -16,35 +16,6 @@ class ScenesManager: public ObjectBase, public Singleton<ScenesManager>
 {
 	GENERATE_METADATA(ScenesManager)
 
-private:
-	std::vector<Scene *> mScenes;
-	u32 mCurrentSceneIndex = 0;
-
-	Scene* mCurrentScene = nullptr;
-	bool mSceneHasChanged = false;
-	GameObject* mGameObjectController = nullptr;
-
-	CPP void internalLoadScene()
-	{
-		mCurrentScene->init();
-
-		if (EngineConfig::getInstance().getConfig().at("scenes").size() > 0)
-		{
-			std::string sceneName = EngineConfig::getInstance().getConfig().at("scenes")[mCurrentSceneIndex].get<std::string>();
-
-			mCurrentScene->loadScene(sceneName);
-		}
-
-		mGameObjectController->setScene(mCurrentScene);
-		RenderEngine::getInstance().setCamera(mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
-	}
-
-
-	CPP void addScene(Scene *newScene)
-	{
-		mScenes.push_back(newScene);
-	}
-
 public:
 	CPP ScenesManager()
 	{
@@ -106,6 +77,37 @@ public:
 		}
 	}
 
+private:
+	CPP void internalLoadScene()
+	{
+		mCurrentScene->init();
+
+		if (EngineConfig::getInstance().getConfig().at("scenes").size() > 0)
+		{
+			std::string sceneName = EngineConfig::getInstance().getConfig().at("scenes")[mCurrentSceneIndex].get<std::string>();
+
+			mCurrentScene->loadScene(sceneName);
+		}
+
+		mGameObjectController->setScene(mCurrentScene);
+		RenderEngine::getInstance().setCamera(mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
+	}
+
+
+	CPP void addScene(Scene *newScene)
+	{
+		mScenes.push_back(newScene);
+	}
+
+private:
+	std::vector<Scene *> mScenes;
+	u32 mCurrentSceneIndex = 0;
+
+	Scene* mCurrentScene = nullptr;
+	bool mSceneHasChanged = false;
+	GameObject* mGameObjectController = nullptr;
+
+public:
 	GET(CurrentScene)
 	GET(SceneHasChanged)
 	GET_SET(GameObjectController)

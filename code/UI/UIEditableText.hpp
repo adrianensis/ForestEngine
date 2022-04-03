@@ -25,6 +25,13 @@ class UIEditableText: public UIText
 {
     GENERATE_METADATA(UIEditableText)
 
+public:
+    CPP void init() override
+    {
+        UIText::init();
+        setIsEditable(true);
+    }
+    
 protected:
     CPP void setBackground(const UIElementConfig& config) override
     {
@@ -44,12 +51,5 @@ protected:
             setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).
             create<UIPanel>().
             getUIElement<UIPanel>();
-    }
-
-public:
-    CPP void init() override
-    {
-        UIText::init();
-        setIsEditable(true);
     }
 };

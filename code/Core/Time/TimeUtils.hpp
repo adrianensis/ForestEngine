@@ -13,13 +13,6 @@ class TimeMark: public ObjectBase
 {
     GENERATE_METADATA(TimeMark)
 
-private:
-	f32 mDeltaTimeMillis = 0.0f;
-	std::chrono::milliseconds mDeltaTimeChronoDuration;
-	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
-	std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
-	bool mIsStarted = false;
-
 public:
 
 	COPY(TimeMark)
@@ -29,8 +22,6 @@ public:
 		DO_COPY(mStartTime)
 		DO_COPY(mLastTime)
 	}
-
-	GET(IsStarted)
 
 	CPP void init()
 	{
@@ -76,17 +67,23 @@ public:
 	{
 		return getDeltaTimeMillis() / 1000.0f;
 	}
+
+private:
+	f32 mDeltaTimeMillis = 0.0f;
+	std::chrono::milliseconds mDeltaTimeChronoDuration;
+	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
+	std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
+	bool mIsStarted = false;
+
+public:
+	GET(IsStarted)
 };
 
 class Time: public ObjectBase, public Singleton<Time>
 {
 	GENERATE_METADATA(Time)	
 
-private:
-	TimeMark mInternalTimeMark;
-
 public:
-
 	void init(){mInternalTimeMark.init();}
 	void startFrame() { mInternalTimeMark.start(); }
 	void endFrame() { mInternalTimeMark.end(); }
@@ -94,4 +91,7 @@ public:
 	f32 getElapsedTimeSeconds() { return mInternalTimeMark.getElapsedTimeSeconds(); }
 	f32 getDeltaTimeMillis() { return mInternalTimeMark.getDeltaTimeMillis(); }
 	f32 getDeltaTimeSeconds() { return mInternalTimeMark.getDeltaTimeSeconds(); }
+
+private:
+	TimeMark mInternalTimeMark;
 };

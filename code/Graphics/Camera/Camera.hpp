@@ -17,45 +17,6 @@ class Camera: public Component
 {
     GENERATE_METADATA(Camera)
 
-private:
-	Matrix4 mProjectionMatrix;
-	mutable Matrix4 mViewMatrix;
-	mutable Matrix4 mProjectionViewMatrix;
-	Matrix4 mInversePVMatrix; // used in screen to world calculations.
-
-	mutable bool mViewMatrixNeedsUpdate = true;
-	mutable bool mProjectionViewMatrixNeedsUpdate = true;
-	mutable bool mInversePVMatrixNeedsUpdate = true;
-
-	f32 mLeft = 0.0f;
-	f32 mRight = 0.0f;
-	f32 mBottom = 0.0f;
-	f32 mTop = 0.0f;
-	f32 mNear = 0.0f;
-	f32 mFar = 0.0f;
-
-	f32 mAspect = 0.0f;
-	f32 mFov = 0.0f;
-	
-	bool mIsOrtho = false;
-
-	Frustum mFrustum;
-	f32 mZoom = 1.0f;
-
-	TransformState mTransformState;
-
-	CPP void calculateInverseMatrix(bool force = false)
-	{
-		if(mInversePVMatrixNeedsUpdate || force)
-		{
-			Matrix4 inverseProjectionMatrix;
-			mInversePVMatrix.init(getProjectionViewMatrix());		
-			mInversePVMatrix.invert();
-
-			mInversePVMatrixNeedsUpdate = false;
-		}
-	}
-
 public:
 
 	CPP void init()
@@ -212,6 +173,47 @@ public:
 		setZoom(mZoom);
 	};
 
+private:
+	CPP void calculateInverseMatrix(bool force = false)
+	{
+		if(mInversePVMatrixNeedsUpdate || force)
+		{
+			Matrix4 inverseProjectionMatrix;
+			mInversePVMatrix.init(getProjectionViewMatrix());		
+			mInversePVMatrix.invert();
+
+			mInversePVMatrixNeedsUpdate = false;
+		}
+	}
+
+private:
+	Matrix4 mProjectionMatrix;
+	mutable Matrix4 mViewMatrix;
+	mutable Matrix4 mProjectionViewMatrix;
+	Matrix4 mInversePVMatrix; // used in screen to world calculations.
+
+	mutable bool mViewMatrixNeedsUpdate = true;
+	mutable bool mProjectionViewMatrixNeedsUpdate = true;
+	mutable bool mInversePVMatrixNeedsUpdate = true;
+
+	f32 mLeft = 0.0f;
+	f32 mRight = 0.0f;
+	f32 mBottom = 0.0f;
+	f32 mTop = 0.0f;
+	f32 mNear = 0.0f;
+	f32 mFar = 0.0f;
+
+	f32 mAspect = 0.0f;
+	f32 mFov = 0.0f;
+	
+	bool mIsOrtho = false;
+
+	Frustum mFrustum;
+	f32 mZoom = 1.0f;
+
+	TransformState mTransformState;
+
+public:
 	CRGET(ProjectionMatrix)
 	GET(IsOrtho)
 	CRGET(Frustum)

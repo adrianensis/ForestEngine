@@ -18,51 +18,6 @@ class GameObject: public ObjectBase
 {
     GENERATE_METADATA(GameObject)
 	
-private:
-
-	inline static std::list<OwnerPtr<Component>> smEmptyList;
-
-	std::map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
-	bool mIsActive = false;
-
-	Scene* mScene = nullptr;
-	bool mIsStatic = false;
-	OwnerPtr<Transform> mTransform;
-	std::string mTag;
-	bool mIsPendingToBeDestroyed = false;
-	bool mIsDestroyed = false;
-	bool mShouldPersist = false;
-
-	CPP const std::list<OwnerPtr<Component>>& getComponents(ClassId classId) const
-	{
-		const std::list<OwnerPtr<Component>>* components = nullptr;
-
-		if (MAP_CONTAINS(mComponentsMap, classId))
-		{
-			components = &mComponentsMap.at(classId);
-		}
-
-		if (!components || components->empty())
-		{
-			components = &smEmptyList;
-		}
-
-		return *components;
-	}
-
-	CPP Ptr<Component> getFirstComponent(ClassId classId) const
-	{
-		Ptr<Component>component;
-		const std::list<OwnerPtr<Component>>& components = getComponents(classId);
-
-		if (!components.empty())
-		{
-			component = components.front();
-		}
-
-		return component;
-	}
-
 public:
 	CPP GameObject()
 	{
@@ -237,6 +192,52 @@ public:
 		// }
 	}
 
+private:
+	CPP const std::list<OwnerPtr<Component>>& getComponents(ClassId classId) const
+	{
+		const std::list<OwnerPtr<Component>>* components = nullptr;
+
+		if (MAP_CONTAINS(mComponentsMap, classId))
+		{
+			components = &mComponentsMap.at(classId);
+		}
+
+		if (!components || components->empty())
+		{
+			components = &smEmptyList;
+		}
+
+		return *components;
+	}
+
+	CPP Ptr<Component> getFirstComponent(ClassId classId) const
+	{
+		Ptr<Component>component;
+		const std::list<OwnerPtr<Component>>& components = getComponents(classId);
+
+		if (!components.empty())
+		{
+			component = components.front();
+		}
+
+		return component;
+	}
+
+private:
+	inline static std::list<OwnerPtr<Component>> smEmptyList;
+
+	std::map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
+	bool mIsActive = false;
+
+	Scene* mScene = nullptr;
+	bool mIsStatic = false;
+	OwnerPtr<Transform> mTransform;
+	std::string mTag;
+	bool mIsPendingToBeDestroyed = false;
+	bool mIsDestroyed = false;
+	bool mShouldPersist = false;
+
+public:
 	GET_SET(Scene)
 	GET_SET(IsStatic)
 	GET(Transform)

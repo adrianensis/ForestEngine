@@ -11,11 +11,6 @@ class UIStyle: public ObjectBase
     GENERATE_METADATA(UIStyle)
 
 public:
-    Vector4 mTextColor;
-	Vector4 mBackgroundColor;
-	Vector4 mColorPressed;
-	Vector4 mColorHovered;
-
 	UIStyle()
 	{
         mTextColor = Vector4(1, 1, 1, 1);
@@ -31,16 +26,18 @@ public:
 		DO_COPY(mColorPressed)
 		DO_COPY(mColorHovered)
 	}
+
+public:
+    Vector4 mTextColor;
+	Vector4 mBackgroundColor;
+	Vector4 mColorPressed;
+	Vector4 mColorHovered;
 };
 
 class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 {
 	GENERATE_METADATA(UIStyleManager)
 	
-private:
-	UIStyle mDefaultStyle;
-	std::map<ClassId, UIStyle*> mStyles;
-
 public:
 	CPP ~UIStyleManager() override
 	{
@@ -80,5 +77,10 @@ public:
 		return getStyle<T>();
 	}
 
+private:
+	UIStyle mDefaultStyle;
+	std::map<ClassId, UIStyle*> mStyles;
+
+public:
 	CRGET(DefaultStyle)
 };

@@ -10,11 +10,6 @@ class AnimationFrame: public ObjectBase
 {
     GENERATE_METADATA(AnimationFrame)
 
-private:
-    Vector2 mPosition;
-	f32 mWidth = 0.0f;
-	f32 mHeight = 0.0f;
-
 public:
 
     COPY(AnimationFrame)
@@ -45,6 +40,12 @@ public:
         DO_DESERIALIZE("height", mHeight);
     }
     
+
+private:
+    Vector2 mPosition;
+	f32 mWidth = 0.0f;
+	f32 mHeight = 0.0f;
+public:
     GET(Position)
     GET(Width)
     GET(Height)

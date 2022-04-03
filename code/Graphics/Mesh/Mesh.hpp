@@ -11,22 +11,7 @@ class Mesh: public ObjectBase
 {
     GENERATE_METADATA(Mesh)
 
-private:
-	std::vector<f32> mVertices;
-	std::vector<f32> mNormals;
-	std::vector<f32> mTextureCoordinates;
-	std::vector<f32> mColors;
-	std::vector<u16> mFaces;
-
-	u32 mVertexCount = 0;
-	u32 mFacesCount = 0;
-
 public:
-	inline static const u32 smVertexPositionSize = 3;
-	inline static const u32 smVertexNormalSize = 3;
-	inline static const u32 smVertexTexCoordSize = 2;
-	inline static const u32 smVertexColorSize = 4;
-	inline static const u32 smFaceSize = 3;
 
 	CPP void init(u32 vertexCount, u32 facesCount)
 	{
@@ -142,6 +127,23 @@ public:
 
 		std::fill(mColors.begin(), mColors.end(), 0);
 	}
+
+private:
+	std::vector<f32> mVertices;
+	std::vector<f32> mNormals;
+	std::vector<f32> mTextureCoordinates;
+	std::vector<f32> mColors;
+	std::vector<u16> mFaces;
+
+	u32 mVertexCount = 0;
+	u32 mFacesCount = 0;
+
+public:
+	inline static const u32 smVertexPositionSize = 3;
+	inline static const u32 smVertexNormalSize = 3;
+	inline static const u32 smVertexTexCoordSize = 2;
+	inline static const u32 smVertexColorSize = 4;
+	inline static const u32 smFaceSize = 3;
 
 	CRGET(Vertices)
 	CRGET(Normals)

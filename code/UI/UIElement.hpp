@@ -28,8 +28,6 @@ class FunctorUIElement: public Functor<UIElementCallback>
 	GENERATE_METADATA(FunctorUIElement)
 
 public:
-	UIElement* mUIElement = nullptr;
-
 	void execute() override
 	{
 		if (mCallback)
@@ -43,32 +41,122 @@ public:
 		DO_COPY(mUIElement)
 		Functor<UIElementCallback>::copy(other);
 	}
+
+public:
+	UIElement* mUIElement = nullptr;
 };
 
 class UIElement: public GameObject
 {
     GENERATE_METADATA(UIElement)
 
-protected:
-	UIElementConfig mConfig;
+public:
+	CPP	void init() override
+	{
+		GameObject::init();
 
-	FunctorUIElement mOnPressedFunctor;
-	FunctorUIElement mOnReleasedFunctor;
+		mPressed = false;
+		mConsumeInput = true;
+		mOnlyReleaseOnClickOutside = false;
+	}
 
-	FunctorUIElement mOnScrollFunctor;
+	CPP virtual void initFromConfig(const UIElementConfig& config)
+	{
+		mConfig = config;
+		init();
+	}
 
-	FunctorUIElement mOnTextChangedFunctor;
-	FunctorUIElement mOnFocusLostFunctor;
+	CPP virtual void onDestroy()
+	{
+		GameObject::onDestroy();
+		UNSUBSCRIBE_TO_EVENT(InputEventKeyPressed, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventKeyReleased, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventScroll, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventKeyEsc, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(InputEventMouseMoved, nullptr, this);
 
-	Renderer* mRenderer = nullptr;
-	//PRI Collider* mCollider = nullptr; GET(Collider)
-	std::string mInputString;
-	bool mConsumeInput = false;
-	bool mPressed = false;
-	bool mCanToggle = false;
-	bool mReleaseOnSameGroupPressed = false;
-	bool mToggled = false;
-    bool mOnlyReleaseOnClickOutside = false;
+		if (hasFocus())
+		{
+			UIManager::getInstance().setFocusedElement(nullptr);
+		}
+	}
+
+	void simulateClick()
+	{
+		press();
+		executePressAndRelease(true);
+	}
+
+	CPP bool hasFocus() const
+	{
+		return this == UIManager::getInstance().getFocusedElement();
+	}
+
+	CPP bool isMouseCursorInsideElement()
+	{
+		//collider->getBoundingBox(true); // force regenerate bounding box
+		Vector2 mousePosition = Input::getInstance().getMousePosition();
+
+		if(getTransform().get().getAffectedByProjection())
+		{
+			mousePosition = RenderEngine::getInstance().getCamera().get().screenToWorld(Input::getInstance().getMousePosition());
+		}
+
+		return Geometry::testRectanglePoint(
+			mConfig.mPosition,
+			UIUtils::correctAspectRatio_X(mConfig.mSize).x,
+			mConfig.mSize.y,
+			mousePosition, 0);
+	}
+
+	virtual void setText(const std::string& text) { };
+
+	CPP void setOnPressedCallback(UIElementCallback callback)
+	{
+		mOnPressedFunctor.mUIElement = this;
+		mOnPressedFunctor.setCallback(callback);
+	}
+
+	CPP void setOnReleasedCallback(UIElementCallback callback)
+	{
+		mOnReleasedFunctor.mUIElement = this;
+		mOnReleasedFunctor.setCallback(callback);
+	}
+
+	CPP void setOnTextChangedCallback(UIElementCallback callback)
+	{
+		mOnTextChangedFunctor.mUIElement = this;
+		mOnTextChangedFunctor.setCallback(callback);
+	}
+
+	CPP void setOnFocusLostCallback(UIElementCallback callback)
+	{
+		mOnFocusLostFunctor.mUIElement = this;
+		mOnFocusLostFunctor.setCallback(callback);
+	}
+
+	CPP void setComponentsCache()
+	{
+		mRenderer = &getFirstComponent<Renderer>().get();
+		//mCollider = getFirstComponent<Collider>();
+	}
+
+
+	CPP virtual void setVisibility(bool visibility)
+	{
+		setIsActive(visibility);
+	}
+
+	CPP bool isVisible()
+	{
+		return isActive();
+	}
+
 
 protected:
 	CPP void subscribeToKeyEvents()
@@ -409,113 +497,28 @@ protected:
 		}
 	}
 
+protected:
+	UIElementConfig mConfig;
+
+	FunctorUIElement mOnPressedFunctor;
+	FunctorUIElement mOnReleasedFunctor;
+
+	FunctorUIElement mOnScrollFunctor;
+
+	FunctorUIElement mOnTextChangedFunctor;
+	FunctorUIElement mOnFocusLostFunctor;
+
+	Renderer* mRenderer = nullptr;
+	//PRI Collider* mCollider = nullptr; GET(Collider)
+	std::string mInputString;
+	bool mConsumeInput = false;
+	bool mPressed = false;
+	bool mCanToggle = false;
+	bool mReleaseOnSameGroupPressed = false;
+	bool mToggled = false;
+    bool mOnlyReleaseOnClickOutside = false;
+
 public:
-	CPP	void init() override
-	{
-		GameObject::init();
-
-		mPressed = false;
-		mConsumeInput = true;
-		mOnlyReleaseOnClickOutside = false;
-	}
-
-	CPP virtual void initFromConfig(const UIElementConfig& config)
-	{
-		mConfig = config;
-		init();
-	}
-
-	CPP virtual void onDestroy()
-	{
-		GameObject::onDestroy();
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyPressed, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyReleased, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventScroll, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyEsc, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventMouseMoved, nullptr, this);
-
-		if (hasFocus())
-		{
-			UIManager::getInstance().setFocusedElement(nullptr);
-		}
-	}
-
-	void simulateClick()
-	{
-		press();
-		executePressAndRelease(true);
-	}
-
-	CPP bool hasFocus() const
-	{
-		return this == UIManager::getInstance().getFocusedElement();
-	}
-
-	CPP bool isMouseCursorInsideElement()
-	{
-		//collider->getBoundingBox(true); // force regenerate bounding box
-		Vector2 mousePosition = Input::getInstance().getMousePosition();
-
-		if(getTransform().get().getAffectedByProjection())
-		{
-			mousePosition = RenderEngine::getInstance().getCamera().get().screenToWorld(Input::getInstance().getMousePosition());
-		}
-
-		return Geometry::testRectanglePoint(
-			mConfig.mPosition,
-			UIUtils::correctAspectRatio_X(mConfig.mSize).x,
-			mConfig.mSize.y,
-			mousePosition, 0);
-	}
-
-	virtual void setText(const std::string& text) { };
-
-	CPP void setOnPressedCallback(UIElementCallback callback)
-	{
-		mOnPressedFunctor.mUIElement = this;
-		mOnPressedFunctor.setCallback(callback);
-	}
-
-	CPP void setOnReleasedCallback(UIElementCallback callback)
-	{
-		mOnReleasedFunctor.mUIElement = this;
-		mOnReleasedFunctor.setCallback(callback);
-	}
-
-	CPP void setOnTextChangedCallback(UIElementCallback callback)
-	{
-		mOnTextChangedFunctor.mUIElement = this;
-		mOnTextChangedFunctor.setCallback(callback);
-	}
-
-	CPP void setOnFocusLostCallback(UIElementCallback callback)
-	{
-		mOnFocusLostFunctor.mUIElement = this;
-		mOnFocusLostFunctor.setCallback(callback);
-	}
-
-	CPP void setComponentsCache()
-	{
-		mRenderer = &getFirstComponent<Renderer>().get();
-		//mCollider = getFirstComponent<Collider>();
-	}
-
-
-	CPP virtual void setVisibility(bool visibility)
-	{
-		setIsActive(visibility);
-	}
-
-	CPP bool isVisible()
-	{
-		return isActive();
-	}
-
 	CRGET_SET(Config)
 	GET(Renderer)
 	GET(InputString)

@@ -10,12 +10,6 @@ class ObjectBase: public ObjectMeta, public ISerializable, public std::enable_sh
 private:
 	GENERATE_METADATA(ObjectBase)
 
-private:
-	ObjectId mObjectId = 0;
-
-protected:
-	inline static ObjectId smObjectIdCounter = 0;
-
 public:
 	ObjectBase()
 	{
@@ -46,4 +40,10 @@ public:
 		copy(&other);
 		return *this;
 	}
+
+private:
+	ObjectId mObjectId = 0;
+
+protected:
+	inline static ObjectId smObjectIdCounter = 0;
 };

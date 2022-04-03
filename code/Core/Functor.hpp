@@ -6,8 +6,6 @@ template <class T>
 class Functor: public ObjectBase
 {
 	GENERATE_METADATA(Functor<T>)
-protected:
-	T mCallback; 
 
 public:
 	virtual void execute() = 0;
@@ -22,6 +20,9 @@ public:
 	   return this == &functor;
 	}*/
 
+protected:
+	T mCallback; 
+public:
 	SET(Callback)
 };
 

@@ -21,7 +21,65 @@
 class EventsManager: public ObjectBase, public Singleton<EventsManager>
 {
 	GENERATE_METADATA(EventsManager)
-	
+
+public:
+	CPP void init()
+	{
+	}
+
+	CPP void terminate()
+	{
+		removeMapContent();
+	}
+
+	template <class E>
+	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
+	{
+		if (std::is_base_of<Event, E>::value)
+		{
+			subscribe(E::getClassIdStatic(), eventOwner, eventReceiver, eventCallback);
+		}
+		else
+		{
+			ASSERT_MSG(false, "The event class must inherit from Event.");
+		}
+	}
+
+	template <class E>
+	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
+	{
+		if (std::is_base_of<Event, E>::value)
+		{
+			unsubscribe(E::getClassIdStatic(), eventOwner, eventReceiver);
+		}
+		else
+		{
+			ASSERT_MSG(false, "The event class must inherit from Event.");
+		}
+	}
+
+	CPP void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
+	{
+		if (ownerExists(eventOwner))
+		{
+			ClassId eventClassId = event->getClassId();
+			if (ownerHasEventType(eventOwner, eventClassId))
+			{
+				// Duplicate functors map. New event-receivers can subscribe during the iteration.
+				// So we don't want to iterate a mutable map.
+				ReceiversFunctorMap receiversFunctorMapCopy = getReceiversFunctorMap(eventOwner, eventClassId);
+
+				FOR_MAP(it, receiversFunctorMapCopy)
+				{
+					EventFunctor<Event> functor = it->second;
+					functor.mEvent = event;
+					functor.mEvent->mInstigator = eventInstigator;
+					functor.execute();
+				}
+			}
+		}
+	}
+
 private:
 	using ReceiversFunctorMap = std::map<ObjectBase *, EventFunctor<Event>>;
 	using EventReceiversMap = std::map<ClassId, ReceiversFunctorMap>;
@@ -93,66 +151,6 @@ private:
 				if (eventTypeHasReceiver(eventOwner, eventClassId, eventReceiver))
 				{
 					removeEventCallback(eventClassId, eventOwner, eventReceiver);
-				}
-			}
-		}
-	}
-
-
-
-public:
-	CPP void init()
-	{
-	}
-
-	CPP void terminate()
-	{
-		removeMapContent();
-	}
-
-	template <class E>
-	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
-	{
-		if (std::is_base_of<Event, E>::value)
-		{
-			subscribe(E::getClassIdStatic(), eventOwner, eventReceiver, eventCallback);
-		}
-		else
-		{
-			ASSERT_MSG(false, "The event class must inherit from Event.");
-		}
-	}
-
-	template <class E>
-	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
-	{
-		if (std::is_base_of<Event, E>::value)
-		{
-			unsubscribe(E::getClassIdStatic(), eventOwner, eventReceiver);
-		}
-		else
-		{
-			ASSERT_MSG(false, "The event class must inherit from Event.");
-		}
-	}
-
-	CPP void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
-	{
-		if (ownerExists(eventOwner))
-		{
-			ClassId eventClassId = event->getClassId();
-			if (ownerHasEventType(eventOwner, eventClassId))
-			{
-				// Duplicate functors map. New event-receivers can subscribe during the iteration.
-				// So we don't want to iterate a mutable map.
-				ReceiversFunctorMap receiversFunctorMapCopy = getReceiversFunctorMap(eventOwner, eventClassId);
-
-				FOR_MAP(it, receiversFunctorMapCopy)
-				{
-					EventFunctor<Event> functor = it->second;
-					functor.mEvent = event;
-					functor.mEvent->mInstigator = eventInstigator;
-					functor.execute();
 				}
 			}
 		}

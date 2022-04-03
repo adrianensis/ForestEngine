@@ -15,10 +15,6 @@ namespace Hash
 // Metadata for base object
 class ObjectMeta
 {
-private:
-	inline static std::string smClassName = "ObjectMeta";
-	inline static ClassId smClassId = Hash::hashString(smClassName);
-
 public:
 	ObjectMeta() { };
 
@@ -58,4 +54,8 @@ public:
 	{
 		return this->getClassId() == object->getClassId();
 	}
+
+private:
+	inline static std::string smClassName = "ObjectMeta";
+	inline static ClassId smClassId = Hash::hashString(smClassName);
 };

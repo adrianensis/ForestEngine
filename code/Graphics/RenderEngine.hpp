@@ -26,83 +26,7 @@ class RenderEngine : public IEngineSystem, public Singleton<RenderEngine>
 {
 	GENERATE_METADATA(RenderEngine)
 
-private:
-	BatchesMap mBatchesMap;
-
-	ShapeBatchRendererMap mShapeBatchRendererMap;
-	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
-
-	Ptr<Camera> mCamera;
-	bool mCameraDirtyTranslation = false;
-
-	f32 mMinChunkDrawDistance = 0.0f;
-	std::vector<OwnerPtr<Chunk>> mChunks;
-
-	CPP void swap()
-	{
-		PROFILER_TIMEMARK_START()
-
-		RenderContext::swap();
-
-		PROFILER_TIMEMARK_END()
-	}
-
-	CPP void renderBatches()
-	{
-		PROFILER_TIMEMARK_START()
-
-		/*FOR_MAP(it, mDepthsData)
-		{
-			if (it->second.mVisible)
-			{
-				
-			}
-		}*/
-
-		mBatchesMap.render();
-
-		mShapeBatchRendererMap.render();
-		mShapeBatchRendererMapScreenSpace.render();
-		
-		PROFILER_TIMEMARK_END()
-	}
-
-	CPP void checkChunks()
-	{
-		PROFILER_TIMEMARK_START()
-
-		FOR_ARRAY(i, mChunks)
-		{
-			Ptr<Chunk> chunk = mChunks.at(i);
-
-			f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera.get().getGameObject()->getTransform().get().getWorldPosition());
-			bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
-			
-			if (chunkInDistance && !chunk.get().getIsLoaded())
-			{
-				chunk.get().load();
-			}
-			else if (!chunkInDistance && chunk.get().getIsLoaded())
-			{
-				mBatchesMap.forceRegenerateBuffers();
-
-				chunk.get().unload();
-			}
-
-			//if (chunk->getIsLoaded()) {
-			chunk.get().update(&mBatchesMap);
-			//}
-		}
-
-		PROFILER_TIMEMARK_END()
-	}
-
 public:
-
-	RGET_SET(Camera)
-	GET(CameraDirtyTranslation)
-	GET(MinChunkDrawDistance)
-	
 	CPP void init(f32 sceneSize)
 	{
 		TRACE()
@@ -254,4 +178,80 @@ public:
 		drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
 		drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y, leftTop.z), Vector3(leftTop.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
 	}
+
+private:
+	CPP void swap()
+	{
+		PROFILER_TIMEMARK_START()
+
+		RenderContext::swap();
+
+		PROFILER_TIMEMARK_END()
+	}
+
+	CPP void renderBatches()
+	{
+		PROFILER_TIMEMARK_START()
+
+		/*FOR_MAP(it, mDepthsData)
+		{
+			if (it->second.mVisible)
+			{
+				
+			}
+		}*/
+
+		mBatchesMap.render();
+
+		mShapeBatchRendererMap.render();
+		mShapeBatchRendererMapScreenSpace.render();
+		
+		PROFILER_TIMEMARK_END()
+	}
+
+	CPP void checkChunks()
+	{
+		PROFILER_TIMEMARK_START()
+
+		FOR_ARRAY(i, mChunks)
+		{
+			Ptr<Chunk> chunk = mChunks.at(i);
+
+			f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera.get().getGameObject()->getTransform().get().getWorldPosition());
+			bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
+			
+			if (chunkInDistance && !chunk.get().getIsLoaded())
+			{
+				chunk.get().load();
+			}
+			else if (!chunkInDistance && chunk.get().getIsLoaded())
+			{
+				mBatchesMap.forceRegenerateBuffers();
+
+				chunk.get().unload();
+			}
+
+			//if (chunk->getIsLoaded()) {
+			chunk.get().update(&mBatchesMap);
+			//}
+		}
+
+		PROFILER_TIMEMARK_END()
+	}
+private:
+	BatchesMap mBatchesMap;
+
+	ShapeBatchRendererMap mShapeBatchRendererMap;
+	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
+
+	Ptr<Camera> mCamera;
+	bool mCameraDirtyTranslation = false;
+
+	f32 mMinChunkDrawDistance = 0.0f;
+	std::vector<OwnerPtr<Chunk>> mChunks;
+
+public:
+	RGET_SET(Camera)
+	GET(CameraDirtyTranslation)
+	GET(MinChunkDrawDistance)
 };

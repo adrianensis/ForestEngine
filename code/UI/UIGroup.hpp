@@ -15,10 +15,6 @@ class UIGroup: public ObjectBase
     GENERATE_METADATA(UIGroup)
 
 public:
-	std::string mName;
-	bool mVisible = false;
-	std::list<UIElement *> mUIElements;
-	
 	CPP void init()
 	{
 		mName = "";
@@ -70,6 +66,11 @@ public:
 		}
 	}
 
+public:
+	std::string mName;
+	bool mVisible = false;
+	std::list<UIElement *> mUIElements;
+	
 	CRGET(Name)
 	GET(Visible)
 	CRGET(UIElements)

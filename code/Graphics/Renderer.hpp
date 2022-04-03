@@ -30,72 +30,10 @@ class Renderer: public Component
 {
     GENERATE_METADATA(Renderer)
 	
-private:
-	TransformState mTransformState;
-	Matrix4 mRendererModelMatrix;
-	bool mRendererModelMatrixGenerated = false;
-	bool mVerticesDirty = true;
-	std::vector<Vector3> mVertices;
-	Vector4 mColor;
-	Vector3 mPositionOffset;
-	Rectangle mTextureRegion;
-	Rectangle mClipRectangle;
-	bool mInvertAxisX = false;
-	bool mIsLineMode = false;
-	i32 mDepth = 0;
-	bool mUseDepth = true; // overrides Z with Depth
-	f32 mRenderDistance = 0.0f;
-	std::map<std::string, Ptr<Animation>> mAnimations;
-	std::string mCurrentAnimationName;
-	Ptr<Chunk> mChunk;
-	Ptr<Batch> mBatch;
-	Ptr<const Mesh> mMesh;
-	Mesh mMeshInstance;
-	Ptr<Material> mMaterial;
-
-private:
-	//void updateAnimation();
-	
-	CPP void updateAnimation()
-	{
-		if (mMaterial.isValid())
-		{
-			Ptr<Animation> currentAnimation;
-			if (MAP_CONTAINS(mAnimations, mCurrentAnimationName))
-			{
-				currentAnimation = mAnimations[mCurrentAnimationName];
-			}
-
-			if (currentAnimation && !currentAnimation.get().getFrames().empty())
-			{
-				const AnimationFrame& frame = currentAnimation.get().getNextFrame();
-				mTextureRegion.setLeftTop(frame.getPosition());
-				mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
-			}
-		}
-	};
 public:
 
 	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
 	Ptr<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
-
-	CRGET_SET(RendererModelMatrix)
-	CRGET_SET(Vertices)
-	CRGET_SET(Color)
-	GET(PositionOffset)
-	CRGET_SET(TextureRegion)
-	CRGET_SET(ClipRectangle)
-	GET_SET(InvertAxisX)
-	GET_SET(IsLineMode)
-	GET_SET(Depth)
-	GET_SET(UseDepth)
-	GET_SET(RenderDistance)
-	RGET(Animations)
-	GET_SET(CurrentAnimationName)
-	RGET_SET(Chunk)
-	RGET_SET(Batch)
-	RGET_SET(Mesh)
-	RGET_SET(Material)
 
 	CPP void init() override
 	{
@@ -281,4 +219,66 @@ public:
 		//     MAP_INSERT(mAnimations, (*it).getName(), RefRaw<Animation>(*it))
 		// }
 	}
+
+private:
+	CPP void updateAnimation()
+	{
+		if (mMaterial.isValid())
+		{
+			Ptr<Animation> currentAnimation;
+			if (MAP_CONTAINS(mAnimations, mCurrentAnimationName))
+			{
+				currentAnimation = mAnimations[mCurrentAnimationName];
+			}
+
+			if (currentAnimation && !currentAnimation.get().getFrames().empty())
+			{
+				const AnimationFrame& frame = currentAnimation.get().getNextFrame();
+				mTextureRegion.setLeftTop(frame.getPosition());
+				mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
+			}
+		}
+	};
+
+private:
+	TransformState mTransformState;
+	Matrix4 mRendererModelMatrix;
+	bool mRendererModelMatrixGenerated = false;
+	bool mVerticesDirty = true;
+	std::vector<Vector3> mVertices;
+	Vector4 mColor;
+	Vector3 mPositionOffset;
+	Rectangle mTextureRegion;
+	Rectangle mClipRectangle;
+	bool mInvertAxisX = false;
+	bool mIsLineMode = false;
+	i32 mDepth = 0;
+	bool mUseDepth = true; // overrides Z with Depth
+	f32 mRenderDistance = 0.0f;
+	std::map<std::string, Ptr<Animation>> mAnimations;
+	std::string mCurrentAnimationName;
+	Ptr<Chunk> mChunk;
+	Ptr<Batch> mBatch;
+	Ptr<const Mesh> mMesh;
+	Mesh mMeshInstance;
+	Ptr<Material> mMaterial;
+
+public:
+	CRGET_SET(RendererModelMatrix)
+	CRGET_SET(Vertices)
+	CRGET_SET(Color)
+	GET(PositionOffset)
+	CRGET_SET(TextureRegion)
+	CRGET_SET(ClipRectangle)
+	GET_SET(InvertAxisX)
+	GET_SET(IsLineMode)
+	GET_SET(Depth)
+	GET_SET(UseDepth)
+	GET_SET(RenderDistance)
+	RGET(Animations)
+	GET_SET(CurrentAnimationName)
+	RGET_SET(Chunk)
+	RGET_SET(Batch)
+	RGET_SET(Mesh)
+	RGET_SET(Material)
 };

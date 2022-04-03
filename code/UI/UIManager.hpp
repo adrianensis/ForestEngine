@@ -20,19 +20,6 @@ class UIManager: public ObjectBase, public Singleton<UIManager>
 {
 	GENERATE_METADATA(UIManager)
 
-private:
-	std::map<std::string, UIGroup *> mGroups;
-	std::map<char, Vector2> mCharMap;
-	Vector2 mFontTilesCount;
-	Vector2 mFontTileTextureSize;
-	Ptr<Material> mFontMaterial;
-
-	inline static Vector2 smDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
-
-	UIBuilder mUIBuilder;
-
-	UIElement* mFocusedElement = nullptr;
-
 public:
 
 	CPP void init()
@@ -196,4 +183,17 @@ public:
 	{
 		mFocusedElement = focusedElement;
 	}
+
+private:
+	std::map<std::string, UIGroup *> mGroups;
+	std::map<char, Vector2> mCharMap;
+	Vector2 mFontTilesCount;
+	Vector2 mFontTileTextureSize;
+	Ptr<Material> mFontMaterial;
+
+	inline static Vector2 smDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
+
+	UIBuilder mUIBuilder;
+
+	UIElement* mFocusedElement = nullptr;
 };

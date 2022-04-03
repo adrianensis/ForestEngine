@@ -13,10 +13,6 @@ class Camera;
 class Frustum: public ObjectBase
 {
     GENERATE_METADATA(Frustum)
-private: 
-	Matrix4 mVPmatrix;
-	Camera* mCamera = nullptr;
-	std::array<Vector4, 6> mPlanes;
 
 public:
 	CPP void init(Camera *camera)
@@ -124,4 +120,9 @@ public:
 			}
 		}
 	}
+	
+private: 
+	Matrix4 mVPmatrix;
+	Camera* mCamera = nullptr;
+	std::array<Vector4, 6> mPlanes;
 };

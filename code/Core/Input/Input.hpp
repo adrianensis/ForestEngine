@@ -16,7 +16,132 @@
 class Input: public ObjectBase, public Singleton<Input>
 {
 	GENERATE_METADATA(Input)
-	
+public:
+	Vector2 smMouseCoordinates;
+	u32 smLastMouseButtonPressed;
+	u32 smLastKeyPressed;
+	u32 smModifier;
+	bool smKeyJustPressed;
+	bool smButtonJustPressed;
+	f32 smScroll;
+
+	CPP void init()
+	{
+		TRACE()
+
+		smMouseCoordinates = Vector2();
+		smLastMouseButtonPressed = -1;
+		smLastKeyPressed = -1;
+		smModifier = -1;
+		smKeyJustPressed = false;
+		smButtonJustPressed = false;
+		smScroll = 0;
+
+		glfwSetKeyCallback(RenderContext::smWindow, keyCallback);
+		glfwSetMouseButtonCallback(RenderContext::smWindow, mouseButtonCallback);
+		glfwSetScrollCallback(RenderContext::smWindow, scrollCallback);
+		glfwSetCharCallback(RenderContext::smWindow, charCallback);
+	}
+
+	CPP void pollEvents()
+	{
+		PROFILER_TIMEMARK_START()
+
+		smKeyJustPressed = false;
+		smButtonJustPressed = false;
+		smScroll = 0;
+
+		f64 mouseCoordX, mouseCoordY;
+
+		glfwGetCursorPos(RenderContext::smWindow, &mouseCoordX, &mouseCoordY);
+
+		f64 halfWindowSizeX = RenderContext::smWindowSize.x / 2.0;
+		f64 halfWindowSizeY = RenderContext::smWindowSize.y / 2.0;
+
+		mouseCoordX = mouseCoordX - halfWindowSizeX;
+		mouseCoordY = halfWindowSizeY - mouseCoordY;
+
+		bool moved = false;
+		Vector2 newMouseCoordinates(mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY);
+
+		if (!smMouseCoordinates.eq(newMouseCoordinates))
+		{
+			smMouseCoordinates.set(newMouseCoordinates);
+
+			InputEventMouseMoved event;
+			SEND_INPUT_EVENT(event);
+		}
+
+		// HACK: implement Hold event since GLFW_REPEAT awaits a small time after GLFW_PRESS there's no GLFW_REPEAT for mouse
+		if(smLastMouseButtonPressed != -1)
+		{
+			InputEventMouseButtonHold event;
+			event.mButton = smLastMouseButtonPressed;
+			event.mMods = smModifier;
+			SEND_INPUT_EVENT(event);
+		}
+
+		if(smLastKeyPressed != -1)
+		{
+			InputEventKeyHold event;
+			event.mKey = smLastKeyPressed;
+			event.mMods = smModifier;
+			SEND_INPUT_EVENT(event);
+		}
+
+		glfwPollEvents();
+
+		PROFILER_TIMEMARK_END();
+	}
+
+	CPP bool isKeyPressedOnce(u32 key)
+	{
+		return smKeyJustPressed && key == smLastKeyPressed;
+	}
+
+	CPP bool isKeyPressed(u32 key)
+	{
+		return key == smLastKeyPressed;
+	}
+
+	CPP bool isModifierPressed(u32 modifier)
+	{
+		return modifier == smModifier;
+	}
+
+	CPP bool isMouseButtonPressedOnce(u32 button)
+	{
+		return smButtonJustPressed && button == smLastMouseButtonPressed;
+	}
+
+	CPP bool isMouseButtonPressed(u32 button)
+	{
+		return button == smLastMouseButtonPressed;
+	}
+
+	CPP const Vector2& getMousePosition()
+	{
+		return smMouseCoordinates;
+	}
+
+	CPP f32 getScroll()
+	{
+		return smScroll;
+	}
+
+	CPP void clearMouseButton()
+	{
+		smLastMouseButtonPressed = -1;
+		smModifier = -1;
+		smButtonJustPressed = false;
+	}
+	CPP void clearKey()
+	{
+		smLastKeyPressed = -1;
+		smModifier = -1;
+		smKeyJustPressed = false;
+	}
+
 private:
 	CPP static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 	{
@@ -148,132 +273,5 @@ private:
 		InputEventChar event;
 		event.mChar = (char)codepoint;
 		SEND_INPUT_EVENT(event);
-	}
-
-public:
-	Vector2 smMouseCoordinates;
-	u32 smLastMouseButtonPressed;
-	u32 smLastKeyPressed;
-	u32 smModifier;
-	bool smKeyJustPressed;
-	bool smButtonJustPressed;
-	f32 smScroll;
-
-
-	CPP void init()
-	{
-		TRACE()
-
-		smMouseCoordinates = Vector2();
-		smLastMouseButtonPressed = -1;
-		smLastKeyPressed = -1;
-		smModifier = -1;
-		smKeyJustPressed = false;
-		smButtonJustPressed = false;
-		smScroll = 0;
-
-		glfwSetKeyCallback(RenderContext::smWindow, keyCallback);
-		glfwSetMouseButtonCallback(RenderContext::smWindow, mouseButtonCallback);
-		glfwSetScrollCallback(RenderContext::smWindow, scrollCallback);
-		glfwSetCharCallback(RenderContext::smWindow, charCallback);
-	}
-
-	CPP void pollEvents()
-	{
-		PROFILER_TIMEMARK_START()
-
-		smKeyJustPressed = false;
-		smButtonJustPressed = false;
-		smScroll = 0;
-
-		f64 mouseCoordX, mouseCoordY;
-
-		glfwGetCursorPos(RenderContext::smWindow, &mouseCoordX, &mouseCoordY);
-
-		f64 halfWindowSizeX = RenderContext::smWindowSize.x / 2.0;
-		f64 halfWindowSizeY = RenderContext::smWindowSize.y / 2.0;
-
-		mouseCoordX = mouseCoordX - halfWindowSizeX;
-		mouseCoordY = halfWindowSizeY - mouseCoordY;
-
-		bool moved = false;
-		Vector2 newMouseCoordinates(mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY);
-
-		if (!smMouseCoordinates.eq(newMouseCoordinates))
-		{
-			smMouseCoordinates.set(newMouseCoordinates);
-
-			InputEventMouseMoved event;
-			SEND_INPUT_EVENT(event);
-		}
-
-		// HACK: implement Hold event since GLFW_REPEAT awaits a small time after GLFW_PRESS there's no GLFW_REPEAT for mouse
-		if(smLastMouseButtonPressed != -1)
-		{
-			InputEventMouseButtonHold event;
-			event.mButton = smLastMouseButtonPressed;
-			event.mMods = smModifier;
-			SEND_INPUT_EVENT(event);
-		}
-
-		if(smLastKeyPressed != -1)
-		{
-			InputEventKeyHold event;
-			event.mKey = smLastKeyPressed;
-			event.mMods = smModifier;
-			SEND_INPUT_EVENT(event);
-		}
-
-		glfwPollEvents();
-
-		PROFILER_TIMEMARK_END();
-	}
-
-	CPP bool isKeyPressedOnce(u32 key)
-	{
-		return smKeyJustPressed && key == smLastKeyPressed;
-	}
-
-	CPP bool isKeyPressed(u32 key)
-	{
-		return key == smLastKeyPressed;
-	}
-
-	CPP bool isModifierPressed(u32 modifier)
-	{
-		return modifier == smModifier;
-	}
-
-	CPP bool isMouseButtonPressedOnce(u32 button)
-	{
-		return smButtonJustPressed && button == smLastMouseButtonPressed;
-	}
-
-	CPP bool isMouseButtonPressed(u32 button)
-	{
-		return button == smLastMouseButtonPressed;
-	}
-
-	CPP const Vector2& getMousePosition()
-	{
-		return smMouseCoordinates;
-	}
-
-	CPP f32 getScroll()
-	{
-		return smScroll;
-	}
-
-	CPP void clearMouseButton()
-	{
-		smLastMouseButtonPressed = -1;
-		smModifier = -1;
-		smButtonJustPressed = false;
-	}
-	CPP void clearKey()
-	{
-		smLastKeyPressed = -1;
-		smModifier = -1;
-		smKeyJustPressed = false;
 	}
 };

@@ -29,24 +29,20 @@ using ClassRegisterCallback = std::function<ObjectBase*()>;
 
 class ClassRegister
 {
-private:        
-    std::string mClassName;
-    ClassRegisterCallback mCallback;
 public:
     CPP ClassRegister(const std::string& className, ClassRegisterCallback callback)
     {
         MAP_INSERT(ClassManager::smRegisters, className, callback);
     }
 
+private:        
+    std::string mClassName;
+    ClassRegisterCallback mCallback;
 };
 
 class ClassManager: public Singleton<ClassManager>
 {
     friend ClassRegister;
-    
-private:
-    inline static std::map<std::string, ClassRegisterCallback> smRegisters;
-    std::map<std::string, ClassRegisterCallback> mInstanceByNameMap;
 
 public:
     CPP void init()
@@ -79,4 +75,8 @@ public:
 
         return nullptr;
     }
+        
+private:
+    inline static std::map<std::string, ClassRegisterCallback> smRegisters;
+    std::map<std::string, ClassRegisterCallback> mInstanceByNameMap;
 };

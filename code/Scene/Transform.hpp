@@ -13,11 +13,6 @@ class TransformState : public ObjectBase
 {
     GENERATE_METADATA(TransformState)
 
-private:
-	Vector3 mWorldPosition;
-	Vector3 mRotation;
-	Vector3 mScale;
-
 public:
 	TransformState() = default;
 	CPP TransformState(const Transform& transform)
@@ -34,6 +29,12 @@ public:
 			mScale.eq(rhs.mScale, eps);
 	}
 
+private:
+	Vector3 mWorldPosition;
+	Vector3 mRotation;
+	Vector3 mScale;
+
+public:
 	CRGET(WorldPosition)
 	CRGET(Rotation)
 	CRGET(Scale)
@@ -42,23 +43,6 @@ public:
 class Transform: public Component
 {
     GENERATE_METADATA(Transform)
-	
-private:
-	mutable Vector3 mWorldPosition;
-
-	mutable Matrix4 mModelMatrix;
-	mutable Matrix4 mTranslationMatrix;
-	mutable Matrix4 mRotationMatrix;
-	mutable Matrix4 mScaleMatrix;
-
-	mutable bool mModelMatrixGenerated = false;
-
-	Transform* mParent = nullptr;
-
-	Vector3 mLocalPosition;
-	Vector3 mRotation;
-	Vector3 mScale;
-	bool mAffectedByProjection = true;
 
 public:
 	static const Vector3 smRight;
@@ -186,6 +170,24 @@ public:
 		DO_DESERIALIZE("rotation", mRotation);
 	}
 
+private:
+	mutable Vector3 mWorldPosition;
+
+	mutable Matrix4 mModelMatrix;
+	mutable Matrix4 mTranslationMatrix;
+	mutable Matrix4 mRotationMatrix;
+	mutable Matrix4 mScaleMatrix;
+
+	mutable bool mModelMatrixGenerated = false;
+
+	Transform* mParent = nullptr;
+
+	Vector3 mLocalPosition;
+	Vector3 mRotation;
+	Vector3 mScale;
+	bool mAffectedByProjection = true;
+
+public:
 	GET_SET(Parent)
 	CRGET_SET(LocalPosition)
 	CRGET_SET(Rotation)

@@ -25,21 +25,6 @@ class UIElementConfig: public ObjectBase
     GENERATE_METADATA(UIElementConfig)
 
 public:
-	const UIStyle* mStyle = nullptr;
-	ClassId mUIElementClassId;
-	Vector2 mPosition;
-	Vector2 mDisplayPosition;
-	Vector2 mSize;
-	Vector2 mTextSize;
-	std::string mText;
-	bool mAdjustSizeToText = false;
-	i32 mLayer = 0;
-	bool mIsAffectedByLayout = true;
-	Ptr<Material> mMaterial;
-	std::string mGroup;
-	GameObject* mParent = nullptr;
-	f32 mSeparatorSize = 0.0f;
-
 	CPP void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string())
 	{
 		mStyle = &UIStyleManager::getInstance().getDefaultStyle();
@@ -82,4 +67,20 @@ public:
 			mGroup = other->mGroup;
 		}
 	}
+
+public:
+	const UIStyle* mStyle = nullptr;
+	ClassId mUIElementClassId;
+	Vector2 mPosition;
+	Vector2 mDisplayPosition;
+	Vector2 mSize;
+	Vector2 mTextSize;
+	std::string mText;
+	bool mAdjustSizeToText = false;
+	i32 mLayer = 0;
+	bool mIsAffectedByLayout = true;
+	Ptr<Material> mMaterial;
+	std::string mGroup;
+	GameObject* mParent = nullptr;
+	f32 mSeparatorSize = 0.0f;
 };

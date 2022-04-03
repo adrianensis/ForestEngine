@@ -23,7 +23,6 @@ class IEngineSystemComponent: public ObjectBase
 
 private:
     bool mAlreadyAddedToEngine = false;
-
 public:
 	GET_SET(AlreadyAddedToEngine)
 };
@@ -31,8 +30,6 @@ public:
 class IEngineSystem: public ObjectBase
 {
     GENERATE_METADATA(IEngineSystem)
-private:
-    std::set<ClassId> mAcceptedEngineSystemComponentClasses;
 
 public:
     CPP void registerComponentClass(ClassId classId)
@@ -54,13 +51,13 @@ public:
     {
         component.get().setAlreadyAddedToEngine(true);
     }
+
+private:
+    std::set<ClassId> mAcceptedEngineSystemComponentClasses;
 };
 
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
 {
-private:
-    std::list<IEngineSystem *> mEngineSystems;
-
 public:
     CPP void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component)
     {
@@ -94,4 +91,7 @@ public:
         return mEngineSystems;
     }
     
+private:
+    std::list<IEngineSystem *> mEngineSystems;
+
 };

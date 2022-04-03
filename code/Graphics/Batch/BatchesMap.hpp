@@ -39,24 +39,6 @@ class BatchesMap: public ObjectBase
 {
     GENERATE_METADATA(BatchesMap)
 
-private:
-
-	std::vector<BatchKey> mBatchKeys;
-
-	using InternalBatchesMap = std::map<BatchKey*, OwnerPtr<Batch>>;
-	InternalBatchesMap mBatchesDynamic;
-	InternalBatchesMap mBatchesDynamicScreenSpace;
-	InternalBatchesMap mBatchesStatic;
-	InternalBatchesMap mBatchesStaticScreenSpace;
-
-	CPP void renderBatchesMap(InternalBatchesMap& batchesMap)
-	{
-		FOR_MAP(it, batchesMap)
-		{
-			it->second.get().render();
-		}
-	}
-
 public:
 	CPP ~BatchesMap() override
 	{
@@ -140,4 +122,24 @@ public:
 			it->second.get().forceRegenerateBuffers();
 		}
 	}
+
+private:
+	using InternalBatchesMap = std::map<BatchKey*, OwnerPtr<Batch>>;
+
+	CPP void renderBatchesMap(InternalBatchesMap& batchesMap)
+	{
+		FOR_MAP(it, batchesMap)
+		{
+			it->second.get().render();
+		}
+	}
+
+private:
+
+	std::vector<BatchKey> mBatchKeys;
+
+	InternalBatchesMap mBatchesDynamic;
+	InternalBatchesMap mBatchesDynamicScreenSpace;
+	InternalBatchesMap mBatchesStatic;
+	InternalBatchesMap mBatchesStaticScreenSpace;
 };

@@ -9,20 +9,6 @@ template<class T>
 class OwnerPtr
 {
 friend Ptr<T>;
-private:
-
-    // Custom Deleter
-    struct OwnerPtrCustomDeleter
-    {
-        // TODO : Debug WHY a nullptr is reaching this
-        void operator()(T* p) const { if(p != nullptr) { DELETE(p);} }
-    };
-
-	std::shared_ptr<T> mReference;
-
-    void setReference(const std::shared_ptr<T> reference) { mReference = reference; }
-
-    OwnerPtr(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
 
 public:
     
@@ -67,15 +53,30 @@ public:
 	}
 
     std::shared_ptr<T> getSharedPtr() const { return mReference; }
+
+private:
+
+    // Custom Deleter
+    struct OwnerPtrCustomDeleter
+    {
+        // TODO : Debug WHY a nullptr is reaching this
+        void operator()(T* p) const { if(p != nullptr) { DELETE(p);} }
+    };
+
+    void setReference(const std::shared_ptr<T> reference) { mReference = reference; }
+
+    OwnerPtr(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
+
+private:
+	std::shared_ptr<T> mReference;
 };
 
 template<class T>
 class Ptr
 {
 private:
-	std::weak_ptr<T> mReference;
-
     void setReference(std::weak_ptr<T> reference) { mReference = reference; }
+
 public:
 
     template <class OtherClass>
@@ -122,4 +123,7 @@ public:
     }
 
     std::weak_ptr<T> getWeakPtr() const { return mReference; }
+
+private:
+	std::weak_ptr<T> mReference;
 };

@@ -16,37 +16,6 @@ class Scene: public ObjectBase
 {
     GENERATE_METADATA(Scene)
 
-private:
-	std::list<GameObject *> mGameObjects;
-	std::list<GameObject *> mNewGameObjects;
-	GameObject* mCameraGameObject;
-
-	f32 mSize = 0.0f;
-	std::string mPath;
-
-	ConfigObject mLoadSceneConfig;
-
-	CPP void destroyGameObjects()
-	{
-		FOR_LIST(it, mGameObjects)
-		{
-			if (!(*it)->getIsDestroyed())
-			{
-				(*it)->destroy();
-				DELETE((*it));
-			}
-		}
-
-		if (mCameraGameObject)
-		{
-			Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
-			mCameraGameObject->removeComponent<Camera>(cameraComponent);
-			//DELETE(cameraComponent);
-			mCameraGameObject->destroy();
-			DELETE(mCameraGameObject);
-		}
-	}
-
 public:
 	CPP Scene()
 	{
@@ -244,6 +213,39 @@ public:
 		return mNewGameObjects.size() > 0;
 	}
 
+private:
+	CPP void destroyGameObjects()
+	{
+		FOR_LIST(it, mGameObjects)
+		{
+			if (!(*it)->getIsDestroyed())
+			{
+				(*it)->destroy();
+				DELETE((*it));
+			}
+		}
+
+		if (mCameraGameObject)
+		{
+			Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+			mCameraGameObject->removeComponent<Camera>(cameraComponent);
+			//DELETE(cameraComponent);
+			mCameraGameObject->destroy();
+			DELETE(mCameraGameObject);
+		}
+	}
+
+private:
+	std::list<GameObject *> mGameObjects;
+	std::list<GameObject *> mNewGameObjects;
+	GameObject* mCameraGameObject;
+
+	f32 mSize = 0.0f;
+	std::string mPath;
+
+	ConfigObject mLoadSceneConfig;
+
+public:
 	GET(GameObjects)
 	GET(NewGameObjects)
 	GET_SET(CameraGameObject)

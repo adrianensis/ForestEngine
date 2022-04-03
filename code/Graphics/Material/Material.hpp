@@ -18,13 +18,6 @@ class Shader;
 class Material: public ObjectBase
 {
     GENERATE_METADATA(Material)
-private: 
-	Vector4 mColor;
-	Ptr<Shader> mShader;
-	Ptr<Texture> mTexture;
-	bool mAlphaEnabled = false;
-	bool mHasBorder = false;
-
 public:
 	CPP Material()
 	{
@@ -82,6 +75,14 @@ public:
 		//DO_DESERIALIZE("texture", mTexture)
 	}
 
+private: 
+	Vector4 mColor;
+	Ptr<Shader> mShader;
+	Ptr<Texture> mTexture;
+	bool mAlphaEnabled = false;
+	bool mHasBorder = false;
+
+public:
 	GET_SET(Color)
 	RGET_SET(Shader)
 	RGET_SET(Texture)

@@ -12,8 +12,6 @@ class GameObject;
 class Script: public Component
 {
     GENERATE_METADATA(Script)
-private:
-	bool mFirstUpdateDone = false;
 
 public:
 	CPP virtual void init()
@@ -50,5 +48,9 @@ public:
 		mFirstUpdateDone = true;
 	}
 
+private:
+	bool mFirstUpdateDone = false;
+
+public:
 	GET(FirstUpdateDone)
 };

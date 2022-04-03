@@ -18,9 +18,6 @@ class UIButton: public UIElement
 {
     GENERATE_METADATA(UIButton)
 	
-private:
-	UIText* mText = nullptr;
-
 public:
 	CPP void init() override
 	{
@@ -102,6 +99,10 @@ public:
 		}
 	}
 
+private:
+	UIText* mText = nullptr;
+
+public:
 	GET(Text)
 };
 

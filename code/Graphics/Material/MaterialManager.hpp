@@ -16,10 +16,6 @@ class Texture;
 class MaterialManager: public ObjectBase, public Singleton<MaterialManager>
 {
 	GENERATE_METADATA(MaterialManager)
-private:
-	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;
-	std::map<std::string, OwnerPtr<Material>> mMaterialsMap;
-	OwnerPtr<Material> mNoTextureMaterial;
 
 public:
 	CPP ~MaterialManager() override
@@ -77,4 +73,9 @@ public:
 
 		return mNoTextureMaterial;
 	}
+
+private:
+	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;
+	std::map<std::string, OwnerPtr<Material>> mMaterialsMap;
+	OwnerPtr<Material> mNoTextureMaterial;
 };

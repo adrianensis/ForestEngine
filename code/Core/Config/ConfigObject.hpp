@@ -21,20 +21,9 @@
 class ConfigObject: public ObjectBase
 {
     GENERATE_METADATA(ConfigObject)
-private:
-	JSON mJson;
 
 public:
-	// void init();
-	// void clear();
-	// bool contains(std::string & key) const;
-
-	// void readFromJsonFile(const std::string& path);
-	// void writeToJsonFile(const std::string& path);
-
 	const JSON& at(const std::string& key) const { return mJson.at(key); }
-
-	CRGET_SET(Json)
 
 	CPP void readFromJsonFile(const std::string& path)
 	{
@@ -66,4 +55,9 @@ public:
 	{
 		return mJson.contains(key);
 	}
+
+private:
+	JSON mJson;
+public:
+	CRGET_SET(Json)
 };

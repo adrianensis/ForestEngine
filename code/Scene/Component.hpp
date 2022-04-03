@@ -13,15 +13,6 @@ class Component: public IEngineSystemComponent
 {
     GENERATE_METADATA(Component)
 	
-private:
-	bool mIsActive = false;
-	mutable bool mIsStatic = false;
-
-	GameObject* mGameObject;
-	
-	bool mIsPendingToBeDestroyed = false;
-	bool mIsDestroyed = false;
-
 public:
 	CPP Component()
 	{
@@ -82,6 +73,16 @@ public:
 
 	CPP void deserialize(const JSON& json) override { };
 
+private:
+	bool mIsActive = false;
+	mutable bool mIsStatic = false;
+
+	GameObject* mGameObject;
+	
+	bool mIsPendingToBeDestroyed = false;
+	bool mIsDestroyed = false;
+
+public:
 	GET_SET(GameObject)
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)

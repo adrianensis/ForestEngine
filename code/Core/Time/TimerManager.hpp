@@ -19,16 +19,6 @@ enum class TimerDurationType
 class Timer: public ObjectBase
 {
     GENERATE_METADATA(Timer)
-private:
-	f32 mDuration = 0.0f;
-	f32 mTimeCounter = 0.0f;
-	TimerDurationType mDurationType;
-public:
-	FunctorVoid mFunctor;
-
-	GET(Duration)
-	GET_SET(TimeCounter)
-	GET(DurationType)
 
 public:
 	CPP void init(f32 duration, TimerDurationType durationType, std::function<void()> callback)
@@ -37,6 +27,17 @@ public:
 		mDuration = duration;
 		mFunctor.setCallback(callback);
 	}
+
+public:
+	FunctorVoid mFunctor;
+private:
+	f32 mDuration = 0.0f;
+	f32 mTimeCounter = 0.0f;
+	TimerDurationType mDurationType;
+public:
+	GET(Duration)
+	GET_SET(TimeCounter)
+	GET(DurationType)
 };
 
 class TimerHandle: public ObjectBase

@@ -42,16 +42,82 @@ class UIBuilder: public ObjectBase
 {
     GENERATE_METADATA(UIBuilder)
 	
-private:
-	UILayout mCurrentLayout;
-	UIElementConfig mConfig;
-	UIElementConfig mDefaultConfig;
-	std::list<UIElementConfig> mConfigStack;
-	UIElementConfig mLastConfig;
-	bool mMakeRelativeToLastConfig = false; // used for layouts
-	UIElementConfig mLayoutFirstUIElementConfig;
-	bool mNewRowOrColumn = false;
-	UIElement* mCurrentUIElement = nullptr;
+public:
+	CPP UIBuilder()
+	{
+		mCurrentLayout = UILayout::VERTICAL;
+		mMakeRelativeToLastConfig = false;
+		mCurrentUIElement = nullptr;
+
+		mDefaultConfig.init(Vector2(0, 0), Vector2(0, 0), 0);
+		mConfig = mDefaultConfig;
+		//mSavedData.init(Vector2(0,0), Vector2(0,0), "", 0);
+	}
+
+	void restoreAll() { mConfig = mDefaultConfig; }
+
+	UIBuilder& setLayout(UILayout layout)
+	{
+		mCurrentLayout = layout;
+		mMakeRelativeToLastConfig = false; // reset
+		mNewRowOrColumn = true;
+		return *this;
+	}
+
+	CPP UIBuilder& nextRow()
+	{
+		mLastConfig = mLayoutFirstUIElementConfig;
+		mNewRowOrColumn = true;
+		return *this;
+	}
+
+	CPP UIBuilder& nextColumn()
+	{
+		return nextRow(); // NOTE : exactly the same code.
+	}
+
+	CPP UIBuilder& saveData()
+	{
+		mConfigStack.push_front(mConfig);
+		return *this;
+	}
+
+	CPP UIBuilder& restoreData()
+	{
+		mConfig = mConfigStack.front();
+		mConfigStack.pop_front();
+		return *this;
+	}
+
+	CPP UIBuilder& create(const std::string& className)
+	{
+		UIElement* uiElement = INSTANCE_BY_NAME(className, UIElement);
+		mConfig.mUIElementClassId = uiElement->getClassId();
+
+		calculateConfig();
+		uiElement->initFromConfig(mConfig);
+
+		registerUIElement(uiElement);
+
+		return *this;
+	}
+
+	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
+	UIBuilder& create()
+	{
+		return create(T::getClassNameStatic());
+	}
+
+	UIElement *getUIElement() const
+	{
+		return mCurrentUIElement;
+	}
+
+	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
+	T *getUIElement() const
+	{
+		return dynamic_cast<T *>(getUIElement());
+	}
 
 private:
 	CPP void registerUIElement(UIElement *uiElement)
@@ -134,17 +200,18 @@ private:
 		}
 	}
 
-public:
-	CPP UIBuilder()
-	{
-		mCurrentLayout = UILayout::VERTICAL;
-		mMakeRelativeToLastConfig = false;
-		mCurrentUIElement = nullptr;
+private:
+	UILayout mCurrentLayout;
+	UIElementConfig mConfig;
+	UIElementConfig mDefaultConfig;
+	std::list<UIElementConfig> mConfigStack;
+	UIElementConfig mLastConfig;
+	bool mMakeRelativeToLastConfig = false; // used for layouts
+	UIElementConfig mLayoutFirstUIElementConfig;
+	bool mNewRowOrColumn = false;
+	UIElement* mCurrentUIElement = nullptr;
 
-		mDefaultConfig.init(Vector2(0, 0), Vector2(0, 0), 0);
-		mConfig = mDefaultConfig;
-		//mSavedData.init(Vector2(0,0), Vector2(0,0), "", 0);
-	}
+public:
 
 	UI_BUILDER_CONFIG_METHODS(IsAffectedByLayout)
 	UI_BUILDER_CONFIG_METHODS(Position)
@@ -158,71 +225,6 @@ public:
 	UI_BUILDER_CONFIG_METHODS(Parent)
 	UI_BUILDER_CONFIG_METHODS(Style)
 	UI_BUILDER_CONFIG_METHODS(Material)
-
-	void restoreAll() { mConfig = mDefaultConfig; }
-
-	UIBuilder& setLayout(UILayout layout)
-	{
-		mCurrentLayout = layout;
-		mMakeRelativeToLastConfig = false; // reset
-		mNewRowOrColumn = true;
-		return *this;
-	}
-
-	CPP UIBuilder& nextRow()
-	{
-		mLastConfig = mLayoutFirstUIElementConfig;
-		mNewRowOrColumn = true;
-		return *this;
-	}
-
-	CPP UIBuilder& nextColumn()
-	{
-		return nextRow(); // NOTE : exactly the same code.
-	}
-
-	CPP UIBuilder& saveData()
-	{
-		mConfigStack.push_front(mConfig);
-		return *this;
-	}
-
-	CPP UIBuilder& restoreData()
-	{
-		mConfig = mConfigStack.front();
-		mConfigStack.pop_front();
-		return *this;
-	}
-
-	CPP UIBuilder& create(const std::string& className)
-	{
-		UIElement* uiElement = INSTANCE_BY_NAME(className, UIElement);
-		mConfig.mUIElementClassId = uiElement->getClassId();
-
-		calculateConfig();
-		uiElement->initFromConfig(mConfig);
-
-		registerUIElement(uiElement);
-
-		return *this;
-	}
-
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
-	UIBuilder& create()
-	{
-		return create(T::getClassNameStatic());
-	}
-
-	UIElement *getUIElement() const
-	{
-		return mCurrentUIElement;
-	}
-
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
-	T *getUIElement() const
-	{
-		return dynamic_cast<T *>(getUIElement());
-	}
 
 	CRGET_SET(Config)
 };

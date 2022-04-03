@@ -12,13 +12,55 @@
 class Texture: public ObjectBase
 {
     GENERATE_METADATA(Texture)
-private: 
-	u32 mTextureId = -1;
-	byte* mData = nullptr;
-	u32 mWidth = 0;
-	u32 mHeight = 0;
-	std::string mPath;
 
+public:
+
+	CPP ~Texture() override
+	{
+		delete[] mData;
+	}
+
+	CPP void init(const std::string& path)
+	{
+		//TRACE()
+
+		if (!mData)
+		{
+			mPath = path;
+			mData = readPNG();
+
+			glGenTextures(1, &mTextureId);
+
+			bind();
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, getData());
+
+			//glGenerateMipmap(GL_TEXTURE_2D);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_TEXTURE_MAG_FILTER
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+	}
+
+	CPP void bind()
+	{
+		//TRACE()
+		glBindTexture(GL_TEXTURE_2D, mTextureId);
+	}
+
+	CPP void serialize(JSON& json) const override
+	{
+		//DO_SERIALIZE("path", mPath)
+	}
+
+	CPP void deserialize(const JSON& json) override
+	{
+		//mPath = json["path"];
+	}
+
+private:
 	CPP byte* readPNG()
 	{
 		//header for testing if it is a png
@@ -141,53 +183,14 @@ private:
 		return image_data;
 	}
 
+private: 
+	u32 mTextureId = -1;
+	byte* mData = nullptr;
+	u32 mWidth = 0;
+	u32 mHeight = 0;
+	std::string mPath;
+
 public:
-
-	CPP ~Texture() override
-	{
-		delete[] mData;
-	}
-
-	CPP void init(const std::string& path)
-	{
-		//TRACE()
-
-		if (!mData)
-		{
-			mPath = path;
-			mData = readPNG();
-
-			glGenTextures(1, &mTextureId);
-
-			bind();
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, getData());
-
-			//glGenerateMipmap(GL_TEXTURE_2D);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_TEXTURE_MAG_FILTER
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		}
-	}
-
-	CPP void bind()
-	{
-		//TRACE()
-		glBindTexture(GL_TEXTURE_2D, mTextureId);
-	}
-
-	CPP void serialize(JSON& json) const override
-	{
-		//DO_SERIALIZE("path", mPath)
-	}
-
-	CPP void deserialize(const JSON& json) override
-	{
-		//mPath = json["path"];
-	}
-
 	GET(TextureId)
 	GET(Data)
 	GET(Width)

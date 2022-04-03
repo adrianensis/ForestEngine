@@ -16,68 +16,6 @@ class ShapeBatchRenderer: public ObjectBase
 {
 	GENERATE_METADATA(ShapeBatchRenderer)
 
-protected:
-	u32 mMaxShapes = 0;
-	u32 mShapesCounter = 0;
-	u32 mVerticesPerShape = 0;
-
-private: 
-	Shader* mShaderLine = nullptr;
-	u32 mVAO = 0;
-	u32 mVBOPosition = 0;
-	u32 mVBOColor = 0;
-	u32 mEBO = 0;
-	std::vector<f32> mPositionBuffer;
-	std::vector<f32> mColorBuffer;
-	std::vector<u16> mIndicesBuffer;
-
-	f32 mSize = 0.0f;
-
-	bool mIsWorldSpace = true;
-
-private:
-	CPP void bind()
-	{
-		mVAO = RenderContext::createVAO();
-		mVBOPosition = RenderContext::createVBO(3, 0);
-		mVBOColor = RenderContext::createVBO(4, 1);
-		mEBO = RenderContext::createEBO();
-
-		RenderContext::resizeVBO(mVBOPosition, mPositionBuffer.capacity());
-		RenderContext::resizeVBO(mVBOColor, mColorBuffer.capacity());
-
-		FOR_RANGE(i, 0, mMaxShapes * mVerticesPerShape)
-		{
-			mIndicesBuffer.push_back(i);
-		}
-
-		RenderContext::resizeEBO(mEBO, mIndicesBuffer.size());
-		RenderContext::setDataEBO(mEBO, mIndicesBuffer);
-
-		RenderContext::enableVAO(0);
-	}
-
-	CPP void addPosition(const Vector3& position)
-	{
-		mPositionBuffer.push_back(position.x);
-		mPositionBuffer.push_back(position.y);
-		mPositionBuffer.push_back(position.z);
-	}
-
-	CPP void addColor(const Vector4& color)
-	{
-		mColorBuffer.push_back(color.x);
-		mColorBuffer.push_back(color.y);
-		mColorBuffer.push_back(color.z);
-		mColorBuffer.push_back(color.w);
-	}
-
-	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	void addSpecificShape(const T& shape, const Vector4& color)
-	{
-
-	}
-
 public:
 	ShapeBatchRenderer() { }
 
@@ -155,6 +93,67 @@ public:
 			mShapesCounter++;
 		}
 	}
+
+private:
+	CPP void bind()
+	{
+		mVAO = RenderContext::createVAO();
+		mVBOPosition = RenderContext::createVBO(3, 0);
+		mVBOColor = RenderContext::createVBO(4, 1);
+		mEBO = RenderContext::createEBO();
+
+		RenderContext::resizeVBO(mVBOPosition, mPositionBuffer.capacity());
+		RenderContext::resizeVBO(mVBOColor, mColorBuffer.capacity());
+
+		FOR_RANGE(i, 0, mMaxShapes * mVerticesPerShape)
+		{
+			mIndicesBuffer.push_back(i);
+		}
+
+		RenderContext::resizeEBO(mEBO, mIndicesBuffer.size());
+		RenderContext::setDataEBO(mEBO, mIndicesBuffer);
+
+		RenderContext::enableVAO(0);
+	}
+
+	CPP void addPosition(const Vector3& position)
+	{
+		mPositionBuffer.push_back(position.x);
+		mPositionBuffer.push_back(position.y);
+		mPositionBuffer.push_back(position.z);
+	}
+
+	CPP void addColor(const Vector4& color)
+	{
+		mColorBuffer.push_back(color.x);
+		mColorBuffer.push_back(color.y);
+		mColorBuffer.push_back(color.z);
+		mColorBuffer.push_back(color.w);
+	}
+
+	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	void addSpecificShape(const T& shape, const Vector4& color)
+	{
+
+	}
+
+private: 
+	Shader* mShaderLine = nullptr;
+	u32 mVAO = 0;
+	u32 mVBOPosition = 0;
+	u32 mVBOColor = 0;
+	u32 mEBO = 0;
+	std::vector<f32> mPositionBuffer;
+	std::vector<f32> mColorBuffer;
+	std::vector<u16> mIndicesBuffer;
+
+	f32 mSize = 0.0f;
+
+	bool mIsWorldSpace = true;
+protected:
+	u32 mMaxShapes = 0;
+	u32 mShapesCounter = 0;
+	u32 mVerticesPerShape = 0;
 };
 
 // Shape Batch Renderer Specialization
@@ -178,10 +177,6 @@ class ShapeBatchRendererMap: public ObjectBase
 {
     GENERATE_METADATA(ShapeBatchRendererMap)
 	
-private:
-	std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
-	bool mIsWorldSpace = true;
-
 public:
 	CPP void render()
 	{
@@ -210,5 +205,10 @@ public:
 		mShapeBatchMap.at(shapeClassId)->add<T>(shape, color);
 	}
 
+private:
+	std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
+	bool mIsWorldSpace = true;
+
+public:
 	GET_SET(IsWorldSpace)
 };

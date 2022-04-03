@@ -17,8 +17,6 @@ using namespace std::chrono_literals;
 class Engine: public ObjectBase, public Singleton<Engine>
 {
 	GENERATE_METADATA(Engine)
-private:
-	f32 mFPS = 0.0f;
 
 public:
 
@@ -144,4 +142,7 @@ public:
 
 		Memory::terminate();
 	}
+
+private:
+	f32 mFPS = 0.0f;
 };

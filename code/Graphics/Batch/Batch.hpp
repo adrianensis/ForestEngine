@@ -25,155 +25,6 @@ class Batch: public ObjectBase
 {
     GENERATE_METADATA(Batch)
 
-private:
-	std::list<Ptr<Renderer>> mRenderers;
-
-	Ptr<Material> mMaterial;
-	bool mIsInstanced = false;
-
-	MeshBatcher mMeshBatcher;
-
-	bool mIsWorldSpace = false;
-	bool mIsStatic = false;
-
-	bool mNewRendererAdded = false;
-	bool mPendingDrawCall = false;
-	bool mForceRegenerateBuffers = false;
-
-	CPP bool processRenderers()
-	{
-		PROFILER_TIMEMARK_START()
-
-		u32 newSize = mRenderers.size();
-		mMeshBatcher.resize(newSize);
-
-		bool pendingDrawCall = false;
-		
-		FOR_LIST(it, mRenderers)
-		{
-			Ptr<Renderer> renderer = *it;
-
-			bool toRemove = false;
-
-			if(renderer.isValid())
-			{
-				if (renderer.get().isActive())
-				{
-					if (!isChunkOk(renderer))
-					{
-						toRemove = true;
-					}
-				}
-				else
-				{
-					if (renderer.get().getIsPendingToBeDestroyed())
-					{
-						toRemove = true;
-					}
-				}
-			}
-			else
-			{
-				toRemove = true;
-			}
-
-			if (toRemove)
-			{
-				internalRemoveRendererFromList(it);
-			}
-			else
-			{
-				/*Transform* transform = renderer->getGameObject()->getTransform();
-				const Vector3& position = transform->getWorldPosition();
-				f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform().get().getWorldPosition());
-				if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
-				
-				if(renderer.get().hasClipRectangle())
-				{
-					/*if(pendingDrawCall)
-					{
-						drawCall(); // flush all the previous rendereres
-						resizeBuffers(renderers->size()); // TODO : resize to the correct remaining size
-					}
-
-					addToVertexBuffer(renderer);
-
-					mMaterial->getShader()->addVector2(renderer->getClipRectangle().getLeftTop(), "clipTextureRegionLeftTop");
-					mMaterial->getShader()->addVector2(renderer->getClipRectangle().getSize(), "clipTextureRegionSize");
-
-					drawCall();
-					resizeBuffers(renderers->size());
-
-					// TODO : comment this ↓↓↓↓ to test clip rectangle
-					mMaterial->getShader()->addVector2(Vector2(), "clipTextureRegionLeftTop");
-					mMaterial->getShader()->addVector2(Vector2(), "clipTextureRegionSize");*/
-				}
-				else
-				{
-					addToVertexBuffer(renderer);
-					pendingDrawCall = true;
-				}
-			}
-		}
-
-		PROFILER_TIMEMARK_END()
-
-		return pendingDrawCall;
-	}
-
-	CPP bool isChunkOk(Ptr<Renderer> renderer) const
-	{
-		Ptr<Chunk> chunk = renderer.get().getChunk();
-		return (!chunk) || (chunk && chunk.get().getIsLoaded()); // !chunk means -> Screen Space case
-	}
-
-
-
-	CPP void internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it)
-	{
-		PROFILER_TIMEMARK_START()
-
-		Ptr<Renderer> renderer = *it;
-
-		if(renderer)
-		{
-			renderer.get().setBatch(Ptr<Batch>());
-
-			// NOTE: UI CASE
-			// UI is not deleted in Chunk so it has to be deleted here.
-			if (!getIsWorldSpace())
-			{
-				renderer.get().finallyDestroy();
-				//DELETE(renderer);
-			}
-		}
-
-		it = mRenderers.erase(it);
-		--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
-
-		PROFILER_TIMEMARK_END()
-	}
-
-	CPP void addToVertexBuffer(Ptr<Renderer> renderer)
-	{
-		renderer.get().update();
-
-		if(getIsInstanced())
-		{
-			const Matrix4& rendererModelMatrix = renderer.get().getRendererModelMatrix();
-			mMeshBatcher.addInstanceMatrix(rendererModelMatrix);
-		}
-		else
-		{
-			mMeshBatcher.addInstance(renderer.get().generateMeshInstance());
-		}
-	}
-
-	CPP bool shouldRegenerateBuffers() const
-	{
-		return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers;
-	}
-
 public:
 	~Batch() override
 	{
@@ -252,6 +103,132 @@ public:
 
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
 
+private:
+	CPP bool processRenderers()
+	{
+		PROFILER_TIMEMARK_START()
+
+		u32 newSize = mRenderers.size();
+		mMeshBatcher.resize(newSize);
+
+		bool pendingDrawCall = false;
+		
+		FOR_LIST(it, mRenderers)
+		{
+			Ptr<Renderer> renderer = *it;
+
+			bool toRemove = false;
+
+			if(renderer.isValid())
+			{
+				if (renderer.get().isActive())
+				{
+					if (!isChunkOk(renderer))
+					{
+						toRemove = true;
+					}
+				}
+				else
+				{
+					if (renderer.get().getIsPendingToBeDestroyed())
+					{
+						toRemove = true;
+					}
+				}
+			}
+			else
+			{
+				toRemove = true;
+			}
+
+			if (toRemove)
+			{
+				internalRemoveRendererFromList(it);
+			}
+			else
+			{
+				/*Transform* transform = renderer->getGameObject()->getTransform();
+				const Vector3& position = transform->getWorldPosition();
+				f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform().get().getWorldPosition());
+				if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
+				
+				addToVertexBuffer(renderer);
+				pendingDrawCall = true;
+			}
+		}
+
+		PROFILER_TIMEMARK_END()
+
+		return pendingDrawCall;
+	}
+
+	CPP bool isChunkOk(Ptr<Renderer> renderer) const
+	{
+		Ptr<Chunk> chunk = renderer.get().getChunk();
+		return (!chunk) || (chunk && chunk.get().getIsLoaded()); // !chunk means -> Screen Space case
+	}
+
+	CPP void internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it)
+	{
+		PROFILER_TIMEMARK_START()
+
+		Ptr<Renderer> renderer = *it;
+
+		if(renderer)
+		{
+			renderer.get().setBatch(Ptr<Batch>());
+
+			// NOTE: UI CASE
+			// UI is not deleted in Chunk so it has to be deleted here.
+			if (!getIsWorldSpace())
+			{
+				renderer.get().finallyDestroy();
+				//DELETE(renderer);
+			}
+		}
+
+		it = mRenderers.erase(it);
+		--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
+
+		PROFILER_TIMEMARK_END()
+	}
+
+	CPP void addToVertexBuffer(Ptr<Renderer> renderer)
+	{
+		renderer.get().update();
+
+		if(getIsInstanced())
+		{
+			const Matrix4& rendererModelMatrix = renderer.get().getRendererModelMatrix();
+			mMeshBatcher.addInstanceMatrix(rendererModelMatrix);
+		}
+		else
+		{
+			mMeshBatcher.addInstance(renderer.get().generateMeshInstance());
+		}
+	}
+
+	CPP bool shouldRegenerateBuffers() const
+	{
+		return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers;
+	}
+
+private:
+	std::list<Ptr<Renderer>> mRenderers;
+
+	Ptr<Material> mMaterial;
+	bool mIsInstanced = false;
+
+	MeshBatcher mMeshBatcher;
+
+	bool mIsWorldSpace = false;
+	bool mIsStatic = false;
+
+	bool mNewRendererAdded = false;
+	bool mPendingDrawCall = false;
+	bool mForceRegenerateBuffers = false;
+
+public:
 	RGET(Material)
 	GET(IsInstanced)
 	GET(IsWorldSpace)
