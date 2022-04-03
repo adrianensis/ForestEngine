@@ -231,10 +231,18 @@ public:
 	CPP void resize(u32 size)
 	{
 		clear();
-		
+
 		if (size > mMaxMeshesThreshold)
 		{
-			mMaxMeshesThreshold += mMaxMeshesIncrement;
+			// TODO: find a better way
+			if(mMaxMeshesThreshold == 0)
+			{
+				mMaxMeshesThreshold = size;
+			}
+			else
+			{
+				mMaxMeshesThreshold += mMaxMeshesIncrement;
+			}
 
 			u32 meshesAmount = mMeshBuffer.getIsInstanced() ? 1 : mMaxMeshesThreshold; 
 
