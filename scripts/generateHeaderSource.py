@@ -31,7 +31,7 @@ MACRO_ACCESS_MODIFIER = "(public|private|protected)\:"
 
 REGEX_ANY = r'[\w\d_\<\s\t\>\&\*\.:\[\]\(\),=;\"\'\\]'
 
-REGEX_FUNCTION = r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\~\w\d_]+)(\('+REGEX_ANY+'*)'
+REGEX_FUNCTION = r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\~\w\d_]+)(\('+REGEX_ANY+r'*)'
 
 REGEX_INLINE_FUNCTION = REGEX_FUNCTION+'\{('+REGEX_ANY+'*)'
 REGEX_FULL_INLINE_FUNCTION = REGEX_FUNCTION+'\{('+REGEX_ANY+'*)\}'
@@ -125,7 +125,15 @@ class FunctionData:
             return ""
 
     def getDeclaration(self):
-        return self.getAccessModifier().strip() + self.previous.strip() + " " + self.pre_return_type.strip() + " " + self.return_type.strip() + " " + self.name.strip() + self.params.strip() + ";\n"
+
+        filteredParams = self.params.strip()
+
+        # remove Constructor initializers
+        match_constructor_initializers = re.search(r'\)(\s*:\s*.+\))', filteredParams)
+        if match_constructor_initializers:
+            filteredParams = filteredParams.replace(match_constructor_initializers.group(1), "")
+
+        return self.getAccessModifier().strip() + self.previous.strip() + " " + self.pre_return_type.strip() + " " + self.return_type.strip() + " " + self.name.strip() + filteredParams + ";\n"
 
     def getImplementation(self):
         filteredParams = self.params.replace('override', '')
@@ -135,10 +143,6 @@ class FunctionData:
             if default_param:
                 filteredParams = filteredParams.replace(default_param, '/*'+default_param+'*/')
 
-        # filteredParams = filteredParams.replace('virtual', '')
-        # filteredParams = filteredParams.replace('static', '')
-
-        
         filteredPrevious = self.previous.replace('static', '')
         filteredPrevious = filteredPrevious.replace('virtual', '')
         filteredPrevious = filteredPrevious.replace(MACRO_FUNCTION, '')

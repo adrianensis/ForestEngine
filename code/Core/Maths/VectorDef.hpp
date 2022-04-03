@@ -19,29 +19,6 @@ private:\
         return *(&x + index);\
     }\
 public:\
-    Vector##vectorLength& set(const Vector##vectorLength& rhs);\
-    Vector##vectorLength& add(const Vector##vectorLength& rhs);\
-    Vector##vectorLength& sub(const Vector##vectorLength& rhs);\
-    Vector##vectorLength& mul(const Vector##vectorLength& rhs);\
-    Vector##vectorLength& div(const Vector##vectorLength& rhs);\
-    Vector##vectorLength& add(f32 rhs);\
-    Vector##vectorLength& sub(f32 rhs);\
-    Vector##vectorLength& mul(f32 rhs);\
-    Vector##vectorLength& div(f32 rhs);\
-    \
-    f32 len() const;\
-    f32 sqrlen() const;\
-    f32 max() const;\
-    f32 min() const;\
-    f32 dot(const Vector##vectorLength& v) const;\
-    Vector##vectorLength& nor();\
-    f32 dst(const Vector##vectorLength& v) const;\
-    f32 sqrdst(const Vector##vectorLength& v) const;\
-    bool eq(const Vector##vectorLength& v, f32 e) const;\
-    bool eq(const Vector##vectorLength& v) const;\
-    Vector##vectorLength& lerp(const Vector##vectorLength& target, f32 t);\
-    f32 angle(const Vector##vectorLength& v) const;\
-    Vector##vectorLength& clamp(f32 maxLength);\
     \
     Vector##vectorLength& operator=(const Vector##vectorLength& other)\
 	{\

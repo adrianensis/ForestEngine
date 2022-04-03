@@ -2,6 +2,8 @@
 
 #include <cstdint> // std::uintptr_t
 #include <cstring>
+#include <cmath> /* ceil, max */
+#include <limits>
 
 #include <vector>
 #include <list>
