@@ -170,6 +170,16 @@ public:
 		return mMeshInstance;
 	}
 
+	CPP bool hasValidChunk() const
+	{
+		return (! mChunk.isValid()) || (mChunk.isValid() && mChunk.get().getIsLoaded()); // !chunk means -> Screen Space case
+	}
+
+	CPP bool hasValidBatch() const
+	{
+		return mBatch.isValid();
+	}
+
 	CPP void serialize(JSON& json) const override
 	{
 		Component::serialize(json);
@@ -277,8 +287,8 @@ public:
 	GET_SET(RenderDistance)
 	RGET(Animations)
 	GET_SET(CurrentAnimationName)
-	RGET_SET(Chunk)
-	RGET_SET(Batch)
+	SET(Chunk)
+	SET(Batch)
 	RGET_SET(Mesh)
 	RGET_SET(Material)
 };

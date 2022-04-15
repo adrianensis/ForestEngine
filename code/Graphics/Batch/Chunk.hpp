@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/Renderer.hpp"
 
 #ifdef CPP_INCLUDE
@@ -11,7 +10,6 @@
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Scene/Module.hpp"
 #endif
@@ -51,7 +49,7 @@ public:
 		mRadius = mCenter.dst(mLeftTop);
 	}
 
-	CPP void update(BatchesMap *batchesMap)
+	CPP void update()
 	{
 		//RenderEngine::getInstance().drawRectangle(Rectangle(mLeftTop, mSize, mSize));
 
@@ -63,9 +61,10 @@ public:
 
 			if (renderer.get().isActive())
 			{
-				if (getIsLoaded() && !renderer.get().getBatch())
+				if (getIsLoaded() && !renderer.get().hasValidBatch())
 				{
-					batchesMap->addRenderer(renderer);
+					//batchesMap->addRenderer(renderer);
+					RenderEngine::getInstance().assignBatch(renderer);
 				}
 
 				if (!renderer.get().isStatic() && !containsRenderer(renderer))

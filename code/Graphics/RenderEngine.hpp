@@ -157,6 +157,11 @@ public:
 		return chunkFound;
 	}
 
+	CPP void assignBatch(Ptr<Renderer> renderer)
+	{
+		mBatchesMap.addRenderer(renderer);
+	}
+
 	CPP void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1))
 	{
 		if (isWorldSpace)
@@ -232,7 +237,7 @@ private:
 			}
 
 			//if (chunk->getIsLoaded()) {
-			chunk.get().update(&mBatchesMap);
+			chunk.get().update();
 			//}
 		}
 

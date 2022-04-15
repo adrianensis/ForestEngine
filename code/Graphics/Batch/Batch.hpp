@@ -17,7 +17,6 @@
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Animation/Animation.hpp"
-#include "Graphics/Batch/Chunk.hpp"
 #include "Scene/Module.hpp"
 #endif
 
@@ -117,31 +116,7 @@ private:
 		{
 			Ptr<Renderer> renderer = *it;
 
-			bool toRemove = false;
-
-			if(renderer.isValid())
-			{
-				if (renderer.get().isActive())
-				{
-					if (!isChunkOk(renderer))
-					{
-						toRemove = true;
-					}
-				}
-				else
-				{
-					if (renderer.get().getIsPendingToBeDestroyed())
-					{
-						toRemove = true;
-					}
-				}
-			}
-			else
-			{
-				toRemove = true;
-			}
-
-			if (toRemove)
+			if (shouldRemoveRenderer(renderer))
 			{
 				internalRemoveRendererFromList(it);
 			}
@@ -162,10 +137,33 @@ private:
 		return pendingDrawCall;
 	}
 
-	CPP bool isChunkOk(Ptr<Renderer> renderer) const
+	CPP bool shouldRemoveRenderer(Ptr<Renderer> renderer)
 	{
-		Ptr<Chunk> chunk = renderer.get().getChunk();
-		return (!chunk) || (chunk && chunk.get().getIsLoaded()); // !chunk means -> Screen Space case
+		bool toRemove = false;
+
+		if(renderer.isValid())
+		{
+			if (renderer.get().isActive())
+			{
+				if (!renderer.get().hasValidChunk())
+				{
+					toRemove = true;
+				}
+			}
+			else
+			{
+				if (renderer.get().getIsPendingToBeDestroyed())
+				{
+					toRemove = true;
+				}
+			}
+		}
+		else
+		{
+			toRemove = true;
+		}
+
+		return toRemove;
 	}
 
 	CPP void internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it)
