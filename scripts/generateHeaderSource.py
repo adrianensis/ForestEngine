@@ -31,7 +31,7 @@ MACRO_ACCESS_MODIFIER = "(public|private|protected)\:"
 
 REGEX_ANY = r'[\w\d_\<\s\t\>\&\*\.:\[\]\(\),=;\"\'\\]'
 
-REGEX_FUNCTION = r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\~\w\d_]+)(\('+REGEX_ANY+r'*)'
+REGEX_FUNCTION = r'([\w\d_\s]*)\s+([\w\d_\<\s\>&\*:]+)\s+([\~\w\d_]+)\s*(\('+REGEX_ANY+r'*)'
 
 REGEX_INLINE_FUNCTION = REGEX_FUNCTION+'\{('+REGEX_ANY+'*)'
 REGEX_FULL_INLINE_FUNCTION = REGEX_FUNCTION+'\{('+REGEX_ANY+'*)\}'

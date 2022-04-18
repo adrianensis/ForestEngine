@@ -55,4 +55,9 @@ public:
 	{
 		return std::max(lower, std::min(n, upper));
 	}
+
+	CPP static f32 det (f32 a, f32 b, f32 c, f32 d)
+	{
+		return a * d - b * c;
+	}
 };

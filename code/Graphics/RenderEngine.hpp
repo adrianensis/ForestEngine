@@ -105,13 +105,6 @@ public:
 		{
 			Ptr<Renderer> renderer = Ptr<Renderer>::Cast(component);
 
-			/*if(!CONTAINS(mDepthsData, renderer->getDepth()))
-			{
-				DepthData DepthData;
-				DepthData.mDepthNumber = renderer->getDepth();
-				MAP_INSERT(mDepthsData, renderer->getDepth(), DepthData);
-			}*/
-
 			if (renderer.get().getIsWorldSpace())
 			{
 				Ptr<Chunk> chunk = assignChunk(renderer);
@@ -197,14 +190,6 @@ private:
 	CPP void renderBatches()
 	{
 		PROFILER_TIMEMARK_START()
-
-		/*FOR_MAP(it, mDepthsData)
-		{
-			if (it->second.mVisible)
-			{
-				
-			}
-		}*/
 
 		mBatchesMap.render();
 

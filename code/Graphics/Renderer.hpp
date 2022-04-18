@@ -46,13 +46,6 @@ public:
 		mRenderDistance = 1500; // TODO : move to settings?
 
 		setColor(Vector4(0, 0, 0, 1));
-
-		mVertices.reserve(4);
-
-		mVertices.push_back(Vector2(0, 0)); // LEFT TOP VERTEX
-		mVertices.push_back(Vector2(0, 0)); // LEFT BOTTOM
-		mVertices.push_back(Vector2(0, 0)); // RIGHT BOTTOM
-		mVertices.push_back(Vector2(0, 0)); // RIGHT TOP
 	}
 
 	CPP void onComponentAdded() override
@@ -91,7 +84,15 @@ public:
 
 		if (transformChanged || mVerticesDirty)
 		{
-			FOR_ARRAY(i, mVertices)
+			u32 verticesCount = mMesh.get().getVertexCount();
+
+			if(mVertices.size() < verticesCount)
+			{
+				mVertices.clear();
+				mVertices.reserve(verticesCount);
+			}
+			
+			FOR_RANGE(i, 0, verticesCount)
 			{
 				Vector3 vertexPosition(
 					mMesh.get().getVertices()[i * 3 + 0],
@@ -263,7 +264,7 @@ private:
 	bool mInvertAxisX = false;
 	bool mIsLineMode = false;
 	i32 mDepth = 0;
-	bool mUseDepth = true; // overrides Z with Depth
+	bool mUseDepth = false; // overrides Z with Depth
 	f32 mRenderDistance = 0.0f;
 	std::map<std::string, Ptr<Animation>> mAnimations;
 	std::string mCurrentAnimationName;

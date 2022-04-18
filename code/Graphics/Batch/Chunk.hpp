@@ -123,15 +123,14 @@ public:
 	CPP bool containsRenderer(Ptr<const Renderer> renderer, f32 epsilon = 0.0f) const
 	{
 		Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
-		bool contains = Geometry::testRectanglePoint(mLeftTop, mSize, mSize, rendererPosition, epsilon);
+		bool contains = Geometry::testCubePoint(Cube(mLeftTop, Vector3(mSize, mSize, mSize)), rendererPosition, epsilon);
 		return contains; // TODO : move to settings ?
 	}
 
 	CPP bool containsRendererSphere(Ptr<const Renderer> renderer) const
 	{
 		Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
-		return Geometry::testSphereSphere(mCenter, rendererPosition, mRadius,
-										renderer.get().getGameObject()->getTransform().get().getScale().y * 2.0f, 0);
+		return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer.get().getGameObject()->getTransform().get().getScale().y * 2.0f), 0);
 	}
 
 private:

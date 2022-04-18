@@ -114,6 +114,7 @@ public:
 
 						renderer->setMesh(MeshPrimitives::getInstance().getPrimitive<Rectangle>());
 						renderer->setMaterial(UIManager::getInstance().getFontMaterial());
+						renderer->setUseDepth(true);
 						renderer->setDepth(mLayer);
 						
 						addComponent<Renderer>(renderer);
@@ -124,7 +125,7 @@ public:
 					}
 
 					renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / RenderContext::getAspectRatio(), 0, 0));
-					renderer->setTextureRegion(Rectangle(textureCoordinates.x, textureCoordinates.y, textureSize.x, textureSize.y));
+					renderer->setTextureRegion(Rectangle(textureCoordinates, textureSize));
 				}
 			}
 

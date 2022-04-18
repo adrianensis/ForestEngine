@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/ObjectBase.hpp"
-#include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/Vector3.hpp"
+#include "Core/Log/Log.hpp"
 
 #ifdef CPP_INCLUDE
 #include "Core/Maths/Geometry.hpp"
@@ -32,7 +32,7 @@ class Line: public Shape
 {
     GENERATE_METADATA(Line)
 
-protected: 
+private: 
     Vector3 mStart;
     Vector3 mEnd;
 
@@ -49,6 +49,11 @@ public:
     {
         mStart.set(start);
         mEnd.set(end);
+    }
+
+    Vector3 toVector() const
+    {
+        return mEnd - mStart;
     }
 
     COPY(Line)
@@ -78,56 +83,7 @@ public:
     CRGET_SET(End)
 };
 
-// class Rectangle: public Shape
-// {
-//     GENERATE_METADATA(Rectangle)
-//     protected: Vector3 mLeftTop; CRGET_SET(LeftTop)
-//     protected: Vector3 mSize; CRGET_SET(Size)
-
-// public:
-//     Rectangle() { mVerticesCount = 8; }
-
-//     Rectangle(f32 x, f32 y, f32 z, f32 w, f32 h, f32 l): Rectangle()
-//     {
-//         mLeftTop.set(x,y,z);
-//         mSize.set(w,h,l);
-//     }
-
-//     Rectangle(const Vector3& leftTop, f32 w, f32 h, f32 l): Rectangle()
-//     {
-//         mLeftTop.set(leftTop);
-//         mSize.set(w,h,l);
-//     }
-
-//     Rectangle(const Vector3& leftTop, const Vector3& size): Rectangle()
-//     {
-//         mLeftTop.set(leftTop);
-//         mSize.set(size);
-//     }
-
-//     COPY(Rectangle)
-//     {
-//         Shape::copy(other);
-//         DO_COPY(mLeftTop)
-//         DO_COPY(mSize)
-//     }
-
-//     void serialize(JSON& json) const override
-//     {
-//         Shape::serialize(json);
-
-//         DO_SERIALIZE("left_top", mLeftTop)
-//         DO_SERIALIZE("size", mSize)
-//     }
-
-//     void deserialize(const JSON& json) override
-//     {
-//         Shape::deserialize(json);
-
-//         DO_DESERIALIZE("left_top", mLeftTop);
-//         DO_DESERIALIZE("size", mSize);
-//     }
-// };
+class Cube;
 
 class Rectangle: public Shape
 {
@@ -135,30 +91,22 @@ class Rectangle: public Shape
 
 protected: 
     Vector3 mLeftTop;
-    Vector2 mSize;
+    Vector3 mSize;
 
 public:
     Rectangle() { mVerticesCount = 4; }
 
-    Rectangle(f32 x, f32 y, f32 w, f32 h): Rectangle()
+    Rectangle(const Vector3& leftTop, const Vector3& size): Rectangle()
     {
-        mLeftTop.set(x,y,0);
-        mSize.set(w,h);
+        set(leftTop, size);
     }
 
-    Rectangle(f32 x, f32 y, f32 z, f32 w, f32 h): Rectangle()
-    {
-        mLeftTop.set(x,y,z);
-        mSize.set(w,h);
-    }
+    CPP Rectangle(const Cube& cube)
+	{
+        set(cube.getLeftTop(), cube.getSize());
+	}
 
-    Rectangle(const Vector3& leftTop, f32 w, f32 h): Rectangle()
-    {
-        mLeftTop.set(leftTop);
-        mSize.set(w,h);
-    }
-
-    Rectangle(const Vector3& leftTop, const Vector2& size): Rectangle()
+    void set(const Vector3& leftTop, const Vector3& size)
     {
         mLeftTop.set(leftTop);
         mSize.set(size);
@@ -191,132 +139,198 @@ public:
     CRGET_SET(Size)
 };
 
+class Cube: public Rectangle
+{
+    GENERATE_METADATA(Cube)
+
+public:
+    Cube() { mVerticesCount = 8; }
+
+    Cube(const Vector3& leftTop, const Vector3& size): Cube()
+    {
+        set(leftTop, size);
+    }
+
+    CPP Cube(const Rectangle& rectangle)
+	{
+        set(rectangle.getLeftTop(), rectangle.getSize());
+	}
+};
+
+class Sphere: public Shape
+{
+    GENERATE_METADATA(Sphere)
+
+protected: 
+    Vector3 mCenter;
+    f32 mRadius;
+
+public:
+    Sphere() { mVerticesCount = 0; }
+
+    Sphere(const Vector3& center, f32 radius): Sphere()
+    {
+        mCenter.set(center);
+        mRadius = radius;
+    }
+
+    COPY(Sphere)
+    {
+        Shape::copy(other);
+        DO_COPY(mCenter)
+        DO_COPY(mRadius)
+    }
+
+    CRGET_SET(Center)
+    CRGET_SET(Radius)
+};
+
 class Geometry
 {
 public:
     // Geometry tests
 
-    CPP static bool testRectanglePoint(const Vector2& leftTop, f32 width, f32 height, const Vector2& point, f32 eps)
-    {
-        return (leftTop.x - eps <= point.x && leftTop.y + eps >= point.y && leftTop.x + width + eps >= point.x && leftTop.y - height - eps <= point.y);
-    }
-
-    CPP static bool testRectangleSphere(const Vector3& leftTop, f32 width, f32 height, f32 length, const Vector3& center, f32 radius, f32 eps)
+    CPP static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
     {
         return
-            (leftTop.x - radius - eps) <= center.x &&
-            (leftTop.y + radius + eps) >= center.y &&
-            (leftTop.z + radius + eps) >= center.z &&
-            (leftTop.x + width + radius + eps) >= center.x &&
-            (leftTop.y - height - radius - eps) <= center.y &&
-            (leftTop.z - length - radius - eps) <= center.z;
+            (cube.getLeftTop().x - sphere.getRadius() - eps) <= sphere.getCenter().x &&
+            (cube.getLeftTop().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x &&
+            (cube.getLeftTop().y + sphere.getRadius() + eps) >= sphere.getCenter().y &&
+            (cube.getLeftTop().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y &&
+            (cube.getLeftTop().z + sphere.getRadius() + eps) >= sphere.getCenter().z &&
+            (cube.getLeftTop().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
     }
 
-    CPP static bool testSphereSphere(const Vector2& centerA, const Vector2& centerB, f32 radiusA, f32 radiusB, f32 eps)
+    CPP static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps)
     {
-        f32 distance = centerA.dst(centerB);
-        return (distance < (radiusA + radiusB + eps));
+        return testCubeSphere(cube, Sphere(point, 0.0f), eps);
     }
 
-    CPP static bool testLineLine(const Vector2& lineAStart, const Vector2& lineAEnd, const Vector2& lineBStart, const Vector2& lineBEnd, Vector2& intersectionResult)
+    CPP static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps)
+    {
+        f32 distance = sphereA.getCenter().dst(sphereB.getCenter());
+        return (distance < (sphereA.getRadius() + sphereB.getRadius() + eps));
+    }
+
+    CPP static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps)
     {
         // Source : http://www-cs.ccny.cuny.edu/~wolberg/capstone/intersection/Intersection%20point%20of%20two%20lines.html
+        // Source: https://stackoverflow.com/questions/2316490/the-algorithm-to-find-the-point-of-intersection-of-two-3d-line-segment/10288710#10288710
+        // Source: https://www.codefull.net/2015/06/intersection-of-a-ray-and-a-line-segment-in-3d/
 
-        /*
-        Pa = P1 + ua ( P2 - P1 )
-        Pb = P3 + ub ( P4 - P3 )
+        Vector3 da = lineA.getEnd() - lineA.getStart(); 
+        Vector3 db = lineB.getEnd() - lineB.getStart();
+        Vector3 dc = lineB.getStart() - lineA.getStart();
 
-        Pa = Pb
-        */
-
-        // calculate the distance to intersection point
-        f32 uA = ((lineBEnd.x - lineBStart.x) * (lineAStart.y - lineBStart.y) - (lineBEnd.y - lineBStart.y) * (lineAStart.x - lineBStart.x)) / ((lineBEnd.y - lineBStart.y) * (lineAEnd.x - lineAStart.x) - (lineBEnd.x - lineBStart.x) * (lineAEnd.y - lineAStart.y));
-        f32 uB = ((lineAEnd.x - lineAStart.x) * (lineAStart.y - lineBStart.y) - (lineAEnd.y - lineAStart.y) * (lineAStart.x - lineBStart.x)) / ((lineBEnd.y - lineBStart.y) * (lineAEnd.x - lineAStart.x) - (lineBEnd.x - lineBStart.x) * (lineAEnd.y - lineAStart.y));
-
-        bool intersection = false;
-        // if uA and uB are between 0-1, lines are colliding
-        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1)
+        if (dc.dot(Vector3(da).cross(db)) != 0.0) // lines are not coplanar
         {
-            intersectionResult.x = lineAStart.x + (uA * (lineAEnd.x - lineAStart.x));
-            intersectionResult.y = lineAStart.y + (uA * (lineAEnd.y - lineAStart.y));
-
-            intersection = true;
+            return false;
         }
 
-        return intersection;
+        f32 s = Vector3(dc).cross(db).dot(Vector3(da).cross(db)) / Vector3(da).cross(db).sqrlen();
+
+        if (s >= 0.0 && s <= 1.0)
+        {
+            intersectionResult = lineA.getStart() + (da * s);
+            return true;
+        }
+
+        return false;
     }
 
-    CPP static bool testLineSphereSimple(const Vector2& lineStart, const Vector2& lineEnd, const Vector2& center, f32 radius, f32 eps)
+    CPP static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps)
     {
         bool lineIntersectsSphere = false;
 
-        Vector2 closestPoint(closestPointInLine(lineStart, lineEnd, center));
+        Vector3 closestPoint(closestPointInLine(line, sphere.getCenter()));
 
-        if (testSpherePoint(lineStart, center, radius + eps) || testSpherePoint(lineEnd, center, radius + eps))
+        if (testSpherePoint(line.getStart(), sphere, eps) || testSpherePoint(line.getEnd(), sphere, eps))
         {
             lineIntersectsSphere = true;
         }
         else
         {
-            lineIntersectsSphere = testSpherePoint(closestPoint, center, radius + eps);
+            lineIntersectsSphere = testSpherePoint(closestPoint, sphere, eps);
         }
 
         return lineIntersectsSphere;
     }
 
-    CPP static bool testLineSphere(const Vector2& lineStart, const Vector2& lineEnd, const Vector2& center, f32 radius, f32 eps, Vector2& intersectionResult1, Vector2& intersectionResult2)
+    CPP static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
     {
+        // http://paulbourke.net/geometry/circlesphere/source.cpp
+
         // X(t) = x1 + (x2 - x1) * t
         // Y(t) = y1 + (y2 - y1) * t
-        //
         // (X - center.x)2 + (Y - center.y)2 = radius2
 
-        f32 radiusEps = radius + eps;
+        f32 radiusEps = sphere.getRadius() + eps;
 
         bool lineIntersectsSphere = false;
 
         f32 t;
 
-        f32 dx = lineEnd.x - lineStart.x;
-        f32 dy = lineEnd.y - lineStart.y;
+        Vector3 dVector = line.toVector();
 
-        Vector2 startToCenter = lineStart - center;
+        Vector3 startToCenter = line.getStart() - sphere.getCenter();
 
-        f32 A = dx * dx + dy * dy;
-        f32 B = 2.0f * (dx * startToCenter.x + dy * startToCenter.y);
-        f32 C = startToCenter.x * startToCenter.x + startToCenter.y * startToCenter.y - radiusEps * radiusEps;
+        f32 A = dVector.sqrlen();
+        f32 B = 2.0f * dVector.dot(startToCenter);
+        f32 C = startToCenter.sqrlen() - radiusEps * radiusEps;
 
-        f32 det = B * B - 4 * A * C;
+        f32 det = B * B - 4.0f * A * C;
 
-        if (det >= 0)
+        if ( det == MathUtils::FLOAT_EPSILON )
         {
-            // Two solutions.
-            f32 sqrtDet = sqrtf(det);
+            // one intersection
 
-            t = (f32)((-B + sqrtDet) / (2 * A));
-            intersectionResult1 = Vector2(lineStart.x + t * dx, lineStart.y + t * dy);
+            f32 t = -B/(2*A);
 
-            t = (f32)((-B - sqrtDet) / (2 * A));
-            intersectionResult2 = Vector2(lineStart.x + t * dx, lineStart.y + t * dy);
+            intersectionResult1.x = line.getStart().x + t*(dVector.x);
+            intersectionResult1.y = line.getStart().y + t*(dVector.y);
+            intersectionResult1.z = line.getStart().z + t*(dVector.z);
 
-            lineIntersectsSphere = true;
+            return 1;
         }
 
-        return lineIntersectsSphere;
+        if ( det > MathUtils::FLOAT_EPSILON )
+        {
+            // two intersections
+
+            // first intersection
+            f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
+
+            intersectionResult1.x = line.getStart().x + t1*(dVector.x);
+            intersectionResult1.y = line.getStart().y + t1*(dVector.y);
+            intersectionResult1.z = line.getStart().z + t1*(dVector.z);
+            
+            // second intersection
+            f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
+
+            intersectionResult2.x = line.getStart().x + t2*(dVector.x);
+            intersectionResult2.y = line.getStart().y + t2*(dVector.y);
+            intersectionResult2.z = line.getStart().z + t2*(dVector.z);
+
+            return 2;
+        }
+
+        // no intersection
+        // det < 0.0
+        return 0;
     }
 
-    CPP static bool testSpherePoint(const Vector2& point, const Vector2& center, f32 radius)
+    CPP static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps)
     {
-        return center.dst(point) <= radius;
+        return sphere.getCenter().dst(point) <= (sphere.getRadius() + eps);
     }
 
-    CPP static bool testLinePoint(const Vector2& lineStart, const Vector2& lineEnd, const Vector2& point, f32 eps)
+    CPP static bool testLinePoint(const Line& line, const Vector3& point, f32 eps)
     {
         // get distance from the point to the two ends of the line
-        f32 d1 = lineStart.dst(point);
-        f32 d2 = lineEnd.dst(point);
+        f32 d1 = line.getStart().dst(point);
+        f32 d2 = line.getEnd().dst(point);
 
-        f32 lineLen = lineStart.dst(lineEnd);
+        f32 lineLen = line.getStart().dst(line.getEnd());
 
         bool pointIsInLine = false;
 
@@ -328,22 +342,22 @@ public:
         return pointIsInLine;
     }
 
-    CPP static Vector2 closestPointInLine(const Vector2& lineStart, const Vector2& lineEnd, const Vector2& point)
+    CPP static Vector3 closestPointInLine(const Line& line, const Vector3& point)
     {
-        Vector2 pointStartVector = (point - lineStart) /*.nor()*/;
-        Vector2 lineVector = (lineEnd - lineStart) /*.nor()*/;
+        Vector3 pointStartVector = (point - line.getStart()) /*.nor()*/;
+        Vector3 lineVector = (line.getEnd() - line.getStart()) /*.nor()*/;
 
         f32 t = pointStartVector.dot(lineVector) / lineVector.dot(lineVector);
 
         t = std::fmaxf(t, 0.0f); // clamp to 0
         t = std::fminf(t, 1.0f); // clampt to 1
 
-        return Vector2(lineStart + (lineVector.mul(t)));
+        return Vector3(line.getStart() + (lineVector.mul(t)));
     }
 
-    CPP static Vector2 midPoint(const Vector2& a, const Vector2& b)
+    CPP static Vector3 midPoint(const Line& line)
     {
-        return Vector2((a.x + b.x) / 2.0f, (a.y + b.y) / 2.0f);
+        return Vector3((line.getStart().x + line.getEnd().x) / 2.0f, (line.getStart().y + line.getEnd().y) / 2.0f, (line.getStart().z + line.getEnd().z) / 2.0f);
     }
 
 };

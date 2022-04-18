@@ -34,6 +34,7 @@ public:
         renderer->setMesh(MeshPrimitives::getInstance().getPrimitive<Rectangle>());
         renderer->setMaterial(mConfig.mMaterial);
         renderer->setColor(mConfig.mStyle->mBackgroundColor);
+        renderer->setUseDepth(true);
         renderer->setDepth(mConfig.mLayer);
         //renderer->setHasBorder(true);
 

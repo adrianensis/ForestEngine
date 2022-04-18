@@ -117,6 +117,11 @@ public:
 		return *this;
 	}
 
+    bool operator==(const Ptr<T>& otherRef) const
+	{
+		return this->mReference.lock().get() == otherRef.mReference.lock().get();
+	}
+
     operator bool() const
     {
         return this->isValid();

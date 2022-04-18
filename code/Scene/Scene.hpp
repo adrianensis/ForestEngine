@@ -40,16 +40,17 @@ public:
 		GameObject *cameraGameObject = NEW(GameObject);
 		cameraGameObject->init();
 
-		// cameraGameObject->getTransform().get().setLocalPosition(Vector3(0, 0, -100.0f));
-		cameraGameObject->getTransform().get().setLocalPosition(Vector3(0, 0, 0));
+		cameraGameObject->getTransform().get().translate(Vector3(0, 0, 100.0f));
+		cameraGameObject->getTransform().get().setScale(Vector3(1,1,1));
+		//cameraGameObject->getTransform().get().setLocalPosition(Vector3(0, 0, 0));
 
 		Camera *cameraComponent = NEW(Camera);
 		cameraComponent->init();
 
 		f32 size = RenderContext::getWindowSize().y;
 		// TODO : use RenderContext::getWindowSize().x also? To keep the scaleproportions?
-		cameraComponent->setOrtho(-size, size, -size, size, 1000, -1000);
-		//cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
+		//cameraComponent->setOrtho(-size, size, -size, size, 1000, -1000);
+		cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 60);
 
 		cameraGameObject->addComponent<Camera>(cameraComponent);
 

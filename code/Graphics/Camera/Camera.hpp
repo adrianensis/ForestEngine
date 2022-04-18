@@ -48,7 +48,6 @@ public:
 			mFrustum.build();
 
 			mInversePVMatrixNeedsUpdate = true;
-			mViewMatrixNeedsUpdate = true;
 			mProjectionViewMatrixNeedsUpdate = true;
 
 			mTransformState = currentTransformState;
@@ -107,16 +106,7 @@ public:
 
 	CPP const Matrix4& getViewMatrix() const
 	{
-		if(mViewMatrixNeedsUpdate)
-		{
-			const Vector3& position = getGameObject()->getTransform().get().getWorldPosition();
-			mViewMatrix.translation(position * -1);
-			mViewMatrix.mul(getGameObject()->getTransform().get().getRotationMatrix());
-
-			mViewMatrixNeedsUpdate = false;
-		}
-
-		return mViewMatrix;
+		return getGameObject()->getTransform().get().getModelMatrix();
 	};
 
 	CPP const Matrix4& getProjectionViewMatrix() const
@@ -192,7 +182,6 @@ private:
 	mutable Matrix4 mProjectionViewMatrix;
 	Matrix4 mInversePVMatrix; // used in screen to world calculations.
 
-	mutable bool mViewMatrixNeedsUpdate = true;
 	mutable bool mProjectionViewMatrixNeedsUpdate = true;
 	mutable bool mInversePVMatrixNeedsUpdate = true;
 

@@ -107,10 +107,8 @@ public:
 			mousePosition = RenderEngine::getInstance().getCamera().get().screenToWorld(Input::getInstance().getMousePosition());
 		}
 
-		return Geometry::testRectanglePoint(
-			mConfig.mPosition,
-			UIUtils::correctAspectRatio_X(mConfig.mSize).x,
-			mConfig.mSize.y,
+		return Geometry::testCubePoint(
+			Rectangle(mConfig.mPosition, Vector2(UIUtils::correctAspectRatio_X(mConfig.mSize).x, mConfig.mSize.y)),
 			mousePosition, 0);
 	}
 

@@ -53,8 +53,11 @@ void KTree::KTreeNode::init(const Rectangle& rectangle, const Vector3& minSize, 
 
 bool QuadTree::KTreeNode::childNodeTestPartial(u32 index, IKTreeElement& element) const
 {
-	bool test = Geometry::testRectangleSphere(mChildren[index].mRectangle.getLeftTop(), mHalfSize.x, mHalfSize.y, mHalfSize.z,
-				element.getKTreeElementCenter(), element.getKTreeElementRadius(), 0);
+	// TODO: uncomment this when ready
+	// ------------------------------
+
+	bool test = false; /*Geometry::testRectangleSphere(mChildren[index].mRectangle.getLeftTop(), mHalfSize.x, mHalfSize.y, mHalfSize.z,
+				element.getKTreeElementCenter(), element.getKTreeElementRadius(), 0);*/
 
 	return test;
 };
@@ -141,7 +144,7 @@ void KTree::KTreeNode::updateChildren(/*contactManager*/)
 // //		bool collision = MathUtils::testRectangleSphere(mLeftTop, mWidth, mHeight,
 // //						Vector2(collider->getCenter()), collider->getRadius(), 0);
 
-// 		bool collision = MathUtils::testRectanglePoint(mLeftTop, mWidth, mHeight,
+// 		bool collision = MathUtils::testCubePoint(mLeftTop, mWidth, mHeight,
 // 								Vector2(collider->getCenter()), -collider->getRadius());
 
 // 		if(!collision || collider->getHasSizeChanged()){
