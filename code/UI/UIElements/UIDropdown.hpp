@@ -1,12 +1,12 @@
 #pragma once
 
-#include "UI/UIButton.hpp"
+#include "UI/UIElements/UIButton.hpp"
 
 #ifdef CPP_INCLUDE
-#include "UI/UIDropdown.hpp"
+#include "UI/UIElements/UIDropdown.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIBuilder.hpp"
-#include "UI/UIText.hpp"
+#include "UI/UIElements/UIText.hpp"
 #include "Graphics/Module.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"

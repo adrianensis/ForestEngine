@@ -1,9 +1,9 @@
 #pragma once
 
-#include "UI/UIElement.hpp"
+#include "UI/UIElements/UIElement.hpp"
 
 #ifdef CPP_INCLUDE
-#include "UI/UIPanel.hpp"
+#include "UI/UIElements/UIPanel.hpp"
 
 #include "Graphics/Module.hpp"
 #include "Scene/Transform.hpp"

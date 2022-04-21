@@ -6,7 +6,7 @@
 #include "UI/UIUtils.hpp"
 
 #ifdef CPP_INCLUDE
-#include "UI/UIElement.hpp"
+#include "UI/UIElements/UIElement.hpp"
 
 #include "Graphics/Module.hpp"
 
@@ -114,6 +114,16 @@ public:
 
 	virtual void setText(const std::string& text) { };
 
+	CPP virtual void setVisibility(bool visibility)
+	{
+		setIsActive(visibility);
+	}
+
+	CPP bool isVisible()
+	{
+		return isActive();
+	}
+
 	CPP void setOnPressedCallback(UIElementCallback callback)
 	{
 		mOnPressedFunctor.mUIElement = this;
@@ -145,17 +155,6 @@ public:
 	}
 
 
-	CPP virtual void setVisibility(bool visibility)
-	{
-		setIsActive(visibility);
-	}
-
-	CPP bool isVisible()
-	{
-		return isActive();
-	}
-
-
 protected:
 	CPP void subscribeToKeyEvents()
 	{
@@ -181,7 +180,7 @@ protected:
 			if (isActive())
 			{
 				// TODO : boolean to enable or disable : can receive char input?
-				onChar(((const InputEventChar *)event)->mChar);
+				onCharEventReceived(((const InputEventChar *)event)->mChar);
 			}
 		});
 
@@ -189,7 +188,7 @@ protected:
 		{
 			if (isActive())
 			{
-				onBackspace();
+				onBackspaceEventReceived();
 			}
 		});
 	}
@@ -226,7 +225,7 @@ protected:
 			if (isActive())
 			{
 				//const InputEventMouseMoved *e = (const InputEventMouseMoved *)event;
-				onMouseOver();
+				onMouseOverEventReceived();
 			}
 		});
 	}
@@ -238,7 +237,7 @@ protected:
 			if (isActive())
 			{
 				const InputEventScroll *e = (const InputEventScroll *)event;
-				onScroll(e->mScroll);
+				onScrollEventReceived(e->mScroll);
 			}
 		});
 	}
@@ -249,7 +248,7 @@ protected:
 		{
 			if (isActive())
 			{
-				onFocusLost(); // TODO : call something more generic
+				loseFocus(); // TODO : call something more generic
 			}
 		});
 	}
@@ -260,26 +259,28 @@ protected:
 		{
 			if (isActive())
 			{
-				onFocusLost(); // TODO : call something more generic
+				loseFocus(); // TODO : call something more generic
 			}
 		});
 	}
 
-	CPP virtual void onChar(char character)
-		{
+	CPP void onCharEventReceived(char character)
+	{
 		if (hasFocus())
 		{
 			mInputString += character;
 			setText(mInputString);
+			onChar(character);
 		}
 	}
 
-    CPP void onBackspace()
-		{
+    CPP void onBackspaceEventReceived()
+	{
 		if(!mInputString.empty())
 		{
 			mInputString.pop_back();
 			setText(mInputString);
+			onBackspace();
 		}
 	}
 
@@ -310,12 +311,7 @@ protected:
 		}
 	}
 
-	virtual void onPrePressed() { };
-	virtual void onPreReleased() { };
-    virtual void onPostPressed() { };
-	virtual void onPostReleased() { };
-
-	CPP virtual void onMouseOver()
+	CPP void onMouseOverEventReceived()
 	{
 		if(!mPressed)
 		{
@@ -326,17 +322,19 @@ protected:
 					if (isMouseCursorInsideElement())
 					{
 						mRenderer->setColor(mConfig.mStyle->mColorHovered);
+						onMouseOverEnter();
 					}
 					else
 					{
 						mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
+						onMouseOverExit();
 					}
 				}
 			}
 		}
 	}
 
-	CPP virtual void onScroll(f32 scroll)
+	CPP virtual void onScrollEventReceived(f32 scroll)
 	{
 		if (isVisible())
 		{
@@ -347,18 +345,20 @@ protected:
 		}
 	}
 
-	CPP void onFocus()
+	CPP void focus()
 	{
 		mInputString.clear();
 		setText(mInputString);
+		onFocusGained();
 	}
 
-	CPP virtual void onFocusLost()
+	CPP virtual void loseFocus()
 	{
 		if (hasFocus())
 		{
 			UIManager::getInstance().setFocusedElement(nullptr);
 			mOnFocusLostFunctor.execute();
+			onFocusLost();
 		}
 	}
 
@@ -377,11 +377,11 @@ protected:
 
 			if (lastFocusedElement && lastFocusedElement->isActive())
 			{
-				lastFocusedElement->onFocusLost();
+				lastFocusedElement->loseFocus();
 			}
 
 			UIManager::getInstance().setFocusedElement(this);
-			onFocus();
+			focus();
 		}
 
 		if (getConsumeInput())
@@ -489,11 +489,24 @@ protected:
 				}
 			}
 			
-			onFocusLost();
+			loseFocus();
 
 			onPostReleased();
 		}
 	}
+
+protected:
+	virtual void onPrePressed() { }
+	virtual void onPreReleased() { }
+    virtual void onPostPressed() { }
+	virtual void onPostReleased() { }
+	virtual void onChar(char character) { }
+    virtual void onBackspace() { }
+	virtual void onMouseOverEnter() { }
+	virtual void onMouseOverExit() { }
+	virtual void onScroll(f32 scroll) { }
+	virtual void onFocusGained() { }
+	virtual void onFocusLost() { }
 
 protected:
 	UIElementConfig mConfig;

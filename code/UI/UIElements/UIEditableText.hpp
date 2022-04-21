@@ -1,10 +1,10 @@
 #pragma once
 
-#include "UI/UIText.hpp"
+#include "UI/UIElements/UIText.hpp"
 #include "UI/UIStyle.hpp"
 
 #ifdef CPP_INCLUDE
-#include "UI/UIEditableText.hpp"
+#include "UI/UIElements/UIEditableText.hpp"
 #include "Graphics/Module.hpp"
 #include "UI/UIManager.hpp"
 #include "Scene/Scene.hpp"

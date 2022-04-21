@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "UI/UIElement.hpp"
+#include "UI/UIElements/UIElement.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"
 

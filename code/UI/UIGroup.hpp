@@ -4,7 +4,7 @@
 
 #ifdef CPP_INCLUDE
 #include "UI/UIGroup.hpp"
-#include "UI/UIElement.hpp"
+#include "UI/UIElements/UIElement.hpp"
 #include "Scene/Scene.hpp"
 #endif
 
