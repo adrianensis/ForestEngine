@@ -45,7 +45,7 @@ class UIBuilder: public ObjectBase
 public:
 	CPP UIBuilder()
 	{
-		mCurrentLayout = UILayout::VERTICAL;
+		mCurrentLayout = UILayout::HORIZONTAL;
 		mMakeRelativeToLastConfig = false;
 		mCurrentUIElement = nullptr;
 
