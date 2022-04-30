@@ -334,7 +334,7 @@ public:
 
 		this->zeros();
 		this->set(0, 0, 1.0f / (tanHalfFOV * aspect));
-		this->set(1, 1, 1.0f / tanHalfFOV);
+		this->set(1, 1, 1.0f / (tanHalfFOV));
 		this->set(2, 2, -((near + far) / zRange));
 		this->set(2, 3, -1.0f);
 		this->set(3, 2, (2.0f * far * near) / zRange);

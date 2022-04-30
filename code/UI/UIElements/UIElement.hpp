@@ -19,6 +19,11 @@
 class Renderer;
 class UIGroup;
 
+enum class UIElementState
+{
+	PRESSED, RELEASED, TOGGLED
+};
+
 class UIElement;
 
 using UIElementCallback = std::function<void(UIElement *uiElement)>;
@@ -54,10 +59,6 @@ public:
 	CPP	void init() override
 	{
 		GameObject::init();
-
-		mPressed = false;
-		mConsumeInput = true;
-		mOnlyReleaseOnClickOutside = false;
 	}
 
 	CPP virtual void initFromConfig(const UIElementConfig& config)
@@ -88,8 +89,9 @@ public:
 
 	void simulateClick()
 	{
-		press();
-		executePressAndRelease(true);
+		markAsPressed();
+		executePressed();
+		tryRelease(true);
 	}
 
 	CPP bool hasFocus() const
@@ -248,7 +250,7 @@ protected:
 		{
 			if (isActive())
 			{
-				loseFocus(); // TODO : call something more generic
+				onEnterEventReceived();
 			}
 		});
 	}
@@ -259,10 +261,169 @@ protected:
 		{
 			if (isActive())
 			{
-				loseFocus(); // TODO : call something more generic
+				onEscEventReceived();
 			}
 		});
 	}
+
+private:
+	
+	// ########### PRESSED ###########
+
+	CPP void onPressedEventReceived()
+	{
+		if (isVisible())
+		{
+			bool cursorInside = isMouseCursorInsideElement();
+			
+			if (cursorInside)
+			{
+				markAsPressed();
+			}
+		}
+	}
+
+	CPP void executePressed()
+	{
+		onPrePressed();
+		mOnPressedFunctor.execute();
+		onPostPressed();
+	}
+
+
+	CPP void markAsPressed()
+	{
+		setColorPressed();
+
+		if(mState == UIElementState::RELEASED)
+		{
+			mState = UIElementState::PRESSED;
+		}
+
+		if (!hasFocus())
+		{
+			obtainFocus();
+		}
+
+		if (getConsumeInput())
+		{
+			Input::getInstance().clearMouseButton();
+		}
+	}
+
+	// ########### RELEASED ###########
+
+	CPP void onReleasedEventReceived()
+	{
+		if(mState == UIElementState::PRESSED)
+		{
+			if (isVisible())
+			{
+				if (hasFocus())
+				{
+					if (isMouseCursorInsideElement())
+					{
+						executePressed();
+						tryRelease(false);
+					}
+					else
+					{
+						if(!mToggleEnabled || (mState != UIElementState::TOGGLED))
+						{
+							markAsReleased();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	CPP void tryRelease(bool force)
+	{
+		if (getConsumeInput())
+		{
+			Input::getInstance().clearMouseButton();
+		}
+
+		bool shouldRelease = false;
+
+		if(mToggleEnabled)
+		{
+			if(mState == UIElementState::TOGGLED)
+			{
+				if(!mReleaseOnSameGroupPressed)
+				{
+					shouldRelease = true;
+				}
+			}
+			else
+			{
+				markAsToggled();
+			}
+		}
+		else
+		{
+			shouldRelease = true;
+		}
+
+		if(shouldRelease)
+		{
+			executeRelease();
+		}
+	}
+
+	CPP void executeRelease()
+	{
+		onPreReleased();
+		markAsReleased();
+		mOnReleasedFunctor.execute();
+		onPostReleased();
+	}
+
+	CPP void markAsReleased()
+	{
+		mState = UIElementState::RELEASED;
+		setColorRelease();
+		if (hasFocus())
+		{
+			loseFocus();
+		}
+	}
+
+	CPP void onMouseOverEventReceived()
+	{
+		if(mState == UIElementState::RELEASED)
+		{
+			if (isVisible())
+			{
+				if(mRenderer)
+				{
+					setColorOver();
+
+					if (isMouseCursorInsideElement())
+					{
+						onMouseOverEnter();
+					}
+					else
+					{
+						onMouseOverExit();
+					}
+				}
+			}
+		}
+	}
+
+	CPP void onScrollEventReceived(f32 scrollValue)
+	{
+		if (isVisible())
+		{
+			if (isMouseCursorInsideElement())
+			{
+				scroll(scrollValue);
+			}
+		}
+	}
+
 
 	CPP void onCharEventReceived(char character)
 	{
@@ -284,66 +445,25 @@ protected:
 		}
 	}
 
-	CPP void onPressedEventReceived()
+	CPP void onEnterEventReceived()
 	{
-		if (isVisible())
+		if (hasFocus())
 		{
-			bool cursorInside = isMouseCursorInsideElement();
-			
-			if (cursorInside)
-			{
-				press();
-			}
+			onEnter();
+			loseFocus();
 		}
 	}
 
-	CPP void onReleasedEventReceived()
+	CPP void onEscEventReceived()
 	{
-		if(mPressed)
+		if (hasFocus())
 		{
-			if (isVisible())
-			{
-				if (hasFocus())
-				{
-					executePressAndRelease();
-				}
-			}
+			onEsc();
+			loseFocus();
 		}
 	}
 
-	CPP void onMouseOverEventReceived()
-	{
-		if(!mPressed)
-		{
-			if (isVisible())
-			{
-				if(mRenderer)
-				{
-					if (isMouseCursorInsideElement())
-					{
-						mRenderer->setColor(mConfig.mStyle->mColorHovered);
-						onMouseOverEnter();
-					}
-					else
-					{
-						mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
-						onMouseOverExit();
-					}
-				}
-			}
-		}
-	}
-
-	CPP virtual void onScrollEventReceived(f32 scroll)
-	{
-		if (isVisible())
-		{
-			if (isMouseCursorInsideElement())
-			{
-				mOnScrollFunctor.execute();
-			}
-		}
-	}
+	// ########### FOCUS ###########
 
 	CPP void focus()
 	{
@@ -352,146 +472,95 @@ protected:
 		onFocusGained();
 	}
 
-	CPP virtual void loseFocus()
+	CPP void loseFocus()
 	{
-		if (hasFocus())
-		{
-			UIManager::getInstance().setFocusedElement(nullptr);
-			mOnFocusLostFunctor.execute();
-			onFocusLost();
-		}
+		UIManager::getInstance().setFocusedElement(nullptr);
+		mOnFocusLostFunctor.execute();
+		onFocusLost();
 	}
 
-	CPP void press()
+	CPP void obtainFocus()
 	{
-		if(mRenderer)
+		UIElement *lastFocusedElement = UIManager::getInstance().getFocusedElement();
+
+		if (lastFocusedElement && lastFocusedElement->isActive())
 		{
-			mRenderer->setColor(mConfig.mStyle->mColorPressed);
+			lastFocusedElement->loseFocus();
 		}
 
-		mPressed = true;
-
-		if (!hasFocus())
-		{
-			UIElement *lastFocusedElement = UIManager::getInstance().getFocusedElement();
-
-			if (lastFocusedElement && lastFocusedElement->isActive())
-			{
-				lastFocusedElement->loseFocus();
-			}
-
-			UIManager::getInstance().setFocusedElement(this);
-			focus();
-		}
-
-		if (getConsumeInput())
-		{
-			Input::getInstance().clearMouseButton();
-		}
+		UIManager::getInstance().setFocusedElement(this);
+		focus();
 	}
 
-	CPP void executePressAndRelease(bool force = false)
+	// ########### SCROLL ###########
+	
+	CPP void scroll(f32 scrollValue)
 	{
-		bool cursorInside = isMouseCursorInsideElement() || force;
+		mOnScrollFunctor.execute();
+		onScroll(scrollValue);
+	}
 
-		bool toggleRequest = false;
-		
-		if(mCanToggle && cursorInside)
+	// ########### TOGGLE ###########
+
+	CPP void releaseOtherToggleElements()
+	{
+		// Release other UIToggleButtons
+		const UIGroup& group = UIManager::getInstance().getOrCreateGroup(mConfig.mGroup);
+		FOR_LIST(it, group.getUIElements())
 		{
-			toggleRequest = mToggled ? false : true;
-		}
-
-		bool canExecutePress = !mCanToggle || (mCanToggle && toggleRequest);
-
-		if(canExecutePress)
-		{
-			if (cursorInside)
+			UIElement* other = *it;
+			if(other != this)
 			{
-				onPrePressed();
-				mOnPressedFunctor.execute();
-				onPostPressed();
-
-				if(mCanToggle)
+				if(other->getToggleEnabled() &&
+				other->getState() == UIElementState::TOGGLED &&
+				other->getReleaseOnSameGroupPressed() &&
+				!other->getConfig().mGroup.empty() &&
+				other->getConfig().mGroup == mConfig.mGroup)
 				{
-					// Release other UIToggleButtons
-					const UIGroup& group = UIManager::getInstance().getOrCreateGroup(mConfig.mGroup);
-					FOR_LIST(it, group.getUIElements())
-					{
-						UIElement* other = *it;
-						if(other != this)
-						{
-							if(other->getCanToggle() &&
-							other->getToggled() &&
-							other->getReleaseOnSameGroupPressed() &&
-							!other->getConfig().mGroup.empty() &&
-							other->getConfig().mGroup == mConfig.mGroup)
-							{
-								other->release(true);
-							}
-						}
-					}
+					other->executeRelease();
 				}
 			}
 		}
-
-		/*
-			NOTE:
-			UIToggleButtons cannot be released by user,
-			only by other UIToggleButtons.
-		*/
-		if(!mCanToggle || (mCanToggle && mToggled && !mReleaseOnSameGroupPressed))
-		{
-			release(force);
-		}
-
-		if(mCanToggle && !toggleRequest && mReleaseOnSameGroupPressed)
-		{
-			mToggled = true;
-		}
-		else
-		{
-			mToggled = toggleRequest;
-		}
 	}
 
-	CPP void release(bool force = false)
+	CPP void markAsToggled()
+	{
+		mState = UIElementState::TOGGLED;
+		releaseOtherToggleElements();
+	}
+
+	// ########### COLOR ###########
+
+	CPP void setColorPressed()
+	{
+		mRenderer->setColor(mConfig.mStyle->mColorPressed);
+	}
+
+	CPP void setColorRelease()
 	{
 		bool cursorInside = isMouseCursorInsideElement();
 
-		bool canExecuteRelease =
-		((!mCanToggle || (mCanToggle && mToggled)) &&
-		((mOnlyReleaseOnClickOutside && !cursorInside) || !mOnlyReleaseOnClickOutside)) ||
-		force;
-
-		if(canExecuteRelease)
+		if(cursorInside)
 		{
-			mPressed = false;
+			mRenderer->setColor(mConfig.mStyle->mColorHovered);
+		}
+		else
+		{
+			mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
+		}
+	}
 
-			mToggled = false;
+	CPP void setColorOver()
+	{
+		bool cursorInside = isMouseCursorInsideElement();
 
-			onPreReleased();
-			mOnReleasedFunctor.execute();
-
-			if (getConsumeInput())
-			{
-				Input::getInstance().clearMouseButton();
-			}
-
-			if(mRenderer)
-			{
-				if(cursorInside)
-				{
-					mRenderer->setColor(mConfig.mStyle->mColorHovered);
-				}
-				else
-				{
-					mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
-				}
-			}
-			
-			loseFocus();
-
-			onPostReleased();
+		if (isMouseCursorInsideElement())
+		{
+			mRenderer->setColor(mConfig.mStyle->mColorHovered);
+		}
+		else
+		{
+			mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
 		}
 	}
 
@@ -502,6 +571,8 @@ protected:
 	virtual void onPostReleased() { }
 	virtual void onChar(char character) { }
     virtual void onBackspace() { }
+	virtual void onEnter() { }
+	virtual void onEsc() { }
 	virtual void onMouseOverEnter() { }
 	virtual void onMouseOverExit() { }
 	virtual void onScroll(f32 scroll) { }
@@ -520,13 +591,11 @@ protected:
 	FunctorUIElement mOnFocusLostFunctor;
 
 	Renderer* mRenderer = nullptr;
-	//PRI Collider* mCollider = nullptr; GET(Collider)
 	std::string mInputString;
-	bool mConsumeInput = false;
-	bool mPressed = false;
-	bool mCanToggle = false;
+	bool mConsumeInput = true;
+	UIElementState mState = UIElementState::RELEASED;
+	bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
-	bool mToggled = false;
     bool mOnlyReleaseOnClickOutside = false;
 
 public:
@@ -534,9 +603,8 @@ public:
 	GET(Renderer)
 	GET(InputString)
 	GET_SET(ConsumeInput)
-	GET(Pressed)
-	GET(CanToggle)
+	GET(ToggleEnabled)
 	GET_SET(ReleaseOnSameGroupPressed)
-	GET(Toggled)
+	GET(State)
 	GET(OnlyReleaseOnClickOutside)
 };

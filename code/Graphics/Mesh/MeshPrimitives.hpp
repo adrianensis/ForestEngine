@@ -85,15 +85,15 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	u32 elementOffsetIncrement = 4;
 	u32 elementOffset = 0;
 
-	Vector3 bottomLeftFront(-0.5f, -0.5f, -0.5f); // bottom left front
-	Vector3 bottomRightFront(0.5f, -0.5f, -0.5f); // bottom right front
-	Vector3 topLeftFront(-0.5f, 0.5f, -0.5f); // top right front
-	Vector3 topRightFront(0.5f, 0.5f, -0.5f); // top left front
+	Vector3 bottomLeftFront(-0.5f, -0.5f, 0.5f); // bottom left front
+	Vector3 bottomRightFront(0.5f, -0.5f, 0.5f); // bottom right front
+	Vector3 topLeftFront(-0.5f, 0.5f, 0.5f); // top right front
+	Vector3 topRightFront(0.5f, 0.5f, 0.5f); // top left front
 
-	Vector3 bottomLeftBack(-0.5f, -0.5f, 0.5f); // bottom left back
-	Vector3 bottomRightBack(0.5f, -0.5f, 0.5f); // bottom right back
-	Vector3 topLeftBack(-0.5f, 0.5f, 0.5f); // top right back
-	Vector3 topRightBack(0.5f, 0.5f, 0.5f); // top left back
+	Vector3 bottomLeftBack(-0.5f, -0.5f, -0.5f); // bottom left back
+	Vector3 bottomRightBack(0.5f, -0.5f, -0.5f); // bottom right back
+	Vector3 topLeftBack(-0.5f, 0.5f, -0.5f); // top right back
+	Vector3 topRightBack(0.5f, 0.5f, -0.5f); // top left back
 
 	// Front
 	mesh.get().addVertex(bottomLeftFront);

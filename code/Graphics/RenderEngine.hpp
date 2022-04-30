@@ -56,7 +56,7 @@ public:
 			{
 				OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>(NEW(Chunk));
 				chunk.get().init();
-				chunk.get().set(Vector2(i * chunkSize, j * chunkSize), chunkSize);
+				chunk.get().set(Vector3(i * chunkSize, j * chunkSize, chunkSize), chunkSize);
 
 				mChunks.push_back(chunk);
 			}
@@ -175,6 +175,19 @@ public:
 		drawLine(Line(Vector3(leftTop.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z)), thickness, isWorldSpace, color);
 		drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
 		drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y, leftTop.z), Vector3(leftTop.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
+	}
+
+	CPP void drawCube(const Cube& cube, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1))
+	{
+		Vector3 leftTopFront = cube.getLeftTop();
+		Vector3 size = cube.getSize();
+		Vector3 leftTopBack = leftTopFront - Vector3(0,0,size.z);
+		drawRectangle(Rectangle(leftTopFront, size), thickness, isWorldSpace, color);
+		drawRectangle(Rectangle(leftTopBack, size), thickness, isWorldSpace, color);
+		drawLine(Line(leftTopFront + Vector3(0,0,0), leftTopBack + Vector3(0,0,0)), thickness, isWorldSpace, color);
+		drawLine(Line(leftTopFront + Vector3(size.x,0,0), leftTopBack + Vector3(size.x,0,0)), thickness, isWorldSpace, color);
+		drawLine(Line(leftTopFront + Vector3(size.x,-size.y,0), leftTopBack + Vector3(size.x,-size.y,0)), thickness, isWorldSpace, color);
+		drawLine(Line(leftTopFront + Vector3(0,-size.y,0), leftTopBack + Vector3(0,-size.y,0)), thickness, isWorldSpace, color);
 	}
 
 private:

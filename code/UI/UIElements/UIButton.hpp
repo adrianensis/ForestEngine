@@ -98,7 +98,7 @@ public:
 	{
 		UIButton::init();
 
-		mCanToggle = true;
+		mToggleEnabled = true;
 		mReleaseOnSameGroupPressed = true;
 	}
 };

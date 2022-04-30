@@ -44,14 +44,14 @@ public:
 		mLeftTop = leftTop;
 		mSize = size;
 		f32 halfSize = mSize / 2.0f;
-		mCenter.set(mLeftTop.x + halfSize, mLeftTop.y - halfSize, 0);
+		mCenter.set(mLeftTop.x + halfSize, mLeftTop.y - halfSize, mLeftTop.z - halfSize);
 
 		mRadius = mCenter.dst(mLeftTop);
 	}
 
 	CPP void update()
 	{
-		//RenderEngine::getInstance().drawRectangle(Rectangle(mLeftTop, mSize, mSize));
+		//RenderEngine::getInstance().drawCube(Cube(mLeftTop, Vector3(mSize, mSize, mSize)));
 
 		FOR_LIST(it, mRenderers)
 		{

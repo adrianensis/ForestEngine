@@ -42,7 +42,7 @@ public:
 
 		cameraGameObject->getTransform().get().translate(Vector3(0, 0, 100.0f));
 		cameraGameObject->getTransform().get().setScale(Vector3(1,1,1));
-		//cameraGameObject->getTransform().get().setLocalPosition(Vector3(0, 0, 0));
+		//cameraGameObject->getTransform().get().rotate(Vector3(0, 180, 0));
 
 		Camera *cameraComponent = NEW(Camera);
 		cameraComponent->init();
@@ -50,11 +50,11 @@ public:
 		f32 size = RenderContext::getWindowSize().y;
 		// TODO : use RenderContext::getWindowSize().x also? To keep the scaleproportions?
 		//cameraComponent->setOrtho(-size, size, -size, size, 1000, -1000);
-		cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 60);
+		cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
 
 		cameraGameObject->addComponent<Camera>(cameraComponent);
 
-		setCameraGameObject(cameraGameObject);
+		mCameraGameObject = cameraGameObject;
 
 		// SET DEFAULT SIZE
 		mSize = EngineConfig::getInstance().getConfig().at("scene").at("defaultSize").get<f32>();
@@ -249,7 +249,7 @@ private:
 public:
 	GET(GameObjects)
 	GET(NewGameObjects)
-	GET_SET(CameraGameObject)
+	GET(CameraGameObject)
 	GET(Size)
 	GET(Path)
 };

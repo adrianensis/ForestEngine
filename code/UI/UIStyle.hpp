@@ -13,10 +13,6 @@ class UIStyle: public ObjectBase
 public:
 	UIStyle()
 	{
-        mTextColor = Vector4(1, 1, 1, 1);
-		mBackgroundColor = Vector4(0, 0, 0, 1);
-		mColorPressed = Vector4(0.3f, 0.3f, 0.3f, 1);
-		mColorHovered = Vector4(0.7f, 0.7f, 0.7f, 1);
 	}
 
 	COPY(UIStyle)
@@ -34,6 +30,20 @@ public:
 	Vector4 mColorHovered;
 };
 
+class UIStyleDefault: public UIStyle
+{
+    GENERATE_METADATA(UIStyleDefault)
+
+public:
+	UIStyleDefault()
+	{
+		mTextColor = Vector4(0.0f, 0.0f, 0.0f, 1);
+		mBackgroundColor = Vector4(0.5f, 0.5f, 0.5f, 1);
+		mColorPressed = Vector4(0.3f, 0.3f, 0.3f, 1);
+		mColorHovered = Vector4(0.7f, 0.7f, 0.7f, 1);
+	}
+};
+
 class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 {
 	GENERATE_METADATA(UIStyleManager)
@@ -46,10 +56,7 @@ public:
 
 	CPP void init()
 	{
-		mDefaultStyle.mTextColor = Vector4(0.0f, 0.0f, 0.0f, 1);
-		mDefaultStyle.mBackgroundColor = Vector4(0.5f, 0.5f, 0.5f, 1);
-		mDefaultStyle.mColorPressed = Vector4(0.3f, 0.3f, 0.3f, 1);
-		mDefaultStyle.mColorHovered = Vector4(0.7f, 0.7f, 0.7f, 1);
+		
 	}
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
@@ -78,7 +85,7 @@ public:
 	}
 
 private:
-	UIStyle mDefaultStyle;
+	UIStyleDefault mDefaultStyle;
 	std::map<ClassId, UIStyle*> mStyles;
 
 public:
