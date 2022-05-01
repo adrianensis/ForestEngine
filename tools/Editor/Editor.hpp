@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.hpp"
 #include "UI/UIStyle.hpp"
+#include "SpacePartition/OcTree.hpp"
 
 #ifdef CPP_INCLUDE
 #include "Editor.hpp"
@@ -30,7 +31,7 @@ class Editor: public Script
 public:
 	CPP void init()
 	{
-
+		octree.init(1000);
 	}
 
 	CPP void firstUpdate()
@@ -272,6 +273,8 @@ public:
 		// {
 		// 	RenderEngine::getInstance().drawLine(Line(Vector3(-1000,-10,z), Vector3(1000,-10,z)), 1, true, Vector4(1,0,0,1));
 		// }
+
+		octree.update();
 	}
 
 	CPP void terminate()
@@ -308,4 +311,6 @@ private:
 	Vector3 position;
 	GameObject* sprite = nullptr;
 	GameObject* cameraGameObject = nullptr;
+
+	OcTree octree;
 };

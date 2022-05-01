@@ -40,7 +40,7 @@ public:
 		// TRACE();
 
 		// texture region
-		mTextureRegion.setLeftTop(Vector2(0.0, 0.0));
+		mTextureRegion.setLeftTopFront(Vector2(0.0, 0.0));
 		mTextureRegion.setSize(Vector2(1.0, 1.0));
 
 		mRenderDistance = 1500; // TODO : move to settings?
@@ -143,7 +143,7 @@ public:
 				mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
 
 			Vector2 regionSize = getTextureRegion().getSize();
-			Vector2 regionPosition = getTextureRegion().getLeftTop();
+			Vector2 regionPosition = getTextureRegion().getLeftTopFront();
 
 			Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
 
@@ -245,7 +245,7 @@ private:
 			if (currentAnimation && !currentAnimation.get().getFrames().empty())
 			{
 				const AnimationFrame& frame = currentAnimation.get().getNextFrame();
-				mTextureRegion.setLeftTop(frame.getPosition());
+				mTextureRegion.setLeftTopFront(frame.getPosition());
 				mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
 			}
 		}

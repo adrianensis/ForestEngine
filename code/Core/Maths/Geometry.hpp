@@ -90,32 +90,32 @@ class Rectangle: public Shape
     GENERATE_METADATA(Rectangle)
 
 protected: 
-    Vector3 mLeftTop;
+    Vector3 mLeftTopFront;
     Vector3 mSize;
 
 public:
     Rectangle() { mVerticesCount = 4; }
 
-    Rectangle(const Vector3& leftTop, const Vector3& size): Rectangle()
+    Rectangle(const Vector3& leftTopFront, const Vector3& size): Rectangle()
     {
-        set(leftTop, size);
+        set(leftTopFront, size);
     }
 
     CPP Rectangle(const Cube& cube)
 	{
-        set(cube.getLeftTop(), cube.getSize());
+        set(cube.getLeftTopFront(), cube.getSize());
 	}
 
-    void set(const Vector3& leftTop, const Vector3& size)
+    void set(const Vector3& leftTopFront, const Vector3& size)
     {
-        mLeftTop.set(leftTop);
+        mLeftTopFront.set(leftTopFront);
         mSize.set(size);
     }
 
     COPY(Rectangle)
     {
         Shape::copy(other);
-        DO_COPY(mLeftTop)
+        DO_COPY(mLeftTopFront)
         DO_COPY(mSize)
     }
 
@@ -123,7 +123,7 @@ public:
     {
         Shape::serialize(json);
 
-        DO_SERIALIZE("left_top", mLeftTop)
+        DO_SERIALIZE("left_top", mLeftTopFront)
         DO_SERIALIZE("size", mSize)
     }
 
@@ -131,11 +131,11 @@ public:
     {
         Shape::deserialize(json);
 
-        DO_DESERIALIZE("left_top", mLeftTop);
+        DO_DESERIALIZE("left_top", mLeftTopFront);
         DO_DESERIALIZE("size", mSize);
     }
 
-    CRGET_SET(LeftTop)
+    CRGET_SET(LeftTopFront)
     CRGET_SET(Size)
 };
 
@@ -146,14 +146,14 @@ class Cube: public Rectangle
 public:
     Cube() { mVerticesCount = 8; }
 
-    Cube(const Vector3& leftTop, const Vector3& size): Cube()
+    Cube(const Vector3& leftTopFront, const Vector3& size): Cube()
     {
-        set(leftTop, size);
+        set(leftTopFront, size);
     }
 
     CPP Cube(const Rectangle& rectangle)
 	{
-        set(rectangle.getLeftTop(), rectangle.getSize());
+        set(rectangle.getLeftTopFront(), rectangle.getSize());
 	}
 };
 
@@ -193,12 +193,12 @@ public:
     CPP static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
     {
         return
-            (cube.getLeftTop().x - sphere.getRadius() - eps) <= sphere.getCenter().x &&
-            (cube.getLeftTop().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x &&
-            (cube.getLeftTop().y + sphere.getRadius() + eps) >= sphere.getCenter().y &&
-            (cube.getLeftTop().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y &&
-            (cube.getLeftTop().z + sphere.getRadius() + eps) >= sphere.getCenter().z &&
-            (cube.getLeftTop().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
+            (cube.getLeftTopFront().x - sphere.getRadius() - eps) <= sphere.getCenter().x &&
+            (cube.getLeftTopFront().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x &&
+            (cube.getLeftTopFront().y + sphere.getRadius() + eps) >= sphere.getCenter().y &&
+            (cube.getLeftTopFront().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y &&
+            (cube.getLeftTopFront().z + sphere.getRadius() + eps) >= sphere.getCenter().z &&
+            (cube.getLeftTopFront().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
     }
 
     CPP static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps)

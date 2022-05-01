@@ -1,17 +1,17 @@
 
-#include "SpacePartition/KTree.hpp"
+#include "SpacePartition/OcTree.hpp"
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void KTree::KTreeNode::init(const Rectangle& rectangle, const Vector3& minSize, KTree& tree)
+void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& tree)
 {
-	mRectangle = rectangle;
+	mCube = cube;
 
-	mRadius = sqrt((mRectangle.getSize().x * mRectangle.getSize().x) + (mRectangle.getSize().y * mRectangle.getSize().y)) / 2.0f;
+	mRadius = mCube.getSize().len() / 2.0f;
 	// mTree = tree;
 
-	mHalfSize = mRectangle.getSize() / 2.0f;
-	mIsDivisible = (mHalfSize.x >= minSize.x) && (mHalfSize.y >= minSize.y);
+	mHalfSize = mCube.getSize() / 2.0f;
+	mIsDivisible = (mHalfSize.x >= minSize.x) && (mHalfSize.y >= minSize.y) && (mHalfSize.z >= minSize.z);
 
 	// mColliders = Memory::allocate<List<Collider*>>();
 	// mColliders->init();
@@ -23,19 +23,33 @@ void KTree::KTreeNode::init(const Rectangle& rectangle, const Vector3& minSize, 
 
 	if(mIsDivisible)
 	{
-		mChildren.reserve(4);
+		mChildren.reserve(mMaxChildNumber);
 		
-		mChildren.emplace_back(KTreeNode()).
-		init(Rectangle(Vector2(mRectangle.getLeftTop().x, mRectangle.getLeftTop().y), mHalfSize), minSize, tree);
+		// front
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,0,0), mHalfSize), minSize, tree);
 		
-		mChildren.emplace_back(KTreeNode()).
-		init(Rectangle(Vector2(mRectangle.getLeftTop().x, mRectangle.getLeftTop().y - mHalfSize.y), mHalfSize), minSize, tree);
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,0), mHalfSize), minSize, tree);
 		
-		mChildren.emplace_back(KTreeNode()).
-		init(Rectangle(Vector2(mRectangle.getLeftTop().x + mHalfSize.x, mRectangle.getLeftTop().y - mHalfSize.y), mHalfSize), minSize, tree);
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,0), mHalfSize), minSize, tree);
 		
-		mChildren.emplace_back(KTreeNode()).
-		init(Rectangle(Vector2(mRectangle.getLeftTop().x + mHalfSize.x, mRectangle.getLeftTop().y), mHalfSize), minSize, tree);
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,0), mHalfSize), minSize, tree);
+
+		// back
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,0,-mHalfSize.z), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,-mHalfSize.z), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,-mHalfSize.z), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,-mHalfSize.z), mHalfSize), minSize, tree);
 	}
 
 	// mLeftTopChildrenArray = Memory::allocate<Array<Vector2>>();
@@ -51,38 +65,38 @@ void KTree::KTreeNode::init(const Rectangle& rectangle, const Vector3& minSize, 
 
 //----------------------------------------------------------------------
 
-bool QuadTree::KTreeNode::childNodeTestPartial(u32 index, IKTreeElement& element) const
+bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, IOcTreeElement& element) const
 {
 	// TODO: uncomment this when ready
 	// ------------------------------
 
-	bool test = false; /*Geometry::testRectangleSphere(mChildren[index].mRectangle.getLeftTop(), mHalfSize.x, mHalfSize.y, mHalfSize.z,
-				element.getKTreeElementCenter(), element.getKTreeElementRadius(), 0);*/
+	bool test = false; /*Geometry::testRectangleSphere(mChildren[index].mCube.getLeftTopFront(), mHalfSize.x, mHalfSize.y, mHalfSize.z,
+				element.getOcTreeElementCenter(), element.getOcTreeElementRadius(), 0);*/
 
 	return test;
 };
 
 //----------------------------------------------------------------------
 
-void QuadTree::KTreeNode::addKTreeElement(IKTreeElement& element)
+void OcTree::OcTreeNode::addOcTreeElement(IOcTreeElement& element)
 {
 	if (mIsDivisible)
 	{
 		// For each "possible" child node
 		FOR_ARRAY(i, mChildren)
 		{
-			KTreeNode& node = mChildren[i];
+			OcTreeNode& node = mChildren[i];
 			bool isPartiallyInChildren = childNodeTestPartial(i, element);
 			if (isPartiallyInChildren)
 			{
-				node.addKTreeElement(element);
+				node.addOcTreeElement(element);
 			}
 		}
 	}
 	else
 	{
 		// Add Element to node
-		mKTreeElements.emplace_back(&element);
+		mOcTreeElements.emplace_back(&element);
 	}
 }
 
@@ -105,14 +119,15 @@ void QuadTree::KTreeNode::addKTreeElement(IKTreeElement& element)
 
 //----------------------------------------------------------------------
 
-void KTree::KTreeNode::update(/*contactManager*/)
+void OcTree::OcTreeNode::update(/*contactManager*/)
 {
 	// DEBUG DRAW
-	RenderEngine::getInstance().drawRectangle(mRectangle);
+	RenderEngine::getInstance().drawCube(mCube);
 
 	// If is leaf node.
 	if (isLeaf())
 	{
+		RenderEngine::getInstance().drawCube(mCube);
 		ECHO("LEAF")
 	}
 	else
@@ -123,11 +138,11 @@ void KTree::KTreeNode::update(/*contactManager*/)
 
 //----------------------------------------------------------------------
 
-void KTree::KTreeNode::updateChildren(/*contactManager*/)
+void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 {
 	FOR_LIST(it, mChildren)
 	{
-		KTreeNode& child = *it;
+		OcTreeNode& child = *it;
 		child.update(/*contactManager*/);
 	}
 };
@@ -180,7 +195,7 @@ void KTree::KTreeNode::updateChildren(/*contactManager*/)
 
 //----------------------------------------------------------------------
 
-bool KTree::KTreeNode::isLeaf() const
+bool OcTree::OcTreeNode::isLeaf() const
 {
 	return mChildren.size() == 0;
 };
@@ -205,7 +220,7 @@ bool KTree::KTreeNode::isLeaf() const
 
 // 				GameObject* gameObject = collider->getGameObject();
 
-// 				// TODO : line vs rectangle
+// 				// TODO : line vs cube
 // 				bool rayIntersectsCollider = MathUtils::testLineSphereSimple(Vector2(lineStart), Vector2(lineEnd),
 // 						Vector2(collider->getCenter()), collider->getRadius(), 0.0f);
 
@@ -247,17 +262,17 @@ bool KTree::KTreeNode::isLeaf() const
 // 	//DELETE(mRoot)
 // }
 
-void KTree::init(f32 size)
+void OcTree::init(f32 size)
 {
 	mSize.set(size, size, size);
 
 	//f32 minSize = Settings::getInstance()->getF32("scene.quadTreeMinSize");
 
-	f32 minSize = size / 8.0f;
-	mRoot.init(Rectangle(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), Vector3(minSize, minSize, minSize), *this);
+	f32 minSize = 200.0f; //size / 2.0f;
+	mRoot.init(Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), Vector3(minSize, minSize, minSize), *this);
 }
 
-void KTree::update()
+void OcTree::update()
 {
 	mRoot.update();
 }

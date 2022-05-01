@@ -169,17 +169,17 @@ public:
 
 	CPP void drawRectangle(const Rectangle& rectangle, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1))
 	{
-		Vector3 leftTop = rectangle.getLeftTop();
+		Vector3 leftTopFront = rectangle.getLeftTopFront();
 		Vector3 size = rectangle.getSize();
-		drawLine(Line(Vector3(leftTop.x, leftTop.y, leftTop.z), Vector3(leftTop.x, leftTop.y - size.y, leftTop.z)), thickness, isWorldSpace, color);
-		drawLine(Line(Vector3(leftTop.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z)), thickness, isWorldSpace, color);
-		drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y - size.y, leftTop.z), Vector3(leftTop.x + size.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
-		drawLine(Line(Vector3(leftTop.x + size.x, leftTop.y, leftTop.z), Vector3(leftTop.x, leftTop.y, leftTop.z)), thickness, isWorldSpace, color);
+		drawLine(Line(Vector3(leftTopFront.x, leftTopFront.y, leftTopFront.z), Vector3(leftTopFront.x, leftTopFront.y - size.y, leftTopFront.z)), thickness, isWorldSpace, color);
+		drawLine(Line(Vector3(leftTopFront.x, leftTopFront.y - size.y, leftTopFront.z), Vector3(leftTopFront.x + size.x, leftTopFront.y - size.y, leftTopFront.z)), thickness, isWorldSpace, color);
+		drawLine(Line(Vector3(leftTopFront.x + size.x, leftTopFront.y - size.y, leftTopFront.z), Vector3(leftTopFront.x + size.x, leftTopFront.y, leftTopFront.z)), thickness, isWorldSpace, color);
+		drawLine(Line(Vector3(leftTopFront.x + size.x, leftTopFront.y, leftTopFront.z), Vector3(leftTopFront.x, leftTopFront.y, leftTopFront.z)), thickness, isWorldSpace, color);
 	}
 
 	CPP void drawCube(const Cube& cube, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1))
 	{
-		Vector3 leftTopFront = cube.getLeftTop();
+		Vector3 leftTopFront = cube.getLeftTopFront();
 		Vector3 size = cube.getSize();
 		Vector3 leftTopBack = leftTopFront - Vector3(0,0,size.z);
 		drawRectangle(Rectangle(leftTopFront, size), thickness, isWorldSpace, color);
