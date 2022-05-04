@@ -165,37 +165,35 @@ private:
 	{
 		Vector3 originalPosition = getGameObject()->getTransform().get().getWorldPosition();
 
-		Matrix4 cameraTranslationMatrix;
-		cameraTranslationMatrix.translation(-originalPosition);
-
-		Matrix4 rotationMatrix = getGameObject()->getTransform().get().getRotationMatrix();
+		Matrix4 viewTranslationMatrix;
+		viewTranslationMatrix.translation(-originalPosition);
 
 		Vector3 worldUp(0,1,0);
-		worldUp = rotationMatrix.mulVector(worldUp);
 
 		Vector3 forward(0,0,1);
-		forward = rotationMatrix.mulVector(forward);
-		forward.nor();
 		forward = forward * -1;
 
 		Vector3 right = Vector3(forward).cross(worldUp).nor();
 
 		Vector3 up = Vector3(right).cross(forward).nor();
 
-		Matrix4 cameraRotationMatrix;
-		cameraRotationMatrix.identity();
+		Matrix4 viewRotationMatrix;
+		viewRotationMatrix.identity();
 
-		cameraRotationMatrix.init(
+		viewRotationMatrix.init(
 			Vector4(right.x, right.y, right.z, 0),
 			Vector4(up.x, up.y, up.z, 0),
 			Vector4(forward.x, forward.y, forward.z, 0),
 			Vector4(0, 0, 0, 1)
 		);
+		
+		viewRotationMatrix.transpose();
 
-		cameraRotationMatrix.transpose();
+		Matrix4 rotationMatrix = getGameObject()->getTransform().get().getRotationMatrix();
 
-		mViewMatrix.init(cameraRotationMatrix);
-		mViewMatrix.mul(cameraTranslationMatrix);
+		mViewMatrix.init(viewRotationMatrix);
+		mViewMatrix.mul(rotationMatrix);
+		mViewMatrix.mul(viewTranslationMatrix);
 	}
 
 	CPP void calculateProjectionViewMatrix()

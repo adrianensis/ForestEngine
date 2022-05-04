@@ -135,11 +135,17 @@ public:
 		smModifier = -1;
 		smButtonJustPressed = false;
 	}
+
 	CPP void clearKey()
 	{
 		smLastKeyPressed = -1;
 		smModifier = -1;
 		smKeyJustPressed = false;
+	}
+
+	CPP void setCursorVisibility(bool visible)
+	{
+		glfwSetInputMode(RenderContext::smWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 	}
 
 private:

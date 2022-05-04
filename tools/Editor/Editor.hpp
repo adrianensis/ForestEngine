@@ -36,6 +36,8 @@ public:
 
 	CPP void firstUpdate()
 	{
+		Input::getInstance().setCursorVisibility(false);
+
 		i32 size = 4;
 		for(i32 x = 0; x < size; ++x)
 		{
@@ -157,6 +159,7 @@ public:
 
 	CPP void update()
 	{
+		Vector2 currentMousePosition = Input::getInstance().getMousePosition();
 		// Vector3 localPosition = position;
 
 		// Matrix4 rotationMatrix;
@@ -206,46 +209,44 @@ public:
 		//sprite->getTransform().get().setLocalPosition(position);
 
 		Transform* cameraTransform = &cameraGameObject->getTransform().get();
+		Matrix4 cameraRotationMatrix = cameraGameObject->getTransform().get().getRotationMatrix();
+		cameraRotationMatrix.invert();
 
 		f32 speed = 200 * Time::getInstance().getDeltaTimeSeconds();
 
 		if(Input::getInstance().isKeyPressed(GLFW_KEY_LEFT))
 		{
-			cameraTransform->translate(Vector3(-speed,0,0));
+			cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
 		}
 		else if (Input::getInstance().isKeyPressed(GLFW_KEY_RIGHT))
 		{
-			cameraTransform->translate(Vector3(speed,0,0));
+			cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(speed,0,0)));
 		}
 		else if (Input::getInstance().isKeyPressed(GLFW_KEY_UP))
 		{
-			cameraTransform->translate(Vector3(0,0,speed));
+			cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,-speed)));
 		}
 		else if (Input::getInstance().isKeyPressed(GLFW_KEY_DOWN))
 		{
-			cameraTransform->translate(Vector3(0,0,-speed));
+			cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
 		}
 
-		if(Input::getInstance().isKeyPressed(GLFW_KEY_W))
+		if(!mousePosition.eq(currentMousePosition))
 		{
-			cameraTransform->rotate(Vector3(-speed,0,0));
+			Vector2 mouseVector = (mousePosition-currentMousePosition).nor() * speed;
+			Vector3 direction;
+
+			f32 yaw = -mouseVector.x;
+			f32 pitch = mouseVector.y;
+
+			cameraTransform->rotate(-Vector3(pitch, yaw, 0));
 		}
-		else if (Input::getInstance().isKeyPressed(GLFW_KEY_S))
-		{
-			cameraTransform->rotate(Vector3(speed,0,0));
-		}
-		else if (Input::getInstance().isKeyPressed(GLFW_KEY_A))
-		{
-			cameraTransform->rotate(Vector3(0,speed,0));
-		}
-		else if (Input::getInstance().isKeyPressed(GLFW_KEY_D))
-		{
-			cameraTransform->rotate(Vector3(0,-speed,0));
-		}
+
+		mousePosition = currentMousePosition;
 
 
 		// x
-		RenderEngine::getInstance().drawLine(Line(Vector3(-1000,-10,0), Vector3(1000,-10,0)), 2, true, Vector4(1,0,0,1));
+		RenderEngine::getInstance().drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
 
 		// +x
 		RenderEngine::getInstance().drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
@@ -256,7 +257,7 @@ public:
 		RenderEngine::getInstance().drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
 
 		// z
-		RenderEngine::getInstance().drawLine(Line(Vector3(0,-10,-1000), Vector3(0,-10,1000)), 2, true, Vector4(0,0,1,1));
+		RenderEngine::getInstance().drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
 
 		// +z
 		RenderEngine::getInstance().drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
@@ -266,7 +267,7 @@ public:
 		// floor
 		for(i32 x = -1000; x < 1000; x+=50)
 		{
-			RenderEngine::getInstance().drawLine(Line(Vector3(x,-10,-1000), Vector3(x,-10,1000)), 1, true, Vector4(0,0,1,1));
+			RenderEngine::getInstance().drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
 		}
 
 		// for(i32 z = -1000; z < 1000; z+=50)
@@ -313,4 +314,6 @@ private:
 	GameObject* cameraGameObject = nullptr;
 
 	OcTree octree;
+
+	Vector2 mousePosition;
 };

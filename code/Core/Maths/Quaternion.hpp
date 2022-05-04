@@ -246,37 +246,27 @@ public:
 		fromEuler(v.x, v.y, v.z);
 	}
 
-	/*Vector3 toEuler() const {
+	Vector3 toEuler() const
+	{
 		// https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 
-		f32 xx = v.x * v.x;
-		f32 yy = v.y * v.y;
-		f32 zz = v.z * v.z;
-		f32 zx = v.z * v.x;
-		f32 yz = v.y * v.z;
-		f32 xy = v.x * v.y;
-		f32 wx = w * v.x;
-		f32 wy = w * v.y;
-		f32 wz = w * v.z;
+		Vector3 eulerVec;
 
-		// roll (x-axis rotation)
-		f32 t0 = +2.0 * (wx + yz);
-		f32 t1 = +1.0 - 2.0 * (xx + yy);
-		f32 roll = atan2f(t0, t1);
-
-		// pitch (y-axis rotation)
-		f32 t2 = +2.0 * (wy * v.y - zx);
-		t2 = t2 > 1.0 ? 1.0 : t2;
-		t2 = t2 < -1.0 ? -1.0 : t2;
-		f32 pitch = asinf(t2);
-
-		// yaw (z-axis rotation)
-		f32 t3 = +2.0 * (wz * v.z + xy);
-		f32 t4 = +1.0 - 2.0 * (yy + zz);
-		f32 yaw = atan2f(t3, t4);
-
-		return Vector3(MathUtils::deg(roll), MathUtils::deg(pitch), MathUtils::deg(yaw));
-	}*/
+		f32 t0 = 2 * (w * v.x + v.y * v.z);
+        f32 t1 = 1 - 2 * (v.x * v.x + v.y * v.y);
+        eulerVec.x = std::atan2(t0, t1);
+ 
+        f32 t2 = 2 * (w * v.y - v.z * v.x);
+		t2 = t2 > 1 ?  1 : t2;
+		t2 = t2 < -1 ? -1 : t2;
+        eulerVec.y = std::asin(t2);
+         
+        f32 t3 = 2 * (w * v.z + v.x * v.y);
+        f32 t4 = 1 - 2 * (v.y * v.y + v.z * v.z);
+        eulerVec.z = std::atan2(t3, t4);
+ 
+        return eulerVec;
+	}
 
 	/*void fromMatrix(const Matrix4& m){
 		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
@@ -341,15 +331,15 @@ public:
 		outMatrix->identity();
 
 		outMatrix->set(0, 0, 1 - (yy2 + zz2));
-		outMatrix->set(0, 1, xy2 - wz2);
-		outMatrix->set(0, 2, xz2 + wy2);
+		outMatrix->set(0, 1, xy2 + wz2);
+		outMatrix->set(0, 2, xz2 - wy2);
 
-		outMatrix->set(1, 0, xy2 + wz2);
+		outMatrix->set(1, 0, xy2 - wz2);
 		outMatrix->set(1, 1, 1 - (xx2 + zz2));
-		outMatrix->set(1, 2, yz2 - wx2);
+		outMatrix->set(1, 2, yz2 + wx2);
 
-		outMatrix->set(2, 0, xz2 - wy2);
-		outMatrix->set(2, 1, yz2 + wx2);
+		outMatrix->set(2, 0, xz2 + wy2);
+		outMatrix->set(2, 1, yz2 - wx2);
 		outMatrix->set(2, 2, 1 - (xx2 + yy2));
 	}
 
