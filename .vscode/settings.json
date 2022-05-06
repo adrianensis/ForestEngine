@@ -74,6 +74,7 @@
         "cfenv": "cpp",
         "*.generated": "cpp",
         "numbers": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "pngpriv.h": "c"
     }
 }

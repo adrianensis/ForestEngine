@@ -85,17 +85,25 @@ message("Selected Build target: ${CMAKE_BUILD_TYPE}")
 # third party libraries
 set(DEPENDENCIES_DIR "dependencies")
 
+# ZLib
+include_directories("${DEPENDENCIES_DIR}/zlib-1.2.11")
+add_subdirectory("${DEPENDENCIES_DIR}/zlib-1.2.11")
+
+# # ZLib (libpng dependency)
+# if(WIN32)
+#   # Requires Zlib -> http://gnuwin32.sourceforge.net/packages/zlib.htm
+#   set(ZLIB_ROOT "C:/Program Files (x86)/GnuWin32")
+  
+#   find_package(ZLIB REQUIRED)
+  
+#   if(ZLIB_FOUND)
+#     message(FATAL_ERROR "ZLIB not found!!")
+#   endif(ZLIB_FOUND)
+# endif(WIN32)
+
 # OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
-
-# ZLib (libpng dependency)
-if(WIN32)
-  # Requires Zlib -> http://gnuwin32.sourceforge.net/packages/zlib.htm
-  set(ZLIB_ROOT "C:/Program Files (x86)/GnuWin32")
-endif(WIN32)
-
-find_package(ZLIB REQUIRED)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
@@ -114,8 +122,9 @@ include_directories("${DEPENDENCIES_DIR}/json-3.9.1/single_include/nlohmann")
 add_subdirectory("${DEPENDENCIES_DIR}/json-3.9.1")
 
 # libpng
-set(PNG_SHARED ON CACHE BOOL "" FORCE)
-set(PNG_STATIC OFF CACHE BOOL "" FORCE)
+set(PNG_BUILD_ZLIB TRUE CACHE BOOL "" FORCE)
+set(PNG_SHARED OFF CACHE BOOL "" FORCE)
+set(PNG_STATIC ON CACHE BOOL "" FORCE)
 set(PNG_EXECUTABLES OFF CACHE BOOL "" FORCE) # we only want lib
 set(PNG_TESTS OFF CACHE BOOL "" FORCE) # we only want lib
 set(SKIP_INSTALL_ALL OFF CACHE BOOL "" FORCE) # we only want lib
@@ -123,6 +132,30 @@ set(SKIP_INSTALL_ALL OFF CACHE BOOL "" FORCE) # we only want lib
 include_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/include")
 link_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/lib")
 add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
+
+# Duktape
+set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
+include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
+
+# Assimp
+set(ASSIMP_LIBRARY "assimp")
+
+SET(BUILD_SHARED_LIBS OFF)
+SET(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+
+set(ASSIMP_NO_EXPORT TRUE CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+
+# Assmip importers
+set(ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/cmake-modules")
+add_subdirectory("${DEPENDENCIES_DIR}/assimp-5.2.3")
+
+set_target_properties(${ASSIMP_LIBRARY} PROPERTIES IMPORTED_LOCATION "${ASSIMP_LIBRARY_DIRS}/libassimp.so")
 
 # Pyhon
 # find_package (Python3 COMPONENTS Interpreter Development)
@@ -134,10 +167,6 @@ add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
 # FreeType
 #find_package(Freetype REQUIRED)
 #include_directories(${FREETYPE_INCLUDE_DIRS})
-
-# Duktape
-set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
-include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
 
 # ----------------------------------------------------------------------------
 # ENGINE PACKAGES
@@ -209,6 +238,8 @@ target_link_libraries(${FOREST} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${FOREST} glfw)
 target_link_libraries(${FOREST} nlohmann_json)
 target_link_libraries(${FOREST} libpng.so)
+target_link_libraries(${FOREST} ${ASSIMP_LIBRARIES}) # try this instead ${ASSIMP_LIBRARIES}
+target_link_libraries(${FOREST} ${ZLIB_LIBRARY} )
 #target_link_libraries(${FOREST} ${FREETYPE_LIBRARIES})
 #target_include_directories(${FOREST} PRIVATE ${FREETYPE_INCLUDE_DIRS})
 #target_link_libraries( ${FOREST} ${Python3_LIBRARIES})
