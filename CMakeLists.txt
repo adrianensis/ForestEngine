@@ -152,10 +152,23 @@ set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
 
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/build/assimp-5.2.3/include")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/include")
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/cmake-modules")
 add_subdirectory("${DEPENDENCIES_DIR}/assimp-5.2.3")
 
 set_target_properties(${ASSIMP_LIBRARY} PROPERTIES IMPORTED_LOCATION "${ASSIMP_LIBRARY_DIRS}/libassimp.so")
+
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/build/${DEPENDENCIES_DIR}/assimp-5.2.3/revision.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/revision.h
+)
+
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/build/${DEPENDENCIES_DIR}/assimp-5.2.3/include/assimp/config.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/include/assimp/config.h
+)
 
 # Pyhon
 # find_package (Python3 COMPONENTS Interpreter Development)
@@ -238,7 +251,7 @@ target_link_libraries(${FOREST} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${FOREST} glfw)
 target_link_libraries(${FOREST} nlohmann_json)
 target_link_libraries(${FOREST} libpng.so)
-target_link_libraries(${FOREST} ${ASSIMP_LIBRARIES}) # try this instead ${ASSIMP_LIBRARIES}
+target_link_libraries(${FOREST} ${ASSIMP_LIBRARY})
 target_link_libraries(${FOREST} ${ZLIB_LIBRARY} )
 #target_link_libraries(${FOREST} ${FREETYPE_LIBRARIES})
 #target_include_directories(${FOREST} PRIVATE ${FREETYPE_INCLUDE_DIRS})
