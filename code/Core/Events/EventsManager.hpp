@@ -1,14 +1,11 @@
-#pragma once
+#ifndef EVENTSMANAGER_HPP
+#define EVENTSMANAGER_HPP
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
 #include "Core/Events/Event.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Singleton.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/Events/EventsManager.hpp"
-#endif
 
 /*
   Macros for (un)susbscribing and sending events.
@@ -23,14 +20,9 @@ class EventsManager: public ObjectBase, public Singleton<EventsManager>
 	GENERATE_METADATA(EventsManager)
 
 public:
-	CPP void init()
-	{
-	}
+    void init();
 
-	CPP void terminate()
-	{
-		removeMapContent();
-	}
+    void terminate();
 
 	template <class E>
 	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
@@ -58,27 +50,7 @@ public:
 		}
 	}
 
-	CPP void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
-	{
-		if (ownerExists(eventOwner))
-		{
-			ClassId eventClassId = event->getClassId();
-			if (ownerHasEventType(eventOwner, eventClassId))
-			{
-				// Duplicate functors map. New event-receivers can subscribe during the iteration.
-				// So we don't want to iterate a mutable map.
-				ReceiversFunctorMap receiversFunctorMapCopy = getReceiversFunctorMap(eventOwner, eventClassId);
-
-				FOR_MAP(it, receiversFunctorMapCopy)
-				{
-					EventFunctor<Event> functor = it->second;
-					functor.mEvent = event;
-					functor.mEvent->mInstigator = eventInstigator;
-					functor.execute();
-				}
-			}
-		}
-	}
+    void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);
 
 private:
 	using ReceiversFunctorMap = std::map<ObjectBase *, EventFunctor<Event>>;
@@ -87,72 +59,15 @@ private:
 
 	OwnersMap mOwnersMap;
 
-	CPP void removeMapContent()
-	{
-		mOwnersMap.clear();
-	}
-
-	CPP bool ownerExists(ObjectBase *eventOwner) const
-	{
-		return MAP_CONTAINS(mOwnersMap, eventOwner);
-	}
-
-	CPP bool ownerHasEventType(ObjectBase *eventOwner, ClassId eventClassId) const
-	{
-		return MAP_CONTAINS(mOwnersMap.at(eventOwner), eventClassId);
-	}
-
-	CPP bool eventTypeHasReceiver(ObjectBase *eventOwner, ClassId eventClassId, ObjectBase *eventReceiver) const
-	{
-		return MAP_CONTAINS(mOwnersMap.at(eventOwner).at(eventClassId), eventReceiver);
-	}
-
-	CPP void insertEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback)
-	{
-		EventFunctor<Event> eventFunctor;
-		eventFunctor.setCallback(eventCallback);
-		eventFunctor.mEventClassId = eventClassId;
-		eventFunctor.mEventReceiver = eventReceiver;
-
-		MAP_INSERT(mOwnersMap.at(eventOwner).at(eventClassId), eventReceiver, eventFunctor);
-	}
-
-	CPP void removeEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver)
-	{
-		mOwnersMap.at(eventOwner).at(eventClassId).erase(eventReceiver);
-	}
-
-	CPP EventsManager::ReceiversFunctorMap& getReceiversFunctorMap(ObjectBase *eventOwner, ClassId eventClassId)
-	{
-		return mOwnersMap.at(eventOwner).at(eventClassId);
-	}
-
-	CPP void subscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback)
-	{
-		if (!ownerExists(eventOwner))
-		{
-			MAP_INSERT(mOwnersMap, eventOwner, EventReceiversMap())
-		}
-
-		if (!ownerHasEventType(eventOwner, eventClassId))
-		{
-			MAP_INSERT(mOwnersMap.at(eventOwner), eventClassId, ReceiversFunctorMap())
-		}
-
-		insertEventCallback(eventClassId, eventOwner, eventReceiver, eventCallback);
-	}
-
-	CPP void unsubscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver)
-	{
-		if (ownerExists(eventOwner))
-		{
-			if (ownerHasEventType(eventOwner, eventClassId))
-			{
-				if (eventTypeHasReceiver(eventOwner, eventClassId, eventReceiver))
-				{
-					removeEventCallback(eventClassId, eventOwner, eventReceiver);
-				}
-			}
-		}
-	}
+    void removeMapContent();
+    bool ownerExists(ObjectBase *eventOwner) const;
+    bool ownerHasEventType(ObjectBase *eventOwner, ClassId eventClassId) const;
+    bool eventTypeHasReceiver(ObjectBase *eventOwner, ClassId eventClassId, ObjectBase *eventReceiver) const;
+    void insertEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback);
+    void removeEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver);
+    EventsManager::ReceiversFunctorMap& getReceiversFunctorMap(ObjectBase *eventOwner, ClassId eventClassId);
+    void subscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback);
+    void unsubscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver);
 };
+
+#endif

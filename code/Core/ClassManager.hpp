@@ -1,15 +1,11 @@
-#pragma once
+#ifndef CLASSMANAGER_HPP
+#define CLASSMANAGER_HPP
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
 #include "Core/Singleton.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory.hpp"
-
-#ifdef CPP_INCLUDE
-#include "ClassManager.hpp"
-#include "Core/Log/Log.hpp"
-#endif
 
 #define REGISTER_CLASS_BY_NAME(...) \
     ClassRegister __classRegister ## _ ## __VA_ARGS__ = ClassRegister(#__VA_ARGS__, []() { \
@@ -30,10 +26,7 @@ using ClassRegisterCallback = std::function<ObjectBase*()>;
 class ClassRegister
 {
 public:
-    CPP ClassRegister(const std::string& className, ClassRegisterCallback callback)
-    {
-        MAP_INSERT(ClassManager::smRegisters, className, callback);
-    }
+    ClassRegister(const std::string& className, ClassRegisterCallback callback);
 
 private:        
     std::string mClassName;
@@ -45,20 +38,9 @@ class ClassManager: public Singleton<ClassManager>
     friend ClassRegister;
 
 public:
-    CPP void init()
-    {
-        TRACE()
-        
-        FOR_MAP(it, smRegisters)
-        {
-            registerClassByName(it->first, it->second);
-        }
-    }
+    void init();
 
-    CPP void registerClassByName(const std::string& className, ClassRegisterCallback callback)
-    {
-        MAP_INSERT(mInstanceByNameMap, className, callback);
-    }
+    void registerClassByName(const std::string& className, ClassRegisterCallback callback);
 
     template<class T, typename = std::enable_if_t<std::is_base_of<ObjectBase, T>::value> >
     T* instanceByName(const std::string& className)
@@ -80,3 +62,5 @@ private:
     inline static std::map<std::string, ClassRegisterCallback> smRegisters;
     std::map<std::string, ClassRegisterCallback> mInstanceByNameMap;
 };
+
+#endif

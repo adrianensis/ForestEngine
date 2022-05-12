@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MODULEGRAPHICS_HPP
+#define MODULEGRAPHICS_HPP
 
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"
@@ -14,3 +15,5 @@
 #include "Graphics/Material/Shader.hpp"
 
 #include "Graphics/Animation/Animation.hpp"
+
+#endif

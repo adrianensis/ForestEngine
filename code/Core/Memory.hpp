@@ -1,32 +1,19 @@
-#pragma once
+#ifndef MEMORY_HPP
+#define MEMORY_HPP
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Metadata.hpp"
 #include "Core/Assert/Assert.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/Memory.hpp"
-#include "Core/Log/Log.hpp"
-#endif
 
 class Memory
 {
 public:
 	inline static std::map<std::string, i32> mAllocationsCounter;
 
-	CPP static void init()
-	{
-	}
+    static void init();
 
-	CPP static void terminate()
-	{
-		ECHO("-------- MEM SUMMARY --------")
-		FOR_MAP(it, Memory::mAllocationsCounter)
-		{
-			std::cout << it->first << ": " << it->second << std::endl;
-		}
-		ECHO("-----------------------------")
-	}
+    static void terminate();
+	
 	template <class T>
 	static T *newObject()
 	{
@@ -78,3 +65,5 @@ public:
 		delete pointer;
 	}
 };
+
+#endif

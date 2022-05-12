@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FUNCTOR_HPP
+#define FUNCTOR_HPP
 
 #include "Core/ObjectBase.hpp"
 
@@ -17,7 +18,7 @@ public:
 	}
 
 	/*bool operator== (const Functor& functor) const{
-	   return this == &functor;
+	 return this == &functor;
 	}*/
 
 protected:
@@ -40,3 +41,5 @@ public:
 		}
 	}
 };
+
+#endif

@@ -1,11 +1,14 @@
-#pragma once
+#ifndef TEST_HPP
+#define TEST_HPP
 
 #include <iomanip>
 #include <sstream>
 #include <chrono>
 #include <cmath>
 #include <math.h> /* isnan */
+
 #include "Core/Module.hpp"
+
 #define test(theClass)                                                             \
     float __test__totaltime = 0;                                                   \
     std::chrono::duration<double, std::milli> elapsed;                             \
@@ -85,3 +88,6 @@
     __test__output << std::endl                                                                                                                                              \
                    << std::setprecision(4) << (isnan(__test__totaltime) ? 0 : __test__totaltime) << "ms " << __test__ok << " " << (__test__total - __test__ok) << std::endl; \
     std::cout << __test__output.str();
+
+
+#endif

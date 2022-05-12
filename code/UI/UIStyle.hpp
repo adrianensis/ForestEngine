@@ -1,10 +1,8 @@
-#pragma once
+#ifndef UISTYLE_HPP
+#define UISTYLE_HPP
 
 #include "Core/Module.hpp"
 
-#ifdef CPP_INCLUDE
-#include "UI/UIStyle.hpp"
-#endif
 
 class UIStyle: public ObjectBase
 {
@@ -49,15 +47,9 @@ class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 	GENERATE_METADATA(UIStyleManager)
 	
 public:
-	CPP ~UIStyleManager() override
-	{
-		MAP_DELETE_CONTENT(mStyles)
-	}
+    ~UIStyleManager() override;
 
-	CPP void init()
-	{
-		
-	}
+    void init();
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
 	void addStyle()
@@ -91,3 +83,5 @@ private:
 public:
 	CRGET(DefaultStyle)
 };
+
+#endif

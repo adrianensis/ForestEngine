@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OBJECTBASE_HPP
+#define OBJECTBASE_HPP
 
 #include "Core/Metadata.hpp"
 #include "Core/Macros.hpp"
@@ -47,3 +48,5 @@ private:
 protected:
 	inline static ObjectId smObjectIdCounter = 0;
 };
+
+#endif

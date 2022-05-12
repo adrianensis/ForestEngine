@@ -1,13 +1,11 @@
-#pragma once
+#ifndef TIMEUTILS_HPP
+#define TIMEUTILS_HPP
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
 #include "Core/Singleton.hpp"
 #include <chrono>
 
-#ifdef CPP_INCLUDE
-#include "Core/Time/TimeUtils.hpp"
-#endif
 
 class TimeMark: public ObjectBase
 {
@@ -23,50 +21,13 @@ public:
 		DO_COPY(mLastTime)
 	}
 
-	CPP void init()
-	{
-		mIsStarted = false;
-		mDeltaTimeMillis = 0.0;
-		mLastTime = std::chrono::high_resolution_clock::now();
-	}
-
-	CPP void start()
-	{
-		mIsStarted = true;
-		mStartTime = std::chrono::high_resolution_clock::now();
-	}
-
-	CPP void end()
-	{
-		if (mIsStarted)
-		{
-			mIsStarted = false;
-			mLastTime = std::chrono::high_resolution_clock::now();
-			mDeltaTimeChronoDuration = std::chrono::duration_cast<std::chrono::milliseconds>(mLastTime - mStartTime);
-			mDeltaTimeMillis = mDeltaTimeChronoDuration.count();
-		}
-	}
-
-	CPP f32 getElapsedTimeMillis()
-	{
-		auto now = std::chrono::high_resolution_clock::now();
-		return mIsStarted ? std::chrono::duration_cast<std::chrono::milliseconds>(now - mStartTime).count() : 0.0f;
-	}
-
-	CPP f32 getElapsedTimeSeconds()
-	{
-		return getElapsedTimeMillis() / 1000.0f;
-	}
-
-	CPP f32 getDeltaTimeMillis()
-	{
-		return mDeltaTimeMillis;
-	}
-
-	CPP f32 getDeltaTimeSeconds()
-	{
-		return getDeltaTimeMillis() / 1000.0f;
-	}
+    void init();
+    void start();
+    void end();
+    f32 getElapsedTimeMillis();
+    f32 getElapsedTimeSeconds();
+    f32 getDeltaTimeMillis();
+    f32 getDeltaTimeSeconds();
 
 private:
 	f32 mDeltaTimeMillis = 0.0f;
@@ -95,3 +56,6 @@ public:
 private:
 	TimeMark mInternalTimeMark;
 };
+
+
+#endif

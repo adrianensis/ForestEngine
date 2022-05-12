@@ -1,17 +1,11 @@
-#pragma once
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
 
 #include "Scene/Component.hpp"
 
 #include "Scene/Transform.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 
-#ifdef CPP_INCLUDE
-//#include "Graphics/Camera/Camera.hpp"
-
-#include "Scene/Module.hpp"
-#include "Graphics/Camera/Frustum.hpp"
-#include "Graphics/RenderEngine.hpp"
-#endif
 
 class Camera: public Component
 {
@@ -19,203 +13,25 @@ class Camera: public Component
 
 public:
 
-	CPP void init()
-	{
-		TRACE()
-
-		mIsOrtho = true;
-		mZoom = 1;
-		
-		mViewMatrix.identity();
-		mInversePVMatrix.identity();
-		mFrustum.init(this);
-	}
-
-	CPP void onComponentAdded()
-	{
-		recalculateProjectionMatrix();
-
-		mTransformState = TransformState(getGameObject()->getTransform().get());
-	}
-
-	CPP void update()
-	{
-		PROFILER_TIMEMARK_START()
-
-		TransformState currentTransformState(getGameObject()->getTransform().get());
-		if(!currentTransformState.eq(mTransformState))
-		{
-			mFrustum.build();
-
-			mInversePVMatrixNeedsUpdate = true;
-
-			calculateProjectionViewMatrix();
-
-			mTransformState = currentTransformState;
-		}
-
-		PROFILER_TIMEMARK_END()
-	}
-
-	CPP void recalculateProjectionMatrix()
-	{
-		if (mIsOrtho)
-		{
-			setOrtho(mLeft, mRight, mBottom, mTop, mNear, mFar);
-		}
-		else
-		{
-			setPerspective(mNear, mFar, mAspect, mFov);
-		}
-
-		calculateInverseMatrix(true);
-		mFrustum.build();
-	}
-
-	CPP void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far)
-	{
-		mIsOrtho = true;
-		
-		mLeft = left;
-		mRight = right;
-		mBottom = bottom;
-		mTop = top;
-		mNear = near;
-		mFar = far;
-
-		mProjectionMatrix.ortho(mLeft * RenderContext::getAspectRatio() * mZoom, mRight * RenderContext::getAspectRatio() * mZoom, mBottom* mZoom,
-								mTop* mZoom, mNear, mFar);
-	}
-
-	CPP void setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
-	{
-		mIsOrtho = false;
-
-		mNear = near;
-		mFar = far;
-		mAspect = aspect;
-		mFov = fov;
-		
-		mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov * mZoom);
-	}
-
-	CPP void onResize()
-	{
-		recalculateProjectionMatrix();
-	}
-
-	CPP const Matrix4& getViewMatrix() const
-	{
-
-
-		return mViewMatrix;
-	}
-
-	CPP const Matrix4& getProjectionViewMatrix() const
-	{
-
-
-		return mProjectionViewMatrix;
-	}
-
-	CPP Vector3 screenToWorld(const Vector2& screenPosition)
-	{	
-		calculateInverseMatrix();
-		Vector4 v = mInversePVMatrix.mulVector(Vector4(screenPosition.x, screenPosition.y, 0, 1.0));
-
-		v.x = v.x / v.w;
-		v.y = v.y / v.w;
-		v.z = v.z / v.w;
-
-		return v;
-	}
-
-	CPP void setZoom(f32 zoom)
-	{
-		mZoom = zoom;
-		recalculateProjectionMatrix();
-	}
-
-	CPP void zoomIn(f32 zoomDelta)
-	{
-		f32 newZoom = mZoom - zoomDelta;
-
-		if(newZoom < 0)
-		{
-			newZoom = 0;
-		}
-
-		setZoom(newZoom);
-	}
-
-	CPP void zoomOut(f32 zoomDelta)
-	{
-		f32 newZoom = mZoom + zoomDelta;
-		setZoom(newZoom);
-	}
-
-	CPP void resetZoom()
-	{
-		mZoom = 1;
-		setZoom(mZoom);
-	}
+    void init();
+    void onComponentAdded();
+    void update();
+    void recalculateProjectionMatrix();
+    void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
+    void setPerspective(f32 near, f32 far, f32 aspect, f32 fov);
+    void onResize();
+    const Matrix4& getViewMatrix() const;
+    const Matrix4& getProjectionViewMatrix() const;
+    Vector3 screenToWorld(const Vector2& screenPosition);
+    void setZoom(f32 zoom);
+    void zoomIn(f32 zoomDelta);
+    void zoomOut(f32 zoomDelta);
+    void resetZoom();
 
 private:
-	CPP void calculateViewMatrix()
-	{
-		Vector3 originalPosition = getGameObject()->getTransform().get().getWorldPosition();
-
-		Matrix4 viewTranslationMatrix;
-		viewTranslationMatrix.translation(-originalPosition);
-
-		Vector3 worldUp(0,1,0);
-
-		Vector3 forward(0,0,1);
-		forward = forward * -1;
-
-		Vector3 right = Vector3(forward).cross(worldUp).nor();
-
-		Vector3 up = Vector3(right).cross(forward).nor();
-
-		Matrix4 viewRotationMatrix;
-		viewRotationMatrix.identity();
-
-		viewRotationMatrix.init(
-			Vector4(right.x, right.y, right.z, 0),
-			Vector4(up.x, up.y, up.z, 0),
-			Vector4(forward.x, forward.y, forward.z, 0),
-			Vector4(0, 0, 0, 1)
-		);
-		
-		viewRotationMatrix.transpose();
-
-		Matrix4 rotationMatrix = getGameObject()->getTransform().get().getRotationMatrix();
-
-		mViewMatrix.init(viewRotationMatrix);
-		mViewMatrix.mul(rotationMatrix);
-		mViewMatrix.mul(viewTranslationMatrix);
-	}
-
-	CPP void calculateProjectionViewMatrix()
-	{
-		calculateViewMatrix();
-		mProjectionViewMatrix.init(getProjectionMatrix());
-		mProjectionViewMatrix.mul(getViewMatrix());
-	}
-
-	CPP void calculateInverseMatrix(bool force = false)
-	{
-		if(mInversePVMatrixNeedsUpdate || force)
-		{
-			calculateProjectionViewMatrix();
-
-			Matrix4 inverseProjectionMatrix;
-			mInversePVMatrix.init(getProjectionViewMatrix());		
-			mInversePVMatrix.invert();
-
-			mInversePVMatrixNeedsUpdate = false;
-		}
-	}
+    void calculateViewMatrix();
+    void calculateProjectionViewMatrix();
+    void calculateInverseMatrix(bool force = false);
 
 private:
 	Matrix4 mProjectionMatrix;
@@ -249,3 +65,6 @@ public:
 	CRGET(Frustum)
 	GET(Zoom)
 };
+
+
+#endif

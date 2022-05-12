@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BASICTYPES_HPP
+#define BASICTYPES_HPP
 
 #include <cstdint> // std::uintptr_t
 #include <cstring>
@@ -41,3 +42,5 @@ using u64 = std::uint64_t;
 
 using ClassId = u64;
 using ObjectId = u64;
+
+#endif

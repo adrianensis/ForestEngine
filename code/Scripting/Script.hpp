@@ -1,11 +1,8 @@
-#pragma once
+#ifndef SCRIPT_HPP
+#define SCRIPT_HPP
 
 #include "Scene/Component.hpp"
 
-#ifdef CPP_INCLUDE
-#include "Scripting/Script.hpp"
-#include "Scene/Module.hpp"
-#endif
 
 class GameObject;
 
@@ -14,34 +11,13 @@ class Script: public Component
     GENERATE_METADATA(Script)
 
 public:
-	CPP virtual void init()
-	{
-		mFirstUpdateDone = false;
-	}
-
-	CPP virtual void firstUpdate()
-	{
-	}
-
-	CPP virtual void update()
-	{
-	}
-
-	CPP virtual void onEnterCollision(GameObject *otherGameObject)
-	{
-	}
-
-	CPP virtual void onCollision(GameObject *otherGameObject)
-	{
-	}
-
-	CPP virtual void onExitCollision(GameObject *otherGameObject)
-	{
-	}
-
-	CPP virtual void terminate()
-	{
-	}
+    virtual void init();
+    virtual void firstUpdate();
+    virtual void update();
+    virtual void onEnterCollision(GameObject *otherGameObject);
+    virtual void onCollision(GameObject *otherGameObject);
+    virtual void onExitCollision(GameObject *otherGameObject);
+    virtual void terminate();
 	
 	void firstUpdateDone()
 	{
@@ -54,3 +30,5 @@ private:
 public:
 	GET(FirstUpdateDone)
 };
+
+#endif

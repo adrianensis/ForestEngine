@@ -1,13 +1,9 @@
-#pragma once
+#ifndef GEOMETRY_HPP
+#define GEOMETRY_HPP
 
 #include "Core/ObjectBase.hpp"
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Log/Log.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/Maths/Geometry.hpp"
-#include "Core/Maths/MathUtils.hpp"
-#endif
 
 class Shape: public ObjectBase
 {
@@ -101,10 +97,7 @@ public:
         set(leftTopFront, size);
     }
 
-    CPP Rectangle(const Cube& cube)
-	{
-        set(cube.getLeftTopFront(), cube.getSize());
-	}
+    Rectangle(const Cube& cube);
 
     void set(const Vector3& leftTopFront, const Vector3& size)
     {
@@ -151,10 +144,7 @@ public:
         set(leftTopFront, size);
     }
 
-    CPP Cube(const Rectangle& rectangle)
-	{
-        set(rectangle.getLeftTopFront(), rectangle.getSize());
-	}
+    Cube(const Rectangle& rectangle);
 };
 
 class Sphere: public Shape
@@ -188,176 +178,17 @@ public:
 class Geometry
 {
 public:
-    // Geometry tests
 
-    CPP static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
-    {
-        return
-            (cube.getLeftTopFront().x - sphere.getRadius() - eps) <= sphere.getCenter().x &&
-            (cube.getLeftTopFront().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x &&
-            (cube.getLeftTopFront().y + sphere.getRadius() + eps) >= sphere.getCenter().y &&
-            (cube.getLeftTopFront().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y &&
-            (cube.getLeftTopFront().z + sphere.getRadius() + eps) >= sphere.getCenter().z &&
-            (cube.getLeftTopFront().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
-    }
-
-    CPP static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps)
-    {
-        return testCubeSphere(cube, Sphere(point, 0.0f), eps);
-    }
-
-    CPP static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps)
-    {
-        f32 distance = sphereA.getCenter().dst(sphereB.getCenter());
-        return (distance < (sphereA.getRadius() + sphereB.getRadius() + eps));
-    }
-
-    CPP static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps)
-    {
-        // Source : http://www-cs.ccny.cuny.edu/~wolberg/capstone/intersection/Intersection%20point%20of%20two%20lines.html
-        // Source: https://stackoverflow.com/questions/2316490/the-algorithm-to-find-the-point-of-intersection-of-two-3d-line-segment/10288710#10288710
-        // Source: https://www.codefull.net/2015/06/intersection-of-a-ray-and-a-line-segment-in-3d/
-
-        Vector3 da = lineA.getEnd() - lineA.getStart(); 
-        Vector3 db = lineB.getEnd() - lineB.getStart();
-        Vector3 dc = lineB.getStart() - lineA.getStart();
-
-        if (dc.dot(Vector3(da).cross(db)) != 0.0) // lines are not coplanar
-        {
-            return false;
-        }
-
-        f32 s = Vector3(dc).cross(db).dot(Vector3(da).cross(db)) / Vector3(da).cross(db).sqrlen();
-
-        if (s >= 0.0 && s <= 1.0)
-        {
-            intersectionResult = lineA.getStart() + (da * s);
-            return true;
-        }
-
-        return false;
-    }
-
-    CPP static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps)
-    {
-        bool lineIntersectsSphere = false;
-
-        Vector3 closestPoint(closestPointInLine(line, sphere.getCenter()));
-
-        if (testSpherePoint(line.getStart(), sphere, eps) || testSpherePoint(line.getEnd(), sphere, eps))
-        {
-            lineIntersectsSphere = true;
-        }
-        else
-        {
-            lineIntersectsSphere = testSpherePoint(closestPoint, sphere, eps);
-        }
-
-        return lineIntersectsSphere;
-    }
-
-    CPP static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
-    {
-        // http://paulbourke.net/geometry/circlesphere/source.cpp
-
-        // X(t) = x1 + (x2 - x1) * t
-        // Y(t) = y1 + (y2 - y1) * t
-        // (X - center.x)2 + (Y - center.y)2 = radius2
-
-        f32 radiusEps = sphere.getRadius() + eps;
-
-        bool lineIntersectsSphere = false;
-
-        f32 t;
-
-        Vector3 dVector = line.toVector();
-
-        Vector3 startToCenter = line.getStart() - sphere.getCenter();
-
-        f32 A = dVector.sqrlen();
-        f32 B = 2.0f * dVector.dot(startToCenter);
-        f32 C = startToCenter.sqrlen() - radiusEps * radiusEps;
-
-        f32 det = B * B - 4.0f * A * C;
-
-        if ( det == MathUtils::FLOAT_EPSILON )
-        {
-            // one intersection
-
-            f32 t = -B/(2*A);
-
-            intersectionResult1.x = line.getStart().x + t*(dVector.x);
-            intersectionResult1.y = line.getStart().y + t*(dVector.y);
-            intersectionResult1.z = line.getStart().z + t*(dVector.z);
-
-            return 1;
-        }
-
-        if ( det > MathUtils::FLOAT_EPSILON )
-        {
-            // two intersections
-
-            // first intersection
-            f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
-
-            intersectionResult1.x = line.getStart().x + t1*(dVector.x);
-            intersectionResult1.y = line.getStart().y + t1*(dVector.y);
-            intersectionResult1.z = line.getStart().z + t1*(dVector.z);
-            
-            // second intersection
-            f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
-
-            intersectionResult2.x = line.getStart().x + t2*(dVector.x);
-            intersectionResult2.y = line.getStart().y + t2*(dVector.y);
-            intersectionResult2.z = line.getStart().z + t2*(dVector.z);
-
-            return 2;
-        }
-
-        // no intersection
-        // det < 0.0
-        return 0;
-    }
-
-    CPP static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps)
-    {
-        return sphere.getCenter().dst(point) <= (sphere.getRadius() + eps);
-    }
-
-    CPP static bool testLinePoint(const Line& line, const Vector3& point, f32 eps)
-    {
-        // get distance from the point to the two ends of the line
-        f32 d1 = line.getStart().dst(point);
-        f32 d2 = line.getEnd().dst(point);
-
-        f32 lineLen = line.getStart().dst(line.getEnd());
-
-        bool pointIsInLine = false;
-
-        if (d1 + d2 >= lineLen - eps && d1 + d2 <= lineLen + eps)
-        {
-            pointIsInLine = true;
-        }
-
-        return pointIsInLine;
-    }
-
-    CPP static Vector3 closestPointInLine(const Line& line, const Vector3& point)
-    {
-        Vector3 pointStartVector = (point - line.getStart()) /*.nor()*/;
-        Vector3 lineVector = (line.getEnd() - line.getStart()) /*.nor()*/;
-
-        f32 t = pointStartVector.dot(lineVector) / lineVector.dot(lineVector);
-
-        t = std::fmaxf(t, 0.0f); // clamp to 0
-        t = std::fminf(t, 1.0f); // clampt to 1
-
-        return Vector3(line.getStart() + (lineVector.mul(t)));
-    }
-
-    CPP static Vector3 midPoint(const Line& line)
-    {
-        return Vector3((line.getStart().x + line.getEnd().x) / 2.0f, (line.getStart().y + line.getEnd().y) / 2.0f, (line.getStart().z + line.getEnd().z) / 2.0f);
-    }
-
+    static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps);
+    static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps);
+    static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps);
+    static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps);
+    static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps);
+    static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2);
+    static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps);
+    static bool testLinePoint(const Line& line, const Vector3& point, f32 eps);
+    static Vector3 closestPointInLine(const Line& line, const Vector3& point);
+    static Vector3 midPoint(const Line& line);
 };
+
+#endif

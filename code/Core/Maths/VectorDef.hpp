@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VECTORDEF_HPP
+#define VECTORDEF_HPP
 
 #include "Core/Macros.hpp"
 
@@ -46,4 +47,10 @@ public:\
     Vector##vectorLength operator*(f32 rhs) const {return Vector##vectorLength(*this) *= rhs; }\
     Vector##vectorLength operator/(f32 rhs) const {return Vector##vectorLength(*this) /= rhs; }\
     f32& operator[](const size_t index) { return get(index); }\
-    f32 operator[](const size_t index) const { return get(index); }
+    f32 operator[](const size_t index) const { return get(index); }\
+    ; 
+
+
+
+
+#endif

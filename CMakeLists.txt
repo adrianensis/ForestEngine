@@ -197,13 +197,13 @@ endforeach()
 # PACKAGES INCLUDE DIRECTORIES
 # ----------------------------------------------------------------------------
 
-#include_directories("code")
+include_directories("code")
 
 # needed for generated code
-#include_directories(".")
+include_directories(".")
 include_directories("generated-code")
-include_directories("generated-code/final")
-include_directories("generated-code/final/code")
+#include_directories("generated-code/final")
+#include_directories("generated-code/final/code")
 
 # file(GLOB INCLUDE_PATHS "code/*")
 #
@@ -220,19 +220,15 @@ include_directories("generated-code/final/code")
 # Alternative: CMakeLists.txt with this code into source directory.
 # add_subdirectory(source)
 foreach(PACKAGE ${PACKAGES})
-  file(GLOB_RECURSE PACKAGE_SOURCE "generated-code/final/code/${PACKAGE}/*")
+  #file(GLOB_RECURSE PACKAGE_SOURCE "generated-code/final/code/${PACKAGE}/*")
+  file(GLOB_RECURSE PACKAGE_SOURCE "code/${PACKAGE}/*")
   add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCE})
 endforeach()
-
-# file(GLOB_RECURSE PACKAGE_SOURCE "generated-code/final/code/Graphics/*")
-# add_library(Graphics_GEN OBJECT ${PACKAGE_SOURCE})
 
 # list of objects
 foreach(PACKAGE ${PACKAGES})
   list(APPEND OBJS $<TARGET_OBJECTS:${PACKAGE}>)
 endforeach()
-
-# list(APPEND OBJS $<TARGET_OBJECTS:Graphics_GEN>)
 
 # ----------------------------------------------------------------------------
 # FOREST ENGINE LIBRARY

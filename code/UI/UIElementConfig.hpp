@@ -1,13 +1,8 @@
-#pragma once
+#ifndef UIELEMENTCONFIG_HPP
+#define UIELEMENTCONFIG_HPP
 
 #include "Core/Module.hpp"
 
-#ifdef CPP_INCLUDE
-#include "UI/UIElementConfig.hpp"
-#include "UI/UIManager.hpp"
-#include "UI/UIStyle.hpp"
-#include "Graphics/Module.hpp"
-#endif
 
 class Material;
 class Scene;
@@ -25,23 +20,7 @@ class UIElementConfig: public ObjectBase
     GENERATE_METADATA(UIElementConfig)
 
 public:
-	CPP void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string())
-	{
-		mStyle = &UIStyleManager::getInstance().getDefaultStyle();
-		mUIElementClassId = 0;
-		mPosition = position;
-		mDisplayPosition = Vector2(0, 0);
-		mSize = size;
-		mText = text;
-		mLayer = layer;
-		mTextSize = UIManager::getDefaultFontSize(); // TODO : move to config?
-		mAdjustSizeToText = false;
-		mIsAffectedByLayout = true;
-		mMaterial = MaterialManager::getInstance().loadNoTextureMaterial();
-		mGroup = "";
-		mParent = nullptr;
-		mSeparatorSize = 0.01f;
-	}
+    void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());
 
 	COPY(UIElementConfig)
 	{
@@ -84,3 +63,5 @@ public:
 	GameObject* mParent = nullptr;
 	f32 mSeparatorSize = 0.0f;
 };
+
+#endif

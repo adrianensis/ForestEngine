@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERER_HPP
+#define RENDERER_HPP
 
 #include "Scene/Component.hpp"
 
@@ -7,21 +8,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-#ifdef CPP_INCLUDE
-#include "Graphics/Renderer.hpp"
-
-#include "Graphics/Animation/AnimationFrame.hpp"
-#include "Graphics/Material/Shader.hpp"
-#include "Graphics/RenderEngine.hpp"
-#include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Material/Texture.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Mesh/MeshPrimitives.hpp"
-#include "Graphics/Animation/Animation.hpp"
-#include "Graphics/Batch/Chunk.hpp"
-#include "Graphics/Batch/Batch.hpp"
-#include "Scene/Module.hpp"
-#endif
 
 class Chunk;
 class Batch;
@@ -35,221 +21,20 @@ public:
 	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
 	Ptr<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
 
-	CPP void init() override
-	{
-		// TRACE();
-
-		// texture region
-		mTextureRegion.setLeftTopFront(Vector2(0.0, 0.0));
-		mTextureRegion.setSize(Vector2(1.0, 1.0));
-
-		mRenderDistance = 1500; // TODO : move to settings?
-
-		setColor(Vector4(0, 0, 0, 1));
-	}
-
-	CPP void onComponentAdded() override
-	{
-		mTransformState = TransformState(getGameObject()->getTransform().get());
-
-		// Force vertices generatiin
-		update();
-	}
-
-	CPP void setPositionOffset(const Vector3& newPositionOffset)
-	{
-		mPositionOffset = newPositionOffset;
-		mVerticesDirty = true;
-		mRendererModelMatrixGenerated = false;
-	};
-
-	CPP bool getIsWorldSpace() const
-	{
-		return getGameObject()->getTransform().get().getAffectedByProjection();
-	}
-
-	CPP void update()
-	{
-		TransformState currentTransformState = TransformState(getGameObject()->getTransform().get());
-
-		bool transformChanged = !currentTransformState.eq(mTransformState);
-
-		if (transformChanged || (!mRendererModelMatrixGenerated))
-		{
-			mRendererModelMatrix.translation(mPositionOffset);
-			mRendererModelMatrix.mul(getGameObject()->getTransform().get().getModelMatrix());
-
-			mRendererModelMatrixGenerated = true;
-		}
-
-		if (transformChanged || mVerticesDirty)
-		{
-			u32 verticesCount = mMesh.get().getVertexCount();
-
-			if(mVertices.size() < verticesCount)
-			{
-				mVertices.clear();
-				mVertices.reserve(verticesCount);
-			}
-			
-			FOR_RANGE(i, 0, verticesCount)
-			{
-				Vector3 vertexPosition(
-					mMesh.get().getVertices()[i * 3 + 0],
-					mMesh.get().getVertices()[i * 3 + 1],
-					mMesh.get().getVertices()[i * 3 + 2]);
-
-				vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
-
-				if(mUseDepth)
-				{
-					vertexPosition.z = mDepth;
-				}
-
-				mVertices[i] = vertexPosition;
-			}
-
-			mVerticesDirty = false;
-		}
-
-		if(transformChanged)
-		{
-			mTransformState = currentTransformState;
-		}
-
-		updateAnimation();
-	}
-
-	CPP void onDestroy() override
-	{
-		if(mBatch.isValid())
-		{
-			mBatch.get().forceRegenerateBuffers();
-		}
-	}
-
-	CPP const Mesh& generateMeshInstance()
-	{
-		const std::vector<Vector3> &vertexPositions = getVertices();
-
-		mMeshInstance.init(mMesh.get().getVertexCount(), mMesh.get().getFacesCount());
-
-		FOR_RANGE(i, 0, mMesh.get().getVertexCount())
-		{
-			mMeshInstance.addVertex(vertexPositions[i]);
-
-			Vector2 vertexTexture(
-				mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
-				mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
-
-			Vector2 regionSize = getTextureRegion().getSize();
-			Vector2 regionPosition = getTextureRegion().getLeftTopFront();
-
-			Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
-
-			if (getInvertAxisX())
-			{
-				textureCoord.x = 1.0f - textureCoord.x;
-
-				Ptr<const Animation> animation = getCurrentAnimation();
-
-				if (animation)
-				{
-					textureCoord.x = textureCoord.x - (1.0f - (animation.get().getNumberOfFrames() * regionSize.x));
-				}
-			}
-
-			mMeshInstance.addTexCoord(textureCoord.x, textureCoord.y);
-
-			mMeshInstance.addColor(
-				getColor().x,
-				getColor().y,
-				getColor().z,
-				getColor().w);
-		}
-
-		return mMeshInstance;
-	}
-
-	CPP bool hasValidChunk() const
-	{
-		return (! mChunk.isValid()) || (mChunk.isValid() && mChunk.get().getIsLoaded()); // !chunk means -> Screen Space case
-	}
-
-	CPP bool hasValidBatch() const
-	{
-		return mBatch.isValid();
-	}
-
-	CPP void serialize(JSON& json) const override
-	{
-		Component::serialize(json);
-
-		std::string materialPath = "";
-
-		if(mMaterial.get().getTexture())
-		{
-			materialPath = mMaterial.get().getTexture().get().getPath();
-		}
-
-		DO_SERIALIZE("material", materialPath)
-		DO_SERIALIZE("region", mTextureRegion)
-		DO_SERIALIZE("depth", mDepth)
-
-		// std::list<Animation> tmpList;
-		// FOR_MAP(it, mAnimations)
-		// {
-		//     tmpList.push_back(it->second);
-		// }
-
-		// DO_SERIALIZE_LIST("animations", tmpList)
-	}
-
-	CPP void deserialize(const JSON& json) override
-	{
-		std::string materialPath = "";
-		DO_DESERIALIZE("material", materialPath)
-
-		mMaterial = MaterialManager::getInstance().loadMaterial(materialPath);
-
-		DO_DESERIALIZE("region", mTextureRegion)
-		DO_DESERIALIZE("depth", mDepth)
-
-		//mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
-
-		// std::list<Animation> tmpList;
-		// DO_DESERIALIZE_LIST("animations", tmpList, [](const JSON& json)
-		// {
-		//     Animation animation;
-		//     animation.deserialize(json);
-		//     return animation;
-		// });
-
-		// FOR_LIST(it, tmpList)
-		// {
-		//     MAP_INSERT(mAnimations, (*it).getName(), RefRaw<Animation>(*it))
-		// }
-	}
+    void init() override;
+    void onComponentAdded() override;
+    void setPositionOffset(const Vector3& newPositionOffset);
+    bool getIsWorldSpace() const;
+    void update();
+    void onDestroy() override;
+    const Mesh& generateMeshInstance();
+    bool hasValidChunk() const;
+    bool hasValidBatch() const;
+    void serialize(JSON& json) const override;
+    void deserialize(const JSON& json) override;
 
 private:
-	CPP void updateAnimation()
-	{
-		if (mMaterial.isValid())
-		{
-			Ptr<Animation> currentAnimation;
-			if (MAP_CONTAINS(mAnimations, mCurrentAnimationName))
-			{
-				currentAnimation = mAnimations[mCurrentAnimationName];
-			}
-
-			if (currentAnimation && !currentAnimation.get().getFrames().empty())
-			{
-				const AnimationFrame& frame = currentAnimation.get().getNextFrame();
-				mTextureRegion.setLeftTopFront(frame.getPosition());
-				mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
-			}
-		}
-	};
+    void updateAnimation();
 
 private:
 	TransformState mTransformState;
@@ -293,3 +78,5 @@ public:
 	RGET_SET(Mesh)
 	RGET_SET(Material)
 };
+
+#endif

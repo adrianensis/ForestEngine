@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMMANDLINE_HPP
+#define COMMANDLINE_HPP
 
 #include "Core/ObjectBase.hpp"
 #include "Core/Singleton.hpp"
@@ -64,3 +65,5 @@ public:
 
 	CRGET(Buffer)
 };
+
+#endif

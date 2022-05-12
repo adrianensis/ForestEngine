@@ -1,15 +1,9 @@
-#pragma once
+#ifndef CONFIGOBJECT_HPP
+#define CONFIGOBJECT_HPP
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
 #include "Core/Serialization.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/Config/ConfigObject.hpp"
-
-#include "Core/File/File.hpp"
-#endif
-
 
 /*
 	example for constant config object:
@@ -24,40 +18,16 @@ class ConfigObject: public ObjectBase
 
 public:
 	const JSON& at(const std::string& key) const { return mJson.at(key); }
-
-	CPP void readFromJsonFile(const std::string& path)
-	{
-		File::readFile(path, [&](std::ifstream& file)
-		{
-			file >> mJson;
-		});
-	}
-
-	CPP void writeToJsonFile(const std::string& path)
-	{
-		File::writeFile(path, [&](std::ofstream& file)
-		{
-			file << mJson.dump(4);
-			// TODO : use dump(4) only for debug and release? but dump() for ship version?
-		});
-	}
-
-	CPP void init()
-	{
-	}
-
-	CPP void clear()
-	{
-		mJson.clear();
-	}
-
-	CPP bool contains(std::string& key) const
-	{
-		return mJson.contains(key);
-	}
+    void readFromJsonFile(const std::string& path);
+    void writeToJsonFile(const std::string& path);
+    void init();
+    void clear();
+    bool contains(std::string& key) const;
 
 private:
 	JSON mJson;
 public:
 	CRGET_SET(Json)
 };
+
+#endif

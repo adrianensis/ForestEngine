@@ -1,11 +1,7 @@
-#pragma once
+#ifndef LOG_HPP
+#define LOG_HPP
 
 #include "Core/BasicTypes.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/Log/Log.hpp"
-#include "Core/BasicTypes.hpp"
-#endif
 
 class Log
 {
@@ -48,77 +44,16 @@ public:
 		log("VAL > " + valueStr);
 	};
 
-	CPP static void init()
-	{
-		logFile.open("log.txt");
-	}
-
-	CPP static void terminate()
-	{
-		logFile.close();
-	}
-
-	CPP static void log(const std::string& str)
-	{
-		std::cout << str << std::endl;
-		logFile << str << std::endl;
-	}
-
-	CPP static void append(const std::string& str)
-	{
-		std::cout << '\r';
-		std::cout << str;
-		logFile << str;
-		std::cout.flush();
-	}
-
-	CPP static void trace(const std::string file, u32 line, const std::string function, const std::string message = emptyMessage)
-	{
-		// std::cout << "TRACE > [" /* << std::experimental::filesystem::path(file).filename() << ":" */ << function << ":" << std::to_string(line) << "] > " << message << std::endl;
-		log("TRACE > [" + function + ":" + std::to_string(line) + "] > " + message);
-	}
-
-	CPP static void echo(const std::string& message, bool newLine = true)
-	{
-		// std::cout << "ECHO > " << message << std::endl;
-		if(newLine)
-		{
-			log("ECHO > " + message);
-		}
-		else
-		{
-			append("ECHO > " + message);
-		}
-	}
-
-	CPP static void customEcho(const std::string& tag, const std::string& message, bool newLine = true)
-	{
-		if(newLine)
-		{
-			log(tag + " > " + message);
-		}
-		else
-		{
-			append(tag + " > " + message);
-		}
-	}
-
-	CPP static void error(const std::string& message)
-	{
-		// std::cout << "ERROR > " << message << std::endl;
-		log("ERROR > " + message);
-	}
-
-	CPP static void brline()
-	{ // break line
-		log(emptyMessage);
-	}
-
-	CPP static void backspace()
-	{
-		std::cout << "\b \b";
-		logFile << "\b \b";
-	}
+    static void init();
+    static void terminate();
+    static void log(const std::string& str);
+    static void append(const std::string& str);
+    static void trace(const std::string file, u32 line, const std::string function, const std::string message = emptyMessage);
+    static void echo(const std::string& message, bool newLine = true);
+    static void customEcho(const std::string& tag, const std::string& message, bool newLine = true);
+    static void error(const std::string& message);
+    static void brline();
+    static void backspace();
 };
 
 #ifdef DE_ENABLE_LOGS
@@ -145,4 +80,6 @@ public:
 #define ERROR(x)
 #define BRLINE()
 #define BACKSPACE()
+#endif
+
 #endif

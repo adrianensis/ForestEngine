@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UIBUILDER_HPP
+#define UIBUILDER_HPP
 
 #include "Core/Module.hpp"
 #include "UI/UIElements/UIElement.hpp"
@@ -12,12 +13,6 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Scene/Module.hpp"
 
-#ifdef CPP_INCLUDE
-#include "UI/UIBuilder.hpp"
-#include "Graphics/Module.hpp"
-#include "UI/UIManager.hpp"
-#include "UI/UIStyle.hpp"
-#endif
 
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
 	UIBuilder& set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \
@@ -42,16 +37,7 @@ class UIBuilder: public ObjectBase
     GENERATE_METADATA(UIBuilder)
 	
 public:
-	CPP UIBuilder()
-	{
-		mCurrentLayout = UILayout::HORIZONTAL;
-		mMakeRelativeToLastConfig = false;
-		mCurrentUIElement = nullptr;
-
-		mDefaultConfig.init(Vector2(0, 0), Vector2(0, 0), 0);
-		mConfig = mDefaultConfig;
-		//mSavedData.init(Vector2(0,0), Vector2(0,0), "", 0);
-	}
+    UIBuilder();
 
 	void restoreAll() { mConfig = mDefaultConfig; }
 
@@ -63,43 +49,11 @@ public:
 		return *this;
 	}
 
-	CPP UIBuilder& nextRow()
-	{
-		mLastConfig = mLayoutFirstUIElementConfig;
-		mNewRowOrColumn = true;
-		return *this;
-	}
-
-	CPP UIBuilder& nextColumn()
-	{
-		return nextRow(); // NOTE : exactly the same code.
-	}
-
-	CPP UIBuilder& saveData()
-	{
-		mConfigStack.push_front(mConfig);
-		return *this;
-	}
-
-	CPP UIBuilder& restoreData()
-	{
-		mConfig = mConfigStack.front();
-		mConfigStack.pop_front();
-		return *this;
-	}
-
-	CPP UIBuilder& create(const std::string& className)
-	{
-		UIElement* uiElement = INSTANCE_BY_NAME(className, UIElement);
-		mConfig.mUIElementClassId = uiElement->getClassId();
-
-		calculateConfig();
-		uiElement->initFromConfig(mConfig);
-
-		registerUIElement(uiElement);
-
-		return *this;
-	}
+    UIBuilder& nextRow();
+    UIBuilder& nextColumn();
+    UIBuilder& saveData();
+    UIBuilder& restoreData();
+    UIBuilder& create(const std::string& className);
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
 	UIBuilder& create()
@@ -119,85 +73,10 @@ public:
 	}
 
 private:
-	CPP void registerUIElement(UIElement *uiElement)
-	{
-		mCurrentUIElement = uiElement;
-
-		ScenesManager::getInstance().getCurrentScene()->addGameObject(mCurrentUIElement);
-
-		if (mConfig.mGroup.length() > 0)
-		{
-			UIManager::getInstance().getOrCreateGroup(mConfig.mGroup).addUIElement(mCurrentUIElement);
-		}
-
-		if (mConfig.mIsAffectedByLayout)
-		{
-			if (mNewRowOrColumn)
-			{
-				mNewRowOrColumn = false;
-				mLayoutFirstUIElementConfig = mConfig;
-			}
-
-			mMakeRelativeToLastConfig = true;
-
-			mLastConfig = mConfig;
-		}
-	}
-
-	CPP UILayout getOppositeLayout(UILayout layout)
-	{
-		return (UILayout)(((int)mCurrentLayout + 1) % 2);
-	}
-
-	CPP Vector2 calculateNextElementOffset(UILayout layout)
-	{
-		Vector2 offset = Vector2(0, 0);
-
-		switch (layout)
-		{
-			case UILayout::HORIZONTAL:
-			{
-				offset = Vector2(mLastConfig.mSize.x / RenderContext::getAspectRatio() + mConfig.mSeparatorSize, 0);
-				break;
-			}
-			case UILayout::VERTICAL:
-			{
-				offset = Vector2(0, -(mLastConfig.mSize.y + mConfig.mSeparatorSize));
-				break;
-			}
-		}
-
-		return offset;
-	}
-
-	CPP void calculateConfig()
-	{
-		if (mConfig.mAdjustSizeToText)
-		{
-			mConfig.mSize.x = (mConfig.mTextSize.x* mConfig.mText.length());
-			mConfig.mSize.y = mConfig.mTextSize.y;
-		}
-
-		if (mConfig.mIsAffectedByLayout && mMakeRelativeToLastConfig)
-		{
-			Vector2 offset = calculateNextElementOffset(mNewRowOrColumn ? getOppositeLayout(mCurrentLayout) : mCurrentLayout);
-			mConfig.mPosition = mLastConfig.mPosition + offset;
-		}
-
-		// Offset the UI Element so its Top-Left corner is the origin.
-		mConfig.mDisplayPosition = mConfig.mPosition;
-
-		if(mConfig.mUIElementClassId == UIText::getClassIdStatic() || mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
-		{
-			mConfig.mDisplayPosition.x += mConfig.mTextSize.x/RenderContext::getAspectRatio();
-			mConfig.mDisplayPosition.y -= mConfig.mTextSize.y / 2.0f;
-		}
-		else
-		{
-			mConfig.mDisplayPosition.x += (mConfig.mSize.x/RenderContext::getAspectRatio()) / 2.0f;
-			mConfig.mDisplayPosition.y -= mConfig.mSize.y / 2.0f;
-		}
-	}
+    void registerUIElement(UIElement *uiElement);
+    UILayout getOppositeLayout(UILayout layout);
+    Vector2 calculateNextElementOffset(UILayout layout);
+    void calculateConfig();
 
 private:
 	UILayout mCurrentLayout;
@@ -227,3 +106,5 @@ public:
 
 	CRGET_SET(Config)
 };
+
+#endif

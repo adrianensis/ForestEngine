@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MACROS_HPP
+#define MACROS_HPP
 
 #define NONE(...)
 
@@ -278,3 +279,5 @@ FOR_LIST(_internal_it, container) { DELETE(*_internal_it); } \
 	(container).clear();
 
 #define CONTAINS(container, element) (std::find((container).begin(), (container).end(), (element)) != (container).end())
+
+#endif

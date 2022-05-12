@@ -1,10 +1,8 @@
-#pragma once
+#ifndef ANIMATIONFRAME_HPP
+#define ANIMATIONFRAME_HPP
 
 #include "Core/Module.hpp"
 
-#ifdef CPP_INCLUDE
-#include "Graphics/Animation/AnimationFrame.hpp"
-#endif
 
 class AnimationFrame: public ObjectBase
 {
@@ -19,27 +17,9 @@ public:
         DO_COPY(mHeight)
     }
 
-    CPP void init(const Vector2& position, f32 width, f32 height)
-    {
-        mPosition = position;
-        mWidth = width;
-        mHeight = height;
-    }
-
-    CPP void serialize(JSON& json) const
-    {
-        DO_SERIALIZE("position", mPosition);
-        DO_SERIALIZE("width", mWidth);
-        DO_SERIALIZE("height", mHeight);
-    }
-
-    CPP void deserialize(const JSON& json)
-    {
-        DO_DESERIALIZE("position", mPosition);
-        DO_DESERIALIZE("width", mWidth);
-        DO_DESERIALIZE("height", mHeight);
-    }
-    
+    void init(const Vector2& position, f32 width, f32 height);
+    void serialize(JSON& json) const;
+    void deserialize(const JSON& json);
 
 private:
     Vector2 mPosition;
@@ -50,3 +30,5 @@ public:
     GET(Width)
     GET(Height)
 };
+
+#endif

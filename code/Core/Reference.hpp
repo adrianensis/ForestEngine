@@ -1,4 +1,5 @@
-#pragma once
+#ifndef REFERENCE_HPP
+#define REFERENCE_HPP
 
 #include "Core/Memory.hpp"
 
@@ -132,3 +133,5 @@ public:
 private:
 	std::weak_ptr<T> mReference;
 };
+
+#endif

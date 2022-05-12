@@ -13,7 +13,7 @@ void CommandLine::init()
     mIsOpen = false;
 
     SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
-	{
+    {
         if(mIsOpen)
         {
             const InputEventChar *e = (InputEventChar*) event;
@@ -21,10 +21,10 @@ void CommandLine::init()
             mBuffer.push_back(c);
             log(mBuffer, false);
         }
-	});
+    });
 
     SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
-	{
+    {
         if(mIsOpen)
         {
             BRLINE();
@@ -32,10 +32,10 @@ void CommandLine::init()
             mBuffer.clear();
             log("", false);
         }
-	});
+    });
 
     SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
-	{
+    {
         if(mIsOpen)
         {
             if(!mBuffer.empty())
@@ -46,10 +46,10 @@ void CommandLine::init()
             
             log(mBuffer, false);
         }
-	});
+    });
 
     SUBSCRIBE_TO_EVENT(InputEventKeyArrow, nullptr, this, [this](const Event *event)
-	{
+    {
         if(mIsOpen)
         {
             const InputEventKeyArrow *e = (InputEventKeyArrow*) event;
@@ -83,7 +83,7 @@ void CommandLine::init()
                 }
             }
         }
-	});
+    });
 
     DefaultCommands::registerDefaultCommands();
 }

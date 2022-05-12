@@ -1,4 +1,5 @@
-#pragma once
+#ifndef METADATA_HPP
+#define METADATA_HPP
 
 #include "Core/BasicTypes.hpp"
 
@@ -59,3 +60,5 @@ private:
 	inline static std::string smClassName = "ObjectMeta";
 	inline static ClassId smClassId = Hash::hashString(smClassName);
 };
+
+#endif

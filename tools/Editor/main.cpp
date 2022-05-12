@@ -11,14 +11,14 @@
 
 ENGINE_MAIN()
 {
-	GameObject *controller = NEW(GameObject);
-	controller->init();
+GameObject *controller = NEW(GameObject);
+controller->init();
 
-	// NOTE: this script won't be added to the ScriptEngine in the usual way,
-	// since ScriptEngine itself is still not initialized.
-	Script *script = NEW(Editor);
-	script->init();
-	controller->addComponent<Script>(script);
+// NOTE: this script won't be added to the ScriptEngine in the usual way,
+// since ScriptEngine itself is still not initialized.
+Script *script = NEW(Editor);
+script->init();
+controller->addComponent<Script>(script);
 
-	ScenesManager::getInstance().setGameObjectController(controller);
+ScenesManager::getInstance().setGameObjectController(controller);
 }

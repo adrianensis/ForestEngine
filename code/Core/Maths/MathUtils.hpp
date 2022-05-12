@@ -1,13 +1,7 @@
-#pragma once
+#ifndef MATHUTILS_HPP
+#define MATHUTILS_HPP
 
 #include "Core/BasicTypes.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/Maths/Vector2.hpp"
-#include "Core/Maths/Vector3.hpp"
-#include "Core/Maths/Geometry.hpp"
-#include "Core/Maths/MathUtils.hpp"
-#endif
 
 class MathUtils
 {
@@ -31,33 +25,13 @@ public:
 	inline static f32 PI_180 = PI / 180.0f;
 	inline static f32 INV_PI_180 = 180.0f / PI;
 
-	CPP static f32 rad(f32 deg)
-	{
-		return deg * PI_180;
-	}
-
-	CPP static f32 deg(f32 rad)
-	{
-		return rad * INV_PI_180;
-	}
-
-	CPP static bool eqf(f32 a, f32 b, f32 epsilon)
-	{
-		return fabsf(a - b) < epsilon;
-	}
-
-	CPP static bool eqf(f32 a, f32 b)
-	{
-		return eqf(a, b, FLOAT_EPSILON);
-	}
-
-	CPP static f32 clamp(f32 n, f32 lower, f32 upper)
-	{
-		return std::max(lower, std::min(n, upper));
-	}
-
-	CPP static f32 det (f32 a, f32 b, f32 c, f32 d)
-	{
-		return a * d - b * c;
-	}
+    static f32 rad(f32 deg);
+    static f32 deg(f32 rad);
+    static bool eqf(f32 a, f32 b, f32 epsilon);
+    static bool eqf(f32 a, f32 b);
+    static f32 clamp(f32 n, f32 lower, f32 upper);
+    static f32 det(f32 a, f32 b, f32 c, f32 d);
 };
+
+
+#endif

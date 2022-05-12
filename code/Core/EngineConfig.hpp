@@ -1,20 +1,14 @@
-#pragma once
+#ifndef ENGINECONFIG_HPP
+#define ENGINECONFIG_HPP
 
 #include "Core/Config/ConfigObject.hpp"
 #include "Core/Singleton.hpp"
-
-#ifdef CPP_INCLUDE
-#include "Core/EngineConfig.hpp"
-#endif
 
 class EngineConfig: public ObjectBase, public Singleton<EngineConfig>
 {
 	GENERATE_METADATA(EngineConfig)
 public:
-	CPP void init()
-	{
-		mConfig.readFromJsonFile("config/engine.json");
-	}
+    void init();
 
 private:
 	ConfigObject mConfig;
@@ -22,3 +16,5 @@ private:
 public:
 	CRGET(Config)
 };
+
+#endif
