@@ -6,7 +6,7 @@
 #include "Graphics/Camera/Frustum.hpp"
 
 #ifdef CPP_INCLUDE
-#include "Graphics/Camera/Camera.hpp"
+//#include "Graphics/Camera/Camera.hpp"
 
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Frustum.hpp"
