@@ -4,7 +4,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Buffers/VertexBuffer.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 
 
 class Batch: public ObjectBase

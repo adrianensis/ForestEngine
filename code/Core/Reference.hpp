@@ -3,11 +3,25 @@
 
 #include "Core/Memory.hpp"
 
+class BasePtr
+{
+
+};
+
+template <typename C>
+struct get_template_type;
+
+template <template <typename > class PtrClass, typename T>
+struct get_template_type<PtrClass<T>>
+{
+    using type = T;
+};
+
 template<class T>
 class Ptr;
 
 template<class T>
-class OwnerPtr
+class OwnerPtr : public BasePtr
 {
 friend Ptr<T>;
 
@@ -29,7 +43,8 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    T& get() const { return *mReference.get(); }
+    const T& get() const { return *mReference.get(); }
+    T& get() { return *mReference.get(); }
     bool isValid() const { return mReference != nullptr; }
 
     OwnerPtr<T>& operator=(const OwnerPtr<T>& rhs)
@@ -73,7 +88,7 @@ private:
 };
 
 template<class T>
-class Ptr
+class Ptr : public BasePtr
 {
 private:
     void setReference(std::weak_ptr<T> reference) { mReference = reference; }
@@ -109,7 +124,8 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    T& get() const { return *mReference.lock().get(); }
+    const T& get() const { return *mReference.lock().get(); }
+    T& get() { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
 
     Ptr<T>& operator=(const Ptr<T>& rhs)

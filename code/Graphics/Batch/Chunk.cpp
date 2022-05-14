@@ -1,7 +1,7 @@
 #include "Graphics/Batch/Chunk.hpp"
 
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/RenderEngine.hpp"

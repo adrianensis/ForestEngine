@@ -1,4 +1,4 @@
-#include "Graphics/ShapeBatchRenderer.hpp"
+#include "Graphics/Renderer/ShapeBatchRenderer.hpp"
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"

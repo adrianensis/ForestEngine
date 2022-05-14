@@ -29,7 +29,7 @@ public:
 		JSON json;
 		if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REF(T))))
 		{
-			if constexpr (IS_POINTER(T))
+			if constexpr (IS_RAW_POINTER(T))
 			{
 				if(value)
 				{
@@ -56,7 +56,7 @@ public:
         {
             if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REF(T))))
             {
-                if constexpr (IS_POINTER(T))
+                if constexpr (IS_RAW_POINTER(T))
                 {
                     if(value)
                     {

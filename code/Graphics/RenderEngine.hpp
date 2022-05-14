@@ -3,9 +3,9 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Batch/BatchesMap.hpp"
-#include "Graphics/ShapeBatchRenderer.hpp"
+#include "Graphics/Renderer/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 #include "Graphics/Batch/Chunk.hpp"
 
 

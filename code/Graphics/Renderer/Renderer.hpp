@@ -29,7 +29,6 @@ public:
     void onDestroy() override;
     const Mesh& generateMeshInstance();
     bool hasValidChunk() const;
-    bool hasValidBatch() const;
     void serialize(JSON& json) const override;
     void deserialize(const JSON& json) override;
 
@@ -75,6 +74,7 @@ public:
 	GET_SET(CurrentAnimationName)
 	SET(Chunk)
 	SET(Batch)
+	HASVALID(Batch)
 	RGET_SET(Mesh)
 	RGET_SET(Material)
 };

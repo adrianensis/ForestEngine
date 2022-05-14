@@ -1,4 +1,4 @@
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 
 #include "Graphics/Animation/AnimationFrame.hpp"
 #include "Graphics/Material/Shader.hpp"
@@ -149,11 +149,6 @@ const Mesh& Renderer::generateMeshInstance()
 bool Renderer::hasValidChunk() const
 {
 	return (! mChunk.isValid()) || (mChunk.isValid() && mChunk.get().getIsLoaded()); // !chunk means -> Screen Space case
-}
-
-bool Renderer::hasValidBatch() const
-{
-	return mBatch.isValid();
 }
 
 void Renderer::serialize(JSON& json) const 

@@ -2,7 +2,7 @@
 #define CHUNK_HPP
 
 #include "Core/Module.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 
 
 class Chunk: public ObjectBase

@@ -1,7 +1,7 @@
 #include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Camera/Frustum.hpp"
@@ -113,6 +113,7 @@ bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
 	{
 		if (renderer.get().isActive())
 		{
+			//renderer.get().getChunk
 			if (!renderer.get().hasValidChunk())
 			{
 				toRemove = true;

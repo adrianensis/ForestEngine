@@ -273,11 +273,11 @@ endif(BUILD_INTEGRATION_TESTS)
 # ----------------------------------------------------------------------------
 
 if(BUILD_TOOLS)
-  build_programs("generated-code/final/tools/*" "tool")
+  build_programs("tools/*" "tool")
 endif(BUILD_TOOLS)
 
 # ----------------------------------------------------------------------------
 # GAMES
 # ----------------------------------------------------------------------------
 
-build_programs("generated-code/final/games/*" "games")
+build_programs("games/*" "games")

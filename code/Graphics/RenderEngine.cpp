@@ -9,8 +9,6 @@
 #include "Scene/Module.hpp"
 #include "Core/EngineConfig.hpp"
 #include "Graphics/Batch/Chunk.hpp"
-#include "Graphics/ShapeBatchRenderer.hpp"
-
 
 void RenderEngine::init(f32 sceneSize)
 {

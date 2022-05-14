@@ -14,7 +14,7 @@
 
 #define REMOVE_REF(Class) typename std::remove_reference<Class>::type
 #define REMOVE_POINTER(Class) typename std::remove_pointer<Class>::type
-#define IS_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
+#define IS_RAW_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
 #define IS_ARITHMETIC(Class) std::is_arithmetic<REMOVE_REF(Class)>::value
 #define IS_ENUM(Class) std::is_enum<Class>::value
 #define ADD_CONST(Class) typename std::add_const<Class>::type
@@ -104,7 +104,7 @@ void __customMain()
 
 #define GETTER_TYPE(Type)                                            \
 	COND_TYPE(                                                      \
-		IS_POINTER(Type),                                  \
+		IS_RAW_POINTER(Type),                                  \
 		ADD_CONST(Type),                                   \
 		COND_TYPE(                                                  \
 			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
@@ -113,7 +113,7 @@ void __customMain()
 
 #define SETTER_TYPE(Type) \
 	COND_TYPE(                                                      \
-		IS_POINTER(Type),                                  \
+		IS_RAW_POINTER(Type),                                  \
 		ADD_CONST(Type),                                   \
 		COND_TYPE(                                                  \
 			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
@@ -124,27 +124,24 @@ void __customMain()
 
 #define SETTER_TYPE_FROM_VAR(Var) SETTER_TYPE(decltype(Var))
 
-#define GENERATE_GET(BaseName)        \
+#define GET(BaseName)        \
 	GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
-#define GENERATE_RGET(BaseName) \
-	ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; };
-
-#define GENERATE_CRGET(BaseName) \
+#define RGET(BaseName) \
+	ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; }; \
 	ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
-#define GENERATE_SET(BaseName) \
+#define CRGET(BaseName) \
+	ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
+
+#define SET(BaseName)  \
 	void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
 
-#define GET(BaseName) GENERATE_GET(BaseName)
-#define RGET(BaseName) GENERATE_RGET(BaseName)
-#define CRGET(BaseName) GENERATE_CRGET(BaseName)
+#define GET_SET(BaseName) GET(BaseName) SET(BaseName)
+#define RGET_SET(BaseName) RGET(BaseName) SET(BaseName)
+#define CRGET_SET(BaseName) CRGET(BaseName) SET(BaseName)
 
-#define SET(BaseName) GENERATE_SET(BaseName)
-
-#define GET_SET(BaseName) GENERATE_GET(BaseName) GENERATE_SET(BaseName)
-#define RGET_SET(BaseName) GENERATE_RGET(BaseName) GENERATE_SET(BaseName)
-#define CRGET_SET(BaseName) GENERATE_CRGET(BaseName) GENERATE_SET(BaseName)
+#define HASVALID(BaseName) bool hasValid ## BaseName() const { return m ## BaseName.isValid(); }
 
 // --------------------------------------------------------
 // COPY

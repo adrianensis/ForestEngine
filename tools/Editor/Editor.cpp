@@ -21,7 +21,7 @@ void Editor::firstUpdate()
 	{
 	}
 
-	importModel("resources/teapot.obj");
+	importModel("resources/wolf/WOLF.OBJ");
 
 
 	UIBuilder uiBuilder;
@@ -243,7 +243,7 @@ void Editor::importModel( const std::string& pFile)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile( pFile, 
-			aiProcess_CalcTangentSpace       | 
+			//aiProcess_CalcTangentSpace       | 
 			aiProcess_Triangulate            |
 			aiProcess_JoinIdenticalVertices  |
 			aiProcess_SortByPType);
@@ -264,7 +264,7 @@ void Editor::importModel( const std::string& pFile)
 		gameObject->init();
 		gameObject->setIsStatic(false);
 		gameObject->getTransform().get().setLocalPosition(Vector3(0,0,0));
-		gameObject->getTransform().get().setScale(scale);
+		gameObject->getTransform().get().setScale(scale*20);
 
 		mesh = OwnerPtr<Mesh>(NEW(Mesh));
 
@@ -281,6 +281,11 @@ void Editor::importModel( const std::string& pFile)
 				aiVector3D assimpVertex = assimpMesh->mVertices[vertexIt];
 				Vector3 vertex = Vector3(assimpVertex.x, assimpVertex.y, assimpVertex.z);
 				mesh.get().addVertex(vertex);
+
+				aiVector3D assimpTexCoord = assimpMesh->mTextureCoords[0][vertexIt];
+
+				Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
+				mesh.get().addTexCoord(texCoord.x, texCoord.y);
 			}
 
 			FOR_RANGE(faceIt, 0, assimpMesh->mNumFaces)
@@ -294,8 +299,9 @@ void Editor::importModel( const std::string& pFile)
 		renderer->init();
 
 		renderer->setMesh(Ptr<Mesh>(mesh));
-		renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
-		renderer->setColor(Vector4(1,1,0,1));
+		renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/wolf/WOLF.png"));
+		//renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
+		//renderer->setColor(Vector4(1,1,0,1));
 
 		gameObject->addComponent<Renderer>(renderer);
 

@@ -6,7 +6,7 @@
 
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
-#include "Graphics/Renderer.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 
 #include "Graphics/Material/MaterialManager.hpp"
