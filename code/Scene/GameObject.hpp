@@ -13,6 +13,7 @@ class EventOnDestroy: public Event { GENERATE_METADATA(EventOnDestroy) };
 class GameObject: public ObjectBase
 {
     GENERATE_METADATA(GameObject)
+	DECLARE_SERIALIZATION()
 	
 public:
     GameObject();
@@ -62,9 +63,6 @@ public:
 
     void setIsActive(bool isActive);
     void destroy();
-
-    void serialize(JSON& json) const override;
-    void deserialize(const JSON& json) override;
 
 private:
     const std::list<OwnerPtr<Component>>& getComponents(ClassId classId) const;

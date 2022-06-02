@@ -8,6 +8,7 @@ class GameObject;
 class Component: public IEngineSystemComponent
 {
     GENERATE_METADATA(Component)
+	DECLARE_SERIALIZATION()
 	
 public:
     Component();
@@ -25,8 +26,6 @@ public:
     void finallyDestroy();
     void destroy();
     virtual void onDestroy();
-    void serialize(JSON& json) const override;
-    void deserialize(const JSON& json) override;
 
 private:
 	bool mIsActive = false;

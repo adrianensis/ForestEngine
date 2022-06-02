@@ -9,6 +9,7 @@ class GameObject;
 class Scene: public ObjectBase
 {
     GENERATE_METADATA(Scene)
+    DECLARE_SERIALIZATION()
 
 public:
     Scene();
@@ -17,8 +18,6 @@ public:
     void init();
     void saveScene(const std::string& path);
     void loadScene(const std::string& path);
-    void serialize(JSON& json) const override;
-    void deserialize(const JSON& json) override;
     void unloadScene();
     void addGameObject(GameObject *gameObject);
     void removeGameObject(GameObject *gameObject);

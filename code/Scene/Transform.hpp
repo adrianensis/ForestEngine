@@ -35,6 +35,7 @@ public:
 class Transform: public Component
 {
     GENERATE_METADATA(Transform)
+	DECLARE_SERIALIZATION()
 
 public:
 	static const Vector3 smRight;
@@ -57,9 +58,6 @@ public:
 	{
 		setRotation(mRotation.add(vector));
 	}
-
-    void serialize(JSON& json) const override;
-    void deserialize(const JSON& json) override;
 
 private:
 	mutable Vector3 mWorldPosition;

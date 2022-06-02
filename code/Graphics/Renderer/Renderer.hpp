@@ -14,6 +14,7 @@ class Batch;
 class Renderer: public Component
 {
     GENERATE_METADATA(Renderer)
+	DECLARE_SERIALIZATION()
 	
 public:
     void init() override;
@@ -23,8 +24,6 @@ public:
     void onDestroy() override;
     const Mesh& generateMeshInstance();
     bool hasValidChunk() const;
-    void serialize(JSON& json) const override;
-    void deserialize(const JSON& json) override;
 
 private:
     void updateAnimation();

@@ -94,14 +94,14 @@ const AnimationFrame& Animation::getCurrentFrame() const
 	return mFrames.at(mCurrentFrameNumber);
 }
 
-void Animation::serialize(JSON& json) const
+IMPLEMENT_SERIALIZATION(Animation)
 {
 	SERIALIZE("name", mName);
 	SERIALIZE("speed", mSpeed);
 	SERIALIZE_LIST("frames", mFrames);
 }
 
-void Animation::deserialize(const JSON& json)
+IMPLEMENT_DESERIALIZATION(Animation)
 {
 	DESERIALIZE("name", mName);
 	DESERIALIZE("speed", mSpeed);

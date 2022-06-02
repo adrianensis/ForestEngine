@@ -53,10 +53,10 @@ void Material::disable()
 	mShader.get().disable();
 }
 
-void Material::serialize(JSON& json) const
+IMPLEMENT_SERIALIZATION(Material)
 {
 }
 
-void Material::deserialize(const JSON& json)
+IMPLEMENT_DESERIALIZATION(Material)
 {
 }

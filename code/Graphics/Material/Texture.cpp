@@ -35,11 +35,11 @@ void Texture::bind()
 	glBindTexture(GL_TEXTURE_2D, mTextureId);
 }
 
-void Texture::serialize(JSON& json) const 
+IMPLEMENT_SERIALIZATION(Texture)
 {
 }
 
-void Texture::deserialize(const JSON& json) 
+IMPLEMENT_DESERIALIZATION(Texture)
 {
 }
 

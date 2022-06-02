@@ -7,14 +7,13 @@
 class Texture: public ObjectBase
 {
     GENERATE_METADATA(Texture)
+	DECLARE_SERIALIZATION()
 
 public:
     ~Texture() override;
 
     void init(const std::string& path);
     void bind();
-    void serialize(JSON& json) const override;
-    void deserialize(const JSON& json) override;
 
 private:
     byte* readPNG();

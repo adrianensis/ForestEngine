@@ -7,6 +7,7 @@
 class AnimationFrame: public ObjectBase
 {
     GENERATE_METADATA(AnimationFrame)
+    DECLARE_SERIALIZATION()
 
 public:
 
@@ -18,8 +19,6 @@ public:
     }
 
     void init(const Vector2& position, f32 width, f32 height);
-    void serialize(JSON& json) const;
-    void deserialize(const JSON& json);
 
 private:
     Vector2 mPosition;

@@ -45,14 +45,17 @@ void Component::destroy()
 	}
 }
 
-void Component::onDestroy(){
+void Component::onDestroy()
+{
 
 }
-void Component::serialize(JSON& json) const 
+
+IMPLEMENT_SERIALIZATION(Component)
 {
 	SERIALIZE("class", getClassName())
 }
 
-void Component::deserialize(const JSON& json)  {
+IMPLEMENT_DESERIALIZATION(Component)
+{
  
 }

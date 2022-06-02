@@ -137,7 +137,7 @@ bool Renderer::hasValidChunk() const
 	return (! mChunk.isValid()) || (mChunk.isValid() && mChunk.get().getIsLoaded()); // !chunk means -> Screen Space case
 }
 
-void Renderer::serialize(JSON& json) const 
+IMPLEMENT_SERIALIZATION(Renderer)
 {
 	Component::serialize(json);
 
@@ -155,7 +155,7 @@ void Renderer::serialize(JSON& json) const
 
 }
 
-void Renderer::deserialize(const JSON& json) 
+IMPLEMENT_DESERIALIZATION(Renderer)
 {
 	std::string materialPath = "";
 	DESERIALIZE("material", materialPath)

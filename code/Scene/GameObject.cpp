@@ -90,7 +90,7 @@ void GameObject::destroy()
 
 }
 
-void GameObject::serialize(JSON& json) const 
+IMPLEMENT_SERIALIZATION(GameObject)
 {
 	SERIALIZE("class", getClassName())
 
@@ -103,7 +103,7 @@ void GameObject::serialize(JSON& json) const
 
 }
 
-void GameObject::deserialize(const JSON& json) 
+IMPLEMENT_DESERIALIZATION(GameObject)
 {
 	DESERIALIZE("is_static", mIsStatic)
 	DESERIALIZE("should_persist", mShouldPersist)

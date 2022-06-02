@@ -77,7 +77,7 @@ void Scene::loadScene(const std::string& path)
 	deserialize(mLoadSceneConfig.getJson());
 }
 
-void Scene::serialize(JSON& json) const 
+IMPLEMENT_SERIALIZATION(Scene)
 {
 	f32 maxSize = 0;
 
@@ -107,7 +107,7 @@ void Scene::serialize(JSON& json) const
 	SERIALIZE("size", maxSize * 2.0f)
 }
 
-void Scene::deserialize(const JSON& json) 
+IMPLEMENT_DESERIALIZATION(Scene)
 { 
 	DESERIALIZE("size", mSize)
 

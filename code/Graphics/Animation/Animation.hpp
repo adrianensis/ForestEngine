@@ -7,7 +7,8 @@
 class Animation: public ObjectBase
 {
     GENERATE_METADATA(Animation)
-
+	DECLARE_SERIALIZATION()
+	
 public:
     Animation();
     ~Animation() override;
@@ -40,9 +41,6 @@ public:
             this->mFrames.push_back(*it);
         }
     }
-
-    void serialize(JSON& json) const;
-    void deserialize(const JSON& json);
 	
 private:
 	std::string mName;

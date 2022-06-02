@@ -99,7 +99,7 @@ const Matrix4& Transform::getModelMatrix(bool force /*= false*/) const
 	return mModelMatrix;
 }
 
-void Transform::serialize(JSON& json) const 
+IMPLEMENT_SERIALIZATION(Transform)
 {
 	Component::serialize(json);
 
@@ -108,7 +108,7 @@ void Transform::serialize(JSON& json) const
 	SERIALIZE("rotation", mRotation);
 }
 
-void Transform::deserialize(const JSON& json) 
+IMPLEMENT_DESERIALIZATION(Transform)
 {
 	Component::deserialize(json);
 
