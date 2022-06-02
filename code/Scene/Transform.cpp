@@ -103,16 +103,16 @@ void Transform::serialize(JSON& json) const
 {
 	Component::serialize(json);
 
-	DO_SERIALIZE("local_position", mLocalPosition);
-	DO_SERIALIZE("scale", mScale);
-	DO_SERIALIZE("rotation", mRotation);
+	SERIALIZE("local_position", mLocalPosition);
+	SERIALIZE("scale", mScale);
+	SERIALIZE("rotation", mRotation);
 }
 
 void Transform::deserialize(const JSON& json) 
 {
 	Component::deserialize(json);
 
-	DO_DESERIALIZE("local_position", mLocalPosition);
-	DO_DESERIALIZE("scale", mScale);
-	DO_DESERIALIZE("rotation", mRotation);
+	DESERIALIZE("local_position", mLocalPosition);
+	DESERIALIZE("scale", mScale);
+	DESERIALIZE("rotation", mRotation);
 }

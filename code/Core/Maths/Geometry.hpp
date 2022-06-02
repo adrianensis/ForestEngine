@@ -3,6 +3,7 @@
 
 #include "Core/ObjectBase.hpp"
 #include "Core/Maths/Vector3.hpp"
+#include "Core/Maths/MathUtils.hpp"
 #include "Core/Log/Log.hpp"
 
 class Shape: public ObjectBase
@@ -13,6 +14,9 @@ protected:
     u32 mVerticesCount = 0;
 
 public:
+
+    virtual bool isZero() const = 0;
+
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
 
@@ -52,6 +56,11 @@ public:
         return mEnd - mStart;
     }
 
+    bool isZero() const override
+    {
+        return toVector().len() <= MathUtils::FLOAT_EPSILON;
+    }
+
     COPY(Line)
     {
         Shape::copy(other);
@@ -63,16 +72,16 @@ public:
     {
         Shape::serialize(json);
 
-        DO_SERIALIZE("start", mStart)
-        DO_SERIALIZE("end", mEnd)
+        SERIALIZE("start", mStart)
+        SERIALIZE("end", mEnd)
     }
 
     void deserialize(const JSON& json) override
     {
         Shape::deserialize(json);
 
-        DO_DESERIALIZE("start", mStart)
-        DO_DESERIALIZE("end", mEnd)
+        DESERIALIZE("start", mStart)
+        DESERIALIZE("end", mEnd)
     }
 
     CRGET_SET(Start)
@@ -105,6 +114,11 @@ public:
         mSize.set(size);
     }
 
+    bool isZero() const override
+    {
+        return getSize().len() <= MathUtils::FLOAT_EPSILON;
+    }
+
     COPY(Rectangle)
     {
         Shape::copy(other);
@@ -116,16 +130,16 @@ public:
     {
         Shape::serialize(json);
 
-        DO_SERIALIZE("left_top", mLeftTopFront)
-        DO_SERIALIZE("size", mSize)
+        SERIALIZE("left_top", mLeftTopFront)
+        SERIALIZE("size", mSize)
     }
 
     void deserialize(const JSON& json) override
     {
         Shape::deserialize(json);
 
-        DO_DESERIALIZE("left_top", mLeftTopFront);
-        DO_DESERIALIZE("size", mSize);
+        DESERIALIZE("left_top", mLeftTopFront);
+        DESERIALIZE("size", mSize);
     }
 
     CRGET_SET(LeftTopFront)
@@ -162,6 +176,11 @@ public:
     {
         mCenter.set(center);
         mRadius = radius;
+    }
+
+    bool isZero() const override
+    {
+        return mRadius <= MathUtils::FLOAT_EPSILON;
     }
 
     COPY(Sphere)

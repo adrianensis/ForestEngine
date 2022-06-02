@@ -50,7 +50,7 @@ void Component::onDestroy(){
 }
 void Component::serialize(JSON& json) const 
 {
-	DO_SERIALIZE("class", getClassName())
+	SERIALIZE("class", getClassName())
 }
 
 void Component::deserialize(const JSON& json)  {

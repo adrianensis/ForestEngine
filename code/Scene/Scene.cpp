@@ -99,22 +99,22 @@ void Scene::serialize(JSON& json) const
 		}
 	}
 
-	DO_SERIALIZE_LIST_IF("objects", mGameObjects, [](GameObject* gameObject)
+	SERIALIZE_LIST_IF("objects", mGameObjects, [](GameObject* gameObject)
 	{
 		return gameObject->getShouldPersist();
 	})
 
-	DO_SERIALIZE("size", maxSize * 2.0f)
+	SERIALIZE("size", maxSize * 2.0f)
 }
 
 void Scene::deserialize(const JSON& json) 
 { 
-	DO_DESERIALIZE("size", mSize)
+	DESERIALIZE("size", mSize)
 
 	if(json.contains("objects"))
 	{
 		std::list<GameObject *> tmpList;
-		DO_DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
+		DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
 		{
 			GameObject *gameObject = INSTANCE_BY_NAME(json["class"], GameObject);
 			return gameObject;

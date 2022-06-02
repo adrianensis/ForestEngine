@@ -3,18 +3,15 @@
 
 #include "Core/Memory.hpp"
 
+// template <template <typename > class C, typename T>
+// struct get_template_type<C<T>>
+// {
+//     using type = T;
+// };
+
 class BasePtr
 {
 
-};
-
-template <typename C>
-struct get_template_type;
-
-template <template <typename > class PtrClass, typename T>
-struct get_template_type<PtrClass<T>>
-{
-    using type = T;
 };
 
 template<class T>
@@ -26,7 +23,7 @@ class OwnerPtr : public BasePtr
 friend Ptr<T>;
 
 public:
-    
+
     template <class OtherClass>
     static OwnerPtr<T> Cast(const OwnerPtr<OtherClass>& other)
     {
@@ -36,6 +33,7 @@ public:
     OwnerPtr() = default;
     OwnerPtr(const OwnerPtr<T>& other) { setReference(other.mReference); }
     OwnerPtr(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerPtrCustomDeleter())); }
+    OwnerPtr(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
 
     operator OwnerPtr<const T>() const
     {
@@ -81,7 +79,6 @@ private:
 
     void setReference(const std::shared_ptr<T> reference) { mReference = reference; }
 
-    OwnerPtr(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
 
 private:
 	std::shared_ptr<T> mReference;
@@ -94,6 +91,11 @@ private:
     void setReference(std::weak_ptr<T> reference) { mReference = reference; }
 
 public:
+
+    static Ptr<const T> toConst()
+    {
+        return Ptr<const T>();
+    }
 
     template <class OtherClass>
     static Ptr<T> Cast(const Ptr<OtherClass>& other)
@@ -148,6 +150,24 @@ public:
 
 private:
 	std::weak_ptr<T> mReference;
+};
+
+template <typename T>
+struct get_const_ptr_type
+{
+    using type = Ptr<const T>;
+};
+
+template<class T>
+struct get_const_ptr_type<Ptr<T>>
+{
+    using type = Ptr<const T>;
+};
+
+template<class T>
+struct get_const_ptr_type<OwnerPtr<T>>
+{
+    using type = OwnerPtr<const T>;
 };
 
 #endif

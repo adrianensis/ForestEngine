@@ -222,19 +222,19 @@ template<>
 JSON SerializationUtils::serializeTemplated(const Vector4& value)
 {
 JSON json;
-DO_SERIALIZE("x", value.x)
-DO_SERIALIZE("y", value.y)
-DO_SERIALIZE("z", value.z)
-DO_SERIALIZE("w", value.w)
+SERIALIZE("x", value.x)
+SERIALIZE("y", value.y)
+SERIALIZE("z", value.z)
+SERIALIZE("w", value.w)
 return json;
 }
 
 template<>
 void SerializationUtils::deserializeTemplated(Vector4& value, const JSON& json)
 {
-DO_DESERIALIZE("x", value.x)
-DO_DESERIALIZE("y", value.y)
-DO_DESERIALIZE("z", value.z)
-DO_DESERIALIZE("w", value.w)
+DESERIALIZE("x", value.x)
+DESERIALIZE("y", value.y)
+DESERIALIZE("z", value.z)
+DESERIALIZE("w", value.w)
 }
 

@@ -11,19 +11,19 @@
 // --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
+#define IS_BASE_OF(BaseClass, DerivedClass) std::is_base_of<BaseClass, DerivedClass>::value
+
+#define COND_TYPE(Bool, T1, T2) typename std::conditional<Bool, T1, T2>::type
 
 #define REMOVE_REF(Class) typename std::remove_reference<Class>::type
 #define REMOVE_POINTER(Class) typename std::remove_pointer<Class>::type
+#define IS_SMART_POINTER(Class) IS_BASE_OF(BasePtr, REMOVE_REF(Class))
 #define IS_RAW_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
 #define IS_ARITHMETIC(Class) std::is_arithmetic<REMOVE_REF(Class)>::value
 #define IS_ENUM(Class) std::is_enum<Class>::value
 #define ADD_CONST(Class) typename std::add_const<Class>::type
 #define ADD_REFERENCE(Class) typename std::add_lvalue_reference<Class>::type
 #define ADD_POINTER(Class) typename std::add_pointer<Class>::type
-
-#define IS_BASE_OF(BaseClass, DerivedClass) std::is_base_of<BaseClass, DerivedClass>::value
-
-#define COND_TYPE(Bool, T1, T2) typename std::conditional<Bool, T1, T2>::type
 
 // --------------------------------------------------------
 // NEW - DELETE
@@ -71,7 +71,7 @@ void __customMain()
 	private: \
 		inline static std::string smClassName = std::string(#__VA_ARGS__);        \
 		inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName); \
-	public: \
+	public:                                                                         \
 		static ClassId getClassIdStatic()                                             \
 		{                                                                             \
 			return smClassId;                                                         \
@@ -95,7 +95,7 @@ void __customMain()
 		Ptr<__VA_ARGS__> getRefToThis()                                               \
 		{                                                                             \
 			return Ptr<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
-		}                                                                             \
+		}                                                                           \
 	private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------
@@ -105,11 +105,23 @@ void __customMain()
 #define GETTER_TYPE(Type)                                            \
 	COND_TYPE(                                                      \
 		IS_RAW_POINTER(Type),                                  \
-		ADD_CONST(Type),                                   \
+		Type,                                   \
 		COND_TYPE(                                                  \
 			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
 			REMOVE_REF(Type),                              \
 			Type))
+
+#define CGETTER_TYPE(Type)                                            \
+	COND_TYPE(                                                      \
+		IS_RAW_POINTER(Type),                                  \
+		ADD_POINTER(ADD_CONST(REMOVE_POINTER(Type))),                                   \
+		COND_TYPE(                                                  \
+			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
+			REMOVE_REF(Type),                              \
+			COND_TYPE(  \
+			IS_SMART_POINTER(Type), \
+				get_const_ptr_type<Type>::type,                              \
+				GETTER_TYPE(Type))))
 
 #define SETTER_TYPE(Type) \
 	COND_TYPE(                                                      \
@@ -121,27 +133,41 @@ void __customMain()
 			ADD_REFERENCE(ADD_CONST(Type))))
 
 #define GETTER_TYPE_FROM_VAR(Var) GETTER_TYPE(decltype(Var))
+#define CGETTER_TYPE_FROM_VAR(Var) CGETTER_TYPE(decltype(Var))
 
 #define SETTER_TYPE_FROM_VAR(Var) SETTER_TYPE(decltype(Var))
 
 #define GET(BaseName)        \
-	GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
+	inline GETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
+
+#define CGET(BaseName)        \
+	inline CGETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
 #define RGET(BaseName) \
-	ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; }; \
-	ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
+	inline ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; }; \
+	inline ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define CRGET(BaseName) \
-	ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
+	inline ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define SET(BaseName)  \
-	void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
+	inline void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
+
+#define SET_DIRTY(BaseName)  \
+	bool mDirty##BaseName = false;\
+	inline void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { mDirty##BaseName = true; m##BaseName = new##BaseName; };
 
 #define GET_SET(BaseName) GET(BaseName) SET(BaseName)
+#define CGET_SET(BaseName) CGET(BaseName) SET(BaseName)
 #define RGET_SET(BaseName) RGET(BaseName) SET(BaseName)
 #define CRGET_SET(BaseName) CRGET(BaseName) SET(BaseName)
 
-#define HASVALID(BaseName) bool hasValid ## BaseName() const { return m ## BaseName.isValid(); }
+#define HASVALID(BaseName) inline bool hasValid ## BaseName() const { return m##BaseName.isValid(); }
+
+#define MAP_GETCURRENT(BaseName) \
+	decltype(m##BaseName)::key_type m##BaseName##CurrentKey = {}; \
+	SET(BaseName##CurrentKey); \
+	inline CGETTER_TYPE(decltype(m##BaseName)::mapped_type) get##BaseName##Current() const { return m##BaseName.at(m##BaseName##CurrentKey); }
 
 // --------------------------------------------------------
 // COPY
@@ -169,34 +195,34 @@ void __customMain()
 
 // SERIALIZE
 
-#define DO_SERIALIZE(Name, Var)\
+#define SERIALIZE(Name, Var)\
 json[Name] = SerializationUtils::serializeTemplated<decltype(Var)>(Var);
 
-#define DO_SERIALIZE_IF(Condition, Name, Var)\
+#define SERIALIZE_IF(Condition, Name, Var)\
 if((Condition))\
 {\
-	DO_SERIALIZE(Name, Var)\
+	SERIALIZE(Name, Var)\
 }
 
-#define DO_SERIALIZE_LIST_ELEMENT(Name, Var)\
+#define SERIALIZE_LIST_ELEMENT(Name, Var)\
 json[Name].push_back(SerializationUtils::serializeTemplated<decltype(Var)>(Var));
 
-#define DO_SERIALIZE_LIST(Name, Var)\
+#define SERIALIZE_LIST(Name, Var)\
 FOR_LIST(__it, Var)\
 {\
-	DO_SERIALIZE_LIST_ELEMENT(Name, (*__it))\
+	SERIALIZE_LIST_ELEMENT(Name, (*__it))\
 }
 
-#define DO_SERIALIZE_LIST_IF(Name, Var, ConditionLambda)\
+#define SERIALIZE_LIST_IF(Name, Var, ConditionLambda)\
 FOR_LIST(__it, Var)\
 {\
 	if((ConditionLambda(*__it)))\
 	{\
-		DO_SERIALIZE_LIST_ELEMENT(Name, (*__it))\
+		SERIALIZE_LIST_ELEMENT(Name, (*__it))\
 	}\
 }
 
-// #define DO_SERIALIZE_MAP(Name, Var)
+// #define SERIALIZE_MAP(Name, Var)
 // JSON __jsonMap = JSON::object();
 // FOR_MAP(__it, Var)
 // {
@@ -206,10 +232,10 @@ FOR_LIST(__it, Var)\
 
 // DESERIALIZE
 
-#define DO_DESERIALIZE(Name, Var)\
+#define DESERIALIZE(Name, Var)\
 SerializationUtils::deserializeTemplated<decltype(Var)>(Var, json[Name]);
 
-#define DO_DESERIALIZE_LIST(Name, Var, ConstructionLambda)\
+#define DESERIALIZE_LIST(Name, Var, ConstructionLambda)\
 if(!json.empty() && json.contains(Name))\
 {\
     FOR_LIST(__it, json[Name])\
@@ -220,7 +246,7 @@ if(!json.empty() && json.contains(Name))\
     }\
 }
 
-// #define DO_DESERIALIZE_MAP(Name, Var, ConstructionLambda)
+// #define DESERIALIZE_MAP(Name, Var, ConstructionLambda)
 // if(!json.empty() && json.contains(Name))
 // {
 //     FOR_LIST(__it, json[Name])

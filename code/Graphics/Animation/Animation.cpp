@@ -96,16 +96,16 @@ const AnimationFrame& Animation::getCurrentFrame() const
 
 void Animation::serialize(JSON& json) const
 {
-	DO_SERIALIZE("name", mName);
-	DO_SERIALIZE("speed", mSpeed);
-	DO_SERIALIZE_LIST("frames", mFrames);
+	SERIALIZE("name", mName);
+	SERIALIZE("speed", mSpeed);
+	SERIALIZE_LIST("frames", mFrames);
 }
 
 void Animation::deserialize(const JSON& json)
 {
-	DO_DESERIALIZE("name", mName);
-	DO_DESERIALIZE("speed", mSpeed);
-	DO_DESERIALIZE_LIST("frames", mFrames, [](const JSON& json)
+	DESERIALIZE("name", mName);
+	DESERIALIZE("speed", mSpeed);
+	DESERIALIZE_LIST("frames", mFrames, [](const JSON& json)
 	{
 		AnimationFrame frame;
 		frame.deserialize(json);

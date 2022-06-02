@@ -257,17 +257,17 @@ template<>
 JSON SerializationUtils::serializeTemplated(const Vector3& value)
 {
 JSON json;
-DO_SERIALIZE("x", value.x)
-DO_SERIALIZE("y", value.y)
-DO_SERIALIZE("z", value.z)
+SERIALIZE("x", value.x)
+SERIALIZE("y", value.y)
+SERIALIZE("z", value.z)
 return json;
 }
 
 template<>
 void SerializationUtils::deserializeTemplated(Vector3& value, const JSON& json)
 {
-DO_DESERIALIZE("x", value.x)
-DO_DESERIALIZE("y", value.y)
-DO_DESERIALIZE("z", value.z)
+DESERIALIZE("x", value.x)
+DESERIALIZE("y", value.y)
+DESERIALIZE("z", value.z)
 }
 

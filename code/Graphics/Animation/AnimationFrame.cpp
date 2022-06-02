@@ -10,14 +10,14 @@ void AnimationFrame::init(const Vector2& position, f32 width, f32 height)
 
 void AnimationFrame::serialize(JSON& json) const
 {
-    DO_SERIALIZE("position", mPosition);
-    DO_SERIALIZE("width", mWidth);
-    DO_SERIALIZE("height", mHeight);
+    SERIALIZE("position", mPosition);
+    SERIALIZE("width", mWidth);
+    SERIALIZE("height", mHeight);
 }
 
 void AnimationFrame::deserialize(const JSON& json)
 {
-    DO_DESERIALIZE("position", mPosition);
-    DO_DESERIALIZE("width", mWidth);
-    DO_DESERIALIZE("height", mHeight);
+    DESERIALIZE("position", mPosition);
+    DESERIALIZE("width", mWidth);
+    DESERIALIZE("height", mHeight);
 }

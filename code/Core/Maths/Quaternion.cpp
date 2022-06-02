@@ -250,15 +250,15 @@ template<>
 JSON SerializationUtils::serializeTemplated(const Quaternion& value)
 {
 JSON json;
-DO_SERIALIZE("v", value.v)
-DO_SERIALIZE("w", value.w)
+SERIALIZE("v", value.v)
+SERIALIZE("w", value.w)
 return json;
 }
 
 template<>
 void SerializationUtils::deserializeTemplated(Quaternion& value, const JSON& json)
 {
-DO_DESERIALIZE("v", value.v)
-DO_DESERIALIZE("w", value.w)
+DESERIALIZE("v", value.v)
+DESERIALIZE("w", value.w)
 }
 

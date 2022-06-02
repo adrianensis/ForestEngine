@@ -92,25 +92,25 @@ void GameObject::destroy()
 
 void GameObject::serialize(JSON& json) const 
 {
-	DO_SERIALIZE("class", getClassName())
+	SERIALIZE("class", getClassName())
 
-	DO_SERIALIZE("is_static", mIsStatic)
-	DO_SERIALIZE("should_persist", mShouldPersist)
+	SERIALIZE("is_static", mIsStatic)
+	SERIALIZE("should_persist", mShouldPersist)
 
-	DO_SERIALIZE("tag", mTag)
+	SERIALIZE("tag", mTag)
 
-	DO_SERIALIZE("transform", mTransform.get())
+	SERIALIZE("transform", mTransform.get())
 
 }
 
 void GameObject::deserialize(const JSON& json) 
 {
-	DO_DESERIALIZE("is_static", mIsStatic)
-	DO_DESERIALIZE("should_persist", mShouldPersist)
+	DESERIALIZE("is_static", mIsStatic)
+	DESERIALIZE("should_persist", mShouldPersist)
 
-	DO_DESERIALIZE("tag", mTag)
+	DESERIALIZE("tag", mTag)
 
-	DO_DESERIALIZE("transform", mTransform.get())
+	DESERIALIZE("transform", mTransform.get())
 
 
 }

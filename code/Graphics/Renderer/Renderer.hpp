@@ -8,7 +8,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-
 class Chunk;
 class Batch;
 
@@ -17,13 +16,8 @@ class Renderer: public Component
     GENERATE_METADATA(Renderer)
 	
 public:
-
-	bool hasClipRectangle() const { return mClipRectangle.getSize().len() > MathUtils::FLOAT_EPSILON; }
-	Ptr<const Animation> getCurrentAnimation() const { return mAnimations.at(mCurrentAnimationName); }
-
     void init() override;
     void onComponentAdded() override;
-    void setPositionOffset(const Vector3& newPositionOffset);
     bool getIsWorldSpace() const;
     void update();
     void onDestroy() override;
@@ -38,7 +32,6 @@ private:
 private:
 	TransformState mTransformState;
 	Matrix4 mRendererModelMatrix;
-	bool mRendererModelMatrixGenerated = false;
 	bool mVerticesDirty = true;
 	std::vector<Vector3> mVertices;
 	Vector4 mColor;
@@ -51,7 +44,6 @@ private:
 	bool mUseDepth = false; // overrides Z with Depth
 	f32 mRenderDistance = 0.0f;
 	std::map<std::string, Ptr<Animation>> mAnimations;
-	std::string mCurrentAnimationName;
 	Ptr<Chunk> mChunk;
 	Ptr<Batch> mBatch;
 	Ptr<const Mesh> mMesh;
@@ -63,6 +55,7 @@ public:
 	CRGET_SET(Vertices)
 	CRGET_SET(Color)
 	GET(PositionOffset)
+	SET_DIRTY(PositionOffset)
 	CRGET_SET(TextureRegion)
 	CRGET_SET(ClipRectangle)
 	GET_SET(InvertAxisX)
@@ -70,13 +63,12 @@ public:
 	GET_SET(Depth)
 	GET_SET(UseDepth)
 	GET_SET(RenderDistance)
-	RGET(Animations)
-	GET_SET(CurrentAnimationName)
 	SET(Chunk)
 	SET(Batch)
 	HASVALID(Batch)
-	RGET_SET(Mesh)
-	RGET_SET(Material)
+	GET_SET(Mesh)
+	GET_SET(Material)
+	MAP_GETCURRENT(Animations)
 };
 
 #endif

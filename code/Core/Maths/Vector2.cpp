@@ -190,15 +190,15 @@ template<>
 JSON SerializationUtils::serializeTemplated(const Vector2& value)
 {
 JSON json;
-DO_SERIALIZE("x", value.x)
-DO_SERIALIZE("y", value.y)
+SERIALIZE("x", value.x)
+SERIALIZE("y", value.y)
 return json;
 }
 
 template<>
 void SerializationUtils::deserializeTemplated(Vector2& value, const JSON& json)
 {
-DO_DESERIALIZE("x", value.x)
-DO_DESERIALIZE("y", value.y)
+DESERIALIZE("x", value.x)
+DESERIALIZE("y", value.y)
 }
 
