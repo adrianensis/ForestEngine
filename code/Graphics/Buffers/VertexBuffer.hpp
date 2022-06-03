@@ -16,7 +16,7 @@ public:
     void init(u32 elementSize, u32 propertyArrayIndex, bool isStatic);
     void terminate();
     void resize(u32 size);
-    void setData(const std::vector<f32> &data);
+    void setData(const vf32 &data);
 
 private:
 	bool mGenerated = false;
@@ -53,7 +53,7 @@ private:
 
 	u32 mVBOMatrices = 0;
 	bool mIsInstanced = false;
-	std::vector<f32> mMatrices;
+	vf32 mMatrices;
 	
 	u32 mVAO = 0;
 	VertexBuffer mVBOPosition;

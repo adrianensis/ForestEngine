@@ -5,9 +5,9 @@
 
 namespace Hash
 {
-	static u64 hashString(std::string key)
+	static u64 hashString(String key)
 	{
-		std::hash<std::string> hash_fn;
+		std::hash<String> hash_fn;
 		u64 hashString = hash_fn(key);
 		return hashString;
 	}
@@ -19,7 +19,7 @@ class ObjectMeta
 public:
 	ObjectMeta() { };
 
-	static std::string getClassNameStatic()
+	static String getClassNameStatic()
 	{
 		return smClassName;
 	}
@@ -34,7 +34,7 @@ public:
 		return ObjectMeta::getClassIdStatic();
 	}
 
-	virtual std::string getClassName() const
+	virtual String getClassName() const
 	{
 		return ObjectMeta::getClassNameStatic();
 	}
@@ -57,7 +57,7 @@ public:
 	}
 
 private:
-	inline static std::string smClassName = "ObjectMeta";
+	inline static String smClassName = "ObjectMeta";
 	inline static ClassId smClassId = Hash::hashString(smClassName);
 };
 

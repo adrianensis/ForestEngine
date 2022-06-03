@@ -40,24 +40,24 @@ class CommandLine: public ObjectBase, public Singleton<CommandLine>
 	GENERATE_METADATA(CommandLine)
 
 private:
-	std::map<std::string, CommandFunctor> mCommandsMap;
-	std::string mBuffer;
+	std::map<String, CommandFunctor> mCommandsMap;
+	String mBuffer;
 
-	std::list<std::string> mHistory;
-	std::list<std::string>::iterator mHistoryIterator;
+	std::list<String> mHistory;
+	std::list<String>::iterator mHistoryIterator;
 
     bool mIsOpen = false;
 
-    void log(const std::string& line, bool newLine = true) const;
+    void log(const String& line, bool newLine = true) const;
 
 public:
     void init();
 	void update();
     void terminate();
 
-    void execute(const std::string& commandLine);
-    std::string autocomplete(const std::string& commandLine);
-    void registerCommand(const std::string& commandName, CommandCallback callback);
+    void execute(const String& commandLine);
+    String autocomplete(const String& commandLine);
+    void registerCommand(const String& commandName, CommandCallback callback);
 
 	void open();
 	void close();

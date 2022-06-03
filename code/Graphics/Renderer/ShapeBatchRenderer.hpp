@@ -44,9 +44,9 @@ private:
 	u32 mVBOPosition = 0;
 	u32 mVBOColor = 0;
 	u32 mEBO = 0;
-	std::vector<f32> mPositionBuffer;
-	std::vector<f32> mColorBuffer;
-	std::vector<u16> mIndicesBuffer;
+	vf32 mPositionBuffer;
+	vf32 mColorBuffer;
+	vu16 mIndicesBuffer;
 
 	f32 mSize = 0.0f;
 

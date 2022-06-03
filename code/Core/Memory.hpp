@@ -8,7 +8,7 @@
 class Memory
 {
 public:
-	inline static std::map<std::string, i32> mAllocationsCounter;
+	inline static std::map<String, i32> mAllocationsCounter;
 
     static void init();
 
@@ -19,7 +19,7 @@ public:
 	{
 		T *object = new T;
 
-		std::string className;
+		String className;
 
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
@@ -47,7 +47,7 @@ public:
 	{
 		ASSERT_MSG(pointer != nullptr, "pointer is nullptr");
 
-		std::string className;
+		String className;
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
 			className = pointer->getClassName();

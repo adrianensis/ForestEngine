@@ -26,7 +26,7 @@ class UIDropdownEntry: public ObjectBase
 public:
 	UIDropdownEntry() = default;
 	
-    UIDropdownEntry(const std::string& label, UIElementCallback callback);
+    UIDropdownEntry(const String& label, UIElementCallback callback);
 
 	COPY(UIDropdownEntry)
 	{
@@ -35,7 +35,7 @@ public:
 	}
 
 public:
-	std::string mLabel;
+	String mLabel;
 	UIElementCallback mCallback;
 };
 
@@ -47,7 +47,7 @@ public:
     void init() override;
     void onDestroy() override;
     void onPostReleased() override;
-    UIDropdown& addOption(const std::string& label, UIElementCallback onPressedCallback);
+    UIDropdown& addOption(const String& label, UIElementCallback onPressedCallback);
     void toggle();
 
 private:

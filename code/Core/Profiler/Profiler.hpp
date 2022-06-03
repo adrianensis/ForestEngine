@@ -20,16 +20,16 @@ public:
     void init();
     void update(f32 deltaTimeMillis);
     void terminate();
-    void timeMarkStart(const std::string& name);
-    void timeMarkEnd(const std::string& name);
+    void timeMarkStart(const String& name);
+    void timeMarkEnd(const String& name);
 
 private:
-    void printResult(const std::string& name, f32 time)  const;
-    void printResultAverage(const std::string& name, f32 time)  const;
+    void printResult(const String& name, f32 time)  const;
+    void printResultAverage(const String& name, f32 time)  const;
 
 private:
-	std::map<std::string, f32> mTimeMap;
-	std::map<std::string, TimeMark> mTimeMarkMap;
+	std::map<String, f32> mTimeMap;
+	std::map<String, TimeMark> mTimeMarkMap;
 
 	f32 mTotalTimeMillis = 0;
 	u32 mFrameCounter = 0;

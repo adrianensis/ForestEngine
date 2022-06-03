@@ -43,4 +43,18 @@ using u64 = std::uint64_t;
 using ClassId = u64;
 using ObjectId = u64;
 
+using vf32 = std::vector<f32>;
+using vf64 = std::vector<f64>;
+using vbyte = std::vector<byte>;
+using vu8 = std::vector<u8>;
+using vu16 = std::vector<u16>;
+using vu32 = std::vector<u32>;
+using vu64 = std::vector<u64>;
+using vi8 = std::vector<i8>;
+using vi16 = std::vector<i16>;
+using vi32 = std::vector<i32>;
+using vi64 = std::vector<i64>;
+
+using String = std::string;
+
 #endif

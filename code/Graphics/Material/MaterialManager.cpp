@@ -14,7 +14,7 @@ void MaterialManager::init()
 	TRACE()
 }
 
-Ptr<Texture> MaterialManager::loadTexture(const std::string& path)
+Ptr<Texture> MaterialManager::loadTexture(const String& path)
 {
 	if (!MAP_CONTAINS(mTexturesMap, path))
 	{
@@ -26,7 +26,7 @@ Ptr<Texture> MaterialManager::loadTexture(const std::string& path)
 	return mTexturesMap.at(path);
 }
 
-Ptr<Material> MaterialManager::loadMaterial(const std::string& path)
+Ptr<Material> MaterialManager::loadMaterial(const String& path)
 {
 	if (!MAP_CONTAINS(mMaterialsMap, path))
 	{

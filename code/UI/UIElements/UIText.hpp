@@ -16,7 +16,7 @@ public:
     void init() override;
     void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
-    void setText(const std::string& text) override;
+    void setText(const String& text) override;
     void setVisibility(bool visibility) override;
     
 protected:
@@ -26,7 +26,7 @@ protected:
 private:
 	i32 mLayer = 0;
 	Vector2 mSize;
-	std::string mString;
+	String mString;
 	std::vector<Renderer *> mFontRenderers;
     bool mIsEditable = false;
 

@@ -32,7 +32,7 @@ public:
 
 private:
     GameObject* createSprite(const Vector3& v, f32 size);
-    void importModel( const std::string& pFile);
+    void importModel( const String& pFile);
 
 private:
 	f32 rotation = 0;

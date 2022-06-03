@@ -141,7 +141,7 @@ IMPLEMENT_SERIALIZATION(Renderer)
 {
 	Component::serialize(json);
 
-	std::string materialPath = "";
+	String materialPath = "";
 
 	if(mMaterial.get().getTexture())
 	{
@@ -157,7 +157,7 @@ IMPLEMENT_SERIALIZATION(Renderer)
 
 IMPLEMENT_DESERIALIZATION(Renderer)
 {
-	std::string materialPath = "";
+	String materialPath = "";
 	DESERIALIZE("material", materialPath)
 
 	mMaterial = MaterialManager::getInstance().loadMaterial(materialPath);

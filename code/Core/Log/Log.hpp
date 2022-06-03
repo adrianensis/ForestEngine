@@ -6,17 +6,17 @@
 class Log
 {
 public:
-	inline static const std::string emptyMessage;
+	inline static const String emptyMessage;
 	inline static std::ofstream logFile;
 
 	Log() = default;
 	~Log() = default;
 
 	template <class T>
-	static void var(const std::string& varname, T var)
+	static void var(const String& varname, T var)
 	{
-		std::string valueStr;
-		if constexpr (std::is_same<T, std::string>::value)
+		String valueStr;
+		if constexpr (std::is_same<T, String>::value)
 		{
 			valueStr = var;
 		}
@@ -31,8 +31,8 @@ public:
 	template <class T>
 	static void val(const T& var)
 	{
-		std::string valueStr;
-		if constexpr (std::is_same<T, std::string>::value)
+		String valueStr;
+		if constexpr (std::is_same<T, String>::value)
 		{
 			valueStr = var;
 		}
@@ -46,12 +46,12 @@ public:
 
     static void init();
     static void terminate();
-    static void log(const std::string& str);
-    static void append(const std::string& str);
-    static void trace(const std::string file, u32 line, const std::string function, const std::string message = emptyMessage);
-    static void echo(const std::string& message, bool newLine = true);
-    static void customEcho(const std::string& tag, const std::string& message, bool newLine = true);
-    static void error(const std::string& message);
+    static void log(const String& str);
+    static void append(const String& str);
+    static void trace(const String file, u32 line, const String function, const String message = emptyMessage);
+    static void echo(const String& message, bool newLine = true);
+    static void customEcho(const String& tag, const String& message, bool newLine = true);
+    static void error(const String& message);
     static void brline();
     static void backspace();
 };

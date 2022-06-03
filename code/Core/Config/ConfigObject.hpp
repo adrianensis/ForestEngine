@@ -17,12 +17,12 @@ class ConfigObject: public ObjectBase
     GENERATE_METADATA(ConfigObject)
 
 public:
-	const JSON& at(const std::string& key) const { return mJson.at(key); }
-    void readFromJsonFile(const std::string& path);
-    void writeToJsonFile(const std::string& path);
+	const JSON& at(const String& key) const { return mJson.at(key); }
+    void readFromJsonFile(const String& path);
+    void writeToJsonFile(const String& path);
     void init();
     void clear();
-    bool contains(std::string& key) const;
+    bool contains(String& key) const;
 
 private:
 	JSON mJson;

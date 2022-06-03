@@ -239,7 +239,7 @@ GameObject* Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-void Editor::importModel( const std::string& pFile)
+void Editor::importModel( const String& pFile)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile( pFile, 

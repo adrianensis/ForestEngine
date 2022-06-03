@@ -61,7 +61,7 @@ public:
     bool hasFocus() const;
     bool isMouseCursorInsideElement();
 
-	virtual void setText(const std::string& text) { };
+	virtual void setText(const String& text) { };
     virtual void setVisibility(bool visibility);
     bool isVisible();
     void setOnPressedCallback(UIElementCallback callback);
@@ -138,7 +138,7 @@ protected:
 	FunctorUIElement mOnFocusLostFunctor;
 
 	Renderer* mRenderer = nullptr;
-	std::string mInputString;
+	String mInputString;
 	bool mConsumeInput = true;
 	UIElementState mState = UIElementState::RELEASED;
 	bool mToggleEnabled = false;
