@@ -4,7 +4,7 @@
 #include "Core/Metadata.hpp"
 #include "Core/Macros.hpp"
 #include "Core/Serialization.hpp"
-#include "Core/Reference.hpp"
+#include "Core/Pointers.hpp"
 
 class ObjectBase: public ObjectMeta, public ISerializable, public std::enable_shared_from_this<ObjectBase>
 {

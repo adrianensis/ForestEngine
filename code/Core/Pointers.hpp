@@ -1,5 +1,5 @@
-#ifndef REFERENCE_HPP
-#define REFERENCE_HPP
+#ifndef POINTERS_HPP
+#define POINTERS_HPP
 
 #include "Core/Memory.hpp"
 
