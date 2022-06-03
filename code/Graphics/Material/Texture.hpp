@@ -12,7 +12,7 @@ class Texture: public ObjectBase
 public:
     ~Texture() override;
 
-    void init(const String& path);
+    void init(const std::string& path);
     void bind();
 
 private:
@@ -23,7 +23,7 @@ private:
 	byte* mData = nullptr;
 	u32 mWidth = 0;
 	u32 mHeight = 0;
-	String mPath;
+	std::string mPath;
 
 public:
 	GET(TextureId)

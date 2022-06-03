@@ -15,7 +15,7 @@ public:
     void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
     void onLabelDestroy();
-    void setText(const String& text) override;
+    void setText(const std::string& text) override;
     void setVisibility(bool visibility) override;
 
 private:

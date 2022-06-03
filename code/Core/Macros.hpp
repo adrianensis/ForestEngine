@@ -69,7 +69,7 @@ void __customMain()
 
 #define GENERATE_METADATA(...)                                                    \
 	private: \
-		inline static String smClassName = String(#__VA_ARGS__);        \
+		inline static std::string smClassName = std::string(#__VA_ARGS__);        \
 		inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName); \
 	public:                                                                         \
 		static ClassId getClassIdStatic()                                             \
@@ -82,12 +82,12 @@ void __customMain()
 			return __VA_ARGS__::getClassIdStatic();                                   \
 		};                                                                            \
 																					\
-		static String getClassNameStatic()                                       \
+		static std::string getClassNameStatic()                                       \
 		{                                                                             \
 			return smClassName;                                                       \
 		};                                                                            \
 																					\
-		String getClassName() const override                                     \
+		std::string getClassName() const override                                     \
 		{                                                                             \
 			return __VA_ARGS__::getClassNameStatic();                                 \
 		};                                                                            \

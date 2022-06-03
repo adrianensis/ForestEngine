@@ -43,7 +43,7 @@ public:
     }
 	
 private:
-	String mName;
+	std::string mName;
 	std::vector<AnimationFrame> mFrames;
 	u32 mCurrentFrameNumber = 0;
 	f32 mTimeAccumulator = 0.0f;

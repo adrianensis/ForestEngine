@@ -16,8 +16,8 @@ public:
     ~Scene() override;
 
     void init();
-    void saveScene(const String& path);
-    void loadScene(const String& path);
+    void saveScene(const std::string& path);
+    void loadScene(const std::string& path);
     void unloadScene();
     void addGameObject(GameObject *gameObject);
     void removeGameObject(GameObject *gameObject);
@@ -34,7 +34,7 @@ private:
 	GameObject* mCameraGameObject;
 
 	f32 mSize = 0.0f;
-	String mPath;
+	std::string mPath;
 
 	ConfigObject mLoadSceneConfig;
 

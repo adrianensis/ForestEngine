@@ -40,7 +40,7 @@ void Profiler::terminate()
 	mTimeMarkMap.clear();
 }
 
-void Profiler::timeMarkStart(const String& name)
+void Profiler::timeMarkStart(const std::string& name)
 {
 	if(!MAP_CONTAINS(mTimeMap, name))
 	{
@@ -54,7 +54,7 @@ void Profiler::timeMarkStart(const String& name)
 	mTimeMarkMap.at(name).start();
 }
 
-void Profiler::timeMarkEnd(const String& name)
+void Profiler::timeMarkEnd(const std::string& name)
 {
 	if(MAP_CONTAINS(mTimeMap, name))
 	{
@@ -63,12 +63,12 @@ void Profiler::timeMarkEnd(const String& name)
 	}
 }
 
-void Profiler::printResult(const String& name, f32 time)  const
+void Profiler::printResult(const std::string& name, f32 time)  const
 {
 	ECHO(name + " : " + std::to_string(time) + "ms ")
 }
 
-void Profiler::printResultAverage(const String& name, f32 time)  const
+void Profiler::printResultAverage(const std::string& name, f32 time)  const
 {
-	printResult(String("(Avg) ") + name, time / mFrameCounter);
+	printResult(std::string("(Avg) ") + name, time / mFrameCounter);
 }

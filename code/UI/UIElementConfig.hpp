@@ -20,7 +20,7 @@ class UIElementConfig: public ObjectBase
     GENERATE_METADATA(UIElementConfig)
 
 public:
-    void init(const Vector2& position, const Vector2& size, i32 layer, String text = String());
+    void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());
 
 	COPY(UIElementConfig)
 	{
@@ -54,12 +54,12 @@ public:
 	Vector2 mDisplayPosition;
 	Vector2 mSize;
 	Vector2 mTextSize;
-	String mText;
+	std::string mText;
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
 	Ptr<Material> mMaterial;
-	String mGroup;
+	std::string mGroup;
 	GameObject* mParent = nullptr;
 	f32 mSeparatorSize = 0.0f;
 };

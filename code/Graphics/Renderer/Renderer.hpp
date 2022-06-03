@@ -42,7 +42,7 @@ private:
 	i32 mDepth = 0;
 	bool mUseDepth = false; // overrides Z with Depth
 	f32 mRenderDistance = 0.0f;
-	std::map<String, Ptr<Animation>> mAnimations;
+	std::map<std::string, Ptr<Animation>> mAnimations;
 	Ptr<Chunk> mChunk;
 	Ptr<Batch> mBatch;
 	Ptr<const Mesh> mMesh;

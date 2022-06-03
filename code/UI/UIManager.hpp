@@ -24,7 +24,7 @@ public:
     Ptr<Material> getFontMaterial();
 	static const Vector2& getDefaultFontSize() { return smDefaultFontSize; }
 
-	UIGroup& getOrCreateGroup(const String & groupName)
+	UIGroup& getOrCreateGroup(const std::string & groupName)
 	{
 		if (!MAP_CONTAINS(mGroups, groupName))
 		{
@@ -43,7 +43,7 @@ public:
     void setFocusedElement(UIElement * focusedElement);
 
 private:
-	std::map<String, UIGroup *> mGroups;
+	std::map<std::string, UIGroup *> mGroups;
 	std::map<char, Vector2> mCharMap;
 	Vector2 mFontTilesCount;
 	Vector2 mFontTileTextureSize;

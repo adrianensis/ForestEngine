@@ -8,8 +8,8 @@ class CommandArgument: public ObjectBase
     GENERATE_METADATA(CommandArgument)
 
 private:
-    String mName;
-    String mValue;
+    std::string mName;
+    std::string mValue;
 
 public:
 
@@ -28,18 +28,18 @@ class Command: public ObjectBase
     GENERATE_METADATA(Command)
 
 private:
-    String mName;
-    String mArgumentsString;
-    std::map<String, CommandArgument> mArguments;
+    std::string mName;
+    std::string mArgumentsString;
+    std::map<std::string, CommandArgument> mArguments;
 
-    inline static const String smDefaultArgumentValue = ""; 
+    inline static const std::string smDefaultArgumentValue = ""; 
 
 public:
 
     void clearArguments() { mArguments.clear(); };
     void addArgument(const CommandArgument& arg) { MAP_INSERT(mArguments, arg.getName(), arg); };
-    bool argumentExists(const String& argName) const { return MAP_CONTAINS(mArguments, argName); };
-    const String& getValue(const String& argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
+    bool argumentExists(const std::string& argName) const { return MAP_CONTAINS(mArguments, argName); };
+    const std::string& getValue(const std::string& argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
 
     COPY(Command)
     {

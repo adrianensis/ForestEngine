@@ -19,7 +19,7 @@ public:
     void setVisibility(bool visibility);
 
 public:
-	String mName;
+	std::string mName;
 	bool mVisible = false;
 	std::list<UIElement *> mUIElements;
 	

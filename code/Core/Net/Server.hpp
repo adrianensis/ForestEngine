@@ -20,8 +20,8 @@ class Server: public ObjectBase
 public:
     void init(u16 port);
     bool checkConnectionRequest();
-    void writeData(const String& data) const;
-    String readData(u32 size = DEFAULT_SOCKET_READ_SIZE) const;
+    void writeData(const std::string& data) const;
+    std::string readData(u32 size = DEFAULT_SOCKET_READ_SIZE) const;
     JSON readJSON() const;
     void writeJSON(JSON& json) const;
 
@@ -36,7 +36,7 @@ private:
 	int opt = 1;
 	int addrlen = sizeof(address);
 
-	mutable String buffer;
+	mutable std::string buffer;
 	
 public:
 	GET(Status)

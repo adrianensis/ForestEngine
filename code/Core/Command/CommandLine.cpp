@@ -88,7 +88,7 @@ void CommandLine::init()
     DefaultCommands::registerDefaultCommands();
 }
 
-void CommandLine::log(const String& line, bool newLine /*= true*/) const
+void CommandLine::log(const std::string& line, bool newLine /*= true*/) const
 {
     if(newLine)
     {
@@ -110,16 +110,16 @@ void CommandLine::terminate()
 
 }
 
-void CommandLine::execute(const String& commandLine)
+void CommandLine::execute(const std::string& commandLine)
 {
-    String patternValidName("[-+]?[a-zA-Z_\\.0-9]+");
+    std::string patternValidName("[-+]?[a-zA-Z_\\.0-9]+");
     std::regex regexCommand("^\\s*(" + patternValidName + ")\\s*");
 
     std::smatch matchCommand;
     std::regex_search(commandLine, matchCommand, regexCommand);
     bool isCommand = !matchCommand.empty();
 
-    String commandName = matchCommand[1];
+    std::string commandName = matchCommand[1];
 
     if(isCommand && MAP_CONTAINS(mCommandsMap, commandName))
     {
@@ -128,7 +128,7 @@ void CommandLine::execute(const String& commandLine)
         CommandFunctor& functor = mCommandsMap.at(commandName);
         functor.getCommand().clearArguments();
 
-        String patternAssignation("\\s*=\\s*");
+        std::string patternAssignation("\\s*=\\s*");
         std::regex regexCommandWithArgumentList("^\\s*" + patternValidName + "\\s+((" + patternValidName + "(" + patternAssignation + patternValidName + ")?\\s*)+)\\s*");
 
         std::smatch matchCommandWithArgumentList;
@@ -137,7 +137,7 @@ void CommandLine::execute(const String& commandLine)
 
         if(isCommandWithArgumentList)
         {
-            String argumentList = matchCommandWithArgumentList[1].str();
+            std::string argumentList = matchCommandWithArgumentList[1].str();
 
             std::regex regexArgument("\\s*(" + patternValidName + "(" + patternAssignation + patternValidName + ")?)\\s*");
 
@@ -151,7 +151,7 @@ void CommandLine::execute(const String& commandLine)
 
             for (std::sregex_iterator i = argumentlistBegin; i != argumentlistEnd; ++i) {
                 std::smatch argumentMatch = *i;                                                 
-                String argumentStr = argumentMatch.str(); 
+                std::string argumentStr = argumentMatch.str(); 
 
                 std::regex regexPair("(" + patternValidName + ")(" + patternAssignation + "(" + patternValidName + "))?");
 
@@ -180,12 +180,12 @@ void CommandLine::execute(const String& commandLine)
     mHistoryIterator = mHistory.end();
 }
 
-String CommandLine::autocomplete(const String& commandLine)
+std::string CommandLine::autocomplete(const std::string& commandLine)
 {
-    return String(); // TODO : implement command autocomplete
+    return std::string(); // TODO : implement command autocomplete
 }
 
-void CommandLine::registerCommand(const String& commandName, CommandCallback callback)
+void CommandLine::registerCommand(const std::string& commandName, CommandCallback callback)
 {
     ASSERT_MSG(!MAP_CONTAINS(mCommandsMap, commandName), "Command " + commandName + " already registered!");
 

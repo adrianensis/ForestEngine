@@ -18,13 +18,13 @@ public:
     ~MaterialManager() override;
     
     void init();
-    Ptr<Texture> loadTexture(const String& path);
-    Ptr<Material> loadMaterial(const String& path);
+    Ptr<Texture> loadTexture(const std::string& path);
+    Ptr<Material> loadMaterial(const std::string& path);
     Ptr<Material> loadNoTextureMaterial();
 
 private:
-	std::map<String, OwnerPtr<Texture>> mTexturesMap;
-	std::map<String, OwnerPtr<Material>> mMaterialsMap;
+	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;
+	std::map<std::string, OwnerPtr<Material>> mMaterialsMap;
 	OwnerPtr<Material> mNoTextureMaterial;
 };
 

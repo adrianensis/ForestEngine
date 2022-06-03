@@ -44,7 +44,7 @@ void Scene::init()
 	mLoadSceneConfig.init();
 }
 
-void Scene::saveScene(const String& path)
+void Scene::saveScene(const std::string& path)
 {
 	mPath = path;
 
@@ -59,7 +59,7 @@ void Scene::saveScene(const String& path)
 	configMap.writeToJsonFile(path);
 }
 
-void Scene::loadScene(const String& path)
+void Scene::loadScene(const std::string& path)
 {
 	mPath = path;
 
@@ -157,7 +157,7 @@ void Scene::update()
 	{
 		FOR_RANGE_COND(i, 0, mMaxGameObjectsToLoadPerFrame, mGameObjectsToLoadIndex < mGameObjectsToLoadTotal)
 		{
-			String className = "GameObject"; //mLoadSceneConfig->at("class").get<String>();
+			std::string className = "GameObject"; //mLoadSceneConfig->at("class").get<std::string>();
 
 			GameObject *gameObject = (GameObject*) INSTANCE_BY_NAME(className); //Memory::fromClassName<GameObject>(className));
 			gameObject->init();

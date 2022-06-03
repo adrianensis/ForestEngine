@@ -55,6 +55,4 @@ using vi16 = std::vector<i16>;
 using vi32 = std::vector<i32>;
 using vi64 = std::vector<i64>;
 
-using String = std::string;
-
 #endif
