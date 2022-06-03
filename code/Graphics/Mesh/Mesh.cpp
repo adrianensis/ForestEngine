@@ -50,27 +50,27 @@ void Mesh::addFaceIndex(u16 i)
 	mFaces.push_back(i);
 }
 
-void Mesh::addVertices(const vf32 vec)
+void Mesh::addVertices(const std::vector<f32> vec)
 {
 	mVertices.insert(mVertices.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addNormals(const vf32 vec)
+void Mesh::addNormals(const std::vector<f32> vec)
 {
 	mNormals.insert(mNormals.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addTextureCoordinates(const vf32 vec)
+void Mesh::addTextureCoordinates(const std::vector<f32> vec)
 {
 	mTextureCoordinates.insert(mTextureCoordinates.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addColors(const vf32 vec)
+void Mesh::addColors(const std::vector<f32> vec)
 {
 	mColors.insert(mColors.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addFaces(const vu16 vec)
+void Mesh::addFaces(const std::vector<u16> vec)
 {
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }

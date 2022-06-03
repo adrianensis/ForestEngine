@@ -119,13 +119,13 @@ void RenderContext::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRA
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u16) * size, nullptr, drawMode);
 }
 
-void RenderContext::setDataVBO(u32 VBO, const vf32 &data)
+void RenderContext::setDataVBO(u32 VBO, const std::vector<f32> &data)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(f32) * data.size(), data.data());
 }
 
-void RenderContext::setDataEBO(u32 EBO, const vu16 &data)
+void RenderContext::setDataEBO(u32 EBO, const std::vector<u16> &data)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u16) * data.size(), data.data());

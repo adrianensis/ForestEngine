@@ -28,7 +28,7 @@ void VertexBuffer::resize(u32 size)
 	RenderContext::resizeVBO(mVBO, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-void VertexBuffer::setData(const vf32 &data)
+void VertexBuffer::setData(const std::vector<f32> &data)
 {
 	RenderContext::setDataVBO(mVBO, data);
 }
