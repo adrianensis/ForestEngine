@@ -1,6 +1,10 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include <algorithm>
 
+Mesh::~Mesh()
+{
+
+}
 
 void Mesh::init(u32 vertexCount, u32 facesCount)
 {

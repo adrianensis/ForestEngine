@@ -11,10 +11,14 @@
 #include "Graphics/Animation/Animation.hpp"
 #include "Scene/Module.hpp"
 
+Batch::~Batch()
+{
+	mRenderers.clear();
+	mMeshBatcher.terminate();
+}
 
 void Batch::init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace)
 {
-
 	mMaterial = material;
 	mIsWorldSpace = isWorldSpace;
 	mIsStatic = isStatic;

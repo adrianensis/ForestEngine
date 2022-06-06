@@ -40,7 +40,7 @@ private:
 	Vector3 position;
 	GameObject* sprite = nullptr;
 	GameObject* cameraGameObject = nullptr;
-	OwnerPtr<Mesh> mesh;
+	std::vector<OwnerPtr<Mesh>> meshes;
 
 	OcTree octree;
 

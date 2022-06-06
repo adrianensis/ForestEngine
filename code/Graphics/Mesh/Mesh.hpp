@@ -8,7 +8,7 @@ class Mesh: public ObjectBase
     GENERATE_METADATA(Mesh)
 
 public:
-
+    ~Mesh() override;
     void init(u32 vertexCount, u32 facesCount);
     void addVertex(const Vector3& vector);
     void addNormal(const Vector3& vector);

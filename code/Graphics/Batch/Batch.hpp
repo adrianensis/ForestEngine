@@ -12,12 +12,7 @@ class Batch: public ObjectBase
     GENERATE_METADATA(Batch)
 
 public:
-	~Batch() override
-	{
-
-		mRenderers.clear();
-		mMeshBatcher.terminate();
-	}
+	~Batch() override;
 
     void init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace);
 
