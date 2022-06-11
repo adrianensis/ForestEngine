@@ -41,7 +41,7 @@ void ScenesManager::init()
 
 void ScenesManager::update()
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 	mCurrentScene->update();
 }
 

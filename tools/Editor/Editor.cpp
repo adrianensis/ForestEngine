@@ -141,6 +141,8 @@ void Editor::firstUpdate()
 
 void Editor::update()
 {
+	PROFILER_CPU()
+
 	Vector2 currentMousePosition = Input::getInstance().getMousePosition();
 
 

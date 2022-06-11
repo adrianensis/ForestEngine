@@ -86,11 +86,11 @@ void Engine::run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
 		}
 		
-		VAR(Time::getInstance().getDeltaTimeMillis())
 
-		Profiler::getInstance().update(1.0f/Time::getInstance().getElapsedTimeMillis());
+		Profiler::getInstance().update(Time::getInstance().getElapsedTimeMillis());
 
 		Time::getInstance().endFrame();
+		VAL(1000.0f/Time::getInstance().getDeltaTimeMillis())
 	}
 }
 

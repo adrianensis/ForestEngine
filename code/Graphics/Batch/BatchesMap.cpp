@@ -63,6 +63,8 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 
 void BatchesMap::render()
 {
+	PROFILER_CPU()
+
 	renderBatchesMap(mBatchesStatic);
 	renderBatchesMap(mBatchesDynamic);
 	renderBatchesMap(mBatchesStaticScreenSpace);
@@ -79,6 +81,8 @@ void BatchesMap::forceRegenerateBuffers()
 
 void BatchesMap::renderBatchesMap(InternalBatchesMap& batchesMap)
 {
+	PROFILER_CPU()
+
 	FOR_MAP(it, batchesMap)
 	{
 		it->second.get().render();

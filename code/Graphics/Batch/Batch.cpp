@@ -36,7 +36,7 @@ void Batch::init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bo
 
 void Batch::render()
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 
 	if (!mRenderers.empty())
 	{
@@ -63,7 +63,6 @@ void Batch::render()
 		mMaterial.get().disable();
 		mMeshBatcher.disable();
 	}
-
 }
 
 void Batch::addRenderer(Ptr<Renderer> renderer)
@@ -76,7 +75,7 @@ void Batch::addRenderer(Ptr<Renderer> renderer)
 
 bool Batch::processRenderers()
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 
 	u32 newSize = mRenderers.size();
 	mMeshBatcher.resize(newSize);
@@ -139,7 +138,7 @@ bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
 
 void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it)
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 
 	Ptr<Renderer> renderer = *it;
 

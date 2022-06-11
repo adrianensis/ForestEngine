@@ -21,7 +21,7 @@ void TimerManager::init() {
 }
 void TimerManager::update()
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 	if (!mTimers.empty())
 	{
 		f32 deltaTime = Time::getInstance().getDeltaTimeSeconds(); // seconds

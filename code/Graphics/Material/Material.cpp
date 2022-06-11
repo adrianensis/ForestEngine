@@ -19,6 +19,8 @@ void Material::init()
 
 void Material::bind(bool isWorldSpace, bool isInstanced)
 {
+	PROFILER_CPU()
+
 	if (mTexture)
 	{
 		mTexture.get().bind();

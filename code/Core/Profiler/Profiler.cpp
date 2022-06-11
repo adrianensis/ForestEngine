@@ -1,15 +1,31 @@
 #include "Core/Profiler/Profiler.hpp"
 #include "Core/Log/Log.hpp"
 
-FunctionProfiler::FunctionProfiler(const std::string& name)
+FunctionProfiler::FunctionProfiler(const std::string& name, bool isGPU /*= false*/)
 {
 	mScopeName = name;
-	Profiler::getInstance().timeMarkStart(mScopeName);
+	mIsGPU = isGPU;
+
+	if(mIsGPU)
+	{
+		Profiler::getInstance().timeMarkGPUStart(mScopeName);
+	}
+	else
+	{
+		Profiler::getInstance().timeMarkStart(mScopeName);
+	}
 }
 
 FunctionProfiler::~FunctionProfiler()
 {
-	Profiler::getInstance().timeMarkEnd(mScopeName);
+	if(mIsGPU)
+	{
+		Profiler::getInstance().timeMarkGPUEnd(mScopeName);
+	}
+	else
+	{
+		Profiler::getInstance().timeMarkEnd(mScopeName);
+	}
 }
 
 Profiler::Profiler()
@@ -29,7 +45,10 @@ void Profiler::update(f32 deltaTimeMillis)
 {
 	mFrameCounter++;
 
-	mTotalTimeMillis += deltaTimeMillis;
+	if(mFrameCounter > 5)
+	{
+		mTotalTimeMillis += deltaTimeMillis;
+	}
 }
 
 void Profiler::terminate()
@@ -39,6 +58,12 @@ void Profiler::terminate()
 	printResult("Total Time", mTotalTimeMillis);
 	printResultAverage("Frame Time", mTotalTimeMillis);
 	FOR_MAP(it, mTimeMap)
+	{
+		printResultAverage(it->first, it->second);
+		ECHO("----------------------------")
+	}
+
+	FOR_MAP(it, mTimeGPUMap)
 	{
 		printResultAverage(it->first, it->second);
 		ECHO("----------------------------")
@@ -71,6 +96,33 @@ void Profiler::timeMarkEnd(const std::string& name)
 	{
 		mTimeMarkMap.at(name).end();
 		MAP_INSERT(mTimeMap, name, mTimeMap.at(name) + mTimeMarkMap.at(name).getDeltaTimeMillis());
+	}
+}
+
+void Profiler::timeMarkGPUStart(const std::string& name)
+{
+	std::string gpuName = "(GPU) " + name;
+
+	if(!MAP_CONTAINS(mTimeGPUMap, gpuName))
+	{
+		MAP_INSERT(mTimeGPUMap, gpuName, 0);
+
+		TimeMarkGPU timeMark;
+		MAP_INSERT(mTimeMarkGPUMap, gpuName, timeMark);
+	}
+
+	mTimeMarkGPUMap.at(gpuName).init();
+	mTimeMarkGPUMap.at(gpuName).start();
+}
+
+void Profiler::timeMarkGPUEnd(const std::string& name)
+{
+	std::string gpuName = "(GPU) " + name;
+
+	if(MAP_CONTAINS(mTimeGPUMap, gpuName))
+	{
+		mTimeMarkGPUMap.at(gpuName).end();
+		MAP_INSERT(mTimeGPUMap, gpuName, mTimeGPUMap.at(gpuName) + mTimeMarkGPUMap.at(gpuName).getDeltaTimeMillis());
 	}
 }
 

@@ -22,7 +22,7 @@ void ScriptEngine::addComponent(Ptr<IEngineSystemComponent> component)
 
 void ScriptEngine::update()
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 	
 	if (mController)
 	{

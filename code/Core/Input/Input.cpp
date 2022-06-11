@@ -22,7 +22,7 @@ void Input::init()
 
 void Input::pollEvents()
 {
-	PROFILER_FUNCTION()
+	PROFILER_CPU()
 
 	smKeyJustPressed = false;
 	smButtonJustPressed = false;

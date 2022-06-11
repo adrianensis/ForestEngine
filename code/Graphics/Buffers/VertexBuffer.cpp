@@ -39,6 +39,8 @@ MeshBuffer::~MeshBuffer()
 
 void MeshBuffer::init(bool isStatic, bool isInstanced)
 {
+	PROFILER_CPU()
+
 	terminate();
 
 	mIsStatic = isStatic;
@@ -125,6 +127,8 @@ void MeshBuffer::setIndexesData(const Mesh& mesh)
 
 void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 {
+	PROFILER_CPU()
+
 	if(mIsInstanced)
 	{
 		std::copy(modelMatrix.getData(), modelMatrix.getData() + Matrix4::smMatrixSize, back_inserter(mMatrices));
@@ -133,6 +137,8 @@ void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 
 void MeshBuffer::clear()
 {
+	PROFILER_CPU()
+
 	if(mIsInstanced)
 	{
 		mMatrices.clear();
@@ -141,6 +147,8 @@ void MeshBuffer::clear()
 
 void MeshBuffer::setMaxInstances(u32 maxInstances)
 {
+	PROFILER_CPU()
+
 	if(mIsInstanced)
 	{
 		mMatrices.reserve(Matrix4::smMatrixSize * maxInstances);
@@ -163,6 +171,8 @@ MeshBatcher::~MeshBatcher()
 
 void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced)
 {
+	PROFILER_CPU()
+
 	terminate();
 	mMeshBuffer.init(isStatic, isInstanced);
 	mPrototypeMesh = prototypeMesh;
@@ -171,6 +181,8 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 
 void MeshBatcher::resize(u32 size)
 {
+	PROFILER_CPU()
+
 	clear();
 
 	if (size > mMaxMeshesThreshold)
@@ -213,6 +225,8 @@ void MeshBatcher::resize(u32 size)
 
 void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
 {
+	PROFILER_CPU()
+
 	mMeshBuffer.addInstanceMatrix(modelMatrix);
 
 	mMeshesIndex++;
@@ -220,6 +234,8 @@ void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
 
 void MeshBatcher::addInstance(const Mesh& meshInstance)
 {
+	PROFILER_CPU()
+
 	mMeshBuilder.addVertices(meshInstance.getVertices());
 	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
 	mMeshBuilder.addColors(meshInstance.getColors());
@@ -228,7 +244,7 @@ void MeshBatcher::addInstance(const Mesh& meshInstance)
 }
 
 void MeshBatcher::drawCall()
-{
+{	
 	if (mMeshesIndex > 0)
 	{
 		sendDataToGPU();
@@ -238,6 +254,7 @@ void MeshBatcher::drawCall()
 
 void MeshBatcher::terminate()
 {
+	PROFILER_CPU()
 	mMeshBuffer.terminate();
 }
 
@@ -253,12 +270,15 @@ void MeshBatcher::disable()
 
 void MeshBatcher::clear()
 {
+	PROFILER_CPU()
 	mMeshBuilder.clear();
 	mMeshBuffer.clear();
 }
 
 void MeshBatcher::generateFacesData(u32 meshesCount)
 {
+	PROFILER_CPU()
+
 	FOR_RANGE(i, 0, meshesCount)
 	{
 		u32 offset = (i * mPrototypeMesh.get().getVertexCount());
@@ -273,7 +293,7 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 }
 
 void MeshBatcher::sendDataToGPU()
-{
+{	
 	if(!mDataSentToGPU)
 	{
 		mMeshBuffer.setData(mMeshBuilder);

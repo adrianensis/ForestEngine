@@ -16,7 +16,6 @@ public:
 	COPY(TimeMark)
 	{
 		DO_COPY(mDeltaTimeMillis)
-		DO_COPY(mDeltaTimeChronoDuration)
 		DO_COPY(mStartTime)
 		DO_COPY(mLastTime)
 	}
@@ -31,9 +30,41 @@ public:
 
 private:
 	f32 mDeltaTimeMillis = 0.0f;
-	std::chrono::milliseconds mDeltaTimeChronoDuration;
 	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
 	std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
+	bool mIsStarted = false;
+
+public:
+	GET(IsStarted)
+};
+
+class TimeMarkGPU: public ObjectBase
+{
+    GENERATE_METADATA(TimeMarkGPU)
+
+public:
+
+	COPY(TimeMarkGPU)
+	{
+		DO_COPY(mDeltaTimeMillis)
+		DO_COPY(mStartTime)
+		DO_COPY(mLastTime)
+	}
+
+    void init();
+    void start();
+    void end();
+    f32 getDeltaTimeMillis();
+    f32 getDeltaTimeSeconds();
+
+private:
+	u32 mQueryIDStart;
+	u32 mQueryIDEnd;
+
+	f32 mDeltaTimeMillis = 0.0f;
+	u32 mDeltaTimeChronoDuration;
+	u64 mStartTime;
+	u64 mLastTime;
 	bool mIsStarted = false;
 
 public:

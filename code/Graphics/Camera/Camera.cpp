@@ -25,8 +25,8 @@ void Camera::onComponentAdded()
 
 void Camera::update()
 {
-	PROFILER_FUNCTION()
-
+	PROFILER_CPU()
+	
 	TransformState currentTransformState(getGameObject()->getTransform().get());
 	if(!currentTransformState.eq(mTransformState))
 	{
@@ -43,6 +43,8 @@ void Camera::update()
 
 void Camera::recalculateProjectionMatrix()
 {
+	PROFILER_CPU()
+
 	if (mIsOrtho)
 	{
 		setOrtho(mLeft, mRight, mBottom, mTop, mNear, mFar);
@@ -146,6 +148,8 @@ void Camera::resetZoom()
 
 void Camera::calculateViewMatrix()
 {
+	PROFILER_CPU()
+
 	Vector3 originalPosition = getGameObject()->getTransform().get().getWorldPosition();
 
 	Matrix4 viewTranslationMatrix;
