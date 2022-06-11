@@ -22,7 +22,7 @@ void Input::init()
 
 void Input::pollEvents()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	smKeyJustPressed = false;
 	smButtonJustPressed = false;
@@ -57,7 +57,7 @@ void Input::pollEvents()
 		SEND_INPUT_EVENT(event);
 	}
 
-	if(smLastKeyPressed != -1)
+	if(smLastKeyPressed != -/*  */1)
 	{
 		InputEventKeyHold event;
 		event.mKey = smLastKeyPressed;
@@ -66,8 +66,6 @@ void Input::pollEvents()
 	}
 
 	glfwPollEvents();
-
-	PROFILER_TIMEMARK_END();
 }
 
 bool Input::isKeyPressedOnce(u32 key)

@@ -22,7 +22,7 @@ void ScriptEngine::addComponent(Ptr<IEngineSystemComponent> component)
 
 void ScriptEngine::update()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 	
 	if (mController)
 	{
@@ -55,7 +55,6 @@ void ScriptEngine::update()
 		}
 	}
 
-	PROFILER_TIMEMARK_END()
 }
 
 void ScriptEngine::terminate()

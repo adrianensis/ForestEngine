@@ -25,7 +25,7 @@ void Camera::onComponentAdded()
 
 void Camera::update()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	TransformState currentTransformState(getGameObject()->getTransform().get());
 	if(!currentTransformState.eq(mTransformState))
@@ -39,7 +39,6 @@ void Camera::update()
 		mTransformState = currentTransformState;
 	}
 
-	PROFILER_TIMEMARK_END()
 }
 
 void Camera::recalculateProjectionMatrix()

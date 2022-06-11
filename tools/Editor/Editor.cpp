@@ -11,13 +11,20 @@ void Editor::init()
 void Editor::firstUpdate()
 {
 
-	i32 size = 4;
+	i32 size = 10;
 	for(i32 x = 0; x < size; ++x)
 	{
+		for(i32 y = 0; y < size; ++y)
+		{
+			for(i32 z = 0; z < size; ++z)
+			{
+				importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*4,y*4,z*4), 1);
+			}
+		}
 	}
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
-	importModel("resources/bob_lamp/bob_lamp.md5mesh");
+	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
 	//importModel("resources/cs_havana.obj");
 
 
@@ -236,15 +243,15 @@ GameObject* Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-void Editor::importModel( const std::string& pFile)
+void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
 	gameObject->setIsStatic(true);
-	gameObject->getTransform().get().setLocalPosition(Vector3(0,0,0));
-	gameObject->getTransform().get().setScale(Vector3(1,1,1));
+	gameObject->getTransform().get().setLocalPosition(v);
+	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
 
 	const std::vector<OwnerPtr<Mesh>>& meshes = model.get().getMeshes();
 

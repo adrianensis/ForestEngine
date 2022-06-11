@@ -9,6 +9,18 @@
 #define PROFILER_TIMEMARK_START() Profiler::getInstance().timeMarkStart(__PRETTY_FUNCTION__);
 #define PROFILER_TIMEMARK_END() Profiler::getInstance().timeMarkEnd(__PRETTY_FUNCTION__);
 
+#define PROFILER_FUNCTION() FunctionProfiler __functionProfiler(__PRETTY_FUNCTION__);
+
+class FunctionProfiler
+{
+public:
+    FunctionProfiler(const std::string& name);
+    ~FunctionProfiler();
+
+private:
+    std::string mScopeName;
+};
+
 class Profiler : public ObjectBase, public Singleton<Profiler>
 {
 	GENERATE_METADATA(Profiler)

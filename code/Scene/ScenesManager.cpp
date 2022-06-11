@@ -41,9 +41,8 @@ void ScenesManager::init()
 
 void ScenesManager::update()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 	mCurrentScene->update();
-	PROFILER_TIMEMARK_END()
 }
 
 void ScenesManager::loadCurrentScene()

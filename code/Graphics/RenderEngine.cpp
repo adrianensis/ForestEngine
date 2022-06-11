@@ -54,7 +54,7 @@ bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
 
 void RenderEngine::update()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	if (mCamera)
 	{
@@ -65,7 +65,6 @@ void RenderEngine::update()
 	swap();
 	checkChunks();
 
-	PROFILER_TIMEMARK_END()
 }
 
 void RenderEngine::terminate()
@@ -167,28 +166,26 @@ void RenderEngine::drawCube(const Cube& cube, f32 thickness/*= 1*/, bool isWorld
 
 void RenderEngine::swap()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	RenderContext::swap();
 
-	PROFILER_TIMEMARK_END()
 }
 
 void RenderEngine::renderBatches()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	mBatchesMap.render();
 
 	mShapeBatchRendererMap.render();
 	mShapeBatchRendererMapScreenSpace.render();
 	
-	PROFILER_TIMEMARK_END()
 }
 
 void RenderEngine::checkChunks()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	FOR_ARRAY(i, mChunks)
 	{
@@ -211,5 +208,4 @@ void RenderEngine::checkChunks()
 		chunk.get().update();
 	}
 
-	PROFILER_TIMEMARK_END()
 }

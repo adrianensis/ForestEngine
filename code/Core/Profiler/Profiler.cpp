@@ -1,8 +1,19 @@
 #include "Core/Profiler/Profiler.hpp"
 #include "Core/Log/Log.hpp"
 
+FunctionProfiler::FunctionProfiler(const std::string& name)
+{
+	mScopeName = name;
+	Profiler::getInstance().timeMarkStart(mScopeName);
+}
 
-Profiler::Profiler() {
+FunctionProfiler::~FunctionProfiler()
+{
+	Profiler::getInstance().timeMarkEnd(mScopeName);
+}
+
+Profiler::Profiler()
+{
 
 }
 Profiler::~Profiler() 

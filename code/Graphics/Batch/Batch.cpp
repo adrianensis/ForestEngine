@@ -36,7 +36,7 @@ void Batch::init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bo
 
 void Batch::render()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	if (!mRenderers.empty())
 	{
@@ -64,7 +64,6 @@ void Batch::render()
 		mMeshBatcher.disable();
 	}
 
-	PROFILER_TIMEMARK_END()
 }
 
 void Batch::addRenderer(Ptr<Renderer> renderer)
@@ -77,7 +76,7 @@ void Batch::addRenderer(Ptr<Renderer> renderer)
 
 bool Batch::processRenderers()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	u32 newSize = mRenderers.size();
 	mMeshBatcher.resize(newSize);
@@ -104,7 +103,6 @@ bool Batch::processRenderers()
 		}
 	}
 
-	PROFILER_TIMEMARK_END()
 
 	return pendingDrawCall;
 }
@@ -141,7 +139,7 @@ bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
 
 void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it)
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 
 	Ptr<Renderer> renderer = *it;
 
@@ -158,7 +156,6 @@ void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& i
 	it = mRenderers.erase(it);
 	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
 
-	PROFILER_TIMEMARK_END()
 }
 
 void Batch::addToVertexBuffer(Ptr<Renderer> renderer)

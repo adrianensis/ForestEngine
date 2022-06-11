@@ -21,7 +21,7 @@ void TimerManager::init() {
 }
 void TimerManager::update()
 {
-	PROFILER_TIMEMARK_START()
+	PROFILER_FUNCTION()
 	if (!mTimers.empty())
 	{
 		f32 deltaTime = Time::getInstance().getDeltaTimeSeconds(); // seconds
@@ -41,7 +41,6 @@ void TimerManager::update()
 		}
 	}
 
-	PROFILER_TIMEMARK_END()
 }
 
 TimerHandle TimerManager::setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback)
