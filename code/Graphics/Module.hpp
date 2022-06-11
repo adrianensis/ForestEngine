@@ -16,6 +16,6 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/Shader.hpp"
 
-#include "Graphics/Animation/Animation.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 
 #endif

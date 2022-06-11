@@ -1,17 +1,16 @@
 #include "Graphics/Renderer/Renderer.hpp"
 
-#include "Graphics/Animation/AnimationFrame.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
-#include "Graphics/Animation/Animation.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/Batch/Batch.hpp"
 #include "Scene/Module.hpp"
-
 
 void Renderer::init() 
 {
@@ -78,7 +77,7 @@ void Renderer::update()
 		mTransformState = currentTransformState;
 	}
 
-	updateAnimation();
+	updateTextureAnimation();
 }
 
 void Renderer::onDestroy() 
@@ -112,11 +111,11 @@ const Mesh& Renderer::generateMeshInstance()
 		{
 			textureCoord.x = 1.0f - textureCoord.x;
 
-			Ptr<const Animation> animation = getAnimationsCurrent();
+			Ptr<const TextureAnimation> TextureAnimation = getTextureAnimationsCurrent();
 
-			if (animation)
+			if (TextureAnimation)
 			{
-				textureCoord.x = textureCoord.x - (1.0f - (animation.get().getNumberOfFrames() * regionSize.x));
+				textureCoord.x = textureCoord.x - (1.0f - (TextureAnimation.get().getNumberOfFrames() * regionSize.x));
 			}
 		}
 
@@ -169,19 +168,19 @@ IMPLEMENT_DESERIALIZATION(Renderer)
 
 }
 
-void Renderer::updateAnimation()
+void Renderer::updateTextureAnimation()
 {
 	if (mMaterial.isValid())
 	{
-		Ptr<Animation> currentAnimation;
-		if (MAP_CONTAINS(mAnimations, mAnimationsCurrentKey))
+		Ptr<TextureAnimation> currentTextureAnimation;
+		if (MAP_CONTAINS(mTextureAnimations, mTextureAnimationsCurrentKey))
 		{
-			currentAnimation = mAnimations[mAnimationsCurrentKey];
+			currentTextureAnimation = mTextureAnimations[mTextureAnimationsCurrentKey];
 		}
 
-		if (currentAnimation && !currentAnimation.get().getFrames().empty())
+		if (currentTextureAnimation && !currentTextureAnimation.get().getFrames().empty())
 		{
-			const AnimationFrame& frame = currentAnimation.get().getNextFrame();
+			const TextureAnimationFrame& frame = currentTextureAnimation.get().getNextFrame();
 			mTextureRegion.setLeftTopFront(frame.getPosition());
 			mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
 		}

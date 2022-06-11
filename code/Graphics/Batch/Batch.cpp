@@ -8,7 +8,7 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
-#include "Graphics/Animation/Animation.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Scene/Module.hpp"
 
 Batch::~Batch()

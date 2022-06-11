@@ -4,7 +4,7 @@
 #include "Scene/Component.hpp"
 
 #include "Scene/Transform.hpp"
-#include "Graphics/Animation/Animation.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
@@ -26,7 +26,7 @@ public:
     bool hasValidChunk() const;
 
 private:
-    void updateAnimation();
+    void updateTextureAnimation();
 
 private:
 	TransformState mTransformState;
@@ -42,7 +42,7 @@ private:
 	i32 mDepth = 0;
 	bool mUseDepth = false; // overrides Z with Depth
 	f32 mRenderDistance = 0.0f;
-	std::map<std::string, Ptr<Animation>> mAnimations;
+	std::map<std::string, Ptr<TextureAnimation>> mTextureAnimations;
 	Ptr<Chunk> mChunk;
 	Ptr<Batch> mBatch;
 	Ptr<const Mesh> mMesh;
@@ -67,7 +67,7 @@ public:
 	HASVALID(Batch)
 	GET_SET(Mesh)
 	GET_SET(Material)
-	MAP_GETCURRENT(Animations)
+	MAP_GETCURRENT(TextureAnimations)
 };
 
 #endif

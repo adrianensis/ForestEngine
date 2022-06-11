@@ -1,21 +1,21 @@
-#include "Graphics/Animation/AnimationFrame.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 
 
-void AnimationFrame::init(const Vector2& position, f32 width, f32 height)
+void TextureAnimationFrame::init(const Vector2& position, f32 width, f32 height)
 {
     mPosition = position;
     mWidth = width;
     mHeight = height;
 }
 
-IMPLEMENT_SERIALIZATION(AnimationFrame)
+IMPLEMENT_SERIALIZATION(TextureAnimationFrame)
 {
     SERIALIZE("position", mPosition);
     SERIALIZE("width", mWidth);
     SERIALIZE("height", mHeight);
 }
 
-IMPLEMENT_DESERIALIZATION(AnimationFrame)
+IMPLEMENT_DESERIALIZATION(TextureAnimationFrame)
 {
     DESERIALIZE("position", mPosition);
     DESERIALIZE("width", mWidth);

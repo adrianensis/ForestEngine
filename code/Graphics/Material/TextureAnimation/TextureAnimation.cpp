@@ -1,22 +1,22 @@
-#include "Graphics/Animation/Animation.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 
 
-Animation::Animation()
+TextureAnimation::TextureAnimation()
 {
 	mCurrentFrameNumber = 0;
 	mSpeed = 1.0f;
 	mTimeAccumulator = 0.0f;
 }
 
-Animation::~Animation()  {
+TextureAnimation::~TextureAnimation()  {
 
 }
-Animation Animation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
+TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
 {
 
-	Animation animation;
-	animation.init();
-	animation.setSpeed(speed);
+	TextureAnimation TextureAnimation;
+	TextureAnimation.init();
+	TextureAnimation.setSpeed(speed);
 
 	i32 horizontalDir = 0;
 	i32 verticalDir = 0;
@@ -54,25 +54,25 @@ Animation Animation::create(u32 frameCount, bool horizontal, bool reverse, const
 		if (verticalDir != 0)
 			pos.y += i * height;
 
-		AnimationFrame frame;
+		TextureAnimationFrame frame;
 		frame.init(pos, width, height);
-		animation.mFrames.push_back(frame);
+		TextureAnimation.mFrames.push_back(frame);
 	}
 
-	return animation;
+	return TextureAnimation;
 }
 
-void Animation::init()
+void TextureAnimation::init()
 {
 	mFrames.clear();
 }
 
-u32 Animation::getNumberOfFrames() const
+u32 TextureAnimation::getNumberOfFrames() const
 {
 	return mFrames.size();
 }
 
-const AnimationFrame& Animation::getNextFrame()
+const TextureAnimationFrame& TextureAnimation::getNextFrame()
 {
 
 	f32 time = (1.0 / (mSpeed)) * 1000.0f; // in milliseconds !
@@ -89,25 +89,25 @@ const AnimationFrame& Animation::getNextFrame()
 	return mFrames.at(mCurrentFrameNumber);
 }
 
-const AnimationFrame& Animation::getCurrentFrame() const
+const TextureAnimationFrame& TextureAnimation::getCurrentFrame() const
 {
 	return mFrames.at(mCurrentFrameNumber);
 }
 
-IMPLEMENT_SERIALIZATION(Animation)
+IMPLEMENT_SERIALIZATION(TextureAnimation)
 {
 	SERIALIZE("name", mName);
 	SERIALIZE("speed", mSpeed);
 	SERIALIZE_LIST("frames", mFrames);
 }
 
-IMPLEMENT_DESERIALIZATION(Animation)
+IMPLEMENT_DESERIALIZATION(TextureAnimation)
 {
 	DESERIALIZE("name", mName);
 	DESERIALIZE("speed", mSpeed);
 	DESERIALIZE_LIST("frames", mFrames, [](const JSON& json)
 	{
-		AnimationFrame frame;
+		TextureAnimationFrame frame;
 		frame.deserialize(json);
 		return frame;
 	});

@@ -1,17 +1,17 @@
-#ifndef ANIMATIONFRAME_HPP
-#define ANIMATIONFRAME_HPP
+#ifndef TEXTUREANIMATIONFRAME_HPP
+#define TEXTUREANIMATIONFRAME_HPP
 
 #include "Core/Module.hpp"
 
 
-class AnimationFrame: public ObjectBase
+class TextureAnimationFrame: public ObjectBase
 {
-    GENERATE_METADATA(AnimationFrame)
+    GENERATE_METADATA(TextureAnimationFrame)
     DECLARE_SERIALIZATION()
 
 public:
 
-    COPY(AnimationFrame)
+    COPY(TextureAnimationFrame)
     {
         DO_COPY(mPosition)
         DO_COPY(mWidth)
