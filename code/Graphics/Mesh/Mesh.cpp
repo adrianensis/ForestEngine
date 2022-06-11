@@ -119,4 +119,6 @@ void Mesh::clear()
 	mFaces.reserve(mFacesCount * smFaceSize);
 
 	std::fill(mColors.begin(), mColors.end(), 0);
+
+	mMaterialPath.clear();
 }

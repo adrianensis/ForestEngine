@@ -6,7 +6,6 @@
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-
 class UIStyleEditorToolButton: public UIStyleDefault
 {
     GENERATE_METADATA(UIStyleEditorToolButton)
@@ -40,7 +39,6 @@ private:
 	Vector3 position;
 	GameObject* sprite = nullptr;
 	GameObject* cameraGameObject = nullptr;
-	std::vector<OwnerPtr<Mesh>> meshes;
 
 	OcTree octree;
 

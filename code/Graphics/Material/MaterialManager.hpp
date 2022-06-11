@@ -3,9 +3,6 @@
 
 #include "Core/Module.hpp"
 #include "Core/Singleton.hpp"
-#include "Graphics/Material/Material.hpp"
-#include "Graphics/Material/Texture.hpp"
-
 
 class Material;
 class Texture;

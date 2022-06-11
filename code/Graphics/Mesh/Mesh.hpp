@@ -38,6 +38,8 @@ private:
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;
 
+    std::string mMaterialPath;
+
 public:
 	inline static const u32 smVertexPositionSize = 3;
 	inline static const u32 smVertexNormalSize = 3;
@@ -52,6 +54,8 @@ public:
 	CRGET(Faces)
 	GET(VertexCount)
 	GET(FacesCount)
+
+    CRGET_SET(MaterialPath)
 };
 
 #endif

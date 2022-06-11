@@ -3,11 +3,6 @@
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
 
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h" // Output data structure
-#include "assimp/postprocess.h" // Post processing flags
-
-
 void Editor::init()
 {
 	octree.init(1000);
@@ -22,8 +17,8 @@ void Editor::firstUpdate()
 	}
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
-	//importModel("resources/bob_lamp/bob_lamp.md5mesh");
-	importModel("resources/cs_havana.obj");
+	importModel("resources/bob_lamp/bob_lamp.md5mesh");
+	//importModel("resources/cs_havana.obj");
 
 
 	UIBuilder uiBuilder;
@@ -243,74 +238,30 @@ GameObject* Editor::createSprite(const Vector3& v, f32 size)
 
 void Editor::importModel( const std::string& pFile)
 {
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile( pFile, 
-			//aiProcess_CalcTangentSpace       |
-			aiProcess_Triangulate            |
-			aiProcess_JoinIdenticalVertices  |
-			aiProcess_SortByPType);
-	
-	if(scene)
+	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
+
+	GameObject* gameObject = NEW(GameObject);
+	gameObject->init();
+	gameObject->setIsStatic(true);
+	gameObject->getTransform().get().setLocalPosition(Vector3(0,0,0));
+	gameObject->getTransform().get().setScale(Vector3(1,1,1));
+
+	const std::vector<OwnerPtr<Mesh>>& meshes = model.get().getMeshes();
+
+	FOR_LIST(it, meshes)
 	{
-		aiVector3t<f32> assimpPosition;
-		aiVector3t<f32> assimpScale;
-		aiVector3t<f32> assimpRotation;
+		Renderer *renderer = NEW(Renderer);
+		renderer->init();
 
-		scene->mRootNode->mTransformation.Decompose(assimpScale, assimpRotation, assimpPosition);
+		renderer->setMesh(*it);
+		renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/" + (*it).get().getMaterialPath()));
+		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/wolf/textures/Wolf_Body.png"));
+		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/guard1_body.png"));
+		// renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
+		// renderer->setColor(Vector4(0,std::sin(Time::getInstance().getElapsedTimeMillis())+0.2f,0,1));
 
-		Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
-		Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
-		Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
-
-		GameObject* gameObject = NEW(GameObject);
-		gameObject->init();
-		gameObject->setIsStatic(false);
-		gameObject->getTransform().get().setLocalPosition(Vector3(0,0,0));
-		gameObject->getTransform().get().setScale(scale/10.0f);
-
-
-		if(scene->HasMeshes())
-		{
-			FOR_RANGE(meshIt, 0, scene->mNumMeshes)
-			{
-				OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
-				meshes.push_back(mesh);
-
-				aiMesh* assimpMesh = scene->mMeshes[meshIt];
-
-				mesh.get().init(assimpMesh->mNumVertices, assimpMesh->mNumFaces);
-
-				FOR_RANGE(vertexIt, 0, assimpMesh->mNumVertices)
-				{
-					aiVector3D assimpVertex = assimpMesh->mVertices[vertexIt];
-					Vector3 vertex = Vector3(assimpVertex.x, assimpVertex.y, assimpVertex.z);
-					mesh.get().addVertex(vertex);
-
-					aiVector3D assimpTexCoord = assimpMesh->mTextureCoords[0][vertexIt];
-
-					Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
-					mesh.get().addTexCoord(texCoord.x, texCoord.y);
-				}
-
-				FOR_RANGE(faceIt, 0, assimpMesh->mNumFaces)
-				{
-					aiFace assimpFace = assimpMesh->mFaces[faceIt];
-					mesh.get().addFace(assimpFace.mIndices[0], assimpFace.mIndices[1], assimpFace.mIndices[2]);
-				}
-
-				Renderer *renderer = NEW(Renderer);
-				renderer->init();
-
-				renderer->setMesh(Ptr<Mesh>(mesh));
-				//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/wolf/textures/Wolf_Body.png"));
-				//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/guard1_body.png"));
-				renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
-				renderer->setColor(Vector4(0,std::sin(Time::getInstance().getElapsedTimeMillis())+0.2f,0,1));
-
-				gameObject->addComponent<Renderer>(renderer);
-			}
-		}
-
-		ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
+		gameObject->addComponent<Renderer>(renderer);
 	}
+
+	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
 }

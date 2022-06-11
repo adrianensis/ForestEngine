@@ -26,6 +26,7 @@ void Engine::init()
 	EventsManager::getInstance().init();
 	MeshPrimitives::getInstance().init();
 	MaterialManager::getInstance().init();
+	ModelManager::getInstance().init();
 	UIManager::getInstance().init();
 	ScenesManager::getInstance().init();
 
@@ -105,6 +106,9 @@ void Engine::terminate()
 
 	UIManager::getInstance().terminate();
 	UIManager::deleteInstance();
+
+	ModelManager::getInstance().terminate();
+	ModelManager::deleteInstance();
 
 	MaterialManager::deleteInstance();
 
