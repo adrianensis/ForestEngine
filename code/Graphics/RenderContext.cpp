@@ -116,7 +116,7 @@ void RenderContext::resizeVBO(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRA
 void RenderContext::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u16) * size, nullptr, drawMode);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * size, nullptr, drawMode);
 }
 
 void RenderContext::setDataVBO(u32 VBO, const std::vector<f32> &data)
@@ -125,10 +125,10 @@ void RenderContext::setDataVBO(u32 VBO, const std::vector<f32> &data)
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(f32) * data.size(), data.data());
 }
 
-void RenderContext::setDataEBO(u32 EBO, const std::vector<u16> &data)
+void RenderContext::setDataEBO(u32 EBO, const std::vector<u32> &data)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u16) * data.size(), data.data());
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());
 }
 
 void RenderContext::enableProperty(u32 PropertyArrayIndex)
@@ -150,11 +150,11 @@ void RenderContext::drawElements(u32 indicesCount, u32 instancesCount, bool inst
 {
 	if(instanced)
 	{
-		glDrawElementsInstanced(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, 0, instancesCount);
+		glDrawElementsInstanced(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0, instancesCount);
 	}
 	else
 	{
-		glDrawElements(GL_TRIANGLES, instancesCount * indicesCount, GL_UNSIGNED_SHORT, 0);
+		glDrawElements(GL_TRIANGLES, instancesCount * indicesCount, GL_UNSIGNED_INT, 0);
 	}
 
 	glBindVertexArray(0);
@@ -162,7 +162,7 @@ void RenderContext::drawElements(u32 indicesCount, u32 instancesCount, bool inst
 
 void RenderContext::drawLines(u32 linesCount)
 {
-	glDrawElements(GL_LINES, linesCount * 2, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_LINES, linesCount * 2, GL_UNSIGNED_INT, 0);
 }
 
 void RenderContext::onResize(GLFWwindow *window, int width, int height)

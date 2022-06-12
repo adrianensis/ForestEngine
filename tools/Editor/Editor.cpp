@@ -22,7 +22,7 @@ void Editor::firstUpdate()
 	// 		}
 	// 	}
 	// }
-	i32 size = 13;
+	i32 size = 12;
 	for(i32 x = 0; x < size; ++x)
 	{
 		for(i32 y = 0; y < size; ++y)
@@ -33,7 +33,7 @@ void Editor::firstUpdate()
 		}
 	}
 
-	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
+	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(-100,0,0), 1);
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);

@@ -41,14 +41,14 @@ void Mesh::addColor(f32 r, f32 g, f32 b, f32 a)
 	mColors.push_back(a);
 }
 
-void Mesh::addFace(u16 v1, u16 v2, u16 v3)
+void Mesh::addFace(u32 v1, u32 v2, u32 v3)
 {
 	addFaceIndex(v1);
 	addFaceIndex(v2);
 	addFaceIndex(v3);
 }
 
-void Mesh::addFaceIndex(u16 i)
+void Mesh::addFaceIndex(u32 i)
 {
 	mFaces.push_back(i);
 }
@@ -73,7 +73,7 @@ void Mesh::addColors(const std::vector<f32> vec)
 	mColors.insert(mColors.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addFaces(const std::vector<u16> vec)
+void Mesh::addFaces(const std::vector<u32> vec)
 {
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }

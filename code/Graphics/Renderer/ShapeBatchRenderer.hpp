@@ -46,7 +46,7 @@ private:
 	u32 mEBO = 0;
 	std::vector<f32> mPositionBuffer;
 	std::vector<f32> mColorBuffer;
-	std::vector<u16> mIndicesBuffer;
+	std::vector<u32> mIndicesBuffer;
 
 	f32 mSize = 0.0f;
 
