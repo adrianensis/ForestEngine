@@ -11,14 +11,14 @@ void Editor::init()
 void Editor::firstUpdate()
 {
 
-	i32 size = 10;
+	i32 size = 7;
 	for(i32 x = 0; x < size; ++x)
 	{
 		for(i32 y = 0; y < size; ++y)
 		{
 			for(i32 z = 0; z < size; ++z)
 			{
-				importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*4,y*4,z*4), 1);
+				importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*20,y*20,z*20), 1);
 			}
 		}
 	}

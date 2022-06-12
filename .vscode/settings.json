@@ -75,6 +75,7 @@
         "*.generated": "cpp",
         "numbers": "cpp",
         "semaphore": "cpp",
-        "pngpriv.h": "c"
+        "pngpriv.h": "c",
+        "*.def": "cpp"
     }
 }

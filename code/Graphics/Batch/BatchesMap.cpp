@@ -20,10 +20,10 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 	);
 
 	BatchKey* foundBatchKey = nullptr;
-	FOR_LIST(itBatchKey, mBatchKeys)
+	FOR_LIST_COND(itBatchKey, mBatchKeys, foundBatchKey == nullptr)
 	{
 		BatchKey* batchKey = &(*itBatchKey);
-		foundBatchKey = (*batchKey) == tmpBatchKey ? batchKey : nullptr; 
+		foundBatchKey = (*batchKey) == tmpBatchKey ? batchKey : nullptr;
 	}
 
 	if(!foundBatchKey)
