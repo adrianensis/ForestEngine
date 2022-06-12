@@ -3,7 +3,6 @@
 
 Mesh::~Mesh()
 {
-
 }
 
 void Mesh::init(u32 vertexCount, u32 facesCount)

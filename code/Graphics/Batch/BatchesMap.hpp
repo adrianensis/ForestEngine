@@ -14,6 +14,8 @@
 class BatchKey
 {
 public:
+	BatchKey() = default;
+	
 	Ptr<const Texture> mTexture;
 	Ptr<const Shader> mShader;
 	Ptr<const Mesh> mMesh;
@@ -44,7 +46,7 @@ public:
     void forceRegenerateBuffers();
 
 private:
-	using InternalBatchesMap = std::map<BatchKey*, OwnerPtr<Batch>>;
+	using InternalBatchesMap = std::map<u32, OwnerPtr<Batch>>;
     void renderBatchesMap(InternalBatchesMap& batchesMap);
 
 private:

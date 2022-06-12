@@ -11,130 +11,142 @@ void Editor::init()
 void Editor::firstUpdate()
 {
 
-	i32 size = 7;
+	// i32 size = 7;
+	// for(i32 x = 0; x < size; ++x)
+	// {
+	// 	for(i32 y = 0; y < size; ++y)
+	// 	{
+	// 		for(i32 z = 0; z < size; ++z)
+	// 		{
+	// 			importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*20,y*20,z*20), 1);
+	// 		}
+	// 	}
+	// }
+	i32 size = 13;
 	for(i32 x = 0; x < size; ++x)
 	{
 		for(i32 y = 0; y < size; ++y)
 		{
-			for(i32 z = 0; z < size; ++z)
-			{
-				importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*20,y*20,z*20), 1);
-			}
+			importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*100,y*40,0), 1);
+			//importModel("resources/char.fbx", Vector3(x*100,y*40,0), 1);
+			//createSprite(Vector3(x*40,y*40,0), 30);
 		}
 	}
+
+	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
 	//importModel("resources/cs_havana.obj");
 
 
-	UIBuilder uiBuilder;
+	// UIBuilder uiBuilder;
 
-	uiBuilder.
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5f, 0.05f));
+	// uiBuilder.
+	// setPosition(Vector2(-1,1)).
+	// setAdjustSizeToText(true).
+	// setSize(Vector2(0.5f, 0.05f));
 
-	uiBuilder.
-	setText("File").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("New", [&](UIElement *uiElement)
-	{
+	// uiBuilder.
+	// setText("File").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("New", [&](UIElement *uiElement)
+	// {
 
-	}).
-	addOption("Open", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Save", [&](UIElement *uiElement)
-	{
-	});
+	// }).
+	// addOption("Open", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Save", [&](UIElement *uiElement)
+	// {
+	// });
 
-	uiBuilder.
-	setText("Sprites").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
+	// uiBuilder.
+	// setText("Sprites").
+	// create<UIButton>().
+	// getUIElement<UIButton>()->
+	// setOnPressedCallback([&, this](UIElement *uiElement){
+	// });
 
-	uiBuilder.
-	setText("View").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("Grid", [&](UIElement *uiElement)
-	{
+	// uiBuilder.
+	// setText("View").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("Grid", [&](UIElement *uiElement)
+	// {
 
-	}).
-	addOption("Colliders", [&](UIElement *uiElement)
-	{
-	});
+	// }).
+	// addOption("Colliders", [&](UIElement *uiElement)
+	// {
+	// });
 
-	uiBuilder.restoreAll();
+	// uiBuilder.restoreAll();
 
-	uiBuilder.
-	setLayout(UILayout::HORIZONTAL).
-	setPosition(Vector2(-1,0.5f)).
-	setAdjustSizeToText(false).
-	setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
-	setGroup("toggleButtons").
-	setSize(Vector2(0.1f, 0.1f));
+	// uiBuilder.
+	// setLayout(UILayout::HORIZONTAL).
+	// setPosition(Vector2(-1,0.5f)).
+	// setAdjustSizeToText(false).
+	// setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
+	// setGroup("toggleButtons").
+	// setSize(Vector2(0.1f, 0.1f));
 
-	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/EventPoint.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/EventPoint.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	getUIElement<UIToggleButton>()->simulateClick();
+	// uiBuilder.
+	// getUIElement<UIToggleButton>()->simulateClick();
 
-	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/PlayerStart.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/PlayerStart.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.
+	// nextRow();
 
-	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/SpawnPoint.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/SpawnPoint.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/WayPoint.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/WayPoint.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.
+	// nextRow();
 
-	uiBuilder.restoreMaterial();
-	uiBuilder.restoreStyle();
-	uiBuilder.restoreGroup();
+	// uiBuilder.restoreMaterial();
+	// uiBuilder.restoreStyle();
+	// uiBuilder.restoreGroup();
 
-	uiBuilder.
-	setText("Test Button").
-	setAdjustSizeToText(true).
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("Option1", [&](UIElement *uiElement)
-	{
+	// uiBuilder.
+	// setText("Test Button").
+	// setAdjustSizeToText(true).
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("Option1", [&](UIElement *uiElement)
+	// {
 
-	}).
-	addOption("Option2", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Option3", [&](UIElement *uiElement)
-	{
-	});
+	// }).
+	// addOption("Option2", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Option3", [&](UIElement *uiElement)
+	// {
+	// });
 
 	cameraGameObject = ScenesManager::getInstance().getCurrentScene()->getCameraGameObject();
 }
@@ -266,8 +278,9 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 		renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/" + (*it).get().getMaterialPath()));
 		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/wolf/textures/Wolf_Body.png"));
 		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/guard1_body.png"));
-		// renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
+		//renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
 		// renderer->setColor(Vector4(0,std::sin(Time::getInstance().getElapsedTimeMillis())+0.2f,0,1));
+		//renderer->setColor(Vector4(0,1,0,1));
 
 		gameObject->addComponent<Renderer>(renderer);
 	}

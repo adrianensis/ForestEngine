@@ -43,16 +43,19 @@ void Model::init(const std::string& path)
 
                 mesh.get().init(assimpMesh->mNumVertices, assimpMesh->mNumFaces);
 
-                FOR_RANGE(vertexIt, 0, assimpMesh->mNumVertices)
+                if(assimpMesh->HasTextureCoords(0))
                 {
-                    aiVector3D assimpVertex = assimpMesh->mVertices[vertexIt];
-                    Vector3 vertex = Vector3(assimpVertex.x, assimpVertex.y, assimpVertex.z);
-                    mesh.get().addVertex(vertex);
+                    FOR_RANGE(vertexIt, 0, assimpMesh->mNumVertices)
+                    {
+                        aiVector3D assimpVertex = assimpMesh->mVertices[vertexIt];
+                        Vector3 vertex = Vector3(assimpVertex.x, assimpVertex.y, assimpVertex.z);
+                        mesh.get().addVertex(vertex);
 
-                    aiVector3D assimpTexCoord = assimpMesh->mTextureCoords[0][vertexIt];
+                        aiVector3D assimpTexCoord = assimpMesh->mTextureCoords[0][vertexIt];
 
-                    Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
-                    mesh.get().addTexCoord(texCoord.x, texCoord.y);
+                        Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
+                        mesh.get().addTexCoord(texCoord.x, texCoord.y);
+                    }
                 }
 
                 FOR_RANGE(faceIt, 0, assimpMesh->mNumFaces)

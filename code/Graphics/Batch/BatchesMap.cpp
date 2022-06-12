@@ -19,21 +19,33 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 		renderer.get().getMesh()
 	);
 
-	BatchKey* foundBatchKey = nullptr;
-	FOR_LIST_COND(itBatchKey, mBatchKeys, foundBatchKey == nullptr)
+	// BatchKey* foundBatchKey = nullptr;
+	// FOR_LIST_COND(itBatchKey, mBatchKeys, foundBatchKey == nullptr)
+	// {
+	// 	BatchKey* batchKey = &(*itBatchKey);
+	// 	foundBatchKey = (*batchKey) == tmpBatchKey ? batchKey : nullptr;
+	// }
+
+	bool keyFound = false;
+	u32 keyIndex = 0;
+	FOR_RANGE_COND(i, 0, mBatchKeys.size(), !keyFound)
 	{
-		BatchKey* batchKey = &(*itBatchKey);
-		foundBatchKey = (*batchKey) == tmpBatchKey ? batchKey : nullptr;
+		BatchKey& batchKey = mBatchKeys[i];
+
+		keyFound = batchKey == tmpBatchKey;
+
+		if(keyFound)
+		{
+			keyIndex = i;
+		}
 	}
 
-	if(!foundBatchKey)
+	if(!keyFound)
 	{
-		foundBatchKey = &(mBatchKeys.emplace_back(tmpBatchKey));
-		foundBatchKey->init(
-			renderer.get().getMaterial().get().getTexture(), // NOTE : Texture can be nullptr as a valid hash key.
-			renderer.get().getMaterial().get().getShader(),
-			renderer.get().getMesh()
-		);
+		mBatchKeys.push_back(tmpBatchKey);
+		//foundBatchKey = &(mBatchKeys.emplace_back(tmpBatchKey));
+
+		keyIndex = mBatchKeys.size() - 1;
 	}
 
 	Ptr<Transform> transform = renderer.get().getGameObject()->getTransform();
@@ -49,16 +61,16 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 		batchesMap = &(transform.get().getAffectedByProjection() ?  mBatchesDynamic : mBatchesDynamicScreenSpace);
 	}
 
-	if (!MAP_CONTAINS(*batchesMap, foundBatchKey))
+	if (!MAP_CONTAINS(*batchesMap, keyIndex))
 	{
 		OwnerPtr<Batch> batch = OwnerPtr<Batch>(NEW(Batch));
 		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial(),
 		transform.get().isStatic(), transform.get().getAffectedByProjection());
 
-		MAP_INSERT(*batchesMap, foundBatchKey, batch);
+		MAP_INSERT(*batchesMap, keyIndex, batch);
 	}
 
-	(*batchesMap).at(foundBatchKey).get().addRenderer(renderer);
+	(*batchesMap).at(keyIndex).get().addRenderer(renderer);
 }
 
 void BatchesMap::render()
