@@ -5,61 +5,61 @@
 
 void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& tree)
 {
-mCube = cube;
+	mCube = cube;
 
-mRadius = mCube.getSize().len() / 2.0f;
-// mTree = tree;
+	mRadius = mCube.getSize().len() / 2.0f;
+	// mTree = tree;
 
-mHalfSize = mCube.getSize() / 2.0f;
-mIsDivisible = (mHalfSize.x >= minSize.x) && (mHalfSize.y >= minSize.y) && (mHalfSize.z >= minSize.z);
+	mHalfSize = mCube.getSize() / 2.0f;
+	mIsDivisible = (mHalfSize.x >= minSize.x) && (mHalfSize.y >= minSize.y) && (mHalfSize.z >= minSize.z);
 
-// mColliders = Memory::allocate<List<Collider*>>();
-// mColliders->init();
+	// mColliders = Memory::allocate<List<Collider*>>();
+	// mColliders->init();
 
-// mExitingColliders = Memory::allocate<List<Collider*>>();
-// mExitingColliders->init();
+	// mExitingColliders = Memory::allocate<List<Collider*>>();
+	// mExitingColliders->init();
 
-//mChildren = Memory::allocate<Array<Node*>>();
+	//mChildren = Memory::allocate<Array<Node*>>();
 
-if(mIsDivisible)
-{
-	mChildren.reserve(mMaxChildNumber);
-	
-	// front
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(0,0,0), mHalfSize), minSize, tree);
-	
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,0), mHalfSize), minSize, tree);
-	
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,0), mHalfSize), minSize, tree);
-	
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,0), mHalfSize), minSize, tree);
+	if(mIsDivisible)
+	{
+		mChildren.reserve(mMaxChildNumber);
+		
+		// front
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,0,0), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,0), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,0), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,0), mHalfSize), minSize, tree);
 
-	// back
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(0,0,-mHalfSize.z), mHalfSize), minSize, tree);
-	
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,-mHalfSize.z), mHalfSize), minSize, tree);
-	
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,-mHalfSize.z), mHalfSize), minSize, tree);
-	
-	mChildren.emplace_back(OcTreeNode()).
-	init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,-mHalfSize.z), mHalfSize), minSize, tree);
-}
+		// back
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,0,-mHalfSize.z), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,-mHalfSize.z), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,-mHalfSize.z), mHalfSize), minSize, tree);
+		
+		mChildren.emplace_back(OcTreeNode()).
+		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,-mHalfSize.z), mHalfSize), minSize, tree);
+	}
 
-// mLeftTopChildrenArray = Memory::allocate<Array<Vector2>>();
-// mLeftTopChildrenArray->init(4);
+	// mLeftTopChildrenArray = Memory::allocate<Array<Vector2>>();
+	// mLeftTopChildrenArray->init(4);
 
-// // This array testPartialCollider the LeftTop Vertices of the 4 children.
-// mLeftTopChildrenArray->set(0, );
-// mLeftTopChildrenArray->set(1, );
-// mLeftTopChildrenArray->set(2, );
-// mLeftTopChildrenArray->set(3, );
+	// // This array testPartialCollider the LeftTop Vertices of the 4 children.
+	// mLeftTopChildrenArray->set(0, );
+	// mLeftTopChildrenArray->set(1, );
+	// mLeftTopChildrenArray->set(2, );
+	// mLeftTopChildrenArray->set(3, );
 
 }
 
@@ -73,7 +73,7 @@ bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, IOcTreeElement& element
 bool test = false; /*Geometry::testRectangleSphere(mChildren[index].mCube.getLeftTopFront(), mHalfSize.x, mHalfSize.y, mHalfSize.z,
 			element.getOcTreeElementCenter(), element.getOcTreeElementRadius(), 0);*/
 
-return test;
+	return test;
 };
 
 //----------------------------------------------------------------------
@@ -121,30 +121,30 @@ else
 
 void OcTree::OcTreeNode::update(/*contactManager*/)
 {
-// DEBUG DRAW
-//RenderEngine::getInstance().drawCube(mCube);
+	// DEBUG DRAW
+	RenderEngine::getInstance().drawCube(mCube);
 
-// If is leaf node.
-if (isLeaf())
-{
-	//RenderEngine::getInstance().drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
-	//ECHO("LEAF")
-}
-else
-{
-	updateChildren(/*contactManager*/);
-}
+	// If is leaf node.
+	if (isLeaf())
+	{
+		//RenderEngine::getInstance().drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
+		//ECHO("LEAF")
+	}
+	else
+	{
+		updateChildren(/*contactManager*/);
+	}
 };
 
 //----------------------------------------------------------------------
 
 void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 {
-FOR_LIST(it, mChildren)
-{
-	OcTreeNode& child = *it;
-	child.update(/*contactManager*/);
-}
+	FOR_LIST(it, mChildren)
+	{
+		OcTreeNode& child = *it;
+		child.update(/*contactManager*/);
+	}
 };
 
 //----------------------------------------------------------------------
@@ -197,7 +197,7 @@ FOR_LIST(it, mChildren)
 
 bool OcTree::OcTreeNode::isLeaf() const
 {
-return mChildren.size() == 0;
+	return mChildren.size() == 0;
 };
 // u32 QuadTree::Node::getCollidersCount() const {
 // 	return mColliders->getLength();
@@ -264,17 +264,17 @@ return mChildren.size() == 0;
 
 void OcTree::init(f32 size)
 {
-mSize.set(size, size, size);
+	mSize.set(size, size, size);
 
-//f32 minSize = Settings::getInstance()->getF32("scene.quadTreeMinSize");
+	//f32 minSize = Settings::getInstance()->getF32("scene.quadTreeMinSize");
 
-f32 minSize = 200.0f; //size / 2.0f;
-mRoot.init(Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), Vector3(minSize, minSize, minSize), *this);
+	f32 minSize = 200.0f; //size / 2.0f;
+	mRoot.init(Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), Vector3(minSize, minSize, minSize), *this);
 }
 
 void OcTree::update()
 {
-mRoot.update();
+	mRoot.update();
 }
 
 // void QuadTree::addCollider(Collider *collider)

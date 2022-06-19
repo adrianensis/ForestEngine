@@ -23,8 +23,7 @@ public:
 
 private:
 	std::list<Ptr<Renderer>> mRenderers;
-	Vector3 mLeftTop;
-	f32 mSize = 0.0f;
+    Cube mCube;
 	bool mIsLoaded = false;
 	Vector3 mCenter;
 	f32 mRadius = 0.0f;

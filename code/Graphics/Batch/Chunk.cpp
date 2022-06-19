@@ -19,21 +19,21 @@ void Chunk::init()
 
 	mRenderers.clear();
 
-	mLeftTop.set(0, 0, 0);
+	mCube.set(Vector3(0, 0, 0), Vector3(0, 0, 0));
 }
 
 void Chunk::set(const Vector3& leftTop, f32 size)
 {
-	mLeftTop = leftTop;
-	mSize = size;
-	f32 halfSize = mSize / 2.0f;
-	mCenter.set(mLeftTop.x + halfSize, mLeftTop.y - halfSize, mLeftTop.z - halfSize);
+	mCube.set(leftTop, Vector3(size, size, size));
+	f32 halfSize = size / 2.0f;
+	mCenter.set(leftTop.x + halfSize, leftTop.y - halfSize, leftTop.z - halfSize);
 
-	mRadius = mCenter.dst(mLeftTop);
+	mRadius = mCenter.dst(leftTop);
 }
 
 void Chunk::update()
 {
+	//RenderEngine::getInstance().drawCube(mCube);
 
 	FOR_LIST(it, mRenderers)
 	{
@@ -102,7 +102,7 @@ void Chunk::addRenderer(Ptr<Renderer> renderer)
 bool Chunk::containsRenderer(Ptr<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
 {
 	Vector3 rendererPosition = renderer.get().getGameObject()->getTransform().get().getWorldPosition();
-	bool contains = Geometry::testCubePoint(Cube(mLeftTop, Vector3(mSize, mSize, mSize)), rendererPosition, epsilon);
+	bool contains = Geometry::testCubePoint(mCube, rendererPosition, epsilon);
 	return contains; // TODO : move to settings ?
 }
 
