@@ -43,12 +43,10 @@ void BonesBuffer::init(u32 propertyArrayIndex, bool isStatic)
 	mIsStatic = isStatic;
 	mAttribPointerIndex = propertyArrayIndex;
 
-	glGenBuffers(1, &mVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-	RenderContext::enableProperty(mAttribPointerIndex);
-	glVertexAttribIPointer(mAttribPointerIndex, VertexBoneData::smMaxBonesPerVertex, GL_UNSIGNED_INT, sizeof(VertexBoneData), (byte *)0);
+	RenderContext::createVBOAnyType(1, sizeof(BoneVertexData), mAttribPointerIndex);
+
 	RenderContext::enableProperty(mAttribPointerIndex + 1);
-	glVertexAttribPointer(mAttribPointerIndex, VertexBoneData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (byte *)(VertexBoneData::smMaxBonesPerVertex * sizeof(u32)));
+	glVertexAttribPointer(mAttribPointerIndex, BoneVertexData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(BoneVertexData), (byte *)(BoneVertexData::smMaxBonesPerVertex * sizeof(u32)));
 
 	mGenerated = true;
 }
@@ -64,14 +62,12 @@ void BonesBuffer::terminate()
 
 void BonesBuffer::resize(u32 size)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * size, nullptr, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	RenderContext::resizeVBOAnyType(mVBO, sizeof(BoneVertexData), size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-void BonesBuffer::setData(const std::vector<VertexBoneData> &data)
+void BonesBuffer::setData(const std::vector<BoneVertexData> &data)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(VertexBoneData) * data.size(), data.data());
+	RenderContext::setDataVBOAnyType(mVBO, data);
 }
 
 MeshBuffer::~MeshBuffer() 
@@ -145,7 +141,7 @@ void MeshBuffer::resize(const Mesh& mesh)
 	mVBOPosition.resize(mesh.getVertices().capacity());
 	mVBOTexture.resize(mesh.getTextureCoordinates().capacity());
 	mVBOColor.resize(mesh.getColors().capacity());
-	mVBOBones.resize(mesh.getBones().capacity());
+	mVBOBones.resize(mesh.getBonesVertexData().capacity());
 
 	if(mIsInstanced)
 	{
@@ -158,7 +154,7 @@ void MeshBuffer::setData(const Mesh& mesh)
 	mVBOPosition.setData(mesh.getVertices());
 	mVBOTexture.setData(mesh.getTextureCoordinates());
 	mVBOColor.setData(mesh.getColors());
-	mVBOBones.setData(mesh.getBones());
+	mVBOBones.setData(mesh.getBonesVertexData());
 
 	if(mIsInstanced)
 	{
@@ -288,7 +284,7 @@ void MeshBatcher::addInstance(const Mesh& meshInstance)
 	mMeshBuilder.addVertices(meshInstance.getVertices());
 	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
 	mMeshBuilder.addColors(meshInstance.getColors());
-	mMeshBuilder.addBones(meshInstance.getBones());
+	mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
 
 	mMeshesIndex++;
 }

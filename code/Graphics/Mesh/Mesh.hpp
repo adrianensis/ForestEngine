@@ -3,13 +3,35 @@
 
 #include "Core/Module.hpp"
 
-class VertexBoneData
+class BoneVertexData
 {
 public:
 	inline static const u32 smMaxBonesPerVertex = 4;
 
-    u32 mBoneID[smMaxBonesPerVertex] = {0};
-    f32 mBoneWeight[smMaxBonesPerVertex] = {0.0f};
+    u32 mBoneIDs[smMaxBonesPerVertex] = {0};
+    f32 mBoneWeights[smMaxBonesPerVertex] = {0.0f};
+
+    void addBoneData(u32 id, f32 weight)
+    {
+        FOR_RANGE(i, 0, smMaxBonesPerVertex)
+        {
+            if (mBoneWeights[i] == 0.0)
+            {
+                mBoneIDs[i] = id;
+                mBoneWeights[i] = weight;
+                return;
+            }
+        }
+
+        // should never get here - more bones than we have space for
+        ASSERT_MSG(false, "should never get here - more bones than we have space for");
+    }
+};
+
+class BoneData
+{
+public:
+	Matrix4 mOffsetMatrix;
 };
 
 class Mesh: public ObjectBase
@@ -24,14 +46,22 @@ public:
     void addTexCoord(f32 u, f32 v);
     void addColor(f32 r, f32 g, f32 b, f32 a);
     void addFace(u32 v1, u32 v2, u32 v3);
-    void addBone(const VertexBoneData& bone);
+    void addBoneVertexData(const BoneVertexData& bone);
     void addFaceIndex(u32 i);
+
     void addVertices(const std::vector<f32> vec);
     void addNormals(const std::vector<f32> vec);
     void addTextureCoordinates(const std::vector<f32> vec);
     void addColors(const std::vector<f32> vec);
     void addFaces(const std::vector<u32> vec);
-    void addBones(const std::vector<VertexBoneData> vec);
+    void addBonesVertexData(const std::vector<BoneVertexData> vec);
+
+    u32 registerBone(const std::string& name);
+    bool isBoneRegistered(const std::string& name) const;
+    u32 getBoneID(const std::string& name) const;
+    void setBoneOffsetMatrix(u32 id, const Matrix4& offsetMatrix);
+    void addBoneWeight(u32 vertexId, u32 id, f32 weight);
+
     void copyVertices(Ptr<const Mesh> other);
     void copyNormals(Ptr<const Mesh> other);
     void copyTextureCoordinates(Ptr<const Mesh> other);
@@ -48,10 +78,14 @@ private:
 
     std::vector<u32> mFaces;
 
-	std::vector<VertexBoneData> mBones;
+	std::vector<BoneVertexData> mBonesVertexData;
+    std::vector<BoneData> mBonesData;
+
+    std::map<std::string, u32> mBonesNameIndexMap;
 
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;
+    u32 mBonesIndexCount = 0;
 
     std::string mMaterialPath;
 
@@ -70,7 +104,7 @@ public:
 	CRGET(TextureCoordinates)
 	CRGET(Colors)
 	CRGET(Faces)
-    CRGET(Bones)
+    CRGET(BonesVertexData)
 	GET(VertexCount)
 	GET(FacesCount)
 

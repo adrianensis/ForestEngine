@@ -36,7 +36,7 @@ public:
     void init(u32 propertyArrayIndex, bool isStatic);
     void terminate();
     void resize(u32 size);
-    void setData(const std::vector<VertexBoneData> &data);
+    void setData(const std::vector<BoneVertexData> &data);
 
 private:
 	bool mGenerated = false;

@@ -22,16 +22,6 @@ void Model::init(const std::string& path)
 
     if(scene)
     {
-        // aiVector3t<f32> assimpPosition;
-        // aiVector3t<f32> assimpScale;
-        // aiVector3t<f32> assimpRotation;
-
-        // scene->mRootNode->mTransformation.Decompose(assimpScale, assimpRotation, assimpPosition);
-
-        // Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
-        // Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
-        // Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
-
         if(scene->HasMeshes())
         {
             FOR_RANGE(meshIt, 0, scene->mNumMeshes)
@@ -55,6 +45,8 @@ void Model::init(const std::string& path)
 
                         Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
                         mesh.get().addTexCoord(texCoord.x, texCoord.y);
+
+                        mesh.get().addBoneVertexData(BoneVertexData());
                     }
                 }
 
@@ -75,6 +67,60 @@ void Model::init(const std::string& path)
                         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
                         {
                             mesh.get().setMaterialPath(materialPath.data);
+                        }
+                    }
+                }
+
+                if(assimpMesh->HasBones())
+                {
+                    FOR_RANGE(boneIt, 0, assimpMesh->mNumBones)
+                    {
+                        u32 boneIndex = 0;
+
+                        aiBone* currentBone = assimpMesh->mBones[boneIt];
+                        std::string boneName(currentBone->mName.data);
+
+                        if (! mesh.get().isBoneRegistered(boneName)) 
+                        {
+                            boneIndex = mesh.get().registerBone(boneName);
+                        }
+                        else 
+                        {
+                            boneIndex = mesh.get().getBoneID(boneName);
+                        }
+
+                        // TODO: CONTINUE HERE ↓↓↓↓↓
+
+                        const aiMatrix4x4& assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
+
+                        aiVector3t<f32> assimpPosition;
+                        aiVector3t<f32> assimpScale;
+                        aiVector3t<f32> assimpRotation;
+
+                        assimpBoneOffsetMatrix.Decompose(assimpScale, assimpRotation, assimpPosition);
+
+                        Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
+                        Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
+                        Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
+
+                        Matrix4 translationMatrix;
+                        translationMatrix.translation(position);
+                        Matrix4 rotationMatrix;
+                        rotationMatrix.rotation(rotation);
+                        Matrix4 scaleMatrix;
+                        scaleMatrix.scale(scale);
+
+                        Matrix4 offsetMatrix(translationMatrix);
+                        scaleMatrix.mul(rotationMatrix);
+                        offsetMatrix.mul(scaleMatrix);
+
+                        mesh.get().setBoneOffsetMatrix(boneIndex, offsetMatrix);
+
+                        FOR_RANGE(weightIt, 0, assimpMesh->mBones[boneIt]->mNumWeights)
+                        {
+                            u32 vertexIndex = /*m_Entries[MeshIndex].BaseVertex +*/ assimpMesh->mBones[boneIt]->mWeights[weightIt].mVertexId;
+                            f32 weight = assimpMesh->mBones[boneIt]->mWeights[weightIt].mWeight;
+                            mesh.get().addBoneWeight(vertexIndex, boneIndex, weight);
                         }
                     }
                 }

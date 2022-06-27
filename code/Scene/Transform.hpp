@@ -13,21 +13,22 @@ class TransformState : public ObjectBase
 public:
 	TransformState() = default;
     TransformState(const Transform& transform);
+    TransformState(const Vector3& position, const Vector3& rotation, const Vector3& scale);
 
 	bool eq(const TransformState& rhs, f32 eps = MathUtils::FLOAT_EPSILON) const
 	{
-		return mWorldPosition.eq(rhs.mWorldPosition, eps) &&
+		return mPosition.eq(rhs.mPosition, eps) &&
 			mRotation.eq(rhs.mRotation, eps) &&
 			mScale.eq(rhs.mScale, eps);
 	}
 
 private:
-	Vector3 mWorldPosition;
+	Vector3 mPosition;
 	Vector3 mRotation;
 	Vector3 mScale;
 
 public:
-	CRGET(WorldPosition)
+	CRGET(Position)
 	CRGET(Rotation)
 	CRGET(Scale)
 };

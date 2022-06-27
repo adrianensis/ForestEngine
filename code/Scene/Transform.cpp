@@ -4,9 +4,16 @@
 
 TransformState::TransformState(const Transform& transform)
 {
-	mWorldPosition = transform.getWorldPosition();
+	mPosition = transform.getWorldPosition();
 	mRotation = transform.getRotation();
 	mScale = transform.getScale();
+}
+
+TransformState::TransformState(const Vector3& position, const Vector3& rotation, const Vector3& scale)
+{
+	mPosition = position;
+	mRotation = rotation;
+	mScale = scale;
 }
 
 void Transform::init() 
@@ -29,7 +36,6 @@ const Vector3& Transform::getWorldPosition() const
 
 	if (mParent)
 	{
-
 		mWorldPosition.add(mParent->getWorldPosition());
 
 		Matrix4 rotationMatrix;

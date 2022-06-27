@@ -48,9 +48,9 @@ void Mesh::addFace(u32 v1, u32 v2, u32 v3)
 	addFaceIndex(v3);
 }
 
-void Mesh::addBone(const VertexBoneData& bone)
+void Mesh::addBoneVertexData(const BoneVertexData& bone)
 {
-	mBones.push_back(bone);
+	mBonesVertexData.push_back(bone);
 }
 
 void Mesh::addFaceIndex(u32 i)
@@ -83,9 +83,46 @@ void Mesh::addFaces(const std::vector<u32> vec)
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addBones(const std::vector<VertexBoneData> vec)
+void Mesh::addBonesVertexData(const std::vector<BoneVertexData> vec)
 {
-	mBones.insert(mBones.end(), vec.begin(), vec.end());
+	mBonesVertexData.insert(mBonesVertexData.end(), vec.begin(), vec.end());
+}
+
+u32 Mesh::registerBone(const std::string& name)
+{
+	u32 boneIndex = mBonesIndexCount;
+	mBonesIndexCount++;
+	BoneData bi;
+	mBonesData.push_back(bi);
+	
+	if(!MAP_CONTAINS(mBonesNameIndexMap, name))
+	{
+		MAP_INSERT(mBonesNameIndexMap, name, boneIndex);
+	}
+
+	mBonesNameIndexMap[name] = boneIndex;
+
+	return boneIndex;
+}
+
+bool Mesh::isBoneRegistered(const std::string& name) const
+{
+	return MAP_CONTAINS(mBonesNameIndexMap, name);
+}
+
+u32 Mesh::getBoneID(const std::string& name) const
+{
+	return mBonesNameIndexMap.at(name);
+}
+
+void Mesh::setBoneOffsetMatrix(u32 id, const Matrix4& offsetMatrix)
+{
+	mBonesData[id].mOffsetMatrix = offsetMatrix;
+}
+
+void Mesh::addBoneWeight(u32 vertexId, u32 id, f32 weight)
+{
+	mBonesVertexData[vertexId].addBoneData(id, weight);
 }
 
 void Mesh::copyVertices(Ptr<const Mesh> other)
@@ -115,7 +152,7 @@ void Mesh::copyFaces(Ptr<const Mesh> other)
 
 void Mesh::copyBones(Ptr<const Mesh> other)
 {
-	std::copy(other.get().getBones().begin(), other.get().getBones().end(), back_inserter(mBones));
+	std::copy(other.get().getBonesVertexData().begin(), other.get().getBonesVertexData().end(), back_inserter(mBonesVertexData));
 }
 
 void Mesh::clear()
@@ -125,12 +162,18 @@ void Mesh::clear()
 	mTextureCoordinates.clear();
 	mColors.clear();
 	mFaces.clear();
+	mBonesVertexData.clear();
+	mBonesData.clear();
+	mBonesNameIndexMap.clear();
+
+	mBonesIndexCount = 0;
 
 	mVertices.reserve(mVertexCount * smVertexPositionSize);
 	mTextureCoordinates.reserve(mVertexCount * smVertexTexCoordSize);
 	mColors.reserve(mVertexCount * smVertexColorSize);
 	mNormals.reserve(mVertexCount * smVertexNormalSize);
 	mFaces.reserve(mFacesCount * smFaceSize);
+	mBonesVertexData.reserve(mVertexCount);
 
 	std::fill(mColors.begin(), mColors.end(), 0);
 
