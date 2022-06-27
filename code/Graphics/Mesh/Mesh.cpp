@@ -48,6 +48,11 @@ void Mesh::addFace(u32 v1, u32 v2, u32 v3)
 	addFaceIndex(v3);
 }
 
+void Mesh::addBone(const VertexBoneData& bone)
+{
+	mBones.push_back(bone);
+}
+
 void Mesh::addFaceIndex(u32 i)
 {
 	mFaces.push_back(i);
@@ -78,6 +83,11 @@ void Mesh::addFaces(const std::vector<u32> vec)
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }
 
+void Mesh::addBones(const std::vector<VertexBoneData> vec)
+{
+	mBones.insert(mBones.end(), vec.begin(), vec.end());
+}
+
 void Mesh::copyVertices(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getVertices().begin(), other.get().getVertices().end(), back_inserter(mVertices));
@@ -101,6 +111,11 @@ void Mesh::copyColors(Ptr<const Mesh> other)
 void Mesh::copyFaces(Ptr<const Mesh> other)
 {
 	std::copy(other.get().getFaces().begin(), other.get().getFaces().end(), back_inserter(mFaces));
+}
+
+void Mesh::copyBones(Ptr<const Mesh> other)
+{
+	std::copy(other.get().getBones().begin(), other.get().getBones().end(), back_inserter(mBones));
 }
 
 void Mesh::clear()

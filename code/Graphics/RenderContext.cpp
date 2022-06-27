@@ -92,6 +92,16 @@ GLuint RenderContext::createVBO(u32 elementSize, u32 PropertyArrayIndex)
 	return VBO;
 }
 
+GLuint RenderContext::createVBOU32(u32 elementSize, u32 PropertyArrayIndex)
+{
+	u32 VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	enableProperty(PropertyArrayIndex);
+	glVertexAttribIPointer(PropertyArrayIndex, elementSize, GL_UNSIGNED_INT, elementSize * sizeof(u32), (byte *)0);
+	return VBO;
+}
+
 GLuint RenderContext::createVAO()
 {
 	u32 VAO;
@@ -113,6 +123,12 @@ void RenderContext::resizeVBO(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRA
 	glBufferData(GL_ARRAY_BUFFER, sizeof(f32) * size, nullptr, drawMode);
 }
 
+void RenderContext::resizeVBOU32(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(u32) * size, nullptr, drawMode);
+}
+
 void RenderContext::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -123,6 +139,12 @@ void RenderContext::setDataVBO(u32 VBO, const std::vector<f32> &data)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(f32) * data.size(), data.data());
+}
+
+void RenderContext::setDataVBOU32(u32 VBO, const std::vector<u32> &data)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());
 }
 
 void RenderContext::setDataEBO(u32 EBO, const std::vector<u32> &data)

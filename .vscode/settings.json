@@ -76,6 +76,7 @@
         "numbers": "cpp",
         "semaphore": "cpp",
         "pngpriv.h": "c",
-        "*.def": "cpp"
+        "*.def": "cpp",
+        "hash_set": "cpp"
     }
 }

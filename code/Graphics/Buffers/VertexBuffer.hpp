@@ -4,7 +4,6 @@
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-
 class VertexBuffer: public ObjectBase
 {
     GENERATE_METADATA(VertexBuffer)
@@ -25,6 +24,50 @@ private:
 	u32 mVBO = 0; // TODO: change u32 for GLuint
 	u32 mAttribPointerIndex = 0;
 };
+
+class BonesBuffer: public ObjectBase
+{
+    GENERATE_METADATA(BonesBuffer)
+
+public:
+	BonesBuffer() = default;
+    ~BonesBuffer() override;
+
+    void init(u32 propertyArrayIndex, bool isStatic);
+    void terminate();
+    void resize(u32 size);
+    void setData(const std::vector<VertexBoneData> &data);
+
+private:
+	bool mGenerated = false;
+
+	bool mIsStatic = false;
+	u32 mVBO = 0; // TODO: change u32 for GLuint
+	u32 mAttribPointerIndex = 0;
+};
+
+// TODO: Move Instanced Rendering matrix to MatrixBuffer
+
+// class MatrixBuffer: public ObjectBase
+// {
+//     GENERATE_METADATA(MatrixBuffer)
+
+// public:
+// 	MatrixBuffer() = default;
+//     ~MatrixBuffer() override;
+
+//     void init(u32 elementSize, u32 propertyArrayIndex, bool isStatic);
+//     void terminate();
+//     void resize(u32 size);
+//     void setData(const std::vector<Matrix4> &data);
+
+// private:
+// 	bool mGenerated = false;
+
+// 	bool mIsStatic = false;
+// 	u32 mVBO = 0; // TODO: change u32 for GLuint
+// 	u32 mAttribPointerIndex = 0;
+// };
 
 class MeshBuffer: public ObjectBase
 {
@@ -59,6 +102,7 @@ private:
 	VertexBuffer mVBOPosition;
 	VertexBuffer mVBOTexture;
 	VertexBuffer mVBOColor;
+    BonesBuffer mVBOBones;
 	u32 mEBO = 0;
 public:
 	GET(IsInstanced)

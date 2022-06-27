@@ -23,11 +23,14 @@ public:
     static void swap();
     static void terminate();
     static GLuint createVBO(u32 elementSize, u32 PropertyArrayIndex);
+    static GLuint createVBOU32(u32 elementSize, u32 PropertyArrayIndex);
     static GLuint createVAO();
     static GLuint createEBO();
     static void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    static void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void setDataVBO(u32 VBO, const std::vector<f32> &data);
+    static void setDataVBOU32(u32 VBO, const std::vector<u32> &data);
     static void setDataEBO(u32 EBO, const std::vector<u32> &data);
     static void enableProperty(u32 PropertyArrayIndex);
     static void disableProperty(u32 PropertyArrayIndex);
