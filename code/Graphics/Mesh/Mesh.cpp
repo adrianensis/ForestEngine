@@ -13,14 +13,14 @@ void Mesh::init(u32 vertexCount, u32 facesCount)
 	clear();
 }
 
-void Mesh::addVertex(const Vector3& vector)
+void Mesh::addVertex(CR(Vector3) vector)
 {
 	mVertices.push_back(vector.x);
 	mVertices.push_back(vector.y);
 	mVertices.push_back(vector.z);
 }
 
-void Mesh::addNormal(const Vector3& vector)
+void Mesh::addNormal(CR(Vector3) vector)
 {
 	mNormals.push_back(vector.x);
 	mNormals.push_back(vector.y);
@@ -48,7 +48,7 @@ void Mesh::addFace(u32 v1, u32 v2, u32 v3)
 	addFaceIndex(v3);
 }
 
-void Mesh::addBoneVertexData(const BoneVertexData& bone)
+void Mesh::addBoneVertexData(CR(BoneVertexData) bone)
 {
 	mBonesVertexData.push_back(bone);
 }
@@ -88,7 +88,7 @@ void Mesh::addBonesVertexData(const std::vector<BoneVertexData> vec)
 	mBonesVertexData.insert(mBonesVertexData.end(), vec.begin(), vec.end());
 }
 
-u32 Mesh::registerBone(const std::string& name)
+u32 Mesh::registerBone(CR(std::string) name)
 {
 	u32 boneIndex = mBonesIndexCount;
 	mBonesIndexCount++;
@@ -105,17 +105,17 @@ u32 Mesh::registerBone(const std::string& name)
 	return boneIndex;
 }
 
-bool Mesh::isBoneRegistered(const std::string& name) const
+bool Mesh::isBoneRegistered(CR(std::string) name) const
 {
 	return MAP_CONTAINS(mBonesNameIndexMap, name);
 }
 
-u32 Mesh::getBoneID(const std::string& name) const
+u32 Mesh::getBoneID(CR(std::string) name) const
 {
 	return mBonesNameIndexMap.at(name);
 }
 
-void Mesh::setBoneOffsetMatrix(u32 id, const Matrix4& offsetMatrix)
+void Mesh::setBoneOffsetMatrix(u32 id, CR(Matrix4) offsetMatrix)
 {
 	mBonesData[id].mOffsetMatrix = offsetMatrix;
 }

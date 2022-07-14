@@ -17,7 +17,7 @@ public:
 		DO_COPY(mCallback)
 	}
 
-	/*bool operator== (const Functor& functor) const{
+	/*bool operator== (CR(Functor) functor) const{
 	 return this == &functor;
 	}*/
 

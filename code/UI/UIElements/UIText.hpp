@@ -14,14 +14,14 @@ public:
     UIText();
 
     void init() override;
-    void initFromConfig(const UIElementConfig& config) override;
+    void initFromConfig(CR(UIElementConfig) config) override;
     void onDestroy() override;
-    void setText(const std::string& text) override;
+    void setText(CR(std::string) text) override;
     void setVisibility(bool visibility) override;
     
 protected:
     void setIsEditable(bool editable);
-    virtual void setBackground(const UIElementConfig& config) { };
+    virtual void setBackground(CR(UIElementConfig) config) { };
 
 private:
 	i32 mLayer = 0;

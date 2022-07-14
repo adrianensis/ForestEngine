@@ -4,7 +4,7 @@
 #include "Graphics/Module.hpp"
 
 
-void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 layer, std::string text /*= std::string()*/)
+void UIElementConfig::init(CR(Vector2) position, CR(Vector2) size, i32 layer, std::string text /*= std::string()*/)
 {
 	mStyle = &UIStyleManager::getInstance().getDefaultStyle();
 	mUIElementClassId = 0;

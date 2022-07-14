@@ -19,17 +19,17 @@ public:
     void initDebug();
     void enable();
     void disable();
-    void addMatrix(const Matrix4& matrix, const std::string& name);
-    void addInt(i32 value, const std::string& name);
-    void addUInt(u32 value, const std::string& name);
-    void addFloat(f32 value, const std::string& name);
-    void addVector4(const Vector4& value, const std::string& name);
-    void addVector3(const Vector3& value, const std::string& name);
-    void addVector2(const Vector2& value, const std::string& name);
-    void addBool(bool value, const std::string& name);
+    void addMatrix(CR(Matrix4) matrix, CR(std::string) name);
+    void addInt(i32 value, CR(std::string) name);
+    void addUInt(u32 value, CR(std::string) name);
+    void addFloat(f32 value, CR(std::string) name);
+    void addVector4(CR(Vector4) value, CR(std::string) name);
+    void addVector3(CR(Vector3) value, CR(std::string) name);
+    void addVector2(CR(Vector2) value, CR(std::string) name);
+    void addBool(bool value, CR(std::string) name);
 
 private:
-    void initInternal(const std::string& vertex, const std::string& fragment);
+    void initInternal(CR(std::string) vertex, CR(std::string) fragment);
 	
 private:
 	u32 mVertexShader = 0;

@@ -12,7 +12,7 @@ class Model: public ObjectBase
 public:
     ~Model() override;
 
-    void init(const std::string& path);
+    void init(CR(std::string) path);
 
 private:
     std::string mPath;

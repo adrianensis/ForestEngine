@@ -7,7 +7,7 @@
 
 
 
-void UIPanel::initFromConfig(const UIElementConfig& config) 
+void UIPanel::initFromConfig(CR(UIElementConfig) config) 
 {
     UIElement::initFromConfig(config);
 

@@ -37,9 +37,9 @@ private:
 public:
 
     void clearArguments() { mArguments.clear(); };
-    void addArgument(const CommandArgument& arg) { MAP_INSERT(mArguments, arg.getName(), arg); };
-    bool argumentExists(const std::string& argName) const { return MAP_CONTAINS(mArguments, argName); };
-    const std::string& getValue(const std::string& argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
+    void addArgument(CR(CommandArgument) arg) { MAP_INSERT(mArguments, arg.getName(), arg); };
+    bool argumentExists(CR(std::string) argName) const { return MAP_CONTAINS(mArguments, argName); };
+    CR(std::string) getValue(CR(std::string) argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
 
     COPY(Command)
     {

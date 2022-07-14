@@ -88,9 +88,9 @@ void Renderer::onDestroy()
 	}
 }
 
-const Mesh& Renderer::generateMeshInstance()
+CR(Mesh) Renderer::generateMeshInstance()
 {
-	const std::vector<Vector3> &vertexPositions = getVertices();
+	CR(std::vector<Vector3>)vertexPositions = getVertices();
 
 	mMeshInstance.init(mMesh.get().getVertexCount(), mMesh.get().getFacesCount());
 
@@ -180,7 +180,7 @@ void Renderer::updateTextureAnimation()
 
 		if (currentTextureAnimation && !currentTextureAnimation.get().getFrames().empty())
 		{
-			const TextureAnimationFrame& frame = currentTextureAnimation.get().getNextFrame();
+			CR(TextureAnimationFrame) frame = currentTextureAnimation.get().getNextFrame();
 			mTextureRegion.setLeftTopFront(frame.getPosition());
 			mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
 		}

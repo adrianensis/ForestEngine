@@ -13,7 +13,7 @@ public:
 	~Log() = default;
 
 	template <class T>
-	static void var(const std::string& varname, T var)
+	static void var(CR(std::string) varname, T var)
 	{
 		std::string valueStr;
 		if constexpr (std::is_same<T, std::string>::value)
@@ -29,7 +29,7 @@ public:
 	};
 
 	template <class T>
-	static void val(const T& var)
+	static void val(CR(T) var)
 	{
 		std::string valueStr;
 		if constexpr (std::is_same<T, std::string>::value)
@@ -46,12 +46,12 @@ public:
 
     static void init();
     static void terminate();
-    static void log(const std::string& str);
-    static void append(const std::string& str);
+    static void log(CR(std::string) str);
+    static void append(CR(std::string) str);
     static void trace(const std::string file, u32 line, const std::string function, const std::string message = emptyMessage);
-    static void echo(const std::string& message, bool newLine = true);
-    static void customEcho(const std::string& tag, const std::string& message, bool newLine = true);
-    static void error(const std::string& message);
+    static void echo(CR(std::string) message, bool newLine = true);
+    static void customEcho(CR(std::string) tag, CR(std::string) message, bool newLine = true);
+    static void error(CR(std::string) message);
     static void brline();
     static void backspace();
 };

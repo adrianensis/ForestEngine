@@ -21,26 +21,26 @@ private:\
     }\
 public:\
     \
-    Vector##vectorLength& operator=(const Vector##vectorLength& other)\
+    R(Vector##vectorLength) operator=(const R(Vector##vectorLength) other)\
 	{\
 		set(other);\
 		return *this;\
 	}\
     \
-    Vector##vectorLength& operator+=(const Vector##vectorLength& rhs) {return this->add(rhs); }\
-    Vector##vectorLength& operator-=(const Vector##vectorLength& rhs) {return this->sub(rhs); }\
-    Vector##vectorLength& operator*=(const Vector##vectorLength& rhs) {return this->mul(rhs); }\
-    Vector##vectorLength& operator/=(const Vector##vectorLength& rhs) {return this->div(rhs); }\
-    Vector##vectorLength& operator+=(f32 rhs) {return this->add(rhs); }\
-    Vector##vectorLength& operator-=(f32 rhs) {return this->sub(rhs); }\
-    Vector##vectorLength& operator*=(f32 rhs) {return this->mul(rhs); }\
-    Vector##vectorLength& operator/=(f32 rhs) {return this->div(rhs); }\
-    bool operator==(const Vector##vectorLength& rhs) const {return this->eq(rhs); }\
-    bool operator!=(const Vector##vectorLength& rhs) const {return !((*this) == rhs); }\
-    Vector##vectorLength operator+(const Vector##vectorLength& rhs) const {return Vector##vectorLength(*this) += rhs; }\
-    Vector##vectorLength operator-(const Vector##vectorLength& rhs) const {return Vector##vectorLength(*this) -= rhs; }\
-    Vector##vectorLength operator*(const Vector##vectorLength& rhs) const {return Vector##vectorLength(*this) *= rhs; }\
-    Vector##vectorLength operator/(const Vector##vectorLength& rhs) const {return Vector##vectorLength(*this) /= rhs; }\
+    R(Vector##vectorLength) operator+=(const R(Vector##vectorLength) rhs) {return this->add(rhs); }\
+    R(Vector##vectorLength) operator-=(const R(Vector##vectorLength) rhs) {return this->sub(rhs); }\
+    R(Vector##vectorLength) operator*=(const R(Vector##vectorLength) rhs) {return this->mul(rhs); }\
+    R(Vector##vectorLength) operator/=(const R(Vector##vectorLength) rhs) {return this->div(rhs); }\
+    R(Vector##vectorLength) operator+=(f32 rhs) {return this->add(rhs); }\
+    R(Vector##vectorLength) operator-=(f32 rhs) {return this->sub(rhs); }\
+    R(Vector##vectorLength) operator*=(f32 rhs) {return this->mul(rhs); }\
+    R(Vector##vectorLength) operator/=(f32 rhs) {return this->div(rhs); }\
+    bool operator==(const R(Vector##vectorLength) rhs) const {return this->eq(rhs); }\
+    bool operator!=(const R(Vector##vectorLength) rhs) const {return !((*this) == rhs); }\
+    Vector##vectorLength operator+(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) += rhs; }\
+    Vector##vectorLength operator-(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) -= rhs; }\
+    Vector##vectorLength operator*(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) *= rhs; }\
+    Vector##vectorLength operator/(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) /= rhs; }\
     Vector##vectorLength operator+(f32 rhs) const {return Vector##vectorLength(*this) += rhs; }\
     Vector##vectorLength operator-(f32 rhs) const {return Vector##vectorLength(*this) -= rhs; }\
     Vector##vectorLength operator-() const{ return Vector##vectorLength(*this) *= -1; }\

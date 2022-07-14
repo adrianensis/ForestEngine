@@ -15,7 +15,7 @@ public:
     void init(u32 elementSize, u32 propertyArrayIndex, bool isStatic);
     void terminate();
     void resize(u32 size);
-    void setData(const std::vector<f32> &data);
+    void setData(CR(std::vector<f32>)data);
 
 private:
 	bool mGenerated = false;
@@ -36,7 +36,7 @@ public:
     void init(u32 propertyArrayIndex, bool isStatic);
     void terminate();
     void resize(u32 size);
-    void setData(const std::vector<BoneVertexData> &data);
+    void setData(CR(std::vector<BoneVertexData>)data);
 
 private:
 	bool mGenerated = false;
@@ -59,7 +59,7 @@ private:
 //     void init(u32 elementSize, u32 propertyArrayIndex, bool isStatic);
 //     void terminate();
 //     void resize(u32 size);
-//     void setData(const std::vector<Matrix4> &data);
+//     void setData(CR(std::vector<Matrix4>)data);
 
 // private:
 // 	bool mGenerated = false;
@@ -80,10 +80,10 @@ public:
 
     void init(bool isStatic, bool isInstanced);
     void terminate();
-    void resize(const Mesh& mesh);
-    void setData(const Mesh& mesh);
-    void setIndexesData(const Mesh& mesh);
-    void addInstanceMatrix(const Matrix4& modelMatrix);
+    void resize(CR(Mesh) mesh);
+    void setData(CR(Mesh) mesh);
+    void setIndexesData(CR(Mesh) mesh);
+    void addInstanceMatrix(CR(Matrix4) modelMatrix);
     void clear();
     void setMaxInstances(u32 maxInstances);
     void enable();
@@ -118,8 +118,8 @@ public:
 
     void init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced);
     void resize(u32 size);
-    void addInstanceMatrix(const Matrix4& modelMatrix);
-    void addInstance(const Mesh& meshInstance);
+    void addInstanceMatrix(CR(Matrix4) modelMatrix);
+    void addInstance(CR(Mesh) meshInstance);
     void drawCall();
     void terminate();
     void enable();

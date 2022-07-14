@@ -12,13 +12,13 @@ void Log::terminate()
 	logFile.close();
 }
 
-void Log::log(const std::string& str)
+void Log::log(CR(std::string) str)
 {
 	std::cout << str << std::endl;
 	logFile << str << std::endl;
 }
 
-void Log::append(const std::string& str)
+void Log::append(CR(std::string) str)
 {
 	std::cout << '\r';
 	std::cout << str;
@@ -31,7 +31,7 @@ void Log::trace(const std::string file, u32 line, const std::string function, co
 	log("TRACE > [" + function + ":" + std::to_string(line) + "] > " + message);
 }
 
-void Log::echo(const std::string& message, bool newLine /*= true*/)
+void Log::echo(CR(std::string) message, bool newLine /*= true*/)
 {
 	if(newLine)
 	{
@@ -43,7 +43,7 @@ void Log::echo(const std::string& message, bool newLine /*= true*/)
 	}
 }
 
-void Log::customEcho(const std::string& tag, const std::string& message, bool newLine /*= true*/)
+void Log::customEcho(CR(std::string) tag, CR(std::string) message, bool newLine /*= true*/)
 {
 	if(newLine)
 	{
@@ -55,7 +55,7 @@ void Log::customEcho(const std::string& tag, const std::string& message, bool ne
 	}
 }
 
-void Log::error(const std::string& message)
+void Log::error(CR(std::string) message)
 {
 	log("ERROR > " + message);
 }

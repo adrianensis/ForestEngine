@@ -29,7 +29,7 @@ void Matrix4::setRows(u32 n)
 	mData[i] = n;
 }
 
-void Matrix4::setRows(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3)
+void Matrix4::setRows(CR(Vector4) row0, CR(Vector4) row1, CR(Vector4) row2, CR(Vector4) row3)
 {
 	Vector4 rows[4] = {row0, row1, row2, row3};
 
@@ -38,7 +38,7 @@ void Matrix4::setRows(const Vector4& row0, const Vector4& row1, const Vector4& r
 	set(row, col, rows[row][col]);
 }
 
-const Matrix4& Matrix4::getIdentity()
+CR(Matrix4) Matrix4::getIdentity()
 {
 	if (!smIdentity)
 	{
@@ -54,7 +54,7 @@ void Matrix4::init(u32 n)
 	setRows(n);
 }
 
-void Matrix4::init(const Matrix4& other)
+void Matrix4::init(CR(Matrix4) other)
 {
 	init(other.mData); //TRACE()
 }
@@ -79,7 +79,7 @@ void Matrix4::init(const f32 *row0, const f32 *row1, const f32 *row2, const f32 
 	setRows(row0, row1, row2, row3);
 }
 
-void Matrix4::init(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3)
+void Matrix4::init(CR(Vector4) row0, CR(Vector4) row1, CR(Vector4) row2, CR(Vector4) row3)
 {
 	setRows(row0, row1, row2, row3);
 }
@@ -176,7 +176,7 @@ void Matrix4::invert()
 	set(3, 3, out_33);
 }
 
-void Matrix4::mul(const Matrix4& other)
+void Matrix4::mul(CR(Matrix4) other)
 {
 	Matrix4 copy;
 	copy.init((*this));
@@ -189,7 +189,7 @@ void Matrix4::mul(const Matrix4& other)
 	this->set(i, j, this->get(i, j) + copy.get(i, k) * other.get(k, j));
 }
 
-Vector4 Matrix4::mulVector(const Vector4& vector) const
+Vector4 Matrix4::mulVector(CR(Vector4) vector) const
 {
 	Vector4 result(0, 0, 0, 0);
 
@@ -218,7 +218,7 @@ void Matrix4::identity()
 	this->set(3, 3, 1.0f);
 }
 
-void Matrix4::translation(const Vector3& vector)
+void Matrix4::translation(CR(Vector3) vector)
 {
 	this->identity();
 	this->set(0, 3, vector.x);
@@ -226,7 +226,7 @@ void Matrix4::translation(const Vector3& vector)
 	this->set(2, 3, vector.z);
 }
 
-void Matrix4::rotation(const Vector3& vector)
+void Matrix4::rotation(CR(Vector3) vector)
 {
 	Quaternion q(vector);
 	q.toMatrix(this);
@@ -262,7 +262,7 @@ void Matrix4::rotation(const Vector3& vector)
 	}*/
 }
 
-void Matrix4::scale(const Vector3& vector)
+void Matrix4::scale(CR(Vector3) vector)
 {
 	this->identity();
 	this->set(0, 0, vector.x);

@@ -26,7 +26,7 @@ using ClassRegisterCallback = std::function<ObjectBase*()>;
 class ClassRegister
 {
 public:
-    ClassRegister(const std::string& className, ClassRegisterCallback callback);
+    ClassRegister(CR(std::string) className, ClassRegisterCallback callback);
 
 private:        
     std::string mClassName;
@@ -40,15 +40,15 @@ class ClassManager: public Singleton<ClassManager>
 public:
     void init();
 
-    void registerClassByName(const std::string& className, ClassRegisterCallback callback);
+    void registerClassByName(CR(std::string) className, ClassRegisterCallback callback);
 
     template<class T, typename = std::enable_if_t<std::is_base_of<ObjectBase, T>::value> >
-    T* instanceByName(const std::string& className)
+    T* instanceByName(CR(std::string) className)
     {
         return static_cast<T*>(instanceByName(className));
     }
 
-    ObjectBase* instanceByName(const std::string& className)
+    ObjectBase* instanceByName(CR(std::string) className)
     {
         if(MAP_CONTAINS(mInstanceByNameMap, className))
         {

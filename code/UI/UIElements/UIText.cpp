@@ -16,7 +16,7 @@ void UIText::init()
 	UIElement::init();
 }
 
-void UIText::initFromConfig(const UIElementConfig& config) 
+void UIText::initFromConfig(CR(UIElementConfig) config) 
 {
 	UIElement::initFromConfig(config);
 
@@ -47,7 +47,7 @@ void UIText::onDestroy()
 	UIElement::onDestroy();
 }
 
-void UIText::setText(const std::string& text) 
+void UIText::setText(CR(std::string) text) 
 {
 	if (mString != text)
 	{

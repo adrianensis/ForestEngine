@@ -1,7 +1,7 @@
 #include "Core/Profiler/Profiler.hpp"
 #include "Core/Log/Log.hpp"
 
-FunctionProfiler::FunctionProfiler(const std::string& name, bool isGPU /*= false*/)
+FunctionProfiler::FunctionProfiler(CR(std::string) name, bool isGPU /*= false*/)
 {
 	mScopeName = name;
 	mIsGPU = isGPU;
@@ -76,7 +76,7 @@ void Profiler::terminate()
 	mTimeMarkMap.clear();
 }
 
-void Profiler::timeMarkStart(const std::string& name)
+void Profiler::timeMarkStart(CR(std::string) name)
 {
 	if(!MAP_CONTAINS(mTimeMap, name))
 	{
@@ -90,7 +90,7 @@ void Profiler::timeMarkStart(const std::string& name)
 	mTimeMarkMap.at(name).start();
 }
 
-void Profiler::timeMarkEnd(const std::string& name)
+void Profiler::timeMarkEnd(CR(std::string) name)
 {
 	if(MAP_CONTAINS(mTimeMap, name))
 	{
@@ -99,7 +99,7 @@ void Profiler::timeMarkEnd(const std::string& name)
 	}
 }
 
-void Profiler::timeMarkGPUStart(const std::string& name)
+void Profiler::timeMarkGPUStart(CR(std::string) name)
 {
 	std::string gpuName = "(GPU) " + name;
 
@@ -115,7 +115,7 @@ void Profiler::timeMarkGPUStart(const std::string& name)
 	mTimeMarkGPUMap.at(gpuName).start();
 }
 
-void Profiler::timeMarkGPUEnd(const std::string& name)
+void Profiler::timeMarkGPUEnd(CR(std::string) name)
 {
 	std::string gpuName = "(GPU) " + name;
 
@@ -126,12 +126,12 @@ void Profiler::timeMarkGPUEnd(const std::string& name)
 	}
 }
 
-void Profiler::printResult(const std::string& name, f32 time)  const
+void Profiler::printResult(CR(std::string) name, f32 time)  const
 {
 	ECHO(name + " : " + std::to_string(time) + "ms ")
 }
 
-void Profiler::printResultAverage(const std::string& name, f32 time)  const
+void Profiler::printResultAverage(CR(std::string) name, f32 time)  const
 {
 	printResult(std::string("(Avg) ") + name, time / mFrameCounter);
 }

@@ -22,7 +22,7 @@ void Chunk::init()
 	mCube.set(Vector3(0, 0, 0), Vector3(0, 0, 0));
 }
 
-void Chunk::set(const Vector3& leftTop, f32 size)
+void Chunk::set(CR(Vector3) leftTop, f32 size)
 {
 	mCube.set(leftTop, Vector3(size, size, size));
 	f32 halfSize = size / 2.0f;

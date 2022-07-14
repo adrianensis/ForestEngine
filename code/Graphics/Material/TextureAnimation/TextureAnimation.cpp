@@ -11,7 +11,7 @@ TextureAnimation::TextureAnimation()
 TextureAnimation::~TextureAnimation()  {
 
 }
-TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
+TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, CR(Vector2) startPosition, f32 width, f32 height, f32 speed)
 {
 
 	TextureAnimation TextureAnimation;
@@ -72,7 +72,7 @@ u32 TextureAnimation::getNumberOfFrames() const
 	return mFrames.size();
 }
 
-const TextureAnimationFrame& TextureAnimation::getNextFrame()
+CR(TextureAnimationFrame) TextureAnimation::getNextFrame()
 {
 
 	f32 time = (1.0 / (mSpeed)) * 1000.0f; // in milliseconds !
@@ -89,7 +89,7 @@ const TextureAnimationFrame& TextureAnimation::getNextFrame()
 	return mFrames.at(mCurrentFrameNumber);
 }
 
-const TextureAnimationFrame& TextureAnimation::getCurrentFrame() const
+CR(TextureAnimationFrame) TextureAnimation::getCurrentFrame() const
 {
 	return mFrames.at(mCurrentFrameNumber);
 }
@@ -105,7 +105,7 @@ IMPLEMENT_DESERIALIZATION(TextureAnimation)
 {
 	DESERIALIZE("name", mName);
 	DESERIALIZE("speed", mSpeed);
-	DESERIALIZE_LIST("frames", mFrames, [](const JSON& json)
+	DESERIALIZE_LIST("frames", mFrames, [](CR(JSON) json)
 	{
 		TextureAnimationFrame frame;
 		frame.deserialize(json);

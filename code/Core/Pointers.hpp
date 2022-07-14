@@ -60,8 +60,8 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    const T& get() const { return *mReference.lock().get(); }
-    T& get() { return *mReference.lock().get(); }
+    CR(T) get() const { return *mReference.lock().get(); }
+    R(T) get() { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
 
     Ptr<T>& operator=(const Ptr<T>& rhs)
@@ -120,8 +120,8 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    const T& get() const { return *mReference.get(); }
-    T& get() { return *mReference.get(); }
+    CR(T) get() const { return *mReference.get(); }
+    R(T) get() { return *mReference.get(); }
     bool isValid() const { return mReference != nullptr; }
 
     OwnerPtr<T>& operator=(const OwnerPtr<T>& rhs)

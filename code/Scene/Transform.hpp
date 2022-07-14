@@ -12,10 +12,10 @@ class TransformState : public ObjectBase
 
 public:
 	TransformState() = default;
-    TransformState(const Transform& transform);
-    TransformState(const Vector3& position, const Vector3& rotation, const Vector3& scale);
+    TransformState(CR(Transform) transform);
+    TransformState(CR(Vector3) position, CR(Vector3) rotation, CR(Vector3) scale);
 
-	bool eq(const TransformState& rhs, f32 eps = MathUtils::FLOAT_EPSILON) const
+	bool eq(CR(TransformState) rhs, f32 eps = MathUtils::FLOAT_EPSILON) const
 	{
 		return mPosition.eq(rhs.mPosition, eps) &&
 			mRotation.eq(rhs.mRotation, eps) &&
@@ -43,19 +43,19 @@ public:
 	static const Vector3 smUp;
 	static const Vector3 smForward;
     void init() override;
-    const Vector3& getWorldPosition() const;
-    void lookAt(const Vector3& targetPosition);
-    const Matrix4& getTranslationMatrix() const;
-    const Matrix4& getRotationMatrix() const;
-    const Matrix4& getScaleMatrix() const;
-    const Matrix4& getModelMatrix(bool force = false) const;
+    CR(Vector3) getWorldPosition() const;
+    void lookAt(CR(Vector3) targetPosition);
+    CR(Matrix4) getTranslationMatrix() const;
+    CR(Matrix4) getRotationMatrix() const;
+    CR(Matrix4) getScaleMatrix() const;
+    CR(Matrix4) getModelMatrix(bool force = false) const;
 
-	void translate(const Vector3& vector)
+	void translate(CR(Vector3) vector)
 	{
 		setLocalPosition(mLocalPosition.add(vector));
 	}
 
-	void rotate(const Vector3& vector)
+	void rotate(CR(Vector3) vector)
 	{
 		setRotation(mRotation.add(vector));
 	}

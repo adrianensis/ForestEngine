@@ -236,7 +236,7 @@ void Editor::terminate()
 	
 }
 
-GameObject* Editor::createSprite(const Vector3& v, f32 size)
+GameObject* Editor::createSprite(CR(Vector3) v, f32 size)
 {
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
@@ -257,7 +257,7 @@ GameObject* Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
+void Editor::importModel( CR(std::string) pFile, CR(Vector3) v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
@@ -267,7 +267,7 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 	gameObject->getTransform().get().setLocalPosition(v);
 	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
 
-	const std::vector<OwnerPtr<Mesh>>& meshes = model.get().getMeshes();
+	CR(std::vector<OwnerPtr<Mesh>>) meshes = model.get().getMeshes();
 
 	FOR_LIST(it, meshes)
 	{

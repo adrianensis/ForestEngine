@@ -28,8 +28,8 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 
 	Ptr<Camera> camera = RenderEngine::getInstance().getCamera();
 
-	const Matrix4& projectionMatrix = camera.get().getProjectionMatrix();
-	const Matrix4& viewMatrix = camera.get().getViewMatrix();
+	CR(Matrix4) projectionMatrix = camera.get().getProjectionMatrix();
+	CR(Matrix4) viewMatrix = camera.get().getViewMatrix();
 
 	mShader.get().addMatrix(isWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 	mShader.get().addMatrix(isWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");

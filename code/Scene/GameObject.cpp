@@ -45,7 +45,7 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 	{
 		component.get().destroy();
 
-		std::list<OwnerPtr<Component>>& list = mComponentsMap.at(classId);
+		R(std::list<OwnerPtr<Component>>) list = mComponentsMap.at(classId);
 		list.remove(component);
 	}
 }
@@ -115,7 +115,7 @@ IMPLEMENT_DESERIALIZATION(GameObject)
 
 }
 
-const std::list<OwnerPtr<Component>>& GameObject::getComponents(ClassId classId) const
+CR(std::list<OwnerPtr<Component>>) GameObject::getComponents(ClassId classId) const
 {
 	const std::list<OwnerPtr<Component>>* components = nullptr;
 
@@ -135,7 +135,7 @@ const std::list<OwnerPtr<Component>>& GameObject::getComponents(ClassId classId)
 Ptr<Component> GameObject::getFirstComponent(ClassId classId) const
 {
 	Ptr<Component>component;
-	const std::list<OwnerPtr<Component>>& components = getComponents(classId);
+	CR(std::list<OwnerPtr<Component>>) components = getComponents(classId);
 
 	if (!components.empty())
 	{

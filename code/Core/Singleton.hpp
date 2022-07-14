@@ -15,7 +15,7 @@ public:
 		return mInstance != nullptr;
 	}
 
-	static T& getInstance()
+	static R(T) getInstance()
 	{
 		if (!existsInstance())
 		{

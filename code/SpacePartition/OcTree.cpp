@@ -3,7 +3,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& tree)
+void OcTree::OcTreeNode::init(CR(Cube) cube, CR(Vector3) minSize, R(OcTree) tree)
 {
 	mCube = cube;
 
@@ -65,7 +65,7 @@ void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& 
 
 //----------------------------------------------------------------------
 
-bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, IOcTreeElement& element) const
+bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, R(IOcTreeElement) element) const
 {
 // TODO: uncomment this when ready
 // ------------------------------
@@ -78,14 +78,14 @@ bool test = false; /*Geometry::testRectangleSphere(mChildren[index].mCube.getLef
 
 //----------------------------------------------------------------------
 
-void OcTree::OcTreeNode::addOcTreeElement(IOcTreeElement& element)
+void OcTree::OcTreeNode::addOcTreeElement(R(IOcTreeElement) element)
 {
 if (mIsDivisible)
 {
 	// For each "possible" child node
 	FOR_ARRAY(i, mChildren)
 	{
-		OcTreeNode& node = mChildren[i];
+		R(OcTreeNode) node = mChildren[i];
 		bool isPartiallyInChildren = childNodeTestPartial(i, element);
 		if (isPartiallyInChildren)
 		{
@@ -142,7 +142,7 @@ void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 {
 	FOR_LIST(it, mChildren)
 	{
-		OcTreeNode& child = *it;
+		R(OcTreeNode) child = *it;
 		child.update(/*contactManager*/);
 	}
 };
@@ -203,7 +203,7 @@ bool OcTree::OcTreeNode::isLeaf() const
 // 	return mColliders->getLength();
 // };
 
-// void QuadTree::Node::rayCastQuery(const Vector3& lineStart, const Vector3& lineEnd, List<GameObject*> *outList)
+// void QuadTree::Node::rayCastQuery(CR(Vector3) lineStart, CR(Vector3) lineEnd, List<GameObject*> *outList)
 // {
 
 // 	bool rayIntersectsNode = MathUtils::testLineSphereSimple(Vector2(lineStart), Vector2(lineEnd),
@@ -283,7 +283,7 @@ void OcTree::update()
 // 	mRoot->addCollider(collider);
 // }
 
-// void QuadTree::rayCastQuery(const Vector3& lineStart, const Vector3& lineEnd, List<GameObject*> *outList)
+// void QuadTree::rayCastQuery(CR(Vector3) lineStart, CR(Vector3) lineEnd, List<GameObject*> *outList)
 // {
 // 	mRoot->rayCastQuery(lineStart, lineEnd, outList);
 // }

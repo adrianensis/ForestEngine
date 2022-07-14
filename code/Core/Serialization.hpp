@@ -16,15 +16,15 @@ using JSON = nlohmann::ordered_json;
 class ISerializable
 {
 public:
-	virtual void serialize(JSON& json) const {};
-	virtual void deserialize(const JSON& json) {};
+	virtual void serialize(R(JSON) json) const {};
+	virtual void deserialize(CR(JSON) json) {};
 };
 
 class SerializationUtils
 {
 public:
 	template<class T>
-	static JSON serializeTemplated(const T& value)
+	static JSON serializeTemplated(CR(T) value)
 	{
 		JSON json;
 		if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REF(T))))
@@ -50,7 +50,7 @@ public:
 	}
 
 	template<class T>
-	static void deserializeTemplated(T& value, const JSON& json)
+	static void deserializeTemplated(R(T) value, CR(JSON) json)
 	{
 		if(!json.empty())
         {

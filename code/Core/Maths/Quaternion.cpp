@@ -9,7 +9,7 @@ Quaternion::Quaternion(f32 x, f32 y, f32 z, f32 w) : v(x, y, z), w(w)
 {
 }
 
-Quaternion::Quaternion(const Vector3& v, f32 w) : v(v), w(w)
+Quaternion::Quaternion(CR(Vector3) v, f32 w) : v(v), w(w)
 {
 }
 
@@ -18,49 +18,49 @@ Quaternion::Quaternion(f32 roll, f32 pitch, f32 yaw)
 	fromEuler(roll, pitch, yaw);
 }
 
-Quaternion::Quaternion(const Vector3& v) : Quaternion(v.x, v.y, v.z)
+Quaternion::Quaternion(CR(Vector3) v) : Quaternion(v.x, v.y, v.z)
 {
 }
 
-Quaternion::Quaternion(const Quaternion& other) : v(other.v), w(other.w)
+Quaternion::Quaternion(CR(Quaternion) other) : v(other.v), w(other.w)
 {
 }
 
-Quaternion& Quaternion::set(f32 x, f32 y, f32 z, f32 w)
+R(Quaternion) Quaternion::set(f32 x, f32 y, f32 z, f32 w)
 {
 	v.set(x, y, z);
 	this->w = w;
 	return *this;
 }
 
-Quaternion& Quaternion::set(const Vector3& v, f32 w)
+R(Quaternion) Quaternion::set(CR(Vector3) v, f32 w)
 {
 	this->v.set(v);
 	this->w = w;
 	return *this;
 }
 
-Quaternion& Quaternion::set(const Quaternion& rhs)
+R(Quaternion) Quaternion::set(CR(Quaternion) rhs)
 {
 	set(rhs.v, rhs.w);
 	return *this;
 }
 
-Quaternion& Quaternion::add(const Quaternion& rhs)
+R(Quaternion) Quaternion::add(CR(Quaternion) rhs)
 {
 	v.add(rhs.v);
 	w = w + rhs.w;
 	return *this;
 }
 
-Quaternion& Quaternion::sub(const Quaternion& rhs)
+R(Quaternion) Quaternion::sub(CR(Quaternion) rhs)
 {
 	v.sub(rhs.v);
 	w = w - rhs.w;
 	return *this;
 }
 
-Quaternion& Quaternion::mul(const Quaternion& rhs)
+R(Quaternion) Quaternion::mul(CR(Quaternion) rhs)
 {
 	f32 w_total = (w * rhs.w) - (v.dot(rhs.v));
 	v.set(rhs.v * w + v * w + Vector3(v).cross(rhs.v));
@@ -68,34 +68,34 @@ Quaternion& Quaternion::mul(const Quaternion& rhs)
 	return *this;
 }
 
-Quaternion& Quaternion::div(const Quaternion& rhs)
+R(Quaternion) Quaternion::div(CR(Quaternion) rhs)
 {
 	this->mul(Quaternion(rhs).inv());
 	return *this;
 }
 
-Quaternion& Quaternion::add(f32 rhs)
+R(Quaternion) Quaternion::add(f32 rhs)
 {
 	v.add(rhs);
 	w = w + rhs;
 	return *this;
 }
 
-Quaternion& Quaternion::sub(f32 rhs)
+R(Quaternion) Quaternion::sub(f32 rhs)
 {
 	v.sub(rhs);
 	w = w - rhs;
 	return *this;
 }
 
-Quaternion& Quaternion::mul(f32 rhs)
+R(Quaternion) Quaternion::mul(f32 rhs)
 {
 	v.mul(rhs);
 	w = w * rhs;
 	return *this;
 }
 
-Quaternion& Quaternion::div(f32 rhs)
+R(Quaternion) Quaternion::div(f32 rhs)
 {
 	ASSERT_MSG(rhs != 0, "Division by zero.");
 	v.div(rhs);
@@ -103,7 +103,7 @@ Quaternion& Quaternion::div(f32 rhs)
 	return *this;
 }
 
-f32 Quaternion::dot(const Quaternion& q) const
+f32 Quaternion::dot(CR(Quaternion) q) const
 {
 	f32 xx = v.x * q.v.x;
 	f32 yy = v.y * q.v.y;
@@ -123,7 +123,7 @@ f32 Quaternion::len() const
 	return sqrtf(this->sqrlen());
 }
 
-Quaternion& Quaternion::nor()
+R(Quaternion) Quaternion::nor()
 {
 	f32 len = this->len();
 
@@ -133,29 +133,29 @@ Quaternion& Quaternion::nor()
 	return *this;
 }
 
-bool Quaternion::eq(const Quaternion& q, f32 e) const
+bool Quaternion::eq(CR(Quaternion) q, f32 e) const
 {
 	return v.eq(q.v, e) && MathUtils::eqf(this->w, q.w, e);
 }
 
-bool Quaternion::eq(const Quaternion& q) const
+bool Quaternion::eq(CR(Quaternion) q) const
 {
 	return v.eq(q.v) && MathUtils::eqf(this->w, q.w);
 }
 
-Quaternion& Quaternion::conj()
+R(Quaternion) Quaternion::conj()
 {
 	this->v.mul(-1);
 	return *this;
 }
 
-Quaternion& Quaternion::inv()
+R(Quaternion) Quaternion::inv()
 {
 	this->conj().div(this->sqrlen());
 	return *this;
 }
 
-f32 Quaternion::angle(const Quaternion& q) const
+f32 Quaternion::angle(CR(Quaternion) q) const
 {
 	/*
 	* angle is acute (positive dot product)
@@ -165,7 +165,7 @@ f32 Quaternion::angle(const Quaternion& q) const
 	return acosf(v.dot(q.v) / (v.len() * q.v.len()));
 }
 
-Quaternion& Quaternion::lerp(const Quaternion& target, f32 t)
+R(Quaternion) Quaternion::lerp(CR(Quaternion) target, f32 t)
 {
 	f32 tt = 1 - t;
 	this->mul(tt);
@@ -173,13 +173,13 @@ Quaternion& Quaternion::lerp(const Quaternion& target, f32 t)
 	return *this;
 }
 
-Quaternion& Quaternion::nlerp(const Quaternion& target, f32 t)
+R(Quaternion) Quaternion::nlerp(CR(Quaternion) target, f32 t)
 {
 	this->lerp(target, t).nor();
 	return *this;
 }
 
-Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
+R(Quaternion) Quaternion::slerp(CR(Quaternion) target, f32 t)
 {
 	f32 theta = angle(target);
 
@@ -210,7 +210,7 @@ void Quaternion::fromEuler(f32 roll, f32 pitch, f32 yaw)
 	v.z = cr * cp * sy - sr * sp * cy;
 }
 
-void Quaternion::fromEuler(const Vector3& v)
+void Quaternion::fromEuler(CR(Vector3) v)
 {
 	fromEuler(v.x, v.y, v.z);
 }
@@ -247,7 +247,7 @@ void Quaternion::toMatrix(Matrix4 *outMatrix) const
 	outMatrix->set(2, 2, 1 - (xx2 + yy2));
 }
 template<>
-JSON SerializationUtils::serializeTemplated(const Quaternion& value)
+JSON SerializationUtils::serializeTemplated(CR(Quaternion) value)
 {
 JSON json;
 SERIALIZE("v", value.v)
@@ -256,7 +256,7 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Quaternion& value, const JSON& json)
+void SerializationUtils::deserializeTemplated(R(Quaternion) value, CR(JSON) json)
 {
 DESERIALIZE("v", value.v)
 DESERIALIZE("w", value.w)

@@ -37,9 +37,9 @@ public:
 	}
 
 	template <class T>
-	const std::list<OwnerPtr<T>>& getComponents() const
+	CR(std::list<OwnerPtr<T>>) getComponents() const
 	{
-		return reinterpret_cast<const std::list<OwnerPtr<T>>&>(GameObject::getComponents(T::getClassIdStatic()));
+		return reinterpret_cast<CR(std::list<OwnerPtr<T>>)>(GameObject::getComponents(T::getClassIdStatic()));
 	}
 
 	template <class T>
@@ -65,7 +65,7 @@ public:
     void destroy();
 
 private:
-    const std::list<OwnerPtr<Component>>& getComponents(ClassId classId) const;
+    CR(std::list<OwnerPtr<Component>>) getComponents(ClassId classId) const;
     Ptr<Component> getFirstComponent(ClassId classId) const;
 
 private:

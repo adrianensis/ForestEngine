@@ -29,7 +29,7 @@ void VertexBuffer::resize(u32 size)
 	RenderContext::resizeVBO(mVBO, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-void VertexBuffer::setData(const std::vector<f32> &data)
+void VertexBuffer::setData(CR(std::vector<f32>)data)
 {
 	RenderContext::setDataVBO(mVBO, data);
 }
@@ -65,7 +65,7 @@ void BonesBuffer::resize(u32 size)
 	RenderContext::resizeVBOAnyType(mVBO, sizeof(BoneVertexData), size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-void BonesBuffer::setData(const std::vector<BoneVertexData> &data)
+void BonesBuffer::setData(CR(std::vector<BoneVertexData>)data)
 {
 	RenderContext::setDataVBOAnyType(mVBO, data);
 }
@@ -136,7 +136,7 @@ void MeshBuffer::terminate()
 	}
 }
 
-void MeshBuffer::resize(const Mesh& mesh)
+void MeshBuffer::resize(CR(Mesh) mesh)
 {
 	mVBOPosition.resize(mesh.getVertices().capacity());
 	mVBOTexture.resize(mesh.getTextureCoordinates().capacity());
@@ -149,7 +149,7 @@ void MeshBuffer::resize(const Mesh& mesh)
 	}
 }
 
-void MeshBuffer::setData(const Mesh& mesh)
+void MeshBuffer::setData(CR(Mesh) mesh)
 {
 	mVBOPosition.setData(mesh.getVertices());
 	mVBOTexture.setData(mesh.getTextureCoordinates());
@@ -162,13 +162,13 @@ void MeshBuffer::setData(const Mesh& mesh)
 	}
 }
 
-void MeshBuffer::setIndexesData(const Mesh& mesh)
+void MeshBuffer::setIndexesData(CR(Mesh) mesh)
 {
 	RenderContext::resizeEBO(mEBO, mesh.getFaces().size(), mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	RenderContext::setDataEBO(mEBO, mesh.getFaces());
 }
 
-void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
+void MeshBuffer::addInstanceMatrix(CR(Matrix4) modelMatrix)
 {
 	PROFILER_CPU()
 
@@ -268,7 +268,7 @@ void MeshBatcher::resize(u32 size)
 	mDataSentToGPU = false;
 }
 
-void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
+void MeshBatcher::addInstanceMatrix(CR(Matrix4) modelMatrix)
 {
 	PROFILER_CPU()
 
@@ -277,7 +277,7 @@ void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
 	mMeshesIndex++;
 }
 
-void MeshBatcher::addInstance(const Mesh& meshInstance)
+void MeshBatcher::addInstance(CR(Mesh) meshInstance)
 {
 	PROFILER_CPU()
 

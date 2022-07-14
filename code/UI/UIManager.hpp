@@ -19,12 +19,12 @@ public:
     void init();
     void terminate();
 
-    const Vector2& getCharTextureCoordinates(char character);
-	const Vector2& getFontTileTextureSize() const { return mFontTileTextureSize; }
+    CR(Vector2) getCharTextureCoordinates(char character);
+	CR(Vector2) getFontTileTextureSize() const { return mFontTileTextureSize; }
     Ptr<Material> getFontMaterial();
-	static const Vector2& getDefaultFontSize() { return smDefaultFontSize; }
+	static CR(Vector2) getDefaultFontSize() { return smDefaultFontSize; }
 
-	UIGroup& getOrCreateGroup(const std::string & groupName)
+	R(UIGroup) getOrCreateGroup(CR(std::string) groupName)
 	{
 		if (!MAP_CONTAINS(mGroups, groupName))
 		{

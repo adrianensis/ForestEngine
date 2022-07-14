@@ -88,7 +88,7 @@ void CommandLine::init()
     DefaultCommands::registerDefaultCommands();
 }
 
-void CommandLine::log(const std::string& line, bool newLine /*= true*/) const
+void CommandLine::log(CR(std::string) line, bool newLine /*= true*/) const
 {
     if(newLine)
     {
@@ -110,7 +110,7 @@ void CommandLine::terminate()
 
 }
 
-void CommandLine::execute(const std::string& commandLine)
+void CommandLine::execute(CR(std::string) commandLine)
 {
     std::string patternValidName("[-+]?[a-zA-Z_\\.0-9]+");
     std::regex regexCommand("^\\s*(" + patternValidName + ")\\s*");
@@ -125,7 +125,7 @@ void CommandLine::execute(const std::string& commandLine)
     {
         //log("command: " + commandName);
 
-        CommandFunctor& functor = mCommandsMap.at(commandName);
+        R(CommandFunctor) functor = mCommandsMap.at(commandName);
         functor.getCommand().clearArguments();
 
         std::string patternAssignation("\\s*=\\s*");
@@ -180,12 +180,12 @@ void CommandLine::execute(const std::string& commandLine)
     mHistoryIterator = mHistory.end();
 }
 
-std::string CommandLine::autocomplete(const std::string& commandLine)
+std::string CommandLine::autocomplete(CR(std::string) commandLine)
 {
     return std::string(); // TODO : implement command autocomplete
 }
 
-void CommandLine::registerCommand(const std::string& commandName, CommandCallback callback)
+void CommandLine::registerCommand(CR(std::string) commandName, CommandCallback callback)
 {
     ASSERT_MSG(!MAP_CONTAINS(mCommandsMap, commandName), "Command " + commandName + " already registered!");
 

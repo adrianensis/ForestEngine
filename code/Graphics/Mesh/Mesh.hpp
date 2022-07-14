@@ -41,12 +41,12 @@ class Mesh: public ObjectBase
 public:
     ~Mesh() override;
     void init(u32 vertexCount, u32 facesCount);
-    void addVertex(const Vector3& vector);
-    void addNormal(const Vector3& vector);
+    void addVertex(CR(Vector3) vector);
+    void addNormal(CR(Vector3) vector);
     void addTexCoord(f32 u, f32 v);
     void addColor(f32 r, f32 g, f32 b, f32 a);
     void addFace(u32 v1, u32 v2, u32 v3);
-    void addBoneVertexData(const BoneVertexData& bone);
+    void addBoneVertexData(CR(BoneVertexData) bone);
     void addFaceIndex(u32 i);
 
     void addVertices(const std::vector<f32> vec);
@@ -56,10 +56,10 @@ public:
     void addFaces(const std::vector<u32> vec);
     void addBonesVertexData(const std::vector<BoneVertexData> vec);
 
-    u32 registerBone(const std::string& name);
-    bool isBoneRegistered(const std::string& name) const;
-    u32 getBoneID(const std::string& name) const;
-    void setBoneOffsetMatrix(u32 id, const Matrix4& offsetMatrix);
+    u32 registerBone(CR(std::string) name);
+    bool isBoneRegistered(CR(std::string) name) const;
+    u32 getBoneID(CR(std::string) name) const;
+    void setBoneOffsetMatrix(u32 id, CR(Matrix4) offsetMatrix);
     void addBoneWeight(u32 vertexId, u32 id, f32 weight);
 
     void copyVertices(Ptr<const Mesh> other);

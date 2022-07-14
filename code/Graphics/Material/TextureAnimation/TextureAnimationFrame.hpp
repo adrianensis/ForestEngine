@@ -18,7 +18,7 @@ public:
         DO_COPY(mHeight)
     }
 
-    void init(const Vector2& position, f32 width, f32 height);
+    void init(CR(Vector2) position, f32 width, f32 height);
 
 private:
     Vector2 mPosition;

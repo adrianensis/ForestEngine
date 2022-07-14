@@ -15,7 +15,7 @@
 class FunctionProfiler
 {
 public:
-    FunctionProfiler(const std::string& name, bool isGPU = false);
+    FunctionProfiler(CR(std::string) name, bool isGPU = false);
     ~FunctionProfiler();
 
 private:
@@ -34,15 +34,15 @@ public:
     void init();
     void update(f32 deltaTimeMillis);
     void terminate();
-    void timeMarkStart(const std::string& name);
-    void timeMarkEnd(const std::string& name);
+    void timeMarkStart(CR(std::string) name);
+    void timeMarkEnd(CR(std::string) name);
 
-    void timeMarkGPUStart(const std::string& name);
-    void timeMarkGPUEnd(const std::string& name);
+    void timeMarkGPUStart(CR(std::string) name);
+    void timeMarkGPUEnd(CR(std::string) name);
 
 private:
-    void printResult(const std::string& name, f32 time)  const;
-    void printResultAverage(const std::string& name, f32 time)  const;
+    void printResult(CR(std::string) name, f32 time)  const;
+    void printResultAverage(CR(std::string) name, f32 time)  const;
 
 private:
 	std::map<std::string, f32> mTimeMap;

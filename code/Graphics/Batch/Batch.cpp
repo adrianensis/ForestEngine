@@ -93,7 +93,7 @@ bool Batch::processRenderers()
 		else
 		{
 			/*Transform* transform = renderer->getGameObject()->getTransform();
-			const Vector3& position = transform->getWorldPosition();
+			CR(Vector3) position = transform->getWorldPosition();
 			f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform().get().getWorldPosition());
 			if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 			
@@ -163,7 +163,7 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 
 	if(getIsInstanced())
 	{
-		const Matrix4& rendererModelMatrix = renderer.get().getRendererModelMatrix();
+		CR(Matrix4) rendererModelMatrix = renderer.get().getRendererModelMatrix();
 		mMeshBatcher.addInstanceMatrix(rendererModelMatrix);
 	}
 	else

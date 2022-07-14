@@ -25,6 +25,9 @@
 #define ADD_REFERENCE(Class) typename std::add_lvalue_reference<Class>::type
 #define ADD_POINTER(Class) typename std::add_pointer<Class>::type
 
+#define R(...) __VA_ARGS__&
+#define CR(...) const R(__VA_ARGS__)
+
 // --------------------------------------------------------
 // NEW - DELETE
 // --------------------------------------------------------
@@ -195,12 +198,12 @@ void __customMain()
 
 #define DECLARE_SERIALIZATION() \
 public:\
-	void serialize(JSON& json) const override; \
-	void deserialize(const JSON& json) override; \
+	void serialize(R(JSON) json) const override; \
+	void deserialize(CR(JSON) json) override; \
 private: // NOTE: notice the last blank space " "
 
-#define IMPLEMENT_SERIALIZATION(...) void __VA_ARGS__::serialize(JSON& json) const  
-#define IMPLEMENT_DESERIALIZATION(...) void __VA_ARGS__::deserialize(const JSON& json)  
+#define IMPLEMENT_SERIALIZATION(...) void __VA_ARGS__::serialize(R(JSON) json) const  
+#define IMPLEMENT_DESERIALIZATION(...) void __VA_ARGS__::deserialize(CR(JSON) json)  
 
 // SERIALIZE
 
@@ -273,7 +276,7 @@ if(!json.empty() && json.contains(Name))\
 template<>\
 JSON SerializationUtils::serializeTemplated(const __VA_ARGS__& value);\
 template<>\
-void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const JSON& json);
+void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, CR(JSON) json);
 
 // --------------------------------------------------------
 // FOR LOOPS

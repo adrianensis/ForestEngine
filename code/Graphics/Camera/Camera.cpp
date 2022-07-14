@@ -90,21 +90,21 @@ void Camera::onResize()
 	recalculateProjectionMatrix();
 }
 
-const Matrix4& Camera::getViewMatrix() const
+CR(Matrix4) Camera::getViewMatrix() const
 {
 
 
 	return mViewMatrix;
 }
 
-const Matrix4& Camera::getProjectionViewMatrix() const
+CR(Matrix4) Camera::getProjectionViewMatrix() const
 {
 
 
 	return mProjectionViewMatrix;
 }
 
-Vector3 Camera::screenToWorld(const Vector2& screenPosition)
+Vector3 Camera::screenToWorld(CR(Vector2) screenPosition)
 {	
 	calculateInverseMatrix();
 	Vector4 v = mInversePVMatrix.mulVector(Vector4(screenPosition.x, screenPosition.y, 0, 1.0));

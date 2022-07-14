@@ -18,7 +18,7 @@ public:
     void render();
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	void add(const T& shape, const Vector4& color)
+	void add(CR(T) shape, CR(Vector4) color)
 	{
 		if(mShapesCounter < mMaxShapes)
 		{
@@ -29,11 +29,11 @@ public:
 
 private:
     void bind();
-    void addPosition(const Vector3& position);
-    void addColor(const Vector4& color);
+    void addPosition(CR(Vector3) position);
+    void addColor(CR(Vector4) color);
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	void addSpecificShape(const T& shape, const Vector4& color)
+	void addSpecificShape(CR(T) shape, CR(Vector4) color)
 	{
 
 	}
@@ -58,7 +58,7 @@ protected:
 };
 
 template<>
-void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color);
+void ShapeBatchRenderer::addSpecificShape<Line>(CR(Line) shape, CR(Vector4) color);
 
 
 class ShapeBatchRendererMap: public ObjectBase
@@ -70,7 +70,7 @@ public:
     void terminate();
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
-	void add(const T& shape, bool isWorldSpace = true, const Vector4& color = Vector4(1, 1, 1, 1))
+	void add(CR(T) shape, bool isWorldSpace = true, CR(Vector4) color = Vector4(1, 1, 1, 1))
 	{
 		ClassId shapeClassId = T::getClassIdStatic();
 		if(!MAP_CONTAINS(mShapeBatchMap, shapeClassId))

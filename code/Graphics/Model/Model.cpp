@@ -11,7 +11,7 @@ Model::~Model()
 
 }
 
-void Model::init(const std::string& path)
+void Model::init(CR(std::string) path)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile( path, 
@@ -91,7 +91,7 @@ void Model::init(const std::string& path)
 
                         // TODO: CONTINUE HERE ↓↓↓↓↓
 
-                        const aiMatrix4x4& assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
+                        CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
 
                         aiVector3t<f32> assimpPosition;
                         aiVector3t<f32> assimpScale;

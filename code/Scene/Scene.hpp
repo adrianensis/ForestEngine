@@ -16,8 +16,8 @@ public:
     ~Scene() override;
 
     void init();
-    void saveScene(const std::string& path);
-    void loadScene(const std::string& path);
+    void saveScene(CR(std::string) path);
+    void loadScene(CR(std::string) path);
     void unloadScene();
     void addGameObject(GameObject *gameObject);
     void removeGameObject(GameObject *gameObject);

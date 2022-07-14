@@ -22,7 +22,7 @@ public:
     bool getIsWorldSpace() const;
     void update();
     void onDestroy() override;
-    const Mesh& generateMeshInstance();
+    CR(Mesh) generateMeshInstance();
     bool hasValidChunk() const;
 
 private:

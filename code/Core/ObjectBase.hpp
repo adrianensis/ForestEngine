@@ -36,7 +36,7 @@ public:
 	{
 	}
 
-	ObjectBase& operator=(const ObjectBase& other)
+	R(ObjectBase) operator=(CR(ObjectBase) other)
 	{
 		copy(&other);
 		return *this;
