@@ -2,8 +2,11 @@
 #define VECTORDEF_HPP
 
 #include "Core/Macros.hpp"
+#include "Core/Metadata.hpp"
 
 #define VECTOR_BASE_DEFINITION(vectorLength) \
+GENERATE_METADATA_STRUCT(Vector##vectorLength)  \
+\
 private:\
     void checkBoundaries(u32 index) const\
     {\
@@ -21,31 +24,31 @@ private:\
     }\
 public:\
     \
-    R(Vector##vectorLength) operator=(const R(Vector##vectorLength) other)\
+    R(ThisClass) operator=(CR(ThisClass) other)\
 	{\
 		set(other);\
 		return *this;\
 	}\
     \
-    R(Vector##vectorLength) operator+=(const R(Vector##vectorLength) rhs) {return this->add(rhs); }\
-    R(Vector##vectorLength) operator-=(const R(Vector##vectorLength) rhs) {return this->sub(rhs); }\
-    R(Vector##vectorLength) operator*=(const R(Vector##vectorLength) rhs) {return this->mul(rhs); }\
-    R(Vector##vectorLength) operator/=(const R(Vector##vectorLength) rhs) {return this->div(rhs); }\
-    R(Vector##vectorLength) operator+=(f32 rhs) {return this->add(rhs); }\
-    R(Vector##vectorLength) operator-=(f32 rhs) {return this->sub(rhs); }\
-    R(Vector##vectorLength) operator*=(f32 rhs) {return this->mul(rhs); }\
-    R(Vector##vectorLength) operator/=(f32 rhs) {return this->div(rhs); }\
-    bool operator==(const R(Vector##vectorLength) rhs) const {return this->eq(rhs); }\
-    bool operator!=(const R(Vector##vectorLength) rhs) const {return !((*this) == rhs); }\
-    Vector##vectorLength operator+(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) += rhs; }\
-    Vector##vectorLength operator-(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) -= rhs; }\
-    Vector##vectorLength operator*(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) *= rhs; }\
-    Vector##vectorLength operator/(const R(Vector##vectorLength) rhs) const {return Vector##vectorLength(*this) /= rhs; }\
-    Vector##vectorLength operator+(f32 rhs) const {return Vector##vectorLength(*this) += rhs; }\
-    Vector##vectorLength operator-(f32 rhs) const {return Vector##vectorLength(*this) -= rhs; }\
-    Vector##vectorLength operator-() const{ return Vector##vectorLength(*this) *= -1; }\
-    Vector##vectorLength operator*(f32 rhs) const {return Vector##vectorLength(*this) *= rhs; }\
-    Vector##vectorLength operator/(f32 rhs) const {return Vector##vectorLength(*this) /= rhs; }\
+    R(ThisClass) operator+=(CR(ThisClass) rhs) {return this->add(rhs); }\
+    R(ThisClass) operator-=(CR(ThisClass) rhs) {return this->sub(rhs); }\
+    R(ThisClass) operator*=(CR(ThisClass) rhs) {return this->mul(rhs); }\
+    R(ThisClass) operator/=(CR(ThisClass) rhs) {return this->div(rhs); }\
+    R(ThisClass) operator+=(f32 rhs) {return this->add(rhs); }\
+    R(ThisClass) operator-=(f32 rhs) {return this->sub(rhs); }\
+    R(ThisClass) operator*=(f32 rhs) {return this->mul(rhs); }\
+    R(ThisClass) operator/=(f32 rhs) {return this->div(rhs); }\
+    bool operator==(CR(ThisClass) rhs) const {return this->eq(rhs); }\
+    bool operator!=(CR(ThisClass) rhs) const {return !((*this) == rhs); }\
+    ThisClass operator+(CR(ThisClass) rhs) const {return ThisClass(*this) += rhs; }\
+    ThisClass operator-(CR(ThisClass) rhs) const {return ThisClass(*this) -= rhs; }\
+    ThisClass operator*(CR(ThisClass) rhs) const {return ThisClass(*this) *= rhs; }\
+    ThisClass operator/(CR(ThisClass) rhs) const {return ThisClass(*this) /= rhs; }\
+    ThisClass operator+(f32 rhs) const {return ThisClass(*this) += rhs; }\
+    ThisClass operator-(f32 rhs) const {return ThisClass(*this) -= rhs; }\
+    ThisClass operator-() const{ return ThisClass(*this) *= -1; }\
+    ThisClass operator*(f32 rhs) const {return ThisClass(*this) *= rhs; }\
+    ThisClass operator/(f32 rhs) const {return ThisClass(*this) /= rhs; }\
     f32& operator[](const size_t index) { return get(index); }\
     f32 operator[](const size_t index) const { return get(index); }\
     ; 

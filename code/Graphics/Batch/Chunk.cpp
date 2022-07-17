@@ -52,7 +52,7 @@ void Chunk::update()
 			{
 				Ptr<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
 
-				if (newChunk && newChunk != getRefToThis())
+				if (newChunk && newChunk != getPtrToThis())
 				{
 					newChunk.get().addRenderer(renderer);
 					removeFromList = true;

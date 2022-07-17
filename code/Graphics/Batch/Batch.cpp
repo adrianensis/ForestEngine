@@ -68,7 +68,7 @@ void Batch::render()
 void Batch::addRenderer(Ptr<Renderer> renderer)
 {
 	mRenderers.push_back(renderer);
-	renderer.get().setBatch(getRefToThis());
+	renderer.get().setBatch(getPtrToThis());
 
 	mNewRendererAdded = true;
 }

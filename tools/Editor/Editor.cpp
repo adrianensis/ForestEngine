@@ -229,6 +229,11 @@ void Editor::update()
 
 
 	octree.update();
+
+	f32 sizeVector = sizeof(Vector3);
+	f32 sizeFloat = sizeof(f32);
+
+	VAR(sizeVector/sizeFloat)
 }
 
 void Editor::terminate()

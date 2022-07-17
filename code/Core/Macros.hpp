@@ -70,35 +70,51 @@ void __customMain()
 	ClassName() = default;        \
 	~ClassName() override = default;
 
-#define GENERATE_METADATA(...)                                                    \
+#define DECLARE_GET_PTR_THIS(...) \
+	Ptr<__VA_ARGS__> getPtrToThis()                                               \
+	{                                                                             \
+		return Ptr<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
+	}   
+
+#define DECLARE_METADATA_METHODS(Override, ...) \
+	static ClassId getClassIdStatic()                                             \
+	{                                                                             \
+		return smClassId;                                                         \
+	};                                                                            \
+																				\
+	ClassId getClassId() const Override                                           \
+	{                                                                             \
+		return __VA_ARGS__::getClassIdStatic();                                   \
+	};                                                                            \
+																				\
+	static std::string getClassNameStatic()                                       \
+	{                                                                             \
+		return smClassName;                                                       \
+	};                                                                            \
+																				\
+	std::string getClassName() const Override                                     \
+	{                                                                             \
+		return __VA_ARGS__::getClassNameStatic();                                 \
+	};         
+
+#define GENERATE_METADATA_BASE(...)  \
 	private: \
+		using ThisClass = __VA_ARGS__;\
 		inline static std::string smClassName = std::string(#__VA_ARGS__);        \
 		inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName); \
-	public:                                                                         \
-		static ClassId getClassIdStatic()                                             \
-		{                                                                             \
-			return smClassId;                                                         \
-		};                                                                            \
-																					\
-		ClassId getClassId() const override                                           \
-		{                                                                             \
-			return __VA_ARGS__::getClassIdStatic();                                   \
-		};                                                                            \
-																					\
-		static std::string getClassNameStatic()                                       \
-		{                                                                             \
-			return smClassName;                                                       \
-		};                                                                            \
-																					\
-		std::string getClassName() const override                                     \
-		{                                                                             \
-			return __VA_ARGS__::getClassNameStatic();                                 \
-		};                                                                            \
+
+#define GENERATE_METADATA(...)                                                    \
+		GENERATE_METADATA_BASE(__VA_ARGS__)  \
+	public: \
+        DECLARE_METADATA_METHODS(override, __VA_ARGS__)                                       \
 	private:                                                                          \
-		Ptr<__VA_ARGS__> getRefToThis()                                               \
-		{                                                                             \
-			return Ptr<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
-		}                                                                           \
+		DECLARE_GET_PTR_THIS(__VA_ARGS__)                                              \
+	private: // NOTE: notice the last blank space " "
+
+#define GENERATE_METADATA_STRUCT(...)                                                    \
+		GENERATE_METADATA_BASE(__VA_ARGS__)  \
+	public: \
+        DECLARE_METADATA_METHODS(NONE(0) , __VA_ARGS__)                                 \
 	private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------

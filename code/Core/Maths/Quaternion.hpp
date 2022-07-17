@@ -7,6 +7,8 @@
 
 class Quaternion
 {
+	GENERATE_METADATA_STRUCT(Quaternion);
+	
 public:
 
 	Vector3 v = Vector3(0,0,0);
