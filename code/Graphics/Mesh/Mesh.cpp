@@ -1,5 +1,6 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include <algorithm>
+#include "assimp/scene.h" // Output data structure
 
 Mesh::~Mesh()
 {
@@ -179,3 +180,82 @@ void Mesh::clear()
 
 	mMaterialPath.clear();
 }
+
+// void Mesh::GetBoneTransforms(float TimeInSeconds, std::vector<Matrix4>& Transforms)
+// {
+//     Matrix4 Identity;
+//     // Identity.InitIdentity();
+
+//     // float TicksPerSecond = (float)(m_pScene->mAnimations[0]->mTicksPerSecond != 0 ? m_pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
+//     // float TimeInTicks = TimeInSeconds * TicksPerSecond;
+//     // // we need to use the integral part of mDuration for the total length of the animation
+//     // float Duration = 0.0f;
+//     // float fraction = modf((float)m_pScene->mAnimations[0]->mDuration, &Duration);
+//     // float AnimationTimeTicks = fmod(TimeInTicks, Duration);
+
+//     readNodeHierarchy(AnimationTimeTicks, m_pScene->mRootNode, Identity);
+//     Transforms.resize(m_BoneInfo.size());
+
+//     for (uint i = 0 ; i < m_BoneInfo.size() ; i++) {
+//         Transforms[i] = m_BoneInfo[i].FinalTransformation;
+//     }
+// }
+
+// void Mesh::readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, const Matrix4& parentTransform)
+// {
+//     std::string NodeName(pNode->mName.data);
+
+//     const aiAnimation* pAnimation = m_pScene->mAnimations[0];
+
+//     Matrix4 NodeTransformation(pNode->mTransformation);
+
+//     const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, NodeName);
+
+//     if (pNodeAnim) {
+//         // Interpolate scaling and generate scaling transformation matrix
+//         aiVector3D Scaling;
+//         CalcInterpolatedScaling(Scaling, animationTimeTicks, pNodeAnim);
+//         Matrix4 ScalingM;
+//         ScalingM.InitScaleTransform(Scaling.x, Scaling.y, Scaling.z);
+
+//         // Interpolate rotation and generate rotation transformation matrix
+//         aiQuaternion RotationQ;
+//         CalcInterpolatedRotation(RotationQ, animationTimeTicks, pNodeAnim);
+//         Matrix4 RotationM = Matrix4(RotationQ.GetMatrix());
+
+//         // Interpolate translation and generate translation transformation matrix
+//         aiVector3D Translation;
+//         CalcInterpolatedPosition(Translation, animationTimeTicks, pNodeAnim);
+//         Matrix4 TranslationM;
+//         TranslationM.InitTranslationTransform(Translation.x, Translation.y, Translation.z);
+
+//         // Combine the above transformations
+//         NodeTransformation = TranslationM * RotationM * ScalingM;
+//     }
+
+//     Matrix4 GlobalTransformation = parentTransform * NodeTransformation;
+
+//     if (m_BoneNameToIndexMap.find(NodeName) != m_BoneNameToIndexMap.end()) {
+//         uint BoneIndex = m_BoneNameToIndexMap[NodeName];
+//         m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].OffsetMatrix;
+//     }
+
+//     for (uint i = 0 ; i < pNode->mNumChildren ; i++) {
+//         readNodeHierarchy(animationTimeTicks, pNode->mChildren[i], GlobalTransformation);
+//     }
+// }
+
+// const aiNodeAnim* Mesh::findNodeAnim(const aiAnimation* animation, const std::string& nodeName)
+// {
+//     for (uint i = 0 ; i < animation->mNumChannels ; i++)
+//     {
+//         const aiNodeAnim* pNodeAnim = animation->mChannels[i];
+
+//         if (std::string(pNodeAnim->mNodeName.data) == nodeName)
+//         {
+//             return pNodeAnim;
+//         }
+//     }
+
+//     return NULL;
+// }

@@ -84,21 +84,29 @@ void RenderContext::terminate()
 
 GLuint RenderContext::createVBO(u32 elementSize, u32 propertyArrayIndex)
 {
-	return createVBOAnyType(elementSize, sizeof(f32), propertyArrayIndex);
+	return createVBOAnyType(elementSize, GL_FLOAT, sizeof(f32), propertyArrayIndex);
 }
 
 GLuint RenderContext::createVBOU32(u32 elementSize, u32 propertyArrayIndex)
 {
-	return createVBOAnyType(elementSize, sizeof(u32), propertyArrayIndex);
+	return createVBOAnyType(elementSize, GL_UNSIGNED_INT, sizeof(u32), propertyArrayIndex);
 }
 
-GLuint RenderContext::createVBOAnyType(u32 elementSize,  u32 typeSize, u32 propertyArrayIndex)
+GLuint RenderContext::createVBOAnyType(u32 elementSize, u32 primitiveType, u32 typeSize, u32 propertyArrayIndex)
 {
 	u32 VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	enableProperty(propertyArrayIndex);
-	glVertexAttribIPointer(propertyArrayIndex, elementSize, GL_UNSIGNED_INT, elementSize * typeSize, (byte *)0);
+	if(primitiveType == GL_INT)
+	{
+		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, elementSize * typeSize, (byte *)0);
+	}
+	else
+	{
+		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, elementSize * typeSize, (byte *)0);
+	}
+
 	return VBO;
 }
 

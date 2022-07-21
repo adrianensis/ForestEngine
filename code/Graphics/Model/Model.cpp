@@ -22,6 +22,9 @@ void Model::init(CR(std::string) path)
 
     if(scene)
     {
+        aiMatrix4x4 globalInverseTransform = scene->mRootNode->mTransformation;
+        globalInverseTransform = globalInverseTransform.Inverse();
+
         if(scene->HasMeshes())
         {
             FOR_RANGE(meshIt, 0, scene->mNumMeshes)
@@ -116,7 +119,7 @@ void Model::init(CR(std::string) path)
 
                         mesh.get().setBoneOffsetMatrix(boneIndex, offsetMatrix);
 
-                        FOR_RANGE(weightIt, 0, assimpMesh->mBones[boneIt]->mNumWeights)
+                        FOR_RANGE(weightIt, 0, currentBone->mNumWeights)
                         {
                             u32 vertexIndex = /*m_Entries[MeshIndex].BaseVertex +*/ assimpMesh->mBones[boneIt]->mWeights[weightIt].mVertexId;
                             f32 weight = assimpMesh->mBones[boneIt]->mWeights[weightIt].mWeight;
@@ -126,5 +129,22 @@ void Model::init(CR(std::string) path)
                 }
             }
         }
+
+        if(scene->HasAnimations())
+        {
+            // FOR_RANGE(animIt, 0, scene->mNumAnimations)
+            // {
+            //     const aiAnimation* animation = scene->mAnimations[animIt];
+
+            //     std::string nodeName(pNode->mName.data);
+
+            //     const aiNodeAnim* pNodeAnim = findNodeAnim(animation, nodeName);
+            // }
+        }
+    }
+    else
+    {
+       printf("Error parsing '%s': '%s'\n", path.c_str(), importer.GetErrorString());
     }
 }
+

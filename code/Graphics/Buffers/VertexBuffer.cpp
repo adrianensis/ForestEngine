@@ -43,10 +43,10 @@ void BonesBuffer::init(u32 propertyArrayIndex, bool isStatic)
 	mIsStatic = isStatic;
 	mAttribPointerIndex = propertyArrayIndex;
 
-	RenderContext::createVBOAnyType(1, sizeof(BoneVertexData), mAttribPointerIndex);
+	mVBO = RenderContext::createVBOAnyType(1, GL_INT, sizeof(BoneVertexData), mAttribPointerIndex);
 
 	RenderContext::enableProperty(mAttribPointerIndex + 1);
-	glVertexAttribPointer(mAttribPointerIndex, BoneVertexData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(BoneVertexData), (byte *)(BoneVertexData::smMaxBonesPerVertex * sizeof(u32)));
+	glVertexAttribPointer(mAttribPointerIndex + 1, BoneVertexData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(BoneVertexData), (byte *)(BoneVertexData::smMaxBonesPerVertex * sizeof(u32)));
 
 	mGenerated = true;
 }
@@ -86,31 +86,30 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mVBOPosition.init(Mesh::smVertexPositionSize, 0, mIsStatic);
 	mVBOTexture.init(Mesh::smVertexTexCoordSize, 1, mIsStatic);
 	mVBOColor.init(Mesh::smVertexColorSize, 2, mIsStatic);
-	mEBO = RenderContext::createEBO();
+	mVBOBones.init(3, mIsStatic);
 
 	if(mIsInstanced)
 	{
 		glGenBuffers(1, &mVBOMatrices);
-
 		glBindBuffer(GL_ARRAY_BUFFER, mVBOMatrices);
 
 		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
-		RenderContext::enableProperty(3);
-		glVertexAttribPointer(3, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)0);
-		RenderContext::enableProperty(4);
-		glVertexAttribPointer(4, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(1 * columnBytesSize));
 		RenderContext::enableProperty(5);
-		glVertexAttribPointer(5, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(2 * columnBytesSize));
+		glVertexAttribPointer(5, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)0);
 		RenderContext::enableProperty(6);
-		glVertexAttribPointer(6, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(3 * columnBytesSize));
+		glVertexAttribPointer(6, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(1 * columnBytesSize));
+		RenderContext::enableProperty(7);
+		glVertexAttribPointer(7, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(2 * columnBytesSize));
+		RenderContext::enableProperty(8);
+		glVertexAttribPointer(8, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(3 * columnBytesSize));
 
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
 		glVertexAttribDivisor(5, 1);
 		glVertexAttribDivisor(6, 1);
+		glVertexAttribDivisor(7, 1);
+		glVertexAttribDivisor(8, 1);
 	}
 
-	mVBOBones.init(7, mIsStatic);
+	mEBO = RenderContext::createEBO();
 
 	mGenerated = true;
 }
@@ -123,14 +122,14 @@ void MeshBuffer::terminate()
 		mVBOPosition.terminate();
 		mVBOTexture.terminate();
 		mVBOColor.terminate();
-		glDeleteBuffers(1, &mEBO);
+		mVBOBones.terminate();
 
 		if(mIsInstanced)
 		{
 			glDeleteBuffers(1, &mVBOMatrices);
 		}
 
-		mVBOBones.terminate();
+		glDeleteBuffers(1, &mEBO);
 
 		mGenerated = false;
 	}
@@ -242,6 +241,7 @@ void MeshBatcher::resize(u32 size)
 		u32 meshesAmount = mMeshBuffer.getIsInstanced() ? 1 : mMaxMeshesThreshold; 
 
 		mMeshBuilder.init(mPrototypeMesh.get().getVertexCount() * meshesAmount, mPrototypeMesh.get().getFacesCount() * meshesAmount);
+		mMeshBuilder.copyBones(mPrototypeMesh);
 
 		mMeshBuffer.setMaxInstances(meshesAmount);
 
@@ -257,8 +257,6 @@ void MeshBatcher::resize(u32 size)
 		{
 			mMeshBuilder.addColor(0,0,0,1);
 		}
-
-		mMeshBuilder.copyBones(mPrototypeMesh);
 	}
 
 	mMeshBuffer.resize(mMeshBuilder);
@@ -284,7 +282,7 @@ void MeshBatcher::addInstance(CR(Mesh) meshInstance)
 	mMeshBuilder.addVertices(meshInstance.getVertices());
 	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
 	mMeshBuilder.addColors(meshInstance.getColors());
-	mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
+	//mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
 
 	mMeshesIndex++;
 }

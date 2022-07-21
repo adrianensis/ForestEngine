@@ -19,12 +19,13 @@ public:
             {
                 mBoneIDs[i] = id;
                 mBoneWeights[i] = weight;
+                //printf("bone %d weight %f index %i\n", id, weight, i);
                 return;
             }
         }
 
         // should never get here - more bones than we have space for
-        ASSERT_MSG(false, "should never get here - more bones than we have space for");
+        //ASSERT_MSG(false, "should never get here - more bones than we have space for");
     }
 };
 
@@ -33,6 +34,9 @@ class BoneData
 public:
 	Matrix4 mOffsetMatrix;
 };
+
+struct aiNodeAnim;
+struct aiAnimation;
 
 class Mesh: public ObjectBase
 {
@@ -69,6 +73,10 @@ public:
     void copyFaces(Ptr<const Mesh> other);
     void copyBones(Ptr<const Mesh> other);
     void clear();
+
+// private:
+//     const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const std::string& nodeName);
+//     void readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, const Matrix4& parentTransform);
 
 private:
 	std::vector<f32> mVertices;

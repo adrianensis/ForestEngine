@@ -7,6 +7,8 @@ out vec4 FragColor;
 // Passed in from the vertex shader.
 in vec2 vTexcoord;
 in vec4 vColor;
+flat in ivec4 BoneIDs0;
+in vec4 Weights0;
 
 uniform float time;
 
@@ -41,6 +43,18 @@ void main()
         FragColor.b += vColor.b;
         FragColor.a = vColor.a;
       }
+
+      // for (int i = 0 ; i < 4 ; i++) {
+      //   if (Weights0[i] >= 0.7) {
+      //       FragColor = vec4(1.0, 0.0, 0.0, 0.0) * Weights0[i];
+      //   } else if (Weights0[i] >= 0.4 && Weights0[i] <= 0.6) {
+      //       FragColor = vec4(0.0, 1.0, 0.0, 0.0) * Weights0[i];
+      //   } else if (Weights0[i] >= 0.1) {
+      //       FragColor = vec4(1.0, 1.0, 0.0, 0.0) * Weights0[i];
+      //   }
+
+      //   FragColor.a = 1;
+      // }
     } else {
         FragColor.r = vColor.r;
         FragColor.g = vColor.g;

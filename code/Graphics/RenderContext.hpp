@@ -24,7 +24,7 @@ public:
     static void terminate();
     static GLuint createVBO(u32 elementSize, u32 propertyArrayIndex);
     static GLuint createVBOU32(u32 elementSize, u32 propertyArrayIndex);
-    static GLuint createVBOAnyType(u32 elementSize,  u32 typeSize, u32 propertyArrayIndex);
+    static GLuint createVBOAnyType(u32 elementSize, u32 primitiveType, u32 typeSize, u32 propertyArrayIndex);
     static GLuint createVAO();
     static GLuint createEBO();
     static void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);

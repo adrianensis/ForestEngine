@@ -22,18 +22,20 @@ void Editor::firstUpdate()
 	// 		}
 	// 	}
 	// }
-	i32 size = 12;
-	for(i32 x = 0; x < size; ++x)
-	{
-		for(i32 y = 0; y < size; ++y)
-		{
-			importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*100,y*40,0), 1);
-			//importModel("resources/char.fbx", Vector3(x*100,y*40,0), 1);
-			//createSprite(Vector3(x*40,y*40,0), 30);
-		}
-	}
+	// i32 size = 12;
+	// for(i32 x = 0; x < size; ++x)
+	// {
+	// 	for(i32 y = 0; y < size; ++y)
+	// 	{
+	// 		importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(x*100,y*40,0), 1);
+	// 		//importModel("resources/char.fbx", Vector3(x*100,y*40,0), 1);
+	// 		//createSprite(Vector3(x*40,y*40,0), 30);
+	// 	}
+	// }
 
-	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(-100,0,0), 1);
+	// importModel("resources/dragon/Dragon 2.5_fbx.fbx", Vector3(0,0,0), 1);
+	//importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
+	importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
@@ -229,11 +231,6 @@ void Editor::update()
 
 
 	octree.update();
-
-	f32 sizeVector = sizeof(Vector3);
-	f32 sizeFloat = sizeof(f32);
-
-	VAR(sizeVector/sizeFloat)
 }
 
 void Editor::terminate()
@@ -281,6 +278,7 @@ void Editor::importModel( CR(std::string) pFile, CR(Vector3) v, f32 size)
 
 		renderer->setMesh(*it);
 		renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/" + (*it).get().getMaterialPath()));
+		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/dragon/textures/Dragon_Bump_Col2.png"));
 		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/wolf/textures/Wolf_Body.png"));
 		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/guard1_body.png"));
 		//renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());

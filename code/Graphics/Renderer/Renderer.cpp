@@ -128,6 +128,8 @@ CR(Mesh) Renderer::generateMeshInstance()
 			getColor().w);
 	}
 
+	mMeshInstance.copyBones(mMesh);
+
 	return mMeshInstance;
 }
 
