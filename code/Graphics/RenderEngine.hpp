@@ -3,7 +3,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Batch/BatchesMap.hpp"
-#include "Graphics/Renderer/ShapeBatchRenderer.hpp"
+#include "Graphics/Batch/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/Renderer.hpp"
 #include "Graphics/Batch/Chunk.hpp"
