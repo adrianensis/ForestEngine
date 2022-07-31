@@ -20,6 +20,7 @@ public:
     void enable();
     void disable();
     void addMatrix(CR(Matrix4) matrix, CR(std::string) name);
+    void addMatrixArray(CR(std::vector<Matrix4>) matrixArray, CR(std::string) name);
     void addInt(i32 value, CR(std::string) name);
     void addUInt(u32 value, CR(std::string) name);
     void addFloat(f32 value, CR(std::string) name);

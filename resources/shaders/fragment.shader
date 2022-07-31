@@ -45,12 +45,15 @@ void main()
       }
 
       // for (int i = 0 ; i < 4 ; i++) {
-      //   if (Weights0[i] >= 0.7) {
-      //       FragColor = vec4(1.0, 0.0, 0.0, 0.0) * Weights0[i];
-      //   } else if (Weights0[i] >= 0.4 && Weights0[i] <= 0.6) {
-      //       FragColor = vec4(0.0, 1.0, 0.0, 0.0) * Weights0[i];
-      //   } else if (Weights0[i] >= 0.1) {
-      //       FragColor = vec4(1.0, 1.0, 0.0, 0.0) * Weights0[i];
+      //   if(i == 0 || (i > 0 && Weights0[i] > Weights0[i-1]))
+      //   {
+      //     if (Weights0[i] >= 0.7) {
+      //         FragColor += vec4(1.0, 0.0, 0.0, 0.0) * Weights0[i];
+      //     } else if (Weights0[i] >= 0.4 && Weights0[i] <= 0.6) {
+      //         FragColor += vec4(0.0, 1.0, 0.0, 0.0) * Weights0[i];
+      //     } else {
+      //         FragColor += vec4(1.0, 1.0, 0.0, 0.0) * Weights0[i];
+      //     }
       //   }
 
       //   FragColor.a = 1;

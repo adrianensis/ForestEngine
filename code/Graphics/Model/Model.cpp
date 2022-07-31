@@ -2,7 +2,6 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
-#include "assimp/Importer.hpp"
 #include "assimp/scene.h" // Output data structure
 #include "assimp/postprocess.h" // Post processing flags
 
@@ -13,8 +12,7 @@ Model::~Model()
 
 void Model::init(CR(std::string) path)
 {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile( path, 
+    const aiScene* scene = mImporter.ReadFile( path, 
             //aiProcess_CalcTangentSpace       |
             aiProcess_Triangulate            |
             aiProcess_JoinIdenticalVertices  |
@@ -23,7 +21,18 @@ void Model::init(CR(std::string) path)
     if(scene)
     {
         aiMatrix4x4 globalInverseTransform = scene->mRootNode->mTransformation;
-        globalInverseTransform = globalInverseTransform.Inverse();
+        //globalInverseTransform = globalInverseTransform.Inverse();
+
+        mGlobalInverseTransform.init(
+            Vector4(globalInverseTransform.a1, globalInverseTransform.a2, globalInverseTransform.a3, globalInverseTransform.a4),
+            Vector4(globalInverseTransform.b1, globalInverseTransform.b2, globalInverseTransform.b3, globalInverseTransform.b4),
+            Vector4(globalInverseTransform.c1, globalInverseTransform.c2, globalInverseTransform.c3, globalInverseTransform.c4),
+            Vector4(globalInverseTransform.d1, globalInverseTransform.d2, globalInverseTransform.d3, globalInverseTransform.d4)
+        );
+        // NOTE: transpose is needed to move from row-major to column-major
+        //mGlobalInverseTransform.transpose();
+        
+        mGlobalInverseTransform.invert();
 
         if(scene->HasMeshes())
         {
@@ -32,6 +41,7 @@ void Model::init(CR(std::string) path)
                 aiMesh* assimpMesh = scene->mMeshes[meshIt];
 
                 OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
+                mesh.get().setModel(getPtrToThis());
                 mMeshes.push_back(mesh);
 
                 mesh.get().init(assimpMesh->mNumVertices, assimpMesh->mNumFaces);
@@ -85,46 +95,43 @@ void Model::init(CR(std::string) path)
 
                         if (! mesh.get().isBoneRegistered(boneName)) 
                         {
+                            CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
+
+                            aiVector3t<f32> assimpPosition;
+                            aiVector3t<f32> assimpScale;
+                            aiVector3t<f32> assimpRotation;
+
+                            assimpBoneOffsetMatrix.Decompose(assimpScale, assimpRotation, assimpPosition);
+
+                            Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
+                            Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
+                            Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
+
+                            Matrix4 translationMatrix;
+                            translationMatrix.translation(position);
+                            Matrix4 rotationMatrix;
+                            rotationMatrix.rotation(rotation);
+                            Matrix4 scaleMatrix;
+                            scaleMatrix.scale(scale);
+
+                            Matrix4 offsetMatrix(translationMatrix);
+                            scaleMatrix.mul(rotationMatrix);
+                            offsetMatrix.mul(scaleMatrix);
+
                             boneIndex = mesh.get().registerBone(boneName);
-                        }
-                        else 
-                        {
-                            boneIndex = mesh.get().getBoneID(boneName);
+                            mesh.get().setBoneOffsetMatrix(boneName, offsetMatrix);
                         }
 
-                        // TODO: CONTINUE HERE ↓↓↓↓↓
+                        boneIndex = mesh.get().getBoneID(boneName);
 
-                        CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
-
-                        aiVector3t<f32> assimpPosition;
-                        aiVector3t<f32> assimpScale;
-                        aiVector3t<f32> assimpRotation;
-
-                        assimpBoneOffsetMatrix.Decompose(assimpScale, assimpRotation, assimpPosition);
-
-                        Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
-                        Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
-                        Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
-
-                        Matrix4 translationMatrix;
-                        translationMatrix.translation(position);
-                        Matrix4 rotationMatrix;
-                        rotationMatrix.rotation(rotation);
-                        Matrix4 scaleMatrix;
-                        scaleMatrix.scale(scale);
-
-                        Matrix4 offsetMatrix(translationMatrix);
-                        scaleMatrix.mul(rotationMatrix);
-                        offsetMatrix.mul(scaleMatrix);
-
-                        mesh.get().setBoneOffsetMatrix(boneIndex, offsetMatrix);
-
+                        aiVertexWeight* weights = currentBone->mWeights;
                         FOR_RANGE(weightIt, 0, currentBone->mNumWeights)
                         {
-                            u32 vertexIndex = /*m_Entries[MeshIndex].BaseVertex +*/ assimpMesh->mBones[boneIt]->mWeights[weightIt].mVertexId;
-                            f32 weight = assimpMesh->mBones[boneIt]->mWeights[weightIt].mWeight;
+                            u32 vertexIndex = weights[weightIt].mVertexId;
+                            f32 weight = weights[weightIt].mWeight;
+                            //assert(vertexId <= vertices.size());
                             mesh.get().addBoneWeight(vertexIndex, boneIndex, weight);
-                        }
+			            }
                     }
                 }
             }
@@ -144,7 +151,7 @@ void Model::init(CR(std::string) path)
     }
     else
     {
-       printf("Error parsing '%s': '%s'\n", path.c_str(), importer.GetErrorString());
+       printf("Error parsing '%s': '%s'\n", path.c_str(), mImporter.GetErrorString());
     }
 }
 

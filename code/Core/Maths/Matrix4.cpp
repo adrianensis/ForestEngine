@@ -4,6 +4,15 @@
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Quaternion.hpp"
 
+Matrix4::Matrix4()
+{
+	zeros();
+}
+
+Matrix4::Matrix4(const Matrix4& other)
+{
+	init(other);
+}
 
 void Matrix4::setRows(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3)
 {
@@ -23,7 +32,7 @@ void Matrix4::setRows(const f32 *row0, const f32 *row1, const f32 *row2, const f
 	set(row, col, rows[row][col]);
 }
 
-void Matrix4::setRows(u32 n)
+void Matrix4::setRows(f32 n)
 {
 	FOR_RANGE(i, 0, 4 * 4)
 	mData[i] = n;
@@ -49,7 +58,7 @@ CR(Matrix4) Matrix4::getIdentity()
 	return smIdentity.get();
 }
 
-void Matrix4::init(u32 n)
+void Matrix4::init(f32 n)
 {
 	setRows(n);
 }
@@ -206,7 +215,7 @@ Vector4 Matrix4::mulVector(CR(Vector4) vector) const
 
 void Matrix4::zeros()
 {
-	this->init((u32)0.0f);
+	memset(mData, 0, 16 * sizeof(f32));
 }
 
 void Matrix4::identity()

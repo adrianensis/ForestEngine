@@ -35,7 +35,7 @@ void Editor::firstUpdate()
 
 	// importModel("resources/dragon/Dragon 2.5_fbx.fbx", Vector3(0,0,0), 1);
 	//importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
-	importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
+	importModel("resources/bob_lamp/bob_lamp_update_export.md5mesh", Vector3(0,0,0), 1);
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
@@ -179,7 +179,7 @@ void Editor::update()
 	Matrix4 cameraRotationMatrix = cameraGameObject->getTransform().get().getRotationMatrix();
 	cameraRotationMatrix.invert();
 
-	f32 speed = 200 * Time::getInstance().getDeltaTimeSeconds();
+	f32 speed = 100 * Time::getInstance().getDeltaTimeSeconds();
 
 	if(Input::getInstance().isKeyPressed(GLFW_KEY_LEFT))
 	{
@@ -269,24 +269,10 @@ void Editor::importModel( CR(std::string) pFile, CR(Vector3) v, f32 size)
 	gameObject->getTransform().get().setLocalPosition(v);
 	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
 
-	CR(std::vector<OwnerPtr<Mesh>>) meshes = model.get().getMeshes();
-
-	FOR_LIST(it, meshes)
-	{
-		Renderer *renderer = NEW(Renderer);
-		renderer->init();
-
-		renderer->setMesh(*it);
-		renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/" + (*it).get().getMaterialPath()));
-		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/dragon/textures/Dragon_Bump_Col2.png"));
-		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/wolf/textures/Wolf_Body.png"));
-		//renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/bob_lamp/guard1_body.png"));
-		//renderer->setMaterial(MaterialManager::getInstance().loadNoTextureMaterial());
-		// renderer->setColor(Vector4(0,std::sin(Time::getInstance().getElapsedTimeMillis())+0.2f,0,1));
-		//renderer->setColor(Vector4(0,1,0,1));
-
-		gameObject->addComponent<Renderer>(renderer);
-	}
+	ModelRenderer *modelRenderer = NEW(ModelRenderer);
+	modelRenderer->setModel(model);
+	
+	gameObject->addComponent<ModelRenderer>(modelRenderer);
 
 	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
 }

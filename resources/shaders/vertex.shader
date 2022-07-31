@@ -7,6 +7,10 @@ uniform mat4 projectionMatrix;
 uniform vec4 positionOffset;
 uniform bool isInstanced;
 
+const int MAX_BONES = 100;
+
+uniform mat4 gBones[MAX_BONES];
+
 //const int MAX_BONES = 100;
 //uniform mat4 gBones[MAX_BONES];
 
@@ -24,14 +28,15 @@ out vec4 Weights0;
 
 void main()
 {
-  // mat4 BoneTransform = gBones[BoneIDs[0]] * Weights[0];
-  // BoneTransform += gBones[BoneIDs[1]] * Weights[1];
-  // BoneTransform += gBones[BoneIDs[2]] * Weights[2];
-  // BoneTransform += gBones[BoneIDs[3]] * Weights[3];
+  mat4 BoneTransform = gBones[BoneIDs[0]] * Weights[0];
+  BoneTransform += gBones[BoneIDs[1]] * Weights[1];
+  BoneTransform += gBones[BoneIDs[2]] * Weights[2];
+  BoneTransform += gBones[BoneIDs[3]] * Weights[3];
   
   mat4 PV_Matrix = projectionMatrix * viewMatrix;
 
-  vec4 finalPositon = vec4(position, 1.0);
+  vec4 finalPositon = BoneTransform * vec4(position, 1.0);
+  //vec4 finalPositon = vec4(position, 1.0);
 
   // if(isInstanced)
   // {

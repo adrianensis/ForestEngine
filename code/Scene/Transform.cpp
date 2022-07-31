@@ -96,8 +96,8 @@ CR(Matrix4) Transform::getModelMatrix(bool force /*= false*/) const
 		Matrix4 rotationMatrix(getRotationMatrix());
 		Matrix4 scaleMatrix(getScaleMatrix());
 
-		scaleMatrix.mul(rotationMatrix);
-		mModelMatrix.mul(scaleMatrix);
+		rotationMatrix.mul(scaleMatrix);
+		mModelMatrix.mul(rotationMatrix);
 
 		mModelMatrixGenerated = true;
 	}

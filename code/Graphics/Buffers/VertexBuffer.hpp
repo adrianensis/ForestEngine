@@ -143,7 +143,7 @@ private:
 	bool mDataSentToGPU = false;
 
 public:
-	RGET(MeshBuilder)
+    GET(PrototypeMesh)
 };
 
 #endif

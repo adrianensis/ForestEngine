@@ -16,7 +16,7 @@ public:
     void bind();
 
 private:
-    byte* readPNG();
+    void loadImage();
 
 private: 
 	u32 mTextureId = -1;

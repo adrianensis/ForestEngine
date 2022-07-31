@@ -122,7 +122,7 @@ else
 void OcTree::OcTreeNode::update(/*contactManager*/)
 {
 	// DEBUG DRAW
-	RenderEngine::getInstance().drawCube(mCube);
+	//RenderEngine::getInstance().drawCube(mCube);
 
 	// If is leaf node.
 	if (isLeaf())

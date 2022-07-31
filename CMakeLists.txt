@@ -133,6 +133,9 @@ include_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/include")
 link_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/lib")
 add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
 
+# SDL2_image
+include_directories("${DEPENDENCIES_DIR}/stb")
+
 # Duktape
 set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
 include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
@@ -250,6 +253,7 @@ target_link_libraries(${FOREST} nlohmann_json)
 target_link_libraries(${FOREST} libpng.so)
 target_link_libraries(${FOREST} ${ASSIMP_LIBRARY})
 target_link_libraries(${FOREST} ${ZLIB_LIBRARY} )
+
 #target_link_libraries(${FOREST} ${FREETYPE_LIBRARIES})
 #target_include_directories(${FOREST} PRIVATE ${FREETYPE_INCLUDE_DIRS})
 #target_link_libraries( ${FOREST} ${Python3_LIBRARIES})

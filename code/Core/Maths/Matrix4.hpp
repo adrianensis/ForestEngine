@@ -33,13 +33,15 @@ class Matrix4
 private:
     void setRows(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3);
     void setRows(const f32 *row0, const f32 *row1, const f32 *row2, const f32 *row3);
-    void setRows(u32 n);
+    void setRows(f32 n);
     void setRows(CR(Vector4) row0, CR(Vector4) row1, CR(Vector4) row2, CR(Vector4) row3);
 
 public:
 
+    Matrix4();
+    Matrix4(const Matrix4& other);
     static CR(Matrix4) getIdentity();
-    void init(u32 n);
+    void init(f32 n);
     void init(CR(Matrix4) other);
     void init(const std::array<f32, 16> &data);
     void init(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3);
@@ -65,6 +67,12 @@ public:
     void scale(CR(Vector3) vector);
     void ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void perspective(f32 near, f32 far, f32 aspect, f32 fov);
+
+    R(Matrix4) operator=(CR(Matrix4) other)
+	{
+		init(other);
+		return *this;
+	}
 
 public:
 	const static u16 smColumnSize = 4;

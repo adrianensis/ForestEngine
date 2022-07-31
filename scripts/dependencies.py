@@ -21,6 +21,10 @@ def extract(file_path, destinty_path):
         with tarfile.open(name=file_path, mode='r:xz') as tarObj:
             tarObj.extractall(destinty_path)
 
+    if file_path.endswith("tar.gz"):
+        with tarfile.open(name=file_path, mode='r:gz') as tarObj:
+            tarObj.extractall(destinty_path)
+
 cwd = os.path.dirname(os.path.realpath(__file__))
 cwd = cwd + "/.."
 os.chdir(cwd)
@@ -87,6 +91,11 @@ extract(os.path.join(origin_path_base, "json-3.9.1.zip"), destiny)
 
 # libpng https://sourceforge.net/projects/libpng/files/latest/download
 extract(os.path.join(origin_path_base, "libpng-1.6.37.tar.xz"), destiny)
+
+# ------------------------------------------------------------------------
+
+# stb https://github.com/nothings/stb
+extract(os.path.join(origin_path_base, "stb.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
