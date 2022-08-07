@@ -21,17 +21,12 @@ void Model::init(CR(std::string) path)
     if(scene)
     {
         aiMatrix4x4 globalInverseTransform = scene->mRootNode->mTransformation;
-        //globalInverseTransform = globalInverseTransform.Inverse();
-
         mGlobalInverseTransform.init(
             Vector4(globalInverseTransform.a1, globalInverseTransform.a2, globalInverseTransform.a3, globalInverseTransform.a4),
             Vector4(globalInverseTransform.b1, globalInverseTransform.b2, globalInverseTransform.b3, globalInverseTransform.b4),
             Vector4(globalInverseTransform.c1, globalInverseTransform.c2, globalInverseTransform.c3, globalInverseTransform.c4),
             Vector4(globalInverseTransform.d1, globalInverseTransform.d2, globalInverseTransform.d3, globalInverseTransform.d4)
         );
-        // NOTE: transpose is needed to move from row-major to column-major
-        //mGlobalInverseTransform.transpose();
-        
         mGlobalInverseTransform.invert();
 
         if(scene->HasMeshes())
@@ -82,6 +77,9 @@ void Model::init(CR(std::string) path)
                             mesh.get().setMaterialPath(materialPath.data);
                         }
                     }
+
+                    // TODO : REMOVE - TEST
+                    mesh.get().setMaterialPath("resources/bob_lamp/bob_body.png");
                 }
 
                 if(assimpMesh->HasBones())
@@ -93,8 +91,11 @@ void Model::init(CR(std::string) path)
                         aiBone* currentBone = assimpMesh->mBones[boneIt];
                         std::string boneName(currentBone->mName.data);
 
-                        if (! mesh.get().isBoneRegistered(boneName)) 
+                        VAR(boneName)
+
+                        if (! MAP_CONTAINS(mBonesMapping, boneName)) 
                         {
+                            ECHO("Registering")
                             CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
 
                             aiVector3t<f32> assimpPosition;
@@ -118,12 +119,23 @@ void Model::init(CR(std::string) path)
                             scaleMatrix.mul(rotationMatrix);
                             offsetMatrix.mul(scaleMatrix);
 
-                            boneIndex = mesh.get().registerBone(boneName);
-                            mesh.get().setBoneOffsetMatrix(boneName, offsetMatrix);
+                            BoneData boneData;
+                            boneData.mId = mBonesIndexCount;
+                            boneData.mOffsetMatrix = offsetMatrix;
+
+                            MAP_INSERT(mBonesMapping, boneName, boneData);
+
+                            //mesh.get().registerBone(boneName, boneData);
+                            //mesh.get().setBoneOffsetMatrix(boneName, offsetMatrix);
+                            
+                            mBonesIndexCount++;
                         }
 
-                        boneIndex = mesh.get().getBoneID(boneName);
+                        boneIndex = mBonesMapping.at(boneName).mId;
 
+                        VAR(boneIndex)
+
+                        ECHO("Weights")
                         aiVertexWeight* weights = currentBone->mWeights;
                         FOR_RANGE(weightIt, 0, currentBone->mNumWeights)
                         {
@@ -131,7 +143,11 @@ void Model::init(CR(std::string) path)
                             f32 weight = weights[weightIt].mWeight;
                             //assert(vertexId <= vertices.size());
                             mesh.get().addBoneWeight(vertexIndex, boneIndex, weight);
+                            VAR(currentBone->mNumWeights)
+                            VAR(weight)
+                            VAR(vertexIndex)
 			            }
+                        ECHO("------------")
                     }
                 }
             }

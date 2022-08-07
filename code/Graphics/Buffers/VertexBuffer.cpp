@@ -241,7 +241,7 @@ void MeshBatcher::resize(u32 size)
 		u32 meshesAmount = mMeshBuffer.getIsInstanced() ? 1 : mMaxMeshesThreshold; 
 
 		mMeshBuilder.init(mPrototypeMesh.get().getVertexCount() * meshesAmount, mPrototypeMesh.get().getFacesCount() * meshesAmount);
-		mMeshBuilder.copyBones(mPrototypeMesh);
+		//mMeshBuilder.copyBones(mPrototypeMesh);
 
 		mMeshBuffer.setMaxInstances(meshesAmount);
 
@@ -282,7 +282,7 @@ void MeshBatcher::addInstance(CR(Mesh) meshInstance)
 	mMeshBuilder.addVertices(meshInstance.getVertices());
 	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
 	mMeshBuilder.addColors(meshInstance.getColors());
-	//mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
+	mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
 
 	mMeshesIndex++;
 }

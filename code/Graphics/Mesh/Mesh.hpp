@@ -15,13 +15,6 @@ public:
     void addBoneData(u32 id, f32 weight);
 };
 
-class BoneData
-{
-public:
-    u32 mId = 0;
-	Matrix4 mOffsetMatrix;
-};
-
 class Model;
 struct aiNodeAnim;
 struct aiNode;
@@ -42,17 +35,17 @@ public:
     void addBoneVertexData(CR(BoneVertexData) bone);
     void addFaceIndex(u32 i);
 
-    void addVertices(const std::vector<f32> vec);
-    void addNormals(const std::vector<f32> vec);
-    void addTextureCoordinates(const std::vector<f32> vec);
-    void addColors(const std::vector<f32> vec);
-    void addFaces(const std::vector<u32> vec);
-    void addBonesVertexData(const std::vector<BoneVertexData> vec);
+    void addVertices(const std::vector<f32>& vec);
+    void addNormals(const std::vector<f32>& vec);
+    void addTextureCoordinates(const std::vector<f32>& vec);
+    void addColors(const std::vector<f32>& vec);
+    void addFaces(const std::vector<u32>& vec);
+    void addBonesVertexData(const std::vector<BoneVertexData>& vec);
 
-    u32 registerBone(CR(std::string) name);
-    bool isBoneRegistered(CR(std::string) name) const;
-    u32 getBoneID(CR(std::string) name) const;
-    void setBoneOffsetMatrix(CR(std::string) name, CR(Matrix4) offsetMatrix);
+    // void registerBone(CR(std::string) name, CR(BoneData) boneData);
+    // bool isBoneRegistered(CR(std::string) name) const;
+    // u32 getBoneID(CR(std::string) name) const;
+    // void setBoneOffsetMatrix(CR(std::string) name, CR(Matrix4) offsetMatrix);
     void addBoneWeight(u32 vertexId, u32 id, f32 weight);
 
     void copyVertices(Ptr<const Mesh> other);
@@ -75,7 +68,6 @@ private:
     u32 FindScaling(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
     void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
 
-
 private:
 	std::vector<f32> mVertices;
 	std::vector<f32> mNormals;
@@ -86,15 +78,14 @@ private:
 
 	std::vector<BoneVertexData> mBonesVertexData;
 
-    std::map<std::string, BoneData> mBones;
-
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;
-    u32 mBonesIndexCount = 0;
 
     std::string mMaterialPath;
 
     Ptr<const Model> mModel;
+
+    mutable u32 test = 0;
 
 public:
 	inline static const u32 smVertexPositionSize = 3;

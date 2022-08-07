@@ -1,4 +1,5 @@
 #include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/RenderEngine.hpp"
 #include "Graphics/Model/Model.hpp"
 #include <algorithm>
 
@@ -16,7 +17,7 @@ void BoneVertexData::addBoneData(u32 id, f32 weight)
 	}
 
 	// should never get here - more bones than we have space for
-	//ASSERT_MSG(false, "should never get here - more bones than we have space for");
+	ASSERT_MSG(false, "should never get here - more bones than we have space for");
 }
 
 Mesh::~Mesh()
@@ -76,66 +77,55 @@ void Mesh::addFaceIndex(u32 i)
 	mFaces.push_back(i);
 }
 
-void Mesh::addVertices(const std::vector<f32> vec)
+void Mesh::addVertices(const std::vector<f32>& vec)
 {
 	mVertices.insert(mVertices.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addNormals(const std::vector<f32> vec)
+void Mesh::addNormals(const std::vector<f32>& vec)
 {
 	mNormals.insert(mNormals.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addTextureCoordinates(const std::vector<f32> vec)
+void Mesh::addTextureCoordinates(const std::vector<f32>& vec)
 {
 	mTextureCoordinates.insert(mTextureCoordinates.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addColors(const std::vector<f32> vec)
+void Mesh::addColors(const std::vector<f32>& vec)
 {
 	mColors.insert(mColors.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addFaces(const std::vector<u32> vec)
+void Mesh::addFaces(const std::vector<u32>& vec)
 {
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addBonesVertexData(const std::vector<BoneVertexData> vec)
+void Mesh::addBonesVertexData(const std::vector<BoneVertexData>& vec)
 {
 	mBonesVertexData.insert(mBonesVertexData.end(), vec.begin(), vec.end());
 }
 
-u32 Mesh::registerBone(CR(std::string) name)
-{
-	u32 boneIndex = mBonesIndexCount;
-	
-	if(!MAP_CONTAINS(mBones, name))
-	{
-	    BoneData boneData;
-	    boneData.mId = boneIndex;
-	    mBonesIndexCount++;
-        mBones[name].mOffsetMatrix = Matrix4::getIdentity();
-		MAP_INSERT(mBones, name, boneData);
-	}
+// void Mesh::registerBone(CR(std::string) name, CR(BoneData) boneData)
+// {
+//     MAP_INSERT(mBonesMapping, name, boneData);
+// }
 
-	return boneIndex;
-}
+// bool Mesh::isBoneRegistered(CR(std::string) name) const
+// {
+// 	return MAP_CONTAINS(mBonesMapping, name);
+// }
 
-bool Mesh::isBoneRegistered(CR(std::string) name) const
-{
-	return MAP_CONTAINS(mBones, name);
-}
+// u32 Mesh::getBoneID(CR(std::string) name) const
+// {
+// 	return mBonesMapping.at(name).mId;
+// }
 
-u32 Mesh::getBoneID(CR(std::string) name) const
-{
-	return mBones.at(name).mId;
-}
-
-void Mesh::setBoneOffsetMatrix(CR(std::string) name, CR(Matrix4) offsetMatrix)
-{
-	mBones[name].mOffsetMatrix = offsetMatrix;
-}
+// void Mesh::setBoneOffsetMatrix(CR(std::string) name, CR(Matrix4) offsetMatrix)
+// {
+// 	mBonesMapping[name].mOffsetMatrix = offsetMatrix;
+// }
 
 void Mesh::addBoneWeight(u32 vertexId, u32 id, f32 weight)
 {
@@ -180,9 +170,9 @@ void Mesh::clear()
 	mColors.clear();
 	mFaces.clear();
 	mBonesVertexData.clear();
-	mBones.clear();
+	//mBonesMapping.clear();
 
-	mBonesIndexCount = 0;
+	//mBonesIndexCount = 0;
 
 	mVertices.reserve(mVertexCount * smVertexPositionSize);
 	mTextureCoordinates.reserve(mVertexCount * smVertexTexCoordSize);
@@ -198,6 +188,8 @@ void Mesh::clear()
 
 void Mesh::getBoneTransforms(float TimeInSeconds, std::vector<Matrix4>& Transforms) const
 {
+    test = 0;
+
     Matrix4 Identity;
 	Identity.identity();
 
@@ -213,28 +205,25 @@ void Mesh::getBoneTransforms(float TimeInSeconds, std::vector<Matrix4>& Transfor
     // float fraction = modf((float)animation->mDuration, &Duration);
     // float AnimationTimeTicks = fmod(TimeInTicks, Duration);
 
-    std::vector<Matrix4> currentTransforms;
-    currentTransforms.resize(mBones.size());
+    Transforms.resize(mModel.get().getBonesIndexCount());
 
-    FOR_ARRAY(it, currentTransforms)
+    FOR_ARRAY(it, Transforms)
     {
-        currentTransforms[it] = Matrix4::getIdentity();
+        Transforms[it] = Matrix4::getIdentity();
     }
 
-    readNodeHierarchy(AnimationTime, m_pScene->mRootNode, Identity, currentTransforms);
-    Transforms.resize(mBones.size());
-
-    FOR_ARRAY(it, currentTransforms)
-    {
-        Transforms[it] = currentTransforms[it];
-    }
+    readNodeHierarchy(AnimationTime, m_pScene->mRootNode, Identity, Transforms);
 }
 
 void Mesh::readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, const Matrix4& parentTransform, std::vector<Matrix4>& currentTransforms) const
 {
+    test++;
+
     std::string NodeName(pNode->mName.data);
 
 	const aiScene* m_pScene = mModel.get().getImporter().GetScene();
+
+    //VAR(NodeName)
 
     const aiAnimation* pAnimation = m_pScene->mAnimations[0];
 
@@ -257,6 +246,7 @@ void Mesh::readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, cons
         CalcInterpolatedScaling(Scaling, animationTimeTicks, pNodeAnim);
         Matrix4 scalingM;
         scalingM.scale(Vector3(Scaling.x, Scaling.y, Scaling.z));
+        //scalingM.transpose();
         // scalingM.identity();
 
         // Interpolate rotation and generate rotation transformation matrix
@@ -266,6 +256,7 @@ void Mesh::readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, cons
 		rotation.set(Vector3(RotationQ.x, RotationQ.y, RotationQ.z), RotationQ.w);
         Matrix4 rotationM;
 		rotation.toMatrix(&rotationM);
+        rotationM.transpose();
 		// rotationM.identity();
 
         // Interpolate translation and generate translation transformation matrix
@@ -273,30 +264,55 @@ void Mesh::readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, cons
         CalcInterpolatedPosition(Translation, animationTimeTicks, pNodeAnim);
         Matrix4 translationM;
         translationM.translation(Vector3(Translation.x, Translation.y, Translation.z));
+        //translationM.transpose();
         // translationM.identity();
 
         // Combine the above transformations
-		scalingM.mul(rotationM);
-		translationM.mul(scalingM);
+		rotationM.mul(scalingM);
+		translationM.mul(rotationM);
         nodeTransformation = translationM;
     }
 
 	Matrix4 globalTransformation(parentTransform);
     globalTransformation.mul(nodeTransformation);
 
-	Matrix4 globalInverseTransform = mModel.get().getGlobalInverseTransform();
+    if (MAP_CONTAINS(mModel.get().getBonesMapping(), NodeName)) {
+        u32 boneIndex = mModel.get().getBonesMapping().at(NodeName).mId;
 
-    if (MAP_CONTAINS(mBones, NodeName)) {
-        u32 boneIndex = mBones.at(NodeName).mId;
-
+	    Matrix4 globalInverseTransform = mModel.get().getGlobalInverseTransform();
 		Matrix4 globalTransformationCopy(globalTransformation);
-		globalTransformationCopy.mul(mBones.at(NodeName).mOffsetMatrix);
+		globalTransformationCopy.mul(mModel.get().getBonesMapping().at(NodeName).mOffsetMatrix);
 		globalInverseTransform.mul(globalTransformationCopy);
 		
         //mBonesData[BoneIndex].FinalTransformation = globalInverseTransform;
         // mBonesData[BoneIndex].FinalTransformation = m_GlobalInverseTransform * globalTransformation * mBonesData[BoneIndex].mOffsetMatrix;
 		currentTransforms[boneIndex] = globalInverseTransform;
+
+        // DRAW
+
+        // aiVector3t<f32> assimpPosition;
+        // aiVector3t<f32> assimpScale;
+        // aiVector3t<f32> assimpRotation;
+
+        // m_pScene->mRootNode->mTransformation.Decompose(assimpScale, assimpRotation, assimpPosition);
+
+        // Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
+        // Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
+        // Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
+
     }
+
+        Vector3 cubeTopLeft(0,0,0);
+        cubeTopLeft = globalTransformation.mulVector(Vector4(cubeTopLeft, 1));
+        RenderEngine::getInstance().drawCube(Cube(cubeTopLeft,Vector3(0.1f,0.1f,0.1f)), 1, true, Vector4(0.5f,0.5f,0,1));
+
+
+        Vector3 parentPosition(0,0,0);
+        parentPosition = parentTransform.mulVector(Vector4(parentPosition, 1));
+        
+        RenderEngine::getInstance().drawLine(Line(parentPosition, cubeTopLeft), 1, true, Vector4(0.5f,0.5f,0,1));
+
+    //if(test == 3) return;
 
     for (u32 i = 0 ; i < pNode->mNumChildren ; i++) {
         readNodeHierarchy(animationTimeTicks, pNode->mChildren[i], globalTransformation, currentTransforms);

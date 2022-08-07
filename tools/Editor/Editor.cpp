@@ -35,7 +35,10 @@ void Editor::firstUpdate()
 
 	// importModel("resources/dragon/Dragon 2.5_fbx.fbx", Vector3(0,0,0), 1);
 	//importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
-	importModel("resources/bob_lamp/bob_lamp_update_export.md5mesh", Vector3(0,0,0), 1);
+	importModel("resources/bob_lamp/bob_lamp_update_export.fbx", Vector3(0,0,0),  1);
+	// importModel("resources/rp_nathan_animated_003_walking.fbx", Vector3(0,0,0),  1);
+	//importModel("resources/cube/cube.fbx", Vector3(0,0,0),  1);
+	
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
@@ -179,7 +182,7 @@ void Editor::update()
 	Matrix4 cameraRotationMatrix = cameraGameObject->getTransform().get().getRotationMatrix();
 	cameraRotationMatrix.invert();
 
-	f32 speed = 100 * Time::getInstance().getDeltaTimeSeconds();
+	f32 speed = 90 * Time::getInstance().getDeltaTimeSeconds();
 
 	if(Input::getInstance().isKeyPressed(GLFW_KEY_LEFT))
 	{
@@ -265,9 +268,10 @@ void Editor::importModel( CR(std::string) pFile, CR(Vector3) v, f32 size)
 
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
-	gameObject->setIsStatic(true);
+	//gameObject->setIsStatic(true);
 	gameObject->getTransform().get().setLocalPosition(v);
 	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
+	//gameObject->getTransform().get().setRotation(Vector3(90,0,0));
 
 	ModelRenderer *modelRenderer = NEW(ModelRenderer);
 	modelRenderer->setModel(model);

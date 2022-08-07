@@ -122,23 +122,23 @@ include_directories("${DEPENDENCIES_DIR}/json-3.9.1/single_include/nlohmann")
 add_subdirectory("${DEPENDENCIES_DIR}/json-3.9.1")
 
 # libpng
-set(PNG_BUILD_ZLIB TRUE CACHE BOOL "" FORCE)
-set(PNG_SHARED OFF CACHE BOOL "" FORCE)
-set(PNG_STATIC ON CACHE BOOL "" FORCE)
-set(PNG_EXECUTABLES OFF CACHE BOOL "" FORCE) # we only want lib
-set(PNG_TESTS OFF CACHE BOOL "" FORCE) # we only want lib
-set(SKIP_INSTALL_ALL OFF CACHE BOOL "" FORCE) # we only want lib
+# set(PNG_BUILD_ZLIB TRUE CACHE BOOL "" FORCE)
+# set(PNG_SHARED OFF CACHE BOOL "" FORCE)
+# set(PNG_STATIC ON CACHE BOOL "" FORCE)
+# set(PNG_EXECUTABLES OFF CACHE BOOL "" FORCE) # we only want lib
+# set(PNG_TESTS OFF CACHE BOOL "" FORCE) # we only want lib
+# set(SKIP_INSTALL_ALL OFF CACHE BOOL "" FORCE) # we only want lib
 
-include_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/include")
-link_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/lib")
-add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
+# include_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/include")
+# link_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/lib")
+# add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
 
 # SDL2_image
 include_directories("${DEPENDENCIES_DIR}/stb")
 
 # Duktape
-set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
-include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
+# set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
+# include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
 
 # Assimp
 set(ASSIMP_LIBRARY "assimp")

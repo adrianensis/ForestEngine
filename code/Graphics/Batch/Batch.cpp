@@ -46,7 +46,7 @@ void Batch::render()
 
 		std::vector<Matrix4> bonesTransforms;
 		mMeshBatcher.getPrototypeMesh().get().getBoneTransforms(t, bonesTransforms);
-		t+=0.01f;
+		t+=0.01f ;
 		mMaterial.get().getShader().get().addMatrixArray(bonesTransforms, "gBones");
 
 		mPendingDrawCall = true;
