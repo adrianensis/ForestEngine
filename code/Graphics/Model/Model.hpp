@@ -8,6 +8,7 @@ class BoneData
 {
 public:
     u32 mId = 0;
+    // offset matrix transforms vertex from model space to bone space
 	Matrix4 mOffsetMatrix;
 };
 

@@ -42,10 +42,6 @@ public:
     void addFaces(const std::vector<u32>& vec);
     void addBonesVertexData(const std::vector<BoneVertexData>& vec);
 
-    // void registerBone(CR(std::string) name, CR(BoneData) boneData);
-    // bool isBoneRegistered(CR(std::string) name) const;
-    // u32 getBoneID(CR(std::string) name) const;
-    // void setBoneOffsetMatrix(CR(std::string) name, CR(Matrix4) offsetMatrix);
     void addBoneWeight(u32 vertexId, u32 id, f32 weight);
 
     void copyVertices(Ptr<const Mesh> other);

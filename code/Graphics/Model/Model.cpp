@@ -91,51 +91,28 @@ void Model::init(CR(std::string) path)
                         aiBone* currentBone = assimpMesh->mBones[boneIt];
                         std::string boneName(currentBone->mName.data);
 
-                        VAR(boneName)
-
                         if (! MAP_CONTAINS(mBonesMapping, boneName)) 
                         {
                             ECHO("Registering")
-                            CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
-
-                            aiVector3t<f32> assimpPosition;
-                            aiVector3t<f32> assimpScale;
-                            aiVector3t<f32> assimpRotation;
-
-                            assimpBoneOffsetMatrix.Decompose(assimpScale, assimpRotation, assimpPosition);
-
-                            Vector3 position = Vector3(assimpPosition.x, assimpPosition.y, assimpPosition.z);
-                            Vector3 scale = Vector3(assimpScale.x, assimpScale.y, assimpScale.z);
-                            Vector3 rotation = Vector3(assimpRotation.x, assimpRotation.y, assimpRotation.z);
-
-                            Matrix4 translationMatrix;
-                            translationMatrix.translation(position);
-                            Matrix4 rotationMatrix;
-                            rotationMatrix.rotation(rotation);
-                            Matrix4 scaleMatrix;
-                            scaleMatrix.scale(scale);
-
-                            Matrix4 offsetMatrix(translationMatrix);
-                            scaleMatrix.mul(rotationMatrix);
-                            offsetMatrix.mul(scaleMatrix);
 
                             BoneData boneData;
                             boneData.mId = mBonesIndexCount;
-                            boneData.mOffsetMatrix = offsetMatrix;
+
+                            CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
+                            boneData.mOffsetMatrix.init(
+                                Vector4(assimpBoneOffsetMatrix.a1, assimpBoneOffsetMatrix.a2, assimpBoneOffsetMatrix.a3, assimpBoneOffsetMatrix.a4),
+                                Vector4(assimpBoneOffsetMatrix.b1, assimpBoneOffsetMatrix.b2, assimpBoneOffsetMatrix.b3, assimpBoneOffsetMatrix.b4),
+                                Vector4(assimpBoneOffsetMatrix.c1, assimpBoneOffsetMatrix.c2, assimpBoneOffsetMatrix.c3, assimpBoneOffsetMatrix.c4),
+                                Vector4(assimpBoneOffsetMatrix.d1, assimpBoneOffsetMatrix.d2, assimpBoneOffsetMatrix.d3, assimpBoneOffsetMatrix.d4)
+                            );
 
                             MAP_INSERT(mBonesMapping, boneName, boneData);
 
-                            //mesh.get().registerBone(boneName, boneData);
-                            //mesh.get().setBoneOffsetMatrix(boneName, offsetMatrix);
-                            
                             mBonesIndexCount++;
                         }
 
                         boneIndex = mBonesMapping.at(boneName).mId;
 
-                        VAR(boneIndex)
-
-                        ECHO("Weights")
                         aiVertexWeight* weights = currentBone->mWeights;
                         FOR_RANGE(weightIt, 0, currentBone->mNumWeights)
                         {
@@ -143,11 +120,7 @@ void Model::init(CR(std::string) path)
                             f32 weight = weights[weightIt].mWeight;
                             //assert(vertexId <= vertices.size());
                             mesh.get().addBoneWeight(vertexIndex, boneIndex, weight);
-                            VAR(currentBone->mNumWeights)
-                            VAR(weight)
-                            VAR(vertexIndex)
 			            }
-                        ECHO("------------")
                     }
                 }
             }
