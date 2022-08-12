@@ -17,7 +17,7 @@ void BoneVertexData::addBoneData(u32 id, f32 weight)
 	}
 
 	// should never get here - more bones than we have space for
-	//ASSERT_MSG(false, "should never get here - more bones than we have space for");
+	ASSERT_MSG(false, "should never get here - more bones than we have space for");
 }
 
 Mesh::~Mesh()
