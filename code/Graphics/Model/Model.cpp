@@ -60,7 +60,8 @@ void Model::init(CR(std::string) path)
 
                 FOR_RANGE(faceIt, 0, assimpMesh->mNumFaces)
                 {
-                    aiFace assimpFace = assimpMesh->mFaces[faceIt];
+                    const aiFace& assimpFace = assimpMesh->mFaces[faceIt];
+                    ASSERT_MSG(assimpFace.mNumIndices == 3, "Face num indices != 3")
                     mesh.get().addFace(assimpFace.mIndices[0], assimpFace.mIndices[1], assimpFace.mIndices[2]);
                 }
 
@@ -77,10 +78,10 @@ void Model::init(CR(std::string) path)
                             mesh.get().setMaterialPath(materialPath.data);
                         }
                     }
-
-                    // TODO : REMOVE - TEST
-                    mesh.get().setMaterialPath("resources/bob_lamp/bob_body.png");
                 }
+
+                // TODO : REMOVE - TEST
+                mesh.get().setMaterialPath("resources/bob_lamp/bob_body.png");
 
                 if(assimpMesh->HasBones())
                 {
@@ -93,8 +94,6 @@ void Model::init(CR(std::string) path)
 
                         if (! MAP_CONTAINS(mBonesMapping, boneName)) 
                         {
-                            ECHO("Registering")
-
                             BoneData boneData;
                             boneData.mId = mBonesIndexCount;
 
@@ -118,7 +117,6 @@ void Model::init(CR(std::string) path)
                         {
                             u32 vertexIndex = weights[weightIt].mVertexId;
                             f32 weight = weights[weightIt].mWeight;
-                            //assert(vertexId <= vertices.size());
                             mesh.get().addBoneWeight(vertexIndex, boneIndex, weight);
 			            }
                     }

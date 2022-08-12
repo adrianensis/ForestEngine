@@ -42,7 +42,7 @@ void RenderContext::init()
 
 		glfwSetFramebufferSizeCallback(smWindow, onResize);
 
-		glClearColor(0,0,0,1);
+		glClearColor(0,0.3,0.3,1);
 		glEnable(GL_DEPTH_TEST); // Enable depth testing
 		glDepthFunc(GL_LEQUAL);	 // Near things obscure far things
 		glEnable(GL_CULL_FACE);	 // BACK by default

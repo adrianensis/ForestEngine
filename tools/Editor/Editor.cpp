@@ -33,9 +33,11 @@ void Editor::firstUpdate()
 	// 	}
 	// }
 
-	//importModel("resources/dragon/Dragon_Baked_Actions_fbx_7.4_binary.fbx", Vector3(0,0,0), 1);
+	//importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1);
 	//importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
 	importModel("resources/bob_lamp/bob_lamp_update_export.fbx", Vector3(0,0,0),  1);
+	//importModel("resources/Player.fbx", Vector3(0,0,0),  1);
+
 	//importModel("resources/rp_nathan_animated_003_walking.fbx", Vector3(0,0,0),  1);
 	//importModel("resources/cube/cube.fbx", Vector3(0,0,0),  1);
 	

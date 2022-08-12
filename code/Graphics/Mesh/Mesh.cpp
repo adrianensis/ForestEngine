@@ -17,7 +17,7 @@ void BoneVertexData::addBoneData(u32 id, f32 weight)
 	}
 
 	// should never get here - more bones than we have space for
-	ASSERT_MSG(false, "should never get here - more bones than we have space for");
+	//ASSERT_MSG(false, "should never get here - more bones than we have space for");
 }
 
 Mesh::~Mesh()
@@ -219,23 +219,44 @@ void Mesh::readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, cons
         // Interpolate scaling and generate scaling transformation matrix
         aiVector3D Scaling;
         CalcInterpolatedScaling(Scaling, animationTimeTicks, pNodeAnim);
+        // Matrix4 scalingM;
+        // scalingM.scale(Vector3(Scaling.x, Scaling.y, Scaling.z));
+        aiMatrix4x4 scaling_matr;
+		aiMatrix4x4::Scaling(Scaling, scaling_matr);
         Matrix4 scalingM;
-        scalingM.scale(Vector3(Scaling.x, Scaling.y, Scaling.z));
+        scalingM.init(
+            Vector4(scaling_matr.a1, scaling_matr.a2, scaling_matr.a3, scaling_matr.a4),
+            Vector4(scaling_matr.b1, scaling_matr.b2, scaling_matr.b3, scaling_matr.b4),
+            Vector4(scaling_matr.c1, scaling_matr.c2, scaling_matr.c3, scaling_matr.c4),
+            Vector4(scaling_matr.d1, scaling_matr.d2, scaling_matr.d3, scaling_matr.d4)
+        );
 
         // Interpolate rotation and generate rotation transformation matrix
         aiQuaternion RotationQ;
         CalcInterpolatedRotation(RotationQ, animationTimeTicks, pNodeAnim);
-		Quaternion rotation;
-		rotation.set(Vector3(RotationQ.x, RotationQ.y, RotationQ.z), RotationQ.w);
+        aiMatrix4x4 rotationMatrix = aiMatrix4x4(RotationQ.GetMatrix());
         Matrix4 rotationM;
-		rotation.toMatrix(&rotationM);
-        rotationM.transpose();
+        rotationM.init(
+            Vector4(rotationMatrix.a1, rotationMatrix.a2, rotationMatrix.a3, rotationMatrix.a4),
+            Vector4(rotationMatrix.b1, rotationMatrix.b2, rotationMatrix.b3, rotationMatrix.b4),
+            Vector4(rotationMatrix.c1, rotationMatrix.c2, rotationMatrix.c3, rotationMatrix.c4),
+            Vector4(rotationMatrix.d1, rotationMatrix.d2, rotationMatrix.d3, rotationMatrix.d4)
+        );
 
         // Interpolate translation and generate translation transformation matrix
         aiVector3D Translation;
         CalcInterpolatedPosition(Translation, animationTimeTicks, pNodeAnim);
+        aiMatrix4x4 translate_matr;
+		aiMatrix4x4::Translation(Translation, translate_matr);
         Matrix4 translationM;
-        translationM.translation(Vector3(Translation.x, Translation.y, Translation.z));
+        translationM.init(
+            Vector4(translate_matr.a1, translate_matr.a2, translate_matr.a3, translate_matr.a4),
+            Vector4(translate_matr.b1, translate_matr.b2, translate_matr.b3, translate_matr.b4),
+            Vector4(translate_matr.c1, translate_matr.c2, translate_matr.c3, translate_matr.c4),
+            Vector4(translate_matr.d1, translate_matr.d2, translate_matr.d3, translate_matr.d4)
+        );
+        // Matrix4 translationM;
+        // translationM.translation(Vector3(Translation.x, Translation.y, Translation.z));
  
         // Combine the above transformations
 		rotationM.mul(scalingM);
