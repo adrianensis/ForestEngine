@@ -6,6 +6,11 @@
 void Editor::init()
 {
 	octree.init(1000);
+
+	SUBSCRIBE_TO_EVENT(InputEventKeyPressed, nullptr, this, [&](const Event *event)
+	{
+		handlePressedKeys();
+	});
 }
 
 void Editor::firstUpdate()
@@ -37,10 +42,12 @@ void Editor::firstUpdate()
 	//importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
 	importModel("resources/bob_lamp/bob_lamp_update_export.fbx", Vector3(0,0,0),  1);
 	//importModel("resources/Player.fbx", Vector3(0,0,0),  1);
+	// importModel("resources/dancing_vampire.dae", Vector3(0,0,0),  1);
+	//importModel("resources/bob_lamp/bob_lamp_update_export.md5mesh", Vector3(0,0,0), 1);
 
 	//importModel("resources/rp_nathan_animated_003_walking.fbx", Vector3(0,0,0),  1);
 	//importModel("resources/cube/cube.fbx", Vector3(0,0,0),  1);
-	
+	//importModel("resources/Spider.fbx", Vector3(0,0,0),  1);
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
@@ -281,4 +288,15 @@ void Editor::importModel( CR(std::string) pFile, CR(Vector3) v, f32 size)
 	gameObject->addComponent<ModelRenderer>(modelRenderer);
 
 	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
+}
+
+void Editor::handlePressedKeys()
+{
+	if(Input::getInstance().isKeyPressedOnce(GLFW_KEY_KP_ADD))
+	{
+	}
+
+	if(Input::getInstance().isKeyPressedOnce(GLFW_KEY_KP_SUBTRACT))
+	{
+	}
 }

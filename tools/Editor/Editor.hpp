@@ -32,7 +32,7 @@ public:
 private:
     GameObject* createSprite(CR(Vector3) v, f32 size);
     void importModel(CR(std::string) pFile, CR(Vector3) v, f32 size);
-
+	void handlePressedKeys();
 private:
 	f32 rotation = 0;
 	f32 y = 0;

@@ -16,7 +16,16 @@ void Model::init(CR(std::string) path)
             //aiProcess_CalcTangentSpace       |
             aiProcess_Triangulate            |
             aiProcess_JoinIdenticalVertices  |
+            aiProcess_GenSmoothNormals |
+            aiProcess_CalcTangentSpace |
             aiProcess_SortByPType);
+
+    // check for errors
+    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+    {
+        printf("Error parsing '%s': '%s'\n", path.c_str(), mImporter.GetErrorString());
+        return;
+    }
 
     if(scene)
     {
@@ -135,10 +144,6 @@ void Model::init(CR(std::string) path)
             //     const aiNodeAnim* pNodeAnim = findNodeAnim(animation, nodeName);
             // }
         }
-    }
-    else
-    {
-       printf("Error parsing '%s': '%s'\n", path.c_str(), mImporter.GetErrorString());
     }
 }
 

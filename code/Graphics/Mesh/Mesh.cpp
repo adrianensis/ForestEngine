@@ -3,11 +3,11 @@
 #include "Graphics/Model/Model.hpp"
 #include <algorithm>
 
-void BoneVertexData::addBoneData(u32 id, f32 weight)
+void BoneVertexData::addBoneData(i32 id, f32 weight)
 {
 	FOR_RANGE(i, 0, smMaxBonesPerVertex)
 	{
-		if (mBoneWeights[i] == 0.0f)
+		if (mBoneIDs[i] == -1)
 		{
 			mBoneIDs[i] = id;
 			mBoneWeights[i] = weight;
@@ -107,7 +107,7 @@ void Mesh::addBonesVertexData(const std::vector<BoneVertexData>& vec)
 	mBonesVertexData.insert(mBonesVertexData.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addBoneWeight(u32 vertexId, u32 id, f32 weight)
+void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 {
 	mBonesVertexData[vertexId].addBoneData(id, weight);
 }
@@ -309,10 +309,9 @@ const aiNodeAnim* Mesh::findNodeAnim(const aiAnimation* animation, const std::st
 
     return nullptr;
 }
-
-u32 Mesh::FindPosition(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
+uint Mesh::FindPosition(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
 {
-    for (u32 i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++) {
+    for (uint i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++) {
         float t = (float)pNodeAnim->mPositionKeys[i + 1].mTime;
         if (AnimationTimeTicks < t) {
             return i;
@@ -322,6 +321,7 @@ u32 Mesh::FindPosition(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) co
     return 0;
 }
 
+
 void Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
 {
     // we need at least two values to interpolate...
@@ -330,8 +330,8 @@ void Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTimeTicks, c
         return;
     }
 
-    u32 PositionIndex = FindPosition(AnimationTimeTicks, pNodeAnim);
-    u32 NextPositionIndex = PositionIndex + 1;
+    uint PositionIndex = FindPosition(AnimationTimeTicks, pNodeAnim);
+    uint NextPositionIndex = PositionIndex + 1;
     assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
     float t1 = (float)pNodeAnim->mPositionKeys[PositionIndex].mTime;
     if (t1 > AnimationTimeTicks) {
@@ -348,11 +348,12 @@ void Mesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTimeTicks, c
     }
 }
 
-u32 Mesh::FindRotation(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
+
+uint Mesh::FindRotation(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
 {
     assert(pNodeAnim->mNumRotationKeys > 0);
 
-    for (u32 i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++) {
+    for (uint i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++) {
         float t = (float)pNodeAnim->mRotationKeys[i + 1].mTime;
         if (AnimationTimeTicks < t) {
             return i;
@@ -362,6 +363,7 @@ u32 Mesh::FindRotation(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) co
     return 0;
 }
 
+
 void Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
 {
     // we need at least two values to interpolate...
@@ -370,8 +372,8 @@ void Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTimeTicks,
         return;
     }
 
-    u32 RotationIndex = FindRotation(AnimationTimeTicks, pNodeAnim);
-    u32 NextRotationIndex = RotationIndex + 1;
+    uint RotationIndex = FindRotation(AnimationTimeTicks, pNodeAnim);
+    uint NextRotationIndex = RotationIndex + 1;
     assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
     float t1 = (float)pNodeAnim->mRotationKeys[RotationIndex].mTime;
     if (t1 > AnimationTimeTicks) {
@@ -390,11 +392,12 @@ void Mesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTimeTicks,
     Out.Normalize();
 }
 
-u32 Mesh::FindScaling(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
+
+uint Mesh::FindScaling(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
 {
     assert(pNodeAnim->mNumScalingKeys > 0);
 
-    for (u32 i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++) {
+    for (uint i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++) {
         float t = (float)pNodeAnim->mScalingKeys[i + 1].mTime;
         if (AnimationTimeTicks < t) {
             return i;
@@ -404,6 +407,7 @@ u32 Mesh::FindScaling(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) con
     return 0;
 }
 
+
 void Mesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const
 {
     // we need at least two values to interpolate...
@@ -412,8 +416,8 @@ void Mesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTimeTicks, co
         return;
     }
 
-    u32 ScalingIndex = FindScaling(AnimationTimeTicks, pNodeAnim);
-    u32 NextScalingIndex = ScalingIndex + 1;
+    uint ScalingIndex = FindScaling(AnimationTimeTicks, pNodeAnim);
+    uint NextScalingIndex = ScalingIndex + 1;
     assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
     float t1 = (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime;
     if (t1 > AnimationTimeTicks) {

@@ -9,10 +9,10 @@ class BoneVertexData
 public:
 	inline static const u32 smMaxBonesPerVertex = 4;
 
-    u32 mBoneIDs[smMaxBonesPerVertex] = {0};
+    i32 mBoneIDs[smMaxBonesPerVertex] = {-1};
     f32 mBoneWeights[smMaxBonesPerVertex] = {0.0f};
 
-    void addBoneData(u32 id, f32 weight);
+    void addBoneData(i32 id, f32 weight);
 };
 
 class Model;
@@ -42,7 +42,7 @@ public:
     void addFaces(const std::vector<u32>& vec);
     void addBonesVertexData(const std::vector<BoneVertexData>& vec);
 
-    void addBoneWeight(u32 vertexId, u32 id, f32 weight);
+    void addBoneWeight(u32 vertexId, i32 id, f32 weight);
 
     void copyVertices(Ptr<const Mesh> other);
     void copyNormals(Ptr<const Mesh> other);

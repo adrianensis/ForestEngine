@@ -62,7 +62,7 @@ void Renderer::update()
 				mMesh.get().getVertices()[i * 3 + 1],
 				mMesh.get().getVertices()[i * 3 + 2]);
 
-			vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
+			//vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
 
 			if(mUseDepth)
 			{
