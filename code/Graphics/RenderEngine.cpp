@@ -9,6 +9,7 @@
 #include "Scene/Module.hpp"
 #include "Core/EngineConfig.hpp"
 #include "Graphics/Batch/Chunk.hpp"
+#include "Graphics/Model/Animation/AnimationManager.hpp"
 
 void RenderEngine::init(f32 sceneSize)
 {
@@ -60,6 +61,8 @@ void RenderEngine::update()
 	{
 		mCamera.get().update();
 	}
+
+	AnimationManager::getInstance().update();
 
 	renderBatches();
 	swap();

@@ -19,7 +19,6 @@ public:
 
 private:
 	Ptr<const Model> mModel;
-	Ptr<Renderer> mRendererr;
 
 public:
 	GET_SET(Model)

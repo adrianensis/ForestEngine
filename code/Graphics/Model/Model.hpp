@@ -4,6 +4,8 @@
 #include "Core/Module.hpp"
 #include "assimp/Importer.hpp"
 
+class Animation;
+
 class BoneData
 {
 public:
@@ -22,6 +24,7 @@ public:
     ~Model() override;
 
     void init(CR(std::string) path);
+    bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }
 
 private:
     Assimp::Importer mImporter;
@@ -32,8 +35,11 @@ private:
     std::map<std::string, BoneData> mBonesMapping;
     u32 mBonesIndexCount = 0;
 
+    std::vector<OwnerPtr<Animation>> mAnimations;
+
 public:
     CRGET(Meshes)
+    CRGET(Path)
     CRGET(Importer)
     CRGET(GlobalInverseTransform)
     CRGET(BonesMapping)

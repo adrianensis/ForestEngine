@@ -1,6 +1,9 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/RenderEngine.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/Model/Animation/Animation.hpp"
 
 #include "assimp/scene.h" // Output data structure
 #include "assimp/postprocess.h" // Post processing flags
@@ -12,6 +15,8 @@ Model::~Model()
 
 void Model::init(CR(std::string) path)
 {
+    mPath = path;
+
     const aiScene* scene = mImporter.ReadFile( path, 
             //aiProcess_CalcTangentSpace       |
             aiProcess_Triangulate            |
@@ -74,23 +79,43 @@ void Model::init(CR(std::string) path)
                     mesh.get().addFace(assimpFace.mIndices[0], assimpFace.mIndices[1], assimpFace.mIndices[2]);
                 }
 
+                //TODO : REMOVE - TEST
+                mesh.get().setMaterialPath("resources/bob_lamp/bob_body_local.png");
+                
                 if(scene->HasMaterials())
                 {
                     aiMaterial* material = scene->mMaterials[assimpMesh->mMaterialIndex];
-                    
-                    if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-                    {
-                        aiString materialPath;
 
-                        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                    // FOR_RANGE(itMaterialProperty, 0, material->mNumProperties)
+                    // {
+                    //     aiMaterialProperty* materialProperty = material->mProperties[itMaterialProperty];
+                    //     materialProperty->
+                    // }
+
+                    FOR_RANGE(itTexture, 0, AI_TEXTURE_TYPE_MAX)
+                    {
+                        aiTextureType textureType = static_cast<aiTextureType>(itTexture);
+                        if (material->GetTextureCount(textureType) > 0)
                         {
-                            mesh.get().setMaterialPath(materialPath.data);
+                            aiString materialPath;
+
+                            if (material->GetTexture(textureType, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                            {
+                                mesh.get().setMaterialPath("resources/bob_lamp/" + std::string(materialPath.data));
+                            }
                         }
                     }
+                        // if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+                        // {
+                        //     aiString materialPath;
+
+                        //     if (material->GetTexture(aiTextureType_DIFFUSE, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                        //     {
+                        //         mesh.get().setMaterialPath(materialPath.data);
+                        //     }
+                        // }
                 }
 
-                // TODO : REMOVE - TEST
-                mesh.get().setMaterialPath("resources/bob_lamp/bob_body.png");
 
                 if(assimpMesh->HasBones())
                 {
@@ -135,15 +160,16 @@ void Model::init(CR(std::string) path)
 
         if(scene->HasAnimations())
         {
-            // FOR_RANGE(animIt, 0, scene->mNumAnimations)
-            // {
-            //     const aiAnimation* animation = scene->mAnimations[animIt];
+            FOR_RANGE(animIt, 0, scene->mNumAnimations)
+            {
+                const aiAnimation* aiAnimation = scene->mAnimations[animIt];
 
-            //     std::string nodeName(pNode->mName.data);
+                OwnerPtr<Animation> animation = OwnerPtr<Animation>(NEW(Animation));
+                animation.get().init(animIt, getPtrToThis());
+                mAnimations.emplace_back(animation);
 
-            //     const aiNodeAnim* pNodeAnim = findNodeAnim(animation, nodeName);
-            // }
+                AnimationManager::getInstance().createAnimationState(animation);
+            }
         }
     }
 }
-

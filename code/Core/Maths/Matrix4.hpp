@@ -54,8 +54,16 @@ public:
 		return mData;
 	}
 
-    f32 get(u8 row, u8 col) const;
-    void set(u8 row, u8 col, f32 value);
+    inline f32 get(u8 row, u8 col) const
+    {
+        return mData[row + (4 * col)];
+    }
+
+    inline void set(u8 row, u8 col, f32 value)
+    {
+        mData[row + (4 * col)] = value;
+    }
+    
     void transpose();
     void invert();
     void mul(CR(Matrix4) other);

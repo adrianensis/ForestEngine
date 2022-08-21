@@ -34,41 +34,41 @@ void VertexBuffer::setData(CR(std::vector<f32>)data)
 	RenderContext::setDataVBO(mVBO, data);
 }
 
-BonesBuffer::~BonesBuffer()
-{
-}
+// BonesBuffer::~BonesBuffer()
+// {
+// }
 
-void BonesBuffer::init(u32 propertyArrayIndex, bool isStatic)
-{
-	mIsStatic = isStatic;
-	mAttribPointerIndex = propertyArrayIndex;
+// void BonesBuffer::init(u32 propertyArrayIndex, bool isStatic)
+// {
+// 	mIsStatic = isStatic;
+// 	mAttribPointerIndex = propertyArrayIndex;
 
-	mVBO = RenderContext::createVBOAnyType(1, GL_INT, sizeof(BoneVertexData), mAttribPointerIndex);
+// 	mVBO = RenderContext::createVBOAnyType(1, GL_INT, sizeof(BoneVertexData), mAttribPointerIndex);
 
-	RenderContext::enableProperty(mAttribPointerIndex + 1);
-	glVertexAttribPointer(mAttribPointerIndex + 1, BoneVertexData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(BoneVertexData), (byte *)(BoneVertexData::smMaxBonesPerVertex * sizeof(i32)));
+// 	RenderContext::enableProperty(mAttribPointerIndex + 1);
+// 	glVertexAttribPointer(mAttribPointerIndex + 1, BoneVertexData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(BoneVertexData), (byte *)(BoneVertexData::smMaxBonesPerVertex * sizeof(i32)));
 
-	mGenerated = true;
-}
+// 	mGenerated = true;
+// }
 
-void BonesBuffer::terminate()
-{
-	if(mGenerated)
-	{
-		glDeleteBuffers(1, &mVBO);
-		mGenerated = false;
-	}
-}
+// void BonesBuffer::terminate()
+// {
+// 	if(mGenerated)
+// 	{
+// 		glDeleteBuffers(1, &mVBO);
+// 		mGenerated = false;
+// 	}
+// }
 
-void BonesBuffer::resize(u32 size)
-{
-	RenderContext::resizeVBOAnyType(mVBO, sizeof(BoneVertexData), size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-}
+// void BonesBuffer::resize(u32 size)
+// {
+// 	RenderContext::resizeVBOAnyType(mVBO, sizeof(BoneVertexData), size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+// }
 
-void BonesBuffer::setData(CR(std::vector<BoneVertexData>)data)
-{
-	RenderContext::setDataVBOAnyType(mVBO, data);
-}
+// void BonesBuffer::setData(CR(std::vector<BoneVertexData>)data)
+// {
+// 	RenderContext::setDataVBOAnyType(mVBO, data);
+// }
 
 MeshBuffer::~MeshBuffer() 
 {
@@ -86,7 +86,7 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mVBOPosition.init(Mesh::smVertexPositionSize, 0, mIsStatic);
 	mVBOTexture.init(Mesh::smVertexTexCoordSize, 1, mIsStatic);
 	mVBOColor.init(Mesh::smVertexColorSize, 2, mIsStatic);
-	mVBOBones.init(3, mIsStatic);
+	//mVBOBones.init(3, mIsStatic);
 
 	if(mIsInstanced)
 	{
@@ -94,19 +94,19 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 		glBindBuffer(GL_ARRAY_BUFFER, mVBOMatrices);
 
 		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
+		RenderContext::enableProperty(3);
+		glVertexAttribPointer(3, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)0);
+		RenderContext::enableProperty(4);
+		glVertexAttribPointer(4, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(1 * columnBytesSize));
 		RenderContext::enableProperty(5);
-		glVertexAttribPointer(5, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)0);
+		glVertexAttribPointer(5, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(2 * columnBytesSize));
 		RenderContext::enableProperty(6);
-		glVertexAttribPointer(6, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(1 * columnBytesSize));
-		RenderContext::enableProperty(7);
-		glVertexAttribPointer(7, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(2 * columnBytesSize));
-		RenderContext::enableProperty(8);
-		glVertexAttribPointer(8, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(3 * columnBytesSize));
+		glVertexAttribPointer(6, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(3 * columnBytesSize));
 
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
 		glVertexAttribDivisor(5, 1);
 		glVertexAttribDivisor(6, 1);
-		glVertexAttribDivisor(7, 1);
-		glVertexAttribDivisor(8, 1);
 	}
 
 	mEBO = RenderContext::createEBO();
@@ -122,7 +122,7 @@ void MeshBuffer::terminate()
 		mVBOPosition.terminate();
 		mVBOTexture.terminate();
 		mVBOColor.terminate();
-		mVBOBones.terminate();
+		// mVBOBones.terminate();
 
 		if(mIsInstanced)
 		{
@@ -140,7 +140,7 @@ void MeshBuffer::resize(CR(Mesh) mesh)
 	mVBOPosition.resize(mesh.getVertices().capacity());
 	mVBOTexture.resize(mesh.getTextureCoordinates().capacity());
 	mVBOColor.resize(mesh.getColors().capacity());
-	mVBOBones.resize(mesh.getBonesVertexData().capacity());
+	//mVBOBones.resize(mesh.getBonesVertexData().capacity());
 
 	if(mIsInstanced)
 	{
@@ -153,7 +153,7 @@ void MeshBuffer::setData(CR(Mesh) mesh)
 	mVBOPosition.setData(mesh.getVertices());
 	mVBOTexture.setData(mesh.getTextureCoordinates());
 	mVBOColor.setData(mesh.getColors());
-	mVBOBones.setData(mesh.getBonesVertexData());
+	//mVBOBones.setData(mesh.getBonesVertexData());
 
 	if(mIsInstanced)
 	{
@@ -282,7 +282,7 @@ void MeshBatcher::addInstance(CR(Mesh) meshInstance)
 	mMeshBuilder.addVertices(meshInstance.getVertices());
 	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
 	mMeshBuilder.addColors(meshInstance.getColors());
-	mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
+	//mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
 
 	mMeshesIndex++;
 }

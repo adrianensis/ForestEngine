@@ -93,16 +93,6 @@ void Matrix4::init(CR(Vector4) row0, CR(Vector4) row1, CR(Vector4) row2, CR(Vect
 	setRows(row0, row1, row2, row3);
 }
 
-f32 Matrix4::get(u8 row, u8 col) const
-{
-	return mData[row + (4 * col)];
-}
-
-void Matrix4::set(u8 row, u8 col, f32 value)
-{
-	mData[row + (4 * col)] = value;
-}
-
 void Matrix4::transpose()
 {
 	Matrix4 copy;

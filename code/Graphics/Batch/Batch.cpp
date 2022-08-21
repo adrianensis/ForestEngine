@@ -9,6 +9,8 @@
 #include "Graphics/Material/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
+#include "Graphics/Model/Model.hpp"
+#include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
 Batch::~Batch()
@@ -43,11 +45,6 @@ void Batch::render()
 		mMeshBatcher.enable();
 		mMaterial.get().enable();
 		mMaterial.get().bind(getIsWorldSpace(), getIsInstanced());
-
-		std::vector<Matrix4> bonesTransforms;
-		mMeshBatcher.getPrototypeMesh().get().getBoneTransforms(t, bonesTransforms);
-		t+=0.01f ;
-		mMaterial.get().getShader().get().addMatrixArray(bonesTransforms, "gBones");
 
 		mPendingDrawCall = true;
 

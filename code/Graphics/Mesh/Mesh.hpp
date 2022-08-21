@@ -2,7 +2,6 @@
 #define MESH_HPP
 
 #include "Core/Module.hpp"
-#include "assimp/scene.h" // Output data structure
 
 class BoneVertexData
 {
@@ -16,9 +15,6 @@ public:
 };
 
 class Model;
-struct aiNodeAnim;
-struct aiNode;
-struct aiAnimation;
 
 class Mesh: public ObjectBase
 {
@@ -52,18 +48,6 @@ public:
     void copyBones(Ptr<const Mesh> other);
     void clear();
 
-    void getBoneTransforms(float TimeInSeconds, std::vector<Matrix4>& Transforms) const;
-
-private:
-    const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const std::string& nodeName) const;
-    void readNodeHierarchy(float animationTimeTicks, const aiNode* pNode, const Matrix4& parentTransform, std::vector<Matrix4>& currentTransforms) const;
-    u32 FindPosition(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
-    void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
-    u32 FindRotation(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
-    void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
-    u32 FindScaling(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
-    void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim) const;
-
 private:
 	std::vector<f32> mVertices;
 	std::vector<f32> mNormals;
@@ -80,8 +64,6 @@ private:
     std::string mMaterialPath;
 
     Ptr<const Model> mModel;
-
-    mutable u32 test = 0;
 
 public:
 	inline static const u32 smVertexPositionSize = 3;
@@ -101,7 +83,7 @@ public:
     CRGET(BonesVertexData)
 	GET(VertexCount)
 	GET(FacesCount)
-    SET(Model)
+    CGET_SET(Model)
 
     CRGET_SET(MaterialPath)
 };

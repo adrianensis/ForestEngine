@@ -42,7 +42,6 @@ private:
 	bool mPendingDrawCall = false;
 	bool mForceRegenerateBuffers = false;
 
-	f32 t = 0;
 public:
 	RGET(Material)
 	GET(IsInstanced)

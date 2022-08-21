@@ -38,20 +38,27 @@ void Editor::firstUpdate()
 	// 	}
 	// }
 
-	//importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1);
-	//importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
-	importModel("resources/bob_lamp/bob_lamp_update_export.fbx", Vector3(0,0,0),  1);
+	// importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1);
+	// importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
+
+	importModel("resources/cat_rigged_animation_run.fbx", Vector3(50,0,150), 0.4f);
+
+	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,50), 5);
+	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,0), 5);
+	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(50,0,50), 5);
+	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 5);
+
 	//importModel("resources/Player.fbx", Vector3(0,0,0),  1);
 	// importModel("resources/dancing_vampire.dae", Vector3(0,0,0),  1);
 	//importModel("resources/bob_lamp/bob_lamp_update_export.md5mesh", Vector3(0,0,0), 1);
 
 	//importModel("resources/rp_nathan_animated_003_walking.fbx", Vector3(0,0,0),  1);
 	//importModel("resources/cube/cube.fbx", Vector3(0,0,0),  1);
-	//importModel("resources/Spider.fbx", Vector3(0,0,0),  1);
+	// importModel("resources/Spider.fbx", Vector3(0,0,0),  1);
 
 	//importModel("resources/wolf/Wolf_One_fbx7.4_binary.fbx");
 	//importModel("resources/bob_lamp/bob_lamp.md5mesh", Vector3(0,0,0), 1);
-	//importModel("resources/cs_havana.obj");
+	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
 	// UIBuilder uiBuilder;

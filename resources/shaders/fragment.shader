@@ -7,8 +7,8 @@ out vec4 FragColor;
 // Passed in from the vertex shader.
 in vec2 vTexcoord;
 in vec4 vColor;
-flat in ivec4 BoneIDs0;
-in vec4 Weights0;
+// flat in ivec4 BoneIDs0;
+// in vec4 Weights0;
 
 uniform float time;
 

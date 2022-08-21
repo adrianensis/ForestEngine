@@ -25,7 +25,7 @@ public:
 
 	};
 
-	ObjectId getObjectId()
+	ObjectId getObjectId() const
 	{
 		return mObjectId;
 	}
