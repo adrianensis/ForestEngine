@@ -41,9 +41,20 @@ void Editor::firstUpdate()
 	// importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1);
 	// importModel("resources/dragon/untitled.fbx", Vector3(0,0,0), 1);
 
-	importModel("resources/cat_rigged_animation_run.fbx", Vector3(50,0,150), 0.4f);
+	//importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1.0f);
 
-	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,50), 5);
+	i32 size = 10;
+	for(i32 x = -size; x < size; ++x)
+	{
+		for(i32 y = -size; y < size; ++y)
+		{
+			importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x*10,y*10,0), 1);
+			//importModel("resources/char.fbx", Vector3(x*100,y*40,0), 1);
+			//createSprite(Vector3(x*40,y*40,0), 30);
+		}
+	}
+
+	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,150), 1.0f);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,0), 5);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(50,0,50), 5);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 5);

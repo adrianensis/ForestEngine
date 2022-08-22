@@ -31,7 +31,7 @@ private:
 	std::list<Ptr<Renderer>> mRenderers;
 
 	Ptr<Material> mMaterial;
-	bool mIsInstanced = false;
+	bool mIsInstanced = true;
 
 	MeshBatcher mMeshBatcher;
 

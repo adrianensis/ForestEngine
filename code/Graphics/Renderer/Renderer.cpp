@@ -30,7 +30,7 @@ void Renderer::onComponentAdded()
 {
 	mTransformState = TransformState(getGameObject()->getTransform().get());
 
-	update();
+	//update();
 }
 
 bool Renderer::getIsWorldSpace() const
@@ -38,7 +38,7 @@ bool Renderer::getIsWorldSpace() const
 	return getGameObject()->getTransform().get().getAffectedByProjection();
 }
 
-void Renderer::update()
+void Renderer::update(bool regenerateVertices)
 {
 	PROFILER_CPU()
 
@@ -57,66 +57,69 @@ void Renderer::update()
 		mRendererModelMatrix.translation(mPositionOffset);
 		mRendererModelMatrix.mul(getGameObject()->getTransform().get().getModelMatrix());
 
-		u32 verticesCount = mMesh.get().getVertexCount();
-
-		if(mVertices.size() < verticesCount)
+		if(regenerateVertices)
 		{
-			mVertices.clear();
-			mVertices.reserve(verticesCount);
-		}
-		
-		FOR_RANGE(i, 0, verticesCount)
-		{
-			Vector3 vertexPosition(
-				mMesh.get().getVertices()[i * 3 + 0],
-				mMesh.get().getVertices()[i * 3 + 1],
-				mMesh.get().getVertices()[i * 3 + 2]);
+			u32 verticesCount = mMesh.get().getVertexCount();
 
-			if(isAnimated)
+			if(mVertices.size() < verticesCount)
 			{
-				const u32 MAX_BONE_INFLUENCE = BoneVertexData::smMaxBonesPerVertex;
-				const u32 MAX_BONES = 100;
+				mVertices.clear();
+				mVertices.reserve(verticesCount);
+			}
+			
+			FOR_RANGE(i, 0, verticesCount)
+			{
+				Vector3 vertexPosition(
+					mMesh.get().getVertices()[i * 3 + 0],
+					mMesh.get().getVertices()[i * 3 + 1],
+					mMesh.get().getVertices()[i * 3 + 2]);
 
-				const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().getModel().get().getObjectId());
-				const std::vector<BoneVertexData>& bonesVertexData = mMesh.get().getBonesVertexData();
-
-				Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
-				for(int boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
+				if(isAnimated)
 				{
-					const BoneVertexData& boneVertexData = bonesVertexData[i];
-					if(boneVertexData.mBoneIDs[boneIt] > -1)
+					const u32 MAX_BONE_INFLUENCE = BoneVertexData::smMaxBonesPerVertex;
+					const u32 MAX_BONES = 100;
+
+					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().getModel().get().getObjectId());
+					const std::vector<BoneVertexData>& bonesVertexData = mMesh.get().getBonesVertexData();
+
+					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
+					for(int boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
 					{
-						if(boneVertexData.mBoneIDs[boneIt] >= MAX_BONES) 
+						const BoneVertexData& boneVertexData = bonesVertexData[i];
+						if(boneVertexData.mBoneIDs[boneIt] > -1)
 						{
-							skinnedVertexPosition = vertexPosition;
-							//ASSERT_MSG(false, "TODO: review MAX_BONES!");
-							break;
+							if(boneVertexData.mBoneIDs[boneIt] >= MAX_BONES) 
+							{
+								skinnedVertexPosition = vertexPosition;
+								//ASSERT_MSG(false, "TODO: review MAX_BONES!");
+								break;
+							}
+
+							Vector4 localPosition = boneTransforms[boneVertexData.mBoneIDs[boneIt]].mulVector(Vector4(vertexPosition,1.0f));
+							skinnedVertexPosition += localPosition * boneVertexData.mBoneWeights[boneIt];
 						}
-
-						Vector4 localPosition = boneTransforms[boneVertexData.mBoneIDs[boneIt]].mulVector(Vector4(vertexPosition,1.0f));
-						skinnedVertexPosition += localPosition * boneVertexData.mBoneWeights[boneIt];
 					}
-				}
 
-				// NOTE: normalize by w! this is bc we cannot assume w == 1 after bone transforms multiplications
-				if(skinnedVertexPosition.w > 0)
+					// NOTE: normalize by w! this is bc we cannot assume w == 1 after bone transforms multiplications
+					if(skinnedVertexPosition.w > 0)
+					{
+						skinnedVertexPosition = skinnedVertexPosition / skinnedVertexPosition.w;
+					}
+
+					vertexPosition = mRendererModelMatrix.mulVector(skinnedVertexPosition);
+				}
+				else
 				{
-					skinnedVertexPosition = skinnedVertexPosition / skinnedVertexPosition.w;
+					vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
 				}
 
-				vertexPosition = mRendererModelMatrix.mulVector(skinnedVertexPosition);
-			}
-			else
-			{
-				vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
-			}
+				if(mUseDepth)
+				{
+					vertexPosition.z = mDepth;
+				}
 
-			if(mUseDepth)
-			{
-				vertexPosition.z = mDepth;
+				mVertices[i] = vertexPosition;
 			}
-
-			mVertices[i] = vertexPosition;
 		}
 
 		mDirtyPositionOffset = false;
@@ -175,7 +178,7 @@ CR(Mesh) Renderer::generateMeshInstance()
 			getColor().w);
 	}
 
-	//mMeshInstance.copyBones(mMesh);
+	mMeshInstance.copyBones(mMesh);
 
 	return mMeshInstance;
 }

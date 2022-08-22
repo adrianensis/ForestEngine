@@ -25,26 +25,26 @@ private:
 	u32 mAttribPointerIndex = 0;
 };
 
-// class BonesBuffer: public ObjectBase
-// {
-//     GENERATE_METADATA(BonesBuffer)
+class BonesBuffer: public ObjectBase
+{
+    GENERATE_METADATA(BonesBuffer)
 
-// public:
-// 	BonesBuffer() = default;
-//     ~BonesBuffer() override;
+public:
+	BonesBuffer() = default;
+    ~BonesBuffer() override;
 
-//     void init(u32 propertyArrayIndex, bool isStatic);
-//     void terminate();
-//     void resize(u32 size);
-//     void setData(CR(std::vector<BoneVertexData>)data);
+    void init(u32 propertyArrayIndex, bool isStatic);
+    void terminate();
+    void resize(u32 size);
+    void setData(CR(std::vector<BoneVertexData>)data);
 
-// private:
-// 	bool mGenerated = false;
+private:
+	bool mGenerated = false;
 
-// 	bool mIsStatic = false;
-// 	u32 mVBO = 0; // TODO: change u32 for GLuint
-// 	u32 mAttribPointerIndex = 0;
-// };
+	bool mIsStatic = false;
+	u32 mVBO = 0; // TODO: change u32 for GLuint
+	u32 mAttribPointerIndex = 0;
+};
 
 // TODO: Move Instanced Rendering matrix to MatrixBuffer
 
@@ -96,13 +96,13 @@ private:
 
 	u32 mVBOMatrices = 0;
 	bool mIsInstanced = false;
-	std::vector<f32> mMatrices;
+	std::vector<Matrix4> mMatrices;
 	
 	u32 mVAO = 0;
 	VertexBuffer mVBOPosition;
 	VertexBuffer mVBOTexture;
 	VertexBuffer mVBOColor;
-    //BonesBuffer mVBOBones;
+    BonesBuffer mVBOBones;
 	u32 mEBO = 0;
 public:
 	GET(IsInstanced)

@@ -20,7 +20,7 @@ public:
     void init() override;
     void onComponentAdded() override;
     bool getIsWorldSpace() const;
-    void update();
+    void update(bool regenerateVertices);
     void onDestroy() override;
     CR(Mesh) generateMeshInstance();
     bool hasValidChunk() const;

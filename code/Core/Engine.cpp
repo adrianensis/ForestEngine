@@ -90,7 +90,7 @@ void Engine::run()
 		Profiler::getInstance().update(Time::getInstance().getElapsedTimeMillis());
 
 		Time::getInstance().endFrame();
-		//VAL(1000.0f/Time::getInstance().getDeltaTimeMillis())
+		VAL(1000.0f/Time::getInstance().getDeltaTimeMillis())
 	}
 }
 

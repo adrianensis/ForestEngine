@@ -46,6 +46,11 @@ void Batch::render()
 		mMaterial.get().enable();
 		mMaterial.get().bind(getIsWorldSpace(), getIsInstanced());
 
+		bool isAnimated = mMeshBatcher.getPrototypeMesh().get().getModel().get().isAnimated();
+		mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
+		const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel().get().getObjectId());
+		mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
+
 		mPendingDrawCall = true;
 
 		if(shouldRegenerateBuffers())
@@ -161,15 +166,15 @@ void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& i
 
 void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 {
-	renderer.get().update();
-
 	if(getIsInstanced())
 	{
+		renderer.get().update(false);
 		CR(Matrix4) rendererModelMatrix = renderer.get().getRendererModelMatrix();
 		mMeshBatcher.addInstanceMatrix(rendererModelMatrix);
 	}
 	else
 	{
+		renderer.get().update(true);
 		mMeshBatcher.addInstance(renderer.get().generateMeshInstance());
 	}
 }
