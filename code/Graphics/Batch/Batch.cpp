@@ -166,6 +166,8 @@ void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& i
 
 void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 {
+	PROFILER_CPU()
+
 	if(getIsInstanced())
 	{
 		renderer.get().update(false);

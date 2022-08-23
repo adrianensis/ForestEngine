@@ -84,6 +84,7 @@ public:
     void setData(CR(Mesh) mesh);
     void setIndexesData(CR(Mesh) mesh);
     void addInstanceMatrix(CR(Matrix4) modelMatrix);
+    void setDataInstanced();
     void clear();
     void setMaxInstances(u32 maxInstances);
     void enable();
