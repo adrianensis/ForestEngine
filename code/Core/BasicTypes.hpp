@@ -22,6 +22,8 @@
 #include <functional>
 #include <future> // std::async, std::future
 #include <thread>
+#include <algorithm>
+#include <execution>
 #include <memory>
 
 #include "Core/Macros.hpp"

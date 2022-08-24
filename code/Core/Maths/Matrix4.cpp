@@ -70,7 +70,7 @@ void Matrix4::init(CR(Matrix4) other)
 
 void Matrix4::init(const std::array<f32, 16> &data)
 {
-	memcpy(mData, &data[0], 16 * sizeof(f32));
+	init(data.data());
 }
 
 void Matrix4::init(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3)

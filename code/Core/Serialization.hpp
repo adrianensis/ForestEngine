@@ -3,8 +3,6 @@
 
 #include "json.hpp"
 
-#include <algorithm>
-
 #include "Core/Macros.hpp"
 #include "Core/Assert/Assert.hpp"
 

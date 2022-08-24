@@ -46,10 +46,13 @@ void Batch::render()
 		mMaterial.get().enable();
 		mMaterial.get().bind(getIsWorldSpace(), getIsInstanced());
 
-		bool isAnimated = mMeshBatcher.getPrototypeMesh().get().getModel().get().isAnimated();
-		mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
-		const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel().get().getObjectId());
-		mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
+		if(mMeshBatcher.getPrototypeMesh().get().getModel())
+		{
+			bool isAnimated = mMeshBatcher.getPrototypeMesh().get().getModel().get().isAnimated();
+			mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
+			const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel().get().getObjectId());
+			mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
+		}
 
 		mPendingDrawCall = true;
 

@@ -1,6 +1,5 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Model/Model.hpp"
-#include <algorithm>
 
 void BoneVertexData::addBoneData(i32 id, f32 weight)
 {

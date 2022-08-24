@@ -64,6 +64,7 @@ void RenderEngine::update()
 
 	AnimationManager::getInstance().update();
 
+	RenderContext::clear();
 	renderBatches();
 	swap();
 	checkChunks();

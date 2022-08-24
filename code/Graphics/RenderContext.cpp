@@ -72,8 +72,10 @@ void RenderContext::clear()
 
 void RenderContext::swap()
 {
+	// https://www.khronos.org/opengl/wiki/Common_Mistakes
+	// section: glFinish and glFlush
+	glFlush();
 	glfwSwapBuffers(smWindow);
-	clear();
 }
 
 void RenderContext::terminate()

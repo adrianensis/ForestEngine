@@ -43,14 +43,18 @@ void Editor::firstUpdate()
 
 	//importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1.0f);
 
-	i32 size = 10;
+	i32 size = 15;
 	for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x*10,y*10,0), 1);
+			importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x,y,0), 1);
+			//importModel("resources/cat_rigged_animation_run.fbx", Vector3(x,y,0), 1.0f);
+			//importModel("resources/Spider.fbx", Vector3(x,y,0),  1);
+
+			
 			//importModel("resources/char.fbx", Vector3(x*100,y*40,0), 1);
-			//createSprite(Vector3(x*40,y*40,0), 30);
+			//createSprite(Vector3(x,y,0), 1);
 		}
 	}
 
