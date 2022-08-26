@@ -89,6 +89,11 @@ extract(os.path.join(origin_path_base, "json-3.9.1.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
+# Easy Profiler https://github.com/yse/easy_profiler
+extract(os.path.join(origin_path_base, "easy_profiler-2.1.0.zip"), destiny)
+
+# ------------------------------------------------------------------------
+
 # libpng https://sourceforge.net/projects/libpng/files/latest/download
 extract(os.path.join(origin_path_base, "libpng-1.6.37.tar.xz"), destiny)
 

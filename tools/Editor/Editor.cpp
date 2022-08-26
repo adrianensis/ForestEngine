@@ -43,12 +43,12 @@ void Editor::firstUpdate()
 
 	//importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1.0f);
 
-	i32 size = 15;
+	i32 size = 30;
 	for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x,y,0), 1);
+			importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x*2,y*2,0), 1);
 			//importModel("resources/cat_rigged_animation_run.fbx", Vector3(x,y,0), 1.0f);
 			//importModel("resources/Spider.fbx", Vector3(x,y,0),  1);
 

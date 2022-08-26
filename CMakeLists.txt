@@ -47,9 +47,15 @@ project(${FOREST})
 
 # set(CMAKE_CXX_FLAGS_ALL "-std=c++17 -Wall") # this macro was invented by me
 
+set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Wall")
+
 if(ENABLE_LOGS)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Wall -D DE_ENABLE_LOGS")
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D DE_ENABLE_LOGS")
 endif(ENABLE_LOGS)
+
+if(ENABLE_PROFILER)
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D BUILD_WITH_EASY_PROFILER")
+endif(ENABLE_PROFILER)
 
 if(UNIX)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -std=c++17 -Werror=return-type")
@@ -115,6 +121,10 @@ include_directories("${DEPENDENCIES_DIR}/glfw-3.3.4/include")
 # glad
 set(GLAD_SOURCE "${DEPENDENCIES_DIR}/glad/src/glad.c")
 include_directories("${DEPENDENCIES_DIR}/glad/include")
+
+# Easy Profiler
+include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
+add_subdirectory("${DEPENDENCIES_DIR}/easy_profiler-2.1.0")
 
 # JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
@@ -254,6 +264,7 @@ target_link_libraries(${FOREST} nlohmann_json)
 target_link_libraries(${FOREST} libpng.so)
 target_link_libraries(${FOREST} ${ASSIMP_LIBRARY})
 target_link_libraries(${FOREST} ${ZLIB_LIBRARY} )
+target_link_libraries(${FOREST} easy_profiler)
 
 #target_link_libraries(${FOREST} ${FREETYPE_LIBRARIES})
 #target_include_directories(${FOREST} PRIVATE ${FREETYPE_INCLUDE_DIRS})

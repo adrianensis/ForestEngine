@@ -16,11 +16,12 @@ buildUnitTests=False
 buildIntegrationTests=False
 buildTools=False
 enableLogs=False
+enableProfiler=False
 
 argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, ":ruixlch")
+  opts, args = getopt.getopt(argv, ":ruixlchp")
 except:
   print("Error parsing opts")
 
@@ -37,6 +38,8 @@ for opt, arg in opts:
       buildTools=True
     elif opt in ['-l']:
       enableLogs=True
+    elif opt in ['-p']:
+      enableProfiler=True
 
 generateCode.generateCode()
 
@@ -69,13 +72,14 @@ elif system_name == "Windows":
 #     pass
 
 # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
-buildCommand = 'cmake {cmake_generator} -DCMAKE_BUILD_TYPE={buildType} -DBUILD_UNIT_TESTS={buildUnitTests} -DBUILD_INTEGRATION_TESTS={buildIntegrationTests} -DBUILD_TOOLS={buildTools} -DENABLE_LOGS={enableLogs} ..'.format(
+buildCommand = 'cmake {cmake_generator} -DCMAKE_BUILD_TYPE={buildType} -DBUILD_UNIT_TESTS={buildUnitTests} -DBUILD_INTEGRATION_TESTS={buildIntegrationTests} -DBUILD_TOOLS={buildTools} -DENABLE_LOGS={enableLogs} -DENABLE_PROFILER={enableProfiler} ..'.format(
   cmake_generator = cmake_generator,
   buildType = buildType,
   buildUnitTests = buildUnitTests,
   buildIntegrationTests = buildIntegrationTests,
   buildTools = buildTools,
-  enableLogs = enableLogs
+  enableLogs = enableLogs,
+  enableProfiler = enableProfiler
 )
 os.system(buildCommand)
 

@@ -54,8 +54,11 @@ void Renderer::update(bool regenerateVertices)
 
 	if (transformChanged || mDirtyPositionOffset || isAnimated)
 	{
-		mRendererModelMatrix.translation(mPositionOffset);
-		mRendererModelMatrix.mul(getGameObject()->getTransform().get().getModelMatrix());
+		if (transformChanged || mDirtyPositionOffset)
+		{
+			mRendererModelMatrix.translation(mPositionOffset);
+			mRendererModelMatrix.mul(getGameObject()->getTransform().get().getModelMatrix());
+		}
 
 		if(regenerateVertices)
 		{
