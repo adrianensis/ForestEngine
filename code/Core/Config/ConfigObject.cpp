@@ -3,17 +3,17 @@
 #include "Core/File/File.hpp"
 
 
-void ConfigObject::readFromJsonFile(CR(std::string) path)
+void ConfigObject::readFromJsonFile(const std::string& path)
 {
-	File::readFile(path, [&](R(std::ifstream) file)
+	File::readFile(path, [&](std::ifstream& file)
 	{
 		file >> mJson;
 	});
 }
 
-void ConfigObject::writeToJsonFile(CR(std::string) path)
+void ConfigObject::writeToJsonFile(const std::string& path)
 {
-	File::writeFile(path, [&](R(std::ofstream) file)
+	File::writeFile(path, [&](std::ofstream& file)
 	{
 		file << mJson.dump(4);
 	});
@@ -28,7 +28,7 @@ void ConfigObject::clear()
 	mJson.clear();
 }
 
-bool ConfigObject::contains(R(std::string) key) const
+bool ConfigObject::contains(std::string& key) const
 {
 	return mJson.contains(key);
 }

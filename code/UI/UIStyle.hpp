@@ -58,7 +58,7 @@ public:
 	}
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
-	CR(T) getStyle()
+	const T& getStyle()
 	{
 		ASSERT_MSG(MAP_CONTAINS(mStyles, T::getClassIdStatic()), "Style not found");
 
@@ -66,7 +66,7 @@ public:
 	}
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
-	CR(T) getOrAddStyle()
+	const T& getOrAddStyle()
 	{
 		if(!MAP_CONTAINS(mStyles, T::getClassIdStatic()))
 		{

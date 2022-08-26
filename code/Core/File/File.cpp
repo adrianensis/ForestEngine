@@ -5,7 +5,7 @@
 void File::init() {
 
 }
-void File::readFile(CR(std::string) path, std::function<void(R(std::ifstream) file)> callback)
+void File::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
 {
 	std::ifstream file;
 	file.open(path);
@@ -21,7 +21,7 @@ void File::readFile(CR(std::string) path, std::function<void(R(std::ifstream) fi
 	file.close();
 }
 
-void File::writeFile(CR(std::string) path, std::function<void(R(std::ofstream) file)> callback)
+void File::writeFile(const std::string& path, std::function<void(std::ofstream& file)> callback)
 {
 	std::ofstream file;
 	file.open(path);

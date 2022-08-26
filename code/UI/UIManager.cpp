@@ -123,7 +123,7 @@ void UIManager::terminate()
 	UIStyleManager::deleteInstance();
 }
 
-CR(Vector2) UIManager::getCharTextureCoordinates(char character)
+const Vector2& UIManager::getCharTextureCoordinates(char character)
 {
 	return mCharMap.at(character);
 }

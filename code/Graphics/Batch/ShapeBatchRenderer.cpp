@@ -50,8 +50,8 @@ void ShapeBatchRenderer::render()
 		RenderContext::enableProperty(0);
 		RenderContext::enableProperty(1);
 
-		CR(Matrix4) projectionMatrix = RenderEngine::getInstance().getCamera().get().getProjectionMatrix();
-		CR(Matrix4) viewMatrix = RenderEngine::getInstance().getCamera().get().getViewMatrix();
+		const Matrix4& projectionMatrix = RenderEngine::getInstance().getCamera().get().getProjectionMatrix();
+		const Matrix4& viewMatrix = RenderEngine::getInstance().getCamera().get().getViewMatrix();
 
 		mShaderLine->addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 		mShaderLine->addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
@@ -92,14 +92,14 @@ void ShapeBatchRenderer::bind()
 	RenderContext::enableVAO(0);
 }
 
-void ShapeBatchRenderer::addPosition(CR(Vector3) position)
+void ShapeBatchRenderer::addPosition(const Vector3& position)
 {
 	mPositionBuffer.push_back(position.x);
 	mPositionBuffer.push_back(position.y);
 	mPositionBuffer.push_back(position.z);
 }
 
-void ShapeBatchRenderer::addColor(CR(Vector4) color)
+void ShapeBatchRenderer::addColor(const Vector4& color)
 {
 	mColorBuffer.push_back(color.x);
 	mColorBuffer.push_back(color.y);
@@ -107,7 +107,7 @@ void ShapeBatchRenderer::addColor(CR(Vector4) color)
 	mColorBuffer.push_back(color.w);
 }
 template<>
-void ShapeBatchRenderer::addSpecificShape<Line>(CR(Line) shape, CR(Vector4) color)
+void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color)
 {
 addPosition(shape.getStart());
 addPosition(shape.getEnd());

@@ -12,7 +12,7 @@ class Texture: public ObjectBase
 public:
     ~Texture() override;
 
-    void init(CR(std::string) path);
+    void init(const std::string& path);
     void bind();
 
 private:

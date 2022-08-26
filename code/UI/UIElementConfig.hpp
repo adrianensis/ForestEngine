@@ -20,7 +20,7 @@ class UIElementConfig: public ObjectBase
     GENERATE_METADATA(UIElementConfig)
 
 public:
-    void init(CR(Vector2) position, CR(Vector2) size, i32 layer, std::string text = std::string());
+    void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());
 
 	COPY(UIElementConfig)
 	{

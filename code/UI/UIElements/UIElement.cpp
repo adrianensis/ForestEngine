@@ -13,7 +13,7 @@ void UIElement::init()
 	GameObject::init();
 }
 
-void UIElement::initFromConfig(CR(UIElementConfig) config)
+void UIElement::initFromConfig(const UIElementConfig& config)
 {
 	mConfig = config;
 	init();
@@ -427,7 +427,7 @@ void UIElement::scroll(f32 scrollValue)
 
 void UIElement::releaseOtherToggleElements()
 {
-	CR(UIGroup) group = UIManager::getInstance().getOrCreateGroup(mConfig.mGroup);
+	const UIGroup& group = UIManager::getInstance().getOrCreateGroup(mConfig.mGroup);
 	FOR_LIST(it, group.getUIElements())
 	{
 		UIElement* other = *it;

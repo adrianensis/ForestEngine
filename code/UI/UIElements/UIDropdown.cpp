@@ -13,7 +13,7 @@ void UIDropdownButton::onPostReleased()
 	mParentDropdown->setEntriesVisibility(false);
 }
 
-UIDropdownEntry::UIDropdownEntry(CR(std::string) label, UIElementCallback callback)
+UIDropdownEntry::UIDropdownEntry(const std::string& label, UIElementCallback callback)
 {
 	mLabel = label;
 	mCallback = callback;
@@ -35,7 +35,7 @@ void UIDropdown::onPostReleased()
 	toggle();
 }
 
-R(UIDropdown) UIDropdown::addOption(CR(std::string) label, UIElementCallback onPressedCallback)
+UIDropdown& UIDropdown::addOption(const std::string& label, UIElementCallback onPressedCallback)
 {
 	mEntries.push_back(UIDropdownEntry(label, onPressedCallback));
 	return *this;
@@ -66,7 +66,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 
 			FOR_LIST(it, mEntries)
 			{
-				R(std::string) label = (*it).mLabel;
+				std::string& label = (*it).mLabel;
 				UIElementCallback onPressedCallback = (*it).mCallback;
 
 				uiBuilder.

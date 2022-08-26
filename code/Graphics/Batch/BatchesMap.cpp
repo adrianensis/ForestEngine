@@ -30,7 +30,7 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 	u32 keyIndex = 0;
 	FOR_RANGE_COND(i, 0, mBatchKeys.size(), !keyFound)
 	{
-		R(BatchKey) batchKey = mBatchKeys[i];
+		BatchKey& batchKey = mBatchKeys[i];
 
 		keyFound = batchKey == tmpBatchKey;
 
@@ -91,7 +91,7 @@ void BatchesMap::forceRegenerateBuffers()
 	}
 }
 
-void BatchesMap::renderBatchesMap(R(InternalBatchesMap) batchesMap)
+void BatchesMap::renderBatchesMap(InternalBatchesMap& batchesMap)
 {
 	PROFILER_CPU()
 

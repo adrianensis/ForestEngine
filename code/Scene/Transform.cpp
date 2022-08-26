@@ -2,14 +2,14 @@
 #include "Scene/GameObject.hpp"
 
 
-TransformState::TransformState(CR(Transform) transform)
+TransformState::TransformState(const Transform& transform)
 {
 	mPosition = transform.getWorldPosition();
 	mRotation = transform.getRotation();
 	mScale = transform.getScale();
 }
 
-TransformState::TransformState(CR(Vector3) position, CR(Vector3) rotation, CR(Vector3) scale)
+TransformState::TransformState(const Vector3& position, const Vector3& rotation, const Vector3& scale)
 {
 	mPosition = position;
 	mRotation = rotation;
@@ -30,7 +30,7 @@ void Transform::init()
 	mModelMatrixGenerated = false;
 }
 
-CR(Vector3) Transform::getWorldPosition() const
+const Vector3& Transform::getWorldPosition() const
 {
 	mWorldPosition = mLocalPosition;
 
@@ -47,7 +47,7 @@ CR(Vector3) Transform::getWorldPosition() const
 	return mWorldPosition;
 }
 
-void Transform::lookAt(CR(Vector3) targetPosition)
+void Transform::lookAt(const Vector3& targetPosition)
 {
 	/*mIsDirtyRotation = true;
 
@@ -70,25 +70,25 @@ void Transform::lookAt(CR(Vector3) targetPosition)
 	mRotation = q.toEuler();*/
 }
 
-CR(Matrix4) Transform::getTranslationMatrix() const
+const Matrix4& Transform::getTranslationMatrix() const
 {
 	mTranslationMatrix.translation(getWorldPosition());
 	return mTranslationMatrix;
 }
 
-CR(Matrix4) Transform::getRotationMatrix() const
+const Matrix4& Transform::getRotationMatrix() const
 {
 	mRotationMatrix.rotation(mRotation);
 	return mRotationMatrix;
 }
 
-CR(Matrix4) Transform::getScaleMatrix() const
+const Matrix4& Transform::getScaleMatrix() const
 {
 	mScaleMatrix.scale(mScale);
 	return mScaleMatrix;
 }
 
-CR(Matrix4) Transform::getModelMatrix(bool force /*= false*/) const
+const Matrix4& Transform::getModelMatrix(bool force /*= false*/) const
 {
 	if (!isStatic() || (isStatic() && !mModelMatrixGenerated) || force)
 	{

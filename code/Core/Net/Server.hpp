@@ -20,10 +20,10 @@ class Server: public ObjectBase
 public:
     void init(u16 port);
     bool checkConnectionRequest();
-    void writeData(CR(std::string) data) const;
+    void writeData(const std::string& data) const;
     std::string readData(u32 size = DEFAULT_SOCKET_READ_SIZE) const;
     JSON readJSON() const;
-    void writeJSON(R(JSON) json) const;
+    void writeJSON(JSON& json) const;
 
 private:
     JSON readSimpleJSON(u32 size  = DEFAULT_SOCKET_READ_SIZE) const;

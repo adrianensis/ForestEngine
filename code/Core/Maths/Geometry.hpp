@@ -17,8 +17,8 @@ public:
 
     virtual bool isZero() const = 0;
 
-    void serialize(R(JSON) json) const override { }
-	void deserialize(CR(JSON) json) override { }
+    void serialize(JSON& json) const override { }
+	void deserialize(const JSON& json) override { }
 
     COPY(Shape)
     {
@@ -45,7 +45,7 @@ public:
         mEnd.set(xEnd, yEnd, 0);
     }
 
-    Line(CR(Vector3) start, CR(Vector3) end): Line()
+    Line(const Vector3& start, const Vector3& end): Line()
     {
         mStart.set(start);
         mEnd.set(end);
@@ -68,7 +68,7 @@ public:
         DO_COPY(mEnd)
     }
 
-    void serialize(R(JSON) json) const override
+    void serialize(JSON& json) const override
     {
         Shape::serialize(json);
 
@@ -76,7 +76,7 @@ public:
         SERIALIZE("end", mEnd)
     }
 
-    void deserialize(CR(JSON) json) override
+    void deserialize(const JSON& json) override
     {
         Shape::deserialize(json);
 
@@ -101,14 +101,14 @@ protected:
 public:
     Rectangle() { mVerticesCount = 4; }
 
-    Rectangle(CR(Vector3) leftTopFront, CR(Vector3) size): Rectangle()
+    Rectangle(const Vector3& leftTopFront, const Vector3& size): Rectangle()
     {
         set(leftTopFront, size);
     }
 
-    Rectangle(CR(Cube) cube);
+    Rectangle(const Cube& cube);
 
-    void set(CR(Vector3) leftTopFront, CR(Vector3) size)
+    void set(const Vector3& leftTopFront, const Vector3& size)
     {
         mLeftTopFront.set(leftTopFront);
         mSize.set(size);
@@ -126,7 +126,7 @@ public:
         DO_COPY(mSize)
     }
 
-    void serialize(R(JSON) json) const override
+    void serialize(JSON& json) const override
     {
         Shape::serialize(json);
 
@@ -134,7 +134,7 @@ public:
         SERIALIZE("size", mSize)
     }
 
-    void deserialize(CR(JSON) json) override
+    void deserialize(const JSON& json) override
     {
         Shape::deserialize(json);
 
@@ -153,12 +153,12 @@ class Cube: public Rectangle
 public:
     Cube() { mVerticesCount = 8; }
 
-    Cube(CR(Vector3) leftTopFront, CR(Vector3) size): Cube()
+    Cube(const Vector3& leftTopFront, const Vector3& size): Cube()
     {
         set(leftTopFront, size);
     }
 
-    Cube(CR(Rectangle) rectangle);
+    Cube(const Rectangle& rectangle);
 };
 
 class Sphere: public Shape
@@ -172,7 +172,7 @@ protected:
 public:
     Sphere() { mVerticesCount = 0; }
 
-    Sphere(CR(Vector3) center, f32 radius): Sphere()
+    Sphere(const Vector3& center, f32 radius): Sphere()
     {
         mCenter.set(center);
         mRadius = radius;
@@ -198,16 +198,16 @@ class Geometry
 {
 public:
 
-    static bool testCubeSphere(CR(Cube) cube, CR(Sphere) sphere, f32 eps);
-    static bool testCubePoint(CR(Cube) cube, CR(Vector3) point, f32 eps);
-    static bool testSphereSphere(CR(Sphere) sphereA, CR(Sphere) sphereB, f32 eps);
-    static bool testLineLine(CR(Line) lineA, CR(Line) lineB, R(Vector3) intersectionResult, f32 eps);
-    static bool testLineSphereSimple(CR(Line) line, CR(Sphere) sphere, f32 eps);
-    static u8 testLineSphere(CR(Line) line, CR(Sphere) sphere, f32 eps, R(Vector3) intersectionResult1, R(Vector3) intersectionResult2);
-    static bool testSpherePoint(CR(Vector3) point, CR(Sphere) sphere, f32 eps);
-    static bool testLinePoint(CR(Line) line, CR(Vector3) point, f32 eps);
-    static Vector3 closestPointInLine(CR(Line) line, CR(Vector3) point);
-    static Vector3 midPoint(CR(Line) line);
+    static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps);
+    static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps);
+    static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps);
+    static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps);
+    static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps);
+    static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2);
+    static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps);
+    static bool testLinePoint(const Line& line, const Vector3& point, f32 eps);
+    static Vector3 closestPointInLine(const Line& line, const Vector3& point);
+    static Vector3 midPoint(const Line& line);
 };
 
 #endif

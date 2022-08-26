@@ -24,26 +24,26 @@ private:\
     }\
 public:\
     \
-    R(ThisClass) operator=(CR(ThisClass) other)\
+    ThisClass& operator=(const ThisClass& other)\
 	{\
 		set(other);\
 		return *this;\
 	}\
     \
-    R(ThisClass) operator+=(CR(ThisClass) rhs) {return this->add(rhs); }\
-    R(ThisClass) operator-=(CR(ThisClass) rhs) {return this->sub(rhs); }\
-    R(ThisClass) operator*=(CR(ThisClass) rhs) {return this->mul(rhs); }\
-    R(ThisClass) operator/=(CR(ThisClass) rhs) {return this->div(rhs); }\
-    R(ThisClass) operator+=(f32 rhs) {return this->add(rhs); }\
-    R(ThisClass) operator-=(f32 rhs) {return this->sub(rhs); }\
-    R(ThisClass) operator*=(f32 rhs) {return this->mul(rhs); }\
-    R(ThisClass) operator/=(f32 rhs) {return this->div(rhs); }\
-    bool operator==(CR(ThisClass) rhs) const {return this->eq(rhs); }\
-    bool operator!=(CR(ThisClass) rhs) const {return !((*this) == rhs); }\
-    ThisClass operator+(CR(ThisClass) rhs) const {return ThisClass(*this) += rhs; }\
-    ThisClass operator-(CR(ThisClass) rhs) const {return ThisClass(*this) -= rhs; }\
-    ThisClass operator*(CR(ThisClass) rhs) const {return ThisClass(*this) *= rhs; }\
-    ThisClass operator/(CR(ThisClass) rhs) const {return ThisClass(*this) /= rhs; }\
+    ThisClass& operator+=(const ThisClass& rhs) {return this->add(rhs); }\
+    ThisClass& operator-=(const ThisClass& rhs) {return this->sub(rhs); }\
+    ThisClass& operator*=(const ThisClass& rhs) {return this->mul(rhs); }\
+    ThisClass& operator/=(const ThisClass& rhs) {return this->div(rhs); }\
+    ThisClass& operator+=(f32 rhs) {return this->add(rhs); }\
+    ThisClass& operator-=(f32 rhs) {return this->sub(rhs); }\
+    ThisClass& operator*=(f32 rhs) {return this->mul(rhs); }\
+    ThisClass& operator/=(f32 rhs) {return this->div(rhs); }\
+    bool operator==(const ThisClass& rhs) const {return this->eq(rhs); }\
+    bool operator!=(const ThisClass& rhs) const {return !((*this) == rhs); }\
+    ThisClass operator+(const ThisClass& rhs) const {return ThisClass(*this) += rhs; }\
+    ThisClass operator-(const ThisClass& rhs) const {return ThisClass(*this) -= rhs; }\
+    ThisClass operator*(const ThisClass& rhs) const {return ThisClass(*this) *= rhs; }\
+    ThisClass operator/(const ThisClass& rhs) const {return ThisClass(*this) /= rhs; }\
     ThisClass operator+(f32 rhs) const {return ThisClass(*this) += rhs; }\
     ThisClass operator-(f32 rhs) const {return ThisClass(*this) -= rhs; }\
     ThisClass operator-() const{ return ThisClass(*this) *= -1; }\

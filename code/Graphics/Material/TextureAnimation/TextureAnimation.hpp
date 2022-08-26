@@ -24,12 +24,12 @@ public:
 	* /param speed The speed of the TextureAnimation.
 	* /returns The TextureAnimation.
 	*/
-    static TextureAnimation create(u32 frameCount, bool horizontal, bool reverse, CR(Vector2) startPosition, f32 width, f32 height, f32 speed);
+    static TextureAnimation create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed);
 
     void init();
     u32 getNumberOfFrames() const;
-    CR(TextureAnimationFrame) getNextFrame();
-    CR(TextureAnimationFrame) getCurrentFrame() const;
+    const TextureAnimationFrame& getNextFrame();
+    const TextureAnimationFrame& getCurrentFrame() const;
 
     COPY(TextureAnimation)
     {

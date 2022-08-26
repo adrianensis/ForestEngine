@@ -23,7 +23,7 @@ public:
     void init() override;
     
 protected:
-    void setBackground(CR(UIElementConfig) config) override;
+    void setBackground(const UIElementConfig& config) override;
 };
 
 #endif

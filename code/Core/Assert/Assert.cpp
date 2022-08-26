@@ -1,7 +1,7 @@
 #include "Core/Assert/Assert.hpp"
 
 
-void AssertUtils::assertMsg(bool condition, CR(std::string) file, u32 line, CR(std::string) function, CR(std::string) message /*= smEmptyAssert*/)
+void AssertUtils::assertMsg(bool condition, const std::string& file, u32 line, const std::string& function, const std::string& message /*= smEmptyAssert*/)
 {
 	if (!condition)
 	{

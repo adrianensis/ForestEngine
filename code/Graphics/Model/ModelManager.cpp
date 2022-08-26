@@ -11,7 +11,7 @@ void ModelManager::terminate()
     mModelMap.clear();
 }
 
-Ptr<const Model> ModelManager::loadModel(CR(std::string) path)
+Ptr<const Model> ModelManager::loadModel(const std::string& path)
 {
     if (!MAP_CONTAINS(mModelMap, path))
 	{

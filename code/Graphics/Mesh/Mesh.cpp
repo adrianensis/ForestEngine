@@ -30,14 +30,14 @@ void Mesh::init(u32 vertexCount, u32 facesCount)
 	clear();
 }
 
-void Mesh::addVertex(CR(Vector3) vector)
+void Mesh::addVertex(const Vector3& vector)
 {
 	mVertices.push_back(vector.x);
 	mVertices.push_back(vector.y);
 	mVertices.push_back(vector.z);
 }
 
-void Mesh::addNormal(CR(Vector3) vector)
+void Mesh::addNormal(const Vector3& vector)
 {
 	mNormals.push_back(vector.x);
 	mNormals.push_back(vector.y);
@@ -65,7 +65,7 @@ void Mesh::addFace(u32 v1, u32 v2, u32 v3)
 	addFaceIndex(v3);
 }
 
-void Mesh::addBoneVertexData(CR(BoneVertexData) bone)
+void Mesh::addBoneVertexData(const BoneVertexData& bone)
 {
 	mBonesVertexData.push_back(bone);
 }

@@ -15,14 +15,14 @@
 
 
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
-	R(UIBuilder) set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \
+	UIBuilder& set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \
 	{                                              \
 		mConfig.m##Name = new##Name;                   \
 		return *this;                               \
 	}
 
 #define UI_BUILDER_CONFIG_RESTORE(Name)   \
-	R(UIBuilder) restore##Name() \
+	UIBuilder& restore##Name() \
 	{                                              \
 		mConfig.m##Name = mDefaultConfig.m##Name;                   \
 		return *this;                               \
@@ -41,7 +41,7 @@ public:
 
 	void restoreAll() { mConfig = mDefaultConfig; }
 
-	R(UIBuilder) setLayout(UILayout layout)
+	UIBuilder& setLayout(UILayout layout)
 	{
 		mCurrentLayout = layout;
 		mMakeRelativeToLastConfig = false; // reset
@@ -49,14 +49,14 @@ public:
 		return *this;
 	}
 
-    R(UIBuilder) nextRow();
-    R(UIBuilder) nextColumn();
-    R(UIBuilder) saveData();
-    R(UIBuilder) restoreData();
-    R(UIBuilder) create(CR(std::string) className);
+    UIBuilder& nextRow();
+    UIBuilder& nextColumn();
+    UIBuilder& saveData();
+    UIBuilder& restoreData();
+    UIBuilder& create(const std::string& className);
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
-	R(UIBuilder) create()
+	UIBuilder& create()
 	{
 		return create(T::getClassNameStatic());
 	}

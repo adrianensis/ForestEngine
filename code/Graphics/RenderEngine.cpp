@@ -48,7 +48,7 @@ void RenderEngine::init(f32 sceneSize)
 	mBatchesMap.init();
 }
 
-bool RenderEngine::frustumTestSphere(CR(Vector3) center, f32 radius)
+bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
 {
 	return mCamera && mCamera.get().getFrustum().testSphere(center, radius);
 }
@@ -133,7 +133,7 @@ void RenderEngine::assignBatch(Ptr<Renderer> renderer)
 	mBatchesMap.addRenderer(renderer);
 }
 
-void RenderEngine::drawLine(CR(Line) line, f32 thickness /*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
+void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
 	if (isWorldSpace)
 	{
@@ -145,7 +145,7 @@ void RenderEngine::drawLine(CR(Line) line, f32 thickness /*= 1*/, bool isWorldSp
 	}
 }
 
-void RenderEngine::drawRectangle(CR(Rectangle) rectangle, f32 thickness/*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
+void RenderEngine::drawRectangle(const Rectangle& rectangle, f32 thickness/*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
 	Vector3 leftTopFront = rectangle.getLeftTopFront();
 	Vector3 size = rectangle.getSize();
@@ -155,7 +155,7 @@ void RenderEngine::drawRectangle(CR(Rectangle) rectangle, f32 thickness/*= 1*/, 
 	drawLine(Line(Vector3(leftTopFront.x + size.x, leftTopFront.y, leftTopFront.z), Vector3(leftTopFront.x, leftTopFront.y, leftTopFront.z)), thickness, isWorldSpace, color);
 }
 
-void RenderEngine::drawCube(CR(Cube) cube, f32 thickness/*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
+void RenderEngine::drawCube(const Cube& cube, f32 thickness/*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
 	Vector3 leftTopFront = cube.getLeftTopFront();
 	Vector3 size = cube.getSize();

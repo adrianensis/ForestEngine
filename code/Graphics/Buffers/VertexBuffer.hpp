@@ -80,10 +80,10 @@ public:
 
     void init(bool isStatic, bool isInstanced);
     void terminate();
-    void resize(CR(Mesh) mesh);
-    void setData(CR(Mesh) mesh);
-    void setIndexesData(CR(Mesh) mesh);
-    void addInstanceMatrix(CR(Matrix4) modelMatrix);
+    void resize(const Mesh& mesh);
+    void setData(const Mesh& mesh);
+    void setIndexesData(const Mesh& mesh);
+    void addInstanceMatrix(const Matrix4& modelMatrix);
     void setDataInstanced();
     void clear();
     void setMaxInstances(u32 maxInstances);
@@ -119,8 +119,8 @@ public:
 
     void init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced);
     void resize(u32 size);
-    void addInstanceMatrix(CR(Matrix4) modelMatrix);
-    void addInstance(CR(Mesh) meshInstance);
+    void addInstanceMatrix(const Matrix4& modelMatrix);
+    void addInstance(const Mesh& meshInstance);
     void drawCall();
     void terminate();
     void enable();

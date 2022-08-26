@@ -13,7 +13,7 @@ Model::~Model()
 
 }
 
-void Model::init(CR(std::string) path)
+void Model::init(const std::string& path)
 {
     mPath = path;
 
@@ -131,7 +131,7 @@ void Model::init(CR(std::string) path)
                             BoneData boneData;
                             boneData.mId = mBonesIndexCount;
 
-                            CR(aiMatrix4x4) assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
+                            const aiMatrix4x4& assimpBoneOffsetMatrix = currentBone->mOffsetMatrix;
                             boneData.mOffsetMatrix.init(
                                 Vector4(assimpBoneOffsetMatrix.a1, assimpBoneOffsetMatrix.a2, assimpBoneOffsetMatrix.a3, assimpBoneOffsetMatrix.a4),
                                 Vector4(assimpBoneOffsetMatrix.b1, assimpBoneOffsetMatrix.b2, assimpBoneOffsetMatrix.b3, assimpBoneOffsetMatrix.b4),

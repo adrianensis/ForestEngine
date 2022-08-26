@@ -15,15 +15,15 @@ class RenderEngine : public IEngineSystem, public Singleton<RenderEngine>
 
 public:
     void init(f32 sceneSize);
-    bool frustumTestSphere(CR(Vector3) center, f32 radius);
+    bool frustumTestSphere(const Vector3& center, f32 radius);
     void update();
     void terminate();
     void addComponent(Ptr<IEngineSystemComponent> component);
     Ptr<Chunk> assignChunk(Ptr<Renderer> renderer);
     void assignBatch(Ptr<Renderer> renderer);
-    void drawLine(CR(Line) line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
-    void drawRectangle(CR(Rectangle) rectangle, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
-    void drawCube(CR(Cube) cube, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
+    void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
+    void drawRectangle(const Rectangle& rectangle, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
+    void drawCube(const Cube& cube, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
 
 private:
     void swap();

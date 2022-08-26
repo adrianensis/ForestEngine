@@ -48,7 +48,7 @@ class UIElement: public GameObject
 
 public:
     void init() override;
-    virtual void initFromConfig(CR(UIElementConfig) config);
+    virtual void initFromConfig(const UIElementConfig& config);
     virtual void onDestroy();
 
 	void simulateClick()
@@ -61,7 +61,7 @@ public:
     bool hasFocus() const;
     bool isMouseCursorInsideElement();
 
-	virtual void setText(CR(std::string) text) { };
+	virtual void setText(const std::string& text) { };
     virtual void setVisibility(bool visibility);
     bool isVisible();
     void setOnPressedCallback(UIElementCallback callback);

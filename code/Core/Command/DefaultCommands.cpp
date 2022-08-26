@@ -5,9 +5,9 @@
 
 void DefaultCommands::registerDefaultCommands()
 {
-R(CommandLine) cmd = CommandLine::getInstance();
+CommandLine& cmd = CommandLine::getInstance();
 
-cmd.registerCommand("echo", [](CR(Command) command)
+cmd.registerCommand("echo", [](const Command& command)
 {
     ECHO(command.getArgumentsString());
 });

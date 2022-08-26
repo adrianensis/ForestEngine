@@ -13,7 +13,7 @@ public:
     ~Chunk() override;
 
     void init();
-    void set(CR(Vector3) leftTop, f32 size);
+    void set(const Vector3& leftTop, f32 size);
     void update();
     void load();
     void unload();

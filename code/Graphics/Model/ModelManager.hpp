@@ -13,7 +13,7 @@ public:
     void init();
     void terminate();
 
-    Ptr<const Model> loadModel(CR(std::string) path);
+    Ptr<const Model> loadModel(const std::string& path);
 
 private:
     std::map<std::string, OwnerPtr<Model>> mModelMap;

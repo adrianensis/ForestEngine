@@ -272,7 +272,7 @@ void Editor::terminate()
 	
 }
 
-GameObject* Editor::createSprite(CR(Vector3) v, f32 size)
+GameObject* Editor::createSprite(const Vector3& v, f32 size)
 {
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
@@ -293,7 +293,7 @@ GameObject* Editor::createSprite(CR(Vector3) v, f32 size)
 	return gameObject;
 }
 
-void Editor::importModel( CR(std::string) pFile, CR(Vector3) v, f32 size)
+void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 

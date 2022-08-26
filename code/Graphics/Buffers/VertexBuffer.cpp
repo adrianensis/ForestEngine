@@ -137,7 +137,7 @@ void MeshBuffer::terminate()
 	}
 }
 
-void MeshBuffer::resize(CR(Mesh) mesh)
+void MeshBuffer::resize(const Mesh& mesh)
 {
 	mVBOPosition.resize(mesh.getVertices().capacity());
 	mVBOTexture.resize(mesh.getTextureCoordinates().capacity());
@@ -150,7 +150,7 @@ void MeshBuffer::resize(CR(Mesh) mesh)
 	}
 }
 
-void MeshBuffer::setData(CR(Mesh) mesh)
+void MeshBuffer::setData(const Mesh& mesh)
 {
 	mVBOPosition.setData(mesh.getVertices());
 	mVBOTexture.setData(mesh.getTextureCoordinates());
@@ -158,13 +158,13 @@ void MeshBuffer::setData(CR(Mesh) mesh)
 	mVBOBones.setData(mesh.getBonesVertexData());
 }
 
-void MeshBuffer::setIndexesData(CR(Mesh) mesh)
+void MeshBuffer::setIndexesData(const Mesh& mesh)
 {
 	RenderContext::resizeEBO(mEBO, mesh.getFaces().size(), mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	RenderContext::setDataEBO(mEBO, mesh.getFaces());
 }
 
-void MeshBuffer::addInstanceMatrix(CR(Matrix4) modelMatrix)
+void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 {
 	PROFILER_CPU()
 
@@ -280,7 +280,7 @@ void MeshBatcher::resize(u32 size)
 	mDataSentToGPU = false;
 }
 
-void MeshBatcher::addInstanceMatrix(CR(Matrix4) modelMatrix)
+void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
 {
 	PROFILER_CPU()
 
@@ -289,7 +289,7 @@ void MeshBatcher::addInstanceMatrix(CR(Matrix4) modelMatrix)
 	mMeshesIndex++;
 }
 
-void MeshBatcher::addInstance(CR(Mesh) meshInstance)
+void MeshBatcher::addInstance(const Mesh& meshInstance)
 {
 	PROFILER_CPU()
 

@@ -23,7 +23,7 @@ class Model: public ObjectBase
 public:
     ~Model() override;
 
-    void init(CR(std::string) path);
+    void init(const std::string& path);
     bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }
 
 private:

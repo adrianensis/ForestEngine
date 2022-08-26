@@ -52,7 +52,7 @@ public:
 		DO_COPY(mEventReceiver)
 	}
 
-	bool operator==(CR(EventFunctor) eventFunctor) const
+	bool operator==(const EventFunctor& eventFunctor) const
 	{
 		return mEventClassId == eventFunctor.mEventClassId && mEventReceiver == eventFunctor.mEventReceiver;
 	}

@@ -2,17 +2,17 @@
 #include "Core/Maths/MathUtils.hpp"
 
 
-Rectangle::Rectangle(CR(Cube) cube)
+Rectangle::Rectangle(const Cube& cube)
 {
     set(cube.getLeftTopFront(), cube.getSize());
 }
 
-Cube::Cube(CR(Rectangle) rectangle)
+Cube::Cube(const Rectangle& rectangle)
 {
     set(rectangle.getLeftTopFront(), rectangle.getSize());
 }
 
-bool Geometry::testCubeSphere(CR(Cube) cube, CR(Sphere) sphere, f32 eps)
+bool Geometry::testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
 {
     return
         (cube.getLeftTopFront().x - sphere.getRadius() - eps) <= sphere.getCenter().x &&
@@ -23,18 +23,18 @@ bool Geometry::testCubeSphere(CR(Cube) cube, CR(Sphere) sphere, f32 eps)
         (cube.getLeftTopFront().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
 }
 
-bool Geometry::testCubePoint(CR(Cube) cube, CR(Vector3) point, f32 eps)
+bool Geometry::testCubePoint(const Cube& cube, const Vector3& point, f32 eps)
 {
     return testCubeSphere(cube, Sphere(point, 0.0f), eps);
 }
 
-bool Geometry::testSphereSphere(CR(Sphere) sphereA, CR(Sphere) sphereB, f32 eps)
+bool Geometry::testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps)
 {
     f32 distance = sphereA.getCenter().dst(sphereB.getCenter());
     return (distance < (sphereA.getRadius() + sphereB.getRadius() + eps));
 }
 
-bool Geometry::testLineLine(CR(Line) lineA, CR(Line) lineB, R(Vector3) intersectionResult, f32 eps)
+bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps)
 {
 
     Vector3 da = lineA.getEnd() - lineA.getStart(); 
@@ -57,7 +57,7 @@ bool Geometry::testLineLine(CR(Line) lineA, CR(Line) lineB, R(Vector3) intersect
     return false;
 }
 
-bool Geometry::testLineSphereSimple(CR(Line) line, CR(Sphere) sphere, f32 eps)
+bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps)
 {
     bool lineIntersectsSphere = false;
 
@@ -75,7 +75,7 @@ bool Geometry::testLineSphereSimple(CR(Line) line, CR(Sphere) sphere, f32 eps)
     return lineIntersectsSphere;
 }
 
-u8 Geometry::testLineSphere(CR(Line) line, CR(Sphere) sphere, f32 eps, R(Vector3) intersectionResult1, R(Vector3) intersectionResult2)
+u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
 {
 
 
@@ -128,12 +128,12 @@ u8 Geometry::testLineSphere(CR(Line) line, CR(Sphere) sphere, f32 eps, R(Vector3
     return 0;
 }
 
-bool Geometry::testSpherePoint(CR(Vector3) point, CR(Sphere) sphere, f32 eps)
+bool Geometry::testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps)
 {
     return sphere.getCenter().dst(point) <= (sphere.getRadius() + eps);
 }
 
-bool Geometry::testLinePoint(CR(Line) line, CR(Vector3) point, f32 eps)
+bool Geometry::testLinePoint(const Line& line, const Vector3& point, f32 eps)
 {
     f32 d1 = line.getStart().dst(point);
     f32 d2 = line.getEnd().dst(point);
@@ -150,7 +150,7 @@ bool Geometry::testLinePoint(CR(Line) line, CR(Vector3) point, f32 eps)
     return pointIsInLine;
 }
 
-Vector3 Geometry::closestPointInLine(CR(Line) line, CR(Vector3) point)
+Vector3 Geometry::closestPointInLine(const Line& line, const Vector3& point)
 {
     Vector3 pointStartVector = (point - line.getStart()) /*.nor()*/;
     Vector3 lineVector = (line.getEnd() - line.getStart()) /*.nor()*/;
@@ -163,7 +163,7 @@ Vector3 Geometry::closestPointInLine(CR(Line) line, CR(Vector3) point)
     return Vector3(line.getStart() + (lineVector.mul(t)));
 }
 
-Vector3 Geometry::midPoint(CR(Line) line)
+Vector3 Geometry::midPoint(const Line& line)
 {
     return Vector3((line.getStart().x + line.getEnd().x) / 2.0f, (line.getStart().y + line.getEnd().y) / 2.0f, (line.getStart().z + line.getEnd().z) / 2.0f);
 }

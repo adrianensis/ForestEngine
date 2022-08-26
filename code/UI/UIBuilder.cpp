@@ -14,32 +14,32 @@ UIBuilder::UIBuilder()
 	mConfig = mDefaultConfig;
 }
 
-R(UIBuilder) UIBuilder::nextRow()
+UIBuilder& UIBuilder::nextRow()
 {
 	mLastConfig = mLayoutFirstUIElementConfig;
 	mNewRowOrColumn = true;
 	return *this;
 }
 
-R(UIBuilder) UIBuilder::nextColumn()
+UIBuilder& UIBuilder::nextColumn()
 {
 	return nextRow(); // NOTE : exactly the same code.
 }
 
-R(UIBuilder) UIBuilder::saveData()
+UIBuilder& UIBuilder::saveData()
 {
 	mConfigStack.push_front(mConfig);
 	return *this;
 }
 
-R(UIBuilder) UIBuilder::restoreData()
+UIBuilder& UIBuilder::restoreData()
 {
 	mConfig = mConfigStack.front();
 	mConfigStack.pop_front();
 	return *this;
 }
 
-R(UIBuilder) UIBuilder::create(CR(std::string) className)
+UIBuilder& UIBuilder::create(const std::string& className)
 {
 	UIElement* uiElement = INSTANCE_BY_NAME(className, UIElement);
 	mConfig.mUIElementClassId = uiElement->getClassId();

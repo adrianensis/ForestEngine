@@ -61,7 +61,7 @@ public:
     void init();
     void update();
     TimerHandle setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback);
-    void cancelTimer(CR(TimerHandle) timerHandle);
+    void cancelTimer(const TimerHandle& timerHandle);
     void terminate();
 
 private:

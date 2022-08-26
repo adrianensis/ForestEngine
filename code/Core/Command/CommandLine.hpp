@@ -6,7 +6,7 @@
 #include "Core/Functor.hpp"
 #include "Core/Command/Command.hpp"
 
-using CommandCallback = std::function<void(CR(Command) command)>;
+using CommandCallback = std::function<void(const Command& command)>;
 
 class CommandFunctor: public Functor<CommandCallback>
 {
@@ -48,16 +48,16 @@ private:
 
     bool mIsOpen = false;
 
-    void log(CR(std::string) line, bool newLine = true) const;
+    void log(const std::string& line, bool newLine = true) const;
 
 public:
     void init();
 	void update();
     void terminate();
 
-    void execute(CR(std::string) commandLine);
-    std::string autocomplete(CR(std::string) commandLine);
-    void registerCommand(CR(std::string) commandName, CommandCallback callback);
+    void execute(const std::string& commandLine);
+    std::string autocomplete(const std::string& commandLine);
+    void registerCommand(const std::string& commandName, CommandCallback callback);
 
 	void open();
 	void close();

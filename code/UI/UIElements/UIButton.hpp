@@ -12,10 +12,10 @@ class UIButton: public UIPanel
 	
 public:
     void init() override;
-    void initFromConfig(CR(UIElementConfig) config) override;
+    void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
     void onLabelDestroy();
-    void setText(CR(std::string) text) override;
+    void setText(const std::string& text) override;
     void setVisibility(bool visibility) override;
 
 private:

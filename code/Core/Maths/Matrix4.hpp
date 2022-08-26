@@ -34,20 +34,20 @@ private:
     void setRows(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3);
     void setRows(const f32 *row0, const f32 *row1, const f32 *row2, const f32 *row3);
     void setRows(f32 n);
-    void setRows(CR(Vector4) row0, CR(Vector4) row1, CR(Vector4) row2, CR(Vector4) row3);
+    void setRows(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3);
 
 public:
 
     Matrix4();
     Matrix4(const Matrix4& other);
-    static CR(Matrix4) getIdentity();
+    static const Matrix4& getIdentity();
     void init(f32 n);
-    void init(CR(Matrix4) other);
+    void init(const Matrix4& other);
     void init(const std::array<f32, 16> &data);
     void init(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3);
     void init(const f32 *data);
     void init(const f32 *row0, const f32 *row1, const f32 *row2, const f32 *row3);
-    void init(CR(Vector4) row0, CR(Vector4) row1, CR(Vector4) row2, CR(Vector4) row3);
+    void init(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3);
 
 	const f32 *getData() const
 	{
@@ -66,17 +66,17 @@ public:
     
     void transpose();
     void invert();
-    void mul(CR(Matrix4) other);
-    Vector4 mulVector(CR(Vector4) vector) const;
+    void mul(const Matrix4& other);
+    Vector4 mulVector(const Vector4& vector) const;
     void zeros();
     void identity();
-    void translation(CR(Vector3) vector);
-    void rotation(CR(Vector3) vector);
-    void scale(CR(Vector3) vector);
+    void translation(const Vector3& vector);
+    void rotation(const Vector3& vector);
+    void scale(const Vector3& vector);
     void ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void perspective(f32 near, f32 far, f32 aspect, f32 fov);
 
-    R(Matrix4) operator=(CR(Matrix4) other)
+    Matrix4& operator=(const Matrix4& other)
 	{
 		init(other);
 		return *this;

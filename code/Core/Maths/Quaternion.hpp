@@ -16,36 +16,36 @@ public:
 
 	Quaternion();
 	Quaternion(f32 x, f32 y, f32 z, f32 w);
-	Quaternion(CR(Vector3) v, f32 w);
+	Quaternion(const Vector3& v, f32 w);
 	Quaternion(f32 roll, f32 pitch, f32 yaw);
-	Quaternion(CR(Vector3) v);
-	Quaternion(CR(Quaternion) other);
+	Quaternion(const Vector3& v);
+	Quaternion(const Quaternion& other);
 
-    R(Quaternion) set(f32 x, f32 y, f32 z, f32 w);
-    R(Quaternion) set(CR(Vector3) v, f32 w);
-    R(Quaternion) set(CR(Quaternion) rhs);
-    R(Quaternion) add(CR(Quaternion) rhs);
-    R(Quaternion) sub(CR(Quaternion) rhs);
-    R(Quaternion) mul(CR(Quaternion) rhs);
-    R(Quaternion) div(CR(Quaternion) rhs);
-    R(Quaternion) add(f32 rhs);
-    R(Quaternion) sub(f32 rhs);
-    R(Quaternion) mul(f32 rhs);
-    R(Quaternion) div(f32 rhs);
-    f32 dot(CR(Quaternion) q) const;
+    Quaternion& set(f32 x, f32 y, f32 z, f32 w);
+    Quaternion& set(const Vector3& v, f32 w);
+    Quaternion& set(const Quaternion& rhs);
+    Quaternion& add(const Quaternion& rhs);
+    Quaternion& sub(const Quaternion& rhs);
+    Quaternion& mul(const Quaternion& rhs);
+    Quaternion& div(const Quaternion& rhs);
+    Quaternion& add(f32 rhs);
+    Quaternion& sub(f32 rhs);
+    Quaternion& mul(f32 rhs);
+    Quaternion& div(f32 rhs);
+    f32 dot(const Quaternion& q) const;
     f32 sqrlen() const;
     f32 len() const;
-    R(Quaternion) nor();
-    bool eq(CR(Quaternion) q, f32 e) const;
-    bool eq(CR(Quaternion) q) const;
-    R(Quaternion) conj();
-    R(Quaternion) inv();
-    f32 angle(CR(Quaternion) q) const;
-    R(Quaternion) lerp(CR(Quaternion) target, f32 t);
-    R(Quaternion) nlerp(CR(Quaternion) target, f32 t);
-    R(Quaternion) slerp(CR(Quaternion) target, f32 t);
+    Quaternion& nor();
+    bool eq(const Quaternion& q, f32 e) const;
+    bool eq(const Quaternion& q) const;
+    Quaternion& conj();
+    Quaternion& inv();
+    f32 angle(const Quaternion& q) const;
+    Quaternion& lerp(const Quaternion& target, f32 t);
+    Quaternion& nlerp(const Quaternion& target, f32 t);
+    Quaternion& slerp(const Quaternion& target, f32 t);
     void fromEuler(f32 roll, f32 pitch, f32 yaw);
-    void fromEuler(CR(Vector3) v);
+    void fromEuler(const Vector3& v);
 
 	Vector3 toEuler() const
 	{
@@ -68,7 +68,7 @@ public:
         return eulerVec;
 	}
 
-	/*void fromMatrix(CR(Matrix4) m){
+	/*void fromMatrix(const Matrix4& m){
 
 		f32 t = m.get(0, 0) + m.get(1, 1) + m.get(2, 2);
 
@@ -114,82 +114,82 @@ public:
 
 	/*
 	* & -> it's a reference, not a full copy.
-	* R(Quaternion) -> it's a constant reference.
+	* Quaternion& -> it's a constant reference.
 	* operator=(...) const -> the method promises not to change *this. Non-member
 	* functions can not have constant qualification.
 	*/
 
-	R(Quaternion) operator=(CR(Quaternion) rhs)
+	Quaternion& operator=(const Quaternion& rhs)
 	{
 			return this->set(rhs);
 	}
 
-	R(Quaternion) operator+=(CR(Quaternion) rhs)
+	Quaternion& operator+=(const Quaternion& rhs)
 	{
 		return this->add(rhs);
 	}
 
-	R(Quaternion) operator-=(CR(Quaternion) rhs)
+	Quaternion& operator-=(const Quaternion& rhs)
 	{
 		return this->sub(rhs);
 	}
 
-	R(Quaternion) operator*=(CR(Quaternion) rhs)
+	Quaternion& operator*=(const Quaternion& rhs)
 	{
 		return this->mul(rhs);
 	}
 
-	R(Quaternion) operator/=(CR(Quaternion) rhs)
+	Quaternion& operator/=(const Quaternion& rhs)
 	{
 		return this->div(rhs);
 	}
 
-	R(Quaternion) operator+=(f32 rhs)
+	Quaternion& operator+=(f32 rhs)
 	{
 		return this->add(rhs);
 	}
 
-	R(Quaternion) operator-=(f32 rhs)
+	Quaternion& operator-=(f32 rhs)
 	{
 		return this->sub(rhs);
 	}
 
-	R(Quaternion) operator*=(f32 rhs)
+	Quaternion& operator*=(f32 rhs)
 	{
 		return this->mul(rhs);
 	}
 
-	R(Quaternion) operator/=(f32 rhs)
+	Quaternion& operator/=(f32 rhs)
 	{
 		return this->div(rhs);
 	}
 
-	bool operator==(CR(Quaternion) rhs) const
+	bool operator==(const Quaternion& rhs) const
 	{
 		return this->eq(rhs);
 	}
 
-	bool operator!=(CR(Quaternion) rhs) const
+	bool operator!=(const Quaternion& rhs) const
 	{
 		return !((*this) == rhs);
 	}
 
-	Quaternion operator+(CR(Quaternion) rhs) const
+	Quaternion operator+(const Quaternion& rhs) const
 	{
 		return Quaternion(*this) += rhs;
 	}
 
-	Quaternion operator-(CR(Quaternion) rhs) const
+	Quaternion operator-(const Quaternion& rhs) const
 	{
 		return Quaternion(*this) -= rhs;
 	}
 
-	Quaternion operator*(CR(Quaternion) rhs) const
+	Quaternion operator*(const Quaternion& rhs) const
 	{
 		return Quaternion(*this) *= rhs;
 	}
 
-	Quaternion operator/(CR(Quaternion) rhs) const
+	Quaternion operator/(const Quaternion& rhs) const
 	{
 		return Quaternion(*this) /= rhs;
 	}

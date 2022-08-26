@@ -27,7 +27,7 @@ public:
 		mMesh = mesh;
 	}
 
-	bool operator==(CR(BatchKey) otherBatchKey) const
+	bool operator==(const BatchKey& otherBatchKey) const
 	{
 		return mTexture == otherBatchKey.mTexture && mShader == otherBatchKey.mShader && mMesh == otherBatchKey.mMesh;
 	}
@@ -47,7 +47,7 @@ public:
 
 private:
 	using InternalBatchesMap = std::map<u32, OwnerPtr<Batch>>;
-    void renderBatchesMap(R(InternalBatchesMap) batchesMap);
+    void renderBatchesMap(InternalBatchesMap& batchesMap);
 
 private:
 

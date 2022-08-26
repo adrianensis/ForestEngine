@@ -8,7 +8,7 @@ class UIPanel: public UIElement
 {
     GENERATE_METADATA(UIPanel)
 public:
-    void initFromConfig(CR(UIElementConfig) config) override;
+    void initFromConfig(const UIElementConfig& config) override;
 };
 
 #endif

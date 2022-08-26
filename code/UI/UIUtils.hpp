@@ -8,7 +8,7 @@ class UIUtils
 {
 public:
 
-    static Vector2 correctAspectRatio_X(CR(Vector2) vector);
+    static Vector2 correctAspectRatio_X(const Vector2& vector);
 };
 
 

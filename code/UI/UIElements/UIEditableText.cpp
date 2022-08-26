@@ -11,7 +11,7 @@ void UIEditableText::init()
     setIsEditable(true);
 }
 
-void UIEditableText::setBackground(CR(UIElementConfig) config) 
+void UIEditableText::setBackground(const UIElementConfig& config) 
 {
     UIText::setBackground(config);
     

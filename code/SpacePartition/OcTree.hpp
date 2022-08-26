@@ -28,7 +28,7 @@ protected:
 	private:
 		std::vector<IOcTreeElement*> mOcTreeElements;
 		void updateChildren();
-		bool childNodeTestPartial(u32 index, R(IOcTreeElement) element) const;
+		bool childNodeTestPartial(u32 index, IOcTreeElement& element) const;
 
 	public:
 		Cube mCube;
@@ -39,8 +39,8 @@ protected:
 
 		std::vector<OcTreeNode> mChildren;
 
-        void init(CR(Cube) cube, CR(Vector3) minSize, R(OcTree) tree);
-		void addOcTreeElement(R(IOcTreeElement) element);
+        void init(const Cube& cube, const Vector3& minSize, OcTree& tree);
+		void addOcTreeElement(IOcTreeElement& element);
 		void update();
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
