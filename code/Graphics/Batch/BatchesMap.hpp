@@ -46,17 +46,23 @@ public:
     void forceRegenerateBuffers();
 
 private:
-	using InternalBatchesMap = std::map<u32, OwnerPtr<Batch>>;
-    void renderBatchesMap(InternalBatchesMap& batchesMap);
+	using BatchMapByBatchKey = std::map<u32, OwnerPtr<Batch>>;
+
+    void renderBatchesMap(BatchMapByBatchKey& batchesMap);
 
 private:
 
 	std::vector<BatchKey> mBatchKeys;
 
-	InternalBatchesMap mBatchesDynamic;
-	InternalBatchesMap mBatchesDynamicScreenSpace;
-	InternalBatchesMap mBatchesStatic;
-	InternalBatchesMap mBatchesStaticScreenSpace;
+	BatchMapByBatchKey mBatchesStatic;
+	BatchMapByBatchKey mBatchesStaticScreenSpace;
+	BatchMapByBatchKey mBatchesDynamic;
+	BatchMapByBatchKey mBatchesDynamicScreenSpace;
+	
+	BatchMapByBatchKey mBatchesInstancedStatic;
+	BatchMapByBatchKey mBatchesInstancedStaticScreenSpace;
+	BatchMapByBatchKey mBatchesInstancedDynamic;
+	BatchMapByBatchKey mBatchesInstancedDynamicScreenSpace;
 };
 
 #endif

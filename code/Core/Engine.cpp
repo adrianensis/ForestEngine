@@ -87,7 +87,7 @@ void Engine::run()
 		}
 		
 		Time::getInstance().endFrame();
-		VAL(1000.0f/Time::getInstance().getDeltaTimeMillis())
+		//VAL(1000.0f/Time::getInstance().getDeltaTimeMillis())
 	}
 }
 

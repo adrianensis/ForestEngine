@@ -20,6 +20,7 @@ void ModelRenderer::onComponentAdded()
 
 		renderer->setMesh(*it);
 		renderer->setMaterial(MaterialManager::getInstance().loadMaterial((*it).get().getMaterialPath()));
+		renderer->setIsInstanced(mIsInstanced);
 		getGameObject()->addComponent<Renderer>(renderer);
 	}
 }

@@ -392,13 +392,6 @@ void UIElement::onEscEventReceived()
 	}
 }
 
-void UIElement::focus()
-{
-	mInputString.clear();
-	setText(mInputString);
-	onFocusGained();
-}
-
 void UIElement::loseFocus()
 {
 	UIManager::getInstance().setFocusedElement(nullptr);
@@ -416,7 +409,10 @@ void UIElement::obtainFocus()
 	}
 
 	UIManager::getInstance().setFocusedElement(this);
-	focus();
+
+	mInputString.clear();
+	setText(mInputString);
+	onFocus();
 }
 
 void UIElement::scroll(f32 scrollValue)

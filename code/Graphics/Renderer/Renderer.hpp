@@ -44,6 +44,7 @@ private:
 	f32 mRenderDistance = 0.0f;
 	std::map<std::string, Ptr<TextureAnimation>> mTextureAnimations;
 	Ptr<Chunk> mChunk;
+	bool mIsInstanced = false;
 	Ptr<Batch> mBatch;
 	Ptr<const Mesh> mMesh;
 	Mesh mMeshInstance;
@@ -63,6 +64,7 @@ public:
 	GET_SET(UseDepth)
 	GET_SET(RenderDistance)
 	SET(Chunk)
+	GET_SET(IsInstanced)
 	SET(Batch)
 	HASVALID(Batch)
 	GET_SET(Mesh)

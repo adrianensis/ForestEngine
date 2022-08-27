@@ -48,24 +48,41 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 		keyIndex = mBatchKeys.size() - 1;
 	}
 
+	BatchMapByBatchKey* batchesMap = nullptr;
+
 	Ptr<Transform> transform = renderer.get().getGameObject()->getTransform();
 
-	InternalBatchesMap* batchesMap = nullptr;
+	bool isStatic = transform.get().isStatic();
+	bool isWorldSpace = transform.get().getAffectedByProjection();
+	bool isInstanced = renderer.get().getIsInstanced();
 	
-	if(transform.get().isStatic())
+	if(isStatic)
 	{
-		batchesMap = &(transform.get().getAffectedByProjection() ?  mBatchesStatic : mBatchesStaticScreenSpace);
+		if(isWorldSpace)
+		{
+			batchesMap = isInstanced ? &mBatchesInstancedStatic : &mBatchesStatic;
+		}
+		else
+		{
+			batchesMap = isInstanced ? &mBatchesInstancedStaticScreenSpace : &mBatchesStaticScreenSpace;
+		}
 	}
 	else
 	{
-		batchesMap = &(transform.get().getAffectedByProjection() ?  mBatchesDynamic : mBatchesDynamicScreenSpace);
+		if(isWorldSpace)
+		{
+			batchesMap = isInstanced ? &mBatchesInstancedDynamic : &mBatchesDynamic;
+		}
+		else
+		{
+			batchesMap = isInstanced ? &mBatchesInstancedDynamic : &mBatchesDynamic;
+		}
 	}
 
 	if (!MAP_CONTAINS(*batchesMap, keyIndex))
 	{
 		OwnerPtr<Batch> batch = OwnerPtr<Batch>(NEW(Batch));
-		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial(),
-		transform.get().isStatic(), transform.get().getAffectedByProjection());
+		batch.get().init(renderer.get().getMesh(), renderer.get().getMaterial(), isStatic, isWorldSpace, isInstanced);
 
 		MAP_INSERT(*batchesMap, keyIndex, batch);
 	}
@@ -81,6 +98,11 @@ void BatchesMap::render()
 	renderBatchesMap(mBatchesDynamic);
 	renderBatchesMap(mBatchesStaticScreenSpace);
 	renderBatchesMap(mBatchesDynamicScreenSpace);
+
+	renderBatchesMap(mBatchesInstancedStatic);
+	renderBatchesMap(mBatchesInstancedDynamic);
+	renderBatchesMap(mBatchesInstancedStaticScreenSpace);
+	renderBatchesMap(mBatchesInstancedDynamicScreenSpace);
 }
 
 void BatchesMap::forceRegenerateBuffers()
@@ -89,9 +111,24 @@ void BatchesMap::forceRegenerateBuffers()
 	{
 		it->second.get().forceRegenerateBuffers();
 	}
+
+	FOR_MAP(it, mBatchesStaticScreenSpace)
+	{
+		it->second.get().forceRegenerateBuffers();
+	}
+
+	FOR_MAP(it, mBatchesInstancedStatic)
+	{
+		it->second.get().forceRegenerateBuffers();
+	}
+
+	FOR_MAP(it, mBatchesInstancedStaticScreenSpace)
+	{
+		it->second.get().forceRegenerateBuffers();
+	}
 }
 
-void BatchesMap::renderBatchesMap(InternalBatchesMap& batchesMap)
+void BatchesMap::renderBatchesMap(BatchMapByBatchKey& batchesMap)
 {
 	PROFILER_CPU()
 

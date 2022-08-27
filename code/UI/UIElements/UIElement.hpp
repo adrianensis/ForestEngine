@@ -98,7 +98,6 @@ private:
     void onEnterEventReceived();
     void onEscEventReceived();
 
-    void focus();
     void loseFocus();
     void obtainFocus();
 
@@ -123,7 +122,7 @@ protected:
 	virtual void onMouseOverEnter() { }
 	virtual void onMouseOverExit() { }
 	virtual void onScroll(f32 scroll) { }
-	virtual void onFocusGained() { }
+	virtual void onFocus() { }
 	virtual void onFocusLost() { }
 
 protected:

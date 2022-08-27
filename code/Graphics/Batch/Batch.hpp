@@ -14,7 +14,7 @@ class Batch: public ObjectBase
 public:
 	~Batch() override;
 
-    void init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace);
+    void init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace, bool isInstanced);
 
     void render();
     void addRenderer(Ptr<Renderer> renderer);
@@ -27,16 +27,18 @@ private:
     void addToVertexBuffer(Ptr<Renderer> renderer);
     bool shouldRegenerateBuffers() const;
 
+	bool isModelAnimated() const;
+
 private:
 	std::list<Ptr<Renderer>> mRenderers;
 
 	Ptr<Material> mMaterial;
-	bool mIsInstanced = true;
 
 	MeshBatcher mMeshBatcher;
 
 	bool mIsWorldSpace = false;
 	bool mIsStatic = false;
+	bool mIsInstanced = false;
 
 	bool mNewRendererAdded = false;
 	bool mPendingDrawCall = false;

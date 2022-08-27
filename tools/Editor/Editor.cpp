@@ -43,7 +43,7 @@ void Editor::firstUpdate()
 
 	//importModel("resources/cat_rigged_animation_run.fbx", Vector3(0,0,0), 1.0f);
 
-	i32 size = 30;
+	i32 size = 40;
 	for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
@@ -76,113 +76,113 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	// UIBuilder uiBuilder;
+	UIBuilder uiBuilder;
 
-	// uiBuilder.
-	// setPosition(Vector2(-1,1)).
-	// setAdjustSizeToText(true).
-	// setSize(Vector2(0.5f, 0.05f));
+	uiBuilder.
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
+	setSize(Vector2(0.5f, 0.05f));
 
-	// uiBuilder.
-	// setText("File").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("New", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("New", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Open", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Save", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.
-	// setText("Sprites").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("View").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Grid", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Grid", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Colliders", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.restoreAll();
+	uiBuilder.restoreAll();
 
-	// uiBuilder.
-	// setLayout(UILayout::HORIZONTAL).
-	// setPosition(Vector2(-1,0.5f)).
-	// setAdjustSizeToText(false).
-	// setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
-	// setGroup("toggleButtons").
-	// setSize(Vector2(0.1f, 0.1f));
+	uiBuilder.
+	setLayout(UILayout::HORIZONTAL).
+	setPosition(Vector2(-1,0.5f)).
+	setAdjustSizeToText(false).
+	setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
+	setGroup("toggleButtons").
+	setSize(Vector2(0.1f, 0.1f));
 
-	// uiBuilder.
-	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/EventPoint.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/EventPoint.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>()->
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// getUIElement<UIToggleButton>()->simulateClick();
+	uiBuilder.
+	getUIElement<UIToggleButton>()->simulateClick();
 
-	// uiBuilder.
-	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/PlayerStart.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/PlayerStart.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>()->
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// nextRow();
+	uiBuilder.
+	nextRow();
 
-	// uiBuilder.
-	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/SpawnPoint.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/SpawnPoint.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>()->
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/WayPoint.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/WayPoint.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>()->
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// nextRow();
+	uiBuilder.
+	nextRow();
 
-	// uiBuilder.restoreMaterial();
-	// uiBuilder.restoreStyle();
-	// uiBuilder.restoreGroup();
+	uiBuilder.restoreMaterial();
+	uiBuilder.restoreStyle();
+	uiBuilder.restoreGroup();
 
-	// uiBuilder.
-	// setText("Test Button").
-	// setAdjustSizeToText(true).
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Option1", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(true).
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Option1", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Option2", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Option3", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Option2", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Option3", [&](UIElement *uiElement)
+	{
+	});
 
 	cameraGameObject = ScenesManager::getInstance().getCurrentScene()->getCameraGameObject();
 }
@@ -299,13 +299,14 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
-	//gameObject->setIsStatic(true);
+	gameObject->setIsStatic(true);
 	gameObject->getTransform().get().setLocalPosition(v);
 	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
 	//gameObject->getTransform().get().setRotation(Vector3(90,0,0));
 
 	ModelRenderer *modelRenderer = NEW(ModelRenderer);
 	modelRenderer->setModel(model);
+	modelRenderer->setIsInstanced(true);
 	
 	gameObject->addComponent<ModelRenderer>(modelRenderer);
 

@@ -19,9 +19,11 @@ public:
 
 private:
 	Ptr<const Model> mModel;
+    bool mIsInstanced = false;
 
 public:
 	GET_SET(Model)
+	GET_SET(IsInstanced)
 };
 
 #endif

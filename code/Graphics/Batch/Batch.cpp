@@ -19,11 +19,12 @@ Batch::~Batch()
 	mMeshBatcher.terminate();
 }
 
-void Batch::init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace)
+void Batch::init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace, bool isInstanced)
 {
 	mMaterial = material;
 	mIsWorldSpace = isWorldSpace;
 	mIsStatic = isStatic;
+	mIsInstanced = isInstanced;
 
 	mMeshBatcher.init(mesh, mIsStatic, mIsInstanced);
 
@@ -46,10 +47,11 @@ void Batch::render()
 		mMaterial.get().enable();
 		mMaterial.get().bind(getIsWorldSpace(), getIsInstanced());
 
-		if(mMeshBatcher.getPrototypeMesh().get().getModel())
+		bool isAnimated = isModelAnimated();
+		mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
+		
+		if(isAnimated)
 		{
-			bool isAnimated = mMeshBatcher.getPrototypeMesh().get().getModel().get().isAnimated();
-			mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
 			const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel().get().getObjectId());
 			mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
 		}
@@ -186,5 +188,16 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 
 bool Batch::shouldRegenerateBuffers() const
 {
-	return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers;
+	return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers || isModelAnimated();
+}
+
+bool Batch::isModelAnimated() const
+{
+	bool isAnimated = false;
+	if(mMeshBatcher.getPrototypeMesh().get().getModel())
+	{
+		isAnimated = mMeshBatcher.getPrototypeMesh().get().getModel().get().isAnimated();
+	}
+
+	return isAnimated;
 }
