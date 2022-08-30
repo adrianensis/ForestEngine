@@ -87,7 +87,7 @@ void RenderEngine::addComponent(Ptr<IEngineSystemComponent> component)
 
 	if(component.get().getClassId() == Renderer::getClassIdStatic())
 	{
-		Ptr<Renderer> renderer = Ptr<Renderer>::Cast(component);
+		Ptr<Renderer> renderer = Ptr<Renderer>::cast(component);
 
 		if (renderer.get().getIsWorldSpace())
 		{
@@ -183,7 +183,6 @@ void RenderEngine::renderBatches()
 
 	mShapeBatchRendererMap.render();
 	mShapeBatchRendererMapScreenSpace.render();
-	
 }
 
 void RenderEngine::checkChunks()

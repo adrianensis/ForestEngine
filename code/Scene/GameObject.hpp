@@ -27,25 +27,34 @@ public:
 	template <class T>
 	void addComponent(OwnerPtr<T> component)
 	{
-		GameObject::addComponent(OwnerPtr<Component>::Cast(component), T::getClassIdStatic());
+		GameObject::addComponent(OwnerPtr<Component>::cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
 	void removeComponent(Ptr<T> component)
 	{
-		GameObject::removeComponent(Ptr<Component>::Cast(component), T::getClassIdStatic());
+		GameObject::removeComponent(Ptr<Component>::cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
-	CR(std::list<OwnerPtr<T>>) getComponents() const
+	std::list<Ptr<T>> getComponents() const
 	{
-		return reinterpret_cast<CR(std::list<OwnerPtr<T>>)>(GameObject::getComponents(T::getClassIdStatic()));
+		ClassId classComponentId = T::getClassIdStatic();
+		const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classComponentId);
+
+		std::list<Ptr<T>> result;
+		FOR_LIST(it, components)
+		{
+			result.push_back(OwnerPtr<T>::cast(*it));
+		}
+
+		return result;
 	}
 
 	template <class T>
 	Ptr<T> getFirstComponent() const
 	{
-		return Ptr<T>::Cast(GameObject::getFirstComponent(T::getClassIdStatic()));
+		return Ptr<T>::cast(GameObject::getFirstComponent(T::getClassIdStatic()));
 	}
 
 	bool isActive() const
@@ -65,7 +74,8 @@ public:
     void destroy();
 
 private:
-    CR(std::list<OwnerPtr<Component>>) getComponents(ClassId classId) const;
+    std::list<Ptr<Component>> getComponents(ClassId classId) const;
+    CR(std::list<OwnerPtr<Component>>) getComponentsNoCopy(ClassId classId) const;
     Ptr<Component> getFirstComponent(ClassId classId) const;
 
 private:

@@ -54,7 +54,7 @@ private:
 protected:
 	u32 mMaxShapes = 0;
 	u32 mShapesCounter = 0;
-	u32 mVerticesPerShape = 0;
+	u32 mPositionsPerShape = 0;
 };
 
 template<>

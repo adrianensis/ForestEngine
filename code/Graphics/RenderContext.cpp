@@ -84,32 +84,30 @@ void RenderContext::terminate()
 	glfwTerminate();
 }
 
-GLuint RenderContext::createVBO(u32 elementSize, u32 propertyArrayIndex)
-{
-	return createVBOAnyType(elementSize, GL_FLOAT, sizeof(f32), propertyArrayIndex);
-}
-
-GLuint RenderContext::createVBOU32(u32 elementSize, u32 propertyArrayIndex)
-{
-	return createVBOAnyType(elementSize, GL_UNSIGNED_INT, sizeof(u32), propertyArrayIndex);
-}
-
-GLuint RenderContext::createVBOAnyType(u32 elementSize, u32 primitiveType, u32 typeSize, u32 propertyArrayIndex)
+GLuint RenderContext::createVBO()
 {
 	u32 VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	return VBO;
+}
+
+void RenderContext::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
+{
 	enableProperty(propertyArrayIndex);
 	if(primitiveType == GL_INT)
 	{
-		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, elementSize * typeSize, (byte *)0);
+		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, strideSize, (byte*) pointerOffset);
 	}
 	else
 	{
-		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, elementSize * typeSize, (byte *)0);
+		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, strideSize, (byte*) pointerOffset);
 	}
 
-	return VBO;
+	if(divisor > 0)
+	{
+		glVertexAttribDivisor(propertyArrayIndex, divisor);
+	}
 }
 
 GLuint RenderContext::createVAO()
@@ -137,10 +135,10 @@ void RenderContext::resizeVBOU32(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_
 	resizeVBOAnyType(VBO, sizeof(u32), size,drawMode);
 }
 
-void RenderContext::resizeVBOAnyType(u32 VBO, u32 typeSize, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+void RenderContext::resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, typeSize * size, nullptr, drawMode);
+	glBufferData(GL_ARRAY_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
 }
 
 void RenderContext::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
@@ -167,7 +165,13 @@ void RenderContext::setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, typeSize * size, data);
 }
 
-void RenderContext::setDataEBO(u32 EBO, CR(std::vector<u32>)data)
+void RenderContext::setDataEBO(u32 EBO, CR(std::vector<Face>)data)
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(Face) * data.size(), data.data());
+}
+
+void RenderContext::setDataEBORaw(u32 EBO, CR(std::vector<u32>)data)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());

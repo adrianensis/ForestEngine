@@ -32,13 +32,13 @@ public:
     }
 
     template <class OtherClass>
-    static Ptr<T> Cast(const Ptr<OtherClass>& other)
+    static Ptr<T> cast(const Ptr<OtherClass>& other)
     {
         return Ptr<T>(std::dynamic_pointer_cast<T>(other.getWeakPtr().lock()));
     }
 
     template <class OtherClass>
-    static Ptr<T> Cast(const OwnerPtr<OtherClass>& other)
+    static Ptr<T> cast(const OwnerPtr<OtherClass>& other)
     {
         return Ptr<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
     }
@@ -99,7 +99,7 @@ friend Ptr<T>;
 public:
 
     template <class OtherClass>
-    static OwnerPtr<T> Cast(const OwnerPtr<OtherClass>& other)
+    static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
     {
         return OwnerPtr<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
     }

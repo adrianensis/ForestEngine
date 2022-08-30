@@ -30,11 +30,9 @@ void Mesh::init(u32 vertexCount, u32 facesCount)
 	clear();
 }
 
-void Mesh::addVertex(const Vector3& vector)
+void Mesh::addPosition(const Vector3& pos)
 {
-	mVertices.push_back(vector.x);
-	mVertices.push_back(vector.y);
-	mVertices.push_back(vector.z);
+	mPositions.push_back(pos);
 }
 
 void Mesh::addNormal(const Vector3& vector)
@@ -44,25 +42,19 @@ void Mesh::addNormal(const Vector3& vector)
 	mNormals.push_back(vector.z);
 }
 
-void Mesh::addTexCoord(f32 u, f32 v)
+void Mesh::addTexCoord(const Vector2& texCoord)
 {
-	mTextureCoordinates.push_back(u);
-	mTextureCoordinates.push_back(v);
+	mTextureCoordinates.push_back(texCoord);
 }
 
-void Mesh::addColor(f32 r, f32 g, f32 b, f32 a)
+void Mesh::addColor(const Vector4& color)
 {
-	mColors.push_back(r);
-	mColors.push_back(g);
-	mColors.push_back(b);
-	mColors.push_back(a);
+	mColors.push_back(color);
 }
 
-void Mesh::addFace(u32 v1, u32 v2, u32 v3)
+void Mesh::addFace(const Face& face)
 {
-	addFaceIndex(v1);
-	addFaceIndex(v2);
-	addFaceIndex(v3);
+	mFaces.push_back(face);
 }
 
 void Mesh::addBoneVertexData(const BoneVertexData& bone)
@@ -70,14 +62,9 @@ void Mesh::addBoneVertexData(const BoneVertexData& bone)
 	mBonesVertexData.push_back(bone);
 }
 
-void Mesh::addFaceIndex(u32 i)
+void Mesh::addPositions(const std::vector<Vector3>& vec)
 {
-	mFaces.push_back(i);
-}
-
-void Mesh::addVertices(const std::vector<f32>& vec)
-{
-	mVertices.insert(mVertices.end(), vec.begin(), vec.end());
+	mPositions.insert(mPositions.end(), vec.begin(), vec.end());
 }
 
 void Mesh::addNormals(const std::vector<f32>& vec)
@@ -85,17 +72,17 @@ void Mesh::addNormals(const std::vector<f32>& vec)
 	mNormals.insert(mNormals.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addTextureCoordinates(const std::vector<f32>& vec)
+void Mesh::addTextureCoordinates(const std::vector<Vector2>& vec)
 {
 	mTextureCoordinates.insert(mTextureCoordinates.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addColors(const std::vector<f32>& vec)
+void Mesh::addColors(const std::vector<Vector4>& vec)
 {
 	mColors.insert(mColors.end(), vec.begin(), vec.end());
 }
 
-void Mesh::addFaces(const std::vector<u32>& vec)
+void Mesh::addFaces(const std::vector<Face>& vec)
 {
 	mFaces.insert(mFaces.end(), vec.begin(), vec.end());
 }
@@ -110,9 +97,9 @@ void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 	mBonesVertexData[vertexId].addBoneData(id, weight);
 }
 
-void Mesh::copyVertices(Ptr<const Mesh> other)
+void Mesh::copyPositions(Ptr<const Mesh> other)
 {
-	std::copy(other.get().getVertices().begin(), other.get().getVertices().end(), back_inserter(mVertices));
+	std::copy(other.get().getPositions().begin(), other.get().getPositions().end(), back_inserter(mPositions));
 }
 
 void Mesh::copyNormals(Ptr<const Mesh> other)
@@ -142,21 +129,21 @@ void Mesh::copyBones(Ptr<const Mesh> other)
 
 void Mesh::clear()
 {
-	mVertices.clear();
+	mPositions.clear();
 	mNormals.clear();
 	mTextureCoordinates.clear();
 	mColors.clear();
 	mFaces.clear();
 	mBonesVertexData.clear();
 
-	mVertices.reserve(mVertexCount * smVertexPositionSize);
-	mTextureCoordinates.reserve(mVertexCount * smVertexTexCoordSize);
-	mColors.reserve(mVertexCount * smVertexColorSize);
+	mPositions.reserve(mVertexCount);
+	mTextureCoordinates.reserve(mVertexCount);
+	mColors.reserve(mVertexCount);
 	mNormals.reserve(mVertexCount * smVertexNormalSize);
-	mFaces.reserve(mFacesCount * smFaceSize);
+	mFaces.reserve(mFacesCount);
 	mBonesVertexData.reserve(mVertexCount);
 
-	std::fill(mColors.begin(), mColors.end(), 0);
+	std::fill(mColors.begin(), mColors.end(), Vector4(0,0,0,0));
 
 	mMaterialPath.clear();
 }

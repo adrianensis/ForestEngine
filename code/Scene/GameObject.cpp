@@ -36,7 +36,7 @@ void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
 	component.get().setGameObject(this);
 	component.get().onComponentAdded();
 
-	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<IEngineSystemComponent>::Cast(component));
+	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<IEngineSystemComponent>::cast(component));
 }
 
 void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
@@ -115,7 +115,20 @@ IMPLEMENT_DESERIALIZATION(GameObject)
 
 }
 
-CR(std::list<OwnerPtr<Component>>) GameObject::getComponents(ClassId classId) const
+std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
+{
+	std::list<Ptr<Component>> result;
+	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
+
+	FOR_LIST(it, components)
+	{
+		result.push_back(*it);
+	}
+
+	return result;
+}
+
+CR(std::list<OwnerPtr<Component>>) GameObject::getComponentsNoCopy(ClassId classId) const
 {
 	const std::list<OwnerPtr<Component>>* components = nullptr;
 
@@ -135,7 +148,7 @@ CR(std::list<OwnerPtr<Component>>) GameObject::getComponents(ClassId classId) co
 Ptr<Component> GameObject::getFirstComponent(ClassId classId) const
 {
 	Ptr<Component>component;
-	CR(std::list<OwnerPtr<Component>>) components = getComponents(classId);
+	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
 
 	if (!components.empty())
 	{

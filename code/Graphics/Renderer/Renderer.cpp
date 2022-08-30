@@ -72,10 +72,7 @@ void Renderer::update(bool regenerateVertices)
 			
 			FOR_RANGE(i, 0, verticesCount)
 			{
-				Vector3 vertexPosition(
-					mMesh.get().getVertices()[i * 3 + 0],
-					mMesh.get().getVertices()[i * 3 + 1],
-					mMesh.get().getVertices()[i * 3 + 2]);
+				Vector3 vertexPosition = mMesh.get().getPositions()[i];
 
 				if(isAnimated)
 				{
@@ -149,11 +146,9 @@ const Mesh& Renderer::generateMeshInstance()
 
 	FOR_RANGE(i, 0, mMesh.get().getVertexCount())
 	{
-		mMeshInstance.addVertex(vertexPositions[i]);
+		mMeshInstance.addPosition(vertexPositions[i]);
 
-		Vector2 vertexTexture(
-			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 0],
-			mMesh.get().getTextureCoordinates()[i * Mesh::smVertexTexCoordSize + 1]);
+		Vector2 vertexTexture = mMesh.get().getTextureCoordinates()[i];
 
 		Vector2 regionSize = getTextureRegion().getSize();
 		Vector2 regionPosition = getTextureRegion().getLeftTopFront();
@@ -172,13 +167,9 @@ const Mesh& Renderer::generateMeshInstance()
 			}
 		}
 
-		mMeshInstance.addTexCoord(textureCoord.x, textureCoord.y);
+		mMeshInstance.addTexCoord(textureCoord);
 
-		mMeshInstance.addColor(
-			getColor().x,
-			getColor().y,
-			getColor().z,
-			getColor().w);
+		mMeshInstance.addColor(getColor());
 	}
 
 	mMeshInstance.copyBones(mMesh);

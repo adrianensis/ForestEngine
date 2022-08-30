@@ -23,24 +23,23 @@ class Mesh: public ObjectBase
 public:
     ~Mesh() override;
     void init(u32 vertexCount, u32 facesCount);
-    void addVertex(const Vector3& vector);
+    void addPosition(const Vector3& pos);
     void addNormal(const Vector3& vector);
-    void addTexCoord(f32 u, f32 v);
-    void addColor(f32 r, f32 g, f32 b, f32 a);
-    void addFace(u32 v1, u32 v2, u32 v3);
+    void addTexCoord(const Vector2& texCoord);
+    void addColor(const Vector4& color);
+    void addFace(const Face& face);
     void addBoneVertexData(const BoneVertexData& bone);
-    void addFaceIndex(u32 i);
 
-    void addVertices(const std::vector<f32>& vec);
+    void addPositions(const std::vector<Vector3>& vec);
     void addNormals(const std::vector<f32>& vec);
-    void addTextureCoordinates(const std::vector<f32>& vec);
-    void addColors(const std::vector<f32>& vec);
-    void addFaces(const std::vector<u32>& vec);
+    void addTextureCoordinates(const std::vector<Vector2>& vec);
+    void addColors(const std::vector<Vector4>& vec);
+    void addFaces(const std::vector<Face>& vec);
     void addBonesVertexData(const std::vector<BoneVertexData>& vec);
 
     void addBoneWeight(u32 vertexId, i32 id, f32 weight);
 
-    void copyVertices(Ptr<const Mesh> other);
+    void copyPositions(Ptr<const Mesh> other);
     void copyNormals(Ptr<const Mesh> other);
     void copyTextureCoordinates(Ptr<const Mesh> other);
     void copyColors(Ptr<const Mesh> other);
@@ -49,12 +48,12 @@ public:
     void clear();
 
 private:
-	std::vector<f32> mVertices;
+	std::vector<Vector3> mPositions;
 	std::vector<f32> mNormals;
-	std::vector<f32> mTextureCoordinates;
-	std::vector<f32> mColors;
+	std::vector<Vector2> mTextureCoordinates;
+	std::vector<Vector4> mColors;
 
-    std::vector<u32> mFaces;
+    std::vector<Face> mFaces;
 
 	std::vector<BoneVertexData> mBonesVertexData;
 
@@ -66,16 +65,12 @@ private:
     Ptr<const Model> mModel;
 
 public:
-	inline static const u32 smVertexPositionSize = 3;
 	inline static const u32 smVertexNormalSize = 3;
-	inline static const u32 smVertexTexCoordSize = 2;
-	inline static const u32 smVertexColorSize = 4;
-	inline static const u32 smFaceSize = 3;
 
 	inline static const u32 smBoneIDSize = 1;
     inline static const u32 smBoneWeightSize = 1;
 
-	CRGET(Vertices)
+	CRGET(Positions)
 	CRGET(Normals)
 	CRGET(TextureCoordinates)
 	CRGET(Colors)

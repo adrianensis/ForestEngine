@@ -4,70 +4,58 @@
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-class VertexBuffer: public ObjectBase
+enum class GPUBufferPrimitiveType
 {
-    GENERATE_METADATA(VertexBuffer)
+    INT = GL_INT,
+    FLOAT = GL_FLOAT,
+};
+
+class GPUBufferBase: public ObjectBase
+{
+    GENERATE_METADATA(GPUBufferBase)
 
 public:
-	VertexBuffer() = default;
-    ~VertexBuffer() override;
+	GPUBufferBase() = default;
+    ~GPUBufferBase() override;
 
-    void init(u32 elementSize, u32 propertyArrayIndex, bool isStatic);
     void terminate();
     void resize(u32 size);
-    void setData(CR(std::vector<f32>)data);
+    void attribute(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor);
+    void attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor);
 
-private:
+protected:
+    void init(u32 typeSizeInBytes, bool isStatic);
+
+protected:
 	bool mGenerated = false;
 
 	bool mIsStatic = false;
 	u32 mVBO = 0; // TODO: change u32 for GLuint
-	u32 mAttribPointerIndex = 0;
+
+    u32 mTypeSizeInBytes = 0;
 };
 
-class BonesBuffer: public ObjectBase
+template <class T>
+class GPUBuffer: public GPUBufferBase
 {
-    GENERATE_METADATA(BonesBuffer)
+    GENERATE_METADATA(GPUBuffer<T>)
 
 public:
-	BonesBuffer() = default;
-    ~BonesBuffer() override;
+    void init(bool isStatic)
+    {
+        GPUBufferBase::init(sizeof(T), isStatic);
+    }
 
-    void init(u32 propertyArrayIndex, bool isStatic);
-    void terminate();
-    void resize(u32 size);
-    void setData(CR(std::vector<BoneVertexData>)data);
+    void setData(const std::vector<T>& data)
+    {
+	    RenderContext::setDataVBOAnyType<T>(mVBO, data);
+    }
 
-private:
-	bool mGenerated = false;
-
-	bool mIsStatic = false;
-	u32 mVBO = 0; // TODO: change u32 for GLuint
-	u32 mAttribPointerIndex = 0;
+    void resize(u32 size)
+    {
+        GPUBufferBase::resize(size);
+    }
 };
-
-// TODO: Move Instanced Rendering matrix to MatrixBuffer
-
-// class MatrixBuffer: public ObjectBase
-// {
-//     GENERATE_METADATA(MatrixBuffer)
-
-// public:
-// 	MatrixBuffer() = default;
-//     ~MatrixBuffer() override;
-
-//     void init(u32 elementSize, u32 propertyArrayIndex, bool isStatic);
-//     void terminate();
-//     void resize(u32 size);
-//     void setData(CR(std::vector<Matrix4>)data);
-
-// private:
-// 	bool mGenerated = false;
-
-// 	bool mIsStatic = false;
-// 	u32 mVBO = 0; // TODO: change u32 for GLuint
-// 	u32 mAttribPointerIndex = 0;
-// };
 
 class MeshBuffer: public ObjectBase
 {
@@ -94,16 +82,18 @@ private:
 	bool mGenerated = false;
 
 	bool mIsStatic = false;
-
-	u32 mVBOMatrices = 0;
 	bool mIsInstanced = false;
-	std::vector<Matrix4> mMatrices;
-	
+
 	u32 mVAO = 0;
-	VertexBuffer mVBOPosition;
-	VertexBuffer mVBOTexture;
-	VertexBuffer mVBOColor;
-    BonesBuffer mVBOBones;
+
+	GPUBuffer<Vector3> mVBOPosition;
+	GPUBuffer<Vector2> mVBOTexture;
+	GPUBuffer<Vector4> mVBOColor;
+	GPUBuffer<BoneVertexData> mVBOBone;
+    
+	std::vector<Matrix4> mMatrices;
+	GPUBuffer<Matrix4> mVBOModelMatrix;
+
 	u32 mEBO = 0;
 public:
 	GET(IsInstanced)

@@ -31,7 +31,7 @@ private:
 private:
 	TransformState mTransformState;
 	Matrix4 mRendererModelMatrix;
-	bool mVerticesDirty = true;
+	bool mPositionsDirty = true;
 	std::vector<Vector3> mVertices;
 	Vector4 mColor;
 	Vector3 mPositionOffset;

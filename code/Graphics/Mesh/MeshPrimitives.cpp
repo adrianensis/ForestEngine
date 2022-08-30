@@ -10,137 +10,138 @@ void MeshPrimitives::terminate()
 {
 	mPrimitivesMap.clear();
 }
+
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
-OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
-mesh.get().init(4*1, 2*1);
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
+	mesh.get().init(4*1, 2*1);
 
-mesh.get().addVertex(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
-mesh.get().addVertex(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
-mesh.get().addVertex(Vector3(0.5f, 0.5f, 0.0f)); // top right
-mesh.get().addVertex(Vector3(-0.5f, 0.5f, 0.0f)); // top left
+	mesh.get().addPosition(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
+	mesh.get().addPosition(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
+	mesh.get().addPosition(Vector3(0.5f, 0.5f, 0.0f)); // top right
+	mesh.get().addPosition(Vector3(-0.5f, 0.5f, 0.0f)); // top left
 
-mesh.get().addTexCoord(0.0f, 0.0f); // bottom left
-mesh.get().addTexCoord(1.0f, 0.0f); // bottom right
-mesh.get().addTexCoord(1.0f, 1.0f); // top right
-mesh.get().addTexCoord(0.0f, 1.0f); // top left
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f)); // bottom left
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f)); // bottom right
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f)); // top right
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f)); // top left
 
-mesh.get().addFace(0,1,2);
-mesh.get().addFace(2,3,0);
+	mesh.get().addFace(Face(0,1,2));
+	mesh.get().addFace(Face(2,3,0));
 
-return mesh;
+	return mesh;
 }
 
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 {
-OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
-mesh.get().init(4*6, 2*6);
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
+	mesh.get().init(4*6, 2*6);
 
-u32 elementOffsetIncrement = 4;
-u32 elementOffset = 0;
+	u32 elementOffsetIncrement = 4;
+	u32 elementOffset = 0;
 
-Vector3 bottomLeftFront(-0.5f, -0.5f, 0.5f); // bottom left front
-Vector3 bottomRightFront(0.5f, -0.5f, 0.5f); // bottom right front
-Vector3 topLeftFront(-0.5f, 0.5f, 0.5f); // top right front
-Vector3 topRightFront(0.5f, 0.5f, 0.5f); // top left front
+	Vector3 bottomLeftFront(-0.5f, -0.5f, 0.5f); // bottom left front
+	Vector3 bottomRightFront(0.5f, -0.5f, 0.5f); // bottom right front
+	Vector3 topLeftFront(-0.5f, 0.5f, 0.5f); // top right front
+	Vector3 topRightFront(0.5f, 0.5f, 0.5f); // top left front
 
-Vector3 bottomLeftBack(-0.5f, -0.5f, -0.5f); // bottom left back
-Vector3 bottomRightBack(0.5f, -0.5f, -0.5f); // bottom right back
-Vector3 topLeftBack(-0.5f, 0.5f, -0.5f); // top right back
-Vector3 topRightBack(0.5f, 0.5f, -0.5f); // top left back
+	Vector3 bottomLeftBack(-0.5f, -0.5f, -0.5f); // bottom left back
+	Vector3 bottomRightBack(0.5f, -0.5f, -0.5f); // bottom right back
+	Vector3 topLeftBack(-0.5f, 0.5f, -0.5f); // top right back
+	Vector3 topRightBack(0.5f, 0.5f, -0.5f); // top left back
 
-mesh.get().addVertex(bottomLeftFront);
-mesh.get().addVertex(bottomRightFront);
-mesh.get().addVertex(topRightFront);
-mesh.get().addVertex(topLeftFront);
+	mesh.get().addPosition(bottomLeftFront);
+	mesh.get().addPosition(bottomRightFront);
+	mesh.get().addPosition(topRightFront);
+	mesh.get().addPosition(topLeftFront);
 
-mesh.get().addTexCoord(0.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 1.0f);
-mesh.get().addTexCoord(0.0f, 1.0f);
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
 
-mesh.get().addFace(0+elementOffset,1+elementOffset,2+elementOffset);
-mesh.get().addFace(2+elementOffset,3+elementOffset,0+elementOffset);
+	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-elementOffset += elementOffsetIncrement;
+	elementOffset += elementOffsetIncrement;
 
-mesh.get().addVertex(bottomLeftBack);
-mesh.get().addVertex(bottomLeftFront);
-mesh.get().addVertex(topLeftFront);
-mesh.get().addVertex(topLeftBack);
+	mesh.get().addPosition(bottomLeftBack);
+	mesh.get().addPosition(bottomLeftFront);
+	mesh.get().addPosition(topLeftFront);
+	mesh.get().addPosition(topLeftBack);
 
-mesh.get().addTexCoord(0.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 1.0f);
-mesh.get().addTexCoord(0.0f, 1.0f);
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
 
-mesh.get().addFace(0+elementOffset,1+elementOffset,2+elementOffset);
-mesh.get().addFace(2+elementOffset,3+elementOffset,0+elementOffset);
+	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-elementOffset += elementOffsetIncrement;
+	elementOffset += elementOffsetIncrement;
 
-mesh.get().addVertex(bottomRightBack);
-mesh.get().addVertex(bottomLeftBack);
-mesh.get().addVertex(topLeftBack);
-mesh.get().addVertex(topRightBack);
+	mesh.get().addPosition(bottomRightBack);
+	mesh.get().addPosition(bottomLeftBack);
+	mesh.get().addPosition(topLeftBack);
+	mesh.get().addPosition(topRightBack);
 
-mesh.get().addTexCoord(0.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 1.0f);
-mesh.get().addTexCoord(0.0f, 1.0f);
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
 
-mesh.get().addFace(0+elementOffset,1+elementOffset,2+elementOffset);
-mesh.get().addFace(2+elementOffset,3+elementOffset,0+elementOffset);
+	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-elementOffset += elementOffsetIncrement;
+	elementOffset += elementOffsetIncrement;
 
-mesh.get().addVertex(bottomRightFront);
-mesh.get().addVertex(bottomRightBack);
-mesh.get().addVertex(topRightBack);
-mesh.get().addVertex(topRightFront);
+	mesh.get().addPosition(bottomRightFront);
+	mesh.get().addPosition(bottomRightBack);
+	mesh.get().addPosition(topRightBack);
+	mesh.get().addPosition(topRightFront);
 
-mesh.get().addTexCoord(0.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 1.0f);
-mesh.get().addTexCoord(0.0f, 1.0f);
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
 
-mesh.get().addFace(0+elementOffset,1+elementOffset,2+elementOffset);
-mesh.get().addFace(2+elementOffset,3+elementOffset,0+elementOffset);
+	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-elementOffset += elementOffsetIncrement;
+	elementOffset += elementOffsetIncrement;
 
-mesh.get().addVertex(topLeftFront);
-mesh.get().addVertex(topRightFront);
-mesh.get().addVertex(topRightBack);
-mesh.get().addVertex(topLeftBack);
+	mesh.get().addPosition(topLeftFront);
+	mesh.get().addPosition(topRightFront);
+	mesh.get().addPosition(topRightBack);
+	mesh.get().addPosition(topLeftBack);
 
-mesh.get().addTexCoord(0.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 1.0f);
-mesh.get().addTexCoord(0.0f, 1.0f);
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
 
-mesh.get().addFace(0+elementOffset,1+elementOffset,2+elementOffset);
-mesh.get().addFace(2+elementOffset,3+elementOffset,0+elementOffset);
+	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-elementOffset += elementOffsetIncrement;
+	elementOffset += elementOffsetIncrement;
 
-mesh.get().addVertex(bottomLeftBack);
-mesh.get().addVertex(bottomRightBack);
-mesh.get().addVertex(bottomRightFront);
-mesh.get().addVertex(bottomLeftFront);
+	mesh.get().addPosition(bottomLeftBack);
+	mesh.get().addPosition(bottomRightBack);
+	mesh.get().addPosition(bottomRightFront);
+	mesh.get().addPosition(bottomLeftFront);
 
-mesh.get().addTexCoord(0.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 0.0f);
-mesh.get().addTexCoord(1.0f, 1.0f);
-mesh.get().addTexCoord(0.0f, 1.0f);
+	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
+	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
+	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
 
-mesh.get().addFace(0+elementOffset,1+elementOffset,2+elementOffset);
-mesh.get().addFace(2+elementOffset,3+elementOffset,0+elementOffset);
+	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-elementOffset += elementOffsetIncrement;
+	elementOffset += elementOffsetIncrement;
 
-return mesh;
+	return mesh;
 }
 

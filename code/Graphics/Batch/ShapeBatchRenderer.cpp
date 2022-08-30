@@ -27,7 +27,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 
 	mIsWorldSpace = isWorldSpace;
 
-	mVerticesPerShape = verticesPerShape;
+	mPositionsPerShape = verticesPerShape;
 
 	mPositionBuffer.reserve(mMaxShapes * 2 * 3); // 2 vertex per line * 3 floats per vertex
 	mColorBuffer.reserve(mMaxShapes * 2 * 4); // 2 vertex per line * 4 floats per vertex
@@ -74,20 +74,22 @@ void ShapeBatchRenderer::render()
 void ShapeBatchRenderer::bind()
 {
 	mVAO = RenderContext::createVAO();
-	mVBOPosition = RenderContext::createVBO(3, 0);
-	mVBOColor = RenderContext::createVBO(4, 1);
+	mVBOPosition = RenderContext::createVBO();
+	RenderContext::attribute(0, 3, GL_FLOAT, 3 * sizeof(f32), 0, 0);
+	mVBOColor = RenderContext::createVBO();
+	RenderContext::attribute(1, 4, GL_FLOAT, 4 * sizeof(f32), 0, 0);
 	mEBO = RenderContext::createEBO();
 
 	RenderContext::resizeVBO(mVBOPosition, mPositionBuffer.capacity());
 	RenderContext::resizeVBO(mVBOColor, mColorBuffer.capacity());
 
-	FOR_RANGE(i, 0, mMaxShapes * mVerticesPerShape)
+	FOR_RANGE(i, 0, mMaxShapes * mPositionsPerShape)
 	{
 		mIndicesBuffer.push_back(i);
 	}
 
 	RenderContext::resizeEBO(mEBO, mIndicesBuffer.size());
-	RenderContext::setDataEBO(mEBO, mIndicesBuffer);
+	RenderContext::setDataEBORaw(mEBO, mIndicesBuffer);
 
 	RenderContext::enableVAO(0);
 }

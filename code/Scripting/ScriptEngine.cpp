@@ -15,7 +15,7 @@ void ScriptEngine::addComponent(Ptr<IEngineSystemComponent> component)
 {
 	if(component.get().getClassId() == Script::getClassIdStatic())
 	{
-		Ptr<Script> script = Ptr<Script>::Cast(component);
+		Ptr<Script> script = Ptr<Script>::cast(component);
 		mScripts.push_back(script);
 	}
 }

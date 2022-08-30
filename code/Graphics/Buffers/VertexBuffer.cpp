@@ -1,21 +1,23 @@
 #include "Graphics/Buffers/VertexBuffer.hpp"
 
 
-VertexBuffer::~VertexBuffer() 
+GPUBufferBase::~GPUBufferBase() 
 {
 }
 
-void VertexBuffer::init(u32 elementSize, u32 propertyArrayIndex, bool isStatic)
+void GPUBufferBase::init(u32 typeSizeInBytes, bool isStatic)
 {
 	terminate();
 
+	mTypeSizeInBytes = typeSizeInBytes;
 	mIsStatic = isStatic;
-	mAttribPointerIndex = propertyArrayIndex;
-	mVBO = RenderContext::createVBO(elementSize, mAttribPointerIndex);
+
+	mVBO = RenderContext::createVBO();
+
 	mGenerated = true;
 }
 
-void VertexBuffer::terminate()
+void GPUBufferBase::terminate()
 {
 	if(mGenerated)
 	{
@@ -24,50 +26,30 @@ void VertexBuffer::terminate()
 	}
 }
 
-void VertexBuffer::resize(u32 size)
+void GPUBufferBase::resize(u32 size)
 {
-	RenderContext::resizeVBO(mVBO, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	RenderContext::resizeVBOAnyType(mVBO, mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-void VertexBuffer::setData(CR(std::vector<f32>)data)
+void GPUBufferBase::attribute(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor)
 {
-	RenderContext::setDataVBO(mVBO, data);
-}
-
-BonesBuffer::~BonesBuffer()
-{
-}
-
-void BonesBuffer::init(u32 propertyArrayIndex, bool isStatic)
-{
-	mIsStatic = isStatic;
-	mAttribPointerIndex = propertyArrayIndex;
-
-	mVBO = RenderContext::createVBOAnyType(1, GL_INT, sizeof(BoneVertexData), mAttribPointerIndex);
-
-	RenderContext::enableProperty(mAttribPointerIndex + 1);
-	glVertexAttribPointer(mAttribPointerIndex + 1, BoneVertexData::smMaxBonesPerVertex, GL_FLOAT, GL_FALSE, sizeof(BoneVertexData), (byte *)(BoneVertexData::smMaxBonesPerVertex * sizeof(i32)));
-
-	mGenerated = true;
-}
-
-void BonesBuffer::terminate()
-{
-	if(mGenerated)
+	u32 primitiveTypeSize = mTypeSizeInBytes;
+	switch (primitiveType)
 	{
-		glDeleteBuffers(1, &mVBO);
-		mGenerated = false;
+		case GPUBufferPrimitiveType::FLOAT:
+			primitiveTypeSize = sizeof(f32);
+		break;
+		case GPUBufferPrimitiveType::INT:
+			primitiveTypeSize = sizeof(u32);
+		break;
 	}
+
+	attributeCustomSize(attributeIndex, primitiveType, mTypeSizeInBytes/primitiveTypeSize, pointerOffset, divisor);
 }
 
-void BonesBuffer::resize(u32 size)
+void GPUBufferBase::attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor)
 {
-	RenderContext::resizeVBOAnyType(mVBO, sizeof(BoneVertexData), size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-}
-
-void BonesBuffer::setData(CR(std::vector<BoneVertexData>)data)
-{
-	RenderContext::setDataVBOAnyType(mVBO, data);
+	RenderContext::attribute(attributeIndex, elementSize, (u32)primitiveType, mTypeSizeInBytes, pointerOffset, divisor);
 }
 
 MeshBuffer::~MeshBuffer() 
@@ -84,32 +66,28 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mIsInstanced = isInstanced;
 	mVAO = RenderContext::createVAO();
 	// Force static draw if instanced
-	mVBOPosition.init(Mesh::smVertexPositionSize, 0, mIsStatic || mIsInstanced);
-	mVBOTexture.init(Mesh::smVertexTexCoordSize, 1, mIsStatic || mIsInstanced);
-	mVBOColor.init(Mesh::smVertexColorSize, 2, mIsStatic || mIsInstanced);
+	mVBOPosition.init(mIsStatic || mIsInstanced);
+	mVBOPosition.attribute(0, GPUBufferPrimitiveType::FLOAT, 0, 0);
+	mVBOTexture.init(mIsStatic || mIsInstanced);
+	mVBOTexture.attribute(1, GPUBufferPrimitiveType::FLOAT, 0, 0);
+	mVBOColor.init(mIsStatic || mIsInstanced);
+	mVBOColor.attribute(2, GPUBufferPrimitiveType::FLOAT, 0, 0);
 
 	if(mIsInstanced)
 	{
-		glGenBuffers(1, &mVBOMatrices);
-		glBindBuffer(GL_ARRAY_BUFFER, mVBOMatrices);
+		mVBOModelMatrix.init(mIsStatic || mIsInstanced);
 
 		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
-		RenderContext::enableProperty(3);
-		glVertexAttribPointer(3, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)0);
-		RenderContext::enableProperty(4);
-		glVertexAttribPointer(4, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(1 * columnBytesSize));
-		RenderContext::enableProperty(5);
-		glVertexAttribPointer(5, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(2 * columnBytesSize));
-		RenderContext::enableProperty(6);
-		glVertexAttribPointer(6, Matrix4::smColumnSize, GL_FLOAT, GL_FALSE, 4 * columnBytesSize, (void*)(3 * columnBytesSize));
 
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
-		glVertexAttribDivisor(5, 1);
-		glVertexAttribDivisor(6, 1);
+		mVBOModelMatrix.attributeCustomSize(3, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 0 * columnBytesSize, 1);
+		mVBOModelMatrix.attributeCustomSize(4, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 1 * columnBytesSize, 1);
+		mVBOModelMatrix.attributeCustomSize(5, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 2 * columnBytesSize, 1);
+		mVBOModelMatrix.attributeCustomSize(6, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 3 * columnBytesSize, 1);
 	}
 
-	mVBOBones.init(7, mIsStatic || mIsInstanced);
+	mVBOBone.init(mIsStatic || mIsInstanced);
+	mVBOBone.attributeCustomSize(7, GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex, 0, 0);
+	mVBOBone.attributeCustomSize(8, GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
 
 	mEBO = RenderContext::createEBO();
 
@@ -124,11 +102,11 @@ void MeshBuffer::terminate()
 		mVBOPosition.terminate();
 		mVBOTexture.terminate();
 		mVBOColor.terminate();
-		mVBOBones.terminate();
+		mVBOBone.terminate();
 
 		if(mIsInstanced)
 		{
-			glDeleteBuffers(1, &mVBOMatrices);
+			mVBOModelMatrix.terminate();
 		}
 
 		glDeleteBuffers(1, &mEBO);
@@ -139,28 +117,28 @@ void MeshBuffer::terminate()
 
 void MeshBuffer::resize(const Mesh& mesh)
 {
-	mVBOPosition.resize(mesh.getVertices().capacity());
+	mVBOPosition.resize(mesh.getPositions().capacity());
 	mVBOTexture.resize(mesh.getTextureCoordinates().capacity());
 	mVBOColor.resize(mesh.getColors().capacity());
-	mVBOBones.resize(mesh.getBonesVertexData().capacity());
+	mVBOBone.resize(mesh.getBonesVertexData().capacity());
 	
 	if(mIsInstanced)
 	{
-		RenderContext::resizeVBOAnyType(mVBOMatrices, sizeof(Matrix4), mMatrices.capacity(), mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+		mVBOModelMatrix.resize(mMatrices.capacity());
 	}
 }
 
 void MeshBuffer::setData(const Mesh& mesh)
 {
-	mVBOPosition.setData(mesh.getVertices());
+	mVBOPosition.setData(mesh.getPositions());
 	mVBOTexture.setData(mesh.getTextureCoordinates());
 	mVBOColor.setData(mesh.getColors());
-	mVBOBones.setData(mesh.getBonesVertexData());
+	mVBOBone.setData(mesh.getBonesVertexData());
 }
 
 void MeshBuffer::setIndexesData(const Mesh& mesh)
 {
-	RenderContext::resizeEBO(mEBO, mesh.getFaces().size(), mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	RenderContext::resizeEBO(mEBO, mesh.getFaces().size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	RenderContext::setDataEBO(mEBO, mesh.getFaces());
 }
 
@@ -171,13 +149,12 @@ void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 	if(mIsInstanced)
 	{
 		mMatrices.push_back(modelMatrix);
-		//std::copy(modelMatrix.getData(), modelMatrix, back_inserter(mMatrices));
 	}
 }
 
 void MeshBuffer::setDataInstanced()
 {
-	RenderContext::setDataVBOAnyType<Matrix4>(mVBOMatrices, mMatrices);
+	mVBOModelMatrix.setData(mMatrices);
 }
 
 void MeshBuffer::clear()
@@ -197,7 +174,7 @@ void MeshBuffer::setMaxInstances(u32 maxInstances)
 	if(mIsInstanced)
 	{
 		mMatrices.reserve(maxInstances);
-		RenderContext::resizeVBOAnyType(mVBOMatrices, sizeof(Matrix4), mMatrices.capacity(), mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+		mVBOModelMatrix.resize(mMatrices.capacity());
 	}
 }
 
@@ -227,11 +204,11 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 	{
 		mMeshBuilder.init(mPrototypeMesh.get().getVertexCount() * 1, mPrototypeMesh.get().getFacesCount() * 1);
 
-		mMeshBuilder.addVertices(mPrototypeMesh.get().getVertices());
+		mMeshBuilder.addPositions(mPrototypeMesh.get().getPositions());
 		mMeshBuilder.addTextureCoordinates(mPrototypeMesh.get().getTextureCoordinates());
 		FOR_RANGE(i, 0, mPrototypeMesh.get().getVertexCount())
 		{
-			mMeshBuilder.addColor(0,0,0,1);
+			mMeshBuilder.addColor(Vector4(0,0,0,1));
 		}
 		mMeshBuilder.addBonesVertexData(mPrototypeMesh.get().getBonesVertexData());
 
@@ -293,7 +270,7 @@ void MeshBatcher::addInstance(const Mesh& meshInstance)
 {
 	PROFILER_CPU()
 
-	mMeshBuilder.addVertices(meshInstance.getVertices());
+	mMeshBuilder.addPositions(meshInstance.getPositions());
 	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
 	mMeshBuilder.addColors(meshInstance.getColors());
 	mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
@@ -306,7 +283,7 @@ void MeshBatcher::drawCall()
 	if (mMeshesIndex > 0)
 	{
 		sendDataToGPU();
-		RenderContext::drawElements(mPrototypeMesh.get().getFaces().size(), mMeshesIndex, mMeshBuffer.getIsInstanced());
+		RenderContext::drawElements(mPrototypeMesh.get().getFaces().size() * 3, mMeshesIndex, mMeshBuffer.getIsInstanced());
 	}
 }
 
@@ -346,7 +323,12 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 		
 		FOR_RANGE(faceIndex, 0, mPrototypeMesh.get().getFaces().size())
 		{
-			mMeshBuilder.addFaceIndex(mPrototypeMesh.get().getFaces()[faceIndex] + offset);
+			Face newFace = mPrototypeMesh.get().getFaces()[faceIndex];
+			newFace.mIndex0 += offset;
+			newFace.mIndex1 += offset;
+			newFace.mIndex2 += offset;
+
+			mMeshBuilder.addFace(newFace);
 		}
 	}
 

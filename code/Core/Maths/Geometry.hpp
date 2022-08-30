@@ -6,6 +6,27 @@
 #include "Core/Maths/MathUtils.hpp"
 #include "Core/Log/Log.hpp"
 
+class Face
+{
+	GENERATE_METADATA_STRUCT(Face);
+	
+public:
+    Face(u32 index0, u32 index1, u32 index2);
+
+	Face& operator=(const Face& rhs)
+	{
+        mIndex0 = rhs.mIndex0;
+        mIndex1 = rhs.mIndex1;
+        mIndex2 = rhs.mIndex2;
+        return *this;
+	}
+
+public:
+	u32 mIndex0 = 0;
+    u32 mIndex1 = 0;
+    u32 mIndex2 = 0;
+};
+
 class Shape: public ObjectBase
 {
     GENERATE_METADATA(Shape)

@@ -22,14 +22,13 @@ public:
     static void clear();
     static void swap();
     static void terminate();
-    static GLuint createVBO(u32 elementSize, u32 propertyArrayIndex);
-    static GLuint createVBOU32(u32 elementSize, u32 propertyArrayIndex);
-    static GLuint createVBOAnyType(u32 elementSize, u32 primitiveType, u32 typeSize, u32 propertyArrayIndex);
+    static GLuint createVBO();
+    static void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
     static GLuint createVAO();
     static GLuint createEBO();
     static void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    static void resizeVBOAnyType(u32 VBO, u32 typeSize, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    static void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void setDataVBO(u32 VBO, CR(std::vector<f32>)data);
     static void setDataVBOU32(u32 VBO, CR(std::vector<u32>)data);
@@ -40,7 +39,9 @@ public:
         setDataVBOAnyTypeRaw(VBO, sizeof(T), data.size(), data.data());
     }
 
-    static void setDataEBO(u32 EBO, CR(std::vector<u32>)data);
+    static void setDataEBO(u32 EBO, CR(std::vector<Face>)data);
+    static void setDataEBORaw(u32 EBO, CR(std::vector<u32>)data);
+
     static void enableProperty(u32 propertyArrayIndex);
     static void disableProperty(u32 propertyArrayIndex);
     static void enableVAO(u32 VAO);
