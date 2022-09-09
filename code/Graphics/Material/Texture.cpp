@@ -6,12 +6,12 @@
 
 Texture::~Texture() 
 {
-	delete[] mData;
+	deleteData();
+	glDeleteTextures(1, &mTextureId);
 }
 
 void Texture::init(const std::string& path)
 {
-
 	if (!mData)
 	{
 		mPath = path;
@@ -22,7 +22,7 @@ void Texture::init(const std::string& path)
 		bind();
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, getData());
-
+		deleteData();
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_TEXTURE_MAG_FILTER
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -61,5 +61,14 @@ void Texture::loadImage()
 	{
 		mWidth = width;
 		mHeight = height;
+	}
+}
+
+void Texture::deleteData()
+{
+	if(mData)
+	{
+		delete[] mData;
+		mData = nullptr;
 	}
 }

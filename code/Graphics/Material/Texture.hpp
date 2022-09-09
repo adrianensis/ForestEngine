@@ -17,6 +17,7 @@ public:
 
 private:
     void loadImage();
+	void deleteData();
 
 private: 
 	u32 mTextureId = -1;

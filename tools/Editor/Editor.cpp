@@ -184,6 +184,19 @@ void Editor::firstUpdate()
 	{
 	});
 
+	uiBuilder.
+	nextRow();
+
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){}).
+	addOption("Option 2", [](UIElement *uiElement){}).
+	addOption("Option 3", [](UIElement *uiElement){});
+
 	cameraGameObject = ScenesManager::getInstance().getCurrentScene()->getCameraGameObject();
 }
 
