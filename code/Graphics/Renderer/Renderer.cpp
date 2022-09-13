@@ -140,7 +140,7 @@ void Renderer::onDestroy()
 
 const Mesh& Renderer::generateMeshInstance()
 {
-	CR(std::vector<Vector3>)vertexPositions = getVertices();
+	const std::vector<Vector3>& vertexPositions = getVertices();
 
 	mMeshInstance.init(mMesh.get().getVertexCount(), mMesh.get().getFacesCount());
 

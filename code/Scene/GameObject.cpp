@@ -45,7 +45,7 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 	{
 		component.get().destroy();
 
-		R(std::list<OwnerPtr<Component>>) list = mComponentsMap.at(classId);
+		std::list<OwnerPtr<Component>>& list = mComponentsMap.at(classId);
 		list.remove(component);
 	}
 }
@@ -128,7 +128,7 @@ std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
 	return result;
 }
 
-CR(std::list<OwnerPtr<Component>>) GameObject::getComponentsNoCopy(ClassId classId) const
+const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId classId) const
 {
 	const std::list<OwnerPtr<Component>>* components = nullptr;
 

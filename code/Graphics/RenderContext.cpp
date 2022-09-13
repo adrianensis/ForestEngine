@@ -147,13 +147,13 @@ void RenderContext::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRA
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * size, nullptr, drawMode);
 }
 
-void RenderContext::setDataVBO(u32 VBO, CR(std::vector<f32>)data)
+void RenderContext::setDataVBO(u32 VBO, const std::vector<f32>& data)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(f32) * data.size(), data.data());
 }
 
-void RenderContext::setDataVBOU32(u32 VBO, CR(std::vector<u32>)data)
+void RenderContext::setDataVBOU32(u32 VBO, const std::vector<u32>& data)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());
@@ -165,13 +165,13 @@ void RenderContext::setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, typeSize * size, data);
 }
 
-void RenderContext::setDataEBO(u32 EBO, CR(std::vector<Face>)data)
+void RenderContext::setDataEBO(u32 EBO, const std::vector<Face>& data)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(Face) * data.size(), data.data());
 }
 
-void RenderContext::setDataEBORaw(u32 EBO, CR(std::vector<u32>)data)
+void RenderContext::setDataEBORaw(u32 EBO, const std::vector<u32>& data)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());

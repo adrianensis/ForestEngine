@@ -69,7 +69,7 @@ void Shader::addMatrix(const Matrix4& matrix, const std::string& name)
 	glUniformMatrix4fv(location, 1, GL_FALSE, matrix.getData());
 }
 
-void Shader::addMatrixArray(CR(std::vector<Matrix4>) matrixArray, const std::string& name)
+void Shader::addMatrixArray(const std::vector<Matrix4>&  matrixArray, const std::string& name)
 {
 	u32 location = glGetUniformLocation(mProgram, name.c_str());
 	glUniformMatrix4fv(location, matrixArray.size(), GL_FALSE, reinterpret_cast<const GLfloat*>(matrixArray.data()));

@@ -30,17 +30,17 @@ public:
     static void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     static void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    static void setDataVBO(u32 VBO, CR(std::vector<f32>)data);
-    static void setDataVBOU32(u32 VBO, CR(std::vector<u32>)data);
+    static void setDataVBO(u32 VBO, const std::vector<f32>& data);
+    static void setDataVBOU32(u32 VBO, const std::vector<u32>& data);
     
     template<class T>
-    static void setDataVBOAnyType(u32 VBO, CR(std::vector<T>)data)
+    static void setDataVBOAnyType(u32 VBO, const std::vector<T>& data)
     {
         setDataVBOAnyTypeRaw(VBO, sizeof(T), data.size(), data.data());
     }
 
-    static void setDataEBO(u32 EBO, CR(std::vector<Face>)data);
-    static void setDataEBORaw(u32 EBO, CR(std::vector<u32>)data);
+    static void setDataEBO(u32 EBO, const std::vector<Face>& data);
+    static void setDataEBORaw(u32 EBO, const std::vector<u32>& data);
 
     static void enableProperty(u32 propertyArrayIndex);
     static void disableProperty(u32 propertyArrayIndex);

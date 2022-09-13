@@ -75,7 +75,7 @@ public:
 
 private:
     std::list<Ptr<Component>> getComponents(ClassId classId) const;
-    CR(std::list<OwnerPtr<Component>>) getComponentsNoCopy(ClassId classId) const;
+    const std::list<OwnerPtr<Component>>&  getComponentsNoCopy(ClassId classId) const;
     Ptr<Component> getFirstComponent(ClassId classId) const;
 
 private:

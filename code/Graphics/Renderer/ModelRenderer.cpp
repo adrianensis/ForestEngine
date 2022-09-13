@@ -11,7 +11,7 @@ void ModelRenderer::init()
 
 void ModelRenderer::onComponentAdded() 
 {
-	CR(std::vector<OwnerPtr<Mesh>>) meshes = mModel.get().getMeshes();
+	const std::vector<OwnerPtr<Mesh>>&  meshes = mModel.get().getMeshes();
 
 	FOR_LIST(it, meshes)
 	{
