@@ -30,6 +30,11 @@ public:
 		return mObjectId;
 	}
 
+	u64 getHash() const
+	{
+		return std::hash<ObjectId>()(mObjectId);
+	}
+
 	// Assignment
 
 	virtual void copy(const ObjectBase *other)

@@ -19,14 +19,14 @@ Batch::~Batch()
 	mMeshBatcher.terminate();
 }
 
-void Batch::init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace, bool isInstanced)
+void Batch::init(const BatchKey& batchKey)
 {
-	mMaterial = material;
-	mIsWorldSpace = isWorldSpace;
-	mIsStatic = isStatic;
-	mIsInstanced = isInstanced;
+	mMaterial = batchKey.mMaterial;
+	mIsStatic = batchKey.mIsStatic;
+	mIsWorldSpace = batchKey.mIsWorldSpace;
+	mIsInstanced = batchKey.mIsInstanced;
 
-	mMeshBatcher.init(mesh, mIsStatic, mIsInstanced);
+	mMeshBatcher.init(batchKey.mMesh, mIsStatic, mIsInstanced);
 
 	Ptr<Texture> texture = mMaterial.get().getTexture();
 	if (texture)

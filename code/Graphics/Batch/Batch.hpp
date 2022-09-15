@@ -6,6 +6,46 @@
 #include "Graphics/Buffers/VertexBuffer.hpp"
 #include "Graphics/Renderer/Renderer.hpp"
 
+class BatchKey
+{
+public:
+	BatchKey() = default;
+	
+	Ptr<Material> mMaterial;
+	Ptr<const Mesh> mMesh;
+	bool mIsStatic = true;
+	bool mIsWorldSpace = true;
+	bool mIsInstanced = false;
+
+	void init(Ptr<Renderer> renderer)
+	{
+		mMaterial = renderer.get().getMaterial();
+		mMesh = renderer.get().getMesh();
+		mIsStatic = renderer.get().isStatic();
+		mIsWorldSpace = renderer.get().getIsWorldSpace();
+		mIsInstanced = renderer.get().getIsInstanced();
+	}
+
+	bool operator==(const BatchKey& otherBatchKey) const
+	{
+		return mMaterial == otherBatchKey.mMaterial && mMesh == otherBatchKey.mMesh &&
+			mIsStatic == otherBatchKey.mIsStatic && mIsWorldSpace == otherBatchKey.mIsWorldSpace && mIsInstanced == otherBatchKey.mIsInstanced;
+	}
+
+	class BatchKeyFunctor
+	{
+	public:
+	
+		// Use sum of lengths of first and last names
+		// as hash function.
+		size_t operator()(const BatchKey& key) const
+		{
+			u64 materialHash = key.mMaterial.isValid() ? key.mMaterial.get().getHash() : 0;
+			return materialHash ^ key.mMesh.get().getHash() ^
+			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced);
+		}
+	};
+};
 
 class Batch: public ObjectBase
 {
@@ -14,7 +54,7 @@ class Batch: public ObjectBase
 public:
 	~Batch() override;
 
-    void init(Ptr<const Mesh> mesh, Ptr<Material> material, bool isStatic, bool isWorldSpace, bool isInstanced);
+    void init(const BatchKey& batchKey);
 
     void render();
     void addRenderer(Ptr<Renderer> renderer);

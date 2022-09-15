@@ -44,8 +44,6 @@ void RenderEngine::init(f32 sceneSize)
 			mChunks.push_back(chunk);
 		}
 	}
-
-	mBatchesMap.init();
 }
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
