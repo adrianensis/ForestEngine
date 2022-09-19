@@ -25,6 +25,8 @@ void Batch::init(const BatchKey& batchKey)
 	mIsStatic = batchKey.mIsStatic;
 	mIsWorldSpace = batchKey.mIsWorldSpace;
 	mIsInstanced = batchKey.mIsInstanced;
+	mStencilValue = batchKey.mStencilValue;
+	mIsStencilMask = batchKey.mIsStencilMask;
 
 	mMeshBatcher.init(batchKey.mMesh, mIsStatic, mIsInstanced);
 
@@ -52,7 +54,7 @@ void Batch::render()
 		
 		if(isAnimated)
 		{
-			const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel().get().getObjectId());
+			const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel());
 			mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
 		}
 
@@ -65,7 +67,11 @@ void Batch::render()
 
 		if(mPendingDrawCall)
 		{
+			enableStencil();
+
 			mMeshBatcher.drawCall();
+
+			disableStencil();
 
 			mNewRendererAdded = false;
 			mPendingDrawCall = false;
@@ -189,6 +195,44 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 bool Batch::shouldRegenerateBuffers() const
 {
 	return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers || isModelAnimated();
+}
+
+
+void Batch::enableStencil() const
+{
+	if(mStencilValue > 0x00)
+	{
+		glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		if(mIsStencilMask)
+		{
+			// Make it so the stencil test always passes
+			glStencilFunc(GL_ALWAYS, mStencilValue, 0xFF);
+			// Enable modifying of the stencil buffer
+			glStencilMask(0xFF);
+
+			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+			glDepthMask(GL_FALSE);
+		}
+		else
+		{
+			// Make it so the stencil test only passes when not equal to ref value
+			glStencilFunc(GL_NOTEQUAL, mStencilValue, 0xFF);
+			// Disable modifying of the stencil buffer
+			glStencilMask(0x00);
+		}
+	}
+}
+
+void Batch::disableStencil() const
+{
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_TRUE);
+
+	glDisable(GL_STENCIL_TEST);
 }
 
 bool Batch::isModelAnimated() const

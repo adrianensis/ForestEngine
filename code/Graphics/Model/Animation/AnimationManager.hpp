@@ -3,6 +3,7 @@
 
 #include "Core/Module.hpp"
 
+class Model;
 class Animation;
 class AnimationState;
 class SkeletonState;
@@ -15,11 +16,11 @@ public:
     void init();
     void update();
     void createAnimationState(Ptr<const Animation> animation);
-    const std::vector<Matrix4>& getBoneTransforms(ObjectId modelId) const;
+    const std::vector<Matrix4>& getBoneTransforms(Ptr<const Model> model) const;
     void terminate();
 
 private:
-    std::map<ObjectId, OwnerPtr<SkeletonState>> mSkeletonStates;
+    std::map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
 };
 
 #endif

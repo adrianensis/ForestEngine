@@ -48,7 +48,7 @@ void Editor::firstUpdate()
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x*2,y*2,0), 1);
+			//importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(x*2,y*2,0), 1);
 			//importModel("resources/cat_rigged_animation_run.fbx", Vector3(x,y,0), 1.0f);
 			//importModel("resources/Spider.fbx", Vector3(x,y,0),  1);
 
@@ -58,8 +58,8 @@ void Editor::firstUpdate()
 		}
 	}
 
-	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,150), 1.0f);
-	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(100,0,0), 5);
+	importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 1.0f);
+	importModel2("resources/bob_lamp/bob_lamp_update.fbx", Vector3(10,0,0), 1.0f);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(50,0,50), 5);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 5);
 
@@ -320,6 +320,29 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 	ModelRenderer *modelRenderer = NEW(ModelRenderer);
 	modelRenderer->setModel(model);
 	modelRenderer->setIsInstanced(true);
+	modelRenderer->setStencilValue(0x1);
+	modelRenderer->setIsStencilMask(true);
+	
+	gameObject->addComponent<ModelRenderer>(modelRenderer);
+
+	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
+}
+
+void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
+{
+	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
+
+	GameObject* gameObject = NEW(GameObject);
+	gameObject->init();
+	gameObject->setIsStatic(true);
+	gameObject->getTransform().get().setLocalPosition(v);
+	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
+	//gameObject->getTransform().get().setRotation(Vector3(90,0,0));
+
+	ModelRenderer *modelRenderer = NEW(ModelRenderer);
+	modelRenderer->setModel(model);
+	modelRenderer->setIsInstanced(true);
+	modelRenderer->setStencilValue(0x1);
 	
 	gameObject->addComponent<ModelRenderer>(modelRenderer);
 

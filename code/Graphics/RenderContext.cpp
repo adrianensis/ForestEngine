@@ -44,7 +44,7 @@ void RenderContext::init()
 
 		glClearColor(0,0.3,0.3,1);
 		glEnable(GL_DEPTH_TEST); // Enable depth testing
-		glDepthFunc(GL_LEQUAL);	 // Near things obscure far things
+		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);	 // BACK by default
 		glCullFace(GL_BACK);
 
@@ -67,7 +67,7 @@ bool RenderContext::isClosed()
 
 void RenderContext::clear()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color and the depth buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void RenderContext::swap()

@@ -23,7 +23,23 @@ void BatchesMap::render()
 
 	FOR_MAP(it, mBatches)
 	{
-		it->second.get().render();
+		if( ! it->first.mIsStencilMask)
+		{
+			it->second.get().render();
+		}
+	}
+}
+
+void BatchesMap::renderStencil()
+{
+	PROFILER_CPU()
+
+	FOR_MAP(it, mBatches)
+	{
+		if(it->first.mIsStencilMask)
+		{
+			it->second.get().render();
+		}
 	}
 }
 

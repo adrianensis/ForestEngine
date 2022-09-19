@@ -21,6 +21,8 @@ void ModelRenderer::onComponentAdded()
 		renderer->setMesh(*it);
 		renderer->setMaterial(MaterialManager::getInstance().loadMaterial((*it).get().getMaterialPath()));
 		renderer->setIsInstanced(mIsInstanced);
+		renderer->setStencilValue(mStencilValue);
+		renderer->setIsStencilMask(mIsStencilMask);
 		getGameObject()->addComponent<Renderer>(renderer);
 	}
 }

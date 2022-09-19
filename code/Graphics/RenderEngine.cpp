@@ -177,6 +177,8 @@ void RenderEngine::renderBatches()
 {
 	PROFILER_CPU()
 
+	mBatchesMap.renderStencil();
+
 	mBatchesMap.render();
 
 	mShapeBatchRendererMap.render();

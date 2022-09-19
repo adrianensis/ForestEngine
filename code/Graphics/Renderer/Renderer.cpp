@@ -79,7 +79,7 @@ void Renderer::update(bool regenerateVertices)
 					const u32 MAX_BONE_INFLUENCE = BoneVertexData::smMaxBonesPerVertex;
 					const u32 MAX_BONES = 100;
 
-					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().getModel().get().getObjectId());
+					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().getModel());
 					const std::vector<BoneVertexData>& bonesVertexData = mMesh.get().getBonesVertexData();
 
 					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);

@@ -16,6 +16,8 @@ public:
 	bool mIsStatic = true;
 	bool mIsWorldSpace = true;
 	bool mIsInstanced = false;
+	u32 mStencilValue = 0x00;
+	bool mIsStencilMask = false;
 
 	void init(Ptr<Renderer> renderer)
 	{
@@ -24,12 +26,15 @@ public:
 		mIsStatic = renderer.get().isStatic();
 		mIsWorldSpace = renderer.get().getIsWorldSpace();
 		mIsInstanced = renderer.get().getIsInstanced();
+		mStencilValue = renderer.get().getStencilValue();
+		mIsStencilMask = renderer.get().getIsStencilMask();
 	}
 
 	bool operator==(const BatchKey& otherBatchKey) const
 	{
 		return mMaterial == otherBatchKey.mMaterial && mMesh == otherBatchKey.mMesh &&
-			mIsStatic == otherBatchKey.mIsStatic && mIsWorldSpace == otherBatchKey.mIsWorldSpace && mIsInstanced == otherBatchKey.mIsInstanced;
+			mIsStatic == otherBatchKey.mIsStatic && mIsWorldSpace == otherBatchKey.mIsWorldSpace && mIsInstanced == otherBatchKey.mIsInstanced &&
+			mStencilValue == otherBatchKey.mStencilValue && mIsStencilMask == otherBatchKey.mIsStencilMask;
 	}
 
 	class BatchKeyFunctor
@@ -42,7 +47,8 @@ public:
 		{
 			u64 materialHash = key.mMaterial.isValid() ? key.mMaterial.get().getHash() : 0;
 			return materialHash ^ key.mMesh.get().getHash() ^
-			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced);
+			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
+			(u64)key.mStencilValue ^ static_cast<u64>(key.mIsStencilMask);
 		}
 	};
 };
@@ -69,6 +75,9 @@ private:
 
 	bool isModelAnimated() const;
 
+	void enableStencil() const;
+	void disableStencil() const;
+
 private:
 	std::list<Ptr<Renderer>> mRenderers;
 
@@ -79,6 +88,8 @@ private:
 	bool mIsWorldSpace = false;
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
+	u32 mStencilValue = 0x00;
+	bool mIsStencilMask = false;
 
 	bool mNewRendererAdded = false;
 	bool mPendingDrawCall = false;

@@ -13,6 +13,7 @@ public:
 
     void addRenderer(Ptr<Renderer> renderer);
     void render();
+    void renderStencil();
     void forceRegenerateBuffers();
 
 private:

@@ -20,10 +20,14 @@ public:
 private:
 	Ptr<const Model> mModel;
     bool mIsInstanced = false;
+	u32 mStencilValue = 0x00;
+	bool mIsStencilMask = false;
 
 public:
 	GET_SET(Model)
 	GET_SET(IsInstanced)
+	GET_SET(StencilValue)
+	GET_SET(IsStencilMask)
 };
 
 #endif
