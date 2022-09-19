@@ -45,8 +45,7 @@ public:
 		// as hash function.
 		size_t operator()(const BatchKey& key) const
 		{
-			u64 materialHash = key.mMaterial.isValid() ? key.mMaterial.get().getHash() : 0;
-			return materialHash ^ key.mMesh.get().getHash() ^
+			return key.mMaterial.get().getHash() ^ key.mMesh.get().getHash() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
 			(u64)key.mStencilValue ^ static_cast<u64>(key.mIsStencilMask);
 		}

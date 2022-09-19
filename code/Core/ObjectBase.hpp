@@ -30,7 +30,7 @@ public:
 		return mObjectId;
 	}
 
-	u64 getHash() const
+	virtual u64 getHash() const
 	{
 		return std::hash<ObjectId>()(mObjectId);
 	}

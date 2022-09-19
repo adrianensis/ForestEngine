@@ -19,6 +19,8 @@ public:
     void enable();
     void disable();
 
+	virtual u64 getHash() const override;
+
 private: 
 	Vector4 mColor;
 	Ptr<Shader> mShader;
