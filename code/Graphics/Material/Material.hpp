@@ -19,13 +19,11 @@ public:
     void enable();
     void disable();
 
-	virtual u64 getHash() const override;
-
 private: 
 	Vector4 mColor;
 	Ptr<Shader> mShader;
 	Ptr<Texture> mTexture;
-	bool mAlphaEnabled = false;
+	bool mAlphaEnabled = true;
 	bool mHasBorder = false;
 
 public:

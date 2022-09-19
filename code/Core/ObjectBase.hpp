@@ -32,7 +32,7 @@ public:
 
 	virtual u64 getHash() const
 	{
-		return std::hash<ObjectId>()(mObjectId);
+		return std::hash<ObjectId>()(mObjectId * 33) + Hash::hashString(getClassNameStatic());
 	}
 
 	// Assignment

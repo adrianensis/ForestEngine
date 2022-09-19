@@ -9,8 +9,6 @@
 
 Material::Material()
 {
-	mAlphaEnabled = true;
-	mHasBorder = false;
 }
 
 void Material::init()
@@ -53,12 +51,6 @@ void Material::enable()
 void Material::disable()
 {
 	mShader.get().disable();
-}
-
-u64 Material::getHash() const
-{
-	u64 textureHash = mTexture.isValid() ? mTexture.get().getHash() : 0;
-	return ObjectBase::getHash() ^ textureHash ^ mShader.get().getHash();
 }
 
 IMPLEMENT_SERIALIZATION(Material)

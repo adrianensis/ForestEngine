@@ -197,7 +197,6 @@ bool Batch::shouldRegenerateBuffers() const
 	return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers || isModelAnimated();
 }
 
-
 void Batch::enableStencil() const
 {
 	if(mStencilValue > 0x00)

@@ -33,7 +33,7 @@ void Chunk::set(const Vector3& leftTop, f32 size)
 
 void Chunk::update()
 {
-	//RenderEngine::getInstance().drawCube(mCube);
+	RenderEngine::getInstance().drawCube(mCube);
 
 	FOR_LIST(it, mRenderers)
 	{

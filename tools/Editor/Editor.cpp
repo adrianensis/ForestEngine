@@ -58,7 +58,7 @@ void Editor::firstUpdate()
 		}
 	}
 
-	importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 1.0f);
+	importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	importModel2("resources/bob_lamp/bob_lamp_update.fbx", Vector3(10,0,0), 1.0f);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(50,0,50), 5);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 5);

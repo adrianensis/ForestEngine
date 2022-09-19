@@ -36,7 +36,7 @@ void main()
       FragColor = texture2D(uSampler, t);
       
       if(alphaEnabled && (FragColor.r + FragColor.g + FragColor.b) == 0){
-        FragColor.a = 0;
+        discard;
       } else {
         FragColor.r += vColor.r;
         FragColor.g += vColor.g;
@@ -44,34 +44,11 @@ void main()
         FragColor.a = vColor.a;
       }
 
-      // for (int i = 0 ; i < 4 ; i++) {
-      //   if(i == 0 || (i > 0 && Weights0[i] > Weights0[i-1]))
-      //   {
-      //     if (Weights0[i] >= 0.7) {
-      //         FragColor += vec4(1.0, 0.0, 0.0, 0.0) * Weights0[i];
-      //     } else if (Weights0[i] >= 0.4 && Weights0[i] <= 0.6) {
-      //         FragColor += vec4(0.0, 1.0, 0.0, 0.0) * Weights0[i];
-      //     } else {
-      //         FragColor += vec4(1.0, 1.0, 0.0, 0.0) * Weights0[i];
-      //     }
-      //   }
-
-      //   FragColor.a = 1;
-      // }
     } else {
         FragColor.r = vColor.r;
         FragColor.g = vColor.g;
         FragColor.b = vColor.b;
         FragColor.a = vColor.a;
-
-      /*if((hasBorder && (t.x >= 0.01 && t.x <= 0.99 && t.y >= 0.01 && t.y <= 0.99)) || !hasBorder) {
-        FragColor.r = vColor.r;
-        FragColor.g = vColor.g;
-        FragColor.b = vColor.b;
-        FragColor.a = vColor.a;
-      } else {
-        FragColor = vec4(0,0,0,1);
-      }*/
     }
 
     if(clipRegionSize.x > 0.0000001 && clipRegionSize.y > 0.0000001)

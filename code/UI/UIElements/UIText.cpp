@@ -51,26 +51,16 @@ void UIText::setText(const std::string& text)
 {
 	if (mString != text)
 	{
-		bool newRenderersCreated = false;
-
 		if (!mFontRenderers.empty())
 		{
 			if (text.empty())
 			{
-				FOR_ARRAY(i, mFontRenderers)
-				{
-				}
-
 				mFontRenderers.clear();
 			}
 			else
 			{
 				if (mFontRenderers.size() > text.length())
 				{
-					FOR_RANGE(i, text.length(), mString.length())
-					{
-					}
-
 					std::vector<Renderer *> copyVector = mFontRenderers;
 					mFontRenderers.clear();
 					std::copy(copyVector.begin(), copyVector.begin() + text.length(), std::back_inserter(mFontRenderers));
@@ -105,8 +95,6 @@ void UIText::setText(const std::string& text)
 					addComponent<Renderer>(renderer);
 
 					mFontRenderers.push_back(renderer);
-
-					newRenderersCreated = true;
 				}
 
 				renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / RenderContext::getAspectRatio(), 0, 0));

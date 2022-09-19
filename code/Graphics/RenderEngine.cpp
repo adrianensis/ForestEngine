@@ -39,7 +39,7 @@ void RenderEngine::init(f32 sceneSize)
 		{
 			OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>(NEW(Chunk));
 			chunk.get().init();
-			chunk.get().set(Vector3(i * chunkSize, j * chunkSize, chunkSize), chunkSize);
+			chunk.get().set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
 
 			mChunks.push_back(chunk);
 		}

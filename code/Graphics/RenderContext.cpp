@@ -44,9 +44,10 @@ void RenderContext::init()
 
 		glClearColor(0,0.3,0.3,1);
 		glEnable(GL_DEPTH_TEST); // Enable depth testing
-		glDepthFunc(GL_LESS);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_CULL_FACE);	 // BACK by default
 		glCullFace(GL_BACK);
+		glFrontFace(GL_CCW);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
