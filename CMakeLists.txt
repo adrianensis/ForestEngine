@@ -4,8 +4,9 @@
 
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
-set(CMAKE_CXX_COMPILER /usr/bin/g++)
-set(CMAKE_CXX_STANDARD 20)
+# project name
+set(PROJECTNAME forest)
+project(${PROJECTNAME} LANGUAGES CXX)
 
 # ----------------------------------------------------------------------------
 # FUNCTIONS
@@ -38,9 +39,10 @@ set(FOREST forest)
 project(${FOREST})
 
 # ----------------------------------------------------------------------------
-# CPP TARGETS
+# CPP CONFIG
 # ----------------------------------------------------------------------------
-# We need c++14 because it defines the auto type.
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
+set(CMAKE_CXX_STANDARD 20)
 
 # set(CMAKE_CXX_FLAGS_ALL "-std=c++17 -Wall") # this macro was invented by me
 
@@ -247,7 +249,7 @@ endforeach()
 # ----------------------------------------------------------------------------
 
 # single library
-add_library(${FOREST} ${OBJS} ${GLAD_SOURCE} ${DUKTAPE_SOURCE})
+add_library(${FOREST} ${OBJS} ${GLAD_SOURCE})
 
 # ----------------------------------------------------------------------------
 # LINK LIBRARIES
