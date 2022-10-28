@@ -2,13 +2,10 @@
 # FOREST ENGINE
 # ----------------------------------------------------------------------------
 
-if(UNIX)
-  cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-endif(UNIX)
+cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
-if(WIN32)
-  cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
-endif(WIN32)
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
+set(CMAKE_CXX_STANDARD 20)
 
 # ----------------------------------------------------------------------------
 # FUNCTIONS
@@ -58,13 +55,13 @@ if(ENABLE_PROFILER)
 endif(ENABLE_PROFILER)
 
 if(UNIX)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -std=c++17 -Werror=return-type")
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Werror=return-type -fmodules-ts")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D DE_DEBUG -mavx -ftree-vectorize -ffast-math")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_ALL} -O3 -mavx")
 endif(UNIX)
 
 if(WIN32)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} /m /TP /std:c++17")
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} /m /TP")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D DE_DEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_ALL}")
 endif(WIN32)
