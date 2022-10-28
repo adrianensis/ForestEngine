@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UILIST_HPP
+#define UILIST_HPP
 
 #include "UI/UIElements/UIElement.hpp"
 
@@ -24,14 +25,7 @@ public:
 class UIList: public UIElement
 {
     GENERATE_METADATA(UIList)
-
-private:
-
-	std::list<UIButton *> mButtons;
-	std::list<UIListEntry> mEntries;
-
-	void setEntriesVisibility(bool visible);
-
+    
 public:
 	void init() override;
 	void initFromConfig(const UIElementConfig& config) override;
@@ -41,4 +35,14 @@ public:
 
 	void toggle();
 	void onScroll(f32 scroll) override;
+
+private:
+	void setEntriesVisibility(bool visible);
+
+private:
+	std::list<UIButton *> mButtons;
+	std::list<UIListEntry> mEntries;
+
 };
+
+#endif

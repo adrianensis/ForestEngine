@@ -195,7 +195,8 @@ void Editor::firstUpdate()
 	getUIElement<UIList>()->
 	addOption("Option 1", [](UIElement *uiElement){}).
 	addOption("Option 2", [](UIElement *uiElement){}).
-	addOption("Option 3", [](UIElement *uiElement){});
+	addOption("Option 3", [](UIElement *uiElement){}).
+	toggle();
 
 	cameraGameObject = ScenesManager::getInstance().getCurrentScene()->getCameraGameObject();
 }

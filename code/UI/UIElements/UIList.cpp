@@ -110,10 +110,10 @@ void UIList::toggle()
 			button->getRenderer()->setClipRectangle(clipRectangle);
 
 			// Set clip rectangle for UIText label also
-			FOR_LIST(itRenderer, button->getText()->getComponents<Renderer>())
-			{
-				(*itRenderer).get().setClipRectangle(clipRectangle);
-			}
+			// FOR_LIST(itRenderer, button->getText()->getComponents<Renderer>())
+			// {
+			// 	(*itRenderer).get().setClipRectangle(clipRectangle);
+			// }
 
 			mButtons.push_back(button);
 		}
