@@ -85,7 +85,8 @@ void UIList::toggle()
 			setPosition(Vector2((-scale.x / 2.0f) / RenderContext::getAspectRatio(), scale.y/2.0f)).
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
-			setLayer(mConfig.mLayer);
+			setLayer(mConfig.mLayer).
+            setParent(this);
 
 		FOR_LIST(it, mEntries)
 		{
@@ -100,14 +101,14 @@ void UIList::toggle()
 			button->setOnPressedCallback(onPressedCallback);
 			//button->setVisibility(false);
 
-			Transform *t = &button->getTransform().get();
-			t->setParent(&getTransform().get());
+			// Transform *t = &button->getTransform().get();
+			// t->setParent(&getTransform().get());
 
-			Rectangle clipRectangle(
-						Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
-						Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y));
+			// Rectangle clipRectangle(
+			// 			Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
+			// 			Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y));
 
-			button->getRenderer()->setClipRectangle(clipRectangle);
+			// button->getRenderer()->setClipRectangle(clipRectangle);
 
 			// Set clip rectangle for UIText label also
 			// FOR_LIST(itRenderer, button->getText()->getComponents<Renderer>())
