@@ -40,6 +40,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	renderer->setMaterial(mConfig.mMaterial);
 	renderer->setColor(mConfig.mStyle->mBackgroundColor);
 	renderer->setDepth(mConfig.mLayer);
+    renderer->setIsStencilMask(true);
+    renderer->setStencilValue(0x2);
 	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y)));
@@ -97,8 +99,10 @@ void UIList::toggle()
 			setText(label).
 			create<UIButton>();
 
+
 			UIButton *button = (UIButton *)uiBuilder.getUIElement();
 			button->setOnPressedCallback(onPressedCallback);
+            //button->getRenderer()->setStencilValue(0x2);
 			//button->setVisibility(false);
 
 			// Transform *t = &button->getTransform().get();
