@@ -42,6 +42,7 @@ private:
 	i32 mDepth = 0;
 	bool mUseDepth = false; // overrides Z with Depth
 	u32 mStencilValue = 0x00;
+	u32 mStencilFunction = GL_NOTEQUAL;
 	bool mIsStencilMask = false;
 	f32 mRenderDistance = 0.0f;
 	std::map<std::string, Ptr<TextureAnimation>> mTextureAnimations;
@@ -66,6 +67,7 @@ public:
 	GET_SET(UseDepth)
 	GET_SET(StencilValue)
 	GET_SET(IsStencilMask)
+	GET_SET(StencilFunction)
 	GET_SET(RenderDistance)
 	SET(Chunk)
 	GET_SET(IsInstanced)

@@ -91,6 +91,8 @@ void UIText::setText(const std::string& text)
 					renderer->setMaterial(UIManager::getInstance().getFontMaterial());
 					renderer->setUseDepth(true);
 					renderer->setDepth(mLayer);
+					renderer->setStencilValue(mConfig.mStencilValue);
+                    renderer->setStencilFunction(mConfig.mStencilFunction);
 					
 					addComponent<Renderer>(renderer);
 

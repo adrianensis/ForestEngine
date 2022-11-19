@@ -53,6 +53,8 @@ void UIButton::setText(const std::string& text)
 			setLayer(mConfig.mLayer - 1).
 			setIsAffectedByLayout(false).
 			setParent(this).
+            setStencilValue(mConfig.mStencilValue).
+            setStencilFunction(mConfig.mStencilFunction).
 			create<UIText>().
 			getUIElement<UIText>();
 		}

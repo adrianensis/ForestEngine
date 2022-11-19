@@ -88,6 +88,8 @@ void UIList::toggle()
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
 			setLayer(mConfig.mLayer).
+            setStencilValue(0x02).
+            setStencilFunction(GL_EQUAL).
             setParent(this);
 
 		FOR_LIST(it, mEntries)

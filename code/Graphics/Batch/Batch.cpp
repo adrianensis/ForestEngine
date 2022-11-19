@@ -27,6 +27,7 @@ void Batch::init(const BatchKey& batchKey)
 	mIsInstanced = batchKey.mIsInstanced;
 	mStencilValue = batchKey.mStencilValue;
 	mIsStencilMask = batchKey.mIsStencilMask;
+	mStencilFunction = batchKey.mStencilFunction;
 
 	mMeshBatcher.init(batchKey.mMesh, mIsStatic, mIsInstanced);
 
@@ -217,7 +218,7 @@ void Batch::enableStencil() const
 		else
 		{
 			// Make it so the stencil test only passes when not equal to ref value
-			glStencilFunc(GL_NOTEQUAL, mStencilValue, 0xFF);
+			glStencilFunc(mStencilFunction, mStencilValue, 0xFF);
 			// Disable modifying of the stencil buffer
 			glStencilMask(0x00);
 		}

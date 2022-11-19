@@ -61,14 +61,14 @@ void Model::init(const std::string& path)
                     {
                         aiVector3D assimpVertex = assimpMesh->mVertices[vertexIt];
                         Vector3 position = Vector3(assimpVertex.x, assimpVertex.y, assimpVertex.z);
-                        mesh.get().addPosition(position);
+                        mesh.get().addToPositions(position);
 
                         aiVector3D assimpTexCoord = assimpMesh->mTextureCoords[0][vertexIt];
 
                         Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
-                        mesh.get().addTexCoord(texCoord);
+                        mesh.get().addToTextureCoordinates(texCoord);
 
-                        mesh.get().addBoneVertexData(BoneVertexData());
+                        mesh.get().addToBonesVertexData(BoneVertexData());
                     }
                 }
 
@@ -76,7 +76,7 @@ void Model::init(const std::string& path)
                 {
                     const aiFace& assimpFace = assimpMesh->mFaces[faceIt];
                     ASSERT_MSG(assimpFace.mNumIndices == 3, "Face num indices != 3")
-                    mesh.get().addFace(Face(assimpFace.mIndices[0], assimpFace.mIndices[1], assimpFace.mIndices[2]));
+                    mesh.get().addToFaces(Face(assimpFace.mIndices[0], assimpFace.mIndices[1], assimpFace.mIndices[2]));
                 }
 
                 //TODO : REMOVE - TEST

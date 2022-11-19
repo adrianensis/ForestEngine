@@ -146,7 +146,7 @@ const Mesh& Renderer::generateMeshInstance()
 
 	FOR_RANGE(i, 0, mMesh.get().getVertexCount())
 	{
-		mMeshInstance.addPosition(vertexPositions[i]);
+		mMeshInstance.addToPositions(vertexPositions[i]);
 
 		Vector2 vertexTexture = mMesh.get().getTextureCoordinates()[i];
 
@@ -167,12 +167,12 @@ const Mesh& Renderer::generateMeshInstance()
 			}
 		}
 
-		mMeshInstance.addTexCoord(textureCoord);
+		mMeshInstance.addToTextureCoordinates(textureCoord);
 
-		mMeshInstance.addColor(getColor());
+		mMeshInstance.addToColors(getColor());
 	}
 
-	mMeshInstance.copyBones(mMesh);
+	mMeshInstance.appendToBonesVertexData(mMesh.get().getBonesVertexData());
 
 	return mMeshInstance;
 }

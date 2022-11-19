@@ -17,18 +17,18 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
 	mesh.get().init(4*1, 2*1);
 
-	mesh.get().addPosition(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
-	mesh.get().addPosition(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
-	mesh.get().addPosition(Vector3(0.5f, 0.5f, 0.0f)); // top right
-	mesh.get().addPosition(Vector3(-0.5f, 0.5f, 0.0f)); // top left
+	mesh.get().addToPositions(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
+	mesh.get().addToPositions(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
+	mesh.get().addToPositions(Vector3(0.5f, 0.5f, 0.0f)); // top right
+	mesh.get().addToPositions(Vector3(-0.5f, 0.5f, 0.0f)); // top left
 
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f)); // bottom left
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f)); // bottom right
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f)); // top right
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f)); // top left
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f)); // bottom left
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f)); // bottom right
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f)); // top right
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f)); // top left
 
-	mesh.get().addFace(Face(0,1,2));
-	mesh.get().addFace(Face(2,3,0));
+	mesh.get().addToFaces(Face(0,1,2));
+	mesh.get().addToFaces(Face(2,3,0));
 
 	return mesh;
 }
@@ -52,93 +52,93 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	Vector3 topLeftBack(-0.5f, 0.5f, -0.5f); // top right back
 	Vector3 topRightBack(0.5f, 0.5f, -0.5f); // top left back
 
-	mesh.get().addPosition(bottomLeftFront);
-	mesh.get().addPosition(bottomRightFront);
-	mesh.get().addPosition(topRightFront);
-	mesh.get().addPosition(topLeftFront);
+	mesh.get().addToPositions(bottomLeftFront);
+	mesh.get().addToPositions(bottomRightFront);
+	mesh.get().addToPositions(topRightFront);
+	mesh.get().addToPositions(topLeftFront);
 
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f));
 
-	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
-
-	elementOffset += elementOffsetIncrement;
-
-	mesh.get().addPosition(bottomLeftBack);
-	mesh.get().addPosition(bottomLeftFront);
-	mesh.get().addPosition(topLeftFront);
-	mesh.get().addPosition(topLeftBack);
-
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
-
-	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh.get().addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh.get().addPosition(bottomRightBack);
-	mesh.get().addPosition(bottomLeftBack);
-	mesh.get().addPosition(topLeftBack);
-	mesh.get().addPosition(topRightBack);
+	mesh.get().addToPositions(bottomLeftBack);
+	mesh.get().addToPositions(bottomLeftFront);
+	mesh.get().addToPositions(topLeftFront);
+	mesh.get().addToPositions(topLeftBack);
 
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f));
 
-	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
-
-	elementOffset += elementOffsetIncrement;
-
-	mesh.get().addPosition(bottomRightFront);
-	mesh.get().addPosition(bottomRightBack);
-	mesh.get().addPosition(topRightBack);
-	mesh.get().addPosition(topRightFront);
-
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
-
-	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh.get().addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh.get().addPosition(topLeftFront);
-	mesh.get().addPosition(topRightFront);
-	mesh.get().addPosition(topRightBack);
-	mesh.get().addPosition(topLeftBack);
+	mesh.get().addToPositions(bottomRightBack);
+	mesh.get().addToPositions(bottomLeftBack);
+	mesh.get().addToPositions(topLeftBack);
+	mesh.get().addToPositions(topRightBack);
 
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f));
 
-	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh.get().addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh.get().addPosition(bottomLeftBack);
-	mesh.get().addPosition(bottomRightBack);
-	mesh.get().addPosition(bottomRightFront);
-	mesh.get().addPosition(bottomLeftFront);
+	mesh.get().addToPositions(bottomRightFront);
+	mesh.get().addToPositions(bottomRightBack);
+	mesh.get().addToPositions(topRightBack);
+	mesh.get().addToPositions(topRightFront);
 
-	mesh.get().addTexCoord(Vector2(0.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 0.0f));
-	mesh.get().addTexCoord(Vector2(1.0f, 1.0f));
-	mesh.get().addTexCoord(Vector2(0.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f));
 
-	mesh.get().addFace(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh.get().addFace(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh.get().addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+
+	elementOffset += elementOffsetIncrement;
+
+	mesh.get().addToPositions(topLeftFront);
+	mesh.get().addToPositions(topRightFront);
+	mesh.get().addToPositions(topRightBack);
+	mesh.get().addToPositions(topLeftBack);
+
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f));
+
+	mesh.get().addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+
+	elementOffset += elementOffsetIncrement;
+
+	mesh.get().addToPositions(bottomLeftBack);
+	mesh.get().addToPositions(bottomRightBack);
+	mesh.get().addToPositions(bottomRightFront);
+	mesh.get().addToPositions(bottomLeftFront);
+
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 0.0f));
+	mesh.get().addToTextureCoordinates(Vector2(1.0f, 1.0f));
+	mesh.get().addToTextureCoordinates(Vector2(0.0f, 1.0f));
+
+	mesh.get().addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh.get().addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 

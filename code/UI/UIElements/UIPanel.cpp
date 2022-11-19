@@ -30,6 +30,8 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     renderer->setColor(mConfig.mStyle->mBackgroundColor);
     renderer->setUseDepth(true);
     renderer->setDepth(mConfig.mLayer);
+    renderer->setStencilValue(mConfig.mStencilValue);
+    renderer->setStencilFunction(mConfig.mStencilFunction);
 
     addComponent<Renderer>(renderer);
     

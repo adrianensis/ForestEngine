@@ -204,13 +204,13 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 	{
 		mMeshBuilder.init(mPrototypeMesh.get().getVertexCount() * 1, mPrototypeMesh.get().getFacesCount() * 1);
 
-		mMeshBuilder.addPositions(mPrototypeMesh.get().getPositions());
-		mMeshBuilder.addTextureCoordinates(mPrototypeMesh.get().getTextureCoordinates());
+		mMeshBuilder.appendToPositions(mPrototypeMesh.get().getPositions());
+		mMeshBuilder.appendToTextureCoordinates(mPrototypeMesh.get().getTextureCoordinates());
 		FOR_RANGE(i, 0, mPrototypeMesh.get().getVertexCount())
 		{
-			mMeshBuilder.addColor(Vector4(0,0,0,1));
+			mMeshBuilder.addToColors(Vector4(0,0,0,1));
 		}
-		mMeshBuilder.addBonesVertexData(mPrototypeMesh.get().getBonesVertexData());
+		mMeshBuilder.appendToBonesVertexData(mPrototypeMesh.get().getBonesVertexData());
 
 		generateFacesData(1);
 		mMeshBuffer.resize(mMeshBuilder);
@@ -270,10 +270,10 @@ void MeshBatcher::addInstance(const Mesh& meshInstance)
 {
 	PROFILER_CPU()
 
-	mMeshBuilder.addPositions(meshInstance.getPositions());
-	mMeshBuilder.addTextureCoordinates(meshInstance.getTextureCoordinates());
-	mMeshBuilder.addColors(meshInstance.getColors());
-	mMeshBuilder.addBonesVertexData(meshInstance.getBonesVertexData());
+	mMeshBuilder.appendToPositions(meshInstance.getPositions());
+	mMeshBuilder.appendToTextureCoordinates(meshInstance.getTextureCoordinates());
+	mMeshBuilder.appendToColors(meshInstance.getColors());
+	mMeshBuilder.appendToBonesVertexData(meshInstance.getBonesVertexData());
 
 	mMeshesIndex++;
 }
@@ -328,7 +328,7 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
 
-			mMeshBuilder.addFace(newFace);
+			mMeshBuilder.addToFaces(newFace);
 		}
 	}
 

@@ -36,6 +36,8 @@ public:
 		DO_COPY(mMaterial)
 		DO_COPY(mSeparatorSize)
 		DO_COPY(mParent)
+		DO_COPY(mStencilValue)
+		DO_COPY(mStencilFunction)
 
 		if (!other->mText.empty())
 		{
@@ -62,6 +64,8 @@ public:
 	std::string mGroup;
 	GameObject* mParent = nullptr;
 	f32 mSeparatorSize = 0.0f;
+	u32 mStencilValue = 0x00;
+	u32 mStencilFunction = GL_NOTEQUAL;
 };
 
 #endif

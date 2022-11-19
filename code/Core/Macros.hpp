@@ -185,6 +185,10 @@ void __customMain()
 	SET(BaseName##CurrentKey); \
 	inline CGETTER_TYPE(decltype(m##BaseName)::mapped_type) get##BaseName##Current() const { return m##BaseName.at(m##BaseName##CurrentKey); }
 
+#define ADD_TO_VECTOR(BaseName) \
+    void addTo##BaseName(const decltype(m##BaseName)::value_type & newElement) { m##BaseName.push_back(newElement); } \
+    void appendTo##BaseName(const decltype(m##BaseName) & otherVector) { m##BaseName.insert(m##BaseName.end(), otherVector.begin(), otherVector.end()); }
+
 // --------------------------------------------------------
 // COPY
 // --------------------------------------------------------

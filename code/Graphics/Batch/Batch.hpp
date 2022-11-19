@@ -17,6 +17,7 @@ public:
 	bool mIsWorldSpace = true;
 	bool mIsInstanced = false;
 	u32 mStencilValue = 0x00;
+    u32 mStencilFunction = 0;
 	bool mIsStencilMask = false;
 
 	void init(Ptr<Renderer> renderer)
@@ -28,13 +29,14 @@ public:
 		mIsInstanced = renderer.get().getIsInstanced();
 		mStencilValue = renderer.get().getStencilValue();
 		mIsStencilMask = renderer.get().getIsStencilMask();
+		mStencilFunction = renderer.get().getStencilFunction();
 	}
 
 	bool operator==(const BatchKey& otherBatchKey) const
 	{
 		return mMaterial == otherBatchKey.mMaterial && mMesh == otherBatchKey.mMesh &&
 			mIsStatic == otherBatchKey.mIsStatic && mIsWorldSpace == otherBatchKey.mIsWorldSpace && mIsInstanced == otherBatchKey.mIsInstanced &&
-			mStencilValue == otherBatchKey.mStencilValue && mIsStencilMask == otherBatchKey.mIsStencilMask;
+			mStencilValue == otherBatchKey.mStencilValue && mIsStencilMask == otherBatchKey.mIsStencilMask && mStencilFunction == otherBatchKey.mStencilFunction;
 	}
 
 	class BatchKeyFunctor
@@ -47,7 +49,7 @@ public:
 		{
 			return key.mMaterial.get().getHash() ^ key.mMesh.get().getHash() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
-			(u64)key.mStencilValue ^ static_cast<u64>(key.mIsStencilMask);
+			(u64)key.mStencilValue ^ static_cast<u64>(key.mIsStencilMask) ^ static_cast<u64>(key.mStencilFunction);
 		}
 	};
 };
@@ -89,6 +91,7 @@ private:
 	bool mIsInstanced = false;
 	u32 mStencilValue = 0x00;
 	bool mIsStencilMask = false;
+	u32 mStencilFunction = 0;
 
 	bool mNewRendererAdded = false;
 	bool mPendingDrawCall = false;
