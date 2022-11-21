@@ -180,7 +180,7 @@ void __customMain()
 
 #define HASVALID(BaseName) inline bool hasValid ## BaseName() const { return m##BaseName.isValid(); }
 
-#define MAP_GETCURRENT(BaseName) \
+#define GET_SET_MAP_CURRENT(BaseName) \
 	decltype(m##BaseName)::key_type m##BaseName##CurrentKey = {}; \
 	SET(BaseName##CurrentKey); \
 	inline CGETTER_TYPE(decltype(m##BaseName)::mapped_type) get##BaseName##Current() const { return m##BaseName.at(m##BaseName##CurrentKey); }

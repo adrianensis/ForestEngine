@@ -75,7 +75,7 @@ public:
 	HASVALID(Batch)
 	GET_SET(Mesh)
 	GET_SET(Material)
-	MAP_GETCURRENT(TextureAnimations)
+	GET_SET_MAP_CURRENT(TextureAnimations)
 };
 
 #endif
