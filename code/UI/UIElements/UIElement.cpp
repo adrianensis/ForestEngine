@@ -44,8 +44,22 @@ bool UIElement::hasFocus() const
 	return this == UIManager::getInstance().getFocusedElement();
 }
 
-bool UIElement::isMouseCursorInsideElement()
+bool UIElement::isMouseCursorInsideElement() const
 {
+    bool parentCheck = true;
+    if(mConfig.mParent)
+    {
+        if(UIElement* parentUIElement = dynamic_cast<UIElement*>(mConfig.mParent))
+        {
+            parentCheck = parentUIElement->isMouseCursorInsideElement();
+        }
+    }
+
+    if(!parentCheck)
+    {
+        return false;
+    }
+
 	Vector2 mousePosition = Input::getInstance().getMousePosition();
 
 	if(getTransform().get().getAffectedByProjection())
@@ -53,9 +67,20 @@ bool UIElement::isMouseCursorInsideElement()
 		mousePosition = RenderEngine::getInstance().getCamera().get().screenToWorld(Input::getInstance().getMousePosition());
 	}
 
+    Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
 	return Geometry::testCubePoint(
-		Rectangle(mConfig.mPosition, Vector2(UIUtils::correctAspectRatio_X(mConfig.mSize).x, mConfig.mSize.y)),
+		Rectangle(getLeftTopPosition(), correctedSize),
 		mousePosition, 0);
+}
+
+Vector3 UIElement::getLeftTopPosition() const
+{
+    Vector3 position = getTransform().get().getWorldPosition();
+    Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
+    position.x = position.x - (correctedSize.x / 2.0f);
+    position.y = position.y + (correctedSize.y / 2.0f);
+
+    return position;
 }
 
 void UIElement::setVisibility(bool visibility)
@@ -207,12 +232,12 @@ void UIElement::onPressedEventReceived()
 {
 	if (isVisible())
 	{
-		bool cursorInside = isMouseCursorInsideElement();
-		
-		if (cursorInside)
-		{
-			markAsPressed();
-		}
+        bool cursorInside = isMouseCursorInsideElement();
+            
+        if (cursorInside)
+        {
+            markAsPressed();
+        }
 	}
 }
 

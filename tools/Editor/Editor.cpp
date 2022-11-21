@@ -193,9 +193,9 @@ void Editor::firstUpdate()
 	setSize(Vector2(0.1f, 0.3f)).
 	create<UIList>().
 	getUIElement<UIList>()->
-	addOption("Option 1", [](UIElement *uiElement){}).
-	addOption("Option 2", [](UIElement *uiElement){}).
-	addOption("Option 3", [](UIElement *uiElement){}).
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	toggle();
 
 	cameraGameObject = ScenesManager::getInstance().getCurrentScene()->getCameraGameObject();

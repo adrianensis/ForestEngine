@@ -59,7 +59,8 @@ public:
 	}
 
     bool hasFocus() const;
-    bool isMouseCursorInsideElement();
+    bool isMouseCursorInsideElement() const;
+    Vector3 getLeftTopPosition() const;
 
 	virtual void setText(const std::string& text) { };
     virtual void setVisibility(bool visibility);
