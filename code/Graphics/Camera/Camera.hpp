@@ -6,7 +6,6 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 
-
 class Camera: public Component
 {
     GENERATE_METADATA(Camera)
@@ -20,8 +19,6 @@ public:
     void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void setPerspective(f32 near, f32 far, f32 aspect, f32 fov);
     void onResize();
-    const Matrix4& getViewMatrix() const;
-    const Matrix4& getProjectionViewMatrix() const;
     Vector3 screenToWorld(const Vector2& screenPosition);
     void setZoom(f32 zoom);
     void zoomIn(f32 zoomDelta);
@@ -61,6 +58,8 @@ private:
 
 public:
 	CRGET(ProjectionMatrix)
+	CRGET(ViewMatrix)
+	CRGET(ProjectionViewMatrix)
 	GET(IsOrtho)
 	CRGET(Frustum)
 	GET(Zoom)
