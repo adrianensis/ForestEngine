@@ -3,18 +3,18 @@
 
 void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 {
-	BatchKey batchKey;
-	batchKey.init(renderer);
+	BatchData BatchData;
+	BatchData.init(renderer);
 
-	if (!MAP_CONTAINS(mBatches, batchKey))
+	if (!MAP_CONTAINS(mBatches, BatchData))
 	{
 		OwnerPtr<Batch> batch = OwnerPtr<Batch>(NEW(Batch));
-		batch.get().init(batchKey);
+		batch.get().init(BatchData);
 
-		MAP_INSERT(mBatches, batchKey, batch);
+		MAP_INSERT(mBatches, BatchData, batch);
 	}
 
-	(mBatches).at(batchKey).get().addRenderer(renderer);
+	(mBatches).at(BatchData).get().addRenderer(renderer);
 }
 
 void BatchesMap::render()

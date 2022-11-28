@@ -19,19 +19,13 @@ Batch::~Batch()
 	mMeshBatcher.terminate();
 }
 
-void Batch::init(const BatchKey& batchKey)
+void Batch::init(const BatchData& batchData)
 {
-	mMaterial = batchKey.mMaterial;
-	mIsStatic = batchKey.mIsStatic;
-	mIsWorldSpace = batchKey.mIsWorldSpace;
-	mIsInstanced = batchKey.mIsInstanced;
-	mStencilValue = batchKey.mStencilValue;
-	mIsStencilMask = batchKey.mIsStencilMask;
-	mStencilFunction = batchKey.mStencilFunction;
+	mBatchData = batchData;
 
-	mMeshBatcher.init(batchKey.mMesh, mIsStatic, mIsInstanced);
+	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced);
 
-	Ptr<Texture> texture = mMaterial.get().getTexture();
+	Ptr<Texture> texture = mBatchData.mMaterial.get().getTexture();
 	if (texture)
 	{
 		texture.get().bind();
@@ -47,16 +41,16 @@ void Batch::render()
 	if (!mRenderers.empty())
 	{
 		mMeshBatcher.enable();
-		mMaterial.get().enable();
-		mMaterial.get().bind(getIsWorldSpace(), getIsInstanced());
+		mBatchData.mMaterial.get().enable();
+		mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced);
 
 		bool isAnimated = isModelAnimated();
-		mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
+		mBatchData.mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
 		
 		if(isAnimated)
 		{
 			const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel());
-			mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
+			mBatchData.mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
 		}
 
 		mPendingDrawCall = true;
@@ -79,7 +73,7 @@ void Batch::render()
 			mForceRegenerateBuffers = false;
 		}
 
-		mMaterial.get().disable();
+		mBatchData.mMaterial.get().disable();
 		mMeshBatcher.disable();
 	}
 }
@@ -165,7 +159,7 @@ void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& i
 	{
 		renderer.get().setBatch(Ptr<Batch>());
 
-		if (!getIsWorldSpace())
+		if (!mBatchData.mIsWorldSpace)
 		{
 			renderer.get().finallyDestroy();
 		}
@@ -180,7 +174,7 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 {
 	PROFILER_CPU()
 
-	if(getIsInstanced())
+	if(mBatchData.mIsInstanced)
 	{
 		renderer.get().update(false);
 		const Matrix4& rendererModelMatrix = renderer.get().getRendererModelMatrix();
@@ -195,20 +189,20 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 
 bool Batch::shouldRegenerateBuffers() const
 {
-	return mNewRendererAdded || !mIsStatic || mForceRegenerateBuffers || isModelAnimated();
+	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || isModelAnimated();
 }
 
 void Batch::enableStencil() const
 {
-	if(mStencilValue > 0x00)
+	if(mBatchData.mStencilValue > 0x00)
 	{
 		glEnable(GL_STENCIL_TEST);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-		if(mIsStencilMask)
+		if(mBatchData.mIsStencilMask)
 		{
 			// Make it so the stencil test always passes
-			glStencilFunc(GL_ALWAYS, mStencilValue, 0xFF);
+			glStencilFunc(GL_ALWAYS, mBatchData.mStencilValue, 0xFF);
 			// Enable modifying of the stencil buffer
 			glStencilMask(0xFF);
 
@@ -218,7 +212,7 @@ void Batch::enableStencil() const
 		else
 		{
 			// Make it so the stencil test only passes when not equal to ref value
-			glStencilFunc(mStencilFunction, mStencilValue, 0xFF);
+			glStencilFunc(mBatchData.mStencilFunction, mBatchData.mStencilValue, 0xFF);
 			// Disable modifying of the stencil buffer
 			glStencilMask(0x00);
 		}

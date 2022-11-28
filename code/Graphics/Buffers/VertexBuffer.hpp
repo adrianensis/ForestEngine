@@ -10,13 +10,11 @@ enum class GPUBufferPrimitiveType
     FLOAT = GL_FLOAT,
 };
 
-class GPUBufferBase: public ObjectBase
+class GPUBufferBase
 {
-    GENERATE_METADATA(GPUBufferBase)
-
 public:
 	GPUBufferBase() = default;
-    ~GPUBufferBase() override;
+    ~GPUBufferBase();
 
     void terminate();
     void resize(u32 size);
@@ -38,8 +36,6 @@ protected:
 template <class T>
 class GPUBuffer: public GPUBufferBase
 {
-    GENERATE_METADATA(GPUBuffer<T>)
-
 public:
     void init(bool isStatic)
     {
@@ -57,14 +53,12 @@ public:
     }
 };
 
-class MeshBuffer: public ObjectBase
+class MeshBuffer
 {
-    GENERATE_METADATA(MeshBuffer)
-
 public:
 	MeshBuffer() = default;
 	
-    ~MeshBuffer() override;
+    ~MeshBuffer();
 
     void init(bool isStatic, bool isInstanced);
     void terminate();
