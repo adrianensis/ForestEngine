@@ -21,7 +21,7 @@ void GPUBufferBase::terminate()
 {
 	if(mGenerated)
 	{
-		glDeleteBuffers(1, &mVBO);
+		RenderContext::deleteVBO(mVBO);
 		mGenerated = false;
 	}
 }
@@ -98,7 +98,7 @@ void MeshBuffer::terminate()
 {
 	if(mGenerated)
 	{
-		glDeleteVertexArrays(1, &mVAO);
+		RenderContext::deleteVAO(mVAO);
 		mVBOPosition.terminate();
 		mVBOTexture.terminate();
 		mVBOColor.terminate();
@@ -109,7 +109,7 @@ void MeshBuffer::terminate()
 			mVBOModelMatrix.terminate();
 		}
 
-		glDeleteBuffers(1, &mEBO);
+		RenderContext::deleteEBO(mEBO);
 
 		mGenerated = false;
 	}

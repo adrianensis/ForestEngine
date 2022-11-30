@@ -29,9 +29,6 @@ private:
 
 	bool isModelAnimated() const;
 
-	void enableStencil() const;
-	void disableStencil() const;
-
 private:
 	std::list<Ptr<Renderer>> mRenderers;
 

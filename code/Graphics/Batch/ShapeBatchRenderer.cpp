@@ -10,9 +10,9 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 {
 	DELETE(mShaderLine);
 
-	glDeleteVertexArrays(1, &mVAO);
-	glDeleteBuffers(1, &mVBOPosition);
-	glDeleteBuffers(1, &mEBO);
+	RenderContext::deleteVAO(mVAO);
+	RenderContext::deleteVBO(mVBOPosition);
+	RenderContext::deleteVBO(mEBO);
 
 	mPositionBuffer.clear();
 	mColorBuffer.clear();

@@ -42,9 +42,23 @@ public:
     static void setDataEBO(u32 EBO, const std::vector<Face>& data);
     static void setDataEBORaw(u32 EBO, const std::vector<u32>& data);
 
+    static void deleteVAO(u32 VBO);
+    static void deleteVBO(u32 VBO);
+    static void deleteEBO(u32 VBO);
+
     static void enableProperty(u32 propertyArrayIndex);
     static void disableProperty(u32 propertyArrayIndex);
+
     static void enableVAO(u32 VAO);
+    
+    static void enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction);
+    static void disableStencil();
+
+    static GLuint createTexture(u32 width, u32 height, const byte* data);
+    static void deleteTexture(u32 textureId);
+    static void enableTexture(u32 textureId);
+    static void disableTexture();
+
     static void drawElements(u32 indicesCount, u32 instancesCount, bool instanced);
     static void drawLines(u32 linesCount);
 

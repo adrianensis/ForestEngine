@@ -7,7 +7,7 @@
 Texture::~Texture() 
 {
 	deleteData();
-	glDeleteTextures(1, &mTextureId);
+	RenderContext::deleteTexture(mTextureId);
 }
 
 void Texture::init(const std::string& path)
@@ -16,24 +16,14 @@ void Texture::init(const std::string& path)
 	{
 		mPath = path;
 		loadImage();
-
-		glGenTextures(1, &mTextureId);
-
-		bind();
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, getData());
+        mTextureId = RenderContext::createTexture(getWidth(), getHeight(), getData());
 		deleteData();
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_TEXTURE_MAG_FILTER
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 }
 
 void Texture::bind()
 {
-	glBindTexture(GL_TEXTURE_2D, mTextureId);
+    RenderContext::enableTexture(mTextureId);
 }
 
 IMPLEMENT_SERIALIZATION(Texture)

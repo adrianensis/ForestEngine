@@ -178,6 +178,21 @@ void RenderContext::setDataEBORaw(u32 EBO, const std::vector<u32>& data)
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());
 }
 
+void RenderContext::deleteVAO(u32 VAO)
+{
+    glDeleteVertexArrays(1, &VAO);
+}
+
+void RenderContext::deleteVBO(u32 VBO)
+{
+    glDeleteBuffers(1, &VBO);
+}
+
+void RenderContext::deleteEBO(u32 EBO)
+{
+    glDeleteBuffers(1, &EBO);
+}
+
 void RenderContext::enableProperty(u32 propertyArrayIndex)
 {
 	glEnableVertexAttribArray(propertyArrayIndex);
@@ -191,6 +206,74 @@ void RenderContext::disableProperty(u32 propertyArrayIndex)
 void RenderContext::enableVAO(u32 VAO)
 {
 	glBindVertexArray(VAO);
+}
+
+void RenderContext::enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction)
+{
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+    if(isMask)
+    {
+        // Make it so the stencil test always passes
+        glStencilFunc(GL_ALWAYS, stencilValue, 0xFF);
+        // Enable modifying of the stencil buffer
+        glStencilMask(0xFF);
+
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+        glDepthMask(GL_FALSE);
+    }
+    else
+    {
+        // Make it so the stencil test only passes when not equal to ref value
+        glStencilFunc(stencilFunction, stencilValue, 0xFF);
+        // Disable modifying of the stencil buffer
+        glStencilMask(0x00);
+    }
+}
+
+void RenderContext::disableStencil()
+{
+    glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_TRUE);
+
+	glDisable(GL_STENCIL_TEST);
+}
+
+GLuint RenderContext::createTexture(u32 width, u32 height, const byte* data)
+{
+    u32 textureId;
+    glGenTextures(1, &textureId);
+
+    enableTexture(textureId);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_TEXTURE_MAG_FILTER
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    disableTexture();
+
+    return textureId;
+}
+
+void RenderContext::deleteTexture(u32 textureId)
+{
+	glDeleteTextures(1, &textureId);
+}
+
+void RenderContext::enableTexture(u32 textureId)
+{
+	glBindTexture(GL_TEXTURE_2D, textureId);
+}
+
+void RenderContext::disableTexture()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void RenderContext::drawElements(u32 indicesCount, u32 instancesCount, bool instanced)

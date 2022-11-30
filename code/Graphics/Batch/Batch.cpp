@@ -62,11 +62,14 @@ void Batch::render()
 
 		if(mPendingDrawCall)
 		{
-			enableStencil();
+            if(mBatchData.mStencilValue > 0x00)
+            {
+                RenderContext::enableStencil(mBatchData.mIsStencilMask, mBatchData.mStencilValue, mBatchData.mStencilFunction);
+            }
 
 			mMeshBatcher.drawCall();
 
-			disableStencil();
+            RenderContext::disableStencil();
 
 			mNewRendererAdded = false;
 			mPendingDrawCall = false;
@@ -190,43 +193,6 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 bool Batch::shouldRegenerateBuffers() const
 {
 	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || isModelAnimated();
-}
-
-void Batch::enableStencil() const
-{
-	if(mBatchData.mStencilValue > 0x00)
-	{
-		glEnable(GL_STENCIL_TEST);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-		if(mBatchData.mIsStencilMask)
-		{
-			// Make it so the stencil test always passes
-			glStencilFunc(GL_ALWAYS, mBatchData.mStencilValue, 0xFF);
-			// Enable modifying of the stencil buffer
-			glStencilMask(0xFF);
-
-			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-			glDepthMask(GL_FALSE);
-		}
-		else
-		{
-			// Make it so the stencil test only passes when not equal to ref value
-			glStencilFunc(mBatchData.mStencilFunction, mBatchData.mStencilValue, 0xFF);
-			// Disable modifying of the stencil buffer
-			glStencilMask(0x00);
-		}
-	}
-}
-
-void Batch::disableStencil() const
-{
-	glStencilMask(0xFF);
-	glStencilFunc(GL_ALWAYS, 0, 0xFF);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDepthMask(GL_TRUE);
-
-	glDisable(GL_STENCIL_TEST);
 }
 
 bool Batch::isModelAnimated() const
