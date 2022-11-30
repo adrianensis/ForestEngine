@@ -14,13 +14,6 @@ public:
 	TimerDurationType mDelayType;
 	ObjectBase* mInstigator = nullptr;
 	
-	// NOTE : Override in children!
-	COPY(Event)
-	{
-		DO_COPY(mInstigator)
-		DO_COPY(mDelayType)
-		DO_COPY(mDelayAmount)
-	}
 };
 
 using EventCallback = std::function<void(const Event *)>;
@@ -41,15 +34,6 @@ public:
 		{
 			mCallback(mEvent);
 		}
-	}
-
-	// NOTE : Override in children!
-	COPY(EventFunctor)
-	{
-		Functor<EventCallback>::copy(other);
-		DO_COPY(mEvent)
-		DO_COPY(mEventClassId)
-		DO_COPY(mEventReceiver)
 	}
 
 	bool operator==(const EventFunctor& eventFunctor) const

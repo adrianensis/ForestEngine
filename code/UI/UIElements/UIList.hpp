@@ -14,12 +14,6 @@ public:
 	UIElementCallback mCallback;
 	
 	void init(const std::string& label, UIElementCallback callback);
-
-	COPY(UIListEntry)
-	{
-		DO_COPY(mLabel)
-		DO_COPY(mCallback)
-	}
 };
 
 class UIList: public UIElement

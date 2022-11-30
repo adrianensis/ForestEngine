@@ -25,14 +25,7 @@ class UIDropdownEntry: public ObjectBase
 
 public:
 	UIDropdownEntry() = default;
-	
     UIDropdownEntry(const std::string& label, UIElementCallback callback);
-
-	COPY(UIDropdownEntry)
-	{
-		DO_COPY(mLabel)
-		DO_COPY(mCallback)
-	}
 
 public:
 	std::string mLabel;

@@ -25,13 +25,6 @@ public:
 		}
 	}
 
-	// NOTE : Override in children!
-	COPY(CommandFunctor)
-	{
-		Functor<CommandCallback>::copy(other);
-        DO_COPY(mCommand)
-	}
-
 	RGET_SET(Command)
 };
 

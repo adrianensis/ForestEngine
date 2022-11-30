@@ -119,9 +119,9 @@ public:
 	* functions can not have constant qualification.
 	*/
 
-	Quaternion& operator=(const Quaternion& rhs)
+	DECLARE_COPY(Quaternion)
 	{
-			return this->set(rhs);
+        set(other);
 	}
 
 	Quaternion& operator+=(const Quaternion& rhs)

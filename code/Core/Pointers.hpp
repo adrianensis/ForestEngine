@@ -64,10 +64,9 @@ public:
     T& get() { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
 
-    Ptr<T>& operator=(const Ptr<T>& rhs)
+    DECLARE_COPY(Ptr<T>)
 	{
-        setReference(rhs.mReference);
-		return *this;
+        setReference(other.mReference);
 	}
 
     bool operator==(const Ptr<T>& otherRef) const
@@ -124,10 +123,9 @@ public:
     T& get() { return *mReference.get(); }
     bool isValid() const { return mReference != nullptr; }
 
-    OwnerPtr<T>& operator=(const OwnerPtr<T>& rhs)
+    DECLARE_COPY(OwnerPtr<T>)
 	{
-        setReference(rhs.mReference);
-		return *this;
+        setReference(other.mReference);
 	}
 
     operator bool() const

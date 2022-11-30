@@ -76,10 +76,9 @@ public:
     void ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void perspective(f32 near, f32 far, f32 aspect, f32 fov);
 
-    Matrix4& operator=(const Matrix4& other)
+    DECLARE_COPY(Matrix4)
 	{
 		init(other);
-		return *this;
 	}
 
 public:

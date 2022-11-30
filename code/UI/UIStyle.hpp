@@ -13,14 +13,6 @@ public:
 	{
 	}
 
-	COPY(UIStyle)
-	{
-        DO_COPY(mTextColor)
-		DO_COPY(mBackgroundColor)
-		DO_COPY(mColorPressed)
-		DO_COPY(mColorHovered)
-	}
-
 public:
     Vector4 mTextColor;
 	Vector4 mBackgroundColor;

@@ -44,11 +44,6 @@ public:
 	{
 		mTimerReference = timerReference;
 	}
-
-	COPY(TimerHandle)
-	{
-		DO_COPY(mTimerReference)
-	}
 };
 
 class TimerManager: public ObjectBase, public Singleton<TimerManager>

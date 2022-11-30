@@ -10,14 +10,6 @@ class TextureAnimationFrame: public ObjectBase
     DECLARE_SERIALIZATION()
 
 public:
-
-    COPY(TextureAnimationFrame)
-    {
-        DO_COPY(mPosition)
-        DO_COPY(mWidth)
-        DO_COPY(mHeight)
-    }
-
     void init(const Vector2& position, f32 width, f32 height);
 
 private:

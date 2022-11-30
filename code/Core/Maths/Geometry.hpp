@@ -13,14 +13,6 @@ class Face
 public:
     Face(u32 index0, u32 index1, u32 index2);
 
-	Face& operator=(const Face& rhs)
-	{
-        mIndex0 = rhs.mIndex0;
-        mIndex1 = rhs.mIndex1;
-        mIndex2 = rhs.mIndex2;
-        return *this;
-	}
-
 public:
 	u32 mIndex0 = 0;
     u32 mIndex1 = 0;
@@ -40,11 +32,6 @@ public:
 
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
-
-    COPY(Shape)
-    {
-        DO_COPY(mVerticesCount)
-    }
 
     GET(VerticesCount)
 };
@@ -80,13 +67,6 @@ public:
     bool isZero() const override
     {
         return toVector().len() <= MathUtils::FLOAT_EPSILON;
-    }
-
-    COPY(Line)
-    {
-        Shape::copy(other);
-        DO_COPY(mStart)
-        DO_COPY(mEnd)
     }
 
     void serialize(JSON& json) const override
@@ -138,13 +118,6 @@ public:
     bool isZero() const override
     {
         return getSize().len() <= MathUtils::FLOAT_EPSILON;
-    }
-
-    COPY(Rectangle)
-    {
-        Shape::copy(other);
-        DO_COPY(mLeftTopFront)
-        DO_COPY(mSize)
     }
 
     void serialize(JSON& json) const override
@@ -202,13 +175,6 @@ public:
     bool isZero() const override
     {
         return mRadius <= MathUtils::FLOAT_EPSILON;
-    }
-
-    COPY(Sphere)
-    {
-        Shape::copy(other);
-        DO_COPY(mCenter)
-        DO_COPY(mRadius)
     }
 
     CRGET_SET(Center)

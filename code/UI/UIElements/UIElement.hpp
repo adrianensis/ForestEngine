@@ -32,12 +32,6 @@ public:
 		}
 	}
 
-	COPY(FunctorUIElement)
-	{
-		DO_COPY(mUIElement)
-		Functor<UIElementCallback>::copy(other);
-	}
-
 public:
 	UIElement* mUIElement = nullptr;
 };

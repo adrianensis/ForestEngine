@@ -12,14 +12,6 @@ class TimeMark: public ObjectBase
     GENERATE_METADATA(TimeMark)
 
 public:
-
-	COPY(TimeMark)
-	{
-		DO_COPY(mDeltaTimeMillis)
-		DO_COPY(mStartTime)
-		DO_COPY(mLastTime)
-	}
-
     void init();
     void start();
     void end();
@@ -43,13 +35,6 @@ class TimeMarkGPU: public ObjectBase
     GENERATE_METADATA(TimeMarkGPU)
 
 public:
-
-	COPY(TimeMarkGPU)
-	{
-		DO_COPY(mDeltaTimeMillis)
-		DO_COPY(mStartTime)
-		DO_COPY(mLastTime)
-	}
 
     void init();
     void start();

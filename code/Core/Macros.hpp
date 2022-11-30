@@ -193,21 +193,21 @@ void __customMain()
 // COPY
 // --------------------------------------------------------
 
-#define COPY(...)                                                                        \
-	virtual void copy(const ObjectBase *other) override                                  \
+#define DECLARE_COPY(...)                                                                        \
+    __VA_ARGS__& operator=(const __VA_ARGS__& other) \
 	{                                                                                    \
-		if (this != other)                                                               \
+		if (this != &other)                                                               \
 		{                                                                                \
-			if (const __VA_ARGS__ *otherCast = dynamic_cast<const __VA_ARGS__ *>(other)) \
-			{                                                                            \
-				specificCopy(otherCast);                                                 \
-			}                                                                            \
+			const __VA_ARGS__ *otherCast = dynamic_cast<const __VA_ARGS__ *>(&other); \
+            __specificCopy(*otherCast);                                                 \
 		}                                                                                \
+        return *this; \
 	}                                                                                    \
                                                                                          \
-	void specificCopy(const __VA_ARGS__ *other)
+	void __specificCopy(const __VA_ARGS__ &other)
 
-#define DO_COPY(MemberName) MemberName = other->MemberName;
+#define SUPER_COPY(...) __VA_ARGS__::operator=(other);
+#define DO_COPY(MemberName) MemberName = other.MemberName;
 
 // --------------------------------------------------------
 // SERIALIZATION

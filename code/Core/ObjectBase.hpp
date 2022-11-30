@@ -36,15 +36,9 @@ public:
 	}
 
 	// Assignment
-
-	virtual void copy(const ObjectBase *other)
+	DECLARE_COPY(ObjectBase)
 	{
-	}
 
-	ObjectBase& operator=(const ObjectBase& other)
-	{
-		copy(&other);
-		return *this;
 	}
 
 private:

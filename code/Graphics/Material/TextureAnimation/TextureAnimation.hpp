@@ -30,17 +30,6 @@ public:
     u32 getNumberOfFrames() const;
     const TextureAnimationFrame& getNextFrame();
     const TextureAnimationFrame& getCurrentFrame() const;
-
-    COPY(TextureAnimation)
-    {
-		DO_COPY(mName);
-        DO_COPY(mSpeed);
-
-        FOR_LIST(it, other->mFrames)
-        {
-            this->mFrames.push_back(*it);
-        }
-    }
 	
 private:
 	std::string mName;

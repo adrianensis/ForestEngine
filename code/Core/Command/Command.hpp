@@ -13,12 +13,6 @@ private:
 
 public:
 
-    COPY(CommandArgument)
-    {
-        DO_COPY(mName)
-        DO_COPY(mValue)
-    }
-
     CRGET_SET(Name)
     CRGET_SET(Value)
 };
@@ -40,13 +34,6 @@ public:
     void addArgument(const CommandArgument& arg) { MAP_INSERT(mArguments, arg.getName(), arg); };
     bool argumentExists(const std::string& argName) const { return MAP_CONTAINS(mArguments, argName); };
     const std::string& getValue(const std::string& argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
-
-    COPY(Command)
-    {
-        DO_COPY(mName)
-        DO_COPY(mArguments)
-        DO_COPY(mArgumentsString)
-    }
 
     CRGET_SET(Name)
     CRGET_SET(ArgumentsString)

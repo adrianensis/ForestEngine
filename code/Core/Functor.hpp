@@ -11,16 +11,6 @@ class Functor: public ObjectBase
 public:
 	virtual void execute() = 0;
 
-	// NOTE : Override in children if needed!
-	COPY(Functor<T>)
-	{
-		DO_COPY(mCallback)
-	}
-
-	/*bool operator== (const Functor& functor) const{
-	 return this == &functor;
-	}*/
-
 protected:
 	T mCallback; 
 public:

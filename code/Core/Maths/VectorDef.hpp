@@ -24,21 +24,15 @@ private:\
     }\
 public:\
     \
-    ThisClass& operator=(const ThisClass& other)\
-	{\
-		set(other);\
-		return *this;\
-	}\
-    \
-    ThisClass& operator+=(const ThisClass& rhs) {return this->add(rhs); }\
-    ThisClass& operator-=(const ThisClass& rhs) {return this->sub(rhs); }\
-    ThisClass& operator*=(const ThisClass& rhs) {return this->mul(rhs); }\
-    ThisClass& operator/=(const ThisClass& rhs) {return this->div(rhs); }\
-    ThisClass& operator+=(f32 rhs) {return this->add(rhs); }\
-    ThisClass& operator-=(f32 rhs) {return this->sub(rhs); }\
-    ThisClass& operator*=(f32 rhs) {return this->mul(rhs); }\
-    ThisClass& operator/=(f32 rhs) {return this->div(rhs); }\
-    bool operator==(const ThisClass& rhs) const {return this->eq(rhs); }\
+    ThisClass& operator+=(const ThisClass& rhs) {return add(rhs); }\
+    ThisClass& operator-=(const ThisClass& rhs) {return sub(rhs); }\
+    ThisClass& operator*=(const ThisClass& rhs) {return mul(rhs); }\
+    ThisClass& operator/=(const ThisClass& rhs) {return div(rhs); }\
+    ThisClass& operator+=(f32 rhs) {return add(rhs); }\
+    ThisClass& operator-=(f32 rhs) {return sub(rhs); }\
+    ThisClass& operator*=(f32 rhs) {return mul(rhs); }\
+    ThisClass& operator/=(f32 rhs) {return div(rhs); }\
+    bool operator==(const ThisClass& rhs) const {return eq(rhs); }\
     bool operator!=(const ThisClass& rhs) const {return !((*this) == rhs); }\
     ThisClass operator+(const ThisClass& rhs) const {return ThisClass(*this) += rhs; }\
     ThisClass operator-(const ThisClass& rhs) const {return ThisClass(*this) -= rhs; }\
