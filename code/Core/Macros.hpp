@@ -206,7 +206,6 @@ void __customMain()
                                                                                          \
 	void __specificCopy(const __VA_ARGS__ &other)
 
-#define SUPER_COPY(...) __VA_ARGS__::operator=(other);
 #define DO_COPY(MemberName) MemberName = other.MemberName;
 
 // --------------------------------------------------------
