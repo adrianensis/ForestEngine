@@ -23,14 +23,14 @@ public:
 private:
     bool processRenderers();
     bool shouldRemoveRenderer(Ptr<Renderer> renderer);
-    void internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it);
+    void internalRemoveRenderer(std::vector<Ptr<Renderer>>::iterator& it);
     void addToVertexBuffer(Ptr<Renderer> renderer);
     bool shouldRegenerateBuffers() const;
 
 	bool isModelAnimated() const;
 
 private:
-	std::list<Ptr<Renderer>> mRenderers;
+	std::vector<Ptr<Renderer>> mRenderers;
 
 	MeshBatcher mMeshBatcher;
 

@@ -104,7 +104,7 @@ bool Batch::processRenderers()
 
 		if (shouldRemoveRenderer(renderer))
 		{
-			internalRemoveRendererFromList(it);
+			internalRemoveRenderer(it);
 		}
 		else
 		{
@@ -152,12 +152,11 @@ bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
 	return toRemove;
 }
 
-void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& it)
+void Batch::internalRemoveRenderer(std::vector<Ptr<Renderer>>::iterator& it)
 {
 	PROFILER_CPU()
 
 	Ptr<Renderer> renderer = *it;
-
 	if(renderer)
 	{
 		renderer.get().setBatch(Ptr<Batch>());
@@ -168,8 +167,10 @@ void Batch::internalRemoveRendererFromList(std::list<Ptr<Renderer>>::iterator& i
 		}
 	}
 
-	it = mRenderers.erase(it);
-	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
+    it->invalidate();
+
+	//it = mRenderers.erase(it);
+	//--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
 
 }
 

@@ -41,40 +41,43 @@ void Chunk::update()
 
 		bool removeFromList = false;
 
-		if (renderer.get().isActive())
-		{
-			if (getIsLoaded() && !renderer.get().hasValidBatch())
-			{
-				RenderEngine::getInstance().assignBatch(renderer);
-			}
+        if(renderer.isValid())
+        {
+            if (renderer.get().isActive())
+            {
+                if (getIsLoaded() && !renderer.get().hasValidBatch())
+                {
+                    RenderEngine::getInstance().assignBatch(renderer);
+                }
 
-			if (!renderer.get().isStatic() && !containsRenderer(renderer))
-			{
-				Ptr<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
+                if (!renderer.get().isStatic() && !containsRenderer(renderer))
+                {
+                    Ptr<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
 
-				if (newChunk && newChunk != getPtrToThis())
-				{
-					newChunk.get().addRenderer(renderer);
-					removeFromList = true;
-				}
-			}
-		}
+                    if (newChunk && newChunk != getPtrToThis())
+                    {
+                        newChunk.get().addRenderer(renderer);
+                        removeFromList = true;
+                    }
+                }
+            }
 
-		if (renderer.get().getIsPendingToBeDestroyed())
-		{
-			renderer.get().finallyDestroy();
-		}
+            if (renderer.get().getIsPendingToBeDestroyed())
+            {
+                renderer.get().finallyDestroy();
+            }
 
-		if (renderer.get().getIsDestroyed())
-		{
-			removeFromList = true;
-		}
+            if (renderer.get().getIsDestroyed())
+            {
+                removeFromList = true;
+            }
+        }
 
-		if (removeFromList)
-		{
-			it = mRenderers.erase(it);
-			--it;
-		}
+        if (removeFromList)
+        {
+            it = mRenderers.erase(it);
+            --it;
+        }
 	}
 }
 

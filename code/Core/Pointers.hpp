@@ -63,6 +63,7 @@ public:
     const T& get() const { return *mReference.lock().get(); }
     T& get() { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
+    void invalidate() { mReference.reset(); }
 
     DECLARE_COPY(Ptr<T>)
 	{
@@ -122,6 +123,7 @@ public:
     const T& get() const { return *mReference.get(); }
     T& get() { return *mReference.get(); }
     bool isValid() const { return mReference != nullptr; }
+    void invalidate() { mReference.reset(); }
 
     DECLARE_COPY(OwnerPtr<T>)
 	{

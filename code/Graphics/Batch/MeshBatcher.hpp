@@ -32,7 +32,6 @@ private:
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;
-
 	u32 mMeshesIndex = 0;
 
 	bool mDataSentToGPU = false;
