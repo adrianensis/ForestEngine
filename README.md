@@ -6,6 +6,12 @@
 
 > Forest Engine is a C++ / OpenGL Game Engine made from scratch with the only purpose of improving my gamedev and programming skills.
 
+Forest Engine has been the latest iteration of my Game Engine (previously [DruidEngine](https://github.com/adrianensis/DruidEngine){:target="_blank"} and before that it was [ThiefEngine](https:// github.com/adrianensis/ThiefEngine){:target="_blank"}).
+
+After about 10 years of learning I've decided to stop working on it and release the code on GitHub in case it's helpful or interesting to other people.
+
+The state I leave the engine is: stable but not usable, there are still known bugs and pending tasks, so don't take this code as a reliable source of knowledge.
+
 ## Build
 
 ### Linux
@@ -50,5 +56,37 @@ This command will print the results in terminal.
 ### Integration Tests
 
 Run integration test by executing `./binaries/test_integration`. Result is stored in **log.txt**.
+
+---
+
+## Devlogs
+
+Here in my blog you can find all the devlogs of my Game Engine, from when it was 2D to the latest 3D version: [Devlogs](https://adrianensis.github.io/blog/categories/#devlogs){:target="_blank"}
+
+---
+
+## Characteristic
+
+- OpenGL 4.x
+- Batching
+- Shaders
+- Support for Texture Atlases
+- Animation using Spritesheet
+- Chunks
+- Simple UI
+- Scene management
+- Perspective / orthographic camera
+- Stencil
+- Math module
+- Simple scripting
+- Loading 3D models with ASSIMP
+
+---
+
+## Bugs and TODOs
+
+- The chunk system remains 2D while the space is now 3D.
+   - I programmed a Spatial Partition module (octree) that came to replace the linear system of chunks.
+- Stencil was my last feature, it may still be inconsistent.
 
 ---
