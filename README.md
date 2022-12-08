@@ -6,7 +6,7 @@
 
 > Forest Engine is a C++ / OpenGL Game Engine made from scratch with the only purpose of improving my gamedev and programming skills.
 
-Forest Engine has been the latest iteration of my Game Engine (previously [DruidEngine](https://github.com/adrianensis/DruidEngine){:target="_blank"} and before that it was [ThiefEngine](https:// github.com/adrianensis/ThiefEngine){:target="_blank"}).
+Forest Engine has been the latest iteration of my Game Engine (previously [DruidEngine](https://github.com/adrianensis/DruidEngine) and before that it was [ThiefEngine](https://github.com/adrianensis/ThiefEngine)).
 
 After about 10 years of learning I've decided to stop working on it and release the code on GitHub in case it's helpful or interesting to other people.
 
@@ -61,7 +61,7 @@ Run integration test by executing `./binaries/test_integration`. Result is store
 
 ## Devlogs
 
-Here in my blog you can find all the devlogs of my Game Engine, from when it was 2D to the latest 3D version: [Devlogs](https://adrianensis.github.io/blog/categories/#devlogs){:target="_blank"}
+Here in my blog you can find all the devlogs of my Game Engine, from when it was 2D to the latest 3D version: [Devlogs](https://adrianensis.github.io/blog/categories/#devlogs)
 
 ---
 
