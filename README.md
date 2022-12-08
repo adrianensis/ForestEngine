@@ -61,7 +61,7 @@ Run integration test by executing `./binaries/test_integration`. Result is store
 
 ## Devlogs
 
-Here in my blog you can find all the devlogs of my Game Engine, from when it was 2D to the latest 3D version: [Devlogs](https://adrianensis.github.io/blog/categories/#devlogs)
+Here in my blog you can find all the devlogs of my Game Engine, from 2D initial stages to the latest 3D version: [Devlogs](https://adrianensis.github.io/blog/categories/#devlogs)
 
 ---
 
