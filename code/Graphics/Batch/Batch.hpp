@@ -70,21 +70,18 @@ public:
 private:
     bool processRenderers();
     bool shouldRemoveRenderer(Ptr<Renderer> renderer);
-    void internalRemoveRenderer(std::vector<Ptr<Renderer>>::iterator& it);
+    void internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it);
     void addToVertexBuffer(Ptr<Renderer> renderer);
     bool shouldRegenerateBuffers() const;
 
-	bool isModelAnimated() const;
-
 private:
-	std::vector<Ptr<Renderer>> mRenderers;
+	std::list<Ptr<Renderer>> mRenderers;
 
 	MeshBatcher mMeshBatcher;
 
     BatchData mBatchData;
 
 	bool mNewRendererAdded = false;
-	bool mPendingDrawCall = false;
 	bool mForceRegenerateBuffers = false;
 };
 

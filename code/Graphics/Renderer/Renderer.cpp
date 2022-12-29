@@ -132,10 +132,7 @@ void Renderer::update(bool regenerateVertices)
 
 void Renderer::onDestroy() 
 {
-	if(mBatch.isValid())
-	{
-		mBatch.get().forceRegenerateBuffers();
-	}
+
 }
 
 const Mesh& Renderer::generateMeshInstance()

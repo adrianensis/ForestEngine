@@ -16,9 +16,9 @@ public:
     void addInstanceMatrix(const Matrix4& modelMatrix);
     void addInstance(const Mesh& meshInstance);
     void drawCall();
-    void terminate();
     void enable();
     void disable();
+    bool isAnimated() const;
 
 private:
     void clear();

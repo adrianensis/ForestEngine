@@ -3,12 +3,11 @@
 
 GPUBufferBase::~GPUBufferBase() 
 {
+	terminate();
 }
 
 void GPUBufferBase::init(u32 typeSizeInBytes, bool isStatic)
 {
-	terminate();
-
 	mTypeSizeInBytes = typeSizeInBytes;
 	mIsStatic = isStatic;
 
@@ -22,7 +21,6 @@ void GPUBufferBase::terminate()
 	if(mGenerated)
 	{
 		RenderContext::deleteVBO(mVBO);
-		mGenerated = false;
 	}
 }
 
@@ -54,13 +52,12 @@ void GPUBufferBase::attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveTy
 
 MeshBuffer::~MeshBuffer() 
 {
+    terminate();
 }
 
 void MeshBuffer::init(bool isStatic, bool isInstanced)
 {
 	PROFILER_CPU()
-
-	terminate();
 
 	mIsStatic = isStatic;
 	mIsInstanced = isInstanced;
@@ -99,19 +96,7 @@ void MeshBuffer::terminate()
 	if(mGenerated)
 	{
 		RenderContext::deleteVAO(mVAO);
-		mVBOPosition.terminate();
-		mVBOTexture.terminate();
-		mVBOColor.terminate();
-		mVBOBone.terminate();
-
-		if(mIsInstanced)
-		{
-			mVBOModelMatrix.terminate();
-		}
-
 		RenderContext::deleteEBO(mEBO);
-
-		mGenerated = false;
 	}
 }
 

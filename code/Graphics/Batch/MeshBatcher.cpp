@@ -1,4 +1,5 @@
 #include "Graphics/Batch/MeshBatcher.hpp"
+#include "Graphics/Model/Model.hpp"
 
 MeshBatcher::~MeshBatcher() 
 {
@@ -8,7 +9,6 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 {
 	PROFILER_CPU()
 
-	terminate();
 	mMeshBuffer.init(isStatic, isInstanced);
 	mPrototypeMesh = prototypeMesh;
 	
@@ -102,12 +102,6 @@ void MeshBatcher::drawCall()
 	}
 }
 
-void MeshBatcher::terminate()
-{
-	PROFILER_CPU()
-	mMeshBuffer.terminate();
-}
-
 void MeshBatcher::enable()
 {
 	mMeshBuffer.enable();
@@ -116,6 +110,17 @@ void MeshBatcher::enable()
 void MeshBatcher::disable()
 {
 	mMeshBuffer.disable();
+}
+
+bool MeshBatcher::isAnimated() const
+{
+	bool isAnimated = false;
+	if(mPrototypeMesh.get().getModel())
+	{
+		isAnimated = mPrototypeMesh.get().getModel().get().isAnimated();
+	}
+
+	return isAnimated;
 }
 
 void MeshBatcher::clear()

@@ -16,13 +16,13 @@ public:
 	GPUBufferBase() = default;
     ~GPUBufferBase();
 
-    void terminate();
     void resize(u32 size);
     void attribute(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor);
     void attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor);
 
 protected:
     void init(u32 typeSizeInBytes, bool isStatic);
+    void terminate();
 
 protected:
 	bool mGenerated = false;
@@ -61,7 +61,6 @@ public:
     ~MeshBuffer();
 
     void init(bool isStatic, bool isInstanced);
-    void terminate();
     void resize(const Mesh& mesh);
     void setData(const Mesh& mesh);
     void setIndexesData(const Mesh& mesh);
@@ -71,6 +70,9 @@ public:
     void setMaxInstances(u32 maxInstances);
     void enable();
     void disable();
+
+private:
+    void terminate();
 
 private:
 	bool mGenerated = false;

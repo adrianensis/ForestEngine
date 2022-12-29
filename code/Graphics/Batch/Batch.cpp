@@ -15,8 +15,6 @@
 
 Batch::~Batch()
 {
-	mRenderers.clear();
-	mMeshBatcher.terminate();
 }
 
 void Batch::init(const BatchData& batchData)
@@ -44,7 +42,7 @@ void Batch::render()
 		mBatchData.mMaterial.get().enable();
 		mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced);
 
-		bool isAnimated = isModelAnimated();
+		bool isAnimated = mMeshBatcher.isAnimated();
 		mBatchData.mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
 		
 		if(isAnimated)
@@ -53,14 +51,14 @@ void Batch::render()
 			mBatchData.mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
 		}
 
-		mPendingDrawCall = true;
+		bool pendingDrawCall = true;
 
 		if(shouldRegenerateBuffers())
 		{
-			mPendingDrawCall = processRenderers();
+			pendingDrawCall = processRenderers();
 		}
 
-		if(mPendingDrawCall)
+		if(pendingDrawCall)
 		{
             if(mBatchData.mStencilValue > 0x00)
             {
@@ -72,7 +70,6 @@ void Batch::render()
             RenderContext::disableStencil();
 
 			mNewRendererAdded = false;
-			mPendingDrawCall = false;
 			mForceRegenerateBuffers = false;
 		}
 
@@ -152,7 +149,7 @@ bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
 	return toRemove;
 }
 
-void Batch::internalRemoveRenderer(std::vector<Ptr<Renderer>>::iterator& it)
+void Batch::internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it)
 {
 	PROFILER_CPU()
 
@@ -169,8 +166,10 @@ void Batch::internalRemoveRenderer(std::vector<Ptr<Renderer>>::iterator& it)
 
     it->invalidate();
 
-	//it = mRenderers.erase(it);
-	//--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
+    mForceRegenerateBuffers = true;
+
+	it = mRenderers.erase(it);
+	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
 
 }
 
@@ -193,16 +192,5 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 
 bool Batch::shouldRegenerateBuffers() const
 {
-	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || isModelAnimated();
-}
-
-bool Batch::isModelAnimated() const
-{
-	bool isAnimated = false;
-	if(mMeshBatcher.getPrototypeMesh().get().getModel())
-	{
-		isAnimated = mMeshBatcher.getPrototypeMesh().get().getModel().get().isAnimated();
-	}
-
-	return isAnimated;
+	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || mMeshBatcher.isAnimated();
 }
