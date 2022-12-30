@@ -33,6 +33,8 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 
 		mMeshesIndex = 0;
 	}
+
+    disable();
 }
 
 void MeshBatcher::resize(u32 size)

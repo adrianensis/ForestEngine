@@ -59,8 +59,6 @@ class Batch: public ObjectBase
     GENERATE_METADATA(Batch)
 
 public:
-	~Batch() override;
-
     void init(const BatchData& batchData);
 
     void render();
@@ -68,7 +66,9 @@ public:
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
 
 private:
-    bool processRenderers();
+    void enable();
+    void disable();
+    void processRenderers();
     bool shouldRemoveRenderer(Ptr<Renderer> renderer);
     void internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it);
     void addToVertexBuffer(Ptr<Renderer> renderer);

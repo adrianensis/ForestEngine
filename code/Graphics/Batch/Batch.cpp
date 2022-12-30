@@ -13,23 +13,10 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
-Batch::~Batch()
-{
-}
-
 void Batch::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
-
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced);
-
-	Ptr<Texture> texture = mBatchData.mMaterial.get().getTexture();
-	if (texture)
-	{
-		texture.get().bind();
-	}
-	
-	mMeshBatcher.disable();
 }
 
 void Batch::render()
@@ -38,44 +25,45 @@ void Batch::render()
 
 	if (!mRenderers.empty())
 	{
-		mMeshBatcher.enable();
-		mBatchData.mMaterial.get().enable();
-		mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced);
-
-		bool isAnimated = mMeshBatcher.isAnimated();
-		mBatchData.mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
-		
-		if(isAnimated)
-		{
-			const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel());
-			mBatchData.mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
-		}
-
-		bool pendingDrawCall = true;
+        enable();
 
 		if(shouldRegenerateBuffers())
 		{
-			pendingDrawCall = processRenderers();
+			processRenderers();
 		}
 
-		if(pendingDrawCall)
-		{
-            if(mBatchData.mStencilValue > 0x00)
-            {
-                RenderContext::enableStencil(mBatchData.mIsStencilMask, mBatchData.mStencilValue, mBatchData.mStencilFunction);
-            }
+        mMeshBatcher.drawCall();
 
-			mMeshBatcher.drawCall();
-
-            RenderContext::disableStencil();
-
-			mNewRendererAdded = false;
-			mForceRegenerateBuffers = false;
-		}
-
-		mBatchData.mMaterial.get().disable();
-		mMeshBatcher.disable();
+        disable();
 	}
+}
+
+void Batch::enable()
+{
+    mMeshBatcher.enable();
+    mBatchData.mMaterial.get().enable();
+    mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced);
+
+    bool isAnimated = mMeshBatcher.isAnimated();
+    mBatchData.mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
+    
+    if(isAnimated)
+    {
+        const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel());
+        mBatchData.mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
+    }
+
+    if(mBatchData.mStencilValue > 0x00)
+    {
+        RenderContext::enableStencil(mBatchData.mIsStencilMask, mBatchData.mStencilValue, mBatchData.mStencilFunction);
+    }
+}
+
+void Batch::disable()
+{
+    RenderContext::disableStencil();
+    mBatchData.mMaterial.get().disable();
+    mMeshBatcher.disable();
 }
 
 void Batch::addRenderer(Ptr<Renderer> renderer)
@@ -86,14 +74,12 @@ void Batch::addRenderer(Ptr<Renderer> renderer)
 	mNewRendererAdded = true;
 }
 
-bool Batch::processRenderers()
+void Batch::processRenderers()
 {
 	PROFILER_CPU()
 
 	u32 newSize = mRenderers.size();
 	mMeshBatcher.resize(newSize);
-
-	bool pendingDrawCall = false;
 	
 	FOR_LIST(it, mRenderers)
 	{
@@ -111,12 +97,11 @@ bool Batch::processRenderers()
 			if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 			
 			addToVertexBuffer(renderer);
-			pendingDrawCall = true;
 		}
 	}
 
-
-	return pendingDrawCall;
+    mNewRendererAdded = false;
+    mForceRegenerateBuffers = false;
 }
 
 bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
