@@ -1,7 +1,7 @@
 #ifndef MESHBATCHER_HPP
 #define MESHBATCHER_HPP
 
-#include "Graphics/Buffers/VertexBuffer.hpp"
+#include "Graphics/Buffers/MeshBuffer.hpp"
 
 class MeshBatcher: public ObjectBase
 {
