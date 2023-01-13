@@ -5,7 +5,7 @@ import pathlib
 
 from generateClassList import *
 
-def generateIncludes(projectDir, generated_code_dirname):
+def generateClassesRegister(projectDir, generated_code_dirname):
 
     os.chdir(os.path.join(projectDir,generated_code_dirname))
 

@@ -14,11 +14,11 @@ def getClassList(currentDir, folders):
     class_map = {}
 
     for folder in folders:
-        path = currentDir+"/"+folder
+        path = os.path.join(currentDir, folder)
         for root,d_names,f_names in os.walk(path):
             for f in f_names:
                 file_name = os.path.join(root, f)
-                if ".hpp" in file_name and "Macros" not in file_name:
+                if ".hpp" in file_name and "Macros.hpp" not in file_name:
                     with open(file_name, 'r') as file:
                         lines = file.readlines()
                         for line in lines:

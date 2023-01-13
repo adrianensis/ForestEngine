@@ -45,8 +45,11 @@ project(${FOREST})
 set(CMAKE_CXX_STANDARD 20)
 
 # set(CMAKE_CXX_FLAGS_ALL "-std=c++17 -Wall") # this macro was invented by me
-
 set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Wall")
+
+if(GENERATE_HEADERS)
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D GENERATE_HEADERS")
+endif(GENERATE_HEADERS)
 
 if(ENABLE_LOGS)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D DE_ENABLE_LOGS")
@@ -216,6 +219,7 @@ include_directories("code")
 # needed for generated code
 include_directories(".")
 include_directories("generated-code")
+# include_directories("generated-code/code")
 #include_directories("generated-code/final")
 #include_directories("generated-code/final/code")
 
