@@ -41,7 +41,7 @@ for opt, arg in opts:
     elif opt in ['-p']:
       enableProfiler=True
 
-generateCode.generateCode()
+generateCode.generateCode(cwd)
 
 if not os.path.isdir(buildDir):
       os.mkdir(buildDir)

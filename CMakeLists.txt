@@ -41,7 +41,7 @@ project(${FOREST})
 # ----------------------------------------------------------------------------
 # CPP CONFIG
 # ----------------------------------------------------------------------------
-set(CMAKE_CXX_COMPILER /usr/bin/g++)
+# set(CMAKE_CXX_COMPILER /usr/bin/g++)
 set(CMAKE_CXX_STANDARD 20)
 
 # set(CMAKE_CXX_FLAGS_ALL "-std=c++17 -Wall") # this macro was invented by me
