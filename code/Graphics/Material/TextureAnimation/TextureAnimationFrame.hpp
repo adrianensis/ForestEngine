@@ -12,14 +12,10 @@ class TextureAnimationFrame: public ObjectBase
 public:
     void init(const Vector2& position, f32 width, f32 height);
 
-private:
+public:
     Vector2 mPosition;
 	f32 mWidth = 0.0f;
 	f32 mHeight = 0.0f;
-public:
-    GET(Position)
-    GET(Width)
-    GET(Height)
 };
 
 #endif

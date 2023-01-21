@@ -24,14 +24,13 @@ public:
     void onDestroy() override;
     const Mesh& generateMeshInstance();
     bool hasValidChunk() const;
-
+    
 private:
     void updateTextureAnimation();
 
-private:
+public:
 	TransformState mTransformState;
 	Matrix4 mRendererModelMatrix;
-	bool mPositionsDirty = true;
 	std::vector<Vector3> mVertices;
 	Vector4 mColor;
 	Vector3 mPositionOffset;
@@ -49,33 +48,17 @@ private:
 	Ptr<Chunk> mChunk;
 	bool mIsInstanced = false;
 	Ptr<Batch> mBatch;
-	Ptr<const Mesh> mMesh;
 	Mesh mMeshInstance;
+	Ptr<const Mesh> mMesh;
 	Ptr<Material> mMaterial;
 
-public:
-	CRGET_SET(RendererModelMatrix)
-	CRGET_SET(Vertices)
-	CRGET_SET(Color)
-	GET(PositionOffset)
 	SET_DIRTY(PositionOffset)
-	CRGET_SET(TextureRegion)
-	CRGET_SET(ClipRectangle)
-	GET_SET(InvertAxisX)
-	GET_SET(IsLineMode)
-	GET_SET(Depth)
-	GET_SET(UseDepth)
-	GET_SET(StencilValue)
-	GET_SET(IsStencilMask)
-	GET_SET(StencilFunction)
-	GET_SET(RenderDistance)
-	SET(Chunk)
-	GET_SET(IsInstanced)
-	SET(Batch)
+	
 	HASVALID(Batch)
-	GET_SET(Mesh)
-	GET_SET(Material)
 	GET_SET_MAP_CURRENT(TextureAnimations)
+
+private:
+	bool mPositionsDirty = true;
 };
 
 #endif

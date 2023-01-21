@@ -85,10 +85,8 @@ public:
 
 private:
 	std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
-	bool mIsWorldSpace = true;
-
 public:
-	GET_SET(IsWorldSpace)
+	bool mIsWorldSpace = true;
 };
 
 #endif

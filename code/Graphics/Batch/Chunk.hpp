@@ -24,13 +24,11 @@ public:
 private:
 	std::list<Ptr<Renderer>> mRenderers;
     Cube mCube;
+
+public:
 	bool mIsLoaded = false;
 	Vector3 mCenter;
 	f32 mRadius = 0.0f;
-public:
-	GET(IsLoaded)
-	GET(Center)
-	GET(Radius)
 };
 
 #endif

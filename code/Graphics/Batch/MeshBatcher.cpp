@@ -12,17 +12,17 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 	mMeshBuffer.init(isStatic, isInstanced);
 	mPrototypeMesh = prototypeMesh;
 	
-	if(mMeshBuffer.getIsInstanced())
+	if(mMeshBuffer.mIsInstanced)
 	{
-		mMeshBuilder.init(mPrototypeMesh.get().getVertexCount() * 1, mPrototypeMesh.get().getFacesCount() * 1);
+		mMeshBuilder.init(mPrototypeMesh.get().mVertexCount * 1, mPrototypeMesh.get().mFacesCount * 1);
 
-		mMeshBuilder.appendToPositions(mPrototypeMesh.get().getPositions());
-		mMeshBuilder.appendToTextureCoordinates(mPrototypeMesh.get().getTextureCoordinates());
-		FOR_RANGE(i, 0, mPrototypeMesh.get().getVertexCount())
+		mMeshBuilder.appendToPositions(mPrototypeMesh.get().mPositions);
+		mMeshBuilder.appendToTextureCoordinates(mPrototypeMesh.get().mTextureCoordinates);
+		FOR_RANGE(i, 0, mPrototypeMesh.get().mVertexCount)
 		{
 			mMeshBuilder.addToColors(Vector4(0,0,0,1));
 		}
-		mMeshBuilder.appendToBonesVertexData(mPrototypeMesh.get().getBonesVertexData());
+		mMeshBuilder.appendToBonesVertexData(mPrototypeMesh.get().mBonesVertexData);
 
 		generateFacesData(1);
 		mMeshBuffer.resize(mMeshBuilder);
@@ -54,13 +54,13 @@ void MeshBatcher::resize(u32 size)
 			mMaxMeshesThreshold += mMaxMeshesIncrement;
 		}
 
-		if (mMeshBuffer.getIsInstanced())
+		if (mMeshBuffer.mIsInstanced)
 		{
 			mMeshBuffer.setMaxInstances(mMaxMeshesThreshold);
 		}
 		else
 		{
-			mMeshBuilder.init(mPrototypeMesh.get().getVertexCount() * mMaxMeshesThreshold, mPrototypeMesh.get().getFacesCount() * mMaxMeshesThreshold);
+			mMeshBuilder.init(mPrototypeMesh.get().mVertexCount * mMaxMeshesThreshold, mPrototypeMesh.get().mFacesCount * mMaxMeshesThreshold);
 			generateFacesData(mMaxMeshesThreshold);
 			mMeshBuffer.resize(mMeshBuilder);
 		}
@@ -84,10 +84,10 @@ void MeshBatcher::addInstance(const Mesh& meshInstance)
 {
 	PROFILER_CPU()
 
-	mMeshBuilder.appendToPositions(meshInstance.getPositions());
-	mMeshBuilder.appendToTextureCoordinates(meshInstance.getTextureCoordinates());
-	mMeshBuilder.appendToColors(meshInstance.getColors());
-	mMeshBuilder.appendToBonesVertexData(meshInstance.getBonesVertexData());
+	mMeshBuilder.appendToPositions(meshInstance.mPositions);
+	mMeshBuilder.appendToTextureCoordinates(meshInstance.mTextureCoordinates);
+	mMeshBuilder.appendToColors(meshInstance.mColors);
+	mMeshBuilder.appendToBonesVertexData(meshInstance.mBonesVertexData);
 
 	mMeshesIndex++;
 }
@@ -100,7 +100,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		RenderContext::drawElements(mPrototypeMesh.get().getFaces().size() * 3, mMeshesIndex, mMeshBuffer.getIsInstanced());
+		RenderContext::drawElements(mPrototypeMesh.get().mFaces.size() * 3, mMeshesIndex, mMeshBuffer.mIsInstanced);
 	}
 }
 
@@ -117,9 +117,9 @@ void MeshBatcher::disable()
 bool MeshBatcher::isAnimated() const
 {
 	bool isAnimated = false;
-	if(mPrototypeMesh.get().getModel())
+	if(mPrototypeMesh.get().mModel)
 	{
-		isAnimated = mPrototypeMesh.get().getModel().get().isAnimated();
+		isAnimated = mPrototypeMesh.get().mModel.get().isAnimated();
 	}
 
 	return isAnimated;
@@ -128,7 +128,7 @@ bool MeshBatcher::isAnimated() const
 void MeshBatcher::clear()
 {
 	PROFILER_CPU()
-	if( ! mMeshBuffer.getIsInstanced())
+	if( ! mMeshBuffer.mIsInstanced)
 	{
 		mMeshBuilder.clear();
 	}
@@ -141,11 +141,11 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 
 	FOR_RANGE(i, 0, meshesCount)
 	{
-		u32 offset = (i * mPrototypeMesh.get().getVertexCount());
+		u32 offset = (i * mPrototypeMesh.get().mVertexCount);
 		
-		FOR_RANGE(faceIndex, 0, mPrototypeMesh.get().getFaces().size())
+		FOR_RANGE(faceIndex, 0, mPrototypeMesh.get().mFaces.size())
 		{
-			Face newFace = mPrototypeMesh.get().getFaces()[faceIndex];
+			Face newFace = mPrototypeMesh.get().mFaces[faceIndex];
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
@@ -159,7 +159,7 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 
 void MeshBatcher::sendDataToGPU()
 {	
-    if(mMeshBuffer.getIsInstanced())
+    if(mMeshBuffer.mIsInstanced)
     {
         mMeshBuffer.setDataInstanced();
     }

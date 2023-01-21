@@ -218,7 +218,7 @@ bool OcTree::OcTreeNode::isLeaf() const
 // {
 // 				Collider* collider = it.get();
 
-// 				GameObject* gameObject = collider->getGameObject();
+// 				GameObject* gameObject = collider->mGameObject;
 
 // 				// TODO : line vs cube
 // 				bool rayIntersectsCollider = MathUtils::testLineSphereSimple(Vector2(lineStart), Vector2(lineEnd),

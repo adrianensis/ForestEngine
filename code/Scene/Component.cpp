@@ -13,7 +13,7 @@ bool Component::isStatic() const
 {
 	if (mGameObject)
 	{
-		mIsStatic = mGameObject->getIsStatic();
+		mIsStatic = mGameObject->mIsStatic;
 	}
 
 	return mIsStatic;

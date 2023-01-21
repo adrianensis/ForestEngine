@@ -224,8 +224,8 @@ void Editor::update()
 	y += 30 * Time::getInstance().getDeltaTimeSeconds();
 
 
-	Transform* cameraTransform = &cameraGameObject->getTransform().get();
-	Matrix4 cameraRotationMatrix = cameraGameObject->getTransform().get().getRotationMatrix();
+	Transform* cameraTransform = &cameraGameObject->mTransform.get();
+	Matrix4 cameraRotationMatrix = cameraGameObject->mTransform.get().getRotationMatrix();
 	cameraRotationMatrix.invert();
 
 	f32 speed = 90 * Time::getInstance().getDeltaTimeSeconds();
@@ -291,15 +291,15 @@ GameObject* Editor::createSprite(const Vector3& v, f32 size)
 {
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
-	gameObject->setIsStatic(false);
-	gameObject->getTransform().get().setLocalPosition(v);
-	gameObject->getTransform().get().setScale(Vector3(size,size,size));
+	gameObject->mIsStatic = false;
+	gameObject->mTransform.get().mLocalPosition = (v);
+	gameObject->mTransform.get().mScale = (Vector3(size,size,size));
 
 	Renderer *renderer = NEW(Renderer);
 	renderer->init();
 
-	renderer->setMesh(MeshPrimitives::getInstance().getPrimitive<Cube>());
-	renderer->setMaterial(MaterialManager::getInstance().loadMaterial("resources/snorlax-fill.png"));
+	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
+	renderer->mMaterial = (MaterialManager::getInstance().loadMaterial("resources/snorlax-fill.png"));
 
 	gameObject->addComponent<Renderer>(renderer);
 
@@ -314,16 +314,16 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
-	gameObject->setIsStatic(true);
-	gameObject->getTransform().get().setLocalPosition(v);
-	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
-	//gameObject->getTransform().get().setRotation(Vector3(90,0,0));
+	gameObject->mIsStatic = true;
+	gameObject->mTransform.get().mLocalPosition = (v);
+	gameObject->mTransform.get().mScale = (Vector3(1,1,1) * size);
+	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
 	ModelRenderer *modelRenderer = NEW(ModelRenderer);
-	modelRenderer->setModel(model);
-	modelRenderer->setIsInstanced(true);
-	modelRenderer->setStencilValue(0x1);
-	modelRenderer->setIsStencilMask(true);
+	modelRenderer->mModel = (model);
+	modelRenderer->mIsInstanced = (true);
+	modelRenderer->mStencilValue = (0x1);
+	modelRenderer->mIsStencilMask = (true);
 	
 	gameObject->addComponent<ModelRenderer>(modelRenderer);
 
@@ -336,15 +336,15 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 
 	GameObject* gameObject = NEW(GameObject);
 	gameObject->init();
-	gameObject->setIsStatic(true);
-	gameObject->getTransform().get().setLocalPosition(v);
-	gameObject->getTransform().get().setScale(Vector3(1,1,1) * size);
-	//gameObject->getTransform().get().setRotation(Vector3(90,0,0));
+	gameObject->mIsStatic = true;
+	gameObject->mTransform.get().mLocalPosition = (v);
+	gameObject->mTransform.get().mScale = (Vector3(1,1,1) * size);
+	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
 	ModelRenderer *modelRenderer = NEW(ModelRenderer);
-	modelRenderer->setModel(model);
-	modelRenderer->setIsInstanced(true);
-	modelRenderer->setStencilValue(0x1);
+	modelRenderer->mModel = (model);
+	modelRenderer->mIsInstanced = (true);
+	modelRenderer->mStencilValue = (0x1);
 	
 	gameObject->addComponent<ModelRenderer>(modelRenderer);
 

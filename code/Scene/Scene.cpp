@@ -26,8 +26,8 @@ void Scene::init()
 	GameObject *cameraGameObject = NEW(GameObject);
 	cameraGameObject->init();
 
-	cameraGameObject->getTransform().get().translate(Vector3(0, 0, 100.0f));
-	cameraGameObject->getTransform().get().setScale(Vector3(1,1,1));
+	cameraGameObject->mTransform.get().translate(Vector3(0, 0, 100.0f));
+	cameraGameObject->mTransform.get().mScale = Vector3(1,1,1);
 
 	Camera *cameraComponent = NEW(Camera);
 	cameraComponent->init();
@@ -86,11 +86,11 @@ IMPLEMENT_SERIALIZATION(Scene)
 		GameObject* obj = *it;
 		if(obj)
 		{
-			if (obj->getShouldPersist())
+			if (obj->mShouldPersist)
 			{
-				Transform *t = &obj->getTransform().get();
+				Transform *t = &obj->mTransform.get();
 				Vector3 worldPosition = t->getWorldPosition();
-				Vector3 scale = t->getScale();
+				Vector3 scale = t->mScale;
 
 				f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
 				maxSize = std::max(std::max(maxSize, std::abs(worldPosition.x) + maxObjectScale),
@@ -101,7 +101,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 
 	SERIALIZE_LIST_IF("objects", mGameObjects, [](GameObject* gameObject)
 	{
-		return gameObject->getShouldPersist();
+		return gameObject->mShouldPersist;
 	})
 
 	SERIALIZE("size", maxSize * 2.0f)
@@ -135,7 +135,7 @@ void Scene::unloadScene()
 
 void Scene::addGameObject(GameObject *gameObject)
 {
-	gameObject->setScene(this);
+	gameObject->mScene = (this);
 	mNewGameObjects.push_back(gameObject);
 }
 

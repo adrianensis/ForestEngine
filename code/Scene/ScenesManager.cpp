@@ -75,8 +75,8 @@ void ScenesManager::internalLoadScene()
 		mCurrentScene->loadScene(sceneName);
 	}
 
-	mGameObjectController->setScene(mCurrentScene);
-	RenderEngine::getInstance().setCamera(mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
+	mGameObjectController->mScene = (mCurrentScene);
+	RenderEngine::getInstance().mCamera = (mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
 }
 
 void ScenesManager::addScene(Scene *newScene)

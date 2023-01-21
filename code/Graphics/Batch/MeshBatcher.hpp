@@ -25,8 +25,10 @@ private:
     void generateFacesData(u32 meshesCount);
     void sendDataToGPU();
 	
-private:
+public:
 	Ptr<const Mesh> mPrototypeMesh;
+
+private:
 	Mesh mMeshBuilder;
 	MeshBuffer mMeshBuffer;
 
@@ -35,9 +37,6 @@ private:
 	u32 mMeshesIndex = 0;
 
 	bool mDataSentToGPU = false;
-
-public:
-    GET(PrototypeMesh)
 };
 
 #endif

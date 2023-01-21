@@ -26,7 +26,7 @@ public:
 private:
     void terminate();
 
-private:
+public:
 	bool mGenerated = false;
 
 	bool mIsStatic = false;
@@ -43,8 +43,6 @@ private:
 	GPUBuffer<Matrix4> mVBOModelMatrix;
 
 	u32 mEBO = 0;
-public:
-	GET(IsInstanced)
 };
 
 #endif

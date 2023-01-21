@@ -18,12 +18,12 @@ void AnimationManager::update()
 
 void AnimationManager::createAnimationState(Ptr<const Animation> animation)
 {
-	Ptr<const Model> model = animation.get().getModel();
+	Ptr<const Model> model = animation.get().mModel;
 
 	if(!MAP_CONTAINS(mSkeletonStates, model))
 	{
 		OwnerPtr<SkeletonState> skeletonState = OwnerPtr<SkeletonState>(NEW(SkeletonState));
-		skeletonState.get().init(animation.get().getModel());
+		skeletonState.get().init(animation.get().mModel);
 
 		MAP_INSERT(mSkeletonStates, model, skeletonState);
 	}

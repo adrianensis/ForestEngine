@@ -27,7 +27,7 @@ public:
 
     void clear();
 
-private:
+public:
 	std::vector<Vector3> mPositions;
 	std::vector<Vector3> mNormals;
 	std::vector<Vector2> mTextureCoordinates;
@@ -42,25 +42,12 @@ private:
 
     Ptr<const Model> mModel;
 
-public:
-	CRGET(Positions)
-	CRGET(Normals)
-	CRGET(TextureCoordinates)
-	CRGET(Colors)
-	CRGET(Faces)
-    CRGET(BonesVertexData)
-	GET(VertexCount)
-	GET(FacesCount)
-    CGET_SET(Model)
-
 	ADD_TO_VECTOR(Positions)
 	ADD_TO_VECTOR(Normals)
 	ADD_TO_VECTOR(TextureCoordinates)
 	ADD_TO_VECTOR(Colors)
 	ADD_TO_VECTOR(Faces)
 	ADD_TO_VECTOR(BonesVertexData)
-
-    CRGET_SET(MaterialPath)
 };
 
 #endif

@@ -19,19 +19,12 @@ private:
     void loadImage();
 	void deleteData();
 
-private: 
+public: 
 	u32 mTextureId = -1;
 	byte* mData = nullptr;
 	u32 mWidth = 0;
 	u32 mHeight = 0;
 	std::string mPath;
-
-public:
-	GET(TextureId)
-	GET(Data)
-	GET(Width)
-	GET(Height)
-	CRGET(Path)
 };
 
 #endif

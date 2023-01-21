@@ -5,8 +5,8 @@
 TransformState::TransformState(const Transform& transform)
 {
 	mPosition = transform.getWorldPosition();
-	mRotation = transform.getRotation();
-	mScale = transform.getScale();
+	mRotation = transform.mRotation;
+	mScale = transform.mScale;
 }
 
 TransformState::TransformState(const Vector3& position, const Vector3& rotation, const Vector3& scale)

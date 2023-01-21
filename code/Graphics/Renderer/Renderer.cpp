@@ -21,35 +21,35 @@ void Renderer::init()
 
 	mRenderDistance = 1500; // TODO : move to settings?
 
-	setColor(Vector4(0, 0, 0, 1));
+	mColor = (Vector4(0, 0, 0, 1));
 
 	mDirtyPositionOffset = true;
 }
 
 void Renderer::onComponentAdded() 
 {
-	mTransformState = TransformState(getGameObject()->getTransform().get());
+	mTransformState = TransformState(mGameObject->mTransform.get());
 
 	//update();
 }
 
 bool Renderer::getIsWorldSpace() const
 {
-	return getGameObject()->getTransform().get().getAffectedByProjection();
+	return mGameObject->mTransform.get().mAffectedByProjection;
 }
 
 void Renderer::update(bool regenerateVertices)
 {
 	PROFILER_CPU()
 
-	TransformState currentTransformState = TransformState(getGameObject()->getTransform().get());
+	TransformState currentTransformState = TransformState(mGameObject->mTransform.get());
 
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 
 	bool isAnimated = false;
-	if(mMesh.get().getModel().isValid())
+	if(mMesh.get().mModel.isValid())
 	{
-		isAnimated = mMesh.get().getModel().get().isAnimated();
+		isAnimated = mMesh.get().mModel.get().isAnimated();
 	}
 
 	if (transformChanged || mDirtyPositionOffset || isAnimated)
@@ -57,12 +57,12 @@ void Renderer::update(bool regenerateVertices)
 		if (transformChanged || mDirtyPositionOffset)
 		{
 			mRendererModelMatrix.translation(mPositionOffset);
-			mRendererModelMatrix.mul(getGameObject()->getTransform().get().getModelMatrix());
+			mRendererModelMatrix.mul(mGameObject->mTransform.get().getModelMatrix());
 		}
 
 		if(regenerateVertices)
 		{
-			u32 verticesCount = mMesh.get().getVertexCount();
+			u32 verticesCount = mMesh.get().mVertexCount;
 
 			if(mVertices.size() < verticesCount)
 			{
@@ -72,15 +72,15 @@ void Renderer::update(bool regenerateVertices)
 			
 			FOR_RANGE(i, 0, verticesCount)
 			{
-				Vector3 vertexPosition = mMesh.get().getPositions()[i];
+				Vector3 vertexPosition = mMesh.get().mPositions[i];
 
 				if(isAnimated)
 				{
 					const u32 MAX_BONE_INFLUENCE = BoneVertexData::smMaxBonesPerVertex;
 					const u32 MAX_BONES = 100;
 
-					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().getModel());
-					const std::vector<BoneVertexData>& bonesVertexData = mMesh.get().getBonesVertexData();
+					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().mModel);
+					const std::vector<BoneVertexData>& bonesVertexData = mMesh.get().mBonesVertexData;
 
 					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
 					for(int boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
@@ -137,22 +137,22 @@ void Renderer::onDestroy()
 
 const Mesh& Renderer::generateMeshInstance()
 {
-	const std::vector<Vector3>& vertexPositions = getVertices();
+	const std::vector<Vector3>& vertexPositions = mVertices;
 
-	mMeshInstance.init(mMesh.get().getVertexCount(), mMesh.get().getFacesCount());
+	mMeshInstance.init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
 
-	FOR_RANGE(i, 0, mMesh.get().getVertexCount())
+	FOR_RANGE(i, 0, mMesh.get().mVertexCount)
 	{
 		mMeshInstance.addToPositions(vertexPositions[i]);
 
-		Vector2 vertexTexture = mMesh.get().getTextureCoordinates()[i];
+		Vector2 vertexTexture = mMesh.get().mTextureCoordinates[i];
 
-		Vector2 regionSize = getTextureRegion().getSize();
-		Vector2 regionPosition = getTextureRegion().getLeftTopFront();
+		Vector2 regionSize = mTextureRegion.getSize();
+		Vector2 regionPosition = mTextureRegion.getLeftTopFront();
 
 		Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
 
-		if (getInvertAxisX())
+		if (mInvertAxisX)
 		{
 			textureCoord.x = 1.0f - textureCoord.x;
 
@@ -166,17 +166,17 @@ const Mesh& Renderer::generateMeshInstance()
 
 		mMeshInstance.addToTextureCoordinates(textureCoord);
 
-		mMeshInstance.addToColors(getColor());
+		mMeshInstance.addToColors(mColor);
 	}
 
-	mMeshInstance.appendToBonesVertexData(mMesh.get().getBonesVertexData());
+	mMeshInstance.appendToBonesVertexData(mMesh.get().mBonesVertexData);
 
 	return mMeshInstance;
 }
 
 bool Renderer::hasValidChunk() const
 {
-	return (! mChunk.isValid()) || (mChunk.isValid() && mChunk.get().getIsLoaded()); // !chunk means -> Screen Space case
+	return (! mChunk.isValid()) || (mChunk.isValid() && mChunk.get().mIsLoaded); // !chunk means -> Screen Space case
 }
 
 IMPLEMENT_SERIALIZATION(Renderer)
@@ -185,9 +185,9 @@ IMPLEMENT_SERIALIZATION(Renderer)
 
 	std::string materialPath = "";
 
-	if(mMaterial.get().getTexture())
+	if(mMaterial.get().mTexture)
 	{
-		materialPath = mMaterial.get().getTexture().get().getPath();
+		materialPath = mMaterial.get().mTexture.get().mPath;
 	}
 
 	SERIALIZE("material", materialPath)
@@ -221,11 +221,11 @@ void Renderer::updateTextureAnimation()
 			currentTextureAnimation = mTextureAnimations[mTextureAnimationsCurrentKey];
 		}
 
-		if (currentTextureAnimation && !currentTextureAnimation.get().getFrames().empty())
+		if (currentTextureAnimation && !currentTextureAnimation.get().mFrames.empty())
 		{
 			const TextureAnimationFrame& frame = currentTextureAnimation.get().getNextFrame();
-			mTextureRegion.setLeftTopFront(frame.getPosition());
-			mTextureRegion.setSize(Vector2(frame.getWidth(), frame.getHeight()));
+			mTextureRegion.setLeftTopFront(frame.mPosition);
+			mTextureRegion.setSize(Vector2(frame.mWidth, frame.mHeight));
 		}
 	}
 };

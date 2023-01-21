@@ -27,6 +27,9 @@ public:
     bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }
 
 private:
+    std::vector<OwnerPtr<Animation>> mAnimations;
+
+public:
     Assimp::Importer mImporter;
     std::string mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
@@ -34,16 +37,6 @@ private:
 
     std::map<std::string, BoneData> mBonesMapping;
     u32 mBonesIndexCount = 0;
-
-    std::vector<OwnerPtr<Animation>> mAnimations;
-
-public:
-    CRGET(Meshes)
-    CRGET(Path)
-    CRGET(Importer)
-    CRGET(GlobalInverseTransform)
-    CRGET(BonesMapping)
-    GET(BonesIndexCount)
 };
 
 #endif

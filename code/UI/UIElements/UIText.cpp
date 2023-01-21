@@ -22,14 +22,14 @@ void UIText::initFromConfig(const UIElementConfig& config)
 
 	Vector3 textSize = Vector3(UIUtils::correctAspectRatio_X(mConfig.mTextSize), 1);
 
-	getTransform().get().setLocalPosition(mConfig.mDisplayPosition);
-	getTransform().get().setScale(textSize);
-	getTransform().get().setAffectedByProjection(false);
+	mTransform.get().mLocalPosition = mConfig.mDisplayPosition;
+	mTransform.get().mScale = textSize;
+	mTransform.get().mAffectedByProjection = false;
 
 	if (mConfig.mParent)
 	{
-		getTransform().get().setParent(&mConfig.mParent->getTransform().get());
-		getTransform().get().setLocalPosition(Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0));
+		mTransform.get().mParent = &mConfig.mParent->mTransform.get();
+		mTransform.get().mLocalPosition = Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0);
 	}
 
 	setSize(mConfig.mTextSize);
@@ -87,12 +87,12 @@ void UIText::setText(const std::string& text)
 					renderer = NEW(Renderer);
 					renderer->init();
 
-					renderer->setMesh(MeshPrimitives::getInstance().getPrimitive<Rectangle>());
-					renderer->setMaterial(UIManager::getInstance().getFontMaterial());
-					renderer->setUseDepth(true);
-					renderer->setDepth(mLayer);
-					renderer->setStencilValue(mConfig.mStencilValue);
-                    renderer->setStencilFunction(mConfig.mStencilFunction);
+					renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
+					renderer->mMaterial = (UIManager::getInstance().getFontMaterial());
+					renderer->mUseDepth = (true);
+					renderer->mDepth = (mLayer);
+					renderer->mStencilValue = (mConfig.mStencilValue);
+                    renderer->mStencilFunction = (mConfig.mStencilFunction);
 					
 					addComponent<Renderer>(renderer);
 
@@ -100,7 +100,7 @@ void UIText::setText(const std::string& text)
 				}
 
 				renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / RenderContext::getAspectRatio(), 0, 0));
-				renderer->setTextureRegion(Rectangle(textureCoordinates, textureSize));
+				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));
 			}
 		}
 

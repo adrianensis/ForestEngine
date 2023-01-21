@@ -16,7 +16,7 @@ TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool 
 
 	TextureAnimation TextureAnimation;
 	TextureAnimation.init();
-	TextureAnimation.setSpeed(speed);
+	TextureAnimation.mSpeed = speed;
 
 	i32 horizontalDir = 0;
 	i32 verticalDir = 0;

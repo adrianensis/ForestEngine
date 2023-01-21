@@ -33,7 +33,7 @@ void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
 
 	mComponentsMap.at(classId).push_back(component);
 
-	component.get().setGameObject(this);
+	component.get().mGameObject = this;
 	component.get().onComponentAdded();
 
 	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<IEngineSystemComponent>::cast(component));
@@ -79,7 +79,7 @@ void GameObject::destroy()
 
 		FOR_LIST(itComponent, list)
 		{
-			(*itComponent).get().setGameObject(nullptr);
+			(*itComponent).get().mGameObject = nullptr;
 			(*itComponent).get().destroy();
 		}
 

@@ -32,15 +32,12 @@ public:
     const TextureAnimationFrame& getCurrentFrame() const;
 	
 private:
-	std::string mName;
-	std::vector<TextureAnimationFrame> mFrames;
 	u32 mCurrentFrameNumber = 0;
 	f32 mTimeAccumulator = 0.0f;
-	f32 mSpeed = 0.0f;
 public:
-	CRGET_SET(Name)
-	CRGET(Frames)
-	GET_SET(Speed)
+	std::string mName;
+	std::vector<TextureAnimationFrame> mFrames;
+	f32 mSpeed = 0.0f;
 };
 
 #endif

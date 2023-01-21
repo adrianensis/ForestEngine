@@ -9,7 +9,7 @@ void Animation::init(u32 animationIndex, Ptr<const Model> model)
     mModel = model;
     mAnimationIndex = animationIndex;
 
-    const aiScene* m_pScene = mModel.get().getImporter().GetScene();
+    const aiScene* m_pScene = mModel.get().mImporter.GetScene();
     aiAnimation* aiAnimation = m_pScene->mAnimations[mAnimationIndex];
 
     mTicksPerSecond = (f32)(aiAnimation->mTicksPerSecond != 0 ? aiAnimation->mTicksPerSecond : 25.0f);
@@ -37,7 +37,7 @@ void AnimationState::update()
     mAccumulatedTime += dt;
 
     // reset accumulatedTime to avoid overflow
-    if(mAccumulatedTime > mAnimation.get().getDurationInSeconds())
+    if(mAccumulatedTime > mAnimation.get().mDurationInSeconds)
     {
         mAccumulatedTime = 0;
     }
@@ -94,11 +94,11 @@ void SkeletonState::getBoneTransformsFromCurrentAnimation(std::vector<Matrix4>& 
     Matrix4 Identity;
 	Identity.identity();
 
-	const aiScene* m_pScene = mCurrentAnimation.get().getAnimation().get().getModel().get().getImporter().GetScene();
+	const aiScene* m_pScene = mCurrentAnimation.get().getAnimation().get().mModel.get().mImporter.GetScene();
 
     f32 animationTime = mCurrentAnimation.get().getAnimationTime();
 
-    Transforms.resize(mCurrentAnimation.get().getAnimation().get().getModel().get().getBonesIndexCount());
+    Transforms.resize(mCurrentAnimation.get().getAnimation().get().mModel.get().mBonesIndexCount);
 
     FOR_ARRAY(it, Transforms)
     {
@@ -114,7 +114,7 @@ void SkeletonState::readNodeHierarchy(f32 animationTimeTicks, const aiNode* pNod
 
     std::string NodeName(pNode->mName.data);
 
-	const aiScene* m_pScene = mCurrentAnimation.get().getAnimation().get().getModel().get().getImporter().GetScene();
+	const aiScene* m_pScene = mCurrentAnimation.get().getAnimation().get().mModel.get().mImporter.GetScene();
     const aiAnimation* pAnimation = m_pScene->mAnimations[0];
 
     Matrix4 nodeTransformation;
@@ -182,11 +182,11 @@ void SkeletonState::readNodeHierarchy(f32 animationTimeTicks, const aiNode* pNod
 	Matrix4 globalTransformation(parentTransform);
     globalTransformation.mul(nodeTransformation);
 
-    const auto& bonesMapping = mCurrentAnimation.get().getAnimation().get().getModel().get().getBonesMapping();
+    const auto& bonesMapping = mCurrentAnimation.get().getAnimation().get().mModel.get().mBonesMapping;
     if (MAP_CONTAINS(bonesMapping, NodeName)) {
         u32 boneIndex = bonesMapping.at(NodeName).mId;
 
-	    Matrix4 globalInverseTransform = mCurrentAnimation.get().getAnimation().get().getModel().get().getGlobalInverseTransform();
+	    Matrix4 globalInverseTransform = mCurrentAnimation.get().getAnimation().get().mModel.get().mGlobalInverseTransform;
 		Matrix4 globalTransformationCopy(globalTransformation);
 		globalTransformationCopy.mul(bonesMapping.at(NodeName).mOffsetMatrix);
 		globalInverseTransform.mul(globalTransformationCopy);

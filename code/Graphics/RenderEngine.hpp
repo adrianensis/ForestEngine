@@ -35,16 +35,13 @@ private:
 	ShapeBatchRendererMap mShapeBatchRendererMap;
 	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
 
-	Ptr<Camera> mCamera;
 	bool mCameraDirtyTranslation = false;
 
-	f32 mMinChunkDrawDistance = 0.0f;
-	std::vector<OwnerPtr<Chunk>> mChunks;
-
 public:
-	RGET_SET(Camera)
-	GET(CameraDirtyTranslation)
-	GET(MinChunkDrawDistance)
+	Ptr<Camera> mCamera;
+
+	std::vector<OwnerPtr<Chunk>> mChunks;
+	f32 mMinChunkDrawDistance = 0.0f;
 };
 
 #endif

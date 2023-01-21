@@ -62,9 +62,9 @@ bool UIElement::isMouseCursorInsideElement() const
 
 	Vector2 mousePosition = Input::getInstance().getMousePosition();
 
-	if(getTransform().get().getAffectedByProjection())
+	if(mTransform.get().mAffectedByProjection)
 	{
-		mousePosition = RenderEngine::getInstance().getCamera().get().screenToWorld(Input::getInstance().getMousePosition());
+		mousePosition = RenderEngine::getInstance().mCamera.get().screenToWorld(Input::getInstance().getMousePosition());
 	}
 
     Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
@@ -75,7 +75,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 Vector3 UIElement::getLeftTopPosition() const
 {
-    Vector3 position = getTransform().get().getWorldPosition();
+    Vector3 position = mTransform.get().getWorldPosition();
     Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
     position.x = position.x - (correctedSize.x / 2.0f);
     position.y = position.y + (correctedSize.y / 2.0f);
@@ -474,7 +474,7 @@ void UIElement::markAsToggled()
 
 void UIElement::setColorPressed()
 {
-	mRenderer->setColor(mConfig.mStyle->mColorPressed);
+	mRenderer->mColor = (mConfig.mStyle->mColorPressed);
 }
 
 void UIElement::setColorRelease()
@@ -483,11 +483,11 @@ void UIElement::setColorRelease()
 
 	if(cursorInside)
 	{
-		mRenderer->setColor(mConfig.mStyle->mColorHovered);
+		mRenderer->mColor = (mConfig.mStyle->mColorHovered);
 	}
 	else
 	{
-		mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
+		mRenderer->mColor = (mConfig.mStyle->mBackgroundColor);
 	}
 }
 
@@ -497,10 +497,10 @@ void UIElement::setColorOver()
 
 	if (isMouseCursorInsideElement())
 	{
-		mRenderer->setColor(mConfig.mStyle->mColorHovered);
+		mRenderer->mColor = (mConfig.mStyle->mColorHovered);
 	}
 	else
 	{
-		mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
+		mRenderer->mColor = (mConfig.mStyle->mBackgroundColor);
 	}
 }

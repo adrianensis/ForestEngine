@@ -20,14 +20,14 @@ void Camera::onComponentAdded()
 {
 	recalculateProjectionMatrix();
 
-	mTransformState = TransformState(getGameObject()->getTransform().get());
+	mTransformState = TransformState(mGameObject->mTransform.get());
 }
 
 void Camera::update()
 {
 	PROFILER_CPU()
 	
-	TransformState currentTransformState(getGameObject()->getTransform().get());
+	TransformState currentTransformState(mGameObject->mTransform.get());
 	if(!currentTransformState.eq(mTransformState))
 	{
 		mFrustum.build();
@@ -136,7 +136,7 @@ void Camera::calculateViewMatrix()
 {
 	PROFILER_CPU()
 
-	Vector3 originalPosition = getGameObject()->getTransform().get().getWorldPosition();
+	Vector3 originalPosition = mGameObject->mTransform.get().getWorldPosition();
 
 	Matrix4 viewTranslationMatrix;
 	viewTranslationMatrix.translation(-originalPosition);
@@ -162,7 +162,7 @@ void Camera::calculateViewMatrix()
 	
 	viewRotationMatrix.transpose();
 
-	Matrix4 rotationMatrix = getGameObject()->getTransform().get().getRotationMatrix();
+	Matrix4 rotationMatrix = mGameObject->mTransform.get().getRotationMatrix();
 
 	mViewMatrix.init(viewRotationMatrix);
 	mViewMatrix.mul(rotationMatrix);
@@ -172,8 +172,8 @@ void Camera::calculateViewMatrix()
 void Camera::calculateProjectionViewMatrix()
 {
 	calculateViewMatrix();
-	mProjectionViewMatrix.init(getProjectionMatrix());
-	mProjectionViewMatrix.mul(getViewMatrix());
+	mProjectionViewMatrix.init(mProjectionMatrix);
+	mProjectionViewMatrix.mul(mViewMatrix);
 }
 
 void Camera::calculateInverseMatrix(bool force /*= false*/)
@@ -183,7 +183,7 @@ void Camera::calculateInverseMatrix(bool force /*= false*/)
 		calculateProjectionViewMatrix();
 
 		Matrix4 inverseProjectionMatrix;
-		mInversePVMatrix.init(getProjectionViewMatrix());		
+		mInversePVMatrix.init(mProjectionViewMatrix);		
 		mInversePVMatrix.invert();
 
 		mInversePVMatrixNeedsUpdate = false;

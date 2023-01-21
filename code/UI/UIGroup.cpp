@@ -29,7 +29,7 @@ void UIGroup::destroyUIElement(UIElement *uiElement)
 	if (uiElement)
 	{
 		removeUIElement(uiElement);
-		uiElement->getScene()->removeGameObject(uiElement);
+		uiElement->mScene->removeGameObject(uiElement);
 	}
 }
 
@@ -38,7 +38,7 @@ void UIGroup::destroyAllUIElements()
 	FOR_LIST(it, mUIElements)
 	{
 		UIElement *element = *it;
-		element->getScene()->removeGameObject(element);
+		element->mScene->removeGameObject(element);
 	}
 
 	mUIElements.clear();

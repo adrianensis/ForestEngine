@@ -16,7 +16,7 @@ void Texture::init(const std::string& path)
 	{
 		mPath = path;
 		loadImage();
-        mTextureId = RenderContext::createTexture(getWidth(), getHeight(), getData());
+        mTextureId = RenderContext::createTexture(mWidth, mHeight, mData);
 		deleteData();
 	}
 }

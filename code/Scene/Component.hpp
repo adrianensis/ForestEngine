@@ -31,13 +31,11 @@ private:
 	bool mIsActive = false;
 	mutable bool mIsStatic = false;
 
-	GameObject* mGameObject;
-	
-	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
+	bool mIsPendingToBeDestroyed = false;
 
 public:
-	GET_SET(GameObject)
+	GameObject* mGameObject;
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 };

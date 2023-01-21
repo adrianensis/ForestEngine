@@ -25,7 +25,7 @@ void UIButton::onDestroy()
 {
 	if (mText)
 	{
-		getScene()->removeGameObject(mText);
+		mScene->removeGameObject(mText);
 		mText = nullptr;
 	}
 
@@ -41,7 +41,7 @@ void UIButton::setText(const std::string& text)
 {
 	if (text.length() > 0)
 	{
-		Vector3 buttonScale = getTransform().get().getScale();
+		Vector3 buttonScale = mTransform.get().mScale;
 
 		if (!mText)
 		{

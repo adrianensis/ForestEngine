@@ -50,7 +50,7 @@ void Model::init(const std::string& path)
                 aiMesh* assimpMesh = scene->mMeshes[meshIt];
 
                 OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
-                mesh.get().setModel(getPtrToThis());
+                mesh.get().mModel = (getPtrToThis());
                 mMeshes.push_back(mesh);
 
                 mesh.get().init(assimpMesh->mNumVertices, assimpMesh->mNumFaces);
@@ -80,7 +80,7 @@ void Model::init(const std::string& path)
                 }
 
                 //TODO : REMOVE - TEST
-                mesh.get().setMaterialPath("resources/bob_lamp/bob_body_local.png");
+                mesh.get().mMaterialPath = ("resources/bob_lamp/bob_body_local.png");
                 
                 if(scene->HasMaterials())
                 {
@@ -101,7 +101,7 @@ void Model::init(const std::string& path)
 
                             if (material->GetTexture(textureType, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
                             {
-                                mesh.get().setMaterialPath("resources/bob_lamp/" + std::string(materialPath.data));
+                                mesh.get().mMaterialPath = ("resources/bob_lamp/" + std::string(materialPath.data));
                             }
                         }
                     }
@@ -111,7 +111,7 @@ void Model::init(const std::string& path)
 
                         //     if (material->GetTexture(aiTextureType_DIFFUSE, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
                         //     {
-                        //         mesh.get().setMaterialPath(materialPath.data);
+                        //         mesh.get().mMaterialPath = (materialPath.data);
                         //     }
                         // }
                 }

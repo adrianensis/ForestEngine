@@ -21,7 +21,7 @@ void RenderEngine::init(f32 sceneSize)
 
 	mCameraDirtyTranslation = true;
 
-	mShapeBatchRendererMapScreenSpace.setIsWorldSpace(false);
+	mShapeBatchRendererMapScreenSpace.mIsWorldSpace = false;
 
 
 	mMinChunkDrawDistance = EngineConfig::getInstance().getConfig().at("scene").at("chunks").at("minChunkDrawDistance").get<f32>();
@@ -48,7 +48,7 @@ void RenderEngine::init(f32 sceneSize)
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
 {
-	return mCamera && mCamera.get().getFrustum().testSphere(center, radius);
+	return mCamera && mCamera.get().mFrustum.testSphere(center, radius);
 }
 
 void RenderEngine::update()
@@ -116,7 +116,7 @@ Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
 		chunkTmp = mChunks.at(i);
 		if (chunkTmp.get().containsRenderer /*Sphere*/ (renderer))
 		{
-			renderer.get().setChunk(chunkTmp);
+			renderer.get().mChunk = chunkTmp;
 
 			found = true;
 			chunkFound = chunkTmp;
@@ -193,14 +193,14 @@ void RenderEngine::checkChunks()
 	{
 		Ptr<Chunk> chunk = mChunks.at(i);
 
-		f32 chunkToCameraDistance = chunk.get().getCenter().dst(mCamera.get().getGameObject()->getTransform().get().getWorldPosition());
+		f32 chunkToCameraDistance = chunk.get().mCenter.dst(mCamera.get().mGameObject->mTransform.get().getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
 		
-		if (chunkInDistance && !chunk.get().getIsLoaded())
+		if (chunkInDistance && !chunk.get().mIsLoaded)
 		{
 			chunk.get().load();
 		}
-		else if (!chunkInDistance && chunk.get().getIsLoaded())
+		else if (!chunkInDistance && chunk.get().mIsLoaded)
 		{
 			mBatchesMap.forceRegenerateBuffers();
 

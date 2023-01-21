@@ -11,19 +11,19 @@ void ModelRenderer::init()
 
 void ModelRenderer::onComponentAdded() 
 {
-	const std::vector<OwnerPtr<Mesh>>&  meshes = mModel.get().getMeshes();
+	const std::vector<OwnerPtr<Mesh>>&  meshes = mModel.get().mMeshes;
 
 	FOR_LIST(it, meshes)
 	{
 		Renderer *renderer = NEW(Renderer);
 		renderer->init();
 
-		renderer->setMesh(*it);
-		renderer->setMaterial(MaterialManager::getInstance().loadMaterial((*it).get().getMaterialPath()));
-		renderer->setIsInstanced(mIsInstanced);
-		renderer->setStencilValue(mStencilValue);
-		renderer->setIsStencilMask(mIsStencilMask);
-		getGameObject()->addComponent<Renderer>(renderer);
+		renderer->mMesh = (*it);
+		renderer->mMaterial = (MaterialManager::getInstance().loadMaterial((*it).get().mMaterialPath));
+		renderer->mIsInstanced = (mIsInstanced);
+		renderer->mStencilValue = (mStencilValue);
+		renderer->mIsStencilMask = (mIsStencilMask);
+		mGameObject->addComponent<Renderer>(renderer);
 	}
 }
 

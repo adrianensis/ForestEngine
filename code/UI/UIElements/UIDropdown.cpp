@@ -52,14 +52,14 @@ void UIDropdown::setEntriesVisibility(bool visible)
 	{
 		if (mButtons.empty())
 		{
-			Vector3 scale = getTransform().get().getScale();
+			Vector3 scale = mTransform.get().mScale;
 			scale.x = scale.x * RenderContext::getAspectRatio();
 			
 			UIBuilder uiBuilder;
 
 			uiBuilder.
 				setLayout(UILayout::VERTICAL).
-				setPosition(getTransform().get().getWorldPosition() + Vector2((-scale.x / 2.0f) / RenderContext::getAspectRatio(), -scale.y / 2.0f)).
+				setPosition(mTransform.get().getWorldPosition() + Vector2((-scale.x / 2.0f) / RenderContext::getAspectRatio(), -scale.y / 2.0f)).
 				setTextSize(mConfig.mTextSize).
 				setAdjustSizeToText(true).
 				setLayer(mConfig.mLayer);
@@ -93,7 +93,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				getScene()->removeGameObject(*it);
+				mScene->removeGameObject(*it);
 			}
 
 			mButtons.clear();

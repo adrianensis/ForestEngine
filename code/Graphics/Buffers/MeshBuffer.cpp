@@ -52,10 +52,10 @@ void MeshBuffer::terminate()
 
 void MeshBuffer::resize(const Mesh& mesh)
 {
-	mVBOPosition.resize(mesh.getPositions().capacity());
-	mVBOTexture.resize(mesh.getTextureCoordinates().capacity());
-	mVBOColor.resize(mesh.getColors().capacity());
-	mVBOBone.resize(mesh.getBonesVertexData().capacity());
+	mVBOPosition.resize(mesh.mPositions.capacity());
+	mVBOTexture.resize(mesh.mTextureCoordinates.capacity());
+	mVBOColor.resize(mesh.mColors.capacity());
+	mVBOBone.resize(mesh.mBonesVertexData.capacity());
 	
 	if(mIsInstanced)
 	{
@@ -65,16 +65,16 @@ void MeshBuffer::resize(const Mesh& mesh)
 
 void MeshBuffer::setData(const Mesh& mesh)
 {
-	mVBOPosition.setData(mesh.getPositions());
-	mVBOTexture.setData(mesh.getTextureCoordinates());
-	mVBOColor.setData(mesh.getColors());
-	mVBOBone.setData(mesh.getBonesVertexData());
+	mVBOPosition.setData(mesh.mPositions);
+	mVBOTexture.setData(mesh.mTextureCoordinates);
+	mVBOColor.setData(mesh.mColors);
+	mVBOBone.setData(mesh.mBonesVertexData);
 }
 
 void MeshBuffer::setIndexesData(const Mesh& mesh)
 {
-	RenderContext::resizeEBO(mEBO, mesh.getFaces().size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-	RenderContext::setDataEBO(mEBO, mesh.getFaces());
+	RenderContext::resizeEBO(mEBO, mesh.mFaces.size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	RenderContext::setDataEBO(mEBO, mesh.mFaces);
 }
 
 void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)

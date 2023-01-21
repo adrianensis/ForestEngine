@@ -22,14 +22,14 @@ public:
 
 	void init(Ptr<Renderer> renderer)
     {
-        mMaterial = renderer.get().getMaterial();
-        mMesh = renderer.get().getMesh();
+        mMaterial = renderer.get().mMaterial;
+        mMesh = renderer.get().mMesh;
         mIsStatic = renderer.get().isStatic();
         mIsWorldSpace = renderer.get().getIsWorldSpace();
-        mIsInstanced = renderer.get().getIsInstanced();
-        mStencilValue = renderer.get().getStencilValue();
-        mIsStencilMask = renderer.get().getIsStencilMask();
-        mStencilFunction = renderer.get().getStencilFunction();
+        mIsInstanced = renderer.get().mIsInstanced;
+        mStencilValue = renderer.get().mStencilValue;
+        mIsStencilMask = renderer.get().mIsStencilMask;
+        mStencilFunction = renderer.get().mStencilFunction;
     }
 
 	bool operator==(const BatchData& otherBatchData) const

@@ -19,18 +19,12 @@ public:
 
     f32 calculateCurrentAnimationTime(f32 accumulatedTime) const;
 
-private:
+public:
     Ptr<const Model> mModel;
     i32 mAnimationIndex = -1;
     f32 mTicksPerSecond = 0;
     f32 mDurationInTicks = 0;
     f32 mDurationInSeconds = 0;
-
-public:
-    CGET(Model)
-    GET(AnimationIndex)
-    GET(DurationInTicks)
-    GET(DurationInSeconds)
 };
 
 class AnimationState: public ObjectBase

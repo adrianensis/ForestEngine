@@ -29,19 +29,19 @@ void UIList::initFromConfig(const UIElementConfig& config)
 {
 	UIElement::initFromConfig(config);
 
-	getTransform().get().setLocalPosition(mConfig.mDisplayPosition);
-	getTransform().get().setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
-	getTransform().get().setAffectedByProjection(false);
+	mTransform.get().mLocalPosition = (mConfig.mDisplayPosition);
+	mTransform.get().mScale = (Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
+	mTransform.get().mAffectedByProjection = (false);
 
 	Renderer* renderer = NEW(Renderer);
 	renderer->init();
 
-	renderer->setMesh(MeshPrimitives::getInstance().getPrimitive<Rectangle>());
-	renderer->setMaterial(mConfig.mMaterial);
-	renderer->setColor(mConfig.mStyle->mBackgroundColor);
-	renderer->setDepth(mConfig.mLayer);
-    renderer->setIsStencilMask(true);
-    renderer->setStencilValue(0x2);
+	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
+	renderer->mMaterial = (mConfig.mMaterial);
+	renderer->mColor = (mConfig.mStyle->mBackgroundColor);
+	renderer->mDepth = (mConfig.mLayer);
+    renderer->mIsStencilMask = (true);
+    renderer->mStencilValue = (0x2);
 	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y)));
@@ -76,7 +76,7 @@ void UIList::toggle()
 	// TODO : Temporary
 	if (mButtons.empty())
 	{
-		Vector3 scale = getTransform().get().getScale();
+		Vector3 scale = mTransform.get().mScale;
 		scale.x = scale.x * RenderContext::getAspectRatio();
 
 		UIBuilder uiBuilder;
@@ -104,11 +104,11 @@ void UIList::toggle()
 
 			UIButton *button = (UIButton *)uiBuilder.getUIElement();
 			button->setOnPressedCallback(onPressedCallback);
-            //button->getRenderer()->setStencilValue(0x2);
+            //button->getRenderer()->mStencilValue = (0x2);
 			//button->setVisibility(false);
 
-			// Transform *t = &button->getTransform().get();
-			// t->setParent(&getTransform().get());
+			// Transform *t = &button->mTransform.get();
+			// t->setParent(&mTransform.get());
 
 			// Rectangle clipRectangle(
 			// 			Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
@@ -145,7 +145,7 @@ void UIList::setEntriesVisibility(bool visible)
 			std::string& label = it.get().mLabel;
 			UIElementCallback onPressedCallback = it.get().mCallback;
 
-			Vector3 scale = getTransform().get().getScale();
+			Vector3 scale = mTransform.get().getScale();
 			scale.x = scale.x * RenderContext::getAspectRatio();
 
 			UIManager::getInstance().getBuilder()->saveData()->
@@ -161,8 +161,8 @@ void UIList::setEntriesVisibility(bool visible)
 			button->setOnPressedCallback(onPressedCallback);
 			//button->setVisibility(false);
 
-			Transform* t = button->getTransform();
-			t->setParent(getTransform());
+			Transform* t = button->mTransform;
+			t->setParent(mTransform);
 
 			UIManager::getInstance().getBuilder()->restoreData();
 
@@ -172,7 +172,7 @@ void UIList::setEntriesVisibility(bool visible)
 	else {
 		if(!mButtons->isEmpty()){
 			FOR_LIST(it, mButtons){
-				getScene()->removeGameObject(it.get());
+				mScene->removeGameObject(it.get());
 			}
 
 			mButtons->clear();
@@ -195,7 +195,7 @@ void UIList::onScroll(f32 scroll)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				(*it)->getTransform().get().translate(Vector2(0,0.005f * -scroll));
+				(*it)->mTransform.get().translate(Vector2(0,0.005f * -scroll));
 			}
 		}
 	}

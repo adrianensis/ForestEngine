@@ -84,22 +84,18 @@ private:
 	std::map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
 	bool mIsActive = false;
 
-	Scene* mScene = nullptr;
-	bool mIsStatic = false;
-	OwnerPtr<Transform> mTransform;
-	std::string mTag;
 	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
-	bool mShouldPersist = false;
 
 public:
-	GET_SET(Scene)
-	GET_SET(IsStatic)
-	GET(Transform)
-	GET_SET(Tag)
+	Scene* mScene = nullptr;
+	OwnerPtr<Transform> mTransform;
+	bool mIsStatic = false;
+	std::string mTag;
+	bool mShouldPersist = false;
+    
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
-	GET_SET(ShouldPersist)
 };
 
 #endif

@@ -33,8 +33,8 @@ Ptr<Material> MaterialManager::loadMaterial(const std::string& path)
 	{
 		OwnerPtr<Material> material = OwnerPtr<Material>(NEW(Material));
 		material.get().init();
-		material.get().setTexture(loadTexture(path));
-		material.get().setShader(Shader::getDefaultShader());
+		material.get().mTexture = (loadTexture(path));
+		material.get().mShader = (Shader::getDefaultShader());
 		MAP_INSERT(mMaterialsMap, path, material);
 	}
 
@@ -47,7 +47,7 @@ Ptr<Material> MaterialManager::loadNoTextureMaterial()
 	{
 		mNoTextureMaterial = OwnerPtr<Material>(NEW(Material));
 		mNoTextureMaterial.get().init();
-		mNoTextureMaterial.get().setShader(Shader::getDefaultShader());
+		mNoTextureMaterial.get().mShader = (Shader::getDefaultShader());
 	}
 
 	return mNoTextureMaterial;

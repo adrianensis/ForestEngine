@@ -31,9 +31,6 @@ private:
     void calculateInverseMatrix(bool force = false);
 
 private:
-	Matrix4 mProjectionMatrix;
-	mutable Matrix4 mViewMatrix;
-	mutable Matrix4 mProjectionViewMatrix;
 	Matrix4 mInversePVMatrix; // used in screen to world calculations.
 
 	mutable bool mProjectionViewMatrixNeedsUpdate = true;
@@ -48,22 +45,16 @@ private:
 
 	f32 mAspect = 0.0f;
 	f32 mFov = 0.0f;
-	
-	bool mIsOrtho = false;
-
-	Frustum mFrustum;
-	f32 mZoom = 1.0f;
 
 	TransformState mTransformState;
 
 public:
-	CRGET(ProjectionMatrix)
-	CRGET(ViewMatrix)
-	CRGET(ProjectionViewMatrix)
-	GET(IsOrtho)
-	CRGET(Frustum)
-	GET(Zoom)
+	Matrix4 mProjectionMatrix;
+	mutable Matrix4 mViewMatrix;
+	mutable Matrix4 mProjectionViewMatrix;
+	bool mIsOrtho = false;
+	Frustum mFrustum;
+	f32 mZoom = 1.0f;
 };
-
 
 #endif

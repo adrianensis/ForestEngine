@@ -45,12 +45,12 @@ void Batch::enable()
     mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced);
 
     bool isAnimated = mMeshBatcher.isAnimated();
-    mBatchData.mMaterial.get().getShader().get().addBool(isAnimated, "hasAnimations");
+    mBatchData.mMaterial.get().mShader.get().addBool(isAnimated, "hasAnimations");
     
     if(isAnimated)
     {
-        const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.getPrototypeMesh().get().getModel());
-        mBatchData.mMaterial.get().getShader().get().addMatrixArray(transforms, "gBones");
+        const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.mPrototypeMesh.get().mModel);
+        mBatchData.mMaterial.get().mShader.get().addMatrixArray(transforms, "gBones");
     }
 
     if(mBatchData.mStencilValue > 0x00)
@@ -69,7 +69,7 @@ void Batch::disable()
 void Batch::addRenderer(Ptr<Renderer> renderer)
 {
 	mRenderers.push_back(renderer);
-	renderer.get().setBatch(getPtrToThis());
+	renderer.get().mBatch = (getPtrToThis());
 
 	mNewRendererAdded = true;
 }
@@ -91,9 +91,9 @@ void Batch::processRenderers()
 		}
 		else
 		{
-			/*Transform* transform = renderer->getGameObject()->getTransform();
+			/*Transform* transform = renderer->mGameObject->mTransform;
 			const Vector3& position = transform->getWorldPosition();
-			f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->getGameObject()->getTransform().get().getWorldPosition());
+			f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->mGameObject->mTransform.get().getWorldPosition());
 			if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 			
 			addToVertexBuffer(renderer);
@@ -141,7 +141,7 @@ void Batch::internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it)
 	Ptr<Renderer> renderer = *it;
 	if(renderer)
 	{
-		renderer.get().setBatch(Ptr<Batch>());
+		renderer.get().mBatch.invalidate();
 
 		if (!mBatchData.mIsWorldSpace)
 		{
@@ -165,7 +165,7 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 	if(mBatchData.mIsInstanced)
 	{
 		renderer.get().update(false);
-		const Matrix4& rendererModelMatrix = renderer.get().getRendererModelMatrix();
+		const Matrix4& rendererModelMatrix = renderer.get().mRendererModelMatrix;
 		mMeshBatcher.addInstanceMatrix(rendererModelMatrix);
 	}
 	else
