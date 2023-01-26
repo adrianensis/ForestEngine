@@ -1,5 +1,4 @@
-#ifndef TIMERMANAGER_HPP
-#define TIMERMANAGER_HPP
+#pragma once
 
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Functor.hpp"
@@ -65,5 +64,3 @@ private:
 private:
 	std::list<Timer *> mTimers;
 };
-
-#endif

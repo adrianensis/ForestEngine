@@ -1,5 +1,4 @@
-#ifndef MATERIALMANAGER_HPP
-#define MATERIALMANAGER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Core/Singleton.hpp"
@@ -24,5 +23,3 @@ private:
 	std::map<std::string, OwnerPtr<Material>> mMaterialsMap;
 	OwnerPtr<Material> mNoTextureMaterial;
 };
-
-#endif

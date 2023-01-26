@@ -1,5 +1,4 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#pragma once
 
 #include "Core/ObjectBase.hpp"
 #include "Core/Singleton.hpp"
@@ -41,5 +40,3 @@ public:
 	bool smButtonJustPressed;
 	f32 smScroll;
 };
-
-#endif

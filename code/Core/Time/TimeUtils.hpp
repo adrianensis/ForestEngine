@@ -1,5 +1,4 @@
-#ifndef TIMEUTILS_HPP
-#define TIMEUTILS_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
@@ -73,5 +72,3 @@ private:
 	TimeMark mInternalTimeMark;
 };
 
-
-#endif

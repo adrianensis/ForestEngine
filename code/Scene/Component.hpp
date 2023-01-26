@@ -1,5 +1,4 @@
-#ifndef COMPONENT_HPP
-#define COMPONENT_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -39,5 +38,3 @@ public:
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 };
-
-#endif

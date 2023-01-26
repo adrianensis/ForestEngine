@@ -1,5 +1,4 @@
-#ifndef EVENT_HPP
-#define EVENT_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
@@ -41,5 +40,3 @@ public:
 		return mEventClassId == eventFunctor.mEventClassId && mEventReceiver == eventFunctor.mEventReceiver;
 	}
 };
-
-#endif

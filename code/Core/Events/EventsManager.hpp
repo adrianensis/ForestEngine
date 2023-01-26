@@ -1,5 +1,4 @@
-#ifndef EVENTSMANAGER_HPP
-#define EVENTSMANAGER_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
@@ -69,5 +68,3 @@ private:
     void subscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback);
     void unsubscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver);
 };
-
-#endif

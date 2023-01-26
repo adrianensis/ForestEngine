@@ -1,5 +1,4 @@
-#ifndef LOG_HPP
-#define LOG_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 
@@ -80,6 +79,4 @@ public:
 #define ERROx&
 #define BRLINE()
 #define BACKSPACE()
-#endif
-
 #endif

@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_HPP
-#define GEOMETRY_HPP
+#pragma once
 
 #include "Core/ObjectBase.hpp"
 #include "Core/Maths/Vector3.hpp"
@@ -196,5 +195,3 @@ public:
     static Vector3 closestPointInLine(const Line& line, const Vector3& point);
     static Vector3 midPoint(const Line& line);
 };
-
-#endif

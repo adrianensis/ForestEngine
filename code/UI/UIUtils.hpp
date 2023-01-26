@@ -1,5 +1,4 @@
-#ifndef UIUTILS_HPP
-#define UIUTILS_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -11,5 +10,3 @@ public:
     static Vector2 correctAspectRatio_X(const Vector2& vector);
 };
 
-
-#endif

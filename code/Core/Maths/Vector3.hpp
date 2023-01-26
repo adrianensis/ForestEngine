@@ -1,5 +1,4 @@
-#ifndef VECTOR3_HPP
-#define VECTOR3_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Serialization.hpp"
@@ -26,5 +25,3 @@ public:
 };
 
 TEMPLATED_SERIALIZATION(Vector3)
-
-#endif

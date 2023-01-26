@@ -1,5 +1,4 @@
-#ifndef ENGINESYSTEM_HPP
-#define ENGINESYSTEM_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Singleton.hpp"
@@ -48,5 +47,3 @@ public:
 private:
     std::list<IEngineSystem *> mEngineSystems;
 };
-
-#endif

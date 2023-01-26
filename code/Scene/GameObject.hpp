@@ -1,5 +1,4 @@
-#ifndef GAMEOBJECT_HPP
-#define GAMEOBJECT_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Scene/Component.hpp"
@@ -97,5 +96,3 @@ public:
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef SERIALIZATION_HPP
-#define SERIALIZATION_HPP
+#pragma once
 
 #include "json.hpp"
 
@@ -73,5 +72,3 @@ public:
         }
 	}
 };
-
-#endif

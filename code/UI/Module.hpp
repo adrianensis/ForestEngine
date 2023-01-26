@@ -1,5 +1,4 @@
-#ifndef MODULEUI_HPP
-#define MODULEUI_HPP
+#pragma once
 
 #include "UI/UIManager.hpp"
 
@@ -16,5 +15,3 @@
 #include "UI/UIStyle.hpp"
 
 #include "UI/UIBuilder.hpp"
-
-#endif

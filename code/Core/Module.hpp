@@ -1,5 +1,4 @@
-#ifndef MODULECORE_HPP
-#define MODULECORE_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Pointers.hpp"
@@ -21,5 +20,3 @@
 #include "Core/Input/Input.hpp"
 #include "Core/Command/CommandLine.hpp"
 #include "Core/Profiler/Profiler.hpp"
-
-#endif

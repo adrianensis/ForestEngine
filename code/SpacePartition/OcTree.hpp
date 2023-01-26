@@ -1,5 +1,4 @@
-#ifndef OCTREE_HPP
-#define OCTREE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -62,5 +61,3 @@ public:
 	//void addCollider(Collider *collider);
 	void update();
 };
-
-#endif

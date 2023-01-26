@@ -1,5 +1,4 @@
-#ifndef UIBUILDER_HPP
-#define UIBUILDER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "UI/UIElements/UIElement.hpp"
@@ -108,5 +107,3 @@ public:
 
 	CRGET_SET(Config)
 };
-
-#endif

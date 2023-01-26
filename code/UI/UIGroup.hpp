@@ -1,5 +1,4 @@
-#ifndef UIGROUP_HPP
-#define UIGROUP_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -27,5 +26,3 @@ public:
 	GET(Visible)
 	CRGET(UIElements)
 };
-
-#endif

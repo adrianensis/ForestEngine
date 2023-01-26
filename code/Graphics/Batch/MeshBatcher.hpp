@@ -1,5 +1,4 @@
-#ifndef MESHBATCHER_HPP
-#define MESHBATCHER_HPP
+#pragma once
 
 #include "Graphics/Buffers/MeshBuffer.hpp"
 
@@ -38,5 +37,3 @@ private:
 
 	bool mDataSentToGPU = false;
 };
-
-#endif

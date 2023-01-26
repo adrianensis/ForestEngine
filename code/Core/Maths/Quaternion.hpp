@@ -1,5 +1,4 @@
-#ifndef QUATERNION_HPP
-#define QUATERNION_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Serialization.hpp"
@@ -234,5 +233,3 @@ public:
 TEMPLATED_SERIALIZATION(Quaternion)
 
 
-
-#endif

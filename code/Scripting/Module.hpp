@@ -1,7 +1,4 @@
-#ifndef MODULESCRIPTING_HPP
-#define MODULESCRIPTING_HPP
+#pragma once
 
 #include "Scripting/ScriptEngine.hpp"
 #include "Scripting/Script.hpp"
-
-#endif

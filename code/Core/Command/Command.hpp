@@ -1,5 +1,4 @@
-#ifndef COMMAND_HPP
-#define COMMAND_HPP
+#pragma once
 
 #include "Core/ObjectBase.hpp"
 
@@ -39,5 +38,3 @@ public:
     CRGET_SET(ArgumentsString)
     CRGET(Arguments)
 };
-
-#endif

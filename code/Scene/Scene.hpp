@@ -1,5 +1,4 @@
-#ifndef SCENE_HPP
-#define SCENE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -46,5 +45,3 @@ public:
 	GET(Path)
 };
 
-
-#endif

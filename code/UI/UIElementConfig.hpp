@@ -1,5 +1,4 @@
-#ifndef UIELEMENTCONFIG_HPP
-#define UIELEMENTCONFIG_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -40,5 +39,3 @@ public:
 	u32 mStencilValue = 0x00;
 	u32 mStencilFunction = GL_NOTEQUAL;
 };
-
-#endif

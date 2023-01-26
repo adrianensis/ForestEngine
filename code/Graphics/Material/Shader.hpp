@@ -1,5 +1,4 @@
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -40,5 +39,3 @@ private:
 	inline static OwnerPtr<Shader> msShaderDefault;
 	inline static Shader *msShaderDebug = nullptr;
 };
-
-#endif

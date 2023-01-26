@@ -1,5 +1,4 @@
-#ifndef UIEDITABLETEXT_HPP
-#define UIEDITABLETEXT_HPP
+#pragma once
 
 #include "UI/UIElements/UIText.hpp"
 #include "UI/UIStyle.hpp"
@@ -25,5 +24,3 @@ public:
 protected:
     void setBackground(const UIElementConfig& config) override;
 };
-
-#endif

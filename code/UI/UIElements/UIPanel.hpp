@@ -1,5 +1,4 @@
-#ifndef UIPANEL_HPP
-#define UIPANEL_HPP
+#pragma once
 
 #include "UI/UIElements/UIElement.hpp"
 
@@ -10,5 +9,3 @@ class UIPanel: public UIElement
 public:
     void initFromConfig(const UIElementConfig& config) override;
 };
-
-#endif

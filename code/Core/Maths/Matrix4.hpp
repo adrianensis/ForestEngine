@@ -1,5 +1,4 @@
-#ifndef MATRIX4_HPP
-#define MATRIX4_HPP
+#pragma once
 
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Vector4.hpp"
@@ -90,5 +89,3 @@ private:
 	inline static OwnerPtr<Matrix4> smIdentity;
 	f32 mData[smMatrixSize];
 };
-
-#endif

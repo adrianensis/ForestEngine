@@ -1,5 +1,4 @@
-#ifndef SCENESMANAGER_HPP
-#define SCENESMANAGER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Scene/Scene.hpp"
@@ -38,5 +37,3 @@ public:
 	GET(SceneHasChanged)
 	GET_SET(GameObjectController)
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#pragma once
 
 #include "Scene/Component.hpp"
 
@@ -57,4 +56,3 @@ public:
 	f32 mZoom = 1.0f;
 };
 
-#endif

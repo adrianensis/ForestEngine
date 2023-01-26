@@ -1,5 +1,4 @@
-#ifndef MATERIAL_HPP
-#define MATERIAL_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -26,5 +25,3 @@ public:
 	bool mAlphaEnabled = true;
 	bool mHasBorder = false;
 };
-
-#endif

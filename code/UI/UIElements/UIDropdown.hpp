@@ -1,5 +1,4 @@
-#ifndef UIDROPDOWN_HPP
-#define UIDROPDOWN_HPP
+#pragma once
 
 #include "UI/UIElements/UIButton.hpp"
 
@@ -51,5 +50,3 @@ private:
 	std::list<UIDropdownEntry> mEntries;
 
 };
-
-#endif

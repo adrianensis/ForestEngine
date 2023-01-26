@@ -1,5 +1,4 @@
-#ifndef CLASSMANAGER_HPP
-#define CLASSMANAGER_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
@@ -62,5 +61,3 @@ private:
     inline static std::map<std::string, ClassRegisterCallback> smRegisters;
     std::map<std::string, ClassRegisterCallback> mInstanceByNameMap;
 };
-
-#endif

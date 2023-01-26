@@ -1,5 +1,4 @@
-#ifndef GPUBUFFER_HPP
-#define GPUBUFFER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
@@ -52,5 +51,3 @@ public:
         GPUBufferBase::resize(size);
     }
 };
-
-#endif

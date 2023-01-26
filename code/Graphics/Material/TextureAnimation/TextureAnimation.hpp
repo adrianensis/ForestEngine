@@ -1,5 +1,4 @@
-#ifndef TEXTUREANIMATION_HPP
-#define TEXTUREANIMATION_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
@@ -39,5 +38,3 @@ public:
 	std::vector<TextureAnimationFrame> mFrames;
 	f32 mSpeed = 0.0f;
 };
-
-#endif

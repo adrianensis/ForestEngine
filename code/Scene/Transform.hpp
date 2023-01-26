@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_HPP
-#define TRANSFORM_HPP
+#pragma once
 
 #include "Scene/Component.hpp"
 
@@ -79,5 +78,3 @@ public:
 	mutable Matrix4 mRotationMatrix;
 	mutable Matrix4 mScaleMatrix;
 };
-
-#endif

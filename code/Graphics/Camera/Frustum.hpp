@@ -1,5 +1,4 @@
-#ifndef FRUSTUM_HPP
-#define FRUSTUM_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -22,5 +21,3 @@ private:
 	Camera* mCamera = nullptr;
 	std::array<Vector4, 6> mPlanes;
 };
-
-#endif

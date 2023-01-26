@@ -1,5 +1,4 @@
-#ifndef BATCH_HPP
-#define BATCH_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
@@ -84,5 +83,3 @@ private:
 	bool mNewRendererAdded = false;
 	bool mForceRegenerateBuffers = false;
 };
-
-#endif

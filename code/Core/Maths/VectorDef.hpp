@@ -1,5 +1,4 @@
-#ifndef VECTORDEF_HPP
-#define VECTORDEF_HPP
+#pragma once
 
 #include "Core/Macros.hpp"
 #include "Core/Metadata.hpp"
@@ -165,5 +164,3 @@ public:\
 
 
 
-
-#endif

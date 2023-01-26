@@ -1,5 +1,4 @@
-#ifndef ASSERT_HPP
-#define ASSERT_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 
@@ -13,5 +12,3 @@ public:
 };
 
 #define ASSERT_MSG(condition, message) AssertUtils::assertMsg((condition), __FILE__, __LINE__, __FUNCTION__, std::string("[ " #condition " ] ") + message);
-
-#endif

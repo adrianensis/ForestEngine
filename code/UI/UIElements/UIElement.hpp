@@ -1,5 +1,4 @@
-#ifndef UIELEMENT_HPP
-#define UIELEMENT_HPP
+#pragma once
 
 #include "Scene/Module.hpp"
 #include "Graphics/RenderContext.hpp"
@@ -149,5 +148,3 @@ public:
 	GET(State)
 	GET(OnlyReleaseOnClickOutside)
 };
-
-#endif

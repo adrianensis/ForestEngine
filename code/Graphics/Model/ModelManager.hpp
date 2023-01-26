@@ -1,5 +1,4 @@
-#ifndef MODELMANAGER_HPP
-#define MODELMANAGER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -18,5 +17,3 @@ public:
 private:
     std::map<std::string, OwnerPtr<Model>> mModelMap;
 };
-
-#endif

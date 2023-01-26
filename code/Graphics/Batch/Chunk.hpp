@@ -1,5 +1,4 @@
-#ifndef CHUNK_HPP
-#define CHUNK_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Renderer/Renderer.hpp"
@@ -30,5 +29,3 @@ public:
 	Vector3 mCenter;
 	f32 mRadius = 0.0f;
 };
-
-#endif

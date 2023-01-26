@@ -1,5 +1,4 @@
-#ifndef UITEXT_HPP
-#define UITEXT_HPP
+#pragma once
 
 #include "UI/UIElements/UIElement.hpp"
 
@@ -39,5 +38,3 @@ public:
 	SET(Size)
 	SET(Layer)
 };
-
-#endif

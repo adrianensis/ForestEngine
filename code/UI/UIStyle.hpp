@@ -1,5 +1,4 @@
-#ifndef UISTYLE_HPP
-#define UISTYLE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -75,5 +74,3 @@ private:
 public:
 	CRGET(DefaultStyle)
 };
-
-#endif

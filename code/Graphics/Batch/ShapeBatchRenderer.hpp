@@ -1,5 +1,4 @@
-#ifndef SHAPEBATCHRENDERER_HPP
-#define SHAPEBATCHRENDERER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Material/Shader.hpp"
@@ -88,5 +87,3 @@ private:
 public:
 	bool mIsWorldSpace = true;
 };
-
-#endif

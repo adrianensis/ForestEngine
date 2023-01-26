@@ -1,5 +1,4 @@
-#ifndef SINGLETON_HPP
-#define SINGLETON_HPP
+#pragma once
 
 #include "Core/Memory.hpp"
 
@@ -37,5 +36,3 @@ public:
 private:
 	inline static T *mInstance = nullptr;
 };
-
-#endif

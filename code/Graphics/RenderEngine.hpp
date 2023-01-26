@@ -1,5 +1,4 @@
-#ifndef RENDERENGINE_HPP
-#define RENDERENGINE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Batch/BatchesMap.hpp"
@@ -43,5 +42,3 @@ public:
 	std::vector<OwnerPtr<Chunk>> mChunks;
 	f32 mMinChunkDrawDistance = 0.0f;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
+#pragma once
 
 #include "Scene/Component.hpp"
 
@@ -60,5 +59,3 @@ public:
 private:
 	bool mPositionsDirty = true;
 };
-
-#endif

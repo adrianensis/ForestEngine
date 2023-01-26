@@ -1,5 +1,4 @@
-#ifndef SCRIPT_HPP
-#define SCRIPT_HPP
+#pragma once
 
 #include "Scene/Component.hpp"
 
@@ -30,5 +29,3 @@ private:
 public:
 	GET(FirstUpdateDone)
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef MEMORY_HPP
-#define MEMORY_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Metadata.hpp"
@@ -65,5 +64,3 @@ public:
 		delete pointer;
 	}
 };
-
-#endif

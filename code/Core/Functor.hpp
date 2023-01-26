@@ -1,5 +1,4 @@
-#ifndef FUNCTOR_HPP
-#define FUNCTOR_HPP
+#pragma once
 
 #include "Core/ObjectBase.hpp"
 
@@ -31,5 +30,3 @@ public:
 		}
 	}
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef MESHPRIMITIVES_HPP
-#define MESHPRIMITIVES_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
@@ -42,5 +41,3 @@ template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const;
-
-#endif

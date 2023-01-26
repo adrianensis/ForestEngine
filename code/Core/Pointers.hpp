@@ -1,5 +1,4 @@
-#ifndef POINTERS_HPP
-#define POINTERS_HPP
+#pragma once
 
 #include "Core/Memory.hpp"
 
@@ -183,5 +182,3 @@ struct get_const_ptr_type<OwnerPtr<T>>
 {
     using type = OwnerPtr<const T>;
 };
-
-#endif

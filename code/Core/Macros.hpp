@@ -1,5 +1,4 @@
-#ifndef MACROS_HPP
-#define MACROS_HPP
+#pragma once
 
 #define NONE(...)
 
@@ -355,5 +354,3 @@ FOR_LIST(_internal_it, container) { DELETE(*_internal_it); } \
 
 // #define CHECK_EQUAL(...) true FOR_EACH(CHECK_EQUAL_HELPER, __VA_ARGS__)
 // #define CHECK_EQUAL_HELPER(name) && BaseName == other.name
-
-#endif

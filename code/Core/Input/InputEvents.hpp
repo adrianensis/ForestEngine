@@ -1,5 +1,4 @@
-#ifndef INPUTEVENTS_HPP
-#define INPUTEVENTS_HPP
+#pragma once
 
 #include "Core/Events/Event.hpp"
 
@@ -86,5 +85,3 @@ class InputEventChar: public Event
 public:
     char mChar;
 };
-
-#endif

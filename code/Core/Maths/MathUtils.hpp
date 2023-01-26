@@ -1,5 +1,4 @@
-#ifndef MATHUTILS_HPP
-#define MATHUTILS_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 
@@ -33,5 +32,3 @@ public:
     static f32 det(f32 a, f32 b, f32 c, f32 d);
 };
 
-
-#endif

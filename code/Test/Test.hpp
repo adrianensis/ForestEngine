@@ -1,5 +1,4 @@
-#ifndef TEST_HPP
-#define TEST_HPP
+#pragma once
 
 #include <iomanip>
 #include <sstream>
@@ -89,5 +88,3 @@
                    << std::setprecision(4) << (isnan(__test__totaltime) ? 0 : __test__totaltime) << "ms " << __test__ok << " " << (__test__total - __test__ok) << std::endl; \
     std::cout << __test__output.str();
 
-
-#endif

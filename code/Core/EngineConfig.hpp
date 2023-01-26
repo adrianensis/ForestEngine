@@ -1,5 +1,4 @@
-#ifndef ENGINECONFIG_HPP
-#define ENGINECONFIG_HPP
+#pragma once
 
 #include "Core/Config/ConfigObject.hpp"
 #include "Core/Singleton.hpp"
@@ -16,5 +15,3 @@ private:
 public:
 	CRGET(Config)
 };
-
-#endif

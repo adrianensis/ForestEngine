@@ -1,5 +1,4 @@
-#ifndef UILIST_HPP
-#define UILIST_HPP
+#pragma once
 
 #include "UI/UIElements/UIElement.hpp"
 
@@ -38,5 +37,3 @@ private:
 	std::list<UIListEntry> mEntries;
 
 };
-
-#endif

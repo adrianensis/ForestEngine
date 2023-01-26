@@ -1,5 +1,4 @@
-#ifndef TEXTURE_HPP
-#define TEXTURE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -26,5 +25,3 @@ public:
 	u32 mHeight = 0;
 	std::string mPath;
 };
-
-#endif

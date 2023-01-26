@@ -1,5 +1,4 @@
-#ifndef ANIMATIONMANAGER_HPP
-#define ANIMATIONMANAGER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -22,5 +21,3 @@ public:
 private:
     std::map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
 };
-
-#endif

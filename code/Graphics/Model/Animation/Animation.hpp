@@ -1,5 +1,4 @@
-#ifndef ANIMATION_HPP
-#define ANIMATION_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "assimp/Importer.hpp"
@@ -76,5 +75,3 @@ private:
 public:
     CRGET(CurrentBoneTransforms)
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef MESHBUFFER_HPP
-#define MESHBUFFER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
@@ -44,5 +43,3 @@ public:
 
 	u32 mEBO = 0;
 };
-
-#endif

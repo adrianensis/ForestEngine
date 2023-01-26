@@ -1,5 +1,4 @@
-#ifndef MODELRENDERER_HPP
-#define MODELRENDERER_HPP
+#pragma once
 
 #include "Scene/Component.hpp"
 
@@ -23,5 +22,3 @@ public:
 	u32 mStencilValue = 0x00;
 	bool mIsStencilMask = false;
 };
-
-#endif

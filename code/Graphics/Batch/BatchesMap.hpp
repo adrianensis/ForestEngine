@@ -1,5 +1,4 @@
-#ifndef BATCHESMAP_HPP
-#define BATCHESMAP_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Graphics/Renderer/Renderer.hpp"
@@ -21,5 +20,3 @@ private:
 
 	BatchMapByBatchData mBatches;
 };
-
-#endif

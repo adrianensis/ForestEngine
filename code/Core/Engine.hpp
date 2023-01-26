@@ -1,5 +1,4 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -17,5 +16,3 @@ public:
 private:
 	f32 mFPS = 0.0f;
 };
-
-#endif

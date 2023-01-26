@@ -1,5 +1,4 @@
-#ifndef EDITOR_HPP
-#define EDITOR_HPP
+#pragma once
 
 #include "Scripting/Script.hpp"
 #include "UI/UIStyle.hpp"
@@ -45,5 +44,3 @@ private:
 
 	Vector2 mousePosition;
 };
-
-#endif

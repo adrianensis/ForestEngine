@@ -1,5 +1,4 @@
-#ifndef UIBUTTON_HPP
-#define UIBUTTON_HPP
+#pragma once
 
 #include "UI/UIElements/UIPanel.hpp"
 
@@ -31,5 +30,3 @@ class UIToggleButton: public UIButton
 public:
     void init() override;
 };
-
-#endif

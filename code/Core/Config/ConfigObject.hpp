@@ -1,5 +1,4 @@
-#ifndef CONFIGOBJECT_HPP
-#define CONFIGOBJECT_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
@@ -29,5 +28,3 @@ private:
 public:
 	CRGET_SET(Json)
 };
-
-#endif

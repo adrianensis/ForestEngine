@@ -1,5 +1,4 @@
-#ifndef PROFILER_HPP
-#define PROFILER_HPP
+#pragma once
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
@@ -26,5 +25,3 @@ public:
     void init();
     void terminate();
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef SCRIPTENGINE_HPP
-#define SCRIPTENGINE_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "Scripting/Script.hpp"
@@ -22,5 +21,3 @@ private:
 	std::list<Ptr<Script>> mScripts;
 	Ptr<Script> mController;
 };
-
-#endif

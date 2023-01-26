@@ -1,5 +1,4 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -49,5 +48,3 @@ public:
 	ADD_TO_VECTOR(Faces)
 	ADD_TO_VECTOR(BonesVertexData)
 };
-
-#endif

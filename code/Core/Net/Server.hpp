@@ -1,5 +1,4 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include <netinet/in.h>
@@ -41,5 +40,3 @@ private:
 public:
 	GET(Status)
 };
-
-#endif

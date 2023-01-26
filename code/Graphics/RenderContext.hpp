@@ -1,5 +1,4 @@
-#ifndef RENDERCONTEXT_HPP
-#define RENDERCONTEXT_HPP
+#pragma once
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -71,5 +70,3 @@ private:
 	inline static Vector2 smWindowSize;
 	inline static Camera *mCamera = nullptr;
 };
-
-#endif

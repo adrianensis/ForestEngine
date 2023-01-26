@@ -1,5 +1,4 @@
-#ifndef UIMANAGER_HPP
-#define UIMANAGER_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "UI/UIElements/UIElement.hpp"
@@ -55,5 +54,3 @@ private:
 
 	UIElement* mFocusedElement = nullptr;
 };
-
-#endif

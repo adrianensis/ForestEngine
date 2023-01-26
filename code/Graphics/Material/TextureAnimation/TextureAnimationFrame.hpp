@@ -1,5 +1,4 @@
-#ifndef TEXTUREANIMATIONFRAME_HPP
-#define TEXTUREANIMATIONFRAME_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 
@@ -17,5 +16,3 @@ public:
 	f32 mWidth = 0.0f;
 	f32 mHeight = 0.0f;
 };
-
-#endif

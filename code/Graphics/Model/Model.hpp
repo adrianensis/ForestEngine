@@ -1,5 +1,4 @@
-#ifndef MODEL_HPP
-#define MODEL_HPP
+#pragma once
 
 #include "Core/Module.hpp"
 #include "assimp/Importer.hpp"
@@ -38,5 +37,3 @@ public:
     std::map<std::string, BoneData> mBonesMapping;
     u32 mBonesIndexCount = 0;
 };
-
-#endif
