@@ -10,7 +10,7 @@
 // };
 
 // BASE
-
+// Needed in Core/Macros.h CGETTER_TYPE
 class BasePtr
 {
 
@@ -45,8 +45,8 @@ public:
 
     Ptr() = default;
     Ptr(const Ptr<T>& other) { setReference(other.mReference); }
-    Ptr(const std::weak_ptr<T> weakPtr) { setReference(weakPtr); }
-    Ptr(const std::shared_ptr<T> sharedPtr) { setReference(std::weak_ptr<T>(sharedPtr)); }
+    Ptr(const std::weak_ptr<T>& weakPtr) { setReference(weakPtr); }
+    Ptr(const std::shared_ptr<T>& sharedPtr) { setReference(std::weak_ptr<T>(sharedPtr)); }
     Ptr(const OwnerPtr<T>& ownerPtr) { setReference(std::weak_ptr<T>(ownerPtr.getSharedPtr())); }
 
     operator Ptr<const T>() const
@@ -83,7 +83,7 @@ public:
     std::weak_ptr<T> getWeakPtr() const { return mReference; }
 
 private:
-    void setReference(std::weak_ptr<T> reference) { mReference = reference; }
+    void setReference(const std::weak_ptr<T>& reference) { mReference = reference; }
 
 private:
 	std::weak_ptr<T> mReference;
@@ -107,7 +107,7 @@ public:
     OwnerPtr() = default;
     OwnerPtr(const OwnerPtr<T>& other) { setReference(other.mReference); }
     OwnerPtr(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerPtrCustomDeleter())); }
-    OwnerPtr(const std::shared_ptr<T> sharedPtr) { setReference(sharedPtr); }
+    OwnerPtr(const std::shared_ptr<T>& sharedPtr) { setReference(sharedPtr); }
 
     operator Ptr<const T>() const
     {
@@ -156,9 +156,9 @@ private:
         void operator()(T* p) const { if(p != nullptr) { DELETE(p);} }
     };
 
-    void setReference(const std::shared_ptr<T> reference) { mReference = reference; }
+    void setReference(const std::shared_ptr<T>& reference) { mReference = reference; }
 
-    OwnerPtr(const std::weak_ptr<T> weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
+    OwnerPtr(const std::weak_ptr<T>& weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
 
 private:
 	std::shared_ptr<T> mReference;

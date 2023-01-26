@@ -80,14 +80,14 @@ void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
 	mMeshesIndex++;
 }
 
-void MeshBatcher::addInstance(const Mesh& meshInstance)
+void MeshBatcher::addInstance(Ptr<const Mesh> meshInstance)
 {
 	PROFILER_CPU()
 
-	mMeshBuilder.appendToPositions(meshInstance.mPositions);
-	mMeshBuilder.appendToTextureCoordinates(meshInstance.mTextureCoordinates);
-	mMeshBuilder.appendToColors(meshInstance.mColors);
-	mMeshBuilder.appendToBonesVertexData(meshInstance.mBonesVertexData);
+	mMeshBuilder.appendToPositions(meshInstance.get().mPositions);
+	mMeshBuilder.appendToTextureCoordinates(meshInstance.get().mTextureCoordinates);
+	mMeshBuilder.appendToColors(meshInstance.get().mColors);
+	mMeshBuilder.appendToBonesVertexData(meshInstance.get().mBonesVertexData);
 
 	mMeshesIndex++;
 }

@@ -28,7 +28,7 @@ public:
 
     void init();
     u32 getNumberOfFrames() const;
-    const TextureAnimationFrame& getNextFrame();
+    const TextureAnimationFrame& nextFrame();
     const TextureAnimationFrame& getCurrentFrame() const;
 	
 private:

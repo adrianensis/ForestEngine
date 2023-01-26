@@ -14,7 +14,7 @@ public:
     void init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced);
     void resize(u32 size);
     void addInstanceMatrix(const Matrix4& modelMatrix);
-    void addInstance(const Mesh& meshInstance);
+    void addInstance(Ptr<const Mesh> meshInstance);
     void drawCall();
     void enable();
     void disable();

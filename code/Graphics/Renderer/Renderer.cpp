@@ -24,6 +24,8 @@ void Renderer::init()
 	mColor = (Vector4(0, 0, 0, 1));
 
 	mDirtyPositionOffset = true;
+
+    mMeshInstance = OwnerPtr<Mesh>(NEW(Mesh));
 }
 
 void Renderer::onComponentAdded() 
@@ -135,15 +137,15 @@ void Renderer::onDestroy()
 
 }
 
-const Mesh& Renderer::generateMeshInstance()
+Ptr<const Mesh> Renderer::generateMeshInstance()
 {
 	const std::vector<Vector3>& vertexPositions = mVertices;
 
-	mMeshInstance.init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
+	mMeshInstance.get().init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
 
 	FOR_RANGE(i, 0, mMesh.get().mVertexCount)
 	{
-		mMeshInstance.addToPositions(vertexPositions[i]);
+		mMeshInstance.get().addToPositions(vertexPositions[i]);
 
 		Vector2 vertexTexture = mMesh.get().mTextureCoordinates[i];
 
@@ -164,12 +166,12 @@ const Mesh& Renderer::generateMeshInstance()
 			}
 		}
 
-		mMeshInstance.addToTextureCoordinates(textureCoord);
+		mMeshInstance.get().addToTextureCoordinates(textureCoord);
 
-		mMeshInstance.addToColors(mColor);
+		mMeshInstance.get().addToColors(mColor);
 	}
 
-	mMeshInstance.appendToBonesVertexData(mMesh.get().mBonesVertexData);
+	mMeshInstance.get().appendToBonesVertexData(mMesh.get().mBonesVertexData);
 
 	return mMeshInstance;
 }
@@ -223,7 +225,7 @@ void Renderer::updateTextureAnimation()
 
 		if (currentTextureAnimation && !currentTextureAnimation.get().mFrames.empty())
 		{
-			const TextureAnimationFrame& frame = currentTextureAnimation.get().getNextFrame();
+			const TextureAnimationFrame& frame = currentTextureAnimation.get().nextFrame();
 			mTextureRegion.setLeftTopFront(frame.mPosition);
 			mTextureRegion.setSize(Vector2(frame.mWidth, frame.mHeight));
 		}

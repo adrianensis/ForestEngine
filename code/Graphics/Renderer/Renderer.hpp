@@ -22,7 +22,7 @@ public:
     bool getIsWorldSpace() const;
     void update(bool regenerateVertices);
     void onDestroy() override;
-    const Mesh& generateMeshInstance();
+    Ptr<const Mesh> generateMeshInstance();
     bool hasValidChunk() const;
     
 private:
@@ -48,7 +48,7 @@ public:
 	Ptr<Chunk> mChunk;
 	bool mIsInstanced = false;
 	Ptr<Batch> mBatch;
-	Mesh mMeshInstance;
+	OwnerPtr<Mesh> mMeshInstance;
 	Ptr<const Mesh> mMesh;
 	Ptr<Material> mMaterial;
 

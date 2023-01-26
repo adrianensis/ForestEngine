@@ -72,7 +72,7 @@ u32 TextureAnimation::getNumberOfFrames() const
 	return mFrames.size();
 }
 
-const TextureAnimationFrame& TextureAnimation::getNextFrame()
+const TextureAnimationFrame& TextureAnimation::nextFrame()
 {
 
 	f32 time = (1.0 / (mSpeed)) * 1000.0f; // in milliseconds !
