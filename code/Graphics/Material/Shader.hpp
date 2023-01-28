@@ -16,8 +16,8 @@ public:
     static void freeStaticShaders();
     void init();
     void initDebug();
-    void enable();
-    void disable();
+    void enable() const;
+    void disable() const;
     void addMatrix(const Matrix4& matrix, const std::string& name);
     void addMatrixArray(const std::vector<Matrix4>&  matrixArray, const std::string& name);
     void addInt(i32 value, const std::string& name);

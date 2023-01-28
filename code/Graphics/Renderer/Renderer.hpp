@@ -48,7 +48,7 @@ public:
 	bool mIsInstanced = false;
 	Ptr<Batch> mBatch;
 	Ptr<const Mesh> mMesh;
-	Ptr<Material> mMaterial;
+	Ptr<const Material> mMaterial;
 
 	SET_DIRTY(PositionOffset)
 	

@@ -52,7 +52,7 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 
 void GameObject::setIsActive(bool isActive)
 {
-	mIsActive = mIsDestroyed or mIsPendingToBeDestroyed ? false : isActive;
+	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
 	FOR_MAP(it, mComponentsMap)
 	{
@@ -137,7 +137,7 @@ const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId c
 		components = &mComponentsMap.at(classId);
 	}
 
-	if (!components or components->empty())
+	if (!components || components->empty())
 	{
 		components = &smEmptyList;
 	}

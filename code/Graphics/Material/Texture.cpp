@@ -21,7 +21,7 @@ void Texture::init(const std::string& path)
 	}
 }
 
-void Texture::bind()
+void Texture::bind() const
 {
     RenderContext::enableTexture(mTextureId);
 }

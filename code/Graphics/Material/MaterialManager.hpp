@@ -14,9 +14,9 @@ public:
     ~MaterialManager() override;
     
     void init();
-    Ptr<Texture> loadTexture(const std::string& path);
-    Ptr<Material> loadMaterial(const std::string& path);
-    Ptr<Material> loadNoTextureMaterial();
+    Ptr<const Texture> loadTexture(const std::string& path);
+    Ptr<const Material> loadMaterial(const std::string& path);
+    Ptr<const Material> loadNoTextureMaterial();
 
 private:
 	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;

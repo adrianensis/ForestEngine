@@ -12,7 +12,7 @@ public:
     ~Texture() override;
 
     void init(const std::string& path);
-    void bind();
+    void bind() const;
 
 private:
     void loadImage();

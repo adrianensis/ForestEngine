@@ -58,7 +58,7 @@ public:
 
 	bool isActive() const
 	{
-		return (mIsDestroyed or mIsPendingToBeDestroyed) ? false : mIsActive;
+		return (mIsDestroyed || mIsPendingToBeDestroyed) ? false : mIsActive;
 	};
 
 	void finallyDestroy()

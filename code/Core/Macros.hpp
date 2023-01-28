@@ -122,7 +122,7 @@ void __customMain()
         IS_RAW_POINTER(Type),                     \
         Type,                                     \
         COND_TYPE(                                \
-            IS_ARITHMETIC(Type) or IS_ENUM(Type), \
+            IS_ARITHMETIC(Type) || IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
             Type))
 
@@ -131,7 +131,7 @@ void __customMain()
         IS_RAW_POINTER(Type),                         \
         ADD_POINTER(ADD_CONST(REMOVE_POINTER(Type))), \
         COND_TYPE(                                    \
-            IS_ARITHMETIC(Type) or IS_ENUM(Type),     \
+            IS_ARITHMETIC(Type) || IS_ENUM(Type),     \
             REMOVE_REF(Type),                         \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
@@ -143,7 +143,7 @@ void __customMain()
         IS_RAW_POINTER(Type),                     \
         ADD_CONST(Type),                          \
         COND_TYPE(                                \
-            IS_ARITHMETIC(Type) or IS_ENUM(Type), \
+            IS_ARITHMETIC(Type) || IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
             ADD_REFERENCE(ADD_CONST(Type))))
 

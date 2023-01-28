@@ -2,7 +2,6 @@
 
 #include "Core/Module.hpp"
 
-
 class Texture;
 class Shader;
 
@@ -14,14 +13,14 @@ class Material: public ObjectBase
 public:
     Material();
     void init();
-    void bind(bool isWorldSpace, bool isInstanced);
-    void enable();
-    void disable();
+    void bind(bool isWorldSpace, bool isInstanced) const;
+    void enable() const;
+    void disable() const;
 
 public:
 	Vector4 mColor;
 	Ptr<Shader> mShader;
-	Ptr<Texture> mTexture;
+	Ptr<const Texture> mTexture;
 	bool mAlphaEnabled = true;
 	bool mHasBorder = false;
 };

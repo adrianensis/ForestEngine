@@ -128,7 +128,7 @@ const Vector2& UIManager::getCharTextureCoordinates(char character)
 	return mCharMap.at(character);
 }
 
-Ptr<Material> UIManager::getFontMaterial()
+Ptr<const Material> UIManager::getFontMaterial()
 {
 	if (!mFontMaterial)
 	{

@@ -15,7 +15,7 @@ void Material::init()
 {
 }
 
-void Material::bind(bool isWorldSpace, bool isInstanced)
+void Material::bind(bool isWorldSpace, bool isInstanced) const
 {
 	PROFILER_CPU()
 
@@ -43,12 +43,12 @@ void Material::bind(bool isWorldSpace, bool isInstanced)
 	mShader.get().addVector2(RenderContext::getWindowSize(), "windowSize");
 }
 
-void Material::enable()
+void Material::enable() const
 {
 	mShader.get().enable();
 }
 
-void Material::disable()
+void Material::disable() const
 {
 	mShader.get().disable();
 }

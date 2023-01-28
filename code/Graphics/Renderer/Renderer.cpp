@@ -53,9 +53,9 @@ void Renderer::update(bool regenerateVertices)
 		isAnimated = mMesh.get().mModel.get().isAnimated();
 	}
 
-	if (transformChanged or mDirtyPositionOffset or isAnimated)
+	if (transformChanged || mDirtyPositionOffset || isAnimated)
 	{
-		if (transformChanged or mDirtyPositionOffset)
+		if (transformChanged || mDirtyPositionOffset)
 		{
 			mRendererModelMatrix.translation(mPositionOffset);
 			mRendererModelMatrix.mul(mGameObject->mTransform.get().getModelMatrix());
@@ -177,7 +177,7 @@ Ptr<const Mesh> Renderer::generateMeshInstance()
 
 bool Renderer::hasValidChunk() const
 {
-	return (! mChunk.isValid()) or (mChunk.isValid() and mChunk.get().mIsLoaded); // !chunk means -> Screen Space case
+	return (! mChunk.isValid()) || (mChunk.isValid() and mChunk.get().mIsLoaded); // !chunk means -> Screen Space case
 }
 
 IMPLEMENT_SERIALIZATION(Renderer)

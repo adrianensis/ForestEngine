@@ -59,8 +59,7 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    const T& get() const { return *mReference.lock().get(); }
-    T& get() { return *mReference.lock().get(); }
+    T& get() const { return *mReference.lock().get(); }
     bool isValid() const { return !mReference.expired(); }
     void invalidate() { mReference.reset(); }
 
@@ -119,8 +118,7 @@ public:
     }
 
     // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    const T& get() const { return *mReference.get(); }
-    T& get() { return *mReference.get(); }
+    T& get() const { return *mReference.get(); }
     bool isValid() const { return mReference != nullptr; }
     void invalidate() { mReference.reset(); }
 

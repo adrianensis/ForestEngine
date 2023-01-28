@@ -90,7 +90,7 @@ const Matrix4& Transform::getScaleMatrix() const
 
 const Matrix4& Transform::getModelMatrix(bool force /*= false*/) const
 {
-	if (!isStatic() or (isStatic() and !mModelMatrixGenerated) or force)
+	if (!isStatic() || (isStatic() and !mModelMatrixGenerated) || force)
 	{
 		mModelMatrix.init(getTranslationMatrix());
 		Matrix4 rotationMatrix(getRotationMatrix());

@@ -53,12 +53,12 @@ void Shader::initDebug()
 	initInternal("resources/shaders/vertexDebug.shader", "resources/shaders/fragmentDebug.shader");
 }
 
-void Shader::enable()
+void Shader::enable() const
 {
 	glUseProgram(mProgram);
 }
 
-void Shader::disable()
+void Shader::disable() const
 {
 	glUseProgram(0);
 }

@@ -283,7 +283,7 @@ void UIElement::onReleasedEventReceived()
 				}
 				else
 				{
-					if(!mToggleEnabled or (mState != UIElementState::TOGGLED))
+					if(!mToggleEnabled || (mState != UIElementState::TOGGLED))
 					{
 						markAsReleased();
 					}

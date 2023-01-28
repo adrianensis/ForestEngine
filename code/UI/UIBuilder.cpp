@@ -119,7 +119,7 @@ void UIBuilder::calculateConfig()
 
 	mConfig.mDisplayPosition = mConfig.mPosition;
 
-	if(mConfig.mUIElementClassId == UIText::getClassIdStatic() or mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
+	if(mConfig.mUIElementClassId == UIText::getClassIdStatic() || mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
 	{
 		mConfig.mDisplayPosition.x += mConfig.mTextSize.x/RenderContext::getAspectRatio();
 		mConfig.mDisplayPosition.y -= mConfig.mTextSize.y / 2.0f;

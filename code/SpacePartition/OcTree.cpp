@@ -153,7 +153,7 @@ void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 // 	// CHECK if collider is out of this node.
 // 	// only dynamic objects can escape from their nodes !!!
 
-// 	if (!collider->isStatic() or collider->getHasSizeChanged())
+// 	if (!collider->isStatic() || collider->getHasSizeChanged())
 // {
 
 // //		bool collision = MathUtils::testRectangleSphere(mLeftTop, mWidth, mHeight,
@@ -162,7 +162,7 @@ void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 // 		bool collision = MathUtils::testCubePoint(mLeftTop, mWidth, mHeight,
 // 								Vector2(collider->getCenter()), -collider->getRadius());
 
-// 		if(!collision or collider->getHasSizeChanged()){
+// 		if(!collision || collider->getHasSizeChanged()){
 // 			mExitingColliders->pushBack(collider);
 // 			mTree->addCollider(collider);
 // 		}

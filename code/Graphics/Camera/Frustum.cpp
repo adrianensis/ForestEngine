@@ -50,7 +50,7 @@ bool Frustum::testPoint(const Vector3& point) const
 
 bool Frustum::testRectangle(const Vector3& leftTop, f32 width, f32 height) const
 {
-	return testPoint(leftTop) or testPoint(Vector3(leftTop.x, leftTop.y - height, 0)) or testPoint(Vector3(leftTop.x + width, leftTop.y - height, 0)) or testPoint(Vector3(leftTop.x + width, leftTop.y, 0));
+	return testPoint(leftTop) || testPoint(Vector3(leftTop.x, leftTop.y - height, 0)) || testPoint(Vector3(leftTop.x + width, leftTop.y - height, 0)) || testPoint(Vector3(leftTop.x + width, leftTop.y, 0));
 }
 
 void Frustum::build()

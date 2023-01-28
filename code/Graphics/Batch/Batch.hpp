@@ -10,7 +10,7 @@ class BatchData
 public:
 	BatchData() = default;
 	
-	Ptr<Material> mMaterial;
+	Ptr<const Material> mMaterial;
 	Ptr<const Mesh> mMesh;
 	bool mIsStatic = true;
 	bool mIsWorldSpace = true;

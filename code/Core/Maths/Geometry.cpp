@@ -69,7 +69,7 @@ bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, f32 
 
     Vector3 closestPoint(closestPointInLine(line, sphere.getCenter()));
 
-    if (testSpherePoint(line.getStart(), sphere, eps) or testSpherePoint(line.getEnd(), sphere, eps))
+    if (testSpherePoint(line.getStart(), sphere, eps) || testSpherePoint(line.getEnd(), sphere, eps))
     {
         lineIntersectsSphere = true;
     }
