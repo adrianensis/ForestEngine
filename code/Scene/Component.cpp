@@ -21,12 +21,12 @@ bool Component::isStatic() const
 
 bool Component::isActive() const
 {
-	return (mIsDestroyed || mIsPendingToBeDestroyed || !mGameObject) ? false : mIsActive;
+	return (mIsDestroyed or mIsPendingToBeDestroyed or !mGameObject) ? false : mIsActive;
 }
 
 void Component::setIsActive(bool isActive)
 {
-	mIsActive = (mIsDestroyed || mIsPendingToBeDestroyed || !mGameObject) ? false : isActive;
+	mIsActive = (mIsDestroyed or mIsPendingToBeDestroyed or !mGameObject) ? false : isActive;
 }
 
 void Component::finallyDestroy()
@@ -37,7 +37,7 @@ void Component::finallyDestroy()
 
 void Component::destroy()
 {
-	if (!(getIsDestroyed() || getIsPendingToBeDestroyed()))
+	if (!(getIsDestroyed() or getIsPendingToBeDestroyed()))
 	{
 		mIsPendingToBeDestroyed = true;
 		mIsActive = false;

@@ -264,7 +264,7 @@ void SkeletonState::calcInterpolatedPosition(aiVector3D& Out, f32 AnimationTimeT
         f32 t2 = (f32)pNodeAnim->mPositionKeys[NextPositionIndex].mTime;
         f32 DeltaTime = t2 - t1;
         f32 Factor = (AnimationTimeTicks - t1) / DeltaTime;
-        assert(Factor >= 0.0f && Factor <= 1.0f);
+        assert(Factor >= 0.0f and Factor <= 1.0f);
         const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
         const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
         aiVector3D Delta = End - Start;
@@ -309,7 +309,7 @@ void SkeletonState::calcInterpolatedRotation(aiQuaternion& Out, f32 AnimationTim
         f32 t2 = (f32)pNodeAnim->mRotationKeys[NextRotationIndex].mTime;
         f32 DeltaTime = t2 - t1;
         f32 Factor = (AnimationTimeTicks - t1) / DeltaTime;
-        assert(Factor >= 0.0f && Factor <= 1.0f);
+        assert(Factor >= 0.0f and Factor <= 1.0f);
         const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
         const aiQuaternion& EndRotationQ   = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
         aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
@@ -355,7 +355,7 @@ void SkeletonState::calcInterpolatedScaling(aiVector3D& Out, f32 AnimationTimeTi
         f32 t2 = (f32)pNodeAnim->mScalingKeys[NextScalingIndex].mTime;
         f32 DeltaTime = t2 - t1;
         f32 Factor = (AnimationTimeTicks - (f32)t1) / DeltaTime;
-        assert(Factor >= 0.0f && Factor <= 1.0f);
+        assert(Factor >= 0.0f and Factor <= 1.0f);
         const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
         const aiVector3D& End   = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
         aiVector3D Delta = End - Start;

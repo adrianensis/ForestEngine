@@ -80,7 +80,7 @@ public:
 			v.y = (m.get(2, 0) - m.get(0, 2)) * s;
 			v.z = (m.get(0, 1) - m.get(1, 0)) * s;
 
-		} else if ((m.get(0, 0) > m.get(1, 1)) && (m.get(0, 0) > m.get(2, 2))){
+		} else if ((m.get(0, 0) > m.get(1, 1)) and (m.get(0, 0) > m.get(2, 2))){
 			f32 s = sqrtf(1.0f + m.get(0, 0) - m.get(1, 1) - m.get(2, 2)); // |s|>=1
 			v.x = s * 0.5f; // |x| >= .5
 			s = 0.5f / s;
@@ -215,7 +215,7 @@ public:
 
 	f32& operator[](size_t index)
 	{
-		ASSERT_MSG(index >= 0 && index < 4, "Index out of bounds.");
+		ASSERT_MSG(index >= 0 and index < 4, "Index out of bounds.");
 		if (index == 3)
 			return w;
 		return v[index];
@@ -223,7 +223,7 @@ public:
 
 	f32 operator[](size_t index) const
 	{
-		ASSERT_MSG(index >= 0 && index < 4, "Index out of bounds.");
+		ASSERT_MSG(index >= 0 and index < 4, "Index out of bounds.");
 		if (index == 3)
 			return w;
 		return v[index];

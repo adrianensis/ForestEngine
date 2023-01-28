@@ -141,7 +141,7 @@ void Scene::addGameObject(GameObject *gameObject)
 
 void Scene::removeGameObject(GameObject *gameObject)
 {
-	if (!gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
+	if (!gameObject->getIsDestroyed() and !gameObject->getIsPendingToBeDestroyed())
 	{
 		mGameObjects.remove(gameObject);
 

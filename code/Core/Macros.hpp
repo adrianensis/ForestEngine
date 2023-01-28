@@ -122,7 +122,7 @@ void __customMain()
         IS_RAW_POINTER(Type),                     \
         Type,                                     \
         COND_TYPE(                                \
-            IS_ARITHMETIC(Type) || IS_ENUM(Type), \
+            IS_ARITHMETIC(Type) or IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
             Type))
 
@@ -131,7 +131,7 @@ void __customMain()
         IS_RAW_POINTER(Type),                         \
         ADD_POINTER(ADD_CONST(REMOVE_POINTER(Type))), \
         COND_TYPE(                                    \
-            IS_ARITHMETIC(Type) || IS_ENUM(Type),     \
+            IS_ARITHMETIC(Type) or IS_ENUM(Type),     \
             REMOVE_REF(Type),                         \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
@@ -143,7 +143,7 @@ void __customMain()
         IS_RAW_POINTER(Type),                     \
         ADD_CONST(Type),                          \
         COND_TYPE(                                \
-            IS_ARITHMETIC(Type) || IS_ENUM(Type), \
+            IS_ARITHMETIC(Type) or IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
             ADD_REFERENCE(ADD_CONST(Type))))
 
@@ -262,7 +262,7 @@ FOR_LIST(__it, Var)\
 SerializationUtils::deserializeTemplated<decltype(Var)>(Var, json[Name]);
 
 #define DESERIALIZE_LIST(Name, Var, ConstructionLambda)\
-if(!json.empty() && json.contains(Name))\
+if(!json.empty() and json.contains(Name))\
 {\
     FOR_LIST(__it, json[Name])\
     {\
@@ -273,7 +273,7 @@ if(!json.empty() && json.contains(Name))\
 }
 
 // #define DESERIALIZE_MAP(Name, Var, ConstructionLambda)
-// if(!json.empty() && json.contains(Name))
+// if(!json.empty() and json.contains(Name))
 // {
 //     FOR_LIST(__it, json[Name])
 //     {
@@ -300,13 +300,13 @@ void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const JSON& js
 	for (auto it = (map).begin(); it != (map).end(); ++it)
 
 #define FOR_RANGE(it, start, size) for (i32 it = start; it < (i32)(size); ++it)
-#define FOR_RANGE_COND(it, start, size, condition) for (i32 it = start; (it < (i32)(size)) && (condition); ++it)
+#define FOR_RANGE_COND(it, start, size, condition) for (i32 it = start; (it < (i32)(size)) and (condition); ++it)
 
 #define FOR_ARRAY(it, array) FOR_RANGE(it, 0, (array).size())
 #define FOR_ARRAY_COND(it, array, condition) FOR_RANGE_COND(it, 0, (array).size(), (condition))
 
 #define FOR_LIST(it, list) for (auto it = (list).begin(); it != (list).end(); ++it)
-#define FOR_LIST_COND(it, list, condition) for (auto it = (list).begin(); (it != (list).end()) && (condition); ++it)
+#define FOR_LIST_COND(it, list, condition) for (auto it = (list).begin(); (it != (list).end()) and (condition); ++it)
 
 // --------------------------------------------------------
 // STD CONTAINERS
@@ -352,4 +352,4 @@ FOR_LIST(_internal_it, container) { DELETE(*_internal_it); } \
 #define FOR_EACH_AGAIN() FOR_EACH_HELPER
 
 // #define CHECK_EQUAL(...) true FOR_EACH(CHECK_EQUAL_HELPER, __VA_ARGS__)
-// #define CHECK_EQUAL_HELPER(name) && BaseName == other.name
+// #define CHECK_EQUAL_HELPER(name) and BaseName == other.name

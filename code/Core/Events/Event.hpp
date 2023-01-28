@@ -37,6 +37,6 @@ public:
 
 	bool operator==(const EventFunctor& eventFunctor) const
 	{
-		return mEventClassId == eventFunctor.mEventClassId && mEventReceiver == eventFunctor.mEventReceiver;
+		return mEventClassId == eventFunctor.mEventClassId and mEventReceiver == eventFunctor.mEventReceiver;
 	}
 };

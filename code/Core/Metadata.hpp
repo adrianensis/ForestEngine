@@ -47,7 +47,7 @@ public:
 	template <class T>
 	bool isSameClass() const
 	{
-		return isDerivedClass<ObjectMeta>() && (this->getClassId() == T::getClassIdStatic());
+		return isDerivedClass<ObjectMeta>() and (this->getClassId() == T::getClassIdStatic());
 	}
 
 	bool hasSameClass(ObjectMeta *object) const

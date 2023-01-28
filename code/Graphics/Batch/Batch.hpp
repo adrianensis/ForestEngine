@@ -33,9 +33,9 @@ public:
 
 	bool operator==(const BatchData& otherBatchData) const
 	{
-        return mMaterial == otherBatchData.mMaterial && mMesh == otherBatchData.mMesh &&
-        mIsStatic == otherBatchData.mIsStatic && mIsWorldSpace == otherBatchData.mIsWorldSpace && mIsInstanced == otherBatchData.mIsInstanced &&
-        mStencilValue == otherBatchData.mStencilValue && mIsStencilMask == otherBatchData.mIsStencilMask && mStencilFunction == otherBatchData.mStencilFunction;
+        return mMaterial == otherBatchData.mMaterial and mMesh == otherBatchData.mMesh and
+        mIsStatic == otherBatchData.mIsStatic and mIsWorldSpace == otherBatchData.mIsWorldSpace and mIsInstanced == otherBatchData.mIsInstanced and
+        mStencilValue == otherBatchData.mStencilValue and mIsStencilMask == otherBatchData.mIsStencilMask and mStencilFunction == otherBatchData.mStencilFunction;
 	}
 
 	class BatchDataFunctor

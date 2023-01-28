@@ -41,7 +41,7 @@ void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
 
 void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 {
-	if (MAP_CONTAINS(mComponentsMap, classId) && !component.get().getIsPendingToBeDestroyed() && !component.get().getIsDestroyed())
+	if (MAP_CONTAINS(mComponentsMap, classId) and !component.get().getIsPendingToBeDestroyed() and !component.get().getIsDestroyed())
 	{
 		component.get().destroy();
 
@@ -52,7 +52,7 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 
 void GameObject::setIsActive(bool isActive)
 {
-	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
+	mIsActive = mIsDestroyed or mIsPendingToBeDestroyed ? false : isActive;
 
 	FOR_MAP(it, mComponentsMap)
 	{
@@ -137,7 +137,7 @@ const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId c
 		components = &mComponentsMap.at(classId);
 	}
 
-	if (!components || components->empty())
+	if (!components or components->empty())
 	{
 		components = &smEmptyList;
 	}

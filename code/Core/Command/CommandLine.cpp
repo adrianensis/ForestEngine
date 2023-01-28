@@ -58,7 +58,7 @@ void CommandLine::init()
             {
                 case GLFW_KEY_UP:
                 {
-                    if(!mHistory.empty() && mHistoryIterator != mHistory.begin())
+                    if(!mHistory.empty() and mHistoryIterator != mHistory.begin())
                     {
                         --mHistoryIterator;
                         mBuffer = *mHistoryIterator;
@@ -67,7 +67,7 @@ void CommandLine::init()
                 }
                 case GLFW_KEY_DOWN:
                 {
-                    if(!mHistory.empty() && mHistoryIterator != mHistory.end())
+                    if(!mHistory.empty() and mHistoryIterator != mHistory.end())
                     {
                         ++mHistoryIterator;
                         if(mHistoryIterator == mHistory.end())
@@ -121,7 +121,7 @@ void CommandLine::execute(const std::string& commandLine)
 
     std::string commandName = matchCommand[1];
 
-    if(isCommand && MAP_CONTAINS(mCommandsMap, commandName))
+    if(isCommand and MAP_CONTAINS(mCommandsMap, commandName))
     {
         //log("command: " + commandName);
 

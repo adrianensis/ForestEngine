@@ -26,7 +26,7 @@ void Model::init(const std::string& path)
             aiProcess_SortByPType);
 
     // check for errors
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+    if(!scene or scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE or !scene->mRootNode) // if is Not Zero
     {
         printf("Error parsing '%s': '%s'\n", path.c_str(), mImporter.GetErrorString());
         return;

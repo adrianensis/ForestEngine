@@ -178,7 +178,7 @@ void Camera::calculateProjectionViewMatrix()
 
 void Camera::calculateInverseMatrix(bool force /*= false*/)
 {
-	if(mInversePVMatrixNeedsUpdate || force)
+	if(mInversePVMatrixNeedsUpdate or force)
 	{
 		calculateProjectionViewMatrix();
 

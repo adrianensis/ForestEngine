@@ -45,16 +45,16 @@ void Chunk::update()
         {
             if (renderer.get().isActive())
             {
-                if (mIsLoaded && !renderer.get().hasValidBatch())
+                if (mIsLoaded and !renderer.get().hasValidBatch())
                 {
                     RenderEngine::getInstance().assignBatch(renderer);
                 }
 
-                if (!renderer.get().isStatic() && !containsRenderer(renderer))
+                if (!renderer.get().isStatic() and !containsRenderer(renderer))
                 {
                     Ptr<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
 
-                    if (newChunk && newChunk != getPtrToThis())
+                    if (newChunk and newChunk != getPtrToThis())
                     {
                         newChunk.get().addRenderer(renderer);
                         removeFromList = true;

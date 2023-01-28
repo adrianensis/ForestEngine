@@ -21,11 +21,11 @@ Cube::Cube(const Rectangle& rectangle)
 bool Geometry::testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
 {
     return
-        (cube.getLeftTopFront().x - sphere.getRadius() - eps) <= sphere.getCenter().x &&
-        (cube.getLeftTopFront().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x &&
-        (cube.getLeftTopFront().y + sphere.getRadius() + eps) >= sphere.getCenter().y &&
-        (cube.getLeftTopFront().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y &&
-        (cube.getLeftTopFront().z + sphere.getRadius() + eps) >= sphere.getCenter().z &&
+        (cube.getLeftTopFront().x - sphere.getRadius() - eps) <= sphere.getCenter().x and
+        (cube.getLeftTopFront().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x and
+        (cube.getLeftTopFront().y + sphere.getRadius() + eps) >= sphere.getCenter().y and
+        (cube.getLeftTopFront().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y and
+        (cube.getLeftTopFront().z + sphere.getRadius() + eps) >= sphere.getCenter().z and
         (cube.getLeftTopFront().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
 }
 
@@ -54,7 +54,7 @@ bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& inter
 
     f32 s = Vector3(dc).cross(db).dot(Vector3(da).cross(db)) / Vector3(da).cross(db).sqrlen();
 
-    if (s >= 0.0 && s <= 1.0)
+    if (s >= 0.0 and s <= 1.0)
     {
         intersectionResult = lineA.getStart() + (da * s);
         return true;
@@ -69,7 +69,7 @@ bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, f32 
 
     Vector3 closestPoint(closestPointInLine(line, sphere.getCenter()));
 
-    if (testSpherePoint(line.getStart(), sphere, eps) || testSpherePoint(line.getEnd(), sphere, eps))
+    if (testSpherePoint(line.getStart(), sphere, eps) or testSpherePoint(line.getEnd(), sphere, eps))
     {
         lineIntersectsSphere = true;
     }
@@ -148,7 +148,7 @@ bool Geometry::testLinePoint(const Line& line, const Vector3& point, f32 eps)
 
     bool pointIsInLine = false;
 
-    if (d1 + d2 >= lineLen - eps && d1 + d2 <= lineLen + eps)
+    if (d1 + d2 >= lineLen - eps and d1 + d2 <= lineLen + eps)
     {
         pointIsInLine = true;
     }

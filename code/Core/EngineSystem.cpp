@@ -23,7 +23,7 @@ void IEngineSystem::addComponent(Ptr<IEngineSystemComponent> component)
 
 void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent> component)
 {
-    if (component && !component.get().getAlreadyAddedToEngine())
+    if (component and !component.get().getAlreadyAddedToEngine())
     {
         ClassId componentClassId = component.get().getClassId();
         bool added = false;

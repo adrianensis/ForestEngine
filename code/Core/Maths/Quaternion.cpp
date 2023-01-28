@@ -135,12 +135,12 @@ Quaternion& Quaternion::nor()
 
 bool Quaternion::eq(const Quaternion& q, f32 e) const
 {
-	return v.eq(q.v, e) && MathUtils::eqf(this->w, q.w, e);
+	return v.eq(q.v, e) and MathUtils::eqf(this->w, q.w, e);
 }
 
 bool Quaternion::eq(const Quaternion& q) const
 {
-	return v.eq(q.v) && MathUtils::eqf(this->w, q.w);
+	return v.eq(q.v) and MathUtils::eqf(this->w, q.w);
 }
 
 Quaternion& Quaternion::conj()

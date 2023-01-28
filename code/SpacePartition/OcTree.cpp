@@ -11,7 +11,7 @@ void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& 
 	// mTree = tree;
 
 	mHalfSize = mCube.getSize() / 2.0f;
-	mIsDivisible = (mHalfSize.x >= minSize.x) && (mHalfSize.y >= minSize.y) && (mHalfSize.z >= minSize.z);
+	mIsDivisible = (mHalfSize.x >= minSize.x) and (mHalfSize.y >= minSize.y) and (mHalfSize.z >= minSize.z);
 
 	// mColliders = Memory::allocate<List<Collider*>>();
 	// mColliders->init();
@@ -153,7 +153,7 @@ void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 // 	// CHECK if collider is out of this node.
 // 	// only dynamic objects can escape from their nodes !!!
 
-// 	if (!collider->isStatic() || collider->getHasSizeChanged())
+// 	if (!collider->isStatic() or collider->getHasSizeChanged())
 // {
 
 // //		bool collision = MathUtils::testRectangleSphere(mLeftTop, mWidth, mHeight,
@@ -162,7 +162,7 @@ void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
 // 		bool collision = MathUtils::testCubePoint(mLeftTop, mWidth, mHeight,
 // 								Vector2(collider->getCenter()), -collider->getRadius());
 
-// 		if(!collision || collider->getHasSizeChanged()){
+// 		if(!collision or collider->getHasSizeChanged()){
 // 			mExitingColliders->pushBack(collider);
 // 			mTree->addCollider(collider);
 // 		}

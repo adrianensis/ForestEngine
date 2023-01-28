@@ -70,7 +70,7 @@ void Input::pollEvents()
 
 bool Input::isKeyPressedOnce(u32 key)
 {
-	return smKeyJustPressed && key == smLastKeyPressed;
+	return smKeyJustPressed and key == smLastKeyPressed;
 }
 
 bool Input::isKeyPressed(u32 key)
@@ -85,7 +85,7 @@ bool Input::isModifierPressed(u32 modifier)
 
 bool Input::isMouseButtonPressedOnce(u32 button)
 {
-	return smButtonJustPressed && button == smLastMouseButtonPressed;
+	return smButtonJustPressed and button == smLastMouseButtonPressed;
 }
 
 bool Input::isMouseButtonPressed(u32 button)

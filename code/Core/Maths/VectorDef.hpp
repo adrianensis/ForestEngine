@@ -76,13 +76,13 @@
 #define VECTOR3_MIN_MAX(minOrMaxFunc) std:: minOrMaxFunc (VECTOR2_MIN_MAX(minOrMaxFunc), z)
 #define VECTOR4_MIN_MAX(minOrMaxFunc) std:: minOrMaxFunc (VECTOR3_MIN_MAX(minOrMaxFunc), w)
 
-#define VECTOR2_EQ_E(v, e) MathUtils::eqf(this->x, v.x, e) && MathUtils::eqf(this->y, v.y, e)
-#define VECTOR3_EQ_E(v, e) VECTOR2_EQ_E(v, e) && MathUtils::eqf(this->z, v.z, e)
-#define VECTOR4_EQ_E(v, e) VECTOR3_EQ_E(v, e) && MathUtils::eqf(this->w, v.w, e)
+#define VECTOR2_EQ_E(v, e) MathUtils::eqf(this->x, v.x, e) and MathUtils::eqf(this->y, v.y, e)
+#define VECTOR3_EQ_E(v, e) VECTOR2_EQ_E(v, e) and MathUtils::eqf(this->z, v.z, e)
+#define VECTOR4_EQ_E(v, e) VECTOR3_EQ_E(v, e) and MathUtils::eqf(this->w, v.w, e)
 
-#define VECTOR2_EQ(v) MathUtils::eqf(this->x, v.x) && MathUtils::eqf(this->y, v.y)
-#define VECTOR3_EQ(v) VECTOR2_EQ(v) && MathUtils::eqf(this->z, v.z)
-#define VECTOR4_EQ(v) VECTOR3_EQ(v) && MathUtils::eqf(this->w, v.w)
+#define VECTOR2_EQ(v) MathUtils::eqf(this->x, v.x) and MathUtils::eqf(this->y, v.y)
+#define VECTOR3_EQ(v) VECTOR2_EQ(v) and MathUtils::eqf(this->z, v.z)
+#define VECTOR4_EQ(v) VECTOR3_EQ(v) and MathUtils::eqf(this->w, v.w)
 
 #define VECTOR_BASE_DEFINITION(vectorLength) \
 GENERATE_METADATA_STRUCT(Vector##vectorLength)  \
@@ -90,7 +90,7 @@ GENERATE_METADATA_STRUCT(Vector##vectorLength)  \
 private:\
     void checkBoundaries(u32 index) const\
     {\
-        ASSERT_MSG(index >= 0 && index < vectorLength, "Index out of bounds.");\
+        ASSERT_MSG(index >= 0 and index < vectorLength, "Index out of bounds.");\
     }\
     f32& get(u32 index)\
     {\

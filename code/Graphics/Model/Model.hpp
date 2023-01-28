@@ -23,7 +23,7 @@ public:
     ~Model() override;
 
     void init(const std::string& path);
-    bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }
+    bool isAnimated() const { return mBonesIndexCount > 0 and !mAnimations.empty(); }
 
 private:
     std::vector<OwnerPtr<Animation>> mAnimations;

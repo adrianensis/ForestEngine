@@ -78,7 +78,7 @@ void UIText::setText(const std::string& text)
 				Vector2 textureCoordinates = UIManager::getInstance().getCharTextureCoordinates(character);
 				Vector2 textureSize = UIManager::getInstance().getFontTileTextureSize();
 
-				if (!mFontRenderers.empty() && i < static_cast<i32>(mString.length()))
+				if (!mFontRenderers.empty() and i < static_cast<i32>(mString.length()))
 				{
 					renderer = mFontRenderers[i];
 				}
@@ -122,7 +122,7 @@ void UIText::setVisibility(bool visibility)
 
 void UIText::setIsEditable(bool editable)
 {
-	if(editable && !getIsEditable())
+	if(editable and !getIsEditable())
 	{
 		subscribeToMouseEvents();
 		subscribeToEnterEvent();
@@ -131,7 +131,7 @@ void UIText::setIsEditable(bool editable)
 		mOnlyReleaseOnClickOutside = true;
 	}
 
-	if(!editable && getIsEditable())
+	if(!editable and getIsEditable())
 	{
 		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
 		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);

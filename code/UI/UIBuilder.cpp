@@ -111,7 +111,7 @@ void UIBuilder::calculateConfig()
 		mConfig.mSize.y = mConfig.mTextSize.y;
 	}
 
-	if (mConfig.mIsAffectedByLayout && mMakeRelativeToLastConfig)
+	if (mConfig.mIsAffectedByLayout and mMakeRelativeToLastConfig)
 	{
 		Vector2 offset = calculateNextElementOffset(mNewRowOrColumn ? getOppositeLayout(mCurrentLayout) : mCurrentLayout);
 		mConfig.mPosition = mLastConfig.mPosition + offset;
@@ -119,7 +119,7 @@ void UIBuilder::calculateConfig()
 
 	mConfig.mDisplayPosition = mConfig.mPosition;
 
-	if(mConfig.mUIElementClassId == UIText::getClassIdStatic() || mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
+	if(mConfig.mUIElementClassId == UIText::getClassIdStatic() or mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
 	{
 		mConfig.mDisplayPosition.x += mConfig.mTextSize.x/RenderContext::getAspectRatio();
 		mConfig.mDisplayPosition.y -= mConfig.mTextSize.y / 2.0f;

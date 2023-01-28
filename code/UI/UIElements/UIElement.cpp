@@ -283,7 +283,7 @@ void UIElement::onReleasedEventReceived()
 				}
 				else
 				{
-					if(!mToggleEnabled || (mState != UIElementState::TOGGLED))
+					if(!mToggleEnabled or (mState != UIElementState::TOGGLED))
 					{
 						markAsReleased();
 					}
@@ -428,7 +428,7 @@ void UIElement::obtainFocus()
 {
 	UIElement *lastFocusedElement = UIManager::getInstance().getFocusedElement();
 
-	if (lastFocusedElement && lastFocusedElement->isActive())
+	if (lastFocusedElement and lastFocusedElement->isActive())
 	{
 		lastFocusedElement->loseFocus();
 	}
@@ -454,10 +454,10 @@ void UIElement::releaseOtherToggleElements()
 		UIElement* other = *it;
 		if(other != this)
 		{
-			if(other->getToggleEnabled() &&
-			other->getState() == UIElementState::TOGGLED &&
-			other->getReleaseOnSameGroupPressed() &&
-			!other->getConfig().mGroup.empty() &&
+			if(other->getToggleEnabled() and
+			other->getState() == UIElementState::TOGGLED and
+			other->getReleaseOnSameGroupPressed() and
+			!other->getConfig().mGroup.empty() and
 			other->getConfig().mGroup == mConfig.mGroup)
 			{
 				other->executeRelease();

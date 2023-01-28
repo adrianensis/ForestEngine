@@ -16,8 +16,8 @@ public:
 
 	bool eq(const TransformState& rhs, f32 eps = MathUtils::FLOAT_EPSILON) const
 	{
-		return mPosition.eq(rhs.mPosition, eps) &&
-			mRotation.eq(rhs.mRotation, eps) &&
+		return mPosition.eq(rhs.mPosition, eps) and
+			mRotation.eq(rhs.mRotation, eps) and
 			mScale.eq(rhs.mScale, eps);
 	}
 

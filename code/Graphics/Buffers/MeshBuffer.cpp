@@ -13,16 +13,16 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mIsInstanced = isInstanced;
 	mVAO = RenderContext::createVAO();
 	// Force static draw if instanced
-	mVBOPosition.init(mIsStatic || mIsInstanced);
+	mVBOPosition.init(mIsStatic or mIsInstanced);
 	mVBOPosition.attribute(0, GPUBufferPrimitiveType::FLOAT, 0, 0);
-	mVBOTexture.init(mIsStatic || mIsInstanced);
+	mVBOTexture.init(mIsStatic or mIsInstanced);
 	mVBOTexture.attribute(1, GPUBufferPrimitiveType::FLOAT, 0, 0);
-	mVBOColor.init(mIsStatic || mIsInstanced);
+	mVBOColor.init(mIsStatic or mIsInstanced);
 	mVBOColor.attribute(2, GPUBufferPrimitiveType::FLOAT, 0, 0);
 
 	if(mIsInstanced)
 	{
-		mVBOModelMatrix.init(mIsStatic || mIsInstanced);
+		mVBOModelMatrix.init(mIsStatic or mIsInstanced);
 
 		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
 
@@ -32,7 +32,7 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 		mVBOModelMatrix.attributeCustomSize(6, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 3 * columnBytesSize, 1);
 	}
 
-	mVBOBone.init(mIsStatic || mIsInstanced);
+	mVBOBone.init(mIsStatic or mIsInstanced);
 	mVBOBone.attributeCustomSize(7, GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex, 0, 0);
 	mVBOBone.attributeCustomSize(8, GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
 
@@ -73,7 +73,7 @@ void MeshBuffer::setData(const Mesh& mesh)
 
 void MeshBuffer::setIndexesData(const Mesh& mesh)
 {
-	RenderContext::resizeEBO(mEBO, mesh.mFaces.size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	RenderContext::resizeEBO(mEBO, mesh.mFaces.size() * 3, mIsStatic or mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	RenderContext::setDataEBO(mEBO, mesh.mFaces);
 }
 
