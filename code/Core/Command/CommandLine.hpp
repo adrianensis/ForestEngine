@@ -10,10 +10,7 @@ using CommandCallback = std::function<void(const Command& command)>;
 class CommandFunctor: public Functor<CommandCallback>
 {
 	GENERATE_METADATA(CommandFunctor)
-
-private:
-	Command mCommand;
-
+    
 public:
 
 	void execute() override
@@ -24,7 +21,7 @@ public:
 		}
 	}
 
-	RGET_SET(Command)
+    Command mCommand;
 };
 
 class CommandLine: public ObjectBase, public Singleton<CommandLine>

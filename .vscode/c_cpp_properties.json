@@ -9,15 +9,13 @@
                 "${workspaceFolder}/test",
                 "${workspaceFolder}/tools",
                 "${workspaceFolder}/tools/**",
-                "${workspaceFolder}/generated-code",
-                "/usr/include/freetype2"
-                //"/usr/include/python3.8"
+                "${workspaceFolder}/generated-code"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
-            "cppStandard": "c++20",
-            "intelliSenseMode": "gcc-x64"
+            "cppStandard": "c++23",
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4

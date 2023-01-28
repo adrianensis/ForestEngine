@@ -7,6 +7,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/Batch/Batch.hpp"
@@ -31,8 +32,6 @@ void Renderer::init()
 void Renderer::onComponentAdded() 
 {
 	mTransformState = TransformState(mGameObject->mTransform.get());
-
-	//update();
 }
 
 bool Renderer::getIsWorldSpace() const

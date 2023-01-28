@@ -6,6 +6,7 @@
 #include <limits>
 
 #include <vector>
+#include <span>
 #include <list>
 #include <array>
 #include <map>

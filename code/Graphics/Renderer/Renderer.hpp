@@ -5,9 +5,9 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
 
 class Chunk;
+class Mesh;
 class Batch;
 
 class Renderer: public Component
@@ -47,7 +47,6 @@ public:
 	Ptr<Chunk> mChunk;
 	bool mIsInstanced = false;
 	Ptr<Batch> mBatch;
-	OwnerPtr<Mesh> mMeshInstance;
 	Ptr<const Mesh> mMesh;
 	Ptr<Material> mMaterial;
 
@@ -58,4 +57,5 @@ public:
 
 private:
 	bool mPositionsDirty = true;
+	OwnerPtr<Mesh> mMeshInstance;
 };

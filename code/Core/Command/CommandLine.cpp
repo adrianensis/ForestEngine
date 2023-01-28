@@ -126,7 +126,7 @@ void CommandLine::execute(const std::string& commandLine)
         //log("command: " + commandName);
 
         CommandFunctor& functor = mCommandsMap.at(commandName);
-        functor.getCommand().clearArguments();
+        functor.mCommand.clearArguments();
 
         std::string patternAssignation("\\s*=\\s*");
         std::regex regexCommandWithArgumentList("^\\s*" + patternValidName + "\\s+((" + patternValidName + "(" + patternAssignation + patternValidName + ")?\\s*)+)\\s*");
@@ -147,7 +147,7 @@ void CommandLine::execute(const std::string& commandLine)
             //log("arguments");
             //VAL(std::distance(argumentlistBegin, argumentlistEnd))
         
-            functor.getCommand().setArgumentsString(argumentList);
+            functor.mCommand.setArgumentsString(argumentList);
 
             for (std::sregex_iterator i = argumentlistBegin; i != argumentlistEnd; ++i) {
                 std::smatch argumentMatch = *i;                                                 
@@ -165,7 +165,7 @@ void CommandLine::execute(const std::string& commandLine)
                 CommandArgument arg;
                 arg.setName(matchPair[1].str());
                 arg.setValue(matchPair[3].str());
-                functor.getCommand().addArgument(arg);
+                functor.mCommand.addArgument(arg);
             }   
         }
         
@@ -194,7 +194,7 @@ void CommandLine::registerCommand(const std::string& commandName, CommandCallbac
 
     CommandFunctor functor;
     functor.setCallback(callback);
-    functor.setCommand(command);
+    functor.mCommand = command;
 
     MAP_INSERT(mCommandsMap, commandName, functor)
 }

@@ -91,61 +91,61 @@ void __customMain()
 	std::string getClassName() const Override                                     \
 	{                                                                             \
 		return __VA_ARGS__::getClassNameStatic();                                 \
-	};         
+	};
 
-#define GENERATE_METADATA_BASE(...)  \
-	private: \
-		using ThisClass = __VA_ARGS__;\
-		inline static std::string smClassName = std::string(#__VA_ARGS__);        \
-		inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName); \
+#define GENERATE_METADATA_BASE(...)                                    \
+    private:                                                               \
+        using ThisClass = __VA_ARGS__;                                     \
+        inline static std::string smClassName = std::string(#__VA_ARGS__); \
+        inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName);
 
-#define GENERATE_METADATA(...)                                                    \
-		GENERATE_METADATA_BASE(__VA_ARGS__)  \
-	public: \
-        DECLARE_METADATA_METHODS(override, __VA_ARGS__)                                       \
-	private:                                                                          \
-		DECLARE_GET_PTR_THIS(__VA_ARGS__)                                              \
-	private: // NOTE: notice the last blank space " "
+#define GENERATE_METADATA(...)                      \
+        GENERATE_METADATA_BASE(__VA_ARGS__)             \
+    public:                                             \
+        DECLARE_METADATA_METHODS(override, __VA_ARGS__) \
+    private:                                            \
+        DECLARE_GET_PTR_THIS(__VA_ARGS__)               \
+    private: // NOTE: notice the last blank space " "
 
-#define GENERATE_METADATA_STRUCT(...)                                                    \
-		GENERATE_METADATA_BASE(__VA_ARGS__)  \
-	public: \
-        DECLARE_METADATA_METHODS(NONE(0) , __VA_ARGS__)                                 \
-	private: // NOTE: notice the last blank space " "
+#define GENERATE_METADATA_STRUCT(...)              \
+        GENERATE_METADATA_BASE(__VA_ARGS__)            \
+    public:                                            \
+        DECLARE_METADATA_METHODS(NONE(0), __VA_ARGS__) \
+    private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
 // --------------------------------------------------------
 
-#define GETTER_TYPE(Type)                                            \
-	COND_TYPE(                                                      \
-		IS_RAW_POINTER(Type),                                  \
-		Type,                                   \
-		COND_TYPE(                                                  \
-			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
-			REMOVE_REF(Type),                              \
-			Type))
+#define GETTER_TYPE(Type)                         \
+    COND_TYPE(                                    \
+        IS_RAW_POINTER(Type),                     \
+        Type,                                     \
+        COND_TYPE(                                \
+            IS_ARITHMETIC(Type) || IS_ENUM(Type), \
+            REMOVE_REF(Type),                     \
+            Type))
 
-#define CGETTER_TYPE(Type)                                            \
-	COND_TYPE(                                                      \
-		IS_RAW_POINTER(Type),                                  \
-		ADD_POINTER(ADD_CONST(REMOVE_POINTER(Type))),                                   \
-		COND_TYPE(                                                  \
-			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
-			REMOVE_REF(Type),                              \
-			COND_TYPE(  \
-			IS_SMART_POINTER(Type), \
-				get_const_ptr_type<Type>::type,                              \
-				GETTER_TYPE(Type))))
+#define CGETTER_TYPE(Type)                            \
+    COND_TYPE(                                        \
+        IS_RAW_POINTER(Type),                         \
+        ADD_POINTER(ADD_CONST(REMOVE_POINTER(Type))), \
+        COND_TYPE(                                    \
+            IS_ARITHMETIC(Type) || IS_ENUM(Type),     \
+            REMOVE_REF(Type),                         \
+            COND_TYPE(                                \
+                IS_SMART_POINTER(Type),               \
+                get_const_ptr_type<Type>::type,       \
+                GETTER_TYPE(Type))))
 
-#define SETTER_TYPE(Type) \
-	COND_TYPE(                                                      \
-		IS_RAW_POINTER(Type),                                  \
-		ADD_CONST(Type),                                   \
-		COND_TYPE(                                                  \
-			IS_ARITHMETIC(Type) || IS_ENUM(Type), \
-			REMOVE_REF(Type),                              \
-			ADD_REFERENCE(ADD_CONST(Type))))
+#define SETTER_TYPE(Type)                         \
+    COND_TYPE(                                    \
+        IS_RAW_POINTER(Type),                     \
+        ADD_CONST(Type),                          \
+        COND_TYPE(                                \
+            IS_ARITHMETIC(Type) || IS_ENUM(Type), \
+            REMOVE_REF(Type),                     \
+            ADD_REFERENCE(ADD_CONST(Type))))
 
 #define GETTER_TYPE_FROM_VAR(Var) GETTER_TYPE(decltype(Var))
 #define CGETTER_TYPE_FROM_VAR(Var) CGETTER_TYPE(decltype(Var))
@@ -159,7 +159,6 @@ void __customMain()
 	inline CGETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
 #define RGET(BaseName) \
-	inline ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; }; \
 	inline ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define CRGET(BaseName) \
@@ -192,18 +191,18 @@ void __customMain()
 // COPY
 // --------------------------------------------------------
 
-#define DECLARE_COPY(...)                                                                        \
-    __VA_ARGS__& operator=(const __VA_ARGS__& other) \
-	{                                                                                    \
-		if (this != &other)                                                               \
-		{                                                                                \
-			const __VA_ARGS__ *otherCast = dynamic_cast<const __VA_ARGS__ *>(&other); \
-            __specificCopy(*otherCast);                                                 \
-		}                                                                                \
-        return *this; \
-	}                                                                                    \
-                                                                                         \
-	void __specificCopy(const __VA_ARGS__ &other)
+#define DECLARE_COPY(...)                                                             \
+    __VA_ARGS__ &operator=(const __VA_ARGS__ &other)                                  \
+    {                                                                                 \
+        if (this != &other)                                                           \
+        {                                                                             \
+            const __VA_ARGS__ *otherCast = dynamic_cast<const __VA_ARGS__ *>(&other); \
+            __specificCopy(*otherCast);                                               \
+        }                                                                             \
+        return *this;                                                                 \
+    }                                                                                 \
+                                                                                      \
+    void __specificCopy(const __VA_ARGS__ &other)
 
 #define DO_COPY(MemberName) MemberName = other.MemberName;
 
