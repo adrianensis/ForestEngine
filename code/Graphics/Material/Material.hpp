@@ -18,7 +18,6 @@ public:
     void disable() const;
 
 public:
-	Vector4 mColor;
 	Ptr<Shader> mShader;
 	Ptr<const Texture> mTexture;
 	bool mAlphaEnabled = true;
