@@ -37,17 +37,12 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mVBOBone.attributeCustomSize(8, GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
 
 	mEBO = RenderContext::createEBO();
-
-	mGenerated = true;
 }
 
 void MeshBuffer::terminate()
 {
-	if(mGenerated)
-	{
-		RenderContext::deleteVAO(mVAO);
-		RenderContext::deleteEBO(mEBO);
-	}
+    RenderContext::deleteVAO(mVAO);
+    RenderContext::deleteEBO(mEBO);
 }
 
 void MeshBuffer::resize(const Mesh& mesh)

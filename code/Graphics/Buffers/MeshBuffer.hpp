@@ -26,8 +26,6 @@ private:
     void terminate();
 
 public:
-	bool mGenerated = false;
-
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
 

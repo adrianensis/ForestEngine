@@ -24,8 +24,6 @@ protected:
     void terminate();
 
 protected:
-	bool mGenerated = false;
-
 	bool mIsStatic = false;
 	u32 mVBO = 0; // TODO: change u32 for GLuint
 

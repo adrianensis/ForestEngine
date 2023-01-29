@@ -11,16 +11,11 @@ void GPUBufferBase::init(u32 typeSizeInBytes, bool isStatic)
 	mIsStatic = isStatic;
 
 	mVBO = RenderContext::createVBO();
-
-	mGenerated = true;
 }
 
 void GPUBufferBase::terminate()
 {
-	if(mGenerated)
-	{
-		RenderContext::deleteVBO(mVBO);
-	}
+    RenderContext::deleteVBO(mVBO);
 }
 
 void GPUBufferBase::resize(u32 size)
