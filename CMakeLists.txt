@@ -47,10 +47,6 @@ set(CMAKE_CXX_STANDARD 23)
 # set(CMAKE_CXX_FLAGS_ALL "-std=c++17 -Wall") # this macro was invented by me
 set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Wall")
 
-if(GENERATE_HEADERS)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D GENERATE_HEADERS")
-endif(GENERATE_HEADERS)
-
 if(ENABLE_LOGS)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D DE_ENABLE_LOGS")
 endif(ENABLE_LOGS)
@@ -295,7 +291,6 @@ endif(BUILD_INTEGRATION_TESTS)
 if(BUILD_TOOLS)
   build_programs("tools/*" "tool")
 endif(BUILD_TOOLS)
-
 # ----------------------------------------------------------------------------
 # GAMES
 # ----------------------------------------------------------------------------

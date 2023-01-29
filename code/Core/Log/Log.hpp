@@ -64,7 +64,7 @@ public:
 #define CUSTOM_ECHO_APPEND(Tag, x) Log::customEcho(Tag, x, false);
 #define VAR(x) Log::var<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(#x, x);
 #define VAL(x) Log::val<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(x);
-#define ERROR(x) og::error(x);
+#define ERROR(x) Log::error(x);
 #define BRLINE() Log::brline();
 #define BACKSPACE() Log::backspace();
 #else
@@ -76,7 +76,7 @@ public:
 #define CUSTOM_ECHO_APPEND(Tag, x)
 #define VAR(x)
 #define VAL(x)
-#define ERROx&
+#define ERROR(x)
 #define BRLINE()
 #define BACKSPACE()
 #endif

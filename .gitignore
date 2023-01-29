@@ -5,3 +5,5 @@ compiledLibs/
 binaries/
 dependencies/
 log.txt
+cmake-build-debug/
+.idea

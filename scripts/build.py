@@ -72,7 +72,7 @@ elif system_name == "Windows":
 #     pass
 
 # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
-buildCommand = 'cmake {cmake_generator} -DCMAKE_BUILD_TYPE={buildType} -DGENERATE_HEADERS=True -DBUILD_UNIT_TESTS={buildUnitTests} -DBUILD_INTEGRATION_TESTS={buildIntegrationTests} -DBUILD_TOOLS={buildTools} -DENABLE_LOGS={enableLogs} -DENABLE_PROFILER={enableProfiler} ..'.format(
+buildCommand = 'cmake {cmake_generator} -DCMAKE_BUILD_TYPE={buildType} -DBUILD_UNIT_TESTS={buildUnitTests} -DBUILD_INTEGRATION_TESTS={buildIntegrationTests} -DBUILD_TOOLS={buildTools} -DENABLE_LOGS={enableLogs} -DENABLE_PROFILER={enableProfiler} ..'.format(
   cmake_generator = cmake_generator,
   buildType = buildType,
   buildUnitTests = buildUnitTests,
