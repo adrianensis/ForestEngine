@@ -162,8 +162,6 @@ void Model::init(const std::string& path)
         {
             FOR_RANGE(animIt, 0, scene->mNumAnimations)
             {
-                const aiAnimation* aiAnimation = scene->mAnimations[animIt];
-
                 OwnerPtr<Animation> animation = OwnerPtr<Animation>(NEW(Animation));
                 animation.get().init(animIt, getPtrToThis());
                 mAnimations.emplace_back(animation);

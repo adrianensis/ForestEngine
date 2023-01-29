@@ -44,9 +44,9 @@ public:
 	bool mIsStencilMask = false;
 	f32 mRenderDistance = 0.0f;
 	std::map<std::string, Ptr<TextureAnimation>> mTextureAnimations;
-	Ptr<Chunk> mChunk;
+	Ptr<const Chunk> mChunk;
 	bool mIsInstanced = false;
-	Ptr<Batch> mBatch;
+	Ptr<const Batch> mBatch;
 	Ptr<const Mesh> mMesh;
 	Ptr<const Material> mMaterial;
 
