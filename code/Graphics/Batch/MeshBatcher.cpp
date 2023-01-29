@@ -18,10 +18,7 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 
 		mMeshBuilder.appendToPositions(mPrototypeMesh.get().mPositions);
 		mMeshBuilder.appendToTextureCoordinates(mPrototypeMesh.get().mTextureCoordinates);
-		FOR_RANGE(i, 0, mPrototypeMesh.get().mVertexCount)
-		{
-			mMeshBuilder.addToColors(Vector4(0,0,0,1));
-		}
+        mMeshBuilder.appendToColors(mPrototypeMesh.get().mColors);
 		mMeshBuilder.appendToBonesVertexData(mPrototypeMesh.get().mBonesVertexData);
 
 		generateFacesData(1);

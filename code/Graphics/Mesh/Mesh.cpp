@@ -47,7 +47,12 @@ void Mesh::clear()
 	mFaces.reserve(mFacesCount);
 	mBonesVertexData.reserve(mVertexCount);
 
-	std::fill(mColors.begin(), mColors.end(), Vector4(0,0,0,0));
-
 	mMaterialPath.clear();
+}
+
+void Mesh::setColor(const Vector4 &color)
+{
+    mColors.clear();
+    mColors.resize(mVertexCount);
+    std::fill(mColors.begin(), mColors.end(), color);
 }

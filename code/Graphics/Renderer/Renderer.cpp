@@ -141,6 +141,7 @@ Ptr<const Mesh> Renderer::generateMeshInstance()
 	const std::vector<Vector3>& vertexPositions = mVertices;
 
 	mMeshInstance.get().init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
+    mMeshInstance.get().setColor(mColor);
 
 	FOR_RANGE(i, 0, mMesh.get().mVertexCount)
 	{
@@ -166,8 +167,6 @@ Ptr<const Mesh> Renderer::generateMeshInstance()
 		}
 
 		mMeshInstance.get().addToTextureCoordinates(textureCoord);
-
-		mMeshInstance.get().addToColors(mColor);
 	}
 
 	mMeshInstance.get().appendToBonesVertexData(mMesh.get().mBonesVertexData);

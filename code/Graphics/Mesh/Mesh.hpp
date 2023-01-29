@@ -23,6 +23,7 @@ public:
     void init(u32 vertexCount, u32 facesCount);
 
     void addBoneWeight(u32 vertexId, i32 id, f32 weight);
+    void setColor(const Vector4& color);
 
     void clear();
 

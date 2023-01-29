@@ -54,6 +54,7 @@ void Model::init(const std::string& path)
                 mMeshes.push_back(mesh);
 
                 mesh.get().init(assimpMesh->mNumVertices, assimpMesh->mNumFaces);
+                mesh.get().setColor(Vector4(0,0,0,1));
 
                 if(assimpMesh->HasTextureCoords(0))
                 {
