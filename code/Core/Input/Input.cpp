@@ -38,7 +38,6 @@ void Input::pollEvents()
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;
 
-	bool moved = false;
 	Vector2 newMouseCoordinates(mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY);
 
 	if (!smMouseCoordinates.eq(newMouseCoordinates))
@@ -57,7 +56,7 @@ void Input::pollEvents()
 		SEND_INPUT_EVENT(event);
 	}
 
-	if(smLastKeyPressed != -/*  */1)
+	if(smLastKeyPressed != -1)
 	{
 		InputEventKeyHold event;
 		event.mKey = smLastKeyPressed;

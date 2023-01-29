@@ -480,7 +480,6 @@ void UIElement::setColorPressed()
 void UIElement::setColorRelease()
 {
 	bool cursorInside = isMouseCursorInsideElement();
-
 	if(cursorInside)
 	{
 		mRenderer->mColor = (mConfig.mStyle->mColorHovered);
@@ -494,8 +493,7 @@ void UIElement::setColorRelease()
 void UIElement::setColorOver()
 {
 	bool cursorInside = isMouseCursorInsideElement();
-
-	if (isMouseCursorInsideElement())
+	if (cursorInside)
 	{
 		mRenderer->mColor = (mConfig.mStyle->mColorHovered);
 	}

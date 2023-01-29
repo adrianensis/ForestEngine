@@ -31,8 +31,6 @@ void Scene::init()
 
 	Camera *cameraComponent = NEW(Camera);
 	cameraComponent->init();
-
-	f32 size = RenderContext::getWindowSize().y;
 	cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
 
 	cameraGameObject->addComponent<Camera>(cameraComponent);

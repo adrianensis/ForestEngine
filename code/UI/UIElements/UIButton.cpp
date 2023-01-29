@@ -41,8 +41,6 @@ void UIButton::setText(const std::string& text)
 {
 	if (text.length() > 0)
 	{
-		Vector3 buttonScale = mTransform.get().mScale;
-
 		if (!mText)
 		{
 			UIBuilder uiBuilder;
