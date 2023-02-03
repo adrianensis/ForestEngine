@@ -14,6 +14,7 @@ public:
 };
 
 class Model;
+class Material;
 
 class Mesh: public ObjectBase
 {
@@ -38,7 +39,7 @@ public:
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;
 
-    std::string mMaterialPath;
+    Ptr<const Material> mMaterial;
 
     Ptr<const Model> mModel;
 

@@ -30,7 +30,7 @@ private:
 
 public:
     Assimp::Importer mImporter;
-    std::string mPath;
+	std::filesystem::path mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
     Matrix4 mGlobalInverseTransform;
 

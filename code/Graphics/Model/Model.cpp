@@ -15,9 +15,9 @@ Model::~Model()
 
 void Model::init(const std::string& path)
 {
-    mPath = path;
+    mPath = Paths::mResources + path;
 
-    const aiScene* scene = mImporter.ReadFile( path, 
+    const aiScene* scene = mImporter.ReadFile( mPath,
             //aiProcess_CalcTangentSpace       |
             aiProcess_Triangulate            |
             aiProcess_JoinIdenticalVertices  |
@@ -43,6 +43,52 @@ void Model::init(const std::string& path)
         );
         mGlobalInverseTransform.invert();
 
+        // relationship map: assimp material ID -> own material ID
+        std::vector<Ptr<Material>> assimpMaterials;
+
+        if(scene->HasMaterials())
+        {
+            assimpMaterials.resize(scene->mNumMaterials);
+
+            FOR_RANGE(materialIt, 0, scene->mNumMaterials)
+            {
+                aiMaterial* material = scene->mMaterials[materialIt];
+                Ptr<Material> newMaterial;
+                if(! assimpMaterials[materialIt].isValid())
+                {
+                    newMaterial = MaterialManager::getInstance().createMaterial();
+                    assimpMaterials[materialIt] = newMaterial;
+                }
+
+                FOR_RANGE(itTexture, 0, TextureType::MAX)
+                {
+                    aiTextureType assimpTextureType = static_cast<aiTextureType>(itTexture);
+                    TextureType textureType = static_cast<TextureType>(itTexture);
+                    if (material->GetTextureCount(assimpTextureType) > 0)
+                    {
+                        aiString materialPath;
+                        if (material->GetTexture(assimpTextureType, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                        {
+                            std::filesystem::path texturePath = mPath.parent_path().append(materialPath.data);
+                            newMaterial.get().mTextures[(u32)textureType] = MaterialManager::getInstance().loadTexture(texturePath);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(scene->HasAnimations())
+        {
+            FOR_RANGE(animIt, 0, scene->mNumAnimations)
+            {
+                OwnerPtr<Animation> animation = OwnerPtr<Animation>(NEW(Animation));
+                animation.get().init(animIt, getPtrToThis());
+                mAnimations.emplace_back(animation);
+
+                AnimationManager::getInstance().createAnimationState(animation);
+            }
+        }
+
         if(scene->HasMeshes())
         {
             FOR_RANGE(meshIt, 0, scene->mNumMeshes)
@@ -55,6 +101,8 @@ void Model::init(const std::string& path)
 
                 mesh.get().init(assimpMesh->mNumVertices, assimpMesh->mNumFaces);
                 mesh.get().setColor(Vector4(0,0,0,1));
+
+                mesh.get().mMaterial = assimpMaterials[assimpMesh->mMaterialIndex];
 
                 if(assimpMesh->HasTextureCoords(0))
                 {
@@ -79,44 +127,6 @@ void Model::init(const std::string& path)
                     ASSERT_MSG(assimpFace.mNumIndices == 3, "Face num indices != 3")
                     mesh.get().addToFaces(Face(assimpFace.mIndices[0], assimpFace.mIndices[1], assimpFace.mIndices[2]));
                 }
-
-                //TODO : REMOVE - TEST
-                mesh.get().mMaterialPath = ("resources/bob_lamp/bob_body_local.png");
-                
-                if(scene->HasMaterials())
-                {
-                    aiMaterial* material = scene->mMaterials[assimpMesh->mMaterialIndex];
-
-                    // FOR_RANGE(itMaterialProperty, 0, material->mNumProperties)
-                    // {
-                    //     aiMaterialProperty* materialProperty = material->mProperties[itMaterialProperty];
-                    //     materialProperty->
-                    // }
-
-                    FOR_RANGE(itTexture, 0, AI_TEXTURE_TYPE_MAX)
-                    {
-                        aiTextureType textureType = static_cast<aiTextureType>(itTexture);
-                        if (material->GetTextureCount(textureType) > 0)
-                        {
-                            aiString materialPath;
-
-                            if (material->GetTexture(textureType, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
-                            {
-                                mesh.get().mMaterialPath = ("resources/bob_lamp/" + std::string(materialPath.data));
-                            }
-                        }
-                    }
-                        // if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-                        // {
-                        //     aiString materialPath;
-
-                        //     if (material->GetTexture(aiTextureType_DIFFUSE, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
-                        //     {
-                        //         mesh.get().mMaterialPath = (materialPath.data);
-                        //     }
-                        // }
-                }
-
 
                 if(assimpMesh->HasBones())
                 {
@@ -156,18 +166,6 @@ void Model::init(const std::string& path)
 			            }
                     }
                 }
-            }
-        }
-
-        if(scene->HasAnimations())
-        {
-            FOR_RANGE(animIt, 0, scene->mNumAnimations)
-            {
-                OwnerPtr<Animation> animation = OwnerPtr<Animation>(NEW(Animation));
-                animation.get().init(animIt, getPtrToThis());
-                mAnimations.emplace_back(animation);
-
-                AnimationManager::getInstance().createAnimationState(animation);
             }
         }
     }

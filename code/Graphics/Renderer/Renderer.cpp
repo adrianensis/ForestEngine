@@ -185,10 +185,10 @@ IMPLEMENT_SERIALIZATION(Renderer)
 
 	std::string materialPath = "";
 
-	if(mMaterial.get().mTexture)
-	{
-		materialPath = mMaterial.get().mTexture.get().mPath;
-	}
+//	if(mMaterial.get().mTexture)
+//	{
+//		materialPath = mMaterial.get().mTexture.get().mPath;
+//	}
 
 	SERIALIZE("material", materialPath)
 	SERIALIZE("region", mTextureRegion)

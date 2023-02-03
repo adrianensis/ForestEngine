@@ -18,11 +18,11 @@ void ModelRenderer::onComponentAdded()
 		Renderer *renderer = NEW(Renderer);
 		renderer->init();
 
-		renderer->mMesh = (*it);
-		renderer->mMaterial = (MaterialManager::getInstance().loadMaterial((*it).get().mMaterialPath));
-		renderer->mIsInstanced = (mIsInstanced);
-		renderer->mStencilValue = (mStencilValue);
-		renderer->mIsStencilMask = (mIsStencilMask);
+		renderer->mMesh = *it;
+		renderer->mMaterial = renderer->mMesh.get().mMaterial;
+		renderer->mIsInstanced = mIsInstanced;
+		renderer->mStencilValue = mStencilValue;
+		renderer->mIsStencilMask = mIsStencilMask;
 		mGameObject->addComponent<Renderer>(renderer);
 	}
 }

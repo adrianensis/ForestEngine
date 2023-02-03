@@ -47,7 +47,7 @@ void Mesh::clear()
 	mFaces.reserve(mFacesCount);
 	mBonesVertexData.reserve(mVertexCount);
 
-	mMaterialPath.clear();
+    mMaterial.invalidate();
 }
 
 void Mesh::setColor(const Vector4 &color)

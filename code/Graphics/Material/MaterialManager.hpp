@@ -15,11 +15,14 @@ public:
     
     void init();
     Ptr<const Texture> loadTexture(const std::string& path);
-    Ptr<const Material> loadMaterial(const std::string& path);
-    Ptr<const Material> loadNoTextureMaterial();
+    Ptr<Material> createMaterial();
+    Ptr<Material> createMaterialWithTexture(const std::string& path);
+    Ptr<const Material> getMaterial(u32 index) const;
+    Ptr<const Material> getNoTextureMaterial();
 
 private:
+    u32 mMaterialIDCounter = 0;
 	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;
-	std::map<std::string, OwnerPtr<Material>> mMaterialsMap;
+    std::map<u32, OwnerPtr<Material>> mMaterials;
 	OwnerPtr<Material> mNoTextureMaterial;
 };

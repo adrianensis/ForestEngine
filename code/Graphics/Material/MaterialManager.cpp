@@ -13,6 +13,9 @@ MaterialManager::~MaterialManager()
 void MaterialManager::init()
 {
 	TRACE()
+
+	// reserve index 0 for no textured material
+	mMaterialIDCounter++;
 }
 
 Ptr<const Texture> MaterialManager::loadTexture(const std::string& path)
@@ -27,28 +30,41 @@ Ptr<const Texture> MaterialManager::loadTexture(const std::string& path)
 	return mTexturesMap.at(path);
 }
 
-Ptr<const Material> MaterialManager::loadMaterial(const std::string& path)
-{
-	if (!MAP_CONTAINS(mMaterialsMap, path))
-	{
-		OwnerPtr<Material> material = OwnerPtr<Material>(NEW(Material));
-		material.get().init();
-		material.get().mTexture = (loadTexture(path));
-		material.get().mShader = (Shader::getDefaultShader());
-		MAP_INSERT(mMaterialsMap, path, material);
-	}
-
-	return mMaterialsMap.at(path);
-}
-
-Ptr<const Material> MaterialManager::loadNoTextureMaterial()
+Ptr<const Material> MaterialManager::getNoTextureMaterial()
 {
 	if (!mNoTextureMaterial)
 	{
 		mNoTextureMaterial = OwnerPtr<Material>(NEW(Material));
-		mNoTextureMaterial.get().init();
+		mNoTextureMaterial.get().init(0);
 		mNoTextureMaterial.get().mShader = (Shader::getDefaultShader());
 	}
 
 	return mNoTextureMaterial;
+}
+
+Ptr<Material> MaterialManager::createMaterial()
+{
+    u32 index = mMaterialIDCounter;
+    if (!MAP_CONTAINS(mMaterials, index))
+    {
+        OwnerPtr<Material> material = OwnerPtr<Material>(NEW(Material));
+        material.get().init(index);
+        material.get().mShader = (Shader::getDefaultShader());
+        MAP_INSERT(mMaterials, index, material);
+        mMaterialIDCounter++;
+    }
+
+    return mMaterials[index];
+}
+
+Ptr<Material> MaterialManager::createMaterialWithTexture(const std::string &path)
+{
+    Ptr<Material> material = createMaterial();
+    material.get().mTextures[(u32)TextureType::DIFFUSE] = loadTexture(path);
+    return material;
+}
+
+Ptr<const Material> MaterialManager::getMaterial(u32 index) const
+{
+    return mMaterials.at(index);
 }

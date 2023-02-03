@@ -11,17 +11,18 @@ Material::Material()
 {
 }
 
-void Material::init()
+void Material::init(u32 id)
 {
+	mID = id;
 }
 
 void Material::bind(bool isWorldSpace, bool isInstanced) const
 {
 	PROFILER_CPU()
 
-	if (mTexture)
+	if (mTextures[(u32)TextureType::DIFFUSE])
 	{
-		mTexture.get().bind();
+        mTextures[(u32)TextureType::DIFFUSE].get().bind();
 	}
 
 	Ptr<Camera> camera = RenderEngine::getInstance().mCamera;
@@ -34,7 +35,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced) const
 
 	mShader.get().addBool(isInstanced, "isInstanced");
 
-	mShader.get().addBool(mTexture.isValid(), "hasTexture");
+	mShader.get().addBool(mTextures[(u32)TextureType::DIFFUSE].isValid(), "hasTexture");
 	mShader.get().addBool(mAlphaEnabled, "alphaEnabled");
 	mShader.get().addBool(mHasBorder, "hasBorder");
 

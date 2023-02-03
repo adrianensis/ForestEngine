@@ -20,5 +20,5 @@ Ptr<const Model> ModelManager::loadModel(const std::string& path)
 		MAP_INSERT(mModelMap, path, model);
 	}
 
-	return OwnerPtr<const Model>(mModelMap.at(path));
+	return mModelMap.at(path);
 }

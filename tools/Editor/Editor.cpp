@@ -58,9 +58,10 @@ void Editor::firstUpdate()
 		}
 	}
 
-	importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
-	importModel2("resources/bob_lamp/bob_lamp_update.fbx", Vector3(10,0,0), 1.0f);
-	importModel2("resources/bob_lamp/bob_lamp_update.fbx", Vector3(15,0,0), 1.0f);
+	importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
+	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(10,0,0), 1.0f);
+	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(15,0,0), 1.0f);
+	//importModel2("dragon/Dragon_2.5_For_Animations.fbx", Vector3(15,0,0), 1.0f);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(50,0,50), 5);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 5);
 
@@ -129,7 +130,7 @@ void Editor::firstUpdate()
 	setSize(Vector2(0.1f, 0.1f));
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/EventPoint.png")).
+	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -139,7 +140,7 @@ void Editor::firstUpdate()
 	getUIElement<UIToggleButton>()->simulateClick();
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/PlayerStart.png")).
+	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -149,14 +150,14 @@ void Editor::firstUpdate()
 	nextRow();
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/SpawnPoint.png")).
+	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().loadMaterial("resources/editor-icons/WayPoint.png")).
+	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -299,7 +300,7 @@ GameObject* Editor::createSprite(const Vector3& v, f32 size)
 	renderer->init();
 
 	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
-	renderer->mMaterial = (MaterialManager::getInstance().loadMaterial("resources/snorlax-fill.png"));
+	renderer->mMaterial = (MaterialManager::getInstance().createMaterialWithTexture("resources/snorlax-fill.png"));
 
 	gameObject->addComponent<Renderer>(renderer);
 
