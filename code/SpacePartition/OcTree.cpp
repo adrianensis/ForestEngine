@@ -259,7 +259,7 @@ bool OcTree::OcTreeNode::isLeaf() const
 
 // QuadTree::~QuadTree()
 // {
-// 	//DELETE(mRoot)
+// 	//Memory::deleteObject(mRoot)
 // }
 
 void OcTree::init(f32 size)

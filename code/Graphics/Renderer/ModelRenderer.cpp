@@ -15,7 +15,7 @@ void ModelRenderer::onComponentAdded()
 	const auto& meshes = mModel.get().mMeshes;
     FOR_LIST(it, meshes)
 	{
-		Renderer *renderer = NEW(Renderer);
+		Renderer *renderer = Memory::newObject<Renderer>();
 		renderer->init();
 
 		renderer->mMesh = *it;

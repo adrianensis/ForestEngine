@@ -33,7 +33,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform.get().mScale = (Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform.get().mAffectedByProjection = (false);
 
-	Renderer* renderer = NEW(Renderer);
+	Renderer* renderer = Memory::newObject<Renderer>();
 	renderer->init();
 
 	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();

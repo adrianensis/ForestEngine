@@ -66,7 +66,7 @@ void SkeletonState::createAnimationState(Ptr<const Animation> animation)
 
 	if(!MAP_CONTAINS(mAnimationStates, animationId))
 	{
-		OwnerPtr<AnimationState> animationState = OwnerPtr<AnimationState>(NEW(AnimationState));
+		OwnerPtr<AnimationState> animationState = OwnerPtr<AnimationState>(Memory::newObject<AnimationState>());
 		animationState.get().init(animation);
 
 		MAP_INSERT(mAnimationStates, animationId, animationState);

@@ -26,7 +26,7 @@ void Renderer::init()
 
 	mDirtyPositionOffset = true;
 
-    mMeshInstance = OwnerPtr<Mesh>(NEW(Mesh));
+    mMeshInstance = OwnerPtr<Mesh>(Memory::newObject<Mesh>());
 }
 
 void Renderer::onComponentAdded() 

@@ -40,7 +40,6 @@ public:
 	u32 mFacesCount = 0;
 
     Ptr<const Material> mMaterial;
-
     Ptr<const Model> mModel;
 
 	ADD_TO_VECTOR(Positions)

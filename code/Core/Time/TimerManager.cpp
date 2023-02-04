@@ -13,7 +13,7 @@ void Timer::init(f32 duration, TimerDurationType durationType, std::function<voi
 void TimerManager::endTimer(Timer * timer)
 {
 	mTimers.remove(timer);
-	DELETE(timer);
+	Memory::deleteObject(timer);
 }
 
 void TimerManager::init() {
@@ -45,7 +45,7 @@ void TimerManager::update()
 
 TimerHandle TimerManager::setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback)
 {
-	Timer *timer = NEW(Timer);
+	Timer *timer = Memory::newObject<Timer>();
 	timer->init(duration, durationType, callback);
 
 	TimerHandle timerHandler;

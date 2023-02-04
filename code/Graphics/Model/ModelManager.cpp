@@ -15,7 +15,7 @@ Ptr<const Model> ModelManager::loadModel(const std::string& path)
 {
     if (!MAP_CONTAINS(mModelMap, path))
 	{
-		OwnerPtr<Model> model = OwnerPtr<Model>(NEW(Model));
+		OwnerPtr<Model> model = OwnerPtr<Model>(Memory::newObject<Model>());
 		model.get().init(path);
 		MAP_INSERT(mModelMap, path, model);
 	}

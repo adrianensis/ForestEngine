@@ -22,7 +22,7 @@ Ptr<const Texture> MaterialManager::loadTexture(const std::string& path)
 {
 	if (!MAP_CONTAINS(mTexturesMap, path))
 	{
-		OwnerPtr<Texture> texture = OwnerPtr<Texture>(NEW(Texture));
+		OwnerPtr<Texture> texture = OwnerPtr<Texture>(Memory::newObject<Texture>());
 		texture.get().init(path);
 		MAP_INSERT(mTexturesMap, path, texture);
 	}
@@ -34,7 +34,7 @@ Ptr<const Material> MaterialManager::getNoTextureMaterial()
 {
 	if (!mNoTextureMaterial)
 	{
-		mNoTextureMaterial = OwnerPtr<Material>(NEW(Material));
+		mNoTextureMaterial = OwnerPtr<Material>(Memory::newObject<Material>());
 		mNoTextureMaterial.get().init(0);
 		mNoTextureMaterial.get().mShader = (Shader::getDefaultShader());
 	}
@@ -47,7 +47,7 @@ Ptr<Material> MaterialManager::createMaterial()
     u32 index = mMaterialIDCounter;
     if (!MAP_CONTAINS(mMaterials, index))
     {
-        OwnerPtr<Material> material = OwnerPtr<Material>(NEW(Material));
+        OwnerPtr<Material> material = OwnerPtr<Material>(Memory::newObject<Material>());
         material.get().init(index);
         material.get().mShader = (Shader::getDefaultShader());
         MAP_INSERT(mMaterials, index, material);

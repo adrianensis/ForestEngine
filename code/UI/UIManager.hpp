@@ -27,7 +27,7 @@ public:
 	{
 		if (!MAP_CONTAINS(mGroups, groupName))
 		{
-			UIGroup *group = NEW(UIGroup);
+			UIGroup *group = Memory::newObject<UIGroup>();
 			group->init();
 			group->mName = groupName;
 

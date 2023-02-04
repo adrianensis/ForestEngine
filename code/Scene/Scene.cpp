@@ -23,13 +23,13 @@ void Scene::init()
 
 	mPath = "config/sceneTmp.json";
 
-	GameObject *cameraGameObject = NEW(GameObject);
+	GameObject *cameraGameObject = Memory::newObject<GameObject>();
 	cameraGameObject->init();
 
 	cameraGameObject->mTransform.get().translate(Vector3(0, 0, 100.0f));
 	cameraGameObject->mTransform.get().mScale = Vector3(1,1,1);
 
-	Camera *cameraComponent = NEW(Camera);
+	Camera *cameraComponent = Memory::newObject<Camera>();
 	cameraComponent->init();
 	cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
 
@@ -145,7 +145,7 @@ void Scene::removeGameObject(GameObject *gameObject)
 
 		gameObject->destroy();
 		gameObject->finallyDestroy();
-		DELETE(gameObject);
+        Memory::deleteObject(gameObject);
 	}
 }
 
@@ -198,7 +198,7 @@ void Scene::destroyGameObjects()
 		if (!(*it)->getIsDestroyed())
 		{
 			(*it)->destroy();
-			DELETE((*it));
+            Memory::deleteObject((*it));
 		}
 	}
 
@@ -207,6 +207,6 @@ void Scene::destroyGameObjects()
 		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
 		mCameraGameObject->removeComponent<Camera>(cameraComponent);
 		mCameraGameObject->destroy();
-		DELETE(mCameraGameObject);
+		Memory::deleteObject(mCameraGameObject);
 	}
 }

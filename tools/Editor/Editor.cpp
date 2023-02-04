@@ -290,13 +290,13 @@ void Editor::terminate()
 
 GameObject* Editor::createSprite(const Vector3& v, f32 size)
 {
-	GameObject* gameObject = NEW(GameObject);
+	GameObject* gameObject = Memory::newObject<GameObject>();
 	gameObject->init();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform.get().mLocalPosition = (v);
 	gameObject->mTransform.get().mScale = (Vector3(size,size,size));
 
-	Renderer *renderer = NEW(Renderer);
+	Renderer *renderer = Memory::newObject<Renderer>();
 	renderer->init();
 
 	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
@@ -313,14 +313,14 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
-	GameObject* gameObject = NEW(GameObject);
+	GameObject* gameObject = Memory::newObject<GameObject>();
 	gameObject->init();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform.get().mLocalPosition = (v);
 	gameObject->mTransform.get().mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
-	ModelRenderer *modelRenderer = NEW(ModelRenderer);
+	ModelRenderer *modelRenderer = Memory::newObject<ModelRenderer>();
 	modelRenderer->mModel = (model);
 	modelRenderer->mIsInstanced = (true);
 	modelRenderer->mStencilValue = (0x1);
@@ -335,14 +335,14 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
-	GameObject* gameObject = NEW(GameObject);
+	GameObject* gameObject = Memory::newObject<GameObject>();
 	gameObject->init();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform.get().mLocalPosition = (v);
 	gameObject->mTransform.get().mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
-	ModelRenderer *modelRenderer = NEW(ModelRenderer);
+	ModelRenderer *modelRenderer = Memory::newObject<ModelRenderer>();
 	modelRenderer->mModel = (model);
 	modelRenderer->mIsInstanced = (true);
 	modelRenderer->mStencilValue = (0x1);

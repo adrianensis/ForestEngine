@@ -28,9 +28,7 @@
 // NEW - DELETE
 // --------------------------------------------------------
 
-#define NEW(...) Memory::newObject<__VA_ARGS__>()
 #define INSTANCE_BY_NAME(ClassNameString, ...) ClassManager::getInstance().instanceByName<__VA_ARGS__>(ClassNameString)
-#define DELETE(...) Memory::deleteObject<REMOVE_POINTER(REMOVE_REF(decltype(__VA_ARGS__)))>(__VA_ARGS__);
 
 // --------------------------------------------------------
 // MAIN
@@ -319,12 +317,12 @@ void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const JSON& js
 	FOR_MAP(_internal_it, map)            \
 	{                                     \
 		if (_internal_it->second)         \
-			DELETE(_internal_it->second); \
+			Memory::deleteObject(_internal_it->second); \
 	}                                     \
 	(map).clear();
 
 #define DELETE_CONTENT(container)                       \
-FOR_LIST(_internal_it, container) { DELETE(*_internal_it); } \
+FOR_LIST(_internal_it, container) { Memory::deleteObject(*_internal_it); } \
 	(container).clear();
 
 #define CONTAINS(container, element) (std::find((container).begin(), (container).end(), (element)) != (container).end())

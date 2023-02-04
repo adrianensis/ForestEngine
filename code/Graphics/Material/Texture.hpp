@@ -18,8 +18,8 @@ private:
     void loadImage();
 	void deleteData();
 
-public: 
-	u32 mTextureId = -1;
+private:
+	u32 mTextureId = 0;
 	byte* mData = nullptr;
 	u32 mWidth = 0;
 	u32 mHeight = 0;

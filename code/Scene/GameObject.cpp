@@ -18,7 +18,7 @@ GameObject::~GameObject()
 void GameObject::init()
 {
 
-	mTransform = OwnerPtr<Transform>(NEW(Transform));
+	mTransform = OwnerPtr<Transform>(Memory::newObject<Transform>());
 	addComponent<Transform>(mTransform);
 
 	mTag = "";

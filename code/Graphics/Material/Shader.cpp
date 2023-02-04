@@ -4,16 +4,13 @@
 
 Shader::Shader()
 {
-	mVertexShader = -1;
-	mFragmentShader = -1;
-	mProgram = -1;
 };
 
 Ptr<Shader> Shader::getDefaultShader()
 {
 	if (!msShaderDefault)
 	{
-		msShaderDefault = OwnerPtr<Shader>(NEW(Shader));
+		msShaderDefault = OwnerPtr<Shader>(Memory::newObject<Shader>());
 		msShaderDefault.get().init();
 	}
 
@@ -24,7 +21,7 @@ Shader* Shader::getDebugShader()
 {
 	if (!msShaderDebug)
 	{
-		msShaderDebug = NEW(Shader);
+		msShaderDebug = Memory::newObject<Shader>();
 		msShaderDebug->initDebug();
 	}
 	return msShaderDebug;
@@ -35,7 +32,7 @@ void Shader::freeStaticShaders()
 
 	if (msShaderDebug)
 	{
-		DELETE(msShaderDebug);
+		Memory::deleteObject(msShaderDebug);
 	}
 }
 

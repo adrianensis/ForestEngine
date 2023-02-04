@@ -81,7 +81,7 @@ void Model::init(const std::string& path)
         {
             FOR_RANGE(animIt, 0, scene->mNumAnimations)
             {
-                OwnerPtr<Animation> animation = OwnerPtr<Animation>(NEW(Animation));
+                OwnerPtr<Animation> animation = OwnerPtr<Animation>(Memory::newObject<Animation>());
                 animation.get().init(animIt, getPtrToThis());
                 mAnimations.emplace_back(animation);
 
@@ -95,7 +95,7 @@ void Model::init(const std::string& path)
             {
                 aiMesh* assimpMesh = scene->mMeshes[meshIt];
 
-                OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
+                OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(Memory::newObject<Mesh>());
                 mesh.get().mModel = (getPtrToThis());
                 mMeshes.push_back(mesh);
 

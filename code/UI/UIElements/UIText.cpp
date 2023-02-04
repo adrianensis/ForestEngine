@@ -84,7 +84,7 @@ void UIText::setText(const std::string& text)
 				}
 				else
 				{
-					renderer = NEW(Renderer);
+					renderer = Memory::newObject<Renderer>();
 					renderer->init();
 
 					renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();

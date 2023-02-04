@@ -11,12 +11,12 @@
 
 ENGINE_MAIN()
 {
-GameObject *controller = NEW(GameObject);
+GameObject *controller = Memory::newObject<GameObject>();
 controller->init();
 
 // NOTE: this script won't be added to the ScriptEngine in the usual way,
 // since ScriptEngine itself is still not initialized.
-Script *script = NEW(Editor);
+Script *script = Memory::newObject<Editor>();
 script->init();
 controller->addComponent<Script>(script);
 

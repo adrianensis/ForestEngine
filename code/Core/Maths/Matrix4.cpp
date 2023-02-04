@@ -51,7 +51,7 @@ const Matrix4& Matrix4::getIdentity()
 {
 	if (!smIdentity)
 	{
-		smIdentity = OwnerPtr<Matrix4>(NEW(Matrix4));
+		smIdentity = OwnerPtr<Matrix4>(Memory::newObject<Matrix4>());
 		smIdentity.get().identity();
 	}
 

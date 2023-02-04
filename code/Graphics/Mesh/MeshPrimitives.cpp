@@ -14,7 +14,7 @@ void MeshPrimitives::terminate()
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
-	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(Memory::newObject<Mesh>());
 	mesh.get().init(4*1, 2*1);
 
 	mesh.get().addToPositions(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
@@ -36,7 +36,7 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 {
-	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(NEW(Mesh));
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>(Memory::newObject<Mesh>());
 	mesh.get().init(4*6, 2*6);
 
 	u32 elementOffsetIncrement = 4;

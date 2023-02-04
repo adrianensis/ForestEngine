@@ -150,7 +150,7 @@ private:
     struct OwnerPtrCustomDeleter
     {
         // TODO : Debug WHY a nullptr is reaching this
-        void operator()(T* p) const { if(p != nullptr) { DELETE(p);} }
+        void operator()(T* p) const { if(p != nullptr) { Memory::deleteObject(p);} }
     };
 
     void setReference(const std::shared_ptr<T>& reference) { mReference = reference; }

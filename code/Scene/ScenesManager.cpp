@@ -16,7 +16,7 @@ ScenesManager::~ScenesManager()
 	DELETE_CONTENT(mScenes)
 
 	mGameObjectController->destroy();
-	DELETE(mGameObjectController);
+	Memory::deleteObject(mGameObjectController);
 }
 
 void ScenesManager::init()
@@ -32,7 +32,7 @@ void ScenesManager::init()
 
 	FOR_RANGE(i, 0, scenesCount)
 	{
-		Scene *scene = NEW(Scene);
+		Scene *scene = Memory::newObject<Scene>();
 		addScene(scene);
 	}
 

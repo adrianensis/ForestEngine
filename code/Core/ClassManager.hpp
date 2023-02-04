@@ -11,7 +11,7 @@
         __VA_ARGS__ *object = nullptr;\
         if constexpr (! std::is_abstract<__VA_ARGS__>::value)\
         {\
-            object = NEW(__VA_ARGS__);\
+            object = Memory::newObject<__VA_ARGS__>();\
         }\
         else\
         {\

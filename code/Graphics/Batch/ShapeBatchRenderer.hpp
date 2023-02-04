@@ -74,7 +74,7 @@ public:
 		ClassId shapeClassId = T::getClassIdStatic();
 		if(!MAP_CONTAINS(mShapeBatchMap, shapeClassId))
 		{
-			ShapeBatchRenderer* shapeBatchRenderer = NEW(ShapeBatchRenderer);
+			ShapeBatchRenderer* shapeBatchRenderer = Memory::newObject<ShapeBatchRenderer>();
 			shapeBatchRenderer->init(mIsWorldSpace, shape.getVerticesCount());
 			MAP_INSERT(mShapeBatchMap, shapeClassId, shapeBatchRenderer)
 		}
