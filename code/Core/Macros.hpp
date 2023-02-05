@@ -20,31 +20,6 @@
 #define ADD_POINTER(Class) typename std::add_pointer<Class>::type
 
 // --------------------------------------------------------
-// MAIN
-// --------------------------------------------------------
-
-#define ENGINE_MAIN() \
-void __customMain();\
-void __initMain()\
-{\
-	Engine::getInstance().init();\
-}\
-void __runMain()\
-{\
-	Engine::getInstance().run();\
-	Engine::getInstance().terminate();\
-	Engine::deleteInstance();\
-}\
-int main()\
-{\
-	__initMain();\
-	__customMain();\
-	__runMain();\
-	return 0;\
-}\
-void __customMain()
-
-// --------------------------------------------------------
 // CLASS - METADATA MACROS
 // --------------------------------------------------------
 

@@ -7,16 +7,24 @@
 /*#include <ft2build.h>
 #include FT_FREETYPE_H */
 
-ENGINE_MAIN()
+int main()
 {
-GameObject *controller = Memory::newObject<GameObject>();
-controller->init();
+    Engine::getInstance().init();
 
-// NOTE: this script won't be added to the ScriptEngine in the usual way,
-// since ScriptEngine itself is still not initialized.
-Script *script = Memory::newObject<Editor>();
-script->init();
-controller->addComponent<Script>(script);
+    GameObject *controller = Memory::newObject<GameObject>();
+    controller->init();
 
-ScenesManager::getInstance().setGameObjectController(controller);
+    // NOTE: this script won't be added to the ScriptEngine in the usual way,
+    // since ScriptEngine itself is still not initialized.
+    Script *script = Memory::newObject<Editor>();
+    script->init();
+    controller->addComponent<Script>(script);
+
+    ScenesManager::getInstance().setGameObjectController(controller);
+
+    Engine::getInstance().run();
+    Engine::getInstance().terminate();
+    Engine::deleteInstance();
+
+    return 0;
 }
