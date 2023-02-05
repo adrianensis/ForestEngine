@@ -8,14 +8,11 @@
 
 using namespace std::chrono_literals;
 
-
 void Engine::init()
 {
 	mFPS = 60;
 
 	Memory::init();
-
-	ClassManager::getInstance().init();
 
 	Profiler::getInstance().init();
 
@@ -127,8 +124,6 @@ void Engine::terminate()
 	EngineSystemsManager::deleteInstance();
 
 	Profiler::getInstance().terminate();
-
-	ClassManager::deleteInstance();
 
 	Memory::terminate();
 }

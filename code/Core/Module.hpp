@@ -8,7 +8,6 @@
 #include "Core/Singleton.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory.hpp"
-#include "Core/ClassManager.hpp"
 #include "Core/EngineSystem.hpp"
 #include "Core/Functor.hpp"
 #include "Core/File/File.hpp"

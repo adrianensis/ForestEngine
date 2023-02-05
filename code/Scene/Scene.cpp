@@ -114,7 +114,7 @@ IMPLEMENT_DESERIALIZATION(Scene)
 		std::list<GameObject *> tmpList;
 		DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
 		{
-			GameObject *gameObject = INSTANCE_BY_NAME(json["class"], GameObject);
+			GameObject *gameObject = nullptr;//INSTANCE_BY_NAME(json["class"], GameObject);
 			return gameObject;
 		})
 

@@ -39,19 +39,6 @@ UIBuilder& UIBuilder::restoreData()
 	return *this;
 }
 
-UIBuilder& UIBuilder::create(const std::string& className)
-{
-	UIElement* uiElement = INSTANCE_BY_NAME(className, UIElement);
-	mConfig.mUIElementClassId = uiElement->getClassId();
-
-	calculateConfig();
-	uiElement->initFromConfig(mConfig);
-
-	registerUIElement(uiElement);
-
-	return *this;
-}
-
 void UIBuilder::registerUIElement(UIElement *uiElement)
 {
 	mCurrentUIElement = uiElement;

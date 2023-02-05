@@ -2,11 +2,6 @@
 
 #define NONE(...)
 
-#define CPP
-#define CPP_INCLUDE
-#define CPP_IGNORE
-#define GENERATE_CPP(...)
-
 // --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
@@ -23,12 +18,6 @@
 #define ADD_CONST(Class) typename std::add_const<Class>::type
 #define ADD_REFERENCE(Class) typename std::add_lvalue_reference<Class>::type
 #define ADD_POINTER(Class) typename std::add_pointer<Class>::type
-
-// --------------------------------------------------------
-// NEW - DELETE
-// --------------------------------------------------------
-
-#define INSTANCE_BY_NAME(ClassNameString, ...) ClassManager::getInstance().instanceByName<__VA_ARGS__>(ClassNameString)
 
 // --------------------------------------------------------
 // MAIN
@@ -48,7 +37,6 @@ void __runMain()\
 }\
 int main()\
 {\
-	ModuleClassesRegister(); /* This comes from generateInstanceByName.py */ \
 	__initMain();\
 	__customMain();\
 	__runMain();\

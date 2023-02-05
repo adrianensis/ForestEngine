@@ -52,12 +52,18 @@ public:
     UIBuilder& nextColumn();
     UIBuilder& saveData();
     UIBuilder& restoreData();
-    UIBuilder& create(const std::string& className);
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
 	UIBuilder& create()
 	{
-		return create(T::getClassNameStatic());
+        UIElement* uiElement = Memory::newObject<T>();
+        mConfig.mUIElementClassId = uiElement->getClassId();
+
+        calculateConfig();
+        uiElement->initFromConfig(mConfig);
+
+        registerUIElement(uiElement);
+		return *this;
 	}
 
 	UIElement *getUIElement() const
