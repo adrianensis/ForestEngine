@@ -56,29 +56,29 @@ public:
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
 	UIBuilder& create()
 	{
-        UIElement* uiElement = Memory::newObject<T>();
-        mConfig.mUIElementClassId = uiElement->getClassId();
+        OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>(Memory::newObject<T>());
+        mConfig.mUIElementClassId = uiElement.get().getClassId();
 
         calculateConfig();
-        uiElement->initFromConfig(mConfig);
+        uiElement.get().initFromConfig(mConfig);
 
         registerUIElement(uiElement);
 		return *this;
 	}
 
-	UIElement *getUIElement() const
+    Ptr<UIElement> getUIElement() const
 	{
 		return mCurrentUIElement;
 	}
 
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
-	T *getUIElement() const
+    Ptr<T> getUIElement() const
 	{
-		return dynamic_cast<T *>(getUIElement());
+		return Ptr<T>::cast(getUIElement());
 	}
 
 private:
-    void registerUIElement(UIElement *uiElement);
+    void registerUIElement(OwnerPtr<UIElement> uiElement);
     UILayout getOppositeLayout(UILayout layout);
     Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
@@ -92,7 +92,7 @@ private:
 	bool mMakeRelativeToLastConfig = false; // used for layouts
 	UIElementConfig mLayoutFirstUIElementConfig;
 	bool mNewRowOrColumn = false;
-	UIElement* mCurrentUIElement = nullptr;
+	OwnerPtr<UIElement> mCurrentUIElement;
 
 public:
 

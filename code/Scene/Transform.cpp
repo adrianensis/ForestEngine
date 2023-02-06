@@ -36,10 +36,10 @@ const Vector3& Transform::getWorldPosition() const
 
 	if (mParent)
 	{
-		mWorldPosition.add(mParent->getWorldPosition());
+		mWorldPosition.add(mParent.get().getWorldPosition());
 
 		Matrix4 rotationMatrix;
-		rotationMatrix.init(mParent->getRotationMatrix());
+		rotationMatrix.init(mParent.get().getRotationMatrix());
 
 		mWorldPosition = Vector3(rotationMatrix.mulVector(Vector4(mWorldPosition, 1.0f)));
 	}

@@ -12,8 +12,8 @@ class UIDropdownButton: public UIButton
 public:
     void onPostReleased() override;
 
-private:	
-	UIDropdown* mParentDropdown = nullptr;
+private:
+    Ptr<UIDropdown> mParentDropdown;
 public:
 	GET_SET(ParentDropdown)
 };
@@ -46,7 +46,7 @@ private:
     void setEntriesVisibility(bool visible);
 
 private:
-	std::list<UIDropdownButton *> mButtons;
+	std::list<Ptr<UIDropdownButton>> mButtons;
 	std::list<UIDropdownEntry> mEntries;
 
 };

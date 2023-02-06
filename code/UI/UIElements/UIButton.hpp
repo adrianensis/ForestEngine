@@ -18,7 +18,7 @@ public:
     void setVisibility(bool visibility) override;
 
 private:
-	UIText* mText = nullptr;
+	Ptr<UIText> mText;
 
 public:
 	GET(Text)

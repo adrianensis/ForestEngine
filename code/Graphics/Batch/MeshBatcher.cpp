@@ -1,10 +1,6 @@
 #include "Graphics/Batch/MeshBatcher.hpp"
 #include "Graphics/Model/Model.hpp"
 
-MeshBatcher::~MeshBatcher() 
-{
-}
-
 void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced)
 {
 	PROFILER_CPU()

@@ -18,6 +18,6 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	mIsAffectedByLayout = true;
 	mMaterial = MaterialManager::getInstance().getNoTextureMaterial();
 	mGroup = "";
-	mParent = nullptr;
+	mParent.invalidate();
 	mSeparatorSize = 0.01f;
 }

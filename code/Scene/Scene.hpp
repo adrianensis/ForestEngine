@@ -18,8 +18,8 @@ public:
     void saveScene(const std::string& path);
     void loadScene(const std::string& path);
     void unloadScene();
-    void addGameObject(GameObject *gameObject);
-    void removeGameObject(GameObject *gameObject);
+    void addGameObject(OwnerPtr<GameObject> gameObject);
+    void removeGameObject(Ptr<GameObject> gameObject);
     void update();
     void flushNewGameObjects();
     bool thereAreNewGameObjects() const;
@@ -28,9 +28,9 @@ private:
     void destroyGameObjects();
 
 private:
-	std::list<GameObject *> mGameObjects;
-	std::list<GameObject *> mNewGameObjects;
-	GameObject* mCameraGameObject;
+	std::list<OwnerPtr<GameObject>> mGameObjects;
+	std::list<OwnerPtr<GameObject>> mNewGameObjects;
+	OwnerPtr<GameObject> mCameraGameObject;
 
 	f32 mSize = 0.0f;
 	std::string mPath;

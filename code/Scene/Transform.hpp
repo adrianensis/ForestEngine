@@ -64,7 +64,7 @@ private:
 	mutable bool mModelMatrixGenerated = false;
 
 public:
-	Transform* mParent = nullptr;
+    Ptr<Transform> mParent;
 
 	Vector3 mLocalPosition;
 	Vector3 mRotation;

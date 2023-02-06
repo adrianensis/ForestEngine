@@ -25,8 +25,8 @@ void UIButton::onDestroy()
 {
 	if (mText)
 	{
-		mScene->removeGameObject(mText);
-		mText = nullptr;
+		mScene.get().removeGameObject(Ptr<GameObject>::cast(mText));
+		mText.invalidate();
 	}
 
 	UIPanel::onDestroy();
@@ -34,7 +34,7 @@ void UIButton::onDestroy()
 
 void UIButton::onLabelDestroy()
 {
-	mText = nullptr;
+	mText.invalidate();
 }
 
 void UIButton::setText(const std::string& text) 
@@ -50,14 +50,14 @@ void UIButton::setText(const std::string& text)
 			setText(text).
 			setLayer(mConfig.mLayer - 1).
 			setIsAffectedByLayout(false).
-			setParent(this).
+			setParent(Ptr<GameObject>::cast(getPtrToThis())).
             setStencilValue(mConfig.mStencilValue).
             setStencilFunction(mConfig.mStencilFunction).
 			create<UIText>().
 			getUIElement<UIText>();
 		}
 
-		mText->setText(text);
+		mText.get().setText(text);
 	}
 }
 
@@ -67,7 +67,7 @@ void UIButton::setVisibility(bool visibility)
 
 	if (mText)
 	{
-		mText->setVisibility(visibility);
+		mText.get().setVisibility(visibility);
 	}
 }
 

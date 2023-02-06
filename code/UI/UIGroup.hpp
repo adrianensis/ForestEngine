@@ -11,16 +11,16 @@ class UIGroup: public ObjectBase
 
 public:
     void init();
-    void addUIElement(UIElement *uiElement);
-    void removeUIElement(UIElement *uiElement);
-    void destroyUIElement(UIElement *uiElement);
+    void addUIElement(Ptr<UIElement> uiElement);
+    void removeUIElement(Ptr<UIElement> uiElement);
+    void destroyUIElement(Ptr<UIElement> uiElement);
     void destroyAllUIElements();
     void setVisibility(bool visibility);
 
 public:
 	std::string mName;
 	bool mVisible = false;
-	std::list<UIElement *> mUIElements;
+	std::list<Ptr<UIElement>> mUIElements;
 	
 	CRGET(Name)
 	GET(Visible)

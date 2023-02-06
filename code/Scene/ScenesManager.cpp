@@ -7,16 +7,13 @@
 
 ScenesManager::ScenesManager()
 {
-	mCurrentScene = nullptr;
 	mSceneHasChanged = true;
 }
 
 ScenesManager::~ScenesManager() 
 {
-	DELETE_CONTENT(mScenes)
-
-	mGameObjectController->destroy();
-	Memory::deleteObject(mGameObjectController);
+	mGameObjectController.get().destroy();
+    mGameObjectController.invalidate();
 }
 
 void ScenesManager::init()
@@ -32,7 +29,7 @@ void ScenesManager::init()
 
 	FOR_RANGE(i, 0, scenesCount)
 	{
-		Scene *scene = Memory::newObject<Scene>();
+        OwnerPtr<Scene> scene = OwnerPtr<Scene>(Memory::newObject<Scene>());
 		addScene(scene);
 	}
 
@@ -42,7 +39,7 @@ void ScenesManager::init()
 void ScenesManager::update()
 {
 	PROFILER_CPU()
-	mCurrentScene->update();
+	mCurrentScene.get().update();
 }
 
 void ScenesManager::loadCurrentScene()
@@ -66,20 +63,20 @@ void ScenesManager::setScene(u32 i)
 
 void ScenesManager::internalLoadScene()
 {
-	mCurrentScene->init();
+	mCurrentScene.get().init();
 
 	if (EngineConfig::getInstance().getConfig().at("scenes").size() > 0)
 	{
 		std::string sceneName = EngineConfig::getInstance().getConfig().at("scenes")[mCurrentSceneIndex].get<std::string>();
 
-		mCurrentScene->loadScene(sceneName);
+		mCurrentScene.get().loadScene(sceneName);
 	}
 
-	mGameObjectController->mScene = (mCurrentScene);
-	RenderEngine::getInstance().mCamera = (mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
+	mGameObjectController.get().mScene = (mCurrentScene);
+	RenderEngine::getInstance().mCamera = (mCurrentScene.get().getCameraGameObject().get().getFirstComponent<Camera>());
 }
 
-void ScenesManager::addScene(Scene *newScene)
+void ScenesManager::addScene(OwnerPtr<Scene> newScene)
 {
 	mScenes.push_back(newScene);
 }

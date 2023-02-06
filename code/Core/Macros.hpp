@@ -31,7 +31,12 @@
 	Ptr<__VA_ARGS__> getPtrToThis()                                               \
 	{                                                                             \
 		return Ptr<__VA_ARGS__>(std::static_pointer_cast<__VA_ARGS__>(shared_from_this()));  \
-	}   
+	}                                \
+    Ptr<const __VA_ARGS__> getPtrToThis() const                                               \
+	{                                                                             \
+		return Ptr<const __VA_ARGS__>(std::static_pointer_cast<const __VA_ARGS__>(shared_from_this()));  \
+	}
+
 
 #define DECLARE_METADATA_METHODS(Override, ...) \
 	static ClassId getClassIdStatic()                                             \

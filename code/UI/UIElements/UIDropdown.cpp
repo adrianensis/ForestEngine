@@ -10,7 +10,7 @@
 void UIDropdownButton::onPostReleased() 
 {
 	UIButton::onPostReleased();
-	mParentDropdown->setEntriesVisibility(false);
+	mParentDropdown.get().setEntriesVisibility(false);
 }
 
 UIDropdownEntry::UIDropdownEntry(const std::string& label, UIElementCallback callback)
@@ -43,7 +43,7 @@ UIDropdown& UIDropdown::addOption(const std::string& label, UIElementCallback on
 
 void UIDropdown::toggle()
 {
-	setEntriesVisibility(mButtons.empty() ? true : !mButtons.front()->isActive());
+	setEntriesVisibility(mButtons.empty() ? true : !mButtons.front().get().isActive());
 }
 
 void UIDropdown::setEntriesVisibility(bool visible)
@@ -73,10 +73,10 @@ void UIDropdown::setEntriesVisibility(bool visible)
 				setText(label).
 				create<UIDropdownButton>();
 
-				UIDropdownButton *button = uiBuilder.getUIElement<UIDropdownButton>();
-				button->setOnPressedCallback(onPressedCallback);
+				Ptr<UIDropdownButton> button = uiBuilder.getUIElement<UIDropdownButton>();
+				button.get().setOnPressedCallback(onPressedCallback);
 
-				button->setParentDropdown(this);
+				button.get().setParentDropdown(getPtrToThis());
 
 				mButtons.push_back(button);
 			}
@@ -84,7 +84,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		
 		FOR_LIST(it, mButtons)
 		{
-			(*it)->setVisibility(true);
+			(*it).get().setVisibility(true);
 		}
 	}
 	else
@@ -93,7 +93,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				mScene->removeGameObject(*it);
+				mScene.get().removeGameObject(Ptr<GameObject>::cast(*it));
 			}
 
 			mButtons.clear();

@@ -34,7 +34,7 @@ public:
 	bool mIsAffectedByLayout = true;
 	Ptr<const Material> mMaterial;
 	std::string mGroup;
-	GameObject* mParent = nullptr;
+	Ptr<GameObject> mParent;
 	f32 mSeparatorSize = 0.0f;
 	u32 mStencilValue = 0x00;
 	u32 mStencilFunction = GL_NOTEQUAL;

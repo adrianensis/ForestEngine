@@ -27,22 +27,22 @@ public:
 	{
 		if (!MAP_CONTAINS(mGroups, groupName))
 		{
-			UIGroup *group = Memory::newObject<UIGroup>();
-			group->init();
-			group->mName = groupName;
+            OwnerPtr<UIGroup> group = OwnerPtr<UIGroup>(Memory::newObject<UIGroup>());
+			group.get().init();
+			group.get().mName = groupName;
 
 			MAP_INSERT(mGroups, groupName, group);
 		}
 
-		return *(mGroups.at(groupName));
+		return mGroups.at(groupName).get();
 	}
 
 
-	UIElement *getFocusedElement() const { return mFocusedElement; };
-    void setFocusedElement(UIElement * focusedElement);
+    Ptr<UIElement> getFocusedElement() const { return mFocusedElement; };
+    void setFocusedElement(Ptr<UIElement> focusedElement);
 
 private:
-	std::map<std::string, UIGroup *> mGroups;
+	std::map<std::string, OwnerPtr<UIGroup>> mGroups;
 	std::map<char, Vector2> mCharMap;
 	Vector2 mFontTilesCount;
 	Vector2 mFontTileTextureSize;
@@ -52,5 +52,5 @@ private:
 
 	UIBuilder mUIBuilder;
 
-	UIElement* mFocusedElement = nullptr;
+	Ptr<UIElement> mFocusedElement;
 };

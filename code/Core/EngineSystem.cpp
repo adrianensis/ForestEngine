@@ -13,7 +13,7 @@ bool IEngineSystem::isComponentClassAccepted(ClassId classId)
 
 void IEngineSystem::init()
 {
-    REGISTER_ENGINE_SYSTEM(this);
+    REGISTER_ENGINE_SYSTEM(getPtrToThis());
 }
 
 void IEngineSystem::addComponent(Ptr<IEngineSystemComponent> component)
@@ -29,25 +29,20 @@ void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent
         bool added = false;
         FOR_LIST_COND(itEngineSystem, mEngineSystems, !added)
         {
-            IEngineSystem *sub = (*itEngineSystem);
-            if (sub->isComponentClassAccepted(componentClassId))
+            Ptr<IEngineSystem> sub = (*itEngineSystem);
+            if (sub.get().isComponentClassAccepted(componentClassId))
             {
-                sub->addComponent(component);
+                sub.get().addComponent(component);
                 added = true;
             }
         }
     }
 }
 
-void EngineSystemsManager::registerEngineSystem(IEngineSystem *engineSystem)
+void EngineSystemsManager::registerEngineSystem(Ptr<IEngineSystem> engineSystem)
 {
     if(!CONTAINS(mEngineSystems, engineSystem))
     {
         mEngineSystems.push_back(engineSystem);
     }
-}
-
-const std::list<IEngineSystem *>& EngineSystemsManager::getEngineSystems() const
-{
-    return mEngineSystems;
 }

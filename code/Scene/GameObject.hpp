@@ -87,7 +87,7 @@ private:
 	bool mIsDestroyed = false;
 
 public:
-	Scene* mScene = nullptr;
+	Ptr<Scene> mScene;
 	OwnerPtr<Transform> mTransform;
 	bool mIsStatic = false;
 	std::string mTag;

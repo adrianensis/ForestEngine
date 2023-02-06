@@ -17,23 +17,20 @@ Ptr<Shader> Shader::getDefaultShader()
 	return msShaderDefault;
 }
 
-Shader* Shader::getDebugShader()
+Ptr<Shader> Shader::getDebugShader()
 {
 	if (!msShaderDebug)
 	{
-		msShaderDebug = Memory::newObject<Shader>();
-		msShaderDebug->initDebug();
+		msShaderDebug = OwnerPtr<Shader>(Memory::newObject<Shader>());
+		msShaderDebug.get().initDebug();
 	}
 	return msShaderDebug;
 }
 
 void Shader::freeStaticShaders()
 {
-
-	if (msShaderDebug)
-	{
-		Memory::deleteObject(msShaderDebug);
-	}
+	msShaderDefault.invalidate();
+	msShaderDebug.invalidate();
 }
 
 void Shader::init()

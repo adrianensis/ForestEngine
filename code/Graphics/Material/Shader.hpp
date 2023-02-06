@@ -12,7 +12,7 @@ public:
 	~Shader() override = default;
 
     static Ptr<Shader> getDefaultShader();
-    static Shader* getDebugShader();
+    static Ptr<Shader> getDebugShader();
     static void freeStaticShaders();
     void init();
     void initDebug();
@@ -37,5 +37,5 @@ private:
 	u32 mProgram = 0;
 
 	inline static OwnerPtr<Shader> msShaderDefault;
-	inline static Shader *msShaderDebug = nullptr;
+	inline static OwnerPtr<Shader> msShaderDebug;
 };

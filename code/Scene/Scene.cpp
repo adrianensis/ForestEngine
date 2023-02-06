@@ -23,19 +23,17 @@ void Scene::init()
 
 	mPath = "config/sceneTmp.json";
 
-	GameObject *cameraGameObject = Memory::newObject<GameObject>();
-	cameraGameObject->init();
+	mCameraGameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	mCameraGameObject.get().init();
 
-	cameraGameObject->mTransform.get().translate(Vector3(0, 0, 100.0f));
-	cameraGameObject->mTransform.get().mScale = Vector3(1,1,1);
+	mCameraGameObject.get().mTransform.get().translate(Vector3(0, 0, 100.0f));
+	mCameraGameObject.get().mTransform.get().mScale = Vector3(1,1,1);
 
-	Camera *cameraComponent = Memory::newObject<Camera>();
-	cameraComponent->init();
-	cameraComponent->setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
+    OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>(Memory::newObject<Camera>());
+	cameraComponent.get().init();
+	cameraComponent.get().setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
 
-	cameraGameObject->addComponent<Camera>(cameraComponent);
-
-	mCameraGameObject = cameraGameObject;
+	mCameraGameObject.get().addComponent<Camera>(cameraComponent);
 
 	mSize = EngineConfig::getInstance().getConfig().at("scene").at("defaultSize").get<f32>();
 
@@ -81,12 +79,11 @@ IMPLEMENT_SERIALIZATION(Scene)
 
 	FOR_LIST(it, mGameObjects)
 	{
-		GameObject* obj = *it;
-		if(obj)
+		if((*it))
 		{
-			if (obj->mShouldPersist)
+			if ((*it).get().mShouldPersist)
 			{
-				Transform *t = &obj->mTransform.get();
+				Transform *t = &(*it).get().mTransform.get();
 				Vector3 worldPosition = t->getWorldPosition();
 				Vector3 scale = t->mScale;
 
@@ -97,10 +94,10 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-	SERIALIZE_LIST_IF("objects", mGameObjects, [](GameObject* gameObject)
-	{
-		return gameObject->mShouldPersist;
-	})
+//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerPtr<GameObject> gameObject)
+//	{
+//		return gameObject.get().mShouldPersist;
+//	})
 
 	SERIALIZE("size", maxSize * 2.0f)
 }
@@ -109,21 +106,21 @@ IMPLEMENT_DESERIALIZATION(Scene)
 { 
 	DESERIALIZE("size", mSize)
 
-	if(json.contains("objects"))
-	{
-		std::list<GameObject *> tmpList;
-		DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
-		{
-			GameObject *gameObject = nullptr;//INSTANCE_BY_NAME(json["class"], GameObject);
-			return gameObject;
-		})
-
-		FOR_LIST(it, tmpList)
-		{
-			(*it)->init();
-			addGameObject(*it);
-		}
-	}
+//	if(json.contains("objects"))
+//	{
+//		std::list<GameObject *> tmpList;
+//		DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
+//		{
+//			GameObject *gameObject = nullptr;//INSTANCE_BY_NAME(json["class"], GameObject);
+//			return gameObject;
+//		})
+//
+//		FOR_LIST(it, tmpList)
+//		{
+//			(*it)->init();
+//			addGameObject(*it);
+//		}
+//	}
 }
 
 void Scene::unloadScene()
@@ -131,22 +128,21 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(GameObject *gameObject)
+void Scene::addGameObject(OwnerPtr<GameObject> gameObject)
 {
-	gameObject->mScene = (this);
+	gameObject.get().mScene = getPtrToThis();
 	mNewGameObjects.push_back(gameObject);
 }
 
-void Scene::removeGameObject(GameObject *gameObject)
+void Scene::removeGameObject(Ptr<GameObject> gameObject)
 {
-	if (!gameObject->getIsDestroyed() and !gameObject->getIsPendingToBeDestroyed())
+	if (!gameObject.get().getIsDestroyed() and !gameObject.get().getIsPendingToBeDestroyed())
 	{
-		mGameObjects.remove(gameObject);
+        gameObject.get().destroy();
+        gameObject.get().finallyDestroy();
 
-		gameObject->destroy();
-		gameObject->finallyDestroy();
-        Memory::deleteObject(gameObject);
-	}
+        mGameObjects.remove(gameObject);
+    }
 }
 
 void Scene::update()
@@ -195,18 +191,18 @@ void Scene::destroyGameObjects()
 {
 	FOR_LIST(it, mGameObjects)
 	{
-		if (!(*it)->getIsDestroyed())
+		if (!(*it).get().getIsDestroyed())
 		{
-			(*it)->destroy();
-            Memory::deleteObject((*it));
+			(*it).get().destroy();
+            (*it).invalidate();
 		}
 	}
 
 	if (mCameraGameObject)
 	{
-		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
-		mCameraGameObject->removeComponent<Camera>(cameraComponent);
-		mCameraGameObject->destroy();
-		Memory::deleteObject(mCameraGameObject);
+		Ptr<Camera> cameraComponent = mCameraGameObject.get().getFirstComponent<Camera>();
+		mCameraGameObject.get().removeComponent<Camera>(cameraComponent);
+		mCameraGameObject.get().destroy();
+        mCameraGameObject.invalidate();
 	}
 }

@@ -35,13 +35,13 @@ void UIElement::onDestroy()
 
 	if (hasFocus())
 	{
-		UIManager::getInstance().setFocusedElement(nullptr);
+		UIManager::getInstance().setFocusedElement(Ptr<UIElement>());
 	}
 }
 
 bool UIElement::hasFocus() const
 {
-	return this == UIManager::getInstance().getFocusedElement();
+	return getPtrToThis() == UIManager::getInstance().getFocusedElement();
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -49,9 +49,9 @@ bool UIElement::isMouseCursorInsideElement() const
     bool parentCheck = true;
     if(mConfig.mParent)
     {
-        if(UIElement* parentUIElement = dynamic_cast<UIElement*>(mConfig.mParent))
+        if(Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent))
         {
-            parentCheck = parentUIElement->isMouseCursorInsideElement();
+            parentCheck = parentUIElement.get().isMouseCursorInsideElement();
         }
     }
 
@@ -419,21 +419,20 @@ void UIElement::onEscEventReceived()
 
 void UIElement::loseFocus()
 {
-	UIManager::getInstance().setFocusedElement(nullptr);
+	UIManager::getInstance().setFocusedElement(Ptr<UIElement>());
 	mOnFocusLostFunctor.execute();
 	onFocusLost();
 }
 
 void UIElement::obtainFocus()
 {
-	UIElement *lastFocusedElement = UIManager::getInstance().getFocusedElement();
-
-	if (lastFocusedElement and lastFocusedElement->isActive())
+	Ptr<UIElement> lastFocusedElement = UIManager::getInstance().getFocusedElement();
+	if (lastFocusedElement and lastFocusedElement.get().isActive())
 	{
-		lastFocusedElement->loseFocus();
+		lastFocusedElement.get().loseFocus();
 	}
 
-	UIManager::getInstance().setFocusedElement(this);
+	UIManager::getInstance().setFocusedElement(getPtrToThis());
 
 	mInputString.clear();
 	setText(mInputString);
@@ -451,16 +450,16 @@ void UIElement::releaseOtherToggleElements()
 	const UIGroup& group = UIManager::getInstance().getOrCreateGroup(mConfig.mGroup);
 	FOR_LIST(it, group.getUIElements())
 	{
-		UIElement* other = *it;
-		if(other != this)
+		Ptr<UIElement> other = *it;
+		if(other != getPtrToThis())
 		{
-			if(other->getToggleEnabled() and
-			other->getState() == UIElementState::TOGGLED and
-			other->getReleaseOnSameGroupPressed() and
-			!other->getConfig().mGroup.empty() and
-			other->getConfig().mGroup == mConfig.mGroup)
+			if(other.get().getToggleEnabled() and
+			other.get().getState() == UIElementState::TOGGLED and
+			other.get().getReleaseOnSameGroupPressed() and
+			!other.get().getConfig().mGroup.empty() and
+			other.get().getConfig().mGroup == mConfig.mGroup)
 			{
-				other->executeRelease();
+				other.get().executeRelease();
 			}
 		}
 	}

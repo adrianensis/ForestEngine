@@ -41,9 +41,8 @@ class EngineSystemsManager : public Singleton<EngineSystemsManager>
 {
 public:
     void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component);
-    void registerEngineSystem(IEngineSystem *engineSystem);
-    const std::list<IEngineSystem *>& getEngineSystems() const;
-    
+    void registerEngineSystem(Ptr<IEngineSystem> engineSystem);
+
 private:
-    std::list<IEngineSystem *> mEngineSystems;
+    std::list<Ptr<IEngineSystem>> mEngineSystems;
 };

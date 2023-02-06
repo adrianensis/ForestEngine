@@ -32,7 +32,7 @@ void Engine::init()
 
 void Engine::initEngineSystems()
 {
-	f32 sceneSize = ScenesManager::getInstance().getCurrentScene()->getSize();
+	f32 sceneSize = ScenesManager::getInstance().getCurrentScene().get().getSize();
 	RenderEngine::getInstance().init(sceneSize);
 	ScriptEngine::getInstance().init();
 }

@@ -29,7 +29,7 @@ public:
     void terminate();
 
 private:
-    GameObject* createSprite(const Vector3& v, f32 size);
+	OwnerPtr<GameObject> createSprite(const Vector3& v, f32 size);
     void importModel(const std::string& pFile, const Vector3& v, f32 size);
     void importModel2(const std::string& pFile, const Vector3& v, f32 size);
 	void handlePressedKeys();
@@ -37,8 +37,8 @@ private:
 	f32 rotation = 0;
 	f32 y = 0;
 	Vector3 position;
-	GameObject* sprite = nullptr;
-	GameObject* cameraGameObject = nullptr;
+    Ptr<GameObject> sprite;
+	Ptr<GameObject> cameraGameObject;
 
 	OcTree octree;
 

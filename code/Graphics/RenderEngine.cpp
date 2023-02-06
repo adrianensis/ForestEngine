@@ -193,7 +193,7 @@ void RenderEngine::checkChunks()
 	{
 		Ptr<Chunk> chunk = mChunks.at(i);
 
-		f32 chunkToCameraDistance = chunk.get().mCenter.dst(mCamera.get().mGameObject->mTransform.get().getWorldPosition());
+		f32 chunkToCameraDistance = chunk.get().mCenter.dst(mCamera.get().mGameObject.get().mTransform.get().getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
 		
 		if (chunkInDistance and !chunk.get().mIsLoaded)

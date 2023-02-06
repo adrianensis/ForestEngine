@@ -17,7 +17,7 @@ void UIEditableText::setBackground(const UIElementConfig& config)
     
     if(mBackground)
     {
-        mScene->removeGameObject(mBackground);
+        mScene.get().removeGameObject(Ptr<GameObject>::cast(mBackground));
     }
 
     UIBuilder uiBuilder;

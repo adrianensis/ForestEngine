@@ -8,7 +8,6 @@ UIBuilder::UIBuilder()
 {
 	mCurrentLayout = UILayout::HORIZONTAL;
 	mMakeRelativeToLastConfig = false;
-	mCurrentUIElement = nullptr;
 
 	mDefaultConfig.init(Vector2(0, 0), Vector2(0, 0), 0);
 	mConfig = mDefaultConfig;
@@ -39,11 +38,11 @@ UIBuilder& UIBuilder::restoreData()
 	return *this;
 }
 
-void UIBuilder::registerUIElement(UIElement *uiElement)
+void UIBuilder::registerUIElement(OwnerPtr<UIElement> uiElement)
 {
 	mCurrentUIElement = uiElement;
 
-	ScenesManager::getInstance().getCurrentScene()->addGameObject(mCurrentUIElement);
+	ScenesManager::getInstance().getCurrentScene().get().addGameObject(OwnerPtr<GameObject>::cast(mCurrentUIElement));
 
 	if (mConfig.mGroup.length() > 0)
 	{

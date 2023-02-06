@@ -117,9 +117,7 @@ void UIManager::init()
 void UIManager::terminate()
 {
 	TRACE()
-
-	MAP_DELETE_CONTENT(mGroups)
-
+    mGroups.clear();
 	UIStyleManager::deleteInstance();
 }
 
@@ -137,7 +135,7 @@ Ptr<const Material> UIManager::getFontMaterial()
 	return mFontMaterial;
 }
 
-void UIManager::setFocusedElement(UIElement * focusedElement)
+void UIManager::setFocusedElement(Ptr<UIElement> focusedElement)
 {
 	mFocusedElement = focusedElement;
 }

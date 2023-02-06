@@ -15,23 +15,23 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 
     if(mConfig.mParent)
     {
-        mTransform.get().mParent = &mConfig.mParent->mTransform.get();
+        mTransform.get().mParent = mConfig.mParent.get().mTransform;
     }
 
     mTransform.get().mLocalPosition = mConfig.mDisplayPosition;
     mTransform.get().mScale = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize));
     mTransform.get().mAffectedByProjection = false;
 
-    Renderer *renderer = Memory::newObject<Renderer>();
-    renderer->init();
+    OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>(Memory::newObject<Renderer>());
+    renderer.get().init();
 
-    renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
-    renderer->mMaterial = (mConfig.mMaterial);
-    renderer->mColor = (mConfig.mStyle->mBackgroundColor);
-    renderer->mUseDepth = (true);
-    renderer->mDepth = (mConfig.mLayer);
-    renderer->mStencilValue = (mConfig.mStencilValue);
-    renderer->mStencilFunction = (mConfig.mStencilFunction);
+    renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
+    renderer.get().mMaterial = (mConfig.mMaterial);
+    renderer.get().mColor = (mConfig.mStyle->mBackgroundColor);
+    renderer.get().mUseDepth = (true);
+    renderer.get().mDepth = (mConfig.mLayer);
+    renderer.get().mStencilValue = (mConfig.mStencilValue);
+    renderer.get().mStencilFunction = (mConfig.mStencilFunction);
 
     addComponent<Renderer>(renderer);
     

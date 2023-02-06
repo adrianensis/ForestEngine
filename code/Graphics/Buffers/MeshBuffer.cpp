@@ -41,6 +41,7 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 
 void MeshBuffer::terminate()
 {
+    disable();
     RenderContext::deleteVAO(mVAO);
     RenderContext::deleteEBO(mEBO);
 }

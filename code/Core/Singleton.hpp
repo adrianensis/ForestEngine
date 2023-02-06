@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Memory.hpp"
+#include "Core/Pointers.hpp"
 
 template <class T>
 class Singleton
@@ -9,30 +10,24 @@ public:
 	Singleton() = default;
 	~Singleton() = default;
 
-	static bool existsInstance()
-	{
-		return mInstance != nullptr;
-	}
-
 	static T& getInstance()
 	{
-		if (!existsInstance())
+		if (!mInstance.isValid())
 		{
-			mInstance = Memory::newObject<T>();
+			mInstance = OwnerPtr<T>(Memory::newObject<T>());
 		}
 
-		return *mInstance;
+		return mInstance.get();
 	}
 
 	static void deleteInstance()
 	{
 		if (mInstance)
 		{
-			Memory::deleteObject<T>(mInstance);
-			mInstance = nullptr;
+			mInstance.invalidate();
 		}
 	}
 	
 private:
-	inline static T *mInstance = nullptr;
+	inline static OwnerPtr<T> mInstance;
 };

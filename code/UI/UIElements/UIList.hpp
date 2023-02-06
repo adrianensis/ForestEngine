@@ -33,7 +33,7 @@ private:
 	void setEntriesVisibility(bool visible);
 
 private:
-	std::list<UIButton *> mButtons;
+	std::list<Ptr<UIButton>> mButtons;
 	std::list<UIListEntry> mEntries;
 
 };

@@ -34,7 +34,7 @@ private:
 	bool mIsPendingToBeDestroyed = false;
 
 public:
-	GameObject* mGameObject;
+	Ptr<GameObject> mGameObject;
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 };

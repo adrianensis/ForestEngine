@@ -31,19 +31,19 @@ void Renderer::init()
 
 void Renderer::onComponentAdded() 
 {
-	mTransformState = TransformState(mGameObject->mTransform.get());
+	mTransformState = TransformState(mGameObject.get().mTransform.get());
 }
 
 bool Renderer::getIsWorldSpace() const
 {
-	return mGameObject->mTransform.get().mAffectedByProjection;
+	return mGameObject.get().mTransform.get().mAffectedByProjection;
 }
 
 void Renderer::update(bool regenerateVertices)
 {
 	PROFILER_CPU()
 
-	TransformState currentTransformState = TransformState(mGameObject->mTransform.get());
+	TransformState currentTransformState = TransformState(mGameObject.get().mTransform.get());
 
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 
@@ -58,7 +58,7 @@ void Renderer::update(bool regenerateVertices)
 		if (transformChanged || mDirtyPositionOffset)
 		{
 			mRendererModelMatrix.translation(mPositionOffset);
-			mRendererModelMatrix.mul(mGameObject->mTransform.get().getModelMatrix());
+			mRendererModelMatrix.mul(mGameObject.get().mTransform.get().getModelMatrix());
 		}
 
 		if(regenerateVertices)

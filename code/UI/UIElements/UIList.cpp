@@ -33,15 +33,15 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform.get().mScale = (Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform.get().mAffectedByProjection = (false);
 
-	Renderer* renderer = Memory::newObject<Renderer>();
-	renderer->init();
+	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>(Memory::newObject<Renderer>());
+	renderer.get().init();
 
-	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
-	renderer->mMaterial = (mConfig.mMaterial);
-	renderer->mColor = (mConfig.mStyle->mBackgroundColor);
-	renderer->mDepth = (mConfig.mLayer);
-    renderer->mIsStencilMask = (true);
-    renderer->mStencilValue = (0x2);
+	renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
+	renderer.get().mMaterial = (mConfig.mMaterial);
+	renderer.get().mColor = (mConfig.mStyle->mBackgroundColor);
+	renderer.get().mDepth = (mConfig.mLayer);
+    renderer.get().mIsStencilMask = (true);
+    renderer.get().mStencilValue = (0x2);
 	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y)));
@@ -90,7 +90,7 @@ void UIList::toggle()
 			setLayer(mConfig.mLayer).
             setStencilValue(0x02).
             setStencilFunction(GL_EQUAL).
-            setParent(this);
+            setParent(Ptr<GameObject>::cast(getPtrToThis()));
 
 		FOR_LIST(it, mEntries)
 		{
@@ -102,8 +102,8 @@ void UIList::toggle()
 			create<UIButton>();
 
 
-			UIButton *button = (UIButton *)uiBuilder.getUIElement();
-			button->setOnPressedCallback(onPressedCallback);
+			Ptr<UIButton> button = uiBuilder.getUIElement<UIButton>();
+			button.get().setOnPressedCallback(onPressedCallback);
             //button->getRenderer()->mStencilValue = (0x2);
 			//button->setVisibility(false);
 
@@ -172,7 +172,7 @@ void UIList::setEntriesVisibility(bool visible)
 	else {
 		if(!mButtons->isEmpty()){
 			FOR_LIST(it, mButtons){
-				mScene->removeGameObject(it.get());
+				mScene.get().removeGameObject(it.get());
 			}
 
 			mButtons->clear();
@@ -181,7 +181,7 @@ void UIList::setEntriesVisibility(bool visible)
 
 	FOR_LIST(it, mButtons)
 	{
-		(*it)->setVisibility(visible);
+		(*it).get().setVisibility(visible);
 	}
 }
 
@@ -195,7 +195,7 @@ void UIList::onScroll(f32 scroll)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				(*it)->mTransform.get().translate(Vector2(0,0.005f * -scroll));
+				(*it).get().mTransform.get().translate(Vector2(0,0.005f * -scroll));
 			}
 		}
 	}

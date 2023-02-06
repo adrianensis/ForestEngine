@@ -26,11 +26,11 @@ private:
 	i32 mLayer = 0;
 	Vector2 mSize;
 	std::string mString;
-	std::vector<Renderer *> mFontRenderers;
+	std::vector<OwnerPtr<Renderer>> mFontRenderers;
     bool mIsEditable = false;
 
 protected:
-    UIPanel* mBackground = nullptr;
+    Ptr<UIPanel> mBackground;
 
 public:
 	GET(IsEditable)

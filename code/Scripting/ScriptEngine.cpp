@@ -8,7 +8,7 @@ void ScriptEngine::init()
 
 	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Script);
 
-	mController = ScenesManager::getInstance().getGameObjectController()->getFirstComponent<Script>();
+	mController = ScenesManager::getInstance().getGameObjectController().get().getFirstComponent<Script>();
 }
 
 void ScriptEngine::addComponent(Ptr<IEngineSystemComponent> component)

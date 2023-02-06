@@ -5,8 +5,6 @@
 
 GameObject::GameObject()
 {
-	mTransform = nullptr;
-	mScene = nullptr;
 	mIsActive = true;
 	mShouldPersist = false;
 }
@@ -33,7 +31,7 @@ void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
 
 	mComponentsMap.at(classId).push_back(component);
 
-	component.get().mGameObject = this;
+	component.get().mGameObject = getPtrToThis();
 	component.get().onComponentAdded();
 
 	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<IEngineSystemComponent>::cast(component));
@@ -79,7 +77,7 @@ void GameObject::destroy()
 
 		FOR_LIST(itComponent, list)
 		{
-			(*itComponent).get().mGameObject = nullptr;
+			(*itComponent).get().mGameObject.invalidate();
 			(*itComponent).get().destroy();
 		}
 

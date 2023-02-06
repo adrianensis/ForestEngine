@@ -104,7 +104,7 @@ public:
 
     OwnerPtr() = default;
     OwnerPtr(const OwnerPtr<T>& other) { setReference(other.mReference); }
-    OwnerPtr(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerPtrCustomDeleter())); }
+    explicit OwnerPtr(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerPtrCustomDeleter())); }
     OwnerPtr(const std::shared_ptr<T>& sharedPtr) { setReference(sharedPtr); }
 
     operator Ptr<const T>() const

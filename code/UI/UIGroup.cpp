@@ -8,7 +8,7 @@ void UIGroup::init()
 	mName = "";
 }
 
-void UIGroup::addUIElement(UIElement *uiElement)
+void UIGroup::addUIElement(Ptr<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -16,7 +16,7 @@ void UIGroup::addUIElement(UIElement *uiElement)
 	}
 }
 
-void UIGroup::removeUIElement(UIElement *uiElement)
+void UIGroup::removeUIElement(Ptr<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -24,12 +24,12 @@ void UIGroup::removeUIElement(UIElement *uiElement)
 	}
 }
 
-void UIGroup::destroyUIElement(UIElement *uiElement)
+void UIGroup::destroyUIElement(Ptr<UIElement> uiElement)
 {
 	if (uiElement)
 	{
 		removeUIElement(uiElement);
-		uiElement->mScene->removeGameObject(uiElement);
+		uiElement.get().mScene.get().removeGameObject(Ptr<GameObject>::cast(uiElement));
 	}
 }
 
@@ -37,8 +37,8 @@ void UIGroup::destroyAllUIElements()
 {
 	FOR_LIST(it, mUIElements)
 	{
-		UIElement *element = *it;
-		element->mScene->removeGameObject(element);
+		Ptr<UIElement> element = *it;
+		element.get().mScene.get().removeGameObject(Ptr<GameObject>::cast(element));
 	}
 
 	mUIElements.clear();
@@ -50,6 +50,6 @@ void UIGroup::setVisibility(bool visibility)
 
 	FOR_LIST(it, mUIElements)
 	{
-		(*it)->setVisibility(mVisible);
+		(*it).get().setVisibility(mVisible);
 	}
 }

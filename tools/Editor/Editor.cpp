@@ -88,7 +88,7 @@ void Editor::firstUpdate()
 	uiBuilder.
 	setText("File").
 	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
+	getUIElement<UIDropdown>().get().
 	addOption("New", [&](UIElement *uiElement)
 	{
 
@@ -103,14 +103,14 @@ void Editor::firstUpdate()
 	uiBuilder.
 	setText("Sprites").
 	create<UIButton>().
-	getUIElement<UIButton>()->
+	getUIElement<UIButton>().get().
 	setOnPressedCallback([&, this](UIElement *uiElement){
 	});
 
 	uiBuilder.
 	setText("View").
 	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
+	getUIElement<UIDropdown>().get().
 	addOption("Grid", [&](UIElement *uiElement)
 	{
 
@@ -132,17 +132,17 @@ void Editor::firstUpdate()
 	uiBuilder.
 	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
 	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
+	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
 	uiBuilder.
-	getUIElement<UIToggleButton>()->simulateClick();
+	getUIElement<UIToggleButton>().get().simulateClick();
 
 	uiBuilder.
 	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
 	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
+	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
@@ -152,14 +152,14 @@ void Editor::firstUpdate()
 	uiBuilder.
 	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
 	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
+	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
 	uiBuilder.
 	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
 	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
+	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
@@ -174,7 +174,7 @@ void Editor::firstUpdate()
 	setText("Test Button").
 	setAdjustSizeToText(true).
 	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
+	getUIElement<UIDropdown>().get().
 	addOption("Option1", [&](UIElement *uiElement)
 	{
 
@@ -194,13 +194,13 @@ void Editor::firstUpdate()
 	setAdjustSizeToText(false).
 	setSize(Vector2(0.1f, 0.3f)).
 	create<UIList>().
-	getUIElement<UIList>()->
+	getUIElement<UIList>().get().
 	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
 	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
 	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	toggle();
 
-	cameraGameObject = ScenesManager::getInstance().getCurrentScene()->getCameraGameObject();
+	cameraGameObject = ScenesManager::getInstance().getCurrentScene().get().getCameraGameObject();
 }
 
 void Editor::update()
@@ -225,8 +225,8 @@ void Editor::update()
 	y += 30 * Time::getInstance().getDeltaTimeSeconds();
 
 
-	Transform* cameraTransform = &cameraGameObject->mTransform.get();
-	Matrix4 cameraRotationMatrix = cameraGameObject->mTransform.get().getRotationMatrix();
+	Transform* cameraTransform = &cameraGameObject.get().mTransform.get();
+	Matrix4 cameraRotationMatrix = cameraGameObject.get().mTransform.get().getRotationMatrix();
 	cameraRotationMatrix.invert();
 
 	f32 speed = 90 * Time::getInstance().getDeltaTimeSeconds();
@@ -288,23 +288,23 @@ void Editor::terminate()
 	
 }
 
-GameObject* Editor::createSprite(const Vector3& v, f32 size)
+OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
-	GameObject* gameObject = Memory::newObject<GameObject>();
-	gameObject->init();
-	gameObject->mIsStatic = false;
-	gameObject->mTransform.get().mLocalPosition = (v);
-	gameObject->mTransform.get().mScale = (Vector3(size,size,size));
+	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	gameObject.get().init();
+	gameObject.get().mIsStatic = false;
+	gameObject.get().mTransform.get().mLocalPosition = (v);
+	gameObject.get().mTransform.get().mScale = (Vector3(size,size,size));
 
-	Renderer *renderer = Memory::newObject<Renderer>();
-	renderer->init();
+	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>(Memory::newObject<Renderer>());
+	renderer.get().init();
 
-	renderer->mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
-	renderer->mMaterial = (MaterialManager::getInstance().createMaterialWithTexture("resources/snorlax-fill.png"));
+	renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
+	renderer.get().mMaterial = (MaterialManager::getInstance().createMaterialWithTexture("resources/snorlax-fill.png"));
 
-	gameObject->addComponent<Renderer>(renderer);
+	gameObject.get().addComponent<Renderer>(renderer);
 
-	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
+	ScenesManager::getInstance().getCurrentScene().get().addGameObject(gameObject);
 
 	return gameObject;
 }
@@ -313,43 +313,43 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
-	GameObject* gameObject = Memory::newObject<GameObject>();
-	gameObject->init();
-	gameObject->mIsStatic = true;
-	gameObject->mTransform.get().mLocalPosition = (v);
-	gameObject->mTransform.get().mScale = (Vector3(1,1,1) * size);
+	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	gameObject.get().init();
+	gameObject.get().mIsStatic = true;
+	gameObject.get().mTransform.get().mLocalPosition = (v);
+	gameObject.get().mTransform.get().mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
-	ModelRenderer *modelRenderer = Memory::newObject<ModelRenderer>();
-	modelRenderer->mModel = (model);
-	modelRenderer->mIsInstanced = (true);
-	modelRenderer->mStencilValue = (0x1);
-	modelRenderer->mIsStencilMask = (true);
+	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>(Memory::newObject<ModelRenderer>());
+	modelRenderer.get().mModel = (model);
+	modelRenderer.get().mIsInstanced = (true);
+	modelRenderer.get().mStencilValue = (0x1);
+	modelRenderer.get().mIsStencilMask = (true);
 	
-	gameObject->addComponent<ModelRenderer>(modelRenderer);
+	gameObject.get().addComponent<ModelRenderer>(modelRenderer);
 
-	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
+	ScenesManager::getInstance().getCurrentScene().get().addGameObject(gameObject);
 }
 
 void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
-	GameObject* gameObject = Memory::newObject<GameObject>();
-	gameObject->init();
-	gameObject->mIsStatic = true;
-	gameObject->mTransform.get().mLocalPosition = (v);
-	gameObject->mTransform.get().mScale = (Vector3(1,1,1) * size);
+	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	gameObject.get().init();
+	gameObject.get().mIsStatic = true;
+	gameObject.get().mTransform.get().mLocalPosition = (v);
+	gameObject.get().mTransform.get().mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
-	ModelRenderer *modelRenderer = Memory::newObject<ModelRenderer>();
-	modelRenderer->mModel = (model);
-	modelRenderer->mIsInstanced = (true);
-	modelRenderer->mStencilValue = (0x1);
+	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>(Memory::newObject<ModelRenderer>());
+	modelRenderer.get().mModel = (model);
+	modelRenderer.get().mIsInstanced = (true);
+	modelRenderer.get().mStencilValue = (0x1);
 	
-	gameObject->addComponent<ModelRenderer>(modelRenderer);
+	gameObject.get().addComponent<ModelRenderer>(modelRenderer);
 
-	ScenesManager::getInstance().getCurrentScene()->addGameObject(gameObject);
+	ScenesManager::getInstance().getCurrentScene().get().addGameObject(gameObject);
 }
 
 void Editor::handlePressedKeys()

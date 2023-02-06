@@ -8,8 +8,6 @@
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 
 {
-	Memory::deleteObject(mShaderLine);
-
 	RenderContext::deleteVAO(mVAO);
 	RenderContext::deleteVBO(mVBOPosition);
 	RenderContext::deleteVBO(mEBO);
@@ -33,8 +31,8 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxShapes * 2 * 4); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxShapes * 2);		 // 1 index per vertex
 
-	mShaderLine = Memory::newObject<Shader>();
-	mShaderLine->initDebug();
+	mShaderLine = OwnerPtr<Shader>(Memory::newObject<Shader>());
+	mShaderLine.get().initDebug();
 
 	bind();
 }
@@ -43,7 +41,7 @@ void ShapeBatchRenderer::render()
 {
 	if (mShapesCounter > 0)
 	{
-		mShaderLine->enable();
+		mShaderLine.get().enable();
 
 		RenderContext::enableVAO(mVAO);
 
@@ -53,8 +51,8 @@ void ShapeBatchRenderer::render()
 		const Matrix4& projectionMatrix = RenderEngine::getInstance().mCamera.get().mProjectionMatrix;
 		const Matrix4& viewMatrix = RenderEngine::getInstance().mCamera.get().mViewMatrix;
 
-		mShaderLine->addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
-		mShaderLine->addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
+		mShaderLine.get().addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
+		mShaderLine.get().addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
 
 		RenderContext::setDataVBO(mVBOPosition, mPositionBuffer);
 		RenderContext::setDataVBO(mVBOColor, mColorBuffer);

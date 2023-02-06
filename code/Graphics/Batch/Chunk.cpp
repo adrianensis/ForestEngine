@@ -104,13 +104,13 @@ void Chunk::addRenderer(Ptr<Renderer> renderer)
 
 bool Chunk::containsRenderer(Ptr<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
 {
-	Vector3 rendererPosition = renderer.get().mGameObject->mTransform.get().getWorldPosition();
+	Vector3 rendererPosition = renderer.get().mGameObject.get().mTransform.get().getWorldPosition();
 	bool contains = Geometry::testCubePoint(mCube, rendererPosition, epsilon);
 	return contains; // TODO : move to settings ?
 }
 
 bool Chunk::containsRendererSphere(Ptr<const Renderer> renderer) const
 {
-	Vector3 rendererPosition = renderer.get().mGameObject->mTransform.get().getWorldPosition();
-	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer.get().mGameObject->mTransform.get().mScale.y * 2.0f), 0);
+	Vector3 rendererPosition = renderer.get().mGameObject.get().mTransform.get().getWorldPosition();
+	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer.get().mGameObject.get().mTransform.get().mScale.y * 2.0f), 0);
 }
