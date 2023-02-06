@@ -56,7 +56,7 @@ public:
 	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
 	UIBuilder& create()
 	{
-        OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>(Memory::newObject<T>());
+        OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>::cast(OwnerPtr<T>::newObject());
         mConfig.mUIElementClassId = uiElement.get().getClassId();
 
         calculateConfig();

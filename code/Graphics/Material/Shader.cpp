@@ -10,7 +10,7 @@ Ptr<Shader> Shader::getDefaultShader()
 {
 	if (!msShaderDefault)
 	{
-		msShaderDefault = OwnerPtr<Shader>(Memory::newObject<Shader>());
+		msShaderDefault = OwnerPtr<Shader>::newObject();
 		msShaderDefault.get().init();
 	}
 
@@ -21,7 +21,7 @@ Ptr<Shader> Shader::getDebugShader()
 {
 	if (!msShaderDebug)
 	{
-		msShaderDebug = OwnerPtr<Shader>(Memory::newObject<Shader>());
+		msShaderDebug = OwnerPtr<Shader>::newObject();
 		msShaderDebug.get().initDebug();
 	}
 	return msShaderDebug;

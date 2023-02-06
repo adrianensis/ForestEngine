@@ -290,13 +290,13 @@ void Editor::terminate()
 
 OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
 	gameObject.get().init();
 	gameObject.get().mIsStatic = false;
 	gameObject.get().mTransform.get().mLocalPosition = (v);
 	gameObject.get().mTransform.get().mScale = (Vector3(size,size,size));
 
-	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>(Memory::newObject<Renderer>());
+	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
 	renderer.get().init();
 
 	renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
@@ -313,14 +313,14 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
 	gameObject.get().init();
 	gameObject.get().mIsStatic = true;
 	gameObject.get().mTransform.get().mLocalPosition = (v);
 	gameObject.get().mTransform.get().mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
-	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>(Memory::newObject<ModelRenderer>());
+	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
 	modelRenderer.get().mModel = (model);
 	modelRenderer.get().mIsInstanced = (true);
 	modelRenderer.get().mStencilValue = (0x1);
@@ -335,14 +335,14 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
 
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
 	gameObject.get().init();
 	gameObject.get().mIsStatic = true;
 	gameObject.get().mTransform.get().mLocalPosition = (v);
 	gameObject.get().mTransform.get().mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
 
-	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>(Memory::newObject<ModelRenderer>());
+	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
 	modelRenderer.get().mModel = (model);
 	modelRenderer.get().mIsInstanced = (true);
 	modelRenderer.get().mStencilValue = (0x1);

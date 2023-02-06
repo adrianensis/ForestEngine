@@ -23,13 +23,13 @@ void Scene::init()
 
 	mPath = "config/sceneTmp.json";
 
-	mCameraGameObject = OwnerPtr<GameObject>(Memory::newObject<GameObject>());
+	mCameraGameObject = OwnerPtr<GameObject>::newObject();
 	mCameraGameObject.get().init();
 
 	mCameraGameObject.get().mTransform.get().translate(Vector3(0, 0, 100.0f));
 	mCameraGameObject.get().mTransform.get().mScale = Vector3(1,1,1);
 
-    OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>(Memory::newObject<Camera>());
+    OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>::newObject();
 	cameraComponent.get().init();
 	cameraComponent.get().setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
 

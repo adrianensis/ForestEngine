@@ -29,7 +29,7 @@ void ScenesManager::init()
 
 	FOR_RANGE(i, 0, scenesCount)
 	{
-        OwnerPtr<Scene> scene = OwnerPtr<Scene>(Memory::newObject<Scene>());
+        OwnerPtr<Scene> scene = OwnerPtr<Scene>::newObject();
 		addScene(scene);
 	}
 

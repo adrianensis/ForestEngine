@@ -27,7 +27,7 @@ public:
 	{
 		if (!MAP_CONTAINS(mGroups, groupName))
 		{
-            OwnerPtr<UIGroup> group = OwnerPtr<UIGroup>(Memory::newObject<UIGroup>());
+            OwnerPtr<UIGroup> group = OwnerPtr<UIGroup>::newObject();
 			group.get().init();
 			group.get().mName = groupName;
 

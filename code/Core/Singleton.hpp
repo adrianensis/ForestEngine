@@ -14,7 +14,7 @@ public:
 	{
 		if (!mInstance.isValid())
 		{
-			mInstance = OwnerPtr<T>(Memory::newObject<T>());
+			mInstance = OwnerPtr<T>::newObject();
 		}
 
 		return mInstance.get();

@@ -144,6 +144,12 @@ public:
 
     std::shared_ptr<T> getSharedPtr() const { return mReference; }
 
+    template <typename ... Args>
+	static OwnerPtr<T> newObject(Args&&... args)
+	{
+        return OwnerPtr<T>(Memory::newObject<T>(args...));
+    }
+
 private:
 
     // Custom Deleter

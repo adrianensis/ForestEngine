@@ -37,7 +37,7 @@ void RenderEngine::init(f32 sceneSize)
 	{
 		for (i32 j = chunksGridSizeHalf; j > -chunksGridSizeHalf; --j)
 		{
-			OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>(Memory::newObject<Chunk>());
+			OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>::newObject();
 			chunk.get().init();
 			chunk.get().set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
 

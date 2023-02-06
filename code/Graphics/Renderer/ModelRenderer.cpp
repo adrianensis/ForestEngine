@@ -15,7 +15,7 @@ void ModelRenderer::onComponentAdded()
 	const auto& meshes = mModel.get().mMeshes;
     FOR_LIST(it, meshes)
 	{
-		OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>(Memory::newObject<Renderer>());
+		OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
 		renderer.get().init();
 
 		renderer.get().mMesh = *it;

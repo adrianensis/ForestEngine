@@ -13,10 +13,10 @@ public:
 
     static void terminate();
 	
-	template <class T, typename ... ConstructorTypes>
-	static T *newObject(ConstructorTypes&&... constructorTypes)
+	template <class T, typename ... Args>
+	static T *newObject(Args&&... args)
 	{
-		T *object = new T(constructorTypes...);
+		T *object = new T(args...);
 
 		std::string className;
 

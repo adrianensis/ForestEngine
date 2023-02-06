@@ -22,7 +22,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     mTransform.get().mScale = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize));
     mTransform.get().mAffectedByProjection = false;
 
-    OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>(Memory::newObject<Renderer>());
+    OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
     renderer.get().init();
 
     renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
