@@ -4,6 +4,7 @@ import filecmp
 import pathlib
 
 from generateClassList import *
+from overwriteFile import *
 
 def generateClassesRegister(projectDir, generated_code_dirname):
 
@@ -33,16 +34,21 @@ def generateClassesRegister(projectDir, generated_code_dirname):
         class_map = getClassList(projectDir, [folder])
 
         class_manager_generated = os.path.join(folder, "generated")
-        class_manager_generated_class = class_manager_generated + ".hpp"
-        class_manager_generated_class_tmp = class_manager_generated + "_tmp" + ".hpp"
+        class_manager_generated_class_header = class_manager_generated + ".hpp"
+        class_manager_generated_class_header_tmp = class_manager_generated + "_tmp" + ".hpp"
+        class_manager_generated_class_source = class_manager_generated + ".cpp"
+        class_manager_generated_class_source_tmp = class_manager_generated + "_tmp" + ".cpp"
 
         register_macros = []
         for _, class_def in class_map.items():
-            register_macros += "REGISTER_CLASS_BY_NAME("+class_def.class_name+")\n"
+            register_macros.append("REGISTER_CLASS_BY_NAME("+class_def.class_name+")\n")
 
         includes = []
+        includes.append("#include \"code/Core/Module.hpp\"\n")
         for _, class_def in class_map.items():
-            includes += "#include \""+class_def.include+"\"\n"
+            new_include = "#include \""+class_def.include+"\"\n"
+            if not new_include in includes:
+                includes.append(new_include)
 
         # if core code, keep data 
         if keyFolder == keyFolder_code:
@@ -54,22 +60,19 @@ def generateClassesRegister(projectDir, generated_code_dirname):
 
             pathlib.Path(folder).mkdir(parents=True, exist_ok=True)
 
-            with open(class_manager_generated_class_tmp, "w") as file:
+            classManagerName = "ModuleClassesRegister"
 
-                classManagerName = "ModuleClassesRegister"
+            with open(class_manager_generated_class_source_tmp, "w") as file:
 
-                file.write("#pragma once\n")
-                
                 # code dependencies
                 for line in includes_code:
                     file.write(line)
                 for line in includes:
                     file.write(line)
 
-                file.write("class " + classManagerName +"\n")
-                file.write("{\n")
-                file.write("public:\n")
-                file.write(classManagerName +"()\n")
+                file.write("#include \"generated.hpp\"\n")
+                
+                file.write(classManagerName + "::" +classManagerName +"()\n")
                 file.write("{\n")
 
                 # code dependencies
@@ -79,21 +82,23 @@ def generateClassesRegister(projectDir, generated_code_dirname):
                     file.write(line)
 
                 file.write("}\n")
+                file.write("\n")
+
+            with open(class_manager_generated_class_header_tmp, "w") as file:
+
+                file.write("#pragma once\n")
+                
+                file.write("class " + classManagerName +"\n")
+                file.write("{\n")
+                file.write("public:\n")
+                file.write(classManagerName +"();\n")
                 file.write("};\n")
                 file.write("\n")
 
-            overwrite = True
-            if os.path.isfile(class_manager_generated_class) and os.path.isfile(class_manager_generated_class_tmp):
-                if filecmp.cmp(class_manager_generated_class, class_manager_generated_class_tmp, shallow=False):
-                    print(class_manager_generated + " have no changes!")
-                    overwrite = False
+            overwriteFileIfChanges(class_manager_generated_class_header_tmp, class_manager_generated_class_header)
+            overwriteFileIfChanges(class_manager_generated_class_source_tmp, class_manager_generated_class_source)
 
-            if overwrite:
-                print(class_manager_generated + " have changes!")
-                if keyFolder != keyFolder_code:
-                    shutil.copyfile(class_manager_generated_class_tmp, class_manager_generated_class)
-
-            os.remove(class_manager_generated_class_tmp)
-            
+            os.remove(class_manager_generated_class_header_tmp)
+            os.remove(class_manager_generated_class_source_tmp)
     
     os.chdir(projectDir)

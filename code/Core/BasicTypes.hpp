@@ -4,6 +4,10 @@
 #include <cstring>
 #include <cmath> /* ceil, max */
 #include <limits>
+#include <string>
+#include <string_view>
+
+using namespace std::literals;
 
 #include <vector>
 #include <span>
@@ -12,13 +16,15 @@
 #include <map>
 #include <unordered_map>
 #include <set>
-#include <string>
 
 #include <iostream>
 #include <fstream>
 #include <regex>
 #include <filesystem>
+
 #include <type_traits>
+#include <typeinfo>
+#include <typeindex>
 
 #include <functional>
 #include <tuple>

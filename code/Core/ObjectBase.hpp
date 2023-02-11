@@ -4,6 +4,7 @@
 #include "Core/Macros.hpp"
 #include "Core/Serialization.hpp"
 #include "Core/Pointers.hpp"
+#include "Core/ClassManager.hpp"
 
 class ObjectBase: public ObjectMeta, public ISerializable, public std::enable_shared_from_this<ObjectBase>
 {
@@ -28,16 +29,11 @@ public:
 	{
 		return mObjectId;
 	}
-
-	virtual u64 getHash() const
-	{
-		return std::hash<ObjectId>()(mObjectId * 33) + Hash::hashString(getClassNameStatic());
-	}
-
+    
 	// Assignment
 	DECLARE_COPY(ObjectBase)
 	{
-
+        // empty to avoid copying mObjectId
 	}
 
 private:

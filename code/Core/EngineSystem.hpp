@@ -37,12 +37,29 @@ private:
     std::set<ClassId> mAcceptedEngineSystemComponentClasses;
 };
 
+#define GET_ENGINE_SYSTEM(...) \
+    EngineSystemsManager::getInstance().getEngineSystem<__VA_ARGS__>().get()
+
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
 {
 public:
     void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component);
     void registerEngineSystem(Ptr<IEngineSystem> engineSystem);
+    template<typename T>
+    Ptr<T> getEngineSystem() const
+    {
+        if constexpr (IS_BASE_OF(IEngineSystem, T))
+        {
+            Ptr<T>::cast(mEngineSystems.at(T::getClassIdStatic()));
+        }
+        else
+        {
+            ASSERT_MSG(false, "Class is not an IEngineSystem!");
+        }
+
+        return Ptr<T>();
+    }
 
 private:
-    std::list<Ptr<IEngineSystem>> mEngineSystems;
+    std::unordered_map<ClassId, Ptr<IEngineSystem>> mEngineSystems;
 };

@@ -8,7 +8,8 @@
                 "${workspaceFolder}/code",
                 "${workspaceFolder}/test",
                 "${workspaceFolder}/tools",
-                "${workspaceFolder}/tools/**"
+                "${workspaceFolder}/tools/**",
+                "${workspaceFolder}/generated-code"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",

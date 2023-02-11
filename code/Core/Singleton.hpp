@@ -10,14 +10,19 @@ public:
 	Singleton() = default;
 	~Singleton() = default;
 
-	static T& getInstance()
+	static Ptr<T> getInstancePtr()
 	{
 		if (!mInstance.isValid())
 		{
 			mInstance = OwnerPtr<T>::newObject();
 		}
 
-		return mInstance.get();
+		return mInstance;
+	}
+
+	static T& getInstance()
+	{
+		return getInstancePtr().get();
 	}
 
 	static void deleteInstance()

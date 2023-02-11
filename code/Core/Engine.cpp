@@ -28,6 +28,8 @@ void Engine::init()
 	ScenesManager::getInstance().init();
 
 	CommandLine::getInstance().init();
+
+    // REGISTER_ENGINE_SYSTEM(Ptr<IEngineSystem>::cast(RenderEngine::getInstancePtr()));
 }
 
 void Engine::initEngineSystems()
@@ -40,7 +42,8 @@ void Engine::initEngineSystems()
 void Engine::terminateSubSystems()
 {
 	ScriptEngine::getInstance().terminate();
-	RenderEngine::getInstance().terminate();
+	//RenderEngine::getInstance().terminate();
+    // GET_ENGINE_SYSTEM(RenderEngine).terminate();
 
 	TimerManager::getInstance().terminate();
 }

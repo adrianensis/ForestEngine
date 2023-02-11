@@ -15,28 +15,12 @@ namespace Hash
 // Metadata for base object
 class ObjectMeta
 {
+private:
+    GENERATE_METADATA_BASE(ObjectMeta)
+public:
+    DECLARE_METADATA_METHODS(virtual, NONE(0), ObjectMeta)
 public:
 	ObjectMeta() { };
-
-	static std::string getClassNameStatic()
-	{
-		return smClassName;
-	}
-
-	static ClassId getClassIdStatic()
-	{
-		return smClassId;
-	}
-
-	virtual ClassId getClassId() const
-	{
-		return ObjectMeta::getClassIdStatic();
-	}
-
-	virtual std::string getClassName() const
-	{
-		return ObjectMeta::getClassNameStatic();
-	}
 
 	template <class T>
 	bool isDerivedClass() const
@@ -54,8 +38,4 @@ public:
 	{
 		return this->getClassId() == object->getClassId();
 	}
-
-private:
-	inline static std::string smClassName = "ObjectMeta";
-	inline static ClassId smClassId = Hash::hashString(smClassName);
 };

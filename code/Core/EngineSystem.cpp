@@ -27,9 +27,9 @@ void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent
     {
         ClassId componentClassId = component.get().getClassId();
         bool added = false;
-        FOR_LIST_COND(itEngineSystem, mEngineSystems, !added)
+        FOR_MAP(itEngineSystem, mEngineSystems)
         {
-            Ptr<IEngineSystem> sub = (*itEngineSystem);
+            Ptr<IEngineSystem> sub = (itEngineSystem->second);
             if (sub.get().isComponentClassAccepted(componentClassId))
             {
                 sub.get().addComponent(component);
@@ -41,8 +41,8 @@ void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent
 
 void EngineSystemsManager::registerEngineSystem(Ptr<IEngineSystem> engineSystem)
 {
-    if(!CONTAINS(mEngineSystems, engineSystem))
+    if(!MAP_CONTAINS(mEngineSystems, engineSystem.get().getClassId()))
     {
-        mEngineSystems.push_back(engineSystem);
+        MAP_INSERT(mEngineSystems, engineSystem.get().getClassId(), engineSystem);
     }
 }

@@ -37,38 +37,28 @@
 		return Ptr<const __VA_ARGS__>(std::static_pointer_cast<const __VA_ARGS__>(shared_from_this()));  \
 	}
 
+/*
+    NOTE: tagging methods as virtual here: virtual ClassId getClassId()
+    may cause "struct"-like classes to become virtual and require a virtual destructor
+    which completely obliterates the engine. Related with virtual destructors.
+*/
 
-#define DECLARE_METADATA_METHODS(Override, ...) \
-	static ClassId getClassIdStatic()                                             \
-	{                                                                             \
-		return smClassId;                                                         \
-	};                                                                            \
-																				\
-	ClassId getClassId() const Override                                           \
-	{                                                                             \
-		return __VA_ARGS__::getClassIdStatic();                                   \
-	};                                                                            \
-																				\
-	static std::string getClassNameStatic()                                       \
-	{                                                                             \
-		return smClassName;                                                       \
-	};                                                                            \
-																				\
-	std::string getClassName() const Override                                     \
-	{                                                                             \
-		return __VA_ARGS__::getClassNameStatic();                                 \
-	};
+#define DECLARE_METADATA_METHODS(Virtual, Override, ...) \
+	static ClassId getClassIdStatic() { return smClassId; }; \
+    static const std::string& getClassNameStatic() { return smClassName; }; \
+	Virtual ClassId getClassId() const Override { return ThisClass::getClassIdStatic(); }; \
+	Virtual const std::string& getClassName() const Override { return ThisClass::getClassNameStatic(); };
 
 #define GENERATE_METADATA_BASE(...)                                    \
     private:                                                               \
         using ThisClass = __VA_ARGS__;                                     \
-        inline static std::string smClassName = std::string(#__VA_ARGS__); \
-        inline static ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName);
+        inline static const std::string smClassName = std::string(#__VA_ARGS__); \
+        inline static const ClassId smClassId = Hash::hashString(__VA_ARGS__::smClassName);
 
 #define GENERATE_METADATA(...)                      \
         GENERATE_METADATA_BASE(__VA_ARGS__)             \
     public:                                             \
-        DECLARE_METADATA_METHODS(override, __VA_ARGS__) \
+        DECLARE_METADATA_METHODS(NONE(0), override, __VA_ARGS__) \
     private:                                            \
         DECLARE_GET_PTR_THIS(__VA_ARGS__)               \
     private: // NOTE: notice the last blank space " "
@@ -76,8 +66,14 @@
 #define GENERATE_METADATA_STRUCT(...)              \
         GENERATE_METADATA_BASE(__VA_ARGS__)            \
     public:                                            \
-        DECLARE_METADATA_METHODS(NONE(0), __VA_ARGS__) \
+        DECLARE_METADATA_METHODS(NONE(0), NONE(0), __VA_ARGS__) \
     private: // NOTE: notice the last blank space " "
+
+#define REGISTER_CLASS_BY_NAME(...) \
+    ClassRegister classRegister_##__VA_ARGS__ {__VA_ARGS__::getClassNameStatic(), [](){ \
+        if constexpr (std::is_abstract_v<__VA_ARGS__>) { return nullptr; } \
+        else { return Memory::newObject<__VA_ARGS__>(); } \
+    }};
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
