@@ -42,7 +42,7 @@ void Engine::initEngineSystems()
 void Engine::terminateSubSystems()
 {
 	ScriptEngine::getInstance().terminate();
-	//RenderEngine::getInstance().terminate();
+	RenderEngine::getInstance().terminate();
     // GET_ENGINE_SYSTEM(RenderEngine).terminate();
 
 	TimerManager::getInstance().terminate();
