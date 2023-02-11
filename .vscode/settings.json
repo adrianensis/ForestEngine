@@ -78,7 +78,9 @@
         "pngpriv.h": "c",
         "*.def": "cpp",
         "hash_set": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "codecvt": "cpp",
+        "typeindex": "cpp"
     },
 
     "C_Cpp.intelliSenseEngine" : "default"
