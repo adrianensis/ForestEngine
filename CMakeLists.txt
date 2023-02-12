@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
 # project name
 set(PROJECTNAME forest)
-project(${PROJECTNAME} LANGUAGES CXX)
+project(${PROJECTNAME} LANGUAGES CXX C)
 
 # ----------------------------------------------------------------------------
 # FUNCTIONS
@@ -16,27 +16,26 @@ function(build_programs path prefix)
   
   message("BUILD PROGRAMS (${prefix}): " ${path})
 
-  file(GLOB PROGRAM_PATHS ${path})
+  file(GLOB PROGRAM_PATHS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${path}/*")
+
+  message("${PROGRAM_PATHS}")
 
   foreach(PROGRAM_PATH ${PROGRAM_PATHS})
 
-    file(GLOB_RECURSE PROGRAM_SOURCES "${PROGRAM_PATH}/*.cpp" "${PROGRAM_PATH}/*.hpp")
+    file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp" "${PROGRAM_PATH}/*.hpp")
+    file(GLOB_RECURSE GENERATED_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${GENERATED_CODE_FOLDER}/${PROGRAM_PATH}/*.cpp" "${GENERATED_CODE_FOLDER}/${PROGRAM_PATH}/*.hpp")
 
     include_directories("${PROGRAM_PATH}")
 
     get_filename_component(PROGRAM_NAME ${PROGRAM_PATH} NAME_WE) # NAME_WE = name with extension
 
     set(PROGRAM_FINAL_NAME "${prefix}_${PROGRAM_NAME}" )
-    add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES} )
-    target_link_libraries( ${PROGRAM_FINAL_NAME} ${FOREST})
+    add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES} ${GENERATED_SOURCES} )
+    target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
     install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
   endforeach()
 endfunction()
-
-# project name
-set(FOREST forest)
-project(${FOREST})
 
 # ----------------------------------------------------------------------------
 # CPP CONFIG
@@ -73,6 +72,7 @@ endif(WIN32)
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/compiledLibs")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/binaries")
+set(GENERATED_CODE_FOLDER "generated-code")
 
 # ----------------------------------------------------------------------------
 
@@ -214,7 +214,7 @@ include_directories("code")
 
 # needed for generated code
 include_directories(".")
-include_directories("generated-code")
+include_directories("${GENERATED_CODE_FOLDER}")
 # include_directories("generated-code/code")
 #include_directories("generated-code/final")
 #include_directories("generated-code/final/code")
@@ -249,39 +249,39 @@ endforeach()
 # ----------------------------------------------------------------------------
 
 # single library
-add_library(${FOREST} ${OBJS} ${GLAD_SOURCE})
+add_library(${PROJECTNAME} ${OBJS} ${GLAD_SOURCE})
 
 # ----------------------------------------------------------------------------
 # LINK LIBRARIES
 # ----------------------------------------------------------------------------
 
 # link libraries with forest library
-target_link_libraries(${FOREST} ${OPENGL_gl_LIBRARY})
-target_link_libraries(${FOREST} ${OPENGL_glu_LIBRARY})
-target_link_libraries(${FOREST} glfw)
-target_link_libraries(${FOREST} nlohmann_json)
-target_link_libraries(${FOREST} libpng.so)
-target_link_libraries(${FOREST} ${ASSIMP_LIBRARY})
-target_link_libraries(${FOREST} ${ZLIB_LIBRARY} )
-target_link_libraries(${FOREST} easy_profiler)
+target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
+target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
+target_link_libraries(${PROJECTNAME} glfw)
+target_link_libraries(${PROJECTNAME} nlohmann_json)
+target_link_libraries(${PROJECTNAME} libpng.so)
+target_link_libraries(${PROJECTNAME} ${ASSIMP_LIBRARY})
+target_link_libraries(${PROJECTNAME} ${ZLIB_LIBRARY} )
+target_link_libraries(${PROJECTNAME} easy_profiler)
 
-#target_link_libraries(${FOREST} ${FREETYPE_LIBRARIES})
-#target_include_directories(${FOREST} PRIVATE ${FREETYPE_INCLUDE_DIRS})
-#target_link_libraries( ${FOREST} ${Python3_LIBRARIES})
+#target_link_libraries(${PROJECTNAME} ${FREETYPE_LIBRARIES})
+#target_include_directories(${PROJECTNAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
+#target_link_libraries( ${PROJECTNAME} ${Python3_LIBRARIES})
 
 # SOIL
-#target_link_libraries( ${FOREST} SOIL )
+#target_link_libraries( ${PROJECTNAME} SOIL )
 
 # ----------------------------------------------------------------------------
 # TESTS
 # ----------------------------------------------------------------------------
 
 if(BUILD_UNIT_TESTS)
-  build_programs("test/unit/*" "test_unit")
+  build_programs("test/unit" "test_unit")
 endif(BUILD_UNIT_TESTS)
 
 if(BUILD_INTEGRATION_TESTS)
-  build_programs("test/integration/*" "test_integration")
+  build_programs("test/integration" "test_integration")
 endif(BUILD_INTEGRATION_TESTS)
 
 # ----------------------------------------------------------------------------
@@ -289,10 +289,10 @@ endif(BUILD_INTEGRATION_TESTS)
 # ----------------------------------------------------------------------------
 
 if(BUILD_TOOLS)
-  build_programs("tools/*" "tool")
+  build_programs("tools" "tool")
 endif(BUILD_TOOLS)
 # ----------------------------------------------------------------------------
 # GAMES
 # ----------------------------------------------------------------------------
 
-build_programs("games/*" "games")
+build_programs("games" "games")

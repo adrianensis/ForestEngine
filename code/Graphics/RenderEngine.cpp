@@ -15,7 +15,7 @@ void RenderEngine::init(f32 sceneSize)
 {
 	TRACE()
 
-	IEngineSystem::init();
+	EngineSystem::init();
 
 	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Renderer)
 
@@ -79,9 +79,9 @@ void RenderEngine::terminate()
 	mChunks.clear();
 }
 
-void RenderEngine::addComponent(Ptr<IEngineSystemComponent> component)
+void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 {
-	IEngineSystem::addComponent(component);
+	EngineSystem::addComponent(component);
 
 	if(component.get().getClassId() == Renderer::getClassIdStatic())
 	{

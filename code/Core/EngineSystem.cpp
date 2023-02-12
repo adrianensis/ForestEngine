@@ -1,27 +1,27 @@
 #include "Core/EngineSystem.hpp"
 
 
-void IEngineSystem::registerComponentClass(ClassId classId)
+void EngineSystem::registerComponentClass(ClassId classId)
 {
     mAcceptedEngineSystemComponentClasses.insert(classId);
 }
 
-bool IEngineSystem::isComponentClassAccepted(ClassId classId)
+bool EngineSystem::isComponentClassAccepted(ClassId classId)
 {
     return mAcceptedEngineSystemComponentClasses.find(classId) != mAcceptedEngineSystemComponentClasses.end();
 }
 
-void IEngineSystem::init()
+void EngineSystem::init()
 {
     REGISTER_ENGINE_SYSTEM(getPtrToThis());
 }
 
-void IEngineSystem::addComponent(Ptr<IEngineSystemComponent> component)
+void EngineSystem::addComponent(Ptr<EngineSystemComponent> component)
 {
     component.get().setAlreadyAddedToEngine(true);
 }
 
-void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent> component)
+void EngineSystemsManager::addComponentToEngineSystem(Ptr<EngineSystemComponent> component)
 {
     if (component and !component.get().getAlreadyAddedToEngine())
     {
@@ -29,7 +29,7 @@ void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent
         bool added = false;
         FOR_MAP(itEngineSystem, mEngineSystems)
         {
-            Ptr<IEngineSystem> sub = (itEngineSystem->second);
+            Ptr<EngineSystem> sub = (itEngineSystem->second);
             if (sub.get().isComponentClassAccepted(componentClassId))
             {
                 sub.get().addComponent(component);
@@ -39,10 +39,12 @@ void EngineSystemsManager::addComponentToEngineSystem(Ptr<IEngineSystemComponent
     }
 }
 
-void EngineSystemsManager::registerEngineSystem(Ptr<IEngineSystem> engineSystem)
+void EngineSystemsManager::registerEngineSystem(Ptr<EngineSystem> engineSystem)
 {
-    if(!MAP_CONTAINS(mEngineSystems, engineSystem.get().getClassId()))
+    std::string_view className = engineSystem.get().getClassName();
+    ClassId classId = engineSystem.get().getClassId();
+    if(!MAP_CONTAINS(mEngineSystems, classId))
     {
-        MAP_INSERT(mEngineSystems, engineSystem.get().getClassId(), engineSystem);
+        MAP_INSERT(mEngineSystems, classId, engineSystem);
     }
 }

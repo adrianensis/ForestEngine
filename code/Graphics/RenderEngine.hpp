@@ -8,7 +8,7 @@
 #include "Graphics/Batch/Chunk.hpp"
 
 
-class RenderEngine : public IEngineSystem, public Singleton<RenderEngine>
+class RenderEngine : public EngineSystem, public Singleton<RenderEngine>
 {
 	GENERATE_METADATA(RenderEngine)
 
@@ -17,7 +17,7 @@ public:
     bool frustumTestSphere(const Vector3& center, f32 radius);
     void update();
     void terminate();
-    void addComponent(Ptr<IEngineSystemComponent> component);
+    void addComponent(Ptr<EngineSystemComponent> component);
     Ptr<Chunk> assignChunk(Ptr<Renderer> renderer);
     void assignBatch(Ptr<Renderer> renderer);
     void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));

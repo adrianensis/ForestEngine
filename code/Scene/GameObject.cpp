@@ -34,7 +34,7 @@ void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
 	component.get().mGameObject = getPtrToThis();
 	component.get().onComponentAdded();
 
-	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<IEngineSystemComponent>::cast(component));
+	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<EngineSystemComponent>::cast(component));
 }
 
 void GameObject::removeComponent(Ptr<Component> component, ClassId classId)

@@ -6,14 +6,14 @@ void ScriptEngine::init()
 {
 	TRACE()
 
-    IEngineSystem::init();
+    EngineSystem::init();
 
 	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Script);
 
 	mController = ScenesManager::getInstance().getGameObjectController().get().getFirstComponent<Script>();
 }
 
-void ScriptEngine::addComponent(Ptr<IEngineSystemComponent> component)
+void ScriptEngine::addComponent(Ptr<EngineSystemComponent> component)
 {
 	if(component.get().getClassId() == Script::getClassIdStatic())
 	{

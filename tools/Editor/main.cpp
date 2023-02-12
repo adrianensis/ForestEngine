@@ -10,6 +10,7 @@
 
 int main()
 {
+    ModuleClassesRegister moduleClassesRegister;
     Engine::getInstance().init();
 
     OwnerPtr<GameObject> controller = OwnerPtr<GameObject>::newObject();

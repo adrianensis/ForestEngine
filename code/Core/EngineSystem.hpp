@@ -13,9 +13,9 @@
 #define ADD_COMPONENT_TO_ENGINE_SYSTEM(engineSystemComponent) \
     EngineSystemsManager::getInstance().addComponentToEngineSystem(engineSystemComponent);
 
-class IEngineSystemComponent: public ObjectBase
+class EngineSystemComponent: public ObjectBase
 {
-    GENERATE_METADATA(IEngineSystemComponent)
+    GENERATE_METADATA(EngineSystemComponent)
 
 private:
     bool mAlreadyAddedToEngine = false;
@@ -23,15 +23,15 @@ public:
 	GET_SET(AlreadyAddedToEngine)
 };
 
-class IEngineSystem: public ObjectBase
+class EngineSystem: public ObjectBase
 {
-    GENERATE_METADATA(IEngineSystem)
+    GENERATE_METADATA(EngineSystem)
 
 public:
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);
     virtual void init();
-    virtual void addComponent(Ptr<IEngineSystemComponent> component);
+    virtual void addComponent(Ptr<EngineSystemComponent> component);
 
 private:
     std::set<ClassId> mAcceptedEngineSystemComponentClasses;
@@ -43,23 +43,23 @@ private:
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
 {
 public:
-    void addComponentToEngineSystem(Ptr<IEngineSystemComponent> component);
-    void registerEngineSystem(Ptr<IEngineSystem> engineSystem);
+    void addComponentToEngineSystem(Ptr<EngineSystemComponent> component);
+    void registerEngineSystem(Ptr<EngineSystem> engineSystem);
     template<typename T>
     Ptr<T> getEngineSystem() const
     {
-        if constexpr (IS_BASE_OF(IEngineSystem, T))
+        if constexpr (IS_BASE_OF(EngineSystem, T))
         {
-            Ptr<T>::cast(mEngineSystems.at(T::getClassIdStatic()));
+            return Ptr<T>::cast(mEngineSystems.at(T::getClassIdStatic()));
         }
         else
         {
-            ASSERT_MSG(false, "Class is not an IEngineSystem!");
+            ASSERT_MSG(false, "Class is not an EngineSystem!");
         }
 
         return Ptr<T>();
     }
 
 private:
-    std::unordered_map<ClassId, Ptr<IEngineSystem>> mEngineSystems;
+    std::unordered_map<ClassId, Ptr<EngineSystem>> mEngineSystems;
 };
