@@ -48,8 +48,8 @@ void ShapeBatchRenderer::render()
 		RenderContext::enableProperty(0);
 		RenderContext::enableProperty(1);
 
-		const Matrix4& projectionMatrix = RenderEngine::getInstance().mCamera.get().mProjectionMatrix;
-		const Matrix4& viewMatrix = RenderEngine::getInstance().mCamera.get().mViewMatrix;
+		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mProjectionMatrix;
+		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mViewMatrix;
 
 		mShaderLine.get().addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 		mShaderLine.get().addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");

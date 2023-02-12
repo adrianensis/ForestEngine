@@ -7,9 +7,6 @@
 #define REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(...) \
     registerComponentClass(__VA_ARGS__::getClassIdStatic());
 
-#define REGISTER_ENGINE_SYSTEM(engineSystem) \
-    EngineSystemsManager::getInstance().registerEngineSystem(engineSystem);
-
 #define ADD_COMPONENT_TO_ENGINE_SYSTEM(engineSystemComponent) \
     EngineSystemsManager::getInstance().addComponentToEngineSystem(engineSystemComponent);
 
@@ -17,10 +14,8 @@ class EngineSystemComponent: public ObjectBase
 {
     GENERATE_METADATA(EngineSystemComponent)
 
-private:
-    bool mAlreadyAddedToEngine = false;
 public:
-	GET_SET(AlreadyAddedToEngine)
+    bool mAlreadyAddedToEngine = false;
 };
 
 class EngineSystem: public ObjectBase
@@ -30,21 +25,34 @@ class EngineSystem: public ObjectBase
 public:
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);
-    virtual void init();
     virtual void addComponent(Ptr<EngineSystemComponent> component);
 
 private:
     std::set<ClassId> mAcceptedEngineSystemComponentClasses;
 };
 
-#define GET_ENGINE_SYSTEM(...) \
+#define GET_SYSTEM(...) \
     EngineSystemsManager::getInstance().getEngineSystem<__VA_ARGS__>().get()
 
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
 {
 public:
     void addComponentToEngineSystem(Ptr<EngineSystemComponent> component);
-    void registerEngineSystem(Ptr<EngineSystem> engineSystem);
+
+    template<typename T>
+    void createEngineSystem()
+    {
+        if constexpr (IS_BASE_OF(EngineSystem, T))
+        {
+            OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
+            MAP_INSERT(mEngineSystems, T::getClassIdStatic(), Ptr<EngineSystem>::cast(newEngineSystem));
+        }
+        else
+        {
+            ASSERT_MSG(false, "Class is not an EngineSystem!");
+        }
+    }
+
     template<typename T>
     Ptr<T> getEngineSystem() const
     {
@@ -60,6 +68,19 @@ public:
         return Ptr<T>();
     }
 
+    template<typename T>
+    void removeEngineSystem()
+    {
+        if constexpr (IS_BASE_OF(EngineSystem, T))
+        {
+            mEngineSystems.erase(T::getClassIdStatic());
+        }
+        else
+        {
+            ASSERT_MSG(false, "Class is not an EngineSystem!");
+        }
+    }
+
 private:
-    std::unordered_map<ClassId, Ptr<EngineSystem>> mEngineSystems;
+    std::unordered_map<ClassId, OwnerPtr<EngineSystem>> mEngineSystems;
 };

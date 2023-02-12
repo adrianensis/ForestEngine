@@ -15,8 +15,6 @@ void RenderEngine::init(f32 sceneSize)
 {
 	TRACE()
 
-	EngineSystem::init();
-
 	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Renderer)
 
 	mCameraDirtyTranslation = true;

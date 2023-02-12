@@ -29,21 +29,24 @@ void Engine::init()
 
 	CommandLine::getInstance().init();
 
+    EngineSystemsManager::getInstance().createEngineSystem<RenderEngine>();
+    EngineSystemsManager::getInstance().createEngineSystem<ScriptEngine>();
+
     //REGISTER_ENGINE_SYSTEM(Ptr<EngineSystem>::cast(RenderEngine::getInstancePtr()));
 }
 
 void Engine::initEngineSystems()
 {
 	f32 sceneSize = ScenesManager::getInstance().getCurrentScene().get().getSize();
-	RenderEngine::getInstance().init(sceneSize);
-	ScriptEngine::getInstance().init();
+	GET_SYSTEM(RenderEngine).init(sceneSize);
+	GET_SYSTEM(ScriptEngine).init();
 }
 
 void Engine::terminateSubSystems()
 {
-	ScriptEngine::getInstance().terminate();
-	RenderEngine::getInstance().terminate();
-    //GET_ENGINE_SYSTEM(RenderEngine).terminate();
+	GET_SYSTEM(ScriptEngine).terminate();
+	GET_SYSTEM(RenderEngine).terminate();
+    //GET_SYSTEM(RenderEngine).terminate();
 
 	TimerManager::getInstance().terminate();
 }
@@ -74,8 +77,8 @@ void Engine::run()
 
 		ScenesManager::getInstance().update();
 		TimerManager::getInstance().update();
-		ScriptEngine::getInstance().update();
-		RenderEngine::getInstance().update();
+		GET_SYSTEM(ScriptEngine).update();
+		GET_SYSTEM(RenderEngine).update();
 
 		f32 dtMillis = Time::getInstance().getElapsedTimeMillis();
 		
@@ -114,7 +117,7 @@ void Engine::terminate()
 	MeshPrimitives::getInstance().deleteInstance();
 
 	ScriptEngine::deleteInstance();
-	RenderEngine::deleteInstance();
+    EngineSystemsManager::getInstance().removeEngineSystem<RenderEngine>();
 	EventsManager::getInstance().terminate();
 	EventsManager::deleteInstance();
 	TimerManager::deleteInstance();

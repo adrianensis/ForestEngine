@@ -93,7 +93,7 @@ void Batch::processRenderers()
 		{
 			/*Transform* transform = renderer->mGameObject.get().mTransform;
 			const Vector3& position = transform->getWorldPosition();
-			f32 distanceToCamera = position.dst(RenderEngine::getInstance().getCamera()->mGameObject.get().mTransform.get().getWorldPosition());
+			f32 distanceToCamera = position.dst(GET_SYSTEM(RenderEngine).getCamera()->mGameObject.get().mTransform.get().getWorldPosition());
 			if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 			
 			addToVertexBuffer(renderer);

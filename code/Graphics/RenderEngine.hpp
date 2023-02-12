@@ -8,7 +8,7 @@
 #include "Graphics/Batch/Chunk.hpp"
 
 
-class RenderEngine : public EngineSystem, public Singleton<RenderEngine>
+class RenderEngine : public EngineSystem
 {
 	GENERATE_METADATA(RenderEngine)
 

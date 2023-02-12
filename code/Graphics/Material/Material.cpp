@@ -25,7 +25,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced) const
         mTextures[(u32)TextureType::DIFFUSE].get().bind();
 	}
 
-	Ptr<Camera> camera = RenderEngine::getInstance().mCamera;
+	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
 
 	const Matrix4& projectionMatrix = camera.get().mProjectionMatrix;
 	const Matrix4& viewMatrix = camera.get().mViewMatrix;

@@ -73,7 +73,7 @@ void ScenesManager::internalLoadScene()
 	}
 
 	mGameObjectController.get().mScene = (mCurrentScene);
-	RenderEngine::getInstance().mCamera = (mCurrentScene.get().getCameraGameObject().get().getFirstComponent<Camera>());
+	GET_SYSTEM(RenderEngine).mCamera = (mCurrentScene.get().getCameraGameObject().get().getFirstComponent<Camera>());
 }
 
 void ScenesManager::addScene(OwnerPtr<Scene> newScene)

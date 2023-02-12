@@ -198,15 +198,15 @@ void SkeletonState::readNodeHierarchy(f32 animationTimeTicks, const aiNode* pNod
 
     // Vector3 cubeTopLeft(0,0,0);
     // cubeTopLeft = globalTransformation.mulVector(Vector4(cubeTopLeft, 1));
-    // RenderEngine::getInstance().drawCube(Cube(cubeTopLeft,Vector3(0.1f,0.1f,0.1f)), 1, true, Vector4(0.5f,0.5f,0,1));
+    // GET_SYSTEM(RenderEngine).drawCube(Cube(cubeTopLeft,Vector3(0.1f,0.1f,0.1f)), 1, true, Vector4(0.5f,0.5f,0,1));
 
 
     // Vector3 parentPosition(0,0,0);
     // parentPosition = parentTransform.mulVector(Vector4(parentPosition, 1));
     
-    // RenderEngine::getInstance().drawLine(Line(parentPosition, cubeTopLeft), 1, true, Vector4(0.5f,0.5f,0,1));
+    // GET_SYSTEM(RenderEngine).drawLine(Line(parentPosition, cubeTopLeft), 1, true, Vector4(0.5f,0.5f,0,1));
 
-    // RenderEngine::getInstance().drawCube(Cube(Vector3(0,0,0),Vector3(1,1,1)), 1, true, Vector4(1.0f,0.5f,0,1));
+    // GET_SYSTEM(RenderEngine).drawCube(Cube(Vector3(0,0,0),Vector3(1,1,1)), 1, true, Vector4(1.0f,0.5f,0,1));
 
     for (u32 i = 0 ; i < pNode->mNumChildren ; i++)
     {

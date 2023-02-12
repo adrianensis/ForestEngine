@@ -11,19 +11,14 @@ bool EngineSystem::isComponentClassAccepted(ClassId classId)
     return mAcceptedEngineSystemComponentClasses.find(classId) != mAcceptedEngineSystemComponentClasses.end();
 }
 
-void EngineSystem::init()
-{
-    REGISTER_ENGINE_SYSTEM(getPtrToThis());
-}
-
 void EngineSystem::addComponent(Ptr<EngineSystemComponent> component)
 {
-    component.get().setAlreadyAddedToEngine(true);
+    component.get().mAlreadyAddedToEngine = true;
 }
 
 void EngineSystemsManager::addComponentToEngineSystem(Ptr<EngineSystemComponent> component)
 {
-    if (component and !component.get().getAlreadyAddedToEngine())
+    if (component and !component.get().mAlreadyAddedToEngine)
     {
         ClassId componentClassId = component.get().getClassId();
         bool added = false;
@@ -36,15 +31,5 @@ void EngineSystemsManager::addComponentToEngineSystem(Ptr<EngineSystemComponent>
                 added = true;
             }
         }
-    }
-}
-
-void EngineSystemsManager::registerEngineSystem(Ptr<EngineSystem> engineSystem)
-{
-    std::string_view className = engineSystem.get().getClassName();
-    ClassId classId = engineSystem.get().getClassId();
-    if(!MAP_CONTAINS(mEngineSystems, classId))
-    {
-        MAP_INSERT(mEngineSystems, classId, engineSystem);
     }
 }

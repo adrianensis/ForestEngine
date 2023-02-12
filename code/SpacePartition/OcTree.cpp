@@ -122,12 +122,12 @@ else
 void OcTree::OcTreeNode::update(/*contactManager*/)
 {
 	// DEBUG DRAW
-	//RenderEngine::getInstance().drawCube(mCube);
+	//GET_SYSTEM(RenderEngine).drawCube(mCube);
 
 	// If is leaf node.
 	if (isLeaf())
 	{
-		//RenderEngine::getInstance().drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
+		//GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
 		//ECHO("LEAF")
 	}
 	else

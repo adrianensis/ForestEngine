@@ -33,7 +33,7 @@ void Chunk::set(const Vector3& leftTop, f32 size)
 
 void Chunk::update()
 {
-	RenderEngine::getInstance().drawCube(mCube);
+	GET_SYSTEM(RenderEngine).drawCube(mCube);
 
 	FOR_LIST(it, mRenderers)
 	{
@@ -47,12 +47,12 @@ void Chunk::update()
             {
                 if (mIsLoaded and !renderer.get().hasValidBatch())
                 {
-                    RenderEngine::getInstance().assignBatch(renderer);
+                    GET_SYSTEM(RenderEngine).assignBatch(renderer);
                 }
 
                 if (!renderer.get().isStatic() and !containsRenderer(renderer))
                 {
-                    Ptr<Chunk> newChunk = RenderEngine::getInstance().assignChunk(renderer);
+                    Ptr<Chunk> newChunk = GET_SYSTEM(RenderEngine).assignChunk(renderer);
 
                     if (newChunk and newChunk != getPtrToThis())
                     {

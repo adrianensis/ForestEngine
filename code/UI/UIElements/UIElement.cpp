@@ -64,7 +64,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 	if(mTransform.get().mAffectedByProjection)
 	{
-		mousePosition = RenderEngine::getInstance().mCamera.get().screenToWorld(Input::getInstance().getMousePosition());
+		mousePosition = GET_SYSTEM(RenderEngine).mCamera.get().screenToWorld(Input::getInstance().getMousePosition());
 	}
 
     Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
