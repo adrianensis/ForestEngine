@@ -5,7 +5,7 @@
 
 void DefaultCommands::registerDefaultCommands()
 {
-CommandLine& cmd = CommandLine::getInstance();
+CommandLine& cmd = GET_SYSTEM(CommandLine);
 
 cmd.registerCommand("echo", [](const Command& command)
 {

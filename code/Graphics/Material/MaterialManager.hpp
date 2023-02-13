@@ -6,7 +6,7 @@
 class Material;
 class Texture;
 
-class MaterialManager: public ObjectBase, public Singleton<MaterialManager>
+class MaterialManager: public EngineSystem
 {
 	GENERATE_METADATA(MaterialManager)
 

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Config/ConfigObject.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/EngineSystem.hpp"
 
-class EngineConfig: public ObjectBase, public Singleton<EngineConfig>
+class EngineConfig: public EngineSystem
 {
 	GENERATE_METADATA(EngineConfig)
 public:

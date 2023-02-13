@@ -123,14 +123,14 @@ void Input::setCursorVisibility(bool visible)
 
 void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	Input::getInstance().smModifier = mods;
+	GET_SYSTEM(Input).smModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			Input::getInstance().smLastKeyPressed = key;
-			Input::getInstance().smKeyJustPressed = true;
+			GET_SYSTEM(Input).smLastKeyPressed = key;
+			GET_SYSTEM(Input).smKeyJustPressed = true;
 
 			switch (key)
 			{
@@ -192,7 +192,7 @@ void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, i
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
 
-			Input::getInstance().clearKey();
+			GET_SYSTEM(Input).clearKey();
 			break;
 		}
 		case GLFW_REPEAT:
@@ -209,14 +209,14 @@ void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, i
 
 void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
-	Input::getInstance().smModifier = mods;
+	GET_SYSTEM(Input).smModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			Input::getInstance().smLastMouseButtonPressed = button;
-			Input::getInstance().smButtonJustPressed = true;
+			GET_SYSTEM(Input).smLastMouseButtonPressed = button;
+			GET_SYSTEM(Input).smButtonJustPressed = true;
 
 			InputEventMouseButtonPressed event;
 			event.mButton = button;
@@ -231,7 +231,7 @@ void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int 
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
 
-			Input::getInstance().clearMouseButton();
+			GET_SYSTEM(Input).clearMouseButton();
 			break;
 		}
 	}
@@ -239,7 +239,7 @@ void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int 
 
 void Input::scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-	Input::getInstance().smScroll = yoffset;
+	GET_SYSTEM(Input).smScroll = yoffset;
 
 	InputEventScroll event;
 	event.mScroll = yoffset;

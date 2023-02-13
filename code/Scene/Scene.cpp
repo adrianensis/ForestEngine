@@ -35,7 +35,7 @@ void Scene::init()
 
 	mCameraGameObject.get().addComponent<Camera>(cameraComponent);
 
-	mSize = EngineConfig::getInstance().getConfig().at("scene").at("defaultSize").get<f32>();
+	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
 
 	mLoadSceneConfig.init();
 }
@@ -67,7 +67,7 @@ void Scene::loadScene(const std::string& path)
 
 	if (mSize == 0)
 	{
-		mSize = EngineConfig::getInstance().getConfig().at("scene").at("defaultSize").get<f32>();
+		mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
 	}
 
 	deserialize(mLoadSceneConfig.getJson());

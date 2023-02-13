@@ -33,7 +33,7 @@ void AnimationState::update()
 {
     mAnimationTime = mAnimation.get().calculateCurrentAnimationTime(mAccumulatedTime);
 
-    f32 dt = Time::getInstance().getDeltaTimeSeconds();
+    f32 dt = GET_SYSTEM(Time).getDeltaTimeSeconds();
     mAccumulatedTime += dt;
 
     // reset accumulatedTime to avoid overflow

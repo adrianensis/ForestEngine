@@ -9,7 +9,7 @@
 class Material;
 class Scene;
 
-class UIManager: public ObjectBase, public Singleton<UIManager>
+class UIManager: public EngineSystem
 {
 	GENERATE_METADATA(UIManager)
 

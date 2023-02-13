@@ -24,7 +24,7 @@ void TimerManager::update()
 	PROFILER_CPU()
 	if (!mTimers.empty())
 	{
-		f32 deltaTime = Time::getInstance().getDeltaTimeSeconds(); // seconds
+		f32 deltaTime = GET_SYSTEM(Time).getDeltaTimeSeconds(); // seconds
 		std::list<Timer *> timers(mTimers);
 
 		for (auto itTimer = timers.begin(); itTimer != timers.end(); ++itTimer)

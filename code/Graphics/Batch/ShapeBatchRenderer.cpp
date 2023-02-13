@@ -21,7 +21,7 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 
 void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 {
-	mMaxShapes = EngineConfig::getInstance().getConfig().at("line").at("count").get<f32>();
+	mMaxShapes = GET_SYSTEM(EngineConfig).getConfig().at("line").at("count").get<f32>();
 
 	mIsWorldSpace = isWorldSpace;
 

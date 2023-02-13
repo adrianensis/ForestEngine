@@ -25,7 +25,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
     renderer.get().init();
 
-    renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
+    renderer.get().mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
     renderer.get().mMaterial = (mConfig.mMaterial);
     renderer.get().mColor = (mConfig.mStyle->mBackgroundColor);
     renderer.get().mUseDepth = (true);

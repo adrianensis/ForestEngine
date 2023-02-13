@@ -39,7 +39,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced) const
 	mShader.get().addBool(mAlphaEnabled, "alphaEnabled");
 	mShader.get().addBool(mHasBorder, "hasBorder");
 
-	mShader.get().addFloat(Time::getInstance().getDeltaTimeSeconds(), "time");
+	mShader.get().addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), "time");
 
 	mShader.get().addVector2(RenderContext::getWindowSize(), "windowSize");
 }

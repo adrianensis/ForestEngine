@@ -34,6 +34,12 @@ private:
 #define GET_SYSTEM(...) \
     EngineSystemsManager::getInstance().getEngineSystem<__VA_ARGS__>().get()
 
+#define CREATE_SYSTEM(...) \
+    EngineSystemsManager::getInstance().createEngineSystem<__VA_ARGS__>();
+
+#define REMOVE_SYSTEM(...) \
+    EngineSystemsManager::getInstance().removeEngineSystem<__VA_ARGS__>();
+
 class EngineSystemsManager : public Singleton<EngineSystemsManager>
 {
 public:

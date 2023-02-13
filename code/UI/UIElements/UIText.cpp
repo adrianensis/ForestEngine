@@ -75,8 +75,8 @@ void UIText::setText(const std::string& text)
 				OwnerPtr<Renderer> renderer;
 
 				char character = text.at(i);
-				Vector2 textureCoordinates = UIManager::getInstance().getCharTextureCoordinates(character);
-				Vector2 textureSize = UIManager::getInstance().getFontTileTextureSize();
+				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
+				Vector2 textureSize = GET_SYSTEM(UIManager).getFontTileTextureSize();
 
 				if (!mFontRenderers.empty() and i < static_cast<i32>(mString.length()))
 				{
@@ -87,8 +87,8 @@ void UIText::setText(const std::string& text)
 					renderer = OwnerPtr<Renderer>::newObject();
 					renderer.get().init();
 
-					renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
-					renderer.get().mMaterial = (UIManager::getInstance().getFontMaterial());
+					renderer.get().mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+					renderer.get().mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
 					renderer.get().mUseDepth = (true);
 					renderer.get().mDepth = (mLayer);
 					renderer.get().mStencilValue = (mConfig.mStencilValue);

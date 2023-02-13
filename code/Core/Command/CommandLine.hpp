@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/ObjectBase.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/EngineSystem.hpp"
 #include "Core/Functor.hpp"
 #include "Core/Command/Command.hpp"
 
@@ -24,7 +24,7 @@ public:
     Command mCommand;
 };
 
-class CommandLine: public ObjectBase, public Singleton<CommandLine>
+class CommandLine: public EngineSystem
 {
 	GENERATE_METADATA(CommandLine)
 

@@ -130,7 +130,7 @@ void Editor::firstUpdate()
 	setSize(Vector2(0.1f, 0.1f));
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -140,7 +140,7 @@ void Editor::firstUpdate()
 	getUIElement<UIToggleButton>().get().simulateClick();
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -150,14 +150,14 @@ void Editor::firstUpdate()
 	nextRow();
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
 	uiBuilder.
-	setMaterial(MaterialManager::getInstance().createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -200,14 +200,14 @@ void Editor::firstUpdate()
 	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	toggle();
 
-	cameraGameObject = ScenesManager::getInstance().getCurrentScene().get().getCameraGameObject();
+	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene().get().getCameraGameObject();
 }
 
 void Editor::update()
 {
 	PROFILER_CPU()
 
-	Vector2 currentMousePosition = Input::getInstance().getMousePosition();
+	Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
 
 
 
@@ -222,28 +222,28 @@ void Editor::update()
 
 
 
-	y += 30 * Time::getInstance().getDeltaTimeSeconds();
+	y += 30 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
 
 	Transform* cameraTransform = &cameraGameObject.get().mTransform.get();
 	Matrix4 cameraRotationMatrix = cameraGameObject.get().mTransform.get().getRotationMatrix();
 	cameraRotationMatrix.invert();
 
-	f32 speed = 90 * Time::getInstance().getDeltaTimeSeconds();
+	f32 speed = 90 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
-	if(Input::getInstance().isKeyPressed(GLFW_KEY_LEFT))
+	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
 	}
-	else if (Input::getInstance().isKeyPressed(GLFW_KEY_RIGHT))
+	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(speed,0,0)));
 	}
-	else if (Input::getInstance().isKeyPressed(GLFW_KEY_UP))
+	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_UP))
 	{
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,-speed)));
 	}
-	else if (Input::getInstance().isKeyPressed(GLFW_KEY_DOWN))
+	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
 	}
@@ -299,19 +299,19 @@ OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
 	renderer.get().init();
 
-	renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Cube>();
-	renderer.get().mMaterial = (MaterialManager::getInstance().createMaterialWithTexture("resources/snorlax-fill.png"));
+	renderer.get().mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
+	renderer.get().mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png"));
 
 	gameObject.get().addComponent<Renderer>(renderer);
 
-	ScenesManager::getInstance().getCurrentScene().get().addGameObject(gameObject);
+	GET_SYSTEM(ScenesManager).getCurrentScene().get().addGameObject(gameObject);
 
 	return gameObject;
 }
 
 void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
-	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
+	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
 	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
 	gameObject.get().init();
@@ -328,12 +328,12 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 	
 	gameObject.get().addComponent<ModelRenderer>(modelRenderer);
 
-	ScenesManager::getInstance().getCurrentScene().get().addGameObject(gameObject);
+	GET_SYSTEM(ScenesManager).getCurrentScene().get().addGameObject(gameObject);
 }
 
 void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 {
-	Ptr<const Model> model = ModelManager::getInstance().loadModel(pFile);
+	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
 	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
 	gameObject.get().init();
@@ -349,16 +349,16 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 	
 	gameObject.get().addComponent<ModelRenderer>(modelRenderer);
 
-	ScenesManager::getInstance().getCurrentScene().get().addGameObject(gameObject);
+	GET_SYSTEM(ScenesManager).getCurrentScene().get().addGameObject(gameObject);
 }
 
 void Editor::handlePressedKeys()
 {
-	if(Input::getInstance().isKeyPressedOnce(GLFW_KEY_KP_ADD))
+	if(GET_SYSTEM(Input).isKeyPressedOnce(GLFW_KEY_KP_ADD))
 	{
 	}
 
-	if(Input::getInstance().isKeyPressedOnce(GLFW_KEY_KP_SUBTRACT))
+	if(GET_SYSTEM(Input).isKeyPressedOnce(GLFW_KEY_KP_SUBTRACT))
 	{
 	}
 }

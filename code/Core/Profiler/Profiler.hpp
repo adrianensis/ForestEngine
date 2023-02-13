@@ -2,7 +2,7 @@
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/EngineSystem.hpp"
 #include "Core/Time/TimeUtils.hpp"
 #include "easy/profiler.h"
 
@@ -14,7 +14,7 @@
 #define PROFILER_GPU()
 #endif
 
-class Profiler : public ObjectBase, public Singleton<Profiler>
+class Profiler : public EngineSystem
 {
 	GENERATE_METADATA(Profiler)
 

@@ -77,7 +77,7 @@ const TextureAnimationFrame& TextureAnimation::nextFrame()
 
 	f32 time = (1.0 / (mSpeed)) * 1000.0f; // in milliseconds !
 
-	mTimeAccumulator += Time::getInstance().getDeltaTimeMillis();
+	mTimeAccumulator += GET_SYSTEM(Time).getDeltaTimeMillis();
 
 
 	if (mTimeAccumulator >= time)

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Core/ObjectBase.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/EngineSystem.hpp"
 
 #include "Graphics/RenderContext.hpp"
 #include "Core/Maths/Vector2.hpp"
 
 #include "Core/Input/InputEvents.hpp"
 
-class Input: public ObjectBase, public Singleton<Input>
+class Input: public EngineSystem
 {
 	GENERATE_METADATA(Input)
 public:

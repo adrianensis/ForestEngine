@@ -35,13 +35,13 @@ void UIElement::onDestroy()
 
 	if (hasFocus())
 	{
-		UIManager::getInstance().setFocusedElement(Ptr<UIElement>());
+		GET_SYSTEM(UIManager).setFocusedElement(Ptr<UIElement>());
 	}
 }
 
 bool UIElement::hasFocus() const
 {
-	return getPtrToThis() == UIManager::getInstance().getFocusedElement();
+	return getPtrToThis() == GET_SYSTEM(UIManager).getFocusedElement();
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -60,11 +60,11 @@ bool UIElement::isMouseCursorInsideElement() const
         return false;
     }
 
-	Vector2 mousePosition = Input::getInstance().getMousePosition();
+	Vector2 mousePosition = GET_SYSTEM(Input).getMousePosition();
 
 	if(mTransform.get().mAffectedByProjection)
 	{
-		mousePosition = GET_SYSTEM(RenderEngine).mCamera.get().screenToWorld(Input::getInstance().getMousePosition());
+		mousePosition = GET_SYSTEM(RenderEngine).mCamera.get().screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}
 
     Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
@@ -264,7 +264,7 @@ void UIElement::markAsPressed()
 
 	if (getConsumeInput())
 	{
-		Input::getInstance().clearMouseButton();
+		GET_SYSTEM(Input).clearMouseButton();
 	}
 }
 
@@ -297,7 +297,7 @@ void UIElement::tryRelease(bool force)
 {
 	if (getConsumeInput())
 	{
-		Input::getInstance().clearMouseButton();
+		GET_SYSTEM(Input).clearMouseButton();
 	}
 
 	bool shouldRelease = false;
@@ -419,20 +419,20 @@ void UIElement::onEscEventReceived()
 
 void UIElement::loseFocus()
 {
-	UIManager::getInstance().setFocusedElement(Ptr<UIElement>());
+	GET_SYSTEM(UIManager).setFocusedElement(Ptr<UIElement>());
 	mOnFocusLostFunctor.execute();
 	onFocusLost();
 }
 
 void UIElement::obtainFocus()
 {
-	Ptr<UIElement> lastFocusedElement = UIManager::getInstance().getFocusedElement();
+	Ptr<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
 	if (lastFocusedElement and lastFocusedElement.get().isActive())
 	{
 		lastFocusedElement.get().loseFocus();
 	}
 
-	UIManager::getInstance().setFocusedElement(getPtrToThis());
+	GET_SYSTEM(UIManager).setFocusedElement(getPtrToThis());
 
 	mInputString.clear();
 	setText(mInputString);
@@ -447,7 +447,7 @@ void UIElement::scroll(f32 scrollValue)
 
 void UIElement::releaseOtherToggleElements()
 {
-	const UIGroup& group = UIManager::getInstance().getOrCreateGroup(mConfig.mGroup);
+	const UIGroup& group = GET_SYSTEM(UIManager).getOrCreateGroup(mConfig.mGroup);
 	FOR_LIST(it, group.getUIElements())
 	{
 		Ptr<UIElement> other = *it;

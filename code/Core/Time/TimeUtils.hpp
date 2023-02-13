@@ -2,7 +2,7 @@
 
 #include "Core/BasicTypes.hpp"
 #include "Core/ObjectBase.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/EngineSystem.hpp"
 #include <chrono>
 
 
@@ -55,7 +55,7 @@ public:
 	GET(IsStarted)
 };
 
-class Time: public ObjectBase, public Singleton<Time>
+class Time: public EngineSystem
 {
 	GENERATE_METADATA(Time)	
 

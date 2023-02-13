@@ -56,7 +56,7 @@ void Model::init(const std::string& path)
                 Ptr<Material> newMaterial;
                 if(! assimpMaterials[materialIt].isValid())
                 {
-                    newMaterial = MaterialManager::getInstance().createMaterial();
+                    newMaterial = GET_SYSTEM(MaterialManager).createMaterial();
                     assimpMaterials[materialIt] = newMaterial;
                 }
 
@@ -70,7 +70,7 @@ void Model::init(const std::string& path)
                         if (material->GetTexture(assimpTextureType, 0, &materialPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
                         {
                             std::filesystem::path texturePath = mPath.parent_path().append(materialPath.data);
-                            newMaterial.get().mTextures[(u32)textureType] = MaterialManager::getInstance().loadTexture(texturePath);
+                            newMaterial.get().mTextures[(u32)textureType] = GET_SYSTEM(MaterialManager).loadTexture(texturePath);
                         }
                     }
                 }

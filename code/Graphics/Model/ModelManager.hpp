@@ -4,7 +4,7 @@
 
 class Model;
 
-class ModelManager: public ObjectBase, public Singleton<ModelManager>
+class ModelManager: public EngineSystem
 {
 	GENERATE_METADATA(ModelManager)
 

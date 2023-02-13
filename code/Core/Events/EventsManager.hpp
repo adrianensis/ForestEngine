@@ -4,17 +4,17 @@
 #include "Core/ObjectBase.hpp"
 #include "Core/Events/Event.hpp"
 #include "Core/Assert/Assert.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/EngineSystem.hpp"
 
 /*
   Macros for (un)susbscribing and sending events.
 */
 
-#define SUBSCRIBE_TO_EVENT(EventClassName, owner, receiver, eventCallback) EventsManager::getInstance().subscribe<EventClassName>(owner, receiver, eventCallback);
-#define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) EventsManager::getInstance().unsubscribe<EventClassName>(owner, receiver);
-#define SEND_EVENT(owner, instigator, event) EventsManager::getInstance().send(owner, instigator, &event);
+#define SUBSCRIBE_TO_EVENT(EventClassName, owner, receiver, eventCallback) GET_SYSTEM(EventsManager).subscribe<EventClassName>(owner, receiver, eventCallback);
+#define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(EventsManager).unsubscribe<EventClassName>(owner, receiver);
+#define SEND_EVENT(owner, instigator, event) GET_SYSTEM(EventsManager).send(owner, instigator, &event);
 
-class EventsManager: public ObjectBase, public Singleton<EventsManager>
+class EventsManager: public EngineSystem
 {
 	GENERATE_METADATA(EventsManager)
 

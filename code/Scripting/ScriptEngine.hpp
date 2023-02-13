@@ -4,7 +4,7 @@
 #include "Scripting/Script.hpp"
 
 
-class ScriptEngine: public EngineSystem, public Singleton<ScriptEngine>
+class ScriptEngine: public EngineSystem
 {
 	GENERATE_METADATA(ScriptEngine)
 

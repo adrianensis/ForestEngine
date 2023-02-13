@@ -202,7 +202,7 @@ IMPLEMENT_DESERIALIZATION(Renderer)
 	std::string materialPath = "";
 	DESERIALIZE("material", materialPath)
 
-	//mMaterial = MaterialManager::getInstance().loadMaterial(materialPath);
+	//mMaterial = GET_SYSTEM(MaterialManager).loadMaterial(materialPath);
 
 	DESERIALIZE("region", mTextureRegion)
 	DESERIALIZE("depth", mDepth)

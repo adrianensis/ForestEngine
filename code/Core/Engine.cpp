@@ -14,30 +14,41 @@ void Engine::init()
 
 	Memory::init();
 
-	Profiler::getInstance().init();
+    CREATE_SYSTEM(Profiler);
+	GET_SYSTEM(Profiler).init();
 
-	EngineConfig::getInstance().init();
+    CREATE_SYSTEM(EngineConfig);
+	GET_SYSTEM(EngineConfig).init();
 	RenderContext::init();
-	Input::getInstance().init();
-	TimerManager::getInstance().init();
-	EventsManager::getInstance().init();
-	MeshPrimitives::getInstance().init();
-	MaterialManager::getInstance().init();
-	ModelManager::getInstance().init();
-	UIManager::getInstance().init();
-	ScenesManager::getInstance().init();
+    CREATE_SYSTEM(Input);
+	GET_SYSTEM(Input).init();
+    CREATE_SYSTEM(TimerManager);
+	GET_SYSTEM(TimerManager).init();
+    CREATE_SYSTEM(EventsManager);
+	GET_SYSTEM(EventsManager).init();
+    CREATE_SYSTEM(MeshPrimitives);
+	GET_SYSTEM(MeshPrimitives).init();
+    CREATE_SYSTEM(MaterialManager);
+	GET_SYSTEM(MaterialManager).init();
+    CREATE_SYSTEM(ModelManager);
+	GET_SYSTEM(ModelManager).init();
+    CREATE_SYSTEM(UIManager);
+	GET_SYSTEM(UIManager).init();
+    CREATE_SYSTEM(ScenesManager);
+	GET_SYSTEM(ScenesManager).init();
 
-	CommandLine::getInstance().init();
+    CREATE_SYSTEM(CommandLine);
+	GET_SYSTEM(CommandLine).init();
 
-    EngineSystemsManager::getInstance().createEngineSystem<RenderEngine>();
-    EngineSystemsManager::getInstance().createEngineSystem<ScriptEngine>();
+    CREATE_SYSTEM(RenderEngine);
+    CREATE_SYSTEM(ScriptEngine);
 
     //REGISTER_ENGINE_SYSTEM(Ptr<EngineSystem>::cast(RenderEngine::getInstancePtr()));
 }
 
 void Engine::initEngineSystems()
 {
-	f32 sceneSize = ScenesManager::getInstance().getCurrentScene().get().getSize();
+	f32 sceneSize = GET_SYSTEM(ScenesManager).getCurrentScene().get().getSize();
 	GET_SYSTEM(RenderEngine).init(sceneSize);
 	GET_SYSTEM(ScriptEngine).init();
 }
@@ -48,12 +59,13 @@ void Engine::terminateSubSystems()
 	GET_SYSTEM(RenderEngine).terminate();
     //GET_SYSTEM(RenderEngine).terminate();
 
-	TimerManager::getInstance().terminate();
+	GET_SYSTEM(TimerManager).terminate();
 }
 
 void Engine::run()
 {
-	Time::getInstance().init();
+    CREATE_SYSTEM(Time);
+	GET_SYSTEM(Time).init();
 
 	f32 inverseFPS = 1.0f / mFPS;
 	f32 inverseFPSMillis = inverseFPS * 1000.0f;
@@ -62,25 +74,25 @@ void Engine::run()
 
 	while (!RenderContext::isClosed())
 	{
-		Time::getInstance().startFrame();
+		GET_SYSTEM(Time).startFrame();
 
-		if (ScenesManager::getInstance().getSceneHasChanged())
+		if (GET_SYSTEM(ScenesManager).getSceneHasChanged())
 		{
 			terminateSubSystems();
-			ScenesManager::getInstance().loadCurrentScene();
+			GET_SYSTEM(ScenesManager).loadCurrentScene();
 			initEngineSystems();
 		}
 
-		Input::getInstance().pollEvents();
+		GET_SYSTEM(Input).pollEvents();
 
-		CommandLine::getInstance().update();
+		GET_SYSTEM(CommandLine).update();
 
-		ScenesManager::getInstance().update();
-		TimerManager::getInstance().update();
+		GET_SYSTEM(ScenesManager).update();
+		GET_SYSTEM(TimerManager).update();
 		GET_SYSTEM(ScriptEngine).update();
 		GET_SYSTEM(RenderEngine).update();
 
-		f32 dtMillis = Time::getInstance().getElapsedTimeMillis();
+		f32 dtMillis = GET_SYSTEM(Time).getElapsedTimeMillis();
 		
 		if (inverseFPSMillis > dtMillis)
 		{
@@ -89,8 +101,8 @@ void Engine::run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
 		}
 		
-		Time::getInstance().endFrame();
-		//VAL(1000.0f/Time::getInstance().getDeltaTimeMillis())
+		GET_SYSTEM(Time).endFrame();
+		//VAL(1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis())
 	}
 }
 
@@ -98,38 +110,38 @@ void Engine::terminate()
 {
 	TRACE();
 	
-	CommandLine::getInstance().terminate();
-	CommandLine::deleteInstance();
+	GET_SYSTEM(CommandLine).terminate();
+    REMOVE_SYSTEM(CommandLine);
 
-	ScenesManager::deleteInstance();
+    REMOVE_SYSTEM(ScenesManager);
 
 	terminateSubSystems();
 
-	UIManager::getInstance().terminate();
-	UIManager::deleteInstance();
+	GET_SYSTEM(UIManager).terminate();
+    REMOVE_SYSTEM(UIManager);
 
-	ModelManager::getInstance().terminate();
-	ModelManager::deleteInstance();
+	GET_SYSTEM(ModelManager).terminate();
+    REMOVE_SYSTEM(ModelManager);
 
-	MaterialManager::deleteInstance();
+    REMOVE_SYSTEM(MaterialManager);
 
-	MeshPrimitives::getInstance().terminate();
-	MeshPrimitives::getInstance().deleteInstance();
+	GET_SYSTEM(MeshPrimitives).terminate();
+    REMOVE_SYSTEM(MeshPrimitives);
 
-	ScriptEngine::deleteInstance();
-    EngineSystemsManager::getInstance().removeEngineSystem<RenderEngine>();
-	EventsManager::getInstance().terminate();
-	EventsManager::deleteInstance();
-	TimerManager::deleteInstance();
-	Time::deleteInstance();
-	Input::deleteInstance();
+    REMOVE_SYSTEM(ScriptEngine);
+    REMOVE_SYSTEM(RenderEngine);
+	GET_SYSTEM(EventsManager).terminate();
+    REMOVE_SYSTEM(EventsManager);
+    REMOVE_SYSTEM(TimerManager);
+    REMOVE_SYSTEM(Time);
+    REMOVE_SYSTEM(Input);
+    REMOVE_SYSTEM(EngineConfig);
 	RenderContext::terminate();
 
-	EngineConfig::deleteInstance();
+	GET_SYSTEM(Profiler).terminate();
+	REMOVE_SYSTEM(Profiler);
 
 	EngineSystemsManager::deleteInstance();
-
-	Profiler::getInstance().terminate();
 
 	Memory::terminate();
 }

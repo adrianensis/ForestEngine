@@ -36,7 +36,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
 	renderer.get().init();
 
-	renderer.get().mMesh = MeshPrimitives::getInstance().getPrimitive<Rectangle>();
+	renderer.get().mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 	renderer.get().mMaterial = (mConfig.mMaterial);
 	renderer.get().mColor = (mConfig.mStyle->mBackgroundColor);
 	renderer.get().mDepth = (mConfig.mLayer);
@@ -148,7 +148,7 @@ void UIList::setEntriesVisibility(bool visible)
 			Vector3 scale = mTransform.get().getScale();
 			scale.x = scale.x * RenderContext::getAspectRatio();
 
-			UIManager::getInstance().getBuilder()->saveData()->
+			GET_SYSTEM(UIManager).getBuilder()->saveData()->
 				setPosition(Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
 				setSize(scale)->
 				setText(label)->
@@ -157,14 +157,14 @@ void UIList::setEntriesVisibility(bool visible)
 				setIsAffectedByLayout(false)->
 				create<UIButton>();
 
-			UIButton* button = (UIButton*) UIManager::getInstance().getBuilder()->getUIElement();
+			UIButton* button = (UIButton*) GET_SYSTEM(UIManager).getBuilder()->getUIElement();
 			button->setOnPressedCallback(onPressedCallback);
 			//button->setVisibility(false);
 
 			Transform* t = button->mTransform;
 			t->setParent(mTransform);
 
-			UIManager::getInstance().getBuilder()->restoreData();
+			GET_SYSTEM(UIManager).getBuilder()->restoreData();
 
 			mButtons->pushBack(button);
 		}

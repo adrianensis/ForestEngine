@@ -16,7 +16,7 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	mTextSize = UIManager::getDefaultFontSize(); // TODO : move to config?
 	mAdjustSizeToText = false;
 	mIsAffectedByLayout = true;
-	mMaterial = MaterialManager::getInstance().getNoTextureMaterial();
+	mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
 	mGroup = "";
 	mParent.invalidate();
 	mSeparatorSize = 0.01f;

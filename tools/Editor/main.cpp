@@ -22,7 +22,7 @@ int main()
     script.get().init();
     controller.get().addComponent<Script>(OwnerPtr<Script>::cast(script));
 
-    ScenesManager::getInstance().setGameObjectController(controller);
+    GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 
     Engine::getInstance().run();
     Engine::getInstance().terminate();
