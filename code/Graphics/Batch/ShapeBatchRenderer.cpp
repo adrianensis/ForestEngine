@@ -8,9 +8,9 @@
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 
 {
-	RenderContext::deleteVAO(mVAO);
-	RenderContext::deleteVBO(mVBOPosition);
-	RenderContext::deleteVBO(mEBO);
+	GET_SYSTEM(RenderContext).deleteVAO(mVAO);
+	GET_SYSTEM(RenderContext).deleteVBO(mVBOPosition);
+	GET_SYSTEM(RenderContext).deleteVBO(mEBO);
 
 	mPositionBuffer.clear();
 	mColorBuffer.clear();
@@ -43,10 +43,10 @@ void ShapeBatchRenderer::render()
 	{
 		mShaderLine.get().enable();
 
-		RenderContext::enableVAO(mVAO);
+		GET_SYSTEM(RenderContext).enableVAO(mVAO);
 
-		RenderContext::enableProperty(0);
-		RenderContext::enableProperty(1);
+		GET_SYSTEM(RenderContext).enableProperty(0);
+		GET_SYSTEM(RenderContext).enableProperty(1);
 
 		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mProjectionMatrix;
 		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mViewMatrix;
@@ -54,14 +54,14 @@ void ShapeBatchRenderer::render()
 		mShaderLine.get().addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
 		mShaderLine.get().addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
 
-		RenderContext::setDataVBO(mVBOPosition, mPositionBuffer);
-		RenderContext::setDataVBO(mVBOColor, mColorBuffer);
-		RenderContext::drawLines(mShapesCounter);
+		GET_SYSTEM(RenderContext).setDataVBO(mVBOPosition, mPositionBuffer);
+		GET_SYSTEM(RenderContext).setDataVBO(mVBOColor, mColorBuffer);
+		GET_SYSTEM(RenderContext).drawLines(mShapesCounter);
 
-		RenderContext::disableProperty(0);
-		RenderContext::disableProperty(1);
+		GET_SYSTEM(RenderContext).disableProperty(0);
+		GET_SYSTEM(RenderContext).disableProperty(1);
 
-		RenderContext::enableVAO(0);
+		GET_SYSTEM(RenderContext).enableVAO(0);
 
 		mPositionBuffer.clear();
 		mColorBuffer.clear();
@@ -71,25 +71,25 @@ void ShapeBatchRenderer::render()
 
 void ShapeBatchRenderer::bind()
 {
-	mVAO = RenderContext::createVAO();
-	mVBOPosition = RenderContext::createVBO();
-	RenderContext::attribute(0, 3, GL_FLOAT, 3 * sizeof(f32), 0, 0);
-	mVBOColor = RenderContext::createVBO();
-	RenderContext::attribute(1, 4, GL_FLOAT, 4 * sizeof(f32), 0, 0);
-	mEBO = RenderContext::createEBO();
+	mVAO = GET_SYSTEM(RenderContext).createVAO();
+	mVBOPosition = GET_SYSTEM(RenderContext).createVBO();
+	GET_SYSTEM(RenderContext).attribute(0, 3, GL_FLOAT, 3 * sizeof(f32), 0, 0);
+	mVBOColor = GET_SYSTEM(RenderContext).createVBO();
+	GET_SYSTEM(RenderContext).attribute(1, 4, GL_FLOAT, 4 * sizeof(f32), 0, 0);
+	mEBO = GET_SYSTEM(RenderContext).createEBO();
 
-	RenderContext::resizeVBO(mVBOPosition, mPositionBuffer.capacity());
-	RenderContext::resizeVBO(mVBOColor, mColorBuffer.capacity());
+	GET_SYSTEM(RenderContext).resizeVBO(mVBOPosition, mPositionBuffer.capacity());
+	GET_SYSTEM(RenderContext).resizeVBO(mVBOColor, mColorBuffer.capacity());
 
 	FOR_RANGE(i, 0, mMaxShapes * mPositionsPerShape)
 	{
 		mIndicesBuffer.push_back(i);
 	}
 
-	RenderContext::resizeEBO(mEBO, mIndicesBuffer.size());
-	RenderContext::setDataEBORaw(mEBO, mIndicesBuffer);
+	GET_SYSTEM(RenderContext).resizeEBO(mEBO, mIndicesBuffer.size());
+	GET_SYSTEM(RenderContext).setDataEBORaw(mEBO, mIndicesBuffer);
 
-	RenderContext::enableVAO(0);
+	GET_SYSTEM(RenderContext).enableVAO(0);
 }
 
 void ShapeBatchRenderer::addPosition(const Vector3& position)

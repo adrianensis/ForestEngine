@@ -14,10 +14,10 @@ void Input::init()
 	smButtonJustPressed = false;
 	smScroll = 0;
 
-	glfwSetKeyCallback(RenderContext::smWindow, keyCallback);
-	glfwSetMouseButtonCallback(RenderContext::smWindow, mouseButtonCallback);
-	glfwSetScrollCallback(RenderContext::smWindow, scrollCallback);
-	glfwSetCharCallback(RenderContext::smWindow, charCallback);
+	glfwSetKeyCallback(GET_SYSTEM(RenderContext).smWindow, keyCallback);
+	glfwSetMouseButtonCallback(GET_SYSTEM(RenderContext).smWindow, mouseButtonCallback);
+	glfwSetScrollCallback(GET_SYSTEM(RenderContext).smWindow, scrollCallback);
+	glfwSetCharCallback(GET_SYSTEM(RenderContext).smWindow, charCallback);
 }
 
 void Input::pollEvents()
@@ -30,10 +30,10 @@ void Input::pollEvents()
 
 	f64 mouseCoordX, mouseCoordY;
 
-	glfwGetCursorPos(RenderContext::smWindow, &mouseCoordX, &mouseCoordY);
+	glfwGetCursorPos(GET_SYSTEM(RenderContext).smWindow, &mouseCoordX, &mouseCoordY);
 
-	f64 halfWindowSizeX = RenderContext::smWindowSize.x / 2.0;
-	f64 halfWindowSizeY = RenderContext::smWindowSize.y / 2.0;
+	f64 halfWindowSizeX = GET_SYSTEM(RenderContext).smWindowSize.x / 2.0;
+	f64 halfWindowSizeY = GET_SYSTEM(RenderContext).smWindowSize.y / 2.0;
 
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;
@@ -118,7 +118,7 @@ void Input::clearKey()
 
 void Input::setCursorVisibility(bool visible)
 {
-	glfwSetInputMode(RenderContext::smWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(GET_SYSTEM(RenderContext).smWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
 void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)

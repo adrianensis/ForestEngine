@@ -55,13 +55,13 @@ void Batch::enable()
 
     if(mBatchData.mStencilValue > 0x00)
     {
-        RenderContext::enableStencil(mBatchData.mIsStencilMask, mBatchData.mStencilValue, mBatchData.mStencilFunction);
+        GET_SYSTEM(RenderContext).enableStencil(mBatchData.mIsStencilMask, mBatchData.mStencilValue, mBatchData.mStencilFunction);
     }
 }
 
 void Batch::disable()
 {
-    RenderContext::disableStencil();
+    GET_SYSTEM(RenderContext).disableStencil();
     mBatchData.mMaterial.get().disable();
     mMeshBatcher.disable();
 }

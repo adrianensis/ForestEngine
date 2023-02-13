@@ -44,7 +44,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
     renderer.get().mStencilValue = (0x2);
 	//renderer->setHasBorder(true);
 
-	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y)));
+	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
 	addComponent<Renderer>(renderer);
 	
@@ -77,14 +77,14 @@ void UIList::toggle()
 	if (mButtons.empty())
 	{
 		Vector3 scale = mTransform.get().mScale;
-		scale.x = scale.x * RenderContext::getAspectRatio();
+		scale.x = scale.x * GET_SYSTEM(RenderContext).getAspectRatio();
 
 		UIBuilder uiBuilder;
 
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
-			setPosition(Vector2((-scale.x / 2.0f) / RenderContext::getAspectRatio(), scale.y/2.0f)).
+			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(RenderContext).getAspectRatio(), scale.y/2.0f)).
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
 			setLayer(mConfig.mLayer).
@@ -112,7 +112,7 @@ void UIList::toggle()
 
 			// Rectangle clipRectangle(
 			// 			Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
-			// 			Vector2(mConfig.mSize.x / RenderContext::getAspectRatio(), mConfig.mSize.y));
+			// 			Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y));
 
 			// button->getRenderer()->setClipRectangle(clipRectangle);
 
@@ -146,7 +146,7 @@ void UIList::setEntriesVisibility(bool visible)
 			UIElementCallback onPressedCallback = it.get().mCallback;
 
 			Vector3 scale = mTransform.get().getScale();
-			scale.x = scale.x * RenderContext::getAspectRatio();
+			scale.x = scale.x * GET_SYSTEM(RenderContext).getAspectRatio();
 
 			GET_SYSTEM(UIManager).getBuilder()->saveData()->
 				setPosition(Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->

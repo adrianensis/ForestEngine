@@ -60,7 +60,7 @@ void RenderEngine::update()
 
 	AnimationManager::getInstance().update();
 
-	RenderContext::clear();
+	GET_SYSTEM(RenderContext).clear();
 	renderBatches();
 	swap();
 	checkChunks();
@@ -168,7 +168,7 @@ void RenderEngine::swap()
 {
 	PROFILER_CPU()
 
-	RenderContext::swap();
+	GET_SYSTEM(RenderContext).swap();
 }
 
 void RenderEngine::renderBatches()

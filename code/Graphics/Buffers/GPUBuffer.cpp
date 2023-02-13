@@ -10,17 +10,17 @@ void GPUBufferBase::init(u32 typeSizeInBytes, bool isStatic)
 	mTypeSizeInBytes = typeSizeInBytes;
 	mIsStatic = isStatic;
 
-	mVBO = RenderContext::createVBO();
+	mVBO = GET_SYSTEM(RenderContext).createVBO();
 }
 
 void GPUBufferBase::terminate()
 {
-    RenderContext::deleteVBO(mVBO);
+    GET_SYSTEM(RenderContext).deleteVBO(mVBO);
 }
 
 void GPUBufferBase::resize(u32 size)
 {
-	RenderContext::resizeVBOAnyType(mVBO, mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(RenderContext).resizeVBOAnyType(mVBO, mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
 void GPUBufferBase::attribute(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor)
@@ -41,5 +41,5 @@ void GPUBufferBase::attribute(u32 attributeIndex, GPUBufferPrimitiveType primiti
 
 void GPUBufferBase::attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor)
 {
-	RenderContext::attribute(attributeIndex, elementSize, (u32)primitiveType, mTypeSizeInBytes, pointerOffset, divisor);
+	GET_SYSTEM(RenderContext).attribute(attributeIndex, elementSize, (u32)primitiveType, mTypeSizeInBytes, pointerOffset, divisor);
 }

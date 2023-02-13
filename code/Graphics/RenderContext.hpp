@@ -5,68 +5,68 @@
 
 #include "Core/Module.hpp"
 
-
 class Camera;
 
-class RenderContext
+class RenderContext : public EngineSystem
 {
 
 public:
 	friend class Input;
     
-    static Vector2 getWindowSize();
-    static f32 getAspectRatio();
-    static void init();
-    static bool isClosed();
-    static void clear();
-    static void swap();
-    static void terminate();
-    static GLuint createVBO();
-    static void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
-    static GLuint createVAO();
-    static GLuint createEBO();
-    static void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    static void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    static void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    static void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    static void setDataVBO(u32 VBO, const std::vector<f32>& data);
-    static void setDataVBOU32(u32 VBO, const std::vector<u32>& data);
+    Vector2 getWindowSize();
+    f32 getAspectRatio();
+    void init();
+    bool isClosed();
+    void clear();
+    void swap();
+    void terminate();
+    GLuint createVBO();
+    void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
+    GLuint createVAO();
+    GLuint createEBO();
+    void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    void setDataVBO(u32 VBO, const std::vector<f32>& data);
+    void setDataVBOU32(u32 VBO, const std::vector<u32>& data);
     
     template<class T>
-    static void setDataVBOAnyType(u32 VBO, const std::vector<T>& data)
+    void setDataVBOAnyType(u32 VBO, const std::vector<T>& data)
     {
         setDataVBOAnyTypeRaw(VBO, sizeof(T), data.size(), data.data());
     }
 
-    static void setDataEBO(u32 EBO, const std::vector<Face>& data);
-    static void setDataEBORaw(u32 EBO, const std::vector<u32>& data);
+    void setDataEBO(u32 EBO, const std::vector<Face>& data);
+    void setDataEBORaw(u32 EBO, const std::vector<u32>& data);
 
-    static void deleteVAO(u32 VBO);
-    static void deleteVBO(u32 VBO);
-    static void deleteEBO(u32 VBO);
+    void deleteVAO(u32 VBO);
+    void deleteVBO(u32 VBO);
+    void deleteEBO(u32 VBO);
 
-    static void enableProperty(u32 propertyArrayIndex);
-    static void disableProperty(u32 propertyArrayIndex);
+    void enableProperty(u32 propertyArrayIndex);
+    void disableProperty(u32 propertyArrayIndex);
 
-    static void enableVAO(u32 VAO);
+    void enableVAO(u32 VAO);
     
-    static void enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction);
-    static void disableStencil();
+    void enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction);
+    void disableStencil();
 
-    static GLuint createTexture(u32 width, u32 height, const byte* data);
-    static void deleteTexture(u32 textureId);
-    static void enableTexture(u32 textureId);
-    static void disableTexture();
+    GLuint createTexture(u32 width, u32 height, const byte* data);
+    void deleteTexture(u32 textureId);
+    void enableTexture(u32 textureId);
+    void disableTexture();
 
-    static void drawElements(u32 indicesCount, u32 instancesCount, bool instanced);
-    static void drawLines(u32 linesCount);
+    void drawElements(u32 indicesCount, u32 instancesCount, bool instanced);
+    void drawLines(u32 linesCount);
 
 private:
-    static void onResize(GLFWwindow *window, int width, int height);
-    static void setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const void* data);
+    void onResize(GLFWwindow *window, int width, int height);
+    static void GLFWonResize(GLFWwindow *window, int width, int height);
+    void setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const void* data);
 	
 private:
-	inline static GLFWwindow *smWindow = nullptr;
-	inline static Vector2 smWindowSize;
-	inline static Camera *mCamera = nullptr;
+	GLFWwindow *smWindow = nullptr;
+	Vector2 smWindowSize;
+	Camera *mCamera = nullptr;
 };

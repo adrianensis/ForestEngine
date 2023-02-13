@@ -76,7 +76,7 @@ Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 	{
 		case UILayout::HORIZONTAL:
 		{
-			offset = Vector2(mLastConfig.mSize.x / RenderContext::getAspectRatio() + mConfig.mSeparatorSize, 0);
+			offset = Vector2(mLastConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio() + mConfig.mSeparatorSize, 0);
 			break;
 		}
 		case UILayout::VERTICAL:
@@ -107,12 +107,12 @@ void UIBuilder::calculateConfig()
 
 	if(mConfig.mUIElementClassId == UIText::getClassIdStatic() || mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
 	{
-		mConfig.mDisplayPosition.x += mConfig.mTextSize.x/RenderContext::getAspectRatio();
+		mConfig.mDisplayPosition.x += mConfig.mTextSize.x/GET_SYSTEM(RenderContext).getAspectRatio();
 		mConfig.mDisplayPosition.y -= mConfig.mTextSize.y / 2.0f;
 	}
 	else
 	{
-		mConfig.mDisplayPosition.x += (mConfig.mSize.x/RenderContext::getAspectRatio()) / 2.0f;
+		mConfig.mDisplayPosition.x += (mConfig.mSize.x/GET_SYSTEM(RenderContext).getAspectRatio()) / 2.0f;
 		mConfig.mDisplayPosition.y -= mConfig.mSize.y / 2.0f;
 	}
 }

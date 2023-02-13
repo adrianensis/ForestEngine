@@ -40,7 +40,7 @@ void RenderContext::init()
 
 		glfwSwapInterval(0);
 
-		glfwSetFramebufferSizeCallback(smWindow, onResize);
+		glfwSetFramebufferSizeCallback(smWindow, GLFWonResize);
 
 		glClearColor(0,0.3,0.3,1);
 		glEnable(GL_DEPTH_TEST); // Enable depth testing
@@ -300,4 +300,9 @@ void RenderContext::onResize(GLFWwindow *window, int width, int height)
 	smWindowSize.set(width, height);
 	glViewport(0, 0, smWindowSize.x, smWindowSize.y);
 	GET_SYSTEM(RenderEngine).mCamera.get().onResize();
+}
+
+void RenderContext::GLFWonResize(GLFWwindow *window, int width, int height)
+{
+	GET_SYSTEM(RenderContext).onResize(window, width, height);
 }

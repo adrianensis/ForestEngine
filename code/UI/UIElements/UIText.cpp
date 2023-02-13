@@ -99,7 +99,7 @@ void UIText::setText(const std::string& text)
 					mFontRenderers.push_back(renderer);
 				}
 
-				renderer.get().setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / RenderContext::getAspectRatio(), 0, 0));
+				renderer.get().setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
 				renderer.get().mTextureRegion = (Rectangle(textureCoordinates, textureSize));
 			}
 		}

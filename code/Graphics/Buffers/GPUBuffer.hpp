@@ -41,7 +41,7 @@ public:
 
     void setData(const std::vector<T>& data)
     {
-	    RenderContext::setDataVBOAnyType<T>(mVBO, data);
+	    GET_SYSTEM(RenderContext).setDataVBOAnyType<T>(mVBO, data);
     }
 
     void resize(u32 size)

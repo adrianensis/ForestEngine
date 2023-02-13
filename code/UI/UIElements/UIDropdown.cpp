@@ -53,13 +53,13 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		if (mButtons.empty())
 		{
 			Vector3 scale = mTransform.get().mScale;
-			scale.x = scale.x * RenderContext::getAspectRatio();
+			scale.x = scale.x * GET_SYSTEM(RenderContext).getAspectRatio();
 			
 			UIBuilder uiBuilder;
 
 			uiBuilder.
 				setLayout(UILayout::VERTICAL).
-				setPosition(mTransform.get().getWorldPosition() + Vector2((-scale.x / 2.0f) / RenderContext::getAspectRatio(), -scale.y / 2.0f)).
+				setPosition(mTransform.get().getWorldPosition() + Vector2((-scale.x / 2.0f) / GET_SYSTEM(RenderContext).getAspectRatio(), -scale.y / 2.0f)).
 				setTextSize(mConfig.mTextSize).
 				setAdjustSizeToText(true).
 				setLayer(mConfig.mLayer);

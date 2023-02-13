@@ -31,7 +31,7 @@ void Scene::init()
 
     OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>::newObject();
 	cameraComponent.get().init();
-	cameraComponent.get().setPerspective(1, 1000, RenderContext::getAspectRatio(), 45);
+	cameraComponent.get().setPerspective(1, 1000, GET_SYSTEM(RenderContext).getAspectRatio(), 45);
 
 	mCameraGameObject.get().addComponent<Camera>(cameraComponent);
 

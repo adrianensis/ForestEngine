@@ -11,7 +11,7 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 
 	mIsStatic = isStatic;
 	mIsInstanced = isInstanced;
-	mVAO = RenderContext::createVAO();
+	mVAO = GET_SYSTEM(RenderContext).createVAO();
 	// Force static draw if instanced
 	mVBOPosition.init(mIsStatic || mIsInstanced);
 	mVBOPosition.attribute(0, GPUBufferPrimitiveType::FLOAT, 0, 0);
@@ -36,14 +36,14 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mVBOBone.attributeCustomSize(7, GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex, 0, 0);
 	mVBOBone.attributeCustomSize(8, GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
 
-	mEBO = RenderContext::createEBO();
+	mEBO = GET_SYSTEM(RenderContext).createEBO();
 }
 
 void MeshBuffer::terminate()
 {
     disable();
-    RenderContext::deleteVAO(mVAO);
-    RenderContext::deleteEBO(mEBO);
+    GET_SYSTEM(RenderContext).deleteVAO(mVAO);
+    GET_SYSTEM(RenderContext).deleteEBO(mEBO);
 }
 
 void MeshBuffer::resize(const Mesh& mesh)
@@ -69,8 +69,8 @@ void MeshBuffer::setData(const Mesh& mesh)
 
 void MeshBuffer::setIndexesData(const Mesh& mesh)
 {
-	RenderContext::resizeEBO(mEBO, mesh.mFaces.size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-	RenderContext::setDataEBO(mEBO, mesh.mFaces);
+	GET_SYSTEM(RenderContext).resizeEBO(mEBO, mesh.mFaces.size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(RenderContext).setDataEBO(mEBO, mesh.mFaces);
 }
 
 void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
@@ -111,10 +111,10 @@ void MeshBuffer::setMaxInstances(u32 maxInstances)
 
 void MeshBuffer::enable()
 {
-	RenderContext::enableVAO(mVAO);
+	GET_SYSTEM(RenderContext).enableVAO(mVAO);
 }
 
 void MeshBuffer::disable()
 {
-	RenderContext::enableVAO(0);
+	GET_SYSTEM(RenderContext).enableVAO(0);
 }

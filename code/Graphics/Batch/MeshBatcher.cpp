@@ -93,7 +93,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		RenderContext::drawElements(mPrototypeMesh.get().mFaces.size() * 3, mMeshesIndex, mMeshBuffer.mIsInstanced);
+		GET_SYSTEM(RenderContext).drawElements(mPrototypeMesh.get().mFaces.size() * 3, mMeshesIndex, mMeshBuffer.mIsInstanced);
 	}
 }
 

@@ -41,7 +41,7 @@ void Material::bind(bool isWorldSpace, bool isInstanced) const
 
 	mShader.get().addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), "time");
 
-	mShader.get().addVector2(RenderContext::getWindowSize(), "windowSize");
+	mShader.get().addVector2(GET_SYSTEM(RenderContext).getWindowSize(), "windowSize");
 }
 
 void Material::enable() const

@@ -19,7 +19,8 @@ void Engine::init()
 
     CREATE_SYSTEM(EngineConfig);
 	GET_SYSTEM(EngineConfig).init();
-	RenderContext::init();
+    CREATE_SYSTEM(RenderContext);
+	GET_SYSTEM(RenderContext).init();
     CREATE_SYSTEM(Input);
 	GET_SYSTEM(Input).init();
     CREATE_SYSTEM(TimerManager);
@@ -72,7 +73,7 @@ void Engine::run()
 
 	f32 diff = 0;
 
-	while (!RenderContext::isClosed())
+	while (!GET_SYSTEM(RenderContext).isClosed())
 	{
 		GET_SYSTEM(Time).startFrame();
 
@@ -136,7 +137,8 @@ void Engine::terminate()
     REMOVE_SYSTEM(Time);
     REMOVE_SYSTEM(Input);
     REMOVE_SYSTEM(EngineConfig);
-	RenderContext::terminate();
+	GET_SYSTEM(RenderContext).terminate();
+    REMOVE_SYSTEM(RenderContext);
 
 	GET_SYSTEM(Profiler).terminate();
 	REMOVE_SYSTEM(Profiler);

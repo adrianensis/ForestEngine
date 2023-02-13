@@ -7,7 +7,7 @@
 Texture::~Texture() 
 {
 	deleteData();
-	RenderContext::deleteTexture(mTextureId);
+	GET_SYSTEM(RenderContext).deleteTexture(mTextureId);
 }
 
 void Texture::init(const std::string& path)
@@ -16,14 +16,14 @@ void Texture::init(const std::string& path)
 	{
 		mPath = path;
 		loadImage();
-        mTextureId = RenderContext::createTexture(mWidth, mHeight, mData);
+        mTextureId = GET_SYSTEM(RenderContext).createTexture(mWidth, mHeight, mData);
 		deleteData();
 	}
 }
 
 void Texture::bind() const
 {
-    RenderContext::enableTexture(mTextureId);
+    GET_SYSTEM(RenderContext).enableTexture(mTextureId);
 }
 
 IMPLEMENT_SERIALIZATION(Texture)
