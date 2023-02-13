@@ -7,7 +7,7 @@
 class Memory
 {
 public:
-	inline static std::map<std::string, i32> mAllocationsCounter;
+	inline static std::unordered_map<std::string_view, i32> mAllocationsCounter;
 
     static void init();
 
@@ -18,7 +18,7 @@ public:
 	{
 		T *object = new T(args...);
 
-		std::string className;
+		std::string_view className;
 
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
@@ -46,7 +46,7 @@ public:
 	{
 		ASSERT_MSG(pointer != nullptr, "pointer is nullptr");
 
-		std::string className;
+		std::string_view className;
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
 			className = pointer->getClassName();

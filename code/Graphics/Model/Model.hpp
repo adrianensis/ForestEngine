@@ -34,6 +34,6 @@ public:
     std::vector<OwnerPtr<Mesh>> mMeshes;
     Matrix4 mGlobalInverseTransform;
 
-    std::map<std::string, BoneData> mBonesMapping;
+    std::unordered_map<std::string, BoneData> mBonesMapping;
     u32 mBonesIndexCount = 0;
 };

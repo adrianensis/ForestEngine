@@ -29,7 +29,7 @@ class CommandLine: public EngineSystem
 	GENERATE_METADATA(CommandLine)
 
 private:
-	std::map<std::string, CommandFunctor> mCommandsMap;
+	std::unordered_map<std::string, CommandFunctor> mCommandsMap;
 	std::string mBuffer;
 
 	std::list<std::string> mHistory;

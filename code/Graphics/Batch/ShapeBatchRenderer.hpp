@@ -83,7 +83,7 @@ public:
 	}
 
 private:
-	std::map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
+	std::unordered_map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
 public:
 	bool mIsWorldSpace = true;
 };

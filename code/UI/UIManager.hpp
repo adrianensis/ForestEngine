@@ -42,8 +42,8 @@ public:
     void setFocusedElement(Ptr<UIElement> focusedElement);
 
 private:
-	std::map<std::string, OwnerPtr<UIGroup>> mGroups;
-	std::map<char, Vector2> mCharMap;
+	std::unordered_map<std::string, OwnerPtr<UIGroup>> mGroups;
+	std::unordered_map<char, Vector2> mCharMap;
 	Vector2 mFontTilesCount;
 	Vector2 mFontTileTextureSize;
 	Ptr<const Material> mFontMaterial;

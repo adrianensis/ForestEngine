@@ -23,7 +23,7 @@ class Command: public ObjectBase
 private:
     std::string mName;
     std::string mArgumentsString;
-    std::map<std::string, CommandArgument> mArguments;
+    std::unordered_map<std::string, CommandArgument> mArguments;
 
     inline static const std::string smDefaultArgumentValue = ""; 
 

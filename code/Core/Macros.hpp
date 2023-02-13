@@ -69,12 +69,6 @@
         DECLARE_METADATA_METHODS(NONE(0), NONE(0)) \
     private: // NOTE: notice the last blank space " "
 
-#define REGISTER_CLASS_BY_NAME(...) \
-    ClassRegister classRegister_##__VA_ARGS__ {__VA_ARGS__::getClassNameStatic(), [](){ \
-        if constexpr (std::is_abstract_v<__VA_ARGS__>) { return nullptr; } \
-        else { return Memory::newObject<__VA_ARGS__>(); } \
-    }};
-
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
 // --------------------------------------------------------

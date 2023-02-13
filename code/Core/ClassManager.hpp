@@ -6,7 +6,21 @@ class ObjectBase;
 
 using ClassRegisterCallback = std::function<ObjectBase*()>;
 
-class ClassRegister;
+#define REGISTER_CLASS_BY_NAME(...) \
+    ClassRegister classRegister_##__VA_ARGS__ {__VA_ARGS__::getClassNameStatic(), [](){ \
+        if constexpr (std::is_abstract_v<__VA_ARGS__>) { return nullptr; } \
+        else { return Memory::newObject<__VA_ARGS__>(); } \
+    }};
+
+class ClassRegister
+{
+public:
+    ClassRegister(const std::string_view& className, const ClassRegisterCallback& callback);
+
+    std::string_view mClassName;
+    ClassRegisterCallback mCallback;
+};
+
 class ClassManager
 {
 friend ClassRegister;
@@ -21,19 +35,5 @@ public:
     static ObjectBase* instance(const std::string_view& className);
 
 private:
-    inline static std::map<std::string_view, ClassRegister> mClassMap;
-};
-
-class ClassRegister
-{
-public:
-    ClassRegister(const std::string_view& className, const ClassRegisterCallback& callback)
-    {
-        mClassName = className;
-        mCallback = callback;
-        MAP_INSERT(ClassManager::mClassMap, className, *this);
-    }
-
-    std::string_view mClassName;
-    ClassRegisterCallback mCallback;
+    inline static std::unordered_map<std::string_view, ClassRegister> mClassMap;
 };

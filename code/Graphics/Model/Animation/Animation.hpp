@@ -68,7 +68,7 @@ private:
 
 private:
     Ptr<const Model> mModel;
-    std::map<ObjectId, OwnerPtr<AnimationState>> mAnimationStates;
+    std::unordered_map<ObjectId, OwnerPtr<AnimationState>> mAnimationStates;
     Ptr<AnimationState> mCurrentAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;
 

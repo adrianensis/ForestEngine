@@ -80,7 +80,7 @@ private:
 private:
 	inline static std::list<OwnerPtr<Component>> smEmptyList;
 
-	std::map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
+	std::unordered_map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
 	bool mIsActive = false;
 
 	bool mIsPendingToBeDestroyed = false;

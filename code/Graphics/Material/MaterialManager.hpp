@@ -22,7 +22,7 @@ public:
 
 private:
     u32 mMaterialIDCounter = 0;
-	std::map<std::string, OwnerPtr<Texture>> mTexturesMap;
-    std::map<u32, OwnerPtr<Material>> mMaterials;
+	std::unordered_map<std::string, OwnerPtr<Texture>> mTexturesMap;
+    std::unordered_map<u32, OwnerPtr<Material>> mMaterials;
 	OwnerPtr<Material> mNoTextureMaterial;
 };

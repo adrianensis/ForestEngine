@@ -34,7 +34,7 @@ private:
 	}
 
 private:
-	std::map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
+	std::unordered_map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
 };
 
 template <>

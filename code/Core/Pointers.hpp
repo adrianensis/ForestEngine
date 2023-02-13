@@ -2,12 +2,6 @@
 
 #include "Core/Memory.hpp"
 
-// template <template <typename > class C, typename T>
-// struct get_template_type<C<T>>
-// {
-//     using type = T;
-// };
-
 // BASE
 // Needed in Core/Macros.h CGETTER_TYPE
 class BasePtr
@@ -169,6 +163,12 @@ private:
 
 // SNIFAE
 
+// template <template <typename > class C, typename T>
+// struct get_template_type<C<T>>
+// {
+//     using type = T;
+// };
+
 template <typename T>
 struct get_const_ptr_type
 {
@@ -186,3 +186,20 @@ struct get_const_ptr_type<OwnerPtr<T>>
 {
     using type = OwnerPtr<const T>;
 };
+
+// HASH
+// Needed for unordered_map
+
+namespace std {
+  template<class T> struct hash<Ptr<T>> {
+    size_t operator()(Ptr<T> const& pointer) const {
+      return size_t(&pointer.get());
+    }
+  };
+  
+  template<class T> struct hash<OwnerPtr<T>> {
+    size_t operator()(OwnerPtr<T> const& pointer) const {
+      return size_t(&pointer.get());
+    }
+  };
+}

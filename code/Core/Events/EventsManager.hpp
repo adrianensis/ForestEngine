@@ -52,9 +52,9 @@ public:
     void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);
 
 private:
-	using ReceiversFunctorMap = std::map<ObjectBase *, EventFunctor<Event>>;
-	using EventReceiversMap = std::map<ClassId, ReceiversFunctorMap>;
-	using OwnersMap = std::map<ObjectBase *, EventReceiversMap>;
+	using ReceiversFunctorMap = std::unordered_map<ObjectBase *, EventFunctor<Event>>;
+	using EventReceiversMap = std::unordered_map<ClassId, ReceiversFunctorMap>;
+	using OwnersMap = std::unordered_map<ObjectBase *, EventReceiversMap>;
 
 	OwnersMap mOwnersMap;
 

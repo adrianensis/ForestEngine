@@ -69,7 +69,7 @@ public:
 
 private:
 	UIStyleDefault mDefaultStyle;
-	std::map<ClassId, UIStyle*> mStyles;
+	std::unordered_map<ClassId, UIStyle*> mStyles;
 
 public:
 	CRGET(DefaultStyle)

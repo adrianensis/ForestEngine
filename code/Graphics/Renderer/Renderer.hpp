@@ -43,7 +43,7 @@ public:
 	u32 mStencilFunction = GL_NOTEQUAL;
 	bool mIsStencilMask = false;
 	f32 mRenderDistance = 0.0f;
-	std::map<std::string, Ptr<TextureAnimation>> mTextureAnimations;
+	std::unordered_map<std::string, Ptr<TextureAnimation>> mTextureAnimations;
 	Ptr<const Chunk> mChunk;
 	bool mIsInstanced = false;
 	Ptr<const Batch> mBatch;

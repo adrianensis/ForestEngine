@@ -19,5 +19,5 @@ public:
     void terminate();
 
 private:
-    std::map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
+    std::unordered_map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
 };
