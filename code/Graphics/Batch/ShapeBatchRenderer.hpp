@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 
 
 class ShapeBatchRenderer: public ObjectBase

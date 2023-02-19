@@ -1,5 +1,5 @@
 #include "Graphics/Batch/ShapeBatchRenderer.hpp"
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"

@@ -1,6 +1,5 @@
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
-
 
 Shader::Shader()
 {

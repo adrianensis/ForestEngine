@@ -58,6 +58,57 @@ void Editor::firstUpdate()
 		}
 	}
 
+    // using namespace ShaderBuilderNodes;
+    // using namespace ShaderBuilderNodes::Expressions;
+
+    // ShaderBuilder sb;
+    // sb.get().attribute(GPUStorage::UNIFORM, {"float", "time"});
+    // sb.get().attribute(GPUStorage::UNIFORM, {"mat4", "viewMatrix"});
+    // sb.get().attribute(GPUStorage::UNIFORM, {"mat4", "projectionMatrix"});
+    // sb.get().attribute(GPUStorage::UNIFORM, {"vec4", "positionOffset"});
+    // auto& isInstanced = sb.get().attribute(GPUStorage::UNIFORM, {"bool", "isInstanced"});
+    // auto& hasAnimations = sb.get().attribute(GPUStorage::UNIFORM, {"bool", "hasAnimations"});
+
+    // auto& MAX_BONES = sb.get().attribute(GPUStorage::CONST, {"int", "MAX_BONES", "100"});
+    // auto& MAX_BONE_INFLUENCE = sb.get().attribute(GPUStorage::CONST, {"int", "MAX_BONE_INFLUENCE", "4"});
+
+    // auto& gBones = sb.get().attribute(GPUStorage::UNIFORM, {"bool", "gBones", "", MAX_BONES});
+
+    // auto& pos = sb.get().attribute(GPUStorage::IN, 0, {"vec3", "position"});
+    // sb.get().attribute(GPUStorage::IN, 1, {"vec2", "texcoord"});
+    // sb.get().attribute(GPUStorage::IN, 2, {"vec4", "color"});
+    // sb.get().attribute(GPUStorage::IN, 3, {"mat4", "modelMatrix"});
+    // auto& bonesIDs = sb.get().attribute(GPUStorage::IN, 7, {"ivec4", "BoneIDs"});
+    // auto& Weights = sb.get().attribute(GPUStorage::IN, 8, {"vec4", "Weights"});
+
+    // sb.get().attribute(GPUStorage::OUT, {"vec2", "vTexcoord"});
+    // sb.get().attribute(GPUStorage::OUT, {"vec4", "vColor"});
+
+    // auto& mainFunc = sb.get().function("void", "main");
+
+    // Variable totalPosition;
+    // Variable localPosition;
+    
+    // mainFunc.body().
+    // variable(totalPosition, "vec4", "totalPosition", call("vec4", {pos, {"1.0f"}}).getNameOrValue()).
+    // ifBlock(isInstanced, "&&", hasAnimations).
+    //     set(totalPosition, call("vec4", {{"0.0f"}})).
+    //     forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
+    //         ifBlock(bonesIDs.at("i"), "==", {"-1"}).
+    //             line("continue").
+    //         end().
+    //         ifBlock(bonesIDs.at("i"), ">=", MAX_BONES).
+    //             set(totalPosition, call("vec4", {pos, {"1.0f"}})).
+    //             line("break").
+    //         end().
+    //         variable(localPosition, "vec4", "localPosition", gBones.at(bonesIDs.at("i")).mul(call("vec4", {pos, {"1.0f"}})).getNameOrValue()).
+    //         set(totalPosition, totalPosition.add(localPosition.mul(Weights.at("i")))).
+    //     end().
+    // end();
+
+    // std::string code = sb.getCode();
+    // ECHO(code);
+
 	importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(10,0,0), 1.0f);
 	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(15,0,0), 1.0f);

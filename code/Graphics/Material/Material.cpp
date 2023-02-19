@@ -1,7 +1,7 @@
 #include "Graphics/Material/Material.hpp"
 
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"

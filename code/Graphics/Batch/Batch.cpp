@@ -6,7 +6,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Model/Model.hpp"

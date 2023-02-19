@@ -1,5 +1,5 @@
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 

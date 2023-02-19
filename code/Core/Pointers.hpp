@@ -149,7 +149,6 @@ private:
     // Custom Deleter
     struct OwnerPtrCustomDeleter
     {
-        // TODO : Debug WHY a nullptr is reaching this
         void operator()(T* p) const { if(p != nullptr) { Memory::deleteObject(p);} }
     };
 

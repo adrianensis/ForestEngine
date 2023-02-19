@@ -2,7 +2,6 @@
 
 #include "Core/Module.hpp"
 
-
 class Shader: public ObjectBase
 {
     GENERATE_METADATA(Shader)

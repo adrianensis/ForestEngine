@@ -5,7 +5,7 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Camera/Frustum.hpp"
-#include "Graphics/Material/Shader.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 #include "Scene/Module.hpp"
 #include "Core/EngineConfig.hpp"
 #include "Graphics/Batch/Chunk.hpp"

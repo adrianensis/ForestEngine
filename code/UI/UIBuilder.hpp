@@ -31,10 +31,8 @@
 	UI_BUILDER_CONFIG_RESTORE(Name)\
 	UI_BUILDER_CONFIG_SETTER(Name)
 
-class UIBuilder: public ObjectBase
+class UIBuilder
 {
-    GENERATE_METADATA(UIBuilder)
-	
 public:
     UIBuilder();
 
