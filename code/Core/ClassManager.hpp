@@ -5,17 +5,14 @@
 class ObjectBase;
 
 using ClassRegisterCallback = std::function<ObjectBase*()>;
-using MemberRegisterCallback = std::function<ClassId()>;
 
 #define REGISTER_CLASS(...) \
-    inline static const ClassRegister classRegister_##__VA_ARGS__ {__VA_ARGS__::getClassNameStatic(), [](){ \
+    inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(__VA_ARGS__::getClassNameStatic(), __VA_ARGS__::getClassIdStatic(), [](){ \
         return Memory::newObject<__VA_ARGS__>(); \
-    }};
+    });
 
 #define REGISTER_MEMBER(...) \
-    inline static const MemberRegister memberRegister_##__VA_ARGS__ = MemberRegister(ThisClass::getClassNameStatic(), #__VA_ARGS__, [](){ \
-        return decltype(__VA_ARGS__)::getClassIdStatic(); \
-    });
+    inline static const MemberRegister memberRegister_##__VA_ARGS__ = MemberRegister(ThisClass::getClassNameStatic(), #__VA_ARGS__, decltype(__VA_ARGS__)::getClassNameStatic(), decltype(__VA_ARGS__)::getClassIdStatic());
 
 // --------------------------------------------------------
 // MEMBER
@@ -24,16 +21,16 @@ using MemberRegisterCallback = std::function<ClassId()>;
 class MemberRegister
 {
 public:
-    MemberRegister(const std::string_view& ownerClassName,const std::string_view& name, const MemberRegisterCallback& callback);
+    MemberRegister(const std::string_view& ownerClassName, const std::string_view& name, const std::string_view& className, ClassId classId);
 };
 
 class MemberInfo
 {
 public:
-    MemberInfo(const std::string_view& name, const MemberRegisterCallback& callback);
+    MemberInfo(const std::string_view& name, const std::string_view& className, ClassId classId);
     std::string_view mName;
-    // TODO: add ClassId
-    MemberRegisterCallback mCallback;
+    std::string_view mClassName;
+    ClassId mClassId;
 };
 
 // --------------------------------------------------------
@@ -43,18 +40,18 @@ public:
 class ClassRegister
 {
 public:
-    ClassRegister(const std::string_view& className);
-    ClassRegister(const std::string_view& className, const ClassRegisterCallback& callback);
+    ClassRegister(const std::string_view& className, ClassId classId);
+    ClassRegister(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback);
 };
 
 class ClassInfo
 {
 public:
-    ClassInfo(const std::string_view& className);
-    ClassInfo(const std::string_view& className, const ClassRegisterCallback& callback);
+    ClassInfo(const std::string_view& className, ClassId classId);
+    ClassInfo(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback);
 
     std::string_view mClassName;
-    // TODO: add ClassId
+    ClassId mClassId;
     ClassRegisterCallback mCallback;
     std::unordered_map<std::string_view, MemberInfo> mMembersMap;
 };
@@ -80,7 +77,9 @@ public:
     static const ClassInfo& getClassInfo(const std::string_view& className);
 
 private:
-    static ClassInfo& getOrCreate(const std::string_view& className);
+    static ClassInfo& getClassInfoInternal(const std::string_view& className);
+    static ClassInfo& getOrCreate(const std::string_view& className, ClassId classId);
     // TODO: add other map, sort classes by ID
-    inline static std::unordered_map<std::string_view, ClassInfo> mClassMap;
+    inline static std::unordered_map<std::string_view, ClassInfo> mClassMapByName;
+    inline static std::unordered_map<ClassId, ClassInfo*> mClassMapById;
 };
