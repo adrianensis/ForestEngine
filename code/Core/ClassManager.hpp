@@ -7,9 +7,8 @@ class ObjectBase;
 using ClassRegisterCallback = std::function<ObjectBase*()>;
 
 #define REGISTER_CLASS_BY_NAME(...) \
-    ClassRegister classRegister_##__VA_ARGS__ {__VA_ARGS__::getClassNameStatic(), [](){ \
-        if constexpr (std::is_abstract_v<__VA_ARGS__>) { return nullptr; } \
-        else { return Memory::newObject<__VA_ARGS__>(); } \
+    inline static const ClassRegister classRegister_##__VA_ARGS__ {__VA_ARGS__::getClassNameStatic(), [](){ \
+        return Memory::newObject<__VA_ARGS__>(); \
     }};
 
 class ClassRegister

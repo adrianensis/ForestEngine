@@ -27,7 +27,7 @@ protected:
 
 public:
 
-    virtual bool isZero() const = 0;
+    virtual bool isZero() const { return true; };
 
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }

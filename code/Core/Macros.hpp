@@ -61,6 +61,7 @@
         DECLARE_METADATA_METHODS(NONE(0), override) \
     private:                                            \
         DECLARE_GET_PTR_THIS()               \
+        REGISTER_CLASS_BY_NAME(__VA_ARGS__)               \
     private: // NOTE: notice the last blank space " "
 
 #define GENERATE_METADATA_STRUCT(...)              \

@@ -12,7 +12,7 @@ class Component: public EngineSystemComponent
 public:
     Component();
 
-	virtual void init() = 0;
+	virtual void init() {};
 
 	virtual void onComponentAdded()
 	{

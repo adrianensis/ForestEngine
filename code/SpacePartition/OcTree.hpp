@@ -7,8 +7,8 @@ class IOcTreeElement: public ObjectBase
 	GENERATE_METADATA(IOcTreeElement)
 
 public:
-	virtual Vector3 getOcTreeElementCenter() const = 0;
-	virtual f32 getOcTreeElementRadius() const = 0;
+	virtual Vector3 getOcTreeElementCenter() const  { return Vector3(0,0,0);}
+	virtual f32 getOcTreeElementRadius() const  { return 0;}
 };
 
 // Parent class for QuadTree and OcTree
@@ -22,7 +22,7 @@ public:
 protected:
 	class OcTreeNode: public ObjectBase
 	{
-		GENERATE_METADATA(OcTree::OcTreeNode)
+		GENERATE_METADATA(OcTreeNode)
 
 	private:
 		std::vector<IOcTreeElement*> mOcTreeElements;

@@ -5,8 +5,6 @@
 template <class T>
 class Functor: public ObjectBase
 {
-	GENERATE_METADATA(Functor<T>)
-
 public:
 	virtual void execute() = 0;
 

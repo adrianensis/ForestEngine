@@ -20,8 +20,6 @@ using EventCallback = std::function<void(const Event *)>;
 template<class E>
 class EventFunctor: public Functor<EventCallback>
 {
-	GENERATE_METADATA(EventFunctor<E>)
-
 public:
 	E* mEvent = nullptr;
 	ClassId mEventClassId;
