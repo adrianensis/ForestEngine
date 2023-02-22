@@ -23,14 +23,13 @@ function(build_programs path prefix)
   foreach(PROGRAM_PATH ${PROGRAM_PATHS})
 
     file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp" "${PROGRAM_PATH}/*.hpp")
-    file(GLOB_RECURSE GENERATED_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${GENERATED_CODE_FOLDER}/${PROGRAM_PATH}/*.cpp" "${GENERATED_CODE_FOLDER}/${PROGRAM_PATH}/*.hpp")
 
     include_directories("${PROGRAM_PATH}")
 
     get_filename_component(PROGRAM_NAME ${PROGRAM_PATH} NAME_WE) # NAME_WE = name with extension
 
     set(PROGRAM_FINAL_NAME "${prefix}_${PROGRAM_NAME}" )
-    add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES} ${GENERATED_SOURCES} )
+    add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
     target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
     install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
@@ -72,7 +71,6 @@ endif(WIN32)
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/compiledLibs")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/binaries")
-set(GENERATED_CODE_FOLDER "generated-code")
 
 # ----------------------------------------------------------------------------
 
@@ -212,13 +210,6 @@ endforeach()
 
 include_directories("code")
 
-# needed for generated code
-include_directories(".")
-include_directories("${GENERATED_CODE_FOLDER}")
-# include_directories("generated-code/code")
-#include_directories("generated-code/final")
-#include_directories("generated-code/final/code")
-
 # file(GLOB INCLUDE_PATHS "code/*")
 #
 # foreach(INCLUDE_PATH ${INCLUDE_PATHS})
@@ -234,7 +225,6 @@ include_directories("${GENERATED_CODE_FOLDER}")
 # Alternative: CMakeLists.txt with this code into source directory.
 # add_subdirectory(source)
 foreach(PACKAGE ${PACKAGES})
-  #file(GLOB_RECURSE PACKAGE_SOURCE "generated-code/final/code/${PACKAGE}/*")
   file(GLOB_RECURSE PACKAGE_SOURCE "code/${PACKAGE}/*")
   add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCE})
 endforeach()
