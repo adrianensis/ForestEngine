@@ -2,10 +2,6 @@
 
 #include "Core/Memory.hpp"
 
-class ObjectBase;
-
-using ClassRegisterCallback = std::function<ObjectBase*()>;
-
 #define REGISTER_CLASS(...) \
     inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(__VA_ARGS__::getClassNameStatic(), __VA_ARGS__::getClassIdStatic(), [](){ \
         return Memory::newObject<__VA_ARGS__>(); \
@@ -13,6 +9,10 @@ using ClassRegisterCallback = std::function<ObjectBase*()>;
 
 #define REGISTER_MEMBER(...) \
     inline static const MemberRegister memberRegister_##__VA_ARGS__ = MemberRegister(ThisClass::getClassNameStatic(), #__VA_ARGS__, decltype(__VA_ARGS__)::getClassNameStatic(), decltype(__VA_ARGS__)::getClassIdStatic());
+
+class ObjectBase;
+
+using ClassRegisterCallback = std::function<ObjectBase*()>;
 
 // --------------------------------------------------------
 // MEMBER

@@ -42,7 +42,6 @@
     may cause "struct"-like classes to become virtual and require a virtual destructor 
     completely obliterating the engine. Related with virtual destructors.
 */
-
 #define DECLARE_METADATA_METHODS(Virtual, Override) \
 	constexpr static ClassId getClassIdStatic() { return smClassId; }; \
     constexpr static const std::string_view& getClassNameStatic() { return smClassName; }; \
@@ -53,15 +52,19 @@
     private:                                                               \
         using ThisClass = __VA_ARGS__;                                     \
         constexpr inline static const std::string_view smClassName = #__VA_ARGS__##sv; \
-        constexpr inline static const ClassId smClassId = Hash::hashString(ThisClass::smClassName);
+        constexpr inline static const ClassId smClassId = Hash::hashString(ThisClass::smClassName); 
 
 #define GENERATE_METADATA(...)                      \
+    private: \
         GENERATE_METADATA_BASE(__VA_ARGS__)             \
     public:                                             \
         DECLARE_METADATA_METHODS(NONE(0), override) \
     private:                                            \
         DECLARE_GET_PTR_THIS()               \
-        REGISTER_CLASS(__VA_ARGS__)               \
+        \
+        inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(#__VA_ARGS__##sv, (ClassId) Hash::hashString(#__VA_ARGS__##sv), [](){ \
+            return Memory::newObject<__VA_ARGS__>(); \
+        }); \
     private: // NOTE: notice the last blank space " "
 
 #define GENERATE_METADATA_STRUCT(...)              \
