@@ -31,13 +31,13 @@ public:
 
 	u32 mVAO = 0;
 
-	GPUBuffer<Vector3> mVBOPosition;
-	GPUBuffer<Vector2> mVBOTexture;
-	GPUBuffer<Vector4> mVBOColor;
-	GPUBuffer<BoneVertexData> mVBOBone;
+	GPUBuffer mVBOPosition;
+	GPUBuffer mVBOTexture;
+	GPUBuffer mVBOColor;
+	GPUBuffer mVBOBone;
     
 	std::vector<Matrix4> mMatrices;
-	GPUBuffer<Matrix4> mVBOModelMatrix;
+	GPUBuffer mVBOModelMatrix;
 
 	u32 mEBO = 0;
 };

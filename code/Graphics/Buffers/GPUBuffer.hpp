@@ -9,43 +9,31 @@ enum class GPUBufferPrimitiveType
     FLOAT = GL_FLOAT,
 };
 
-class GPUBufferBase
+class GPUBuffer
 {
 public:
-	GPUBufferBase() = default;
-    ~GPUBufferBase();
+	GPUBuffer() = default;
+    ~GPUBuffer();
 
+    void init(u32 attributeIndex, u32 typeSizeInBytes, bool isStatic);
     void resize(u32 size);
-    void attribute(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor);
-    void attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor);
+    template <class T>
+    void setData(const std::vector<T>& data)
+    {
+	    GET_SYSTEM(RenderContext).setDataVBOAnyType<T>(mVBO, data);
+    }
+    u32 attribute(GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor);
+    u32 attributeCustomSize(GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor);
+    u32 getAttributeLocation() const;
+    u32 getAttributeLocationWithOffset() const;
 
 protected:
-    void init(u32 typeSizeInBytes, bool isStatic);
     void terminate();
 
 protected:
 	bool mIsStatic = false;
 	u32 mVBO = 0; // TODO: change u32 for GLuint
-
+    u32 mAttribute = 0;
+    u32 mAttributeOffset = 0;
     u32 mTypeSizeInBytes = 0;
-};
-
-template <class T>
-class GPUBuffer: public GPUBufferBase
-{
-public:
-    void init(bool isStatic)
-    {
-        GPUBufferBase::init(sizeof(T), isStatic);
-    }
-
-    void setData(const std::vector<T>& data)
-    {
-	    GET_SYSTEM(RenderContext).setDataVBOAnyType<T>(mVBO, data);
-    }
-
-    void resize(u32 size)
-    {
-        GPUBufferBase::resize(size);
-    }
 };

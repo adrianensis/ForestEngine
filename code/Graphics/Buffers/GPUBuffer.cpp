@@ -1,29 +1,30 @@
 #include "Graphics/Buffers/GPUBuffer.hpp"
 
-GPUBufferBase::~GPUBufferBase() 
+GPUBuffer::~GPUBuffer() 
 {
 	terminate();
 }
 
-void GPUBufferBase::init(u32 typeSizeInBytes, bool isStatic)
+void GPUBuffer::init(u32 attributeIndex, u32 typeSizeInBytes, bool isStatic)
 {
 	mTypeSizeInBytes = typeSizeInBytes;
 	mIsStatic = isStatic;
+    mAttribute = attributeIndex;
 
 	mVBO = GET_SYSTEM(RenderContext).createVBO();
 }
 
-void GPUBufferBase::terminate()
+void GPUBuffer::terminate()
 {
     GET_SYSTEM(RenderContext).deleteVBO(mVBO);
 }
 
-void GPUBufferBase::resize(u32 size)
+void GPUBuffer::resize(u32 size)
 {
 	GET_SYSTEM(RenderContext).resizeVBOAnyType(mVBO, mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-void GPUBufferBase::attribute(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor)
+u32 GPUBuffer::attribute(GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor)
 {
 	u32 primitiveTypeSize = 0;
 	switch (primitiveType)
@@ -36,10 +37,22 @@ void GPUBufferBase::attribute(u32 attributeIndex, GPUBufferPrimitiveType primiti
 		break;
 	}
 
-	attributeCustomSize(attributeIndex, primitiveType, mTypeSizeInBytes/primitiveTypeSize, pointerOffset, divisor);
+	return attributeCustomSize(primitiveType, mTypeSizeInBytes/primitiveTypeSize, pointerOffset, divisor);
 }
 
-void GPUBufferBase::attributeCustomSize(u32 attributeIndex, GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor)
+u32 GPUBuffer::attributeCustomSize(GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor)
 {
-	GET_SYSTEM(RenderContext).attribute(attributeIndex, elementSize, (u32)primitiveType, mTypeSizeInBytes, pointerOffset, divisor);
+	GET_SYSTEM(RenderContext).attribute(getAttributeLocationWithOffset(), elementSize, (u32)primitiveType, mTypeSizeInBytes, pointerOffset, divisor);
+    mAttributeOffset += 1;
+    return getAttributeLocationWithOffset();
+}
+
+u32 GPUBuffer::getAttributeLocation() const
+{
+    return mAttribute;
+}
+
+u32 GPUBuffer::getAttributeLocationWithOffset() const
+{
+    return getAttributeLocation() + mAttributeOffset;
 }

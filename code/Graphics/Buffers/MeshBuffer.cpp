@@ -12,29 +12,32 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mIsStatic = isStatic;
 	mIsInstanced = isInstanced;
 	mVAO = GET_SYSTEM(RenderContext).createVAO();
+
+    u32 attributeIndex = 0;
+
 	// Force static draw if instanced
-	mVBOPosition.init(mIsStatic || mIsInstanced);
-	mVBOPosition.attribute(0, GPUBufferPrimitiveType::FLOAT, 0, 0);
-	mVBOTexture.init(mIsStatic || mIsInstanced);
-	mVBOTexture.attribute(1, GPUBufferPrimitiveType::FLOAT, 0, 0);
-	mVBOColor.init(mIsStatic || mIsInstanced);
-	mVBOColor.attribute(2, GPUBufferPrimitiveType::FLOAT, 0, 0);
+	mVBOPosition.init(attributeIndex, sizeof(Vector3), mIsStatic || mIsInstanced);
+	attributeIndex = mVBOPosition.attribute(GPUBufferPrimitiveType::FLOAT, 0, 0);
+	mVBOTexture.init(attributeIndex, sizeof(Vector2), mIsStatic || mIsInstanced);
+	attributeIndex = mVBOTexture.attribute(GPUBufferPrimitiveType::FLOAT, 0, 0);
+	mVBOColor.init(attributeIndex, sizeof(Vector4), mIsStatic || mIsInstanced);
+	attributeIndex = mVBOColor.attribute(GPUBufferPrimitiveType::FLOAT, 0, 0);
 
 	if(mIsInstanced)
 	{
-		mVBOModelMatrix.init(mIsStatic || mIsInstanced);
+		mVBOModelMatrix.init(attributeIndex, sizeof(Matrix4), mIsStatic || mIsInstanced);
 
 		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
 
-		mVBOModelMatrix.attributeCustomSize(3, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 0 * columnBytesSize, 1);
-		mVBOModelMatrix.attributeCustomSize(4, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 1 * columnBytesSize, 1);
-		mVBOModelMatrix.attributeCustomSize(5, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 2 * columnBytesSize, 1);
-		mVBOModelMatrix.attributeCustomSize(6, GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 3 * columnBytesSize, 1);
+		mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 0 * columnBytesSize, 1);
+		mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 1 * columnBytesSize, 1);
+		mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 2 * columnBytesSize, 1);
+		attributeIndex = mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 3 * columnBytesSize, 1);
 	}
 
-	mVBOBone.init(mIsStatic || mIsInstanced);
-	mVBOBone.attributeCustomSize(7, GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex, 0, 0);
-	mVBOBone.attributeCustomSize(8, GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
+	mVBOBone.init(attributeIndex, sizeof(BoneVertexData), mIsStatic || mIsInstanced);
+	mVBOBone.attributeCustomSize(GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex, 0, 0);
+	attributeIndex = mVBOBone.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
 
 	mEBO = GET_SYSTEM(RenderContext).createEBO();
 }
