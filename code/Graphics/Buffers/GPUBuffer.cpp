@@ -1,10 +1,5 @@
 #include "Graphics/Buffers/GPUBuffer.hpp"
 
-GPUBuffer::~GPUBuffer() 
-{
-	terminate();
-}
-
 void GPUBuffer::init(u32 attributeIndex, u32 typeSizeInBytes, bool isStatic)
 {
 	mTypeSizeInBytes = typeSizeInBytes;
@@ -24,7 +19,7 @@ void GPUBuffer::resize(u32 size)
 	GET_SYSTEM(RenderContext).resizeVBOAnyType(mVBO, mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-u32 GPUBuffer::attribute(GPUBufferPrimitiveType primitiveType, u32 pointerOffset, u32 divisor)
+u32 GPUBuffer::attribute(GPUBufferPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes /*=0*/)
 {
 	u32 primitiveTypeSize = 0;
 	switch (primitiveType)
@@ -33,16 +28,21 @@ u32 GPUBuffer::attribute(GPUBufferPrimitiveType primitiveType, u32 pointerOffset
 			primitiveTypeSize = sizeof(f32);
 		break;
 		case GPUBufferPrimitiveType::INT:
-			primitiveTypeSize = sizeof(u32);
+			primitiveTypeSize = sizeof(i32);
 		break;
 	}
 
-	return attributeCustomSize(primitiveType, mTypeSizeInBytes/primitiveTypeSize, pointerOffset, divisor);
-}
+    // sizeInPrimitiveTypes: size of the object divided in primitive types
+    // ex: Vector3 -> 3 floats
+    u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSize;
+    if(customSizeInPrimitiveTypes > 0)
+    {
+        sizeInPrimitiveTypes = customSizeInPrimitiveTypes;
+    }
 
-u32 GPUBuffer::attributeCustomSize(GPUBufferPrimitiveType primitiveType, u32 elementSize, u32 pointerOffset, u32 divisor)
-{
-	GET_SYSTEM(RenderContext).attribute(getAttributeLocationWithOffset(), elementSize, (u32)primitiveType, mTypeSizeInBytes, pointerOffset, divisor);
+    GET_SYSTEM(RenderContext).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, static_cast<u32>(primitiveType), mTypeSizeInBytes, mPreviousOffsetInBytes, mDivisor);
+    // accumulative offset in bytes
+    mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSize;
     mAttributeOffset += 1;
     return getAttributeLocationWithOffset();
 }

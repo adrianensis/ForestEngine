@@ -13,31 +13,29 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mIsInstanced = isInstanced;
 	mVAO = GET_SYSTEM(RenderContext).createVAO();
 
-    u32 attributeIndex = 0;
-
-	// Force static draw if instanced
-	mVBOPosition.init(attributeIndex, sizeof(Vector3), mIsStatic || mIsInstanced);
-	attributeIndex = mVBOPosition.attribute(GPUBufferPrimitiveType::FLOAT, 0, 0);
-	mVBOTexture.init(attributeIndex, sizeof(Vector2), mIsStatic || mIsInstanced);
-	attributeIndex = mVBOTexture.attribute(GPUBufferPrimitiveType::FLOAT, 0, 0);
-	mVBOColor.init(attributeIndex, sizeof(Vector4), mIsStatic || mIsInstanced);
-	attributeIndex = mVBOColor.attribute(GPUBufferPrimitiveType::FLOAT, 0, 0);
+    mBuffersLayout.init(mIsStatic || mIsInstanced);
+    mVBOPosition = mBuffersLayout.addBuffer(sizeof(Vector3));
+    mBuffersLayout.getBuffer(mVBOPosition).attribute(GPUBufferPrimitiveType::FLOAT);
+    mVBOTexture = mBuffersLayout.addBuffer(sizeof(Vector2));
+    mBuffersLayout.getBuffer(mVBOTexture).attribute(GPUBufferPrimitiveType::FLOAT);
+    mVBOColor = mBuffersLayout.addBuffer(sizeof(Vector4));
+    mBuffersLayout.getBuffer(mVBOColor).attribute(GPUBufferPrimitiveType::FLOAT);
 
 	if(mIsInstanced)
 	{
-		mVBOModelMatrix.init(attributeIndex, sizeof(Matrix4), mIsStatic || mIsInstanced);
-
 		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
 
-		mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 0 * columnBytesSize, 1);
-		mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 1 * columnBytesSize, 1);
-		mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 2 * columnBytesSize, 1);
-		attributeIndex = mVBOModelMatrix.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize, 3 * columnBytesSize, 1);
+        mVBOModelMatrix = mBuffersLayout.addBuffer(sizeof(Matrix4));
+        mBuffersLayout.getBuffer(mVBOModelMatrix).setInstanceDivisor(1);
+		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
+		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
+		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
+		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
 	}
 
-	mVBOBone.init(attributeIndex, sizeof(BoneVertexData), mIsStatic || mIsInstanced);
-	mVBOBone.attributeCustomSize(GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex, 0, 0);
-	attributeIndex = mVBOBone.attributeCustomSize(GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex, BoneVertexData::smMaxBonesPerVertex * sizeof(i32), 0);
+    mVBOBone = mBuffersLayout.addBuffer(sizeof(BoneVertexData));
+	mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex);
+	mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex);
 
 	mEBO = GET_SYSTEM(RenderContext).createEBO();
 }
@@ -51,23 +49,23 @@ void MeshBuffer::terminate()
 
 void MeshBuffer::resize(const Mesh& mesh)
 {
-	mVBOPosition.resize(mesh.mPositions.capacity());
-	mVBOTexture.resize(mesh.mTextureCoordinates.capacity());
-	mVBOColor.resize(mesh.mColors.capacity());
-	mVBOBone.resize(mesh.mBonesVertexData.capacity());
+	mBuffersLayout.getBuffer(mVBOPosition).resize(mesh.mPositions.capacity());
+	mBuffersLayout.getBuffer(mVBOTexture).resize(mesh.mTextureCoordinates.capacity());
+	mBuffersLayout.getBuffer(mVBOColor).resize(mesh.mColors.capacity());
+	mBuffersLayout.getBuffer(mVBOBone).resize(mesh.mBonesVertexData.capacity());
 	
 	if(mIsInstanced)
 	{
-		mVBOModelMatrix.resize(mMatrices.capacity());
+		mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
 	}
 }
 
 void MeshBuffer::setData(const Mesh& mesh)
 {
-	mVBOPosition.setData(mesh.mPositions);
-	mVBOTexture.setData(mesh.mTextureCoordinates);
-	mVBOColor.setData(mesh.mColors);
-	mVBOBone.setData(mesh.mBonesVertexData);
+	mBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
+	mBuffersLayout.getBuffer(mVBOTexture).setData(mesh.mTextureCoordinates);
+	mBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
+	mBuffersLayout.getBuffer(mVBOBone).setData(mesh.mBonesVertexData);
 }
 
 void MeshBuffer::setIndexesData(const Mesh& mesh)
@@ -88,7 +86,7 @@ void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 
 void MeshBuffer::setDataInstanced()
 {
-	mVBOModelMatrix.setData(mMatrices);
+	mBuffersLayout.getBuffer(mVBOModelMatrix).setData(mMatrices);
 }
 
 void MeshBuffer::clear()
@@ -108,7 +106,7 @@ void MeshBuffer::setMaxInstances(u32 maxInstances)
 	if(mIsInstanced)
 	{
 		mMatrices.reserve(maxInstances);
-		mVBOModelMatrix.resize(mMatrices.capacity());
+		mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
 	}
 }
 

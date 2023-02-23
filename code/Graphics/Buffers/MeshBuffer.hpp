@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/Buffers/GPUBuffer.hpp"
+#include "Graphics/Buffers/GPUBuffersLayout.hpp"
 
 class MeshBuffer
 {
@@ -30,14 +30,16 @@ public:
 	bool mIsInstanced = false;
 
 	u32 mVAO = 0;
-
-	GPUBuffer mVBOPosition;
-	GPUBuffer mVBOTexture;
-	GPUBuffer mVBOColor;
-	GPUBuffer mVBOBone;
     
 	std::vector<Matrix4> mMatrices;
-	GPUBuffer mVBOModelMatrix;
+
+    u32 mVBOPosition = 0;
+	u32 mVBOTexture = 0;
+	u32 mVBOColor = 0;
+	u32 mVBOBone = 0;
+	u32 mVBOModelMatrix = 0;
+
+    GPUBuffersLayout mBuffersLayout;
 
 	u32 mEBO = 0;
 };
