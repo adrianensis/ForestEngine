@@ -39,7 +39,7 @@ class ObjectMeta
 private:
     GENERATE_METADATA_BASE(ObjectMeta)
 public:
-    DECLARE_METADATA_METHODS(virtual, NONE(0))
+    DECLARE_METADATA_METHODS(virtual, EMPTY_MACRO())
 public:
 	ObjectMeta() { };
 

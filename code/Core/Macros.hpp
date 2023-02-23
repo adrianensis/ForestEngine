@@ -4,7 +4,7 @@
 // COMMON
 // --------------------------------------------------------
 
-#define NONE(...)
+#define EMPTY_MACRO(...)
 #define ADD_TRAIL_COMMA(token) token ,
 #define TO_STRING_AND_ADD_TRAIL_COMMA(token) #token ,
 
@@ -64,7 +64,7 @@
     private: \
         GENERATE_METADATA_BASE(__VA_ARGS__)             \
     public:                                             \
-        DECLARE_METADATA_METHODS(NONE(0), override) \
+        DECLARE_METADATA_METHODS(EMPTY_MACRO(), override) \
     private:                                            \
         DECLARE_GET_PTR_THIS()               \
         \
@@ -76,7 +76,7 @@
 #define GENERATE_METADATA_STRUCT(...)              \
         GENERATE_METADATA_BASE(__VA_ARGS__)            \
     public:                                            \
-        DECLARE_METADATA_METHODS(NONE(0), NONE(0)) \
+        DECLARE_METADATA_METHODS(EMPTY_MACRO(), EMPTY_MACRO()) \
     private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------
