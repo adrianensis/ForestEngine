@@ -22,8 +22,7 @@
     - varying: same as in for vertex shader, same as
     out for fragment shader
 */
-enum class GPUStorage : u8
-{
+DECLARE_ENUM(GPUStorage,
     NONE,
     IN,
     OUT,
@@ -31,26 +30,10 @@ enum class GPUStorage : u8
     ATTRIBUTE,
     CONST,
     UNIFORM
-};
+);
 
 namespace ShaderBuilderNodes
 {
-    inline static std::string getGPUStorageString(GPUStorage as)
-    {
-        switch (as)
-        {
-            case GPUStorage::IN: return "in";
-            case GPUStorage::OUT: return "out";
-            case GPUStorage::VARYING: return "varying";
-            case GPUStorage::ATTRIBUTE: return "attribute";
-            case GPUStorage::CONST: return "const";
-            case GPUStorage::UNIFORM: return "uniform";
-            case GPUStorage::NONE: 
-            default:
-            return "";
-        }
-    }
-
     class Statement
     {
     public:

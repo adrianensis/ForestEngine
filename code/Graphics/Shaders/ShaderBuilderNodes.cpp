@@ -25,7 +25,7 @@ namespace ShaderBuilderNodes
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
         std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ")";
-        return {getIndent(indent) + locationStr + " " + getGPUStorageString(mGPUStorage) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + locationStr + " " + std::string(EnumsManager::toString(mGPUStorage)) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
     }
     
     namespace Expressions
