@@ -37,11 +37,3 @@ void GPUBuffersLayout::terminate()
         it->terminate();
     }
 }
-
-void GPUBuffersLayout::enable()
-{
-}
-
-void GPUBuffersLayout::disable()
-{
-}
