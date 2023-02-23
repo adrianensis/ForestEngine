@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
+#include "Core/ClassManager.hpp"
+#include "Core/EnumsManager.hpp"
 #include "Core/Pointers.hpp"
 #include "Core/Maths/Module.hpp"
 #include "Core/Serialization.hpp"
