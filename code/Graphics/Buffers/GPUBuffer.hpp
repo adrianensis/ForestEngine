@@ -9,30 +9,66 @@ enum class GPUBufferPrimitiveType : u32
     FLOAT = GL_FLOAT,
 };
 
+class GPUBufferData
+{
+public:
+	GPUBufferData() = default;
+    GPUBufferData(u32 typeSizeInBytes): mTypeSizeInBytes(typeSizeInBytes) {};
+
+    u32 getPrimitiveTypeSizeInBytes()
+    {
+        u32 primitiveTypeSize = 0;
+        switch (mPrimitiveType)
+        {
+            case GPUBufferPrimitiveType::FLOAT:
+                primitiveTypeSize = sizeof(f32);
+            break;
+            case GPUBufferPrimitiveType::INT:
+                primitiveTypeSize = sizeof(i32);
+            break;
+        }
+
+        return primitiveTypeSize;
+    }
+
+    u32 getSizePrimitiveType()
+    {
+        u32 primitiveTypeSizeInBytes = getPrimitiveTypeSizeInBytes();
+        u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
+        return sizeInPrimitiveTypes;
+    }
+    
+public:
+    GPUBufferPrimitiveType mPrimitiveType = GPUBufferPrimitiveType::FLOAT;
+    u32 mTypeSizeInBytes = 0;
+    u32 mInstanceDivisor = 0;
+    u32 mAttributeDivisorSizeInPrimitiveTypes = 0;
+};
+
 class GPUBuffer
 {
 public:
 	GPUBuffer() = default;
 
-    void init(u32 attributeIndex, u32 typeSizeInBytes, bool isStatic);
+    void init(u32 attributeLocation, const GPUBufferData& data, bool isStatic);
     void resize(u32 size);
     template <class T>
     void setData(const std::vector<T>& data)
     {
 	    GET_SYSTEM(RenderContext).setDataVBOAnyType<T>(mVBO, data);
     }
-    void setInstanceDivisor(u32 divisor) { mDivisor = divisor; };
-    u32 attribute(GPUBufferPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes = 0);
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
     void terminate();
 
 private:
-	bool mIsStatic = false;
+    u32 attribute(GPUBufferPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes = 0);
+
+private:
 	u32 mVBO = 0; // TODO: change u32 for GLuint
-    u32 mAttribute = 0;
+    GPUBufferData mData;
+    u32 mAttributeLocation = 0;
     u32 mAttributeOffset = 0;
     u32 mPreviousOffsetInBytes = 0;
-    u32 mTypeSizeInBytes = 0;
-    u32 mDivisor = 0;
+    bool mIsStatic = false;
 };

@@ -112,8 +112,8 @@ namespace ShaderBuilderNodes
 
         std::vector<std::string> toLines(u16 indent) const override;
 
-        i32 mLocation = -1;
         GPUStorage mGPUStorage = GPUStorage::NONE;
+        i32 mLocation = -1;
     };
 
     // EXPRESSIONS
@@ -128,7 +128,7 @@ namespace ShaderBuilderNodes
         {
         public:
             Unary(const std::string& op, const Variable& var) : mOp(op), mVariable(var) {};
-            Unary(const Variable& var, const std::string& op) : mFront(false), mOp(op), mVariable(var) {};
+            Unary(const Variable& var, const std::string& op) : mOp(op), mVariable(var), mFront(false) {};
             std::vector<std::string> toLines(u16 indent) const override;
 
             std::string mOp = "??";

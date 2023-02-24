@@ -13,29 +13,30 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mIsInstanced = isInstanced;
 	mVAO = GET_SYSTEM(RenderContext).createVAO();
 
+    GPUBufferData bufferDataPosition(sizeof(Vector3));
+    GPUBufferData bufferDataTexture(sizeof(Vector2));
+    GPUBufferData bufferDataColor(sizeof(Vector4));
+
     mBuffersLayout.init(mIsStatic || mIsInstanced);
-    mVBOPosition = mBuffersLayout.addBuffer(sizeof(Vector3));
-    mBuffersLayout.getBuffer(mVBOPosition).attribute(GPUBufferPrimitiveType::FLOAT);
-    mVBOTexture = mBuffersLayout.addBuffer(sizeof(Vector2));
-    mBuffersLayout.getBuffer(mVBOTexture).attribute(GPUBufferPrimitiveType::FLOAT);
-    mVBOColor = mBuffersLayout.addBuffer(sizeof(Vector4));
-    mBuffersLayout.getBuffer(mVBOColor).attribute(GPUBufferPrimitiveType::FLOAT);
+    mVBOPosition = mBuffersLayout.addBuffer(bufferDataPosition);
+    mVBOTexture = mBuffersLayout.addBuffer(bufferDataTexture);
+    mVBOColor = mBuffersLayout.addBuffer(bufferDataColor);
 
 	if(mIsInstanced)
 	{
-		u32 columnBytesSize = Matrix4::smColumnSize * sizeof(f32);
+        GPUBufferData bufferDataMatrix(sizeof(Matrix4));
+        bufferDataMatrix.mInstanceDivisor = 1;
+        bufferDataMatrix.mAttributeDivisorSizeInPrimitiveTypes = Matrix4::smColumnSize;
 
-        mVBOModelMatrix = mBuffersLayout.addBuffer(sizeof(Matrix4));
-        mBuffersLayout.getBuffer(mVBOModelMatrix).setInstanceDivisor(1);
-		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
-		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
-		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
-		mBuffersLayout.getBuffer(mVBOModelMatrix).attribute(GPUBufferPrimitiveType::FLOAT, Matrix4::smColumnSize);
+        mVBOModelMatrix = mBuffersLayout.addBuffer(bufferDataMatrix);
 	}
 
-    mVBOBone = mBuffersLayout.addBuffer(sizeof(BoneVertexData));
-	mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex);
-	mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex);
+    GPUBufferData bufferDataBones(sizeof(BoneVertexData));
+    bufferDataBones.mAttributeDivisorSizeInPrimitiveTypes = BoneVertexData::smMaxBonesPerVertex;
+
+    mVBOBone = mBuffersLayout.addBuffer(bufferDataBones);
+	// mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex);
+	// mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex);
 
 	mEBO = GET_SYSTEM(RenderContext).createEBO();
 }

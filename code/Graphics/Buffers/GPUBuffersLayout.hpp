@@ -11,7 +11,7 @@ public:
     ~GPUBuffersLayout();
 
     void init(bool isStatic);
-    u32 addBuffer(u32 typeSizeInBytes);
+    u32 addBuffer(const GPUBufferData& data);
     GPUBuffer& getBuffer(u32 index);
 
 private:

@@ -12,7 +12,7 @@ void GPUBuffersLayout::init(bool isStatic)
 	mIsStatic = isStatic;
 }
 
-u32 GPUBuffersLayout::addBuffer(u32 typeSizeInBytes)
+u32 GPUBuffersLayout::addBuffer(const GPUBufferData& data)
 {
     if(mBuffers.size() > 0)
     {
@@ -20,7 +20,7 @@ u32 GPUBuffersLayout::addBuffer(u32 typeSizeInBytes)
     }
 
     GPUBuffer& gpuBuffer = mBuffers.emplace_back();
-    gpuBuffer.init(mAttributeIndex, typeSizeInBytes, mIsStatic);
+    gpuBuffer.init(mAttributeIndex, data, mIsStatic);
 
     return mBuffers.size() - 1;
 }
