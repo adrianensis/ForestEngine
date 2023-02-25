@@ -2,15 +2,18 @@
 
 #include "Core/Module.hpp"
 
-class BoneVertexData
+inline static const u32 smMaxBonesPerVertex = 4;
+
+class BoneVertexIDsData
 {
 public:
-	inline static const u32 smMaxBonesPerVertex = 4;
+    i32 mBonesIDs[smMaxBonesPerVertex] = {-1};
+};
 
-    i32 mBoneIDs[smMaxBonesPerVertex] = {-1};
-    f32 mBoneWeights[smMaxBonesPerVertex] = {0.0f};
-
-    void setBoneWeight(i32 id, f32 weight);
+class BoneVertexWeightsData
+{
+public:
+    f32 mBonesWeights[smMaxBonesPerVertex] = {0.0f};
 };
 
 class Model;
@@ -34,7 +37,8 @@ public:
 	std::vector<Vector2> mTextureCoordinates;
 	std::vector<Vector4> mColors;
     std::vector<Face> mFaces;
-	std::vector<BoneVertexData> mBonesVertexData;
+	std::vector<BoneVertexIDsData> mBonesVertexIDsData;
+	std::vector<BoneVertexWeightsData> mBonesVertexWeightsData;
 
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;
@@ -47,5 +51,6 @@ public:
 	ADD_TO_VECTOR(TextureCoordinates)
 	ADD_TO_VECTOR(Colors)
 	ADD_TO_VECTOR(Faces)
-	ADD_TO_VECTOR(BonesVertexData)
+	ADD_TO_VECTOR(BonesVertexIDsData)
+	ADD_TO_VECTOR(BonesVertexWeightsData)
 };

@@ -117,7 +117,8 @@ void Model::init(const std::string& path)
                         Vector2 texCoord = Vector2(assimpTexCoord.x, assimpTexCoord.y);
                         mesh.get().addToTextureCoordinates(texCoord);
 
-                        mesh.get().addToBonesVertexData(BoneVertexData());
+                        mesh.get().addToBonesVertexIDsData(BoneVertexIDsData());
+                        mesh.get().addToBonesVertexWeightsData(BoneVertexWeightsData());
                     }
                 }
 

@@ -77,27 +77,29 @@ void Renderer::update(bool regenerateVertices)
 
 				if(isAnimated)
 				{
-					const u32 MAX_BONE_INFLUENCE = BoneVertexData::smMaxBonesPerVertex;
+					const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
 					const u32 MAX_BONES = 100;
 
 					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().mModel);
-					const std::vector<BoneVertexData>& bonesVertexData = mMesh.get().mBonesVertexData;
+					const std::vector<BoneVertexIDsData>& bonesVertexIDsData = mMesh.get().mBonesVertexIDsData;
+					const std::vector<BoneVertexWeightsData>& boneVertexWeightsData = mMesh.get().mBonesVertexWeightsData;
 
 					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
 					for(int boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
 					{
-						const BoneVertexData& boneVertexData = bonesVertexData[i];
-						if(boneVertexData.mBoneIDs[boneIt] > -1)
+						const BoneVertexIDsData& IDsData = bonesVertexIDsData[i];
+						const BoneVertexWeightsData& wightsData = boneVertexWeightsData[i];
+						if(IDsData.mBonesIDs[boneIt] > -1)
 						{
-							if(boneVertexData.mBoneIDs[boneIt] >= MAX_BONES) 
+							if(IDsData.mBonesIDs[boneIt] >= MAX_BONES) 
 							{
 								skinnedVertexPosition = vertexPosition;
 								//ASSERT_MSG(false, "TODO: review MAX_BONES!");
 								break;
 							}
 
-							Vector4 localPosition = boneTransforms[boneVertexData.mBoneIDs[boneIt]].mulVector(Vector4(vertexPosition,1.0f));
-							skinnedVertexPosition += localPosition * boneVertexData.mBoneWeights[boneIt];
+							Vector4 localPosition = boneTransforms[IDsData.mBonesIDs[boneIt]].mulVector(Vector4(vertexPosition,1.0f));
+							skinnedVertexPosition += localPosition * wightsData.mBonesWeights[boneIt];
 						}
 					}
 
@@ -169,7 +171,8 @@ Ptr<const Mesh> Renderer::generateMeshInstance()
 		mMeshInstance.get().addToTextureCoordinates(textureCoord);
 	}
 
-	mMeshInstance.get().appendToBonesVertexData(mMesh.get().mBonesVertexData);
+	mMeshInstance.get().appendToBonesVertexIDsData(mMesh.get().mBonesVertexIDsData);
+	mMeshInstance.get().appendToBonesVertexWeightsData(mMesh.get().mBonesVertexWeightsData);
 
 	return mMeshInstance;
 }

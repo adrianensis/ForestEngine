@@ -1,23 +1,6 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void BoneVertexData::setBoneWeight(i32 id, f32 weight)
-{
-	FOR_RANGE(i, 0, smMaxBonesPerVertex)
-	{
-		if (mBoneIDs[i] == -1)
-		{
-			mBoneIDs[i] = id;
-			mBoneWeights[i] = weight;
-			//printf("bone %d weight %f index %i\n", id, weight, i);
-			return;
-		}
-	}
-
-	// should never get here - more bones than we have space for
-	//ASSERT_MSG(false, "should never get here - more bones than we have space for");
-}
-
 void Mesh::init(u32 vertexCount, u32 facesCount)
 {
 	mVertexCount = vertexCount;
@@ -28,7 +11,22 @@ void Mesh::init(u32 vertexCount, u32 facesCount)
 
 void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 {
-	mBonesVertexData[vertexId].setBoneWeight(id, weight);
+	BoneVertexIDsData& boneVertexIDsData = mBonesVertexIDsData[vertexId]; //.setBoneWeight(id, weight);
+	BoneVertexWeightsData& boneVertexWeightsData = mBonesVertexWeightsData[vertexId]; //.setBoneWeight(id, weight);
+
+    FOR_RANGE(i, 0, smMaxBonesPerVertex)
+	{
+		if (boneVertexIDsData.mBonesIDs[i] == -1)
+		{
+			boneVertexIDsData.mBonesIDs[i] = id;
+			boneVertexWeightsData.mBonesWeights[i] = weight;
+			//printf("bone %d weight %f index %i\n", id, weight, i);
+			return;
+		}
+	}
+
+	// should never get here - more bones than we have space for
+	//ASSERT_MSG(false, "should never get here - more bones than we have space for");
 }
 
 void Mesh::clear()
@@ -38,14 +36,16 @@ void Mesh::clear()
 	mTextureCoordinates.clear();
 	mColors.clear();
 	mFaces.clear();
-	mBonesVertexData.clear();
+	mBonesVertexIDsData.clear();
+	mBonesVertexWeightsData.clear();
 
 	mPositions.reserve(mVertexCount);
 	mTextureCoordinates.reserve(mVertexCount);
 	mColors.reserve(mVertexCount);
 	mNormals.reserve(mVertexCount);
 	mFaces.reserve(mFacesCount);
-	mBonesVertexData.reserve(mVertexCount);
+	mBonesVertexIDsData.reserve(mVertexCount);
+	mBonesVertexWeightsData.reserve(mVertexCount);
 
     mMaterial.invalidate();
 }

@@ -36,7 +36,8 @@ public:
     u32 mVBOPosition = 0;
 	u32 mVBOTexture = 0;
 	u32 mVBOColor = 0;
-	u32 mVBOBone = 0;
+	u32 mVBOBonesIDs = 0;
+	u32 mVBOBonesWeights = 0;
 	u32 mVBOModelMatrix = 0;
 
     GPUBuffersLayout mBuffersLayout;

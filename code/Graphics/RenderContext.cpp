@@ -105,10 +105,7 @@ void RenderContext::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primi
 		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, strideSize, (byte*) pointerOffset);
 	}
 
-	if(divisor > 0)
-	{
-		glVertexAttribDivisor(propertyArrayIndex, divisor);
-	}
+    glVertexAttribDivisor(propertyArrayIndex, divisor);
 }
 
 GLuint RenderContext::createVAO()

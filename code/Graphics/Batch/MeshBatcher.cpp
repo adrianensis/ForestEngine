@@ -15,7 +15,8 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 		mMeshBuilder.appendToPositions(mPrototypeMesh.get().mPositions);
 		mMeshBuilder.appendToTextureCoordinates(mPrototypeMesh.get().mTextureCoordinates);
         mMeshBuilder.appendToColors(mPrototypeMesh.get().mColors);
-		mMeshBuilder.appendToBonesVertexData(mPrototypeMesh.get().mBonesVertexData);
+		mMeshBuilder.appendToBonesVertexIDsData(mPrototypeMesh.get().mBonesVertexIDsData);
+		mMeshBuilder.appendToBonesVertexWeightsData(mPrototypeMesh.get().mBonesVertexWeightsData);
 
 		generateFacesData(1);
 		mMeshBuffer.resize(mMeshBuilder);
@@ -80,7 +81,8 @@ void MeshBatcher::addInstance(Ptr<const Mesh> meshInstance)
 	mMeshBuilder.appendToPositions(meshInstance.get().mPositions);
 	mMeshBuilder.appendToTextureCoordinates(meshInstance.get().mTextureCoordinates);
 	mMeshBuilder.appendToColors(meshInstance.get().mColors);
-	mMeshBuilder.appendToBonesVertexData(meshInstance.get().mBonesVertexData);
+	mMeshBuilder.appendToBonesVertexIDsData(meshInstance.get().mBonesVertexIDsData);
+	mMeshBuilder.appendToBonesVertexWeightsData(meshInstance.get().mBonesVertexWeightsData);
 
 	mMeshesIndex++;
 }

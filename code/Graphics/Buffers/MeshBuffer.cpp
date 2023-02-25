@@ -13,13 +13,12 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mIsInstanced = isInstanced;
 	mVAO = GET_SYSTEM(RenderContext).createVAO();
 
-    GPUBufferData bufferDataPosition(sizeof(Vector3));
-    GPUBufferData bufferDataTexture(sizeof(Vector2));
-    GPUBufferData bufferDataColor(sizeof(Vector4));
-
     mBuffersLayout.init(mIsStatic || mIsInstanced);
+    GPUBufferData bufferDataPosition(sizeof(Vector3));
     mVBOPosition = mBuffersLayout.addBuffer(bufferDataPosition);
+    GPUBufferData bufferDataTexture(sizeof(Vector2));
     mVBOTexture = mBuffersLayout.addBuffer(bufferDataTexture);
+    GPUBufferData bufferDataColor(sizeof(Vector4));
     mVBOColor = mBuffersLayout.addBuffer(bufferDataColor);
 
 	if(mIsInstanced)
@@ -31,12 +30,12 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
         mVBOModelMatrix = mBuffersLayout.addBuffer(bufferDataMatrix);
 	}
 
-    GPUBufferData bufferDataBones(sizeof(BoneVertexData));
-    bufferDataBones.mAttributeDivisorSizeInPrimitiveTypes = BoneVertexData::smMaxBonesPerVertex;
+    GPUBufferData bufferDataBonesIDs(sizeof(BoneVertexIDsData));
+    bufferDataBonesIDs.mPrimitiveType = GPUBufferPrimitiveType::INT;
+    mVBOBonesIDs = mBuffersLayout.addBuffer(bufferDataBonesIDs);
 
-    mVBOBone = mBuffersLayout.addBuffer(bufferDataBones);
-	// mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::INT, BoneVertexData::smMaxBonesPerVertex);
-	// mBuffersLayout.getBuffer(mVBOBone).attribute(GPUBufferPrimitiveType::FLOAT, BoneVertexData::smMaxBonesPerVertex);
+    GPUBufferData bufferDataBonesWeights(sizeof(BoneVertexIDsData));
+    mVBOBonesWeights = mBuffersLayout.addBuffer(bufferDataBonesWeights);
 
 	mEBO = GET_SYSTEM(RenderContext).createEBO();
 }
@@ -53,7 +52,8 @@ void MeshBuffer::resize(const Mesh& mesh)
 	mBuffersLayout.getBuffer(mVBOPosition).resize(mesh.mPositions.capacity());
 	mBuffersLayout.getBuffer(mVBOTexture).resize(mesh.mTextureCoordinates.capacity());
 	mBuffersLayout.getBuffer(mVBOColor).resize(mesh.mColors.capacity());
-	mBuffersLayout.getBuffer(mVBOBone).resize(mesh.mBonesVertexData.capacity());
+	mBuffersLayout.getBuffer(mVBOBonesIDs).resize(mesh.mBonesVertexIDsData.capacity());
+	mBuffersLayout.getBuffer(mVBOBonesWeights).resize(mesh.mBonesVertexWeightsData.capacity());
 	
 	if(mIsInstanced)
 	{
@@ -66,7 +66,8 @@ void MeshBuffer::setData(const Mesh& mesh)
 	mBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
 	mBuffersLayout.getBuffer(mVBOTexture).setData(mesh.mTextureCoordinates);
 	mBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
-	mBuffersLayout.getBuffer(mVBOBone).setData(mesh.mBonesVertexData);
+	mBuffersLayout.getBuffer(mVBOBonesIDs).setData(mesh.mBonesVertexIDsData);
+	mBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
 }
 
 void MeshBuffer::setIndexesData(const Mesh& mesh)
