@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Graphics/Buffers/MeshBuffer.hpp"
+#include "Graphics/Buffers/GPUMeshBuffer.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 
 class MeshBatcher: public ObjectBase
 {
@@ -28,7 +29,7 @@ public:
 
 private:
 	Mesh mMeshBuilder;
-	MeshBuffer mMeshBuffer;
+	GPUMeshBuffer mGPUMeshBuffer;
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;

@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Buffers/GPUBuffersLayout.hpp"
 
-class MeshBuffer
+class Mesh;
+
+class GPUMeshBuffer
 {
 public:
-	MeshBuffer() = default;
+	GPUMeshBuffer() = default;
 	
-    ~MeshBuffer();
+    ~GPUMeshBuffer();
 
     void init(bool isStatic, bool isInstanced);
     void resize(const Mesh& mesh);

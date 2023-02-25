@@ -5,10 +5,10 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 {
 	PROFILER_CPU()
 
-	mMeshBuffer.init(isStatic, isInstanced);
+	mGPUMeshBuffer.init(isStatic, isInstanced);
 	mPrototypeMesh = prototypeMesh;
 	
-	if(mMeshBuffer.mIsInstanced)
+	if(mGPUMeshBuffer.mIsInstanced)
 	{
 		mMeshBuilder.init(mPrototypeMesh.get().mVertexCount * 1, mPrototypeMesh.get().mFacesCount * 1);
 
@@ -19,11 +19,11 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 		mMeshBuilder.appendToBonesVertexWeightsData(mPrototypeMesh.get().mBonesVertexWeightsData);
 
 		generateFacesData(1);
-		mMeshBuffer.resize(mMeshBuilder);
+		mGPUMeshBuffer.resize(mMeshBuilder);
 
 		mDataSentToGPU = false;
 
-		mMeshBuffer.setData(mMeshBuilder);
+		mGPUMeshBuffer.setData(mMeshBuilder);
 
 		mMeshesIndex = 0;
 	}
@@ -48,15 +48,15 @@ void MeshBatcher::resize(u32 size)
 			mMaxMeshesThreshold += mMaxMeshesIncrement;
 		}
 
-		if (mMeshBuffer.mIsInstanced)
+		if (mGPUMeshBuffer.mIsInstanced)
 		{
-			mMeshBuffer.setMaxInstances(mMaxMeshesThreshold);
+			mGPUMeshBuffer.setMaxInstances(mMaxMeshesThreshold);
 		}
 		else
 		{
 			mMeshBuilder.init(mPrototypeMesh.get().mVertexCount * mMaxMeshesThreshold, mPrototypeMesh.get().mFacesCount * mMaxMeshesThreshold);
 			generateFacesData(mMaxMeshesThreshold);
-			mMeshBuffer.resize(mMeshBuilder);
+			mGPUMeshBuffer.resize(mMeshBuilder);
 		}
 	}
 
@@ -69,7 +69,7 @@ void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
 {
 	PROFILER_CPU()
 
-	mMeshBuffer.addInstanceMatrix(modelMatrix);
+	mGPUMeshBuffer.addInstanceMatrix(modelMatrix);
 
 	mMeshesIndex++;
 }
@@ -95,18 +95,18 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(RenderContext).drawElements(mPrototypeMesh.get().mFaces.size() * 3, mMeshesIndex, mMeshBuffer.mIsInstanced);
+		GET_SYSTEM(RenderContext).drawElements(mPrototypeMesh.get().mFaces.size() * 3, mMeshesIndex, mGPUMeshBuffer.mIsInstanced);
 	}
 }
 
 void MeshBatcher::enable()
 {
-	mMeshBuffer.enable();
+	mGPUMeshBuffer.enable();
 }
 
 void MeshBatcher::disable()
 {
-	mMeshBuffer.disable();
+	mGPUMeshBuffer.disable();
 }
 
 bool MeshBatcher::isAnimated() const
@@ -123,11 +123,11 @@ bool MeshBatcher::isAnimated() const
 void MeshBatcher::clear()
 {
 	PROFILER_CPU()
-	if( ! mMeshBuffer.mIsInstanced)
+	if( ! mGPUMeshBuffer.mIsInstanced)
 	{
 		mMeshBuilder.clear();
 	}
-	mMeshBuffer.clear();
+	mGPUMeshBuffer.clear();
 }
 
 void MeshBatcher::generateFacesData(u32 meshesCount)
@@ -149,18 +149,18 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 		}
 	}
 
-	mMeshBuffer.setIndexesData(mMeshBuilder);
+	mGPUMeshBuffer.setIndexesData(mMeshBuilder);
 }
 
 void MeshBatcher::sendDataToGPU()
 {	
-    if(mMeshBuffer.mIsInstanced)
+    if(mGPUMeshBuffer.mIsInstanced)
     {
-        mMeshBuffer.setDataInstanced();
+        mGPUMeshBuffer.setDataInstanced();
     }
     else
     {
-        mMeshBuffer.setData(mMeshBuilder);
+        mGPUMeshBuffer.setData(mMeshBuilder);
     }
 
     mDataSentToGPU = true;

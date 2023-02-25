@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
 
 enum class GPUBufferPrimitiveType : u32
 {

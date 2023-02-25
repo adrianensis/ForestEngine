@@ -1,11 +1,12 @@
-#include "Graphics/Buffers/MeshBuffer.hpp"
+#include "Graphics/Buffers/GPUMeshBuffer.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 
-MeshBuffer::~MeshBuffer() 
+GPUMeshBuffer::~GPUMeshBuffer() 
 {
     terminate();
 }
 
-void MeshBuffer::init(bool isStatic, bool isInstanced)
+void GPUMeshBuffer::init(bool isStatic, bool isInstanced)
 {
 	PROFILER_CPU()
 
@@ -40,14 +41,14 @@ void MeshBuffer::init(bool isStatic, bool isInstanced)
 	mEBO = GET_SYSTEM(RenderContext).createEBO();
 }
 
-void MeshBuffer::terminate()
+void GPUMeshBuffer::terminate()
 {
     disable();
     GET_SYSTEM(RenderContext).deleteVAO(mVAO);
     GET_SYSTEM(RenderContext).deleteEBO(mEBO);
 }
 
-void MeshBuffer::resize(const Mesh& mesh)
+void GPUMeshBuffer::resize(const Mesh& mesh)
 {
 	mBuffersLayout.getBuffer(mVBOPosition).resize(mesh.mPositions.capacity());
 	mBuffersLayout.getBuffer(mVBOTexture).resize(mesh.mTextureCoordinates.capacity());
@@ -61,7 +62,7 @@ void MeshBuffer::resize(const Mesh& mesh)
 	}
 }
 
-void MeshBuffer::setData(const Mesh& mesh)
+void GPUMeshBuffer::setData(const Mesh& mesh)
 {
 	mBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
 	mBuffersLayout.getBuffer(mVBOTexture).setData(mesh.mTextureCoordinates);
@@ -70,13 +71,13 @@ void MeshBuffer::setData(const Mesh& mesh)
 	mBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
 }
 
-void MeshBuffer::setIndexesData(const Mesh& mesh)
+void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
 {
 	GET_SYSTEM(RenderContext).resizeEBO(mEBO, mesh.mFaces.size() * 3, mIsStatic || mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	GET_SYSTEM(RenderContext).setDataEBO(mEBO, mesh.mFaces);
 }
 
-void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
+void GPUMeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 {
 	PROFILER_CPU()
 
@@ -86,12 +87,12 @@ void MeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 	}
 }
 
-void MeshBuffer::setDataInstanced()
+void GPUMeshBuffer::setDataInstanced()
 {
 	mBuffersLayout.getBuffer(mVBOModelMatrix).setData(mMatrices);
 }
 
-void MeshBuffer::clear()
+void GPUMeshBuffer::clear()
 {
 	PROFILER_CPU()
 
@@ -101,7 +102,7 @@ void MeshBuffer::clear()
 	}
 }
 
-void MeshBuffer::setMaxInstances(u32 maxInstances)
+void GPUMeshBuffer::setMaxInstances(u32 maxInstances)
 {
 	PROFILER_CPU()
 
@@ -112,12 +113,12 @@ void MeshBuffer::setMaxInstances(u32 maxInstances)
 	}
 }
 
-void MeshBuffer::enable()
+void GPUMeshBuffer::enable()
 {
 	GET_SYSTEM(RenderContext).enableVAO(mVAO);
 }
 
-void MeshBuffer::disable()
+void GPUMeshBuffer::disable()
 {
 	GET_SYSTEM(RenderContext).enableVAO(0);
 }

@@ -39,7 +39,7 @@ public:
     template <typename E>
     static const std::string_view& getEnumNameFromTemplate()
     {
-        return std::string_view();
+        return mEmptyName;
     }
     template <typename E>
     static const std::string_view& toString(E enumToken)
@@ -60,4 +60,5 @@ private:
     static const EnumInfo& create(const std::string_view& enumName, const std::vector<std::string_view>& names);
 private:
     inline static std::unordered_map<std::string_view, EnumInfo> mEnumsMapByName;
+    inline static std::string_view mEmptyName;
 };
