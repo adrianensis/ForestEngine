@@ -7,7 +7,6 @@ class GPUBuffersLayout
 {
 public:
 	GPUBuffersLayout() = default;
-	
     ~GPUBuffersLayout();
 
     void init(bool isStatic);
@@ -23,5 +22,5 @@ private:
 public:
 	bool mIsStatic = false;
 public:
-    CRGET(Buffers);
+    CRGET(Buffers)
 };

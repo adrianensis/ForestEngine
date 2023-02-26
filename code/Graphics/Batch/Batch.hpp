@@ -76,6 +76,8 @@ private:
 private:
 	std::list<Ptr<Renderer>> mRenderers;
 
+    OwnerPtr<Shader> mShader;
+
 	MeshBatcher mMeshBatcher;
 
     BatchData mBatchData;

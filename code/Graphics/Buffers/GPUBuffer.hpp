@@ -6,13 +6,15 @@ enum class GPUBufferPrimitiveType : u32
 {
     INT = GL_INT,
     FLOAT = GL_FLOAT,
+    BOOL = GL_BOOL,
 };
 
-class GPUBufferData
+class GPUDataType
 {
 public:
-	GPUBufferData() = default;
-    GPUBufferData(const std::string_view& attributeName, u32 typeSizeInBytes): mTypeSizeInBytes(typeSizeInBytes), mAttributeName(attributeName) {};
+    std::string mTypeName;
+    u32 mTypeSizeInBytes;
+    GPUBufferPrimitiveType mPrimitiveType = GPUBufferPrimitiveType::FLOAT;
 
     u32 getPrimitiveTypeSizeInBytes()
     {
@@ -25,6 +27,9 @@ public:
             case GPUBufferPrimitiveType::INT:
                 primitiveTypeSize = sizeof(i32);
             break;
+            case GPUBufferPrimitiveType::BOOL:
+                primitiveTypeSize = sizeof(bool);
+            break;
         }
 
         return primitiveTypeSize;
@@ -36,14 +41,32 @@ public:
         u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
         return sizeInPrimitiveTypes;
     }
+};
+
+class GPUVariableData
+{
+public:
+    GPUDataType mGPUDataType;
+    std::string mAttributeName;
+    std::string mValue;
+    std::string mArraySize;
+};
+
+class GPUBufferData
+{
+public:
+	GPUBufferData() = default;
+    GPUBufferData(const GPUDataType& gpuDataType, const std::string_view& attributeName)
+    {
+        mGPUVariableData.mAttributeName = attributeName;
+        mGPUVariableData.mGPUDataType = gpuDataType;
+    };
+    GPUBufferData(const GPUVariableData& gpuVariableData): mGPUVariableData(gpuVariableData) {};
     
 public:
-    GPUBufferPrimitiveType mPrimitiveType = GPUBufferPrimitiveType::FLOAT;
-    u32 mTypeSizeInBytes = 0;
     u32 mInstanceDivisor = 0;
     u32 mAttributeDivisorSizeInPrimitiveTypes = 0;
-    std::string mAttributeName;
-    std::string mTypeName;
+    GPUVariableData mGPUVariableData;
 };
 
 class GPUBuffer

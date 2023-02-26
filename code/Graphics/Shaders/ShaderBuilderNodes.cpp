@@ -122,7 +122,19 @@ namespace ShaderBuilderNodes
     {
         std::vector<std::string> code;
 
-        code.push_back(getIndent(indent) + mType + " " + mName + "()");
+        std::string paramsStr = "";
+        
+        FOR_ARRAY(i, mParameters)
+        {
+            paramsStr += "in " + mParameters[i].mType + " " + mParameters[i].mName;
+
+            if(i < mParameters.size() - 1)
+            {
+                paramsStr += ",";
+            }
+        }
+
+        code.push_back(getIndent(indent) + mType + " " + mName + "(" + paramsStr + ")");
         auto statementCode = mBlockStatement.toLines(indent);
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;
@@ -137,7 +149,7 @@ namespace ShaderBuilderNodes
         return mAttributes.emplace_back(Attribute(GPUStorage, location, var));
     }
 
-    const Attribute& Program::getAttribute(const std::string_view& attributeName)
+    const Attribute& Program::getAttribute(const std::string_view& attributeName) const
     {
         FOR_LIST(it, mAttributes)
         {

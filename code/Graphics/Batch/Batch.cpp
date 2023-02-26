@@ -10,13 +10,19 @@
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
+#include "Graphics/Shaders/ShaderBuilder.hpp"
 
 void Batch::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced);
+
+    ShaderBuilder sb;
+    const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
+    sb.createShader(gpuBuffersLayout, mBatchData.mMaterial);
+    std::string code = sb.getCode();
+    ECHO(code);
 }
 
 void Batch::render()
@@ -42,16 +48,7 @@ void Batch::enable()
 {
     mMeshBatcher.enable();
     mBatchData.mMaterial.get().enable();
-    mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced);
-
-    bool isAnimated = mMeshBatcher.isAnimated();
-    mBatchData.mMaterial.get().mShader.get().addBool(isAnimated, "hasAnimations");
-    
-    if(isAnimated)
-    {
-        const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(mMeshBatcher.mPrototypeMesh.get().mModel);
-        mBatchData.mMaterial.get().mShader.get().addMatrixArray(transforms, "gBones");
-    }
+    mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh.get().mModel);
 
     if(mBatchData.mStencilValue > 0x00)
     {

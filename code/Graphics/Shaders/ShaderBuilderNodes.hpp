@@ -87,7 +87,7 @@ namespace ShaderBuilderNodes
     };
 
     inline static Variable literal(const std::string& value) { return Variable(value); }
-    inline static Variable call(const std::string& funcName, std::vector<Variable> params)
+    inline static Variable call(const std::string& funcName, const std::vector<Variable>& params)
     {
         std::string callStr = funcName;
         callStr += "(";
@@ -226,11 +226,13 @@ namespace ShaderBuilderNodes
     {
     public:
         FunctionDefinition(const std::string& type, const std::string& name) : mType(type), mName(name) {};
+        FunctionDefinition(const std::string& type, const std::string& name, const std::vector<Variable>& params) : mType(type), mName(name), mParameters(params) {};
         BlockStatement& body() { return mBlockStatement; };
         std::vector<std::string> toLines(u16 indent) const override;
 
         std::string mType = "??";
         std::string mName = "??";
+        std::vector<Variable> mParameters;
         BlockStatement mBlockStatement;
     };
 
@@ -249,7 +251,7 @@ namespace ShaderBuilderNodes
             return mFunctionDefinitions.emplace_back(args...);
         }
 
-        const Attribute& getAttribute(const std::string_view& attributeName);
+        const Attribute& getAttribute(const std::string_view& attributeName) const;
 
         std::vector<std::string> toLines(u16 indent) const;
 

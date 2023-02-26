@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Graphics/Buffers/GPUBuffer.hpp"
 
 enum class TextureType
 {
@@ -150,6 +151,7 @@ enum class TextureType
 
 class Texture;
 class Shader;
+class Model;
 
 class Material: public ObjectBase
 {
@@ -159,7 +161,7 @@ class Material: public ObjectBase
 public:
     Material();
     void init(u32 id);
-    void bind(bool isWorldSpace, bool isInstanced) const;
+    void bind(bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
     void enable() const;
     void disable() const;
 
@@ -170,5 +172,13 @@ public:
 	bool mHasBorder = false;
 
 private:
+    std::vector<GPUVariableData> mUniforms;
+    std::vector<GPUVariableData> mConsts;
+    std::vector<GPUVariableData> mVertexOutputs;
     u32 mID = 0;
+
+public:
+    CRGET(Uniforms)
+    CRGET(Consts)
+    CRGET(VertexOutputs)
 };

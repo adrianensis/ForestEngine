@@ -1,6 +1,9 @@
 #include "Graphics/Shaders/ShaderBuilder.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Buffers/GPUBuffersLayout.hpp"
+#include "Graphics/Buffers/GPUDefinitions.hpp"
+#include "Graphics/Material/Material.hpp"
+#include "Graphics/Shaders/ShaderBuilderFunctionsLibrary.hpp"
 
 ShaderBuilder::ShaderBuilder()
 {
@@ -9,60 +12,50 @@ ShaderBuilder::ShaderBuilder()
 
 void ShaderBuilder::createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-    const std::vector<GPUBuffer>& gpuBuffers = gpuBuffersLayout.getBuffers();
-
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
 
+    const std::vector<GPUBuffer>& gpuBuffers = gpuBuffersLayout.getBuffers();
     FOR_LIST(it, gpuBuffers)
     {
         const GPUBuffer& gpuBuffer = *it;
-        get().attribute(GPUStorage::IN, gpuBuffer.getAttributeLocation(), {"vec3", gpuBuffer.mData.mAttributeName});
+        get().attribute(GPUStorage::IN, gpuBuffer.getAttributeLocation(), {gpuBuffer.mData.mGPUVariableData.mGPUDataType.mTypeName, gpuBuffer.mData.mGPUVariableData.mAttributeName});
     }
 
-    get().attribute(GPUStorage::UNIFORM, {"float", "time"});
-    get().attribute(GPUStorage::UNIFORM, {"mat4", "viewMatrix"});
-    get().attribute(GPUStorage::UNIFORM, {"mat4", "projectionMatrix"});
-    get().attribute(GPUStorage::UNIFORM, {"vec4", "positionOffset"});
-    auto& isInstanced = get().attribute(GPUStorage::UNIFORM, {"bool", "isInstanced"});
-    auto& hasAnimations = get().attribute(GPUStorage::UNIFORM, {"bool", "hasAnimations"});
+    const std::vector<GPUVariableData>& uniforms = material.get().getUniforms();
+    FOR_LIST(it, uniforms)
+    {
+        const GPUVariableData& uniformVar = *it;
+        get().attribute(GPUStorage::UNIFORM, {uniformVar.mGPUDataType.mTypeName, uniformVar.mAttributeName, uniformVar.mValue, uniformVar.mArraySize});
+    }
 
-    auto& MAX_BONES = get().attribute(GPUStorage::CONST, {"int", "MAX_BONES", "100"});
-    auto& MAX_BONE_INFLUENCE = get().attribute(GPUStorage::CONST, {"int", "MAX_BONE_INFLUENCE", "4"});
+    const std::vector<GPUVariableData>& consts = material.get().getConsts();
+    FOR_LIST(it, consts)
+    {
+        const GPUVariableData& constVar = *it;
+        get().attribute(GPUStorage::CONST, {constVar.mGPUDataType.mTypeName, constVar.mAttributeName, constVar.mValue, constVar.mArraySize});
+    }
 
-    auto& gBones = get().attribute(GPUStorage::UNIFORM, {"bool", "gBones", "", MAX_BONES});
+    const std::vector<GPUVariableData>& outputs = material.get().getVertexOutputs();
+    FOR_LIST(it, outputs)
+    {
+        const GPUVariableData& outputVar = *it;
+        get().attribute(GPUStorage::OUT, {outputVar.mGPUDataType.mTypeName, outputVar.mAttributeName, outputVar.mValue, outputVar.mArraySize});
+    }
 
-    // auto& pos = get().attribute(GPUStorage::IN, 0, {"vec3", "position"});
-    // get().attribute(GPUStorage::IN, 1, {"vec2", "texcoord"});
-    // get().attribute(GPUStorage::IN, 2, {"vec4", "color"});
-    // get().attribute(GPUStorage::IN, 3, {"mat4", "modelMatrix"});
-    // auto& bonesIDs = get().attribute(GPUStorage::IN, 7, {"ivec4", "BoneIDs"});
-    // auto& Weights = get().attribute(GPUStorage::IN, 8, {"vec4", "Weights"});
+    ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
 
-    get().attribute(GPUStorage::OUT, {"vec2", "vTexcoord"});
-    get().attribute(GPUStorage::OUT, {"vec4", "vColor"});
+    FunctionDefinition func = shaderBuilderFunctionsLibrary.getFunctionCalculateSkinnedPosition(get());
+    get().function(func);
 
+    // // retrieve the needed attributes
+    auto& position = get().getAttribute(GPUBuiltIn::VertexInput::mPosition.mAttributeName);
     auto& mainFunc = get().function("void", "main");
 
-    Variable totalPosition;
-    Variable localPosition;
-    
+    Variable finalPositon;
+
     mainFunc.body().
-    variable(totalPosition, "vec4", "totalPosition", call("vec4", {get().getAttribute("position"), {"1.0f"}})).
-    ifBlock(isInstanced, "&&", hasAnimations).
-        set(totalPosition, call("vec4", {{"0.0f"}})).
-        forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
-            ifBlock(get().getAttribute("BoneIDs").at("i"), "==", {"-1"}).
-                line("continue").
-            end().
-            ifBlock(get().getAttribute("BoneIDs").at("i"), ">=", MAX_BONES).
-                set(totalPosition, call("vec4", {get().getAttribute("position"), {"1.0f"}})).
-                line("break").
-            end().
-            variable(localPosition, "vec4", "localPosition", gBones.at(get().getAttribute("BoneIDs").at("i")).mul(call("vec4", {get().getAttribute("position"), {"1.0f"}})).getNameOrValue()).
-            set(totalPosition, totalPosition.add(localPosition.mul(get().getAttribute("Weights").at("i")))).
-        end().
-    end();
+    variable(finalPositon, "vec4", "finalPositon", call(func.mName, {position, {"1.0f"}}));
 }
 
 std::string ShaderBuilder::getCode() const
