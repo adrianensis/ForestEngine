@@ -12,7 +12,7 @@ class GPUBufferData
 {
 public:
 	GPUBufferData() = default;
-    GPUBufferData(u32 typeSizeInBytes): mTypeSizeInBytes(typeSizeInBytes) {};
+    GPUBufferData(const std::string_view& attributeName, u32 typeSizeInBytes): mTypeSizeInBytes(typeSizeInBytes), mAttributeName(attributeName) {};
 
     u32 getPrimitiveTypeSizeInBytes()
     {
@@ -42,6 +42,8 @@ public:
     u32 mTypeSizeInBytes = 0;
     u32 mInstanceDivisor = 0;
     u32 mAttributeDivisorSizeInPrimitiveTypes = 0;
+    std::string mAttributeName;
+    std::string mTypeName;
 };
 
 class GPUBuffer
@@ -63,9 +65,10 @@ public:
 private:
     u32 attribute(GPUBufferPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes = 0);
 
+public:
+    GPUBufferData mData;
 private:
 	u32 mVBO = 0; // TODO: change u32 for GLuint
-    GPUBufferData mData;
     u32 mAttributeLocation = 0;
     u32 mAttributeOffset = 0;
     u32 mPreviousOffsetInBytes = 0;

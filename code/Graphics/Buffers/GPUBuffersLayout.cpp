@@ -32,7 +32,7 @@ GPUBuffer& GPUBuffersLayout::getBuffer(u32 index)
 
 void GPUBuffersLayout::terminate()
 {
-    FOR_LIST(it, mBuffers)
+    FOR_MAP(it, mBuffers)
     {
         it->terminate();
     }

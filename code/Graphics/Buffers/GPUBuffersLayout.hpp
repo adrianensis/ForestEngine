@@ -22,4 +22,6 @@ private:
     u32 mAttributeIndex = 0;
 public:
 	bool mIsStatic = false;
+public:
+    CRGET(Buffers);
 };

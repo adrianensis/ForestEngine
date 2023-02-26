@@ -137,6 +137,19 @@ namespace ShaderBuilderNodes
         return mAttributes.emplace_back(Attribute(GPUStorage, location, var));
     }
 
+    const Attribute& Program::getAttribute(const std::string_view& attributeName)
+    {
+        FOR_LIST(it, mAttributes)
+        {
+            if(it->mName == attributeName)
+            {
+                return *it;
+            }
+        }
+
+        return mNullAttribute;
+    }
+
     std::vector<std::string> Program::toLines(u16 indent) const
     {
         std::vector<std::string> code;

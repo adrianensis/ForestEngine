@@ -15,27 +15,27 @@ void GPUMeshBuffer::init(bool isStatic, bool isInstanced)
 	mVAO = GET_SYSTEM(RenderContext).createVAO();
 
     mBuffersLayout.init(mIsStatic || mIsInstanced);
-    GPUBufferData bufferDataPosition(sizeof(Vector3));
+    GPUBufferData bufferDataPosition("position",sizeof(Vector3));
     mVBOPosition = mBuffersLayout.addBuffer(bufferDataPosition);
-    GPUBufferData bufferDataTexture(sizeof(Vector2));
+    GPUBufferData bufferDataTexture("texcoord",sizeof(Vector2));
     mVBOTexture = mBuffersLayout.addBuffer(bufferDataTexture);
-    GPUBufferData bufferDataColor(sizeof(Vector4));
+    GPUBufferData bufferDataColor("color",sizeof(Vector4));
     mVBOColor = mBuffersLayout.addBuffer(bufferDataColor);
 
 	if(mIsInstanced)
 	{
-        GPUBufferData bufferDataMatrix(sizeof(Matrix4));
+        GPUBufferData bufferDataMatrix("modelMatrix",sizeof(Matrix4));
         bufferDataMatrix.mInstanceDivisor = 1;
         bufferDataMatrix.mAttributeDivisorSizeInPrimitiveTypes = Matrix4::smColumnSize;
 
         mVBOModelMatrix = mBuffersLayout.addBuffer(bufferDataMatrix);
 	}
 
-    GPUBufferData bufferDataBonesIDs(sizeof(BoneVertexIDsData));
+    GPUBufferData bufferDataBonesIDs("BoneIDs",sizeof(BoneVertexIDsData));
     bufferDataBonesIDs.mPrimitiveType = GPUBufferPrimitiveType::INT;
     mVBOBonesIDs = mBuffersLayout.addBuffer(bufferDataBonesIDs);
 
-    GPUBufferData bufferDataBonesWeights(sizeof(BoneVertexIDsData));
+    GPUBufferData bufferDataBonesWeights("Weights",sizeof(BoneVertexIDsData));
     mVBOBonesWeights = mBuffersLayout.addBuffer(bufferDataBonesWeights);
 
 	mEBO = GET_SYSTEM(RenderContext).createEBO();

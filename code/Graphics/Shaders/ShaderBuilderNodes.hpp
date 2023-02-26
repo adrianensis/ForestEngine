@@ -249,11 +249,15 @@ namespace ShaderBuilderNodes
             return mFunctionDefinitions.emplace_back(args...);
         }
 
+        const Attribute& getAttribute(const std::string_view& attributeName);
+
         std::vector<std::string> toLines(u16 indent) const;
 
         std::vector<Attribute> mAttributes;
         std::vector<FunctionDefinition> mFunctionDefinitions;
         u16 mVersion = 420;
+    private:
+        inline static Attribute mNullAttribute {GPUStorage::NONE, {}};
     };
 
 }

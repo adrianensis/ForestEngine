@@ -18,6 +18,7 @@ public:
     void enable();
     void disable();
     bool isAnimated() const;
+    const GPUBuffersLayout& getGPUBuffersLayout() const { return mGPUMeshBuffer.mBuffersLayout; }
 
 private:
     void clear();
