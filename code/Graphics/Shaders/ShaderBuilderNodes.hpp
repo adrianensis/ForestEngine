@@ -24,13 +24,13 @@
     out for fragment shader
 */
 DECLARE_ENUM(GPUStorage,
-    NONE,
-    IN,
-    OUT,
-    VARYING,
-    ATTRIBUTE,
-    CONST,
-    UNIFORM
+    NONE, "none",
+    IN, "in",
+    OUT, "out",
+    VARYING, "varying",
+    ATTRIBUTE, "attribute",
+    CONST, "const",
+    UNIFORM, "uniform"
 );
 
 namespace ShaderBuilderNodes
@@ -73,6 +73,8 @@ namespace ShaderBuilderNodes
         std::vector<std::string> toLines(u16 indent) const override;
 
         std::string getNameOrValue() const { return mName.empty() ? mValue : mName; }
+        Variable dot(const std::string& member) const { return Variable(getNameOrValue() + "." + member); }
+
         Variable at(const std::string& i) const { return Variable(getNameOrValue() + "[" + i + "]"); }
         Variable at(const Variable& i) const { return at(i.getNameOrValue()); }
 
@@ -81,6 +83,8 @@ namespace ShaderBuilderNodes
         Variable div(const Variable& other) const { return binOp(other, "/"); }
         Variable add(const Variable& other) const { return binOp(other, "+"); }
         Variable sub(const Variable& other) const { return binOp(other, "-"); }
+        Variable eq(const Variable& other) const { return binOp(other, "=="); }
+        Variable notEq(const Variable& other) const { return binOp(other, "!="); }
 
         std::string mType = "";
         std::string mName = "";
@@ -161,6 +165,7 @@ namespace ShaderBuilderNodes
     // STATEMENTS
 
     class IfStatement;
+    class ElseStatement;
     class ForStatement;
 
     class BlockStatement : public Statement
@@ -183,6 +188,7 @@ namespace ShaderBuilderNodes
         BlockStatement& set(const Variable& a, const std::string& value);
         BlockStatement& ifBlock(const Variable& a, const std::string& op , const Variable& b);
         BlockStatement& ifBlock(const Variable& boolean);
+        BlockStatement& elseBlock();
         BlockStatement& forBlock(auto&& ...args)
         {
             BlockStatement* newStatement = new ForStatement(args...);
@@ -191,6 +197,7 @@ namespace ShaderBuilderNodes
             return *newStatement;
         }
         BlockStatement& line(const std::string& line);
+        BlockStatement& ret(const Variable& a);
         BlockStatement& end();
 
         std::vector<std::string> toLines(u16 indent) const override;
@@ -208,6 +215,14 @@ namespace ShaderBuilderNodes
         std::vector<std::string> toLines(u16 indent) const override;
 
         Expressions::Binary mExpression;
+    };
+
+    class ElseStatement : public BlockStatement
+    {
+    public:
+        ElseStatement() {};
+
+        std::vector<std::string> toLines(u16 indent) const override;
     };
 
     class ForStatement : public BlockStatement

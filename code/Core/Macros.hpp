@@ -323,5 +323,25 @@ FOR_LIST(_internal_it, container) { Memory::deleteObject(*_internal_it); } \
 
 #define FOR_EACH_AGAIN() FOR_EACH_HELPER
 
+// ODD
+#define FOR_EACH_ODD(macro, ...)                                    \
+  __VA_OPT__(EXPAND(FOR_EACH_HELPER_ODD(macro, __VA_ARGS__)))
+
+#define FOR_EACH_HELPER_ODD(macro, a1, a2, ...)                         \
+  macro(a1)                                                     \
+  __VA_OPT__(FOR_EACH_AGAIN_ODD PARENS (macro, __VA_ARGS__))
+
+#define FOR_EACH_AGAIN_ODD() FOR_EACH_HELPER_ODD
+
+// EVEN
+#define FOR_EACH_EVEN(macro, ...)                                    \
+  __VA_OPT__(EXPAND(FOR_EACH_HELPER_EVEN(macro, __VA_ARGS__)))
+
+#define FOR_EACH_HELPER_EVEN(macro, a1, a2, ...)                         \
+  macro(a2)                                                     \
+  __VA_OPT__(FOR_EACH_AGAIN_EVEN PARENS (macro, __VA_ARGS__))
+
+#define FOR_EACH_AGAIN_EVEN() FOR_EACH_HELPER_EVEN
+
 // #define CHECK_EQUAL(...) true FOR_EACH(CHECK_EQUAL_HELPER, __VA_ARGS__)
 // #define CHECK_EQUAL_HELPER(name) and BaseName == other.name

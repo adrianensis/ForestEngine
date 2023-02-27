@@ -11,10 +11,12 @@ class ShaderBuilder
 public:
     ShaderBuilder();
 
-    void createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
+    void createVertexShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
+    void createFragmentShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
     std::string getCode() const;
 
 private:
+
     ShaderBuilderNodes::Program& get() { return mProgram; }
     ShaderBuilderNodes::Program mProgram;
 };

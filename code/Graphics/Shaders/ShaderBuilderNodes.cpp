@@ -24,8 +24,8 @@ namespace ShaderBuilderNodes
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
-        std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ")";
-        return {getIndent(indent) + locationStr + " " + std::string(EnumsManager::toString(mGPUStorage)) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
+        std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ") ";
+        return {getIndent(indent) + locationStr + std::string(EnumsManager::toString(mGPUStorage)) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
     }
     
     namespace Expressions
@@ -77,11 +77,22 @@ namespace ShaderBuilderNodes
         mStatements.push_back((Statement*)newStatement);
         return *newStatement;
     }
+    BlockStatement& BlockStatement::elseBlock()
+    {
+        BlockStatement* newStatement = new ElseStatement();
+        newStatement->mParent = this;
+        mStatements.push_back((Statement*)newStatement);
+        return *newStatement;
+    }
     BlockStatement& BlockStatement::line(const std::string& line)
     {
         Statement* newStatement = new LineCode(line);
         mStatements.push_back((Statement*)newStatement);
         return *this;
+    }
+    BlockStatement& BlockStatement::ret(const Variable& returnValue)
+    {
+        return line("return " + returnValue.getNameOrValue());
     }
     BlockStatement& BlockStatement::end()
     {
@@ -110,6 +121,16 @@ namespace ShaderBuilderNodes
         std::vector<std::string> code;
 
         code.push_back(getIndent(indent) + "if(" + mExpression.toString() + ")");
+        auto statementCode = BlockStatement::toLines(indent);
+        code.insert(code.end(), statementCode.begin(), statementCode.end());
+        return code;
+    }
+
+    std::vector<std::string> ElseStatement::toLines(u16 indent) const
+    {
+        std::vector<std::string> code;
+
+        code.push_back(getIndent(indent) + "else");
         auto statementCode = BlockStatement::toLines(indent);
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;

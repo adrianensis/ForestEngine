@@ -18,11 +18,17 @@ void Batch::init(const BatchData& batchData)
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced);
 
-    ShaderBuilder sb;
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
-    sb.createShader(gpuBuffersLayout, mBatchData.mMaterial);
-    std::string code = sb.getCode();
-    ECHO(code);
+    
+    ShaderBuilder sbVert;
+    sbVert.createVertexShader(gpuBuffersLayout, mBatchData.mMaterial);
+    std::string codeVert = sbVert.getCode();
+    ECHO(codeVert);
+
+    ShaderBuilder sbFrag;
+    sbFrag.createFragmentShader(gpuBuffersLayout, mBatchData.mMaterial);
+    std::string codeFrag = sbFrag.getCode();
+    ECHO(codeFrag);
 }
 
 void Batch::render()

@@ -175,10 +175,12 @@ private:
     std::vector<GPUVariableData> mUniforms;
     std::vector<GPUVariableData> mConsts;
     std::vector<GPUVariableData> mVertexOutputs;
+    std::vector<GPUVariableData> mFragmentOutputs;
     u32 mID = 0;
 
 public:
     CRGET(Uniforms)
     CRGET(Consts)
     CRGET(VertexOutputs)
+    CRGET(FragmentOutputs)
 };

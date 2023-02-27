@@ -6,7 +6,7 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
 {
     using namespace ShaderBuilderNodes;
     Variable pos = Variable(GPUBuiltIn::Types::mVector3.mTypeName, "pos");
-    FunctionDefinition func(GPUBuiltIn::Types::mVector3.mTypeName, "calculateSkinnedPosition", {pos});
+    FunctionDefinition func(GPUBuiltIn::Types::mVector4.mTypeName, "calculateSkinnedPosition", {pos});
     
     auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
     auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
@@ -36,7 +36,8 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
             variable(localPosition, "vec4", "localPosition", bonesTransform.at(bonesIDs.at("i")).mul(call("vec4", {pos, {"1.0f"}})).getNameOrValue()).
             set(finalPositon, finalPositon.add(localPosition.mul(bonesWeights.at("i")))).
         end().
-    end();
+    end().
+    ret(finalPositon);
 
     return func;
 }

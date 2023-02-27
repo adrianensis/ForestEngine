@@ -6,11 +6,12 @@
 enum class EnumName : u8\
 {\
     /* Notice extra MAX enum token! */ \
-    FOR_EACH(ADD_TRAIL_COMMA, __VA_ARGS__ , MAX) \
+    FOR_EACH_ODD(ADD_TRAIL_COMMA, __VA_ARGS__) \
+    MAX\
 };\
 template <>\
 inline const std::string_view& EnumsManager::getEnumNameFromTemplate<EnumName>() { static std::string_view enumName = #EnumName; return enumName; } \
-inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { FOR_EACH(TO_STRING_AND_ADD_TRAIL_COMMA, __VA_ARGS__) });
+inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { FOR_EACH_EVEN(ADD_TRAIL_COMMA, __VA_ARGS__) });
 
 // --------------------------------------------------------
 // ENUMS

@@ -22,6 +22,7 @@ public:
         inline static const GPUDataType mMatrix4{"mat4",sizeof(Matrix4), GPUBufferPrimitiveType::FLOAT};
         inline static const GPUDataType mBoneIDs{"ivec4",sizeof(BoneVertexIDsData), GPUBufferPrimitiveType::INT};
         inline static const GPUDataType mBoneWeights{"vec4",sizeof(BoneVertexWeightsData), GPUBufferPrimitiveType::FLOAT};
+        inline static const GPUDataType mSampler2D{"sampler2D",0, GPUBufferPrimitiveType::INT};
     };
 
     class Consts
@@ -55,6 +56,8 @@ public:
         inline static const GPUVariableData mTime{Types::mFloat, "time"};
         inline static const GPUVariableData mWindowSize{Types::mVector2, "windowSize"};
         inline static const GPUVariableData mBonesTransform{Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mName};
+        
+        inline static const GPUVariableData mSampler{Types::mSampler2D, "uSampler"};
     };
 
     class VertexOutput
@@ -63,6 +66,12 @@ public:
         inline static const GPUVariableData mPosition{Types::mVector4, "gl_Position"};
         inline static const GPUVariableData mTexture{Types::mVector2, "vTexcoord"};
         inline static const GPUVariableData mColor{Types::mVector4, "vColor"};
+    };
+
+    class FragmentOutput
+    {
+    public:
+        inline static const GPUVariableData mColor{Types::mVector4, "FragColor"};
     };
 
     class Functions
