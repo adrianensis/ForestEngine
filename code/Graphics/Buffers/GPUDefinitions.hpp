@@ -54,12 +54,13 @@ public:
         inline static const GPUVariableData mHasBorder{Types::mBool, "hasBorder"};
         inline static const GPUVariableData mTime{Types::mFloat, "time"};
         inline static const GPUVariableData mWindowSize{Types::mVector2, "windowSize"};
-        inline static const GPUVariableData mBonesTransform{Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mAttributeName};
+        inline static const GPUVariableData mBonesTransform{Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mName};
     };
 
     class VertexOutput
     {
     public:
+        inline static const GPUVariableData mPosition{Types::mVector4, "gl_Position"};
         inline static const GPUVariableData mTexture{Types::mVector2, "vTexcoord"};
         inline static const GPUVariableData mColor{Types::mVector4, "vColor"};
     };

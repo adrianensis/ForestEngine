@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Graphics/Buffers/GPUDefinitions.hpp"
 
 /*
     - none: (default) local read/write memory,
@@ -60,6 +61,7 @@ namespace ShaderBuilderNodes
     {
     public:
         Variable() = default;
+        Variable(const GPUVariableData& gpuVariableData) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize) {};
         Variable(const std::string& value) : mValue(value) {};
         Variable(const std::string& type, const std::string& name) : mType(type), mName(name) {};
         Variable(const std::string& type, const std::string& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
@@ -107,6 +109,7 @@ namespace ShaderBuilderNodes
     class Attribute : public Variable
     {
     public:
+        Attribute(GPUStorage GPUStorage, const GPUVariableData& gpuVariableData) : Variable(gpuVariableData), mGPUStorage(GPUStorage) {};
         Attribute(GPUStorage GPUStorage, const Variable& var) : Variable(var), mGPUStorage(GPUStorage) {};
         Attribute(GPUStorage GPUStorage, u32 location, const Variable& var) : Variable(var), mGPUStorage(GPUStorage), mLocation(location) {};
 
@@ -179,6 +182,7 @@ namespace ShaderBuilderNodes
         BlockStatement& set(const Variable& a, const Variable& b);
         BlockStatement& set(const Variable& a, const std::string& value);
         BlockStatement& ifBlock(const Variable& a, const std::string& op , const Variable& b);
+        BlockStatement& ifBlock(const Variable& boolean);
         BlockStatement& forBlock(auto&& ...args)
         {
             BlockStatement* newStatement = new ForStatement(args...);
@@ -199,6 +203,7 @@ namespace ShaderBuilderNodes
     {
     public:
         IfStatement(const Variable& a, const std::string& op , const Variable& b) : mExpression(a, op, b) {};
+        IfStatement(const Variable& boolean) : mExpression(boolean, "", {}) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
@@ -259,7 +264,7 @@ namespace ShaderBuilderNodes
         std::vector<FunctionDefinition> mFunctionDefinitions;
         u16 mVersion = 420;
     private:
-        inline static Attribute mNullAttribute {GPUStorage::NONE, {}};
+        inline static Attribute mNullAttribute {GPUStorage::NONE, Variable{}};
     };
 
 }

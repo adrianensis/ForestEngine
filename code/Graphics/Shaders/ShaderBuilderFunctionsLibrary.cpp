@@ -8,15 +8,15 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
     Variable pos = Variable(GPUBuiltIn::Types::mVector3.mTypeName, "pos");
     FunctionDefinition func(GPUBuiltIn::Types::mVector3.mTypeName, "calculateSkinnedPosition", {pos});
     
-    auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mAttributeName);
-    auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mAttributeName);
+    auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
+    auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
 
-    auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mAttributeName);
-    auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mAttributeName);
+    auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
+    auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
 
-    auto& isInstanced = program.getAttribute(GPUBuiltIn::Uniforms::mIsInstanced.mAttributeName);
-    auto& hasAnimations = program.getAttribute(GPUBuiltIn::Uniforms::mIsAnimated.mAttributeName);
-    auto& bonesTransform = program.getAttribute(GPUBuiltIn::Uniforms::mBonesTransform.mAttributeName);
+    auto& isInstanced = program.getAttribute(GPUBuiltIn::Uniforms::mIsInstanced.mName);
+    auto& hasAnimations = program.getAttribute(GPUBuiltIn::Uniforms::mIsAnimated.mName);
+    auto& bonesTransform = program.getAttribute(GPUBuiltIn::Uniforms::mBonesTransform.mName);
     
     Variable finalPositon;
     Variable localPosition;

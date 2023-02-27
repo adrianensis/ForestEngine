@@ -47,7 +47,7 @@ class GPUVariableData
 {
 public:
     GPUDataType mGPUDataType;
-    std::string mAttributeName;
+    std::string mName;
     std::string mValue;
     std::string mArraySize;
 };
@@ -58,7 +58,7 @@ public:
 	GPUBufferData() = default;
     GPUBufferData(const GPUDataType& gpuDataType, const std::string_view& attributeName)
     {
-        mGPUVariableData.mAttributeName = attributeName;
+        mGPUVariableData.mName = attributeName;
         mGPUVariableData.mGPUDataType = gpuDataType;
     };
     GPUBufferData(const GPUVariableData& gpuVariableData): mGPUVariableData(gpuVariableData) {};

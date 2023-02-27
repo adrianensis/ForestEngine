@@ -70,6 +70,13 @@ namespace ShaderBuilderNodes
         mStatements.push_back((Statement*)newStatement);
         return *newStatement;
     }
+    BlockStatement& BlockStatement::ifBlock(const Variable& boolean)
+    {
+        BlockStatement* newStatement = new IfStatement(boolean);
+        newStatement->mParent = this;
+        mStatements.push_back((Statement*)newStatement);
+        return *newStatement;
+    }
     BlockStatement& BlockStatement::line(const std::string& line)
     {
         Statement* newStatement = new LineCode(line);
