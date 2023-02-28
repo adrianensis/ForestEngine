@@ -6,8 +6,6 @@
 MaterialManager::~MaterialManager() 
 {
 
-
-	Shader::freeStaticShaders();
 }
 
 void MaterialManager::init()
@@ -36,7 +34,6 @@ Ptr<const Material> MaterialManager::getNoTextureMaterial()
 	{
 		mNoTextureMaterial = OwnerPtr<Material>::newObject();
 		mNoTextureMaterial.get().init(0);
-		mNoTextureMaterial.get().mShader = (Shader::getDefaultShader());
 	}
 
 	return mNoTextureMaterial;
@@ -49,7 +46,6 @@ Ptr<Material> MaterialManager::createMaterial()
     {
         OwnerPtr<Material> material = OwnerPtr<Material>::newObject();
         material.get().init(index);
-        material.get().mShader = (Shader::getDefaultShader());
         MAP_INSERT(mMaterials, index, material);
         mMaterialIDCounter++;
     }

@@ -2,6 +2,9 @@
 
 #include "Core/Module.hpp"
 
+class GPUBuffersLayout;
+class Material;
+
 class Shader: public ObjectBase
 {
     GENERATE_METADATA(Shader)
@@ -10,10 +13,7 @@ public:
     Shader();
 	~Shader() override = default;
 
-    static Ptr<Shader> getDefaultShader();
-    static Ptr<Shader> getDebugShader();
-    static void freeStaticShaders();
-    void init();
+    void init(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
     void initDebug();
     void enable() const;
     void disable() const;
@@ -28,13 +28,11 @@ public:
     void addBool(bool value, const std::string& name);
 
 private:
-    void initInternal(const std::string& vertex, const std::string& fragment);
+    void initFromFilePaths(const std::string& vertex, const std::string& fragment);
+    void initFromFileContents(const std::string& vertex, const std::string& fragment);
 	
 private:
 	u32 mVertexShader = 0;
 	u32 mFragmentShader = 0;
 	u32 mProgram = 0;
-
-	inline static OwnerPtr<Shader> msShaderDefault;
-	inline static OwnerPtr<Shader> msShaderDebug;
 };

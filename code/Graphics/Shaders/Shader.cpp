@@ -1,49 +1,33 @@
 #include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
+#include "Graphics/Shaders/ShaderBuilder.hpp"
+#include "Graphics/Buffers/GPUBuffersLayout.hpp"
+#include "Graphics/Material/Material.hpp"
 
 Shader::Shader()
 {
 };
 
-Ptr<Shader> Shader::getDefaultShader()
+void Shader::init(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-	if (!msShaderDefault)
-	{
-		msShaderDefault = OwnerPtr<Shader>::newObject();
-		msShaderDefault.get().init();
-	}
+    ShaderBuilder sbVert;
+    sbVert.createVertexShader(gpuBuffersLayout, material);
 
-	return msShaderDefault;
-}
+    ShaderBuilder sbFrag;
+    sbFrag.createFragmentShader(gpuBuffersLayout, material);
 
-Ptr<Shader> Shader::getDebugShader()
-{
-	if (!msShaderDebug)
-	{
-		msShaderDebug = OwnerPtr<Shader>::newObject();
-		msShaderDebug.get().initDebug();
-	}
-	return msShaderDebug;
-}
-
-void Shader::freeStaticShaders()
-{
-	msShaderDefault.invalidate();
-	msShaderDebug.invalidate();
-}
-
-void Shader::init()
-{
-	TRACE()
-
-	initInternal("resources/shaders/vertex.shader", "resources/shaders/fragment.shader");
+    std::string codeVert = sbVert.getCode();
+    // ECHO(codeVert);
+    std::string codeFrag = sbFrag.getCode();
+    // ECHO(codeFrag);
+    initFromFileContents(codeVert, codeFrag);
 }
 
 void Shader::initDebug()
 {
 	TRACE()
 
-	initInternal("resources/shaders/vertexDebug.shader", "resources/shaders/fragmentDebug.shader");
+	initFromFilePaths("resources/shaders/vertexDebug.shader", "resources/shaders/fragmentDebug.shader");
 }
 
 void Shader::enable() const
@@ -113,17 +97,12 @@ void Shader::addBool(bool value, const std::string& name)
 	glUniform1ui(location, value);
 }
 
-void Shader::initInternal(const std::string& vertex, const std::string& fragment)
+void Shader::initFromFileContents(const std::string& vertex, const std::string& fragment)
 {
-	TRACE()
+    mVertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	mVertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-	std::ifstream vertex_ifs;
-	vertex_ifs.open(vertex.c_str(), std::ifstream::in);
-	std::string vertexShaderSource((std::istreambuf_iterator<char>(vertex_ifs)), (std::istreambuf_iterator<char>()));
-
-	const char *c_str_vertex = vertexShaderSource.c_str();
+	const char *c_str_vertex = vertex.c_str();
+	const char *c_str_fragment = fragment.c_str();
 
 	glShaderSource(mVertexShader, 1, &c_str_vertex, nullptr);
 	glCompileShader(mVertexShader);
@@ -137,17 +116,11 @@ void Shader::initInternal(const std::string& vertex, const std::string& fragment
 		glGetShaderInfoLog(mVertexShader, 512, nullptr, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
 				<< infoLog << std::endl
-				<< vertexShaderSource
+				<< vertex
 				<< std::endl;
 	}
 
 	mFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	std::ifstream fragment_ifs;
-	fragment_ifs.open(fragment.c_str(), std::ifstream::in);
-	std::string fragmentShaderSource((std::istreambuf_iterator<char>(fragment_ifs)),
-									(std::istreambuf_iterator<char>()));
-	const char *c_str_fragment = fragmentShaderSource.c_str();
 
 	glShaderSource(mFragmentShader, 1, &c_str_fragment, nullptr);
 	glCompileShader(mFragmentShader);
@@ -159,7 +132,7 @@ void Shader::initInternal(const std::string& vertex, const std::string& fragment
 		glGetShaderInfoLog(mVertexShader, 512, nullptr, infoLog);
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
 				<< infoLog << std::endl
-				<< fragmentShaderSource
+				<< fragment
 				<< std::endl;
 	}
 
@@ -179,4 +152,21 @@ void Shader::initInternal(const std::string& vertex, const std::string& fragment
 
 	glDeleteShader(mVertexShader);
 	glDeleteShader(mFragmentShader);
+}
+
+void Shader::initFromFilePaths(const std::string& vertex, const std::string& fragment)
+{
+	TRACE()
+
+    std::ifstream vertex_ifs;
+	vertex_ifs.open(vertex.c_str(), std::ifstream::in);
+	std::string vertexShaderSource((std::istreambuf_iterator<char>(vertex_ifs)), (std::istreambuf_iterator<char>()));
+
+
+    std::ifstream fragment_ifs;
+	fragment_ifs.open(fragment.c_str(), std::ifstream::in);
+	std::string fragmentShaderSource((std::istreambuf_iterator<char>(fragment_ifs)),
+									(std::istreambuf_iterator<char>()));
+
+    initFromFileContents(vertexShaderSource, fragmentShaderSource);
 }

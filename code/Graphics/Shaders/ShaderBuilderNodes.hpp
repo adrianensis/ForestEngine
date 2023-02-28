@@ -62,6 +62,8 @@ namespace ShaderBuilderNodes
     public:
         Variable() = default;
         Variable(const GPUVariableData& gpuVariableData) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize) {};
+        Variable(const GPUVariableData& gpuVariableData, const std::string& value) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(value), mArraySize(gpuVariableData.mArraySize) {};
+        Variable(const GPUVariableData& gpuVariableData, const Variable& value) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(value.getNameOrValue()), mArraySize(gpuVariableData.mArraySize) {};
         Variable(const std::string& value) : mValue(value) {};
         Variable(const std::string& type, const std::string& name) : mType(type), mName(name) {};
         Variable(const std::string& type, const std::string& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
@@ -72,7 +74,8 @@ namespace ShaderBuilderNodes
         Variable(const std::string& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
         std::vector<std::string> toLines(u16 indent) const override;
 
-        std::string getNameOrValue() const { return mName.empty() ? mValue : mName; }
+        const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
+        bool isEmpty() const {return getNameOrValue().empty(); };
         Variable dot(const std::string& member) const { return Variable(getNameOrValue() + "." + member); }
 
         Variable at(const std::string& i) const { return Variable(getNameOrValue() + "[" + i + "]"); }

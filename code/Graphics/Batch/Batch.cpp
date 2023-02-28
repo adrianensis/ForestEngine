@@ -20,15 +20,8 @@ void Batch::init(const BatchData& batchData)
 
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
-    ShaderBuilder sbVert;
-    sbVert.createVertexShader(gpuBuffersLayout, mBatchData.mMaterial);
-    std::string codeVert = sbVert.getCode();
-    ECHO(codeVert);
-
-    ShaderBuilder sbFrag;
-    sbFrag.createFragmentShader(gpuBuffersLayout, mBatchData.mMaterial);
-    std::string codeFrag = sbFrag.getCode();
-    ECHO(codeFrag);
+    mShader = OwnerPtr<Shader>::newObject();
+    mShader.get().init(gpuBuffersLayout, mBatchData.mMaterial);
 }
 
 void Batch::render()
@@ -53,8 +46,8 @@ void Batch::render()
 void Batch::enable()
 {
     mMeshBatcher.enable();
-    mBatchData.mMaterial.get().enable();
-    mBatchData.mMaterial.get().bind(mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh.get().mModel);
+    mShader.get().enable();
+    mBatchData.mMaterial.get().bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh.get().mModel);
 
     if(mBatchData.mStencilValue > 0x00)
     {
@@ -65,7 +58,7 @@ void Batch::enable()
 void Batch::disable()
 {
     GET_SYSTEM(RenderContext).disableStencil();
-    mBatchData.mMaterial.get().disable();
+    mShader.get().disable();
     mMeshBatcher.disable();
 }
 

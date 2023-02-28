@@ -161,12 +161,9 @@ class Material: public ObjectBase
 public:
     Material();
     void init(u32 id);
-    void bind(bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
-    void enable() const;
-    void disable() const;
+    void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
 
 public:
-	Ptr<Shader> mShader;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 	bool mAlphaEnabled = true;
 	bool mHasBorder = false;
