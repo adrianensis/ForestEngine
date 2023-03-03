@@ -58,7 +58,7 @@ void RenderEngine::update()
 		mCamera.get().update();
 	}
 
-	AnimationManager::getInstance().update();
+	GET_SYSTEM(AnimationManager).update();
 
 	GET_SYSTEM(RenderContext).clear();
 	renderBatches();

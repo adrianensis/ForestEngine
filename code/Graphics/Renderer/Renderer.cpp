@@ -80,7 +80,7 @@ void Renderer::update(bool regenerateVertices)
 					const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
 					const u32 MAX_BONES = 100;
 
-					const std::vector<Matrix4>& boneTransforms = AnimationManager::getInstance().getBoneTransforms(mMesh.get().mModel);
+					const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mMesh.get().mModel);
 					const std::vector<BoneVertexIDsData>& bonesVertexIDsData = mMesh.get().mBonesVertexIDsData;
 					const std::vector<BoneVertexWeightsData>& boneVertexWeightsData = mMesh.get().mBonesVertexWeightsData;
 

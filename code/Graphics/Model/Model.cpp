@@ -85,7 +85,7 @@ void Model::init(const std::string& path)
                 animation.get().init(animIt, getPtrToThis());
                 mAnimations.emplace_back(animation);
 
-                AnimationManager::getInstance().createAnimationState(animation);
+                GET_SYSTEM(AnimationManager).createAnimationState(animation);
             }
         }
 

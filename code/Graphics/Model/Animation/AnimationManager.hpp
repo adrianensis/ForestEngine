@@ -7,7 +7,7 @@ class Animation;
 class AnimationState;
 class SkeletonState;
 
-class AnimationManager: public ObjectBase, public Singleton<AnimationManager>
+class AnimationManager: public EngineSystem
 {
 	GENERATE_METADATA(AnimationManager)
 

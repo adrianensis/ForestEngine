@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Core/Singleton.hpp"
 
 class Material;
 class Texture;

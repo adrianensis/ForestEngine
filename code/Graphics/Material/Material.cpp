@@ -69,7 +69,7 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
     
     if(isAnimated)
     {
-        const std::vector<Matrix4> & transforms = AnimationManager::getInstance().getBoneTransforms(model);
+        const std::vector<Matrix4> & transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(model);
         shader.get().addMatrixArray(transforms, GPUBuiltIn::Uniforms::mBonesTransform.mName);
     }
 }

@@ -31,6 +31,8 @@ void Engine::init()
 	GET_SYSTEM(MeshPrimitives).init();
     CREATE_SYSTEM(MaterialManager);
 	GET_SYSTEM(MaterialManager).init();
+    CREATE_SYSTEM(AnimationManager);
+	GET_SYSTEM(AnimationManager).init();
     CREATE_SYSTEM(ModelManager);
 	GET_SYSTEM(ModelManager).init();
     CREATE_SYSTEM(UIManager);
@@ -125,6 +127,9 @@ void Engine::terminate()
     REMOVE_SYSTEM(ModelManager);
 
     REMOVE_SYSTEM(MaterialManager);
+
+	GET_SYSTEM(AnimationManager).terminate();
+    REMOVE_SYSTEM(AnimationManager);
 
 	GET_SYSTEM(MeshPrimitives).terminate();
     REMOVE_SYSTEM(MeshPrimitives);
