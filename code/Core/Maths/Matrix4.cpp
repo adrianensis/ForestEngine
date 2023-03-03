@@ -4,6 +4,8 @@
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Quaternion.hpp"
 
+const Matrix4 Matrix4::smIdentity = Matrix4({1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1});
+
 Matrix4::Matrix4()
 {
 	zeros();
@@ -12,6 +14,11 @@ Matrix4::Matrix4()
 Matrix4::Matrix4(const Matrix4& other)
 {
 	init(other);
+}
+
+Matrix4::Matrix4(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3)
+{
+	init(row0, row1, row2, row3);
 }
 
 void Matrix4::setRows(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3)
@@ -45,17 +52,6 @@ void Matrix4::setRows(const Vector4& row0, const Vector4& row1, const Vector4& r
 	FOR_RANGE(row, 0, 4)
 	FOR_RANGE(col, 0, 4)
 	set(row, col, rows[row][col]);
-}
-
-const Matrix4& Matrix4::getIdentity()
-{
-	if (!smIdentity)
-	{
-		smIdentity = OwnerPtr<Matrix4>::newObject();
-		smIdentity.get().identity();
-	}
-
-	return smIdentity.get();
 }
 
 void Matrix4::init(f32 n)

@@ -102,7 +102,7 @@ void SkeletonState::getBoneTransformsFromCurrentAnimation(std::vector<Matrix4>& 
 
     FOR_ARRAY(it, Transforms)
     {
-        Transforms[it] = Matrix4::getIdentity();
+        Transforms[it] = Matrix4::smIdentity;
     }
 
     readNodeHierarchy(animationTime, m_pScene->mRootNode, Identity, Transforms);

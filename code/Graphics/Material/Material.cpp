@@ -52,8 +52,8 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 	const Matrix4& projectionMatrix = camera.get().mProjectionMatrix;
 	const Matrix4& viewMatrix = camera.get().mViewMatrix;
 
-	shader.get().addMatrix(isWorldSpace ? projectionMatrix : Matrix4::getIdentity(), GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
-	shader.get().addMatrix(isWorldSpace ? viewMatrix : Matrix4::getIdentity(), GPUBuiltIn::Uniforms::mViewMatrix.mName);
+	shader.get().addMatrix(isWorldSpace ? projectionMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
+	shader.get().addMatrix(isWorldSpace ? viewMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mViewMatrix.mName);
 
 	shader.get().addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
 

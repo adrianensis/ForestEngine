@@ -51,8 +51,8 @@ void ShapeBatchRenderer::render()
 		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mProjectionMatrix;
 		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mViewMatrix;
 
-		mShaderLine.get().addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::getIdentity(), "projectionMatrix");
-		mShaderLine.get().addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::getIdentity(), "viewMatrix");
+		mShaderLine.get().addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::smIdentity, "projectionMatrix");
+		mShaderLine.get().addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::smIdentity, "viewMatrix");
 
 		GET_SYSTEM(RenderContext).setDataVBO(mVBOPosition, mPositionBuffer);
 		GET_SYSTEM(RenderContext).setDataVBO(mVBOColor, mColorBuffer);

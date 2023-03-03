@@ -38,8 +38,8 @@ private:
 public:
 
     Matrix4();
+    Matrix4(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3);
     Matrix4(const Matrix4& other);
-    static const Matrix4& getIdentity();
     void init(f32 n);
     void init(const Matrix4& other);
     void init(const std::array<f32, 16> &data);
@@ -81,11 +81,11 @@ public:
 	}
 
 public:
-	const static u16 smColumnSize = 4;
-	const static u16 smMatrixSize = smColumnSize * smColumnSize;
+	inline static const u16 smColumnSize = 4;
+	inline static const u16 smMatrixSize = smColumnSize * smColumnSize;
+	static const Matrix4 smIdentity;
 	
 private:
 	inline static bool smIdentityCreated = false;
-	inline static OwnerPtr<Matrix4> smIdentity;
 	f32 mData[smMatrixSize];
 };
