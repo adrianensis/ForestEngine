@@ -41,9 +41,6 @@ public:
 	class BatchDataFunctor
 	{
 	public:
-	
-		// Use sum of lengths of first and last names
-		// as hash function.
 		size_t operator()(const BatchData& key) const
 		{
 			return key.mMaterial.get().getObjectId() ^ key.mMesh.get().getObjectId() ^
