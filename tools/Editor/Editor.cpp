@@ -58,9 +58,10 @@ void Editor::firstUpdate()
 		}
 	}
 
-	importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
-	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(10,0,0), 1.0f);
-	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(15,0,0), 1.0f);
+	// importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
+	importModel2("Avocado/glTF/Avocado.gltf", Vector3(0,0,0), 1000.0f, 180);
+	importModel2("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(300,0,0), 20.0f, 0);
 	//importModel2("dragon/Dragon_2.5_For_Animations.fbx", Vector3(15,0,0), 1.0f);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(50,0,50), 5);
 	// importModel("resources/bob_lamp/bob_lamp_update.fbx", Vector3(0,0,0), 5);
@@ -78,127 +79,127 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	UIBuilder uiBuilder;
+	// UIBuilder uiBuilder;
 
-	uiBuilder.
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5f, 0.05f));
+	// uiBuilder.
+	// setPosition(Vector2(-1,1)).
+	// setAdjustSizeToText(true).
+	// setSize(Vector2(0.5f, 0.05f));
 
-	uiBuilder.
-	setText("File").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>().get().
-	addOption("New", [&](UIElement *uiElement)
-	{
+	// uiBuilder.
+	// setText("File").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>().get().
+	// addOption("New", [&](UIElement *uiElement)
+	// {
 
-	}).
-	addOption("Open", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Save", [&](UIElement *uiElement)
-	{
-	});
+	// }).
+	// addOption("Open", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Save", [&](UIElement *uiElement)
+	// {
+	// });
 
-	uiBuilder.
-	setText("Sprites").
-	create<UIButton>().
-	getUIElement<UIButton>().get().
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
+	// uiBuilder.
+	// setText("Sprites").
+	// create<UIButton>().
+	// getUIElement<UIButton>().get().
+	// setOnPressedCallback([&, this](UIElement *uiElement){
+	// });
 
-	uiBuilder.
-	setText("View").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>().get().
-	addOption("Grid", [&](UIElement *uiElement)
-	{
+	// uiBuilder.
+	// setText("View").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>().get().
+	// addOption("Grid", [&](UIElement *uiElement)
+	// {
 
-	}).
-	addOption("Colliders", [&](UIElement *uiElement)
-	{
-	});
+	// }).
+	// addOption("Colliders", [&](UIElement *uiElement)
+	// {
+	// });
 
-	uiBuilder.restoreAll();
+	// uiBuilder.restoreAll();
 
-	uiBuilder.
-	setLayout(UILayout::HORIZONTAL).
-	setPosition(Vector2(-1,0.5f)).
-	setAdjustSizeToText(false).
-	setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
-	setGroup("toggleButtons").
-	setSize(Vector2(0.1f, 0.1f));
+	// uiBuilder.
+	// setLayout(UILayout::HORIZONTAL).
+	// setPosition(Vector2(-1,0.5f)).
+	// setAdjustSizeToText(false).
+	// setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
+	// setGroup("toggleButtons").
+	// setSize(Vector2(0.1f, 0.1f));
 
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>().get().
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>().get().
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	getUIElement<UIToggleButton>().get().simulateClick();
+	// uiBuilder.
+	// getUIElement<UIToggleButton>().get().simulateClick();
 
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>().get().
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>().get().
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.
+	// nextRow();
 
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>().get().
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>().get().
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>().get().
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>().get().
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.
+	// nextRow();
 
-	uiBuilder.restoreMaterial();
-	uiBuilder.restoreStyle();
-	uiBuilder.restoreGroup();
+	// uiBuilder.restoreMaterial();
+	// uiBuilder.restoreStyle();
+	// uiBuilder.restoreGroup();
 
-	uiBuilder.
-	setText("Test Button").
-	setAdjustSizeToText(true).
-	create<UIDropdown>().
-	getUIElement<UIDropdown>().get().
-	addOption("Option1", [&](UIElement *uiElement)
-	{
+	// uiBuilder.
+	// setText("Test Button").
+	// setAdjustSizeToText(true).
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>().get().
+	// addOption("Option1", [&](UIElement *uiElement)
+	// {
 
-	}).
-	addOption("Option2", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Option3", [&](UIElement *uiElement)
-	{
-	});
+	// }).
+	// addOption("Option2", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Option3", [&](UIElement *uiElement)
+	// {
+	// });
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.
+	// nextRow();
 
-	uiBuilder.
-	setText("Test Button").
-	setAdjustSizeToText(false).
-	setSize(Vector2(0.1f, 0.3f)).
-	create<UIList>().
-	getUIElement<UIList>().get().
-	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
-	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
-	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	toggle();
+	// uiBuilder.
+	// setText("Test Button").
+	// setAdjustSizeToText(false).
+	// setSize(Vector2(0.1f, 0.3f)).
+	// create<UIList>().
+	// getUIElement<UIList>().get().
+	// addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	// addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	// toggle();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene().get().getCameraGameObject();
 }
@@ -229,7 +230,7 @@ void Editor::update()
 	Matrix4 cameraRotationMatrix = cameraGameObject.get().mTransform.get().getRotationMatrix();
 	cameraRotationMatrix.invert();
 
-	f32 speed = 90 * GET_SYSTEM(Time).getDeltaTimeSeconds();
+	f32 speed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
@@ -331,7 +332,7 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 	GET_SYSTEM(ScenesManager).getCurrentScene().get().addGameObject(gameObject);
 }
 
-void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
+void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
@@ -340,7 +341,7 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size)
 	gameObject.get().mIsStatic = true;
 	gameObject.get().mTransform.get().mLocalPosition = (v);
 	gameObject.get().mTransform.get().mScale = (Vector3(1,1,1) * size);
-	//gameObject->mTransform.get().setRotation(Vector3(90,0,0));
+	gameObject.get().mTransform.get().mRotation = (Vector3(0,rot,0));
 
 	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
 	modelRenderer.get().mModel = (model);

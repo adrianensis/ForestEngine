@@ -31,7 +31,7 @@ public:
 private:
 	OwnerPtr<GameObject> createSprite(const Vector3& v, f32 size);
     void importModel(const std::string& pFile, const Vector3& v, f32 size);
-    void importModel2(const std::string& pFile, const Vector3& v, f32 size);
+    void importModel2(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
 	void handlePressedKeys();
 private:
 	f32 rotation = 0;

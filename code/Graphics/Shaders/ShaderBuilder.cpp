@@ -137,35 +137,19 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
         end().
     end().
     elseBlock().
-        set(outColor.dot("r"), inColor.dot("r")).
-        set(outColor.dot("g"), inColor.dot("g")).
-        set(outColor.dot("b"), inColor.dot("b")).
-        set(outColor.dot("a"), inColor.dot("a")).
+        ifBlock(inColor.dot("r").add(inColor.dot("g").add(inColor.dot("b"))).eq({"0"})).
+            set(outColor.dot("r"), "0.5").
+            set(outColor.dot("g"), "0.5").
+            set(outColor.dot("b"), "0.5").
+            set(outColor.dot("a"), "1").
+        end().
+        elseBlock().
+            set(outColor.dot("r"), inColor.dot("r")).
+            set(outColor.dot("g"), inColor.dot("g")).
+            set(outColor.dot("b"), inColor.dot("b")).
+            set(outColor.dot("a"), inColor.dot("a")).
+        end().
     end();
-
-    /*
-        vec2 t = vTexcoord;
-
-        if(hasTexture) {
-
-        FragColor = texture2D(uSampler, t);
-        
-        if(alphaEnabled && (FragColor.r + FragColor.g + FragColor.b) == 0){
-            discard;
-        } else {
-            FragColor.r += vColor.r;
-            FragColor.g += vColor.g;
-            FragColor.b += vColor.b;
-            FragColor.a = vColor.a;
-        }
-
-        } else {
-            FragColor.r = vColor.r;
-            FragColor.g = vColor.g;
-            FragColor.b = vColor.b;
-            FragColor.a = vColor.a;
-        }
-    */
 }
 
 std::string ShaderBuilder::getCode() const
