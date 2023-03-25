@@ -37,7 +37,7 @@ IMPLEMENT_DESERIALIZATION(Texture)
 void Texture::loadImage()
 {
 	i32 width, height, original_number_channels;
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 
 	if(mPath.find("\\") != std::string::npos)
 	{

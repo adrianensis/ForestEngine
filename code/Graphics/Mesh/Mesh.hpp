@@ -7,13 +7,13 @@ inline static const u32 smMaxBonesPerVertex = 4;
 class BoneVertexIDsData
 {
 public:
-    i32 mBonesIDs[smMaxBonesPerVertex] = {-1};
+    i32 mBonesIDs[smMaxBonesPerVertex] = {-1, -1, -1, -1};
 };
 
 class BoneVertexWeightsData
 {
 public:
-    f32 mBonesWeights[smMaxBonesPerVertex] = {0.0f};
+    f32 mBonesWeights[smMaxBonesPerVertex] = {0.0f, 0.0f, 0.0f, 0.0f};
 };
 
 class Model;

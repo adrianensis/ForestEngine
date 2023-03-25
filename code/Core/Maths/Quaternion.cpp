@@ -22,6 +22,10 @@ Quaternion::Quaternion(const Vector3& v) : Quaternion(v.x, v.y, v.z)
 {
 }
 
+Quaternion::Quaternion(const Vector4& v) : Quaternion(v.x, v.y, v.z, v.w)
+{
+}
+
 Quaternion::Quaternion(const Quaternion& other) : v(other.v), w(other.w)
 {
 }
@@ -162,7 +166,12 @@ f32 Quaternion::angle(const Quaternion& q) const
 	* perpendicular (zero dot product)
 	* or obtuse (negative dot product).
 	*/
-	return acosf(v.dot(q.v) / (v.len() * q.v.len()));
+    Quaternion copyThis = *this;
+    Quaternion copyOther = q;
+    copyThis.nor();
+    copyOther.nor();
+    f32 cosOfAngle = copyThis.dot(copyOther) / (copyThis.len() * copyOther.len());
+	return std::acos(cosOfAngle);
 }
 
 Quaternion& Quaternion::lerp(const Quaternion& target, f32 t)
@@ -181,11 +190,40 @@ Quaternion& Quaternion::nlerp(const Quaternion& target, f32 t)
 
 Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 {
-	f32 theta = angle(target);
+    // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
+    // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
 
-	f32 sinTheta = sinf(theta);
+    Quaternion qa = *this;
+    Quaternion qb = target;
 
-	this->mul((sinf(1 - t) * theta) / sinTheta).add(Quaternion(target).mul((sinf(t * theta)) / sinTheta));
+	// Calculate angle between them.
+    f32 cosHalfTheta = qa.dot(qb);
+
+	// // if qa=qb or qa=-qb then theta = 0 and we can return qa
+	if (std::abs(cosHalfTheta) >= 1.0)
+    {
+        *this = qa;
+		return *this;
+	}
+
+	// Calculate temporary values.
+	f32 halfTheta = std::acos(cosHalfTheta);
+	f32 sinHalfTheta = std::sqrt(1.0f - cosHalfTheta*cosHalfTheta);
+
+	// if theta = 180 degrees then result is not fully defined
+	// we could rotate around any axis normal to qa or qb
+    // fabs is floating point absolute
+	if (std::abs(sinHalfTheta) < 0.001f)
+    { 
+        *this = qa.mul(0.5f) + qb.mul(0.5f);
+		return *this;
+	}
+
+	f32 ratioA = std::sin((1.0f - t) * halfTheta) / sinHalfTheta;
+	f32 ratioB = std::sin(t * halfTheta) / sinHalfTheta; 
+
+	//calculate Quaternion.
+    *this = qa.mul(ratioA) + qb.mul(ratioB);
 	return *this;
 }
 

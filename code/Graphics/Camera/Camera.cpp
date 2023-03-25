@@ -160,8 +160,6 @@ void Camera::calculateViewMatrix()
 		Vector4(0, 0, 0, 1)
 	);
 	
-	viewRotationMatrix.transpose();
-
 	Matrix4 rotationMatrix = mGameObject.get().mTransform.get().getRotationMatrix();
 
 	mViewMatrix.init(viewRotationMatrix);

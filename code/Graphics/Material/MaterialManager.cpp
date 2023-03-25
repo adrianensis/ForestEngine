@@ -56,7 +56,7 @@ Ptr<Material> MaterialManager::createMaterial()
 Ptr<Material> MaterialManager::createMaterialWithTexture(const std::string &path)
 {
     Ptr<Material> material = createMaterial();
-    material.get().mTextures[(u32)TextureType::DIFFUSE] = loadTexture(path);
+    material.get().mTextures[(u32)TextureType::BASE_COLOR] = loadTexture(path);
     return material;
 }
 

@@ -128,7 +128,7 @@ public:\
     f32 dst(const ThisClass& v) const { return sqrtf(this->sqrdst(v)); } \
     bool eq(const ThisClass& v, f32 e) const { return VECTOR##vectorLength##_EQ_E(v,e); } \
     bool eq(const ThisClass& v) const { return VECTOR##vectorLength##_EQ(v); } \
-    ThisClass& lerp(const ThisClass& target, f32 t) { (*this) += (ThisClass(target) - (*this)) * t; return *this; } \
+    ThisClass& lerp(const ThisClass& target, f32 t) { (*this) += ((ThisClass(target) - (*this)) * t); return *this; } \
     ThisClass& clamp(f32 maxLength)\
     {\
         if (this->sqrlen() > (maxLength * maxLength))\

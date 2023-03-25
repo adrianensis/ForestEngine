@@ -109,7 +109,7 @@ extract(os.path.join(origin_path_base, "duktape-2.6.0.tar.xz"), destiny)
 
 # ------------------------------------------------------------------------
 
-# Assimp https://github.com/assimp/assimp
-extract(os.path.join(origin_path_base, "assimp-5.2.3.zip"), destiny)
+# cgltf https://github.com/jkuhlmann/cgltf
+extract(os.path.join(origin_path_base, "cgltf-1.13.zip"), destiny)
 
 # ------------------------------------------------------------------------

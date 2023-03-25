@@ -42,9 +42,9 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 {
 	PROFILER_CPU()
 
-	if (mTextures[(u32)TextureType::DIFFUSE])
+	if (mTextures[(u32)TextureType::BASE_COLOR])
 	{
-        mTextures[(u32)TextureType::DIFFUSE].get().bind();
+        mTextures[(u32)TextureType::BASE_COLOR].get().bind();
 	}
 
 	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
@@ -57,7 +57,7 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 
 	shader.get().addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
 
-	shader.get().addBool(mTextures[(u32)TextureType::DIFFUSE].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
+	shader.get().addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
 	shader.get().addBool(mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
 	shader.get().addBool(mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
 

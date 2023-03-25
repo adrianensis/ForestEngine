@@ -146,40 +146,8 @@ include_directories("${DEPENDENCIES_DIR}/stb")
 # set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
 # include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
 
-# Assimp
-set(ASSIMP_LIBRARY "assimp")
-
-SET(BUILD_SHARED_LIBS OFF)
-SET(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
-SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-
-set(ASSIMP_NO_EXPORT TRUE CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
-
-# Assmip importers
-set(ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_MD5_IMPORTER ON CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_COLLADA_IMPORTER ON CACHE BOOL "" FORCE)
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/build/assimp-5.2.3/include")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/include")
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/cmake-modules")
-add_subdirectory("${DEPENDENCIES_DIR}/assimp-5.2.3")
-
-set_target_properties(${ASSIMP_LIBRARY} PROPERTIES IMPORTED_LOCATION "${ASSIMP_LIBRARY_DIRS}/libassimp.so")
-
-CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/build/${DEPENDENCIES_DIR}/assimp-5.2.3/revision.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/revision.h
-)
-
-CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/build/${DEPENDENCIES_DIR}/assimp-5.2.3/include/assimp/config.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/${DEPENDENCIES_DIR}/assimp-5.2.3/include/assimp/config.h
-)
+# cgltf
+include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")
 
 # Pyhon
 # find_package (Python3 COMPONENTS Interpreter Development)
@@ -251,7 +219,6 @@ target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
-target_link_libraries(${PROJECTNAME} ${ASSIMP_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${ZLIB_LIBRARY} )
 target_link_libraries(${PROJECTNAME} easy_profiler)
 
