@@ -51,8 +51,13 @@ void Model::init(const std::string& path)
 
                 if(cgltfMaterial.has_pbr_metallic_roughness)
                 {
-                    std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    newMaterial.get().mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath);
+                    cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
+                    newMaterial.get().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                    if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
+                    {
+                        std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
+                        newMaterial.get().mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath);
+                    }
                 }
             }
         }
@@ -166,6 +171,7 @@ void Model::init(const std::string& path)
                 {
                     cgltf_node& node = *skin.joints[i];
                     mBonesToNode[i] = &node;
+                    MAP_INSERT(mNodeToBoneId, &node, i);
                     std::string boneName(node.name);
 
                     if (! MAP_CONTAINS(mBonesMapping, boneName)) 
@@ -197,11 +203,11 @@ void Model::init(const std::string& path)
                             scaleMatrix.scale(Vector3(node.scale[0], node.scale[1], node.scale[2]));
                         }
     
-                        Matrix4 boneMatrix = translationMatrix;
+                        Matrix4 bindMatrix = translationMatrix;
                         rotationMatrix.mul(scaleMatrix);
-                        boneMatrix.mul(rotationMatrix);
+                        bindMatrix.mul(rotationMatrix);
 
-                        boneData.mBindMatrix = boneMatrix;
+                        boneData.mBindMatrix = bindMatrix;
 
                         // Find parent bone index
                         unsigned int parentIndex = -1;
@@ -235,19 +241,13 @@ void Model::init(const std::string& path)
                         ASSERT_MSG(channel.sampler->interpolation == cgltf_interpolation_type_linear, "Interpolation is not linear.");
                         
                         i32 boneIndex = -1;
-
-                        for (unsigned int k = 0; k < mBonesIndexCount; k++)
+                        if(MAP_CONTAINS(mNodeToBoneId, channel.target_node))
                         {
-                            if (channel.target_node == skin.joints[k])
-                            {
-                                boneIndex = k;
-                                break;
-                            }
+                            boneIndex = mNodeToBoneId.at(channel.target_node);
                         }
-
-                        if (boneIndex == -1)
+                        else
                         {
-                            // Animation channel for a node not in the armature
+                            ECHO("Animation channel for a node not in the armature");
                             continue;
                         }
 
@@ -269,25 +269,14 @@ void Model::init(const std::string& path)
                     }
 
                     OwnerPtr<Animation> animation = OwnerPtr<Animation>::newObject();
-                    animation.get().init(animIt, getPtrToThis());
-
-                    // TODO: put this inside Animation init!
-                    // ------
-                    animation.get().mDurationInSeconds = animDuration;
-                    animation.get().mTicksPerSecond = smAnimationFPS;
-                    animation.get().mDurationInTicks = (int)(animDuration/smAnimationFrameRateSeconds);
-                    animation.get().mFrames.resize(animation.get().mDurationInTicks);
-                    // ------
-
-                    FOR_RANGE(frameIt, 0, animation.get().mDurationInTicks)
-                    {
-                        animation.get().mFrames[frameIt].mTransforms.resize(mBonesIndexCount);
-                    }
+                    animation.get().init(animDuration, getPtrToThis());
 
                     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
 
                     FOR_RANGE(frameIt, 0, animation.get().mDurationInTicks)
                     {
+                        animation.get().mFrames[frameIt].mTransforms.resize(mBonesIndexCount);
+
                         f32 currentAnimationTime = frameIt*smAnimationFrameRateSeconds;
                         FOR_RANGE(boneIt, 0, mBonesIndexCount)
                         {
@@ -345,6 +334,7 @@ void Model::init(const std::string& path)
 
                 mChannels.clear();
                 mBonesToNode.clear();
+                mNodeToBoneId.clear();
             }
         }
     }
@@ -433,8 +423,14 @@ void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_accessor *output, 
 
     Vector3 v1;
     Vector3 v2;
-    cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3);
-    cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3);
+    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3))
+    {
+        ASSERT_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+    }
+    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3))
+    {
+        ASSERT_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+    }
     out = v1;
     out.lerp(v2, keyframeData.mInterpolationValue);
 }
@@ -454,8 +450,14 @@ void Model::getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32
     
     Quaternion q1;
     Quaternion q2;
-    cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4);
-    cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&q2, 4);
+    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4))
+    {
+        ASSERT_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+    }
+    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&q2, 4))
+    {
+        ASSERT_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+    }
     out = q1;
     out.slerp(q2, keyframeData.mInterpolationValue);
 }

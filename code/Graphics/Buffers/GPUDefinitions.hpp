@@ -56,6 +56,7 @@ public:
         inline static const GPUVariableData mTime{Types::mFloat, "time"};
         inline static const GPUVariableData mWindowSize{Types::mVector2, "windowSize"};
         inline static const GPUVariableData mBonesTransform{Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mName};
+        inline static const GPUVariableData mBaseColor{Types::mVector4, "baseColor"};
         
         inline static const GPUVariableData mSampler{Types::mSampler2D, "uSampler"};
     };

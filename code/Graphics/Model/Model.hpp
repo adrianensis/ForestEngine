@@ -51,10 +51,6 @@ private:
     static void getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Quaternion& out);
 
 private:
-
-    inline static float smAnimationFPS = 60.0f;
-    inline static float smAnimationFrameRateSeconds = 1.0f/smAnimationFPS;
-
     class GLTFFace
     {
     public:
@@ -86,6 +82,9 @@ private:
     std::vector<OwnerPtr<Animation>> mAnimations;
 
 public:
+    inline static float smAnimationFPS = 60.0f;
+    inline static float smAnimationFrameRateSeconds = 1.0f/smAnimationFPS;
+
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
@@ -93,6 +92,7 @@ public:
     std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;
     std::vector<const cgltf_node*> mBonesToNode;
+    std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
 };

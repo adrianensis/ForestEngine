@@ -117,6 +117,7 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
     auto& hasTexture = get().getAttribute(GPUBuiltIn::Uniforms::mHasTexture.mName);
     auto& alphaEnabled = get().getAttribute(GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
+    auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
 
     auto& mainFunc = get().function("void", "main");
 
@@ -138,10 +139,10 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     end().
     elseBlock().
         ifBlock(inColor.dot("r").add(inColor.dot("g").add(inColor.dot("b"))).eq({"0"})).
-            set(outColor.dot("r"), "0.5").
-            set(outColor.dot("g"), "0.5").
-            set(outColor.dot("b"), "0.5").
-            set(outColor.dot("a"), "1").
+            set(outColor.dot("r"), baseColor.dot("r")).
+            set(outColor.dot("g"), baseColor.dot("g")).
+            set(outColor.dot("b"), baseColor.dot("b")).
+            set(outColor.dot("a"), baseColor.dot("a")).
         end().
         elseBlock().
             set(outColor.dot("r"), inColor.dot("r")).

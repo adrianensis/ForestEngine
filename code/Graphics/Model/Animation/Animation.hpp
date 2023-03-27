@@ -15,14 +15,13 @@ class Animation: public ObjectBase
     GENERATE_METADATA(Animation)
 
 public:
-    void init(u32 animationIndex, Ptr<const Model> model);
+    void init(f32 animDurationInSeconds, Ptr<const Model> model);
 
     f32 calculateCurrentAnimationTime(f32 accumulatedTime) const;
 
 public:
     Ptr<const Model> mModel;
     std::vector<Frame> mFrames;
-    i32 mAnimationIndex = -1;
     f32 mTicksPerSecond = 0;
     u32 mDurationInTicks = 0;
     f32 mDurationInSeconds = 0;

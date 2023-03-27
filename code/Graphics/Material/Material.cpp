@@ -27,6 +27,7 @@ void Material::init(u32 id)
     mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mBonesTransform);
+    mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
     mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
@@ -64,6 +65,8 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 	shader.get().addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
 
 	shader.get().addVector2(GET_SYSTEM(RenderContext).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
+
+	shader.get().addVector4(mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
 
     shader.get().addBool(isAnimated, GPUBuiltIn::Uniforms::mIsAnimated.mName);
     

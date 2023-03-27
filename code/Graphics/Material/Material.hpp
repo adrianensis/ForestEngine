@@ -167,6 +167,7 @@ public:
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 	bool mAlphaEnabled = true;
 	bool mHasBorder = false;
+	Vector4 mBaseColor = Vector4(0,0,0,1);
 
 private:
     std::vector<GPUVariableData> mUniforms;

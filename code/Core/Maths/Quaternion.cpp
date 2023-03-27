@@ -1,5 +1,6 @@
 #include "Core/Maths/Quaternion.hpp"
 #include "Core/Maths/MathUtils.hpp"
+#include "Core/Log/Log.hpp"
 
 Quaternion::Quaternion()
 {
@@ -198,6 +199,13 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 
 	// Calculate angle between them.
     f32 cosHalfTheta = qa.dot(qb);
+
+    //make sure we take the shortest path in case dot Product is negative
+    if(cosHalfTheta < 0.0f)
+    {
+        qb.mul(-1.0f);
+        cosHalfTheta = -cosHalfTheta;
+    }
 
 	// // if qa=qb or qa=-qb then theta = 0 and we can return qa
 	if (std::abs(cosHalfTheta) >= 1.0)

@@ -2,17 +2,14 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/RenderEngine.hpp"
 
-void Animation::init(u32 animationIndex, Ptr<const Model> model)
+void Animation::init(f32 animDurationInSeconds, Ptr<const Model> model)
 {
     mModel = model;
-    mAnimationIndex = animationIndex;
 
-    // const aiScene* m_pScene = mModel.get().mImporter.GetScene();
-    // aiAnimation* aiAnimation = m_pScene->mAnimations[mAnimationIndex];
-
-    // mTicksPerSecond = (f32)(aiAnimation->mTicksPerSecond != 0 ? aiAnimation->mTicksPerSecond : 25.0f);
-    // mDurationInTicks = aiAnimation->mDuration;
-    // mDurationInSeconds = mDurationInTicks / mTicksPerSecond;
+    mDurationInSeconds = animDurationInSeconds;
+    mTicksPerSecond = Model::smAnimationFPS;
+    mDurationInTicks = (int)(animDurationInSeconds/Model::smAnimationFrameRateSeconds);
+    mFrames.resize(mDurationInTicks);
 }
 
 f32 Animation::calculateCurrentAnimationTime(f32 accumulatedTime) const
@@ -95,14 +92,4 @@ void SkeletonState::getBoneTransformsFromCurrentAnimation(std::vector<Matrix4>& 
     f32 animationTime = mCurrentAnimation.get().getAnimationTime();
 
     Transforms = mCurrentAnimation.get().getAnimation().get().mFrames[animationTime].mTransforms;
-
-    FOR_RANGE(i, 0, mCurrentAnimation.get().getAnimation().get().mModel.get().mBonesIndexCount)
-    {
-        GET_SYSTEM(RenderEngine).drawCube(Cube(Transforms[i].mulVector(Vector4(0,0,0,1)),Vector3(0.01f,0.01f,0.01f)));
-        i32 parentID = mCurrentAnimation.get().getAnimation().get().mModel.get().mBones[i].mParentId;
-        if(parentID > 0)
-        {
-            GET_SYSTEM(RenderEngine).drawLine(Line(Transforms[i].mulVector(Vector4(0,0,0,1)), Transforms[parentID].mulVector(Vector4(0,0,0,1))));
-        }
-    }
 }
