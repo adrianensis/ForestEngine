@@ -98,127 +98,127 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	// UIBuilder uiBuilder;
+	UIBuilder uiBuilder;
 
-	// uiBuilder.
-	// setPosition(Vector2(-1,1)).
-	// setAdjustSizeToText(true).
-	// setSize(Vector2(0.5f, 0.05f));
+	uiBuilder.
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
+	setSize(Vector2(0.5f, 0.05f));
 
-	// uiBuilder.
-	// setText("File").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>().get().
-	// addOption("New", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>().get().
+	addOption("New", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Open", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Save", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.
-	// setText("Sprites").
-	// create<UIButton>().
-	// getUIElement<UIButton>().get().
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>().get().
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("View").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>().get().
-	// addOption("Grid", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>().get().
+	addOption("Grid", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Colliders", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.restoreAll();
+	uiBuilder.restoreAll();
 
-	// uiBuilder.
-	// setLayout(UILayout::HORIZONTAL).
-	// setPosition(Vector2(-1,0.5f)).
-	// setAdjustSizeToText(false).
-	// setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
-	// setGroup("toggleButtons").
-	// setSize(Vector2(0.1f, 0.1f));
+	uiBuilder.
+	setLayout(UILayout::HORIZONTAL).
+	setPosition(Vector2(-1,0.5f)).
+	setAdjustSizeToText(false).
+	setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
+	setGroup("toggleButtons").
+	setSize(Vector2(0.1f, 0.1f));
 
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>().get().
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>().get().
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// getUIElement<UIToggleButton>().get().simulateClick();
+	uiBuilder.
+	getUIElement<UIToggleButton>().get().simulateClick();
 
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>().get().
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>().get().
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// nextRow();
+	uiBuilder.
+	nextRow();
 
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>().get().
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>().get().
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>().get().
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
+	uiBuilder.
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
+	create<UIToggleButton>().
+	getUIElement<UIToggleButton>().get().
+	setOnPressedCallback([&](UIElement* uiElement){
+	});
 
-	// uiBuilder.
-	// nextRow();
+	uiBuilder.
+	nextRow();
 
-	// uiBuilder.restoreMaterial();
-	// uiBuilder.restoreStyle();
-	// uiBuilder.restoreGroup();
+	uiBuilder.restoreMaterial();
+	uiBuilder.restoreStyle();
+	uiBuilder.restoreGroup();
 
-	// uiBuilder.
-	// setText("Test Button").
-	// setAdjustSizeToText(true).
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>().get().
-	// addOption("Option1", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(true).
+	create<UIDropdown>().
+	getUIElement<UIDropdown>().get().
+	addOption("Option1", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Option2", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Option3", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Option2", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Option3", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.
-	// nextRow();
+	uiBuilder.
+	nextRow();
 
-	// uiBuilder.
-	// setText("Test Button").
-	// setAdjustSizeToText(false).
-	// setSize(Vector2(0.1f, 0.3f)).
-	// create<UIList>().
-	// getUIElement<UIList>().get().
-	// addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
-	// addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
-	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	// toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>().get().
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene().get().getCameraGameObject();
 }

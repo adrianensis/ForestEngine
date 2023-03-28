@@ -51,7 +51,7 @@ public:
         if constexpr (IS_BASE_OF(EngineSystem, T))
         {
             OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
-            MAP_INSERT(mEngineSystems, T::getClassIdStatic(), Ptr<EngineSystem>::cast(newEngineSystem));
+            MAP_INSERT(mEngineSystems, T::getClassIdStatic(), OwnerPtr<EngineSystem>::cast(newEngineSystem));
         }
         else
         {
