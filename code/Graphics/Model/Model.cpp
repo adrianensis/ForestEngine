@@ -109,6 +109,7 @@ void Model::init(const std::string& path)
                             {
                                 Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                                 Vector2& texCoord = texCoordArray[vertexIt];
+                                texCoord.y = 1.0f - texCoord.y;
                                 mesh.get().addToTextureCoordinates(texCoord);
                             }
                         }

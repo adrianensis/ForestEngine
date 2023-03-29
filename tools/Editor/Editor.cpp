@@ -63,7 +63,7 @@ void Editor::firstUpdate()
 	// importModel2("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,0), 20.0f, 180);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
