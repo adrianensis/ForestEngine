@@ -150,7 +150,7 @@ void Editor::firstUpdate()
 	setSize(Vector2(0.1f, 0.1f));
 
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png", true)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -160,7 +160,7 @@ void Editor::firstUpdate()
 	getUIElement<UIToggleButton>().get().simulateClick();
 
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png", true)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -170,14 +170,14 @@ void Editor::firstUpdate()
 	nextRow();
 
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png", true)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png")).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png", true)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>().get().
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -320,7 +320,7 @@ OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	renderer.get().init();
 
 	renderer.get().mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
-	renderer.get().mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png"));
+	renderer.get().mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png", true));
 
 	gameObject.get().addComponent<Renderer>(renderer);
 

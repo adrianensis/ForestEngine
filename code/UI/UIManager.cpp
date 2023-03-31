@@ -130,7 +130,7 @@ Ptr<const Material> UIManager::getFontMaterial()
 {
 	if (!mFontMaterial)
 	{
-		mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/font16x16.png");
+		mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/font16x16.png", false);
 	}
 	return mFontMaterial;
 }

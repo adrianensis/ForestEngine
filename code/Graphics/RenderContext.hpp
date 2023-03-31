@@ -52,7 +52,7 @@ public:
     void enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction);
     void disableStencil();
 
-    GLuint createTexture(u32 width, u32 height, const byte* data);
+    GLuint createTexture(u32 width, u32 height, const byte* data, bool createMipMap);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId);
     void disableTexture();

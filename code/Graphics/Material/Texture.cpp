@@ -10,13 +10,13 @@ Texture::~Texture()
 	GET_SYSTEM(RenderContext).deleteTexture(mTextureId);
 }
 
-void Texture::init(const std::string& path)
+void Texture::init(const std::string& path, bool createMipMap)
 {
 	if (!mData)
 	{
 		mPath = path;
 		loadImage();
-        mTextureId = GET_SYSTEM(RenderContext).createTexture(mWidth, mHeight, mData);
+        mTextureId = GET_SYSTEM(RenderContext).createTexture(mWidth, mHeight, mData, createMipMap);
 		deleteData();
 	}
 }

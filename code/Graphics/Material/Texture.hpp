@@ -11,7 +11,7 @@ class Texture: public ObjectBase
 public:
     ~Texture() override;
 
-    void init(const std::string& path);
+    void init(const std::string& path, bool createMipMap);
     void bind() const;
 
 private:

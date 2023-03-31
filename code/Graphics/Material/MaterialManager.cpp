@@ -16,12 +16,12 @@ void MaterialManager::init()
 	mMaterialIDCounter++;
 }
 
-Ptr<const Texture> MaterialManager::loadTexture(const std::string& path)
+Ptr<const Texture> MaterialManager::loadTexture(const std::string& path, bool createMipMap)
 {
 	if (!MAP_CONTAINS(mTexturesMap, path))
 	{
 		OwnerPtr<Texture> texture = OwnerPtr<Texture>::newObject();
-		texture.get().init(path);
+		texture.get().init(path, createMipMap);
 		MAP_INSERT(mTexturesMap, path, texture);
 	}
 
@@ -53,10 +53,10 @@ Ptr<Material> MaterialManager::createMaterial()
     return mMaterials[index];
 }
 
-Ptr<Material> MaterialManager::createMaterialWithTexture(const std::string &path)
+Ptr<Material> MaterialManager::createMaterialWithTexture(const std::string &path, bool createMipMap)
 {
     Ptr<Material> material = createMaterial();
-    material.get().mTextures[(u32)TextureType::BASE_COLOR] = loadTexture(path);
+    material.get().mTextures[(u32)TextureType::BASE_COLOR] = loadTexture(path, createMipMap);
     return material;
 }
 

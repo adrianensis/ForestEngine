@@ -66,11 +66,9 @@ void Renderer::update(bool regenerateVertices)
         if(regenerateVertices)
 		{
             mMeshInstance.get().init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
-            mMeshInstance.get().setColor(mColor);
 
 			if(mVertices.size() < verticesCount)
 			{
-				mVertices.clear();
 				mVertices.resize(verticesCount);
 			}
 			
@@ -129,7 +127,30 @@ void Renderer::update(bool regenerateVertices)
 
             mMeshInstance.get().appendToPositions(mVertices);
             //mMeshInstance.get().appendToTextureCoordinates(mMesh.get().mTextureCoordinates);
-            
+
+            FOR_RANGE(i, 0, verticesCount)
+            {
+                Vector2 vertexTexture = mMesh.get().mTextureCoordinates[i];
+                Vector2 regionSize = mTextureRegion.getSize();
+                Vector2 regionPosition = mTextureRegion.getLeftTopFront();
+
+                Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
+
+                if (mInvertAxisX)
+                {
+                    textureCoord.x = 1.0f - textureCoord.x;
+
+                    Ptr<const TextureAnimation> TextureAnimation = getTextureAnimationsCurrent();
+
+                    if (TextureAnimation)
+                    {
+                        textureCoord.x = textureCoord.x - (1.0f - (TextureAnimation.get().getNumberOfFrames() * regionSize.x));
+                    }
+                }
+
+                mMeshInstance.get().addToTextureCoordinates(textureCoord);
+            }
+                    
             if(isAnimated)
             {
                 mMeshInstance.get().appendToBonesVertexIDsData(mMesh.get().mBonesVertexIDsData);
@@ -142,30 +163,10 @@ void Renderer::update(bool regenerateVertices)
 		mTransformState = currentTransformState;
 	}
 
+    mMeshInstance.get().setColor(mColor);
+
 	updateTextureAnimation();
 
-    FOR_RANGE(i, 0, verticesCount)
-    {
-        Vector2 vertexTexture = mMesh.get().mTextureCoordinates[i];
-        Vector2 regionSize = mTextureRegion.getSize();
-        Vector2 regionPosition = mTextureRegion.getLeftTopFront();
-
-        Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
-
-        if (mInvertAxisX)
-        {
-            textureCoord.x = 1.0f - textureCoord.x;
-
-            Ptr<const TextureAnimation> TextureAnimation = getTextureAnimationsCurrent();
-
-            if (TextureAnimation)
-            {
-                textureCoord.x = textureCoord.x - (1.0f - (TextureAnimation.get().getNumberOfFrames() * regionSize.x));
-            }
-        }
-
-        mMeshInstance.get().addToTextureCoordinates(textureCoord);
-    }
 }
 
 void Renderer::onDestroy() 
