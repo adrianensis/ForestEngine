@@ -5,18 +5,14 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 {
 	PROFILER_CPU()
 
-	mGPUMeshBuffer.init(isStatic, isInstanced);
 	mPrototypeMesh = prototypeMesh;
+	mGPUMeshBuffer.init(mPrototypeMesh.get().mVertexCount, isStatic, isInstanced);
 	
 	if(mGPUMeshBuffer.mIsInstanced)
 	{
-		mMeshBuilder.init(mPrototypeMesh.get().mVertexCount * 1, mPrototypeMesh.get().mFacesCount * 1);
+		mMeshBuilder.init(mPrototypeMesh.get().mVertexCount, mPrototypeMesh.get().mFacesCount);
 
-		mMeshBuilder.appendToPositions(mPrototypeMesh.get().mPositions);
-		mMeshBuilder.appendToTextureCoordinates(mPrototypeMesh.get().mTextureCoordinates);
-        mMeshBuilder.appendToColors(mPrototypeMesh.get().mColors);
-		mMeshBuilder.appendToBonesVertexIDsData(mPrototypeMesh.get().mBonesVertexIDsData);
-		mMeshBuilder.appendToBonesVertexWeightsData(mPrototypeMesh.get().mBonesVertexWeightsData);
+        addDataToBuffers(mPrototypeMesh);
 
 		generateFacesData(1);
 		mGPUMeshBuffer.resize(mMeshBuilder);
@@ -29,6 +25,15 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 	}
 
     disable();
+}
+
+void MeshBatcher::addDataToBuffers(Ptr<const Mesh> meshInstance)
+{
+    mMeshBuilder.appendToPositions(meshInstance.get().mPositions);
+    mMeshBuilder.appendToTextureCoordinates(meshInstance.get().mTextureCoordinates);
+    mMeshBuilder.appendToColors(meshInstance.get().mColors);
+    mMeshBuilder.appendToBonesVertexIDsData(meshInstance.get().mBonesVertexIDsData);
+    mMeshBuilder.appendToBonesVertexWeightsData(meshInstance.get().mBonesVertexWeightsData);
 }
 
 void MeshBatcher::resize(u32 size)
@@ -65,24 +70,18 @@ void MeshBatcher::resize(u32 size)
 	mDataSentToGPU = false;
 }
 
-void MeshBatcher::addInstanceMatrix(const Matrix4& modelMatrix)
+void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance)
 {
 	PROFILER_CPU()
 
-	mGPUMeshBuffer.addInstanceMatrix(modelMatrix);
-
-	mMeshesIndex++;
-}
-
-void MeshBatcher::addInstance(Ptr<const Mesh> meshInstance)
-{
-	PROFILER_CPU()
-
-	mMeshBuilder.appendToPositions(meshInstance.get().mPositions);
-	mMeshBuilder.appendToTextureCoordinates(meshInstance.get().mTextureCoordinates);
-	mMeshBuilder.appendToColors(meshInstance.get().mColors);
-	mMeshBuilder.appendToBonesVertexIDsData(meshInstance.get().mBonesVertexIDsData);
-	mMeshBuilder.appendToBonesVertexWeightsData(meshInstance.get().mBonesVertexWeightsData);
+    if(mGPUMeshBuffer.mIsInstanced)
+    {
+        mGPUMeshBuffer.addInstanceMatrix(modelMatrix);
+    }
+    else
+    {
+        addDataToBuffers(meshInstance);
+    }
 
 	mMeshesIndex++;
 }
@@ -154,14 +153,6 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 
 void MeshBatcher::sendDataToGPU()
 {	
-    if(mGPUMeshBuffer.mIsInstanced)
-    {
-        mGPUMeshBuffer.setDataInstanced();
-    }
-    else
-    {
-        mGPUMeshBuffer.setData(mMeshBuilder);
-    }
-
+    mGPUMeshBuffer.setData(mMeshBuilder);
     mDataSentToGPU = true;
 }

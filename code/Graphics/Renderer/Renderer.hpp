@@ -21,7 +21,6 @@ public:
     bool getIsWorldSpace() const;
     void update(bool regenerateVertices);
     void onDestroy() override;
-    Ptr<const Mesh> generateMeshInstance();
     bool hasValidChunk() const;
     
 private:
@@ -58,4 +57,6 @@ public:
 private:
 	bool mPositionsDirty = true;
 	OwnerPtr<Mesh> mMeshInstance;
+public:
+    CGET(MeshInstance)
 };

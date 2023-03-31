@@ -64,6 +64,8 @@ public:
     GPUBufferData(const GPUVariableData& gpuVariableData): mGPUVariableData(gpuVariableData) {};
     
 public:
+    // glVertexAttribDivisor — modify the rate at which generic vertex attributes advance during instanced rendering
+    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribDivisor.xhtml
     u32 mInstanceDivisor = 0;
     u32 mAttributeDivisorSizeInPrimitiveTypes = 0;
     GPUVariableData mGPUVariableData;

@@ -10,7 +10,8 @@
 				"./scripts/build.py",
 				"-x",
 				"-i",
-				"-l"
+				"-l",
+				"-p"
 			],
 			"problemMatcher": [
 				"$gcc"

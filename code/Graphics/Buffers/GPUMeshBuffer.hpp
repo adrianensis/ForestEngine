@@ -12,12 +12,11 @@ public:
 	
     ~GPUMeshBuffer();
 
-    void init(bool isStatic, bool isInstanced);
+    void init(u32 vertexCount, bool isStatic, bool isInstanced);
     void resize(const Mesh& mesh);
     void setData(const Mesh& mesh);
     void setIndexesData(const Mesh& mesh);
     void addInstanceMatrix(const Matrix4& modelMatrix);
-    void setDataInstanced();
     void clear();
     void setMaxInstances(u32 maxInstances);
     void enable();
@@ -29,8 +28,9 @@ private:
 public:
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
-
-	u32 mVAO = 0;
+    u32 mVertexCount = 0;
+	
+    u32 mVAO = 0;
     
 	std::vector<Matrix4> mMatrices;
 

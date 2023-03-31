@@ -28,7 +28,8 @@ public:
     class Consts
     {
     public:
-        inline static const GPUVariableData MAX_BONES{Types::mInt, "MAX_BONES", "100"};
+        // TODO: unsigned int?
+        inline static const GPUVariableData MAX_BONES{Types::mInt, "MAX_BONES", "50"};
         inline static const GPUVariableData MAX_BONE_INFLUENCE{Types::mInt, "MAX_BONE_INFLUENCE", "4"};
     };
 

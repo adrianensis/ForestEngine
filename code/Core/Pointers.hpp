@@ -183,7 +183,7 @@ struct get_const_ptr_type<Ptr<T>>
 template<class T>
 struct get_const_ptr_type<OwnerPtr<T>>
 {
-    using type = OwnerPtr<const T>;
+    using type = Ptr<const T>;
 };
 
 // HASH

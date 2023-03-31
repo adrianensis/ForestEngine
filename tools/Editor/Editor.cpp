@@ -78,7 +78,7 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,-60), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,-60), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,-60), 20.0f, 0);
-	importModel2("BrainStem/glTF/BrainStem2.gltf", Vector3(0,0,-60), 20.0f, 0);
+	// importModel2("BrainStem/glTF/BrainStem2.gltf", Vector3(0,0,-60), 20.0f, 0);
 
 	// importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(300,0,0), 20.0f, 0);
 	//importModel2("dragon/Dragon_2.5_For_Animations.fbx", Vector3(15,0,0), 1.0f);

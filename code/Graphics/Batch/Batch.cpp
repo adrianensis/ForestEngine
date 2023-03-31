@@ -161,14 +161,14 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 	if(mBatchData.mIsInstanced)
 	{
 		renderer.get().update(false);
-		const Matrix4& rendererModelMatrix = renderer.get().mRendererModelMatrix;
-		mMeshBatcher.addInstanceMatrix(rendererModelMatrix);
 	}
 	else
 	{
 		renderer.get().update(true);
-		mMeshBatcher.addInstance(renderer.get().generateMeshInstance());
 	}
+
+    const Matrix4& rendererModelMatrix = renderer.get().mRendererModelMatrix;
+    mMeshBatcher.addInstance(rendererModelMatrix, renderer.get().getMeshInstance());
 }
 
 bool Batch::shouldRegenerateBuffers() const

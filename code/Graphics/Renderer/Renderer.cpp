@@ -53,6 +53,8 @@ void Renderer::update(bool regenerateVertices)
 		isAnimated = mMesh.get().mModel.get().isAnimated();
 	}
 
+	u32 verticesCount = mMesh.get().mVertexCount;
+
 	if (transformChanged || mDirtyPositionOffset || isAnimated)
 	{
 		if (transformChanged || mDirtyPositionOffset)
@@ -61,14 +63,15 @@ void Renderer::update(bool regenerateVertices)
 			mRendererModelMatrix.mul(mGameObject.get().mTransform.get().getModelMatrix());
 		}
 
-		if(regenerateVertices)
+        if(regenerateVertices)
 		{
-			u32 verticesCount = mMesh.get().mVertexCount;
+            mMeshInstance.get().init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
+            mMeshInstance.get().setColor(mColor);
 
 			if(mVertices.size() < verticesCount)
 			{
 				mVertices.clear();
-				mVertices.reserve(verticesCount);
+				mVertices.resize(verticesCount);
 			}
 			
 			FOR_RANGE(i, 0, verticesCount)
@@ -78,7 +81,7 @@ void Renderer::update(bool regenerateVertices)
 				if(isAnimated)
 				{
 					const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
-					const u32 MAX_BONES = 100;
+					const u32 MAX_BONES = 50;
 
 					const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mMesh.get().mModel);
 					const std::vector<BoneVertexIDsData>& bonesVertexIDsData = mMesh.get().mBonesVertexIDsData;
@@ -123,6 +126,15 @@ void Renderer::update(bool regenerateVertices)
 
 				mVertices[i] = vertexPosition;
 			}
+
+            mMeshInstance.get().appendToPositions(mVertices);
+            //mMeshInstance.get().appendToTextureCoordinates(mMesh.get().mTextureCoordinates);
+            
+            if(isAnimated)
+            {
+                mMeshInstance.get().appendToBonesVertexIDsData(mMesh.get().mBonesVertexIDsData);
+                mMeshInstance.get().appendToBonesVertexWeightsData(mMesh.get().mBonesVertexWeightsData);
+            }
 		}
 
 		mDirtyPositionOffset = false;
@@ -131,50 +143,34 @@ void Renderer::update(bool regenerateVertices)
 	}
 
 	updateTextureAnimation();
+
+    FOR_RANGE(i, 0, verticesCount)
+    {
+        Vector2 vertexTexture = mMesh.get().mTextureCoordinates[i];
+        Vector2 regionSize = mTextureRegion.getSize();
+        Vector2 regionPosition = mTextureRegion.getLeftTopFront();
+
+        Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
+
+        if (mInvertAxisX)
+        {
+            textureCoord.x = 1.0f - textureCoord.x;
+
+            Ptr<const TextureAnimation> TextureAnimation = getTextureAnimationsCurrent();
+
+            if (TextureAnimation)
+            {
+                textureCoord.x = textureCoord.x - (1.0f - (TextureAnimation.get().getNumberOfFrames() * regionSize.x));
+            }
+        }
+
+        mMeshInstance.get().addToTextureCoordinates(textureCoord);
+    }
 }
 
 void Renderer::onDestroy() 
 {
 
-}
-
-Ptr<const Mesh> Renderer::generateMeshInstance()
-{
-	const std::vector<Vector3>& vertexPositions = mVertices;
-
-	mMeshInstance.get().init(mMesh.get().mVertexCount, mMesh.get().mFacesCount);
-    mMeshInstance.get().setColor(mColor);
-
-	FOR_RANGE(i, 0, mMesh.get().mVertexCount)
-	{
-		mMeshInstance.get().addToPositions(vertexPositions[i]);
-
-		Vector2 vertexTexture = mMesh.get().mTextureCoordinates[i];
-
-		Vector2 regionSize = mTextureRegion.getSize();
-		Vector2 regionPosition = mTextureRegion.getLeftTopFront();
-
-		Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
-
-		if (mInvertAxisX)
-		{
-			textureCoord.x = 1.0f - textureCoord.x;
-
-			Ptr<const TextureAnimation> TextureAnimation = getTextureAnimationsCurrent();
-
-			if (TextureAnimation)
-			{
-				textureCoord.x = textureCoord.x - (1.0f - (TextureAnimation.get().getNumberOfFrames() * regionSize.x));
-			}
-		}
-
-		mMeshInstance.get().addToTextureCoordinates(textureCoord);
-	}
-
-	mMeshInstance.get().appendToBonesVertexIDsData(mMesh.get().mBonesVertexIDsData);
-	mMeshInstance.get().appendToBonesVertexWeightsData(mMesh.get().mBonesVertexWeightsData);
-
-	return mMeshInstance;
 }
 
 bool Renderer::hasValidChunk() const
