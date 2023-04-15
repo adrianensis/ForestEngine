@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 void Engine::init()
 {
-	mFPS = 60;
+	mFPS = 500;
 
 	Memory::init();
 
@@ -97,7 +97,7 @@ void Engine::run()
 
 		f32 dtMillis = GET_SYSTEM(Time).getElapsedTimeMillis();
 		
-		if (inverseFPSMillis > dtMillis)
+		if (inverseFPSMillis >= dtMillis)
 		{
 			diff = inverseFPSMillis - dtMillis;
 			auto diff_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double, std::milli>(diff));
@@ -105,7 +105,8 @@ void Engine::run()
 		}
 		
 		GET_SYSTEM(Time).endFrame();
-		//VAL(1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis())
+        // f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+		// VAR(fps)
 	}
 }
 
