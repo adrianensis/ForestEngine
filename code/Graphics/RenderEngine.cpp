@@ -36,8 +36,8 @@ void RenderEngine::init(f32 sceneSize)
 		for (i32 j = chunksGridSizeHalf; j > -chunksGridSizeHalf; --j)
 		{
 			OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>::newObject();
-			chunk.get().init();
-			chunk.get().set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
+			chunk->init();
+			chunk->set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
 
 			mChunks.push_back(chunk);
 		}
@@ -46,7 +46,7 @@ void RenderEngine::init(f32 sceneSize)
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
 {
-	return mCamera and mCamera.get().mFrustum.testSphere(center, radius);
+	return mCamera and mCamera->mFrustum.testSphere(center, radius);
 }
 
 void RenderEngine::update()
@@ -55,7 +55,7 @@ void RenderEngine::update()
 
 	if (mCamera)
 	{
-		mCamera.get().update();
+		mCamera->update();
 	}
 
 	GET_SYSTEM(AnimationManager).update();
@@ -81,16 +81,16 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 {
 	EngineSystem::addComponent(component);
 
-	if(component.get().getClassId() == Renderer::getClassIdStatic())
+	if(component->getClassId() == Renderer::getClassIdStatic())
 	{
 		Ptr<Renderer> renderer = Ptr<Renderer>::cast(component);
 
-		if (renderer.get().getIsWorldSpace())
+		if (renderer->getIsWorldSpace())
 		{
 			Ptr<Chunk> chunk = assignChunk(renderer);
 			if (chunk)
 			{
-				chunk.get().addRenderer(renderer);
+				chunk->addRenderer(renderer);
 			}
 			else
 			{
@@ -112,9 +112,9 @@ Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
 	for (i32 i = 0; (i < (i32)(mChunks.size())) and (!found); ++i)
 	{
 		chunkTmp = mChunks.at(i);
-		if (chunkTmp.get().containsRenderer /*Sphere*/ (renderer))
+		if (chunkTmp->containsRenderer /*Sphere*/ (renderer))
 		{
-			renderer.get().mChunk = chunkTmp;
+			renderer->mChunk = chunkTmp;
 
 			found = true;
 			chunkFound = chunkTmp;
@@ -191,21 +191,21 @@ void RenderEngine::checkChunks()
 	{
 		Ptr<Chunk> chunk = mChunks.at(i);
 
-		f32 chunkToCameraDistance = chunk.get().mCenter.dst(mCamera.get().mGameObject.get().mTransform.get().getWorldPosition());
+		f32 chunkToCameraDistance = chunk->mCenter.dst(mCamera->mGameObject->mTransform->getWorldPosition());
 		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
 		
-		if (chunkInDistance and !chunk.get().mIsLoaded)
+		if (chunkInDistance and !chunk->mIsLoaded)
 		{
-			chunk.get().load();
+			chunk->load();
 		}
-		else if (!chunkInDistance and chunk.get().mIsLoaded)
+		else if (!chunkInDistance and chunk->mIsLoaded)
 		{
 			mBatchesMap.forceRegenerateBuffers();
 
-			chunk.get().unload();
+			chunk->unload();
 		}
 
-		chunk.get().update();
+		chunk->update();
 	}
 
 }

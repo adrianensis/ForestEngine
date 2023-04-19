@@ -32,7 +32,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mIndicesBuffer.reserve(mMaxShapes * 2);		 // 1 index per vertex
 
 	mShaderLine = OwnerPtr<Shader>::newObject();
-	mShaderLine.get().initDebug();
+	mShaderLine->initDebug();
 
 	bind();
 }
@@ -41,18 +41,18 @@ void ShapeBatchRenderer::render()
 {
 	if (mShapesCounter > 0)
 	{
-		mShaderLine.get().enable();
+		mShaderLine->enable();
 
 		GET_SYSTEM(RenderContext).enableVAO(mVAO);
 
 		GET_SYSTEM(RenderContext).enableProperty(0);
 		GET_SYSTEM(RenderContext).enableProperty(1);
 
-		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mProjectionMatrix;
-		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera.get().mViewMatrix;
+		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera->mProjectionMatrix;
+		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera->mViewMatrix;
 
-		mShaderLine.get().addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::smIdentity, "projectionMatrix");
-		mShaderLine.get().addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::smIdentity, "viewMatrix");
+		mShaderLine->addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::smIdentity, "projectionMatrix");
+		mShaderLine->addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::smIdentity, "viewMatrix");
 
 		GET_SYSTEM(RenderContext).setDataVBO(mVBOPosition, mPositionBuffer);
 		GET_SYSTEM(RenderContext).setDataVBO(mVBOColor, mColorBuffer);

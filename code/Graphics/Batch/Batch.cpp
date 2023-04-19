@@ -21,7 +21,7 @@ void Batch::init(const BatchData& batchData)
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
     mShader = OwnerPtr<Shader>::newObject();
-    mShader.get().init(gpuBuffersLayout, mBatchData.mMaterial);
+    mShader->init(gpuBuffersLayout, mBatchData.mMaterial);
 }
 
 void Batch::render()
@@ -46,8 +46,8 @@ void Batch::render()
 void Batch::enable()
 {
     mMeshBatcher.enable();
-    mShader.get().enable();
-    mBatchData.mMaterial.get().bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh.get().mModel);
+    mShader->enable();
+    mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh->mModel);
 
     if(mBatchData.mStencilValue > 0x00)
     {
@@ -58,14 +58,14 @@ void Batch::enable()
 void Batch::disable()
 {
     GET_SYSTEM(RenderContext).disableStencil();
-    mShader.get().disable();
+    mShader->disable();
     mMeshBatcher.disable();
 }
 
 void Batch::addRenderer(Ptr<Renderer> renderer)
 {
 	mRenderers.push_back(renderer);
-	renderer.get().mBatch = (getPtrToThis());
+	renderer->mBatch = (getPtrToThis());
 
 	mNewRendererAdded = true;
 }
@@ -87,9 +87,9 @@ void Batch::processRenderers()
 		}
 		else
 		{
-			/*Transform* transform = renderer->mGameObject.get().mTransform;
+			/*Transform* transform = renderer->mGameObject->mTransform;
 			const Vector3& position = transform->getWorldPosition();
-			f32 distanceToCamera = position.dst(GET_SYSTEM(RenderEngine).getCamera()->mGameObject.get().mTransform.get().getWorldPosition());
+			f32 distanceToCamera = position.dst(GET_SYSTEM(RenderEngine).getCamera()->mGameObject->mTransform->getWorldPosition());
 			if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
 			
 			addToVertexBuffer(renderer);
@@ -106,17 +106,17 @@ bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
 
 	if(renderer.isValid())
 	{
-		if (renderer.get().isActive())
+		if (renderer->isActive())
 		{
-			//renderer.get().getChunk
-			if (!renderer.get().hasValidChunk())
+			//renderer->getChunk
+			if (!renderer->hasValidChunk())
 			{
 				toRemove = true;
 			}
 		}
 		else
 		{
-			if (renderer.get().getIsPendingToBeDestroyed())
+			if (renderer->getIsPendingToBeDestroyed())
 			{
 				toRemove = true;
 			}
@@ -137,11 +137,11 @@ void Batch::internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it)
 	Ptr<Renderer> renderer = *it;
 	if(renderer)
 	{
-		renderer.get().mBatch.invalidate();
+		renderer->mBatch.invalidate();
 
 		if (!mBatchData.mIsWorldSpace)
 		{
-			renderer.get().finallyDestroy();
+			renderer->finallyDestroy();
 		}
 	}
 
@@ -160,15 +160,15 @@ void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 
 	if(mBatchData.mIsInstanced)
 	{
-		renderer.get().update(false);
+		renderer->update(false);
 	}
 	else
 	{
-		renderer.get().update(true);
+		renderer->update(true);
 	}
 
-    const Matrix4& rendererModelMatrix = renderer.get().mRendererModelMatrix;
-    mMeshBatcher.addInstance(rendererModelMatrix, renderer.get().getMeshInstance());
+    const Matrix4& rendererModelMatrix = renderer->mRendererModelMatrix;
+    mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
 }
 
 bool Batch::shouldRegenerateBuffers() const

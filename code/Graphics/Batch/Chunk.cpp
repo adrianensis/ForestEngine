@@ -43,31 +43,31 @@ void Chunk::update()
 
         if(renderer.isValid())
         {
-            if (renderer.get().isActive())
+            if (renderer->isActive())
             {
-                if (mIsLoaded and !renderer.get().hasValidBatch())
+                if (mIsLoaded and !renderer->hasValidBatch())
                 {
                     GET_SYSTEM(RenderEngine).assignBatch(renderer);
                 }
 
-                if (!renderer.get().isStatic() and !containsRenderer(renderer))
+                if (!renderer->isStatic() and !containsRenderer(renderer))
                 {
                     Ptr<Chunk> newChunk = GET_SYSTEM(RenderEngine).assignChunk(renderer);
 
                     if (newChunk and newChunk != getPtrToThis())
                     {
-                        newChunk.get().addRenderer(renderer);
+                        newChunk->addRenderer(renderer);
                         removeFromList = true;
                     }
                 }
             }
 
-            if (renderer.get().getIsPendingToBeDestroyed())
+            if (renderer->getIsPendingToBeDestroyed())
             {
-                renderer.get().finallyDestroy();
+                renderer->finallyDestroy();
             }
 
-            if (renderer.get().getIsDestroyed())
+            if (renderer->getIsDestroyed())
             {
                 removeFromList = true;
             }
@@ -104,13 +104,13 @@ void Chunk::addRenderer(Ptr<Renderer> renderer)
 
 bool Chunk::containsRenderer(Ptr<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
 {
-	Vector3 rendererPosition = renderer.get().mGameObject.get().mTransform.get().getWorldPosition();
+	Vector3 rendererPosition = renderer->mGameObject->mTransform->getWorldPosition();
 	bool contains = Geometry::testCubePoint(mCube, rendererPosition, epsilon);
 	return contains; // TODO : move to settings ?
 }
 
 bool Chunk::containsRendererSphere(Ptr<const Renderer> renderer) const
 {
-	Vector3 rendererPosition = renderer.get().mGameObject.get().mTransform.get().getWorldPosition();
-	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer.get().mGameObject.get().mTransform.get().mScale.y * 2.0f), 0);
+	Vector3 rendererPosition = renderer->mGameObject->mTransform->getWorldPosition();
+	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer->mGameObject->mTransform->mScale.y * 2.0f), 0);
 }

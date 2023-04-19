@@ -306,7 +306,7 @@ void RenderContext::onResize(GLFWwindow *window, int width, int height)
 {
 	smWindowSize.set(width, height);
 	glViewport(0, 0, smWindowSize.x, smWindowSize.y);
-	GET_SYSTEM(RenderEngine).mCamera.get().onResize();
+	GET_SYSTEM(RenderEngine).mCamera->onResize();
 }
 
 void RenderContext::GLFWonResize(GLFWwindow *window, int width, int height)

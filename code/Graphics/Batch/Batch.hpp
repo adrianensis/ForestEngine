@@ -21,14 +21,14 @@ public:
 
 	void init(Ptr<Renderer> renderer)
     {
-        mMaterial = renderer.get().mMaterial;
-        mMesh = renderer.get().mMesh;
-        mIsStatic = renderer.get().isStatic();
-        mIsWorldSpace = renderer.get().getIsWorldSpace();
-        mIsInstanced = renderer.get().mIsInstanced;
-        mStencilValue = renderer.get().mStencilValue;
-        mIsStencilMask = renderer.get().mIsStencilMask;
-        mStencilFunction = renderer.get().mStencilFunction;
+        mMaterial = renderer->mMaterial;
+        mMesh = renderer->mMesh;
+        mIsStatic = renderer->isStatic();
+        mIsWorldSpace = renderer->getIsWorldSpace();
+        mIsInstanced = renderer->mIsInstanced;
+        mStencilValue = renderer->mStencilValue;
+        mIsStencilMask = renderer->mIsStencilMask;
+        mStencilFunction = renderer->mStencilFunction;
     }
 
 	bool operator==(const BatchData& otherBatchData) const
@@ -43,7 +43,7 @@ public:
 	public:
 		size_t operator()(const BatchData& key) const
 		{
-			return key.mMaterial.get().getObjectId() ^ key.mMesh.get().getObjectId() ^
+			return key.mMaterial->getObjectId() ^ key.mMesh->getObjectId() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
 			(u64)key.mStencilValue ^ static_cast<u64>(key.mIsStencilMask) ^ static_cast<u64>(key.mStencilFunction);
 		}

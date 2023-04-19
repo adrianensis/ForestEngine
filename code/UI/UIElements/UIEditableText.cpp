@@ -17,13 +17,13 @@ void UIEditableText::setBackground(const UIElementConfig& config)
     
     if(mBackground)
     {
-        mScene.get().removeGameObject(Ptr<GameObject>::cast(mBackground));
+        mScene->removeGameObject(Ptr<GameObject>::cast(mBackground));
     }
 
     UIBuilder uiBuilder;
 
     mBackground = uiBuilder.
-        setPosition(mTransform.get().getWorldPosition() + Vector2(-config.mTextSize.x/GET_SYSTEM(RenderContext).getAspectRatio(), config.mTextSize.y/2.0f)).
+        setPosition(mTransform->getWorldPosition() + Vector2(-config.mTextSize.x/GET_SYSTEM(RenderContext).getAspectRatio(), config.mTextSize.y/2.0f)).
         setLayer(mConfig.mLayer).
         setIsAffectedByLayout(false).
         setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).

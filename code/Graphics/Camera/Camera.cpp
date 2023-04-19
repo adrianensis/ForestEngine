@@ -20,14 +20,14 @@ void Camera::onComponentAdded()
 {
 	recalculateProjectionMatrix();
 
-	mTransformState = TransformState(mGameObject.get().mTransform.get());
+	mTransformState = TransformState(mGameObject->mTransform.get());
 }
 
 void Camera::update()
 {
 	PROFILER_CPU()
 	
-	TransformState currentTransformState(mGameObject.get().mTransform.get());
+	TransformState currentTransformState(mGameObject->mTransform.get());
 	if(!currentTransformState.eq(mTransformState))
 	{
 		mFrustum.build();
@@ -136,7 +136,7 @@ void Camera::calculateViewMatrix()
 {
 	PROFILER_CPU()
 
-	Vector3 originalPosition = mGameObject.get().mTransform.get().getWorldPosition();
+	Vector3 originalPosition = mGameObject->mTransform->getWorldPosition();
 
 	Matrix4 viewTranslationMatrix;
 	viewTranslationMatrix.translation(-originalPosition);
@@ -160,7 +160,7 @@ void Camera::calculateViewMatrix()
 		Vector4(0, 0, 0, 1)
 	);
 	
-	Matrix4 rotationMatrix = mGameObject.get().mTransform.get().getRotationMatrix();
+	Matrix4 rotationMatrix = mGameObject->mTransform->getRotationMatrix();
 
 	mViewMatrix.init(viewRotationMatrix);
 	mViewMatrix.mul(rotationMatrix);

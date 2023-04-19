@@ -12,7 +12,7 @@ ScenesManager::ScenesManager()
 
 ScenesManager::~ScenesManager() 
 {
-	mGameObjectController.get().destroy();
+	mGameObjectController->destroy();
     mGameObjectController.invalidate();
 }
 
@@ -39,7 +39,7 @@ void ScenesManager::init()
 void ScenesManager::update()
 {
 	PROFILER_CPU()
-	mCurrentScene.get().update();
+	mCurrentScene->update();
 }
 
 void ScenesManager::loadCurrentScene()
@@ -63,17 +63,17 @@ void ScenesManager::setScene(u32 i)
 
 void ScenesManager::internalLoadScene()
 {
-	mCurrentScene.get().init();
+	mCurrentScene->init();
 
 	if (GET_SYSTEM(EngineConfig).getConfig().at("scenes").size() > 0)
 	{
 		std::string sceneName = GET_SYSTEM(EngineConfig).getConfig().at("scenes")[mCurrentSceneIndex].get<std::string>();
 
-		mCurrentScene.get().loadScene(sceneName);
+		mCurrentScene->loadScene(sceneName);
 	}
 
-	mGameObjectController.get().mScene = (mCurrentScene);
-	GET_SYSTEM(RenderEngine).mCamera = (mCurrentScene.get().getCameraGameObject().get().getFirstComponent<Camera>());
+	mGameObjectController->mScene = (mCurrentScene);
+	GET_SYSTEM(RenderEngine).mCamera = (mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
 }
 
 void ScenesManager::addScene(OwnerPtr<Scene> newScene)

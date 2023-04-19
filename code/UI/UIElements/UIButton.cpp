@@ -25,7 +25,7 @@ void UIButton::onDestroy()
 {
 	if (mText)
 	{
-		mScene.get().removeGameObject(Ptr<GameObject>::cast(mText));
+		mScene->removeGameObject(Ptr<GameObject>::cast(mText));
 		mText.invalidate();
 	}
 
@@ -57,7 +57,7 @@ void UIButton::setText(const std::string& text)
 			getUIElement<UIText>();
 		}
 
-		mText.get().setText(text);
+		mText->setText(text);
 	}
 }
 
@@ -67,7 +67,7 @@ void UIButton::setVisibility(bool visibility)
 
 	if (mText)
 	{
-		mText.get().setVisibility(visibility);
+		mText->setVisibility(visibility);
 	}
 }
 

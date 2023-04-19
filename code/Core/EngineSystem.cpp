@@ -13,21 +13,21 @@ bool EngineSystem::isComponentClassAccepted(ClassId classId)
 
 void EngineSystem::addComponent(Ptr<EngineSystemComponent> component)
 {
-    component.get().mAlreadyAddedToEngine = true;
+    component->mAlreadyAddedToEngine = true;
 }
 
 void EngineSystemsManager::addComponentToEngineSystem(Ptr<EngineSystemComponent> component)
 {
-    if (component and !component.get().mAlreadyAddedToEngine)
+    if (component and !component->mAlreadyAddedToEngine)
     {
-        ClassId componentClassId = component.get().getClassId();
+        ClassId componentClassId = component->getClassId();
         bool added = false;
         FOR_MAP(itEngineSystem, mEngineSystems)
         {
             Ptr<EngineSystem> sub = (itEngineSystem->second);
-            if (sub.get().isComponentClassAccepted(componentClassId))
+            if (sub->isComponentClassAccepted(componentClassId))
             {
-                sub.get().addComponent(component);
+                sub->addComponent(component);
                 added = true;
             }
         }

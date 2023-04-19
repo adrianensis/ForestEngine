@@ -12,13 +12,13 @@ int main()
     Engine::getInstance().init();
 
     OwnerPtr<GameObject> controller = OwnerPtr<GameObject>::newObject();
-    controller.get().init();
+    controller->init();
 
     // NOTE: this script won't be added to the ScriptEngine in the usual way,
     // since ScriptEngine itself is still not initialized.
     OwnerPtr<Editor> script = OwnerPtr<Editor>::newObject();
-    script.get().init();
-    controller.get().addComponent<Script>(OwnerPtr<Script>::cast(script));
+    script->init();
+    controller->addComponent<Script>(OwnerPtr<Script>::cast(script));
 
     GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 

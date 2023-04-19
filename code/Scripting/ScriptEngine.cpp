@@ -8,12 +8,12 @@ void ScriptEngine::init()
 
 	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Script);
 
-	mController = GET_SYSTEM(ScenesManager).getGameObjectController().get().getFirstComponent<Script>();
+	mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
 }
 
 void ScriptEngine::addComponent(Ptr<EngineSystemComponent> component)
 {
-	if(component.get().getClassId() == Script::getClassIdStatic())
+	if(component->getClassId() == Script::getClassIdStatic())
 	{
 		Ptr<Script> script = Ptr<Script>::cast(component);
 		mScripts.push_back(script);
@@ -26,30 +26,30 @@ void ScriptEngine::update()
 	
 	if (mController)
 	{
-		if (!mController.get().getFirstUpdateDone())
+		if (!mController->getFirstUpdateDone())
 		{
-			mController.get().firstUpdate();
-			mController.get().firstUpdateDone();
+			mController->firstUpdate();
+			mController->firstUpdateDone();
 		}
 
-		mController.get().update();
+		mController->update();
 	}
 
 	FOR_LIST(it, mScripts)
 	{
 		Ptr<Script> script = *it;
 
-		if (script.get().isActive())
+		if (script->isActive())
 		{
-			if (!script.get().getFirstUpdateDone())
+			if (!script->getFirstUpdateDone())
 			{
-				script.get().firstUpdate();
-				script.get().firstUpdateDone();
+				script->firstUpdate();
+				script->firstUpdateDone();
 			}
 
-			script.get().update();
+			script->update();
 		}
-		else if (script.get().getIsPendingToBeDestroyed())
+		else if (script->getIsPendingToBeDestroyed())
 		{
 			internalRemoveScript(it);
 		}
@@ -68,8 +68,8 @@ void ScriptEngine::internalRemoveScript(std::list<Ptr<Script>>::iterator & it)
 {
 	Ptr<Script> script = *it;
 
-	script.get().terminate();
-	script.get().finallyDestroy();
+	script->terminate();
+	script->finallyDestroy();
 
 	it = mScripts.erase(it);
 	--it;

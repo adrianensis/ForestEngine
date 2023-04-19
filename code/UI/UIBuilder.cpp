@@ -42,7 +42,7 @@ void UIBuilder::registerUIElement(OwnerPtr<UIElement> uiElement)
 {
 	mCurrentUIElement = uiElement;
 
-	GET_SYSTEM(ScenesManager).getCurrentScene().get().addGameObject(OwnerPtr<GameObject>::cast(mCurrentUIElement));
+	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(OwnerPtr<GameObject>::cast(mCurrentUIElement));
 
 	if (mConfig.mGroup.length() > 0)
 	{

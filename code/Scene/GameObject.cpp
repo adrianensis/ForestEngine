@@ -31,17 +31,17 @@ void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
 
 	mComponentsMap.at(classId).push_back(component);
 
-	component.get().mGameObject = getPtrToThis();
-	component.get().onComponentAdded();
+	component->mGameObject = getPtrToThis();
+	component->onComponentAdded();
 
 	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<EngineSystemComponent>::cast(component));
 }
 
 void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 {
-	if (MAP_CONTAINS(mComponentsMap, classId) and !component.get().getIsPendingToBeDestroyed() and !component.get().getIsDestroyed())
+	if (MAP_CONTAINS(mComponentsMap, classId) and !component->getIsPendingToBeDestroyed() and !component->getIsDestroyed())
 	{
-		component.get().destroy();
+		component->destroy();
 
 		std::list<OwnerPtr<Component>>& list = mComponentsMap.at(classId);
 		list.remove(component);
@@ -56,7 +56,7 @@ void GameObject::setIsActive(bool isActive)
 	{
 		FOR_LIST(itComponent, it->second)
 		{
-			(*itComponent).get().setIsActive(isActive);
+			(*itComponent)->setIsActive(isActive);
 		}
 	}
 }
@@ -77,8 +77,8 @@ void GameObject::destroy()
 
 		FOR_LIST(itComponent, list)
 		{
-			(*itComponent).get().mGameObject.invalidate();
-			(*itComponent).get().destroy();
+			(*itComponent)->mGameObject.invalidate();
+			(*itComponent)->destroy();
 		}
 
 		list.clear();

@@ -12,18 +12,18 @@ void ModelRenderer::init()
 
 void ModelRenderer::onComponentAdded() 
 {
-	const auto& meshes = mModel.get().mMeshes;
+	const auto& meshes = mModel->mMeshes;
     FOR_LIST(it, meshes)
 	{
 		OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
-		renderer.get().init();
+		renderer->init();
 
-		renderer.get().mMesh = *it;
-		renderer.get().mMaterial = renderer.get().mMesh.get().mMaterial;
-		renderer.get().mIsInstanced = mIsInstanced;
-		renderer.get().mStencilValue = mStencilValue;
-		renderer.get().mIsStencilMask = mIsStencilMask;
-		mGameObject.get().addComponent<Renderer>(renderer);
+		renderer->mMesh = *it;
+		renderer->mMaterial = renderer->mMesh->mMaterial;
+		renderer->mIsInstanced = mIsInstanced;
+		renderer->mStencilValue = mStencilValue;
+		renderer->mIsStencilMask = mIsStencilMask;
+		mGameObject->addComponent<Renderer>(renderer);
 	}
 }
 

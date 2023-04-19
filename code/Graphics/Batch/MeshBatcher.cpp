@@ -6,11 +6,11 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 	PROFILER_CPU()
 
 	mPrototypeMesh = prototypeMesh;
-	mGPUMeshBuffer.init(mPrototypeMesh.get().mVertexCount, isStatic, isInstanced);
+	mGPUMeshBuffer.init(mPrototypeMesh->mVertexCount, isStatic, isInstanced);
 	
 	if(mGPUMeshBuffer.mIsInstanced)
 	{
-		mMeshBuilder.init(mPrototypeMesh.get().mVertexCount, mPrototypeMesh.get().mFacesCount);
+		mMeshBuilder.init(mPrototypeMesh->mVertexCount, mPrototypeMesh->mFacesCount);
 
         addDataToBuffers(mPrototypeMesh);
 
@@ -29,11 +29,11 @@ void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInst
 
 void MeshBatcher::addDataToBuffers(Ptr<const Mesh> meshInstance)
 {
-    mMeshBuilder.appendToPositions(meshInstance.get().mPositions);
-    mMeshBuilder.appendToTextureCoordinates(meshInstance.get().mTextureCoordinates);
-    mMeshBuilder.appendToColors(meshInstance.get().mColors);
-    mMeshBuilder.appendToBonesVertexIDsData(meshInstance.get().mBonesVertexIDsData);
-    mMeshBuilder.appendToBonesVertexWeightsData(meshInstance.get().mBonesVertexWeightsData);
+    mMeshBuilder.appendToPositions(meshInstance->mPositions);
+    mMeshBuilder.appendToTextureCoordinates(meshInstance->mTextureCoordinates);
+    mMeshBuilder.appendToColors(meshInstance->mColors);
+    mMeshBuilder.appendToBonesVertexIDsData(meshInstance->mBonesVertexIDsData);
+    mMeshBuilder.appendToBonesVertexWeightsData(meshInstance->mBonesVertexWeightsData);
 }
 
 void MeshBatcher::resize(u32 size)
@@ -59,7 +59,7 @@ void MeshBatcher::resize(u32 size)
 		}
 		else
 		{
-			mMeshBuilder.init(mPrototypeMesh.get().mVertexCount * mMaxMeshesThreshold, mPrototypeMesh.get().mFacesCount * mMaxMeshesThreshold);
+			mMeshBuilder.init(mPrototypeMesh->mVertexCount * mMaxMeshesThreshold, mPrototypeMesh->mFacesCount * mMaxMeshesThreshold);
 			generateFacesData(mMaxMeshesThreshold);
 			mGPUMeshBuffer.resize(mMeshBuilder);
 		}
@@ -94,7 +94,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(RenderContext).drawElements(mPrototypeMesh.get().mFaces.size() * 3, mMeshesIndex, mGPUMeshBuffer.mIsInstanced);
+		GET_SYSTEM(RenderContext).drawElements(mPrototypeMesh->mFaces.size() * 3, mMeshesIndex, mGPUMeshBuffer.mIsInstanced);
 	}
 }
 
@@ -111,9 +111,9 @@ void MeshBatcher::disable()
 bool MeshBatcher::isAnimated() const
 {
 	bool isAnimated = false;
-	if(mPrototypeMesh.get().mModel)
+	if(mPrototypeMesh->mModel)
 	{
-		isAnimated = mPrototypeMesh.get().mModel.get().isAnimated();
+		isAnimated = mPrototypeMesh->mModel->isAnimated();
 	}
 
 	return isAnimated;
@@ -135,11 +135,11 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 
 	FOR_RANGE(i, 0, meshesCount)
 	{
-		u32 offset = (i * mPrototypeMesh.get().mVertexCount);
+		u32 offset = (i * mPrototypeMesh->mVertexCount);
 		
-		FOR_RANGE(faceIndex, 0, mPrototypeMesh.get().mFaces.size())
+		FOR_RANGE(faceIndex, 0, mPrototypeMesh->mFaces.size())
 		{
-			Face newFace = mPrototypeMesh.get().mFaces[faceIndex];
+			Face newFace = mPrototypeMesh->mFaces[faceIndex];
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;

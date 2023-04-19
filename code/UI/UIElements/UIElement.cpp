@@ -51,7 +51,7 @@ bool UIElement::isMouseCursorInsideElement() const
     {
         if(Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent))
         {
-            parentCheck = parentUIElement.get().isMouseCursorInsideElement();
+            parentCheck = parentUIElement->isMouseCursorInsideElement();
         }
     }
 
@@ -62,9 +62,9 @@ bool UIElement::isMouseCursorInsideElement() const
 
 	Vector2 mousePosition = GET_SYSTEM(Input).getMousePosition();
 
-	if(mTransform.get().mAffectedByProjection)
+	if(mTransform->mAffectedByProjection)
 	{
-		mousePosition = GET_SYSTEM(RenderEngine).mCamera.get().screenToWorld(GET_SYSTEM(Input).getMousePosition());
+		mousePosition = GET_SYSTEM(RenderEngine).mCamera->screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}
 
     Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
@@ -75,7 +75,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 Vector3 UIElement::getLeftTopPosition() const
 {
-    Vector3 position = mTransform.get().getWorldPosition();
+    Vector3 position = mTransform->getWorldPosition();
     Vector2 correctedSize = UIUtils::correctAspectRatio_X(mConfig.mSize);
     position.x = position.x - (correctedSize.x / 2.0f);
     position.y = position.y + (correctedSize.y / 2.0f);
@@ -427,9 +427,9 @@ void UIElement::loseFocus()
 void UIElement::obtainFocus()
 {
 	Ptr<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
-	if (lastFocusedElement and lastFocusedElement.get().isActive())
+	if (lastFocusedElement and lastFocusedElement->isActive())
 	{
-		lastFocusedElement.get().loseFocus();
+		lastFocusedElement->loseFocus();
 	}
 
 	GET_SYSTEM(UIManager).setFocusedElement(getPtrToThis());
@@ -453,13 +453,13 @@ void UIElement::releaseOtherToggleElements()
 		Ptr<UIElement> other = *it;
 		if(other != getPtrToThis())
 		{
-			if(other.get().getToggleEnabled() and
-			other.get().getState() == UIElementState::TOGGLED and
-			other.get().getReleaseOnSameGroupPressed() and
-			!other.get().getConfig().mGroup.empty() and
-			other.get().getConfig().mGroup == mConfig.mGroup)
+			if(other->getToggleEnabled() and
+			other->getState() == UIElementState::TOGGLED and
+			other->getReleaseOnSameGroupPressed() and
+			!other->getConfig().mGroup.empty() and
+			other->getConfig().mGroup == mConfig.mGroup)
 			{
-				other.get().executeRelease();
+				other->executeRelease();
 			}
 		}
 	}

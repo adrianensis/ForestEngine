@@ -29,7 +29,7 @@ void UIGroup::destroyUIElement(Ptr<UIElement> uiElement)
 	if (uiElement)
 	{
 		removeUIElement(uiElement);
-		uiElement.get().mScene.get().removeGameObject(Ptr<GameObject>::cast(uiElement));
+		uiElement->mScene->removeGameObject(Ptr<GameObject>::cast(uiElement));
 	}
 }
 
@@ -38,7 +38,7 @@ void UIGroup::destroyAllUIElements()
 	FOR_LIST(it, mUIElements)
 	{
 		Ptr<UIElement> element = *it;
-		element.get().mScene.get().removeGameObject(Ptr<GameObject>::cast(element));
+		element->mScene->removeGameObject(Ptr<GameObject>::cast(element));
 	}
 
 	mUIElements.clear();
@@ -50,6 +50,6 @@ void UIGroup::setVisibility(bool visibility)
 
 	FOR_LIST(it, mUIElements)
 	{
-		(*it).get().setVisibility(mVisible);
+		(*it)->setVisibility(mVisible);
 	}
 }

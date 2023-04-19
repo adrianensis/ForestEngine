@@ -22,14 +22,14 @@ void UIText::initFromConfig(const UIElementConfig& config)
 
 	Vector3 textSize = Vector3(UIUtils::correctAspectRatio_X(mConfig.mTextSize), 1);
 
-	mTransform.get().mLocalPosition = mConfig.mDisplayPosition;
-	mTransform.get().mScale = textSize;
-	mTransform.get().mAffectedByProjection = false;
+	mTransform->mLocalPosition = mConfig.mDisplayPosition;
+	mTransform->mScale = textSize;
+	mTransform->mAffectedByProjection = false;
 
 	if (mConfig.mParent)
 	{
-		mTransform.get().mParent = mConfig.mParent.get().mTransform;
-		mTransform.get().mLocalPosition = Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0);
+		mTransform->mParent = mConfig.mParent->mTransform;
+		mTransform->mLocalPosition = Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0);
 	}
 
 	setSize(mConfig.mTextSize);
@@ -85,22 +85,22 @@ void UIText::setText(const std::string& text)
 				else
 				{
 					renderer = OwnerPtr<Renderer>::newObject();
-					renderer.get().init();
+					renderer->init();
 
-					renderer.get().mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-					renderer.get().mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
-					renderer.get().mUseDepth = (true);
-					renderer.get().mDepth = (mLayer);
-					renderer.get().mStencilValue = (mConfig.mStencilValue);
-                    renderer.get().mStencilFunction = (mConfig.mStencilFunction);
+					renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+					renderer->mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
+					renderer->mUseDepth = (true);
+					renderer->mDepth = (mLayer);
+					renderer->mStencilValue = (mConfig.mStencilValue);
+                    renderer->mStencilFunction = (mConfig.mStencilFunction);
 					
 					addComponent<Renderer>(renderer);
 
 					mFontRenderers.push_back(renderer);
 				}
 
-				renderer.get().setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
-				renderer.get().mTextureRegion = (Rectangle(textureCoordinates, textureSize));
+				renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
+				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));
 			}
 		}
 
@@ -116,7 +116,7 @@ void UIText::setVisibility(bool visibility)
 
 	if(mBackground)
 	{
-		mBackground.get().setVisibility(visibility);
+		mBackground->setVisibility(visibility);
 	}
 }
 

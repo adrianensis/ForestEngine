@@ -9,12 +9,12 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 	if (!MAP_CONTAINS(mBatches, BatchData))
 	{
 		OwnerPtr<Batch> batch = OwnerPtr<Batch>::newObject();
-		batch.get().init(BatchData);
+		batch->init(BatchData);
 
 		MAP_INSERT(mBatches, BatchData, batch);
 	}
 
-	(mBatches).at(BatchData).get().addRenderer(renderer);
+	(mBatches).at(BatchData)->addRenderer(renderer);
 }
 
 void BatchesMap::render()
@@ -25,7 +25,7 @@ void BatchesMap::render()
 	{
 		if( ! it->first.mIsStencilMask)
 		{
-			it->second.get().render();
+			it->second->render();
 		}
 	}
 }
@@ -38,7 +38,7 @@ void BatchesMap::renderStencil()
 	{
 		if(it->first.mIsStencilMask)
 		{
-			it->second.get().render();
+			it->second->render();
 		}
 	}
 }
@@ -47,6 +47,6 @@ void BatchesMap::forceRegenerateBuffers()
 {
 	FOR_MAP(it, mBatches)
 	{
-		it->second.get().forceRegenerateBuffers();
+		it->second->forceRegenerateBuffers();
 	}
 }

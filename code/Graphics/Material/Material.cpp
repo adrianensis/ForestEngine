@@ -45,35 +45,35 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 
 	if (mTextures[(u32)TextureType::BASE_COLOR])
 	{
-        mTextures[(u32)TextureType::BASE_COLOR].get().bind();
+        mTextures[(u32)TextureType::BASE_COLOR]->bind();
 	}
 
 	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
 
-	const Matrix4& projectionMatrix = camera.get().mProjectionMatrix;
-	const Matrix4& viewMatrix = camera.get().mViewMatrix;
+	const Matrix4& projectionMatrix = camera->mProjectionMatrix;
+	const Matrix4& viewMatrix = camera->mViewMatrix;
 
-	shader.get().addMatrix(isWorldSpace ? projectionMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
-	shader.get().addMatrix(isWorldSpace ? viewMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mViewMatrix.mName);
+	shader->addMatrix(isWorldSpace ? projectionMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
+	shader->addMatrix(isWorldSpace ? viewMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mViewMatrix.mName);
 
-	shader.get().addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
+	shader->addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
 
-	shader.get().addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
-	shader.get().addBool(mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
-	shader.get().addBool(mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
+	shader->addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
+	shader->addBool(mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
+	shader->addBool(mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
 
-	shader.get().addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
+	shader->addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
 
-	shader.get().addVector2(GET_SYSTEM(RenderContext).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
+	shader->addVector2(GET_SYSTEM(RenderContext).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
 
-	shader.get().addVector4(mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
+	shader->addVector4(mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
 
-    shader.get().addBool(isAnimated, GPUBuiltIn::Uniforms::mIsAnimated.mName);
+    shader->addBool(isAnimated, GPUBuiltIn::Uniforms::mIsAnimated.mName);
     
     if(isAnimated)
     {
         const std::vector<Matrix4> & transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(model);
-        shader.get().addMatrixArray(transforms, GPUBuiltIn::Uniforms::mBonesTransform.mName);
+        shader->addMatrixArray(transforms, GPUBuiltIn::Uniforms::mBonesTransform.mName);
     }
 }
 

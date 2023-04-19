@@ -76,11 +76,11 @@ void Model::loadGLTFMaterials()
             if(cgltfMaterial.has_pbr_metallic_roughness)
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                newMaterial.get().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                newMaterial->mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    newMaterial.get().mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath, true);
+                    newMaterial->mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath, true);
                 }
             }
         }
@@ -104,7 +104,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     ASSERT_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
 
     OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
-    mesh.get().mModel = (getPtrToThis());
+    mesh->mModel = (getPtrToThis());
     mMeshes.push_back(mesh);
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
@@ -112,14 +112,14 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         cgltf_attribute& attribute = primitive.attributes[attributeIt];
         if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_position)
         {
-            mesh.get().init(attribute.data->count, primitive.indices->count / 3);
+            mesh->init(attribute.data->count, primitive.indices->count / 3);
             break;
         }
     }
 
-    mesh.get().setColor(Vector4(0,0,0,1));
+    mesh->setColor(Vector4(0,0,0,1));
 
-    mesh.get().mMaterial = mGLTFMaterials[primitive.material];
+    mesh->mMaterial = mGLTFMaterials[primitive.material];
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
     {
@@ -130,7 +130,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 Vector3* positionsArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& position = positionsArray[vertexIt];
-                mesh.get().addToPositions(position);
+                mesh->addToPositions(position);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
@@ -140,7 +140,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector2& texCoord = texCoordArray[vertexIt];
                 texCoord.y = 1.0f - texCoord.y;
-                mesh.get().addToTextureCoordinates(texCoord);
+                mesh->addToTextureCoordinates(texCoord);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
@@ -158,7 +158,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }
 
-                    mesh.get().addToBonesVertexIDsData(boneVertexIDsData);
+                    mesh->addToBonesVertexIDsData(boneVertexIDsData);
                 }
             }
             else
@@ -174,7 +174,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 {
                     BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<BoneVertexWeightsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                     BoneVertexWeightsData& boneVertexWeightsData = boneVertexWeightsDataArray[vertexIt];
-                    mesh.get().addToBonesVertexWeightsData(boneVertexWeightsData);
+                    mesh->addToBonesVertexWeightsData(boneVertexWeightsData);
                 }
             }
         }
@@ -184,7 +184,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     {
         GLTFFace* facesArray = reinterpret_cast<GLTFFace*>(reinterpret_cast<byte*>(primitive.indices->buffer_view->buffer->data) + primitive.indices->offset + primitive.indices->buffer_view->offset);
         GLTFFace& face = facesArray[faceIt];
-        mesh.get().addToFaces(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
+        mesh->addToFaces(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
     }
 }
 
@@ -324,9 +324,9 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
 {
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
 
-    FOR_RANGE(frameIt, 0, animation.get().mDurationInTicks)
+    FOR_RANGE(frameIt, 0, animation->mDurationInTicks)
     {
-        animation.get().mFrames[frameIt].mTransforms.resize(mBonesIndexCount);
+        animation->mFrames[frameIt].mTransforms.resize(mBonesIndexCount);
         mOriginalFrameTransforms.clear();
         mOriginalFrameTransforms.resize(mBonesIndexCount);
 
@@ -365,22 +365,22 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
             boneFrameMatrix.mul(rotationMatrix);
 
             mOriginalFrameTransforms[boneIt] = boneFrameMatrix;
-            animation.get().mFrames[frameIt].mTransforms[boneIt] = boneFrameMatrix;
+            animation->mFrames[frameIt].mTransforms[boneIt] = boneFrameMatrix;
         }
 
         FOR_RANGE(i, 0, mBonesIndexCount)
         {
-            animation.get().mFrames[frameIt].mTransforms[i] = calculateHierarchicalBoneTransform(i, mOriginalFrameTransforms);
+            animation->mFrames[frameIt].mTransforms[i] = calculateHierarchicalBoneTransform(i, mOriginalFrameTransforms);
         }
 
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
         {
-            Matrix4 boneFrameMatrix = animation.get().mFrames[frameIt].mTransforms[boneIt];
+            Matrix4 boneFrameMatrix = animation->mFrames[frameIt].mTransforms[boneIt];
             Matrix4 inverseBindMatrix = mBones[boneIt].mBindMatrix;
             inverseBindMatrix.invert();
             boneFrameMatrix.mul(inverseBindMatrix);
 
-            animation.get().mFrames[frameIt].mTransforms[boneIt] = boneFrameMatrix;
+            animation->mFrames[frameIt].mTransforms[boneIt] = boneFrameMatrix;
         }
     }
 }
@@ -396,7 +396,7 @@ void Model::loadGLTFAnimations()
         loadGLTFChannels(gltfAnim);
 
         OwnerPtr<Animation> animation = OwnerPtr<Animation>::newObject();
-        animation.get().init(animDuration, getPtrToThis());
+        animation->init(animDuration, getPtrToThis());
 
         loadGLTFAnimationFrames(animation);
 

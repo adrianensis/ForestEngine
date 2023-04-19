@@ -55,10 +55,10 @@ public:
 	UIBuilder& create()
 	{
         OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>::cast(OwnerPtr<T>::newObject());
-        mConfig.mUIElementClassId = uiElement.get().getClassId();
+        mConfig.mUIElementClassId = uiElement->getClassId();
 
         calculateConfig();
-        uiElement.get().initFromConfig(mConfig);
+        uiElement->initFromConfig(mConfig);
 
         registerUIElement(uiElement);
 		return *this;

@@ -26,13 +26,13 @@ void AnimationState::init(Ptr<const Animation> animation)
 
 void AnimationState::update()
 {
-    mAnimationTime = mAnimation.get().calculateCurrentAnimationTime(mAccumulatedTime);
+    mAnimationTime = mAnimation->calculateCurrentAnimationTime(mAccumulatedTime);
 
     f32 dt = GET_SYSTEM(Time).getDeltaTimeSeconds();
     mAccumulatedTime += dt;
 
     // reset accumulatedTime to avoid overflow
-    if(mAccumulatedTime > mAnimation.get().mDurationInSeconds)
+    if(mAccumulatedTime > mAnimation->mDurationInSeconds)
     {
         mAccumulatedTime = 0;
     }
@@ -49,7 +49,7 @@ void SkeletonState::update()
 
     if(mCurrentAnimation)
     {
-        mCurrentAnimation.get().update();
+        mCurrentAnimation->update();
 
         getBoneTransforms(mCurrentBoneTransforms);
     }
@@ -57,12 +57,12 @@ void SkeletonState::update()
 
 void SkeletonState::createAnimationState(Ptr<const Animation> animation)
 {
-    ObjectId animationId = animation.get().getObjectId();
+    ObjectId animationId = animation->getObjectId();
 
 	if(!MAP_CONTAINS(mAnimationStates, animationId))
 	{
 		OwnerPtr<AnimationState> animationState = OwnerPtr<AnimationState>::newObject();
-		animationState.get().init(animation);
+		animationState->init(animation);
 
 		MAP_INSERT(mAnimationStates, animationId, animationState);
 	}
@@ -89,7 +89,7 @@ void SkeletonState::getBoneTransformsFromCurrentAnimation(std::vector<Matrix4>& 
     Matrix4 Identity;
 	Identity.identity();
 
-    f32 animationTime = mCurrentAnimation.get().getAnimationTime();
+    f32 animationTime = mCurrentAnimation->getAnimationTime();
 
-    Transforms = mCurrentAnimation.get().getAnimation().get().mFrames[animationTime].mTransforms;
+    Transforms = mCurrentAnimation->getAnimation()->mFrames[animationTime].mTransforms;
 }

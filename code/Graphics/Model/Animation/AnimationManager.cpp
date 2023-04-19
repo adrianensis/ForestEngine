@@ -12,23 +12,23 @@ void AnimationManager::update()
 
 	FOR_MAP(it, mSkeletonStates)
 	{
-		it->second.get().update();
+		it->second->update();
 	}
 }
 
 void AnimationManager::createAnimationState(Ptr<const Animation> animation)
 {
-	Ptr<const Model> model = animation.get().mModel;
+	Ptr<const Model> model = animation->mModel;
 
 	if(!MAP_CONTAINS(mSkeletonStates, model))
 	{
 		OwnerPtr<SkeletonState> skeletonState = OwnerPtr<SkeletonState>::newObject();
-		skeletonState.get().init(animation.get().mModel);
+		skeletonState->init(animation->mModel);
 
 		MAP_INSERT(mSkeletonStates, model, skeletonState);
 	}
 
-	mSkeletonStates[model].get().createAnimationState(animation);
+	mSkeletonStates[model]->createAnimationState(animation);
 }
 
 void AnimationManager::terminate()
@@ -38,5 +38,5 @@ void AnimationManager::terminate()
 
 const std::vector<Matrix4>& AnimationManager::getBoneTransforms(Ptr<const Model> model) const
 {
-	return mSkeletonStates.at(model).get().getCurrentBoneTransforms();
+	return mSkeletonStates.at(model)->getCurrentBoneTransforms();
 }

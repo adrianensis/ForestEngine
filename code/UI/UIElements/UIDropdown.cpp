@@ -10,7 +10,7 @@
 void UIDropdownButton::onPostReleased() 
 {
 	UIButton::onPostReleased();
-	mParentDropdown.get().setEntriesVisibility(false);
+	mParentDropdown->setEntriesVisibility(false);
 }
 
 UIDropdownEntry::UIDropdownEntry(const std::string& label, UIElementCallback callback)
@@ -43,7 +43,7 @@ UIDropdown& UIDropdown::addOption(const std::string& label, UIElementCallback on
 
 void UIDropdown::toggle()
 {
-	setEntriesVisibility(mButtons.empty() ? true : !mButtons.front().get().isActive());
+	setEntriesVisibility(mButtons.empty() ? true : !mButtons.front()->isActive());
 }
 
 void UIDropdown::setEntriesVisibility(bool visible)
@@ -52,14 +52,14 @@ void UIDropdown::setEntriesVisibility(bool visible)
 	{
 		if (mButtons.empty())
 		{
-			Vector3 scale = mTransform.get().mScale;
+			Vector3 scale = mTransform->mScale;
 			scale.x = scale.x * GET_SYSTEM(RenderContext).getAspectRatio();
 			
 			UIBuilder uiBuilder;
 
 			uiBuilder.
 				setLayout(UILayout::VERTICAL).
-				setPosition(mTransform.get().getWorldPosition() + Vector2((-scale.x / 2.0f) / GET_SYSTEM(RenderContext).getAspectRatio(), -scale.y / 2.0f)).
+				setPosition(mTransform->getWorldPosition() + Vector2((-scale.x / 2.0f) / GET_SYSTEM(RenderContext).getAspectRatio(), -scale.y / 2.0f)).
 				setTextSize(mConfig.mTextSize).
 				setAdjustSizeToText(true).
 				setLayer(mConfig.mLayer);
@@ -74,9 +74,9 @@ void UIDropdown::setEntriesVisibility(bool visible)
 				create<UIDropdownButton>();
 
 				Ptr<UIDropdownButton> button = uiBuilder.getUIElement<UIDropdownButton>();
-				button.get().setOnPressedCallback(onPressedCallback);
+				button->setOnPressedCallback(onPressedCallback);
 
-				button.get().setParentDropdown(getPtrToThis());
+				button->setParentDropdown(getPtrToThis());
 
 				mButtons.push_back(button);
 			}
@@ -84,7 +84,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		
 		FOR_LIST(it, mButtons)
 		{
-			(*it).get().setVisibility(true);
+			(*it)->setVisibility(true);
 		}
 	}
 	else
@@ -93,7 +93,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				mScene.get().removeGameObject(Ptr<GameObject>::cast(*it));
+				mScene->removeGameObject(Ptr<GameObject>::cast(*it));
 			}
 
 			mButtons.clear();
