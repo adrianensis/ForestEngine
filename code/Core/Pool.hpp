@@ -13,15 +13,16 @@ template<class T> T_EXTENDS(T, IPoolable)
 class ObjectPool;
 
 template<class T> T_EXTENDS(T, IPoolable)
-class Handle
+class PoolHandle
 {
 public:
-    Handle(i32 index, ObjectPool<T>* pool);
+    PoolHandle() = default;
+    PoolHandle(i32 index, ObjectPool<T>* pool);
     T& get() const;
     T* operator->() const { return &get(); }
     bool isValid() const { return mIndex >= 0; }
 
-    bool operator==(const Handle<T>& other) const
+    bool operator==(const PoolHandle<T>& other) const
 	{
 		return this->mIndex == other.mIndex;
 	}
@@ -55,7 +56,7 @@ public:
         mAvailableObjects.reserve(10);
     }
 
-    Handle<T> allocate()
+    PoolHandle<T> allocate()
     {
         u32 index = 0;
         if (mAvailableObjects.empty())
@@ -69,7 +70,7 @@ public:
             mAvailableObjects.pop_back();
         }
         
-        Handle<T> handle(index, this);
+        PoolHandle<T> handle(index, this);
         return handle;
     }
 
@@ -78,7 +79,7 @@ public:
         return mObjects[index];
     }
 
-    void free(Handle<T>& handle)
+    void free(PoolHandle<T>& handle)
     {
         handle.get().poolReset();
         mAvailableObjects.push_back(handle.getIndex());
@@ -91,14 +92,14 @@ private:
 };
 
 template<class T>
-Handle<T>::Handle(i32 index, ObjectPool<T>* pool)
+PoolHandle<T>::PoolHandle(i32 index, ObjectPool<T>* pool)
 {
     mIndex = index;
     mPool = pool;
 }
 
 template<class T>
-T& Handle<T>::get() const
+T& PoolHandle<T>::get() const
 {
     ASSERT_MSG(isValid(), "Invalid handle!");
     return mPool->get(mIndex);

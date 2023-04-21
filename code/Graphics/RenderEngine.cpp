@@ -104,11 +104,6 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 	}
 }
 
-Handle<Renderer> RenderEngine::createRenderer()
-{
-    return mRenderersPool.allocate();
-}
-
 Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
 {
 	bool found = false;

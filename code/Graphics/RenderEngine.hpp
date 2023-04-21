@@ -20,8 +20,6 @@ public:
     
     void addComponent(Ptr<EngineSystemComponent> component);
 
-    Handle<Renderer> createRenderer();
-
     Ptr<Chunk> assignChunk(Ptr<Renderer> renderer);
     void assignBatch(Ptr<Renderer> renderer);
 
@@ -40,8 +38,6 @@ private:
 	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
 
 	bool mCameraDirtyTranslation = false;
-
-    ObjectPool<Renderer> mRenderersPool;
 
 public:
 	Ptr<Camera> mCamera;
