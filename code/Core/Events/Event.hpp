@@ -17,7 +17,7 @@ public:
 
 using EventCallback = std::function<void(const Event *)>;
 
-template<class E>
+template<class E> T_EXTENDS(E, Event)
 class EventFunctor: public Functor<EventCallback>
 {
 public:

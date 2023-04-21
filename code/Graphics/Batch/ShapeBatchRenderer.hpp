@@ -16,7 +16,7 @@ public:
     void init(bool isWorldSpace, u32 verticesPerShape);
     void render();
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template<class T> T_EXTENDS(T, Shape)
 	void add(const T& shape, const Vector4& color)
 	{
 		if(mShapesCounter < mMaxShapes)
@@ -31,7 +31,7 @@ private:
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template<class T> T_EXTENDS(T, Shape)
 	void addSpecificShape(const T& shape, const Vector4& color)
 	{
 
@@ -68,7 +68,7 @@ public:
     void render();
     void terminate();
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template<class T> T_EXTENDS(T, Shape)
 	void add(const T& shape, bool isWorldSpace = true, const Vector4& color = Vector4(1, 1, 1, 1))
 	{
 		ClassId shapeClassId = T::getClassIdStatic();

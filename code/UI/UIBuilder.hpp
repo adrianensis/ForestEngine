@@ -51,7 +51,7 @@ public:
     UIBuilder& saveData();
     UIBuilder& restoreData();
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
+	template<class T> T_EXTENDS(T, UIElement)
 	UIBuilder& create()
 	{
         OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>::cast(OwnerPtr<T>::newObject());
@@ -69,7 +69,7 @@ public:
 		return mCurrentUIElement;
 	}
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIElement, T>::value> >
+	template<class T> T_EXTENDS(T, UIElement)
     Ptr<T> getUIElement() const
 	{
 		return Ptr<T>::cast(getUIElement());

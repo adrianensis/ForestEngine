@@ -42,13 +42,13 @@ public:
 
     void init();
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
+	template<class T> T_EXTENDS(T, UIStyle)
 	void addStyle()
 	{
 		MAP_INSERT(mStyles, T::getClassIdStatic(), Memory::newObject<T>());
 	}
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
+	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getStyle()
 	{
 		ASSERT_MSG(MAP_CONTAINS(mStyles, T::getClassIdStatic()), "Style not found");
@@ -56,7 +56,7 @@ public:
 		return *(static_cast<T*>(mStyles.at(T::getClassIdStatic())));
 	}
 
-	template<class T, typename = std::enable_if_t<std::is_base_of<UIStyle, T>::value> >
+	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getOrAddStyle()
 	{
 		if(!MAP_CONTAINS(mStyles, T::getClassIdStatic()))

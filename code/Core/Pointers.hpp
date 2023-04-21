@@ -151,7 +151,7 @@ private:
     // Custom Deleter
     struct OwnerPtrCustomDeleter
     {
-        void operator()(T* p) const { if(p != nullptr) { Memory::deleteObject(p);} }
+        void operator()(T* p) const { /*if(p != nullptr) { Memory::deleteObject(p);}*/ }
     };
 
     void setReference(const std::shared_ptr<T>& reference) { mReference = reference; }

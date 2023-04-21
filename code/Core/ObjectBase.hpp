@@ -4,9 +4,10 @@
 #include "Core/Macros.hpp"
 #include "Core/Serialization.hpp"
 #include "Core/Pointers.hpp"
+#include "Core/Pool.hpp"
 #include "Core/ClassManager.hpp"
 
-class ObjectBase: public ObjectMeta, public ISerializable, public std::enable_shared_from_this<ObjectBase>
+class ObjectBase: public ObjectMeta, public ISerializable, public IPoolable, public std::enable_shared_from_this<ObjectBase>
 {
 private:
 	GENERATE_METADATA(ObjectBase)

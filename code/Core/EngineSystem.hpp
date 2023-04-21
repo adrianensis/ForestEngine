@@ -45,46 +45,23 @@ class EngineSystemsManager : public Singleton<EngineSystemsManager>
 public:
     void addComponentToEngineSystem(Ptr<EngineSystemComponent> component);
 
-    template<typename T>
+    template<typename T> T_EXTENDS(T, EngineSystem)
     void createEngineSystem()
     {
-        if constexpr (IS_BASE_OF(EngineSystem, T))
-        {
-            OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
-            MAP_INSERT(mEngineSystems, T::getClassIdStatic(), OwnerPtr<EngineSystem>::cast(newEngineSystem));
-        }
-        else
-        {
-            ASSERT_MSG(false, "Class is not an EngineSystem!");
-        }
+        OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
+        MAP_INSERT(mEngineSystems, T::getClassIdStatic(), OwnerPtr<EngineSystem>::cast(newEngineSystem));
     }
 
-    template<typename T>
+    template<typename T> T_EXTENDS(T, EngineSystem)
     Ptr<T> getEngineSystem() const
     {
-        if constexpr (IS_BASE_OF(EngineSystem, T))
-        {
-            return Ptr<T>::cast(mEngineSystems.at(T::getClassIdStatic()));
-        }
-        else
-        {
-            ASSERT_MSG(false, "Class is not an EngineSystem!");
-        }
-
-        return Ptr<T>();
+        return Ptr<T>::cast(mEngineSystems.at(T::getClassIdStatic()));
     }
 
-    template<typename T>
+    template<typename T> T_EXTENDS(T, EngineSystem)
     void removeEngineSystem()
     {
-        if constexpr (IS_BASE_OF(EngineSystem, T))
-        {
-            mEngineSystems.erase(T::getClassIdStatic());
-        }
-        else
-        {
-            ASSERT_MSG(false, "Class is not an EngineSystem!");
-        }
+        mEngineSystems.erase(T::getClassIdStatic());
     }
 
 private:

@@ -25,6 +25,9 @@
 #define ADD_REFERENCE(Class) typename std::add_lvalue_reference<Class>::type
 #define ADD_POINTER(Class) typename std::add_pointer<Class>::type
 
+//#define T_EXTENDS(Class, BaseClass) typename = std::enable_if<std::is_base_of<BaseClass, Class>::value>::type
+#define T_EXTENDS(Class, BaseClass) requires std::derived_from<Class, BaseClass>
+
 // --------------------------------------------------------
 // CLASS - METADATA MACROS
 // --------------------------------------------------------

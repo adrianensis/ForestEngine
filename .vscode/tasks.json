@@ -11,7 +11,7 @@
 				"-x",
 				"-i",
 				"-l",
-				"-p"
+				//"-p"
 			],
 			"problemMatcher": [
 				"$gcc"

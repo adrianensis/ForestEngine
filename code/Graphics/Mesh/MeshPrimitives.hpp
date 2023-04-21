@@ -12,7 +12,7 @@ public:
 
     void terminate();
 
-	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template <class T> T_EXTENDS(T, Shape)
 	Ptr<const Mesh> getPrimitive()
 	{
 		if(!MAP_CONTAINS(mPrimitivesMap, T::getClassIdStatic()))
@@ -26,7 +26,7 @@ public:
 	}
 
 private:
-	template <class T, typename = std::enable_if_t<std::is_base_of<Shape, T>::value> >
+	template <class T> T_EXTENDS(T, Shape)
 	OwnerPtr<Mesh> createPrimitive() const
 	{
 		ASSERT_MSG(false, "Mesh Primitive not implemented");
