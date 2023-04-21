@@ -38,13 +38,11 @@ public:
 
     Ptr() = default;
     Ptr(const Ptr<T>& other) { setReference(other.mReference); }
-    Ptr(const std::weak_ptr<T>& weakPtr) { setReference(weakPtr); }
-    Ptr(const std::shared_ptr<T>& sharedPtr) { setReference(std::weak_ptr<T>(sharedPtr)); }
     Ptr(const OwnerPtr<T>& ownerPtr) { setReference(std::weak_ptr<T>(ownerPtr.getSharedPtr())); }
 
     operator Ptr<const T>() const
     {
-        return Ptr<const T>(static_cast<std::weak_ptr<const T>>(mReference));
+        return Ptr<const T>(*this);
     }
 
     operator OwnerPtr<T>() const
