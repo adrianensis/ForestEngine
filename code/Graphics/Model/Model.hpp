@@ -2,6 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/Model/Animation/Animation.hpp"
 
 class Animation;
 class Material;

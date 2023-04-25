@@ -40,8 +40,10 @@ private:
 #define REMOVE_SYSTEM(...) \
     EngineSystemsManager::getInstance().removeEngineSystem<__VA_ARGS__>();
 
-class EngineSystemsManager : public Singleton<EngineSystemsManager>
+class EngineSystemsManager : public ObjectBase, public Singleton<EngineSystemsManager>
 {
+    GENERATE_METADATA(EngineSystemsManager)
+
 public:
     void addComponentToEngineSystem(Ptr<EngineSystemComponent> component);
 

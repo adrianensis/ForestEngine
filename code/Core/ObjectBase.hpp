@@ -6,8 +6,9 @@
 #include "Core/Pointers.hpp"
 #include "Core/Pool.hpp"
 #include "Core/ClassManager.hpp"
+#include "Core/Memory.hpp"
 
-class ObjectBase: public ObjectMeta, public ISerializable, public IPoolable, public std::enable_shared_from_this<ObjectBase>
+class ObjectBase: public ObjectMeta, public ISerializable, public IPoolable, public PointedObject, public EnablePtrFromThis
 {
 private:
 	GENERATE_METADATA(ObjectBase)

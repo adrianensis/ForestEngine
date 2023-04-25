@@ -8,10 +8,13 @@ void Memory::init()
 
 void Memory::terminate()
 {
+#if ENABLE_PROFILER
 	ECHO("-------- MEM SUMMARY --------")
 	FOR_MAP(it, Memory::mAllocationsCounter)
 	{
 		std::cout << it->first << ": " << it->second << std::endl;
 	}
 	ECHO("-----------------------------")
+#endif
+
 }

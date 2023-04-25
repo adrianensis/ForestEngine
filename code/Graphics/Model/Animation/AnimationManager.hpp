@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Graphics/Model/Animation/Animation.hpp"
 
 class Model;
-class Animation;
-class AnimationState;
-class SkeletonState;
 
 class AnimationManager: public EngineSystem
 {

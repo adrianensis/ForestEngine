@@ -6,8 +6,7 @@
 
 Texture::~Texture() 
 {
-	deleteData();
-	GET_SYSTEM(RenderContext).deleteTexture(mTextureId);
+    GET_SYSTEM(RenderContext).deleteTexture(mTextureId);
 }
 
 void Texture::init(const std::string& path, bool createMipMap)
@@ -17,7 +16,8 @@ void Texture::init(const std::string& path, bool createMipMap)
 		mPath = path;
 		loadImage();
         mTextureId = GET_SYSTEM(RenderContext).createTexture(mWidth, mHeight, mData, createMipMap);
-		deleteData();
+		stbi_image_free(mData);
+		mData = nullptr;
 	}
 }
 
@@ -51,14 +51,5 @@ void Texture::loadImage()
 	{
 		mWidth = width;
 		mHeight = height;
-	}
-}
-
-void Texture::deleteData()
-{
-	if(mData)
-	{
-		delete[] mData;
-		mData = nullptr;
 	}
 }

@@ -4,6 +4,7 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Batch/MeshBatcher.hpp"
 #include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Shaders/Shader.hpp"
 
 class BatchData
 {

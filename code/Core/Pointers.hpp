@@ -17,8 +17,12 @@ class OwnerPtr;
 template<class T>
 class Ptr : public BasePtr
 {
-public:
+template<class U>
+friend class OwnerPtr;
+template<class V>
+friend class Ptr;
 
+public:
     static Ptr<const T> toConst()
     {
         return Ptr<const T>();
@@ -27,43 +31,57 @@ public:
     template <class OtherClass>
     static Ptr<T> cast(const Ptr<OtherClass>& other)
     {
-        return Ptr<T>(std::dynamic_pointer_cast<T>(other.getWeakPtr().lock()));
+        // TODO: static cast?
+        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceCounter());
     }
 
     template <class OtherClass>
     static Ptr<T> cast(const OwnerPtr<OtherClass>& other)
     {
-        return Ptr<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
+        // TODO: static cast?
+        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceCounter());
     }
 
     Ptr() = default;
-    Ptr(const Ptr<T>& other) { setReference(other.mReference); }
-    Ptr(const OwnerPtr<T>& ownerPtr) { setReference(std::weak_ptr<T>(ownerPtr.getSharedPtr())); }
+    Ptr(const Ptr<T>& other)
+    {
+        set(other.mInternalPointer, other.mReferenceCounter);
+    }
+    Ptr(const OwnerPtr<T>& ownerPtr)
+    { 
+        set(ownerPtr.mInternalPointer, ownerPtr.mReferenceCounter);
+    }
+    ~Ptr()
+    {
+        invalidate();
+    }
 
     operator Ptr<const T>() const
     {
-        return Ptr<const T>(*this);
+        return Ptr<const T>(mInternalPointer, mReferenceCounter);
     }
 
     operator OwnerPtr<T>() const
     {
-        return OwnerPtr<T>(mReference);
+        return OwnerPtr<T>(mInternalPointer, mReferenceCounter);
     }
 
-    // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    T& get() const { return *mReference.lock().get(); }
+    T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
-    bool isValid() const { return !mReference.expired(); }
-    void invalidate() { mReference.reset(); }
+    bool isValid() const { return mReferenceCounter != nullptr && (*mReferenceCounter) > 0 && mInternalPointer != nullptr; }
+    void invalidate()
+    {
+        set(nullptr, nullptr);
+    }
 
     DECLARE_COPY(Ptr<T>)
 	{
-        setReference(other.mReference);
+        set(other.mInternalPointer, other.mReferenceCounter);
 	}
 
     bool operator==(const Ptr<T>& otherRef) const
 	{
-		return this->mReference.lock().get() == otherRef.mReference.lock().get();
+		return this->mInternalPointer == otherRef.mInternalPointer;
 	}
 
     operator bool() const
@@ -71,13 +89,56 @@ public:
         return this->isValid();
     }
 
-    std::weak_ptr<T> getWeakPtr() const { return mReference; }
+private:
+    Ptr(T* reference, u32* referenceCounter)
+    {
+        set(reference, referenceCounter);
+    }
+    void set(T* reference, u32* referenceCounter)
+    {
+        mInternalPointer = reference;
+        mReferenceCounter = referenceCounter;
+    }
 
 private:
-    void setReference(const std::weak_ptr<T>& reference) { mReference = reference; }
+    T* mInternalPointer = nullptr;
+    u32* mReferenceCounter = nullptr;
+
+public:
+    GET(InternalPointer);
+    GET(ReferenceCounter);
+};
+
+class PointedObject
+{
+public:
+    virtual ~PointedObject() = default;
+};
+
+class EnablePtrFromThis
+{
+template<class U>
+friend class OwnerPtr;
+
+protected:
+    template<class OtherClass>
+    Ptr<OtherClass> getPtrToThisCasted()
+	{
+		return Ptr<OtherClass>::cast(mPtrToThis);
+	}
+    template<class OtherClass>
+    Ptr<const OtherClass> getPtrToThisCasted() const
+	{
+		return Ptr<const OtherClass>::cast(mPtrToThis);
+	}
 
 private:
-	std::weak_ptr<T> mReference;
+    template <class OtherClass>
+    void set(const Ptr<OtherClass>& ptr)
+    {
+        mPtrToThis = Ptr<PointedObject>::cast(ptr);
+    }
+    Ptr<PointedObject> mPtrToThis;
 };
 
 // OWNER PTR
@@ -85,40 +146,87 @@ private:
 template<class T>
 class OwnerPtr : public BasePtr
 {
-friend Ptr<T>;
+template<class U>
+friend class Ptr;
 
 public:
 
     template <class OtherClass>
     static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
     {
-        return OwnerPtr<T>(std::dynamic_pointer_cast<T>(other.getSharedPtr()));
+        // TODO: static cast?
+        return OwnerPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceCounter());
     }
 
     OwnerPtr() = default;
-    OwnerPtr(const OwnerPtr<T>& other) { setReference(other.mReference); }
-    explicit OwnerPtr(T* reference) { setReference(std::shared_ptr<T>(reference, OwnerPtrCustomDeleter())); }
-    OwnerPtr(const std::shared_ptr<T>& sharedPtr) { setReference(sharedPtr); }
+    OwnerPtr(const OwnerPtr<T>& other)
+    {
+        invalidate();
+        if(other.isValid())
+        {
+            set(other.mInternalPointer, other.mReferenceCounter);
+            increment();
+        }
+    }
+    OwnerPtr(OwnerPtr<T>&& other)
+    {
+        invalidate();
+        if(other.isValid())
+        {
+            set(other.mInternalPointer, other.mReferenceCounter);
+            increment();
+        }
+    }
+    explicit OwnerPtr(T* reference)
+    {
+        invalidate();
+        set(reference, new u32());
+        increment();
+    }
+
+    ~OwnerPtr()
+    {
+        invalidate();
+    }
 
     operator Ptr<const T>() const
     {
-        return Ptr<const T>(std::static_pointer_cast<const T>(mReference));
+        return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceCounter);
     }
 
     operator OwnerPtr<const T>() const
     {
-        return OwnerPtr<const T>(std::static_pointer_cast<const T>(mReference));
+        return OwnerPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceCounter);
     }
 
-    // HACK to get raw ptr reference, TODO : remove/refactor/limit
-    T& get() const { return *mReference.get(); }
+    T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
-    bool isValid() const { return mReference != nullptr; }
-    void invalidate() { mReference.reset(); }
+    bool isValid() const { return mReferenceCounter != nullptr && (*mReferenceCounter) > 0 && mInternalPointer != nullptr; }
+    void invalidate()
+    {
+        if(mReferenceCounter)
+        {
+            if((*mReferenceCounter) > 0)
+            {
+                (*mReferenceCounter) -= 1;
+            }
+            if((*mReferenceCounter) == 0)
+            {
+                if(mInternalPointer != nullptr)
+                {
+                    Memory::deleteObject(mInternalPointer);
+                }
+                //delete mReferenceCounter;
+            }
+        }
+        set(nullptr, mReferenceCounter);
+    }
 
     DECLARE_COPY(OwnerPtr<T>)
 	{
-        setReference(other.mReference);
+        invalidate();
+        set(other.mInternalPointer, other.mReferenceCounter);
+        increment();
 	}
 
     operator bool() const
@@ -128,15 +236,13 @@ public:
 
     bool operator==(const OwnerPtr<T>& otherRef) const
 	{
-		return this->mReference == otherRef.mReference;
+		return this->mInternalPointer == otherRef.mInternalPointer;
 	}
 
     bool operator!=(const OwnerPtr<T>& otherRef) const
 	{
 		return (*this == otherRef);
 	}
-
-    std::shared_ptr<T> getSharedPtr() const { return mReference; }
 
     template <typename ... Args>
 	static OwnerPtr<T> newObject(Args&&... args)
@@ -145,19 +251,45 @@ public:
     }
 
 private:
-
-    // Custom Deleter
-    struct OwnerPtrCustomDeleter
+    void increment()
     {
-        void operator()(T* p) const { if(p != nullptr) { Memory::deleteObject(p);} }
-    };
+        (*mReferenceCounter) += 1;
+    }
 
-    void setReference(const std::shared_ptr<T>& reference) { mReference = reference; }
+    OwnerPtr(T* reference, u32* referenceCounter)
+    {
+        invalidate();
+        if(reference)
+        {
+            set(reference, referenceCounter);
+            increment();
+        }
+    }
 
-    OwnerPtr(const std::weak_ptr<T>& weakPtr) { setReference(std::shared_ptr<T>(weakPtr)); }
+    void set(T* reference, u32* referenceCounter)
+    {
+        mInternalPointer = reference;
+        mReferenceCounter = referenceCounter;
+        if(mInternalPointer)
+        {
+            if (IS_BASE_OF(EnablePtrFromThis, T))
+            {
+                EnablePtrFromThis* enablePtrFromThis = static_cast<EnablePtrFromThis*>(reference);
+                if(enablePtrFromThis)
+                {
+                    enablePtrFromThis->set(Ptr<T>(*this));
+                }
+            }
+        }
+    }
 
 private:
-	std::shared_ptr<T> mReference;
+    T* mInternalPointer = nullptr;
+    u32* mReferenceCounter = nullptr;
+
+public:
+    GET(InternalPointer);
+    GET(ReferenceCounter);
 };
 
 // SNIFAE

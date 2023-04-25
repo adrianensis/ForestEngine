@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Memory.hpp"
+#include "Core/BasicTypes.hpp"
 
 #define REGISTER_CLASS(...) \
     inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(__VA_ARGS__::getClassNameStatic(), __VA_ARGS__::getClassIdStatic(), [](){ \

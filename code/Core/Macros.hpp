@@ -39,11 +39,11 @@
 #define DECLARE_GET_PTR_THIS() \
 	Ptr<ThisClass> getPtrToThis()                                               \
 	{                                                                             \
-		return Ptr<ThisClass>(std::static_pointer_cast<ThisClass>(shared_from_this()));  \
+		return getPtrToThisCasted<ThisClass>();  \
 	}                                \
     Ptr<const ThisClass> getPtrToThis() const                                               \
 	{                                                                             \
-		return Ptr<const ThisClass>(std::static_pointer_cast<const ThisClass>(shared_from_this()));  \
+		return getPtrToThisCasted<const ThisClass>();  \
 	}
 
 /*

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/Metadata.hpp"
 #include "Core/Assert/Assert.hpp"
+#include "Core/Metadata.hpp"
 
 class Memory
 {
@@ -17,7 +17,7 @@ public:
 	static T *newObject(Args&&... args)
 	{
 		T *object = new T(args...);
-
+#if ENABLE_PROFILER
 		std::string_view className;
 
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
@@ -37,7 +37,7 @@ public:
 		{
 			MAP_INSERT(mAllocationsCounter, className, 1);
 		}
-
+#endif
 		return object;
 	}
 
@@ -46,6 +46,7 @@ public:
 	{
 		ASSERT_MSG(pointer != nullptr, "pointer is nullptr");
 
+#if ENABLE_PROFILER
 		std::string_view className;
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
@@ -60,7 +61,7 @@ public:
 		{
 			MAP_INSERT(mAllocationsCounter, className, mAllocationsCounter[className] - 1);
 		}
-
+#endif
 		delete pointer;
 	}
 };

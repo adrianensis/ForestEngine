@@ -9,7 +9,6 @@
                 "-B",
 				"./scripts/build.py",
 				"-x",
-				"-i",
 				"-l",
 				//"-p"
 			],
@@ -29,7 +28,6 @@
                 "-B",
 				"./scripts/build.py",
 				"-x",
-				"-i",
 				"-l",
 				"-r"
 			],
