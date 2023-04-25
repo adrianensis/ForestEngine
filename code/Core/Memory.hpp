@@ -17,7 +17,7 @@ public:
 	static T *newObject(Args&&... args)
 	{
 		T *object = new T(args...);
-#if ENABLE_PROFILER
+#ifdef DE_DEBUG
 		std::string_view className;
 
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
@@ -46,7 +46,7 @@ public:
 	{
 		ASSERT_MSG(pointer != nullptr, "pointer is nullptr");
 
-#if ENABLE_PROFILER
+#ifdef DE_DEBUG
 		std::string_view className;
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{

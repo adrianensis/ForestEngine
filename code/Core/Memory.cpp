@@ -8,7 +8,7 @@ void Memory::init()
 
 void Memory::terminate()
 {
-#if ENABLE_PROFILER
+#ifdef DE_DEBUG
 	ECHO("-------- MEM SUMMARY --------")
 	FOR_MAP(it, Memory::mAllocationsCounter)
 	{
