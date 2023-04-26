@@ -40,7 +40,7 @@ private:
 public:
 	GET(GameObjects)
 	GET(NewGameObjects)
-	GET(CameraGameObject)
+	RGET(CameraGameObject)
 	GET(Size)
 	GET(Path)
 };

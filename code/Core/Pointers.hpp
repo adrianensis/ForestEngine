@@ -48,28 +48,12 @@ public:
         return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
+    Ptr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
     Ptr() = default;
-    Ptr(const Ptr<T>& other)
-    {
-        invalidate();
-        if(other.isValid())
-        {
-            set(other.mInternalPointer, other.mReferenceBlock);
-        }
-    }
-    Ptr(const OwnerPtr<T>& ownerPtr)
-    { 
-        invalidate();
-        if(ownerPtr.isValid())
-        {
-            set(ownerPtr.mInternalPointer, ownerPtr.mReferenceBlock);
-        }
-    }
+    Ptr(const Ptr<T>& other) { assign(other); }
     ~Ptr() { invalidate(); }
-
     operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
     operator OwnerPtr<T>() const { return OwnerPtr<T>(mInternalPointer, mReferenceBlock); }
-
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
@@ -79,7 +63,7 @@ public:
         {
             if(mReferenceBlock->isWeakReferenced())
             {
-                (mReferenceBlock->mWeakReferenceCounter) -= 1;
+                decrement();
             }
             if(! (mReferenceBlock->isReferenced() || mReferenceBlock->isWeakReferenced()))
             {
@@ -95,6 +79,25 @@ public:
 
 private:
     Ptr(T* reference, ReferenceBlock* referenceBlock) { set(reference, referenceBlock); }
+
+    void assign(const Ptr<T>& other)
+    {
+        invalidate();
+        if(other.isValid())
+        {
+            set(other.mInternalPointer, other.mReferenceBlock);
+        }
+    }
+    
+    void assign(const OwnerPtr<T>& ownerPtr)
+    {
+        invalidate();
+        if(ownerPtr.isValid())
+        {
+            set(ownerPtr.mInternalPointer, ownerPtr.mReferenceBlock);
+        }
+    }
+
     void set(T* reference, ReferenceBlock* referenceBlock)
     {
         mInternalPointer = reference;
@@ -104,7 +107,9 @@ private:
             increment();
         }
     }
+    
     void increment() { mReferenceBlock->mWeakReferenceCounter += 1; }
+    void decrement() { mReferenceBlock->mWeakReferenceCounter -= 1; }
 
 private:
     T* mInternalPointer = nullptr;
@@ -131,7 +136,6 @@ protected:
     Ptr<OtherClass> getPtrToThisCasted() { return Ptr<OtherClass>::cast(mPtrToThis); }
     template<class OtherClass>
     Ptr<const OtherClass> getPtrToThisCasted() const { return Ptr<const OtherClass>::cast(mPtrToThis); }
-
 private:
     template <class OtherClass>
     void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<PointedObject>::cast(ptr); }
@@ -147,7 +151,6 @@ template<class U>
 friend class Ptr;
 
 public:
-
     template <class OtherClass>
     static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
     {
@@ -155,37 +158,13 @@ public:
         return OwnerPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
+    explicit OwnerPtr(T* reference) { init(reference, new ReferenceBlock()); }
     OwnerPtr() = default;
-    OwnerPtr(const OwnerPtr<T>& other)
-    {
-        invalidate();
-        if(other.isValid())
-        {
-            set(other.mInternalPointer, other.mReferenceBlock);
-        }
-    }
-    OwnerPtr(OwnerPtr<T>&& other)
-    {
-        invalidate();
-        if(other.isValid())
-        {
-            set(other.mInternalPointer, other.mReferenceBlock);
-        }
-    }
-    explicit OwnerPtr(T* reference)
-    {
-        invalidate();
-        if(reference)
-        {
-            set(reference, new ReferenceBlock());
-        }
-    }
-
+    OwnerPtr(const OwnerPtr<T>& other) { assign(other); }
+    OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
     ~OwnerPtr() { invalidate(); }
-
     operator Ptr<const T>() const { return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
     operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
-
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
@@ -195,7 +174,7 @@ public:
         {
             if(mReferenceBlock->isReferenced())
             {
-                (mReferenceBlock->mReferenceCounter) -= 1;
+                decrement();
             }
             if(! mReferenceBlock->isReferenced())
             {
@@ -212,15 +191,7 @@ public:
         set(nullptr, nullptr);
     }
 
-    DECLARE_COPY(OwnerPtr<T>)
-	{
-        invalidate();
-        if(other.isValid())
-        {
-            set(other.mInternalPointer, other.mReferenceBlock);
-        }
-	}
-
+    DECLARE_COPY(OwnerPtr<T>) { assign(other); }
     operator bool() const { return this->isValid(); }
     bool operator==(const OwnerPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator!=(const OwnerPtr<T>& otherRef) const { return (*this == otherRef); }
@@ -232,9 +203,19 @@ public:
     }
 
 private:
-    void increment() { mReferenceBlock->mReferenceCounter += 1; }
 
-    OwnerPtr(T* reference, ReferenceBlock* referenceBlock)
+    OwnerPtr(T* reference, ReferenceBlock* referenceBlock) { init(reference, referenceBlock); }
+
+    void assign(const OwnerPtr<T>& other)
+    {
+        invalidate();
+        if(other.isValid())
+        {
+            set(other.mInternalPointer, other.mReferenceBlock);
+        }
+    }
+
+    void init(T* reference, ReferenceBlock* referenceBlock)
     {
         invalidate();
         if(reference)
@@ -260,6 +241,9 @@ private:
             }
         }
     }
+
+    void increment() { mReferenceBlock->mReferenceCounter += 1; }
+    void decrement() { mReferenceBlock->mReferenceCounter -= 1; }
 
 private:
     T* mInternalPointer = nullptr;
