@@ -22,15 +22,15 @@ private:
     void internalLoadScene();
 
 
-    void addScene(OwnerPtr<Scene> newScene);
+    void addScene(SharedPtr<Scene> newScene);
 
 private:
-	std::vector<OwnerPtr<Scene>> mScenes;
+	std::vector<SharedPtr<Scene>> mScenes;
 	u32 mCurrentSceneIndex = 0;
 
-    OwnerPtr<Scene> mCurrentScene;
+    SharedPtr<Scene> mCurrentScene;
 	bool mSceneHasChanged = false;
-    OwnerPtr<GameObject> mGameObjectController;
+    SharedPtr<GameObject> mGameObjectController;
 
 public:
 	GET(CurrentScene)

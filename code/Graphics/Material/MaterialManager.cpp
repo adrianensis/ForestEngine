@@ -20,7 +20,7 @@ Ptr<const Texture> MaterialManager::loadTexture(const std::string& path, bool cr
 {
 	if (!MAP_CONTAINS(mTexturesMap, path))
 	{
-		OwnerPtr<Texture> texture = OwnerPtr<Texture>::newObject();
+		SharedPtr<Texture> texture = SharedPtr<Texture>::newObject();
 		texture->init(path, createMipMap);
 		MAP_INSERT(mTexturesMap, path, texture);
 	}
@@ -32,7 +32,7 @@ Ptr<const Material> MaterialManager::getNoTextureMaterial()
 {
 	if (!mNoTextureMaterial)
 	{
-		mNoTextureMaterial = OwnerPtr<Material>::newObject();
+		mNoTextureMaterial = SharedPtr<Material>::newObject();
 		mNoTextureMaterial->init(0);
 	}
 
@@ -44,7 +44,7 @@ Ptr<Material> MaterialManager::createMaterial()
     u32 index = mMaterialIDCounter;
     if (!MAP_CONTAINS(mMaterials, index))
     {
-        OwnerPtr<Material> material = OwnerPtr<Material>::newObject();
+        SharedPtr<Material> material = SharedPtr<Material>::newObject();
         material->init(index);
         MAP_INSERT(mMaterials, index, material);
         mMaterialIDCounter++;

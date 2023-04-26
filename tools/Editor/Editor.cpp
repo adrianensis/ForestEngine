@@ -308,15 +308,15 @@ void Editor::terminate()
 	
 }
 
-OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
+SharedPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
+	SharedPtr<GameObject> gameObject = SharedPtr<GameObject>::newObject();
 	gameObject->init();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->mLocalPosition = (v);
 	gameObject->mTransform->mScale = (Vector3(size,size,size));
 
-	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
+	SharedPtr<Renderer> renderer = SharedPtr<Renderer>::newObject();
 	renderer->init();
 
 	renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
@@ -333,14 +333,14 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
+	SharedPtr<GameObject> gameObject = SharedPtr<GameObject>::newObject();
 	gameObject->init();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform->mLocalPosition = (v);
 	gameObject->mTransform->mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform->setRotation(Vector3(90,0,0));
 
-	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
+	SharedPtr<ModelRenderer > modelRenderer = SharedPtr<ModelRenderer>::newObject();
 	modelRenderer->mModel = (model);
 	modelRenderer->mIsInstanced = (true);
 	modelRenderer->mStencilValue = (0x1);
@@ -355,14 +355,14 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size,
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
+	SharedPtr<GameObject> gameObject = SharedPtr<GameObject>::newObject();
 	gameObject->init();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform->mLocalPosition = (v);
 	gameObject->mTransform->mScale = (Vector3(1,1,1) * size);
 	gameObject->mTransform->mRotation = (Vector3(0,rot,0));
 
-	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
+	SharedPtr<ModelRenderer > modelRenderer = SharedPtr<ModelRenderer>::newObject();
 	modelRenderer->mModel = (model);
 	modelRenderer->mIsInstanced = (true);
 	modelRenderer->mStencilValue = (0x1);

@@ -56,7 +56,7 @@ public:
 
 private:
 	bool mPositionsDirty = true;
-	OwnerPtr<Mesh> mMeshInstance;
+	SharedPtr<Mesh> mMeshInstance;
 public:
     CGET(MeshInstance)
 };

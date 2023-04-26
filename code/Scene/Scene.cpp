@@ -23,13 +23,13 @@ void Scene::init()
 
 	mPath = "config/sceneTmp.json";
 
-	mCameraGameObject = OwnerPtr<GameObject>::newObject();
+	mCameraGameObject = SharedPtr<GameObject>::newObject();
 	mCameraGameObject->init();
 
 	mCameraGameObject->mTransform->translate(Vector3(0, 0, 100.0f));
 	mCameraGameObject->mTransform->mScale = Vector3(1,1,1);
 
-    OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>::newObject();
+    SharedPtr<Camera> cameraComponent = SharedPtr<Camera>::newObject();
 	cameraComponent->init();
 	cameraComponent->setPerspective(1, 1000, GET_SYSTEM(RenderContext).getAspectRatio(), 45);
 
@@ -94,7 +94,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerPtr<GameObject> gameObject)
+//	SERIALIZE_LIST_IF("objects", mGameObjects, [](SharedPtr<GameObject> gameObject)
 //	{
 //		return gameObject->mShouldPersist;
 //	})
@@ -128,7 +128,7 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(OwnerPtr<GameObject> gameObject)
+void Scene::addGameObject(SharedPtr<GameObject> gameObject)
 {
 	gameObject->mScene = getPtrToThis();
 	mNewGameObjects.push_back(gameObject);

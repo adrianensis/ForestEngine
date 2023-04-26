@@ -18,7 +18,7 @@ public:
     void saveScene(const std::string& path);
     void loadScene(const std::string& path);
     void unloadScene();
-    void addGameObject(OwnerPtr<GameObject> gameObject);
+    void addGameObject(SharedPtr<GameObject> gameObject);
     void removeGameObject(Ptr<GameObject> gameObject);
     void update();
     void flushNewGameObjects();
@@ -28,9 +28,9 @@ private:
     void destroyGameObjects();
 
 private:
-	std::list<OwnerPtr<GameObject>> mGameObjects;
-	std::list<OwnerPtr<GameObject>> mNewGameObjects;
-	OwnerPtr<GameObject> mCameraGameObject;
+	std::list<SharedPtr<GameObject>> mGameObjects;
+	std::list<SharedPtr<GameObject>> mNewGameObjects;
+	SharedPtr<GameObject> mCameraGameObject;
 
 	f32 mSize = 0.0f;
 	std::string mPath;

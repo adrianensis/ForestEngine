@@ -21,15 +21,14 @@ class BasePtr
 };
 
 // PTR
-
 template<class T>
-class OwnerPtr;
+class SharedPtr;
 
 template<class T>
 class Ptr : public BasePtr
 {
 template<class U>
-friend class OwnerPtr;
+friend class SharedPtr;
 template<class V>
 friend class Ptr;
 
@@ -37,23 +36,21 @@ public:
     template <class OtherClass>
     static Ptr<T> cast(const Ptr<OtherClass>& other)
     {
-        // TODO: static cast?
-        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     template <class OtherClass>
-    static Ptr<T> cast(const OwnerPtr<OtherClass>& other)
+    static Ptr<T> cast(const SharedPtr<OtherClass>& other)
     {
-        // TODO: static cast?
-        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    Ptr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
+    Ptr(const SharedPtr<T>& SharedPtr) {  assign(SharedPtr); }
     Ptr() = default;
     Ptr(const Ptr<T>& other) { assign(other); }
     ~Ptr() { invalidate(); }
     operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
-    operator OwnerPtr<T>() const { return OwnerPtr<T>(mInternalPointer, mReferenceBlock); }
+    operator SharedPtr<T>() const { return SharedPtr<T>(mInternalPointer, mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
@@ -89,12 +86,12 @@ private:
         }
     }
     
-    void assign(const OwnerPtr<T>& ownerPtr)
+    void assign(const SharedPtr<T>& SharedPtr)
     {
         invalidate();
-        if(ownerPtr.isValid())
+        if(SharedPtr.isValid())
         {
-            set(ownerPtr.mInternalPointer, ownerPtr.mReferenceBlock);
+            set(SharedPtr.mInternalPointer, SharedPtr.mReferenceBlock);
         }
     }
 
@@ -129,7 +126,7 @@ public:
 class EnablePtrFromThis
 {
 template<class U>
-friend class OwnerPtr;
+friend class SharedPtr;
 
 protected:
     template<class OtherClass>
@@ -142,29 +139,27 @@ private:
     Ptr<PointedObject> mPtrToThis;
 };
 
-// OWNER PTR
-
+// SHARED PTR
 template<class T>
-class OwnerPtr : public BasePtr
+class SharedPtr : public BasePtr
 {
 template<class U>
 friend class Ptr;
 
 public:
     template <class OtherClass>
-    static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
+    static SharedPtr<T> cast(const SharedPtr<OtherClass>& other)
     {
-        // TODO: static cast?
-        return OwnerPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return SharedPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    explicit OwnerPtr(T* reference) { init(reference, new ReferenceBlock()); }
-    OwnerPtr() = default;
-    OwnerPtr(const OwnerPtr<T>& other) { assign(other); }
-    OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
-    ~OwnerPtr() { invalidate(); }
+    explicit SharedPtr(T* reference) { init(reference, new ReferenceBlock()); }
+    SharedPtr() = default;
+    SharedPtr(const SharedPtr<T>& other) { assign(other); }
+    SharedPtr(SharedPtr<T>&& other) { assign(other); }
+    ~SharedPtr() { invalidate(); }
     operator Ptr<const T>() const { return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
-    operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
+    operator SharedPtr<const T>() const { return SharedPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
@@ -191,22 +186,22 @@ public:
         set(nullptr, nullptr);
     }
 
-    DECLARE_COPY(OwnerPtr<T>) { assign(other); }
+    DECLARE_COPY(SharedPtr<T>) { assign(other); }
     operator bool() const { return this->isValid(); }
-    bool operator==(const OwnerPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
-    bool operator!=(const OwnerPtr<T>& otherRef) const { return (*this == otherRef); }
+    bool operator==(const SharedPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator!=(const SharedPtr<T>& otherRef) const { return (*this == otherRef); }
 
     template <typename ... Args>
-	static OwnerPtr<T> newObject(Args&&... args)
+	static SharedPtr<T> newObject(Args&&... args)
 	{
-        return OwnerPtr<T>(Memory::newObject<T>(args...));
+        return SharedPtr<T>(Memory::newObject<T>(args...));
     }
 
 private:
 
-    OwnerPtr(T* reference, ReferenceBlock* referenceBlock) { init(reference, referenceBlock); }
+    SharedPtr(T* reference, ReferenceBlock* referenceBlock) { init(reference, referenceBlock); }
 
-    void assign(const OwnerPtr<T>& other)
+    void assign(const SharedPtr<T>& other)
     {
         invalidate();
         if(other.isValid())
@@ -269,7 +264,7 @@ template<class T>
 struct get_const_ptr_type<Ptr<T>> { using type = Ptr<const T>; };
 
 template<class T>
-struct get_const_ptr_type<OwnerPtr<T>> { using type = Ptr<const T>; };
+struct get_const_ptr_type<SharedPtr<T>> { using type = Ptr<const T>; };
 
 // HASH
 // Needed for unordered_map
@@ -285,9 +280,9 @@ namespace std {
   };
   
   template<class T>
-  struct hash<OwnerPtr<T>> 
+  struct hash<SharedPtr<T>> 
   {
-    size_t operator()(OwnerPtr<T> const& pointer) const 
+    size_t operator()(SharedPtr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }

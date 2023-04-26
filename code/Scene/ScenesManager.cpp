@@ -29,7 +29,7 @@ void ScenesManager::init()
 
 	FOR_RANGE(i, 0, scenesCount)
 	{
-        OwnerPtr<Scene> scene = OwnerPtr<Scene>::newObject();
+        SharedPtr<Scene> scene = SharedPtr<Scene>::newObject();
 		addScene(scene);
 	}
 
@@ -76,7 +76,7 @@ void ScenesManager::internalLoadScene()
 	GET_SYSTEM(RenderEngine).mCamera = (mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
 }
 
-void ScenesManager::addScene(OwnerPtr<Scene> newScene)
+void ScenesManager::addScene(SharedPtr<Scene> newScene)
 {
 	mScenes.push_back(newScene);
 }

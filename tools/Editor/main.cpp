@@ -11,14 +11,14 @@ int main()
 {
     Engine::getInstance().init();
 
-    OwnerPtr<GameObject> controller = OwnerPtr<GameObject>::newObject();
+    SharedPtr<GameObject> controller = SharedPtr<GameObject>::newObject();
     controller->init();
 
     // NOTE: this script won't be added to the ScriptEngine in the usual way,
     // since ScriptEngine itself is still not initialized.
-    OwnerPtr<Editor> script = OwnerPtr<Editor>::newObject();
+    SharedPtr<Editor> script = SharedPtr<Editor>::newObject();
     script->init();
-    controller->addComponent<Script>(OwnerPtr<Script>::cast(script));
+    controller->addComponent<Script>(SharedPtr<Script>::cast(script));
 
     GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 

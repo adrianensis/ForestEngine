@@ -92,7 +92,7 @@ private:
         cgltf_animation_channel *scale = nullptr;
     };
 
-    std::vector<OwnerPtr<Animation>> mAnimations;
+    std::vector<SharedPtr<Animation>> mAnimations;
 
 public:
     inline static float smAnimationFPS = 60.0f;
@@ -100,7 +100,7 @@ public:
 
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
-    std::vector<OwnerPtr<Mesh>> mMeshes;
+    std::vector<SharedPtr<Mesh>> mMeshes;
     std::unordered_map<cgltf_material*, Ptr<Material>> mGLTFMaterials;
     std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;

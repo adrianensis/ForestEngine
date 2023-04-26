@@ -61,7 +61,7 @@ void UIText::setText(const std::string& text)
 			{
 				if (mFontRenderers.size() > text.length())
 				{
-					std::vector<OwnerPtr<Renderer>> copyVector = mFontRenderers;
+					std::vector<SharedPtr<Renderer>> copyVector = mFontRenderers;
 					mFontRenderers.clear();
 					std::copy(copyVector.begin(), copyVector.begin() + text.length(), std::back_inserter(mFontRenderers));
 				}
@@ -72,7 +72,7 @@ void UIText::setText(const std::string& text)
 		{
 			FOR_RANGE(i, 0, text.length())
 			{
-				OwnerPtr<Renderer> renderer;
+				SharedPtr<Renderer> renderer;
 
 				char character = text.at(i);
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
@@ -84,7 +84,7 @@ void UIText::setText(const std::string& text)
 				}
 				else
 				{
-					renderer = OwnerPtr<Renderer>::newObject();
+					renderer = SharedPtr<Renderer>::newObject();
 					renderer->init();
 
 					renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();

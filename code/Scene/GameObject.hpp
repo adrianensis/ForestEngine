@@ -20,13 +20,13 @@ public:
 
 
     virtual void init();
-    void addComponent(OwnerPtr<Component> component, ClassId classId);
+    void addComponent(SharedPtr<Component> component, ClassId classId);
     void removeComponent(Ptr<Component> component, ClassId classId);
 
 	template <class T>
-	void addComponent(OwnerPtr<T> component)
+	void addComponent(SharedPtr<T> component)
 	{
-		GameObject::addComponent(OwnerPtr<Component>::cast(component), T::getClassIdStatic());
+		GameObject::addComponent(SharedPtr<Component>::cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
@@ -39,12 +39,12 @@ public:
 	std::list<Ptr<T>> getComponents() const
 	{
 		ClassId classComponentId = T::getClassIdStatic();
-		const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classComponentId);
+		const std::list<SharedPtr<Component>>& components = getComponentsNoCopy(classComponentId);
 
 		std::list<Ptr<T>> result;
 		FOR_LIST(it, components)
 		{
-			result.push_back(OwnerPtr<T>::cast(*it));
+			result.push_back(SharedPtr<T>::cast(*it));
 		}
 
 		return result;
@@ -74,13 +74,13 @@ public:
 
 private:
     std::list<Ptr<Component>> getComponents(ClassId classId) const;
-    const std::list<OwnerPtr<Component>>&  getComponentsNoCopy(ClassId classId) const;
+    const std::list<SharedPtr<Component>>&  getComponentsNoCopy(ClassId classId) const;
     Ptr<Component> getFirstComponent(ClassId classId) const;
 
 private:
-	inline static std::list<OwnerPtr<Component>> smEmptyList;
+	inline static std::list<SharedPtr<Component>> smEmptyList;
 
-	std::unordered_map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
+	std::unordered_map<ClassId, std::list<SharedPtr<Component>>> mComponentsMap;
 	bool mIsActive = false;
 
 	bool mIsPendingToBeDestroyed = false;
@@ -88,7 +88,7 @@ private:
 
 public:
 	Ptr<Scene> mScene;
-	OwnerPtr<Transform> mTransform;
+	SharedPtr<Transform> mTransform;
 	bool mIsStatic = false;
 	std::string mTag;
 	bool mShouldPersist = false;

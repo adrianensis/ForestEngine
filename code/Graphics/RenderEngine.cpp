@@ -35,7 +35,7 @@ void RenderEngine::init(f32 sceneSize)
 	{
 		for (i32 j = chunksGridSizeHalf; j > -chunksGridSizeHalf; --j)
 		{
-			OwnerPtr<Chunk> chunk = OwnerPtr<Chunk>::newObject();
+			SharedPtr<Chunk> chunk = SharedPtr<Chunk>::newObject();
 			chunk->init();
 			chunk->set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
 

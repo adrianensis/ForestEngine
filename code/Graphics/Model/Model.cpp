@@ -103,7 +103,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
     ASSERT_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
 
-    OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
+    SharedPtr<Mesh> mesh = SharedPtr<Mesh>::newObject();
     mesh->mModel = (getPtrToThis());
     mMeshes.push_back(mesh);
 
@@ -395,7 +395,7 @@ void Model::loadGLTFAnimations()
 
         loadGLTFChannels(gltfAnim);
 
-        OwnerPtr<Animation> animation = OwnerPtr<Animation>::newObject();
+        SharedPtr<Animation> animation = SharedPtr<Animation>::newObject();
         animation->init(animDuration, getPtrToThis());
 
         loadGLTFAnimationFrames(animation);

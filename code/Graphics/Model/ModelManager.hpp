@@ -15,5 +15,5 @@ public:
     Ptr<const Model> loadModel(const std::string& path);
 
 private:
-    std::unordered_map<std::string, OwnerPtr<Model>> mModelMap;
+    std::unordered_map<std::string, SharedPtr<Model>> mModelMap;
 };

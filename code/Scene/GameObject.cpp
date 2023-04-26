@@ -16,17 +16,17 @@ GameObject::~GameObject()
 void GameObject::init()
 {
 
-	mTransform = OwnerPtr<Transform>::newObject();
+	mTransform = SharedPtr<Transform>::newObject();
 	addComponent<Transform>(mTransform);
 
 	mTag = "";
 }
 
-void GameObject::addComponent(OwnerPtr<Component> component, ClassId classId)
+void GameObject::addComponent(SharedPtr<Component> component, ClassId classId)
 {
 	if (!MAP_CONTAINS(mComponentsMap, classId))
 	{
-		MAP_INSERT(mComponentsMap, classId, std::list<OwnerPtr<Component>>());
+		MAP_INSERT(mComponentsMap, classId, std::list<SharedPtr<Component>>());
 	}
 
 	mComponentsMap.at(classId).push_back(component);
@@ -43,7 +43,7 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 	{
 		component->destroy();
 
-		std::list<OwnerPtr<Component>>& list = mComponentsMap.at(classId);
+		std::list<SharedPtr<Component>>& list = mComponentsMap.at(classId);
 		list.remove(component);
 	}
 }
@@ -116,7 +116,7 @@ IMPLEMENT_DESERIALIZATION(GameObject)
 std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
 {
 	std::list<Ptr<Component>> result;
-	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
+	const std::list<SharedPtr<Component>>& components = getComponentsNoCopy(classId);
 
 	FOR_LIST(it, components)
 	{
@@ -126,9 +126,9 @@ std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
 	return result;
 }
 
-const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId classId) const
+const std::list<SharedPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId classId) const
 {
-	const std::list<OwnerPtr<Component>>* components = nullptr;
+	const std::list<SharedPtr<Component>>* components = nullptr;
 
 	if (MAP_CONTAINS(mComponentsMap, classId))
 	{
@@ -146,7 +146,7 @@ const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId c
 Ptr<Component> GameObject::getFirstComponent(ClassId classId) const
 {
 	Ptr<Component>component;
-	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
+	const std::list<SharedPtr<Component>>& components = getComponentsNoCopy(classId);
 
 	if (!components.empty())
 	{
