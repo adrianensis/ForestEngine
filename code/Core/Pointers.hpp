@@ -175,7 +175,10 @@ public:
     explicit OwnerPtr(T* reference)
     {
         invalidate();
-        set(reference, new ReferenceBlock());
+        if(reference)
+        {
+            set(reference, new ReferenceBlock());
+        }
     }
 
     ~OwnerPtr() { invalidate(); }
@@ -212,7 +215,10 @@ public:
     DECLARE_COPY(OwnerPtr<T>)
 	{
         invalidate();
-        set(other.mInternalPointer, other.mReferenceBlock);
+        if(other.isValid())
+        {
+            set(other.mInternalPointer, other.mReferenceBlock);
+        }
 	}
 
     operator bool() const { return this->isValid(); }
