@@ -6,14 +6,8 @@ class ReferenceBlock
 {
 public:
     ReferenceBlock() = default;
-    bool isReferenced() const
-    {
-        return (mReferenceCounter > 0);
-    }
-    bool isWeakReferenced() const
-    {
-        return (mWeakReferenceCounter > 0);
-    }
+    bool isReferenced() const { return mReferenceCounter > 0; }
+    bool isWeakReferenced() const { return mWeakReferenceCounter > 0; }
 public:
     u32 mWeakReferenceCounter = 0;
     u32 mReferenceCounter = 0;
@@ -71,20 +65,10 @@ public:
             set(ownerPtr.mInternalPointer, ownerPtr.mReferenceBlock);
         }
     }
-    ~Ptr()
-    {
-        invalidate();
-    }
+    ~Ptr() { invalidate(); }
 
-    operator Ptr<const T>() const
-    {
-        return Ptr<const T>(mInternalPointer, mReferenceBlock);
-    }
-
-    operator OwnerPtr<T>() const
-    {
-        return OwnerPtr<T>(mInternalPointer, mReferenceBlock);
-    }
+    operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
+    operator OwnerPtr<T>() const { return OwnerPtr<T>(mInternalPointer, mReferenceBlock); }
 
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
@@ -105,26 +89,12 @@ public:
         set(nullptr, nullptr);
     }
 
-    DECLARE_COPY(Ptr<T>)
-	{
-        set(other.mInternalPointer, other.mReferenceBlock);
-	}
-
-    bool operator==(const Ptr<T>& otherRef) const
-	{
-		return this->mInternalPointer == otherRef.mInternalPointer;
-	}
-
-    operator bool() const
-    {
-        return this->isValid();
-    }
+    DECLARE_COPY(Ptr<T>) { set(other.mInternalPointer, other.mReferenceBlock); }
+    bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    operator bool() const { return this->isValid(); }
 
 private:
-    Ptr(T* reference, ReferenceBlock* referenceBlock)
-    {
-        set(reference, referenceBlock);
-    }
+    Ptr(T* reference, ReferenceBlock* referenceBlock) { set(reference, referenceBlock); }
     void set(T* reference, ReferenceBlock* referenceBlock)
     {
         mInternalPointer = reference;
@@ -134,10 +104,7 @@ private:
             increment();
         }
     }
-    void increment()
-    {
-        (mReferenceBlock->mWeakReferenceCounter) += 1;
-    }
+    void increment() { mReferenceBlock->mWeakReferenceCounter += 1; }
 
 private:
     T* mInternalPointer = nullptr;
@@ -161,22 +128,13 @@ friend class OwnerPtr;
 
 protected:
     template<class OtherClass>
-    Ptr<OtherClass> getPtrToThisCasted()
-	{
-		return Ptr<OtherClass>::cast(mPtrToThis);
-	}
+    Ptr<OtherClass> getPtrToThisCasted() { return Ptr<OtherClass>::cast(mPtrToThis); }
     template<class OtherClass>
-    Ptr<const OtherClass> getPtrToThisCasted() const
-	{
-		return Ptr<const OtherClass>::cast(mPtrToThis);
-	}
+    Ptr<const OtherClass> getPtrToThisCasted() const { return Ptr<const OtherClass>::cast(mPtrToThis); }
 
 private:
     template <class OtherClass>
-    void set(const Ptr<OtherClass>& ptr)
-    {
-        mPtrToThis = Ptr<PointedObject>::cast(ptr);
-    }
+    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<PointedObject>::cast(ptr); }
     Ptr<PointedObject> mPtrToThis;
 };
 
@@ -220,20 +178,10 @@ public:
         set(reference, new ReferenceBlock());
     }
 
-    ~OwnerPtr()
-    {
-        invalidate();
-    }
+    ~OwnerPtr() { invalidate(); }
 
-    operator Ptr<const T>() const
-    {
-        return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock);
-    }
-
-    operator OwnerPtr<const T>() const
-    {
-        return OwnerPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock);
-    }
+    operator Ptr<const T>() const { return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
+    operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
 
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
@@ -267,20 +215,9 @@ public:
         set(other.mInternalPointer, other.mReferenceBlock);
 	}
 
-    operator bool() const
-    {
-        return this->isValid();
-    }
-
-    bool operator==(const OwnerPtr<T>& otherRef) const
-	{
-		return this->mInternalPointer == otherRef.mInternalPointer;
-	}
-
-    bool operator!=(const OwnerPtr<T>& otherRef) const
-	{
-		return (*this == otherRef);
-	}
+    operator bool() const { return this->isValid(); }
+    bool operator==(const OwnerPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator!=(const OwnerPtr<T>& otherRef) const { return (*this == otherRef); }
 
     template <typename ... Args>
 	static OwnerPtr<T> newObject(Args&&... args)
@@ -289,10 +226,7 @@ public:
     }
 
 private:
-    void increment()
-    {
-        (mReferenceBlock->mReferenceCounter) += 1;
-    }
+    void increment() { mReferenceBlock->mReferenceCounter += 1; }
 
     OwnerPtr(T* reference, ReferenceBlock* referenceBlock)
     {
@@ -310,7 +244,6 @@ private:
         if(mInternalPointer && mReferenceBlock)
         {
             increment();
-
             if (IS_BASE_OF(EnablePtrFromThis, T))
             {
                 EnablePtrFromThis* enablePtrFromThis = static_cast<EnablePtrFromThis*>(reference);
@@ -340,35 +273,32 @@ public:
 // };
 
 template <typename T>
-struct get_const_ptr_type
-{
-    using type = Ptr<const T>;
-};
+struct get_const_ptr_type { using type = Ptr<const T>; };
 
 template<class T>
-struct get_const_ptr_type<Ptr<T>>
-{
-    using type = Ptr<const T>;
-};
+struct get_const_ptr_type<Ptr<T>> { using type = Ptr<const T>; };
 
 template<class T>
-struct get_const_ptr_type<OwnerPtr<T>>
-{
-    using type = Ptr<const T>;
-};
+struct get_const_ptr_type<OwnerPtr<T>> { using type = Ptr<const T>; };
 
 // HASH
 // Needed for unordered_map
 
 namespace std {
-  template<class T> struct hash<Ptr<T>> {
-    size_t operator()(Ptr<T> const& pointer) const {
+  template<class T>
+  struct hash<Ptr<T>> 
+  {
+    size_t operator()(Ptr<T> const& pointer) const 
+    {
       return size_t(&pointer.get());
     }
   };
   
-  template<class T> struct hash<OwnerPtr<T>> {
-    size_t operator()(OwnerPtr<T> const& pointer) const {
+  template<class T>
+  struct hash<OwnerPtr<T>> 
+  {
+    size_t operator()(OwnerPtr<T> const& pointer) const 
+    {
       return size_t(&pointer.get());
     }
   };

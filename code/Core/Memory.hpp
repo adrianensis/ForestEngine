@@ -6,9 +6,18 @@
 
 class Memory
 {
-public:
-	inline static std::unordered_map<std::string_view, i32> mAllocationsCounter;
+private:
+#ifdef DE_DEBUG
+	class AllocationInfo
+    {
+    public:
+        AllocationInfo() = default;
+        u32 mCurrentAllocations = 0;
+        u32 mMaxAllocations = 0;
+    };
+#endif
 
+public:
     static void init();
 
     static void terminate();
@@ -29,14 +38,13 @@ public:
 			className = typeid(T).name();
 		}
 
-		if (MAP_CONTAINS(mAllocationsCounter, className))
-		{
-			MAP_INSERT(mAllocationsCounter, className, mAllocationsCounter[className] + 1);
+		if (!MAP_CONTAINS(mAllocationsCounter, className))
+        {
+			MAP_INSERT(mAllocationsCounter, className, AllocationInfo());
 		}
-		else
-		{
-			MAP_INSERT(mAllocationsCounter, className, 1);
-		}
+
+        mAllocationsCounter[className].mCurrentAllocations += 1;
+        mAllocationsCounter[className].mMaxAllocations += 1;
 #endif
 		return object;
 	}
@@ -57,11 +65,14 @@ public:
 			className = typeid(T).name();
 		}
 
-		if (MAP_CONTAINS(mAllocationsCounter, className))
-		{
-			MAP_INSERT(mAllocationsCounter, className, mAllocationsCounter[className] - 1);
-		}
+        ASSERT_MSG(MAP_CONTAINS(mAllocationsCounter, className), "No prevoius allocation for class: " + std::string(className));
+        mAllocationsCounter[className].mCurrentAllocations -= 1;
 #endif
 		delete pointer;
 	}
+
+private:
+#ifdef DE_DEBUG
+	inline static std::unordered_map<std::string_view, AllocationInfo> mAllocationsCounter;
+#endif
 };

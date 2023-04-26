@@ -12,7 +12,7 @@ void Memory::terminate()
 	ECHO("-------- MEM SUMMARY --------")
 	FOR_MAP(it, Memory::mAllocationsCounter)
 	{
-		std::cout << it->first << ": " << it->second << std::endl;
+		std::cout << it->first << ": " << it->second.mCurrentAllocations << " (max: " << it->second.mMaxAllocations << ")" << std::endl;
 	}
 	ECHO("-----------------------------")
 #endif
