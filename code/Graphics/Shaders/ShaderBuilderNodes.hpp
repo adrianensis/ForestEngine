@@ -104,7 +104,7 @@ namespace ShaderBuilderNodes
         {
             callStr += params[i].getNameOrValue();
 
-            if(i < params.size() - 1)
+            if((u32)(i) < params.size() - 1)
             {
                 callStr += ",";
             }

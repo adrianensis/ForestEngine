@@ -25,17 +25,17 @@ public:
 
 private:
 	template <class T> T_EXTENDS(T, Shape)
-	OwnerPtr<Mesh> createPrimitive() const
+	SharedPtr<Mesh> createPrimitive() const
 	{
 		ASSERT_MSG(false, "Mesh Primitive not implemented");
-		return OwnerPtr<Mesh>();
+		return SharedPtr<Mesh>();
 	}
 
 private:
-	std::unordered_map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
+	std::unordered_map<ClassId, SharedPtr<Mesh>> mPrimitivesMap;
 };
 
 template <>
-OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
+SharedPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
 template <>
-OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const;
+SharedPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const;

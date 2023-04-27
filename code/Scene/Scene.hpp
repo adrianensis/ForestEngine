@@ -38,9 +38,9 @@ private:
 	ConfigObject mLoadSceneConfig;
 
 public:
-	GET(GameObjects)
-	GET(NewGameObjects)
-	RGET(CameraGameObject)
+	CRGET(GameObjects)
+	CRGET(NewGameObjects)
+	GET(CameraGameObject)
 	GET(Size)
 	GET(Path)
 };

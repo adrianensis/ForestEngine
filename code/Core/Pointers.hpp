@@ -13,6 +13,9 @@ public:
     u32 mReferenceCounter = 0;
 };
 
+template <typename V>
+struct get_ptr_type;
+
 // BASE
 // Needed in Core/Macros.h CGETTER_TYPE
 class BasePtr
@@ -88,6 +91,7 @@ public:
 
     DECLARE_COPY(Ptr<T>) { set(other.mInternalPointer, other.mReferenceBlock); }
     bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     operator bool() const { return this->isValid(); }
 
 private:
@@ -187,8 +191,8 @@ public:
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     operator bool() const { return this->isValid(); }
+    bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
-    bool operator!=(const RefCountedPtrBase<T>& otherRef) const { return (*this == otherRef); }
     void invalidate()
     {
         if(mReferenceBlock)
@@ -294,16 +298,16 @@ template<class T>
 class OwnerPtr : public RefCountedPtrBase<T>
 {
 public:
-    template <class OtherClass>
-    static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
-    {
-        return OwnerPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
-    }
+    // template <class OtherClass>
+    // static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
+    // {
+    //     return OwnerPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+    // }
 
     explicit OwnerPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
-    operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
+    //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
     DECLARE_MOVE(OwnerPtr<T>) { assign(other); }
 
     template <typename ... Args>
@@ -335,18 +339,30 @@ private:
 //     using type = T;
 // };
 
-template <typename T>
-struct get_const_ptr_type { using type = Ptr<const T>; };
-
+template <typename U>
+struct get_ptr_type { using type = Ptr<U>; };
 template<class T>
-struct get_const_ptr_type<Ptr<T>> { using type = Ptr<const T>; };
-
+struct get_ptr_type<Ptr<T>> { using type = Ptr<T>; };
 template<class T>
-struct get_const_ptr_type<SharedPtr<T>> { using type = Ptr<const T>; };
+struct get_ptr_type<RefCountedPtrBase<T>> { using type = Ptr<T>; };
+template<class T>
+struct get_ptr_type<SharedPtr<T>> { using type = Ptr<T>; };
+template<class T>
+struct get_ptr_type<OwnerPtr<T>> { using type = Ptr<T>; };
+
+// template <typename T>
+// struct get_const_ptr_type { using type = Ptr<const T>; };
+// template<class T>
+// struct get_const_ptr_type<Ptr<const T>> { using type = Ptr<const T>; };
+// template<class T>
+// struct get_const_ptr_type<RefCountedPtrBase<const T>> { using type = Ptr<const T>; };
+// template<class T>
+// struct get_const_ptr_type<SharedPtr<const T>> { using type = Ptr<const T>; };
+// template<class T>
+// struct get_const_ptr_type<OwnerPtr<const T>> { using type = Ptr<const T>; };
 
 // HASH
 // Needed for unordered_map
-
 namespace std {
   template<class T>
   struct hash<Ptr<T>> 
@@ -358,9 +374,27 @@ namespace std {
   };
   
   template<class T>
+  struct hash<RefCountedPtrBase<T>> 
+  {
+    size_t operator()(SharedPtr<T> const& pointer) const 
+    {
+      return size_t(&pointer.get());
+    }
+  };
+
+  template<class T>
   struct hash<SharedPtr<T>> 
   {
     size_t operator()(SharedPtr<T> const& pointer) const 
+    {
+      return size_t(&pointer.get());
+    }
+  };
+
+  template<class T>
+  struct hash<OwnerPtr<T>> 
+  {
+    size_t operator()(OwnerPtr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }

@@ -15,7 +15,7 @@ Ptr<const Model> ModelManager::loadModel(const std::string& path)
 {
     if (!MAP_CONTAINS(mModelMap, path))
 	{
-		MAP_INSERT(mModelMap, path, OwnerPtr<Model>::newObject());
+		MAP_INSERT(mModelMap, path, SharedPtr<Model>::newObject());
 		mModelMap.at(path)->init(path);
 	}
 

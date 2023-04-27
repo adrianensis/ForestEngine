@@ -141,7 +141,9 @@ void Scene::removeGameObject(Ptr<GameObject> gameObject)
         gameObject->destroy();
         gameObject->finallyDestroy();
 
-        mGameObjects.remove(gameObject);
+        std::remove_if(
+        mGameObjects.begin(), mGameObjects.end(),
+        [gameObject](SharedPtr<GameObject>& go) { return go == gameObject; });
     }
 }
 

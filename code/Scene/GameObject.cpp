@@ -15,9 +15,9 @@ GameObject::~GameObject()
 
 void GameObject::init()
 {
-
-	mTransform = SharedPtr<Transform>::newObject();
-	addComponent<Transform>(mTransform);
+	SharedPtr<Transform> transform = SharedPtr<Transform>::newObject();
+	addComponent<Transform>(transform);
+    mTransform = transform;
 
 	mTag = "";
 }
@@ -29,7 +29,7 @@ void GameObject::addComponent(SharedPtr<Component> component, ClassId classId)
 		MAP_INSERT(mComponentsMap, classId, std::list<SharedPtr<Component>>());
 	}
 
-	mComponentsMap.at(classId).push_back(component);
+	mComponentsMap.at(classId).emplace_back(component);
 
 	component->mGameObject = getPtrToThis();
 	component->onComponentAdded();
@@ -44,7 +44,9 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 		component->destroy();
 
 		std::list<SharedPtr<Component>>& list = mComponentsMap.at(classId);
-		list.remove(component);
+        std::remove_if(
+        list.begin(), list.end(),
+        [component](SharedPtr<Component>& c) { return c == component; });
 	}
 }
 
@@ -73,7 +75,7 @@ void GameObject::destroy()
 
 	FOR_MAP(it, mComponentsMap)
 	{
-		auto list = it->second;
+		auto& list = it->second;
 
 		FOR_LIST(itComponent, list)
 		{

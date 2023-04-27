@@ -89,8 +89,6 @@ u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vec
 
     bool lineIntersectsSphere = false;
 
-    f32 t;
-
     Vector3 dVector = line.toVector();
 
     Vector3 startToCenter = line.getStart() - sphere.getCenter();

@@ -21,19 +21,16 @@ public:
 private:
     void internalLoadScene();
 
-
-    void addScene(SharedPtr<Scene> newScene);
-
 private:
 	std::vector<SharedPtr<Scene>> mScenes;
 	u32 mCurrentSceneIndex = 0;
 
-    SharedPtr<Scene> mCurrentScene;
+    Ptr<Scene> mCurrentScene;
 	bool mSceneHasChanged = false;
     SharedPtr<GameObject> mGameObjectController;
 
 public:
-	RGET(CurrentScene)
+	GET(CurrentScene)
 	GET(SceneHasChanged)
-	RGET_SET(GameObjectController)
+	GET_SET(GameObjectController)
 };

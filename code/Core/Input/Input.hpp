@@ -33,8 +33,8 @@ private:
 
 public:
 	Vector2 smMouseCoordinates;
-	u32 smLastMouseButtonPressed;
-	u32 smLastKeyPressed;
+	i32 smLastMouseButtonPressed;
+	i32 smLastKeyPressed;
 	u32 smModifier;
 	bool smKeyJustPressed;
 	bool smButtonJustPressed;

@@ -5,9 +5,9 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 
 class Chunk;
-class Mesh;
 class Batch;
 
 class Renderer: public Component
@@ -58,5 +58,5 @@ private:
 	bool mPositionsDirty = true;
 	SharedPtr<Mesh> mMeshInstance;
 public:
-    CGET(MeshInstance)
+    GET(MeshInstance)
 };

@@ -90,6 +90,7 @@
     __VA_ARGS__;        \
     REGISTER_MEMBER(__VA_ARGS__);
 
+
 #define GETTER_TYPE(Type)                         \
     COND_TYPE(                                    \
         IS_RAW_POINTER(Type),                     \
@@ -108,8 +109,11 @@
             REMOVE_REF(Type),                         \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
-                get_const_ptr_type<Type>::type,       \
-                GETTER_TYPE(Type))))
+                typename get_ptr_type<typename Type>::type,       \
+                GETTER_TYPE(Type) \
+            )  \
+        ) \
+    )
 
 #define SETTER_TYPE(Type)                         \
     COND_TYPE(                                    \
@@ -118,7 +122,9 @@
         COND_TYPE(                                \
             IS_ARITHMETIC(Type) || IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
-            ADD_REFERENCE(ADD_CONST(Type))))
+            ADD_REFERENCE(ADD_CONST(Type))      \
+        )                                         \
+    )
 
 #define GETTER_TYPE_FROM_VAR(Var) GETTER_TYPE(decltype(Var))
 #define CGETTER_TYPE_FROM_VAR(Var) CGETTER_TYPE(decltype(Var))

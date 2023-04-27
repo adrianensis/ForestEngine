@@ -88,7 +88,7 @@ private:
 
 public:
 	Ptr<Scene> mScene;
-	SharedPtr<Transform> mTransform;
+	Ptr<Transform> mTransform;
 	bool mIsStatic = false;
 	std::string mTag;
 	bool mShouldPersist = false;

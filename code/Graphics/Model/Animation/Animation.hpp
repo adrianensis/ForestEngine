@@ -41,7 +41,7 @@ private:
     f32 mAnimationTime = 0;
 
 public:
-    CGET(Animation)
+    GET(Animation)
     GET(AnimationTime)
 };
 
@@ -59,7 +59,7 @@ private:
     void getBoneTransformsFromCurrentAnimation(std::vector<Matrix4>& Transforms) const;
 private:
     Ptr<const Model> mModel;
-    std::unordered_map<ObjectId, OwnerPtr<AnimationState>> mAnimationStates;
+    std::unordered_map<ObjectId, SharedPtr<AnimationState>> mAnimationStates;
     Ptr<AnimationState> mCurrentAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;
 
