@@ -31,7 +31,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxShapes * 2 * 4); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxShapes * 2);		 // 1 index per vertex
 
-	mShaderLine = SharedPtr<Shader>::newObject();
+	mShaderLine = OwnerPtr<Shader>::newObject();
 	mShaderLine->initDebug();
 
 	bind();

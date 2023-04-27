@@ -17,9 +17,7 @@ public:
 	{
 		if(!MAP_CONTAINS(mPrimitivesMap, T::getClassIdStatic()))
 		{
-			SharedPtr<Mesh> mesh = createPrimitive<T>();
-
-			MAP_INSERT(mPrimitivesMap, T::getClassIdStatic(), mesh);
+			MAP_INSERT(mPrimitivesMap, T::getClassIdStatic(), createPrimitive<T>());
 		}
 		
 		return Ptr<Mesh>(mPrimitivesMap.at(T::getClassIdStatic()));
@@ -27,17 +25,17 @@ public:
 
 private:
 	template <class T> T_EXTENDS(T, Shape)
-	SharedPtr<Mesh> createPrimitive() const
+	OwnerPtr<Mesh> createPrimitive() const
 	{
 		ASSERT_MSG(false, "Mesh Primitive not implemented");
-		return SharedPtr<Mesh>();
+		return OwnerPtr<Mesh>();
 	}
 
 private:
-	std::unordered_map<ClassId, SharedPtr<Mesh>> mPrimitivesMap;
+	std::unordered_map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
 };
 
 template <>
-SharedPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
+OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
 template <>
-SharedPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const;
+OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const;

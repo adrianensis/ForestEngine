@@ -74,7 +74,7 @@ private:
 private:
 	std::list<Ptr<Renderer>> mRenderers;
 
-    SharedPtr<Shader> mShader;
+    OwnerPtr<Shader> mShader;
 
 	MeshBatcher mMeshBatcher;
 

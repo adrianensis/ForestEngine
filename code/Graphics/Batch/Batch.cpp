@@ -20,7 +20,7 @@ void Batch::init(const BatchData& batchData)
 
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
-    mShader = SharedPtr<Shader>::newObject();
+    mShader = OwnerPtr<Shader>::newObject();
     mShader->init(gpuBuffersLayout, mBatchData.mMaterial);
 }
 

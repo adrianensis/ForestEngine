@@ -22,10 +22,8 @@ void AnimationManager::createAnimationState(Ptr<const Animation> animation)
 
 	if(!MAP_CONTAINS(mSkeletonStates, model))
 	{
-		SharedPtr<SkeletonState> skeletonState = SharedPtr<SkeletonState>::newObject();
-		skeletonState->init(animation->mModel);
-
-		MAP_INSERT(mSkeletonStates, model, skeletonState);
+		MAP_INSERT(mSkeletonStates, model, OwnerPtr<SkeletonState>::newObject());
+		mSkeletonStates.at(model)->init(animation->mModel);
 	}
 
 	mSkeletonStates[model]->createAnimationState(animation);

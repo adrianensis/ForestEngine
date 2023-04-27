@@ -22,14 +22,22 @@ class BasePtr
 
 // PTR
 template<class T>
+class RefCountedPtrBase;
+template<class T>
 class SharedPtr;
+template<class T>
+class OwnerPtr;
 
 template<class T>
 class Ptr : public BasePtr
 {
+template<class S>
+friend class RefCountedPtrBase;
 template<class U>
 friend class SharedPtr;
 template<class V>
+friend class OwnerPtr;
+template<class W>
 friend class Ptr;
 
 public:
@@ -45,7 +53,15 @@ public:
         return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    Ptr(const SharedPtr<T>& SharedPtr) {  assign(SharedPtr); }
+    template <class OtherClass>
+    static Ptr<T> cast(const OwnerPtr<OtherClass>& other)
+    {
+        return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+    }
+
+    Ptr(const RefCountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
+    // Ptr(const SharedPtr<T>& sharedPtr) {  assign(sharedPtr); }
+    // Ptr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
     Ptr() = default;
     Ptr(const Ptr<T>& other) { assign(other); }
     ~Ptr() { invalidate(); }
@@ -86,12 +102,30 @@ private:
         }
     }
     
-    void assign(const SharedPtr<T>& SharedPtr)
+    void assign(const RefCountedPtrBase<T>& ownerPtr)
     {
         invalidate();
-        if(SharedPtr.isValid())
+        if(ownerPtr.isValid())
         {
-            set(SharedPtr.mInternalPointer, SharedPtr.mReferenceBlock);
+            set(ownerPtr.mInternalPointer, ownerPtr.mReferenceBlock);
+        }
+    }
+    
+    void assign(const SharedPtr<T>& sharedPtr)
+    {
+        invalidate();
+        if(sharedPtr.isValid())
+        {
+            set(sharedPtr.mInternalPointer, sharedPtr.mReferenceBlock);
+        }
+    }
+
+    void assign(const OwnerPtr<T>& ownerPtr)
+    {
+        invalidate();
+        if(ownerPtr.isValid())
+        {
+            set(ownerPtr.mInternalPointer, ownerPtr.mReferenceBlock);
         }
     }
 
@@ -126,7 +160,7 @@ public:
 class EnablePtrFromThis
 {
 template<class U>
-friend class SharedPtr;
+friend class RefCountedPtrBase;
 
 protected:
     template<class OtherClass>
@@ -139,30 +173,22 @@ private:
     Ptr<PointedObject> mPtrToThis;
 };
 
-// SHARED PTR
+// REF COUNTED PTR BASE
 template<class T>
-class SharedPtr : public BasePtr
+class RefCountedPtrBase : public BasePtr
 {
 template<class U>
 friend class Ptr;
 
 public:
-    template <class OtherClass>
-    static SharedPtr<T> cast(const SharedPtr<OtherClass>& other)
-    {
-        return SharedPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
-    }
-
-    explicit SharedPtr(T* reference) { init(reference, new ReferenceBlock()); }
-    SharedPtr() = default;
-    SharedPtr(const SharedPtr<T>& other) { assign(other); }
-    SharedPtr(SharedPtr<T>&& other) { assign(other); }
-    ~SharedPtr() { invalidate(); }
+    virtual ~RefCountedPtrBase() { invalidate(); }
     operator Ptr<const T>() const { return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
-    operator SharedPtr<const T>() const { return SharedPtr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
+    operator bool() const { return this->isValid(); }
+    bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator!=(const RefCountedPtrBase<T>& otherRef) const { return (*this == otherRef); }
     void invalidate()
     {
         if(mReferenceBlock)
@@ -185,31 +211,7 @@ public:
         }
         set(nullptr, nullptr);
     }
-
-    DECLARE_COPY(SharedPtr<T>) { assign(other); }
-    operator bool() const { return this->isValid(); }
-    bool operator==(const SharedPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
-    bool operator!=(const SharedPtr<T>& otherRef) const { return (*this == otherRef); }
-
-    template <typename ... Args>
-	static SharedPtr<T> newObject(Args&&... args)
-	{
-        return SharedPtr<T>(Memory::newObject<T>(args...));
-    }
-
-private:
-
-    SharedPtr(T* reference, ReferenceBlock* referenceBlock) { init(reference, referenceBlock); }
-
-    void assign(const SharedPtr<T>& other)
-    {
-        invalidate();
-        if(other.isValid())
-        {
-            set(other.mInternalPointer, other.mReferenceBlock);
-        }
-    }
-
+protected:
     void init(T* reference, ReferenceBlock* referenceBlock)
     {
         invalidate();
@@ -218,7 +220,6 @@ private:
             set(reference, referenceBlock);
         }
     }
-
     void set(T* reference, ReferenceBlock* referenceBlock)
     {
         mInternalPointer = reference;
@@ -236,17 +237,94 @@ private:
             }
         }
     }
-
     void increment() { mReferenceBlock->mReferenceCounter += 1; }
     void decrement() { mReferenceBlock->mReferenceCounter -= 1; }
-
-private:
+protected:
     T* mInternalPointer = nullptr;
     ReferenceBlock* mReferenceBlock = nullptr;
 
 public:
     GET(InternalPointer);
     GET(ReferenceBlock);
+};
+
+// SHARED PTR
+template<class T>
+class SharedPtr : public RefCountedPtrBase<T>
+{
+template<class U>
+friend class Ptr;
+
+public:
+    template <class OtherClass>
+    static SharedPtr<T> cast(const SharedPtr<OtherClass>& other)
+    {
+        return SharedPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+    }
+
+    explicit SharedPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
+    SharedPtr() = default;
+    SharedPtr(const SharedPtr<T>& other) { assign(other); }
+    SharedPtr(SharedPtr<T>&& other) { assign(other); }
+    operator SharedPtr<const T>() const { return SharedPtr<const T>(static_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
+    DECLARE_COPY(SharedPtr<T>) { assign(other); }
+
+    template <typename ... Args>
+	static SharedPtr<T> newObject(Args&&... args)
+	{
+        return SharedPtr<T>(Memory::newObject<T>(args...));
+    }
+
+private:
+
+    SharedPtr(T* reference, ReferenceBlock* referenceBlock) { this->init(reference, referenceBlock); }
+
+    void assign(const SharedPtr<T>& other)
+    {
+        this->invalidate();
+        if(other.isValid())
+        {
+            this->set(other.mInternalPointer, other.mReferenceBlock);
+        }
+    }
+};
+
+// OWNER PTR
+template<class T>
+class OwnerPtr : public RefCountedPtrBase<T>
+{
+public:
+    template <class OtherClass>
+    static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
+    {
+        return OwnerPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+    }
+
+    explicit OwnerPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
+    OwnerPtr() = default;
+    OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
+    operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
+    DECLARE_MOVE(OwnerPtr<T>) { assign(other); }
+
+    template <typename ... Args>
+	static OwnerPtr<T> newObject(Args&&... args)
+	{
+        return OwnerPtr<T>(Memory::newObject<T>(args...));
+    }
+
+private:
+
+    OwnerPtr(T* reference, ReferenceBlock* referenceBlock) { this->init(reference, referenceBlock); }
+
+    void assign(OwnerPtr<T>& other)
+    {
+        this->invalidate();
+        if(other.isValid())
+        {
+            this->set(other.mInternalPointer, other.mReferenceBlock);
+            other.invalidate();
+        }
+    }
 };
 
 // SNIFAE

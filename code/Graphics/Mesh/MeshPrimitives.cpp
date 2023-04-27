@@ -12,9 +12,9 @@ void MeshPrimitives::terminate()
 }
 
 template <>
-SharedPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
+OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
-	SharedPtr<Mesh> mesh = SharedPtr<Mesh>::newObject();
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
 	mesh->init(4*1, 2*1);
 
 	mesh->addToPositions(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
@@ -34,9 +34,9 @@ SharedPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 }
 
 template <>
-SharedPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
+OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 {
-	SharedPtr<Mesh> mesh = SharedPtr<Mesh>::newObject();
+	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
 	mesh->init(4*6, 2*6);
 
 	u32 elementOffsetIncrement = 4;

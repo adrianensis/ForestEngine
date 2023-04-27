@@ -132,7 +132,7 @@
 	inline CGETTER_TYPE_FROM_VAR(m##BaseName) get##BaseName() const { return m##BaseName; };
 
 #define RGET(BaseName) \
-	inline ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
+	inline ADD_REFERENCE(GETTER_TYPE_FROM_VAR(m##BaseName)) get##BaseName() { return m##BaseName; };
 
 #define CRGET(BaseName) \
 	inline ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
@@ -169,8 +169,7 @@
     {                                                                                 \
         if (this != &other)                                                           \
         {                                                                             \
-            const __VA_ARGS__ *otherCast = dynamic_cast<const __VA_ARGS__ *>(&other); \
-            __specificCopy(*otherCast);                                               \
+            __specificCopy(other);                                               \
         }                                                                             \
         return *this;                                                                 \
     }                                                                                 \
@@ -178,6 +177,19 @@
     void __specificCopy(const __VA_ARGS__ &other)
 
 #define DO_COPY(MemberName) MemberName = other.MemberName;
+
+
+#define DECLARE_MOVE(...)                                                             \
+    __VA_ARGS__ &operator=(__VA_ARGS__ &&other)                                  \
+    {                                                                                 \
+        if (this != &other)                                                           \
+        {                                                                             \
+            __specificMove(other);                                               \
+        }                                                                             \
+        return *this;                                                                 \
+    }                                                                                 \
+                                                                                      \
+    void __specificMove(__VA_ARGS__ &other)
 
 // --------------------------------------------------------
 // SERIALIZATION

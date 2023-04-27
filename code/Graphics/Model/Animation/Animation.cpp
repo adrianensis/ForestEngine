@@ -61,10 +61,8 @@ void SkeletonState::createAnimationState(Ptr<const Animation> animation)
 
 	if(!MAP_CONTAINS(mAnimationStates, animationId))
 	{
-		SharedPtr<AnimationState> animationState = SharedPtr<AnimationState>::newObject();
-		animationState->init(animation);
-
-		MAP_INSERT(mAnimationStates, animationId, animationState);
+		MAP_INSERT(mAnimationStates, animationId, OwnerPtr<AnimationState>::newObject());
+		mAnimationStates.at(animationId)->init(animation);
 	}
 
     // TMP: grab the first anim state for testing

@@ -16,7 +16,7 @@ public:
     void forceRegenerateBuffers();
 
 private:
-	using BatchMapByBatchData = std::unordered_map<BatchData, SharedPtr<Batch>, BatchData::BatchDataFunctor>;
+	using BatchMapByBatchData = std::unordered_map<BatchData, OwnerPtr<Batch>, BatchData::BatchDataFunctor>;
 
 	BatchMapByBatchData mBatches;
 };
