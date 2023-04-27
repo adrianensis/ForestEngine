@@ -41,7 +41,7 @@ private:
     f32 mAnimationTime = 0;
 
 public:
-    GET(Animation)
+    CGET(Animation)
     GET(AnimationTime)
 };
 

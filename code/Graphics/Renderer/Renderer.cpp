@@ -86,7 +86,7 @@ void Renderer::update(bool regenerateVertices)
 					const std::vector<BoneVertexWeightsData>& boneVertexWeightsData = mMesh->mBonesVertexWeightsData;
 
 					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
-					for(int boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
+					for(u32 boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
 					{
 						const BoneVertexIDsData& IDsData = bonesVertexIDsData[i];
 						const BoneVertexWeightsData& wightsData = boneVertexWeightsData[i];

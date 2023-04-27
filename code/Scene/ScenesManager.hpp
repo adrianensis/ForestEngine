@@ -30,7 +30,7 @@ private:
     SharedPtr<GameObject> mGameObjectController;
 
 public:
-	GET(CurrentScene)
+	RGET(CurrentScene)
 	GET(SceneHasChanged)
 	GET_SET(GameObjectController)
 };

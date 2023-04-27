@@ -2,6 +2,15 @@
 
 #include "Core/Memory.hpp"
 
+template<class T>
+class RefCountedPtrBase;
+template<class T>
+class SharedPtr;
+template<class T>
+class OwnerPtr;
+template<class T>
+class Ptr;
+
 class ReferenceBlock
 {
 public:
@@ -12,6 +21,43 @@ public:
     u32 mWeakReferenceCounter = 0;
     u32 mReferenceCounter = 0;
 };
+
+class PointedObject
+{
+public:
+    virtual ~PointedObject() = default;
+};
+
+
+// SNIFAE
+
+// template <template <typename > class C, typename T>
+// struct get_template_type<C<T>>
+// {
+//     using type = T;
+// };
+
+template <typename U>
+struct get_ptr_type { using type = Ptr<U>; };
+template<class T>
+struct get_ptr_type<Ptr<T>> { using type = Ptr<T>; };
+template<class T>
+struct get_ptr_type<RefCountedPtrBase<T>> { using type = Ptr<T>; };
+template<class T>
+struct get_ptr_type<SharedPtr<T>> { using type = Ptr<T>; };
+template<class T>
+struct get_ptr_type<OwnerPtr<T>> { using type = Ptr<T>; };
+
+template <typename U>
+struct get_const_ptr_type { using type = Ptr<const U>; };
+template<class T>
+struct get_const_ptr_type<Ptr<T>> { using type = Ptr<const T>; };
+template<class T>
+struct get_const_ptr_type<RefCountedPtrBase<T>> { using type = Ptr<const T>; };
+template<class T>
+struct get_const_ptr_type<SharedPtr<T>> { using type = Ptr<const T>; };
+template<class T>
+struct get_const_ptr_type<OwnerPtr<T>> { using type = Ptr<const T>; };
 
 template <typename V>
 struct get_ptr_type;
@@ -24,12 +70,6 @@ class BasePtr
 };
 
 // PTR
-template<class T>
-class RefCountedPtrBase;
-template<class T>
-class SharedPtr;
-template<class T>
-class OwnerPtr;
 
 template<class T>
 class Ptr : public BasePtr
@@ -153,12 +193,6 @@ private:
 public:
     GET(InternalPointer);
     GET(ReferenceBlock);
-};
-
-class PointedObject
-{
-public:
-    virtual ~PointedObject() = default;
 };
 
 class EnablePtrFromThis
@@ -330,36 +364,6 @@ private:
         }
     }
 };
-
-// SNIFAE
-
-// template <template <typename > class C, typename T>
-// struct get_template_type<C<T>>
-// {
-//     using type = T;
-// };
-
-template <typename U>
-struct get_ptr_type { using type = Ptr<U>; };
-template<class T>
-struct get_ptr_type<Ptr<T>> { using type = Ptr<T>; };
-template<class T>
-struct get_ptr_type<RefCountedPtrBase<T>> { using type = Ptr<T>; };
-template<class T>
-struct get_ptr_type<SharedPtr<T>> { using type = Ptr<T>; };
-template<class T>
-struct get_ptr_type<OwnerPtr<T>> { using type = Ptr<T>; };
-
-// template <typename T>
-// struct get_const_ptr_type { using type = Ptr<const T>; };
-// template<class T>
-// struct get_const_ptr_type<Ptr<const T>> { using type = Ptr<const T>; };
-// template<class T>
-// struct get_const_ptr_type<RefCountedPtrBase<const T>> { using type = Ptr<const T>; };
-// template<class T>
-// struct get_const_ptr_type<SharedPtr<const T>> { using type = Ptr<const T>; };
-// template<class T>
-// struct get_const_ptr_type<OwnerPtr<const T>> { using type = Ptr<const T>; };
 
 // HASH
 // Needed for unordered_map

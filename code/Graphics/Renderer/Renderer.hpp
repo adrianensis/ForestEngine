@@ -58,5 +58,5 @@ private:
 	bool mPositionsDirty = true;
 	SharedPtr<Mesh> mMeshInstance;
 public:
-    GET(MeshInstance)
+    CGET(MeshInstance)
 };

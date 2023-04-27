@@ -98,7 +98,13 @@
         COND_TYPE(                                \
             IS_ARITHMETIC(Type) || IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
-            Type))
+            COND_TYPE(                                \
+                IS_SMART_POINTER(Type),               \
+                typename get_ptr_type<Type>::type,       \
+                Type \
+            )  \
+        ) \
+    )
 
 #define CGETTER_TYPE(Type)                            \
     COND_TYPE(                                        \
@@ -109,7 +115,7 @@
             REMOVE_REF(Type),                         \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
-                typename get_ptr_type<typename Type>::type,       \
+                typename get_const_ptr_type<Type>::type,       \
                 GETTER_TYPE(Type) \
             )  \
         ) \

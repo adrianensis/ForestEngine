@@ -24,9 +24,9 @@ public:
     void removeComponent(Ptr<Component> component, ClassId classId);
 
 	template <class T>
-	void addComponent(SharedPtr<T> component)
+	void addComponent(Ptr<T> component)
 	{
-		GameObject::addComponent(SharedPtr<Component>::cast(component), T::getClassIdStatic());
+		GameObject::addComponent(Ptr<Component>::cast(component), T::getClassIdStatic());
 	}
 
 	template <class T>
