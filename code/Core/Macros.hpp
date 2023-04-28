@@ -50,6 +50,8 @@
     NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassId()"
     may cause "struct"-like classes to become virtual and require a virtual destructor 
     completely obliterating the engine. Related with virtual destructors.
+
+    The "Virtual" param is only used from ObjectMeta.
 */
 #define DECLARE_METADATA_METHODS(Virtual, Override) \
 	constexpr static ClassId getClassIdStatic() { return smClassId; }; \
