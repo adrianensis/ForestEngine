@@ -31,6 +31,7 @@ public:
 
 // SNIFAE
 
+// Example:
 // template <template <typename > class C, typename T>
 // struct get_template_type<C<T>>
 // {
@@ -372,12 +373,6 @@ private:
         }
     }
 };
-
-// template<class T>
-// void __templatedSet<OwnerPtr<T>, OwnerPtr<T>>(OwnerPtr<T>& member, OwnerPtr<T>&& newValue)
-// {
-//     member = std::forward<OwnerPtr<T>>(newValue);
-// }
 
 // HASH
 // Needed for unordered_map
