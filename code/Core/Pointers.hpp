@@ -69,6 +69,12 @@ class BasePtr
 
 };
 
+// Needed in Core/Macros.h SETTER_TYPE
+class BaseOwnerPtr
+{
+
+};
+
 // PTR
 
 template<class T>
@@ -87,19 +93,19 @@ public:
     template <class OtherClass>
     static Ptr<T> cast(const Ptr<OtherClass>& other)
     {
-        return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     template <class OtherClass>
     static Ptr<T> cast(const SharedPtr<OtherClass>& other)
     {
-        return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     template <class OtherClass>
     static Ptr<T> cast(const OwnerPtr<OtherClass>& other)
     {
-        return Ptr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     Ptr(const RefCountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
@@ -220,7 +226,7 @@ friend class Ptr;
 
 public:
     virtual ~RefCountedPtrBase() { invalidate(); }
-    operator Ptr<const T>() const { return Ptr<const T>(static_cast<const T*>(mInternalPointer), mReferenceBlock); }
+    operator Ptr<const T>() const { return Ptr<const T>(dynamic_cast<const T*>(mInternalPointer), mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
@@ -267,7 +273,7 @@ protected:
             increment();
             if (IS_BASE_OF(EnablePtrFromThis, T))
             {
-                EnablePtrFromThis* enablePtrFromThis = static_cast<EnablePtrFromThis*>(reference);
+                EnablePtrFromThis* enablePtrFromThis = dynamic_cast<EnablePtrFromThis*>(reference);
                 if(enablePtrFromThis)
                 {
                     enablePtrFromThis->set(Ptr<T>(*this));
@@ -297,14 +303,14 @@ public:
     template <class OtherClass>
     static SharedPtr<T> cast(const SharedPtr<OtherClass>& other)
     {
-        return SharedPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return SharedPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     explicit SharedPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
     SharedPtr() = default;
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
     SharedPtr(SharedPtr<T>&& other) { assign(other); }
-    operator SharedPtr<const T>() const { return SharedPtr<const T>(static_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
+    operator SharedPtr<const T>() const { return SharedPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
     DECLARE_COPY(SharedPtr<T>) { assign(other); }
 
     template <typename ... Args>
@@ -329,19 +335,21 @@ private:
 
 // OWNER PTR
 template<class T>
-class OwnerPtr : public RefCountedPtrBase<T>
+class OwnerPtr : public BaseOwnerPtr, public RefCountedPtrBase<T>
 {
 public:
-    // template <class OtherClass>
-    // static OwnerPtr<T> cast(const OwnerPtr<OtherClass>& other)
-    // {
-    //     return OwnerPtr<T>(static_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
-    // }
+    template <class OtherClass>
+    static OwnerPtr<T> moveCast(OwnerPtr<OtherClass>& other)
+    {
+        OwnerPtr<T> newPtr = OwnerPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        other.invalidate();
+        return newPtr;
+    }
 
     explicit OwnerPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
-    //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(static_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
+    //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
     DECLARE_MOVE(OwnerPtr<T>) { assign(other); }
 
     template <typename ... Args>
@@ -364,6 +372,12 @@ private:
         }
     }
 };
+
+// template<class T>
+// void __templatedSet<OwnerPtr<T>, OwnerPtr<T>>(OwnerPtr<T>& member, OwnerPtr<T>&& newValue)
+// {
+//     member = std::forward<OwnerPtr<T>>(newValue);
+// }
 
 // HASH
 // Needed for unordered_map

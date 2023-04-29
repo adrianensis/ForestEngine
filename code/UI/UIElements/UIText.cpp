@@ -61,7 +61,7 @@ void UIText::setText(const std::string& text)
 			{
 				if (mFontRenderers.size() > text.length())
 				{
-					std::vector<SharedPtr<Renderer>> copyVector = mFontRenderers;
+					std::vector<Ptr<Renderer>> copyVector = mFontRenderers;
 					mFontRenderers.clear();
 					std::copy(copyVector.begin(), copyVector.begin() + text.length(), std::back_inserter(mFontRenderers));
 				}
@@ -72,7 +72,7 @@ void UIText::setText(const std::string& text)
 		{
 			FOR_RANGE(i, 0, text.length())
 			{
-				SharedPtr<Renderer> renderer;
+				Ptr<Renderer> renderer;
 
 				char character = text.at(i);
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
@@ -84,7 +84,8 @@ void UIText::setText(const std::string& text)
 				}
 				else
 				{
-					renderer = SharedPtr<Renderer>::newObject();
+					OwnerPtr<Renderer> newRenderer = OwnerPtr<Renderer>::newObject();
+                    renderer = newRenderer;
 					renderer->init();
 
 					renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
@@ -94,7 +95,7 @@ void UIText::setText(const std::string& text)
 					renderer->mStencilValue = (mConfig.mStencilValue);
                     renderer->mStencilFunction = (mConfig.mStencilFunction);
 					
-					addComponent<Renderer>(renderer);
+					addComponent<Renderer>(std::move(newRenderer));
 
 					mFontRenderers.push_back(renderer);
 				}

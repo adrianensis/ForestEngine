@@ -14,7 +14,7 @@ public:
 	{
 		if (!mInstance.isValid())
 		{
-			mInstance = SharedPtr<T>::newObject();
+			mInstance = OwnerPtr<T>::newObject();
 		}
 
 		return mInstance;
@@ -34,5 +34,5 @@ public:
 	}
 	
 private:
-	inline static SharedPtr<T> mInstance;
+	inline static OwnerPtr<T> mInstance;
 };

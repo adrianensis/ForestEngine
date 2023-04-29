@@ -67,27 +67,27 @@ void Input::pollEvents()
 	glfwPollEvents();
 }
 
-bool Input::isKeyPressedOnce(u32 key)
+bool Input::isKeyPressedOnce(i32 key)
 {
 	return smKeyJustPressed and key == smLastKeyPressed;
 }
 
-bool Input::isKeyPressed(u32 key)
+bool Input::isKeyPressed(i32 key)
 {
 	return key == smLastKeyPressed;
 }
 
-bool Input::isModifierPressed(u32 modifier)
+bool Input::isModifierPressed(i32 modifier)
 {
 	return modifier == smModifier;
 }
 
-bool Input::isMouseButtonPressedOnce(u32 button)
+bool Input::isMouseButtonPressedOnce(i32 button)
 {
 	return smButtonJustPressed and button == smLastMouseButtonPressed;
 }
 
-bool Input::isMouseButtonPressed(u32 button)
+bool Input::isMouseButtonPressed(i32 button)
 {
 	return button == smLastMouseButtonPressed;
 }

@@ -103,7 +103,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
     ASSERT_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
 
-    Ptr<Mesh> mesh = mMeshes.emplace_back(SharedPtr<Mesh>::newObject());
+    Ptr<Mesh> mesh = mMeshes.emplace_back(OwnerPtr<Mesh>::newObject());
     mesh->mModel = (getPtrToThis());
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
@@ -197,7 +197,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     std::vector<Matrix4> originalBindMatrices;
     originalBindMatrices.resize(mBonesIndexCount);
 
-    for (unsigned int i = 0; i < mBonesIndexCount; i++)
+    FOR_RANGE(i, 0, mBonesIndexCount)
     {
         const cgltf_node& node = *skin.joints[i];
         mBonesToNode[i] = &node;
@@ -394,7 +394,7 @@ void Model::loadGLTFAnimations()
 
         loadGLTFChannels(gltfAnim);
 
-        Ptr<Animation> animation = mAnimations.emplace_back(SharedPtr<Animation>::newObject());;
+        Ptr<Animation> animation = mAnimations.emplace_back(OwnerPtr<Animation>::newObject());;
         animation->init(animDuration, getPtrToThis());
 
         loadGLTFAnimationFrames(animation);

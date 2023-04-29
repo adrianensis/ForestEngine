@@ -54,13 +54,14 @@ public:
 	template<class T> T_EXTENDS(T, UIElement)
 	UIBuilder& create()
 	{
-        SharedPtr<UIElement> uiElement = SharedPtr<UIElement>::cast(SharedPtr<T>::newObject());
+        OwnerPtr<T> uiElementSpecific = OwnerPtr<T>::newObject();
+        OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>::moveCast(uiElementSpecific);
         mConfig.mUIElementClassId = uiElement->getClassId();
 
         calculateConfig();
         uiElement->initFromConfig(mConfig);
 
-        registerUIElement(uiElement);
+        registerUIElement(std::move(uiElement));
 		return *this;
 	}
 
@@ -76,7 +77,7 @@ public:
 	}
 
 private:
-    void registerUIElement(SharedPtr<UIElement> uiElement);
+    void registerUIElement(OwnerPtr<UIElement> uiElement);
     UILayout getOppositeLayout(UILayout layout);
     Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
@@ -90,7 +91,7 @@ private:
 	bool mMakeRelativeToLastConfig = false; // used for layouts
 	UIElementConfig mLayoutFirstUIElementConfig;
 	bool mNewRowOrColumn = false;
-	SharedPtr<UIElement> mCurrentUIElement;
+	Ptr<UIElement> mCurrentUIElement;
 
 public:
 

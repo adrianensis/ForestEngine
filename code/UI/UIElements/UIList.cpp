@@ -33,7 +33,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform->mScale = (Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform->mAffectedByProjection = (false);
 
-	SharedPtr<Renderer> renderer = SharedPtr<Renderer>::newObject();
+	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
 	renderer->init();
 
 	renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
@@ -46,7 +46,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
-	addComponent<Renderer>(renderer);
+	addComponent<Renderer>(std::move(renderer));
 	
 	setComponentsCache();
 

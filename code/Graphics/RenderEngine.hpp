@@ -42,6 +42,6 @@ private:
 public:
 	Ptr<Camera> mCamera;
 
-	std::vector<SharedPtr<Chunk>> mChunks;
+	std::vector<OwnerPtr<Chunk>> mChunks;
 	f32 mMinChunkDrawDistance = 0.0f;
 };

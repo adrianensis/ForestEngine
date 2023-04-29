@@ -18,6 +18,7 @@
 #define REMOVE_REF(Class) typename std::remove_reference<Class>::type
 #define REMOVE_POINTER(Class) typename std::remove_pointer<Class>::type
 #define IS_SMART_POINTER(Class) IS_BASE_OF(BasePtr, REMOVE_REF(Class))
+#define IS_OWNER_POINTER(Class) IS_BASE_OF(BaseOwnerPtr, REMOVE_REF(Class))
 #define IS_RAW_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
 #define IS_ARITHMETIC(Class) std::is_arithmetic<REMOVE_REF(Class)>::value
 #define IS_ENUM(Class) std::is_enum<Class>::value
@@ -130,7 +131,11 @@
         COND_TYPE(                                \
             IS_ARITHMETIC(Type) || IS_ENUM(Type), \
             REMOVE_REF(Type),                     \
-            ADD_REFERENCE(ADD_CONST(Type))      \
+            COND_TYPE(                                \
+                IS_OWNER_POINTER(Type),               \
+                Type&&,       \
+                ADD_REFERENCE(ADD_CONST(Type)) \
+            )  \
         )                                         \
     )
 
@@ -152,7 +157,16 @@
 	inline ADD_REFERENCE(ADD_CONST(GETTER_TYPE_FROM_VAR(m##BaseName))) get##BaseName() const { return m##BaseName; };
 
 #define SET(BaseName)  \
-	inline void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) { m##BaseName = new##BaseName; };
+	inline void set##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) \
+    { \
+        m##BaseName = new##BaseName; \
+    };
+
+#define SETMOVE(BaseName)  \
+	inline void setMove##BaseName(SETTER_TYPE_FROM_VAR(m##BaseName) new##BaseName) \
+    { \
+        m##BaseName = std::forward<decltype(m##BaseName)>(new##BaseName); \
+    };
 
 #define SET_DIRTY(BaseName)  \
 	bool mDirty##BaseName = false;\

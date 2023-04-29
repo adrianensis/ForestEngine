@@ -50,8 +50,8 @@ public:
     template<typename T> T_EXTENDS(T, EngineSystem)
     void createEngineSystem()
     {
-        SharedPtr<T> newEngineSystem = SharedPtr<T>::newObject();
-        MAP_INSERT(mEngineSystems, T::getClassIdStatic(), SharedPtr<EngineSystem>::cast(newEngineSystem));
+        OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
+        MAP_INSERT(mEngineSystems, T::getClassIdStatic(), OwnerPtr<EngineSystem>::moveCast(newEngineSystem));
     }
 
     template<typename T> T_EXTENDS(T, EngineSystem)
@@ -67,5 +67,5 @@ public:
     }
 
 private:
-    std::unordered_map<ClassId, SharedPtr<EngineSystem>> mEngineSystems;
+    std::unordered_map<ClassId, OwnerPtr<EngineSystem>> mEngineSystems;
 };

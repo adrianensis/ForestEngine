@@ -15,26 +15,26 @@ GameObject::~GameObject()
 
 void GameObject::init()
 {
-	SharedPtr<Transform> transform = SharedPtr<Transform>::newObject();
-	addComponent<Transform>(transform);
-    mTransform = transform;
+	OwnerPtr<Transform> transform = OwnerPtr<Transform>::newObject();
+	addComponent<Transform>(std::move(transform));
+    mTransform = getFirstComponent<Transform>();
 
 	mTag = "";
 }
 
-void GameObject::addComponent(SharedPtr<Component> component, ClassId classId)
+void GameObject::addComponent(OwnerPtr<Component>&& component, ClassId classId)
 {
 	if (!MAP_CONTAINS(mComponentsMap, classId))
 	{
-		MAP_INSERT(mComponentsMap, classId, std::list<SharedPtr<Component>>());
+		MAP_INSERT(mComponentsMap, classId, std::list<OwnerPtr<Component>>());
 	}
 
-	mComponentsMap.at(classId).emplace_back(component);
+	Ptr<Component> comp = mComponentsMap.at(classId).emplace_back(std::move(component));
 
-	component->mGameObject = getPtrToThis();
-	component->onComponentAdded();
+	comp->mGameObject = getPtrToThis();
+	comp->onComponentAdded();
 
-	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<EngineSystemComponent>::cast(component));
+	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<EngineSystemComponent>::cast(comp));
 }
 
 void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
@@ -43,10 +43,10 @@ void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
 	{
 		component->destroy();
 
-		std::list<SharedPtr<Component>>& list = mComponentsMap.at(classId);
+		std::list<OwnerPtr<Component>>& list = mComponentsMap.at(classId);
         std::remove_if(
         list.begin(), list.end(),
-        [component](SharedPtr<Component>& c) { return c == component; });
+        [component](OwnerPtr<Component>& c) { return c == component; });
 	}
 }
 
@@ -118,7 +118,7 @@ IMPLEMENT_DESERIALIZATION(GameObject)
 std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
 {
 	std::list<Ptr<Component>> result;
-	const std::list<SharedPtr<Component>>& components = getComponentsNoCopy(classId);
+	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
 
 	FOR_LIST(it, components)
 	{
@@ -128,9 +128,9 @@ std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
 	return result;
 }
 
-const std::list<SharedPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId classId) const
+const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId classId) const
 {
-	const std::list<SharedPtr<Component>>* components = nullptr;
+	const std::list<OwnerPtr<Component>>* components = nullptr;
 
 	if (MAP_CONTAINS(mComponentsMap, classId))
 	{
@@ -148,7 +148,7 @@ const std::list<SharedPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId 
 Ptr<Component> GameObject::getFirstComponent(ClassId classId) const
 {
 	Ptr<Component>component;
-	const std::list<SharedPtr<Component>>& components = getComponentsNoCopy(classId);
+	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
 
 	if (!components.empty())
 	{

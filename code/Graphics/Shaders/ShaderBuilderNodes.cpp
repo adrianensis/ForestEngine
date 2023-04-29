@@ -156,7 +156,7 @@ namespace ShaderBuilderNodes
         {
             paramsStr += "in " + mParameters[i].mType + " " + mParameters[i].mName;
 
-            if(i < mParameters.size() - 1)
+            if(i < (i32)mParameters.size() - 1)
             {
                 paramsStr += ",";
             }

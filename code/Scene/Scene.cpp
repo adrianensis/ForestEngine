@@ -23,17 +23,17 @@ void Scene::init()
 
 	mPath = "config/sceneTmp.json";
 
-	mCameraGameObject = SharedPtr<GameObject>::newObject();
+	mCameraGameObject = OwnerPtr<GameObject>::newObject();
 	mCameraGameObject->init();
 
 	mCameraGameObject->mTransform->translate(Vector3(0, 0, 100.0f));
 	mCameraGameObject->mTransform->mScale = Vector3(1,1,1);
 
-    SharedPtr<Camera> cameraComponent = SharedPtr<Camera>::newObject();
+    OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>::newObject();
 	cameraComponent->init();
 	cameraComponent->setPerspective(1, 1000, GET_SYSTEM(RenderContext).getAspectRatio(), 45);
 
-	mCameraGameObject->addComponent<Camera>(cameraComponent);
+	mCameraGameObject->addComponent<Camera>(std::move(cameraComponent));
 
 	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
 
@@ -94,7 +94,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-//	SERIALIZE_LIST_IF("objects", mGameObjects, [](SharedPtr<GameObject> gameObject)
+//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerPtr<GameObject> gameObject)
 //	{
 //		return gameObject->mShouldPersist;
 //	})
@@ -128,10 +128,10 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(SharedPtr<GameObject> gameObject)
+void Scene::addGameObject(OwnerPtr<GameObject>&& gameObject)
 {
 	gameObject->mScene = getPtrToThis();
-	mNewGameObjects.push_back(gameObject);
+	mNewGameObjects.emplace_back(std::move(gameObject));
 }
 
 void Scene::removeGameObject(Ptr<GameObject> gameObject)
@@ -143,7 +143,7 @@ void Scene::removeGameObject(Ptr<GameObject> gameObject)
 
         std::remove_if(
         mGameObjects.begin(), mGameObjects.end(),
-        [gameObject](SharedPtr<GameObject>& go) { return go == gameObject; });
+        [gameObject](OwnerPtr<GameObject>& go) { return go == gameObject; });
     }
 }
 
@@ -178,7 +178,7 @@ void Scene::flushNewGameObjects()
 {
 	FOR_LIST(it, mNewGameObjects)
 	{
-		mGameObjects.push_back(*it);
+		mGameObjects.emplace_back(std::move(*it));
 	}
 
 	mNewGameObjects.clear();

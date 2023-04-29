@@ -38,7 +38,7 @@ private:
 	}
 
 private: 
-	SharedPtr<Shader> mShaderLine;
+	OwnerPtr<Shader> mShaderLine;
 	u32 mVAO = 0;
 	u32 mVBOPosition = 0;
 	u32 mVBOColor = 0;

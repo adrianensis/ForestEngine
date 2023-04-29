@@ -14,11 +14,11 @@ class Input: public EngineSystem
 public:
     void init();
     void pollEvents();
-    bool isKeyPressedOnce(u32 key);
-    bool isKeyPressed(u32 key);
-    bool isModifierPressed(u32 modifier);
-    bool isMouseButtonPressedOnce(u32 button);
-    bool isMouseButtonPressed(u32 button);
+    bool isKeyPressedOnce(i32 key);
+    bool isKeyPressed(i32 key);
+    bool isModifierPressed(i32 modifier);
+    bool isMouseButtonPressedOnce(i32 button);
+    bool isMouseButtonPressed(i32 button);
     const Vector2& getMousePosition();
     f32 getScroll();
     void clearMouseButton();
@@ -35,7 +35,7 @@ public:
 	Vector2 smMouseCoordinates;
 	i32 smLastMouseButtonPressed;
 	i32 smLastKeyPressed;
-	u32 smModifier;
+	i32 smModifier;
 	bool smKeyJustPressed;
 	bool smButtonJustPressed;
 	f32 smScroll;

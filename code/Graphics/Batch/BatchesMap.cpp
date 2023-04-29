@@ -8,7 +8,7 @@ void BatchesMap::addRenderer(Ptr<Renderer> renderer)
 
 	if (!MAP_CONTAINS(mBatches, BatchData))
 	{
-		MAP_INSERT(mBatches, BatchData, SharedPtr<Batch>::newObject());
+		MAP_INSERT(mBatches, BatchData, OwnerPtr<Batch>::newObject());
         (mBatches).at(BatchData)->init(BatchData);
 	}
 

@@ -27,11 +27,10 @@ public:
 	{
 		if (!MAP_CONTAINS(mGroups, groupName))
 		{
-            SharedPtr<UIGroup> group = SharedPtr<UIGroup>::newObject();
-			group->init();
-			group->mName = groupName;
-
-			MAP_INSERT(mGroups, groupName, group);
+			MAP_INSERT(mGroups, groupName, OwnerPtr<UIGroup>::newObject());
+            Ptr<UIGroup> group = mGroups.at(groupName);
+            group->init();
+            group->mName = groupName;
 		}
 
 		return mGroups.at(groupName).get();
@@ -42,7 +41,7 @@ public:
     void setFocusedElement(Ptr<UIElement> focusedElement);
 
 private:
-	std::unordered_map<std::string, SharedPtr<UIGroup>> mGroups;
+	std::unordered_map<std::string, OwnerPtr<UIGroup>> mGroups;
 	std::unordered_map<char, Vector2> mCharMap;
 	Vector2 mFontTilesCount;
 	Vector2 mFontTileTextureSize;

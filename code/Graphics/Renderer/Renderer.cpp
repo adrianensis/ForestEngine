@@ -26,7 +26,7 @@ void Renderer::init()
 
 	mDirtyPositionOffset = true;
 
-    mMeshInstance = SharedPtr<Mesh>::newObject();
+    mMeshInstance = OwnerPtr<Mesh>::newObject();
 }
 
 void Renderer::onComponentAdded() 
@@ -86,13 +86,13 @@ void Renderer::update(bool regenerateVertices)
 					const std::vector<BoneVertexWeightsData>& boneVertexWeightsData = mMesh->mBonesVertexWeightsData;
 
 					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
-					for(u32 boneIt = 0 ; boneIt < MAX_BONE_INFLUENCE ; boneIt++)
+					for(u32 boneIt = 0 ; boneIt < (i32)MAX_BONE_INFLUENCE ; boneIt++)
 					{
 						const BoneVertexIDsData& IDsData = bonesVertexIDsData[i];
 						const BoneVertexWeightsData& wightsData = boneVertexWeightsData[i];
 						if(IDsData.mBonesIDs[boneIt] > -1)
 						{
-							if(IDsData.mBonesIDs[boneIt] >= MAX_BONES) 
+							if(IDsData.mBonesIDs[boneIt] >= (i32)MAX_BONES) 
 							{
 								skinnedVertexPosition = vertexPosition;
 								//ASSERT_MSG(false, "TODO: review MAX_BONES!");

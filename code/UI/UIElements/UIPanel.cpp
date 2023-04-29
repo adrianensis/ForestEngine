@@ -22,7 +22,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     mTransform->mScale = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize));
     mTransform->mAffectedByProjection = false;
 
-    SharedPtr<Renderer> renderer = SharedPtr<Renderer>::newObject();
+    OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
     renderer->init();
 
     renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
@@ -33,7 +33,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     renderer->mStencilValue = (mConfig.mStencilValue);
     renderer->mStencilFunction = (mConfig.mStencilFunction);
 
-    addComponent<Renderer>(renderer);
+    addComponent<Renderer>(std::move(renderer));
     
     setComponentsCache();
 }

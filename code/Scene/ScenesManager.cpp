@@ -29,7 +29,7 @@ void ScenesManager::init()
 
 	FOR_RANGE(i, 0, scenesCount)
 	{
-		mScenes.emplace_back(SharedPtr<Scene>::newObject());
+		mScenes.emplace_back(OwnerPtr<Scene>::newObject());
 	}
 
 	mCurrentScene = *mScenes.begin();

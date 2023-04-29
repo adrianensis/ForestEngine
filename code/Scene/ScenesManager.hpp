@@ -4,7 +4,6 @@
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 
-
 class ScenesManager: public EngineSystem
 {
 	GENERATE_METADATA(ScenesManager)
@@ -22,15 +21,16 @@ private:
     void internalLoadScene();
 
 private:
-	std::vector<SharedPtr<Scene>> mScenes;
+	std::vector<OwnerPtr<Scene>> mScenes;
 	u32 mCurrentSceneIndex = 0;
 
     Ptr<Scene> mCurrentScene;
 	bool mSceneHasChanged = false;
-    SharedPtr<GameObject> mGameObjectController;
+    OwnerPtr<GameObject> mGameObjectController;
 
 public:
 	RGET(CurrentScene)
 	GET(SceneHasChanged)
-	GET_SET(GameObjectController)
+	GET(GameObjectController)
+	SETMOVE(GameObjectController)
 };

@@ -98,11 +98,11 @@ void RenderContext::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primi
 	enableProperty(propertyArrayIndex);
 	if(primitiveType == GL_INT)
 	{
-		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, strideSize, (byte*) pointerOffset);
+		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, strideSize, reinterpret_cast<byte*>(pointerOffset));
 	}
 	else
 	{
-		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, strideSize, (byte*) pointerOffset);
+		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, strideSize, reinterpret_cast<byte*>(pointerOffset));
 	}
 
     glVertexAttribDivisor(propertyArrayIndex, divisor);

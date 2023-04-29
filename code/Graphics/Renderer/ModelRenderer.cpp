@@ -15,7 +15,7 @@ void ModelRenderer::onComponentAdded()
 	const auto& meshes = mModel->mMeshes;
     FOR_LIST(it, meshes)
 	{
-		SharedPtr<Renderer> renderer = SharedPtr<Renderer>::newObject();
+		OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
 		renderer->init();
 
 		renderer->mMesh = *it;
@@ -23,7 +23,7 @@ void ModelRenderer::onComponentAdded()
 		renderer->mIsInstanced = mIsInstanced;
 		renderer->mStencilValue = mStencilValue;
 		renderer->mIsStencilMask = mIsStencilMask;
-		mGameObject->addComponent<Renderer>(renderer);
+		mGameObject->addComponent<Renderer>(std::move(renderer));
 	}
 }
 

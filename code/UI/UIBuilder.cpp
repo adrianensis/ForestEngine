@@ -38,11 +38,10 @@ UIBuilder& UIBuilder::restoreData()
 	return *this;
 }
 
-void UIBuilder::registerUIElement(SharedPtr<UIElement> uiElement)
+void UIBuilder::registerUIElement(OwnerPtr<UIElement> uiElement)
 {
 	mCurrentUIElement = uiElement;
-
-	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(SharedPtr<GameObject>::cast(mCurrentUIElement));
+	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(OwnerPtr<GameObject>::moveCast(uiElement));
 
 	if (mConfig.mGroup.length() > 0)
 	{
