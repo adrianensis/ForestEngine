@@ -51,8 +51,7 @@ void UIButton::setText(const std::string& text)
 			setLayer(mConfig.mLayer - 1).
 			setIsAffectedByLayout(false).
 			setParent(Ptr<GameObject>::cast(getPtrToThis())).
-            setStencilValue(mConfig.mStencilValue).
-            setStencilFunction(mConfig.mStencilFunction).
+            setStencilData(mConfig.mStencilData).
 			create<UIText>().
 			getUIElement<UIText>();
 		}

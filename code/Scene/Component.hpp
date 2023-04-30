@@ -26,6 +26,7 @@ public:
     void destroy();
     virtual void onDestroy();
 
+
 private:
 	bool mIsActive = false;
 	mutable bool mIsStatic = false;
@@ -37,4 +38,25 @@ public:
 	Ptr<GameObject> mGameObject;
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
+};
+
+class ComponentData
+{
+public:
+    virtual ~ComponentData() = default;
+};
+
+template<class T> T_EXTENDS(T, ComponentData)
+class ComponentWithData: public Component
+{
+public:
+	virtual void init(T& data)
+    {
+        mComponentData = data;
+    };
+
+private:
+    T mComponentData;
+public:
+    CRGET(ComponentData)
 };

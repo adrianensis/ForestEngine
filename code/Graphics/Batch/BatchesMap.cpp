@@ -21,7 +21,7 @@ void BatchesMap::render()
 
 	FOR_MAP(it, mBatches)
 	{
-		if( ! it->first.mIsStencilMask)
+		if( ! it->first.mStencilData.mIsStencilMask)
 		{
 			it->second->render();
 		}
@@ -34,7 +34,7 @@ void BatchesMap::renderStencil()
 
 	FOR_MAP(it, mBatches)
 	{
-		if(it->first.mIsStencilMask)
+		if(it->first.mStencilData.mIsStencilMask)
 		{
 			it->second->render();
 		}

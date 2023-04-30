@@ -16,27 +16,23 @@ public:
 	bool mIsStatic = true;
 	bool mIsWorldSpace = true;
 	bool mIsInstanced = false;
-	u32 mStencilValue = 0x00;
-    u32 mStencilFunction = 0;
-	bool mIsStencilMask = false;
+    StencilData mStencilData;
 
 	void init(Ptr<Renderer> renderer)
     {
-        mMaterial = renderer->mMaterial;
-        mMesh = renderer->mMesh;
+        mMaterial = renderer->getComponentData().mMaterial;
+        mMesh = renderer->getComponentData().mMesh;
         mIsStatic = renderer->isStatic();
         mIsWorldSpace = renderer->getIsWorldSpace();
-        mIsInstanced = renderer->mIsInstanced;
-        mStencilValue = renderer->mStencilValue;
-        mIsStencilMask = renderer->mIsStencilMask;
-        mStencilFunction = renderer->mStencilFunction;
+        mIsInstanced = renderer->getComponentData().mIsInstanced;
+        mStencilData = renderer->getComponentData().mStencilData;
     }
 
 	bool operator==(const BatchData& otherBatchData) const
 	{
         return mMaterial == otherBatchData.mMaterial and mMesh == otherBatchData.mMesh and
         mIsStatic == otherBatchData.mIsStatic and mIsWorldSpace == otherBatchData.mIsWorldSpace and mIsInstanced == otherBatchData.mIsInstanced and
-        mStencilValue == otherBatchData.mStencilValue and mIsStencilMask == otherBatchData.mIsStencilMask and mStencilFunction == otherBatchData.mStencilFunction;
+        mStencilData.mStencilValue == otherBatchData.mStencilData.mStencilValue and mStencilData.mIsStencilMask == otherBatchData.mStencilData.mIsStencilMask and mStencilData.mStencilFunction == otherBatchData.mStencilData.mStencilFunction;
 	}
 
 	class BatchDataFunctor
@@ -46,7 +42,7 @@ public:
 		{
 			return key.mMaterial->getObjectId() ^ key.mMesh->getObjectId() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
-			(u64)key.mStencilValue ^ static_cast<u64>(key.mIsStencilMask) ^ static_cast<u64>(key.mStencilFunction);
+			(u64)key.mStencilData.mStencilValue ^ static_cast<u64>(key.mStencilData.mIsStencilMask) ^ static_cast<u64>(key.mStencilData.mStencilFunction);
 		}
 	};
 };

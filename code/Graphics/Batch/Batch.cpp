@@ -49,9 +49,9 @@ void Batch::enable()
     mShader->enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh->mModel);
 
-    if(mBatchData.mStencilValue > 0x00)
+    if(mBatchData.mStencilData.mStencilValue > 0x00)
     {
-        GET_SYSTEM(RenderContext).enableStencil(mBatchData.mIsStencilMask, mBatchData.mStencilValue, mBatchData.mStencilFunction);
+        GET_SYSTEM(RenderContext).enableStencil(mBatchData.mStencilData.mIsStencilMask, mBatchData.mStencilData.mStencilValue, mBatchData.mStencilData.mStencilFunction);
     }
 }
 

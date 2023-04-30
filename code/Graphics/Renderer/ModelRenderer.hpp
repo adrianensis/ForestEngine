@@ -6,19 +6,20 @@
 
 class Model;
 
-class ModelRenderer: public Component
+class ModelRendererData: public RendererData
+{
+public:
+	Ptr<const Model> mModel;
+};
+
+class ModelRenderer: public ComponentWithData<ModelRendererData>
 {
     GENERATE_METADATA(ModelRenderer)
 	DECLARE_SERIALIZATION()
 	
 public:
-    void init() override;
+    void init(ModelRendererData& data) override;
+    
     void onComponentAdded() override;
     void onDestroy() override;
-
-public:
-	Ptr<const Model> mModel;
-    bool mIsInstanced = false;
-	u32 mStencilValue = 0x00;
-	bool mIsStencilMask = false;
 };

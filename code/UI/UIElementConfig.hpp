@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-
+#include "Graphics/Renderer/Renderer.hpp"
 
 class Material;
 class Scene;
@@ -36,6 +36,5 @@ public:
 	std::string mGroup;
 	Ptr<GameObject> mParent;
 	f32 mSeparatorSize = 0.0f;
-	u32 mStencilValue = 0x00;
-	u32 mStencilFunction = GL_NOTEQUAL;
+	StencilData mStencilData;
 };

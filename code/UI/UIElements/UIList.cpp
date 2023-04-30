@@ -33,21 +33,21 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform->mScale = (Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform->mAffectedByProjection = (false);
 
-	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
-	renderer->init();
-
-	renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-	renderer->mMaterial = (mConfig.mMaterial);
-	renderer->mColor = (mConfig.mStyle->mBackgroundColor);
-	renderer->mDepth = (mConfig.mLayer);
-    renderer->mIsStencilMask = (true);
-    renderer->mStencilValue = (0x2);
+    RendererData rendererData;
+	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+	rendererData.mMaterial = (mConfig.mMaterial);
+	// rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
+	rendererData.mUseDepth = (true);
+	rendererData.mDepth = (mConfig.mLayer);
+    rendererData.mStencilData.mIsStencilMask = (true);
+    rendererData.mStencilData.mStencilValue = (0x2);
 	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
-	addComponent<Renderer>(std::move(renderer));
-	
+    Ptr<Renderer> renderer = createComponent<Renderer>(rendererData);
+	renderer->mColor = mConfig.mStyle->mBackgroundColor;
+    
 	setComponentsCache();
 
 	setOnPressedCallback([&](UIElement* uiElement) 
@@ -88,8 +88,7 @@ void UIList::toggle()
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
 			setLayer(mConfig.mLayer).
-            setStencilValue(0x02).
-            setStencilFunction(GL_EQUAL).
+            setStencilData(StencilData{0x02, GL_EQUAL}).
             setParent(Ptr<GameObject>::cast(getPtrToThis()));
 
 		FOR_LIST(it, mEntries)

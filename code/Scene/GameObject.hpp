@@ -20,13 +20,21 @@ public:
 
 
     virtual void init();
-    void addComponent(OwnerPtr<Component>&& component, ClassId classId);
+    Ptr<Component> addComponent(OwnerPtr<Component>&& component, ClassId classId);
     void removeComponent(Ptr<Component> component, ClassId classId);
 
 	template <class T>
-	void addComponent(OwnerPtr<T>&& component)
+	Ptr<T> addComponent(OwnerPtr<T>&& component)
 	{
-		GameObject::addComponent(OwnerPtr<Component>::moveCast(component), T::getClassIdStatic());
+		return Ptr<T>::cast(GameObject::addComponent(OwnerPtr<Component>::moveCast(component), T::getClassIdStatic()));
+	}
+
+    template <class T, typename ... Args> T_EXTENDS(T, Component)
+	Ptr<T> createComponent(Args&&... args)
+	{
+		OwnerPtr<T> component = OwnerPtr<T>::newObject();
+        component->init(args...);
+        return addComponent(std::move(component));
 	}
 
 	template <class T>

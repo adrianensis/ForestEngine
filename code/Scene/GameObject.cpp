@@ -22,7 +22,7 @@ void GameObject::init()
 	mTag = "";
 }
 
-void GameObject::addComponent(OwnerPtr<Component>&& component, ClassId classId)
+Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component, ClassId classId)
 {
 	if (!MAP_CONTAINS(mComponentsMap, classId))
 	{
@@ -35,6 +35,8 @@ void GameObject::addComponent(OwnerPtr<Component>&& component, ClassId classId)
 	comp->onComponentAdded();
 
 	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<EngineSystemComponent>::cast(comp));
+
+    return comp;
 }
 
 void GameObject::removeComponent(Ptr<Component> component, ClassId classId)

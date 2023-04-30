@@ -22,18 +22,17 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     mTransform->mScale = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize));
     mTransform->mAffectedByProjection = false;
 
-    OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
-    renderer->init();
+    RendererData rendererData;
+    rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+    rendererData.mMaterial = (mConfig.mMaterial);
+    // rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
+    rendererData.mUseDepth = (true);
+    rendererData.mDepth = (mConfig.mLayer);
+    rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
+    rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
 
-    renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-    renderer->mMaterial = (mConfig.mMaterial);
-    renderer->mColor = (mConfig.mStyle->mBackgroundColor);
-    renderer->mUseDepth = (true);
-    renderer->mDepth = (mConfig.mLayer);
-    renderer->mStencilValue = (mConfig.mStencilValue);
-    renderer->mStencilFunction = (mConfig.mStencilFunction);
-
-    addComponent<Renderer>(std::move(renderer));
+    Ptr<Renderer> renderer = createComponent<Renderer>(rendererData);
+	renderer->mColor = mConfig.mStyle->mBackgroundColor;
     
     setComponentsCache();
 }

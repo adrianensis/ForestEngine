@@ -15,12 +15,11 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
-void Renderer::init() 
+void Renderer::init(RendererData& data) 
 {
+    ComponentWithData::init(data);
 	mTextureRegion.setLeftTopFront(Vector2(0.0, 0.0));
 	mTextureRegion.setSize(Vector2(1.0, 1.0));
-
-	mRenderDistance = 1500; // TODO : move to settings?
 
 	mColor = (Vector4(0, 0, 0, 1));
 
@@ -48,12 +47,12 @@ void Renderer::update(bool regenerateVertices)
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 
 	bool isAnimated = false;
-	if(mMesh->mModel.isValid())
+	if(getComponentData().mMesh->mModel.isValid())
 	{
-		isAnimated = mMesh->mModel->isAnimated();
+		isAnimated = getComponentData().mMesh->mModel->isAnimated();
 	}
 
-	u32 verticesCount = mMesh->mVertexCount;
+	u32 verticesCount = getComponentData().mMesh->mVertexCount;
 
 	if (transformChanged || mDirtyPositionOffset || isAnimated)
 	{
@@ -65,7 +64,7 @@ void Renderer::update(bool regenerateVertices)
 
         if(regenerateVertices)
 		{
-            mMeshInstance->init(mMesh->mVertexCount, mMesh->mFacesCount);
+            mMeshInstance->init(getComponentData().mMesh->mVertexCount, getComponentData().mMesh->mFacesCount);
 
 			if(mVertices.size() < verticesCount)
 			{
@@ -74,16 +73,16 @@ void Renderer::update(bool regenerateVertices)
 			
 			FOR_RANGE(i, 0, verticesCount)
 			{
-				Vector3 vertexPosition = mMesh->mPositions[i];
+				Vector3 vertexPosition = getComponentData().mMesh->mPositions[i];
 
 				if(isAnimated)
 				{
 					const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
 					const u32 MAX_BONES = 50;
 
-					const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mMesh->mModel);
-					const std::vector<BoneVertexIDsData>& bonesVertexIDsData = mMesh->mBonesVertexIDsData;
-					const std::vector<BoneVertexWeightsData>& boneVertexWeightsData = mMesh->mBonesVertexWeightsData;
+					const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(getComponentData().mMesh->mModel);
+					const std::vector<BoneVertexIDsData>& bonesVertexIDsData = getComponentData().mMesh->mBonesVertexIDsData;
+					const std::vector<BoneVertexWeightsData>& boneVertexWeightsData = getComponentData().mMesh->mBonesVertexWeightsData;
 
 					Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
 					for(u32 boneIt = 0 ; boneIt < (i32)MAX_BONE_INFLUENCE ; boneIt++)
@@ -117,9 +116,9 @@ void Renderer::update(bool regenerateVertices)
 					vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
 				}
 
-				if(mUseDepth)
+				if(getComponentData().mUseDepth)
 				{
-					vertexPosition.z = mDepth;
+					vertexPosition.z = getComponentData().mDepth;
 				}
 
 				mVertices[i] = vertexPosition;
@@ -130,13 +129,13 @@ void Renderer::update(bool regenerateVertices)
 
             FOR_RANGE(i, 0, verticesCount)
             {
-                Vector2 vertexTexture = mMesh->mTextureCoordinates[i];
+                Vector2 vertexTexture = getComponentData().mMesh->mTextureCoordinates[i];
                 Vector2 regionSize = mTextureRegion.getSize();
                 Vector2 regionPosition = mTextureRegion.getLeftTopFront();
 
                 Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
 
-                if (mInvertAxisX)
+                if (getComponentData().mInvertAxisX)
                 {
                     textureCoord.x = 1.0f - textureCoord.x;
 
@@ -153,8 +152,8 @@ void Renderer::update(bool regenerateVertices)
                     
             if(isAnimated)
             {
-                mMeshInstance->appendToBonesVertexIDsData(mMesh->mBonesVertexIDsData);
-                mMeshInstance->appendToBonesVertexWeightsData(mMesh->mBonesVertexWeightsData);
+                mMeshInstance->appendToBonesVertexIDsData(getComponentData().mMesh->mBonesVertexIDsData);
+                mMeshInstance->appendToBonesVertexWeightsData(getComponentData().mMesh->mBonesVertexWeightsData);
             }
 		}
 
@@ -192,7 +191,7 @@ IMPLEMENT_SERIALIZATION(Renderer)
 
 	SERIALIZE("material", materialPath)
 	SERIALIZE("region", mTextureRegion)
-	SERIALIZE("depth", mDepth)
+	SERIALIZE("depth", getComponentData().mDepth)
 
 
 }
@@ -204,8 +203,8 @@ IMPLEMENT_DESERIALIZATION(Renderer)
 
 	//mMaterial = GET_SYSTEM(MaterialManager).loadMaterial(materialPath);
 
-	DESERIALIZE("region", mTextureRegion)
-	DESERIALIZE("depth", mDepth)
+	// DESERIALIZE("region", mTextureRegion)
+	// DESERIALIZE("depth", getComponentData().mDepth)
 
 
 
@@ -213,7 +212,7 @@ IMPLEMENT_DESERIALIZATION(Renderer)
 
 void Renderer::updateTextureAnimation()
 {
-	if (mMaterial.isValid())
+	if (getComponentData().mMaterial.isValid())
 	{
 		Ptr<TextureAnimation> currentTextureAnimation;
 		if (MAP_CONTAINS(mTextureAnimations, mTextureAnimationsCurrentKey))

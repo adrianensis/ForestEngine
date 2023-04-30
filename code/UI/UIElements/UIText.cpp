@@ -84,18 +84,15 @@ void UIText::setText(const std::string& text)
 				}
 				else
 				{
-					OwnerPtr<Renderer> newRenderer = OwnerPtr<Renderer>::newObject();
-                    renderer = newRenderer;
-					renderer->init();
-
-					renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-					renderer->mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
-					renderer->mUseDepth = (true);
-					renderer->mDepth = (mLayer);
-					renderer->mStencilValue = (mConfig.mStencilValue);
-                    renderer->mStencilFunction = (mConfig.mStencilFunction);
+                    RendererData rendererData;
+					rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+					rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
+					rendererData.mUseDepth = (true);
+					rendererData.mDepth = (mLayer);
+					rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
+                    rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
 					
-					addComponent<Renderer>(std::move(newRenderer));
+                    renderer = createComponent<Renderer>(rendererData);
 
 					mFontRenderers.push_back(renderer);
 				}

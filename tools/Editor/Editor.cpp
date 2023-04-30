@@ -316,13 +316,11 @@ OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	gameObject->mTransform->mLocalPosition = (v);
 	gameObject->mTransform->mScale = (Vector3(size,size,size));
 
-	OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
-	renderer->init();
+    RendererData rendererData;
+	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
+	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png", true));
 
-	renderer->mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
-	renderer->mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png", true));
-
-	gameObject->addComponent<Renderer>(std::move(renderer));
+	gameObject->createComponent<Renderer>(rendererData);
 
 	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(std::move(gameObject));
 
@@ -340,13 +338,13 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
 	gameObject->mTransform->mScale = (Vector3(1,1,1) * size);
 	//gameObject->mTransform->setRotation(Vector3(90,0,0));
 
-	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
-	modelRenderer->mModel = (model);
-	modelRenderer->mIsInstanced = (true);
-	modelRenderer->mStencilValue = (0x1);
-	modelRenderer->mIsStencilMask = (true);
-	
-	gameObject->addComponent<ModelRenderer>(std::move(modelRenderer));
+    ModelRendererData modelRendererData;
+    modelRendererData.mModel = model;
+    modelRendererData.mIsInstanced = true;
+    modelRendererData.mStencilData.mStencilValue = 0x1;
+    modelRendererData.mStencilData.mStencilValue = true;
+
+	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
 	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(std::move(gameObject));
 }
@@ -362,12 +360,13 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size,
 	gameObject->mTransform->mScale = (Vector3(1,1,1) * size);
 	gameObject->mTransform->mRotation = (Vector3(0,rot,0));
 
-	OwnerPtr<ModelRenderer > modelRenderer = OwnerPtr<ModelRenderer>::newObject();
-	modelRenderer->mModel = (model);
-	modelRenderer->mIsInstanced = (true);
-	modelRenderer->mStencilValue = (0x1);
-	
-	gameObject->addComponent<ModelRenderer>(std::move(modelRenderer));
+    ModelRendererData modelRendererData;
+    modelRendererData.mModel = model;
+    modelRendererData.mIsInstanced = true;
+    modelRendererData.mStencilData.mStencilValue = 0x1;
+    modelRendererData.mStencilData.mStencilValue = true;
+
+	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
 	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(std::move(gameObject));
 }

@@ -5,25 +5,23 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Scene/Module.hpp"
 
-void ModelRenderer::init() 
+void ModelRenderer::init(ModelRendererData& data) 
 {
-
+    ComponentWithData::init(data);
 }
 
 void ModelRenderer::onComponentAdded() 
 {
-	const auto& meshes = mModel->mMeshes;
+	const auto& meshes = getComponentData().mModel->mMeshes;
     FOR_LIST(it, meshes)
 	{
-		OwnerPtr<Renderer> renderer = OwnerPtr<Renderer>::newObject();
-		renderer->init();
+        RendererData rendererData;
+		rendererData.mMesh = *it;
+		rendererData.mMaterial = (*it)->mMaterial;
+		rendererData.mIsInstanced = getComponentData().mIsInstanced;
+		rendererData.mStencilData = getComponentData().mStencilData;
 
-		renderer->mMesh = *it;
-		renderer->mMaterial = renderer->mMesh->mMaterial;
-		renderer->mIsInstanced = mIsInstanced;
-		renderer->mStencilValue = mStencilValue;
-		renderer->mIsStencilMask = mIsStencilMask;
-		mGameObject->addComponent<Renderer>(std::move(renderer));
+        mGameObject->createComponent<Renderer>(rendererData);
 	}
 }
 
