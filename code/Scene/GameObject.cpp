@@ -22,46 +22,39 @@ void GameObject::init()
 	mTag = "";
 }
 
-Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component, ClassId classId)
+Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
 {
-	if (!MAP_CONTAINS(mComponentsMap, classId))
-	{
-		MAP_INSERT(mComponentsMap, classId, std::list<OwnerPtr<Component>>());
-	}
+    ASSERT_MSG(!component->mGameObject.isValid(), "Component is already assigned to a GameObject!");
 
-	Ptr<Component> comp = mComponentsMap.at(classId).emplace_back(std::move(component));
+	Ptr<Component> comp = mComponents.emplace_back(std::move(component));
 
 	comp->mGameObject = getPtrToThis();
 	comp->onComponentAdded();
 
-	ADD_COMPONENT_TO_ENGINE_SYSTEM(Ptr<EngineSystemComponent>::cast(comp));
+	ADD_COMPONENT_TO_ENGINE_SYSTEM(comp);
 
     return comp;
 }
 
-void GameObject::removeComponent(Ptr<Component> component, ClassId classId)
+void GameObject::removeComponent(Ptr<Component> component)
 {
-	if (MAP_CONTAINS(mComponentsMap, classId) and !component->getIsPendingToBeDestroyed() and !component->getIsDestroyed())
-	{
-		component->destroy();
+    ASSERT_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
+    ASSERT_MSG(component->mGameObject == getPtrToThis(), "Component is assigned to another GameObject!");
 
-		std::list<OwnerPtr<Component>>& list = mComponentsMap.at(classId);
-        std::remove_if(
-        list.begin(), list.end(),
-        [component](OwnerPtr<Component>& c) { return c == component; });
-	}
+	component->destroy();
+
+    std::remove_if(
+    mComponents.begin(), mComponents.end(),
+    [component](OwnerPtr<Component>& c) { return c == component; });
 }
 
 void GameObject::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
-	FOR_MAP(it, mComponentsMap)
+	FOR_LIST(it, mComponents)
 	{
-		FOR_LIST(itComponent, it->second)
-		{
-			(*itComponent)->setIsActive(isActive);
-		}
+		(*it)->setIsActive(isActive);
 	}
 }
 
@@ -75,20 +68,13 @@ void GameObject::destroy()
 
 	onDestroy();
 
-	FOR_MAP(it, mComponentsMap)
+	FOR_LIST(it, mComponents)
 	{
-		auto& list = it->second;
-
-		FOR_LIST(itComponent, list)
-		{
-			(*itComponent)->mGameObject.invalidate();
-			(*itComponent)->destroy();
-		}
-
-		list.clear();
+		(*it)->mGameObject.invalidate();
+        (*it)->destroy();
 	}
 
-	mComponentsMap.clear();
+	mComponents.clear();
 
 }
 
@@ -115,47 +101,4 @@ IMPLEMENT_DESERIALIZATION(GameObject)
 	DESERIALIZE("transform", mTransform.get())
 
 
-}
-
-std::list<Ptr<Component>> GameObject::getComponents(ClassId classId) const
-{
-	std::list<Ptr<Component>> result;
-	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
-
-	FOR_LIST(it, components)
-	{
-		result.push_back(*it);
-	}
-
-	return result;
-}
-
-const std::list<OwnerPtr<Component>>&  GameObject::getComponentsNoCopy(ClassId classId) const
-{
-	const std::list<OwnerPtr<Component>>* components = nullptr;
-
-	if (MAP_CONTAINS(mComponentsMap, classId))
-	{
-		components = &mComponentsMap.at(classId);
-	}
-
-	if (!components || components->empty())
-	{
-		components = &smEmptyList;
-	}
-
-	return *components;
-}
-
-Ptr<Component> GameObject::getFirstComponent(ClassId classId) const
-{
-	Ptr<Component>component;
-	const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classId);
-
-	if (!components.empty())
-	{
-		component = components.front();
-	}
-
-	return component;
 }

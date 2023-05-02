@@ -16,9 +16,7 @@ int main()
 
     // NOTE: this script won't be added to the ScriptEngine in the usual way,
     // since ScriptEngine itself is still not initialized.
-    OwnerPtr<Editor> script = OwnerPtr<Editor>::newObject();
-    script->init();
-    controller->addComponent<Script>(OwnerPtr<Script>::moveCast(script));
+    controller->createComponent<Editor>();
 
     GET_SYSTEM(ScenesManager).setMoveGameObjectController(std::move(controller));
 

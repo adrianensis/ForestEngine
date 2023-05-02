@@ -15,6 +15,11 @@ class EngineSystemComponent: public ObjectBase
     GENERATE_METADATA(EngineSystemComponent)
 
 public:
+    // Important: Override this in ONLY those component classes allowed to be injected into engine systems
+    // Renderer for RenderEngine, Script for RenderEngine, ...
+    // This will automatically work in derived classes, no need to override this method in derived classes
+    virtual ClassId getEngineSystemComponentId() const { return 0; }
+public:
     bool mAlreadyAddedToEngine = false;
 };
 
@@ -45,7 +50,22 @@ class EngineSystemsManager : public ObjectBase, public Singleton<EngineSystemsMa
     GENERATE_METADATA(EngineSystemsManager)
 
 public:
-    void addComponentToEngineSystem(Ptr<EngineSystemComponent> component);
+    template<typename T> T_EXTENDS(T, EngineSystemComponent)
+    void addComponentToEngineSystem(Ptr<T> component)
+    {
+        if (component and !component->mAlreadyAddedToEngine)
+        {
+            ClassId componentClassId = component->getEngineSystemComponentId();
+            FOR_MAP(itEngineSystem, mEngineSystems)
+            {
+                Ptr<EngineSystem> sub = (itEngineSystem->second);
+                if (sub->isComponentClassAccepted(componentClassId))
+                {
+                    sub->addComponent(Ptr<EngineSystemComponent>::cast(component));
+                }
+            }
+        }
+    }
 
     template<typename T> T_EXTENDS(T, EngineSystem)
     void createEngineSystem()

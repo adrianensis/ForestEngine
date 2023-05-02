@@ -36,6 +36,8 @@ class Renderer: public ComponentWithData<RendererData>
 	DECLARE_SERIALIZATION()
 	
 public:
+    ClassId getEngineSystemComponentId() const override { return getClassIdStatic(); }
+    
     void init(RendererData& data) override;
     void onComponentAdded() override;
     bool getIsWorldSpace() const;

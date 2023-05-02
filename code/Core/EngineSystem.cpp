@@ -15,19 +15,3 @@ void EngineSystem::addComponent(Ptr<EngineSystemComponent> component)
 {
     component->mAlreadyAddedToEngine = true;
 }
-
-void EngineSystemsManager::addComponentToEngineSystem(Ptr<EngineSystemComponent> component)
-{
-    if (component and !component->mAlreadyAddedToEngine)
-    {
-        ClassId componentClassId = component->getClassId();
-        FOR_MAP(itEngineSystem, mEngineSystems)
-        {
-            Ptr<EngineSystem> sub = (itEngineSystem->second);
-            if (sub->isComponentClassAccepted(componentClassId))
-            {
-                sub->addComponent(component);
-            }
-        }
-    }
-}

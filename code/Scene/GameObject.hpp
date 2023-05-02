@@ -20,13 +20,11 @@ public:
 
 
     virtual void init();
-    Ptr<Component> addComponent(OwnerPtr<Component>&& component, ClassId classId);
-    void removeComponent(Ptr<Component> component, ClassId classId);
 
 	template <class T>
 	Ptr<T> addComponent(OwnerPtr<T>&& component)
 	{
-		return Ptr<T>::cast(GameObject::addComponent(OwnerPtr<Component>::moveCast(component), T::getClassIdStatic()));
+		return Ptr<T>::cast(GameObject::addComponent(OwnerPtr<Component>::moveCast(component)));
 	}
 
     template <class T, typename ... Args> T_EXTENDS(T, Component)
@@ -40,28 +38,40 @@ public:
 	template <class T>
 	void removeComponent(Ptr<T> component)
 	{
-		GameObject::removeComponent(Ptr<Component>::cast(component), T::getClassIdStatic());
+		GameObject::removeComponent(Ptr<Component>::cast(component));
 	}
 
 	template <class T>
 	std::list<Ptr<T>> getComponents() const
 	{
-		ClassId classComponentId = T::getClassIdStatic();
-		const std::list<OwnerPtr<Component>>& components = getComponentsNoCopy(classComponentId);
-
-		std::list<Ptr<T>> result;
-		FOR_LIST(it, components)
+		std::list<Ptr<T>> components;
+		FOR_LIST(it, mComponents)
 		{
-			result.push_back(Ptr<T>::cast(*it));
+            Ptr<T> casted = Ptr<T>::cast((*it));
+            if(casted)
+            {
+			    components.push_back(Ptr<T>::cast(*it));
+            }
 		}
 
-		return result;
+		return components;
 	}
 
 	template <class T>
 	Ptr<T> getFirstComponent() const
-	{
-		return Ptr<T>::cast(GameObject::getFirstComponent(T::getClassIdStatic()));
+	{   
+        Ptr<T> component;
+        FOR_LIST(it, mComponents)
+        {
+            Ptr<T> casted = Ptr<T>::cast((*it));
+            if(casted)
+            {
+                component = casted;
+                break;
+            }
+        }
+
+        return component;
 	}
 
 	bool isActive() const
@@ -81,14 +91,13 @@ public:
     void destroy();
 
 private:
-    std::list<Ptr<Component>> getComponents(ClassId classId) const;
-    const std::list<OwnerPtr<Component>>&  getComponentsNoCopy(ClassId classId) const;
-    Ptr<Component> getFirstComponent(ClassId classId) const;
+    Ptr<Component> addComponent(OwnerPtr<Component>&& component);
+    void removeComponent(Ptr<Component> component);
 
 private:
 	inline static std::list<OwnerPtr<Component>> smEmptyList;
 
-	std::unordered_map<ClassId, std::list<OwnerPtr<Component>>> mComponentsMap;
+	std::list<OwnerPtr<Component>> mComponents;
 	bool mIsActive = false;
 
 	bool mIsPendingToBeDestroyed = false;
