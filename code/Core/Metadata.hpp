@@ -60,3 +60,11 @@ public:
 		return this->getClassId() == object->getClassId();
 	}
 };
+
+// this parent class provides SuperClass alias/keyworkd
+template<class T>
+class WithSuperClass
+{
+public:
+    using SuperClass = T;
+};

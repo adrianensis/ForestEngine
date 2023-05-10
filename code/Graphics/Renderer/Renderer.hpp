@@ -30,7 +30,7 @@ public:
     Ptr<const Material> mMaterial;
 };
 
-class Renderer: public ComponentWithData<RendererData>
+class Renderer: SUPER(ComponentWithData<RendererData>)
 {
     GENERATE_METADATA(Renderer)
 	DECLARE_SERIALIZATION()
