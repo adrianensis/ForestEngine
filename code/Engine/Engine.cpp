@@ -1,5 +1,5 @@
-#include "Core/Engine.hpp"
-#include "Core/EngineConfig.hpp"
+#include "Engine/Engine.hpp"
+#include "Engine/EngineConfig.hpp"
 #include "Graphics/Module.hpp"
 #include "Scripting/Module.hpp"
 

@@ -7,7 +7,7 @@
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Shaders/Shader.hpp"
 #include "Scene/Module.hpp"
-#include "Core/EngineConfig.hpp"
+#include "Engine/EngineConfig.hpp"
 #include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 

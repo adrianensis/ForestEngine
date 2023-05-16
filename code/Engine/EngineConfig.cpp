@@ -1,4 +1,4 @@
-#include "Core/EngineConfig.hpp"
+#include "Engine/EngineConfig.hpp"
 
 
 void EngineConfig::init()

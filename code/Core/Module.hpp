@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/ClassManager.hpp"
-#include "Core/EnumsManager.hpp"
+#include "Core/Metadata/ClassManager.hpp"
+#include "Core/Metadata/EnumsManager.hpp"
 #include "Core/Pointers.hpp"
 #include "Core/Maths/Module.hpp"
 #include "Core/Serialization.hpp"
@@ -10,7 +10,6 @@
 #include "Core/Singleton.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory.hpp"
-#include "Core/EngineSystem.hpp"
 #include "Core/Functor.hpp"
 #include "Core/File/File.hpp"
 #include "Core/Log/Log.hpp"

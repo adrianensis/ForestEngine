@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Macros.hpp"
-#include "Core/Metadata.hpp"
+#include "Core/Metadata/Metadata.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
 #define VECTOR2_MEMBERS() \

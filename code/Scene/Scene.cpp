@@ -2,7 +2,7 @@
 #include "Scene/GameObject.hpp"
 #include "Scene/Transform.hpp"
 #include "Graphics/Module.hpp"
-#include "Core/EngineConfig.hpp"
+#include "Engine/EngineConfig.hpp"
 
 
 Scene::Scene()

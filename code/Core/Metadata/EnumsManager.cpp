@@ -1,4 +1,4 @@
-#include "Core/EnumsManager.hpp"
+#include "Core/Metadata/EnumsManager.hpp"
 
 EnumRegister::EnumRegister(const std::string_view& enumName, const std::vector<std::string_view>& names)
 {

@@ -2,7 +2,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 #include "Graphics/Module.hpp"
-#include "Core/EngineConfig.hpp"
+#include "Engine/EngineConfig.hpp"
 
 
 ScenesManager::ScenesManager()

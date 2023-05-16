@@ -1,4 +1,4 @@
-#include "Core/ClassManager.hpp"
+#include "Core/Metadata/ClassManager.hpp"
 
 ClassRegister::ClassRegister(const std::string_view& className, ClassId classId)
 {

@@ -4,7 +4,7 @@
 #include "Core/ObjectBase.hpp"
 #include "Core/Events/Event.hpp"
 #include "Core/Assert/Assert.hpp"
-#include "Core/EngineSystem.hpp"
+#include "Engine/EngineSystem.hpp"
 
 /*
   Macros for (un)susbscribing and sending events.

@@ -3,7 +3,7 @@
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Core/EngineConfig.hpp"
+#include "Engine/EngineConfig.hpp"
 
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 

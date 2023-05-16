@@ -2,7 +2,7 @@
 
 #include "Core/BasicTypes.hpp"
 #include "Core/Assert/Assert.hpp"
-#include "Core/Metadata.hpp"
+#include "Core/Metadata/Metadata.hpp"
 
 class Memory
 {
