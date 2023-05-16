@@ -51,22 +51,10 @@ void UIText::setText(const std::string& text)
 {
 	if (mString != text)
 	{
-		if (!mFontRenderers.empty())
-		{
-			if (text.empty())
-			{
-				mFontRenderers.clear();
-			}
-			else
-			{
-				if (mFontRenderers.size() > text.length())
-				{
-					std::vector<Ptr<Renderer>> copyVector = mFontRenderers;
-					mFontRenderers.clear();
-					std::copy(copyVector.begin(), copyVector.begin() + text.length(), std::back_inserter(mFontRenderers));
-				}
-			}
-		}
+		FOR_LIST(it, mFontRenderers)
+        {
+            removeComponent(*it);
+        }
 
 		if (!text.empty())
 		{
@@ -78,24 +66,17 @@ void UIText::setText(const std::string& text)
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
 				Vector2 textureSize = GET_SYSTEM(UIManager).getFontTileTextureSize();
 
-				if (!mFontRenderers.empty() and i < static_cast<i32>(mString.length()))
-				{
-					renderer = mFontRenderers[i];
-				}
-				else
-				{
-                    RendererData rendererData;
-					rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-					rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
-					rendererData.mUseDepth = (true);
-					rendererData.mDepth = (mLayer);
-					rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
-                    rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
-					
-                    renderer = createComponent<Renderer>(rendererData);
+                RendererData rendererData;
+                rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+                rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
+                rendererData.mUseDepth = (true);
+                rendererData.mDepth = (mLayer);
+                rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
+                rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
+                
+                renderer = createComponent<Renderer>(rendererData);
 
-					mFontRenderers.push_back(renderer);
-				}
+                mFontRenderers.push_back(renderer);
 
 				renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
 				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));

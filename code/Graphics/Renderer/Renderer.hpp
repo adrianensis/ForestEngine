@@ -53,15 +53,17 @@ public:
     Ptr<const Batch> mBatch;
     Ptr<const Chunk> mChunk;
     Matrix4 mRendererModelMatrix;
+
+    // TODO: move to static data? This is incompatible with batching.
     Vector4 mColor;
     Rectangle mTextureRegion;
     
 private:
-
+    // TODO: move to static data? This is incompatible with batching.
     Vector3 mPositionOffset;
+
     TransformState mTransformState;
     std::vector<Vector3> mVertices;
-	bool mPositionsDirty = true;
 	OwnerPtr<Mesh> mMeshInstance;
 
     // TODO: move to material?
