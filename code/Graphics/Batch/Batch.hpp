@@ -62,7 +62,7 @@ private:
     void enable();
     void disable();
     void processRenderers();
-    bool shouldRemoveRenderer(Ptr<Renderer> renderer);
+    bool shouldRemoveRenderer(Ptr<const Renderer> renderer);
     void internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it);
     void addToVertexBuffer(Ptr<Renderer> renderer);
     bool shouldRegenerateBuffers() const;

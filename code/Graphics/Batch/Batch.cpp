@@ -100,7 +100,7 @@ void Batch::processRenderers()
     mForceRegenerateBuffers = false;
 }
 
-bool Batch::shouldRemoveRenderer(Ptr<Renderer> renderer)
+bool Batch::shouldRemoveRenderer(Ptr<const Renderer> renderer)
 {
 	bool toRemove = false;
 
