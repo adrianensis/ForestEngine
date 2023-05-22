@@ -13,6 +13,8 @@ void MaterialManager::init()
 	TRACE()
 
 	// reserve index 0 for no textured material
+    mNoTextureMaterial = OwnerPtr<Material>::newObject();
+	mNoTextureMaterial->init(mMaterialIDCounter);
 	mMaterialIDCounter++;
 }
 
@@ -26,17 +28,6 @@ Ptr<const Texture> MaterialManager::loadTexture(const std::string& path, bool cr
 	}
 
 	return mTexturesMap.at(path);
-}
-
-Ptr<const Material> MaterialManager::getNoTextureMaterial()
-{
-	if (!mNoTextureMaterial)
-	{
-		mNoTextureMaterial = OwnerPtr<Material>::newObject();
-		mNoTextureMaterial->init(0);
-	}
-
-	return mNoTextureMaterial;
 }
 
 Ptr<Material> MaterialManager::createMaterial()
