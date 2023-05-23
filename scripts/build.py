@@ -3,8 +3,6 @@ import os
 import getopt
 import platform
 
-import generateCode
-
 cwd = os.path.dirname(os.path.realpath(__file__))
 cwd = cwd + "/.."
 os.chdir(cwd)
@@ -40,8 +38,6 @@ for opt, arg in opts:
       enableLogs=True
     elif opt in ['-p']:
       enableProfiler=True
-
-#generateCode.generateCode(cwd)
 
 if not os.path.isdir(buildDir):
       os.mkdir(buildDir)
