@@ -24,13 +24,13 @@ void GPUMeshBuffer::init(u32 vertexCount, bool isStatic, bool isInstanced)
     GPUBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
     mVBOColor = mBuffersLayout.addBuffer(bufferDataColor);
 
+    GPUBufferData bufferDataMatrix(GPUBuiltIn::VertexInput::mModelMatrix);
+    bufferDataMatrix.mAttributeDivisorSizeInPrimitiveTypes = Matrix4::smColumnSize;
 	if(mIsInstanced)
 	{
-        GPUBufferData bufferDataMatrix(GPUBuiltIn::VertexInput::mModelMatrix);
-        bufferDataMatrix.mAttributeDivisorSizeInPrimitiveTypes = Matrix4::smColumnSize;
         bufferDataMatrix.mInstanceDivisor = 1;
-        mVBOModelMatrix = mBuffersLayout.addBuffer(bufferDataMatrix);
 	}
+    mVBOModelMatrix = mBuffersLayout.addBuffer(bufferDataMatrix);
 
     GPUBufferData bufferDataBonesIDs(GPUBuiltIn::VertexInput::mBonesIDs);
     mVBOBonesIDs = mBuffersLayout.addBuffer(bufferDataBonesIDs);
@@ -55,10 +55,7 @@ void GPUMeshBuffer::resize(const Mesh& mesh)
 	mBuffersLayout.getBuffer(mVBOColor).resize(mesh.mColors.capacity());
 	mBuffersLayout.getBuffer(mVBOBonesIDs).resize(mesh.mBonesVertexIDsData.capacity());
 	mBuffersLayout.getBuffer(mVBOBonesWeights).resize(mesh.mBonesVertexWeightsData.capacity());
-    if(mIsInstanced)
-	{
-        mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
-    }
+    mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
 }
 
 void GPUMeshBuffer::setData(const Mesh& mesh)
@@ -68,10 +65,7 @@ void GPUMeshBuffer::setData(const Mesh& mesh)
 	mBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
 	mBuffersLayout.getBuffer(mVBOBonesIDs).setData(mesh.mBonesVertexIDsData);
 	mBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
-    if(mIsInstanced)
-	{
-	    mBuffersLayout.getBuffer(mVBOModelMatrix).setData(mMatrices);
-    }
+    mBuffersLayout.getBuffer(mVBOModelMatrix).setData(mMatrices);
 }
 
 void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
@@ -83,7 +77,17 @@ void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
 void GPUMeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
 {
 	PROFILER_CPU()
-    mMatrices.push_back(modelMatrix);
+    if(mIsInstanced)
+	{
+	    mMatrices.push_back(modelMatrix);
+    }
+    else
+    {
+        FOR_RANGE(i, 0, mVertexCount)
+        {
+            mMatrices.push_back(modelMatrix);
+        }
+    }
 }
 
 void GPUMeshBuffer::clear()
@@ -98,7 +102,8 @@ void GPUMeshBuffer::setMaxInstances(u32 maxInstances)
 	PROFILER_CPU()
 
     mMatrices.clear();
-    mMatrices.reserve(maxInstances);
+    u32 matricesBufferSizeMultiplier = mIsInstanced ? 1 : mVertexCount;
+    mMatrices.reserve(maxInstances * matricesBufferSizeMultiplier);
     mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
 }
 

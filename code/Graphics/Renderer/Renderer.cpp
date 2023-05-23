@@ -47,57 +47,31 @@ void Renderer::update()
 	TransformState currentTransformState = TransformState(mGameObject->mTransform.get());
 	bool transformChanged = !currentTransformState.eq(mTransformState);
 
-	// bool isAnimated = false;
-	// if(getComponentData().mMesh->mModel.isValid())
-	// {
-	// 	isAnimated = getComponentData().mMesh->mModel->isAnimated();
-	// }
-
 	u32 verticesCount = getComponentData().mMesh->mVertexCount;
 
-	if (transformChanged || mDirtyPositionOffset /*|| isAnimated*/)
+	if (transformChanged || mDirtyPositionOffset)
 	{
-		if (transformChanged || mDirtyPositionOffset)
-		{
-			mRendererModelMatrix.translation(mPositionOffset);
-			mRendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
-		}
+        mRendererModelMatrix.translation(mPositionOffset);
+        mRendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
 
         bool regenerateVertices = !getComponentData().mIsInstanced;
         if(regenerateVertices)
 		{
             mMeshInstance->init(getComponentData().mMesh->mVertexCount, getComponentData().mMesh->mFacesCount);
 
-			if(mVertices.size() < verticesCount)
-			{
-				mVertices.resize(verticesCount);
-			}
+            mVertices = getComponentData().mMesh->mPositions;
 
-            // if(isAnimated)
-            // {
-                // mVertices = getComponentData().mMesh->calculateSkinnedVertices();
-            // }
-            // else
-            // {
-                mVertices = getComponentData().mMesh->mPositions;
-            // }
-
-            FOR_RANGE(i, 0, mVertices.size())
+            if(mUseDepth)
             {
-                Vector3 vertexPosition = mVertices[i];
-
-                vertexPosition = mRendererModelMatrix.mulVector(Vector4(vertexPosition, 1));
-
-                if(mUseDepth)
+                FOR_RANGE(i, 0, mVertices.size())
                 {
+                    Vector3 vertexPosition = mVertices[i];
                     vertexPosition.z = mDepth;
+                    mVertices[i] = vertexPosition;
                 }
-
-                mVertices[i] = vertexPosition;
             }
 
             mMeshInstance->appendToPositions(mVertices);
-            //mMeshInstance->appendToTextureCoordinates(mMesh->mTextureCoordinates);
 
             FOR_RANGE(i, 0, verticesCount)
             {
@@ -122,11 +96,8 @@ void Renderer::update()
                 mMeshInstance->addToTextureCoordinates(textureCoord);
             }
                     
-            // if(isAnimated)
-            // {
-            //     mMeshInstance->appendToBonesVertexIDsData(getComponentData().mMesh->mBonesVertexIDsData);
-            //     mMeshInstance->appendToBonesVertexWeightsData(getComponentData().mMesh->mBonesVertexWeightsData);
-            // }
+            mMeshInstance->appendToBonesVertexIDsData(getComponentData().mMesh->mBonesVertexIDsData);
+            mMeshInstance->appendToBonesVertexWeightsData(getComponentData().mMesh->mBonesVertexWeightsData);
 		}
 
 		mDirtyPositionOffset = false;
@@ -161,8 +132,6 @@ IMPLEMENT_SERIALIZATION(Renderer)
 	SERIALIZE("material", materialPath)
 	SERIALIZE("region", mTextureRegion)
 	SERIALIZE("depth", mDepth)
-
-
 }
 
 IMPLEMENT_DESERIALIZATION(Renderer)
@@ -174,9 +143,6 @@ IMPLEMENT_DESERIALIZATION(Renderer)
 
 	// DESERIALIZE("region", mTextureRegion)
 	// DESERIALIZE("depth", getComponentData().mDepth)
-
-
-
 }
 
 void Renderer::updateTextureAnimation()

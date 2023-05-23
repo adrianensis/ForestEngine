@@ -53,11 +53,8 @@ void MeshBatcher::resize(u32 size)
 			mMaxMeshesThreshold += mMaxMeshesIncrement;
 		}
 
-		if (mGPUMeshBuffer.mIsInstanced)
-		{
-			mGPUMeshBuffer.setMaxInstances(mMaxMeshesThreshold);
-		}
-		else
+        mGPUMeshBuffer.setMaxInstances(mMaxMeshesThreshold);
+		if (!mGPUMeshBuffer.mIsInstanced)
 		{
 			mMeshBuilder.init(mPrototypeMesh->mVertexCount * mMaxMeshesThreshold, mPrototypeMesh->mFacesCount * mMaxMeshesThreshold);
 			generateFacesData(mMaxMeshesThreshold);
@@ -74,11 +71,8 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
 {
 	PROFILER_CPU()
 
-    if(mGPUMeshBuffer.mIsInstanced)
-    {
-        mGPUMeshBuffer.addInstanceMatrix(modelMatrix);
-    }
-    else
+    mGPUMeshBuffer.addInstanceMatrix(modelMatrix);
+    if(!mGPUMeshBuffer.mIsInstanced)
     {
         addDataToBuffers(meshInstance);
     }

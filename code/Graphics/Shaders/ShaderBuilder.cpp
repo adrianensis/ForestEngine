@@ -67,11 +67,9 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     Variable PVMatrix;
 
     mainFunc.body().
-    variable(finalPositon, "vec4", "finalPositon", call(func.mName, {position})).
+    variable(finalPositon, "vec4", "finalPositon", call(func.mName, {call("vec4", {position, {"1.0f"}})})).
     variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix)).
-    ifBlock(isInstanced).
-        set(finalPositon, modelMatrix.isEmpty() ? finalPositon : modelMatrix.mul(finalPositon)).
-    end().
+    set(finalPositon, modelMatrix.mul(finalPositon)).
     set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon)).
     set(outColor, color).
     set(outTexture, texture);
