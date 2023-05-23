@@ -37,8 +37,6 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 	rendererData.mMaterial = (mConfig.mMaterial);
 	// rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
-	rendererData.mUseDepth = (true);
-	rendererData.mDepth = (mConfig.mLayer);
     rendererData.mStencilData.mIsStencilMask = (true);
     rendererData.mStencilData.mStencilValue = (0x2);
 	//renderer->setHasBorder(true);
@@ -46,6 +44,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
     Ptr<Renderer> renderer = createComponent<Renderer>(rendererData);
+	renderer->mUseDepth = (true);
+	renderer->mDepth = (mConfig.mLayer);
 	renderer->mColor = mConfig.mStyle->mBackgroundColor;
     
 	setComponentsCache();

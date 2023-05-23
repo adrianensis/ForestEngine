@@ -26,12 +26,12 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
     rendererData.mMaterial = (mConfig.mMaterial);
     // rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
-    rendererData.mUseDepth = (true);
-    rendererData.mDepth = (mConfig.mLayer);
     rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
     rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
 
     Ptr<Renderer> renderer = createComponent<Renderer>(rendererData);
+    renderer->mUseDepth = (true);
+	renderer->mDepth = (mConfig.mLayer);
 	renderer->mColor = mConfig.mStyle->mBackgroundColor;
     
     setComponentsCache();

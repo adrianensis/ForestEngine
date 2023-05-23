@@ -21,9 +21,6 @@ public:
 class RendererData: public ComponentData
 {
 public:
-    bool mInvertAxisX = false;
-    i32 mDepth = 0;
-    bool mUseDepth = false; // overrides Z with Depth
     StencilData mStencilData;
     bool mIsInstanced = false;
     Ptr<const Mesh> mMesh;
@@ -41,7 +38,7 @@ public:
     void init(RendererData& data) override;
     void onComponentAdded() override;
     bool getIsWorldSpace() const;
-    void update(bool regenerateVertices);
+    void update();
     void onDestroy() override;
     bool hasValidChunk() const;
     
@@ -57,7 +54,12 @@ public:
     // TODO: move to static data? This is incompatible with batching.
     Vector4 mColor;
     Rectangle mTextureRegion;
-    
+
+    // TODO: move to material?
+    bool mInvertAxisX = false;
+    i32 mDepth = 0;
+    bool mUseDepth = false; // overrides Z with Depth
+
 private:
     // TODO: move to static data? This is incompatible with batching.
     Vector3 mPositionOffset;

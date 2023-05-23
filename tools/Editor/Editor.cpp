@@ -341,8 +341,6 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size)
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
     modelRendererData.mIsInstanced = true;
-    modelRendererData.mStencilData.mStencilValue = 0x1;
-    modelRendererData.mStencilData.mStencilValue = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
@@ -362,9 +360,7 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size,
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
-    modelRendererData.mIsInstanced = true;
-    modelRendererData.mStencilData.mStencilValue = 0x1;
-    modelRendererData.mStencilData.mStencilValue = true;
+    modelRendererData.mIsInstanced = false;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 

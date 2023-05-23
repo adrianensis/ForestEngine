@@ -69,8 +69,6 @@ void UIText::setText(const std::string& text)
                 RendererData rendererData;
                 rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
                 rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
-                rendererData.mUseDepth = (true);
-                rendererData.mDepth = (mLayer);
                 rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
                 rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
                 
@@ -79,6 +77,8 @@ void UIText::setText(const std::string& text)
                 mFontRenderers.push_back(renderer);
 
 				renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
+                renderer->mUseDepth = (true);
+	            renderer->mDepth = (mLayer);
 				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));
 			}
 		}

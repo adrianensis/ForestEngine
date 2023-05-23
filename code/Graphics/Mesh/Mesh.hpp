@@ -26,10 +26,15 @@ class Mesh: public ObjectBase
 public:
     void init(u32 vertexCount, u32 facesCount);
 
+    std::vector<Vector3> calculateSkinnedVertices() const;
+
     void addBoneWeight(u32 vertexId, i32 id, f32 weight);
     void setColor(const Vector4& color);
 
     void clear();
+
+private:
+    Vector3 calculateSkinnedVertex(u32 i) const;
 
 public:
 	std::vector<Vector3> mPositions;

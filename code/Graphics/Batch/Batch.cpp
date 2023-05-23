@@ -151,21 +151,13 @@ void Batch::internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it)
 
 	it = mRenderers.erase(it);
 	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
-
 }
 
 void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
 {
 	PROFILER_CPU()
 
-	if(mBatchData.mIsInstanced)
-	{
-		renderer->update(false);
-	}
-	else
-	{
-		renderer->update(true);
-	}
+    renderer->update();
 
     const Matrix4& rendererModelMatrix = renderer->mRendererModelMatrix;
     mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
