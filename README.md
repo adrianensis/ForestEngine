@@ -87,7 +87,5 @@ Here in my blog you can find all the devlogs of my Game Engine, from 2D initial 
 
 - The chunk system remains 2D while the space is now 3D.
    - I programmed a Spatial Partition module (octree) that came to replace the linear system of chunks.
-- Stencil was my last feature, it may still be inconsistent.
-- Pending to replace more raw pointers/refs by smart pointers.
 
 ---
