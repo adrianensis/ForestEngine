@@ -193,12 +193,17 @@ void Scene::destroyGameObjects()
 {
 	FOR_LIST(it, mGameObjects)
 	{
-		if (!(*it)->getIsDestroyed())
+        if ((*it))
 		{
-			(*it)->destroy();
-            (*it).invalidate();
-		}
+            if (!(*it)->getIsDestroyed())
+            {
+                (*it)->destroy();
+                (*it).invalidate();
+            }
+        }
 	}
+
+    mGameObjects.clear();
 
 	if (mCameraGameObject)
 	{
