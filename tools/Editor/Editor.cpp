@@ -308,9 +308,9 @@ void Editor::terminate()
 	
 }
 
-OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
+Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->init();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->mLocalPosition = (v);
@@ -322,8 +322,6 @@ OwnerPtr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
 	gameObject->createComponent<Renderer>(rendererData);
 
-	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(std::move(gameObject));
-
 	return gameObject;
 }
 
@@ -331,7 +329,7 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, 
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
+    Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->init();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform->mLocalPosition = (v);
@@ -343,15 +341,13 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, 
     modelRendererData.mIsInstanced = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
-
-	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(std::move(gameObject));
 }
 
 void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-	OwnerPtr<GameObject> gameObject = OwnerPtr<GameObject>::newObject();
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->init();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform->mLocalPosition = (v);
@@ -363,8 +359,6 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size,
     //modelRendererData.mIsInstanced = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
-
-	GET_SYSTEM(ScenesManager).getCurrentScene()->addGameObject(std::move(gameObject));
 }
 
 void Editor::handlePressedKeys()

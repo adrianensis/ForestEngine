@@ -7,16 +7,9 @@
 #include "UI/UIStyle.hpp"
 #include "UI/UIGroup.hpp"
 
-
-void UIElement::init() 
-{
-	GameObject::init();
-}
-
 void UIElement::initFromConfig(const UIElementConfig& config)
 {
 	mConfig = config;
-	init();
 }
 
 void UIElement::onDestroy()

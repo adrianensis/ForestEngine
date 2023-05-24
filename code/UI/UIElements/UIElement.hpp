@@ -40,7 +40,6 @@ class UIElement: public GameObject
     GENERATE_METADATA(UIElement)
 
 public:
-    void init() override;
     virtual void initFromConfig(const UIElementConfig& config);
     virtual void onDestroy();
 

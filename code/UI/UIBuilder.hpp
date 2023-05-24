@@ -54,14 +54,13 @@ public:
 	template<class T> T_EXTENDS(T, UIElement)
 	UIBuilder& create()
 	{
-        OwnerPtr<T> uiElementSpecific = OwnerPtr<T>::newObject();
-        OwnerPtr<UIElement> uiElement = OwnerPtr<UIElement>::moveCast(uiElementSpecific);
-        mConfig.mUIElementClassId = uiElement->getClassId();
+        mConfig.mUIElementClassId = T::getClassIdStatic();
 
         calculateConfig();
+	    Ptr<T> uiElement = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<T>();
         uiElement->initFromConfig(mConfig);
 
-        registerUIElement(std::move(uiElement));
+        registerUIElement(Ptr<UIElement>::cast(uiElement));
 		return *this;
 	}
 
@@ -77,7 +76,7 @@ public:
 	}
 
 private:
-    void registerUIElement(OwnerPtr<UIElement> uiElement);
+    void registerUIElement(Ptr<UIElement> uiElement);
     UILayout getOppositeLayout(UILayout layout);
     Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
