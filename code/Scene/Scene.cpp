@@ -165,11 +165,6 @@ void Scene::update()
 
 	if (thereAreNewGameObjects())
 	{
-		/*FOR_LIST(it, mNewGameObjects)
-		{
-			updateComponents(*it);
-		}*/
-
 		flushNewGameObjects();
 	}
 }
