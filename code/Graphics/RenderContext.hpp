@@ -17,6 +17,7 @@ public:
     f32 getAspectRatio();
     void init();
     bool isClosed();
+    void clearDepth();
     void clear();
     void swap();
     void terminate();

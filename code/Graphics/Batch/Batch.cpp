@@ -58,6 +58,7 @@ void Batch::enable()
 void Batch::disable()
 {
     GET_SYSTEM(RenderContext).disableStencil();
+
     mShader->disable();
     mMeshBatcher.disable();
 }
