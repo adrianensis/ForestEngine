@@ -29,10 +29,9 @@ void UIText::initFromConfig(const UIElementConfig& config)
 	if (mConfig.mParent)
 	{
 		mTransform->mParent = mConfig.mParent->mTransform;
-		mTransform->mLocalPosition = Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0);
+		//mTransform->mLocalPosition = Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0);
 	}
 
-	setSize(mConfig.mTextSize);
 	setLayer(mConfig.mLayer);
 
 	setBackground(mConfig);
@@ -55,6 +54,7 @@ void UIText::setText(const std::string& text)
         {
             removeComponent(*it);
         }
+        mFontRenderers.clear();
 
 		if (!text.empty())
 		{
@@ -76,7 +76,9 @@ void UIText::setText(const std::string& text)
 
                 mFontRenderers.push_back(renderer);
 
-				renderer->setPositionOffset(Vector3(((i* mSize.x) - (mSize.x / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
+	            Vector3 size = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1);
+
+				renderer->setPositionOffset(Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
                 renderer->mUseDepth = (true);
 	            renderer->mDepth = (mLayer);
 				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));

@@ -70,8 +70,11 @@ void GameObject::destroy()
 
 	FOR_LIST(it, mComponents)
 	{
-		(*it)->mGameObject.invalidate();
-        (*it)->destroy();
+        if(*it)
+        {
+            (*it)->mGameObject.invalidate();
+            (*it)->destroy();
+        }
 	}
 
 	mComponents.clear();

@@ -73,6 +73,8 @@ Vector3 UIElement::getLeftTopPosition() const
     position.x = position.x - (correctedSize.x / 2.0f);
     position.y = position.y + (correctedSize.y / 2.0f);
 
+    GET_SYSTEM(RenderEngine).drawRectangle(Rectangle(position, correctedSize),1,false);
+
     return position;
 }
 
@@ -269,18 +271,29 @@ void UIElement::onReleasedEventReceived()
 		{
 			if (hasFocus())
 			{
-				if (isMouseCursorInsideElement())
-				{
-					executePressed();
-					tryRelease(false);
-				}
-				else
-				{
-					if(!mToggleEnabled || (mState != UIElementState::TOGGLED))
-					{
-						markAsReleased();
-					}
-				}
+                bool cursorInside = isMouseCursorInsideElement();
+                if(mOnlyReleaseOnClickOutside)
+                {
+                    if(!cursorInside)
+                    {
+                        tryRelease(false);
+                    }
+                }
+                else
+                {
+                    if (cursorInside)
+                    {
+                        executePressed();
+                        tryRelease(false);
+                    }
+                    else
+                    {
+                        if(!mToggleEnabled || (mState != UIElementState::TOGGLED))
+                        {
+                            markAsReleased();
+                        }
+                    }
+                }
 			}
 		}
 	}
@@ -466,7 +479,10 @@ void UIElement::markAsToggled()
 
 void UIElement::setColorPressed()
 {
-	mRenderer->mColor = (mConfig.mStyle->mColorPressed);
+    if(mRenderer)
+    {
+	    mRenderer->mColor = (mConfig.mStyle->mColorPressed);
+    }
 }
 
 void UIElement::setColorRelease()
@@ -474,11 +490,17 @@ void UIElement::setColorRelease()
 	bool cursorInside = isMouseCursorInsideElement();
 	if(cursorInside)
 	{
-		mRenderer->mColor = (mConfig.mStyle->mColorHovered);
+        if(mRenderer)
+        {
+		    mRenderer->mColor = (mConfig.mStyle->mColorHovered);
+        }
 	}
 	else
 	{
-		mRenderer->mColor = (mConfig.mStyle->mBackgroundColor);
+        if(mRenderer)
+        {
+		    mRenderer->mColor = (mConfig.mStyle->mBackgroundColor);
+        }
 	}
 }
 

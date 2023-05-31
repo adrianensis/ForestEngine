@@ -24,7 +24,6 @@ protected:
 
 private:
 	i32 mLayer = 0;
-	Vector2 mSize;
 	std::string mString;
 	std::vector<Ptr<Renderer>> mFontRenderers;
     bool mIsEditable = false;
@@ -35,6 +34,5 @@ protected:
 public:
 	GET(IsEditable)
 	CRGET(String)
-	SET(Size)
 	SET(Layer)
 };

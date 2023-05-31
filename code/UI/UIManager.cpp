@@ -123,7 +123,12 @@ void UIManager::terminate()
 
 const Vector2& UIManager::getCharTextureCoordinates(char character)
 {
-	return mCharMap.at(character);
+    if(MAP_CONTAINS(mCharMap, character))
+    {
+	    return mCharMap.at(character);
+    }
+    
+    return mCharMap.at(63);
 }
 
 Ptr<const Material> UIManager::getFontMaterial()
