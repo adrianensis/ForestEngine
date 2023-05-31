@@ -73,8 +73,6 @@ Vector3 UIElement::getLeftTopPosition() const
     position.x = position.x - (correctedSize.x / 2.0f);
     position.y = position.y + (correctedSize.y / 2.0f);
 
-    GET_SYSTEM(RenderEngine).drawRectangle(Rectangle(position, correctedSize),1,false);
-
     return position;
 }
 

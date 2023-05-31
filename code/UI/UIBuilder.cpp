@@ -103,14 +103,6 @@ void UIBuilder::calculateConfig()
 
 	mConfig.mDisplayPosition = mConfig.mPosition;
 
-	// if(mConfig.mUIElementClassId == UIText::getClassIdStatic() || mConfig.mUIElementClassId == UIEditableText::getClassIdStatic())
-	// {
-	// 	mConfig.mDisplayPosition.x += ((mConfig.mText.length() * mConfig.mTextSize.x)/GET_SYSTEM(RenderContext).getAspectRatio()) / 2.0f;
-	// 	mConfig.mDisplayPosition.y -= mConfig.mTextSize.y / 2.0f;
-	// }
-	// else
-	{
-		mConfig.mDisplayPosition.x += (mConfig.mSize.x/GET_SYSTEM(RenderContext).getAspectRatio()) / 2.0f;
-		mConfig.mDisplayPosition.y -= mConfig.mSize.y / 2.0f;
-	}
+	mConfig.mDisplayPosition.x += (mConfig.mSize.x/GET_SYSTEM(RenderContext).getAspectRatio()) / 2.0f;
+    mConfig.mDisplayPosition.y -= mConfig.mSize.y / 2.0f;
 }

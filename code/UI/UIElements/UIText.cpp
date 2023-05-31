@@ -29,7 +29,6 @@ void UIText::initFromConfig(const UIElementConfig& config)
 	if (mConfig.mParent)
 	{
 		mTransform->mParent = mConfig.mParent->mTransform;
-		//mTransform->mLocalPosition = Vector2(-textSize.x* mConfig.mText.length() / 2.0f + textSize.x,0);
 	}
 
 	setLayer(mConfig.mLayer);
