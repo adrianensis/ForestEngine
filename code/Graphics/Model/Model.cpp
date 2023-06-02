@@ -148,8 +148,24 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 FOR_RANGE(vertexIt, 0, attribute.data->count)
                 {
-                    GLTFBoneVertexIDsData* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
-                    GLTFBoneVertexIDsData& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
+                    GLTFBoneVertexIDsData<i8>* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData<i8>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GLTFBoneVertexIDsData<i8>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
+
+                    BoneVertexIDsData boneVertexIDsData;
+                    FOR_RANGE(i, 0, smMaxBonesPerVertex)
+                    {
+                        boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
+                    }
+
+                    mesh->addToBonesVertexIDsData(boneVertexIDsData);
+                }
+            }
+            else if ((attribute.data->component_type == cgltf_component_type_r_16u) && (attribute.data->type == cgltf_type_vec4))
+            {
+                FOR_RANGE(vertexIt, 0, attribute.data->count)
+                {
+                    GLTFBoneVertexIDsData<i16>* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData<i16>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GLTFBoneVertexIDsData<i16>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
 
                     BoneVertexIDsData boneVertexIDsData;
                     FOR_RANGE(i, 0, smMaxBonesPerVertex)
@@ -162,7 +178,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             }
             else
             {
-                ASSERT_MSG(false, "Joint attribute data format not supported, use vec4 u8")
+                ASSERT_MSG(false, "Joint attribute data format not supported, use vec4 u8 or u16")
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_weights)

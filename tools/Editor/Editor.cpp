@@ -61,21 +61,22 @@ void Editor::firstUpdate()
 	// importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 180);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,0), 20.0f, 180);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,0), 20.0f, 0);
+	importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 180);
+	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,60), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,60), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,60), 20.0f, 0);
 
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,-60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,-60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,-60), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,-60), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,-60), 20.0f, 0);
 	importModel2("BrainStem/glTF/BrainStem2.gltf", Vector3(0,0,-60), 60.0f, 0);

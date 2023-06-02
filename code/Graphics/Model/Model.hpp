@@ -78,10 +78,11 @@ private:
         u16 mIndices[3] {0,0,0};
     };
 
+    template<class T>
     class GLTFBoneVertexIDsData
     {
     public:
-        i8 mBonesIDs[smMaxBonesPerVertex] = {-1, -1, -1, -1};
+        T mBonesIDs[smMaxBonesPerVertex] = {-1, -1, -1, -1};
     };
 
     class GLTFChannels
