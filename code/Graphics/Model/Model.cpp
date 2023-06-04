@@ -118,7 +118,14 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     mesh->setColor(Vector4(0,0,0,1));
 
-    mesh->mMaterial = mGLTFMaterials[primitive.material];
+    if(primitive.material)
+    {
+        mesh->mMaterial = mGLTFMaterials[primitive.material];
+    }
+    else
+    {
+        mesh->mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
+    }
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
     {
@@ -178,7 +185,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             }
             else
             {
-                ASSERT_MSG(false, "Joint attribute data format not supported, use vec4 u8 or u16")
+                ASSERT_MSG(false, "Joint attribute data format not supported, use vec4 u8 or u16");
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_weights)
