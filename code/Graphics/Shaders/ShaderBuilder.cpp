@@ -126,15 +126,6 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     variable(t, "vec2", "t", inTexture).
     ifBlock(hasTexture).
         set(GPUBuiltIn::FragmentOutput::mColor, call("texture2D", {sampler, t})).
-        ifBlock(alphaEnabled, "&&", outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-            line("discard").
-        end().
-        elseBlock().
-            set(outColor.dot("r"), outColor.dot("r").add(inColor.dot("r"))).
-            set(outColor.dot("g"), outColor.dot("g").add(inColor.dot("g"))).
-            set(outColor.dot("b"), outColor.dot("b").add(inColor.dot("b"))).
-            set(outColor.dot("a"), inColor.dot("a")).
-        end().
     end().
     elseBlock().
         ifBlock(useVertexColor).
@@ -149,6 +140,9 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
             set(outColor.dot("b"), baseColor.dot("b")).
             set(outColor.dot("a"), baseColor.dot("a")).
         end().
+    end().
+    ifBlock(alphaEnabled, "&&", outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+        line("discard").
     end();
 }
 

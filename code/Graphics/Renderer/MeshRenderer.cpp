@@ -62,7 +62,10 @@ void MeshRenderer::update()
         mMeshInstance->appendToBonesVertexWeightsData(getComponentData().mMesh->mBonesVertexWeightsData);
     }
 
-    mMeshInstance->setColor(mColor);
+    if(getComponentData().mMaterial and getComponentData().mMaterial->getMaterialData().mUseVertexColor)
+    {
+        mMeshInstance->setColor(mColor);
+    }
 }
 
 void MeshRenderer::updatePositions()
