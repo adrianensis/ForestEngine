@@ -12,14 +12,14 @@ void ModelRenderer::init(ModelRendererData& data)
 
 void ModelRenderer::onComponentAdded() 
 {
-	const auto& meshes = getComponentData().mModel->mMeshes;
+	const auto& meshes = mComponentData.mModel->mMeshes;
     FOR_LIST(it, meshes)
 	{
         RendererData rendererData;
 		rendererData.mMesh = *it;
 		rendererData.mMaterial = (*it)->mMaterial;
-		rendererData.mIsInstanced = getComponentData().mIsInstanced;
-		rendererData.mStencilData = getComponentData().mStencilData;
+		rendererData.mIsInstanced = mComponentData.mIsInstanced;
+		rendererData.mStencilData = mComponentData.mStencilData;
 
         mGameObject->createComponent<MeshRenderer>(rendererData);
 	}

@@ -109,8 +109,12 @@ bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
 	{
 		if (renderer->isActive())
 		{
-			//renderer->getChunk
 			if (!renderer->hasValidChunk())
+			{
+				toRemove = true;
+			}
+
+            if (renderer->getComponentDataChanged())
 			{
 				toRemove = true;
 			}
@@ -140,10 +144,13 @@ void Batch::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
 	{
 		renderer->setBatch(Ptr<Batch>());
 
-		if (!mBatchData.mIsWorldSpace)
-		{
-			renderer->finallyDestroy();
-		}
+        if (!mBatchData.mIsWorldSpace)
+        {
+            if (renderer->getIsPendingToBeDestroyed())
+            {
+                renderer->finallyDestroy();
+            }
+        }
 	}
 
     it->invalidate();

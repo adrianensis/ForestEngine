@@ -37,7 +37,7 @@ bool MeshRenderer::getIsWorldSpace() const
 Matrix4 MeshRenderer::getRendererModelMatrix() const
 {
     Matrix4 rendererModelMatrix;
-    rendererModelMatrix.translation(getComponentData().mPositionOffset);
+    rendererModelMatrix.translation(mComponentData.mPositionOffset);
     rendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
     return rendererModelMatrix;
 }
@@ -48,34 +48,36 @@ void MeshRenderer::update()
 
 	preUpdate();
 
-	u32 verticesCount = getComponentData().mMesh->mVertexCount;
+	u32 verticesCount = mComponentData.mMesh->mVertexCount;
     
-    bool regenerateVertices = !getComponentData().mIsInstanced;
+    bool regenerateVertices = !mComponentData.mIsInstanced;
     if(regenerateVertices)
     {
-        mMeshInstance->init(getComponentData().mMesh->mVertexCount, getComponentData().mMesh->mFacesCount);
+        mMeshInstance->init(mComponentData.mMesh->mVertexCount, mComponentData.mMesh->mFacesCount);
 
         updatePositions();
         updateTextureCoords();
                 
-        mMeshInstance->appendToBonesVertexIDsData(getComponentData().mMesh->mBonesVertexIDsData);
-        mMeshInstance->appendToBonesVertexWeightsData(getComponentData().mMesh->mBonesVertexWeightsData);
+        mMeshInstance->appendToBonesVertexIDsData(mComponentData.mMesh->mBonesVertexIDsData);
+        mMeshInstance->appendToBonesVertexWeightsData(mComponentData.mMesh->mBonesVertexWeightsData);
     }
 
-    if(getComponentData().mMaterial and getComponentData().mMaterial->getMaterialData().mUseVertexColor)
+    if(mComponentData.mMaterial and mComponentData.mMaterial->getMaterialData().mUseVertexColor)
     {
         mMeshInstance->setColor(mColor);
     }
+
+    mComponentDataChanged = false;
 }
 
 void MeshRenderer::updatePositions()
 {
-    mMeshInstance->appendToPositions(getComponentData().mMesh->mPositions);
+    mMeshInstance->appendToPositions(mComponentData.mMesh->mPositions);
 }
 
 void MeshRenderer::updateTextureCoords()
 {
-    mMeshInstance->appendToTextureCoordinates(getComponentData().mMesh->mTextureCoordinates);
+    mMeshInstance->appendToTextureCoordinates(mComponentData.mMesh->mTextureCoordinates);
 }
 
 void MeshRenderer::onDestroy() 
@@ -86,6 +88,16 @@ void MeshRenderer::onDestroy()
 bool MeshRenderer::hasValidChunk() const
 {
 	return (! mChunk.isValid()) || (mChunk.isValid() and mChunk->mIsLoaded); // !chunk means -> Screen Space case
+}
+
+void MeshRenderer::changeMaterial(Ptr<const Material> material)
+{
+    if(mComponentData.mMaterial != material)
+    {
+        mComponentData.mMaterial = material;
+
+        mComponentDataChanged = true;
+    }
 }
 
 IMPLEMENT_SERIALIZATION(MeshRenderer)
@@ -112,5 +124,5 @@ IMPLEMENT_DESERIALIZATION(MeshRenderer)
 	//mMaterial = GET_SYSTEM(MaterialManager).loadMaterial(materialPath);
 
 	// DESERIALIZE("region", mTextureRegion)
-	// DESERIALIZE("depth", getComponentData().mDepth)
+	// DESERIALIZE("depth", mComponentData.mDepth)
 }

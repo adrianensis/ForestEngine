@@ -2,9 +2,9 @@
 
 void SpriteRenderer::updateTextureRegion()
 {
-	if (getComponentData().mMaterial.isValid())
+	if (mComponentData.mMaterial.isValid())
 	{
-        const auto& textureAnimationsMap = getComponentData().mMaterial->getMaterialData().mTextureAnimations;
+        const auto& textureAnimationsMap = mComponentData.mMaterial->getMaterialData().mTextureAnimations;
 		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
 
 		if (currentTextureAnimation and !currentTextureAnimation->mFrames.empty())
@@ -38,7 +38,7 @@ void SpriteRenderer::updateTextureCoords()
     
     FOR_RANGE(i, 0, mMeshInstance->mVertexCount)
     {
-        Vector2 vertexTexture = getComponentData().mMesh->mTextureCoordinates[i];
+        Vector2 vertexTexture = mComponentData.mMesh->mTextureCoordinates[i];
         Vector2 regionSize = mTextureRegion.getSize();
         Vector2 regionPosition = mTextureRegion.getLeftTopFront();
 
@@ -63,9 +63,9 @@ void SpriteRenderer::updateTextureCoords()
 const TextureAnimation* SpriteRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    if (getComponentData().mMaterial.isValid())
+    if (mComponentData.mMaterial.isValid())
 	{
-        const auto& textureAnimationsMap = getComponentData().mMaterial->getMaterialData().mTextureAnimations;
+        const auto& textureAnimationsMap = mComponentData.mMaterial->getMaterialData().mTextureAnimations;
 		if (MAP_CONTAINS(textureAnimationsMap, mCurrentTextureAnimationKey))
 		{
 			currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);

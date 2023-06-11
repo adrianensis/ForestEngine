@@ -55,8 +55,11 @@ public:
         mComponentData = data;
     };
 
-private:
+protected:
     T mComponentData;
+    bool mComponentDataChanged = false;
+
 public:
     CRGET(ComponentData)
+    GET(ComponentDataChanged)
 };

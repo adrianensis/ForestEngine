@@ -41,6 +41,7 @@ public:
     void update();
     void onDestroy() override;
     bool hasValidChunk() const;
+    void changeMaterial(Ptr<const Material> material);
 
     Matrix4 getRendererModelMatrix() const;
 
