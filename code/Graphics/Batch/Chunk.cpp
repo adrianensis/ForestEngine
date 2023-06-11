@@ -1,7 +1,7 @@
 #include "Graphics/Batch/Chunk.hpp"
 
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/RenderEngine.hpp"
@@ -37,7 +37,7 @@ void Chunk::update()
 
 	FOR_LIST(it, mRenderers)
 	{
-		Ptr<Renderer> renderer = *it;
+		Ptr<MeshRenderer> renderer = *it;
 
 		bool removeFromList = false;
 
@@ -45,7 +45,7 @@ void Chunk::update()
         {
             if (renderer->isActive())
             {
-                if (mIsLoaded and !renderer->hasValidBatch())
+                if (mIsLoaded and !renderer->getBatch().isValid())
                 {
                     GET_SYSTEM(RenderEngine).assignBatch(renderer);
                 }
@@ -97,19 +97,19 @@ void Chunk::unload()
 	}
 }
 
-void Chunk::addRenderer(Ptr<Renderer> renderer)
+void Chunk::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRenderers.push_back(renderer);
 }
 
-bool Chunk::containsRenderer(Ptr<const Renderer> renderer, f32 epsilon /*= 0.0f*/) const
+bool Chunk::containsRenderer(Ptr<const MeshRenderer> renderer, f32 epsilon /*= 0.0f*/) const
 {
 	Vector3 rendererPosition = renderer->mGameObject->mTransform->getWorldPosition();
 	bool contains = Geometry::testCubePoint(mCube, rendererPosition, epsilon);
 	return contains; // TODO : move to settings ?
 }
 
-bool Chunk::containsRendererSphere(Ptr<const Renderer> renderer) const
+bool Chunk::containsRendererSphere(Ptr<const MeshRenderer> renderer) const
 {
 	Vector3 rendererPosition = renderer->mGameObject->mTransform->getWorldPosition();
 	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer->mGameObject->mTransform->mScale.y * 2.0f), 0);

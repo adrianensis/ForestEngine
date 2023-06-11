@@ -6,7 +6,8 @@
 #include "UI/UIUtils.hpp"
 
 
-class Renderer;
+class MeshRenderer;
+class SpriteRenderer;
 class UIGroup;
 
 enum class UIElementState
@@ -129,7 +130,7 @@ protected:
 	FunctorUIElement mOnTextChangedFunctor;
 	FunctorUIElement mOnFocusLostFunctor;
 
-	Renderer* mRenderer = nullptr;
+	MeshRenderer* mRenderer = nullptr;
 	std::string mInputString;
 	bool mConsumeInput = true;
 	UIElementState mState = UIElementState::RELEASED;

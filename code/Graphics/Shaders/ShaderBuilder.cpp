@@ -115,6 +115,7 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
     auto& hasTexture = get().getAttribute(GPUBuiltIn::Uniforms::mHasTexture.mName);
     auto& alphaEnabled = get().getAttribute(GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
+    auto& useVertexColor = get().getAttribute(GPUBuiltIn::Uniforms::mUseVertexColor.mName);
     auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
 
     auto& mainFunc = get().function("void", "main");
@@ -136,17 +137,17 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
         end().
     end().
     elseBlock().
-        ifBlock(inColor.dot("r").add(inColor.dot("g").add(inColor.dot("b"))).eq({"0"})).
-            set(outColor.dot("r"), baseColor.dot("r")).
-            set(outColor.dot("g"), baseColor.dot("g")).
-            set(outColor.dot("b"), baseColor.dot("b")).
-            set(outColor.dot("a"), baseColor.dot("a")).
-        end().
-        elseBlock().
+        ifBlock(useVertexColor).
             set(outColor.dot("r"), inColor.dot("r")).
             set(outColor.dot("g"), inColor.dot("g")).
             set(outColor.dot("b"), inColor.dot("b")).
             set(outColor.dot("a"), inColor.dot("a")).
+        end().
+        elseBlock().
+            set(outColor.dot("r"), baseColor.dot("r")).
+            set(outColor.dot("g"), baseColor.dot("g")).
+            set(outColor.dot("b"), baseColor.dot("b")).
+            set(outColor.dot("a"), baseColor.dot("a")).
         end().
     end();
 }

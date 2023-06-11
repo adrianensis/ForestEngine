@@ -5,7 +5,8 @@
 
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/Renderer/SpriteRenderer.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"

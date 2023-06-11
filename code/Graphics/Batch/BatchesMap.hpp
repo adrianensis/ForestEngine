@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Batch/Batch.hpp"
 
 class BatchesMap: public ObjectBase
@@ -10,7 +10,7 @@ class BatchesMap: public ObjectBase
 
 public:
 
-    void addRenderer(Ptr<Renderer> renderer);
+    void addRenderer(Ptr<MeshRenderer> renderer);
     void render();
     void renderStencil();
     void renderScreenSpace();

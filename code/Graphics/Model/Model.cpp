@@ -66,23 +66,25 @@ void Model::loadGLTFMaterials()
         FOR_RANGE(materialIt, 0, mCGLTFData->materials_count)
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
-            Ptr<Material> newMaterial;
-            if(! MAP_CONTAINS(mGLTFMaterials, &cgltfMaterial))
-            {
-                newMaterial = GET_SYSTEM(MaterialManager).createMaterial();
-                MAP_INSERT(mGLTFMaterials, &cgltfMaterial, newMaterial )
-            }
+            MaterialData materialData;
 
             if(cgltfMaterial.has_pbr_metallic_roughness)
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                newMaterial->mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                materialData.mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    newMaterial->mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath, true);
+                    materialData.mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath, true);
                 }
             }
+
+            if(! MAP_CONTAINS(mGLTFMaterials, &cgltfMaterial))
+            {
+                Ptr<const Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+                MAP_INSERT(mGLTFMaterials, &cgltfMaterial, newMaterial )
+            }
+
         }
     }
 }

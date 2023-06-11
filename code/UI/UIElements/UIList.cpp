@@ -43,7 +43,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
-    Ptr<Renderer> renderer = createComponent<Renderer>(rendererData);
+    Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
 	renderer->mUseDepth = (true);
 	renderer->mDepth = (mConfig.mLayer);
 	renderer->mColor = mConfig.mStyle->mBackgroundColor;
@@ -116,7 +116,7 @@ void UIList::toggle()
 			// button->getRenderer()->setClipRectangle(clipRectangle);
 
 			// Set clip rectangle for UIText label also
-			// FOR_LIST(itRenderer, button->getText()->getComponents<Renderer>())
+			// FOR_LIST(itRenderer, button->getText()->getComponents<MeshRenderer>())
 			// {
 			// 	(*itRenderer)->setClipRectangle(clipRectangle);
 			// }

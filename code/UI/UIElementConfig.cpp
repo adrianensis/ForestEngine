@@ -13,10 +13,10 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	mSize = size;
 	mText = text;
 	mLayer = layer;
-	mTextSize = UIManager::getDefaultFontSize(); // TODO : move to config?
+	mTextSize = GET_SYSTEM(UIManager).getDefaultFontSize();
 	mAdjustSizeToText = false;
 	mIsAffectedByLayout = true;
-	mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
+	mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterialVertexColor();
 	mGroup = "";
 	mParent.invalidate();
 	mSeparatorSize = 0.01f;

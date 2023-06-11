@@ -14,8 +14,9 @@ public:
     
     void init();
     Ptr<const Texture> loadTexture(const std::string& path, bool createMipMap);
-    Ptr<Material> createMaterial();
-    Ptr<Material> createMaterialWithTexture(const std::string& path, bool createMipMap);
+    Ptr<const Material> createMaterial();
+    Ptr<const Material> createMaterial(const MaterialData& materialData);
+    Ptr<const Material> createMaterialWithTexture(const std::string& path, bool createMipMap);
     Ptr<const Material> getMaterial(u32 index) const;
 
 private:
@@ -23,7 +24,9 @@ private:
 	std::unordered_map<std::string, OwnerPtr<Texture>> mTexturesMap;
     std::unordered_map<u32, OwnerPtr<Material>> mMaterials;
 	OwnerPtr<Material> mNoTextureMaterial;
+	OwnerPtr<Material> mNoTextureMaterialVertexColor;
 
 public:
     CGET(NoTextureMaterial)
+    CGET(NoTextureMaterialVertexColor)
 };

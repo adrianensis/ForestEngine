@@ -21,7 +21,7 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mIsInstanced = getComponentData().mIsInstanced;
 		rendererData.mStencilData = getComponentData().mStencilData;
 
-        mGameObject->createComponent<Renderer>(rendererData);
+        mGameObject->createComponent<MeshRenderer>(rendererData);
 	}
 }
 

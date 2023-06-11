@@ -338,7 +338,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
 	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png", true));
 
-	gameObject->createComponent<Renderer>(rendererData);
+	gameObject->createComponent<MeshRenderer>(rendererData);
 
 	return gameObject;
 }

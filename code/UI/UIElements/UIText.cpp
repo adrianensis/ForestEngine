@@ -59,7 +59,7 @@ void UIText::setText(const std::string& text)
 		{
 			FOR_RANGE(i, 0, text.length())
 			{
-				Ptr<Renderer> renderer;
+				Ptr<SpriteRenderer> renderer;
 
 				char character = text.at(i);
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
@@ -70,17 +70,14 @@ void UIText::setText(const std::string& text)
                 rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
                 rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
                 rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
+				rendererData.mPositionOffset = (Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
                 
-                renderer = createComponent<Renderer>(rendererData);
-
-                mFontRenderers.push_back(renderer);
-
-	            Vector3 size = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1);
-
-				renderer->setPositionOffset(Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
+                renderer = createComponent<SpriteRenderer>(rendererData);
                 renderer->mUseDepth = (true);
 	            renderer->mDepth = (mLayer);
 				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));
+
+                mFontRenderers.push_back(renderer);
 			}
 		}
 

@@ -4,7 +4,7 @@
 #include "Graphics/Batch/BatchesMap.hpp"
 #include "Graphics/Batch/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Batch/Chunk.hpp"
 
 
@@ -20,8 +20,8 @@ public:
     
     void addComponent(Ptr<EngineSystemComponent> component);
 
-    Ptr<Chunk> assignChunk(Ptr<Renderer> renderer);
-    void assignBatch(Ptr<Renderer> renderer);
+    Ptr<Chunk> assignChunk(Ptr<MeshRenderer> renderer);
+    void assignBatch(Ptr<MeshRenderer> renderer);
 
     void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
     void drawRectangle(const Rectangle& rectangle, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));

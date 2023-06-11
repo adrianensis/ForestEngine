@@ -13,14 +13,16 @@ Material::Material()
 {
 }
 
-void Material::init(u32 id)
+void Material::init(const MaterialData& materialData, u32 id)
 {
+    mMaterialData = materialData;
 	mID = id;
 
     mUniforms.push_back(GPUBuiltIn::Uniforms::mProjectionMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mViewMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mIsInstanced);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mIsAnimated);
+    mUniforms.push_back(GPUBuiltIn::Uniforms::mUseVertexColor);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mHasTexture);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mAlphaEnabled);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mHasBorder);
@@ -43,9 +45,9 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 {
 	PROFILER_CPU()
 
-	if (mTextures[(u32)TextureType::BASE_COLOR])
+	if (mMaterialData.mTextures[(u32)TextureType::BASE_COLOR])
 	{
-        mTextures[(u32)TextureType::BASE_COLOR]->bind();
+        mMaterialData.mTextures[(u32)TextureType::BASE_COLOR]->bind();
 	}
 
 	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
@@ -58,15 +60,16 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 
 	shader->addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
 
-	shader->addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
-	shader->addBool(mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
-	shader->addBool(mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
+	shader->addBool(mMaterialData.mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
+	shader->addBool(mMaterialData.mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
+	shader->addBool(mMaterialData.mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
+    shader->addBool(mMaterialData.mUseVertexColor, GPUBuiltIn::Uniforms::mUseVertexColor.mName);
+	shader->addVector4(mMaterialData.mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
 
 	shader->addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
 
 	shader->addVector2(GET_SYSTEM(RenderContext).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
 
-	shader->addVector4(mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
 
     shader->addBool(isAnimated, GPUBuiltIn::Uniforms::mIsAnimated.mName);
     

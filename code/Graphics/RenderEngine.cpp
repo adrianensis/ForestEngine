@@ -15,7 +15,7 @@ void RenderEngine::init(f32 sceneSize)
 {
 	TRACE()
 
-	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Renderer)
+	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(MeshRenderer)
 
 	mCameraDirtyTranslation = true;
 
@@ -79,30 +79,27 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 {
 	EngineSystem::addComponent(component);
 
-	if(component->getClassId() == Renderer::getClassIdStatic())
-	{
-		Ptr<Renderer> renderer = Ptr<Renderer>::cast(component);
-
-		if (renderer->getIsWorldSpace())
-		{
-			Ptr<Chunk> chunk = assignChunk(renderer);
-			if (chunk)
-			{
-				chunk->addRenderer(renderer);
-			}
-			else
-			{
-				ASSERT_MSG(false, "Renderer can't find a chunk.")
-			}
-		}
-		else
-		{
-			mBatchesMap.addRenderer(renderer);
-		}
-	}
+    Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
+    ASSERT_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
+	if (renderer->getIsWorldSpace())
+    {
+        Ptr<Chunk> chunk = assignChunk(renderer);
+        if (chunk)
+        {
+            chunk->addRenderer(renderer);
+        }
+        else
+        {
+            ASSERT_MSG(false, "MeshRenderer can't find a chunk.")
+        }
+    }
+    else
+    {
+        mBatchesMap.addRenderer(renderer);
+    }
 }
 
-Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
+Ptr<Chunk> RenderEngine::assignChunk(Ptr<MeshRenderer> renderer)
 {
 	bool found = false;
 	Ptr<Chunk> chunkTmp;
@@ -112,7 +109,7 @@ Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
 		chunkTmp = mChunks.at(i);
 		if (chunkTmp->containsRenderer /*Sphere*/ (renderer))
 		{
-			renderer->mChunk = chunkTmp;
+			renderer->setChunk(chunkTmp);
 
 			found = true;
 			chunkFound = chunkTmp;
@@ -122,7 +119,7 @@ Ptr<Chunk> RenderEngine::assignChunk(Ptr<Renderer> renderer)
 	return chunkFound;
 }
 
-void RenderEngine::assignBatch(Ptr<Renderer> renderer)
+void RenderEngine::assignBatch(Ptr<MeshRenderer> renderer)
 {
 	mBatchesMap.addRenderer(renderer);
 }

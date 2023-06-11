@@ -9,8 +9,6 @@ class TextureAnimation: public ObjectBase
 	DECLARE_SERIALIZATION()
 	
 public:
-    TextureAnimation();
-    ~TextureAnimation() override;
 
 	/**
 	* Static method that creates an TextureAnimation.
@@ -27,14 +25,21 @@ public:
 
     void init();
     u32 getNumberOfFrames() const;
-    const TextureAnimationFrame& nextFrame();
-    const TextureAnimationFrame& getCurrentFrame() const;
 	
-private:
-	u32 mCurrentFrameNumber = 0;
-	f32 mTimeAccumulator = 0.0f;
 public:
 	std::string mName;
 	std::vector<TextureAnimationFrame> mFrames;
-	f32 mSpeed = 0.0f;
+	f32 mSpeed = 1.0f;
+};
+
+class TextureAnimationUpdater
+{
+public:
+    void setTextureAnimation(const TextureAnimation& textureAnimation);
+    const TextureAnimationFrame& nextFrame();
+    const TextureAnimationFrame& getCurrentFrame() const;
+private:
+	u32 mCurrentFrameNumber = 0;
+	f32 mTimeAccumulator = 0.0f;
+    const TextureAnimation* mTextureAnimation = nullptr;
 };

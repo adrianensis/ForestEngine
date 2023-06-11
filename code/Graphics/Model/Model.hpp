@@ -102,7 +102,7 @@ public:
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
-    std::unordered_map<cgltf_material*, Ptr<Material>> mGLTFMaterials;
+    std::unordered_map<cgltf_material*, Ptr<const Material>> mGLTFMaterials;
     std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mOriginalFrameTransforms;

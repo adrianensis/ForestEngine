@@ -1,7 +1,7 @@
 #include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Camera/Frustum.hpp"
@@ -63,10 +63,10 @@ void Batch::disable()
     mMeshBatcher.disable();
 }
 
-void Batch::addRenderer(Ptr<Renderer> renderer)
+void Batch::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRenderers.push_back(renderer);
-	renderer->mBatch = (getPtrToThis());
+	renderer->setBatch(getPtrToThis());
 
 	mNewRendererAdded = true;
 }
@@ -80,7 +80,7 @@ void Batch::processRenderers()
 	
 	FOR_LIST(it, mRenderers)
 	{
-		Ptr<Renderer> renderer = *it;
+		Ptr<MeshRenderer> renderer = *it;
 
 		if (shouldRemoveRenderer(renderer))
 		{
@@ -101,7 +101,7 @@ void Batch::processRenderers()
     mForceRegenerateBuffers = false;
 }
 
-bool Batch::shouldRemoveRenderer(Ptr<const Renderer> renderer)
+bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
 {
 	bool toRemove = false;
 
@@ -131,14 +131,14 @@ bool Batch::shouldRemoveRenderer(Ptr<const Renderer> renderer)
 	return toRemove;
 }
 
-void Batch::internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it)
+void Batch::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
 {
 	PROFILER_CPU()
 
-	Ptr<Renderer> renderer = *it;
+	Ptr<MeshRenderer> renderer = *it;
 	if(renderer)
 	{
-		renderer->mBatch.invalidate();
+		renderer->setBatch(Ptr<Batch>());
 
 		if (!mBatchData.mIsWorldSpace)
 		{
@@ -154,13 +154,13 @@ void Batch::internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it)
 	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
 }
 
-void Batch::addToVertexBuffer(Ptr<Renderer> renderer)
+void Batch::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
 
     renderer->update();
 
-    const Matrix4& rendererModelMatrix = renderer->mRendererModelMatrix;
+    const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
     mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
 }
 

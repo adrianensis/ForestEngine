@@ -29,9 +29,6 @@
 //#define T_EXTENDS(Class, BaseClass) typename = std::enable_if<std::is_base_of<BaseClass, Class>::value>::type
 #define T_EXTENDS(Class, BaseClass) requires std::derived_from<Class, BaseClass>
 
-// usage: class Renderer: SUPER(ComponentWithData<RendererData>)
-#define SUPER(...) public __VA_ARGS__, public WithSuperClass<__VA_ARGS__>
-
 // --------------------------------------------------------
 // CLASS - METADATA MACROS
 // --------------------------------------------------------

@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Batch/MeshBatcher.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Shaders/Shader.hpp"
 
 class BatchData
@@ -18,7 +18,7 @@ public:
 	bool mIsInstanced = false;
     StencilData mStencilData;
 
-	void init(Ptr<Renderer> renderer)
+	void init(Ptr<MeshRenderer> renderer)
     {
         mMaterial = renderer->getComponentData().mMaterial;
         mMesh = renderer->getComponentData().mMesh;
@@ -55,20 +55,20 @@ public:
     void init(const BatchData& batchData);
 
     void render();
-    void addRenderer(Ptr<Renderer> renderer);
+    void addRenderer(Ptr<MeshRenderer> renderer);
 	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
 
 private:
     void enable();
     void disable();
     void processRenderers();
-    bool shouldRemoveRenderer(Ptr<const Renderer> renderer);
-    void internalRemoveRenderer(std::list<Ptr<Renderer>>::iterator& it);
-    void addToVertexBuffer(Ptr<Renderer> renderer);
+    bool shouldRemoveRenderer(Ptr<const MeshRenderer> renderer);
+    void internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it);
+    void addToVertexBuffer(Ptr<MeshRenderer> renderer);
     bool shouldRegenerateBuffers() const;
 
 private:
-	std::list<Ptr<Renderer>> mRenderers;
+	std::list<Ptr<MeshRenderer>> mRenderers;
 
     OwnerPtr<Shader> mShader;
 

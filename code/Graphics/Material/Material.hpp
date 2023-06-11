@@ -2,6 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Buffers/GPUBuffer.hpp"
+#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 
 enum class TextureType
 {
@@ -153,6 +154,17 @@ class Texture;
 class Shader;
 class Model;
 
+class MaterialData
+{
+public:
+    std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
+	bool mAlphaEnabled = true;
+	bool mHasBorder = false;
+	bool mUseVertexColor = false;
+	Vector4 mBaseColor = Vector4(0,0,0,1);
+    std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
+};
+
 class Material: public ObjectBase
 {
     GENERATE_METADATA(Material)
@@ -160,16 +172,14 @@ class Material: public ObjectBase
 
 public:
     Material();
-    void init(u32 id);
+    void init(const MaterialData& materialData, u32 id);
     void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
 
 public:
-    std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
-	bool mAlphaEnabled = true;
-	bool mHasBorder = false;
-	Vector4 mBaseColor = Vector4(0,0,0,1);
+    MaterialData mMaterialData;
 
 private:
+
     std::vector<GPUVariableData> mUniforms;
     std::vector<GPUVariableData> mConsts;
     std::vector<GPUVariableData> mVertexOutputs;
@@ -177,6 +187,7 @@ private:
     u32 mID = 0;
 
 public:
+    CRGET(MaterialData)
     CRGET(Uniforms)
     CRGET(Consts)
     CRGET(VertexOutputs)

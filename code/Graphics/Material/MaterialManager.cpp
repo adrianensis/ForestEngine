@@ -12,9 +12,15 @@ void MaterialManager::init()
 {
 	TRACE()
 
-	// reserve index 0 for no textured material
+	// reserve index 0 and 1 for no textured material
     mNoTextureMaterial = OwnerPtr<Material>::newObject();
-	mNoTextureMaterial->init(mMaterialIDCounter);
+	mNoTextureMaterial->init(MaterialData(), mMaterialIDCounter);
+	mMaterialIDCounter++;
+
+    MaterialData materialData;
+    materialData.mUseVertexColor = true;
+    mNoTextureMaterialVertexColor = OwnerPtr<Material>::newObject();
+	mNoTextureMaterialVertexColor->init(materialData, mMaterialIDCounter);
 	mMaterialIDCounter++;
 }
 
@@ -30,24 +36,31 @@ Ptr<const Texture> MaterialManager::loadTexture(const std::string& path, bool cr
 	return mTexturesMap.at(path);
 }
 
-Ptr<Material> MaterialManager::createMaterial()
+Ptr<const Material> MaterialManager::createMaterial()
+{
+    return createMaterial(MaterialData());
+}
+
+Ptr<const Material> MaterialManager::createMaterial(const MaterialData& materialData)
 {
     u32 index = mMaterialIDCounter;
     if (!MAP_CONTAINS(mMaterials, index))
     {
         MAP_INSERT(mMaterials, index, OwnerPtr<Material>::newObject());
         Ptr<Material> material = mMaterials.at(index);
-        material->init(index);
+        material->init(materialData, index);
         mMaterialIDCounter++;
     }
 
     return mMaterials[index];
 }
 
-Ptr<Material> MaterialManager::createMaterialWithTexture(const std::string &path, bool createMipMap)
+Ptr<const Material> MaterialManager::createMaterialWithTexture(const std::string &path, bool createMipMap)
 {
-    Ptr<Material> material = createMaterial();
-    material->mTextures[(u32)TextureType::BASE_COLOR] = loadTexture(path, createMipMap);
+    MaterialData materialData;
+    materialData.mTextures[(u32)TextureType::BASE_COLOR] = loadTexture(path, createMipMap);
+
+    Ptr<const Material> material = createMaterial(materialData);
     return material;
 }
 

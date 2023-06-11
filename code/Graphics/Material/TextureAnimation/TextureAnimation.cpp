@@ -1,19 +1,7 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 
-
-TextureAnimation::TextureAnimation()
-{
-	mCurrentFrameNumber = 0;
-	mSpeed = 1.0f;
-	mTimeAccumulator = 0.0f;
-}
-
-TextureAnimation::~TextureAnimation()  {
-
-}
 TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
 {
-
 	TextureAnimation TextureAnimation;
 	TextureAnimation.init();
 	TextureAnimation.mSpeed = speed;
@@ -72,10 +60,10 @@ u32 TextureAnimation::getNumberOfFrames() const
 	return mFrames.size();
 }
 
-const TextureAnimationFrame& TextureAnimation::nextFrame()
+const TextureAnimationFrame& TextureAnimationUpdater::nextFrame()
 {
 
-	f32 time = (1.0 / (mSpeed)) * 1000.0f; // in milliseconds !
+	f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
 
 	mTimeAccumulator += GET_SYSTEM(Time).getDeltaTimeMillis();
 
@@ -83,15 +71,22 @@ const TextureAnimationFrame& TextureAnimation::nextFrame()
 	if (mTimeAccumulator >= time)
 	{
 		mTimeAccumulator = 0.0f;
-		mCurrentFrameNumber = (mCurrentFrameNumber + 1) % mFrames.size();
+		mCurrentFrameNumber = (mCurrentFrameNumber + 1) % mTextureAnimation->mFrames.size();
 	}
 
-	return mFrames.at(mCurrentFrameNumber);
+	return mTextureAnimation->mFrames.at(mCurrentFrameNumber);
 }
 
-const TextureAnimationFrame& TextureAnimation::getCurrentFrame() const
+const TextureAnimationFrame& TextureAnimationUpdater::getCurrentFrame() const
 {
-	return mFrames.at(mCurrentFrameNumber);
+	return mTextureAnimation->mFrames.at(mCurrentFrameNumber);
+}
+
+void TextureAnimationUpdater::setTextureAnimation(const TextureAnimation& textureAnimation)
+{
+    mCurrentFrameNumber = 0;
+	mTimeAccumulator = 0.0f;
+    mTextureAnimation = &textureAnimation;
 }
 
 IMPLEMENT_SERIALIZATION(TextureAnimation)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 
 
 class Chunk: public ObjectBase
@@ -16,12 +16,12 @@ public:
     void update();
     void load();
     void unload();
-    void addRenderer(Ptr<Renderer> renderer);
-    bool containsRenderer(Ptr<const Renderer> renderer, f32 epsilon = 0.0f) const;
-    bool containsRendererSphere(Ptr<const Renderer> renderer) const;
+    void addRenderer(Ptr<MeshRenderer> renderer);
+    bool containsRenderer(Ptr<const MeshRenderer> renderer, f32 epsilon = 0.0f) const;
+    bool containsRendererSphere(Ptr<const MeshRenderer> renderer) const;
 
 private:
-	std::list<Ptr<Renderer>> mRenderers;
+	std::list<Ptr<MeshRenderer>> mRenderers;
     Cube mCube;
 
 public:

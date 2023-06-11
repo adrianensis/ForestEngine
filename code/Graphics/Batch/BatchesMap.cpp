@@ -2,7 +2,7 @@
 #include "Graphics/RenderContext.hpp"
 #include "Scene/Module.hpp"
 
-void BatchesMap::addRenderer(Ptr<Renderer> renderer)
+void BatchesMap::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	BatchData BatchData;
 	BatchData.init(renderer);

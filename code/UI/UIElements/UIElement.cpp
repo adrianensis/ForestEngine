@@ -112,7 +112,7 @@ void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 
 void UIElement::setComponentsCache()
 {
-	mRenderer = &getFirstComponent<Renderer>().get();
+	mRenderer = &getFirstComponent<MeshRenderer>().get();
 }
 
 void UIElement::subscribeToKeyEvents()

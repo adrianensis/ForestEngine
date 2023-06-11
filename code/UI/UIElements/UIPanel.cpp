@@ -29,7 +29,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
     rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
 
-    Ptr<Renderer> renderer = createComponent<Renderer>(rendererData);
+    Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
     renderer->mUseDepth = (true);
 	renderer->mDepth = (mConfig.mLayer);
 	renderer->mColor = mConfig.mStyle->mBackgroundColor;

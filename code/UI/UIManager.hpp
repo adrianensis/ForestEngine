@@ -21,7 +21,6 @@ public:
     const Vector2& getCharTextureCoordinates(char character);
 	const Vector2& getFontTileTextureSize() const { return mFontTileTextureSize; }
     Ptr<const Material> getFontMaterial();
-	static const Vector2& getDefaultFontSize() { return smDefaultFontSize; }
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)
 	{
@@ -47,9 +46,10 @@ private:
 	Vector2 mFontTileTextureSize;
 	Ptr<const Material> mFontMaterial;
 
-	inline static Vector2 smDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
-
-	UIBuilder mUIBuilder;
+	Vector2 mDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
 
 	Ptr<UIElement> mFocusedElement;
+
+public:
+    CRGET(DefaultFontSize)
 };
