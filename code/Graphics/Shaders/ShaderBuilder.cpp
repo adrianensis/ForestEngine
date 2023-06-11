@@ -116,30 +116,40 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     auto& hasTexture = get().getAttribute(GPUBuiltIn::Uniforms::mHasTexture.mName);
     auto& alphaEnabled = get().getAttribute(GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
     auto& useVertexColor = get().getAttribute(GPUBuiltIn::Uniforms::mUseVertexColor.mName);
+    auto& useColorAsTint = get().getAttribute(GPUBuiltIn::Uniforms::mUseColorAsTint.mName);
     auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
 
     auto& mainFunc = get().function("void", "main");
 
     Variable t;
+    Variable color;
 
     mainFunc.body().
-    variable(t, "vec2", "t", inTexture).
-    ifBlock(hasTexture).
-        set(GPUBuiltIn::FragmentOutput::mColor, call("texture2D", {sampler, t})).
+    variable(color, "vec4", "color").
+    ifBlock(useVertexColor).
+        set(color.dot("r"), inColor.dot("r")).
+        set(color.dot("g"), inColor.dot("g")).
+        set(color.dot("b"), inColor.dot("b")).
+        set(color.dot("a"), inColor.dot("a")).
     end().
     elseBlock().
-        ifBlock(useVertexColor).
-            set(outColor.dot("r"), inColor.dot("r")).
-            set(outColor.dot("g"), inColor.dot("g")).
-            set(outColor.dot("b"), inColor.dot("b")).
-            set(outColor.dot("a"), inColor.dot("a")).
+        set(color.dot("r"), baseColor.dot("r")).
+        set(color.dot("g"), baseColor.dot("g")).
+        set(color.dot("b"), baseColor.dot("b")).
+        set(color.dot("a"), baseColor.dot("a")).
+    end().
+    variable(t, "vec2", "t", inTexture).
+    ifBlock(hasTexture).
+        set(outColor, call("texture2D", {sampler, t})).
+        ifBlock(useColorAsTint).
+            set(outColor.dot("r"), outColor.dot("r").add(color.dot("r"))).
+            set(outColor.dot("g"), outColor.dot("g").add(color.dot("g"))).
+            set(outColor.dot("b"), outColor.dot("b").add(color.dot("b"))).
+            set(outColor.dot("a"), outColor.dot("a").add(color.dot("a"))).
         end().
-        elseBlock().
-            set(outColor.dot("r"), baseColor.dot("r")).
-            set(outColor.dot("g"), baseColor.dot("g")).
-            set(outColor.dot("b"), baseColor.dot("b")).
-            set(outColor.dot("a"), baseColor.dot("a")).
-        end().
+    end().
+    elseBlock().
+        set(outColor, color).
     end().
     ifBlock(alphaEnabled, "&&", outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
         line("discard").

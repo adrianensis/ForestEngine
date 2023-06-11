@@ -15,12 +15,14 @@ void MaterialManager::init()
 	// reserve index 0 and 1 for no textured material
     MaterialData materialData;
     materialData.mAlphaEnabled = true;
+    materialData.mUseColorAsTint = true;
     mNoTextureMaterial = OwnerPtr<Material>::newObject();
 	mNoTextureMaterial->init(materialData, mMaterialIDCounter);
 	mMaterialIDCounter++;
 
     MaterialData materialDataVertexColor;
     materialDataVertexColor.mAlphaEnabled = true;
+    materialDataVertexColor.mUseColorAsTint = true;
     materialDataVertexColor.mUseVertexColor = true;
     mNoTextureMaterialVertexColor = OwnerPtr<Material>::newObject();
 	mNoTextureMaterialVertexColor->init(materialDataVertexColor, mMaterialIDCounter);
