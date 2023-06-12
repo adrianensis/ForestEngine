@@ -17,7 +17,10 @@ void Material::init(const MaterialData& materialData, u32 id)
 
     FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
     {
-        mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(mMaterialData.mTexturePaths[i], mMaterialData.mCreateMipMap);
+        if(!mMaterialData.mTexturePaths[i].empty())
+        {
+            mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(mMaterialData.mTexturePaths[i], mMaterialData.mCreateMipMap);
+        }
     }
 
     mUniforms.push_back(GPUBuiltIn::Uniforms::mProjectionMatrix);
