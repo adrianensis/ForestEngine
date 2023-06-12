@@ -17,7 +17,7 @@ void ModelRenderer::onComponentAdded()
 	{
         RendererData rendererData;
 		rendererData.mMesh = *it;
-		rendererData.mMaterial = (*it)->mMaterial;
+		rendererData.mMaterial = mComponentData.mModel->mMeshMaterials.at(*it);
 		rendererData.mIsInstanced = mComponentData.mIsInstanced;
 		rendererData.mStencilData = mComponentData.mStencilData;
 

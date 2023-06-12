@@ -119,14 +119,17 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     mesh->setColor(Vector4(0,0,0,1));
 
+    Ptr<const Material> meshMaterial;
     if(primitive.material)
     {
-        mesh->mMaterial = mGLTFMaterials[primitive.material];
+        meshMaterial = mGLTFMaterials[primitive.material];
     }
     else
     {
-        mesh->mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
+        meshMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
     }
+
+    mMeshMaterials[mesh] = meshMaterial;
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
     {

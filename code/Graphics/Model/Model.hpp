@@ -103,6 +103,7 @@ public:
 	std::filesystem::path mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
     std::unordered_map<cgltf_material*, Ptr<const Material>> mGLTFMaterials;
+    std::unordered_map<Ptr<const Mesh>, Ptr<const Material>> mMeshMaterials;
     std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mOriginalFrameTransforms;
