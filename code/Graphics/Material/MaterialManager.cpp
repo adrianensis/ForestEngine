@@ -41,11 +41,6 @@ Ptr<const Texture> MaterialManager::loadTexture(const std::string& path, bool cr
 	return mTexturesMap.at(path);
 }
 
-Ptr<const Material> MaterialManager::createMaterial()
-{
-    return createMaterial(MaterialData());
-}
-
 Ptr<const Material> MaterialManager::createMaterial(const MaterialData& materialData)
 {
     u32 index = mMaterialIDCounter;
