@@ -52,7 +52,6 @@ public:
         inline static const GPUVariableData mIsInstanced{Types::mBool, "isInstanced"};
         inline static const GPUVariableData mHasTexture{Types::mBool, "hasTexture"};
         inline static const GPUVariableData mIsAnimated{Types::mBool, "isAnimated"};
-        inline static const GPUVariableData mUseVertexColor{Types::mBool, "useVertexColor"};
         inline static const GPUVariableData mUseColorAsTint{Types::mBool, "useColorAsTint"};
         inline static const GPUVariableData mAlphaEnabled{Types::mBool, "alphaEnabled"};
         inline static const GPUVariableData mHasBorder{Types::mBool, "hasBorder"};

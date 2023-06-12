@@ -27,7 +27,6 @@ void Material::init(const MaterialData& materialData, u32 id)
     mUniforms.push_back(GPUBuiltIn::Uniforms::mViewMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mIsInstanced);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mIsAnimated);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mUseVertexColor);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mUseColorAsTint);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mHasTexture);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mAlphaEnabled);
@@ -42,8 +41,11 @@ void Material::init(const MaterialData& materialData, u32 id)
     mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
 
     mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTexture);
-    mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
-
+    if(mMaterialData.mUseVertexColor)
+    {
+        mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
+    }
+    
     mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
@@ -69,7 +71,6 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 	shader->addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
 	shader->addBool(mMaterialData.mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
 	shader->addBool(mMaterialData.mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
-    shader->addBool(mMaterialData.mUseVertexColor, GPUBuiltIn::Uniforms::mUseVertexColor.mName);
     shader->addBool(mMaterialData.mUseColorAsTint, GPUBuiltIn::Uniforms::mUseColorAsTint.mName);
 	shader->addVector4(mMaterialData.mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
 

@@ -7,12 +7,13 @@ GPUMeshBuffer::~GPUMeshBuffer()
     terminate();
 }
 
-void GPUMeshBuffer::init(u32 vertexCount, bool isStatic, bool isInstanced)
+void GPUMeshBuffer::init(u32 vertexCount, bool isStatic, bool isInstanced, bool useVertexColor)
 {
 	PROFILER_CPU()
 
 	mIsStatic = isStatic;
 	mIsInstanced = isInstanced;
+	mUseVertexColor = useVertexColor;
     mVertexCount = vertexCount;
 	mVAO = GET_SYSTEM(RenderContext).createVAO();
 
@@ -21,8 +22,11 @@ void GPUMeshBuffer::init(u32 vertexCount, bool isStatic, bool isInstanced)
     mVBOPosition = mBuffersLayout.addBuffer(bufferDataPosition);
     GPUBufferData bufferDataTexture(GPUBuiltIn::VertexInput::mTexture);
     mVBOTexture = mBuffersLayout.addBuffer(bufferDataTexture);
-    GPUBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-    mVBOColor = mBuffersLayout.addBuffer(bufferDataColor);
+    if(mUseVertexColor)
+    {
+        GPUBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
+        mVBOColor = mBuffersLayout.addBuffer(bufferDataColor);
+    }
 
     GPUBufferData bufferDataMatrix(GPUBuiltIn::VertexInput::mModelMatrix);
     bufferDataMatrix.mAttributeDivisorSizeInPrimitiveTypes = Matrix4::smColumnSize;
@@ -52,7 +56,10 @@ void GPUMeshBuffer::resize(const Mesh& mesh)
 {
 	mBuffersLayout.getBuffer(mVBOPosition).resize(mesh.mPositions.capacity());
 	mBuffersLayout.getBuffer(mVBOTexture).resize(mesh.mTextureCoordinates.capacity());
-	mBuffersLayout.getBuffer(mVBOColor).resize(mesh.mColors.capacity());
+    if(mUseVertexColor)
+    {
+	    mBuffersLayout.getBuffer(mVBOColor).resize(mesh.mColors.capacity());
+    }
 	mBuffersLayout.getBuffer(mVBOBonesIDs).resize(mesh.mBonesVertexIDsData.capacity());
 	mBuffersLayout.getBuffer(mVBOBonesWeights).resize(mesh.mBonesVertexWeightsData.capacity());
     mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
@@ -62,7 +69,10 @@ void GPUMeshBuffer::setData(const Mesh& mesh)
 {
 	mBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
 	mBuffersLayout.getBuffer(mVBOTexture).setData(mesh.mTextureCoordinates);
-	mBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
+    if(mUseVertexColor)
+    {
+	    mBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
+    }
 	mBuffersLayout.getBuffer(mVBOBonesIDs).setData(mesh.mBonesVertexIDsData);
 	mBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
     mBuffersLayout.getBuffer(mVBOModelMatrix).setData(mMatrices);

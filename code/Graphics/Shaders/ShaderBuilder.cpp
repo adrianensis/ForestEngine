@@ -71,8 +71,13 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix)).
     set(finalPositon, modelMatrix.mul(finalPositon)).
     set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon)).
-    set(outColor, color).
     set(outTexture, texture);
+
+    if(material->getMaterialData().mUseVertexColor)
+    {
+       mainFunc.body().
+       set(outColor, color);
+    }
 }
 
 void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
@@ -115,7 +120,6 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
     auto& hasTexture = get().getAttribute(GPUBuiltIn::Uniforms::mHasTexture.mName);
     auto& alphaEnabled = get().getAttribute(GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
-    auto& useVertexColor = get().getAttribute(GPUBuiltIn::Uniforms::mUseVertexColor.mName);
     auto& useColorAsTint = get().getAttribute(GPUBuiltIn::Uniforms::mUseColorAsTint.mName);
     auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
 
@@ -125,19 +129,20 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     Variable color;
 
     mainFunc.body().
-    variable(color, "vec4", "color").
-    ifBlock(useVertexColor).
-        set(color.dot("r"), inColor.dot("r")).
-        set(color.dot("g"), inColor.dot("g")).
-        set(color.dot("b"), inColor.dot("b")).
-        set(color.dot("a"), inColor.dot("a")).
-    end().
-    elseBlock().
-        set(color.dot("r"), baseColor.dot("r")).
-        set(color.dot("g"), baseColor.dot("g")).
-        set(color.dot("b"), baseColor.dot("b")).
-        set(color.dot("a"), baseColor.dot("a")).
-    end().
+    variable(color, "vec4", "color");
+
+    if(material->getMaterialData().mUseVertexColor)
+    {
+        mainFunc.body().
+        set(color, inColor);
+    }
+    else
+    {
+        mainFunc.body().
+        set(color, baseColor);
+    }
+
+    mainFunc.body().
     set(outColor, color).
     variable(t, "vec2", "t", inTexture).
     ifBlock(hasTexture).

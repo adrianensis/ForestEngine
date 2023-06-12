@@ -176,10 +176,8 @@ public:
     void init(const MaterialData& materialData, u32 id);
     void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
 
-public:
-    MaterialData mMaterialData;
-
 private:
+    MaterialData mMaterialData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
     std::vector<GPUVariableData> mUniforms;

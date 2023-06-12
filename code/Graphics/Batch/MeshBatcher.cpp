@@ -1,12 +1,12 @@
 #include "Graphics/Batch/MeshBatcher.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced)
+void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced, bool useVertexColor)
 {
 	PROFILER_CPU()
 
 	mPrototypeMesh = prototypeMesh;
-	mGPUMeshBuffer.init(mPrototypeMesh->mVertexCount, isStatic, isInstanced);
+	mGPUMeshBuffer.init(mPrototypeMesh->mVertexCount, isStatic, isInstanced, useVertexColor);
 	
 	if(mGPUMeshBuffer.mIsInstanced)
 	{
@@ -31,7 +31,10 @@ void MeshBatcher::addDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     mMeshBuilder.appendToPositions(meshInstance->mPositions);
     mMeshBuilder.appendToTextureCoordinates(meshInstance->mTextureCoordinates);
-    mMeshBuilder.appendToColors(meshInstance->mColors);
+    if(mGPUMeshBuffer.mUseVertexColor)
+    {
+        mMeshBuilder.appendToColors(meshInstance->mColors);
+    }
     mMeshBuilder.appendToBonesVertexIDsData(meshInstance->mBonesVertexIDsData);
     mMeshBuilder.appendToBonesVertexWeightsData(meshInstance->mBonesVertexWeightsData);
 }

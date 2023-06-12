@@ -16,7 +16,7 @@
 void Batch::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
-	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced);
+	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced, mBatchData.mMaterial->getMaterialData().mUseVertexColor);
 
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     

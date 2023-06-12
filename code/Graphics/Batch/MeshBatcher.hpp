@@ -10,7 +10,7 @@ class MeshBatcher: public ObjectBase
 public:
 	MeshBatcher() = default;
 
-    void init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced);
+    void init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced, bool useVertexColor);
     void resize(u32 size);
     void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
     void drawCall();

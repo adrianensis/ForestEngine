@@ -12,7 +12,7 @@ public:
 	
     ~GPUMeshBuffer();
 
-    void init(u32 vertexCount, bool isStatic, bool isInstanced);
+    void init(u32 vertexCount, bool isStatic, bool isInstanced, bool useVertexColor);
     void resize(const Mesh& mesh);
     void setData(const Mesh& mesh);
     void setIndexesData(const Mesh& mesh);
@@ -28,6 +28,7 @@ private:
 public:
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
+	bool mUseVertexColor = false;
     u32 mVertexCount = 0;
 	
     u32 mVAO = 0;
