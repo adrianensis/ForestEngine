@@ -161,8 +161,10 @@ void Editor::firstUpdate()
 	setGroup("toggleButtons").
 	setSize(Vector2(0.1f, 0.1f));
 
+    MaterialData materialData;
+    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/EventPoint.png";
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/EventPoint.png", true)).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -171,8 +173,9 @@ void Editor::firstUpdate()
 	uiBuilder.
 	getUIElement<UIToggleButton>()->simulateClick();
 
+    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/PlayerStart.png";
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/PlayerStart.png", true)).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -181,15 +184,17 @@ void Editor::firstUpdate()
 	uiBuilder.
 	nextRow();
 
+    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/SpawnPoint.png";
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/SpawnPoint.png", true)).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
 	});
 
+    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/WayPoint.png";
 	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/editor-icons/WayPoint.png", true)).
+	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
 	create<UIToggleButton>().
 	getUIElement<UIToggleButton>()->
 	setOnPressedCallback([&](UIElement* uiElement){
@@ -336,7 +341,10 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
     RendererData rendererData;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
-	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/snorlax-fill.png", true));
+
+    MaterialData materialData;
+    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/snorlax-fill.png";
+	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial(materialData));
 
 	gameObject->createComponent<MeshRenderer>(rendererData);
 

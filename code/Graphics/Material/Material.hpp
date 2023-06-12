@@ -157,11 +157,12 @@ class Model;
 class MaterialData
 {
 public:
-    std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
+    std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
 	bool mAlphaEnabled = true;
 	bool mHasBorder = false;
 	bool mUseVertexColor = false;
 	bool mUseColorAsTint = false;
+    bool mCreateMipMap = true;
 	Vector4 mBaseColor = Vector4(0,0,0,1);
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 };
@@ -172,7 +173,6 @@ class Material: public ObjectBase
 	DECLARE_SERIALIZATION()
 
 public:
-    Material();
     void init(const MaterialData& materialData, u32 id);
     void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
 
@@ -180,6 +180,7 @@ public:
     MaterialData mMaterialData;
 
 private:
+    std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
     std::vector<GPUVariableData> mUniforms;
     std::vector<GPUVariableData> mConsts;

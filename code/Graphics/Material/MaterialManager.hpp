@@ -16,7 +16,6 @@ public:
     Ptr<const Texture> loadTexture(const std::string& path, bool createMipMap);
     Ptr<const Material> createMaterial();
     Ptr<const Material> createMaterial(const MaterialData& materialData);
-    Ptr<const Material> createMaterialWithTexture(const std::string& path, bool createMipMap);
     Ptr<const Material> getMaterial(u32 index) const;
 
 private:

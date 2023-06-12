@@ -135,7 +135,10 @@ Ptr<const Material> UIManager::getFontMaterial()
 {
 	if (!mFontMaterial)
 	{
-		mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialWithTexture("resources/font16x16.png", false);
+        MaterialData materialData;
+        materialData.mCreateMipMap = false;
+        materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/font16x16.png";
+		mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 	}
 	return mFontMaterial;
 }

@@ -75,7 +75,7 @@ void Model::loadGLTFMaterials()
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    materialData.mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(texturePath, true);
+                    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = texturePath;
                 }
             }
 
@@ -84,7 +84,6 @@ void Model::loadGLTFMaterials()
                 Ptr<const Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
                 MAP_INSERT(mGLTFMaterials, &cgltfMaterial, newMaterial )
             }
-
         }
     }
 }

@@ -60,15 +60,6 @@ Ptr<const Material> MaterialManager::createMaterial(const MaterialData& material
     return mMaterials[index];
 }
 
-Ptr<const Material> MaterialManager::createMaterialWithTexture(const std::string &path, bool createMipMap)
-{
-    MaterialData materialData;
-    materialData.mTextures[(u32)TextureType::BASE_COLOR] = loadTexture(path, createMipMap);
-
-    Ptr<const Material> material = createMaterial(materialData);
-    return material;
-}
-
 Ptr<const Material> MaterialManager::getMaterial(u32 index) const
 {
     return mMaterials.at(index);

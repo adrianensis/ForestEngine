@@ -1,4 +1,5 @@
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
 
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Shaders/Shader.hpp"
@@ -9,14 +10,15 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
-Material::Material()
-{
-}
-
 void Material::init(const MaterialData& materialData, u32 id)
 {
     mMaterialData = materialData;
 	mID = id;
+
+    FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
+    {
+        mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(mMaterialData.mTexturePaths[i], mMaterialData.mCreateMipMap);
+    }
 
     mUniforms.push_back(GPUBuiltIn::Uniforms::mProjectionMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mViewMatrix);
@@ -46,9 +48,9 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 {
 	PROFILER_CPU()
 
-	if (mMaterialData.mTextures[(u32)TextureType::BASE_COLOR])
+	if (mTextures[(u32)TextureType::BASE_COLOR])
 	{
-        mMaterialData.mTextures[(u32)TextureType::BASE_COLOR]->bind();
+        mTextures[(u32)TextureType::BASE_COLOR]->bind();
 	}
 
 	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
@@ -61,7 +63,7 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 
 	shader->addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
 
-	shader->addBool(mMaterialData.mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
+	shader->addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
 	shader->addBool(mMaterialData.mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
 	shader->addBool(mMaterialData.mHasBorder, GPUBuiltIn::Uniforms::mHasBorder.mName);
     shader->addBool(mMaterialData.mUseVertexColor, GPUBuiltIn::Uniforms::mUseVertexColor.mName);
