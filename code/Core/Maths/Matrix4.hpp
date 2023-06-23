@@ -73,7 +73,7 @@ public:
     void rotation(const Vector3& vector);
     void scale(const Vector3& vector);
     void ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
-    void perspective(f32 near, f32 far, f32 aspect, f32 fov);
+    void perspective(f32 near, f32 far, f32 aspect, f32 fovy);
 
     DECLARE_COPY(Matrix4)
 	{

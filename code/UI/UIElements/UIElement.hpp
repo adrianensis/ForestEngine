@@ -53,6 +53,7 @@ public:
 
     bool hasFocus() const;
     bool isMouseCursorInsideElement() const;
+    virtual Vector2 getSize() const;
     Vector3 getLeftTopPosition() const;
 
 	virtual void setText(const std::string& text) { };

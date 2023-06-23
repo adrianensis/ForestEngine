@@ -68,8 +68,7 @@ void UIText::setText(const std::string& text)
                 RendererData rendererData;
                 rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
                 rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
-                rendererData.mStencilData.mStencilValue = (mConfig.mStencilData.mStencilValue);
-                rendererData.mStencilData.mStencilFunction = (mConfig.mStencilData.mStencilFunction);
+                rendererData.mStencilData = mConfig.mStencilData;
 				rendererData.mPositionOffset = (Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
                 
                 renderer = createComponent<SpriteRenderer>(rendererData);

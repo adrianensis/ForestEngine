@@ -63,7 +63,10 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 	const Matrix4& projectionMatrix = camera->mProjectionMatrix;
 	const Matrix4& viewMatrix = camera->mViewMatrix;
 
-	shader->addMatrix(isWorldSpace ? projectionMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
+    Matrix4 ortho;
+    ortho.ortho(-1, 1, -1, 1, -1000, 1000);
+
+	shader->addMatrix(isWorldSpace ? projectionMatrix : ortho, GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
 	shader->addMatrix(isWorldSpace ? viewMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mViewMatrix.mName);
 
 	shader->addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);

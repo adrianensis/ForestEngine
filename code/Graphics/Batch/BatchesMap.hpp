@@ -13,6 +13,7 @@ public:
     void addRenderer(Ptr<MeshRenderer> renderer);
     void render();
     void renderStencil();
+    void renderScreenSpaceStencil();
     void renderScreenSpace();
     void forceRegenerateBuffers();
 

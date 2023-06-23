@@ -22,9 +22,9 @@ public:
 	}
 
 private:
-	Vector3 mPosition;
-	Vector3 mRotation;
-	Vector3 mScale;
+	Vector3 mPosition = Vector3(0,0,0);
+	Vector3 mRotation = Vector3(0,0,0);
+	Vector3 mScale = Vector3(1,1,1);
 
 public:
 	CRGET(Position)
@@ -66,12 +66,12 @@ private:
 public:
     Ptr<Transform> mParent;
 
-	Vector3 mLocalPosition;
-	Vector3 mRotation;
-	Vector3 mScale;
+	Vector3 mLocalPosition = Vector3(0,0,0);
+	Vector3 mRotation = Vector3(0,0,0);
+	Vector3 mScale = Vector3(1,1,1);
 	bool mAffectedByProjection = true;
 
-	mutable Vector3 mWorldPosition;
+	mutable Vector3 mWorldPosition = Vector3(0,0,0);;
 
 	mutable Matrix4 mModelMatrix;
 	mutable Matrix4 mTranslationMatrix;

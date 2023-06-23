@@ -49,7 +49,7 @@ void Batch::enable()
     mShader->enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh->mModel);
 
-    if(mBatchData.mStencilData.mStencilValue > 0x00)
+    if(mBatchData.mStencilData.mUseStencil)
     {
         GET_SYSTEM(RenderContext).enableStencil(mBatchData.mStencilData.mIsStencilMask, mBatchData.mStencilData.mStencilValue, mBatchData.mStencilData.mStencilFunction);
     }
@@ -57,7 +57,10 @@ void Batch::enable()
 
 void Batch::disable()
 {
-    GET_SYSTEM(RenderContext).disableStencil();
+    if(mBatchData.mStencilData.mUseStencil)
+    {
+        GET_SYSTEM(RenderContext).disableStencil();
+    }
 
     mShader->disable();
     mMeshBatcher.disable();

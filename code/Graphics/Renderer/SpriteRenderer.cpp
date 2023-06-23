@@ -4,7 +4,6 @@ void SpriteRenderer::updateTextureRegion()
 {
 	if (mComponentData.mMaterial.isValid())
 	{
-        const auto& textureAnimationsMap = mComponentData.mMaterial->getMaterialData().mTextureAnimations;
 		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
 
 		if (currentTextureAnimation and !currentTextureAnimation->mFrames.empty())

@@ -18,6 +18,7 @@ public:
     void init();
     bool isClosed();
     void clearDepth();
+    void clearStencil();
     void clear();
     void swap();
     void terminate();

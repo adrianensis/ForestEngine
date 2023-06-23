@@ -12,6 +12,7 @@ class Batch;
 class StencilData
 {
 public:
+    bool mUseStencil = false;
     u32 mStencilValue = 0x00;
     u32 mStencilFunction = GL_NOTEQUAL;
     bool mIsStencilMask = false;

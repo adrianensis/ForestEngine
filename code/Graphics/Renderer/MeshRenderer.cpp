@@ -48,8 +48,6 @@ void MeshRenderer::update()
 
 	preUpdate();
 
-	u32 verticesCount = mComponentData.mMesh->mVertexCount;
-    
     bool regenerateVertices = !mComponentData.mIsInstanced;
     if(regenerateVertices)
     {

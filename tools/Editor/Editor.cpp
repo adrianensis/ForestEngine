@@ -66,20 +66,21 @@ void Editor::firstUpdate()
 	importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 180);
 	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
+	// // importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,60), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,60), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,60), 20.0f, 0);
+	// // importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,60), 20.0f, 0);
+	// // importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,60), 20.0f, 0);
 
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,-60), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,-60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,-60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,-60), 20.0f, 0);
-	importModel2("BrainStem/glTF/BrainStem2.gltf", Vector3(0,0,-60), 60.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,-60), 20.0f, 0);
+	// // importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,-60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,-60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,-60), 20.0f, 0);
+	// importModel2("BrainStem/glTF/BrainStem2.gltf", Vector3(0,0,-60), 60.0f, 0);
 
 	// importModel2("bob_lamp/bob_lamp_update.fbx", Vector3(300,0,0), 20.0f, 0);
 	//importModel2("dragon/Dragon_2.5_For_Animations.fbx", Vector3(15,0,0), 1.0f);
@@ -121,10 +122,6 @@ void Editor::firstUpdate()
 	{
 	});
 
-    // uiBuilder.
-	// setText("abcd").
-	// create<UIEditableText>();
-
 	uiBuilder.
 	setText("Sprites").
 	create<UIButton>().
@@ -150,6 +147,10 @@ void Editor::firstUpdate()
 	addOption("Colliders", [&](UIElement *uiElement)
 	{
 	});
+
+    uiBuilder.
+	setText("abcd").
+	create<UIEditableText>();
 
 	uiBuilder.restoreAll();
 
@@ -277,11 +278,11 @@ void Editor::update()
 
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
-		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
+        cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
-		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(speed,0,0)));
+        cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(speed,0,0)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_UP))
 	{
@@ -294,29 +295,36 @@ void Editor::update()
 
 	if(!mousePosition.eq(currentMousePosition))
 	{
-		Vector2 mouseVector = (mousePosition-currentMousePosition).nor() * speed;
+		Vector2 mouseVector = (currentMousePosition - mousePosition).nor() * speed;
 		Vector3 direction;
 
-		f32 yaw = -mouseVector.x;
+		f32 yaw = mouseVector.x;
 		f32 pitch = mouseVector.y;
 
-		cameraTransform->rotate(-Vector3(pitch, yaw, 0));
+		cameraTransform->rotate(Vector3(pitch, -yaw, 0));
 	}
 
 	mousePosition = currentMousePosition;
 
 
+    // -x to x
 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
 
+    // x
 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,100,0)), 1, true, Vector4(1,1,0,1));
+    // -x
+	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,50,0)), 1, true, Vector4(1,1,0,1));
 
+    // -y to y
 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
 
+    // -z to z
 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
 
+    // z
 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,100,-1000)), 1, true, Vector4(0,1,1,1));
+    // -z
+	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
 
 	for(i32 x = -1000; x < 1000; x+=50)
 	{

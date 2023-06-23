@@ -128,11 +128,11 @@ void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorl
 {
 	if (isWorldSpace)
 	{
-		mShapeBatchRendererMap.add(line, thickness, color);
+		mShapeBatchRendererMap.add(line, isWorldSpace, color);
 	}
 	else
 	{
-		mShapeBatchRendererMapScreenSpace.add(line, thickness, color);
+		mShapeBatchRendererMapScreenSpace.add(line, isWorldSpace, color);
 	}
 }
 
@@ -172,11 +172,14 @@ void RenderEngine::renderBatches()
 
 	mBatchesMap.renderStencil();
 	mBatchesMap.render();
-
 	mShapeBatchRendererMap.render();
-	mShapeBatchRendererMapScreenSpace.render();
     
+    GET_SYSTEM(RenderContext).clearDepth();
+    GET_SYSTEM(RenderContext).clearStencil();
+    
+	mBatchesMap.renderScreenSpaceStencil();
 	mBatchesMap.renderScreenSpace();
+	mShapeBatchRendererMapScreenSpace.render();
 }
 
 void RenderEngine::checkChunks()

@@ -144,27 +144,28 @@ void Camera::calculateViewMatrix()
 	Vector3 worldUp(0,1,0);
 
 	Vector3 forward(0,0,1);
-	forward = forward * -1;
+	// forward = forward * -1;
 
-	Vector3 right = Vector3(forward).cross(worldUp).nor();
+	Vector3 right = Vector3(worldUp).cross(forward).nor();
 
-	Vector3 up = Vector3(right).cross(forward).nor();
+	Vector3 up = Vector3(forward).cross(right).nor();
 
 	Matrix4 viewRotationMatrix;
 	viewRotationMatrix.identity();
 
-	viewRotationMatrix.init(
-		Vector4(right.x, right.y, right.z, 0),
-		Vector4(up.x, up.y, up.z, 0),
-		Vector4(forward.x, forward.y, forward.z, 0),
-		Vector4(0, 0, 0, 1)
-	);
+	// viewRotationMatrix.init(
+	// 	Vector4(right.x, right.y, right.z, 0),
+	// 	Vector4(up.x, up.y, up.z, 0),
+	// 	Vector4(forward.x, forward.y, forward.z, 0),
+	// 	Vector4(0, 0, 0, 1)
+	// );
 	
 	Matrix4 rotationMatrix = mGameObject->mTransform->getRotationMatrix();
 
 	mViewMatrix.init(viewRotationMatrix);
 	mViewMatrix.mul(rotationMatrix);
 	mViewMatrix.mul(viewTranslationMatrix);
+	// mViewMatrix.init(viewTranslationMatrix);
 }
 
 void Camera::calculateProjectionViewMatrix()

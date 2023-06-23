@@ -37,6 +37,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 	rendererData.mMaterial = (mConfig.mMaterial);
 	// rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
+    // rendererData.mStencilData.mUseStencil = (true);
     rendererData.mStencilData.mIsStencilMask = (true);
     rendererData.mStencilData.mStencilValue = (0x2);
 	//renderer->setHasBorder(true);
@@ -87,8 +88,8 @@ void UIList::toggle()
 			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(RenderContext).getAspectRatio(), scale.y/2.0f)).
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
-			setLayer(mConfig.mLayer).
-            setStencilData(StencilData{0x02, GL_EQUAL}).
+			setLayer(mConfig.mLayer + 1).
+            setStencilData(StencilData{false, 0x02, GL_EQUAL}).
             setParent(Ptr<GameObject>::cast(getPtrToThis()));
 
 		FOR_LIST(it, mEntries)

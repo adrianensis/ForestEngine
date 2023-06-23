@@ -27,11 +27,10 @@ void Scene::init()
 	mCameraGameObject->init();
 
 	mCameraGameObject->mTransform->translate(Vector3(0, 0, 100.0f));
-	mCameraGameObject->mTransform->mScale = Vector3(1,1,1);
 
     OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>::newObject();
 	cameraComponent->init();
-	cameraComponent->setPerspective(1, 1000, GET_SYSTEM(RenderContext).getAspectRatio(), 45);
+	cameraComponent->setPerspective(0.1, 1000, GET_SYSTEM(RenderContext).getAspectRatio(), 90);
 
 	mCameraGameObject->addComponent<Camera>(std::move(cameraComponent));
 
