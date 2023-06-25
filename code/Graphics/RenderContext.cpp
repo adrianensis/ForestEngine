@@ -224,26 +224,21 @@ void RenderContext::enableStencil(bool isMask, u32 stencilValue, u32 stencilFunc
     {
         // Make it so the stencil test always passes
         glStencilFunc(GL_ALWAYS, stencilValue, 0xFF);
-        // Enable modifying of the stencil buffer
-        glStencilMask(0xFF);
 
-        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+        // glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         glDepthMask(GL_FALSE);
     }
     else
     {
         // Make it so the stencil test only passes when not equal to ref value
         glStencilFunc(stencilFunction, stencilValue, 0xFF);
-        // Disable modifying of the stencil buffer
-        glStencilMask(0x00);
     }
 }
 
 void RenderContext::disableStencil()
 {
-    glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glDepthMask(GL_TRUE);
 
 	glDisable(GL_STENCIL_TEST);
