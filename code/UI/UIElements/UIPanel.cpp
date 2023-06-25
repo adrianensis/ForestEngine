@@ -27,6 +27,9 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mMaterial = (mConfig.mMaterial);
     // rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = mConfig.mStencilData;
+    //     rendererData.mStencilData.mUseStencil = (true);
+    // rendererData.mStencilData.mStencilValue += 1;
+    // rendererData.mStencilData.mThisObjectId = this->getObjectId();
 
     Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
     renderer->mUseDepth = (true);

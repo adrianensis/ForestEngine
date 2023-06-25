@@ -37,9 +37,10 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 	rendererData.mMaterial = (mConfig.mMaterial);
 	// rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
-    // rendererData.mStencilData.mUseStencil = (true);
-    rendererData.mStencilData.mIsStencilMask = (true);
-    rendererData.mStencilData.mStencilValue = (0x2);
+    rendererData.mStencilData.mUseStencil = (true);
+    rendererData.mStencilData.mStencilValue = (1);
+    rendererData.mStencilData.mStencilFunction = GL_EQUAL;
+    rendererData.mStencilData.mThisObjectId = this->getObjectId();
 	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
@@ -89,7 +90,7 @@ void UIList::toggle()
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
 			setLayer(mConfig.mLayer + 1).
-            setStencilData(StencilData{false, 0x02, GL_EQUAL}).
+            setStencilData(StencilData{true, 1, GL_EQUAL, this->getObjectId()}).
             setParent(Ptr<GameObject>::cast(getPtrToThis()));
 
 		FOR_LIST(it, mEntries)

@@ -18,6 +18,10 @@ public:
     void forceRegenerateBuffers();
 
 private:
+    void renderScreenSpaceStencilMask(ObjectId maskObjectId);
+    void renderStencilMask(ObjectId maskObjectId);
+
+private:
 	using BatchMapByBatchData = std::unordered_map<BatchData, OwnerPtr<Batch>, BatchData::BatchDataFunctor>;
 
 	BatchMapByBatchData mBatches;

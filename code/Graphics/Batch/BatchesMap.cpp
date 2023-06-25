@@ -33,18 +33,16 @@ void BatchesMap::renderStencil()
 {
 	PROFILER_CPU()
 
-	FOR_MAP(it, mBatches)
-	{
-		if(it->first.mStencilData.mUseStencil and it->first.mStencilData.mIsStencilMask and it->first.mIsWorldSpace)
-		{
-			it->second->render();
-		}
-	}
-
     FOR_MAP(it, mBatches)
 	{
-		if(it->first.mStencilData.mUseStencil and !it->first.mStencilData.mIsStencilMask and it->first.mIsWorldSpace)
+		if(it->first.mStencilData.mUseStencil and it->first.mIsWorldSpace)
 		{
+            ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
+            if(maskObjectId > 0)
+            {
+                renderStencilMask(maskObjectId);
+            }
+
 			it->second->render();
 		}
 	}
@@ -54,23 +52,60 @@ void BatchesMap::renderScreenSpaceStencil()
 {
 	PROFILER_CPU()
 
-	FOR_MAP(it, mBatches)
-	{
-		if(it->first.mStencilData.mUseStencil and it->first.mStencilData.mIsStencilMask and !it->first.mIsWorldSpace)
-		{
-			it->second->render();
-		}
-	}
-
     FOR_MAP(it, mBatches)
 	{
-		if(it->first.mStencilData.mUseStencil and !it->first.mStencilData.mIsStencilMask and !it->first.mIsWorldSpace)
+		if(it->first.mStencilData.mUseStencil and !it->first.mIsWorldSpace)
 		{
+            ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
+            if(maskObjectId > 0)
+            {
+                renderScreenSpaceStencilMask(maskObjectId);
+            }
+
 			it->second->render();
 		}
 	}
 }
 
+void BatchesMap::renderScreenSpaceStencilMask(ObjectId maskObjectId)
+{
+    FOR_MAP(it, mBatches)
+	{
+		if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and !it->first.mIsWorldSpace)
+		{
+            if(it->first.mStencilData.mMaskObjectId > 0)
+            {
+                renderScreenSpaceStencilMask(it->first.mStencilData.mMaskObjectId);
+            }
+            else
+            {
+                it->second->setRenderStencilAsMask(true);
+                it->second->render();
+                it->second->setRenderStencilAsMask(false);
+            }
+		}
+	}
+}
+
+void BatchesMap::renderStencilMask(ObjectId maskObjectId)
+{
+    FOR_MAP(it, mBatches)
+	{
+		if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and it->first.mIsWorldSpace)
+		{
+            if(it->first.mStencilData.mMaskObjectId > 0)
+            {
+                renderStencilMask(it->first.mStencilData.mMaskObjectId);
+            }
+            else
+            {
+                it->second->setRenderStencilAsMask(true);
+                it->second->render();
+                it->second->setRenderStencilAsMask(false);
+            }
+		}
+	}
+}
 void BatchesMap::renderScreenSpace()
 {
 	PROFILER_CPU()

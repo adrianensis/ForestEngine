@@ -32,8 +32,7 @@ public:
 	{
         return mMaterial == otherBatchData.mMaterial and mMesh == otherBatchData.mMesh and
         mIsStatic == otherBatchData.mIsStatic and mIsWorldSpace == otherBatchData.mIsWorldSpace and mIsInstanced == otherBatchData.mIsInstanced and
-        mStencilData.mUseStencil == otherBatchData.mStencilData.mUseStencil and
-        mStencilData.mStencilValue == otherBatchData.mStencilData.mStencilValue and mStencilData.mIsStencilMask == otherBatchData.mStencilData.mIsStencilMask and mStencilData.mStencilFunction == otherBatchData.mStencilData.mStencilFunction;
+        mStencilData == otherBatchData.mStencilData;
 	}
 
 	class BatchDataFunctor
@@ -44,7 +43,8 @@ public:
 			return key.mMaterial->getObjectId() ^ key.mMesh->getObjectId() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
             (u64)key.mStencilData.mUseStencil ^ 
-			(u64)key.mStencilData.mStencilValue ^ static_cast<u64>(key.mStencilData.mIsStencilMask) ^ static_cast<u64>(key.mStencilData.mStencilFunction);
+			(u64)key.mStencilData.mStencilValue ^ static_cast<u64>(key.mStencilData.mStencilFunction) ^
+            (u64)key.mStencilData.mMaskObjectId ^ (u64)key.mStencilData.mThisObjectId;
 		}
 	};
 };
@@ -71,13 +71,14 @@ private:
 
 private:
 	std::list<Ptr<MeshRenderer>> mRenderers;
-
     OwnerPtr<Shader> mShader;
-
 	MeshBatcher mMeshBatcher;
-
     BatchData mBatchData;
 
 	bool mNewRendererAdded = false;
 	bool mForceRegenerateBuffers = false;
+    bool mRenderStencilAsMask = false;
+
+public:
+    SET(RenderStencilAsMask)
 };

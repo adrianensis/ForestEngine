@@ -42,5 +42,6 @@ private:
 	ObjectId mObjectId = 0;
 
 protected:
-	inline static ObjectId smObjectIdCounter = 0;
+    // Important: starts by 1, 0 is reserved for null
+	inline static ObjectId smObjectIdCounter = 1;
 };

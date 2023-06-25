@@ -238,6 +238,18 @@ void Editor::firstUpdate()
 	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	toggle();
 
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+
+
     // uiBuilder.
 	// nextRow();
 
