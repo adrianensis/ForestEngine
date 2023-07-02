@@ -21,6 +21,8 @@ private:
     void renderScreenSpaceStencilMask(ObjectId maskObjectId);
     void renderStencilMask(ObjectId maskObjectId);
 
+    std::set<ObjectId> mMasksDrawn;
+
 private:
 	using BatchMapByBatchData = std::unordered_map<BatchData, OwnerPtr<Batch>, BatchData::BatchDataFunctor>;
 

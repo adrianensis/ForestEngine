@@ -215,31 +215,37 @@ void RenderContext::enableVAO(u32 VAO)
 	glBindVertexArray(VAO);
 }
 
-void RenderContext::enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction)
+void RenderContext::enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp)
 {
     glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-    if(isMask)
-    {
-        // Make it so the stencil test always passes
-        glStencilFunc(GL_ALWAYS, stencilValue, 0xFF);
+    // if(isMask)
+    // {
+    //     // NOTE: Required stencilValue starts at 1!
+    //     glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+    //     glStencilFunc(GL_EQUAL, stencilValue-1, 0xFF);
 
-        // glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-        glDepthMask(GL_FALSE);
-    }
-    else
-    {
-        // Make it so the stencil test only passes when not equal to ref value
-        glStencilFunc(stencilFunction, stencilValue, 0xFF);
-    }
+    //     // glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    //     // glDepthMask(GL_FALSE);
+    // }
+    // else
+    // {
+    //     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+    //     // Make it so the stencil test only passes when not equal to ref value
+    //     glStencilFunc(stencilFunction, stencilValue-1, 0xFF);
+    // }
+
+    glStencilOp(GL_KEEP, GL_KEEP, stencilPassOp);
+    glStencilFunc(stencilFunction, stencilValue, 0xFF);
+
 }
 
 void RenderContext::disableStencil()
 {
-	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	// glStencilFunc(GL_ALWAYS, 0, 0xFF);
 	// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDepthMask(GL_TRUE);
+	// glDepthMask(GL_TRUE);
 
 	glDisable(GL_STENCIL_TEST);
 }

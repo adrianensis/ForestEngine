@@ -17,6 +17,8 @@ void UIList::init()
 {
 	UIElement::init();
 
+    mClipChildren = true;
+
 	setOnFocusLostCallback([this](UIElement *uiElement)
 	{ 
 		//setEntriesVisibility(false); 
@@ -37,10 +39,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 	rendererData.mMaterial = (mConfig.mMaterial);
 	// rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
-    rendererData.mStencilData.mUseStencil = (true);
-    rendererData.mStencilData.mStencilValue = (1);
-    rendererData.mStencilData.mStencilFunction = GL_EQUAL;
-    rendererData.mStencilData.mThisObjectId = this->getObjectId();
+    rendererData.mStencilData = calculateStencilData();
 	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
@@ -90,7 +89,6 @@ void UIList::toggle()
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
 			setLayer(mConfig.mLayer + 1).
-            setStencilData(StencilData{true, 1, GL_EQUAL, this->getObjectId()}).
             setParent(Ptr<GameObject>::cast(getPtrToThis()));
 
 		FOR_LIST(it, mEntries)
@@ -105,23 +103,6 @@ void UIList::toggle()
 
 			Ptr<UIButton> button = uiBuilder.getUIElement<UIButton>();
 			button->setOnPressedCallback(onPressedCallback);
-            //button->getRenderer()->mStencilValue = (0x2);
-			//button->setVisibility(false);
-
-			// Transform *t = &button->mTransform.get();
-			// t->setParent(&mTransform.get());
-
-			// Rectangle clipRectangle(
-			// 			Vector2(mConfig.mPosition.x, mConfig.mPosition.y),
-			// 			Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y));
-
-			// button->getRenderer()->setClipRectangle(clipRectangle);
-
-			// Set clip rectangle for UIText label also
-			// FOR_LIST(itRenderer, button->getText()->getComponents<MeshRenderer>())
-			// {
-			// 	(*itRenderer)->setClipRectangle(clipRectangle);
-			// }
 
 			mButtons.push_back(button);
 		}

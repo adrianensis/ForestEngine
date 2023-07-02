@@ -51,7 +51,7 @@ void Batch::enable()
 
     if(mBatchData.mStencilData.mUseStencil)
     {
-        GET_SYSTEM(RenderContext).enableStencil(mRenderStencilAsMask, mBatchData.mStencilData.mStencilValue, mBatchData.mStencilData.mStencilFunction);
+        GET_SYSTEM(RenderContext).enableStencil(mBatchData.mStencilData.mMaskStencilValue, mBatchData.mStencilData.mStencilFunction, mBatchData.mStencilData.mStencilPassOp);
     }
 }
 

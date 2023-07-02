@@ -13,8 +13,9 @@ class StencilData
 {
 public:
     bool mUseStencil = false;
-    u32 mStencilValue = 0x00;
+    u32 mMaskStencilValue = 0;
     u32 mStencilFunction = GL_NOTEQUAL;
+    u32 mStencilPassOp = GL_KEEP;
     ObjectId mMaskObjectId = 0;
     ObjectId mThisObjectId = 0;
 
@@ -22,7 +23,7 @@ public:
 	{
         return
         mUseStencil == other.mUseStencil and
-        mStencilValue == other.mStencilValue and
+        mMaskStencilValue == other.mMaskStencilValue and
         mMaskObjectId == other.mMaskObjectId and
         mThisObjectId == other.mThisObjectId and 
         mStencilFunction == other.mStencilFunction;

@@ -51,7 +51,7 @@ public:
 
     void enableVAO(u32 VAO);
     
-    void enableStencil(bool isMask, u32 stencilValue, u32 stencilFunction);
+    void enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp);
     void disableStencil();
 
     GLuint createTexture(u32 width, u32 height, const byte* data, bool createMipMap);

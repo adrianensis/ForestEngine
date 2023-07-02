@@ -30,7 +30,7 @@ void Scene::init()
 
     OwnerPtr<Camera> cameraComponent = OwnerPtr<Camera>::newObject();
 	cameraComponent->init();
-	cameraComponent->setPerspective(0.1, 1000, GET_SYSTEM(RenderContext).getAspectRatio(), 90);
+	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(RenderContext).getAspectRatio(), 90);
 
 	mCameraGameObject->addComponent<Camera>(std::move(cameraComponent));
 

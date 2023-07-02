@@ -36,5 +36,4 @@ public:
 	std::string mGroup;
 	Ptr<GameObject> mParent;
 	f32 mSeparatorSize = 0.0f;
-	StencilData mStencilData;
 };

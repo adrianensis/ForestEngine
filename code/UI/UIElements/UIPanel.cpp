@@ -25,11 +25,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
     rendererData.mMaterial = (mConfig.mMaterial);
-    // rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
-    rendererData.mStencilData = mConfig.mStencilData;
-    //     rendererData.mStencilData.mUseStencil = (true);
-    // rendererData.mStencilData.mStencilValue += 1;
-    // rendererData.mStencilData.mThisObjectId = this->getObjectId();
+    rendererData.mStencilData = calculateStencilData();
 
     Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
     renderer->mUseDepth = (true);

@@ -247,15 +247,43 @@ void Editor::firstUpdate()
 	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
 	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
 	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	toggle();
 
+	uiBuilder.
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
+	setSize(Vector2(0.5f, 0.05f));
 
-    // uiBuilder.
-	// nextRow();
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-    // uiBuilder.
-	// setText("Edit").
-	// create<UIEditableText>();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+
+    uiBuilder.
+	nextRow();
+
+    uiBuilder.
+	setText("Edit").
+	create<UIEditableText>();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->getCameraGameObject();
 }

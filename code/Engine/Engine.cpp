@@ -105,8 +105,8 @@ void Engine::run()
 		}
 		
 		GET_SYSTEM(Time).endFrame();
-        // f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
-		// VAR(fps)
+        f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+		VAR(fps)
 	}
 }
 

@@ -120,6 +120,8 @@ protected:
 	virtual void onFocus() { }
 	virtual void onFocusLost() { }
 
+    StencilData calculateStencilData() const;
+
 protected:
 	UIElementConfig mConfig;
 
@@ -138,6 +140,8 @@ protected:
 	bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
     bool mOnlyReleaseOnClickOutside = false;
+    
+    bool mClipChildren = false;
 
 public:
 	CRGET_SET(Config)

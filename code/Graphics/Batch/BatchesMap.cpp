@@ -33,42 +33,97 @@ void BatchesMap::renderStencil()
 {
 	PROFILER_CPU()
 
-    FOR_MAP(it, mBatches)
-	{
-		if(it->first.mStencilData.mUseStencil and it->first.mIsWorldSpace)
-		{
-            ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
-            if(maskObjectId > 0)
-            {
-                renderStencilMask(maskObjectId);
-            }
+    // FOR_MAP(it, mBatches)
+	// {
+	// 	if(it->first.mStencilData.mUseStencil and it->first.mIsWorldSpace)
+	// 	{
+    //         ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
+    //         if(maskObjectId > 0)
+    //         {
+    //             renderStencilMask(maskObjectId);
+    //         }
 
-			it->second->render();
-		}
-	}
+	// 		it->second->render();
+	// 	}
+	// }
+}
+
+void BatchesMap::renderStencilMask(ObjectId maskObjectId)
+{
+    // FOR_MAP(it, mBatches)
+	// {
+	// 	if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and it->first.mIsWorldSpace)
+	// 	{
+    //         if(it->first.mStencilData.mMaskObjectId > 0)
+    //         {
+    //             renderStencilMask(it->first.mStencilData.mMaskObjectId);
+
+    //             it->second->render();
+    //         }
+    //         else
+    //         {
+    //             it->second->render();
+    //         }
+
+    //         break;
+	// 	}
+	// }
 }
 
 void BatchesMap::renderScreenSpaceStencil()
 {
 	PROFILER_CPU()
 
+    mMasksDrawn.clear();
+
+    std::vector<Ptr<Batch>> sortedBatches;
     FOR_MAP(it, mBatches)
 	{
 		if(it->first.mStencilData.mUseStencil and !it->first.mIsWorldSpace)
 		{
-            ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
-            if(maskObjectId > 0)
-            {
-                renderScreenSpaceStencilMask(maskObjectId);
-            }
+            sortedBatches.push_back(it->second);
+        }
+    }
 
-			it->second->render();
+    auto compareStencilBatch = [](Ptr<Batch> b1, Ptr<Batch> b2)
+    {
+        ObjectId o1 = b1->getBatchData().mStencilData.mMaskObjectId > 0 ? b1->getBatchData().mStencilData.mMaskObjectId : b1->getBatchData().mStencilData.mThisObjectId;
+        ObjectId o2 = b2->getBatchData().mStencilData.mMaskObjectId > 0 ? b2->getBatchData().mStencilData.mMaskObjectId : b2->getBatchData().mStencilData.mThisObjectId;
+        return (o1 < o2);
+    };
+  
+    std::sort(sortedBatches.begin(), sortedBatches.end(), compareStencilBatch);
+
+    ObjectId currentMaskId = 0;
+    FOR_LIST(it, sortedBatches)
+	{
+        ObjectId maskId = (*it)->getBatchData().mStencilData.mMaskObjectId > 0 ? (*it)->getBatchData().mStencilData.mMaskObjectId : (*it)->getBatchData().mStencilData.mThisObjectId;
+        if(currentMaskId != maskId)
+        {
+            currentMaskId = maskId;
+            GET_SYSTEM(RenderContext).clearStencil();
+        }
+
+		if((*it)->getBatchData().mStencilData.mUseStencil and !(*it)->getBatchData().mIsWorldSpace)
+		{
+            if(!mMasksDrawn.contains((*it)->getBatchData().mStencilData.mThisObjectId) || (*it)->getBatchData().mStencilData.mThisObjectId == 0)
+            {
+                mMasksDrawn.insert((*it)->getBatchData().mStencilData.mThisObjectId);
+                
+                ObjectId maskObjectId = (*it)->getBatchData().mStencilData.mMaskObjectId;
+                if(maskObjectId > 0)
+                {
+                    renderScreenSpaceStencilMask(maskObjectId);
+                }
+                
+			    (*it)->render();
+            }
 		}
 	}
 }
 
 void BatchesMap::renderScreenSpaceStencilMask(ObjectId maskObjectId)
-{
+{    
     FOR_MAP(it, mBatches)
 	{
 		if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and !it->first.mIsWorldSpace)
@@ -77,35 +132,18 @@ void BatchesMap::renderScreenSpaceStencilMask(ObjectId maskObjectId)
             {
                 renderScreenSpaceStencilMask(it->first.mStencilData.mMaskObjectId);
             }
-            else
+
+            if(!mMasksDrawn.contains(it->first.mStencilData.mThisObjectId))
             {
-                it->second->setRenderStencilAsMask(true);
+                mMasksDrawn.insert(it->first.mStencilData.mThisObjectId);
                 it->second->render();
-                it->second->setRenderStencilAsMask(false);
             }
+
+            break;
 		}
 	}
 }
 
-void BatchesMap::renderStencilMask(ObjectId maskObjectId)
-{
-    FOR_MAP(it, mBatches)
-	{
-		if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and it->first.mIsWorldSpace)
-		{
-            if(it->first.mStencilData.mMaskObjectId > 0)
-            {
-                renderStencilMask(it->first.mStencilData.mMaskObjectId);
-            }
-            else
-            {
-                it->second->setRenderStencilAsMask(true);
-                it->second->render();
-                it->second->setRenderStencilAsMask(false);
-            }
-		}
-	}
-}
 void BatchesMap::renderScreenSpace()
 {
 	PROFILER_CPU()
