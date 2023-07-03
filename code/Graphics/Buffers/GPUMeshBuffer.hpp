@@ -5,6 +5,15 @@
 
 class Mesh;
 
+class GPUMeshBufferData
+{
+public:
+	bool mIsStatic = false;
+	bool mIsInstanced = false;
+	bool mUseVertexColor = false;
+    u32 mVertexCount = 0;
+};
+
 class GPUMeshBuffer
 {
 public:
@@ -12,7 +21,7 @@ public:
 	
     ~GPUMeshBuffer();
 
-    void init(u32 vertexCount, bool isStatic, bool isInstanced, bool useVertexColor);
+    void init(const GPUMeshBufferData& gpuMeshBufferData);
     void resize(const Mesh& mesh);
     void setData(const Mesh& mesh);
     void setIndexesData(const Mesh& mesh);
@@ -26,11 +35,7 @@ private:
     void terminate();
 
 public:
-	bool mIsStatic = false;
-	bool mIsInstanced = false;
-	bool mUseVertexColor = false;
-    u32 mVertexCount = 0;
-	
+    GPUMeshBufferData mGPUMeshBufferData;
     u32 mVAO = 0;
     
 	std::vector<Matrix4> mMatrices;

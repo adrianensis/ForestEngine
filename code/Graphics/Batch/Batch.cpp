@@ -16,7 +16,7 @@
 void Batch::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
-	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsStatic, mBatchData.mIsInstanced, mBatchData.mMaterial->getMaterialData().mUseVertexColor);
+	mMeshBatcher.init(mBatchData);
 
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
@@ -47,7 +47,7 @@ void Batch::enable()
 {
     mMeshBatcher.enable();
     mShader->enable();
-    mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mMeshBatcher.isAnimated(), mMeshBatcher.mPrototypeMesh->mModel);
+    mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, isAnimated(), mBatchData.mMesh->mModel);
 
     if(mBatchData.mStencilData.mUseStencil)
     {
@@ -176,5 +176,16 @@ void Batch::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 
 bool Batch::shouldRegenerateBuffers() const
 {
-	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || mMeshBatcher.isAnimated();
+	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || isAnimated();
+}
+
+bool Batch::isAnimated() const
+{
+	bool isAnimated = false;
+	if(mBatchData.mMesh->mModel)
+	{
+		isAnimated = mBatchData.mMesh->mModel->isAnimated();
+	}
+
+	return isAnimated;
 }

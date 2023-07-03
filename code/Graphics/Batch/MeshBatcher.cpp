@@ -1,18 +1,24 @@
 #include "Graphics/Batch/MeshBatcher.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void MeshBatcher::init(Ptr<const Mesh> prototypeMesh, bool isStatic, bool isInstanced, bool useVertexColor)
+void MeshBatcher::init(const BatchData batchData)
 {
 	PROFILER_CPU()
+    mBatchData = batchData;
 
-	mPrototypeMesh = prototypeMesh;
-	mGPUMeshBuffer.init(mPrototypeMesh->mVertexCount, isStatic, isInstanced, useVertexColor);
+    GPUMeshBufferData gpuMeshBufferData;
+	gpuMeshBufferData.mVertexCount = mBatchData.mMesh->mVertexCount;
+	gpuMeshBufferData.mIsStatic = mBatchData.mIsStatic;
+	gpuMeshBufferData.mIsInstanced = mBatchData.mIsInstanced;
+	gpuMeshBufferData.mUseVertexColor = mBatchData.mMaterial->getMaterialData().mUseVertexColor;
+
+	mGPUMeshBuffer.init(gpuMeshBufferData);
 	
-	if(mGPUMeshBuffer.mIsInstanced)
+	if(mBatchData.mIsInstanced)
 	{
-		mMeshBuilder.init(mPrototypeMesh->mVertexCount, mPrototypeMesh->mFacesCount);
+		mMeshBuilder.init(mBatchData.mMesh->mVertexCount, mBatchData.mMesh->mFacesCount);
 
-        addDataToBuffers(mPrototypeMesh);
+        addDataToBuffers(mBatchData.mMesh);
 
 		generateFacesData(1);
 		mGPUMeshBuffer.resize(mMeshBuilder);
@@ -31,7 +37,7 @@ void MeshBatcher::addDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     mMeshBuilder.appendToPositions(meshInstance->mPositions);
     mMeshBuilder.appendToTextureCoordinates(meshInstance->mTextureCoordinates);
-    if(mGPUMeshBuffer.mUseVertexColor)
+    if(mBatchData.mMaterial->getMaterialData().mUseVertexColor)
     {
         mMeshBuilder.appendToColors(meshInstance->mColors);
     }
@@ -57,9 +63,9 @@ void MeshBatcher::resize(u32 size)
 		}
 
         mGPUMeshBuffer.setMaxInstances(mMaxMeshesThreshold);
-		if (!mGPUMeshBuffer.mIsInstanced)
+		if (!mBatchData.mIsInstanced)
 		{
-			mMeshBuilder.init(mPrototypeMesh->mVertexCount * mMaxMeshesThreshold, mPrototypeMesh->mFacesCount * mMaxMeshesThreshold);
+			mMeshBuilder.init(mBatchData.mMesh->mVertexCount * mMaxMeshesThreshold, mBatchData.mMesh->mFacesCount * mMaxMeshesThreshold);
 			generateFacesData(mMaxMeshesThreshold);
 			mGPUMeshBuffer.resize(mMeshBuilder);
 		}
@@ -75,7 +81,7 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
 	PROFILER_CPU()
 
     mGPUMeshBuffer.addInstanceMatrix(modelMatrix);
-    if(!mGPUMeshBuffer.mIsInstanced)
+    if(!mBatchData.mIsInstanced)
     {
         addDataToBuffers(meshInstance);
     }
@@ -91,7 +97,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(RenderContext).drawElements(mPrototypeMesh->mFaces.size() * 3, mMeshesIndex, mGPUMeshBuffer.mIsInstanced);
+		GET_SYSTEM(RenderContext).drawElements(mBatchData.mMesh->mFaces.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 	}
 }
 
@@ -105,21 +111,10 @@ void MeshBatcher::disable()
 	mGPUMeshBuffer.disable();
 }
 
-bool MeshBatcher::isAnimated() const
-{
-	bool isAnimated = false;
-	if(mPrototypeMesh->mModel)
-	{
-		isAnimated = mPrototypeMesh->mModel->isAnimated();
-	}
-
-	return isAnimated;
-}
-
 void MeshBatcher::clear()
 {
 	PROFILER_CPU()
-	if( ! mGPUMeshBuffer.mIsInstanced)
+	if( ! mBatchData.mIsInstanced)
 	{
 		mMeshBuilder.clear();
 	}
@@ -132,11 +127,11 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 
 	FOR_RANGE(i, 0, meshesCount)
 	{
-		u32 offset = (i * mPrototypeMesh->mVertexCount);
+		u32 offset = (i * mBatchData.mMesh->mVertexCount);
 		
-		FOR_RANGE(faceIndex, 0, mPrototypeMesh->mFaces.size())
+		FOR_RANGE(faceIndex, 0, mBatchData.mMesh->mFaces.size())
 		{
-			Face newFace = mPrototypeMesh->mFaces[faceIndex];
+			Face newFace = mBatchData.mMesh->mFaces[faceIndex];
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
