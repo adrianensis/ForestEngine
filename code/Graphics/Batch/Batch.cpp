@@ -116,11 +116,6 @@ bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
 			{
 				toRemove = true;
 			}
-
-            if (renderer->getComponentDataChanged())
-			{
-				toRemove = true;
-			}
 		}
 		else
 		{

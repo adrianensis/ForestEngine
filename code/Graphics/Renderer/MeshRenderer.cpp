@@ -88,13 +88,23 @@ bool MeshRenderer::hasValidChunk() const
 	return (! mChunk.isValid()) || (mChunk.isValid() and mChunk->mIsLoaded); // !chunk means -> Screen Space case
 }
 
-void MeshRenderer::changeMaterial(Ptr<const Material> material)
+void MeshRenderer::setMaterial(Ptr<const Material> material)
 {
     if(mComponentData.mMaterial != material)
     {
         mComponentData.mMaterial = material;
-
         mComponentDataChanged = true;
+        mBatch->forceRegenerateBuffers();
+    }
+}
+
+void MeshRenderer::setColor(const Vector4& color)
+{
+    if(mColor != color)
+    {
+        mColor = color;
+        mComponentDataChanged = true;
+        mBatch->forceRegenerateBuffers();
     }
 }
 

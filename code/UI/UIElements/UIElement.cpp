@@ -10,6 +10,7 @@
 void UIElement::initFromConfig(const UIElementConfig& config)
 {
 	mConfig = config;
+    mIsStatic = mConfig.mIsStatic;
 }
 
 void UIElement::onDestroy()
@@ -487,7 +488,7 @@ void UIElement::setColorPressed()
 {
     if(mRenderer)
     {
-	    mRenderer->mColor = (mConfig.mStyle->mColorPressed);
+	    mRenderer->setColor(mConfig.mStyle->mColorPressed);
     }
 }
 
@@ -498,14 +499,14 @@ void UIElement::setColorRelease()
 	{
         if(mRenderer)
         {
-		    mRenderer->mColor = (mConfig.mStyle->mColorHovered);
+		    mRenderer->setColor(mConfig.mStyle->mColorHovered);
         }
 	}
 	else
 	{
         if(mRenderer)
         {
-		    mRenderer->mColor = (mConfig.mStyle->mBackgroundColor);
+		    mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
         }
 	}
 }
@@ -515,11 +516,11 @@ void UIElement::setColorOver()
 	bool cursorInside = isMouseCursorInsideElement();
 	if (cursorInside)
 	{
-		mRenderer->mColor = (mConfig.mStyle->mColorHovered);
+		mRenderer->setColor(mConfig.mStyle->mColorHovered);
 	}
 	else
 	{
-		mRenderer->mColor = (mConfig.mStyle->mBackgroundColor);
+		mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
 	}
 }
 

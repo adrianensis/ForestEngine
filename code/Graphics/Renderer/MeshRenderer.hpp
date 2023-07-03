@@ -54,7 +54,8 @@ public:
     void update();
     void onDestroy() override;
     bool hasValidChunk() const;
-    void changeMaterial(Ptr<const Material> material);
+    void setMaterial(Ptr<const Material> material);
+    void setColor(const Vector4& color);
 
     Matrix4 getRendererModelMatrix() const;
 
@@ -63,14 +64,12 @@ protected:
     virtual void updatePositions();
     virtual void updateTextureCoords();
 
-public:
-    Vector4 mColor;
-
 protected:
 	OwnerPtr<Mesh> mMeshInstance;
 
 private:
-    Ptr<const Batch> mBatch;
+    Vector4 mColor;
+    Ptr<Batch> mBatch;
     Ptr<const Chunk> mChunk;
 
 public:

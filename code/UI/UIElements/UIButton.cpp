@@ -50,6 +50,7 @@ void UIButton::setText(const std::string& text)
 			setText(text).
 			setTextSize(mConfig.mTextSize).
 			setLayer(mConfig.mLayer + 1).
+			setIsStatic(false).
 			setIsAffectedByLayout(false).
 			setParent(Ptr<GameObject>::cast(getPtrToThis())).
 			create<UIText>().

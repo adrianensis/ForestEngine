@@ -38,7 +38,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
     RendererData rendererData;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 	rendererData.mMaterial = (mConfig.mMaterial);
-	// rendererData.mColor = (mConfig.mStyle->mBackgroundColor);
+	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();
 	//renderer->setHasBorder(true);
 
@@ -47,7 +47,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
     Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
 	renderer->mUseDepth = (true);
 	renderer->mDepth = (mConfig.mLayer);
-	renderer->mColor = mConfig.mStyle->mBackgroundColor;
+	renderer->setColor(mConfig.mStyle->mBackgroundColor);
     
 	setComponentsCache();
 
@@ -88,6 +88,7 @@ void UIList::toggle()
 			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(RenderContext).getAspectRatio(), scale.y/2.0f)).
 			setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
+			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
             setParent(Ptr<GameObject>::cast(getPtrToThis()));
 

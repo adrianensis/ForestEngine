@@ -30,7 +30,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
     renderer->mUseDepth = (true);
 	renderer->mDepth = (mConfig.mLayer);
-	renderer->mColor = mConfig.mStyle->mBackgroundColor;
+	renderer->setColor(mConfig.mStyle->mBackgroundColor);
     
     setComponentsCache();
 }

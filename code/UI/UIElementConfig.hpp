@@ -27,6 +27,7 @@ public:
 	Vector2 mPosition;
 	Vector2 mDisplayPosition;
 	Vector2 mSize;
+	bool mIsStatic = true;
 	Vector2 mTextSize;
 	std::string mText;
 	bool mAdjustSizeToText = false;

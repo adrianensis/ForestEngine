@@ -11,6 +11,7 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	mPosition = position;
 	mDisplayPosition = Vector2(0, 0);
 	mSize = size;
+	mIsStatic = true;
 	mText = text;
 	mLayer = layer;
 	mTextSize = GET_SYSTEM(UIManager).getDefaultFontSize();
