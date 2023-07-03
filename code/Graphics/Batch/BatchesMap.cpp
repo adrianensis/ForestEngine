@@ -157,10 +157,10 @@ void BatchesMap::renderScreenSpace()
 	}
 }
 
-void BatchesMap::forceRegenerateBuffers()
+void BatchesMap::requestRegenerateBuffers()
 {
 	FOR_MAP(it, mBatches)
 	{
-		it->second->forceRegenerateBuffers();
+		it->second->requestRegenerateBuffers();
 	}
 }

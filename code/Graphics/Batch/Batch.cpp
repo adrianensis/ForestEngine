@@ -101,7 +101,7 @@ void Batch::processRenderers()
 	}
 
     mNewRendererAdded = false;
-    mForceRegenerateBuffers = false;
+    mRegenerateBuffersRequested = false;
 }
 
 bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
@@ -153,7 +153,7 @@ void Batch::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
 
     it->invalidate();
 
-    mForceRegenerateBuffers = true;
+    mRegenerateBuffersRequested = true;
 
 	it = mRenderers.erase(it);
 	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
@@ -171,7 +171,8 @@ void Batch::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 
 bool Batch::shouldRegenerateBuffers() const
 {
-	return mNewRendererAdded || !mBatchData.mIsStatic || mForceRegenerateBuffers || isAnimated();
+    // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
+	return mNewRendererAdded || !mBatchData.mIsStatic || mRegenerateBuffersRequested;
 }
 
 bool Batch::isAnimated() const

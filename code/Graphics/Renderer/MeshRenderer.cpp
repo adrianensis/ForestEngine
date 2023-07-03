@@ -104,7 +104,7 @@ void MeshRenderer::setMaterial(Ptr<const Material> material)
         mComponentData.mMaterial = material;
         if(mBatch)
         {
-            mBatch->forceRegenerateBuffers();
+            mBatch->requestRegenerateBuffers();
         }
     }
 }
@@ -117,7 +117,7 @@ void MeshRenderer::setColor(const Vector4& color)
         mRegenerateColor = true;
         if(mBatch)
         {
-            mBatch->forceRegenerateBuffers();
+            mBatch->requestRegenerateBuffers();
         }
     }
 }

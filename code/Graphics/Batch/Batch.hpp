@@ -14,7 +14,7 @@ public:
 
     void render();
     void addRenderer(Ptr<MeshRenderer> renderer);
-	void forceRegenerateBuffers() { mForceRegenerateBuffers = true; }
+	void requestRegenerateBuffers() { mRegenerateBuffersRequested = true; }
 
 private:
     void enable();
@@ -33,7 +33,7 @@ private:
     BatchData mBatchData;
 
 	bool mNewRendererAdded = false;
-	bool mForceRegenerateBuffers = false;
+	bool mRegenerateBuffersRequested = false;
 
 public:
     CRGET(BatchData)

@@ -199,7 +199,7 @@ void RenderEngine::checkChunks()
 		}
 		else if (!chunkInDistance and chunk->mIsLoaded)
 		{
-			mBatchesMap.forceRegenerateBuffers();
+			mBatchesMap.requestRegenerateBuffers();
 
 			chunk->unload();
 		}
