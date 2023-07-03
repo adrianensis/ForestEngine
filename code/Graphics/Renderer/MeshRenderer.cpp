@@ -19,9 +19,14 @@ void MeshRenderer::init(RendererData& data)
 {
     ComponentWithData::init(data);
 
-	mColor = (Vector4(0, 0, 0, 1));
-
     mMeshInstance = OwnerPtr<Mesh>::newObject();
+    mMeshInstance->init(mComponentData.mMesh->mVertexCount, mComponentData.mMesh->mFacesCount);
+    mMeshInstance->appendToBonesVertexIDsData(mComponentData.mMesh->mBonesVertexIDsData);
+    mMeshInstance->appendToBonesVertexWeightsData(mComponentData.mMesh->mBonesVertexWeightsData);
+
+    setColor(Vector4(0, 0, 0, 1));
+    mRegeneratePositions = true;
+    mRegenerateTextureCoords = true;
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -51,21 +56,25 @@ void MeshRenderer::update()
     bool regenerateVertices = !mComponentData.mIsInstanced;
     if(regenerateVertices)
     {
-        mMeshInstance->init(mComponentData.mMesh->mVertexCount, mComponentData.mMesh->mFacesCount);
-
-        updatePositions();
-        updateTextureCoords();
-                
-        mMeshInstance->appendToBonesVertexIDsData(mComponentData.mMesh->mBonesVertexIDsData);
-        mMeshInstance->appendToBonesVertexWeightsData(mComponentData.mMesh->mBonesVertexWeightsData);
+        if(mRegeneratePositions)
+        {
+            mMeshInstance->clearPositions();
+            updatePositions();
+            mRegeneratePositions = false;
+        }
+        if(mRegenerateTextureCoords)
+        {
+            mMeshInstance->clearTextureCoordinates();
+            updateTextureCoords();
+            mRegenerateTextureCoords = false;
+        }
     }
 
-    if(mComponentData.mMaterial and mComponentData.mMaterial->getMaterialData().mUseVertexColor)
+    if(mRegenerateColor && mComponentData.mMaterial and mComponentData.mMaterial->getMaterialData().mUseVertexColor)
     {
         mMeshInstance->setColor(mColor);
+        mRegenerateColor = false;
     }
-
-    mComponentDataChanged = false;
 }
 
 void MeshRenderer::updatePositions()
@@ -93,8 +102,10 @@ void MeshRenderer::setMaterial(Ptr<const Material> material)
     if(mComponentData.mMaterial != material)
     {
         mComponentData.mMaterial = material;
-        mComponentDataChanged = true;
-        mBatch->forceRegenerateBuffers();
+        if(mBatch)
+        {
+            mBatch->forceRegenerateBuffers();
+        }
     }
 }
 
@@ -103,8 +114,11 @@ void MeshRenderer::setColor(const Vector4& color)
     if(mColor != color)
     {
         mColor = color;
-        mComponentDataChanged = true;
-        mBatch->forceRegenerateBuffers();
+        mRegenerateColor = true;
+        if(mBatch)
+        {
+            mBatch->forceRegenerateBuffers();
+        }
     }
 }
 

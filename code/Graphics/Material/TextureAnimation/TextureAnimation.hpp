@@ -38,6 +38,7 @@ public:
     void setTextureAnimation(const TextureAnimation& textureAnimation);
     const TextureAnimationFrame& nextFrame();
     const TextureAnimationFrame& getCurrentFrame() const;
+    bool isNewFrame() const { return mTimeAccumulator == 0.0f; }
 private:
 	u32 mCurrentFrameNumber = 0;
 	f32 mTimeAccumulator = 0.0f;

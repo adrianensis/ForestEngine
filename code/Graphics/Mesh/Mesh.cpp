@@ -82,13 +82,13 @@ Vector3 Mesh::calculateSkinnedVertex(u32 i) const
 
 void Mesh::clear()
 {
-	mPositions.clear();
-	mNormals.clear();
-	mTextureCoordinates.clear();
-	mColors.clear();
-	mFaces.clear();
-	mBonesVertexIDsData.clear();
-	mBonesVertexWeightsData.clear();
+	clearPositions();
+	clearNormals();
+	clearTextureCoordinates();
+	clearColors();
+	clearFaces();
+	clearBonesVertexIDsData();
+	clearBonesVertexWeightsData();
 
 	mPositions.reserve(mVertexCount);
 	mTextureCoordinates.reserve(mVertexCount);

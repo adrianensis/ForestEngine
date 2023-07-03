@@ -186,7 +186,8 @@
 
 #define ADD_TO_VECTOR(BaseName) \
     void addTo##BaseName(const decltype(m##BaseName)::value_type & newElement) { m##BaseName.push_back(newElement); } \
-    void appendTo##BaseName(const decltype(m##BaseName) & otherVector) { m##BaseName.insert(m##BaseName.end(), otherVector.begin(), otherVector.end()); }
+    void appendTo##BaseName(const decltype(m##BaseName) & otherVector) { m##BaseName.insert(m##BaseName.end(), otherVector.begin(), otherVector.end()); } \
+    void clear##BaseName() { m##BaseName.clear(); }
 
 // --------------------------------------------------------
 // COPY

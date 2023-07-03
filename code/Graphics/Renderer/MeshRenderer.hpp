@@ -66,6 +66,9 @@ protected:
 
 protected:
 	OwnerPtr<Mesh> mMeshInstance;
+    bool mRegenerateColor = false;
+    bool mRegeneratePositions = false;
+    bool mRegenerateTextureCoords = false;
 
 private:
     Vector4 mColor;

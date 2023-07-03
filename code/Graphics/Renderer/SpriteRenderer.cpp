@@ -1,5 +1,10 @@
 #include "Graphics/Renderer/SpriteRenderer.hpp"
 
+void SpriteRenderer::preUpdate()
+{
+    updateTextureRegion();
+}
+
 void SpriteRenderer::updateTextureRegion()
 {
 	if (mComponentData.mMaterial.isValid())
@@ -10,8 +15,12 @@ void SpriteRenderer::updateTextureRegion()
 		{
             mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
 			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
-			mTextureRegion.setLeftTopFront(frame.mPosition);
-			mTextureRegion.setSize(Vector2(frame.mWidth, frame.mHeight));
+			if(mCurrentTextureAnimationUpdater.isNewFrame())
+            {
+                mTextureRegion.setLeftTopFront(frame.mPosition);
+                mTextureRegion.setSize(Vector2(frame.mWidth, frame.mHeight));
+                mRegenerateTextureCoords = true;
+            }
 		}
 	}
 };
@@ -72,4 +81,28 @@ const TextureAnimation* SpriteRenderer::getCurrentTextureAnimation() const
 	}
 
     return currentTextureAnimation;
+}
+
+void SpriteRenderer::setDepth(i32 depth)
+{
+    if(mDepth != depth)
+    {
+        mDepth = depth;
+        mRegeneratePositions = true;
+    }
+}
+
+void SpriteRenderer::setInvertAxisX(bool invertAxisX)
+{
+    if(mInvertAxisX != invertAxisX)
+    {
+        mInvertAxisX = invertAxisX;
+        mRegenerateTextureCoords = true;
+    }
+}
+
+void SpriteRenderer::setTextureRegion(const Rectangle& textureRegion)
+{
+    mTextureRegion = textureRegion;
+    mRegenerateTextureCoords = true;
 }

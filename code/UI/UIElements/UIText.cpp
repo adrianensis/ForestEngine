@@ -73,8 +73,8 @@ void UIText::setText(const std::string& text)
                 
                 renderer = createComponent<SpriteRenderer>(rendererData);
                 renderer->mUseDepth = (true);
-	            renderer->mDepth = (mLayer);
-				renderer->mTextureRegion = (Rectangle(textureCoordinates, textureSize));
+	            renderer->setDepth(mLayer);
+				renderer->setTextureRegion(Rectangle(textureCoordinates, textureSize));
 
                 mFontRenderers.push_back(renderer);
 			}

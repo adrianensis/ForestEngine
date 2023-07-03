@@ -62,12 +62,8 @@ u32 TextureAnimation::getNumberOfFrames() const
 
 const TextureAnimationFrame& TextureAnimationUpdater::nextFrame()
 {
-
 	f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
-
 	mTimeAccumulator += GET_SYSTEM(Time).getDeltaTimeMillis();
-
-
 	if (mTimeAccumulator >= time)
 	{
 		mTimeAccumulator = 0.0f;

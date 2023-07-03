@@ -46,7 +46,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	
     Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
 	renderer->mUseDepth = (true);
-	renderer->mDepth = (mConfig.mLayer);
+	renderer->setDepth(mConfig.mLayer);
 	renderer->setColor(mConfig.mStyle->mBackgroundColor);
     
 	setComponentsCache();
