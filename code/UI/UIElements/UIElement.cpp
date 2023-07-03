@@ -366,7 +366,7 @@ void UIElement::onMouseOverEventReceived()
 		{
 			if(mRenderer)
 			{
-				setColorOver();
+				setColorHover();
 
 				if (isMouseCursorInsideElement())
 				{
@@ -385,10 +385,11 @@ void UIElement::onScrollEventReceived(f32 scrollValue)
 {
 	if (isVisible())
 	{
-		if (isMouseCursorInsideElement())
+        if (isMouseCursorInsideElement())
 		{
 			scroll(scrollValue);
 		}
+        
 	}
 }
 
@@ -511,7 +512,7 @@ void UIElement::setColorRelease()
 	}
 }
 
-void UIElement::setColorOver()
+void UIElement::setColorHover()
 {
 	bool cursorInside = isMouseCursorInsideElement();
 	if (cursorInside)

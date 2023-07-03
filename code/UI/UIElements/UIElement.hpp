@@ -103,7 +103,7 @@ private:
 
     void setColorPressed();
     void setColorRelease();
-    void setColorOver();
+    void setColorHover();
 
 protected:
 	virtual void onPrePressed() { }
