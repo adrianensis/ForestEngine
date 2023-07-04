@@ -31,8 +31,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 {
 	UIElement::initFromConfig(config);
 
-	mTransform->mLocalPosition = (mConfig.mDisplayPosition);
-	mTransform->mScale = (Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
+	mTransform->setLocalPosition(mConfig.mDisplayPosition);
+	mTransform->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform->mAffectedByProjection = (false);
 
     RendererData rendererData;
@@ -77,7 +77,7 @@ void UIList::toggle()
 	// TODO : Temporary
 	if (mButtons.empty())
 	{
-		Vector3 scale = mTransform->mScale;
+		Vector3 scale = mTransform->getScale();
 		scale.x = scale.x * GET_SYSTEM(RenderContext).getAspectRatio();
 
 		UIBuilder uiBuilder;

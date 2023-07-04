@@ -84,7 +84,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 			{
 				Transform *t = &(*it)->mTransform.get();
 				Vector3 worldPosition = t->getWorldPosition();
-				Vector3 scale = t->mScale;
+				Vector3 scale = t->getScale();
 
 				f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
 				maxSize = std::max(std::max(maxSize, std::abs(worldPosition.x) + maxObjectScale),

@@ -277,6 +277,110 @@ void Editor::firstUpdate()
 	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
 	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
+	uiBuilder.
+	setText("Test Button").
+	setAdjustSizeToText(false).
+	setSize(Vector2(0.1f, 0.3f)).
+	create<UIList>().
+	getUIElement<UIList>()->
+	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	toggle();
 
     uiBuilder.
 	nextRow();
@@ -384,8 +488,8 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
-	gameObject->mTransform->mLocalPosition = (v);
-	gameObject->mTransform->mScale = (Vector3(size,size,size));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setScale(Vector3(size,size,size));
 
     RendererData rendererData;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
@@ -405,9 +509,9 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, 
 
     Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = true;
-	gameObject->mTransform->mLocalPosition = (v);
-	gameObject->mTransform->mScale = (Vector3(1,1,1) * size);
-	gameObject->mTransform->mRotation = (Vector3(0,rot,0));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
+	gameObject->mTransform->setRotation(Vector3(0,rot,0));
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
@@ -422,9 +526,9 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size,
 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = true;
-	gameObject->mTransform->mLocalPosition = (v);
-	gameObject->mTransform->mScale = (Vector3(1,1,1) * size);
-	gameObject->mTransform->mRotation = (Vector3(0,rot,0));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
+	gameObject->mTransform->setRotation(Vector3(0,rot,0));
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;

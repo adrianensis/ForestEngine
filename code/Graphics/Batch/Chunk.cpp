@@ -112,5 +112,5 @@ bool Chunk::containsRenderer(Ptr<const MeshRenderer> renderer, f32 epsilon /*= 0
 bool Chunk::containsRendererSphere(Ptr<const MeshRenderer> renderer) const
 {
 	Vector3 rendererPosition = renderer->mGameObject->mTransform->getWorldPosition();
-	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer->mGameObject->mTransform->mScale.y * 2.0f), 0);
+	return Geometry::testSphereSphere(Sphere(mCenter, mRadius), Sphere(rendererPosition, renderer->mGameObject->mTransform->getScale().y * 2.0f), 0);
 }

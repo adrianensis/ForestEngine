@@ -15,11 +15,11 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 
     if(mConfig.mParent)
     {
-        mTransform->mParent = mConfig.mParent->mTransform;
+        mConfig.mParent->mTransform->addChild(mTransform);
     }
 
-    mTransform->mLocalPosition = mConfig.mDisplayPosition;
-    mTransform->mScale = Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize));
+    mTransform->setLocalPosition(mConfig.mDisplayPosition);
+    mTransform->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize)));
     mTransform->mAffectedByProjection = false;
 
     RendererData rendererData;

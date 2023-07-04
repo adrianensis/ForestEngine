@@ -31,7 +31,6 @@ void MeshRenderer::init(RendererData& data)
 
 void MeshRenderer::onComponentAdded() 
 {
-
 }
 
 bool MeshRenderer::getIsWorldSpace() const
@@ -39,17 +38,18 @@ bool MeshRenderer::getIsWorldSpace() const
 	return mGameObject->mTransform->mAffectedByProjection;
 }
 
-Matrix4 MeshRenderer::getRendererModelMatrix() const
+void MeshRenderer::calculateRendererModelMatrix()
 {
-    Matrix4 rendererModelMatrix;
-    rendererModelMatrix.translation(mComponentData.mPositionOffset);
-    rendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
-    return rendererModelMatrix;
+    PROFILER_CPU()
+    mRendererModelMatrix.translation(mComponentData.mPositionOffset);
+    mRendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
 }
 
 void MeshRenderer::update()
 {
 	PROFILER_CPU()
+
+    calculateRendererModelMatrix();
 
 	preUpdate();
 

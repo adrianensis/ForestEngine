@@ -7,7 +7,10 @@
 #include "easy/profiler.h"
 
 #ifdef BUILD_WITH_EASY_PROFILER
-#define PROFILER_CPU() EASY_FUNCTION(profiler::colors::Magenta); //ProfilerBlock __ProfilerBlock(__PRETTY_FUNCTION__, false);
+// #define PROFILER_CPU() EASY_FUNCTION(profiler::colors::Magenta); EASY_BLOCK("ssss");
+#define PROFILER_CPU() EASY_BLOCK(__PRETTY_FUNCTION__);
+
+//ProfilerBlock __ProfilerBlock(__PRETTY_FUNCTION__, false);
 #define PROFILER_GPU() //ProfilerBlock __ProfilerBlockGPU(__PRETTY_FUNCTION__, true);
 #else
 #define PROFILER_CPU()

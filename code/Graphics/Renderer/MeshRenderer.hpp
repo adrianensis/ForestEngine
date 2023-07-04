@@ -57,12 +57,13 @@ public:
     void setMaterial(Ptr<const Material> material);
     void setColor(const Vector4& color);
 
-    Matrix4 getRendererModelMatrix() const;
-
 protected:
     virtual void preUpdate() {}
     virtual void updatePositions();
     virtual void updateTextureCoords();
+
+private:
+    void calculateRendererModelMatrix();
 
 protected:
 	OwnerPtr<Mesh> mMeshInstance;
@@ -74,9 +75,11 @@ private:
     Vector4 mColor;
     Ptr<Batch> mBatch;
     Ptr<const Chunk> mChunk;
+    Matrix4 mRendererModelMatrix;
 
 public:
     CGET(MeshInstance)
     CRGET_SET(Batch)
     CRGET_SET(Chunk)
+    CRGET(RendererModelMatrix)
 };

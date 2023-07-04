@@ -51,6 +51,7 @@ void GPUMeshBuffer::terminate()
 
 void GPUMeshBuffer::resize(const Mesh& mesh)
 {
+    PROFILER_CPU()
 	mBuffersLayout.getBuffer(mVBOPosition).resize(mesh.mPositions.capacity());
 	mBuffersLayout.getBuffer(mVBOTexture).resize(mesh.mTextureCoordinates.capacity());
     if(mGPUMeshBufferData.mUseVertexColor)
@@ -64,6 +65,7 @@ void GPUMeshBuffer::resize(const Mesh& mesh)
 
 void GPUMeshBuffer::setData(const Mesh& mesh)
 {
+    PROFILER_CPU()
 	mBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
 	mBuffersLayout.getBuffer(mVBOTexture).setData(mesh.mTextureCoordinates);
     if(mGPUMeshBufferData.mUseVertexColor)
@@ -77,6 +79,7 @@ void GPUMeshBuffer::setData(const Mesh& mesh)
 
 void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
 {
+    PROFILER_CPU()
 	GET_SYSTEM(RenderContext).resizeEBO(mEBO, mesh.mFaces.size() * 3, mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	GET_SYSTEM(RenderContext).setDataEBO(mEBO, mesh.mFaces);
 }

@@ -52,7 +52,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 	{
 		if (mButtons.empty())
 		{
-			Vector3 scale = mTransform->mScale;
+			Vector3 scale = mTransform->getScale();
 			scale.x = scale.x * GET_SYSTEM(RenderContext).getAspectRatio();
 			
 			UIBuilder uiBuilder;

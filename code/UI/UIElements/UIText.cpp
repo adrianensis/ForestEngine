@@ -22,13 +22,13 @@ void UIText::initFromConfig(const UIElementConfig& config)
 
 	Vector3 textSize = Vector3(UIUtils::correctAspectRatio_X(mConfig.mTextSize), 1);
 
-	mTransform->mLocalPosition = mConfig.mDisplayPosition;
-	mTransform->mScale = textSize;
+	mTransform->setLocalPosition(mConfig.mDisplayPosition);
+	mTransform->setScale(textSize);
 	mTransform->mAffectedByProjection = false;
 
 	if (mConfig.mParent)
 	{
-		mTransform->mParent = mConfig.mParent->mTransform;
+        mConfig.mParent->mTransform->addChild(mTransform);
 	}
 
 	setLayer(mConfig.mLayer);

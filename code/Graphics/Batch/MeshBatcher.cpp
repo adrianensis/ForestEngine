@@ -35,6 +35,7 @@ void MeshBatcher::init(const BatchData batchData)
 
 void MeshBatcher::addDataToBuffers(Ptr<const Mesh> meshInstance)
 {
+    PROFILER_CPU()
     mMeshBuilder.appendToPositions(meshInstance->mPositions);
     mMeshBuilder.appendToTextureCoordinates(meshInstance->mTextureCoordinates);
     if(mBatchData.mMaterial->getMaterialData().mUseVertexColor)
@@ -145,6 +146,7 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 
 void MeshBatcher::sendDataToGPU()
 {	
+    PROFILER_CPU()
     mGPUMeshBuffer.setData(mMeshBuilder);
     mDataSentToGPU = true;
 }
