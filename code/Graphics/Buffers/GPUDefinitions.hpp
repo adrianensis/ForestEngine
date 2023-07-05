@@ -37,7 +37,7 @@ public:
     {
     public:
         inline static const GPUVariableData mPosition{Types::mVector3, "position"};
-        inline static const GPUVariableData mTexture{Types::mVector2, "texcoord"};
+        inline static const GPUVariableData mTextureCoord{Types::mVector2, "texcoord"};
         inline static const GPUVariableData mColor{Types::mVector4, "color"};
         inline static const GPUVariableData mModelMatrix{Types::mMatrix4, "modelMatrix"};
         inline static const GPUVariableData mBonesIDs{Types::mBoneIDs, "BoneIDs"};
@@ -67,7 +67,7 @@ public:
     {
     public:
         inline static const GPUVariableData mPosition{Types::mVector4, "gl_Position"};
-        inline static const GPUVariableData mTexture{Types::mVector2, "vTexcoord"};
+        inline static const GPUVariableData mTextureCoord{Types::mVector2, "vTexcoord"};
         inline static const GPUVariableData mColor{Types::mVector4, "vColor"};
     };
 

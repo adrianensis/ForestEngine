@@ -45,21 +45,24 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
 
     ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
 
-    FunctionDefinition func = shaderBuilderFunctionsLibrary.getFunctionCalculateSkinnedPosition(get());
-    get().function(func);
+    FunctionDefinition functionCalculateSkinnedPosition = shaderBuilderFunctionsLibrary.getFunctionCalculateSkinnedPosition(get(), material);
+    if(material->getMaterialData().mIsSkinned)
+    {
+        get().function(functionCalculateSkinnedPosition);
+    }
 
     // retrieve the needed attributes
     auto& position = get().getAttribute(GPUBuiltIn::VertexInput::mPosition.mName);
     auto& modelMatrix = get().getAttribute(GPUBuiltIn::VertexInput::mModelMatrix.mName);
     auto& color = get().getAttribute(GPUBuiltIn::VertexInput::mColor.mName);
-    auto& texture = get().getAttribute(GPUBuiltIn::VertexInput::mTexture.mName);    
+    auto& textureCoord = get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);    
 
     auto& projectionMatrix = get().getAttribute(GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
     auto& viewMatrix = get().getAttribute(GPUBuiltIn::Uniforms::mViewMatrix.mName);
     auto& isInstanced = get().getAttribute(GPUBuiltIn::Uniforms::mIsInstanced.mName);
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
-    auto& outTexture = get().getAttribute(GPUBuiltIn::VertexOutput::mTexture.mName);
+    auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
 
     auto& mainFunc = get().function("void", "main");
 
@@ -67,11 +70,18 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     Variable PVMatrix;
 
     mainFunc.body().
-    variable(finalPositon, "vec4", "finalPositon", call(func.mName, {call("vec4", {position, {"1.0f"}})})).
-    variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix)).
+    variable(finalPositon, "vec4", "finalPositon", call("vec4", {position, {"1.0f"}}));
+    
+    if(material->getMaterialData().mIsSkinned)
+    {
+        mainFunc.body().
+        set(finalPositon, call(functionCalculateSkinnedPosition.mName, {finalPositon}));
+    }
+
+    mainFunc.body().variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix)).
     set(finalPositon, modelMatrix.mul(finalPositon)).
     set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon)).
-    set(outTexture, texture);
+    set(outTextureCoord, textureCoord);
 
     if(material->getMaterialData().mUseVertexColor)
     {
@@ -114,7 +124,7 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     }
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
-    auto& inTexture = get().getAttribute(GPUBuiltIn::VertexOutput::mTexture.mName);
+    auto& inTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
     auto& outColor = get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
 
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
@@ -144,9 +154,8 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
 
     mainFunc.body().
     set(outColor, color).
-    variable(t, "vec2", "t", inTexture).
     ifBlock(hasTexture).
-        set(outColor, call("texture2D", {sampler, t})).
+        set(outColor, call("texture2D", {sampler, inTextureCoord})).
         ifBlock(useColorAsTint).
             set(outColor.dot("r"), outColor.dot("r").add(color.dot("r"))).
             set(outColor.dot("g"), outColor.dot("g").add(color.dot("g"))).

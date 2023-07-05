@@ -2,7 +2,7 @@
 #include "Graphics/Shaders/ShaderBuilderNodes.hpp"
 #include "Graphics/Buffers/GPUDefinitions.hpp"
 
-ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program)
+ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
     using namespace ShaderBuilderNodes;
     Variable pos = Variable(GPUBuiltIn::Types::mVector4.mTypeName, "pos");

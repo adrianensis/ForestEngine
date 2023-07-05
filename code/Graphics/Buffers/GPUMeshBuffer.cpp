@@ -17,7 +17,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
     mBuffersLayout.init(mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced);
     GPUBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
     mVBOPosition = mBuffersLayout.addBuffer(bufferDataPosition);
-    GPUBufferData bufferDataTexture(GPUBuiltIn::VertexInput::mTexture);
+    GPUBufferData bufferDataTexture(GPUBuiltIn::VertexInput::mTextureCoord);
     mVBOTexture = mBuffersLayout.addBuffer(bufferDataTexture);
     if(mGPUMeshBufferData.mUseVertexColor)
     {

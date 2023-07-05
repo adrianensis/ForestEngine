@@ -12,12 +12,12 @@ void ModelRenderer::init(ModelRendererData& data)
 
 void ModelRenderer::onComponentAdded() 
 {
-	const auto& meshes = mComponentData.mModel->mMeshes;
+	const auto& meshes = mComponentData.mModel->getMeshes();
     FOR_LIST(it, meshes)
 	{
         RendererData rendererData;
 		rendererData.mMesh = *it;
-		rendererData.mMaterial = mComponentData.mModel->mMeshMaterials.at(*it);
+		rendererData.mMaterial = mComponentData.mModel->getMeshMaterials().at(*it);
 		rendererData.mIsInstanced = mComponentData.mIsInstanced;
 		rendererData.mStencilData = mComponentData.mStencilData;
 

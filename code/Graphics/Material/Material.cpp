@@ -26,21 +26,25 @@ void Material::init(const MaterialData& materialData, u32 id)
     mUniforms.push_back(GPUBuiltIn::Uniforms::mProjectionMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mViewMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mIsInstanced);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mIsAnimated);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mUseColorAsTint);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mHasTexture);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mAlphaEnabled);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mHasBorder);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mBonesTransform);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
-    mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
-    mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
+    if(materialData.mIsSkinned)
+    {
+        mUniforms.push_back(GPUBuiltIn::Uniforms::mBonesTransform);
+        mUniforms.push_back(GPUBuiltIn::Uniforms::mIsAnimated);
 
-    mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTexture);
+        mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
+        mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
+    }
+
+    mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     if(mMaterialData.mUseVertexColor)
     {
         mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);

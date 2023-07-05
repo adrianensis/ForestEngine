@@ -35,13 +35,16 @@ void Model::init(const std::string& path)
 
     if (result == cgltf_result_success)
 	{
+        ASSERT_MSG(mCGLTFData->skins_count <= 1, "Only 1 Skin allowed!")
+        mIsSkinned = mCGLTFData->skins_count == 1;
+
         loadGLTFMaterials();
 
         if(mCGLTFData->meshes_count > 0)
         {
             loadGLTFMeshes();
 
-            if (mCGLTFData->skins_count == 1)
+            if (mIsSkinned)
             {
                 const cgltf_skin& skin = mCGLTFData->skins[0];
                 loadGLTFBones(skin);
@@ -67,6 +70,7 @@ void Model::loadGLTFMaterials()
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
+            materialData.mIsSkinned = mIsSkinned;
 
             if(cgltfMaterial.has_pbr_metallic_roughness)
             {

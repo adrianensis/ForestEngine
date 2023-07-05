@@ -162,6 +162,7 @@ public:
 	bool mHasBorder = false;
 	bool mUseVertexColor = false;
 	bool mUseColorAsTint = false;
+    bool mIsSkinned = false;
     bool mCreateMipMap = true;
 	Vector4 mBaseColor = Vector4(0,0,0,1);
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
