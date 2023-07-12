@@ -22,12 +22,11 @@ public:
     ~GPUMeshBuffer();
 
     void init(const GPUMeshBufferData& gpuMeshBufferData);
-    void resize(const Mesh& mesh);
-    void setData(const Mesh& mesh);
+    void resizeMeshData(const Mesh& mesh);
+    void resizeInstancesData(u32 maxInstances);
+    void setMeshData(const Mesh& mesh);
+    void setInstancesData(const std::vector<Matrix4>& matrices);
     void setIndexesData(const Mesh& mesh);
-    void addInstanceMatrix(const Matrix4& modelMatrix);
-    void clear();
-    void setMaxInstances(u32 maxInstances);
     void enable();
     void disable();
 
@@ -38,8 +37,6 @@ private:
     GPUMeshBufferData mGPUMeshBufferData;
     u32 mVAO = 0;
     
-	std::vector<Matrix4> mMatrices;
-
     u32 mVBOPosition = 0;
 	u32 mVBOTexture = 0;
 	u32 mVBOColor = 0;
@@ -48,6 +45,8 @@ private:
 	u32 mVBOModelMatrix = 0;
 
     GPUBuffersLayout mBuffersLayout;
+
+    u32 mMaxInstances = 0;
 
 	u32 mEBO = 0;
 

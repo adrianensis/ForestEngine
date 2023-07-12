@@ -30,6 +30,7 @@ public:
 private:
     BatchData mBatchData;
 	Mesh mMeshBuilder;
+	std::vector<Matrix4> mMatrices;
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;

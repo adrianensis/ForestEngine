@@ -49,7 +49,7 @@ void GPUMeshBuffer::terminate()
     GET_SYSTEM(RenderContext).deleteEBO(mEBO);
 }
 
-void GPUMeshBuffer::resize(const Mesh& mesh)
+void GPUMeshBuffer::resizeMeshData(const Mesh& mesh)
 {
     PROFILER_CPU()
 	mBuffersLayout.getBuffer(mVBOPosition).resize(mesh.mPositions.capacity());
@@ -60,10 +60,17 @@ void GPUMeshBuffer::resize(const Mesh& mesh)
     }
 	mBuffersLayout.getBuffer(mVBOBonesIDs).resize(mesh.mBonesVertexIDsData.capacity());
 	mBuffersLayout.getBuffer(mVBOBonesWeights).resize(mesh.mBonesVertexWeightsData.capacity());
-    mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
 }
 
-void GPUMeshBuffer::setData(const Mesh& mesh)
+void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
+{
+    PROFILER_CPU()
+    mMaxInstances = maxInstances;
+    u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mVertexCount;
+    mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMaxInstances * matricesBufferSizeMultiplier);
+}
+
+void GPUMeshBuffer::setMeshData(const Mesh& mesh)
 {
     PROFILER_CPU()
 	mBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
@@ -74,7 +81,12 @@ void GPUMeshBuffer::setData(const Mesh& mesh)
     }
 	mBuffersLayout.getBuffer(mVBOBonesIDs).setData(mesh.mBonesVertexIDsData);
 	mBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
-    mBuffersLayout.getBuffer(mVBOModelMatrix).setData(mMatrices);
+}
+
+void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices)
+{
+    PROFILER_CPU()
+	mBuffersLayout.getBuffer(mVBOModelMatrix).setData(matrices);
 }
 
 void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
@@ -82,39 +94,6 @@ void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
     PROFILER_CPU()
 	GET_SYSTEM(RenderContext).resizeEBO(mEBO, mesh.mFaces.size() * 3, mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	GET_SYSTEM(RenderContext).setDataEBO(mEBO, mesh.mFaces);
-}
-
-void GPUMeshBuffer::addInstanceMatrix(const Matrix4& modelMatrix)
-{
-	PROFILER_CPU()
-    if(mGPUMeshBufferData.mIsInstanced)
-	{
-	    mMatrices.push_back(modelMatrix);
-    }
-    else
-    {
-        FOR_RANGE(i, 0, mGPUMeshBufferData.mVertexCount)
-        {
-            mMatrices.push_back(modelMatrix);
-        }
-    }
-}
-
-void GPUMeshBuffer::clear()
-{
-	PROFILER_CPU()
-
-    mMatrices.clear();
-}
-
-void GPUMeshBuffer::setMaxInstances(u32 maxInstances)
-{
-	PROFILER_CPU()
-
-    mMatrices.clear();
-    u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mVertexCount;
-    mMatrices.reserve(maxInstances * matricesBufferSizeMultiplier);
-    mBuffersLayout.getBuffer(mVBOModelMatrix).resize(mMatrices.capacity());
 }
 
 void GPUMeshBuffer::enable()
