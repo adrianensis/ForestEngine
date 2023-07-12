@@ -16,7 +16,7 @@ public:
     void drawCall();
     void enable();
     void disable();
-    const GPUBuffersLayout& getGPUBuffersLayout() const { return mGPUMeshBuffer.mBuffersLayout; }
+    const GPUBuffersLayout& getGPUBuffersLayout() const { return mGPUMeshBuffer.getBuffersLayout(); }
 
 private:
     void addDataToBuffers(Ptr<const Mesh> meshInstance);

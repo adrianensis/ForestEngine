@@ -34,7 +34,7 @@ public:
 private:
     void terminate();
 
-public:
+private:
     GPUMeshBufferData mGPUMeshBufferData;
     u32 mVAO = 0;
     
@@ -50,4 +50,7 @@ public:
     GPUBuffersLayout mBuffersLayout;
 
 	u32 mEBO = 0;
+
+public:
+    CRGET(BuffersLayout)
 };
