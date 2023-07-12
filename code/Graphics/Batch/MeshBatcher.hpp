@@ -19,7 +19,10 @@ public:
     const GPUBuffersLayout& getGPUBuffersLayout() const { return mGPUMeshBuffer.getBuffersLayout(); }
 
 private:
-    void addDataToBuffers(Ptr<const Mesh> meshInstance);
+    void initInternal(u32 maxInstances);
+    void initSingleMeshData();
+    void resizeInternal(u32 maxInstances);
+    void addMeshDataToBuffers(Ptr<const Mesh> meshInstance);
     void clear();
     void generateFacesData(u32 meshesCount);
     void sendDataToGPU();

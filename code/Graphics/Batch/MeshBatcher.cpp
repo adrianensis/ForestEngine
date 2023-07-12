@@ -16,24 +16,13 @@ void MeshBatcher::init(const BatchData batchData)
 	
 	if(mBatchData.mIsInstanced)
 	{
-		mMeshBuilder.init(mBatchData.mMesh->mVertexCount, mBatchData.mMesh->mFacesCount);
-
-        addDataToBuffers(mBatchData.mMesh);
-
-		generateFacesData(1);
-		mGPUMeshBuffer.resizeMeshData(mBatchData.mMesh.get());
-
-		mDataSentToGPU = false;
-
-		mGPUMeshBuffer.setMeshData(mBatchData.mMesh.get());
-
-		mMeshesIndex = 0;
+		initSingleMeshData();
 	}
 
     disable();
 }
 
-void MeshBatcher::addDataToBuffers(Ptr<const Mesh> meshInstance)
+void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     PROFILER_CPU()
     mMeshBuilder.appendToPositions(meshInstance->mPositions);
@@ -63,18 +52,35 @@ void MeshBatcher::resize(u32 size)
 			mMaxMeshesThreshold += mMaxMeshesIncrement;
 		}
 
-        mGPUMeshBuffer.resizeInstancesData(mMaxMeshesThreshold);
-		if (!mBatchData.mIsInstanced)
-		{
-			mMeshBuilder.init(mBatchData.mMesh->mVertexCount * mMaxMeshesThreshold, mBatchData.mMesh->mFacesCount * mMaxMeshesThreshold);
-			generateFacesData(mMaxMeshesThreshold);
-			mGPUMeshBuffer.resizeMeshData(mMeshBuilder);
-		}
+        resizeInternal(mMaxMeshesThreshold);
 	}
 
 	mMeshesIndex = 0;
 
 	mDataSentToGPU = false;
+}
+
+void MeshBatcher::initInternal(u32 maxInstances)
+{
+    mMeshBuilder.init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mFacesCount * maxInstances);
+    generateFacesData(maxInstances);
+    mGPUMeshBuffer.resizeMeshData(mMeshBuilder);
+}
+
+void MeshBatcher::initSingleMeshData()
+{
+    initInternal(1);
+    mGPUMeshBuffer.setMeshData(mBatchData.mMesh.get());
+    addMeshDataToBuffers(mBatchData.mMesh);
+}
+
+void MeshBatcher::resizeInternal(u32 maxInstances)
+{
+    mGPUMeshBuffer.resizeInstancesData(mMaxMeshesThreshold);
+    if (!mBatchData.mIsInstanced)
+    {
+        initInternal(mMaxMeshesThreshold);
+    }
 }
 
 void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance)
@@ -92,7 +98,7 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
             mMatrices.push_back(modelMatrix);
         }
 
-        addDataToBuffers(meshInstance);
+        addMeshDataToBuffers(meshInstance);
     }
 
 	mMeshesIndex++;
