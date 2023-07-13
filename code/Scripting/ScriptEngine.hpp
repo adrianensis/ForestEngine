@@ -10,7 +10,7 @@ class ScriptEngine: public EngineSystem
 
 public:
     void init();
-    void addComponent(Ptr<EngineSystemComponent> component);
+    void addComponent(Ptr<EngineSystemComponent> component) override;
     void update();
     void terminate();
 

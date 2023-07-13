@@ -18,7 +18,7 @@ public:
     void update();
     void terminate();
     
-    void addComponent(Ptr<EngineSystemComponent> component);
+    void addComponent(Ptr<EngineSystemComponent> component) override;
 
     Ptr<Chunk> assignChunk(Ptr<MeshRenderer> renderer);
     void assignBatch(Ptr<MeshRenderer> renderer);
