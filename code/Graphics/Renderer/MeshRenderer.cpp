@@ -51,8 +51,6 @@ void MeshRenderer::update()
 
     calculateRendererModelMatrix();
 
-	preUpdate();
-
     bool regenerateVertices = !mComponentData.mIsInstanced;
     if(regenerateVertices)
     {
@@ -80,11 +78,44 @@ void MeshRenderer::update()
 void MeshRenderer::updatePositions()
 {
     mMeshInstance->appendToPositions(mComponentData.mMesh->mPositions);
+
+    if(mUseDepth)
+    {
+        FOR_RANGE(i, 0, mMeshInstance->mPositions.size())
+        {
+            Vector3 vertexPosition = mMeshInstance->mPositions[i];
+            vertexPosition.z = mDepth;
+            mMeshInstance->mPositions[i] = vertexPosition;
+        }
+    }
 }
 
 void MeshRenderer::updateTextureCoords()
 {
     mMeshInstance->appendToTextureCoordinates(mComponentData.mMesh->mTextureCoordinates);
+
+    updateTextureRegion();
+    FOR_RANGE(i, 0, mMeshInstance->mVertexCount)
+    {
+        Vector2 vertexTexture = mComponentData.mMesh->mTextureCoordinates[i];
+        Vector2 regionSize = mTextureRegion.getSize();
+        Vector2 regionPosition = mTextureRegion.getLeftTopFront();
+
+        Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
+
+        if (mInvertAxisX)
+        {
+            textureCoord.x = 1.0f - textureCoord.x;
+
+            const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
+            if (currentTextureAnimation)
+            {
+                textureCoord.x = textureCoord.x - (1.0f - (currentTextureAnimation->getNumberOfFrames() * regionSize.x));
+            }
+        }
+
+        mMeshInstance->mTextureCoordinates[i] = textureCoord;
+    }
 }
 
 void MeshRenderer::onDestroy() 
@@ -120,6 +151,65 @@ void MeshRenderer::setColor(const Vector4& color)
             mBatch->requestRegenerateBuffers();
         }
     }
+}
+
+void MeshRenderer::updateTextureRegion()
+{
+	if (mComponentData.mMaterial.isValid())
+	{
+		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
+
+		if (currentTextureAnimation and !currentTextureAnimation->mFrames.empty())
+		{
+            mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
+			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
+			if(mCurrentTextureAnimationUpdater.isNewFrame())
+            {
+                mTextureRegion.setLeftTopFront(frame.mPosition);
+                mTextureRegion.setSize(Vector2(frame.mWidth, frame.mHeight));
+                mRegenerateTextureCoords = true;
+            }
+		}
+	}
+}
+
+const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
+{
+	const TextureAnimation* currentTextureAnimation = nullptr;
+    if (mComponentData.mMaterial.isValid())
+	{
+        const auto& textureAnimationsMap = mComponentData.mMaterial->getMaterialData().mTextureAnimations;
+		if (MAP_CONTAINS(textureAnimationsMap, mCurrentTextureAnimationKey))
+		{
+			currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
+		}
+	}
+
+    return currentTextureAnimation;
+}
+
+void MeshRenderer::setDepth(i32 depth)
+{
+    if(mDepth != depth)
+    {
+        mDepth = depth;
+        mRegeneratePositions = true;
+    }
+}
+
+void MeshRenderer::setInvertAxisX(bool invertAxisX)
+{
+    if(mInvertAxisX != invertAxisX)
+    {
+        mInvertAxisX = invertAxisX;
+        mRegenerateTextureCoords = true;
+    }
+}
+
+void MeshRenderer::setTextureRegion(const Rectangle& textureRegion)
+{
+    mTextureRegion = textureRegion;
+    mRegenerateTextureCoords = true;
 }
 
 IMPLEMENT_SERIALIZATION(MeshRenderer)

@@ -59,7 +59,7 @@ void UIText::setText(const std::string& text)
 		{
 			FOR_RANGE(i, 0, text.length())
 			{
-				Ptr<SpriteRenderer> renderer;
+				Ptr<MeshRenderer> renderer;
 
 				char character = text.at(i);
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
@@ -71,7 +71,7 @@ void UIText::setText(const std::string& text)
                 rendererData.mStencilData = calculateStencilData();
 				rendererData.mPositionOffset = (Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(RenderContext).getAspectRatio(), 0, 0));
                 
-                renderer = createComponent<SpriteRenderer>(rendererData);
+                renderer = createComponent<MeshRenderer>(rendererData);
                 renderer->mUseDepth = (true);
 	            renderer->setDepth(mLayer);
 				renderer->setTextureRegion(Rectangle(textureCoordinates, textureSize));

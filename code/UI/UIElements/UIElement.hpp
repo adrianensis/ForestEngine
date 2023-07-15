@@ -7,7 +7,6 @@
 
 
 class MeshRenderer;
-class SpriteRenderer;
 class UIGroup;
 
 enum class UIElementState

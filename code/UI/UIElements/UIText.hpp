@@ -25,7 +25,7 @@ protected:
 private:
 	i32 mLayer = 0;
 	std::string mString;
-	std::vector<Ptr<SpriteRenderer>> mFontRenderers;
+	std::vector<Ptr<MeshRenderer>> mFontRenderers;
     bool mIsEditable = false;
 
 protected:

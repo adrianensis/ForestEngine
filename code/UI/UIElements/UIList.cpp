@@ -44,7 +44,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
-    Ptr<SpriteRenderer> renderer = createComponent<SpriteRenderer>(rendererData);
+    Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->mUseDepth = (true);
 	renderer->setDepth(mConfig.mLayer);
 	renderer->setColor(mConfig.mStyle->mBackgroundColor);

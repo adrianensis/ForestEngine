@@ -56,14 +56,18 @@ public:
     bool hasValidChunk() const;
     void setMaterial(Ptr<const Material> material);
     void setColor(const Vector4& color);
+    void setDepth(i32 depth);
+    void setInvertAxisX(bool invertAxisX);
+    void setTextureRegion(const Rectangle& textureRegion);
 
 protected:
-    virtual void preUpdate() {}
-    virtual void updatePositions();
-    virtual void updateTextureCoords();
+    void updatePositions();
+    void updateTextureCoords();
 
 private:
     void calculateRendererModelMatrix();
+    const TextureAnimation* getCurrentTextureAnimation() const;
+    void updateTextureRegion();
 
 protected:
 	OwnerPtr<Mesh> mMeshInstance;
@@ -76,6 +80,16 @@ private:
     Ptr<Batch> mBatch;
     Ptr<const Chunk> mChunk;
     Matrix4 mRendererModelMatrix;
+
+public:
+    std::string mCurrentTextureAnimationKey;
+    bool mUseDepth = false; // overrides Z with Depth
+
+private:
+    TextureAnimationUpdater mCurrentTextureAnimationUpdater;
+    Rectangle mTextureRegion = Rectangle(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
+    bool mInvertAxisX = false;
+    i32 mDepth = 0;
 
 public:
     CGET(MeshInstance)
