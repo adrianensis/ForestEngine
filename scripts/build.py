@@ -12,18 +12,24 @@ buildDir="build"
 buildType="Debug"
 buildUnitTests=False
 buildIntegrationTests=False
-buildTools=False
+toolsToBuild = []
+appsToBuild = []
 enableLogs=False
 enableProfiler=False
 
-argv = sys.argv[1:]
+argv = []
+if(len(sys.argv) > 1):
+    argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, ":ruixlchp")
+  opts, args = getopt.getopt(argv, "uilchp", ["app=", "tool="])
 except:
-  print("Error parsing opts")
+  print("Error parsing options!")
+  exit(1)
 
 for opt, arg in opts:
+    arg_list = arg.split(",")
+
     if opt in ['-c']:
       os.system('./scripts/clean.sh')
     elif opt in ['-r']:
@@ -32,8 +38,10 @@ for opt, arg in opts:
       buildUnitTests=True
     elif opt in ['-i']:
       buildIntegrationTests=True
-    elif opt in ['-x']:
-      buildTools=True
+    elif opt in ['--tool']:
+      toolsToBuild = arg_list
+    elif opt in ['--app']:
+      appsToBuild = arg_list
     elif opt in ['-l']:
       enableLogs=True
     elif opt in ['-p']:
@@ -68,15 +76,24 @@ elif system_name == "Windows":
 #     pass
 
 # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
-buildCommand = 'cmake {cmake_generator} -DCMAKE_BUILD_TYPE={buildType} -DBUILD_UNIT_TESTS={buildUnitTests} -DBUILD_INTEGRATION_TESTS={buildIntegrationTests} -DBUILD_TOOLS={buildTools} -DENABLE_LOGS={enableLogs} -DENABLE_PROFILER={enableProfiler} ..'.format(
+
+buildCommandArgs = [
+"-DCMAKE_BUILD_TYPE=" + str(buildType),
+"-DBUILD_UNIT_TESTS=" + str(buildUnitTests),
+"-DBUILD_INTEGRATION_TESTS=" + str(buildIntegrationTests),
+"-DTOOLS_TO_BUILD=" + "\"" + str(";".join(toolsToBuild) + "\""),
+"-DAPPS_TO_BUILD=" + "\"" + str(";".join(appsToBuild) + "\""),
+"-DENABLE_LOGS=" + str(enableLogs),
+"-DENABLE_PROFILER=" + str(enableProfiler),
+]
+
+buildCommandArgsString =" ".join(buildCommandArgs)
+
+buildCommand = 'cmake {cmake_generator} {buildCommandArgsString} ..'.format(
   cmake_generator = cmake_generator,
-  buildType = buildType,
-  buildUnitTests = buildUnitTests,
-  buildIntegrationTests = buildIntegrationTests,
-  buildTools = buildTools,
-  enableLogs = enableLogs,
-  enableProfiler = enableProfiler
+  buildCommandArgsString = buildCommandArgsString,
 )
+print(buildCommand)
 os.system(buildCommand)
 
 if system_name == "Linux" or system_name == "Linux2":

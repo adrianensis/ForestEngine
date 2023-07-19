@@ -20,7 +20,7 @@ def generateClassesRegister(projectDir, generated_code_dirname):
     includes_code = []
 
     # add folders to foldersMap
-    foldersToExplore = ["tools", "games"]
+    foldersToExplore = ["tools", "apps"]
 
     for folder in foldersToExplore:
         current_path = os.path.join(projectDir, folder)
@@ -55,7 +55,7 @@ def generateClassesRegister(projectDir, generated_code_dirname):
             register_macros_code = register_macros
             includes_code = includes
 
-        # only generate code for tools/games, nor for core code
+        # only generate code for tools/apps, nor for core code
         if keyFolder != keyFolder_code:
 
             pathlib.Path(folder).mkdir(parents=True, exist_ok=True)

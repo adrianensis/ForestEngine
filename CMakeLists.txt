@@ -14,7 +14,7 @@ project(${PROJECTNAME} LANGUAGES CXX C)
 
 function(build_programs path prefix)
   
-  message("BUILD PROGRAMS (${prefix}): " ${path})
+  message("BUILD PROGRAMS ${path}")
 
   file(GLOB PROGRAM_PATHS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${path}/*")
 
@@ -34,6 +34,24 @@ function(build_programs path prefix)
     install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 
   endforeach()
+endfunction()
+
+function(build_single_program path prefix program_name)
+  
+  set(PROGRAM_PATH "${path}/${program_name}")
+  message("BUILD PROGRAM ${PROGRAM_PATH}")
+
+  file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp" "${PROGRAM_PATH}/*.hpp")
+
+  include_directories("${PROGRAM_PATH}")
+
+#   get_filename_component(PROGRAM_NAME ${PROGRAM_PATH} NAME_WE) # NAME_WE = name with extension
+
+  set(PROGRAM_FINAL_NAME "${prefix}_${program_name}" )
+  add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
+  target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
+  install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
+
 endfunction()
 
 # ----------------------------------------------------------------------------
@@ -245,11 +263,15 @@ endif(BUILD_INTEGRATION_TESTS)
 # TOOLS
 # ----------------------------------------------------------------------------
 
-if(BUILD_TOOLS)
-  build_programs("tools" "tool")
-endif(BUILD_TOOLS)
+message("Tools to build: ${TOOLS_TO_BUILD}")
+FOREACH(TOOL ${TOOLS_TO_BUILD})
+build_single_program("tools" "tool" ${TOOL})
+ENDFOREACH()
 # ----------------------------------------------------------------------------
 # GAMES
 # ----------------------------------------------------------------------------
 
-build_programs("games" "games")
+message("Apps to build: ${APPS_TO_BUILD}")
+FOREACH(APP ${APPS_TO_BUILD})
+  build_single_program("apps" "app" ${APP})
+ENDFOREACH()

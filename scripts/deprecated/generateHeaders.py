@@ -27,7 +27,7 @@ def generateHeaders(projectDir, generated_code_dirname):
     foldersMap[keyFolder_code] = "code"
 
     # add folders to foldersMap
-    foldersToExplore = ["tools", "games"]
+    foldersToExplore = ["tools", "apps"]
 
     for folder in foldersToExplore:
         current_path = os.path.join(projectDir, folder)

@@ -10,7 +10,7 @@ os.chdir(cwd)
 #print(cwd)
 
 # folders to find classes
-folders = ["code", "tools", "games"]
+folders = ["code", "tools", "apps"]
 
 class_map = getClassList(cwd, folders)
 
