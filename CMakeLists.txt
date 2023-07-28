@@ -157,7 +157,7 @@ add_subdirectory("${DEPENDENCIES_DIR}/json-3.9.1")
 # link_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/lib")
 # add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
 
-# SDL2_image
+# stb
 include_directories("${DEPENDENCIES_DIR}/stb")
 
 # Duktape
