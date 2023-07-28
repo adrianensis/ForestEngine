@@ -1,7 +1,3 @@
-# ----------------------------------------------------------------------------
-# FOREST ENGINE
-# ----------------------------------------------------------------------------
-
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
 # project name
@@ -11,30 +7,6 @@ project(${PROJECTNAME} LANGUAGES CXX C)
 # ----------------------------------------------------------------------------
 # FUNCTIONS
 # ----------------------------------------------------------------------------
-
-function(build_programs path prefix)
-  
-  message("BUILD PROGRAMS ${path}")
-
-  file(GLOB PROGRAM_PATHS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${path}/*")
-
-  message("${PROGRAM_PATHS}")
-
-  foreach(PROGRAM_PATH ${PROGRAM_PATHS})
-
-    file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp" "${PROGRAM_PATH}/*.hpp")
-
-    include_directories("${PROGRAM_PATH}")
-
-    get_filename_component(PROGRAM_NAME ${PROGRAM_PATH} NAME_WE) # NAME_WE = name with extension
-
-    set(PROGRAM_FINAL_NAME "${prefix}_${PROGRAM_NAME}" )
-    add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
-    target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
-    install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
-
-  endforeach()
-endfunction()
 
 function(build_single_program path prefix program_name)
   
@@ -50,7 +22,7 @@ function(build_single_program path prefix program_name)
   set(PROGRAM_FINAL_NAME "${prefix}_${program_name}" )
   add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
   target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
-  install(TARGETS ${PROGRAM_FINAL_NAME} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
+  install(TARGETS ${PROGRAM_FINAL_NAME})
 
 endfunction()
 
@@ -87,9 +59,16 @@ endif(WIN32)
 # OUTPUT DIRECTORIES
 # ----------------------------------------------------------------------------
 
-set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/compiledLibs")
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/binaries")
+# set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/compiledLibs")
+# set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/binaries")
 
+# set(LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
+# set(ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
+# set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries")
+
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
+# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries")
 # ----------------------------------------------------------------------------
 
 message("Compiler: ${CMAKE_CXX_COMPILER}")
@@ -137,6 +116,8 @@ set(GLAD_SOURCE "${DEPENDENCIES_DIR}/glad/src/glad.c")
 include_directories("${DEPENDENCIES_DIR}/glad/include")
 
 # Easy Profiler
+set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
+set(EASY_PROFILER_NO_SAMPLES ON CACHE BOOL "")
 include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
 add_subdirectory("${DEPENDENCIES_DIR}/easy_profiler-2.1.0")
 
@@ -179,7 +160,7 @@ include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")
 #include_directories(${FREETYPE_INCLUDE_DIRS})
 
 # ----------------------------------------------------------------------------
-# ENGINE PACKAGES
+# PROJECT PACKAGES
 # ----------------------------------------------------------------------------
 
 file(GLOB PACKAGES_PATHS "code/*")
@@ -190,21 +171,11 @@ foreach(PACKAGE_PATH ${PACKAGES_PATHS})
   list(APPEND PACKAGES ${PACKAGE_NAME})
 endforeach()
 
-# ----------------------------------------------------------------------------
-# PACKAGES INCLUDE DIRECTORIES
-# ----------------------------------------------------------------------------
-
+# include source code root
 include_directories("code")
 
-# file(GLOB INCLUDE_PATHS "code/*")
-#
-# foreach(INCLUDE_PATH ${INCLUDE_PATHS})
-#   get_filename_component(INCLUDE_NAME ${INCLUDE_PATH} NAME_WE) # NAME_WE = name with extension
-#   include_directories("code/${INCLUDE_NAME}")
-# endforeach()
-
 # ----------------------------------------------------------------------------
-# LIBRARY OBJECTS
+# OBJECT FILES
 # ----------------------------------------------------------------------------
 
 # object libraries
@@ -221,7 +192,7 @@ foreach(PACKAGE ${PACKAGES})
 endforeach()
 
 # ----------------------------------------------------------------------------
-# FOREST ENGINE LIBRARY
+# DEFINE LIBRARY
 # ----------------------------------------------------------------------------
 
 # single library
