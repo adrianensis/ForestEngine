@@ -94,18 +94,8 @@ extract(os.path.join(origin_path_base, "easy_profiler-2.1.0.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
-# libpng https://sourceforge.net/projects/libpng/files/latest/download
-extract(os.path.join(origin_path_base, "libpng-1.6.37.tar.xz"), destiny)
-
-# ------------------------------------------------------------------------
-
 # stb https://github.com/nothings/stb
 extract(os.path.join(origin_path_base, "stb.zip"), destiny)
-
-# ------------------------------------------------------------------------
-
-# Duktape
-extract(os.path.join(origin_path_base, "duktape-2.6.0.tar.xz"), destiny)
 
 # ------------------------------------------------------------------------
 

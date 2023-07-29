@@ -88,18 +88,6 @@ set(DEPENDENCIES_DIR "dependencies")
 include_directories("${DEPENDENCIES_DIR}/zlib-1.2.11")
 add_subdirectory("${DEPENDENCIES_DIR}/zlib-1.2.11")
 
-# # ZLib (libpng dependency)
-# if(WIN32)
-#   # Requires Zlib -> http://gnuwin32.sourceforge.net/packages/zlib.htm
-#   set(ZLIB_ROOT "C:/Program Files (x86)/GnuWin32")
-  
-#   find_package(ZLIB REQUIRED)
-  
-#   if(ZLIB_FOUND)
-#     message(FATAL_ERROR "ZLIB not found!!")
-#   endif(ZLIB_FOUND)
-# endif(WIN32)
-
 # OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
@@ -115,49 +103,24 @@ include_directories("${DEPENDENCIES_DIR}/glfw-3.3.4/include")
 set(GLAD_SOURCE "${DEPENDENCIES_DIR}/glad/src/glad.c")
 include_directories("${DEPENDENCIES_DIR}/glad/include")
 
-# Easy Profiler
-set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
-set(EASY_PROFILER_NO_SAMPLES ON CACHE BOOL "")
-include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
-add_subdirectory("${DEPENDENCIES_DIR}/easy_profiler-2.1.0")
+if(ENABLE_PROFILER)
+    # Easy Profiler
+    #set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
+    set(EASY_PROFILER_NO_SAMPLES ON CACHE BOOL "")
+    include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
+    add_subdirectory("${DEPENDENCIES_DIR}/easy_profiler-2.1.0")
+endif(ENABLE_PROFILER)
 
 # JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 include_directories("${DEPENDENCIES_DIR}/json-3.9.1/single_include/nlohmann")
 add_subdirectory("${DEPENDENCIES_DIR}/json-3.9.1")
 
-# libpng
-# set(PNG_BUILD_ZLIB TRUE CACHE BOOL "" FORCE)
-# set(PNG_SHARED OFF CACHE BOOL "" FORCE)
-# set(PNG_STATIC ON CACHE BOOL "" FORCE)
-# set(PNG_EXECUTABLES OFF CACHE BOOL "" FORCE) # we only want lib
-# set(PNG_TESTS OFF CACHE BOOL "" FORCE) # we only want lib
-# set(SKIP_INSTALL_ALL OFF CACHE BOOL "" FORCE) # we only want lib
-
-# include_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/include")
-# link_directories("${DEPENDENCIES_DIR}/libpng-1.6.37/build/lib")
-# add_subdirectory("${DEPENDENCIES_DIR}/libpng-1.6.37")
-
 # stb
 include_directories("${DEPENDENCIES_DIR}/stb")
 
-# Duktape
-# set(DUKTAPE_SOURCE "${DEPENDENCIES_DIR}/duktape-2.6.0/src/duktape.c")
-# include_directories("${DEPENDENCIES_DIR}/duktape-2.6.0/src")
-
 # cgltf
 include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")
-
-# Pyhon
-# find_package (Python3 COMPONENTS Interpreter Development)
-# message("Python3 found: ${Python3_FOUND}")
-# include_directories(${Python3_INCLUDE_DIRS})
-# message(${Python3_INCLUDE_DIRS})
-# message(${Python3_LIBRARIES})
-
-# FreeType
-#find_package(Freetype REQUIRED)
-#include_directories(${FREETYPE_INCLUDE_DIRS})
 
 # ----------------------------------------------------------------------------
 # PROJECT PACKAGES
@@ -209,14 +172,9 @@ target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
 target_link_libraries(${PROJECTNAME} ${ZLIB_LIBRARY} )
-target_link_libraries(${PROJECTNAME} easy_profiler)
-
-#target_link_libraries(${PROJECTNAME} ${FREETYPE_LIBRARIES})
-#target_include_directories(${PROJECTNAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
-#target_link_libraries( ${PROJECTNAME} ${Python3_LIBRARIES})
-
-# SOIL
-#target_link_libraries( ${PROJECTNAME} SOIL )
+if(ENABLE_PROFILER)
+    target_link_libraries(${PROJECTNAME} easy_profiler)
+endif(ENABLE_PROFILER)
 
 # ----------------------------------------------------------------------------
 # TESTS
