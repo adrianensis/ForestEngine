@@ -11,7 +11,6 @@ print(cwd)
 buildDir="build"
 dependenciesDir="dependencies"
 binariesDir="binaries"
-absoluteBinariesDir= os.path.join(cwd, binariesDir)
 
 buildType="Debug"
 
@@ -140,5 +139,7 @@ for binary_name in binaries_to_remove:
 
 # easy_profiler: create bin link
 if enableProfiler:
-    absolute_easy_profiler_bin_path = os.path.join(cwd, os.path.join(buildDir, os.path.join(dependenciesDir, "easy_profiler-2.1.0/bin")))
-    os.symlink(os.path.join(absolute_easy_profiler_bin_path, "profiler_gui"), os.path.join(absoluteBinariesDir, "profiler_gui"))
+    easy_profiler_bin_path_source = os.path.join(os.path.join(buildDir, os.path.join(dependenciesDir, "easy_profiler-2.1.0/bin")), "profiler_gui")
+    bin_gui_path_destiny = os.path.join(binariesDir, "profiler_gui")
+    os.remove(bin_gui_path_destiny)
+    os.symlink(easy_profiler_bin_path_source, bin_gui_path_destiny)
