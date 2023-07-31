@@ -159,7 +159,6 @@ class MaterialData
 public:
     std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
 	bool mAlphaEnabled = true;
-	bool mHasBorder = false;
 	bool mUseVertexColor = false;
 	bool mUseColorAsTint = false;
     bool mIsSkinned = false;

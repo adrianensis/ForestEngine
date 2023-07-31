@@ -54,7 +54,6 @@ public:
         inline static const GPUVariableData mIsAnimated{Types::mBool, "isAnimated"};
         inline static const GPUVariableData mUseColorAsTint{Types::mBool, "useColorAsTint"};
         inline static const GPUVariableData mAlphaEnabled{Types::mBool, "alphaEnabled"};
-        inline static const GPUVariableData mHasBorder{Types::mBool, "hasBorder"};
         inline static const GPUVariableData mTime{Types::mFloat, "time"};
         inline static const GPUVariableData mWindowSize{Types::mVector2, "windowSize"};
         inline static const GPUVariableData mBonesTransform{Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mName};

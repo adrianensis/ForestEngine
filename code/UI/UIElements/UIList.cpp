@@ -40,7 +40,6 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMaterial = (mConfig.mMaterial);
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();
-	//renderer->setHasBorder(true);
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(RenderContext).getAspectRatio(), mConfig.mSize.y)));
 	
