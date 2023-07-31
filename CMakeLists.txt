@@ -9,7 +9,7 @@ project(${PROJECTNAME} LANGUAGES CXX C)
 # ----------------------------------------------------------------------------
 
 function(build_single_program path prefix program_name)
-  
+
   set(PROGRAM_PATH "${path}/${program_name}")
   message("BUILD PROGRAM ${PROGRAM_PATH}")
 
@@ -83,10 +83,6 @@ message("Selected Build target: ${CMAKE_BUILD_TYPE}")
 
 # third party libraries
 set(DEPENDENCIES_DIR "dependencies")
-
-# ZLib
-include_directories("${DEPENDENCIES_DIR}/zlib-1.2.11")
-add_subdirectory("${DEPENDENCIES_DIR}/zlib-1.2.11")
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -171,7 +167,6 @@ target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
-target_link_libraries(${PROJECTNAME} ${ZLIB_LIBRARY} )
 if(ENABLE_PROFILER)
     target_link_libraries(${PROJECTNAME} easy_profiler)
 endif(ENABLE_PROFILER)

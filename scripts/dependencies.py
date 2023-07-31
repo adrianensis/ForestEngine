@@ -69,11 +69,6 @@ elif system_name == "Win32":
 
 # ------------------------------------------------------------------------
 
-# ZLib https://zlib.net/
-extract(os.path.join(origin_path_base, "zlib1211.zip"), destiny)
-
-# ------------------------------------------------------------------------
-
 # GLFW
 extract(os.path.join(origin_path_base, "glfw-3.3.4.zip"), destiny)
 

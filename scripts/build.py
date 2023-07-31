@@ -84,7 +84,6 @@ elif system_name == "Windows":
 
 buildCommandArgs = [
 "-DCMAKE_BUILD_TYPE=" + str(buildType),
-"-DBINARIES_OUTPUT_DIRECTORY=" + binariesDir,
 "-DBUILD_UNIT_TESTS=" + str(buildUnitTests),
 "-DBUILD_INTEGRATION_TESTS=" + str(buildIntegrationTests),
 "-DTOOLS_TO_BUILD=" + "\"" + str(";".join(toolsToBuild) + "\""),
@@ -135,11 +134,18 @@ binaries_to_remove = [
 ]
 
 for binary_name in binaries_to_remove:
-    os.remove(os.path.join(binariesDir, binary_name))
+    try:
+        os.remove(os.path.join(binariesDir, binary_name))
+    except:
+        pass
 
 # easy_profiler: create bin link
 if enableProfiler:
     easy_profiler_bin_path_source = os.path.join(os.path.join(buildDir, os.path.join(dependenciesDir, "easy_profiler-2.1.0/bin")), "profiler_gui")
     bin_gui_path_destiny = os.path.join(binariesDir, "profiler_gui")
-    os.remove(bin_gui_path_destiny)
+    try:
+        os.remove(bin_gui_path_destiny)
+    except:
+       pass   
+
     os.symlink(easy_profiler_bin_path_source, bin_gui_path_destiny)
