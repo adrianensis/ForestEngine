@@ -125,20 +125,6 @@ os.chdir(cwd)
 # POST BUILD
 #####################
 
-# clean not needed binaries
-binaries_to_remove = [
-   "example",
-   "example64",
-   "minigzip",
-   "minigzip64"
-]
-
-for binary_name in binaries_to_remove:
-    try:
-        os.remove(os.path.join(binariesDir, binary_name))
-    except:
-        pass
-
 # easy_profiler: create bin link
 if enableProfiler:
     easy_profiler_bin_path_source = os.path.join(os.path.join(buildDir, os.path.join(dependenciesDir, "easy_profiler-2.1.0/bin")), "profiler_gui")
