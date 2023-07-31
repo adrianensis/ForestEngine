@@ -1,5 +1,5 @@
-#include "Graphics/Buffers/GPUMeshBuffer.hpp"
-#include "Graphics/Buffers/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUMeshBuffer.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 GPUMeshBuffer::~GPUMeshBuffer() 

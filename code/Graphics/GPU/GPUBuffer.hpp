@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Buffers/GPUAttribute.hpp"
+#include "Graphics/GPU/GPUAttribute.hpp"
 
 class GPUBufferData
 {

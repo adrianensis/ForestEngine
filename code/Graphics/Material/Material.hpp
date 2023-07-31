@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Buffers/GPUBuffer.hpp"
+#include "Graphics/GPU/GPUBuffer.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 
 enum class TextureType

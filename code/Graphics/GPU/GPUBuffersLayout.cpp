@@ -1,4 +1,4 @@
-#include "Graphics/Buffers/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 
 GPUBuffersLayout::~GPUBuffersLayout() 
 {

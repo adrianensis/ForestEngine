@@ -1,6 +1,6 @@
 #include "Graphics/Shaders/ShaderBuilderFunctionsLibrary.hpp"
 #include "Graphics/Shaders/ShaderBuilderNodes.hpp"
-#include "Graphics/Buffers/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 
 ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {

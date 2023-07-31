@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Buffers/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 
 class Mesh;
 

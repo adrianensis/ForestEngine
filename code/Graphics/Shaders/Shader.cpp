@@ -1,7 +1,7 @@
 #include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Shaders/ShaderBuilder.hpp"
-#include "Graphics/Buffers/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/Material/Material.hpp"
 
 Shader::Shader()

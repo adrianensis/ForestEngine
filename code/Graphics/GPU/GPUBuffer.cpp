@@ -1,4 +1,4 @@
-#include "Graphics/Buffers/GPUBuffer.hpp"
+#include "Graphics/GPU/GPUBuffer.hpp"
 
 void GPUBuffer::init(u32 attributeLocation, const GPUBufferData& data, bool isStatic)
 {

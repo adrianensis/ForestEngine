@@ -6,7 +6,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/RenderEngine.hpp"
-#include "Graphics/Buffers/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Buffers/GPUMeshBuffer.hpp"
+#include "Graphics/GPU/GPUMeshBuffer.hpp"
 #include "Graphics/Batch/BatchData.hpp"
 
 class MeshBatcher: public ObjectBase
