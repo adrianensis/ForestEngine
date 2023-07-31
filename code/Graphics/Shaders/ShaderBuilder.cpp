@@ -15,32 +15,32 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
     
-    const std::vector<GPUVariableData>& consts = material->getConsts();
+    const std::vector<GPUAttributeData>& consts = material->getConsts();
     FOR_LIST(it, consts)
     {
-        const GPUVariableData& constVar = *it;
-        get().attribute(GPUStorage::CONST, constVar);
+        const GPUAttributeData& constVar = *it;
+        get().attribute(constVar);
     }
 
     const std::vector<GPUBuffer>& gpuBuffers = gpuBuffersLayout.getBuffers();
     FOR_LIST(it, gpuBuffers)
     {
         const GPUBuffer& gpuBuffer = *it;
-        get().attribute(GPUStorage::IN, gpuBuffer.getAttributeLocation(), gpuBuffer.mData.mGPUVariableData);
+        get().attribute({gpuBuffer.mData.mGPUAttributeData, gpuBuffer.getAttributeLocation()});
     }
 
-    const std::vector<GPUVariableData>& uniforms = material->getUniforms();
+    const std::vector<GPUAttributeData>& uniforms = material->getUniforms();
     FOR_LIST(it, uniforms)
     {
-        const GPUVariableData& uniformVar = *it;
-        get().attribute(GPUStorage::UNIFORM, uniformVar);
+        const GPUAttributeData& uniformVar = *it;
+        get().attribute(uniformVar);
     }
 
-    const std::vector<GPUVariableData>& outputs = material->getVertexOutputs();
+    const std::vector<GPUAttributeData>& outputs = material->getVertexOutputs();
     FOR_LIST(it, outputs)
     {
-        const GPUVariableData& outputVar = *it;
-        get().attribute(GPUStorage::OUT, outputVar);
+        const GPUAttributeData& outputVar = *it;
+        get().attribute(outputVar);
     }
 
     ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
@@ -95,32 +95,32 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
     
-    const std::vector<GPUVariableData>& consts = material->getConsts();
+    const std::vector<GPUAttributeData>& consts = material->getConsts();
     FOR_LIST(it, consts)
     {
-        const GPUVariableData& constVar = *it;
-        get().attribute(GPUStorage::CONST, constVar);
+        const GPUAttributeData& constVar = *it;
+        get().attribute(constVar);
     }
 
-    const std::vector<GPUVariableData>& uniforms = material->getUniforms();
+    const std::vector<GPUAttributeData>& uniforms = material->getUniforms();
     FOR_LIST(it, uniforms)
     {
-        const GPUVariableData& uniformVar = *it;
-        get().attribute(GPUStorage::UNIFORM, uniformVar);
+        const GPUAttributeData& uniformVar = *it;
+        get().attribute(uniformVar);
     }
 
-    const std::vector<GPUVariableData>& vertexOutputs = material->getVertexOutputs();
-    FOR_LIST(it, vertexOutputs)
+    const std::vector<GPUAttributeData>& fragmentInputs = material->getFragmentInputs();
+    FOR_LIST(it, fragmentInputs)
     {
-        const GPUVariableData& outputVar = *it;
-        get().attribute(GPUStorage::IN, outputVar);
+        const GPUAttributeData& inputVar = *it;
+        get().attribute(inputVar);
     }
 
-    const std::vector<GPUVariableData>& fragmentOutputs = material->getFragmentOutputs();
+    const std::vector<GPUAttributeData>& fragmentOutputs = material->getFragmentOutputs();
     FOR_LIST(it, fragmentOutputs)
     {
-        const GPUVariableData& outputVar = *it;
-        get().attribute(GPUStorage::OUT, outputVar);
+        const GPUAttributeData& outputVar = *it;
+        get().attribute(outputVar);
     }
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);

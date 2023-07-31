@@ -180,10 +180,11 @@ private:
     MaterialData mMaterialData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
-    std::vector<GPUVariableData> mUniforms;
-    std::vector<GPUVariableData> mConsts;
-    std::vector<GPUVariableData> mVertexOutputs;
-    std::vector<GPUVariableData> mFragmentOutputs;
+    std::vector<GPUAttributeData> mUniforms;
+    std::vector<GPUAttributeData> mConsts;
+    std::vector<GPUAttributeData> mVertexOutputs;
+    std::vector<GPUAttributeData> mFragmentInputs;
+    std::vector<GPUAttributeData> mFragmentOutputs;
     u32 mID = 0;
 
 public:
@@ -191,5 +192,6 @@ public:
     CRGET(Uniforms)
     CRGET(Consts)
     CRGET(VertexOutputs)
+    CRGET(FragmentInputs)
     CRGET(FragmentOutputs)
 };

@@ -6,10 +6,9 @@
 			"label": "forest build debug",
 			"command": "python3",
 			"args": [
-                "-B",
-				"./scripts/build.py",
-				"-x",
-				"-l",
+				"scripts/build.py",
+				"-lp",
+				"--tool=Editor",
 				//"-p"
 			],
 			"problemMatcher": [
@@ -25,11 +24,9 @@
 			"label": "forest build release",
 			"command": "python3",
 			"args": [
-                "-B",
-				"./scripts/build.py",
-				"-x",
-				"-l",
-				"-r"
+				"scripts/build.py",
+				"-lpr",
+				"--tool=Editor",
 			],
 			"problemMatcher": [
 				"$gcc"

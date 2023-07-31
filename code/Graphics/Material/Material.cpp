@@ -49,6 +49,9 @@ void Material::init(const MaterialData& materialData, u32 id)
         mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     
+    mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
+    mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
+
     mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 

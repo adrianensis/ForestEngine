@@ -3,36 +3,6 @@
 #include "Core/Module.hpp"
 #include "Graphics/Buffers/GPUDefinitions.hpp"
 
-/*
-    - none: (default) local read/write memory,
-    or input parameter
-
-    - const: global compile-time constant, or
-    read-only function parameter,
-    or read-only local variable
-
-    - in: linkage into shader from previous stage
-
-    - out: linkage out of a shader to next stage
-
-    - attribute: same as in for vertex shader
-
-    - uniform: linkage between a shader, OpenGL,
-    and the application
-
-    - varying: same as in for vertex shader, same as
-    out for fragment shader
-*/
-DECLARE_ENUM(GPUStorage,
-    NONE, "none",
-    IN, "in",
-    OUT, "out",
-    VARYING, "varying",
-    ATTRIBUTE, "attribute",
-    CONST, "const",
-    UNIFORM, "uniform"
-);
-
 namespace ShaderBuilderNodes
 {
     class Statement
@@ -116,9 +86,8 @@ namespace ShaderBuilderNodes
     class Attribute : public Variable
     {
     public:
-        Attribute(GPUStorage GPUStorage, const GPUVariableData& gpuVariableData) : Variable(gpuVariableData), mGPUStorage(GPUStorage) {};
-        Attribute(GPUStorage GPUStorage, const Variable& var) : Variable(var), mGPUStorage(GPUStorage) {};
-        Attribute(GPUStorage GPUStorage, u32 location, const Variable& var) : Variable(var), mGPUStorage(GPUStorage), mLocation(location) {};
+        Attribute(const GPUAttributeData& gpuAttributeData) : Variable({gpuAttributeData.mGPUDataType, gpuAttributeData.mName, gpuAttributeData.mValue, gpuAttributeData.mArraySize}), mGPUStorage(gpuAttributeData.mGPUStorage) {};
+        Attribute(const GPUAttributeData& gpuAttributeData, u32 location) : Variable({gpuAttributeData.mGPUDataType, gpuAttributeData.mName, gpuAttributeData.mValue, gpuAttributeData.mArraySize}), mGPUStorage(gpuAttributeData.mGPUStorage), mLocation(location) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
@@ -267,8 +236,7 @@ namespace ShaderBuilderNodes
             mAttributes.reserve(100);
             mFunctionDefinitions.reserve(50);
         }
-        Attribute& attribute(GPUStorage GPUStorage, const Variable& var);
-        Attribute& attribute(GPUStorage GPUStorage, u32 location, const Variable& var);
+        Attribute& attribute(const Attribute& attribute);
         FunctionDefinition& function(auto&& ...args)
         {
             return mFunctionDefinitions.emplace_back(args...);
@@ -282,7 +250,7 @@ namespace ShaderBuilderNodes
         std::vector<FunctionDefinition> mFunctionDefinitions;
         u16 mVersion = 420;
     private:
-        inline static Attribute mNullAttribute {GPUStorage::NONE, Variable{}};
+        inline static Attribute mNullAttribute {GPUAttributeData{}};
     };
 
 }

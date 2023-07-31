@@ -168,13 +168,9 @@ namespace ShaderBuilderNodes
         return code;
     }
 
-    Attribute& Program::attribute(GPUStorage GPUStorage, const Variable& var)
+    Attribute& Program::attribute(const Attribute& attribute)
     {
-        return mAttributes.emplace_back(Attribute(GPUStorage, var));
-    }
-    Attribute& Program::attribute(GPUStorage GPUStorage, u32 location, const Variable& var)
-    {
-        return mAttributes.emplace_back(Attribute(GPUStorage, location, var));
+        return mAttributes.emplace_back(attribute);
     }
 
     const Attribute& Program::getAttribute(const std::string_view& attributeName) const

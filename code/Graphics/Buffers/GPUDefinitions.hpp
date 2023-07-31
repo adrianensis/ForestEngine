@@ -29,57 +29,57 @@ public:
     {
     public:
         // TODO: unsigned int?
-        inline static const GPUVariableData MAX_BONES{Types::mInt, "MAX_BONES", "50"};
-        inline static const GPUVariableData MAX_BONE_INFLUENCE{Types::mInt, "MAX_BONE_INFLUENCE", "4"};
-    };
-
-    class VertexInput
-    {
-    public:
-        inline static const GPUVariableData mPosition{Types::mVector3, "position"};
-        inline static const GPUVariableData mTextureCoord{Types::mVector2, "texcoord"};
-        inline static const GPUVariableData mColor{Types::mVector4, "color"};
-        inline static const GPUVariableData mModelMatrix{Types::mMatrix4, "modelMatrix"};
-        inline static const GPUVariableData mBonesIDs{Types::mBoneIDs, "BoneIDs"};
-        inline static const GPUVariableData mBonesWeights{Types::mBoneWeights, "Weights"};
+        inline static const GPUAttributeData MAX_BONES{GPUStorage::CONST, {Types::mInt, "MAX_BONES", "50"}};
+        inline static const GPUAttributeData MAX_BONE_INFLUENCE{GPUStorage::CONST, {Types::mInt, "MAX_BONE_INFLUENCE", "4"}};
     };
 
     class Uniforms
     {
     public:
-        inline static const GPUVariableData mProjectionMatrix{Types::mMatrix4, "projectionMatrix"};
-        inline static const GPUVariableData mViewMatrix{Types::mMatrix4, "viewMatrix"};
-        inline static const GPUVariableData mIsInstanced{Types::mBool, "isInstanced"};
-        inline static const GPUVariableData mHasTexture{Types::mBool, "hasTexture"};
-        inline static const GPUVariableData mIsAnimated{Types::mBool, "isAnimated"};
-        inline static const GPUVariableData mUseColorAsTint{Types::mBool, "useColorAsTint"};
-        inline static const GPUVariableData mAlphaEnabled{Types::mBool, "alphaEnabled"};
-        inline static const GPUVariableData mTime{Types::mFloat, "time"};
-        inline static const GPUVariableData mWindowSize{Types::mVector2, "windowSize"};
-        inline static const GPUVariableData mBonesTransform{Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mName};
-        inline static const GPUVariableData mBaseColor{Types::mVector4, "baseColor"};
+        inline static const GPUAttributeData mProjectionMatrix{GPUStorage::UNIFORM, {Types::mMatrix4, "projectionMatrix"}};
+        inline static const GPUAttributeData mViewMatrix{GPUStorage::UNIFORM, {Types::mMatrix4, "viewMatrix"}};
+        inline static const GPUAttributeData mIsInstanced{GPUStorage::UNIFORM, {Types::mBool, "isInstanced"}};
+        inline static const GPUAttributeData mHasTexture{GPUStorage::UNIFORM, {Types::mBool, "hasTexture"}};
+        inline static const GPUAttributeData mIsAnimated{GPUStorage::UNIFORM, {Types::mBool, "isAnimated"}};
+        inline static const GPUAttributeData mUseColorAsTint{GPUStorage::UNIFORM, {Types::mBool, "useColorAsTint"}};
+        inline static const GPUAttributeData mAlphaEnabled{GPUStorage::UNIFORM, {Types::mBool, "alphaEnabled"}};
+        inline static const GPUAttributeData mTime{GPUStorage::UNIFORM, {Types::mFloat, "time"}};
+        inline static const GPUAttributeData mWindowSize{GPUStorage::UNIFORM, {Types::mVector2, "windowSize"}};
+        inline static const GPUAttributeData mBonesTransform{GPUStorage::UNIFORM, {Types::mMatrix4, "bonesTransform", "", Consts::MAX_BONES.mName}};
+        inline static const GPUAttributeData mBaseColor{GPUStorage::UNIFORM, {Types::mVector4, "baseColor"}};
         
-        inline static const GPUVariableData mSampler{Types::mSampler2D, "uSampler"};
+        inline static const GPUAttributeData mSampler{GPUStorage::UNIFORM, {Types::mSampler2D, "uSampler"}};
+    };
+
+    class VertexInput
+    {
+    public:
+        inline static const GPUAttributeData mPosition{GPUStorage::IN, {Types::mVector3, "position"}};
+        inline static const GPUAttributeData mTextureCoord{GPUStorage::IN, {Types::mVector2, "texcoord"}};
+        inline static const GPUAttributeData mColor{GPUStorage::IN, {Types::mVector4, "color"}};
+        inline static const GPUAttributeData mModelMatrix{GPUStorage::IN, {Types::mMatrix4, "modelMatrix"}};
+        inline static const GPUAttributeData mBonesIDs{GPUStorage::IN, {Types::mBoneIDs, "BoneIDs"}};
+        inline static const GPUAttributeData mBonesWeights{GPUStorage::IN, {Types::mBoneWeights, "Weights"}};
     };
 
     class VertexOutput
     {
     public:
-        inline static const GPUVariableData mPosition{Types::mVector4, "gl_Position"};
-        inline static const GPUVariableData mTextureCoord{Types::mVector2, "vTexcoord"};
-        inline static const GPUVariableData mColor{Types::mVector4, "vColor"};
+        inline static const GPUAttributeData mPosition{GPUStorage::OUT, {Types::mVector4, "gl_Position"}};
+        inline static const GPUAttributeData mTextureCoord{GPUStorage::OUT, {Types::mVector2, "vTexcoord"}};
+        inline static const GPUAttributeData mColor{GPUStorage::OUT, {Types::mVector4, "vColor"}};
+    };
+
+    class FragmentInput
+    {
+    public:
+        inline static const GPUAttributeData mTextureCoord{GPUStorage::IN, VertexOutput::mTextureCoord};
+        inline static const GPUAttributeData mColor{GPUStorage::IN, VertexOutput::mColor};
     };
 
     class FragmentOutput
     {
     public:
-        inline static const GPUVariableData mColor{Types::mVector4, "FragColor"};
-    };
-
-    class Functions
-    {
-    public:
-        inline static const GPUVariableData mTexture{Types::mVector2, "vTexcoord"};
-        inline static const GPUVariableData mColor{Types::mVector4, "vColor"};
+        inline static const GPUAttributeData mColor{GPUStorage::OUT, {Types::mVector4, "FragColor"}};
     };
 };
