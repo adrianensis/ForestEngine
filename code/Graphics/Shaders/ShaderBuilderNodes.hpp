@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Buffers/GPUDefinitions.hpp"
+#include "Graphics/Buffers/GPUBuiltIn.hpp"
 
 namespace ShaderBuilderNodes
 {

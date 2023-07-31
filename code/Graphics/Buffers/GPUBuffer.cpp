@@ -32,7 +32,7 @@ void GPUBuffer::resize(u32 size)
 	GET_SYSTEM(RenderContext).resizeVBOAnyType(mVBO, mData.mGPUAttributeData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
-u32 GPUBuffer::attribute(GPUBufferPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes /*=0*/)
+u32 GPUBuffer::attribute(GPUPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes /*=0*/)
 {
     // sizeInPrimitiveTypes: size of the object divided in primitive types
     // ex: Vector3 -> 3 floats

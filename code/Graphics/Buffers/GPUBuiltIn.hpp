@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Buffers/GPUBuffer.hpp"
+#include "Graphics/Buffers/GPUAttribute.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 class GPUBuiltIn
@@ -9,20 +9,20 @@ public:
     class Types
     {
     public:
-        inline static const GPUDataType mBool{"bool",sizeof(bool), GPUBufferPrimitiveType::BOOL};
-        inline static const GPUDataType mInt{"int",sizeof(i32), GPUBufferPrimitiveType::INT};
-        inline static const GPUDataType mUnsignedInt{"uint",sizeof(u32), GPUBufferPrimitiveType::INT};
-        inline static const GPUDataType mFloat{"float",sizeof(f32), GPUBufferPrimitiveType::FLOAT};
-        inline static const GPUDataType mVector2{"vec2",sizeof(Vector2), GPUBufferPrimitiveType::FLOAT};
-        inline static const GPUDataType mVector2i{"ivec2",sizeof(i32) * 4, GPUBufferPrimitiveType::INT};
-        inline static const GPUDataType mVector3{"vec3",sizeof(Vector3), GPUBufferPrimitiveType::FLOAT};
-        inline static const GPUDataType mVector3i{"ivec3",sizeof(i32) * 4, GPUBufferPrimitiveType::INT};
-        inline static const GPUDataType mVector4{"vec4",sizeof(Vector4), GPUBufferPrimitiveType::FLOAT};
-        inline static const GPUDataType mVector4i{"ivec4",sizeof(i32) * 4, GPUBufferPrimitiveType::INT};
-        inline static const GPUDataType mMatrix4{"mat4",sizeof(Matrix4), GPUBufferPrimitiveType::FLOAT};
-        inline static const GPUDataType mBoneIDs{"ivec4",sizeof(BoneVertexIDsData), GPUBufferPrimitiveType::INT};
-        inline static const GPUDataType mBoneWeights{"vec4",sizeof(BoneVertexWeightsData), GPUBufferPrimitiveType::FLOAT};
-        inline static const GPUDataType mSampler2D{"sampler2D",0, GPUBufferPrimitiveType::INT};
+        inline static const GPUDataType mBool{"bool",sizeof(bool), GPUPrimitiveType::BOOL};
+        inline static const GPUDataType mInt{"int",sizeof(i32), GPUPrimitiveType::INT};
+        inline static const GPUDataType mUnsignedInt{"uint",sizeof(u32), GPUPrimitiveType::INT};
+        inline static const GPUDataType mFloat{"float",sizeof(f32), GPUPrimitiveType::FLOAT};
+        inline static const GPUDataType mVector2{"vec2",sizeof(Vector2), GPUPrimitiveType::FLOAT};
+        inline static const GPUDataType mVector2i{"ivec2",sizeof(i32) * 2, GPUPrimitiveType::INT};
+        inline static const GPUDataType mVector3{"vec3",sizeof(Vector3), GPUPrimitiveType::FLOAT};
+        inline static const GPUDataType mVector3i{"ivec3",sizeof(i32) * 3, GPUPrimitiveType::INT};
+        inline static const GPUDataType mVector4{"vec4",sizeof(Vector4), GPUPrimitiveType::FLOAT};
+        inline static const GPUDataType mVector4i{"ivec4",sizeof(i32) * 4, GPUPrimitiveType::INT};
+        inline static const GPUDataType mMatrix4{"mat4",sizeof(Matrix4), GPUPrimitiveType::FLOAT};
+        inline static const GPUDataType mBoneIDs{"ivec4",sizeof(BoneVertexIDsData), GPUPrimitiveType::INT};
+        inline static const GPUDataType mBoneWeights{"vec4",sizeof(BoneVertexWeightsData), GPUPrimitiveType::FLOAT};
+        inline static const GPUDataType mSampler2D{"sampler2D",0, GPUPrimitiveType::INT};
     };
 
     class Consts
