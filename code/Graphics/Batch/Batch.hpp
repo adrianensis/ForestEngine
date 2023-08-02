@@ -24,7 +24,6 @@ private:
     void internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it);
     void addToVertexBuffer(Ptr<MeshRenderer> renderer);
     bool shouldRegenerateBuffers() const;
-    bool isAnimated() const;
 
 private:
 	std::list<Ptr<MeshRenderer>> mRenderers;

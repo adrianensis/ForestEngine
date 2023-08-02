@@ -1,6 +1,7 @@
 #include "Graphics/Shaders/ShaderBuilderFunctionsLibrary.hpp"
 #include "Graphics/Shaders/ShaderBuilderNodes.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/Material/Material.hpp"
 
 ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
@@ -14,15 +15,17 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
     auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
     auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
 
-    auto& hasAnimations = program.getAttribute(GPUBuiltIn::Uniforms::mIsAnimated.mName);
     auto& bonesTransform = program.getAttribute(GPUBuiltIn::Uniforms::mBonesTransform.mName);
     
     Variable finalPositon;
     Variable localPosition;
     
     func.body().
-    variable(finalPositon, "vec4", "finalPositon", pos).
-    ifBlock(hasAnimations).
+    variable(finalPositon, "vec4", "finalPositon", pos);
+
+    if(material->getMaterialData().mIsSkinned)
+    {
+        func.body().
         set(finalPositon, call("vec4", {{"0.0f"}})).
         forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
             ifBlock(bonesIDs.at("i"), "==", {"-1"}).
@@ -34,8 +37,10 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
             end().
             variable(localPosition, "vec4", "localPosition", bonesTransform.at(bonesIDs.at("i")).mul(pos).getNameOrValue()).
             set(finalPositon, finalPositon.add(localPosition.mul(bonesWeights.at("i")))).
-        end().
-    end().
+        end();
+    }
+    
+    func.body().
     ret(finalPositon);
 
     return func;

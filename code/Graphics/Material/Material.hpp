@@ -152,7 +152,7 @@ enum class TextureType
 
 class Texture;
 class Shader;
-class Model;
+class Mesh;
 
 class MaterialData
 {
@@ -174,7 +174,7 @@ class Material: public ObjectBase
 
 public:
     void init(const MaterialData& materialData, u32 id);
-    void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, bool isAnimated, Ptr<const Model> model) const;
+    void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const;
     bool hasTexture() const;
 
 private:

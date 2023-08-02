@@ -47,7 +47,7 @@ void Batch::enable()
 {
     mMeshBatcher.enable();
     mShader->enable();
-    mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, isAnimated(), mBatchData.mMesh->mModel);
+    mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
 
     if(mBatchData.mStencilData.mUseStencil)
     {
@@ -173,15 +173,4 @@ bool Batch::shouldRegenerateBuffers() const
 {
     // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
 	return mNewRendererAdded || !mBatchData.mIsStatic || mRegenerateBuffersRequested;
-}
-
-bool Batch::isAnimated() const
-{
-	bool isAnimated = false;
-	if(mBatchData.mMesh->mModel)
-	{
-		isAnimated = mBatchData.mMesh->mModel->isAnimated();
-	}
-
-	return isAnimated;
 }
