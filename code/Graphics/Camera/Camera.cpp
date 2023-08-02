@@ -18,9 +18,8 @@ void Camera::init()
 
 void Camera::onComponentAdded()
 {
-	recalculateProjectionMatrix();
-
 	mTransformState = TransformState(mGameObject->mTransform.get());
+    recalculateProjectionMatrix();
 }
 
 void Camera::update()
