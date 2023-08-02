@@ -25,10 +25,6 @@ void Material::init(const MaterialData& materialData, u32 id)
 
     mUniforms.push_back(GPUBuiltIn::Uniforms::mProjectionMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mViewMatrix);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mIsInstanced);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mUseColorAsTint);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mHasTexture);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mAlphaEnabled);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
@@ -75,17 +71,11 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
 	shader->addMatrix(isWorldSpace ? projectionMatrix : ortho, GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
 	shader->addMatrix(isWorldSpace ? viewMatrix : Matrix4::smIdentity, GPUBuiltIn::Uniforms::mViewMatrix.mName);
 
-	shader->addBool(isInstanced, GPUBuiltIn::Uniforms::mIsInstanced.mName);
-
-	shader->addBool(mTextures[(u32)TextureType::BASE_COLOR].isValid(), GPUBuiltIn::Uniforms::mHasTexture.mName);
-	shader->addBool(mMaterialData.mAlphaEnabled, GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
-    shader->addBool(mMaterialData.mUseColorAsTint, GPUBuiltIn::Uniforms::mUseColorAsTint.mName);
 	shader->addVector4(mMaterialData.mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
 
 	shader->addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
 
 	shader->addVector2(GET_SYSTEM(RenderContext).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
-
 
     shader->addBool(isAnimated, GPUBuiltIn::Uniforms::mIsAnimated.mName);
     
@@ -94,6 +84,11 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, boo
         const std::vector<Matrix4> & transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(model);
         shader->addMatrixArray(transforms, GPUBuiltIn::Uniforms::mBonesTransform.mName);
     }
+}
+
+bool Material::hasTexture() const
+{
+    return mTextures[(u32)TextureType::BASE_COLOR].isValid();
 }
 
 IMPLEMENT_SERIALIZATION(Material)

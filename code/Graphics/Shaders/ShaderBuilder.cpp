@@ -59,7 +59,6 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
 
     auto& projectionMatrix = get().getAttribute(GPUBuiltIn::Uniforms::mProjectionMatrix.mName);
     auto& viewMatrix = get().getAttribute(GPUBuiltIn::Uniforms::mViewMatrix.mName);
-    auto& isInstanced = get().getAttribute(GPUBuiltIn::Uniforms::mIsInstanced.mName);
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
@@ -128,9 +127,6 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     auto& outColor = get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
 
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
-    auto& hasTexture = get().getAttribute(GPUBuiltIn::Uniforms::mHasTexture.mName);
-    auto& alphaEnabled = get().getAttribute(GPUBuiltIn::Uniforms::mAlphaEnabled.mName);
-    auto& useColorAsTint = get().getAttribute(GPUBuiltIn::Uniforms::mUseColorAsTint.mName);
     auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
 
     auto& mainFunc = get().function("void", "main");
@@ -153,19 +149,30 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
     }
 
     mainFunc.body().
-    set(outColor, color).
-    ifBlock(hasTexture).
-        set(outColor, call("texture2D", {sampler, inTextureCoord})).
-        ifBlock(useColorAsTint).
+    set(outColor, color);
+
+    if(material->hasTexture())
+    {
+        mainFunc.body().
+        set(outColor, call("texture2D", {sampler, inTextureCoord}));
+
+        if(material->getMaterialData().mUseColorAsTint)
+        {
+            mainFunc.body().
             set(outColor.dot("r"), outColor.dot("r").add(color.dot("r"))).
             set(outColor.dot("g"), outColor.dot("g").add(color.dot("g"))).
             set(outColor.dot("b"), outColor.dot("b").add(color.dot("b"))).
-            set(outColor.dot("a"), outColor.dot("a").add(color.dot("a"))).
-        end().
-    end().
-    ifBlock(alphaEnabled, "&&", outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-        line("discard").
-    end();
+            set(outColor.dot("a"), outColor.dot("a").add(color.dot("a")));
+        }
+    }
+    
+    if(material->getMaterialData().mAlphaEnabled)
+    {
+        mainFunc.body().
+        ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+            line("discard").
+        end();
+    }
 }
 
 std::string ShaderBuilder::getCode() const

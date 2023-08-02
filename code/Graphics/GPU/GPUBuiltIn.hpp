@@ -38,11 +38,7 @@ public:
     public:
         inline static const GPUAttributeDefinitionData mProjectionMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "projectionMatrix"};
         inline static const GPUAttributeDefinitionData mViewMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "viewMatrix"};
-        inline static const GPUAttributeDefinitionData mIsInstanced{GPUStorage::UNIFORM, Types::mBool, "isInstanced"};
-        inline static const GPUAttributeDefinitionData mHasTexture{GPUStorage::UNIFORM, Types::mBool, "hasTexture"};
         inline static const GPUAttributeDefinitionData mIsAnimated{GPUStorage::UNIFORM, Types::mBool, "isAnimated"};
-        inline static const GPUAttributeDefinitionData mUseColorAsTint{GPUStorage::UNIFORM, Types::mBool, "useColorAsTint"};
-        inline static const GPUAttributeDefinitionData mAlphaEnabled{GPUStorage::UNIFORM, Types::mBool, "alphaEnabled"};
         inline static const GPUAttributeDefinitionData mTime{GPUStorage::UNIFORM, Types::mFloat, "time"};
         inline static const GPUAttributeDefinitionData mWindowSize{GPUStorage::UNIFORM, Types::mVector2, "windowSize"};
         inline static const GPUAttributeDefinitionData mBonesTransform{{GPUStorage::UNIFORM, Types::mMatrix4, "bonesTransform"}, "", Consts::MAX_BONES.mName};
