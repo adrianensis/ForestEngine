@@ -27,13 +27,39 @@ namespace ShaderBuilderNodes
 
     // VARIABLES DEFINITION
 
+    class VariableData
+    {
+    public:
+        VariableData() = default;
+        VariableData(GPUDataType gpuDataType, std::string name, std::string value, std::string arraySize):
+        mGPUDataType(gpuDataType),
+        mName(name),
+        mValue(value),
+        mArraySize(arraySize)
+        {}
+        VariableData(GPUDataType gpuDataType, std::string name, std::string value):
+        mGPUDataType(gpuDataType),
+        mName(name),
+        mValue(value)
+        {}
+        VariableData(GPUDataType gpuDataType, std::string name):
+        mGPUDataType(gpuDataType),
+        mName(name)
+        {}
+
+        GPUDataType mGPUDataType;
+        std::string mName;
+        std::string mValue;
+        std::string mArraySize;
+    };
+
     class Variable : public Statement
     {
     public:
         Variable() = default;
-        Variable(const GPUVariableData& gpuVariableData) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize) {};
-        Variable(const GPUVariableData& gpuVariableData, const std::string& value) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(value), mArraySize(gpuVariableData.mArraySize) {};
-        Variable(const GPUVariableData& gpuVariableData, const Variable& value) : mType(gpuVariableData.mGPUDataType.mTypeName), mName(gpuVariableData.mName), mValue(value.getNameOrValue()), mArraySize(gpuVariableData.mArraySize) {};
+        Variable(const VariableData& VariableData) : mType(VariableData.mGPUDataType.mName), mName(VariableData.mName), mValue(VariableData.mValue), mArraySize(VariableData.mArraySize) {};
+        Variable(const VariableData& VariableData, const std::string& value) : mType(VariableData.mGPUDataType.mName), mName(VariableData.mName), mValue(value), mArraySize(VariableData.mArraySize) {};
+        Variable(const VariableData& VariableData, const Variable& value) : mType(VariableData.mGPUDataType.mName), mName(VariableData.mName), mValue(value.getNameOrValue()), mArraySize(VariableData.mArraySize) {};
         Variable(const std::string& value) : mValue(value) {};
         Variable(const std::string& type, const std::string& name) : mType(type), mName(name) {};
         Variable(const std::string& type, const std::string& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
@@ -42,6 +68,7 @@ namespace ShaderBuilderNodes
         Variable(const std::string& type, const std::string& name, const Variable& value, const Variable& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize.getNameOrValue()) {};
         Variable(const std::string& type, const std::string& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
         Variable(const std::string& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
+        Variable(const GPUAttributeDefinitionData& gpuAttributeData) : mType(gpuAttributeData.mGPUDataType.mName), mName(gpuAttributeData.mName), mValue(gpuAttributeData.mValue), mArraySize(gpuAttributeData.mArraySize){};
         std::vector<std::string> toLines(u16 indent) const override;
 
         const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
@@ -86,8 +113,8 @@ namespace ShaderBuilderNodes
     class Attribute : public Variable
     {
     public:
-        Attribute(const GPUAttributeData& gpuAttributeData) : Variable({gpuAttributeData.mGPUDataType, gpuAttributeData.mName, gpuAttributeData.mValue, gpuAttributeData.mArraySize}), mGPUStorage(gpuAttributeData.mGPUStorage) {};
-        Attribute(const GPUAttributeData& gpuAttributeData, u32 location) : Variable({gpuAttributeData.mGPUDataType, gpuAttributeData.mName, gpuAttributeData.mValue, gpuAttributeData.mArraySize}), mGPUStorage(gpuAttributeData.mGPUStorage), mLocation(location) {};
+        Attribute(const GPUAttributeDefinitionData& gpuAttributeData) : Variable(gpuAttributeData), mGPUStorage(gpuAttributeData.mGPUStorage) {};
+        Attribute(const GPUAttributeDefinitionData& gpuAttributeData, u32 location) : Variable(gpuAttributeData), mGPUStorage(gpuAttributeData.mGPUStorage), mLocation(location) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
@@ -250,7 +277,7 @@ namespace ShaderBuilderNodes
         std::vector<FunctionDefinition> mFunctionDefinitions;
         u16 mVersion = 420;
     private:
-        inline static Attribute mNullAttribute {GPUAttributeData{}};
+        inline static Attribute mNullAttribute {GPUAttributeDefinitionData{}};
     };
 
 }

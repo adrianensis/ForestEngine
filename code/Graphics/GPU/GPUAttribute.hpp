@@ -42,7 +42,7 @@ enum class GPUPrimitiveType : u32
 class GPUDataType
 {
 public:
-    std::string mTypeName;
+    std::string mName;
     u32 mTypeSizeInBytes;
     GPUPrimitiveType mPrimitiveType = GPUPrimitiveType::FLOAT;
 
@@ -73,40 +73,41 @@ public:
     }
 };
 
-class GPUVariableData
-{
-public:
-    GPUVariableData() = default;
-    GPUVariableData(GPUDataType gpuDataType, std::string name, std::string value, std::string arraySize):
-    mGPUDataType(gpuDataType),
-    mName(name),
-    mValue(value),
-    mArraySize(arraySize)
-    {}
-    GPUVariableData(GPUDataType gpuDataType, std::string name, std::string value):
-    mGPUDataType(gpuDataType),
-    mName(name),
-    mValue(value)
-    {}
-    GPUVariableData(GPUDataType gpuDataType, std::string name):
-    mGPUDataType(gpuDataType),
-    mName(name)
-    {}
-
-    GPUDataType mGPUDataType;
-    std::string mName;
-    std::string mValue;
-    std::string mArraySize;
-};
-
-class GPUAttributeData : public GPUVariableData
+class GPUAttributeData
 {
 public:
     GPUAttributeData() = default;
-    GPUAttributeData(GPUStorage gpuStorage, const GPUVariableData& gpuVariableData):
-    GPUVariableData(gpuVariableData),
-    mGPUStorage(gpuStorage)
+    GPUAttributeData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const std::string& name):
+    mGPUStorage(gpuStorage), mGPUDataType(gpuDataType), mName(name)
+    {}
+    GPUAttributeData(GPUStorage gpuStorage, const GPUAttributeData& otherGPUAttributeData):
+    mGPUStorage(gpuStorage), mGPUDataType(otherGPUAttributeData.mGPUDataType), mName(otherGPUAttributeData.mName)
     {}
 
     GPUStorage mGPUStorage = GPUStorage::NONE;
+    GPUDataType mGPUDataType;
+    std::string mName;
+};
+
+class GPUAttributeDefinitionData: public GPUAttributeData
+{
+public:
+    GPUAttributeDefinitionData() = default;
+    GPUAttributeDefinitionData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const std::string& name):
+    GPUAttributeData(gpuStorage, gpuDataType, name)
+    {}
+    GPUAttributeDefinitionData(const GPUAttributeData& gpuAttributeData):
+    GPUAttributeData(gpuAttributeData)
+    {}   
+    GPUAttributeDefinitionData(const GPUAttributeData& gpuAttributeData, const std::string& value):
+    GPUAttributeData(gpuAttributeData), mValue(value)
+    {}   
+    GPUAttributeDefinitionData(const GPUAttributeData& gpuAttributeData, const std::string& value, const std::string& arraySize):
+    GPUAttributeData(gpuAttributeData), mValue(value), mArraySize(arraySize)
+    {}
+    GPUAttributeDefinitionData(GPUStorage gpuStorage, const GPUAttributeData& gpuAttributeData):
+    GPUAttributeData(gpuStorage, gpuAttributeData)
+    {}   
+    std::string mValue;
+    std::string mArraySize;
 };
