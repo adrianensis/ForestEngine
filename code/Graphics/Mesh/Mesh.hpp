@@ -50,6 +50,9 @@ public:
 
     Ptr<const Model> mModel;
 
+    Vector3 mMin;
+    Vector3 mMax;
+
 	ADD_TO_VECTOR(Positions)
 	ADD_TO_VECTOR(Normals)
 	ADD_TO_VECTOR(TextureCoordinates)

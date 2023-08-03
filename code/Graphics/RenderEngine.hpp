@@ -6,7 +6,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Batch/Chunk.hpp"
-
+#include "SpacePartition/OcTree.hpp"
 
 class RenderEngine : public EngineSystem
 {
@@ -44,4 +44,6 @@ public:
 
 	std::vector<OwnerPtr<Chunk>> mChunks;
 	f32 mMinChunkDrawDistance = 0.0f;
+
+	OcTree octree;
 };

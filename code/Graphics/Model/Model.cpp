@@ -140,6 +140,9 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         cgltf_attribute& attribute = primitive.attributes[attributeIt];
         if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_position)
         {
+            mesh->mMin = Vector3(attribute.data->min[0], attribute.data->min[1], attribute.data->min[2]);
+            mesh->mMax = Vector3(attribute.data->max[0], attribute.data->max[1], attribute.data->max[2]);
+
             FOR_RANGE(vertexIt, 0, attribute.data->count)
             {
                 Vector3* positionsArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);

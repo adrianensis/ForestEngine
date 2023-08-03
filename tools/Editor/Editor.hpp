@@ -2,7 +2,6 @@
 
 #include "Scripting/Script.hpp"
 #include "UI/UIStyle.hpp"
-#include "SpacePartition/OcTree.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 class UIStyleEditorToolButton: public UIStyleDefault
@@ -39,8 +38,6 @@ private:
 	Vector3 position;
     Ptr<GameObject> sprite;
 	Ptr<GameObject> cameraGameObject;
-
-	OcTree octree;
 
 	Vector2 mousePosition;
 };

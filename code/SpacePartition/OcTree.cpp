@@ -65,39 +65,36 @@ void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& 
 
 //----------------------------------------------------------------------
 
-bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, IOcTreeElement& element) const
+bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, Ptr<IOcTreeElement> element) const
 {
-// TODO: uncomment this when ready
-// ------------------------------
-
-bool test = false; /*Geometry::testRectangleSphere(mChildren[index].mCube.getLeftTopFront(), mHalfSize.x, mHalfSize.y, mHalfSize.z,
-			element.getOcTreeElementCenter(), element.getOcTreeElementRadius(), 0);*/
+    bool test = Geometry::testCubeSphere(Cube(mChildren[index].mCube.getLeftTopFront(), mHalfSize),
+			Sphere(element->getOcTreeElementCenter(), element->getOcTreeElementRadius()), 0);
 
 	return test;
 };
 
 //----------------------------------------------------------------------
 
-void OcTree::OcTreeNode::addOcTreeElement(IOcTreeElement& element)
+void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element)
 {
-if (mIsDivisible)
-{
-	// For each "possible" child node
-	FOR_ARRAY(i, mChildren)
-	{
-		OcTreeNode& node = mChildren[i];
-		bool isPartiallyInChildren = childNodeTestPartial(i, element);
-		if (isPartiallyInChildren)
-		{
-			node.addOcTreeElement(element);
-		}
-	}
-}
-else
-{
-	// Add Element to node
-	mOcTreeElements.emplace_back(&element);
-}
+    if (mIsDivisible)
+    {
+        // For each "possible" child node
+        FOR_ARRAY(i, mChildren)
+        {
+            OcTreeNode& node = mChildren[i];
+            bool isPartiallyInChildren = childNodeTestPartial(i, element);
+            if (isPartiallyInChildren)
+            {
+                node.addOcTreeElement(element);
+            }
+        }
+    }
+    else
+    {
+        // Add Element to node
+        mOcTreeElements.emplace_back(element);
+    }
 }
 
 //----------------------------------------------------------------------
@@ -127,8 +124,14 @@ void OcTree::OcTreeNode::update(/*contactManager*/)
 	// If is leaf node.
 	if (isLeaf())
 	{
-		//GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
-		//ECHO("LEAF")
+		GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
+		FOR_LIST(it, mOcTreeElements)
+        {
+            Ptr<IOcTreeElement> elem = *it;
+            f32 radius = elem->getOcTreeElementRadius();
+            Vector3 radiusVec = Vector3(radius,radius,radius);
+            GET_SYSTEM(RenderEngine).drawCube(Cube(elem->getOcTreeElementCenter(), radiusVec),1,true,Vector4(1,0,0,0.4f));
+        }
 	}
 	else
 	{
@@ -275,6 +278,11 @@ void OcTree::init(f32 size)
 void OcTree::update()
 {
 	mRoot.update();
+}
+
+void OcTree::addOcTreeElement(Ptr<IOcTreeElement> element)
+{
+    mRoot.addOcTreeElement(element);
 }
 
 // void QuadTree::addCollider(Collider *collider)

@@ -1,15 +1,6 @@
 #pragma once
 
-#include "Core/Module.hpp"
-
-class IOcTreeElement: public ObjectBase
-{
-	GENERATE_METADATA(IOcTreeElement)
-
-public:
-	virtual Vector3 getOcTreeElementCenter() const  { return Vector3(0,0,0);}
-	virtual f32 getOcTreeElementRadius() const  { return 0;}
-};
+#include "SpacePartition/OcTreeElement.hpp"
 
 // Parent class for QuadTree and OcTree
 class OcTree: public ObjectBase
@@ -25,9 +16,9 @@ protected:
 		GENERATE_METADATA(OcTreeNode)
 
 	private:
-		std::vector<IOcTreeElement*> mOcTreeElements;
+		std::vector<Ptr<IOcTreeElement>> mOcTreeElements;
 		void updateChildren();
-		bool childNodeTestPartial(u32 index, IOcTreeElement& element) const;
+		bool childNodeTestPartial(u32 index, Ptr<IOcTreeElement> element) const;
 
 	public:
 		Cube mCube;
@@ -39,7 +30,7 @@ protected:
 		std::vector<OcTreeNode> mChildren;
 
         void init(const Cube& cube, const Vector3& minSize, OcTree& tree);
-		void addOcTreeElement(IOcTreeElement& element);
+		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update();
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
@@ -59,5 +50,6 @@ public:
 	void init(f32 size);
 
 	//void addCollider(Collider *collider);
+    void addOcTreeElement(Ptr<IOcTreeElement> element);
 	void update();
 };

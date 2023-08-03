@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene/Component.hpp"
+#include "SpacePartition/OcTreeElement.hpp"
 
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/Material.hpp"
@@ -40,14 +41,16 @@ public:
     Vector3 mPositionOffset;
 };
 
-class MeshRenderer: public ComponentWithData<RendererData>
+class MeshRenderer: public ComponentWithData<RendererData>, public IOcTreeElement
 {
     GENERATE_METADATA(MeshRenderer)
 	DECLARE_SERIALIZATION()
 	
 public:
     ClassId getEngineSystemComponentId() const override { return getClassIdStatic(); }
-    
+    virtual Vector3 getOcTreeElementCenter() const override;
+	virtual f32 getOcTreeElementRadius() const override;
+
     virtual void init(RendererData& data) override;
     void onComponentAdded() override;
     bool getIsWorldSpace() const;

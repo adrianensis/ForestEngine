@@ -40,6 +40,8 @@ void RenderEngine::init(f32 sceneSize)
 			chunk->set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
 		}
 	}
+
+	octree.init(1000);
 }
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
@@ -62,7 +64,8 @@ void RenderEngine::update()
 	renderBatches();
 	swap();
 	checkChunks();
-
+    
+	octree.update();
 }
 
 void RenderEngine::terminate()
@@ -83,6 +86,8 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
     ASSERT_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
 	if (renderer->getIsWorldSpace())
     {
+        // octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
+        
         Ptr<Chunk> chunk = assignChunk(renderer);
         if (chunk)
         {
