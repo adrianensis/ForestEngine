@@ -47,8 +47,6 @@ class MeshRenderer: public ComponentWithData<RendererData>, public IOcTreeElemen
 	
 public:
     ClassId getEngineSystemComponentId() const override { return getClassIdStatic(); }
-    virtual Vector3 getOcTreeElementCenter() const override;
-	virtual f32 getOcTreeElementRadius() const override;
 
     virtual void init(RendererData& data) override;
     void onComponentAdded() override;

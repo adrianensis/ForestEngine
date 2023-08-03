@@ -56,6 +56,18 @@
     VECTOR3_SET_F32(); \
     this->w = w; 
 
+#define VECTOR2_APPLY_FUNC(func) \
+    this->x = func(x); \
+    this->y = func(y); 
+
+#define VECTOR3_APPLY_FUNC(func) \
+    VECTOR2_APPLY_FUNC(func); \
+    this->z = func(z); 
+
+#define VECTOR4_APPLY_FUNC(func) \
+    VECTOR3_APPLY_FUNC(func); \
+    this->w = func(w); 
+
 #define VECTOR2_SET_VECTOR() \
     this->x = rhs.x; \
     this->y = rhs.y; 
@@ -118,6 +130,7 @@ public:\
     ThisClass& sub(f32 rhs) { VECTOR##vectorLength##_OP_F32(-); return *this; }\
     ThisClass& mul(f32 rhs) { VECTOR##vectorLength##_OP_F32(*); return *this; }\
     ThisClass& div(f32 rhs) { VECTOR##vectorLength##_OP_F32(/); return *this; }\
+    ThisClass& abs() { VECTOR##vectorLength##_APPLY_FUNC(std::abs); return *this; }\
     f32 dot(const ThisClass& v) const { return VECTOR##vectorLength##_DOT(v); } \
     f32 sqrlen() const { return this->dot(*this); } \
     f32 sqrdst(const ThisClass& v) const { ThisClass sub = ThisClass(v) - (*this); return sub.dot(sub); } \

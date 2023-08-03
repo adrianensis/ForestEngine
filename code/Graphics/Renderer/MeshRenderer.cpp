@@ -14,9 +14,6 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
-Vector3 MeshRenderer::getOcTreeElementCenter() const { return mGameObject->mTransform->getModelMatrix().mulVector(Vector4(getComponentData().mMesh->mMax, 1));}
-f32 MeshRenderer::getOcTreeElementRadius() const { return getComponentData().mMesh->mMax.max() * mGameObject->mTransform->getScale().max();}
-
 void MeshRenderer::init(RendererData& data) 
 {
     ComponentWithData::init(data);
@@ -33,6 +30,8 @@ void MeshRenderer::init(RendererData& data)
 
 void MeshRenderer::onComponentAdded() 
 {
+    calculateRendererModelMatrix();
+    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
 }
 
 bool MeshRenderer::getIsWorldSpace() const

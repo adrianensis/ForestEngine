@@ -28,7 +28,7 @@ protected:
 public:
 
     virtual bool isZero() const { return true; };
-
+    virtual Vector3 getCenter() const { return Vector3(); }
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
 
@@ -68,6 +68,10 @@ public:
         return toVector().len() <= MathUtils::FLOAT_EPSILON;
     }
 
+    Vector3 getCenter() const override
+    {
+        return toVector();
+    }
     void serialize(JSON& json) const override
     {
         Shape::serialize(json);
@@ -117,6 +121,11 @@ public:
     bool isZero() const override
     {
         return getSize().len() <= MathUtils::FLOAT_EPSILON;
+    }
+
+    Vector3 getCenter() const override
+    {
+        return mLeftTopFront - (mSize/2.0f);
     }
 
     void serialize(JSON& json) const override
@@ -176,7 +185,11 @@ public:
         return mRadius <= MathUtils::FLOAT_EPSILON;
     }
 
-    CRGET_SET(Center)
+    Vector3 getCenter() const override
+    {
+        return mCenter;
+    }
+
     CRGET_SET(Radius)
 };
 

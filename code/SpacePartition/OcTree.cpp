@@ -118,20 +118,24 @@ void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element)
 
 void OcTree::OcTreeNode::update(/*contactManager*/)
 {
-	// DEBUG DRAW
-	//GET_SYSTEM(RenderEngine).drawCube(mCube);
-
 	// If is leaf node.
 	if (isLeaf())
 	{
-		GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
-		FOR_LIST(it, mOcTreeElements)
-        {
-            Ptr<IOcTreeElement> elem = *it;
-            f32 radius = elem->getOcTreeElementRadius();
-            Vector3 radiusVec = Vector3(radius,radius,radius);
-            GET_SYSTEM(RenderEngine).drawCube(Cube(elem->getOcTreeElementCenter(), radiusVec),1,true,Vector4(1,0,0,0.4f));
-        }
+        // DEBUG DRAW
+        // if(mOcTreeElements.size() > 0)
+        // {
+		//     GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(0.4,0.5,0,0.5f));
+        // }
+        // else
+        // {
+    	// 	GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
+        // }
+        
+		// FOR_LIST(it, mOcTreeElements)
+        // {
+        //     Ptr<IOcTreeElement> elem = *it;
+        //     GET_SYSTEM(RenderEngine).drawCube(elem->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
+        // }
 	}
 	else
 	{
