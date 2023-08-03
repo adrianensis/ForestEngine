@@ -122,20 +122,21 @@ void OcTree::OcTreeNode::update(/*contactManager*/)
 	if (isLeaf())
 	{
         // DEBUG DRAW
-        // if(mOcTreeElements.size() > 0)
-        // {
-		//     GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(0.4,0.5,0,0.5f));
-        // }
-        // else
-        // {
-    	// 	GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
-        // }
+        if(mOcTreeElements.size() > 0)
+        {
+		    GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(0.4,0.5,0,0.6f));
+        }
+        else
+        {
+    		GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
+        }
         
-		// FOR_LIST(it, mOcTreeElements)
-        // {
-        //     Ptr<IOcTreeElement> elem = *it;
-        //     GET_SYSTEM(RenderEngine).drawCube(elem->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
-        // }
+		FOR_LIST(it, mOcTreeElements)
+        {
+            Ptr<IOcTreeElement> elem = *it;
+            GET_SYSTEM(RenderEngine).drawCube(elem->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
+            GET_SYSTEM(RenderEngine).drawLine(Line(elem->getOcTreeElementCenter(), elem->getOcTreeElementCenter() + Vector3(0,elem->getOcTreeElementRadius(),0)),1,true,Vector4(0,1,0,1));
+        }
 	}
 	else
 	{

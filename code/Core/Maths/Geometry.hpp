@@ -2,6 +2,7 @@
 
 #include "Core/ObjectBase.hpp"
 #include "Core/Maths/Vector3.hpp"
+#include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/MathUtils.hpp"
 #include "Core/Log/Log.hpp"
 
@@ -112,10 +113,10 @@ public:
 
     Rectangle(const Cube& cube);
 
-    void set(const Vector3& leftTopFront, const Vector3& size)
+    virtual void set(const Vector3& leftTopFront, const Vector3& size)
     {
         mLeftTopFront.set(leftTopFront);
-        mSize.set(size);
+        mSize.set(Vector2(size));
     }
 
     bool isZero() const override
@@ -125,7 +126,7 @@ public:
 
     Vector3 getCenter() const override
     {
-        return mLeftTopFront - (mSize/2.0f);
+        return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f);
     }
 
     void serialize(JSON& json) const override
@@ -161,6 +162,12 @@ public:
     }
 
     Cube(const Rectangle& rectangle);
+
+    void set(const Vector3& leftTopFront, const Vector3& size) override
+    {
+        mLeftTopFront.set(leftTopFront);
+        mSize.set(size);
+    }
 };
 
 class Sphere: public Shape
