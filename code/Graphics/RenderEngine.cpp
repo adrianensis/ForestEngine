@@ -8,7 +8,6 @@
 #include "Graphics/Shaders/Shader.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 
 void RenderEngine::init(f32 sceneSize)
@@ -20,26 +19,6 @@ void RenderEngine::init(f32 sceneSize)
 	mCameraDirtyTranslation = true;
 
 	mShapeBatchRendererMapScreenSpace.mIsWorldSpace = false;
-
-
-	mMinChunkDrawDistance = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("chunks").at("minChunkDrawDistance").get<f32>();
-
-	f32 chunksGridSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("chunks").at("gridSize").get<f32>();
-	f32 chunksGridSizeHalf = chunksGridSize / 2.0f; // TODO : Make it power of 2!
-
-	mChunks.reserve(chunksGridSize * chunksGridSize);
-
-	f32 chunkSize = sceneSize / ((f32)chunksGridSize);
-
-	for (i32 i = -chunksGridSizeHalf; i < chunksGridSizeHalf; ++i)
-	{
-		for (i32 j = chunksGridSizeHalf; j > -chunksGridSizeHalf; --j)
-		{
-			Ptr<Chunk> chunk = mChunks.emplace_back(OwnerPtr<Chunk>::newObject());
-			chunk->init();
-			chunk->set(Vector3(i * chunkSize, j * chunkSize, chunkSize/2.0f), chunkSize);
-		}
-	}
 
 	octree.init(1000);
 }
@@ -63,7 +42,6 @@ void RenderEngine::update()
 	GET_SYSTEM(RenderContext).clear();
 	renderBatches();
 	swap();
-	checkChunks();
     
 	octree.update();
 }
@@ -74,8 +52,6 @@ void RenderEngine::terminate()
 
 	mShapeBatchRendererMap.terminate();
 	mShapeBatchRendererMapScreenSpace.terminate();
-
-	mChunks.clear();
 }
 
 void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
@@ -84,44 +60,7 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 
     Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
     ASSERT_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
-	if (renderer->getIsWorldSpace())
-    {
-        // octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
-        
-        Ptr<Chunk> chunk = assignChunk(renderer);
-        if (chunk)
-        {
-            chunk->addRenderer(renderer);
-        }
-        else
-        {
-            ASSERT_MSG(false, "MeshRenderer can't find a chunk.")
-        }
-    }
-    else
-    {
-        mBatchesMap.addRenderer(renderer);
-    }
-}
-
-Ptr<Chunk> RenderEngine::assignChunk(Ptr<MeshRenderer> renderer)
-{
-	bool found = false;
-	Ptr<Chunk> chunkTmp;
-	Ptr<Chunk> chunkFound;
-	for (i32 i = 0; (i < (i32)(mChunks.size())) and (!found); ++i)
-	{
-		chunkTmp = mChunks.at(i);
-		if (chunkTmp->containsRenderer /*Sphere*/ (renderer))
-		{
-			renderer->setChunk(chunkTmp);
-
-			found = true;
-			chunkFound = chunkTmp;
-		}
-	}
-
-	return chunkFound;
+    mBatchesMap.addRenderer(renderer);
 }
 
 void RenderEngine::assignBatch(Ptr<MeshRenderer> renderer)
@@ -185,31 +124,4 @@ void RenderEngine::renderBatches()
 	mBatchesMap.renderScreenSpaceStencil();
 	mBatchesMap.renderScreenSpace();
 	mShapeBatchRendererMapScreenSpace.render();
-}
-
-void RenderEngine::checkChunks()
-{
-	PROFILER_CPU()
-
-	FOR_ARRAY(i, mChunks)
-	{
-		Ptr<Chunk> chunk = mChunks.at(i);
-
-		f32 chunkToCameraDistance = chunk->mCenter.dst(mCamera->mGameObject->mTransform->getWorldPosition());
-		bool chunkInDistance = chunkToCameraDistance <= mMinChunkDrawDistance;
-		
-		if (chunkInDistance and !chunk->mIsLoaded)
-		{
-			chunk->load();
-		}
-		else if (!chunkInDistance and chunk->mIsLoaded)
-		{
-			mBatchesMap.requestRegenerateBuffers();
-
-			chunk->unload();
-		}
-
-		chunk->update();
-	}
-
 }

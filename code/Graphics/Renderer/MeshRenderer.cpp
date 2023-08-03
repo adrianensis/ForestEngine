@@ -9,7 +9,6 @@
 #include "Graphics/Mesh/MeshPrimitives.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/Batch/Chunk.hpp"
 #include "Graphics/Batch/Batch.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
@@ -124,11 +123,6 @@ void MeshRenderer::updateTextureCoords()
 void MeshRenderer::onDestroy() 
 {
 
-}
-
-bool MeshRenderer::hasValidChunk() const
-{
-	return (! mChunk.isValid()) || (mChunk.isValid() and mChunk->mIsLoaded); // !chunk means -> Screen Space case
 }
 
 void MeshRenderer::setMaterial(Ptr<const Material> material)

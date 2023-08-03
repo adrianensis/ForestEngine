@@ -110,20 +110,10 @@ bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
 
 	if(renderer.isValid())
 	{
-		if (renderer->isActive())
-		{
-			if (!renderer->hasValidChunk())
-			{
-				toRemove = true;
-			}
-		}
-		else
-		{
-			if (renderer->getIsPendingToBeDestroyed())
-			{
-				toRemove = true;
-			}
-		}
+		if (renderer->getIsPendingToBeDestroyed())
+        {
+            toRemove = true;
+        }
 	}
 	else
 	{

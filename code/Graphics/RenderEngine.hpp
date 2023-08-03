@@ -5,7 +5,6 @@
 #include "Graphics/Batch/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
-#include "Graphics/Batch/Chunk.hpp"
 #include "SpacePartition/OcTree.hpp"
 
 class RenderEngine : public EngineSystem
@@ -20,7 +19,6 @@ public:
     
     void addComponent(Ptr<EngineSystemComponent> component) override;
 
-    Ptr<Chunk> assignChunk(Ptr<MeshRenderer> renderer);
     void assignBatch(Ptr<MeshRenderer> renderer);
 
     void drawLine(const Line& line, f32 thickness = 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
@@ -30,7 +28,6 @@ public:
 private:
     void swap();
     void renderBatches();
-    void checkChunks();
 private:
 	BatchesMap mBatchesMap;
 
@@ -41,9 +38,5 @@ private:
 
 public:
 	Ptr<Camera> mCamera;
-
-	std::vector<OwnerPtr<Chunk>> mChunks;
-	f32 mMinChunkDrawDistance = 0.0f;
-
 	OcTree octree;
 };

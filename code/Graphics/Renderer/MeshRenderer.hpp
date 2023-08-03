@@ -7,7 +7,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-class Chunk;
 class Batch;
 
 class StencilData
@@ -56,7 +55,6 @@ public:
     bool getIsWorldSpace() const;
     void update();
     void onDestroy() override;
-    bool hasValidChunk() const;
     void setMaterial(Ptr<const Material> material);
     void setColor(const Vector4& color);
     void setDepth(i32 depth);
@@ -81,7 +79,6 @@ protected:
 private:
     Vector4 mColor;
     Ptr<Batch> mBatch;
-    Ptr<const Chunk> mChunk;
     Matrix4 mRendererModelMatrix;
 
 public:
@@ -97,6 +94,5 @@ private:
 public:
     CGET(MeshInstance)
     CRGET_SET(Batch)
-    CRGET_SET(Chunk)
     CRGET(RendererModelMatrix)
 };
