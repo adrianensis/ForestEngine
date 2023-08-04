@@ -14,6 +14,11 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
+bool MeshRenderer::isOcTreeElementStatic() const
+{
+    return isStatic();
+}
+
 void MeshRenderer::init(RendererData& data) 
 {
     ComponentWithData::init(data);
@@ -31,7 +36,6 @@ void MeshRenderer::init(RendererData& data)
 void MeshRenderer::onComponentAdded() 
 {
     calculateRendererModelMatrix();
-    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
 }
 
 bool MeshRenderer::getIsWorldSpace() const
@@ -44,6 +48,7 @@ void MeshRenderer::calculateRendererModelMatrix()
     PROFILER_CPU()
     mRendererModelMatrix.translation(mComponentData.mPositionOffset);
     mRendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
+    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
 }
 
 void MeshRenderer::update()

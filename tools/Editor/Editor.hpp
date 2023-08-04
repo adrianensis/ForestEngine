@@ -29,14 +29,14 @@ public:
 
 private:
 	Ptr<GameObject> createSprite(const Vector3& v, f32 size);
-    void importModel(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
-    void importModel2(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
+    Ptr<GameObject> importModel(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
+    Ptr<GameObject> importModel2(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
 	void handlePressedKeys();
 private:
 	f32 rotation = 0;
 	f32 y = 0;
 	Vector3 position;
-    Ptr<GameObject> sprite;
+    Ptr<GameObject> gameObject;
 	Ptr<GameObject> cameraGameObject;
 
 	Vector2 mousePosition;

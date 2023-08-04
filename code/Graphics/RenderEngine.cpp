@@ -20,7 +20,7 @@ void RenderEngine::init(f32 sceneSize)
 
 	mShapeBatchRendererMapScreenSpace.mIsWorldSpace = false;
 
-	octree.init(1000);
+	octree.init(10000);
 }
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)

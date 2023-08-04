@@ -8,18 +8,9 @@ void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& 
 	mCube = cube;
 
 	mRadius = mCube.getSize().len() / 2.0f;
-	// mTree = tree;
 
 	mHalfSize = mCube.getSize() / 2.0f;
 	mIsDivisible = (mHalfSize.x >= minSize.x) and (mHalfSize.y >= minSize.y) and (mHalfSize.z >= minSize.z);
-
-	// mColliders = Memory::allocate<List<Collider*>>();
-	// mColliders->init();
-
-	// mExitingColliders = Memory::allocate<List<Collider*>>();
-	// mExitingColliders->init();
-
-	//mChildren = Memory::allocate<Array<Node*>>();
 
 	if(mIsDivisible)
 	{
@@ -51,16 +42,6 @@ void OcTree::OcTreeNode::init(const Cube& cube, const Vector3& minSize, OcTree& 
 		mChildren.emplace_back(OcTreeNode()).
 		init(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,-mHalfSize.z), mHalfSize), minSize, tree);
 	}
-
-	// mLeftTopChildrenArray = Memory::allocate<Array<Vector2>>();
-	// mLeftTopChildrenArray->init(4);
-
-	// // This array testPartialCollider the LeftTop Vertices of the 4 children.
-	// mLeftTopChildrenArray->set(0, );
-	// mLeftTopChildrenArray->set(1, );
-	// mLeftTopChildrenArray->set(2, );
-	// mLeftTopChildrenArray->set(3, );
-
 }
 
 //----------------------------------------------------------------------
@@ -92,8 +73,18 @@ void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element)
     }
     else
     {
-        // Add Element to node
-        mOcTreeElements.emplace_back(element);
+        auto* octreeNodeElements = &mOcTreeElementsStatic;
+        if(!element->isOcTreeElementStatic())
+        {
+            octreeNodeElements = &mOcTreeElementsDynamic;
+        }
+
+        // Add Element to leaf node
+        auto it = std::find(octreeNodeElements->begin(), octreeNodeElements->end(), element);
+        if(it == octreeNodeElements->end())
+        {
+            octreeNodeElements->push_back(element);
+        }
     }
 }
 
@@ -116,42 +107,53 @@ void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element)
 
 //----------------------------------------------------------------------
 
-void OcTree::OcTreeNode::update(/*contactManager*/)
+void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
 {
 	// If is leaf node.
 	if (isLeaf())
 	{
         // DEBUG DRAW
-        if(mOcTreeElements.size() > 0)
+        if(mOcTreeElementsStatic.size() > 0 || mOcTreeElementsDynamic.size() > 0)
         {
-		    GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(0.4,0.5,0,0.6f));
+		    GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,0,1));
+
+            FOR_RANGE(i,0,mOcTreeElementsStatic.size())
+            {
+                Ptr<IOcTreeElement> element = mOcTreeElementsStatic[i];
+                GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(0,0.8,0.8,1));
+            }
+            FOR_RANGE(i,0,mOcTreeElementsDynamic.size())
+            {
+                Ptr<IOcTreeElement> element = mOcTreeElementsDynamic[i];
+                GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
+            }
         }
         else
         {
-    		GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.1f));
+    		GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.5f));
         }
-        
-		FOR_LIST(it, mOcTreeElements)
+
+        auto dynamicElementsCopyArray = mOcTreeElementsDynamic;
+        mOcTreeElementsDynamic.clear();
+        FOR_LIST(it, dynamicElementsCopyArray)
         {
-            Ptr<IOcTreeElement> elem = *it;
-            GET_SYSTEM(RenderEngine).drawCube(elem->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
-            GET_SYSTEM(RenderEngine).drawLine(Line(elem->getOcTreeElementCenter(), elem->getOcTreeElementCenter() + Vector3(0,elem->getOcTreeElementRadius(),0)),1,true,Vector4(0,1,0,1));
+            tree.addOcTreeElement(*it);
         }
 	}
 	else
 	{
-		updateChildren(/*contactManager*/);
+		updateChildren(tree/*contactManager*/);
 	}
 };
 
 //----------------------------------------------------------------------
 
-void OcTree::OcTreeNode::updateChildren(/*contactManager*/)
+void OcTree::OcTreeNode::updateChildren(OcTree& tree/*contactManager*/)
 {
 	FOR_LIST(it, mChildren)
 	{
 		OcTreeNode& child = *it;
-		child.update(/*contactManager*/);
+		child.update(tree/*contactManager*/);
 	}
 };
 
@@ -282,7 +284,7 @@ void OcTree::init(f32 size)
 
 void OcTree::update()
 {
-	mRoot.update();
+	mRoot.update(*this);
 }
 
 void OcTree::addOcTreeElement(Ptr<IOcTreeElement> element)

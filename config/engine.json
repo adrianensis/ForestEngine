@@ -12,10 +12,6 @@
             "minChunkDrawDistance" : 1500
         }
     },
-    "line" : 
-    {
-        "count" : 10000
-    },
     "scenes" :
     [
         

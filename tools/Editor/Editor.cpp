@@ -57,23 +57,23 @@ void Editor::firstUpdate()
 	}
 
 	// importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
-	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
+	gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
 	importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 0);
 	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,60), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,60), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,60), 20.0f, 0);
 
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,-60), 20.0f, 0);
 	// // importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,-60), 20.0f, 0);
@@ -301,6 +301,8 @@ void Editor::update()
 
 	f32 speed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
+    gameObject->mTransform->translate(Vector3(0,0,-0.5));
+
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
         cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
@@ -381,7 +383,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
+Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
@@ -393,17 +395,18 @@ void Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, 
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
-    modelRendererData.mIsInstanced = true;
+    // modelRendererData.mIsInstanced = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
+    return gameObject;
 }
 
-void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
+Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
-	gameObject->mIsStatic = true;
+	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
 	gameObject->mTransform->setRotation(Vector3(0,rot,0));
@@ -413,6 +416,7 @@ void Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size,
     //modelRendererData.mIsInstanced = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
+    return gameObject;
 }
 
 void Editor::handlePressedKeys()

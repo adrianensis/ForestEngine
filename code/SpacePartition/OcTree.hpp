@@ -16,8 +16,9 @@ protected:
 		GENERATE_METADATA(OcTreeNode)
 
 	private:
-		std::vector<Ptr<IOcTreeElement>> mOcTreeElements;
-		void updateChildren();
+		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsStatic;
+		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamic;
+		void updateChildren(OcTree& tree);
 		bool childNodeTestPartial(u32 index, Ptr<IOcTreeElement> element) const;
 
 	public:
@@ -31,7 +32,7 @@ protected:
 
         void init(const Cube& cube, const Vector3& minSize, OcTree& tree);
 		void addOcTreeElement(Ptr<IOcTreeElement> element);
-		void update();
+		void update(OcTree& tree);
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
 
