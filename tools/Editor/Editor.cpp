@@ -406,7 +406,7 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
-	gameObject->mIsStatic = true;
+	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
 	gameObject->mTransform->setRotation(Vector3(0,rot,0));

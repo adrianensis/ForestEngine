@@ -27,7 +27,7 @@ void Transform::init()
 	mRotation = Vector3(0.0f, 0.0f, 0.0f);
 	mScale = Vector3(1.0f, 1.0f, 1.0f);
 
-	notifyTransformChanged();
+	notifyModelMatrixDirty();
 }
 
 void Transform::onDestroy()
@@ -77,7 +77,7 @@ void Transform::lookAt(const Vector3& targetPosition)
 
 const Matrix4& Transform::getTranslationMatrix() const
 {
-    if(mTransformChanged)
+    if(mModelMatrixDirty)
     {
 	    mTranslationMatrix.translation(getWorldPosition());
     }
@@ -86,7 +86,7 @@ const Matrix4& Transform::getTranslationMatrix() const
 
 const Matrix4& Transform::getRotationMatrix() const
 {
-    if(mTransformChanged)
+    if(mModelMatrixDirty)
     {
 	    mRotationMatrix.rotation(mRotation);
     }
@@ -95,18 +95,18 @@ const Matrix4& Transform::getRotationMatrix() const
 
 const Matrix4& Transform::getScaleMatrix() const
 {
-    if(mTransformChanged)
+    if(mModelMatrixDirty)
     {
 	    mScaleMatrix.scale(mScale);
     }
 	return mScaleMatrix;
 }
 
-const Matrix4& Transform::getModelMatrix() const
+const Matrix4& Transform::calculateModelMatrix() const
 {
     PROFILER_CPU()
 
-    if(mTransformChanged)
+    if(mModelMatrixDirty)
     {
         mModelMatrix.init(getTranslationMatrix());
         Matrix4 rotationMatrix(getRotationMatrix());
@@ -115,37 +115,37 @@ const Matrix4& Transform::getModelMatrix() const
         rotationMatrix.mul(scaleMatrix);
         mModelMatrix.mul(rotationMatrix);
 
-        mTransformChanged = false;
+        mModelMatrixDirty = false;
     }
 
 	return mModelMatrix;
 }
 
-void Transform::notifyTransformChanged()
+void Transform::notifyModelMatrixDirty()
 {
-    mTransformChanged = true;
+    mModelMatrixDirty = true;
     FOR_MAP(it, mChildren)
     {
-        it->second->notifyTransformChanged();
+        it->second->notifyModelMatrixDirty();
     }
 }
 
 void Transform::setLocalPosition(const Vector3& vec)
 {
     mLocalPosition = vec;
-    notifyTransformChanged();
+    notifyModelMatrixDirty();
 }
 
 void Transform::setRotation(const Vector3& vec)
 {
     mRotation = vec;
-    notifyTransformChanged();
+    notifyModelMatrixDirty();
 }
 
 void Transform::setScale(const Vector3& vec)
 {
     mScale = vec;
-    notifyTransformChanged();
+    notifyModelMatrixDirty();
 }
 
 void Transform::addChild(Ptr<Transform> child)

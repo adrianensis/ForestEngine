@@ -91,13 +91,15 @@ void Batch::processRenderers()
 		}
 		else
 		{
-			/*Transform* transform = renderer->mGameObject->mTransform;
-			const Vector3& position = transform->getWorldPosition();
-			f32 distanceToCamera = position.dst(GET_SYSTEM(RenderEngine).getCamera()->mGameObject->mTransform->getWorldPosition());
-			if(!renderer->getIsWorldSpace() || distanceToCamera <= renderer->getRenderDistance())*/
-			
-			addToVertexBuffer(renderer);
+			renderer->preUpdate();
 		}
+	}
+
+    FOR_LIST(it, mRenderers)
+	{
+		Ptr<MeshRenderer> renderer = *it;
+        renderer->update();
+		addToVertexBuffer(renderer);
 	}
 
     mNewRendererAdded = false;
@@ -152,8 +154,6 @@ void Batch::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
 void Batch::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
-
-    renderer->update();
 
     const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
     mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());

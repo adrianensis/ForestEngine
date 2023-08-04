@@ -52,6 +52,7 @@ public:
     virtual void init(RendererData& data) override;
     void onComponentAdded() override;
     bool getIsWorldSpace() const;
+    void preUpdate();
     void update();
     void onDestroy() override;
     void setMaterial(Ptr<const Material> material);
@@ -79,6 +80,7 @@ private:
     Vector4 mColor;
     Ptr<Batch> mBatch;
     Matrix4 mRendererModelMatrix;
+    mutable bool mRendererModelMatrixDirty = true;
 
 public:
     std::string mCurrentTextureAnimationKey;

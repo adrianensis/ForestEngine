@@ -48,7 +48,7 @@ public:
     const Matrix4& getTranslationMatrix() const;
     const Matrix4& getRotationMatrix() const;
     const Matrix4& getScaleMatrix() const;
-    const Matrix4& getModelMatrix() const;
+    const Matrix4& calculateModelMatrix() const;
 
 	void translate(const Vector3& vector)
 	{
@@ -68,13 +68,13 @@ public:
     void removeChild(Ptr<Transform> child);
 
 private:
-    void notifyTransformChanged();
+    void notifyModelMatrixDirty();
 
 private:
     std::unordered_map<ObjectId, Ptr<Transform>> mChildren;
     Ptr<Transform> mParent;
 	
-    mutable bool mTransformChanged = true;
+    mutable bool mModelMatrixDirty = true;
 
 	Vector3 mLocalPosition = Vector3(0,0,0);
 	Vector3 mRotation = Vector3(0,0,0);
@@ -93,4 +93,5 @@ public:
     CRGET(LocalPosition)
     CRGET(Rotation)
     CRGET(Scale)
+    GET(ModelMatrixDirty)
 };

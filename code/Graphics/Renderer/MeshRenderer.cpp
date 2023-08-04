@@ -46,17 +46,33 @@ bool MeshRenderer::getIsWorldSpace() const
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    mRendererModelMatrix.translation(mComponentData.mPositionOffset);
-    mRendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
-    // NOTE: this is very inneficient, it adds more matrix x vector multiplications
-    //IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
+    if(mComponentData.mPositionOffset == Vector3(0,0,0))
+    {
+        mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
+    }
+    else
+    {
+        mRendererModelMatrix.translation(mComponentData.mPositionOffset);
+        mRendererModelMatrix.mul(mGameObject->mTransform->calculateModelMatrix());
+    }
+
+    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
+}
+
+void MeshRenderer::preUpdate()
+{
+    mRendererModelMatrixDirty = mGameObject->mTransform->getModelMatrixDirty();
 }
 
 void MeshRenderer::update()
 {
 	PROFILER_CPU()
 
-    calculateRendererModelMatrix();
+    if(mRendererModelMatrixDirty)
+    {
+        calculateRendererModelMatrix();
+        mRendererModelMatrixDirty = false;
+    }
 
     bool regenerateVertices = !mComponentData.mIsInstanced;
     if(regenerateVertices)
