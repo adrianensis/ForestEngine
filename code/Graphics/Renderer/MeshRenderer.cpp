@@ -48,7 +48,8 @@ void MeshRenderer::calculateRendererModelMatrix()
     PROFILER_CPU()
     mRendererModelMatrix.translation(mComponentData.mPositionOffset);
     mRendererModelMatrix.mul(mGameObject->mTransform->getModelMatrix());
-    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
+    // NOTE: this is very inneficient, it adds more matrix x vector multiplications
+    //IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
 }
 
 void MeshRenderer::update()

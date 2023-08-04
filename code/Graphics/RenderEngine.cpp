@@ -20,7 +20,7 @@ void RenderEngine::init(f32 sceneSize)
 
 	mShapeBatchRendererMapScreenSpace.mIsWorldSpace = false;
 
-	octree.init(10000);
+	// octree.init(10000);
 }
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
@@ -39,11 +39,11 @@ void RenderEngine::update()
 
 	GET_SYSTEM(AnimationManager).update();
 
+	// octree.update();
+
 	GET_SYSTEM(RenderContext).clear();
 	renderBatches();
 	swap();
-    
-	octree.update();
 }
 
 void RenderEngine::terminate()

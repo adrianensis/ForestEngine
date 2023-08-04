@@ -25,13 +25,16 @@ protected:
 		Cube mCube;
         f32 mRadius = 0;
         Vector3 mHalfSize;
+    	Vector3 mMinSize;
 		bool mIsDivisible = false;
 		const u32 mMaxChildNumber = 8;
 
-		std::vector<OcTreeNode> mChildren;
+		std::vector<OcTreeNode*> mChildren;
+		std::vector<OcTreeNode*> mActiveChildren;
+		std::vector<Cube> mChildrenBoundingBoxes;
 
-        void init(const Cube& cube, const Vector3& minSize, OcTree& tree);
-		void addOcTreeElement(Ptr<IOcTreeElement> element);
+        void init(const Cube& cube, f32 minSize, OcTree& tree);
+		void addOcTreeElement(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree);
 		void update(OcTree& tree);
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
@@ -44,6 +47,7 @@ private:
 
 public:
 	Vector3 mSize;
+	f32 mMinSize;
 
 	//DE_M_GET_SET(Status, ColliderStatus)
 
