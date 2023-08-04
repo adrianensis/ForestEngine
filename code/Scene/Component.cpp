@@ -6,17 +6,11 @@ Component::Component()
 {
 	mIsActive = true;
 	mIsDestroyed = false;
-	mIsStatic = false;
 }
 
 bool Component::isStatic() const
 {
-	if (mGameObject)
-	{
-		mIsStatic = mGameObject->mIsStatic;
-	}
-
-	return mIsStatic;
+	return mGameObject->mIsStatic;
 }
 
 bool Component::isActive() const

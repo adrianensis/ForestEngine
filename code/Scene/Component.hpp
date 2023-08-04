@@ -29,7 +29,6 @@ public:
 
 private:
 	bool mIsActive = false;
-	mutable bool mIsStatic = false;
 
 	bool mIsDestroyed = false;
 	bool mIsPendingToBeDestroyed = false;
