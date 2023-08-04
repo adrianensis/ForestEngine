@@ -51,7 +51,7 @@ private:
 
 	bool mIsWorldSpace = true;
 protected:
-	u32 mMaxShapes = 0;
+	u32 mMaxShapes = 10000;
 	u32 mShapesCounter = 0;
 	u32 mPositionsPerShape = 0;
 };

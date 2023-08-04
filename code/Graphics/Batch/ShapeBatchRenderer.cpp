@@ -21,8 +21,6 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 
 void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 {
-	mMaxShapes = GET_SYSTEM(EngineConfig).getConfig().at("line").at("count").get<f32>();
-
 	mIsWorldSpace = isWorldSpace;
 
 	mPositionsPerShape = verticesPerShape;
@@ -39,6 +37,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 
 void ShapeBatchRenderer::render()
 {
+    PROFILER_CPU()
 	if (mShapesCounter > 0)
 	{
 		mShaderLine->enable();
@@ -109,16 +108,18 @@ void ShapeBatchRenderer::addColor(const Vector4& color)
 template<>
 void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color)
 {
-addPosition(shape.getStart());
-addPosition(shape.getEnd());
+    PROFILER_CPU()
+    addPosition(shape.getStart());
+    addPosition(shape.getEnd());
 
-addColor(color);
-addColor(color);
+    addColor(color);
+    addColor(color);
 }
 
 
 void ShapeBatchRendererMap::render()
 {
+    PROFILER_CPU()
 	FOR_MAP(it, mShapeBatchMap)
 	{
 		it->second->render();
