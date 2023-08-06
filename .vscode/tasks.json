@@ -8,8 +8,7 @@
 			"args": [
 				"scripts/build.py",
 				"-lp",
-				"--tool=Editor",
-				//"-p"
+				"--tool=Editor"
 			],
 			"problemMatcher": [
 				"$gcc"
