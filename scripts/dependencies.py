@@ -1,4 +1,6 @@
+import sys
 import os  
+import getopt
 import shutil
 import platform
 import distro
@@ -33,39 +35,58 @@ os.chdir(cwd)
 destiny="dependencies"
 origin_path_base="scripts/dependencies-zip"
 
+installSystemDepencencies=False
+
+argv = []
+if(len(sys.argv) > 1):
+    argv = sys.argv[1:]
+
+try:
+  opts, args = getopt.getopt(argv, "s")
+except:
+  print("Error parsing options!")
+  exit(1)
+
+for opt, arg in opts:
+    arg_list = arg.split(",")
+
+    if opt in ['-s']:
+      installSystemDepencencies = True
+
 if os.path.isdir(destiny):
     shutil.rmtree(destiny)
 
 os.mkdir(destiny)
 
-system_name = platform.system()
-system_info = str(platform.uname())
+if installSystemDepencencies:
+    system_name = platform.system()
+    system_info = str(platform.uname())
 
-print(system_name)
-print(system_info)
+    print(system_name)
+    print(system_info)
 
-if system_name == "Linux" or system_name == "Linux2":
-    # linux
-    distro_id = distro.id()
-    if distro_id == "ubuntu":
-        os.system("sudo apt-get -y update")
-        os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang cmake-data libglu1-mesa-dev freeglut3-dev mesa-common-dev xorg-dev doxygen graphviz")
-    elif distro_id == "manjaro":
-        os.system("sudo pacman -Syy")
-        os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
+    if system_name == "Linux" or system_name == "Linux2":
+        # linux
+        distro_id = distro.id()
+        if distro_id == "ubuntu":
+            os.system("sudo apt-get -y update")
+            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang cmake-data libglu1-mesa-dev freeglut3-dev mesa-common-dev xorg-dev doxygen graphviz")
+        elif distro_id == "manjaro":
+            os.system("sudo pacman -Syy")
+            os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
 
-elif system_name == "Darwin":
-    # OS X
-    pass
-elif system_name == "Win32":
-    # Windows...
-    pass
-# elif ANDROID:
-#     # Windows...
-#     pass
-# elif IOS:
-#     # Windows...
-#     pass
+    elif system_name == "Darwin":
+        # OS X
+        pass
+    elif system_name == "Win32":
+        # Windows...
+        pass
+    # elif ANDROID:
+    #     # Windows...
+    #     pass
+    # elif IOS:
+    #     # Windows...
+    #     pass
 
 # ------------------------------------------------------------------------
 

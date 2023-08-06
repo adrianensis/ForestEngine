@@ -147,7 +147,7 @@ os.chdir(cwd)
 # easy_profiler: create bin link
 if enableProfiler:
     easy_profiler_bin_path_source = os.path.join(cwd, os.path.join(dependenciesDir, "easy_profiler-2.1.0/bin"), "profiler_gui")
-    bin_gui_path_destiny = os.path.join(cwd, os.path.join(os.path.join(binariesDir, buildType), "profiler_gui"))
+    bin_gui_path_destiny = os.path.join(cwd, os.path.join(binariesDir, "profiler_gui"))
     try:
         os.remove(bin_gui_path_destiny)
     except:
