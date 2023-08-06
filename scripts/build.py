@@ -29,7 +29,7 @@ if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, "uilchp", ["app=", "tool="])
+  opts, args = getopt.getopt(argv, "uilcpr", ["app=", "tool="])
 except:
   print("Error parsing options!")
   exit(1)
