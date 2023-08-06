@@ -101,7 +101,7 @@ include_directories("${DEPENDENCIES_DIR}/glad/include")
 
 if(ENABLE_PROFILER)
     # Easy Profiler
-    #set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
+    set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
     set(EASY_PROFILER_NO_SAMPLES ON CACHE BOOL "")
     include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
     add_subdirectory("${DEPENDENCIES_DIR}/easy_profiler-2.1.0")
