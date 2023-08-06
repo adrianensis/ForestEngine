@@ -18,9 +18,10 @@ void RenderEngine::init(f32 sceneSize)
 
 	mCameraDirtyTranslation = true;
 
-	mShapeBatchRendererMapScreenSpace.mIsWorldSpace = false;
+	mShapeBatchRenderer.init(true, 2);
+	mShapeBatchRendererScreenSpace.init(false, 2);
 
-	// octree.init(10000);
+	octree.init(10000);
 }
 
 bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
@@ -39,7 +40,7 @@ void RenderEngine::update()
 
 	GET_SYSTEM(AnimationManager).update();
 
-	// octree.update();
+	octree.update();
 
 	GET_SYSTEM(RenderContext).clear();
 	renderBatches();
@@ -50,8 +51,8 @@ void RenderEngine::terminate()
 {
 	TRACE()
 
-	mShapeBatchRendererMap.terminate();
-	mShapeBatchRendererMapScreenSpace.terminate();
+	mShapeBatchRenderer.terminate();
+	mShapeBatchRendererScreenSpace.terminate();
 }
 
 void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
@@ -75,20 +76,22 @@ void RenderEngine::assignBatch(Ptr<MeshRenderer> renderer)
 
 void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
+    PROFILER_CPU()
 	if (isWorldSpace)
 	{
-		mShapeBatchRendererMap.add(line, isWorldSpace, color);
+		mShapeBatchRenderer.addLine(line, color);
 	}
 	else
 	{
-		mShapeBatchRendererMapScreenSpace.add(line, isWorldSpace, color);
+		mShapeBatchRendererScreenSpace.addLine(line, color);
 	}
 }
 
 void RenderEngine::drawRectangle(const Rectangle& rectangle, f32 thickness/*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
-	Vector3 leftTopFront = rectangle.getLeftTopFront();
-	Vector3 size = rectangle.getSize();
+    PROFILER_CPU()
+	const Vector3& leftTopFront = rectangle.getLeftTopFront();
+	const Vector3& size = rectangle.getSize();
 	drawLine(Line(Vector3(leftTopFront.x, leftTopFront.y, leftTopFront.z), Vector3(leftTopFront.x, leftTopFront.y - size.y, leftTopFront.z)), thickness, isWorldSpace, color);
 	drawLine(Line(Vector3(leftTopFront.x, leftTopFront.y - size.y, leftTopFront.z), Vector3(leftTopFront.x + size.x, leftTopFront.y - size.y, leftTopFront.z)), thickness, isWorldSpace, color);
 	drawLine(Line(Vector3(leftTopFront.x + size.x, leftTopFront.y - size.y, leftTopFront.z), Vector3(leftTopFront.x + size.x, leftTopFront.y, leftTopFront.z)), thickness, isWorldSpace, color);
@@ -97,8 +100,9 @@ void RenderEngine::drawRectangle(const Rectangle& rectangle, f32 thickness/*= 1*
 
 void RenderEngine::drawCube(const Cube& cube, f32 thickness/*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
-	Vector3 leftTopFront = cube.getLeftTopFront();
-	Vector3 size = cube.getSize();
+    PROFILER_CPU()
+	const Vector3& leftTopFront = cube.getLeftTopFront();
+	const Vector3& size = cube.getSize();
 	Vector3 leftTopBack = leftTopFront - Vector3(0,0,size.z);
 	drawRectangle(Rectangle(leftTopFront, size), thickness, isWorldSpace, color);
 	drawRectangle(Rectangle(leftTopBack, size), thickness, isWorldSpace, color);
@@ -121,12 +125,12 @@ void RenderEngine::renderBatches()
 
 	mBatchesMap.renderStencil();
 	mBatchesMap.render();
-	mShapeBatchRendererMap.render();
+	mShapeBatchRenderer.render();
     
     GET_SYSTEM(RenderContext).clearDepth();
     GET_SYSTEM(RenderContext).clearStencil();
     
 	mBatchesMap.renderScreenSpaceStencil();
 	mBatchesMap.renderScreenSpace();
-	mShapeBatchRendererMapScreenSpace.render();
+	mShapeBatchRendererScreenSpace.render();
 }

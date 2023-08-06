@@ -8,6 +8,10 @@
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 
 {
+
+}
+void ShapeBatchRenderer::terminate()
+{
 	GET_SYSTEM(RenderContext).deleteVAO(mVAO);
 	GET_SYSTEM(RenderContext).deleteVBO(mVBOPosition);
 	GET_SYSTEM(RenderContext).deleteVBO(mEBO);
@@ -93,6 +97,7 @@ void ShapeBatchRenderer::bind()
 
 void ShapeBatchRenderer::addPosition(const Vector3& position)
 {
+    PROFILER_CPU()
 	mPositionBuffer.push_back(position.x);
 	mPositionBuffer.push_back(position.y);
 	mPositionBuffer.push_back(position.z);
@@ -100,33 +105,23 @@ void ShapeBatchRenderer::addPosition(const Vector3& position)
 
 void ShapeBatchRenderer::addColor(const Vector4& color)
 {
+    PROFILER_CPU()
 	mColorBuffer.push_back(color.x);
 	mColorBuffer.push_back(color.y);
 	mColorBuffer.push_back(color.z);
 	mColorBuffer.push_back(color.w);
 }
-template<>
-void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color)
+
+void ShapeBatchRenderer::addLine(const Line& shape, const Vector4& color)
 {
     PROFILER_CPU()
-    addPosition(shape.getStart());
-    addPosition(shape.getEnd());
+    if(mShapesCounter < mMaxShapes)
+    {
+        addPosition(shape.getStart());
+        addPosition(shape.getEnd());
 
-    addColor(color);
-    addColor(color);
-}
-
-
-void ShapeBatchRendererMap::render()
-{
-    PROFILER_CPU()
-	FOR_MAP(it, mShapeBatchMap)
-	{
-		it->second->render();
-	}
-}
-
-void ShapeBatchRendererMap::terminate()
-{
-	MAP_DELETE_CONTENT(mShapeBatchMap);
+        addColor(color);
+        addColor(color);
+        mShapesCounter++;
+    }
 }

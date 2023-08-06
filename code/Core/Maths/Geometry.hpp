@@ -6,6 +6,26 @@
 #include "Core/Maths/MathUtils.hpp"
 #include "Core/Log/Log.hpp"
 
+class Cube;
+class Sphere;
+class Line;
+
+class Geometry
+{
+public:
+
+    static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps);
+    static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps);
+    static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps);
+    static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps);
+    static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps);
+    static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2);
+    static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps);
+    static bool testLinePoint(const Line& line, const Vector3& point, f32 eps);
+    static Vector3 closestPointInLine(const Line& line, const Vector3& point);
+    static Vector3 midPoint(const Line& line);
+};
+
 class Face
 {
 	GENERATE_METADATA_STRUCT(Face);
@@ -71,7 +91,7 @@ public:
 
     Vector3 getCenter() const override
     {
-        return toVector();
+        return Geometry::midPoint(*this);
     }
     void serialize(JSON& json) const override
     {
@@ -198,20 +218,4 @@ public:
     }
 
     CRGET_SET(Radius)
-};
-
-class Geometry
-{
-public:
-
-    static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps);
-    static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps);
-    static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps);
-    static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps);
-    static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps);
-    static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2);
-    static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps);
-    static bool testLinePoint(const Line& line, const Vector3& point, f32 eps);
-    static Vector3 closestPointInLine(const Line& line, const Vector3& point);
-    static Vector3 midPoint(const Line& line);
 };

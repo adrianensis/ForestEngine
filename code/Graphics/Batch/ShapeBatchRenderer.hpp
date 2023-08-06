@@ -14,29 +14,15 @@ public:
     ~ShapeBatchRenderer() override;
 
     void init(bool isWorldSpace, u32 verticesPerShape);
+    void terminate();
     void render();
 
-	template<class T> T_EXTENDS(T, Shape)
-	void add(const T& shape, const Vector4& color)
-	{
-		if(mShapesCounter < mMaxShapes)
-		{
-			addSpecificShape<T>(shape, color);
-			mShapesCounter++;
-		}
-	}
+	void addLine(const Line& shape, const Vector4& color);
 
 private:
     void bind();
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
-
-	template<class T> T_EXTENDS(T, Shape)
-	void addSpecificShape(const T& shape, const Vector4& color)
-	{
-
-	}
-
 private: 
 	OwnerPtr<Shader> mShaderLine;
 	u32 mVAO = 0;
@@ -49,41 +35,9 @@ private:
 
 	f32 mSize = 0.0f;
 
-	bool mIsWorldSpace = true;
 protected:
 	u32 mMaxShapes = 10000;
 	u32 mShapesCounter = 0;
 	u32 mPositionsPerShape = 0;
-};
-
-template<>
-void ShapeBatchRenderer::addSpecificShape<Line>(const Line& shape, const Vector4& color);
-
-
-class ShapeBatchRendererMap: public ObjectBase
-{
-    GENERATE_METADATA(ShapeBatchRendererMap)
-	
-public:
-    void render();
-    void terminate();
-
-	template<class T> T_EXTENDS(T, Shape)
-	void add(const T& shape, bool isWorldSpace = true, const Vector4& color = Vector4(1, 1, 1, 1))
-	{
-		ClassId shapeClassId = T::getClassIdStatic();
-		if(!MAP_CONTAINS(mShapeBatchMap, shapeClassId))
-		{
-			ShapeBatchRenderer* shapeBatchRenderer = Memory::newObject<ShapeBatchRenderer>();
-			shapeBatchRenderer->init(mIsWorldSpace, shape.getVerticesCount());
-			MAP_INSERT(mShapeBatchMap, shapeClassId, shapeBatchRenderer)
-		}
-
-		mShapeBatchMap.at(shapeClassId)->add<T>(shape, color);
-	}
-
-private:
-	std::unordered_map<ClassId, ShapeBatchRenderer*> mShapeBatchMap;
-public:
 	bool mIsWorldSpace = true;
 };

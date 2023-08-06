@@ -20,8 +20,12 @@ protected:
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamic;
 		void updateChildren(OcTree& tree);
 		bool childNodeTestPartial(u32 index, Ptr<IOcTreeElement> element) const;
+        void addOcTreeElementToChildren(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree);
+        void addOcTreeElementLeaf(Ptr<IOcTreeElement> element);
+        void createChildren(u32 index, f32 minSize, OcTree& tree);
 
 	public:
+        OcTreeNode* mParent = nullptr;
 		Cube mCube;
         f32 mRadius = 0;
         Vector3 mHalfSize;
@@ -33,7 +37,7 @@ protected:
 		std::vector<OcTreeNode*> mActiveChildren;
 		std::vector<Cube> mChildrenBoundingBoxes;
 
-        void init(const Cube& cube, f32 minSize, OcTree& tree);
+        void init(OcTreeNode* parent, const Cube& cube, f32 minSize, OcTree& tree);
 		void addOcTreeElement(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree);
 		void update(OcTree& tree);
 		//void checkExit(Collider *collider) const;

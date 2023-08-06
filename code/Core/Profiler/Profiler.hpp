@@ -4,9 +4,10 @@
 #include "Core/ObjectBase.hpp"
 #include "Engine/EngineSystem.hpp"
 #include "Core/Time/TimeUtils.hpp"
-#include "easy/profiler.h"
 
 #ifdef BUILD_WITH_EASY_PROFILER
+#include "easy/profiler.h"
+
 // #define PROFILER_CPU() EASY_FUNCTION(profiler::colors::Magenta); EASY_BLOCK("ssss");
 #define PROFILER_CPU() EASY_BLOCK(__PRETTY_FUNCTION__);
 

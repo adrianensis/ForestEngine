@@ -31,8 +31,8 @@ private:
 private:
 	BatchesMap mBatchesMap;
 
-	ShapeBatchRendererMap mShapeBatchRendererMap;
-	ShapeBatchRendererMap mShapeBatchRendererMapScreenSpace;
+	ShapeBatchRenderer mShapeBatchRenderer;
+	ShapeBatchRenderer mShapeBatchRendererScreenSpace;
 
 	bool mCameraDirtyTranslation = false;
 

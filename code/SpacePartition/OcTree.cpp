@@ -3,8 +3,9 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void OcTree::OcTreeNode::init(const Cube& cube, f32 minSize, OcTree& tree)
+void OcTree::OcTreeNode::init(OcTreeNode* parent, const Cube& cube, f32 minSize, OcTree& tree)
 {
+    mParent = parent;
 	mCube = cube;
     mMinSize.set(minSize,minSize,minSize);
 
@@ -50,36 +51,54 @@ void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element, f32 minSi
     PROFILER_CPU()
     if (mIsDivisible)
     {
-        // For each "possible" child node
-        FOR_RANGE(i, 0, mMaxChildNumber)
-        {
-            bool isPartiallyInChildren = childNodeTestPartial(i, element);
-            if (isPartiallyInChildren)
-            {
-                if(!mChildren[i])
-                {
-                    mChildren[i] = Memory::newObject<OcTreeNode>();
-                    mChildren[i]->init(mChildrenBoundingBoxes[i], minSize, tree);
-                    mActiveChildren.push_back(mChildren[i]);
-                }
-                mChildren[i]->addOcTreeElement(element, minSize, tree);
-            }
-        }
+        addOcTreeElementToChildren(element, minSize, tree);
     }
     else
     {
-        auto* octreeNodeElements = &mOcTreeElementsStatic;
-        if(!element->isOcTreeElementStatic())
-        {
-            octreeNodeElements = &mOcTreeElementsDynamic;
-        }
+        addOcTreeElementLeaf(element);
+    }
+}
 
-        // Add Element to leaf node
-        auto it = std::find(octreeNodeElements->begin(), octreeNodeElements->end(), element);
-        if(it == octreeNodeElements->end())
+void OcTree::OcTreeNode::addOcTreeElementToChildren(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree)
+{
+    PROFILER_CPU()
+    // For each "possible" child node
+    FOR_RANGE(i, 0, mMaxChildNumber)
+    {
+        bool isPartiallyInChildren = childNodeTestPartial(i, element);
+        if (isPartiallyInChildren)
         {
-            octreeNodeElements->push_back(element);
+            if(!mChildren[i])
+            {
+                createChildren(i, minSize, tree);
+            }
+            mChildren[i]->addOcTreeElement(element, minSize, tree);
         }
+    }
+}
+
+void OcTree::OcTreeNode::createChildren(u32 index, f32 minSize, OcTree& tree)
+{
+    PROFILER_CPU()
+    mChildren[index] = Memory::newObject<OcTreeNode>();
+    mChildren[index]->init(this, mChildrenBoundingBoxes[index], minSize, tree);
+    mActiveChildren.push_back(mChildren[index]);
+}
+
+void OcTree::OcTreeNode::addOcTreeElementLeaf(Ptr<IOcTreeElement> element)
+{
+    PROFILER_CPU()
+    auto* octreeNodeElements = &mOcTreeElementsStatic;
+    if(!element->isOcTreeElementStatic())
+    {
+        octreeNodeElements = &mOcTreeElementsDynamic;
+    }
+
+    // Add Element to leaf node
+    auto it = std::find(octreeNodeElements->begin(), octreeNodeElements->end(), element);
+    if(it == octreeNodeElements->end())
+    {
+        octreeNodeElements->push_back(element);
     }
 }
 
@@ -106,36 +125,36 @@ void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
 {
     PROFILER_CPU()
 
+    // GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.5f));
+
 	// If is leaf node.
 	if (isLeaf())
 	{
         // DEBUG DRAW
         if(mOcTreeElementsStatic.size() > 0 || mOcTreeElementsDynamic.size() > 0)
         {
-		    GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,0,1));
+		    // GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,0,1));
 
-            FOR_RANGE(i,0,mOcTreeElementsStatic.size())
-            {
-                Ptr<IOcTreeElement> element = mOcTreeElementsStatic[i];
-                GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(0,0.8,0.8,1));
-            }
-            FOR_RANGE(i,0,mOcTreeElementsDynamic.size())
-            {
-                Ptr<IOcTreeElement> element = mOcTreeElementsDynamic[i];
-                GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
-            }
-        }
-        else
-        {
-    		GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.5f));
+            // FOR_RANGE(i,0,mOcTreeElementsStatic.size())
+            // {
+            //     Ptr<IOcTreeElement> element = mOcTreeElementsStatic[i];
+            //     GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(0,0.8,0.8,1));
+            // }
+            // FOR_RANGE(i,0,mOcTreeElementsDynamic.size())
+            // {
+            //     Ptr<IOcTreeElement> element = mOcTreeElementsDynamic[i];
+            //     GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
+            // }
         }
 
-        auto dynamicElementsCopyArray = mOcTreeElementsDynamic;
-        mOcTreeElementsDynamic.clear();
-        FOR_LIST(it, dynamicElementsCopyArray)
-        {
-            tree.addOcTreeElement(*it);
-        }
+        // TODO: don't reinsert, check the parent/siblings instead
+
+        // auto dynamicElementsCopyArray = mOcTreeElementsDynamic;
+        // mOcTreeElementsDynamic.clear();
+        // FOR_LIST(it, dynamicElementsCopyArray)
+        // {
+        //     tree.addOcTreeElement(*it);
+        // }
 	}
 	else
 	{
@@ -276,7 +295,7 @@ void OcTree::init(f32 size)
 	//f32 minSize = Settings::getInstance()->getF32("scene.quadTreeMinSize");
 
 	mMinSize = 200.0f; //size / 2.0f;
-	mRoot.init(Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), mMinSize, *this);
+	mRoot.init(nullptr, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), mMinSize, *this);
 }
 
 void OcTree::update()
