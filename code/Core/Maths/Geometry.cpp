@@ -29,6 +29,17 @@ bool Geometry::testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
         (cube.getLeftTopFront().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
 }
 
+bool Geometry::testSphereInsideCube(const Cube& cube, const Sphere& sphere)
+{
+    return
+        (cube.getLeftTopFront().x + sphere.getRadius()) <= sphere.getCenter().x and
+        (cube.getLeftTopFront().x + cube.getSize().x - sphere.getRadius()) >= sphere.getCenter().x and
+        (cube.getLeftTopFront().y - sphere.getRadius()) >= sphere.getCenter().y and
+        (cube.getLeftTopFront().y - cube.getSize().y + sphere.getRadius()) <= sphere.getCenter().y and
+        (cube.getLeftTopFront().z - sphere.getRadius()) >= sphere.getCenter().z and
+        (cube.getLeftTopFront().z - cube.getSize().z + sphere.getRadius()) <= sphere.getCenter().z;
+}
+
 bool Geometry::testCubePoint(const Cube& cube, const Vector3& point, f32 eps)
 {
     return testCubeSphere(cube, Sphere(point, 0.0f), eps);

@@ -15,6 +15,7 @@ class Geometry
 public:
 
     static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps);
+    static bool testSphereInsideCube(const Cube& cube, const Sphere& sphere);
     static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps);
     static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps);
     static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps);
