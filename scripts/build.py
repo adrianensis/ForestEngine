@@ -12,7 +12,8 @@ buildDir="build"
 dependenciesDir="dependencies"
 binariesDir="binaries"
 
-profilerDir = os.path.join(dependenciesDir, "easy_profiler-2.1.0")
+profilerDir = "easy_profiler-2.1.0"
+profilerDepencencyDir = os.path.join(dependenciesDir, "easy_profiler-2.1.0")
 
 buildType="Debug"
 
@@ -90,7 +91,7 @@ if not os.path.isdir(buildDir):
 
 # easy_profiler GUI
 if enableProfiler:
-    os.chdir(profilerDir)
+    os.chdir(profilerDepencencyDir)
 
     if not os.path.isdir(buildDir):
       os.mkdir(buildDir)
@@ -146,7 +147,7 @@ os.chdir(cwd)
 
 # easy_profiler: create bin link
 if enableProfiler:
-    easy_profiler_bin_path_source = os.path.join(cwd, os.path.join(dependenciesDir, "easy_profiler-2.1.0/bin"), "profiler_gui")
+    easy_profiler_bin_path_source = os.path.join(cwd, os.path.join(os.path.join(profilerDepencencyDir, buildDir), "bin"), "profiler_gui")
     bin_gui_path_destiny = os.path.join(cwd, os.path.join(binariesDir, "profiler_gui"))
     try:
         os.remove(bin_gui_path_destiny)
