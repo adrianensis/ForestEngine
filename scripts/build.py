@@ -55,6 +55,8 @@ for opt, arg in opts:
     elif opt in ['-p']:
       enableProfiler=True
 
+buildTargetDir=os.path.join(buildDir, buildType)
+
 system_name = platform.system()
 system_info = str(platform.uname())
 
@@ -84,6 +86,8 @@ elif system_name == "Windows":
 
 if not os.path.isdir(buildDir):
       os.mkdir(buildDir)
+if not os.path.isdir(buildTargetDir):
+      os.mkdir(buildTargetDir)
 
 ##########################################
 ########## PRE BUILD ###########
@@ -94,17 +98,19 @@ if enableProfiler:
     os.chdir(profilerDepencencyDir)
 
     if not os.path.isdir(buildDir):
-      os.mkdir(buildDir)
+        os.mkdir(buildDir)
+    if not os.path.isdir(buildTargetDir):
+        os.mkdir(buildTargetDir)
 
-    os.chdir(buildDir)
+    os.chdir(buildTargetDir)
 
     buildProfilerCommandArgs = [
-        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_BUILD_TYPE=" + buildType
     ]
 
     buildProfilerCommandArgsString =" ".join(buildProfilerCommandArgs)
 
-    buildProfilerCommand = 'cmake {cmake_generator} {buildProfilerCommandArgsString} ..'.format(
+    buildProfilerCommand = 'cmake {cmake_generator} {buildProfilerCommandArgsString} ../..'.format(
     cmake_generator = cmake_generator,
     buildProfilerCommandArgsString = buildProfilerCommandArgsString)
     print(buildProfilerCommand)
@@ -114,12 +120,12 @@ if enableProfiler:
 ##########################################
 ########## BUILD ###########
 ##########################################
-os.chdir(os.path.join(cwd, buildDir))
+os.chdir(os.path.join(cwd, buildTargetDir))
 
 # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
 
 buildCommandArgs = [
-    "-DCMAKE_BUILD_TYPE=" + str(buildType),
+    "-DCMAKE_BUILD_TYPE=" + buildType,
     "-DBUILD_UNIT_TESTS=" + str(buildUnitTests),
     "-DBUILD_INTEGRATION_TESTS=" + str(buildIntegrationTests),
     "-DTOOLS_TO_BUILD=" + "\"" + str(";".join(toolsToBuild) + "\""),
@@ -130,7 +136,7 @@ buildCommandArgs = [
 
 buildCommandArgsString =" ".join(buildCommandArgs)
 
-buildCommand = 'cmake {cmake_generator} {buildCommandArgsString} ..'.format(
+buildCommand = 'cmake {cmake_generator} {buildCommandArgsString} ../..'.format(
   cmake_generator = cmake_generator,
   buildCommandArgsString = buildCommandArgsString)
 print(buildCommand)
@@ -147,8 +153,8 @@ os.chdir(cwd)
 
 # easy_profiler: create bin link
 if enableProfiler:
-    easy_profiler_bin_path_source = os.path.join(cwd, os.path.join(os.path.join(profilerDepencencyDir, buildDir), "bin"), "profiler_gui")
-    bin_gui_path_destiny = os.path.join(cwd, os.path.join(binariesDir, "profiler_gui"))
+    easy_profiler_bin_path_source = os.path.join(cwd, os.path.join(os.path.join(profilerDepencencyDir, buildTargetDir), "bin"), "profiler_gui")
+    bin_gui_path_destiny = os.path.join(cwd, os.path.join(binariesDir, os.path.join(buildType, "profiler_gui")))
     try:
         os.remove(bin_gui_path_destiny)
     except:
