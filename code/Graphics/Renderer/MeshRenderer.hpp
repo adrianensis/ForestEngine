@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene/Component.hpp"
-#include "SpacePartition/OcTreeElement.hpp"
+#include "SpacePartition/OcTree.hpp"
 
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/Material.hpp"

@@ -68,6 +68,18 @@ void Editor::firstUpdate()
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+    
+    // Vector3 pos(0,0,0);
+    // FOR_RANGE(x, -10, 10)
+    // {
+    //     FOR_RANGE(y, -10, 10)
+    //     {
+    //         FOR_RANGE(z, -10, 10)
+    //         {
+    //             importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x,y,z) * 100, 20.0f*z, 0);
+    //         }
+    //     }
+    // }
 
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(150,0,60), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(300,0,60), 20.0f, 0);
@@ -395,7 +407,7 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
-    // modelRendererData.mIsInstanced = true;
+    modelRendererData.mIsInstanced = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
     return gameObject;

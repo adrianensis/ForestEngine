@@ -1,6 +1,8 @@
 #pragma once
 
-#include "SpacePartition/OcTreeElement.hpp"
+#include "Core/Module.hpp"
+
+class IOcTreeElement;
 
 // Parent class for QuadTree and OcTree
 class OcTree: public ObjectBase
@@ -10,11 +12,11 @@ class OcTree: public ObjectBase
 public:
 	~OcTree() override {};
 
-protected:
+public:
 	class OcTreeNode: public ObjectBase
 	{
 		GENERATE_METADATA(OcTreeNode)
-
+    friend IOcTreeElement;
 	private:
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsStatic;
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamic;
@@ -22,24 +24,24 @@ protected:
         void addOcTreeElementToChildren(Ptr<IOcTreeElement> element);
         void addOcTreeElementToLeaf(Ptr<IOcTreeElement> element);
         void addOcTreeElementToParent(Ptr<IOcTreeElement> element);
-        void createChildren(u32 index);
+        void createChildren(u8 index);
         u32 getElementsCount() const { return mOcTreeElementsStatic.size() + mOcTreeElementsDynamic.size(); }
 
 	public:
         OcTreeNode* mParent = nullptr;
+        u8 mIndex = 0;
 		Cube mCube;
         Vector3 mHalfSize;
     	f32 mMinSize = 0;
-    	f32 mMaxElements = 10;
 		bool mIsDivisible = false;
-		static const u32 smMaxChildNumber = 8;
+		static const u8 smMaxChildNumber = 8;
 
 		std::array<OcTreeNode*, smMaxChildNumber> mChildren;
-		std::array<i32, smMaxChildNumber> mActiveChildren;
-		u32 mActiveChildrenIndex = 0;
+		std::array<i8, smMaxChildNumber> mActiveChildren;
+		u8 mActiveChildrenIndex = 0;
 		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTreeNode* parent, const Cube& cube, f32 minSize);
+        void init(OcTreeNode* parent, u8 index, const Cube& cube, f32 minSize);
 		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update(OcTree& tree);
         void drawDebug();
@@ -59,4 +61,18 @@ public:
 	//void addCollider(Collider *collider);
     void addOcTreeElement(Ptr<IOcTreeElement> element);
 	void update();
+};
+
+class IOcTreeElement
+{
+public:
+    void init(const Matrix4& modelMatrix, const Vector3& meshMin, const Vector3& meshMax);
+	virtual bool isOcTreeElementStatic() const { return false;}
+	virtual bool isOcTreeTransformChanged() const { return false;}
+
+private:
+    Cube mOcTreeBoundingBox;
+
+public:
+    CRGET(OcTreeBoundingBox)
 };
