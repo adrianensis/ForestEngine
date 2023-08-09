@@ -46,15 +46,18 @@ class Shape: public ObjectBase
     
 protected: 
     u32 mVerticesCount = 0;
+    Vector3 mCenter;
+    f32 mRadius;
 
 public:
 
     virtual bool isZero() const { return true; };
-    virtual Vector3 getCenter() const { return Vector3(); }
     void serialize(JSON& json) const override { }
 	void deserialize(const JSON& json) override { }
 
     GET(VerticesCount)
+    CRGET(Center)
+    CRGET(Radius)
 };
 
 class Line: public Shape
@@ -72,12 +75,16 @@ public:
     {
         mStart.set(xStart,yStart, 0);
         mEnd.set(xEnd, yEnd, 0);
+        mCenter = Geometry::midPoint(*this);
+        mRadius = toVector().len();
     }
 
     Line(const Vector3& start, const Vector3& end): Line()
     {
         mStart.set(start);
         mEnd.set(end);
+        mCenter = Geometry::midPoint(*this);
+        mRadius = toVector().len();
     }
 
     Vector3 toVector() const
@@ -90,10 +97,6 @@ public:
         return toVector().len() <= MathUtils::FLOAT_EPSILON;
     }
 
-    Vector3 getCenter() const override
-    {
-        return Geometry::midPoint(*this);
-    }
     void serialize(JSON& json) const override
     {
         Shape::serialize(json);
@@ -110,8 +113,8 @@ public:
         DESERIALIZE("end", mEnd)
     }
 
-    CRGET_SET(Start)
-    CRGET_SET(End)
+    CRGET(Start)
+    CRGET(End)
 };
 
 class Cube;
@@ -138,16 +141,13 @@ public:
     {
         mLeftTopFront.set(leftTopFront);
         mSize.set(Vector2(size));
+        mCenter = mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f);
+        mRadius = mSize.max();
     }
 
     bool isZero() const override
     {
         return getSize().len() <= MathUtils::FLOAT_EPSILON;
-    }
-
-    Vector3 getCenter() const override
-    {
-        return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f);
     }
 
     void serialize(JSON& json) const override
@@ -166,8 +166,8 @@ public:
         DESERIALIZE("size", mSize);
     }
 
-    CRGET_SET(LeftTopFront)
-    CRGET_SET(Size)
+    CRGET(LeftTopFront)
+    CRGET(Size)
 };
 
 class Cube: public Rectangle
@@ -188,16 +188,14 @@ public:
     {
         mLeftTopFront.set(leftTopFront);
         mSize.set(size);
+        mCenter = mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f);
+        mRadius = mSize.max();
     }
 };
 
 class Sphere: public Shape
 {
     GENERATE_METADATA(Sphere)
-
-protected: 
-    Vector3 mCenter;
-    f32 mRadius;
 
 public:
     Sphere() { mVerticesCount = 0; }
@@ -212,11 +210,4 @@ public:
     {
         return mRadius <= MathUtils::FLOAT_EPSILON;
     }
-
-    Vector3 getCenter() const override
-    {
-        return mCenter;
-    }
-
-    CRGET_SET(Radius)
 };

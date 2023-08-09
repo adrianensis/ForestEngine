@@ -3,89 +3,82 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void OcTree::OcTreeNode::init(OcTreeNode* parent, const Cube& cube, f32 minSize, OcTree& tree)
+void OcTree::OcTreeNode::init(OcTreeNode* parent, const Cube& cube, f32 minSize)
 {
     mParent = parent;
 	mCube = cube;
-    mMinSize.set(minSize,minSize,minSize);
-
-	mRadius = mCube.getSize().len() / 2.0f;
-
+    mMinSize = minSize;
 	mHalfSize = mCube.getSize() / 2.0f;
-	mIsDivisible = (mHalfSize.x >= mMinSize.x) and (mHalfSize.y >= mMinSize.y) and (mHalfSize.z >= mMinSize.z);
+	mIsDivisible = (mHalfSize.x >= mMinSize) and (mHalfSize.y >= mMinSize) and (mHalfSize.z >= mMinSize);
+
+    FOR_RANGE(i, 0, smMaxChildNumber)
+    {
+        mActiveChildren[i] = -1;
+    }
 
 	if(mIsDivisible)
-	{
-		mChildren.resize(mMaxChildNumber);
-		mChildrenBoundingBoxes.reserve(mMaxChildNumber);
-        
+	{        
 		// front
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(0,0,0), mHalfSize));
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,0), mHalfSize));
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,0), mHalfSize));
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,0), mHalfSize));
+        mChildrenBoundingBoxes[0] = Cube(mCube.getLeftTopFront() + Vector3(0,0,-mHalfSize.z), mHalfSize);
+        mChildrenBoundingBoxes[1] = Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,-mHalfSize.z), mHalfSize);
+        mChildrenBoundingBoxes[2] = Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,-mHalfSize.z), mHalfSize);
+        mChildrenBoundingBoxes[3] = Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,-mHalfSize.z), mHalfSize);
         
 		// back
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(0,0,-mHalfSize.z), mHalfSize));
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,-mHalfSize.z), mHalfSize));
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,-mHalfSize.z), mHalfSize));
-        mChildrenBoundingBoxes.emplace_back(Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,-mHalfSize.z), mHalfSize));
+        mChildrenBoundingBoxes[4] = Cube(mCube.getLeftTopFront() + Vector3(0,0,0), mHalfSize);
+        mChildrenBoundingBoxes[5] = Cube(mCube.getLeftTopFront() + Vector3(0,-mHalfSize.y,0), mHalfSize);
+        mChildrenBoundingBoxes[6] = Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,-mHalfSize.y,0), mHalfSize);
+        mChildrenBoundingBoxes[7] = Cube(mCube.getLeftTopFront() + Vector3(mHalfSize.x,0,0), mHalfSize);
 	}
 }
 
-//----------------------------------------------------------------------
-
-bool OcTree::OcTreeNode::childNodeTestPartial(u32 index, Ptr<IOcTreeElement> element) const
+void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
-    bool test = Geometry::testCubeSphere(mChildrenBoundingBoxes[index],
-			Sphere(element->getOcTreeElementCenter(), element->getOcTreeElementRadius()), 0);
 
-	return test;
-};
-
-//----------------------------------------------------------------------
-
-void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree)
-{
-    PROFILER_CPU()
     if (mIsDivisible)
     {
-        addOcTreeElementToChildren(element, minSize, tree);
+        addOcTreeElementToChildren(element);
     }
     else
     {
-        addOcTreeElementLeaf(element);
+        addOcTreeElementToLeaf(element);
     }
 }
 
-void OcTree::OcTreeNode::addOcTreeElementToChildren(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree)
+void OcTree::OcTreeNode::addOcTreeElementToChildren(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
+
+
+
     // For each "possible" child node
-    FOR_RANGE(i, 0, mMaxChildNumber)
+    FOR_RANGE(i, 0, smMaxChildNumber)
     {
-        bool isPartiallyInChildren = childNodeTestPartial(i, element);
+        bool isPartiallyInChildren = Geometry::testCubeSphere(mChildrenBoundingBoxes[i],
+			Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()), 0);
+
         if (isPartiallyInChildren)
         {
             if(!mChildren[i])
             {
-                createChildren(i, minSize, tree);
+                createChildren(i);
+                mActiveChildren[mActiveChildrenIndex] = i;
+                mActiveChildrenIndex++;
             }
-            mChildren[i]->addOcTreeElement(element, minSize, tree);
+            mChildren[i]->addOcTreeElement(element);
         }
     }
 }
 
-void OcTree::OcTreeNode::createChildren(u32 index, f32 minSize, OcTree& tree)
+void OcTree::OcTreeNode::createChildren(u32 index)
 {
     PROFILER_CPU()
     mChildren[index] = Memory::newObject<OcTreeNode>();
-    mChildren[index]->init(this, mChildrenBoundingBoxes[index], minSize, tree);
-    mActiveChildren.push_back(mChildren[index]);
+    mChildren[index]->init(this, mChildrenBoundingBoxes[index], mMinSize);
 }
 
-void OcTree::OcTreeNode::addOcTreeElementLeaf(Ptr<IOcTreeElement> element)
+void OcTree::OcTreeNode::addOcTreeElementToLeaf(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
     auto* octreeNodeElements = &mOcTreeElementsStatic;
@@ -102,38 +95,114 @@ void OcTree::OcTreeNode::addOcTreeElementLeaf(Ptr<IOcTreeElement> element)
     }
 }
 
-//----------------------------------------------------------------------
+void OcTree::OcTreeNode::addOcTreeElementToParent(Ptr<IOcTreeElement> element)
+{
+    PROFILER_CPU()
 
-// void QuadTree::Node::internalRemoveColliderFromList(const Iterator *it)
-// {
-// 	auto castedIt = it->cast<Collider*>();
-// 	mColliders->remove(*castedIt);
+    bool test = Geometry::testSphereInsideCube(mCube,
+        Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()));
 
-// }
-
-// //----------------------------------------------------------------------
-
-// void QuadTree::Node::internalFreeCollider(Collider *collider)
-// {
-// 	collider->setDestroyed();
-// 	Memory::free<Collider>(collider);
-// }
-
-//----------------------------------------------------------------------
+    if(test)
+    {
+        addOcTreeElement(element);
+    }
+    else
+    {
+        if(mParent)
+        {
+            mParent->addOcTreeElementToParent(element);
+        }
+    }
+}
 
 void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
 {
     PROFILER_CPU()
 
-    // GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.5f));
+    drawDebug();
 
-	// If is leaf node.
-	if (isLeaf())
+	if (mIsDivisible)
+	{
+		updateChildren(tree/*contactManager*/);
+	}
+    else // If is leaf node
+	{
+        auto dynamicElementsCopyArray = mOcTreeElementsDynamic;
+        mOcTreeElementsDynamic.clear();
+        FOR_LIST(it, dynamicElementsCopyArray)
+        {
+            Ptr<IOcTreeElement> element = *it;
+            bool test = Geometry::testSphereInsideCube(mCube,
+            Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()));
+
+            if(test)
+            {
+                mOcTreeElementsDynamic.push_back(element);
+            }
+            else
+            {
+                mParent->addOcTreeElementToParent(*it);
+            }
+        }
+	}
+}
+
+void OcTree::OcTreeNode::updateChildren(OcTree& tree/*contactManager*/)
+{
+    PROFILER_CPU()
+    FOR_RANGE(i, 0, mActiveChildrenIndex)
+    {
+        i32 childrenIndex = mActiveChildren[i];
+        OcTreeNode* node = mChildren[childrenIndex];
+        if(node)
+        {
+            // if(node->mActiveChildren == 0)
+            // {
+            //     if(node->mIsDivisible)
+            //     {
+            //         Memory::deleteObject(node);
+            //         mChildren[i] = nullptr;
+            //         mActiveChildren--;
+            //     }
+            //     else
+            //     {
+            //         if(node->getElementsCount() == 0)
+            //         {
+            //             Memory::deleteObject(node);
+            //             mChildren[i] = nullptr;
+            //             mActiveChildren--;
+            //         }
+            //         else
+            //         {
+            //             node->update(tree/*contactManager*/);
+            //         }
+            //     }
+            // }
+            // else
+            // {
+                node->update(tree/*contactManager*/);
+            // }
+        }
+	}
+}
+
+void OcTree::OcTreeNode::drawDebug()
+{
+    PROFILER_CPU()
+
+    GET_SYSTEM(RenderEngine).drawLine(Line(mCube.getLeftTopFront(), mCube.getLeftTopFront() + Vector3(0,10,0)),1,true,Vector4(0,1,0,1));
+    GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,1,0.5f));
+    GET_SYSTEM(RenderEngine).drawCube(Cube(Vector3(0,0,-100), Vector3(100,100,100)),1,true,Vector4(1,0,1,1));
+    GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-100), Vector3(0,0,-100) + Vector3(0,10,0)),1,true,Vector4(0,1,0,1));
+    if (mIsDivisible)
+	{
+	}
+    else // If is leaf node
 	{
         // DEBUG DRAW
         if(mOcTreeElementsStatic.size() > 0 || mOcTreeElementsDynamic.size() > 0)
         {
-		    // GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,0,1));
+		    GET_SYSTEM(RenderEngine).drawCube(mCube,1,true,Vector4(1,1,0,1));
 
             // FOR_RANGE(i,0,mOcTreeElementsStatic.size())
             // {
@@ -146,156 +215,14 @@ void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
             //     GET_SYSTEM(RenderEngine).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
             // }
         }
-
-        // TODO: don't reinsert, check the parent/siblings instead
-
-        // auto dynamicElementsCopyArray = mOcTreeElementsDynamic;
-        // mOcTreeElementsDynamic.clear();
-        // FOR_LIST(it, dynamicElementsCopyArray)
-        // {
-        //     tree.addOcTreeElement(*it);
-        // }
-	}
-	else
-	{
-		updateChildren(tree/*contactManager*/);
-	}
-};
-
-//----------------------------------------------------------------------
-
-void OcTree::OcTreeNode::updateChildren(OcTree& tree/*contactManager*/)
-{
-    PROFILER_CPU()
-	FOR_RANGE(i, 0, mActiveChildren.size())
-	{
-        mActiveChildren[i]->update(tree/*contactManager*/);
-	}
-};
-
-//----------------------------------------------------------------------
-
-// void QuadTree::Node::checkExit(Collider *collider) const {
-// 	// CHECK if collider is out of this node.
-// 	// only dynamic objects can escape from their nodes !!!
-
-// 	if (!collider->isStatic() || collider->getHasSizeChanged())
-// {
-
-// //		bool collision = MathUtils::testRectangleSphere(mLeftTop, mWidth, mHeight,
-// //						Vector2(collider->getCenter()), collider->getRadius(), 0);
-
-// 		bool collision = MathUtils::testCubePoint(mLeftTop, mWidth, mHeight,
-// 								Vector2(collider->getCenter()), -collider->getRadius());
-
-// 		if(!collision || collider->getHasSizeChanged()){
-// 			mExitingColliders->pushBack(collider);
-// 			mTree->addCollider(collider);
-// 		}
-// 	}
-// };
-
-// //----------------------------------------------------------------------
-
-// void QuadTree::Node::manageExits(List<Collider*> *exitingColliders)
-// {
-
-// 	// If any collider has left the node
-// 	if (exitingColliders->getLength() > 0)
-// {
-
-// 		// FOR EACH COLLIDER
-// 		FOR_LIST (itExiting, exitingColliders)
-// 		{
-// 			Collider* collider = itExiting.get();
-// 			mColliders->remove(mColliders->find(collider));
-
-// 			// Note: Only dynamic colliders can leave the node!
-// 			if (!collider->isStatic())
-// {
-// 				mDynamicCollidersCount--;
-// 			}
-// 		}
-// 	}
-// };
-
-//----------------------------------------------------------------------
-
-bool OcTree::OcTreeNode::isLeaf() const
-{
-	return mActiveChildren.size() == 0;
-};
-// u32 QuadTree::Node::getCollidersCount() const {
-// 	return mColliders->getLength();
-// };
-
-// void QuadTree::Node::rayCastQuery(const Vector3& lineStart, const Vector3& lineEnd, List<GameObject*> *outList)
-// {
-
-// 	bool rayIntersectsNode = MathUtils::testLineSphereSimple(Vector2(lineStart), Vector2(lineEnd),
-// 			Vector2(mLeftTop + Vector3(mHalfWidth, -mHalfHeight, 0)), mRadius, 0.0f);
-
-// 	if (rayIntersectsNode)
-// {
-// 		if (isLeaf())
-// {
-
-// 			FOR_LIST(it, mColliders)
-// {
-// 				Collider* collider = it.get();
-
-// 				GameObject* gameObject = collider->mGameObject;
-
-// 				// TODO : line vs cube
-// 				bool rayIntersectsCollider = MathUtils::testLineSphereSimple(Vector2(lineStart), Vector2(lineEnd),
-// 						Vector2(collider->getCenter()), collider->getRadius(), 0.0f);
-
-// 				if (rayIntersectsCollider)
-// {
-// 					List<GameObject*>::ListIterator it = outList->find(gameObject);
-
-// 					// If not found then add it
-// 					if (it.isNull())
-// {
-// 						outList->pushBack(gameObject);
-// 					}
-// 				}
-// 			}
-
-// 		} else {
-// 			FOR_ARRAY (i, mChildren)
-// {
-// 				Node* child = mChildren->get(i);
-
-// 				if (child)
-// {
-// 					child->rayCastQuery(lineStart, lineEnd, outList);
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
-// QuadTree::QuadTree()
-// {
-// 	mWidth = 0.0f;
-// 	mHeight = 0.0f;
-// 	//mStatus = ColliderStatus::STATUS_NONE;
-// }
-
-// QuadTree::~QuadTree()
-// {
-// 	//Memory::deleteObject(mRoot)
-// }
+    }
+}
 
 void OcTree::init(f32 size)
 {
 	mSize.set(size, size, size);
-
-	//f32 minSize = Settings::getInstance()->getF32("scene.quadTreeMinSize");
-
-	mMinSize = 200.0f; //size / 2.0f;
-	mRoot.init(nullptr, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), mMinSize, *this);
+	mMinSize = 400.0f; //size / 2.0f;
+	mRoot.init(nullptr, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), mMinSize);
 }
 
 void OcTree::update()
@@ -307,16 +234,5 @@ void OcTree::update()
 void OcTree::addOcTreeElement(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
-    mRoot.addOcTreeElement(element, mMinSize, *this);
+    mRoot.addOcTreeElement(element);
 }
-
-// void QuadTree::addCollider(Collider *collider)
-// {
-// 	collider->resetHasSizeChaged();
-// 	mRoot->addCollider(collider);
-// }
-
-// void QuadTree::rayCastQuery(const Vector3& lineStart, const Vector3& lineEnd, List<GameObject*> *outList)
-// {
-// 	mRoot->rayCastQuery(lineStart, lineEnd, outList);
-// }

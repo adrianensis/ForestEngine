@@ -19,6 +19,11 @@ bool MeshRenderer::isOcTreeElementStatic() const
     return isStatic();
 }
 
+bool MeshRenderer::isOcTreeTransformChanged() const
+{
+    return mGameObject->mTransform->getModelMatrixDirty();
+}
+
 void MeshRenderer::init(RendererData& data) 
 {
     ComponentWithData::init(data);
@@ -183,8 +188,7 @@ void MeshRenderer::updateTextureRegion()
 			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
 			if(mCurrentTextureAnimationUpdater.isNewFrame())
             {
-                mTextureRegion.setLeftTopFront(frame.mPosition);
-                mTextureRegion.setSize(Vector2(frame.mWidth, frame.mHeight));
+                mTextureRegion.set(frame.mPosition, Vector2(frame.mWidth, frame.mHeight));
                 mRegenerateTextureCoords = true;
             }
 		}

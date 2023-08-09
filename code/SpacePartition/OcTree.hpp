@@ -19,31 +19,32 @@ protected:
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsStatic;
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamic;
 		void updateChildren(OcTree& tree);
-		bool childNodeTestPartial(u32 index, Ptr<IOcTreeElement> element) const;
-        void addOcTreeElementToChildren(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree);
-        void addOcTreeElementLeaf(Ptr<IOcTreeElement> element);
-        void createChildren(u32 index, f32 minSize, OcTree& tree);
+        void addOcTreeElementToChildren(Ptr<IOcTreeElement> element);
+        void addOcTreeElementToLeaf(Ptr<IOcTreeElement> element);
+        void addOcTreeElementToParent(Ptr<IOcTreeElement> element);
+        void createChildren(u32 index);
+        u32 getElementsCount() const { return mOcTreeElementsStatic.size() + mOcTreeElementsDynamic.size(); }
 
 	public:
         OcTreeNode* mParent = nullptr;
 		Cube mCube;
-        f32 mRadius = 0;
         Vector3 mHalfSize;
-    	Vector3 mMinSize;
+    	f32 mMinSize = 0;
+    	f32 mMaxElements = 10;
 		bool mIsDivisible = false;
-		const u32 mMaxChildNumber = 8;
+		static const u32 smMaxChildNumber = 8;
 
-		std::vector<OcTreeNode*> mChildren;
-		std::vector<OcTreeNode*> mActiveChildren;
-		std::vector<Cube> mChildrenBoundingBoxes;
+		std::array<OcTreeNode*, smMaxChildNumber> mChildren;
+		std::array<i32, smMaxChildNumber> mActiveChildren;
+		u32 mActiveChildrenIndex = 0;
+		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTreeNode* parent, const Cube& cube, f32 minSize, OcTree& tree);
-		void addOcTreeElement(Ptr<IOcTreeElement> element, f32 minSize, OcTree& tree);
+        void init(OcTreeNode* parent, const Cube& cube, f32 minSize);
+		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update(OcTree& tree);
+        void drawDebug();
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
-
-		bool isLeaf() const;
     };
 
 private:
@@ -51,10 +52,7 @@ private:
 
 public:
 	Vector3 mSize;
-	f32 mMinSize;
-
-	//DE_M_GET_SET(Status, ColliderStatus)
-
+	f32 mMinSize = 0;
 
 	void init(f32 size);
 
