@@ -3,14 +3,15 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void OcTree::OcTreeNode::init(OcTreeNode* parent, u8 index, const Cube& cube, f32 minSize)
+void OcTree::OcTreeNode::init(OcTreeNode* parent, u8 index, const Cube& cube, u8 maxDepth, u8 depth)
 {
     mParent = parent;
     mIndex = index;
 	mCube = cube;
-    mMinSize = minSize;
+	mMaxDepth = maxDepth;
+	mDepth = depth;
 	mHalfSize = mCube.getSize() / 2.0f;
-	mIsDivisible = (mHalfSize.x >= mMinSize);
+	mIsDivisible = depth < maxDepth;
 
     FOR_RANGE(i, 0, smMaxChildNumber)
     {
@@ -91,7 +92,7 @@ void OcTree::OcTreeNode::createChildren(u8 index)
 {
     PROFILER_CPU()
     mChildren[index] = Memory::newObject<OcTreeNode>();
-    mChildren[index]->init(this, index, mChildrenBoundingBoxes[index], mMinSize);
+    mChildren[index]->init(this, index, mChildrenBoundingBoxes[index], mMaxDepth, mDepth + 1);
 }
 
 void OcTree::OcTreeNode::addOcTreeElementToLeaf(Ptr<IOcTreeElement> element)
@@ -240,8 +241,9 @@ void OcTree::OcTreeNode::drawDebug()
 void OcTree::init(f32 size)
 {
 	mSize.set(size, size, size);
-	mMinSize = 400.0f; //size / 2.0f;
-	mRoot.init(nullptr, 0, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), mMinSize);
+    mMaxDepth = 4;
+	//f32 minSize = size / (mMaxDepth * 2);
+	mRoot.init(nullptr, 0, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), mMaxDepth, 1);
 }
 
 void OcTree::update()

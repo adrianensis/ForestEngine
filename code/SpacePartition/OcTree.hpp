@@ -32,7 +32,8 @@ public:
         u8 mIndex = 0;
 		Cube mCube;
         Vector3 mHalfSize;
-    	f32 mMinSize = 0;
+    	u8 mMaxDepth = 0;
+    	u8 mDepth = 0;
 		bool mIsDivisible = false;
 		static const u8 smMaxChildNumber = 8;
 
@@ -41,7 +42,7 @@ public:
 		u8 mActiveChildrenIndex = 0;
 		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTreeNode* parent, u8 index, const Cube& cube, f32 minSize);
+        void init(OcTreeNode* parent, u8 index, const Cube& cube, u8 maxDepth, u8 depth);
 		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update(OcTree& tree);
         void drawDebug();
@@ -51,10 +52,10 @@ public:
 
 private:
 	OcTreeNode mRoot;
+    u8 mMaxDepth = 0;
+	Vector3 mSize;
 
 public:
-	Vector3 mSize;
-	f32 mMinSize = 0;
 
 	void init(f32 size);
 
