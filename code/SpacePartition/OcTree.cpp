@@ -258,10 +258,10 @@ void OcTree::addOcTreeElement(Ptr<IOcTreeElement> element)
     mRoot.addOcTreeElement(element);
 }
 
-void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& meshMin, const Vector3& meshMax)
+void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax)
 {
-    Vector3 maxWorld = modelMatrix.mulVector(Vector4(meshMax, 1));
-    Vector3 minWorld = modelMatrix.mulVector(Vector4(meshMin, 1));
+    Vector3 maxWorld = modelMatrix.mulVector(Vector4(AABBMax, 1));
+    Vector3 minWorld = modelMatrix.mulVector(Vector4(AABBMin, 1));
     Vector3 diffWorld(maxWorld - minWorld);
     diffWorld.abs();
     Vector3 centerWorld = maxWorld - diffWorld/2.0f;

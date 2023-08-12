@@ -67,7 +67,7 @@ public:
 class IOcTreeElement
 {
 public:
-    void init(const Matrix4& modelMatrix, const Vector3& meshMin, const Vector3& meshMax);
+    void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax);
 	virtual bool isOcTreeElementStatic() const { return false;}
 	virtual bool isOcTreeTransformChanged() const { return false;}
 
