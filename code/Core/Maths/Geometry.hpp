@@ -57,7 +57,7 @@ public:
 
     GET(VerticesCount)
     CRGET(Center)
-    CRGET(Radius)
+    GET(Radius)
 };
 
 class Line: public Shape
