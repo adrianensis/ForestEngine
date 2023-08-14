@@ -28,23 +28,21 @@ public:
         u32 getElementsCount() const { return mOcTreeElementsStatic.size() + mOcTreeElementsDynamic.size(); }
 
 	public:
+        OcTree* mTree = nullptr;
         OcTreeNode* mParent = nullptr;
-        u8 mIndex = 0;
 		Cube mCube;
-        Vector3 mHalfSize;
-    	u8 mMaxDepth = 0;
     	u8 mDepth = 0;
-		bool mIsDivisible = false;
-		static const u8 smMaxChildNumber = 8;
+		inline static const u8 smMaxChildNumber = 8;
 
 		std::array<OcTreeNode*, smMaxChildNumber> mChildren;
 		std::array<i8, smMaxChildNumber> mActiveChildren;
 		u8 mActiveChildrenIndex = 0;
 		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTreeNode* parent, u8 index, const Cube& cube, u8 maxDepth, u8 depth);
+        void init(OcTree* tree, OcTreeNode* parent, const Cube& cube, u8 depth);
 		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update(OcTree& tree);
+        bool isDivisible() const;
         void drawDebug();
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
@@ -56,7 +54,6 @@ private:
 	Vector3 mSize;
 
 public:
-
 	void init(f32 size);
 
 	//void addCollider(Collider *collider);
@@ -73,6 +70,12 @@ public:
 
 private:
     Cube mOcTreeBoundingBox;
+
+    // TODO: CONTINUE HERE
+    // track current octancts to avoid re-insertions
+    // u8 mOctantHash ?
+    // octanct Ptr?
+
 
 public:
     CRGET(OcTreeBoundingBox)
