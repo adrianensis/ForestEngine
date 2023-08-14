@@ -3,12 +3,13 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, const Cube& cube, u8 depth)
+void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, u8 index, const Cube& cube, u8 depth)
 {
     mTree = tree;
     mParent = parent;
 	mCube = cube;
 	mDepth = depth;
+	mIndex = index;
 
     FOR_RANGE(i, 0, smMaxChildNumber)
     {
@@ -94,7 +95,7 @@ void OcTree::OcTreeNode::createChildren(u8 index)
 {
     PROFILER_CPU()
     mChildren[index] = Memory::newObject<OcTreeNode>();
-    mChildren[index]->init(mTree, this, mChildrenBoundingBoxes[index], mDepth + 1);
+    mChildren[index]->init(mTree, this, index, mChildrenBoundingBoxes[index], mDepth + 1);
 }
 
 void OcTree::OcTreeNode::addOcTreeElementToLeaf(Ptr<IOcTreeElement> element)
@@ -208,6 +209,17 @@ void OcTree::OcTreeNode::updateChildren(OcTree& tree/*contactManager*/)
 	}
 }
 
+u32 OcTree::OcTreeNode::getHash() const
+{
+    u32 parentHash = 0;
+    if(mParent)
+    {
+        parentHash = mParent->getHash();
+    }
+
+    return mIndex + parentHash + (std::pow(smMaxChildNumber, mDepth));
+}
+
 void OcTree::OcTreeNode::drawDebug()
 {
     PROFILER_CPU()
@@ -244,7 +256,7 @@ void OcTree::init(f32 size)
 {
 	mSize.set(size, size, size);
     mMaxDepth = 4;
-	mRoot.init(this, nullptr, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), 0);
+	mRoot.init(this, nullptr, 0, Cube(Vector3(-mSize.x / 2.0f, mSize.y / 2.0f, mSize.z / 2.0f), mSize), 0);
 }
 
 void OcTree::update()

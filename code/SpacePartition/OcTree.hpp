@@ -32,6 +32,7 @@ public:
         OcTreeNode* mParent = nullptr;
 		Cube mCube;
     	u8 mDepth = 0;
+        u8 mIndex = 0;
 		inline static const u8 smMaxChildNumber = 8;
 
 		std::array<OcTreeNode*, smMaxChildNumber> mChildren;
@@ -39,10 +40,11 @@ public:
 		u8 mActiveChildrenIndex = 0;
 		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTree* tree, OcTreeNode* parent, const Cube& cube, u8 depth);
+        void init(OcTree* tree, OcTreeNode* parent, u8 index, const Cube& cube, u8 depth);
 		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update(OcTree& tree);
         bool isDivisible() const;
+        u32 getHash() const;
         void drawDebug();
 		//void checkExit(Collider *collider) const;
 		//void manageExits(List<Collider*> *exitingColliders);
@@ -67,15 +69,12 @@ public:
     void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax);
 	virtual bool isOcTreeElementStatic() const { return false;}
 	virtual bool isOcTreeTransformChanged() const { return false;}
+    void addNode(u32 nodeHash);
+    void removeNode(u32 nodeHash);
+    bool isInNode(u32 nodeHash) const;
 
 private:
     Cube mOcTreeBoundingBox;
-
-    // TODO: CONTINUE HERE
-    // track current octancts to avoid re-insertions
-    // u8 mOctantHash ?
-    // octanct Ptr?
-
 
 public:
     CRGET(OcTreeBoundingBox)
