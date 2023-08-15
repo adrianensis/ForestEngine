@@ -20,6 +20,7 @@ public:
 	private:
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsStatic;
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamic;
+		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamicReinsert;
 		void updateChildren(OcTree& tree);
         void addOcTreeElementToChildren(Ptr<IOcTreeElement> element);
         void addOcTreeElementToLeaf(Ptr<IOcTreeElement> element);
@@ -43,11 +44,10 @@ public:
         void init(OcTree* tree, OcTreeNode* parent, u8 index, const Cube& cube, u8 depth);
 		void addOcTreeElement(Ptr<IOcTreeElement> element);
 		void update(OcTree& tree);
+		void updateDynamicElements(OcTree& tree);
         bool isDivisible() const;
         u32 getHash() const;
         void drawDebug();
-		//void checkExit(Collider *collider) const;
-		//void manageExits(List<Collider*> *exitingColliders);
     };
 
 private:
@@ -69,12 +69,22 @@ public:
     void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax);
 	virtual bool isOcTreeElementStatic() const { return false;}
 	virtual bool isOcTreeTransformChanged() const { return false;}
-    void addNode(u32 nodeHash);
-    void removeNode(u32 nodeHash);
-    bool isInNode(u32 nodeHash) const;
+    // void addNode(u32 nodeHash);
+    // void removeNode(u32 nodeHash);
+    // bool isInNode(u32 nodeHash) const;
 
 private:
     Cube mOcTreeBoundingBox;
+
+
+    // TODO: CONTINUE HERE
+    // track current octancts to avoid re-insertions
+    // u8 mOctantHash ?
+    // octanct Ptr?
+    // std::array<i32, OcTree::OcTreeNode::smMaxChildNumber> mNodes;
+    // u8 mNodesIndex = 0;
+public:
+    bool mPendingToReinsert = false;
 
 public:
     CRGET(OcTreeBoundingBox)

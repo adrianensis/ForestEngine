@@ -108,10 +108,12 @@ void OcTree::OcTreeNode::addOcTreeElementToLeaf(Ptr<IOcTreeElement> element)
     }
 
     // Add Element to leaf node
-    auto it = std::find(octreeNodeElements->begin(), octreeNodeElements->end(), element);
-    if(it == octreeNodeElements->end())
+    //auto it = std::find(octreeNodeElements->begin(), octreeNodeElements->end(), element);
+    //if(it == octreeNodeElements->end())
+    // if(!element->isInNode(getHash()))
     {
         octreeNodeElements->push_back(element);
+        // element->addNode(getHash());
     }
 }
 
@@ -124,7 +126,8 @@ void OcTree::OcTreeNode::addOcTreeElementToParent(Ptr<IOcTreeElement> element)
 
     if(test)
     {
-        addOcTreeElement(element);
+        element->mPendingToReinsert = true;
+        mOcTreeElementsDynamicReinsert.push_back(element);
     }
     else
     {
@@ -143,7 +146,33 @@ void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
 
 	if (isDivisible())
 	{
+        FOR_LIST(it, mOcTreeElementsDynamicReinsert)
+        {
+            Ptr<IOcTreeElement> element = *it;
+            addOcTreeElementToChildren(element);
+            element->mPendingToReinsert = false;
+        }
+        mOcTreeElementsDynamicReinsert.clear();
+
 		updateChildren(tree/*contactManager*/);
+	}
+}
+
+void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree/*contactManager*/)
+{
+    PROFILER_CPU()
+
+	if (isDivisible())
+	{
+        FOR_RANGE(i, 0, mActiveChildrenIndex)
+        {
+            i8 childrenIndex = mActiveChildren[i];
+            OcTreeNode* node = mChildren[childrenIndex];
+            if(node)
+            {
+                node->updateDynamicElements(tree/*contactManager*/);
+            }
+        }
 	}
     else // If is leaf node
 	{
@@ -161,9 +190,12 @@ void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
             }
             else
             {
-                if(mParent)
+                if(!element->mPendingToReinsert)
                 {
-                    mParent->addOcTreeElementToParent(*it);
+                    if(mParent)
+                    {
+                        mParent->addOcTreeElementToParent(element);
+                    }
                 }
             }
         }
@@ -217,7 +249,7 @@ u32 OcTree::OcTreeNode::getHash() const
         parentHash = mParent->getHash();
     }
 
-    return mIndex + parentHash + (std::pow(smMaxChildNumber, mDepth));
+    return mIndex + parentHash + (mDepth > 0 ? std::pow(smMaxChildNumber, mDepth - 1) : 0);
 }
 
 void OcTree::OcTreeNode::drawDebug()
@@ -262,6 +294,7 @@ void OcTree::init(f32 size)
 void OcTree::update()
 {
     PROFILER_CPU()
+	mRoot.updateDynamicElements(*this);
 	mRoot.update(*this);
 }
 
@@ -281,4 +314,60 @@ void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, co
     Vector3 topLeft = centerWorld + (Vector3(-diffWorld.x,diffWorld.y,diffWorld.z)/2.0f);
 
     mOcTreeBoundingBox = Cube(topLeft, diffWorld);
+
+    // FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
+    // {
+    //     mNodes[i] = -1;
+    // }
 }
+
+// void IOcTreeElement::addNode(u32 nodeHash)
+// {
+//     u8 freeSlot = 0;
+//     bool found = false;
+//     FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
+//     {
+//         found = mNodes[i] == (i32)(nodeHash);
+//         if(found)
+//         {
+//             break;
+//         }
+
+//         if(mNodes[i] == -1)
+//         {
+//             freeSlot = i;
+//         }
+//     }
+
+//     if(!found)
+//     {
+//         mNodes[freeSlot] = nodeHash;
+//     }
+// }
+
+// void IOcTreeElement::removeNode(u32 nodeHash)
+// {
+//     FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
+//     {
+//         if(mNodes[i] == (i32)(nodeHash))
+//         {
+//             mNodes[i] = -1;
+//             break;
+//         }
+//     }
+// }
+
+// bool IOcTreeElement::isInNode(u32 nodeHash) const
+// {
+//     bool found = false;
+//     FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
+//     {
+//         found = mNodes[i] == (i32)(nodeHash);
+//         if(found)
+//         {
+//             break;
+//         }
+//     }
+
+//     return found;
+// }
