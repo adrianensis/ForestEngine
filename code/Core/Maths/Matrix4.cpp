@@ -41,8 +41,7 @@ void Matrix4::setRows(const f32 *row0, const f32 *row1, const f32 *row2, const f
 
 void Matrix4::setRows(f32 n)
 {
-	FOR_RANGE(i, 0, 4 * 4)
-	mData[i] = n;
+	memset(mData, n, sizeof(mData));
 }
 
 void Matrix4::setRows(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3)
@@ -76,7 +75,7 @@ void Matrix4::init(const std::array<f32, 4> &row0, const std::array<f32, 4> &row
 
 void Matrix4::init(const f32 *data)
 {
-	memcpy(mData, data, 16 * sizeof(f32));
+	memcpy(mData, data, sizeof(mData));
 }
 
 void Matrix4::init(const f32 *row0, const f32 *row1, const f32 *row2, const f32 *row3)
@@ -181,7 +180,7 @@ void Matrix4::mul(const Matrix4& other)
 	FOR_RANGE(i, 0, 4)
 	FOR_RANGE(j, 0, 4)
 	FOR_RANGE(k, 0, 4)
-	this->set(i, j, this->get(i, j) + copy.get(i, k) * other.get(k, j));
+	this->set(i, j, get(i, j) + copy.get(i, k) * other.get(k, j));
 }
 
 Vector4 Matrix4::mulVector(const Vector4& vector) const
@@ -190,10 +189,11 @@ Vector4 Matrix4::mulVector(const Vector4& vector) const
 
 	FOR_RANGE(row, 0, 4)
 	{
-		FOR_RANGE(col, 0, 4)
-		{
-			result[row] += this->get(row, col) * vector[col];
-		}
+		const f32 a = get(row, 0) * vector[0];
+        const f32 b = get(row, 1) * vector[1];
+        const f32 c = get(row, 2) * vector[2];
+        const f32 d = get(row, 3) * vector[3];
+        result[row] = a + b + c + d;
 	}
 
 	return result;
@@ -201,7 +201,7 @@ Vector4 Matrix4::mulVector(const Vector4& vector) const
 
 void Matrix4::zeros()
 {
-	memset(mData, 0, 16 * sizeof(f32));
+	setRows(0);
 }
 
 void Matrix4::identity()
