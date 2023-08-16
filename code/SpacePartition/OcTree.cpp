@@ -121,13 +121,7 @@ void OcTree::OcTreeNode::addOcTreeElementToLeaf(Ptr<IOcTreeElement> element)
     }
 
     // Add Element to leaf node
-    //auto it = std::find(octreeNodeElements->begin(), octreeNodeElements->end(), element);
-    //if(it == octreeNodeElements->end())
-    // if(!element->isInNode(getHash()))
-    {
-        octreeNodeElements->push_back(element);
-        // element->addNode(getHash());
-    }
+    octreeNodeElements->push_back(element);
 }
 
 void OcTree::OcTreeNode::addOcTreeElementToParent(Ptr<IOcTreeElement> element)
@@ -148,7 +142,7 @@ void OcTree::OcTreeNode::addOcTreeElementToParent(Ptr<IOcTreeElement> element)
     }
 }
 
-void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
+void OcTree::OcTreeNode::update(OcTree& tree)
 {
     PROFILER_CPU()
 
@@ -164,11 +158,11 @@ void OcTree::OcTreeNode::update(OcTree& tree/*contactManager*/)
         }
         mOcTreeElementsDynamicReinsert.clear();
 
-		updateChildren(tree/*contactManager*/);
+		updateChildren(tree);
 	}
 }
 
-void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree/*contactManager*/)
+void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree)
 {
     PROFILER_CPU()
 
@@ -180,7 +174,7 @@ void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree/*contactManager*/)
             OcTreeNode* node = mChildren[childrenIndex];
             if(node)
             {
-                node->updateDynamicElements(tree/*contactManager*/);
+                node->updateDynamicElements(tree);
             }
         }
 	}
@@ -209,7 +203,7 @@ void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree/*contactManager*/)
 	}
 }
 
-void OcTree::OcTreeNode::updateChildren(OcTree& tree/*contactManager*/)
+void OcTree::OcTreeNode::updateChildren(OcTree& tree)
 {
     u32 newActiveChildrenIndex = 0;
     std::array<i8, smMaxChildNumber> newActiveChildren;
@@ -243,7 +237,7 @@ void OcTree::OcTreeNode::updateChildren(OcTree& tree/*contactManager*/)
         OcTreeNode* node = mChildren[childrenIndex];
         if(node)
         {
-            node->update(tree/*contactManager*/);
+            node->update(tree);
         }
 	}
 }
