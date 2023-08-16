@@ -13,6 +13,10 @@
   - For Model Matrices
   - For Bones Matrices
   - For View and Projection Matrices
+    - Plan:
+      1. RenderEngine should store all the visible Renderer
+      2. Use Octree to calculate visibility? (frustum culling with octree?)
+      3. Before ```renderBatches()``` we should fill UBO with all model matrices (and bone matrices? and ViewProj matrices?)
 - Threads - split render and logic in different threads
   - Scripting Engine - Put scripting engine in another thread???
   - Tasks system - threaded?
