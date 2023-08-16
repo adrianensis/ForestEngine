@@ -146,7 +146,7 @@ void OcTree::OcTreeNode::update(OcTree& tree)
 {
     PROFILER_CPU()
 
-    drawDebug();
+    // drawDebug();
 
 	if (isDivisible())
 	{

@@ -65,7 +65,7 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 
     if(renderer->getIsWorldSpace())
     {
-        octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
+        //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
     }
 }
 
