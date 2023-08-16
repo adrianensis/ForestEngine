@@ -68,7 +68,7 @@ namespace ShaderBuilderNodes
         Variable(const std::string& type, const std::string& name, const Variable& value, const Variable& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize.getNameOrValue()) {};
         Variable(const std::string& type, const std::string& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
         Variable(const std::string& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
-        Variable(const GPUAttributeDefinitionData& gpuAttributeData) : mType(gpuAttributeData.mGPUDataType.mName), mName(gpuAttributeData.mName), mValue(gpuAttributeData.mValue), mArraySize(gpuAttributeData.mArraySize){};
+        Variable(const GPUVariableDefinitionData& gpuVariableData) : mType(gpuVariableData.mGPUDataType.mName), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize){};
         std::vector<std::string> toLines(u16 indent) const override;
 
         const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
@@ -113,8 +113,8 @@ namespace ShaderBuilderNodes
     class Attribute : public Variable
     {
     public:
-        Attribute(const GPUAttributeDefinitionData& gpuAttributeData) : Variable(gpuAttributeData), mGPUStorage(gpuAttributeData.mGPUStorage) {};
-        Attribute(const GPUAttributeDefinitionData& gpuAttributeData, u32 location) : Variable(gpuAttributeData), mGPUStorage(gpuAttributeData.mGPUStorage), mLocation(location) {};
+        Attribute(const GPUVariableDefinitionData& gpuVariableData) : Variable(gpuVariableData), mGPUStorage(gpuVariableData.mGPUStorage) {};
+        Attribute(const GPUVariableDefinitionData& gpuVariableData, u32 location) : Variable(gpuVariableData), mGPUStorage(gpuVariableData.mGPUStorage), mLocation(location) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
@@ -277,7 +277,7 @@ namespace ShaderBuilderNodes
         std::vector<FunctionDefinition> mFunctionDefinitions;
         u16 mVersion = 420;
     private:
-        inline static Attribute mNullAttribute {GPUAttributeDefinitionData{}};
+        inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
     };
 
 }

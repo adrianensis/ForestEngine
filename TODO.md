@@ -1,6 +1,5 @@
 # TODO
 
-- Space Partitioning - QuadTree
 - Lights
 - OpenGL - Cache uniform locations
 - Hide backface for 2D sprites (optional, since some sprites could rotate?)
@@ -10,6 +9,7 @@
 - OpenGL - Compress textures? Why/When?
 - OpenGL - Bindless Textures
 - OpenGL - DSA - Direct State Access
+- OpenGL - Uniform Buffer Objects that allow us to declare a set of global uniform variables that remain the same over any number of shader programs
 - Threads - split render and logic in different threads
   - Scripting Engine - Put scripting engine in another thread???
   - Tasks system - threaded?

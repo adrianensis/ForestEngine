@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/GPU/GPUBuffer.hpp"
+#include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 
 enum class TextureType
@@ -181,11 +181,11 @@ private:
     MaterialData mMaterialData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
-    std::vector<GPUAttributeDefinitionData> mUniforms;
-    std::vector<GPUAttributeDefinitionData> mConsts;
-    std::vector<GPUAttributeDefinitionData> mVertexOutputs;
-    std::vector<GPUAttributeDefinitionData> mFragmentInputs;
-    std::vector<GPUAttributeDefinitionData> mFragmentOutputs;
+    std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUVariableDefinitionData> mConsts;
+    std::vector<GPUVariableDefinitionData> mVertexOutputs;
+    std::vector<GPUVariableDefinitionData> mFragmentInputs;
+    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
     u32 mID = 0;
 
 public:

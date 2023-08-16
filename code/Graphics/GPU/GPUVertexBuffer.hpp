@@ -1,27 +1,27 @@
 #pragma once
 
-#include "Graphics/GPU/GPUAttribute.hpp"
+#include "Graphics/GPU/GPUVariable.hpp"
 
-class GPUBufferData
+class GPUVertexBufferData
 {
 public:
-	GPUBufferData() = default;
-    GPUBufferData(const GPUAttributeData& gpuAttributeData): mGPUAttributeData(gpuAttributeData) {};
+	GPUVertexBufferData() = default;
+    GPUVertexBufferData(const GPUVariableData& gpuVariableData): mGPUVariableData(gpuVariableData) {};
     
 public:
     // glVertexAttribDivisor — modify the rate at which generic vertex attributes advance during instanced rendering
     // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribDivisor.xhtml
     u32 mInstanceDivisor = 0;
     u32 mAttributeDivisorSizeInPrimitiveTypes = 0;
-    GPUAttributeData mGPUAttributeData;
+    GPUVariableData mGPUVariableData;
 };
 
-class GPUBuffer
+class GPUVertexBuffer
 {
 public:
-	GPUBuffer() = default;
+	GPUVertexBuffer() = default;
 
-    void init(u32 attributeLocation, const GPUBufferData& data, bool isStatic);
+    void init(u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic);
     void resize(u32 size);
     template <class T>
     void setData(const std::vector<T>& data)
@@ -36,7 +36,7 @@ private:
     u32 attribute(GPUPrimitiveType primitiveType, u32 customSizeInPrimitiveTypes = 0);
 
 public:
-    GPUBufferData mData;
+    GPUVertexBufferData mData;
 private:
 	u32 mVBO = 0; // TODO: change u32 for GLuint
     u32 mAttributeLocation = 0;

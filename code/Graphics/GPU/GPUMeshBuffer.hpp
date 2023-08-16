@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 
 class Mesh;
 
@@ -44,12 +44,12 @@ private:
 	u32 mVBOBonesWeights = 0;
 	u32 mVBOModelMatrix = 0;
 
-    GPUBuffersLayout mBuffersLayout;
+    GPUVertexBuffersLayout mGPUVertexBuffersLayout;
 
     u32 mMaxInstances = 0;
 
 	u32 mEBO = 0;
 
 public:
-    CRGET(BuffersLayout)
+    CRGET(GPUVertexBuffersLayout)
 };

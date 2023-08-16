@@ -1,20 +1,20 @@
 #include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Graphics/Shaders/ShaderBuilder.hpp"
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 #include "Graphics/Material/Material.hpp"
 
 Shader::Shader()
 {
 };
 
-void Shader::init(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
+void Shader::init(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
     ShaderBuilder sbVert;
-    sbVert.createVertexShader(gpuBuffersLayout, material);
+    sbVert.createVertexShader(gpuVertexBuffersLayout, material);
 
     ShaderBuilder sbFrag;
-    sbFrag.createFragmentShader(gpuBuffersLayout, material);
+    sbFrag.createFragmentShader(gpuVertexBuffersLayout, material);
 
     std::string codeVert = sbVert.getCode();
     // ECHO(codeVert);

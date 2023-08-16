@@ -35,8 +35,36 @@ void RenderContext::init()
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			std::cout << "Failed to initialize GLAD" << std::endl;
+			ECHO("Failed to initialize GLAD");
 		}
+        
+        ECHO("UNIFORM");
+        i32 gl_MAX_VERTEX_UNIFORM_VECTORS;
+        glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &gl_MAX_VERTEX_UNIFORM_VECTORS);
+        VAR(gl_MAX_VERTEX_UNIFORM_VECTORS);
+        // vectors / 4 components = matrices
+        i32 gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4 = (gl_MAX_VERTEX_UNIFORM_VECTORS/4);
+        VAR(gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4);
+        // matrices * 16 = floats
+        // floats * 4 = bytes
+        i32 gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES = gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4*16*4;
+        VAR(gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES);
+
+        ECHO("UNIFORM BUFFER");
+        i32 gl_MAX_UNIFORM_BUFFER_BINDINGS;
+        glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &gl_MAX_UNIFORM_BUFFER_BINDINGS);
+        VAR(gl_MAX_UNIFORM_BUFFER_BINDINGS);
+        i32 gl_MAX_UNIFORM_BLOCK_SIZE;
+        glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
+        VAR(gl_MAX_UNIFORM_BLOCK_SIZE);
+
+        ECHO("SHADER STORAGE");
+        i32 gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS;
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, &gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+        VAR(gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+        i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE;
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
+        VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
 
 		glfwSwapInterval(0);
 
@@ -56,7 +84,7 @@ void RenderContext::init()
 	}
 	else
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		ECHO("Failed to create GLFW window");
 		glfwTerminate();
 	}
 }

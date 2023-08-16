@@ -89,10 +89,12 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
 
     if(mBatchData.mIsInstanced)
 	{
+        PROFILER_BLOCK_CPU("Instanced");
 	    mMatrices.push_back(modelMatrix);
     }
     else
     {
+        PROFILER_BLOCK_CPU("Non Instanced");
         FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
         {
             mMatrices.push_back(modelMatrix);

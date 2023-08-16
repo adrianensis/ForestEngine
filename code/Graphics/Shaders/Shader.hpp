@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 
-class GPUBuffersLayout;
+class GPUVertexBuffersLayout;
 class Material;
 
 class Shader: public ObjectBase
@@ -13,7 +13,7 @@ public:
     Shader();
 	~Shader() override = default;
 
-    void init(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
+    void init(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
     void initDebug();
     void enable() const;
     void disable() const;

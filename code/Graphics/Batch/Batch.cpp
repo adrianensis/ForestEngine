@@ -18,10 +18,10 @@ void Batch::init(const BatchData& batchData)
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
 
-    const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
+    const GPUVertexBuffersLayout& gpuVertexBuffersLayout = mMeshBatcher.getGPUVertexBuffersLayout();
     
     mShader = OwnerPtr<Shader>::newObject();
-    mShader->init(gpuBuffersLayout, mBatchData.mMaterial);
+    mShader->init(gpuVertexBuffersLayout, mBatchData.mMaterial);
 }
 
 void Batch::render()
