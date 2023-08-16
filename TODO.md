@@ -10,6 +10,9 @@
 - OpenGL - Bindless Textures
 - OpenGL - DSA - Direct State Access
 - OpenGL - Uniform Buffer Objects that allow us to declare a set of global uniform variables that remain the same over any number of shader programs
+  - For Model Matrices
+  - For Bones Matrices
+  - For View and Projection Matrices
 - Threads - split render and logic in different threads
   - Scripting Engine - Put scripting engine in another thread???
   - Tasks system - threaded?

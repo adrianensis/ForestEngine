@@ -161,6 +161,13 @@ GLuint RenderContext::createEBO()
 	return EBO;
 }
 
+GLuint RenderContext::createUBO()
+{
+	u32 UBO;
+	glGenBuffers(1, &UBO);
+	return UBO;
+}
+
 void RenderContext::resizeVBO(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
 	resizeVBOAnyType(VBO, sizeof(f32), size,drawMode);
@@ -183,6 +190,12 @@ void RenderContext::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRA
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * size, nullptr, drawMode);
 }
 
+void RenderContext::resizeUBOAnyType(u32 UBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, UBO);
+	glBufferData(GL_ARRAY_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
+}
+
 void RenderContext::setDataVBO(u32 VBO, const std::vector<f32>& data)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -199,6 +212,12 @@ void RenderContext::setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const 
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, typeSize * size, data);
+}
+
+void RenderContext::setDataUBOAnyTypeRaw(u32 UBO, u32 typeSize, u32 size, const void* data)
+{
+	glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, typeSize * size, data);
 }
 
 void RenderContext::setDataEBO(u32 EBO, const std::vector<Face>& data)
@@ -226,6 +245,11 @@ void RenderContext::deleteVBO(u32 VBO)
 void RenderContext::deleteEBO(u32 EBO)
 {
     glDeleteBuffers(1, &EBO);
+}
+
+void RenderContext::deleteUBO(u32 UBO)
+{
+    glDeleteBuffers(1, &UBO);
 }
 
 void RenderContext::enableProperty(u32 propertyArrayIndex)
