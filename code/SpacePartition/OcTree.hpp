@@ -46,6 +46,8 @@ public:
 		void update(OcTree& tree);
 		void updateDynamicElements(OcTree& tree);
         bool isDivisible() const;
+        bool isElementEnclosed(Ptr<IOcTreeElement> element) const;
+        bool isElementOverlappingChild(Ptr<IOcTreeElement> element, u8 childIndex) const;
         u32 getHash() const;
         void drawDebug();
     };

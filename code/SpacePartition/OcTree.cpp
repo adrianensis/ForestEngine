@@ -54,6 +54,22 @@ bool OcTree::OcTreeNode::isDivisible() const
     return mDepth < (mTree->mMaxDepth - 1);
 }
 
+bool OcTree::OcTreeNode::isElementEnclosed(Ptr<IOcTreeElement> element) const
+{
+    PROFILER_CPU()
+    bool test = Geometry::testSphereInsideCube(mCube,
+    Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()));
+    return test;
+}
+
+bool OcTree::OcTreeNode::isElementOverlappingChild(Ptr<IOcTreeElement> element, u8 childIndex) const
+{
+    PROFILER_CPU()
+    bool test = Geometry::testCubeSphere(mChildrenBoundingBoxes[childIndex],
+    Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()), 0);
+    return test;
+}
+
 void OcTree::OcTreeNode::addOcTreeElement(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
@@ -75,10 +91,7 @@ void OcTree::OcTreeNode::addOcTreeElementToChildren(Ptr<IOcTreeElement> element)
     // For each "possible" child node
     FOR_RANGE(i, 0, smMaxChildNumber)
     {
-        bool isPartiallyInChildren = Geometry::testCubeSphere(mChildrenBoundingBoxes[i],
-			Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()), 0);
-
-        if (isPartiallyInChildren)
+        if (isElementOverlappingChild(element, i))
         {
             if(!mChildren[i])
             {
@@ -121,10 +134,7 @@ void OcTree::OcTreeNode::addOcTreeElementToParent(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
 
-    bool test = Geometry::testSphereInsideCube(mCube,
-        Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()));
-
-    if(test)
+    if(isElementEnclosed(element))
     {
         element->mPendingToReinsert = true;
         mOcTreeElementsDynamicReinsert.push_back(element);
@@ -181,10 +191,7 @@ void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree/*contactManager*/)
         FOR_LIST(it, dynamicElementsCopyArray)
         {
             Ptr<IOcTreeElement> element = *it;
-            bool test = Geometry::testSphereInsideCube(mCube,
-            Sphere(element->getOcTreeBoundingBox().getCenter(), element->getOcTreeBoundingBox().getRadius()));
-
-            if(test)
+            if(isElementEnclosed(element))
             {
                 mOcTreeElementsDynamic.push_back(element);
             }
