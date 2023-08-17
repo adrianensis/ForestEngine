@@ -33,3 +33,9 @@
   - No inheritance/virtual functions allowed since jumping to vtable mem address generate cache misses
   - That should go for systems
   - QuadTree could live in a packed array, better cache performance
+
+## Bugs
+- -
+
+## Potential Bugs
+- RenderContext::createVBO() performs a glBindBuffer but createEBO() and createUBO() don't. Is that correct? Unify in a single createBuffer() method?
