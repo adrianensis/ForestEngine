@@ -19,7 +19,7 @@ void CommandLine::init()
             const InputEventChar *e = (InputEventChar*) event;
             char c = e->mChar;
             mBuffer.push_back(c);
-            log(mBuffer, false);
+            writeLine(mBuffer, false);
         }
     });
 
@@ -30,7 +30,7 @@ void CommandLine::init()
             BRLINE();
             execute(mBuffer);
             mBuffer.clear();
-            log("", false);
+            writeLine("", false);
         }
     });
 
@@ -44,7 +44,7 @@ void CommandLine::init()
                 mBuffer.pop_back();
             }
             
-            log(mBuffer, false);
+            writeLine(mBuffer, false);
         }
     });
 
@@ -88,7 +88,7 @@ void CommandLine::init()
     DefaultCommands::registerDefaultCommands();
 }
 
-void CommandLine::log(const std::string& line, bool newLine /*= true*/) const
+void CommandLine::writeLine(const std::string& line, bool newLine /*= true*/) const
 {
     if(newLine)
     {
@@ -123,7 +123,7 @@ void CommandLine::execute(const std::string& commandLine)
 
     if(isCommand and MAP_CONTAINS(mCommandsMap, commandName))
     {
-        //log("command: " + commandName);
+        //writeLine("command: " + commandName);
 
         CommandFunctor& functor = mCommandsMap.at(commandName);
         functor.mCommand.clearArguments();
@@ -144,7 +144,7 @@ void CommandLine::execute(const std::string& commandLine)
             auto argumentlistBegin = std::sregex_iterator(argumentList.begin(), argumentList.end(), regexArgument);
             auto argumentlistEnd = std::sregex_iterator();
         
-            //log("arguments");
+            //writeLine("arguments");
             //VAL(std::distance(argumentlistBegin, argumentlistEnd))
         
             functor.mCommand.setArgumentsString(argumentList);
@@ -173,7 +173,7 @@ void CommandLine::execute(const std::string& commandLine)
     }
     else
     {
-        log("command: " + commandLine + " not recognized.");
+        writeLine("command: " + commandLine + " not recognized.");
     }
 
     mHistory.push_back(commandLine);
@@ -202,15 +202,15 @@ void CommandLine::registerCommand(const std::string& commandName, CommandCallbac
 void CommandLine::open()
 {
     mIsOpen = true;
-    log("CMD Opened");
-    log(mBuffer, false);
+    writeLine("CMD Opened");
+    writeLine(mBuffer, false);
 }
 
 void CommandLine::close()
 {
     mIsOpen = false;
-    log(mBuffer);
-    log("CMD Closed");
+    writeLine(mBuffer);
+    writeLine("CMD Closed");
 }
 
 void CommandLine::toggle()

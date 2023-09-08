@@ -12,7 +12,7 @@ void Log::terminate()
 	logFile.close();
 }
 
-void Log::log(const std::string_view& str)
+void Log::writeLine(const std::string_view& str)
 {
 	std::cout << str << std::endl;
 	logFile << str << std::endl;
@@ -28,14 +28,14 @@ void Log::append(const std::string_view& str)
 
 void Log::trace(const std::string_view file, u32 line, const std::string_view function, const std::string_view message /*= emptyMessage*/)
 {
-	log("TRACE > [" + std::string(function) + ":" + std::to_string(line) + "] > " + std::string(message));
+	writeLine("TRACE > [" + std::string(function) + ":" + std::to_string(line) + "] > " + std::string(message));
 }
 
 void Log::echo(const std::string_view& message, bool newLine /*= true*/)
 {
 	if(newLine)
 	{
-		log("ECHO > " + std::string(message));
+		writeLine("ECHO > " + std::string(message));
 	}
 	else
 	{
@@ -47,7 +47,7 @@ void Log::customEcho(const std::string_view& tag, const std::string_view& messag
 {
 	if(newLine)
 	{
-		log(std::string(tag) + " > " + std::string(message));
+		writeLine(std::string(tag) + " > " + std::string(message));
 	}
 	else
 	{
@@ -57,12 +57,12 @@ void Log::customEcho(const std::string_view& tag, const std::string_view& messag
 
 void Log::error(const std::string_view& message)
 {
-	log("ERROR > " + std::string(message));
+	writeLine("ERROR > " + std::string(message));
 }
 
 void Log::brline()
 { // break line
-	log(emptyMessage);
+	writeLine(emptyMessage);
 }
 
 void Log::backspace()

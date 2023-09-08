@@ -24,7 +24,7 @@ public:
 			valueStr = std::to_string(var);
 		}
 
-		log("VAR > " + std::string(varname) + " : " + valueStr);
+		writeLine("VAR > " + std::string(varname) + " : " + valueStr);
 	};
 
 	template <class T>
@@ -40,19 +40,21 @@ public:
 			valueStr = std::to_string(var);
 		}
 
-		log("VAL > " + valueStr);
+		writeLine("VAL > " + valueStr);
 	};
 
     static void init();
     static void terminate();
-    static void log(const std::string_view& str);
-    static void append(const std::string_view& str);
     static void trace(const std::string_view file, u32 line, const std::string_view function, const std::string_view message = emptyMessage);
     static void echo(const std::string_view& message, bool newLine = true);
     static void customEcho(const std::string_view& tag, const std::string_view& message, bool newLine = true);
     static void error(const std::string_view& message);
     static void brline();
     static void backspace();
+
+private:
+    static void writeLine(const std::string_view& str);
+    static void append(const std::string_view& str);
 };
 
 #ifdef DE_ENABLE_LOGS

@@ -37,7 +37,7 @@ private:
 
     bool mIsOpen = false;
 
-    void log(const std::string& line, bool newLine = true) const;
+    void writeLine(const std::string& line, bool newLine = true) const;
 
 public:
     void init();
