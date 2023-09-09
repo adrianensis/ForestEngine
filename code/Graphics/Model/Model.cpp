@@ -282,14 +282,8 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
                 if (skin.joints[j] == node.parent)
                 {
                     parentIndex = j;
-                    if (parentIndex > i)
-                    {
-                        CHECK_MSG(false, "Bones are not sorted!");
-                    }
-                    if (parentIndex == i)
-                    {
-                        CHECK_MSG(false, "Bone cannot be its own parent!");
-                    }
+                    CHECK_MSG(parentIndex != i, "Bone cannot be its own parent!");
+                    CHECK_MSG(parentIndex < i, "Bones are not sorted!");
                     break;
                 }
             }
@@ -493,14 +487,11 @@ void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_accessor *output, 
 
     Vector3 v1;
     Vector3 v2;
-    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3))
-    {
-        CHECK_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
-    }
-    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3))
-    {
-        CHECK_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
-    }
+    cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3);
+    CHECK_MSG(readResult1, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+    cgltf_bool readResult2 = cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3);
+    CHECK_MSG(readResult2, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+
     out = v1;
     out.lerp(v2, keyframeData.mInterpolationValue);
 }
@@ -520,14 +511,11 @@ void Model::getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32
     
     Quaternion q1;
     Quaternion q2;
-    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4))
-    {
-        CHECK_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
-    }
-    if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&q2, 4))
-    {
-        CHECK_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
-    }
+    cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4);
+    CHECK_MSG(readResult1, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+    cgltf_bool readResult2 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q2, 4);
+    CHECK_MSG(readResult2, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+
     out = q1;
     out.slerp(q2, keyframeData.mInterpolationValue);
 }

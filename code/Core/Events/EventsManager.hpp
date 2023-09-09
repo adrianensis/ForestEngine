@@ -26,27 +26,17 @@ public:
 	template <class E>
 	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
 	{
-		if (std::is_base_of<Event, E>::value)
-		{
-			subscribe(E::getClassIdStatic(), eventOwner, eventReceiver, eventCallback);
-		}
-		else
-		{
-			CHECK_MSG(false, "The event class must inherit from Event.");
-		}
+        bool isValidClass = std::is_base_of<Event, E>::value;
+        CHECK_MSG(isValidClass, "The event class must inherit from Event.");
+        subscribe(E::getClassIdStatic(), eventOwner, eventReceiver, eventCallback);
 	}
 
 	template <class E>
 	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
 	{
-		if (std::is_base_of<Event, E>::value)
-		{
-			unsubscribe(E::getClassIdStatic(), eventOwner, eventReceiver);
-		}
-		else
-		{
-			CHECK_MSG(false, "The event class must inherit from Event.");
-		}
+        bool isValidClass = std::is_base_of<Event, E>::value;
+        CHECK_MSG(isValidClass, "The event class must inherit from Event.");
+        unsubscribe(E::getClassIdStatic(), eventOwner, eventReceiver);
 	}
 
     void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);
