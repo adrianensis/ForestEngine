@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ObjectBase.hpp"
+#include "Core/Object/ObjectBase.hpp"
 
 class CommandArgument: public ObjectBase
 {

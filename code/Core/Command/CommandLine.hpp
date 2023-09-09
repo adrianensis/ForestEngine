@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ObjectBase.hpp"
+#include "Core/Object/ObjectBase.hpp"
 #include "Engine/EngineSystem.hpp"
 #include "Core/Functor.hpp"
 #include "Core/Command/Command.hpp"

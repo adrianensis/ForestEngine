@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/ObjectBase.hpp"
-#include "Core/Serialization.hpp"
+#include "Core/Object/ObjectBase.hpp"
+#include "Core/Serialization/Serialization.hpp"
 
 /*
 	example for constant config object:

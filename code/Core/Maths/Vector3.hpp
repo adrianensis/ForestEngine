@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/Serialization.hpp"
+#include "Core/Serialization/Serialization.hpp"
 #include "Core/Maths/VectorDef.hpp"
 
 class Vector2;

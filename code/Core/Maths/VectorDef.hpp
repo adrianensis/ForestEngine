@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Metadata/Metadata.hpp"
+#include "Core/Hash.hpp"
 #include "Core/Maths/MathUtils.hpp"
 #include "Core/Assert/Assert.hpp"
 

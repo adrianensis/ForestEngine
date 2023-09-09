@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/Metadata/Metadata.hpp"
-#include "Core/Serialization.hpp"
+#include "Core/Object/ObjectMetadata.hpp"
+#include "Core/Serialization/Serialization.hpp"
 #include "Core/Assert/Assert.hpp"
-#include "Core/Pointers.hpp"
-#include "Core/Pool.hpp"
+#include "Core/Memory/Pointers.hpp"
+#include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 
 class ObjectBase: public ObjectMeta, public ISerializable, public IPoolable, public PointedObject, public EnablePtrFromThis

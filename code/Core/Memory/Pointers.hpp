@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Memory.hpp"
+#include "Core/Memory/Memory.hpp"
 
 template<class T>
 class RefCountedPtrBase;

@@ -2,7 +2,7 @@
 
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Vector4.hpp"
-#include "Core/Pointers.hpp"
+#include "Core/Memory/Pointers.hpp"
 
 
 
