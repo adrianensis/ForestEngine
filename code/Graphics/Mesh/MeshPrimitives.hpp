@@ -27,7 +27,7 @@ private:
 	template <class T> T_EXTENDS(T, Shape)
 	OwnerPtr<Mesh> createPrimitive() const
 	{
-		ASSERT_MSG(false, "Mesh Primitive not implemented");
+		CHECK_MSG(false, "Mesh Primitive not implemented");
 		return OwnerPtr<Mesh>();
 	}
 

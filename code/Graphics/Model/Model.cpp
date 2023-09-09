@@ -35,7 +35,7 @@ void Model::init(const std::string& path)
 
     if (result == cgltf_result_success)
 	{
-        ASSERT_MSG(mCGLTFData->skins_count <= 1, "Only 1 Skin allowed!")
+        CHECK_MSG(mCGLTFData->skins_count <= 1, "Only 1 Skin allowed!")
         mIsSkinned = mCGLTFData->skins_count == 1;
 
         loadGLTFMaterials();
@@ -106,7 +106,7 @@ void Model::loadGLTFMeshes()
 
 void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
-    ASSERT_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
+    CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
 
     Ptr<Mesh> mesh = mMeshes.emplace_back(OwnerPtr<Mesh>::newObject());
     mesh->mModel = (getPtrToThis());
@@ -196,7 +196,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             }
             else
             {
-                ASSERT_MSG(false, "Joint attribute data format not supported, use vec4 u8 or u16");
+                CHECK_MSG(false, "Joint attribute data format not supported, use vec4 u8 or u16");
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_weights)
@@ -284,11 +284,11 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
                     parentIndex = j;
                     if (parentIndex > i)
                     {
-                        ASSERT_MSG(false, "Bones are not sorted!");
+                        CHECK_MSG(false, "Bones are not sorted!");
                     }
                     if (parentIndex == i)
                     {
-                        ASSERT_MSG(false, "Bone cannot be its own parent!");
+                        CHECK_MSG(false, "Bone cannot be its own parent!");
                     }
                     break;
                 }
@@ -325,7 +325,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
     {
         cgltf_animation_channel& channel = gltfAnim.channels[channelIt];
-        ASSERT_MSG(channel.sampler->interpolation == cgltf_interpolation_type_linear, "Interpolation is not linear. Only linear supported!");
+        CHECK_MSG(channel.sampler->interpolation == cgltf_interpolation_type_linear, "Interpolation is not linear. Only linear supported!");
         
         i32 boneIndex = -1;
         if(MAP_CONTAINS(mNodeToBoneId, channel.target_node))
@@ -487,19 +487,19 @@ void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_accessor *output, 
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
 
-    ASSERT_MSG(result, "Error obtaining keyframe data!");
-    ASSERT_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
-    ASSERT_MSG(output->type == cgltf_type_vec3, "Type is not vec3!");
+    CHECK_MSG(result, "Error obtaining keyframe data!");
+    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
+    CHECK_MSG(output->type == cgltf_type_vec3, "Type is not vec3!");
 
     Vector3 v1;
     Vector3 v2;
     if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3))
     {
-        ASSERT_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+        CHECK_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
     }
     if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3))
     {
-        ASSERT_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+        CHECK_MSG(false, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
     }
     out = v1;
     out.lerp(v2, keyframeData.mInterpolationValue);
@@ -514,19 +514,19 @@ void Model::getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
 
-    ASSERT_MSG(result, "Error obtaining keyframe data!");
-    ASSERT_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
-    ASSERT_MSG(output->type == cgltf_type_vec4, "Type is not vec4!");
+    CHECK_MSG(result, "Error obtaining keyframe data!");
+    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
+    CHECK_MSG(output->type == cgltf_type_vec4, "Type is not vec4!");
     
     Quaternion q1;
     Quaternion q2;
     if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4))
     {
-        ASSERT_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+        CHECK_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
     }
     if(!cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&q2, 4))
     {
-        ASSERT_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+        CHECK_MSG(false, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
     }
     out = q1;
     out.slerp(q2, keyframeData.mInterpolationValue);

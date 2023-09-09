@@ -216,7 +216,7 @@ public:
 
 	f32& operator[](size_t index)
 	{
-		ASSERT_MSG(index >= 0 and index < 4, "Index out of bounds.");
+		CHECK_MSG(index >= 0 and index < 4, "Index out of bounds.");
 		if (index == 3)
 			return w;
 		return v[index];
@@ -224,7 +224,7 @@ public:
 
 	f32 operator[](size_t index) const
 	{
-		ASSERT_MSG(index >= 0 and index < 4, "Index out of bounds.");
+		CHECK_MSG(index >= 0 and index < 4, "Index out of bounds.");
 		if (index == 3)
 			return w;
 		return v[index];

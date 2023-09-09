@@ -8,7 +8,8 @@ private:
 	inline static const std::string smEmptyAssert = "?";
 
 public:
-    static void assertMsg(bool condition, const std::string& file, u32 line, const std::string& function, const std::string& message = smEmptyAssert);
+    static void internalCheckMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message = smEmptyAssert);
+    static void raiseAssert();
 };
 
-#define ASSERT_MSG(condition, message) AssertUtils::assertMsg((condition), __FILE__, __LINE__, __FUNCTION__, std::string("[ " #condition " ] ") + message);
+#define CHECK_MSG(condition, message) AssertUtils::internalCheckMsg((condition), #condition, __FILE__, __LINE__, __FUNCTION__, message);

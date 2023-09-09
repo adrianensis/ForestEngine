@@ -102,7 +102,7 @@ GENERATE_METADATA_STRUCT(Vector##vectorLength)  \
 private:\
     void checkBoundaries(u32 index) const\
     {\
-        ASSERT_MSG(index >= 0 and index < vectorLength, "Index out of bounds.");\
+        CHECK_MSG(index >= 0 and index < vectorLength, "Index out of bounds.");\
     }\
     f32& get(u32 index)\
     {\

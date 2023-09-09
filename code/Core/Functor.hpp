@@ -20,7 +20,7 @@ class FunctorVoid: public Functor<std::function<void()>>
 public:	
 	void execute() override
 	{
-		ASSERT_MSG(mCallback != nullptr, "Callback is null.");
+		CHECK_MSG(mCallback != nullptr, "Callback is null.");
 
 		if (mCallback)
 		{

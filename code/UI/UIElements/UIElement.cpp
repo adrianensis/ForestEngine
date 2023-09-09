@@ -539,7 +539,7 @@ StencilData UIElement::calculateStencilData() const
         if(mConfig.mParent)
         {
             Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent);
-            ASSERT_MSG(parentUIElement, "Not a valid UIElement parent!");
+            CHECK_MSG(parentUIElement, "Not a valid UIElement parent!");
             StencilData parentStencilData = parentUIElement->calculateStencilData();
             if(parentStencilData.mUseStencil)
             {
@@ -558,7 +558,7 @@ StencilData UIElement::calculateStencilData() const
         if(mConfig.mParent)
         {
             Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent);
-            ASSERT_MSG(parentUIElement, "Not a valid UIElement parent!");
+            CHECK_MSG(parentUIElement, "Not a valid UIElement parent!");
             StencilData parentStencilData = parentUIElement->calculateStencilData();
             if(parentStencilData.mUseStencil)
             {

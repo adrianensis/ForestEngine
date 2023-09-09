@@ -101,6 +101,6 @@ PoolHandle<T>::PoolHandle(i32 index, ObjectPool<T>* pool)
 template<class T>
 T& PoolHandle<T>::get() const
 {
-    ASSERT_MSG(isValid(), "Invalid handle!");
+    CHECK_MSG(isValid(), "Invalid handle!");
     return mPool->get(mIndex);
 }

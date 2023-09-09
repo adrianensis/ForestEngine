@@ -32,7 +32,7 @@ public:
 		}
 		else
 		{
-			ASSERT_MSG(false, "The event class must inherit from Event.");
+			CHECK_MSG(false, "The event class must inherit from Event.");
 		}
 	}
 
@@ -45,7 +45,7 @@ public:
 		}
 		else
 		{
-			ASSERT_MSG(false, "The event class must inherit from Event.");
+			CHECK_MSG(false, "The event class must inherit from Event.");
 		}
 	}
 

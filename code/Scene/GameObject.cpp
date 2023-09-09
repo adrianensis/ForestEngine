@@ -24,7 +24,7 @@ void GameObject::init()
 
 Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
 {
-    ASSERT_MSG(!component->mGameObject.isValid(), "Component is already assigned to a GameObject!");
+    CHECK_MSG(!component->mGameObject.isValid(), "Component is already assigned to a GameObject!");
 
 	Ptr<Component> comp = mComponents.emplace_back(std::move(component));
 
@@ -38,8 +38,8 @@ Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
 
 void GameObject::removeComponent(Ptr<Component> component)
 {
-    ASSERT_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
-    ASSERT_MSG(component->mGameObject == getPtrToThis(), "Component is assigned to another GameObject!");
+    CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
+    CHECK_MSG(component->mGameObject == getPtrToThis(), "Component is assigned to another GameObject!");
 
 	component->destroy();
 

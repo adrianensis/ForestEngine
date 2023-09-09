@@ -51,7 +51,7 @@ public:
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getStyle()
 	{
-		ASSERT_MSG(MAP_CONTAINS(mStyles, T::getClassIdStatic()), "Style not found");
+		CHECK_MSG(MAP_CONTAINS(mStyles, T::getClassIdStatic()), "Style not found");
 
 		return *(static_cast<T*>(mStyles.at(T::getClassIdStatic())));
 	}

@@ -60,7 +60,7 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 	EngineSystem::addComponent(component);
 
     Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-    ASSERT_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
+    CHECK_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
     mBatchesMap.addRenderer(renderer);
 
     if(renderer->getIsWorldSpace())

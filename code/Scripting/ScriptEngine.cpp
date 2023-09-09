@@ -16,7 +16,7 @@ void ScriptEngine::addComponent(Ptr<EngineSystemComponent> component)
 	EngineSystem::addComponent(component);
 
     Ptr<Script> script = Ptr<Script>::cast(component);
-    ASSERT_MSG(script.isValid(), "Trying to add a not valid Script derived component.");
+    CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");
     mScripts.push_back(script);
 }
 

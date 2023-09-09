@@ -187,7 +187,7 @@ std::string CommandLine::autocomplete(const std::string& commandLine)
 
 void CommandLine::registerCommand(const std::string& commandName, CommandCallback callback)
 {
-    ASSERT_MSG(!MAP_CONTAINS(mCommandsMap, commandName), "Command " + commandName + " already registered!");
+    CHECK_MSG(!MAP_CONTAINS(mCommandsMap, commandName), "Command " + commandName + " already registered!");
 
     Command command;
     command.setName(commandName);

@@ -52,7 +52,7 @@ public:
 	template <class T>
 	static void deleteObject(T * pointer)
 	{
-		ASSERT_MSG(pointer != nullptr, "pointer is nullptr");
+		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef DE_DEBUG
 		std::string_view className;
@@ -65,7 +65,7 @@ public:
 			className = typeid(T).name();
 		}
 
-        ASSERT_MSG(MAP_CONTAINS(mAllocationsCounter, className), "No prevoius allocation for class: " + std::string(className));
+        CHECK_MSG(MAP_CONTAINS(mAllocationsCounter, className), "No prevoius allocation for class: " + std::string(className));
         mAllocationsCounter[className].mCurrentAllocations -= 1;
 #endif
 		delete pointer;
