@@ -61,7 +61,7 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 
     Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
     CHECK_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
-    mBatchesMap.addRenderer(renderer);
+    mBatchesManager.addRenderer(renderer);
 
     if(renderer->getIsWorldSpace())
     {
@@ -71,7 +71,7 @@ void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
 
 void RenderEngine::assignBatch(Ptr<MeshRenderer> renderer)
 {
-	mBatchesMap.addRenderer(renderer);
+	mBatchesManager.addRenderer(renderer);
 }
 
 void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
@@ -123,14 +123,14 @@ void RenderEngine::renderBatches()
 {
 	PROFILER_CPU()
 
-	mBatchesMap.renderStencil();
-	mBatchesMap.render();
+	mBatchesManager.renderStencil();
+	mBatchesManager.render();
 	mShapeBatchRenderer.render();
     
     GET_SYSTEM(RenderContext).clearDepth();
     GET_SYSTEM(RenderContext).clearStencil();
     
-	mBatchesMap.renderScreenSpaceStencil();
-	mBatchesMap.renderScreenSpace();
+	mBatchesManager.renderScreenSpaceStencil();
+	mBatchesManager.renderScreenSpace();
 	mShapeBatchRendererScreenSpace.render();
 }

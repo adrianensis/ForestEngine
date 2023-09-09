@@ -4,9 +4,9 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Batch/Batch.hpp"
 
-class BatchesMap: public ObjectBase
+class BatchesManager: public ObjectBase
 {
-    GENERATE_METADATA(BatchesMap)
+    GENERATE_METADATA(BatchesManager)
 
 public:
 

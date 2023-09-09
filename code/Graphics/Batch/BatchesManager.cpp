@@ -1,8 +1,8 @@
-#include "Graphics/Batch/BatchesMap.hpp"
+#include "Graphics/Batch/BatchesManager.hpp"
 #include "Graphics/RenderContext.hpp"
 #include "Scene/Module.hpp"
 
-void BatchesMap::addRenderer(Ptr<MeshRenderer> renderer)
+void BatchesManager::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	BatchData BatchData;
 	BatchData.init(renderer);
@@ -16,7 +16,7 @@ void BatchesMap::addRenderer(Ptr<MeshRenderer> renderer)
 	(mBatches).at(BatchData)->addRenderer(renderer);
 }
 
-void BatchesMap::render()
+void BatchesManager::render()
 {
 	PROFILER_CPU()
 
@@ -29,7 +29,7 @@ void BatchesMap::render()
 	}
 }
 
-void BatchesMap::renderStencil()
+void BatchesManager::renderStencil()
 {
 	PROFILER_CPU()
 
@@ -48,7 +48,7 @@ void BatchesMap::renderStencil()
 	// }
 }
 
-void BatchesMap::renderStencilMask(ObjectId maskObjectId)
+void BatchesManager::renderStencilMask(ObjectId maskObjectId)
 {
     // FOR_MAP(it, mBatches)
 	// {
@@ -70,7 +70,7 @@ void BatchesMap::renderStencilMask(ObjectId maskObjectId)
 	// }
 }
 
-void BatchesMap::renderScreenSpaceStencil()
+void BatchesManager::renderScreenSpaceStencil()
 {
 	PROFILER_CPU()
 
@@ -122,7 +122,7 @@ void BatchesMap::renderScreenSpaceStencil()
 	}
 }
 
-void BatchesMap::renderScreenSpaceStencilMask(ObjectId maskObjectId)
+void BatchesManager::renderScreenSpaceStencilMask(ObjectId maskObjectId)
 {    
     FOR_MAP(it, mBatches)
 	{
@@ -144,7 +144,7 @@ void BatchesMap::renderScreenSpaceStencilMask(ObjectId maskObjectId)
 	}
 }
 
-void BatchesMap::renderScreenSpace()
+void BatchesManager::renderScreenSpace()
 {
 	PROFILER_CPU()
 
@@ -157,7 +157,7 @@ void BatchesMap::renderScreenSpace()
 	}
 }
 
-void BatchesMap::requestRegenerateBuffers()
+void BatchesManager::requestRegenerateBuffers()
 {
 	FOR_MAP(it, mBatches)
 	{

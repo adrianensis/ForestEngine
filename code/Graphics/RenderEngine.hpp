@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Batch/BatchesMap.hpp"
+#include "Graphics/Batch/BatchesManager.hpp"
 #include "Graphics/Batch/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
@@ -29,7 +29,7 @@ private:
     void swap();
     void renderBatches();
 private:
-	BatchesMap mBatchesMap;
+	BatchesManager mBatchesManager;
 
 	ShapeBatchRenderer mShapeBatchRenderer;
 	ShapeBatchRenderer mShapeBatchRendererScreenSpace;
