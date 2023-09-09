@@ -2,8 +2,7 @@
 
 #include "json.hpp"
 
-#include "Core/Macros.hpp"
-#include "Core/Assert/Assert.hpp"
+#include "Core/BasicTypes.hpp"
 
 using JSON = nlohmann::ordered_json;
 

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Core/BasicTypes.hpp"
-#include "Core/ObjectBase.hpp"
 #include "Core/Events/Event.hpp"
-#include "Core/Assert/Assert.hpp"
 #include "Engine/EngineSystem.hpp"
 
 /*
@@ -23,19 +20,15 @@ public:
 
     void terminate();
 
-	template <class E>
+	template <class E> T_EXTENDS(E, Event)
 	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
 	{
-        bool isValidClass = std::is_base_of<Event, E>::value;
-        CHECK_MSG(isValidClass, "The event class must inherit from Event.");
         subscribe(E::getClassIdStatic(), eventOwner, eventReceiver, eventCallback);
 	}
 
-	template <class E>
+	template <class E> T_EXTENDS(E, Event)
 	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
 	{
-        bool isValidClass = std::is_base_of<Event, E>::value;
-        CHECK_MSG(isValidClass, "The event class must inherit from Event.");
         unsubscribe(E::getClassIdStatic(), eventOwner, eventReceiver);
 	}
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Macros.hpp"
 #include "Core/Metadata/Metadata.hpp"
 #include "Core/Maths/MathUtils.hpp"
+#include "Core/Assert/Assert.hpp"
 
 #define VECTOR2_MEMBERS() \
     f32 x = 0; \

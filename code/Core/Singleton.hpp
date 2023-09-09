@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Memory.hpp"
 #include "Core/Pointers.hpp"
 
 template <class T>
