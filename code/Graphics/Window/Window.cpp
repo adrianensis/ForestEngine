@@ -26,11 +26,11 @@ void Window::init()
 
 	mWindowSize.set(1080, 720);
 
-	mWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
+	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
 
-	if (mWindow)
+	if (mGLTFWindow)
 	{
-		glfwMakeContextCurrent(mWindow);
+		glfwMakeContextCurrent(mGLTFWindow);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -67,7 +67,6 @@ void Window::init()
 
 		glfwSwapInterval(0);
 
-		glfwSetFramebufferSizeCallback(mWindow, GLFWonResize);
 
 		glClearColor(0,0.3,0.3,1);
 		glEnable(GL_DEPTH_TEST); // Enable depth testing
@@ -87,15 +86,16 @@ void Window::init()
 		glfwTerminate();
 	}
 
-    glfwSetKeyCallback(mWindow, keyCallbackGLFW);
-	glfwSetMouseButtonCallback(mWindow, mouseButtonCallbackGLFW);
-	glfwSetScrollCallback(mWindow, scrollCallbackGLFW);
-	glfwSetCharCallback(mWindow, charCallbackGLFW);
+    glfwSetKeyCallback(mGLTFWindow, keyCallbackGLFW);
+	glfwSetMouseButtonCallback(mGLTFWindow, mouseButtonCallbackGLFW);
+	glfwSetScrollCallback(mGLTFWindow, scrollCallbackGLFW);
+	glfwSetCharCallback(mGLTFWindow, charCallbackGLFW);
+    glfwSetFramebufferSizeCallback(mGLTFWindow, onResizeGLFW);
 }
 
 bool Window::isClosed()
 {
-	return glfwWindowShouldClose(mWindow);
+	return glfwWindowShouldClose(mGLTFWindow);
 }
 
 void Window::swap()
@@ -103,18 +103,18 @@ void Window::swap()
 	// https://www.khronos.org/opengl/wiki/Common_Mistakes
 	// section: glFinish and glFlush
 	//glFlush();
-	glfwSwapBuffers(mWindow);
+	glfwSwapBuffers(mGLTFWindow);
 }
 
 void Window::terminate()
 {
-	glfwDestroyWindow(mWindow);
+	glfwDestroyWindow(mGLTFWindow);
 	glfwTerminate();
 }
 
 void Window::setCursorVisibility(bool visible)
 {
-    glfwSetInputMode(GET_SYSTEM(Window).getWindow(), GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(mGLTFWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
 void Window::onResize(GLFWwindow *window, int width, int height)
@@ -124,7 +124,7 @@ void Window::onResize(GLFWwindow *window, int width, int height)
 	GET_SYSTEM(RenderEngine).mCamera->onResize();
 }
 
-void Window::GLFWonResize(GLFWwindow *window, int width, int height)
+void Window::onResizeGLFW(GLFWwindow *window, int width, int height)
 {
 	GET_SYSTEM(Window).onResize(window, width, height);
 }
@@ -285,10 +285,10 @@ Vector2 Window::getMousePosition() const
 {
 	f64 mouseCoordX, mouseCoordY;
 
-	glfwGetCursorPos(getWindow(), &mouseCoordX, &mouseCoordY);
+	glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
 
-	f64 halfWindowSizeX = getWindowSize().x / 2.0;
-	f64 halfWindowSizeY = getWindowSize().y / 2.0;
+	f64 halfWindowSizeX = mWindowSize.x / 2.0;
+	f64 halfWindowSizeY = mWindowSize.y / 2.0;
 
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;

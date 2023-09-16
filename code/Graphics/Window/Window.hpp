@@ -22,10 +22,8 @@ public:
 
 private:
     void onResize(GLFWwindow *window, int width, int height);
-    static void GLFWonResize(GLFWwindow *window, int width, int height);
-    void setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const void* data);
-    void setDataUBOAnyTypeRaw(u32 UBO, u32 typeSize, u32 size, const void* data);
-	
+
+    static void onResizeGLFW(GLFWwindow *window, int width, int height);
     static void keyCallbackGLFW(GLFWwindow *window, int key, int scancode, int action, int mods);
     static void mouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods);
     static void scrollCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset);
@@ -37,10 +35,10 @@ private:
     virtual void charCallback(unsigned int codepoint) override;
 
 private:
-	GLFWwindow *mWindow = nullptr;
+	GLFWwindow *mGLTFWindow = nullptr;
 	Vector2 mWindowSize;
 
 public:
-    GET(Window);
+    CGET(GLTFWindow);
     CRGET(WindowSize);
 };
