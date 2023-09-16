@@ -21,7 +21,7 @@ public:
 
     virtual void init();
 
-	template <class T>
+	template <class T> T_EXTENDS(T, Component)
 	Ptr<T> addComponent(OwnerPtr<T>&& component)
 	{
 		return Ptr<T>::cast(GameObject::addComponent(OwnerPtr<Component>::moveCast(component)));
@@ -35,13 +35,13 @@ public:
         return addComponent(std::move(component));
 	}
 
-	template <class T>
+	template <class T> T_EXTENDS(T, Component)
 	void removeComponent(Ptr<T> component)
 	{
 		GameObject::removeComponent(Ptr<Component>::cast(component));
 	}
 
-	template <class T>
+	template <class T> T_EXTENDS(T, Component)
 	std::list<Ptr<T>> getComponents() const
 	{
 		std::list<Ptr<T>> components;
@@ -57,7 +57,7 @@ public:
 		return components;
 	}
 
-	template <class T>
+	template <class T> T_EXTENDS(T, Component)
 	Ptr<T> getFirstComponent() const
 	{   
         Ptr<T> component;
