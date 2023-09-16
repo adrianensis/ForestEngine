@@ -4,6 +4,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/RenderContext.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Shaders/Shader.hpp"
 #include "Scene/Module.hpp"
@@ -42,7 +43,7 @@ void RenderEngine::update()
 
 	// octree.update();
 
-	GET_SYSTEM(RenderContext).clear();
+	GET_SYSTEM(GPUInterface).clear();
 	renderBatches();
 	swap();
 }
@@ -127,8 +128,8 @@ void RenderEngine::renderBatches()
 	mBatchesManager.render();
 	mShapeBatchRenderer.render();
     
-    GET_SYSTEM(RenderContext).clearDepth();
-    GET_SYSTEM(RenderContext).clearStencil();
+    GET_SYSTEM(GPUInterface).clearDepth();
+    GET_SYSTEM(GPUInterface).clearStencil();
     
 	mBatchesManager.renderScreenSpaceStencil();
 	mBatchesManager.renderScreenSpace();

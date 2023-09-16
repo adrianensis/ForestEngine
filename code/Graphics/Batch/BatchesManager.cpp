@@ -1,5 +1,5 @@
 #include "Graphics/Batch/BatchesManager.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 #include "Scene/Module.hpp"
 
 void BatchesManager::addRenderer(Ptr<MeshRenderer> renderer)
@@ -101,7 +101,7 @@ void BatchesManager::renderScreenSpaceStencil()
         if(currentMaskId != maskId)
         {
             currentMaskId = maskId;
-            GET_SYSTEM(RenderContext).clearStencil();
+            GET_SYSTEM(GPUInterface).clearStencil();
         }
 
 		if((*it)->getBatchData().mStencilData.mUseStencil and !(*it)->getBatchData().mIsWorldSpace)

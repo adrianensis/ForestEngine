@@ -1,6 +1,7 @@
 #include "Graphics/GPU/GPUMeshBuffer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 
 GPUMeshBuffer::~GPUMeshBuffer() 
 {
@@ -12,7 +13,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 	PROFILER_CPU()
 
 	mGPUMeshBufferData = gpuMeshBufferData;
-	mVAO = GET_SYSTEM(RenderContext).createVAO();
+	mVAO = GET_SYSTEM(GPUInterface).createVAO();
 
     mGPUVertexBuffersLayout.init(mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
@@ -39,14 +40,14 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
     GPUVertexBufferData bufferDataBonesWeights(GPUBuiltIn::VertexInput::mBonesWeights);
     mVBOBonesWeights = mGPUVertexBuffersLayout.addBuffer(bufferDataBonesWeights);
 
-	mEBO = GET_SYSTEM(RenderContext).createEBO();
+	mEBO = GET_SYSTEM(GPUInterface).createEBO();
 }
 
 void GPUMeshBuffer::terminate()
 {
     disable();
-    GET_SYSTEM(RenderContext).deleteVAO(mVAO);
-    GET_SYSTEM(RenderContext).deleteEBO(mEBO);
+    GET_SYSTEM(GPUInterface).deleteVAO(mVAO);
+    GET_SYSTEM(GPUInterface).deleteEBO(mEBO);
 }
 
 void GPUMeshBuffer::resizeMeshData(const Mesh& mesh)
@@ -92,16 +93,16 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices)
 void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
 {
     PROFILER_CPU()
-	GET_SYSTEM(RenderContext).resizeEBO(mEBO, mesh.mFaces.size() * 3, mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-	GET_SYSTEM(RenderContext).setDataEBO(mEBO, mesh.mFaces);
+	GET_SYSTEM(GPUInterface).resizeEBO(mEBO, mesh.mFaces.size() * 3, mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(GPUInterface).setDataEBO(mEBO, mesh.mFaces);
 }
 
 void GPUMeshBuffer::enable()
 {
-	GET_SYSTEM(RenderContext).enableVAO(mVAO);
+	GET_SYSTEM(GPUInterface).enableVAO(mVAO);
 }
 
 void GPUMeshBuffer::disable()
 {
-	GET_SYSTEM(RenderContext).enableVAO(0);
+	GET_SYSTEM(GPUInterface).enableVAO(0);
 }

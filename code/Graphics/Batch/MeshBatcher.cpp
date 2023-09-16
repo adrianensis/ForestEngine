@@ -1,5 +1,6 @@
 #include "Graphics/Batch/MeshBatcher.hpp"
 #include "Graphics/Model/Model.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 
 void MeshBatcher::init(const BatchData batchData)
 {
@@ -114,7 +115,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(RenderContext).drawElements(mBatchData.mMesh->mFaces.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
+		GET_SYSTEM(GPUInterface).drawElements(mBatchData.mMesh->mFaces.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 	}
 }
 

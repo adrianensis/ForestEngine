@@ -7,7 +7,7 @@
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Shaders/Shader.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Scene/Module.hpp"
@@ -51,7 +51,7 @@ void Batch::enable()
 
     if(mBatchData.mStencilData.mUseStencil)
     {
-        GET_SYSTEM(RenderContext).enableStencil(mBatchData.mStencilData.mMaskStencilValue, mBatchData.mStencilData.mStencilFunction, mBatchData.mStencilData.mStencilPassOp);
+        GET_SYSTEM(GPUInterface).enableStencil(mBatchData.mStencilData.mMaskStencilValue, mBatchData.mStencilData.mStencilFunction, mBatchData.mStencilData.mStencilPassOp);
     }
 }
 
@@ -59,7 +59,7 @@ void Batch::disable()
 {
     if(mBatchData.mStencilData.mUseStencil)
     {
-        GET_SYSTEM(RenderContext).disableStencil();
+        GET_SYSTEM(GPUInterface).disableStencil();
     }
 
     mShader->disable();

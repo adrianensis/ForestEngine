@@ -1,12 +1,12 @@
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 #include "png.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 Texture::~Texture() 
 {
-    GET_SYSTEM(RenderContext).deleteTexture(mTextureId);
+    GET_SYSTEM(GPUInterface).deleteTexture(mTextureId);
 }
 
 void Texture::init(const std::string& path, bool createMipMap)
@@ -15,7 +15,7 @@ void Texture::init(const std::string& path, bool createMipMap)
 	{
 		mPath = path;
 		loadImage();
-        mTextureId = GET_SYSTEM(RenderContext).createTexture(mWidth, mHeight, mData, createMipMap);
+        mTextureId = GET_SYSTEM(GPUInterface).createTexture(mWidth, mHeight, mData, createMipMap);
 		stbi_image_free(mData);
 		mData = nullptr;
 	}
@@ -23,7 +23,7 @@ void Texture::init(const std::string& path, bool createMipMap)
 
 void Texture::bind() const
 {
-    GET_SYSTEM(RenderContext).enableTexture(mTextureId);
+    GET_SYSTEM(GPUInterface).enableTexture(mTextureId);
 }
 
 IMPLEMENT_SERIALIZATION(Texture)

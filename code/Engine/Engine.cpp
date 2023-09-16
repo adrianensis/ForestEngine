@@ -19,6 +19,7 @@ void Engine::init()
 
     CREATE_SYSTEM(EngineConfig);
 	GET_SYSTEM(EngineConfig).init();
+    CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(RenderContext);
 	GET_SYSTEM(RenderContext).init();
     CREATE_SYSTEM(Input);
@@ -145,6 +146,7 @@ void Engine::terminate()
     REMOVE_SYSTEM(EngineConfig);
 	GET_SYSTEM(RenderContext).terminate();
     REMOVE_SYSTEM(RenderContext);
+    REMOVE_SYSTEM(GPUInterface);
 
 	GET_SYSTEM(Profiler).terminate();
 	REMOVE_SYSTEM(Profiler);

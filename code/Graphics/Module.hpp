@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/RenderContext.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/RenderEngine.hpp"
 
 #include "Graphics/Mesh/Mesh.hpp"

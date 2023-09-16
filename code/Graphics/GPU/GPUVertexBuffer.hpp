@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 
 class GPUVertexBufferData
 {
@@ -26,7 +27,7 @@ public:
     template <class T>
     void setData(const std::vector<T>& data)
     {
-	    GET_SYSTEM(RenderContext).setDataVBOAnyType<T>(mVBO, data);
+	    GET_SYSTEM(GPUInterface).setDataVBOAnyType<T>(mVBO, data);
     }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
