@@ -2,8 +2,6 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 
-#include <stddef.h>
-
 Vector2 Window::getWindowSize()
 {
 	return mWindowSize;
