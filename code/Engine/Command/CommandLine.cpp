@@ -4,6 +4,7 @@
 #include "Core/Log/Log.hpp"
 #include "Core/Events/EventsManager.hpp"
 #include "Core/Input/Input.hpp"
+#include "Graphics/Window/Window.hpp"
 
 #include <regex>
 
@@ -56,31 +57,31 @@ void CommandLine::init()
 
             switch (e->mArrowButton)
             {
-                // case GLFW_KEY_UP:
-                // {
-                //     if(!mHistory.empty() and mHistoryIterator != mHistory.begin())
-                //     {
-                //         --mHistoryIterator;
-                //         mBuffer = *mHistoryIterator;
-                //     }
-                //     break;
-                // }
-                // case GLFW_KEY_DOWN:
-                // {
-                //     if(!mHistory.empty() and mHistoryIterator != mHistory.end())
-                //     {
-                //         ++mHistoryIterator;
-                //         if(mHistoryIterator == mHistory.end())
-                //         {
-                //             mBuffer.clear();
-                //         }
-                //         else
-                //         {
-                //             mBuffer = *mHistoryIterator;
-                //         }
-                //     }
-                //     break;
-                // }
+                case GLFW_KEY_UP:
+                {
+                    if(!mHistory.empty() and mHistoryIterator != mHistory.begin())
+                    {
+                        --mHistoryIterator;
+                        mBuffer = *mHistoryIterator;
+                    }
+                    break;
+                }
+                case GLFW_KEY_DOWN:
+                {
+                    if(!mHistory.empty() and mHistoryIterator != mHistory.end())
+                    {
+                        ++mHistoryIterator;
+                        if(mHistoryIterator == mHistory.end())
+                        {
+                            mBuffer.clear();
+                        }
+                        else
+                        {
+                            mBuffer = *mHistoryIterator;
+                        }
+                    }
+                    break;
+                }
             }
         }
     });
