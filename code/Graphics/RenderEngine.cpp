@@ -3,7 +3,7 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Shaders/Shader.hpp"
@@ -117,7 +117,7 @@ void RenderEngine::swap()
 {
 	PROFILER_CPU()
 
-	GET_SYSTEM(RenderContext).swap();
+	GET_SYSTEM(Window).swap();
 }
 
 void RenderEngine::renderBatches()

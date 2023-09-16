@@ -3,17 +3,26 @@
 #include "Core/Object/ObjectBase.hpp"
 #include "Engine/EngineSystem.hpp"
 
-#include "Graphics/RenderContext.hpp"
 #include "Core/Maths/Vector2.hpp"
 
 #include "Core/Input/InputEvents.hpp"
+
+class IWindowInputAdapter
+{
+public:
+    virtual void keyCallback(int key, int scancode, int action, int mods) = 0;
+    virtual void mouseButtonCallback(int button, int action, int mods) = 0;
+    virtual void scrollCallback(double xoffset, double yoffset) = 0;
+    virtual void charCallback(unsigned int codepoint) = 0;
+    virtual Vector2 getMousePosition() const = 0;
+};
 
 class Input: public EngineSystem
 {
 	GENERATE_METADATA(Input)
 public:
-    void init();
-    void pollEvents();
+    void init(const Ptr<IWindowInputAdapter>& windowInputAdapter);
+    void update();
     bool isKeyPressedOnce(i32 key);
     bool isKeyPressed(i32 key);
     bool isModifierPressed(i32 modifier);
@@ -23,14 +32,7 @@ public:
     f32 getScroll();
     void clearMouseButton();
     void clearKey();
-    void setCursorVisibility(bool visible);
-
-private:
-    static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-    static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
-    static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
-    static void charCallback(GLFWwindow *window, unsigned int codepoint);
-
+    
 public:
 	Vector2 smMouseCoordinates;
 	i32 smLastMouseButtonPressed;
@@ -39,4 +41,10 @@ public:
 	bool smKeyJustPressed;
 	bool smButtonJustPressed;
 	f32 smScroll;
+
+private:
+    Ptr<IWindowInputAdapter> mWindowInputAdapter;
+
+public:
+    GET(WindowInputAdapter);
 };

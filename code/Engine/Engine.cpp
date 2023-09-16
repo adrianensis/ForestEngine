@@ -20,10 +20,10 @@ void Engine::init()
     CREATE_SYSTEM(EngineConfig);
 	GET_SYSTEM(EngineConfig).init();
     CREATE_SYSTEM(GPUInterface);
-    CREATE_SYSTEM(RenderContext);
-	GET_SYSTEM(RenderContext).init();
+    CREATE_SYSTEM(Window);
+	GET_SYSTEM(Window).init();
     CREATE_SYSTEM(Input);
-	GET_SYSTEM(Input).init();
+	GET_SYSTEM(Input).init(Ptr<IWindowInputAdapter>::cast(GET_SYSTEM_PTR(Window)));
     CREATE_SYSTEM(TimerManager);
 	GET_SYSTEM(TimerManager).init();
     CREATE_SYSTEM(EventsManager);
@@ -76,7 +76,7 @@ void Engine::run()
 
 	f32 diff = 0;
 
-	while (!GET_SYSTEM(RenderContext).isClosed())
+	while (!GET_SYSTEM(Window).isClosed())
 	{
 		GET_SYSTEM(Time).startFrame();
 
@@ -87,7 +87,8 @@ void Engine::run()
 			initEngineSystems();
 		}
 
-		GET_SYSTEM(Input).pollEvents();
+		GET_SYSTEM(Input).update();
+		GET_SYSTEM(Window).pollEvents();
 
 		GET_SYSTEM(CommandLine).update();
 
@@ -144,8 +145,8 @@ void Engine::terminate()
     REMOVE_SYSTEM(Time);
     REMOVE_SYSTEM(Input);
     REMOVE_SYSTEM(EngineConfig);
-	GET_SYSTEM(RenderContext).terminate();
-    REMOVE_SYSTEM(RenderContext);
+	GET_SYSTEM(Window).terminate();
+    REMOVE_SYSTEM(Window);
     REMOVE_SYSTEM(GPUInterface);
 
 	GET_SYSTEM(Profiler).terminate();

@@ -1,5 +1,4 @@
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 
 void GPUSharedBuffer::init(const GPUSharedBufferData& data, bool isStatic)
 {

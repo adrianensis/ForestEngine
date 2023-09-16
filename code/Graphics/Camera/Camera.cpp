@@ -2,7 +2,7 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/RenderEngine.hpp"
-
+#include "Graphics/Window/Window.hpp"
 
 void Camera::init()
 {
@@ -68,7 +68,7 @@ void Camera::setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 fa
 	mNear = near;
 	mFar = far;
 
-	mProjectionMatrix.ortho(mLeft * GET_SYSTEM(RenderContext).getAspectRatio() * mZoom, mRight * GET_SYSTEM(RenderContext).getAspectRatio() * mZoom, mBottom* mZoom,
+	mProjectionMatrix.ortho(mLeft * GET_SYSTEM(Window).getAspectRatio() * mZoom, mRight * GET_SYSTEM(Window).getAspectRatio() * mZoom, mBottom* mZoom,
 							mTop* mZoom, mNear, mFar);
 }
 

@@ -1,5 +1,5 @@
 #include "Core/Time/TimeUtils.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/Window/Window.hpp"
 
 void TimeMark::init()
 {

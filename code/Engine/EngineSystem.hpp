@@ -36,8 +36,11 @@ private:
     std::set<ClassId> mAcceptedEngineSystemComponentClasses;
 };
 
+#define GET_SYSTEM_PTR(...) \
+    EngineSystemsManager::getInstance().getEngineSystem<__VA_ARGS__>()
+
 #define GET_SYSTEM(...) \
-    EngineSystemsManager::getInstance().getEngineSystem<__VA_ARGS__>().get()
+    GET_SYSTEM_PTR(__VA_ARGS__).get()
 
 #define CREATE_SYSTEM(...) \
     EngineSystemsManager::getInstance().createEngineSystem<__VA_ARGS__>();

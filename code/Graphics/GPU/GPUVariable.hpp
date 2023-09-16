@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Module.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
 
 /*
     - none: (default) local read/write memory,

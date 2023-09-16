@@ -74,7 +74,7 @@ Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 	{
 		case UILayout::HORIZONTAL:
 		{
-			offset = Vector2((mLastConfig.mSize.x + mConfig.mSeparatorSize) / GET_SYSTEM(RenderContext).getAspectRatio(), 0);
+			offset = Vector2((mLastConfig.mSize.x + mConfig.mSeparatorSize) / GET_SYSTEM(Window).getAspectRatio(), 0);
 			break;
 		}
 		case UILayout::VERTICAL:
@@ -103,6 +103,6 @@ void UIBuilder::calculateConfig()
 
 	mConfig.mDisplayPosition = mConfig.mPosition;
 
-	mConfig.mDisplayPosition.x += (mConfig.mSize.x/GET_SYSTEM(RenderContext).getAspectRatio()) / 2.0f;
+	mConfig.mDisplayPosition.x += (mConfig.mSize.x/GET_SYSTEM(Window).getAspectRatio()) / 2.0f;
     mConfig.mDisplayPosition.y -= mConfig.mSize.y / 2.0f;
 }

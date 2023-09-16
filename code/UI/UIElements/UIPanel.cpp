@@ -11,7 +11,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 
     Vector3 size = mConfig.mSize;
     size.z = 1;
-    size.x = size.x / GET_SYSTEM(RenderContext).getAspectRatio();
+    size.x = size.x / GET_SYSTEM(Window).getAspectRatio();
 
     if(mConfig.mParent)
     {

@@ -1,5 +1,5 @@
 #include "Graphics/Shaders/Shader.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/Window/Window.hpp"
 #include "Graphics/Shaders/ShaderBuilder.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 #include "Graphics/Material/Material.hpp"

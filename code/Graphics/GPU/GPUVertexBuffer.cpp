@@ -1,5 +1,4 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 
 void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
 {

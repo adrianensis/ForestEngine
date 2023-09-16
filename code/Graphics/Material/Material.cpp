@@ -4,7 +4,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/RenderContext.hpp"
+#include "Graphics/Window/Window.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
@@ -74,7 +74,7 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr
 
 	shader->addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
 
-	shader->addVector2(GET_SYSTEM(RenderContext).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
+	shader->addVector2(GET_SYSTEM(Window).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
 
 	if(mesh->mModel)
 	{
