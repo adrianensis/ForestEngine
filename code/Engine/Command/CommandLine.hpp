@@ -3,7 +3,7 @@
 #include "Core/Object/ObjectBase.hpp"
 #include "Engine/EngineSystem.hpp"
 #include "Core/Functor.hpp"
-#include "Core/Command/Command.hpp"
+#include "Engine/Command/Command.hpp"
 
 using CommandCallback = std::function<void(const Command& command)>;
 

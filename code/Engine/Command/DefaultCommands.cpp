@@ -1,5 +1,5 @@
-#include "Core/Command/DefaultCommands.hpp"
-#include "Core/Command/CommandLine.hpp"
+#include "Engine/Command/DefaultCommands.hpp"
+#include "Engine/Command/CommandLine.hpp"
 
 #include "Core/Log/Log.hpp"
 
