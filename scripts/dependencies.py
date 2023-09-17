@@ -70,11 +70,16 @@ if installSystemDepencencies:
         distro_id = distro.id()
         if distro_id == "ubuntu":
             os.system("sudo apt-get -y update")
-            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang cmake-data libglu1-mesa-dev freeglut3-dev mesa-common-dev xorg-dev doxygen graphviz")
+            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang")
+            os.system("sudo apt-get -y install mesa-common-dev")
+            os.system("sudo apt-get -y install xorg-dev") # glfw3 dependency
+            os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
+            os.system("sudo apt-get -y install qtbase5-dev") # easy_profiler dependency
+            os.system("sudo apt-get -y install doxygen graphviz")
         elif distro_id == "manjaro":
-            os.system("sudo pacman -Syy")
-            os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
-
+            # os.system("sudo pacman -Syy")
+            # os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
+            pass
     elif system_name == "Darwin":
         # OS X
         pass
@@ -117,5 +122,10 @@ extract(os.path.join(origin_path_base, "stb.zip"), destiny)
 
 # cgltf https://github.com/jkuhlmann/cgltf
 extract(os.path.join(origin_path_base, "cgltf-1.13.zip"), destiny)
+
+# ------------------------------------------------------------------------
+
+# freetype https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz
+extract(os.path.join(origin_path_base, "freetype-2.10.1.tar.gz"), destiny)
 
 # ------------------------------------------------------------------------

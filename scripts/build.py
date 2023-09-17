@@ -13,7 +13,9 @@ dependenciesDir="dependencies"
 binariesDir="binaries"
 
 profilerDir = "easy_profiler-2.1.0"
-profilerDepencencyDir = os.path.join(dependenciesDir, "easy_profiler-2.1.0")
+profilerDepencencyDir = os.path.join(dependenciesDir, profilerDir)
+freetypeDir = "freetype-2.10.1"
+freetypeDepencencyDir = os.path.join(dependenciesDir, freetypeDir)
 
 buildType="Debug"
 
@@ -116,6 +118,35 @@ if enableProfiler:
     print(buildProfilerCommand)
     os.system(buildProfilerCommand)
     os.system(systemBuildCommand)
+
+# go back
+os.chdir(cwd)
+
+# freetype
+os.chdir(freetypeDepencencyDir)
+
+if not os.path.isdir(buildDir):
+    os.mkdir(buildDir)
+if not os.path.isdir(buildTargetDir):
+    os.mkdir(buildTargetDir)
+
+os.chdir(buildTargetDir)
+
+buildFreetypeCommandArgs = [
+    "-DCMAKE_BUILD_TYPE=" + buildType
+]
+
+buildFreetypeCommandArgsString =" ".join(buildFreetypeCommandArgs)
+
+buildFreetypeCommand = 'cmake {cmake_generator} {buildFreetypeCommandArgsString} ../..'.format(
+cmake_generator = cmake_generator,
+buildFreetypeCommandArgsString = buildFreetypeCommandArgsString)
+print(buildFreetypeCommand)
+os.system(buildFreetypeCommand)
+os.system(systemBuildCommand)
+
+# go back
+os.chdir(cwd)
 
 ##########################################
 ########## BUILD ###########

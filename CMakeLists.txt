@@ -99,8 +99,8 @@ include_directories("${DEPENDENCIES_DIR}/glfw-3.3.4/include")
 set(GLAD_SOURCE "${DEPENDENCIES_DIR}/glad/src/glad.c")
 include_directories("${DEPENDENCIES_DIR}/glad/include")
 
+# Easy Profiler
 if(ENABLE_PROFILER)
-    # Easy Profiler
     set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
     set(EASY_PROFILER_NO_SAMPLES ON CACHE BOOL "")
     include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
@@ -114,6 +114,9 @@ add_subdirectory("${DEPENDENCIES_DIR}/json-3.9.1")
 
 # stb
 include_directories("${DEPENDENCIES_DIR}/stb")
+
+# freetype
+include_directories("${DEPENDENCIES_DIR}/freetype-2.10.1/include")
 
 # cgltf
 include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")

@@ -5,6 +5,9 @@
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"
 
+#include "ft2build.h"
+#include FT_FREETYPE_H
+
 
 class Material;
 class Scene;
@@ -49,6 +52,8 @@ private:
 	Vector2 mDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
 
 	Ptr<UIElement> mFocusedElement;
+
+    FT_Library library;
 
 public:
     CRGET(DefaultFontSize)
