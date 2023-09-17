@@ -131,6 +131,7 @@ const Vector2& UIManager::getCharTextureCoordinates(char character)
 	    return mCharMap.at(character);
     }
     
+    // '?'
     return mCharMap.at(63);
 }
 
