@@ -15,7 +15,7 @@ void Texture::init(const std::string& path, bool createMipMap)
 	{
 		mPath = path;
 		loadImage();
-        mTextureId = GET_SYSTEM(GPUInterface).createTexture(mWidth, mHeight, mData, createMipMap);
+        mTextureId = GET_SYSTEM(GPUInterface).createTexture(mWidth, mHeight, GL_RGBA, mData, createMipMap);
 		stbi_image_free(mData);
 		mData = nullptr;
 	}

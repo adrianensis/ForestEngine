@@ -4,7 +4,6 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-
 void UIManager::init()
 {
 	UIStyleManager::getInstance().init();
@@ -112,6 +111,9 @@ void UIManager::init()
 	MAP_INSERT(mCharMap, '|', Vector2(12 / mFontTilesCount.x, 0 / mFontTilesCount.y));
 	MAP_INSERT(mCharMap, '}', Vector2(13 / mFontTilesCount.x, 0 / mFontTilesCount.y));
 	MAP_INSERT(mCharMap, '~', Vector2(14 / mFontTilesCount.x, 0 / mFontTilesCount.y));
+
+    mFontsManager.init();
+    mFontsManager.loadFont(Paths::mResources + "fonts/Arial.ttf");
 }
 
 void UIManager::terminate()
@@ -119,6 +121,7 @@ void UIManager::terminate()
 	TRACE()
     mGroups.clear();
 	UIStyleManager::deleteInstance();
+    mFontsManager.terminate();
 }
 
 const Vector2& UIManager::getCharTextureCoordinates(char character)

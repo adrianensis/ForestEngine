@@ -50,7 +50,9 @@ public:
     void enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp);
     void disableStencil();
 
-    GLuint createTexture(u32 width, u32 height, const byte* data, bool createMipMap);
+    GLuint createTexture(u32 width, u32 height, u32 format, const byte* data, bool createMipMap);
+    GLuint createTextureFont(u32 width, u32 height, u32 format, const byte* data);
+    void subTexture(u32 x, u32 y, u32 width, u32 height, u32 format,  const byte* data);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId);
     void disableTexture();

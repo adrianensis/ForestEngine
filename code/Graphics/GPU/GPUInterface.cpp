@@ -198,7 +198,7 @@ void GPUInterface::disableStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 
-GLuint GPUInterface::createTexture(u32 width, u32 height, const byte* data, bool createMipMap)
+GLuint GPUInterface::createTexture(u32 width, u32 height, u32 format, const byte* data, bool createMipMap)
 {
     u32 textureId;
     glGenTextures(1, &textureId);
@@ -219,7 +219,7 @@ GLuint GPUInterface::createTexture(u32 width, u32 height, const byte* data, bool
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     
     if(createMipMap)
     {
@@ -229,6 +229,32 @@ GLuint GPUInterface::createTexture(u32 width, u32 height, const byte* data, bool
     disableTexture();
 
     return textureId;
+}
+
+GLuint GPUInterface::createTextureFont(u32 width, u32 height, u32 format, const byte* data)
+{
+    u32 textureId;
+    glGenTextures(1, &textureId);
+
+    enableTexture(textureId);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
+    disableTexture();
+
+    return textureId;
+}
+
+void GPUInterface::subTexture(u32 x, u32 y, u32 width, u32 height, u32 format, const byte* data)
+{
+    glTexSubImage2D(GL_TEXTURE_2D, 0, x, y , width, height, format, GL_UNSIGNED_BYTE, data);
 }
 
 void GPUInterface::deleteTexture(u32 textureId)

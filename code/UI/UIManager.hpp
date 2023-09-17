@@ -4,10 +4,7 @@
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"
-
-#include "ft2build.h"
-#include FT_FREETYPE_H
-
+#include "UI/UIFont.hpp"
 
 class Material;
 class Scene;
@@ -15,7 +12,6 @@ class Scene;
 class UIManager: public EngineSystem
 {
 	GENERATE_METADATA(UIManager)
-
 public:
 
     void init();
@@ -53,7 +49,7 @@ private:
 
 	Ptr<UIElement> mFocusedElement;
 
-    FT_Library library;
+    UIFontsManager mFontsManager;
 
 public:
     CRGET(DefaultFontSize)
