@@ -59,19 +59,17 @@ void UIText::setText(const std::string& text)
 		{
 			FOR_RANGE(i, 0, text.length())
 			{
-				Ptr<MeshRenderer> renderer;
-
 				char character = text.at(i);
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
 				Vector2 textureSize = GET_SYSTEM(UIManager).getFontTileTextureSize();
 
                 RendererData rendererData;
                 rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-                rendererData.mMaterial = (GET_SYSTEM(UIManager).getFontMaterial());
+                rendererData.mMaterial = Ptr<const Material>::cast(GET_SYSTEM(UIManager).getFontMaterial());
                 rendererData.mStencilData = calculateStencilData();
 				rendererData.mPositionOffset = (Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(Window).getAspectRatio(), 0, 0));
                 
-                renderer = createComponent<MeshRenderer>(rendererData);
+                Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
                 renderer->mUseDepth = (true);
 	            renderer->setDepth(mLayer);
 				renderer->setTextureRegion(Rectangle(textureCoordinates, textureSize));
