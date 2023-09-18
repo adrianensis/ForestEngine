@@ -15,13 +15,7 @@ void Material::init(const MaterialData& materialData, u32 id)
     mMaterialData = materialData;
 	mID = id;
 
-    FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
-    {
-        if(!mMaterialData.mTexturePaths[i].empty())
-        {
-            mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(mMaterialData.mTexturePaths[i], mMaterialData.mCreateMipMap);
-        }
-    }
+    loadTextures();
 
     mUniforms.push_back(GPUBuiltIn::Uniforms::mProjectionMatrix);
     mUniforms.push_back(GPUBuiltIn::Uniforms::mViewMatrix);
@@ -91,6 +85,31 @@ bool Material::hasTexture() const
 {
     return mTextures[(u32)TextureType::BASE_COLOR].isValid();
 }
+
+void Material::loadTextures()
+{
+    FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
+    {
+        if(!mMaterialData.mTexturePaths[i].empty())
+        {
+            TextureData textureData;
+            textureData.mPath = mMaterialData.mTexturePaths[i];
+            textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
+                
+            mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData, false);
+        }
+    }
+}
+
+void MaterialFont::loadTextures()
+{
+    if(!mMaterialData.mFontTextureData.mPath.empty())
+    {
+        TextureData textureData = mMaterialData.mFontTextureData;
+        mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(textureData, true);
+    }
+}
+
 
 IMPLEMENT_SERIALIZATION(Material)
 {

@@ -17,9 +17,9 @@ public:
     void init();
     void terminate();
 
-    const Vector2& getCharTextureCoordinates(char character);
-	const Vector2& getFontTileTextureSize() const { return mFontTileTextureSize; }
-    Ptr<const Material> getFontMaterial();
+    Vector2 getCharTextureCoordinates(char character);
+	Vector2 getFontTileTextureSize();
+    Ptr<const MaterialFont> getFontMaterial();
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)
 	{
@@ -40,15 +40,8 @@ public:
 
 private:
 	std::unordered_map<std::string, OwnerPtr<UIGroup>> mGroups;
-	std::unordered_map<char, Vector2> mCharMap;
-	Vector2 mFontTilesCount;
-	Vector2 mFontTileTextureSize;
-	Ptr<const Material> mFontMaterial;
-
-	Vector2 mDefaultFontSize = Vector2(0.04f / 2.0f, 0.04f);
-
+	Vector2 mDefaultFontSize = Vector2(0.04f, 0.04f);
 	Ptr<UIElement> mFocusedElement;
-
     UIFontsManager mFontsManager;
 
 public:

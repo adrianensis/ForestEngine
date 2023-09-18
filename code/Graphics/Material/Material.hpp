@@ -3,6 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
+#include "Graphics/Material/Texture.hpp"
 
 enum class TextureType
 {
@@ -150,7 +151,6 @@ enum class TextureType
     UNKNOWN,
 };
 
-class Texture;
 class Shader;
 class Mesh;
 
@@ -163,6 +163,7 @@ public:
 	bool mUseColorAsTint = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
+    TextureData mFontTextureData;
 	Vector4 mBaseColor = Vector4(0,0,0,1);
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 };
@@ -177,7 +178,10 @@ public:
     void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const;
     bool hasTexture() const;
 
-private:
+protected:
+    virtual void loadTextures();
+
+protected:
     MaterialData mMaterialData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
@@ -195,4 +199,11 @@ public:
     CRGET(VertexOutputs)
     CRGET(FragmentInputs)
     CRGET(FragmentOutputs)
+};
+
+class MaterialFont: public Material
+{
+    GENERATE_METADATA(MaterialFont)
+protected:
+    virtual void loadTextures() override;
 };

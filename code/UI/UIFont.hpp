@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "ft2build.h"
-#include FT_FREETYPE_H
+#include "Graphics/Material/Material.hpp"
 
 class UIFont;
 
@@ -21,29 +20,26 @@ public:
     CRGET(FreeTypeLibrary)
 };
 
-class UIFontGlyph
-{
-public:
-    Vector2 mAdvance;
-    Vector2 mBitmapSize;
-    Vector2 mBitmapTopLeft;
-    f32 xOffset;
-};
-
 class UIFont: public ObjectBase
 {
     GENERATE_METADATA(UIFont)
 public:
-    ~UIFont();
     void init(UIFontsManager& fontsManager, const std::string& fontFile);
 
+private:
+    static void vertical_flip(void *image, int w, int h, int bytes_per_pixel);
 private:
     FT_Face mFreeTypeFace;
     std::string mPath;
     u32 mWidth;
     u32 mHeight;
-    std::array<UIFontGlyph, 128> mGlyphs;
+    inline static const u32 MAX_GLYPHS = 128;
+    std::array<TextureFontGlyph, MAX_GLYPHS> mGlyphs;
+    Ptr<const MaterialFont> mFontMaterial;
 public:
     CRGET(FreeTypeFace)
+    GET(FontMaterial)
+    GET(Width)
+    GET(Height)
+    CRGET(Glyphs)
 };
-

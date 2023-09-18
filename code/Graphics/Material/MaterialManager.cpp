@@ -29,16 +29,26 @@ void MaterialManager::init()
 	mMaterialIDCounter++;
 }
 
-Ptr<const Texture> MaterialManager::loadTexture(const std::string& path, bool createMipMap)
+Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData, bool isFont)
 {
-	if (!MAP_CONTAINS(mTexturesMap, path))
+	if (!MAP_CONTAINS(mTexturesMap, textureData.mPath))
 	{
-		MAP_INSERT(mTexturesMap, path, OwnerPtr<Texture>::newObject());
-		Ptr<Texture> texture = mTexturesMap.at(path);
-		texture->init(path, createMipMap);
+        if(isFont)
+        {
+            OwnerPtr<TextureFont> texture = OwnerPtr<TextureFont>::newObject();
+		    MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
+        }
+        else
+        {
+            OwnerPtr<TextureImage> texture = OwnerPtr<TextureImage>::newObject();
+		    MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
+        }
+		
+		Ptr<Texture> texture = mTexturesMap.at(textureData.mPath);
+        texture->init(textureData);
 	}
 
-	return mTexturesMap.at(path);
+	return mTexturesMap.at(textureData.mPath);
 }
 
 Ptr<const Material> MaterialManager::createMaterial(const MaterialData& materialData)
@@ -53,6 +63,21 @@ Ptr<const Material> MaterialManager::createMaterial(const MaterialData& material
     }
 
     return mMaterials[index];
+}
+
+Ptr<const MaterialFont> MaterialManager::createMaterialFont(const MaterialData& materialData)
+{
+    u32 index = mMaterialIDCounter;
+    if (!MAP_CONTAINS(mMaterials, index))
+    {
+        OwnerPtr<MaterialFont> materialFont = OwnerPtr<MaterialFont>::newObject();
+        MAP_INSERT(mMaterials, index, OwnerPtr<Material>::moveCast(materialFont));
+        Ptr<Material> material = mMaterials.at(index);
+        material->init(materialData, index);
+        mMaterialIDCounter++;
+    }
+
+    return Ptr<const MaterialFont>::cast(mMaterials[index]);
 }
 
 Ptr<const Material> MaterialManager::getMaterial(u32 index) const

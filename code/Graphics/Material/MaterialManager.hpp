@@ -13,8 +13,9 @@ public:
     ~MaterialManager() override;
     
     void init();
-    Ptr<const Texture> loadTexture(const std::string& path, bool createMipMap);
+    Ptr<const Texture> loadTexture(const TextureData& textureData, bool isFont);
     Ptr<const Material> createMaterial(const MaterialData& materialData);
+    Ptr<const MaterialFont> createMaterialFont(const MaterialData& materialData);
     Ptr<const Material> getMaterial(u32 index) const;
 
 private:
