@@ -137,4 +137,9 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
     materialData.mFontTextureData.mFontWidth = mWidth;
     materialData.mFontTextureData.mFontHeight = mHeight;
     mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialFont(materialData);
+
+    FOR_RANGE(c, 0, charSetCount)
+    {
+        delete[] mGlyphs[c].mData;
+    }
 }
