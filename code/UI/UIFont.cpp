@@ -120,7 +120,7 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
 
         memcpy(mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.buffer, mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows);
 
-        vertical_flip(mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows, 1);
+        ImageUtils::flipImageVertically({mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows}, 1);
 
         // Increase texture offset
         texPos += mGlyphs[c].mBitmapSize.x /*+ 2*/;
@@ -137,28 +137,4 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
     materialData.mFontTextureData.mFontWidth = mWidth;
     materialData.mFontTextureData.mFontHeight = mHeight;
     mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialFont(materialData);
-}
-
-void UIFont::vertical_flip(void *image, int w, int h, int bytes_per_pixel)
-{
-   int row;
-   size_t bytes_per_row = (size_t)w * bytes_per_pixel;
-   byte temp[2048];
-   byte *bytes = (byte *)image;
-
-   for (row = 0; row < (h>>1); row++) {
-      byte *row0 = bytes + row*bytes_per_row;
-      byte *row1 = bytes + (h - row - 1)*bytes_per_row;
-      // swap row0 with row1
-      size_t bytes_left = bytes_per_row;
-      while (bytes_left) {
-         size_t bytes_copy = (bytes_left < sizeof(temp)) ? bytes_left : sizeof(temp);
-         memcpy(temp, row0, bytes_copy);
-         memcpy(row0, row1, bytes_copy);
-         memcpy(row1, temp, bytes_copy);
-         row0 += bytes_copy;
-         row1 += bytes_copy;
-         bytes_left -= bytes_copy;
-      }
-   }
 }

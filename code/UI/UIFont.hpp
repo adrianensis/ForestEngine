@@ -25,9 +25,6 @@ class UIFont: public ObjectBase
     GENERATE_METADATA(UIFont)
 public:
     void init(UIFontsManager& fontsManager, const std::string& fontFile);
-
-private:
-    static void vertical_flip(void *image, int w, int h, int bytes_per_pixel);
 private:
     FT_Face mFreeTypeFace;
     std::string mPath;

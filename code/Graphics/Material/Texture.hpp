@@ -45,9 +45,6 @@ class TextureImage: public Texture
     GENERATE_METADATA(TextureImage)
 public:
     void init(const TextureData& textureData);
-
-private:
-    byte* loadImage();
 };
 
 class TextureFont: public Texture

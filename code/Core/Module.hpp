@@ -20,3 +20,4 @@
 #include "Core/Events/EventsManager.hpp"
 #include "Core/Input/Input.hpp"
 #include "Core/Profiler/Profiler.hpp"
+#include "Core/Image/ImageUtils.hpp"

@@ -1,8 +1,5 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "png.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 Texture::~Texture() 
 {
@@ -17,26 +14,13 @@ void Texture::bind() const
 void TextureImage::init(const TextureData& textureData)
 {
 	mTextureData = textureData;
-    byte* data = loadImage();
-    mTextureId = GET_SYSTEM(GPUInterface).createTexture(mWidth, mHeight, GL_RGBA, data, textureData.mCreateMipMap);
-    CHECK_MSG(data, "Error loading image " + mTextureData.mPath);
-    stbi_image_free(data);
-}
-
-byte* TextureImage::loadImage()
-{
-	i32 width, height, original_number_channels;
-	stbi_set_flip_vertically_on_load(true);
-
-	if(mTextureData.mPath.find("\\") != std::string::npos)
-	{
-		mTextureData.mPath.replace(mTextureData.mPath.find("\\"), 1, "/");
-	}
-
-	byte* data = stbi_load(mTextureData.mPath.c_str(), &width, &height, &original_number_channels, STBI_rgb_alpha);
-	mWidth = width;
-    mHeight = height;
-    return data;
+    ImageData imageData;
+    imageData = ImageUtils::loadImage(textureData.mPath);
+    mWidth = imageData.mWidth;
+    mHeight = imageData.mHeight;
+    mTextureId = GET_SYSTEM(GPUInterface).createTexture(mWidth, mHeight, GL_RGBA, imageData.mData, textureData.mCreateMipMap);
+    CHECK_MSG(imageData.mData, "Error loading image " + mTextureData.mPath);
+    ImageUtils::freeImage(imageData);
 }
 
 void TextureFont::init(const TextureData& textureData)
