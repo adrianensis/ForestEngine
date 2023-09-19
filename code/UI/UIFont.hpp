@@ -30,4 +30,5 @@ private:
     Ptr<const MaterialFont> mFontMaterial;
 public:
     GET(FontMaterial)
+    CRGET(FontData)
 };

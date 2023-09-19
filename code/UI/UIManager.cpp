@@ -23,14 +23,16 @@ Vector2 UIManager::getCharTextureCoordinates(char character)
 {
     const auto& f = mFontsManager.loadFont(Paths::mResources + "fonts/Arial.ttf");
     const auto& g = f->getFontMaterial()->getMaterialData().mFontData.mGlyphs;
-    // return g.at(character).mBitmapTopLeft / Vector2(f->getWidth(), f->getHeight());
-    return Vector2(0,0);
+    const FontGlyphData& glyph = g.at(character);
+    return Vector2(glyph.xOffset, 0);
 }
 
-Vector2 UIManager::getFontTileTextureSize()
+Vector2 UIManager::getFontTileTextureSize(char character)
 {
     const auto& f = mFontsManager.loadFont(Paths::mResources + "fonts/Arial.ttf");
-    return Vector2(1,1);
+    const auto& g = f->getFontMaterial()->getMaterialData().mFontData.mGlyphs;
+    const FontGlyphData& glyph = g.at(character);
+    return glyph.mBitmapSize / Vector2(f->getFontData().mWidth, f->getFontData().mHeight);
 }
 
 Ptr<const MaterialFont> UIManager::getFontMaterial()

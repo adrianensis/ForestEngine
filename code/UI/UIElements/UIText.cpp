@@ -61,7 +61,7 @@ void UIText::setText(const std::string& text)
 			{
 				char character = text.at(i);
 				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
-				Vector2 textureSize = GET_SYSTEM(UIManager).getFontTileTextureSize();
+				Vector2 textureSize = GET_SYSTEM(UIManager).getFontTileTextureSize(character);
 
                 RendererData rendererData;
                 rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();

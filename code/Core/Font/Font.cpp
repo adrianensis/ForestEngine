@@ -64,10 +64,10 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
 
     CHECK_MSG(!_error, "Failed to open font");
 
-    u32 charSetCount = 1;
+    u32 charSetCount = MAX_GLYPHS;
     FOR_RANGE(c, 0, charSetCount)
     {
-        _error = FT_Load_Char(mFreeTypeFace, c + 65, FT_LOAD_DEFAULT);
+        _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
         CHECK_MSG(!_error, "Failed to load Glyph: " + c);
 
         _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);
@@ -83,7 +83,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
     u32 texPos = 0;
     FOR_RANGE(c, 0, charSetCount)
     {
-        _error = FT_Load_Char(mFreeTypeFace, c + 65, FT_LOAD_DEFAULT);
+        _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
         CHECK_MSG(!_error, "Failed to load Glyph: " + c);
 
         _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);

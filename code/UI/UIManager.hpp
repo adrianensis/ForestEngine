@@ -18,7 +18,7 @@ public:
     void terminate();
 
     Vector2 getCharTextureCoordinates(char character);
-	Vector2 getFontTileTextureSize();
+	Vector2 getFontTileTextureSize(char character);
     Ptr<const MaterialFont> getFontMaterial();
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)
