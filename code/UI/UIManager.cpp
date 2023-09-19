@@ -22,7 +22,7 @@ void UIManager::terminate()
 Vector2 UIManager::getCharTextureCoordinates(char character)
 {
     const auto& f = mFontsManager.loadFont(Paths::mResources + "fonts/Arial.ttf");
-    const auto& g = f->getGlyphs();
+    const auto& g = f->getFontMaterial()->getMaterialData().mFontData.mGlyphs;
     // return g.at(character).mBitmapTopLeft / Vector2(f->getWidth(), f->getHeight());
     return Vector2(0,0);
 }

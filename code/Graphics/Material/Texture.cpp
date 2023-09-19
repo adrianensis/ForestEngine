@@ -26,8 +26,8 @@ void TextureImage::init(const TextureData& textureData)
 void TextureFont::init(const TextureData& textureData)
 {
     mTextureData = textureData;
-    mWidth = mTextureData.mFontWidth;
-    mHeight = mTextureData.mFontHeight;
+    mWidth = mTextureData.mFontData.mWidth;
+    mHeight = mTextureData.mFontData.mHeight;
     mTextureId = GET_SYSTEM(GPUInterface).createTextureFont(mWidth, mHeight, GL_RED, nullptr);
 
     GET_SYSTEM(GPUInterface).enableTexture(mTextureId);
@@ -36,11 +36,11 @@ void TextureFont::init(const TextureData& textureData)
     FOR_RANGE(c, 0, 1)
     {
         // GET_SYSTEM(GPUInterface).subTexture(texPos, 0, 1, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, nullptr);
-        GET_SYSTEM(GPUInterface).subTexture(texPos, 0, mTextureData.mFontGlyphs[c].mBitmapSize.x, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, mTextureData.mFontGlyphs[c].mData);
+        GET_SYSTEM(GPUInterface).subTexture(texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GL_RED, mTextureData.mFontData.mGlyphs[c].mData);
         // GET_SYSTEM(GPUInterface).subTexture(texPos, 0, 1, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, nullptr);
 
         // Increase texture offset
-        texPos += mTextureData.mFontGlyphs[c].mBitmapSize.x /*+ 2*/;
+        texPos += mTextureData.mFontData.mGlyphs[c].mBitmapSize.x /*+ 2*/;
     }
     GET_SYSTEM(GPUInterface).disableTexture();
 }

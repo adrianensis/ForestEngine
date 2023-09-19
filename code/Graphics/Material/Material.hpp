@@ -163,7 +163,7 @@ public:
 	bool mUseColorAsTint = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
-    TextureData mFontTextureData;
+    FontData mFontData;
 	Vector4 mBaseColor = Vector4(0,0,0,1);
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 };

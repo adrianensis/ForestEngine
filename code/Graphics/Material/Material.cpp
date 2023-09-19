@@ -96,17 +96,20 @@ void Material::loadTextures()
             textureData.mPath = mMaterialData.mTexturePaths[i];
             textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
                 
-            mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData, false);
+            mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
         }
     }
 }
 
 void MaterialFont::loadTextures()
 {
-    if(!mMaterialData.mFontTextureData.mPath.empty())
+    if(!mMaterialData.mFontData.mPath.empty())
     {
-        TextureData textureData = mMaterialData.mFontTextureData;
-        mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(textureData, true);
+        TextureData textureData;
+        textureData.mPath = mMaterialData.mFontData.mPath;
+        textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
+        textureData.mFontData = mMaterialData.mFontData;
+        mTextures[(u32)TextureType::BASE_COLOR] = Ptr<const Texture>::cast(GET_SYSTEM(MaterialManager).loadTextureFont(textureData));
     }
 }
 

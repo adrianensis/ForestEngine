@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/BasicTypes.hpp"
-#include "Core/Object/ObjectBase.hpp"
 
 class ImageData
 {

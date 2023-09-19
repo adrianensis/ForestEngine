@@ -21,3 +21,4 @@
 #include "Core/Input/Input.hpp"
 #include "Core/Profiler/Profiler.hpp"
 #include "Core/Image/ImageUtils.hpp"
+#include "Core/Font/Font.hpp"

@@ -3,7 +3,6 @@
 #include "Core/Module.hpp"
 
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Material/Texture.hpp"
 
 class MaterialManager: public EngineSystem
 {
@@ -13,7 +12,8 @@ public:
     ~MaterialManager() override;
     
     void init();
-    Ptr<const Texture> loadTexture(const TextureData& textureData, bool isFont);
+    Ptr<const Texture> loadTexture(const TextureData& textureData);
+    Ptr<const TextureFont> loadTextureFont(const TextureData& textureData);
     Ptr<const Material> createMaterial(const MaterialData& materialData);
     Ptr<const MaterialFont> createMaterialFont(const MaterialData& materialData);
     Ptr<const Material> getMaterial(u32 index) const;

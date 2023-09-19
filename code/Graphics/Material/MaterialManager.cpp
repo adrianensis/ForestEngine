@@ -29,26 +29,32 @@ void MaterialManager::init()
 	mMaterialIDCounter++;
 }
 
-Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData, bool isFont)
+Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)
 {
 	if (!MAP_CONTAINS(mTexturesMap, textureData.mPath))
 	{
-        if(isFont)
-        {
-            OwnerPtr<TextureFont> texture = OwnerPtr<TextureFont>::newObject();
-		    MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
-        }
-        else
-        {
-            OwnerPtr<TextureImage> texture = OwnerPtr<TextureImage>::newObject();
-		    MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
-        }
+        OwnerPtr<TextureImage> texture = OwnerPtr<TextureImage>::newObject();
+        MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
 		
-		Ptr<Texture> texture = mTexturesMap.at(textureData.mPath);
-        texture->init(textureData);
+		Ptr<Texture> texturePtr = mTexturesMap.at(textureData.mPath);
+        texturePtr->init(textureData);
 	}
 
 	return mTexturesMap.at(textureData.mPath);
+}
+
+Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textureData)
+{
+	if (!MAP_CONTAINS(mTexturesMap, textureData.mPath))
+	{
+        OwnerPtr<TextureFont> texture = OwnerPtr<TextureFont>::newObject();
+        MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
+		
+		Ptr<Texture> texturePtr = mTexturesMap.at(textureData.mPath);
+        texturePtr->init(textureData);
+	}
+
+	return Ptr<const TextureFont>::cast(mTexturesMap.at(textureData.mPath));
 }
 
 Ptr<const Material> MaterialManager::createMaterial(const MaterialData& materialData)
