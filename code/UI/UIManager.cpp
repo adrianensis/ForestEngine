@@ -19,20 +19,12 @@ void UIManager::terminate()
     mFontsManager.terminate();
 }
 
-Vector2 UIManager::getCharTextureCoordinates(char character)
+Rectangle UIManager::getGlyphTextureRegion(char character)
 {
     const auto& f = mFontsManager.loadFont(Paths::mResources + "fonts/Arial.ttf");
     const auto& g = f->getFontMaterial()->getMaterialData().mFontData.mGlyphs;
     const FontGlyphData& glyph = g.at(character);
-    return Vector2(glyph.xOffset, 0);
-}
-
-Vector2 UIManager::getFontTileTextureSize(char character)
-{
-    const auto& f = mFontsManager.loadFont(Paths::mResources + "fonts/Arial.ttf");
-    const auto& g = f->getFontMaterial()->getMaterialData().mFontData.mGlyphs;
-    const FontGlyphData& glyph = g.at(character);
-    return glyph.mBitmapSize / Vector2(f->getFontData().mWidth, f->getFontData().mHeight);
+    return Rectangle(Vector2(glyph.xOffset, 0), glyph.mBitmapSize / Vector2(f->getFontData().mWidth, f->getFontData().mHeight));
 }
 
 Ptr<const MaterialFont> UIManager::getFontMaterial()

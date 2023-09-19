@@ -60,8 +60,6 @@ void UIText::setText(const std::string& text)
 			FOR_RANGE(i, 0, text.length())
 			{
 				char character = text.at(i);
-				Vector2 textureCoordinates = GET_SYSTEM(UIManager).getCharTextureCoordinates(character);
-				Vector2 textureSize = GET_SYSTEM(UIManager).getFontTileTextureSize(character);
 
                 RendererData rendererData;
                 rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
@@ -72,7 +70,8 @@ void UIText::setText(const std::string& text)
                 Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
                 renderer->mUseDepth = (true);
 	            renderer->setDepth(mLayer);
-				renderer->setTextureRegion(Rectangle(textureCoordinates, textureSize));
+				Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphTextureRegion(character);
+				renderer->setTextureRegion(textureRegion);
 
                 mFontRenderers.push_back(renderer);
 			}
