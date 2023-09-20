@@ -46,7 +46,8 @@ void UIButton::setText(const std::string& text)
 			UIBuilder uiBuilder;
 
 			mText = uiBuilder.
-			setPosition(Vector2(0, 0)).
+			setPosition(Vector2(-mConfig.mSize.x/2.0f, mConfig.mSize.y/2.0f)).
+			setSize(mConfig.mSize).
 			setText(text).
 			// setTextSize(mConfig.mTextSize).
 			setLayer(mConfig.mLayer + 1).

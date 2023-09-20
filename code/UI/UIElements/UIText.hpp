@@ -1,27 +1,25 @@
 #pragma once
 
-#include "UI/UIElements/UIElement.hpp"
-
+#include "UI/UIElements/UIPanel.hpp"
 
 class UIPanel;
 
-class UITextGlyph: public UIElement
+class UITextGlyph: public UIArea
 {
     GENERATE_METADATA(UITextGlyph)
 
 public:
-    void init() override;
     void initFromConfig(const UIElementConfig& config) override;
+
+private:
+    char mCharacter;
 };
 
-class UIText: public UIElement
+class UIText: public UIArea
 {
     GENERATE_METADATA(UIText)
 
 public:
-    UIText();
-
-    void init() override;
     void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
     void setText(const std::string& text) override;
@@ -30,7 +28,6 @@ public:
 protected:
     void setIsEditable(bool editable);
     virtual void setBackground(const UIElementConfig& config) { };
-
 private:
 	i32 mLayer = 0;
 	std::string mString;

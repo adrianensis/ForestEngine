@@ -119,6 +119,7 @@ protected:
 	virtual void onFocusLost() { }
 
     StencilData calculateStencilData() const;
+    virtual void calculateConfig() {};
 
 protected:
 	UIElementConfig mConfig;

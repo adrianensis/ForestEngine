@@ -62,12 +62,12 @@ void Editor::firstUpdate()
 	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	// importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 0);
-	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 0);
+	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
     
     // Vector3 pos(0,0,0);
     // FOR_RANGE(x, -10, 10)
@@ -117,7 +117,7 @@ void Editor::firstUpdate()
 	setPosition(Vector2(0,0)).
 	// setPosition(Vector2(-1,1)).
 	// setAdjustSizeToText(true).
-	setSize(Vector2(1, 0.05f));
+	setSize(Vector2(0.5, 0.05f));
 
     uiBuilder.
 	setText("ABCsdgwg").

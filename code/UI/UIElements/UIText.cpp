@@ -5,14 +5,13 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Transform.hpp"
 
-void UITextGlyph::init() 
-{
-	UIElement::init();
-}
-
 void UITextGlyph::initFromConfig(const UIElementConfig& config) 
 {
 	UIElement::initFromConfig(config);
+
+    CHECK_MSG(mConfig.mText.size() == 1, "UITextGlyph mConfig.mText must be 1 character only");
+
+    mCharacter = mConfig.mText.at(0);
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
 	mTransform->setScale(Vector3(mConfig.mSize, 1));
@@ -27,41 +26,19 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
     rendererData.mMaterial = Ptr<const Material>::cast(GET_SYSTEM(UIManager).getFontMaterial());
     rendererData.mStencilData = calculateStencilData();
-    // rendererData.mPositionOffset = Vector3(offset + (glyphSizeScreenSpace.x/2.0f), 0,1);
-    // rendererData.mScaleOffset = Vector3(glyphSizeScreenSpace,1);
-
-    // offset += glyphSizeScreenSpace.x;
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
     renderer->mUseDepth = (true);
     renderer->setDepth(mConfig.mLayer);
-    Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphTextureRegion('A');
+    Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphTextureRegion(mCharacter);
     renderer->setTextureRegion(textureRegion);
 
 	setComponentsCache();
 }
 
-UIText::UIText()
-{
-	mIsEditable = false;
-}
-
-void UIText::init() 
-{
-	UIElement::init();
-}
-
 void UIText::initFromConfig(const UIElementConfig& config) 
 {
-	UIElement::initFromConfig(config);
-
-	// mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->mAffectedByProjection = false;
-
-	if (mConfig.mParent)
-	{
-        mConfig.mParent->mTransform->addChild(mTransform);
-	}
+	UIArea::initFromConfig(config);
 
 	setLayer(mConfig.mLayer);
 
@@ -89,19 +66,19 @@ void UIText::setText(const std::string& text)
 
 		if (!text.empty())
 		{
-            f32 offset = 0;
+            f32 offset = -mConfig.mSize.x/2.0f;
 			FOR_RANGE(i, 0, text.length())
 			{
                 char character = text.at(i);
-                Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(mConfig.mText.at(i));
+                Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(character);
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
 
                 UIBuilder uiBuilder;
 
                 Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
-                setPosition(Vector2(offset + (glyphSizeScreenSpace.x/2.0f),0)).
+                setPosition(Vector2(offset,mConfig.mSize.y/2.0f)).
                 setSize(glyphSizeScreenSpace).
-                // setTextSize(mConfig.mTextSize).
+                setText(std::string() + character).
                 setLayer(mConfig.mLayer).
                 setIsStatic(false).
                 setIsAffectedByLayout(false).
@@ -110,6 +87,8 @@ void UIText::setText(const std::string& text)
                 getUIElement<UITextGlyph>();
 
                 mFontRenderers.push_back(gameObjectGlyph);
+
+                offset += glyphSizeScreenSpace.x;
 			}
 		}
 
@@ -121,7 +100,7 @@ void UIText::setText(const std::string& text)
 
 void UIText::setVisibility(bool visibility) 
 {
-	UIElement::setVisibility(visibility);
+	UIArea::setVisibility(visibility);
 
 	if(mBackground)
 	{

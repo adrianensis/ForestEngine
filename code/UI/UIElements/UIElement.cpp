@@ -11,6 +11,8 @@ void UIElement::initFromConfig(const UIElementConfig& config)
 {
 	mConfig = config;
     mIsStatic = mConfig.mIsStatic;
+
+    calculateConfig();
 }
 
 void UIElement::onDestroy()

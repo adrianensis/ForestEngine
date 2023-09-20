@@ -57,7 +57,7 @@ void UIBuilder::registerUIElement(Ptr<UIElement> uiElement)
 
 		mMakeRelativeToLastConfig = true;
 
-		mLastConfig = mConfig;
+		mLastConfig = uiElement->getConfig();
 	}
 }
 
@@ -95,27 +95,27 @@ void UIBuilder::calculateConfig()
 		mConfig.mPosition = mLastConfig.mPosition + offset;
 	}
 
-	mConfig.mDisplayPosition = mConfig.mPosition;
+// 	mConfig.mDisplayPosition = mConfig.mPosition;
 
-	if (mConfig.mAdjustSizeToText)
-	{
-        Vector2 textSize;
-        FOR_ARRAY(i, mConfig.mText)
-        {
-            Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(mConfig.mText.at(i));
-            textSize.x += glyphSize.x;
-            textSize.y = std::max(glyphSize.y, textSize.y);
-        }
+// 	if (mConfig.mAdjustSizeToText)
+// 	{
+//         Vector2 textSize;
+//         FOR_ARRAY(i, mConfig.mText)
+//         {
+//             Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(mConfig.mText.at(i));
+//             textSize.x += glyphSize.x;
+//             textSize.y = std::max(glyphSize.y, textSize.y);
+//         }
 
-		mConfig.mSize = textSize;
-		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);
-	}
-    else
-    {
-        mConfig.mDisplaySize = Vector3(mConfig.mSize, 1);
-    }
+// 		mConfig.mSize = textSize;
+// 		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);
+// 	}
+//     else
+//     {
+//         mConfig.mDisplaySize = Vector3(mConfig.mSize, 1);
+//     }
 
-    // translate to top left corner
-	mConfig.mDisplayPosition.x += mConfig.mDisplaySize.x / 2.0f;
-    mConfig.mDisplayPosition.y -= mConfig.mDisplaySize.y / 2.0f;
+//     // translate to top left corner
+// 	mConfig.mDisplayPosition.x += mConfig.mDisplaySize.x / 2.0f;
+//     mConfig.mDisplayPosition.y -= mConfig.mDisplaySize.y / 2.0f;
 }
