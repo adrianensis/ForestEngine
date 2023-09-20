@@ -41,7 +41,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
     // // set size to load glyphs as
     // FT_Set_Pixel_Sizes(mFreeTypeFace, 0, 48);
 
-    _error = FT_Set_Char_Size ( mFreeTypeFace, 24 * 64, 24 * 64, 72, 72);
+    _error = FT_Set_Char_Size ( mFreeTypeFace, 48 * 64, 48 * 64, 72, 72);
     CHECK_MSG(!_error, "Failed to set char size");
 
     // _error = FT_Set_Char_Size(

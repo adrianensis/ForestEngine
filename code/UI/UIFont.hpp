@@ -12,6 +12,7 @@ public:
     void init();
     void terminate();
     Ptr<UIFont> loadFont(const std::string& fontFile);
+    Ptr<UIFont> getFont(const std::string& fontFile) const;
 
 private:
     FontsLibrary mFontsLibrary;

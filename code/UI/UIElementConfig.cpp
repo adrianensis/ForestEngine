@@ -14,7 +14,7 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	mIsStatic = true;
 	mText = text;
 	mLayer = layer;
-	mTextSize = GET_SYSTEM(UIManager).getDefaultFontSize();
+	// mTextSize = GET_SYSTEM(UIManager).getDefaultFontSize();
 	mAdjustSizeToText = false;
 	mIsAffectedByLayout = true;
 	mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterialVertexColor();

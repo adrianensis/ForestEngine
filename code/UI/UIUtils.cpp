@@ -1,10 +1,18 @@
 #include "Graphics/Module.hpp"
 #include "UI/UIUtils.hpp"
 
-
 Vector2 UIUtils::correctAspectRatio_X(const Vector2& vector)
 {
 	Vector2 correctedVector = vector;
-	correctedVector.x = correctedVector.x / GET_SYSTEM(Window).getAspectRatio();
+    f32 aspectRation = GET_SYSTEM(Window).getAspectRatio();
+	correctedVector.x = correctedVector.x / aspectRation;
+	return correctedVector;
+}
+
+Vector2 UIUtils::toScreenSpace(const Vector2& vector)
+{
+	Vector2 correctedVector = vector;
+    Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
+	correctedVector = correctedVector / windowSize;
 	return correctedVector;
 }

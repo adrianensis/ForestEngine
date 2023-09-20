@@ -25,6 +25,11 @@ Ptr<UIFont> UIFontsManager::loadFont(const std::string& fontFile)
     return mFontsMap.at(fontFile);
 }
 
+Ptr<UIFont> UIFontsManager::getFont(const std::string& fontFile) const
+{
+    return mFontsMap.at(fontFile);
+}
+
 void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
 {
     mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile);

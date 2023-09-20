@@ -25,10 +25,11 @@ public:
 	const UIStyle* mStyle = nullptr;
 	ClassId mUIElementClassId;
 	Vector2 mPosition;
-	Vector2 mDisplayPosition;
 	Vector2 mSize;
+	Vector2 mDisplayPosition;
+	Vector2 mDisplaySize;
 	bool mIsStatic = true;
-	Vector2 mTextSize;
+	// Vector2 mTextSize;
 	std::string mText;
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;

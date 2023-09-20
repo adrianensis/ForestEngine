@@ -17,8 +17,9 @@ public:
     void init();
     void terminate();
 
-    Rectangle getGlyphTextureRegion(char character);
-    Ptr<const MaterialFont> getFontMaterial();
+    Rectangle getGlyphTextureRegion(char character) const;
+    Vector2 getGlyphSize(char character) const;
+    Ptr<const MaterialFont> getFontMaterial() const;
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)
 	{
@@ -39,10 +40,7 @@ public:
 
 private:
 	std::unordered_map<std::string, OwnerPtr<UIGroup>> mGroups;
-	Vector2 mDefaultFontSize = Vector2(0.04f, 0.04f);
 	Ptr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
-
-public:
-    CRGET(DefaultFontSize)
+    std::string mDefaultFont;
 };
