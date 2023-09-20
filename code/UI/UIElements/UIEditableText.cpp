@@ -23,7 +23,7 @@ void UIEditableText::setBackground(const UIElementConfig& config)
     UIBuilder uiBuilder;
 
     mBackground = uiBuilder.
-        setPosition(mTransform->getWorldPosition() + Vector2(-config.mTextSize.x/GET_SYSTEM(Window).getAspectRatio(), config.mTextSize.y/2.0f)).
+        // setPosition(mTransform->getWorldPosition() + Vector2(-config.mTextSize.x/GET_SYSTEM(Window).getAspectRatio(), config.mTextSize.y/2.0f)).
         setLayer(mConfig.mLayer).
         setIsAffectedByLayout(false).
         // setStencilData(StencilData{0x3, GL_NOTEQUAL, true}).
