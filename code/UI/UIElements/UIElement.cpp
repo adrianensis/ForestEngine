@@ -61,26 +61,18 @@ bool UIElement::isMouseCursorInsideElement() const
 		mousePosition = GET_SYSTEM(RenderEngine).mCamera->screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}
 
-    Vector2 correctedSize = UIUtils::correctAspectRatio_X(getSize());
-
     // GET_SYSTEM(RenderEngine).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);
 
 	return Geometry::testCubePoint(
-		Rectangle(getLeftTopPosition(), correctedSize),
+		Rectangle(getLeftTopPosition(), mConfig.mDisplaySize),
 		mousePosition, 0);
-}
-
-Vector2 UIElement::getSize() const
-{
-    return mConfig.mSize;
 }
 
 Vector3 UIElement::getLeftTopPosition() const
 {
     Vector3 position = mTransform->getWorldPosition();
-    Vector2 correctedSize = UIUtils::correctAspectRatio_X(getSize());
-    position.x = position.x - (correctedSize.x / 2.0f);
-    position.y = position.y + (correctedSize.y / 2.0f);
+    position.x = position.x - (mConfig.mDisplaySize.x / 2.0f);
+    position.y = position.y + (mConfig.mDisplaySize.y / 2.0f);
 
     return position;
 }
