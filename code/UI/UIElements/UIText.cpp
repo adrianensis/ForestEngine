@@ -5,6 +5,41 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Transform.hpp"
 
+void UITextGlyph::init() 
+{
+	UIElement::init();
+}
+
+void UITextGlyph::initFromConfig(const UIElementConfig& config) 
+{
+	UIElement::initFromConfig(config);
+
+	mTransform->setLocalPosition(mConfig.mDisplayPosition);
+	mTransform->setScale(Vector3(mConfig.mSize, 1));
+	mTransform->mAffectedByProjection = false;
+
+	if (mConfig.mParent)
+	{
+        mConfig.mParent->mTransform->addChild(mTransform);
+	}
+
+    RendererData rendererData;
+    rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+    rendererData.mMaterial = Ptr<const Material>::cast(GET_SYSTEM(UIManager).getFontMaterial());
+    rendererData.mStencilData = calculateStencilData();
+    // rendererData.mPositionOffset = Vector3(offset + (glyphSizeScreenSpace.x/2.0f), 0,1);
+    // rendererData.mScaleOffset = Vector3(glyphSizeScreenSpace,1);
+
+    // offset += glyphSizeScreenSpace.x;
+
+    Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
+    renderer->mUseDepth = (true);
+    renderer->setDepth(mConfig.mLayer);
+    Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphTextureRegion('A');
+    renderer->setTextureRegion(textureRegion);
+
+	setComponentsCache();
+}
 
 UIText::UIText()
 {
@@ -20,10 +55,7 @@ void UIText::initFromConfig(const UIElementConfig& config)
 {
 	UIElement::initFromConfig(config);
 
-	Vector3 textSize = Vector3(UIUtils::correctAspectRatio_X(mConfig.mTextSize), 1);
-
-	mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->setScale(textSize);
+	// mTransform->setLocalPosition(mConfig.mDisplayPosition);
 	mTransform->mAffectedByProjection = false;
 
 	if (mConfig.mParent)
@@ -51,29 +83,33 @@ void UIText::setText(const std::string& text)
 	{
 		FOR_LIST(it, mFontRenderers)
         {
-            removeComponent(*it);
+            mScene->removeGameObject(Ptr<GameObject>::cast(*it));
         }
         mFontRenderers.clear();
 
 		if (!text.empty())
 		{
+            f32 offset = 0;
 			FOR_RANGE(i, 0, text.length())
 			{
-				char character = text.at(i);
+                char character = text.at(i);
+                Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(mConfig.mText.at(i));
+                Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
 
-                RendererData rendererData;
-                rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-                rendererData.mMaterial = Ptr<const Material>::cast(GET_SYSTEM(UIManager).getFontMaterial());
-                rendererData.mStencilData = calculateStencilData();
-				rendererData.mPositionOffset = (Vector3(((i* mConfig.mTextSize.x + (mConfig.mTextSize.x/2.0f)) - (mConfig.mTextSize.x * mConfig.mText.length() / 2.0f)) / GET_SYSTEM(Window).getAspectRatio(), 0, 0));
-                
-                Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
-                renderer->mUseDepth = (true);
-	            renderer->setDepth(mLayer);
-				Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphTextureRegion(character);
-				renderer->setTextureRegion(textureRegion);
+                UIBuilder uiBuilder;
 
-                mFontRenderers.push_back(renderer);
+                Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
+                setPosition(Vector2(offset + (glyphSizeScreenSpace.x/2.0f),0)).
+                setSize(glyphSizeScreenSpace).
+                // setTextSize(mConfig.mTextSize).
+                setLayer(mConfig.mLayer).
+                setIsStatic(false).
+                setIsAffectedByLayout(false).
+                setParent(Ptr<GameObject>::cast(getPtrToThis())).
+                create<UITextGlyph>().
+                getUIElement<UITextGlyph>();
+
+                mFontRenderers.push_back(gameObjectGlyph);
 			}
 		}
 

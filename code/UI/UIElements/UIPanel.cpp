@@ -9,17 +9,13 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 {
     UIElement::initFromConfig(config);
 
-    Vector3 size = mConfig.mSize;
-    size.z = 1;
-    size.x = size.x / GET_SYSTEM(Window).getAspectRatio();
-
     if(mConfig.mParent)
     {
         mConfig.mParent->mTransform->addChild(mTransform);
     }
 
     mTransform->setLocalPosition(mConfig.mDisplayPosition);
-    mTransform->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize)));
+    mTransform->setScale(Vector3(mConfig.mDisplaySize, 1));
     mTransform->mAffectedByProjection = false;
 
     RendererData rendererData;

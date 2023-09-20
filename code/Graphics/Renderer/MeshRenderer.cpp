@@ -51,16 +51,7 @@ bool MeshRenderer::getIsWorldSpace() const
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    if(mComponentData.mPositionOffset == Vector3(0,0,0))
-    {
-        mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
-    }
-    else
-    {
-        mRendererModelMatrix.translation(mComponentData.mPositionOffset);
-        mRendererModelMatrix.mul(mGameObject->mTransform->calculateModelMatrix());
-    }
-
+    mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
     IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
 }
 

@@ -37,7 +37,6 @@ public:
     bool mIsInstanced = false;
     Ptr<const Mesh> mMesh;
     Ptr<const Material> mMaterial;
-    Vector3 mPositionOffset;
 };
 
 class MeshRenderer: public ComponentWithData<RendererData>, public IOcTreeElement

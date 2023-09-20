@@ -5,6 +5,15 @@
 
 class UIPanel;
 
+class UITextGlyph: public UIElement
+{
+    GENERATE_METADATA(UITextGlyph)
+
+public:
+    void init() override;
+    void initFromConfig(const UIElementConfig& config) override;
+};
+
 class UIText: public UIElement
 {
     GENERATE_METADATA(UIText)
@@ -25,7 +34,7 @@ protected:
 private:
 	i32 mLayer = 0;
 	std::string mString;
-	std::vector<Ptr<MeshRenderer>> mFontRenderers;
+	std::vector<Ptr<UITextGlyph>> mFontRenderers;
     bool mIsEditable = false;
 
 protected:

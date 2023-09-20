@@ -89,12 +89,6 @@ Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 
 void UIBuilder::calculateConfig()
 {
-	if (mConfig.mAdjustSizeToText)
-	{
-		mConfig.mSize.x = (mConfig.mTextSize.x* mConfig.mText.length());
-		mConfig.mSize.y = mConfig.mTextSize.y;
-	}
-
 	if (mConfig.mIsAffectedByLayout and mMakeRelativeToLastConfig)
 	{
 		Vector2 offset = calculateNextElementOffset(mNewRowOrColumn ? getOppositeLayout(mCurrentLayout) : mCurrentLayout);
@@ -103,6 +97,25 @@ void UIBuilder::calculateConfig()
 
 	mConfig.mDisplayPosition = mConfig.mPosition;
 
-	mConfig.mDisplayPosition.x += (mConfig.mSize.x/GET_SYSTEM(Window).getAspectRatio()) / 2.0f;
-    mConfig.mDisplayPosition.y -= mConfig.mSize.y / 2.0f;
+	if (mConfig.mAdjustSizeToText)
+	{
+        Vector2 textSize;
+        FOR_ARRAY(i, mConfig.mText)
+        {
+            Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(mConfig.mText.at(i));
+            textSize.x += glyphSize.x;
+            textSize.y = std::max(glyphSize.y, textSize.y);
+        }
+
+		mConfig.mSize = textSize;
+		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);
+	}
+    else
+    {
+        mConfig.mDisplaySize = Vector3(mConfig.mSize, 1);
+    }
+
+    // translate to top left corner
+	mConfig.mDisplayPosition.x += mConfig.mDisplaySize.x / 2.0f;
+    mConfig.mDisplayPosition.y -= mConfig.mDisplaySize.y / 2.0f;
 }

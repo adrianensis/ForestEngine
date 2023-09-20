@@ -57,17 +57,17 @@ void Editor::firstUpdate()
 	}
 
 	// importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
-	gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
+	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
+	// importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
+	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 0);
-	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 0);
+	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
     
     // Vector3 pos(0,0,0);
     // FOR_RANGE(x, -10, 10)
@@ -114,173 +114,180 @@ void Editor::firstUpdate()
 	UIBuilder uiBuilder;
 
 	uiBuilder.
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5f, 0.05f));
-
-	uiBuilder.
-	setText("File").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("New", [&](UIElement *uiElement)
-	{
-
-	}).
-	addOption("Open", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Save", [&](UIElement *uiElement)
-	{
-	});
-
-	uiBuilder.
-	setText("Sprites").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
-
-	uiBuilder.
-	setText("Edit").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
-
-	uiBuilder.
-	setText("View").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("Grid", [&](UIElement *uiElement)
-	{
-
-	}).
-	addOption("Colliders", [&](UIElement *uiElement)
-	{
-	});
+	setPosition(Vector2(0,0)).
+	// setPosition(Vector2(-1,1)).
+	// setAdjustSizeToText(true).
+	setSize(Vector2(1, 0.05f));
 
     uiBuilder.
-	setText("abcd").
-	create<UIEditableText>();
+	setText("ABCsdgwg").
+	// setText("ABC").
+	create<UIButton>();
 
-	uiBuilder.restoreAll();
 
-	uiBuilder.
-	setLayout(UILayout::HORIZONTAL).
-	setPosition(Vector2(-1,0.5f)).
-	setAdjustSizeToText(false).
-	setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
-	setGroup("toggleButtons").
-	setSize(Vector2(0.1f, 0.1f));
+	// uiBuilder.
+	// setText("File").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("New", [&](UIElement *uiElement)
+	// {
 
-    MaterialData materialData;
-    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/EventPoint.png";
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// }).
+	// addOption("Open", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Save", [&](UIElement *uiElement)
+	// {
+	// });
 
-	uiBuilder.
-	getUIElement<UIToggleButton>()->simulateClick();
+	// uiBuilder.
+	// setText("Sprites").
+	// create<UIButton>().
+	// getUIElement<UIButton>()->
+	// setOnPressedCallback([&, this](UIElement *uiElement){
+	// });
 
-    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/PlayerStart.png";
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// uiBuilder.
+	// setText("Edit").
+	// create<UIButton>().
+	// getUIElement<UIButton>()->
+	// setOnPressedCallback([&, this](UIElement *uiElement){
+	// });
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.
+	// setText("View").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("Grid", [&](UIElement *uiElement)
+	// {
 
-    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/SpawnPoint.png";
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+	// }).
+	// addOption("Colliders", [&](UIElement *uiElement)
+	// {
+	// });
 
-    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/WayPoint.png";
-	uiBuilder.
-	setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	create<UIToggleButton>().
-	getUIElement<UIToggleButton>()->
-	setOnPressedCallback([&](UIElement* uiElement){
-	});
+    // uiBuilder.
+	// setText("abcd").
+	// create<UIEditableText>();
 
-	uiBuilder.
-	nextRow();
+	// uiBuilder.restoreAll();
 
-	uiBuilder.restoreMaterial();
-	uiBuilder.restoreStyle();
-	uiBuilder.restoreGroup();
+	// uiBuilder.
+	// setLayout(UILayout::HORIZONTAL).
+	// setPosition(Vector2(-1,0.5f)).
+	// setAdjustSizeToText(false).
+	// setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
+	// setGroup("toggleButtons").
+	// setSize(Vector2(0.1f, 0.1f));
 
-	uiBuilder.
-	setText("Test Button").
-	setAdjustSizeToText(true).
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("Option1", [&](UIElement *uiElement)
-	{
+    // MaterialData materialData;
+    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/EventPoint.png";
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	}).
-	addOption("Option2", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Option3", [&](UIElement *uiElement)
-	{
-	});
+	// uiBuilder.
+	// getUIElement<UIToggleButton>()->simulateClick();
 
-	uiBuilder.
-	nextRow();
+    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/PlayerStart.png";
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	setText("Test Button").
-	setAdjustSizeToText(false).
-	setSize(Vector2(0.1f, 0.3f)).
-	create<UIList>().
-	getUIElement<UIList>()->
-	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
-	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
-	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	toggle();
+	// uiBuilder.
+	// nextRow();
 
-	uiBuilder.
-	setText("Test Button").
-	setAdjustSizeToText(false).
-	setSize(Vector2(0.1f, 0.3f)).
-	create<UIList>().
-	getUIElement<UIList>()->
-	addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
-	addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
-	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	toggle();
+    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/SpawnPoint.png";
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5f, 0.05f));
+    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/WayPoint.png";
+	// uiBuilder.
+	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
+	// create<UIToggleButton>().
+	// getUIElement<UIToggleButton>()->
+	// setOnPressedCallback([&](UIElement* uiElement){
+	// });
 
-	uiBuilder.
-	setText("Sprites").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
+	// uiBuilder.
+	// nextRow();
 
-    uiBuilder.
-	nextRow();
+	// uiBuilder.restoreMaterial();
+	// uiBuilder.restoreStyle();
+	// uiBuilder.restoreGroup();
 
-    uiBuilder.
-	setText("Edit").
-	create<UIEditableText>();
+	// uiBuilder.
+	// setText("Test Button").
+	// setAdjustSizeToText(true).
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("Option1", [&](UIElement *uiElement)
+	// {
+
+	// }).
+	// addOption("Option2", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Option3", [&](UIElement *uiElement)
+	// {
+	// });
+
+	// uiBuilder.
+	// nextRow();
+
+	// uiBuilder.
+	// setText("Test Button").
+	// setAdjustSizeToText(false).
+	// setSize(Vector2(0.1f, 0.3f)).
+	// create<UIList>().
+	// getUIElement<UIList>()->
+	// addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	// addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	// toggle();
+
+	// uiBuilder.
+	// setText("Test Button").
+	// setAdjustSizeToText(false).
+	// setSize(Vector2(0.1f, 0.3f)).
+	// create<UIList>().
+	// getUIElement<UIList>()->
+	// addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
+	// addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
+	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
+	// toggle();
+
+	// uiBuilder.
+	// setPosition(Vector2(-1,1)).
+	// setAdjustSizeToText(true).
+	// setSize(Vector2(0.5f, 0.05f));
+
+	// uiBuilder.
+	// setText("Sprites").
+	// create<UIButton>().
+	// getUIElement<UIButton>()->
+	// setOnPressedCallback([&, this](UIElement *uiElement){
+	// });
+
+    // uiBuilder.
+	// nextRow();
+
+    // uiBuilder.
+	// setText("Edit").
+	// create<UIEditableText>();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->getCameraGameObject();
 }
@@ -313,7 +320,7 @@ void Editor::update()
 
 	f32 speed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
-    gameObject->mTransform->translate(Vector3(0,0,-0.5));
+    //gameObject->mTransform->translate(Vector3(0,0,-0.5));
 
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
