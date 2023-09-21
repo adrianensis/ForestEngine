@@ -7,20 +7,11 @@
 
 void UITextGlyph::initFromConfig(const UIElementConfig& config) 
 {
-	UIElement::initFromConfig(config);
+	UIArea::initFromConfig(config);
 
     CHECK_MSG(mConfig.mText.size() == 1, "UITextGlyph mConfig.mText must be 1 character only");
 
     mCharacter = mConfig.mText.at(0);
-
-	mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->setScale(Vector3(mConfig.mSize, 1));
-	mTransform->mAffectedByProjection = false;
-
-	if (mConfig.mParent)
-	{
-        mConfig.mParent->mTransform->addChild(mTransform);
-	}
 
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
@@ -51,7 +42,12 @@ void UIText::initFromConfig(const UIElementConfig& config)
 
 void UIText::onDestroy() 
 {
-	UIElement::onDestroy();
+	UIArea::onDestroy();
+
+    FOR_LIST(it, mFontRenderers)
+    {
+        mScene->removeGameObject(Ptr<GameObject>::cast(*it));
+    }
 }
 
 void UIText::setText(const std::string& text) 
@@ -66,7 +62,7 @@ void UIText::setText(const std::string& text)
 
 		if (!text.empty())
 		{
-            f32 offset = -mConfig.mSize.x/2.0f;
+            f32 offset = -mConfig.mDisplaySize.x/2.0f;
 			FOR_RANGE(i, 0, text.length())
 			{
                 char character = text.at(i);
@@ -76,7 +72,7 @@ void UIText::setText(const std::string& text)
                 UIBuilder uiBuilder;
 
                 Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
-                setPosition(Vector2(offset,mConfig.mSize.y/2.0f)).
+                setPosition(Vector2(offset,mConfig.mDisplaySize.y/2.0f)).
                 setSize(glyphSizeScreenSpace).
                 setText(std::string() + character).
                 setLayer(mConfig.mLayer).
@@ -101,6 +97,11 @@ void UIText::setText(const std::string& text)
 void UIText::setVisibility(bool visibility) 
 {
 	UIArea::setVisibility(visibility);
+
+    FOR_LIST(it, mFontRenderers)
+    {
+        (*it)->setVisibility(visibility);
+    }
 
 	if(mBackground)
 	{

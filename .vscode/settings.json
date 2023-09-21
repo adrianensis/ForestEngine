@@ -83,5 +83,6 @@
         "typeindex": "cpp"
     },
 
-    "C_Cpp.intelliSenseEngine" : "default"
+    "C_Cpp.intelliSenseEngine": "default",
+    "cmake.configureOnOpen": false
 }

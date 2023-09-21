@@ -114,63 +114,67 @@ void Editor::firstUpdate()
 	UIBuilder uiBuilder;
 
 	uiBuilder.
-	setPosition(Vector2(0,0)).
-	// setPosition(Vector2(-1,1)).
-	// setAdjustSizeToText(true).
+	// setPosition(Vector2(0,0)).
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
 	setSize(Vector2(0.5, 0.05f));
 
-    uiBuilder.
-	setText("ABCsdgwg").
-	// setText("ABC").
-	create<UIButton>();
-
-
-	// uiBuilder.
-	// setText("File").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("New", [&](UIElement *uiElement)
-	// {
-
-	// }).
-	// addOption("Open", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Save", [&](UIElement *uiElement)
-	// {
-	// });
-
-	// uiBuilder.
-	// setText("Sprites").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
-
-	// uiBuilder.
-	// setText("Edit").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
-
-	// uiBuilder.
-	// setText("View").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Grid", [&](UIElement *uiElement)
-	// {
-
-	// }).
-	// addOption("Colliders", [&](UIElement *uiElement)
-	// {
-	// });
-
     // uiBuilder.
-	// setText("abcd").
-	// create<UIEditableText>();
+	// setText("ABC").
+	// // setText("ABC").
+	// create<UIButton>();
+    // uiBuilder.
+	// setText("DEF").
+	// // setText("ABC").
+	// create<UIButton>();
 
-	// uiBuilder.restoreAll();
+
+	uiBuilder.
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("New", [&](UIElement *uiElement)
+	{
+
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
+
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
+
+	uiBuilder.
+	setText("Edit").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
+
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Grid", [&](UIElement *uiElement)
+	{
+
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
+
+    uiBuilder.
+	setText("abcd").
+	create<UIEditableText>();
+
+	uiBuilder.restoreAll();
 
 	// uiBuilder.
 	// setLayout(UILayout::HORIZONTAL).

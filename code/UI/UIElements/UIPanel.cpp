@@ -3,6 +3,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"
+#include "UI/UIManager.hpp"
 #include "UI/UIStyle.hpp"
 
 void UIArea::initFromConfig(const UIElementConfig& config) 
@@ -21,8 +22,23 @@ void UIArea::initFromConfig(const UIElementConfig& config)
 
 void UIArea::calculateConfig()
 {
-    mConfig.mDisplayPosition = Vector3(mConfig.mPosition, 1);
-    mConfig.mDisplaySize = Vector3(mConfig.mSize, 1);
+    mConfig.mDisplayPosition = mConfig.mPosition;
+    mConfig.mDisplaySize = mConfig.mSize;
+
+	if (mConfig.mAdjustSizeToText)
+	{
+        Vector2 textSize;
+        FOR_ARRAY(i, mConfig.mText)
+        {
+            char character = mConfig.mText.at(i);
+            Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(character);
+            textSize.x += glyphSize.x;
+            textSize.y = std::max(glyphSize.y, textSize.y);
+        }
+
+		mConfig.mSize = textSize;
+		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);
+	}
 
     // translate to top left corner
 	mConfig.mDisplayPosition.x += mConfig.mDisplaySize.x / 2.0f;
