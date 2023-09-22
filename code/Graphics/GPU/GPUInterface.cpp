@@ -88,8 +88,8 @@ void GPUInterface::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW
 
 void GPUInterface::resizeUBOAnyType(u32 UBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, UBO);
-	glBufferData(GL_ARRAY_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
+	glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+	glBufferData(GL_UNIFORM_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
 }
 
 void GPUInterface::setDataVBO(u32 VBO, const std::vector<f32>& data)
