@@ -50,15 +50,8 @@ public:
     const Matrix4& getScaleMatrix() const;
     const Matrix4& calculateModelMatrix() const;
 
-	void translate(const Vector3& vector)
-	{
-		setLocalPosition(mLocalPosition.add(vector));
-	}
-
-	void rotate(const Vector3& vector)
-	{
-		setRotation(mRotation.add(vector));
-	}
+	void translate(const Vector3& vector);
+	void rotate(const Vector3& vector);
 
     void setLocalPosition(const Vector3& vec);
 	void setRotation(const Vector3& vec);

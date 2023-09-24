@@ -130,6 +130,16 @@ void Transform::notifyModelMatrixDirty()
     }
 }
 
+void Transform::translate(const Vector3& vector)
+{
+    setLocalPosition(mLocalPosition.add(vector));
+}
+
+void Transform::rotate(const Vector3& vector)
+{
+    setRotation(mRotation.add(vector));
+}
+
 void Transform::setLocalPosition(const Vector3& vec)
 {
     mLocalPosition = vec;
