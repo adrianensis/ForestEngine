@@ -391,7 +391,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
-	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setPosition(v);
 	gameObject->mTransform->setScale(Vector3(size,size,size));
 
     RendererData rendererData;
@@ -412,7 +412,7 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
 
     Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = true;
-	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setPosition(v);
 	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
 	gameObject->mTransform->setRotation(Vector3(0,rot,0));
 
@@ -430,7 +430,7 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
-	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setPosition(v);
 	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
 	gameObject->mTransform->setRotation(Vector3(0,rot,0));
 

@@ -15,9 +15,10 @@ void UIArea::initFromConfig(const UIElementConfig& config)
         mConfig.mParent->mTransform->addChild(mTransform);
     }
 
-    mTransform->setLocalPosition(mConfig.mDisplayPosition);
+    mTransform->setPosition(mConfig.mDisplayPosition);
     mTransform->setScale(Vector3(mConfig.mDisplaySize, 1));
     mTransform->mAffectedByProjection = false;
+    mTransform->mIgnoreParentScale = true;
 }
 
 void UIArea::calculateConfig()

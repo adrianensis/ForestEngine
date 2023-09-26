@@ -31,7 +31,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 {
 	UIElement::initFromConfig(config);
 
-	mTransform->setLocalPosition(mConfig.mDisplayPosition);
+	mTransform->setPosition(mConfig.mDisplayPosition);
 	mTransform->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform->mAffectedByProjection = (false);
 

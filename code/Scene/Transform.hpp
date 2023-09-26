@@ -43,7 +43,9 @@ public:
 	static const Vector3 smForward;
     void init() override;
     void onDestroy() override;
-    const Vector3& getWorldPosition() const;
+    Vector3 getWorldPosition() const;
+    Vector3 getWorldScale() const;
+    Vector3 getWorldRotation() const;
     void lookAt(const Vector3& targetPosition);
     const Matrix4& getTranslationMatrix() const;
     const Matrix4& getRotationMatrix() const;
@@ -53,7 +55,7 @@ public:
 	void translate(const Vector3& vector);
 	void rotate(const Vector3& vector);
 
-    void setLocalPosition(const Vector3& vec);
+    void setPosition(const Vector3& vec);
 	void setRotation(const Vector3& vec);
 	void setScale(const Vector3& vec);
 
@@ -73,7 +75,6 @@ private:
 	Vector3 mRotation = Vector3(0,0,0);
 	Vector3 mScale = Vector3(1,1,1);
 
-	mutable Vector3 mWorldPosition = Vector3(0,0,0);
 	mutable Matrix4 mModelMatrix;
 	mutable Matrix4 mTranslationMatrix;
 	mutable Matrix4 mRotationMatrix;
@@ -81,10 +82,12 @@ private:
 
 public:
 	bool mAffectedByProjection = true;
+    bool mIgnoreParentScale = true;
 
 public:
     CRGET(LocalPosition)
     CRGET(Rotation)
     CRGET(Scale)
     GET(ModelMatrixDirty)
+    GET_SET(IgnoreParentScale)
 };

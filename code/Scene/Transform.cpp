@@ -22,7 +22,6 @@ void Transform::init()
 	mRotationMatrix.identity();
 	mScaleMatrix.identity();
 
-	mWorldPosition = Vector3(0.0f, 0.0f, 0.0f);
 	mLocalPosition = Vector3(0.0f, 0.0f, 0.0f);
 	mRotation = Vector3(0.0f, 0.0f, 0.0f);
 	mScale = Vector3(1.0f, 1.0f, 1.0f);
@@ -38,18 +37,46 @@ void Transform::onDestroy()
     }
 }
 
-const Vector3& Transform::getWorldPosition() const
+Vector3 Transform::getWorldPosition() const
 {
-	mWorldPosition = mLocalPosition;
-
+	Vector3 worldPosition = mLocalPosition;
 	if (mParent)
 	{
-		mWorldPosition.add(mParent->getWorldPosition());
-		Matrix4 rotationMatrix = mParent->getRotationMatrix();
-		mWorldPosition = Vector3(rotationMatrix.mulVector(Vector4(mWorldPosition, 1.0f)));
+        const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+		// worldPosition.add(mParent->getWorldPosition());
+		// Matrix4 rotationMatrix = mParent->getRotationMatrix();
+		// worldPosition = Vector3(rotationMatrix.mulVector(Vector4(worldPosition, 1.0f)));
+        worldPosition = parentModelMatrix.mulVector(Vector4(worldPosition, 1.0f));
 	}
 
-	return mWorldPosition;
+	return worldPosition;
+}
+
+Vector3 Transform::getWorldScale() const
+{
+	Vector3 worldScale = mScale;
+    if(!mIgnoreParentScale)
+    {
+        if (mParent)
+        {
+            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            worldScale = parentModelMatrix.mulVector(Vector4(worldScale, 1.0f));
+        }
+    }
+
+	return worldScale;
+}
+
+Vector3 Transform::getWorldRotation() const
+{
+	Vector3 worldRotation = mRotation;
+	if (mParent)
+	{
+        const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+        worldRotation = parentModelMatrix.mulVector(Vector4(worldRotation, 1.0f));
+	}
+
+	return worldRotation;
 }
 
 void Transform::lookAt(const Vector3& targetPosition)
@@ -79,7 +106,7 @@ const Matrix4& Transform::getTranslationMatrix() const
 {
     if(mModelMatrixDirty)
     {
-	    mTranslationMatrix.translation(getWorldPosition());
+	    mTranslationMatrix.translation(mLocalPosition);
     }
 	return mTranslationMatrix;
 }
@@ -112,8 +139,24 @@ const Matrix4& Transform::calculateModelMatrix() const
         Matrix4 rotationMatrix(getRotationMatrix());
         Matrix4 scaleMatrix(getScaleMatrix());
 
+        if(mIgnoreParentScale)
+        {
+            if (mParent)
+            {
+                Vector3 parentScale = mParent->getWorldScale();
+                scaleMatrix.scale(mScale/parentScale);
+            }
+        }
+
         rotationMatrix.mul(scaleMatrix);
         mModelMatrix.mul(rotationMatrix);
+
+        if (mParent)
+        {
+            Matrix4 parentModelMatrix = mParent->calculateModelMatrix();
+            parentModelMatrix.mul(mModelMatrix);
+            mModelMatrix = parentModelMatrix;
+        }
 
         mModelMatrixDirty = false;
     }
@@ -132,7 +175,7 @@ void Transform::notifyModelMatrixDirty()
 
 void Transform::translate(const Vector3& vector)
 {
-    setLocalPosition(mLocalPosition.add(vector));
+    setPosition(mLocalPosition.add(vector));
 }
 
 void Transform::rotate(const Vector3& vector)
@@ -140,7 +183,7 @@ void Transform::rotate(const Vector3& vector)
     setRotation(mRotation.add(vector));
 }
 
-void Transform::setLocalPosition(const Vector3& vec)
+void Transform::setPosition(const Vector3& vec)
 {
     mLocalPosition = vec;
     notifyModelMatrixDirty();
