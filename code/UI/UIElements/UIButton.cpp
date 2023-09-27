@@ -37,7 +37,7 @@ void UIButton::onLabelDestroy()
 	mText.invalidate();
 }
 
-void UIButton::setText(const std::string& text) 
+void UIButton::setText(const std::string& text)
 {
 	if (text.length() > 0)
 	{

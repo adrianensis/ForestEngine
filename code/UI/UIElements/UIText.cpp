@@ -75,7 +75,7 @@ void UIText::setText(const std::string& text)
                 setPosition(Vector2(offset,mConfig.mDisplaySize.y/2.0f)).
                 setSize(glyphSizeScreenSpace).
                 setText(std::string() + character).
-                setLayer(mConfig.mLayer).
+                setLayer(mConfig.mLayer + 1).
                 setIsStatic(false).
                 setIsAffectedByLayout(false).
                 setParent(Ptr<GameObject>::cast(getPtrToThis())).

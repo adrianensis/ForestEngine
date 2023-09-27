@@ -9,7 +9,7 @@ UIBuilder::UIBuilder()
 	mCurrentLayout = UILayout::HORIZONTAL;
 	mMakeRelativeToLastConfig = false;
 
-	mDefaultConfig.init(Vector2(0, 0), Vector2(0, 0), 0);
+	mDefaultConfig.init(Vector2(0,0), Vector2(1,1), 0);
 	mConfig = mDefaultConfig;
 }
 
