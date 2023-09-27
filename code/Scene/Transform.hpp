@@ -76,6 +76,7 @@ private:
 	Vector3 mScale = Vector3(1,1,1);
 
 	mutable Matrix4 mModelMatrix;
+	mutable Matrix4 mModelMatrixNoScale;
 	mutable Matrix4 mTranslationMatrix;
 	mutable Matrix4 mRotationMatrix;
 	mutable Matrix4 mScaleMatrix;
@@ -89,5 +90,6 @@ public:
     CRGET(Rotation)
     CRGET(Scale)
     GET(ModelMatrixDirty)
+    GET(ModelMatrixNoScale)
     GET_SET(IgnoreParentScale)
 };

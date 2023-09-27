@@ -43,9 +43,6 @@ Vector3 Transform::getWorldPosition() const
 	if (mParent)
 	{
         const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-		// worldPosition.add(mParent->getWorldPosition());
-		// Matrix4 rotationMatrix = mParent->getRotationMatrix();
-		// worldPosition = Vector3(rotationMatrix.mulVector(Vector4(worldPosition, 1.0f)));
         worldPosition = parentModelMatrix.mulVector(Vector4(worldPosition, 1.0f));
 	}
 
@@ -55,13 +52,10 @@ Vector3 Transform::getWorldPosition() const
 Vector3 Transform::getWorldScale() const
 {
 	Vector3 worldScale = mScale;
-    if(!mIgnoreParentScale)
+    if (mParent)
     {
-        if (mParent)
-        {
-            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            worldScale = parentModelMatrix.mulVector(Vector4(worldScale, 1.0f));
-        }
+        const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+        worldScale = parentModelMatrix.mulVector(Vector4(worldScale, 1.0f));
     }
 
 	return worldScale;
@@ -135,27 +129,29 @@ const Matrix4& Transform::calculateModelMatrix() const
 
     if(mModelMatrixDirty)
     {
-        mModelMatrix.init(getTranslationMatrix());
+        Matrix4 translationMatrix(getTranslationMatrix());
         Matrix4 rotationMatrix(getRotationMatrix());
         Matrix4 scaleMatrix(getScaleMatrix());
 
-        if(mIgnoreParentScale)
-        {
-            if (mParent)
-            {
-                Vector3 parentScale = mParent->getWorldScale();
-                scaleMatrix.scale(mScale/parentScale);
-            }
-        }
-
         rotationMatrix.mul(scaleMatrix);
-        mModelMatrix.mul(rotationMatrix);
+        translationMatrix.mul(rotationMatrix);
+        mModelMatrix.init(translationMatrix);
+
+        translationMatrix.init(getTranslationMatrix());
+        rotationMatrix.init(getRotationMatrix());
+
+        translationMatrix.mul(rotationMatrix);
+        mModelMatrixNoScale.init(translationMatrix);
 
         if (mParent)
         {
-            Matrix4 parentModelMatrix = mParent->calculateModelMatrix();
+            mParent->calculateModelMatrix();
+            Matrix4 parentModelMatrix = mParent->getModelMatrixNoScale();
+            Matrix4 parentModelMatrixNoScale = mParent->getModelMatrixNoScale();
             parentModelMatrix.mul(mModelMatrix);
             mModelMatrix = parentModelMatrix;
+            parentModelMatrixNoScale.mul(mModelMatrixNoScale);
+            mModelMatrixNoScale = parentModelMatrixNoScale;
         }
 
         mModelMatrixDirty = false;
