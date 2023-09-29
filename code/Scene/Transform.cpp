@@ -145,11 +145,15 @@ const Matrix4& Transform::calculateModelMatrix() const
 
         if (mParent)
         {
-            mParent->calculateModelMatrix();
-            Matrix4 parentModelMatrix = mParent->getModelMatrixNoScale();
-            Matrix4 parentModelMatrixNoScale = mParent->getModelMatrixNoScale();
+            Matrix4 parentModelMatrix = mParent->calculateModelMatrix();
+            if(mIgnoreParentScale)
+            {
+                parentModelMatrix = mParent->getModelMatrixNoScale();
+            }
             parentModelMatrix.mul(mModelMatrix);
             mModelMatrix = parentModelMatrix;
+            
+            Matrix4 parentModelMatrixNoScale = mParent->getModelMatrixNoScale();
             parentModelMatrixNoScale.mul(mModelMatrixNoScale);
             mModelMatrixNoScale = parentModelMatrixNoScale;
         }
