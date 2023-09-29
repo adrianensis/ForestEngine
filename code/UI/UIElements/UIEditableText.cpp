@@ -13,8 +13,6 @@ void UIEditableText::init()
 
 void UIEditableText::setBackground(const UIElementConfig& config) 
 {
-    UIText::setBackground(config);
-    
     if(mBackground)
     {
         mScene->removeGameObject(Ptr<GameObject>::cast(mBackground));
@@ -24,9 +22,12 @@ void UIEditableText::setBackground(const UIElementConfig& config)
 
     mBackground = uiBuilder.
         // setPosition(mTransform->getWorldPosition() + Vector2(-config.mTextSize.x/GET_SYSTEM(Window).getAspectRatio(), config.mTextSize.y/2.0f)).
+        setPosition(Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
+        setSize(mConfig.mDisplaySize).
         setLayer(mConfig.mLayer).
         setIsAffectedByLayout(false).
         // setStencilData(StencilData{0x3, GL_NOTEQUAL, true}).
+        setParent(Ptr<GameObject>::cast(getPtrToThis())).
         setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).
         create<UIPanel>().
         getUIElement<UIPanel>();
