@@ -44,6 +44,8 @@ void UIText::onDestroy()
 {
 	UIArea::onDestroy();
 
+    mScene->removeGameObject(Ptr<GameObject>::cast(mBackground));
+
     FOR_LIST(it, mFontRenderers)
     {
         mScene->removeGameObject(Ptr<GameObject>::cast(*it));

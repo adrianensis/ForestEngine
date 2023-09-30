@@ -126,13 +126,16 @@ void Scene::unloadScene()
 
 void Scene::addGameObject(OwnerPtr<GameObject>&& gameObject)
 {
-	gameObject->mScene = getPtrToThis();
-	mNewGameObjects.emplace_back(std::move(gameObject));
+    if(gameObject)
+    {
+        gameObject->mScene = getPtrToThis();
+        mNewGameObjects.emplace_back(std::move(gameObject));
+    }
 }
 
 void Scene::removeGameObject(Ptr<GameObject> gameObject)
 {
-	if (!gameObject->getIsDestroyed() and !gameObject->getIsPendingToBeDestroyed())
+	if (gameObject and !gameObject->getIsDestroyed() and !gameObject->getIsPendingToBeDestroyed())
 	{
         gameObject->destroy();
         gameObject->finallyDestroy();
