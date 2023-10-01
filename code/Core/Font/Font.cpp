@@ -68,10 +68,10 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
     FOR_RANGE(c, 0, charSetCount)
     {
         _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
-        CHECK_MSG(!_error, "Failed to load Glyph: " + c);
+        CHECK_MSG(!_error, "Failed to load Glyph: " + std::to_string(c));
 
         _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);
-        CHECK_MSG(!_error, "Failed to render Glyph: " + c);
+        CHECK_MSG(!_error, "Failed to render Glyph: " + std::to_string(c));
 
         mWidth += mFreeTypeFace->glyph->bitmap.width /*+ 2*/; // add the width of this glyph to our texture width
         // Note: We add 2 pixels of blank space between glyphs for padding - this helps reduce texture bleeding
@@ -84,10 +84,10 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
     FOR_RANGE(c, 0, charSetCount)
     {
         _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
-        CHECK_MSG(!_error, "Failed to load Glyph: " + c);
+        CHECK_MSG(!_error, "Failed to load Glyph: " + std::to_string(c));
 
         _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);
-        CHECK_MSG(!_error, "Failed to render Glyph: " + c);
+        CHECK_MSG(!_error, "Failed to render Glyph: " + std::to_string(c));
 
         mGlyphs[c] = {
             // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
