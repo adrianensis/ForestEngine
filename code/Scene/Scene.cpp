@@ -140,9 +140,11 @@ void Scene::removeGameObject(Ptr<GameObject> gameObject)
         gameObject->destroy();
         gameObject->finallyDestroy();
 
-        std::remove_if(
-        mGameObjects.begin(), mGameObjects.end(),
-        [gameObject](OwnerPtr<GameObject>& go) { return go == gameObject; });
+        auto it = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
+        if (it != mGameObjects.end())
+        {
+            mGameObjects.erase(it);
+        }
     }
 }
 

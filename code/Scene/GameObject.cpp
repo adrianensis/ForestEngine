@@ -43,9 +43,11 @@ void GameObject::removeComponent(Ptr<Component> component)
 
 	component->destroy();
 
-    std::remove_if(
-    mComponents.begin(), mComponents.end(),
-    [component](OwnerPtr<Component>& c) { return c == component; });
+    auto it = std::find(mComponents.begin(), mComponents.end(), component);
+    if (it != mComponents.end())
+    {
+        mComponents.erase(it);
+    }
 }
 
 void GameObject::setIsActive(bool isActive)
