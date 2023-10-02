@@ -43,9 +43,13 @@ if(ENABLE_PROFILER)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D BUILD_WITH_EASY_PROFILER")
 endif(ENABLE_PROFILER)
 
+if(ENABLE_ADDRESS_SANITIZER)
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -fsanitize=address -static-libasan")
+endif(ENABLE_ADDRESS_SANITIZER)
+
 if(UNIX)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Werror=return-type -fmodules-ts")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D DE_DEBUG -mavx -ftree-vectorize -fsanitize=address -static-libasan")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D DE_DEBUG -mavx -ftree-vectorize")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_ALL} -O3 -mavx")
 endif(UNIX)
 

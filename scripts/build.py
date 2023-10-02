@@ -23,6 +23,7 @@ buildUnitTests=False
 buildIntegrationTests=False
 enableLogs=False
 enableProfiler=False
+enableAddressSanitizer=False
 
 appsToBuild = []
 toolsToBuild = []
@@ -32,7 +33,7 @@ if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, "uilcpr", ["app=", "tool="])
+  opts, args = getopt.getopt(argv, "uilcpr", ["app=", "tool=", "asan"])
 except:
   print("Error parsing options!")
   exit(1)
@@ -56,6 +57,8 @@ for opt, arg in opts:
       enableLogs=True
     elif opt in ['-p']:
       enableProfiler=True
+    elif opt in ['--asan']:
+      enableAddressSanitizer=True
 
 buildTargetDir=os.path.join(buildDir, buildType)
 
@@ -162,7 +165,8 @@ buildCommandArgs = [
     "-DTOOLS_TO_BUILD=" + "\"" + str(";".join(toolsToBuild) + "\""),
     "-DAPPS_TO_BUILD=" + "\"" + str(";".join(appsToBuild) + "\""),
     "-DENABLE_LOGS=" + str(enableLogs),
-    "-DENABLE_PROFILER=" + str(enableProfiler)
+    "-DENABLE_PROFILER=" + str(enableProfiler),
+    "-DENABLE_ADDRESS_SANITIZER=" + str(enableAddressSanitizer),
 ]
 
 buildCommandArgsString =" ".join(buildCommandArgs)
