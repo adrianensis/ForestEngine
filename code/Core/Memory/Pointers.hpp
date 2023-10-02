@@ -122,21 +122,19 @@ public:
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     void invalidate()
     {
-        if(mReferenceBlock)
+        if(mInternalPointer and mReferenceBlock)
         {
-            if(mReferenceBlock->isWeakReferenced())
+            CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
+            decrement();
+            if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
-                decrement();
-            }
-            if(! (mReferenceBlock->isReferenced() || mReferenceBlock->isWeakReferenced()))
-            {
-                delete mReferenceBlock;
+                Memory::deleteObject(mReferenceBlock);
             }
         }
         set(nullptr, nullptr);
     }
 
-    DECLARE_COPY(Ptr<T>) { set(other.mInternalPointer, other.mReferenceBlock); }
+    DECLARE_COPY(Ptr<T>) { assign(other); }
     bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     operator bool() const { return this->isValid(); }
@@ -146,6 +144,10 @@ private:
 
     void assign(const Ptr<T>& other)
     {
+        if(*this == other)
+        {
+            return;
+        }
         invalidate();
         if(other.isValid())
         {
@@ -155,6 +157,10 @@ private:
     
     void assign(const RefCountedPtrBase<T>& ownerPtr)
     {
+        if(*this == ownerPtr)
+        {
+            return;
+        }
         invalidate();
         if(ownerPtr.isValid())
         {
@@ -164,6 +170,10 @@ private:
     
     void assign(const SharedPtr<T>& sharedPtr)
     {
+        if(*this == sharedPtr)
+        {
+            return;
+        }
         invalidate();
         if(sharedPtr.isValid())
         {
@@ -173,6 +183,10 @@ private:
 
     void assign(const OwnerPtr<T>& ownerPtr)
     {
+        if(*this == ownerPtr)
+        {
+            return;
+        }
         invalidate();
         if(ownerPtr.isValid())
         {
@@ -190,8 +204,8 @@ private:
         }
     }
     
-    void increment() { mReferenceBlock->mWeakReferenceCounter += 1; }
-    void decrement() { mReferenceBlock->mWeakReferenceCounter -= 1; }
+    void increment() { mReferenceBlock->mWeakReferenceCounter += 1;}
+    void decrement() { mReferenceBlock->mWeakReferenceCounter -= 1;}
 
 private:
     T* mInternalPointer = nullptr;
@@ -236,22 +250,18 @@ public:
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     void invalidate()
     {
-        if(mReferenceBlock)
+        if(mInternalPointer and mReferenceBlock)
         {
-            if(mReferenceBlock->isReferenced())
+            CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
+            decrement();
+            
+            if(!mReferenceBlock->isReferenced() and !mReferenceBlock->isWeakReferenced())
             {
-                decrement();
+                Memory::deleteObject(mReferenceBlock);
             }
-            if(! mReferenceBlock->isReferenced())
+            if(!mReferenceBlock->isReferenced())
             {
-                if(mInternalPointer != nullptr)
-                {
-                    Memory::deleteObject(mInternalPointer);
-                }
-            }
-            if(! (mReferenceBlock->isReferenced() || mReferenceBlock->isWeakReferenced()))
-            {
-                delete mReferenceBlock;
+                Memory::deleteObject(mInternalPointer);
             }
         }
         set(nullptr, nullptr);
@@ -282,8 +292,8 @@ protected:
             }
         }
     }
-    void increment() { mReferenceBlock->mReferenceCounter += 1; }
-    void decrement() { mReferenceBlock->mReferenceCounter -= 1; }
+    void increment() { mReferenceBlock->mReferenceCounter += 1;}
+    void decrement() { mReferenceBlock->mReferenceCounter -= 1;}
 protected:
     T* mInternalPointer = nullptr;
     ReferenceBlock* mReferenceBlock = nullptr;
@@ -307,7 +317,7 @@ public:
         return SharedPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    explicit SharedPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
+    explicit SharedPtr(T* reference) { this->init(reference, Memory::newObject<ReferenceBlock>()); }
     SharedPtr() = default;
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
     SharedPtr(SharedPtr<T>&& other) { assign(other); }
@@ -326,6 +336,11 @@ private:
 
     void assign(const SharedPtr<T>& other)
     {
+        if(*this == other)
+        {
+            return;
+        }
+
         this->invalidate();
         if(other.isValid())
         {
@@ -347,7 +362,10 @@ public:
         return newPtr;
     }
 
-    explicit OwnerPtr(T* reference) { this->init(reference, new ReferenceBlock()); }
+    explicit OwnerPtr(T* reference)
+    {
+        this->init(reference, Memory::newObject<ReferenceBlock>());
+    }
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
     //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
@@ -365,6 +383,11 @@ private:
 
     void assign(OwnerPtr<T>& other)
     {
+        if(*this == other)
+        {
+            return;
+        }
+
         this->invalidate();
         if(other.isValid())
         {
