@@ -122,7 +122,7 @@ public:
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     void invalidate()
     {
-        if(mInternalPointer and mReferenceBlock)
+        if(mReferenceBlock)
         {
             CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
             decrement();
@@ -144,10 +144,7 @@ private:
 
     void assign(const Ptr<T>& other)
     {
-        if(*this == other)
-        {
-            return;
-        }
+        if(*this == other) { return; }
         invalidate();
         if(other.isValid())
         {
@@ -202,6 +199,12 @@ private:
         {
             increment();
         }
+        else
+        {
+            // if one of them or both are invalid, force set to NULL
+            mInternalPointer = nullptr;
+            mReferenceBlock = nullptr;
+        }
     }
     
     void increment() { mReferenceBlock->mWeakReferenceCounter += 1;}
@@ -250,9 +253,9 @@ public:
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     void invalidate()
     {
-        if(mInternalPointer and mReferenceBlock)
+        if(mReferenceBlock)
         {
-            CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
+            CHECK_MSG(mReferenceBlock->isReferenced(), "Weak references are already 0!")
             decrement();
             
             if(!mReferenceBlock->isReferenced() and !mReferenceBlock->isWeakReferenced())
@@ -290,6 +293,12 @@ protected:
                     enablePtrFromThis->set(Ptr<T>(*this));
                 }
             }
+        }
+        else
+        {
+            // if one of them or both are invalid, force set to NULL
+            mInternalPointer = nullptr;
+            mReferenceBlock = nullptr;
         }
     }
     void increment() { mReferenceBlock->mReferenceCounter += 1;}
@@ -336,10 +345,7 @@ private:
 
     void assign(const SharedPtr<T>& other)
     {
-        if(*this == other)
-        {
-            return;
-        }
+        if(*this == other) { return; }
 
         this->invalidate();
         if(other.isValid())
