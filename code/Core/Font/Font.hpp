@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Object/ObjectBase.hpp"
-#include "Core/Maths/Vector2.hpp"
+#include "Core/Maths/Geometry.hpp"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
@@ -16,6 +16,16 @@ public:
     RGET(FreeTypeLibrary)
 };
 
+class FontGlyphMetricsData
+{
+public:
+    Vector2 mSize;
+    Vector2  mHoriBearing;
+    f32  mHoriAdvance;
+    Vector2  mVertBearing;
+    f32  mVertAdvance;
+};
+
 class FontGlyphData
 {
 public:
@@ -25,7 +35,8 @@ public:
     Vector2 mAdvance;
     Vector2 mBitmapSize;
     Vector2 mBitmapTopLeft;
-    f32 xOffset;
+    FontGlyphMetricsData mMetrics;
+    Rectangle mTextureRegion;
     byte* mData = nullptr;
 };
 

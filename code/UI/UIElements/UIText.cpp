@@ -21,7 +21,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
     renderer->mUseDepth = (true);
     renderer->setDepth(mConfig.mLayer);
-    Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphTextureRegion(mCharacter);
+    Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
     renderer->setTextureRegion(textureRegion);
 
 	setComponentsCache();
@@ -68,13 +68,17 @@ void UIText::setText(const std::string& text)
 			FOR_RANGE(i, 0, text.length())
 			{
                 char character = text.at(i);
-                Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(character);
+                Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphData(character).mMetrics.mSize;
+                Vector2 glyphHorizontalBearing = glyphSize - GET_SYSTEM(UIManager).getGlyphData(character).mMetrics.mHoriBearing;
+                Vector2 topLeftCorner = GET_SYSTEM(UIManager).getGlyphData(character).mBitmapTopLeft;
+                Vector2 topLeftCornerScreenSpace = UIUtils::toScreenSpace(topLeftCorner);
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
+                Vector2 glyphHorizontalBearingScreenSpace = UIUtils::toScreenSpace(glyphHorizontalBearing);
 
                 UIBuilder uiBuilder;
 
                 Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
-                setPosition(Vector2(offset,mConfig.mDisplaySize.y/2.0f)).
+                setPosition(Vector2(offset,topLeftCornerScreenSpace.y -mConfig.mDisplaySize.y/2.0f)).
                 setSize(glyphSizeScreenSpace).
                 setText(std::string() + character).
                 setLayer(mConfig.mLayer + 1).

@@ -32,7 +32,7 @@ void UIArea::calculateConfig()
         FOR_ARRAY(i, mConfig.mText)
         {
             char character = mConfig.mText.at(i);
-            Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphSize(character);
+            Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphData(character).mMetrics.mSize;
             textSize.x += glyphSize.x;
             textSize.y = std::max(glyphSize.y, textSize.y);
         }

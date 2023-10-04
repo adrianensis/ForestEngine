@@ -17,8 +17,7 @@ public:
     void init();
     void terminate();
 
-    Rectangle getGlyphTextureRegion(char character) const;
-    Vector2 getGlyphSize(char character) const;
+    const FontGlyphData& getGlyphData(char character) const;
     Ptr<const MaterialFont> getFontMaterial() const;
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)

@@ -70,15 +70,38 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
         _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
         CHECK_MSG(!_error, "Failed to load Glyph: " + std::to_string(c));
 
-        _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);
-        CHECK_MSG(!_error, "Failed to render Glyph: " + std::to_string(c));
-
         mWidth += mFreeTypeFace->glyph->bitmap.width /*+ 2*/; // add the width of this glyph to our texture width
         // Note: We add 2 pixels of blank space between glyphs for padding - this helps reduce texture bleeding
         //       that can occur with antialiasing
 
         mHeight = std::max(mHeight, (u32)mFreeTypeFace->glyph->bitmap.rows);
     }
+
+/*
+    GLYPH METRICS (sample character: A)
+    source: https://freetype.org/freetype2/docs/glyphs/glyphs-3.html
+
+
+            .            xMin         xMax                       
+            .              .           .                     
+            .              .           .                     
+            .              .   width   .                     
+            .              .<.........>.                     
+            .              .           .                     
+            .              .           .                     
+            .              *************....................................... yMax
+            .  bearingX    *     X     *           ^                        ^
+            ..............>*     XX    *           . bearingY               .
+            .              *    X  X   *           .                        . height
+            .              *   XXXXXX  *           .                        .
+        ----O--------------*--X------X-*--------------------O---->          .
+origin(0,0) .              * X        X*                    .               v
+            .              *************....................................... yMin
+            .                                               .
+            .                                               .
+            ...............................................>.
+            .                 advance                       .
+*/
 
     u32 texPos = 0;
     FOR_RANGE(c, 0, charSetCount)
@@ -88,6 +111,17 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
 
         _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);
         CHECK_MSG(!_error, "Failed to render Glyph: " + std::to_string(c));
+
+        Vector2 bitmapSize = Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
+        Vector2 glyphSizeInAtlasSpace = bitmapSize / Vector2(mWidth, mHeight);
+        Vector2 textureOffset = Vector2((f32)texPos / (f32)mWidth, 0);
+
+        FontGlyphMetricsData metrics;
+        metrics.mSize = Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
+        metrics.mHoriBearing = Vector2(mFreeTypeFace->glyph->metrics.horiBearingX >> 6, mFreeTypeFace->glyph->metrics.horiBearingY >> 6);
+        metrics.mHoriAdvance = mFreeTypeFace->glyph->metrics.horiAdvance >> 6;
+        metrics.mVertBearing = Vector2(mFreeTypeFace->glyph->metrics.vertBearingX >> 6, mFreeTypeFace->glyph->metrics.vertBearingY >> 6);
+        metrics.mVertAdvance = mFreeTypeFace->glyph->metrics.vertAdvance >> 6;
 
         mGlyphs[c] = {
             // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
@@ -101,9 +135,10 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
             // w and h are represented in 1/64ths of a pixel so we need 
             // to convert them to accurate on-screen pixels.
             Vector2(mFreeTypeFace->glyph->advance.x >> 6, mFreeTypeFace->glyph->advance.y >> 6),
-            Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows),
+            bitmapSize,
             Vector2(mFreeTypeFace->glyph->bitmap_left, mFreeTypeFace->glyph->bitmap_top),
-            (f32)texPos / (f32)mWidth,
+            metrics,
+            Rectangle(textureOffset, glyphSizeInAtlasSpace),
             nullptr
         };
 
