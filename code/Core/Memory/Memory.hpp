@@ -44,7 +44,7 @@ public:
 		}
 
         mAllocationsCounter[className].mCurrentAllocations += 1;
-        mAllocationsCounter[className].mMaxAllocations += 1;
+        mAllocationsCounter[className].mMaxAllocations = std::max(mAllocationsCounter[className].mCurrentAllocations, mAllocationsCounter[className].mMaxAllocations);
 #endif
 		return object;
 	}
