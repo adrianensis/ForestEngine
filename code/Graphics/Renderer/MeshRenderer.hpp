@@ -60,6 +60,7 @@ public:
     void setDepth(i32 depth);
     void setInvertAxisX(bool invertAxisX);
     void setTextureRegion(const Rectangle& textureRegion);
+    void setPositionOffset(const Vector3& positionOffset);
 
 protected:
     void updatePositions();
@@ -80,7 +81,8 @@ private:
     Vector4 mColor;
     Ptr<Batch> mBatch;
     Matrix4 mRendererModelMatrix;
-    mutable bool mRendererModelMatrixDirty = true;
+    bool mRendererModelMatrixDirty = true;
+    bool mRendererPositionOffsetDirty = true;
 
 public:
     std::string mCurrentTextureAnimationKey;
@@ -91,6 +93,7 @@ private:
     Rectangle mTextureRegion = Rectangle(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
     bool mInvertAxisX = false;
     i32 mDepth = 0;
+    Vector3 mPositionOffset;
 
 public:
     CGET(MeshInstance)

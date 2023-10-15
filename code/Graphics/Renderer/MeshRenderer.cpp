@@ -52,12 +52,22 @@ void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
     mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
+
+    if(!mPositionOffset.eq(Vector3(0,0,0)))
+    {
+        Matrix4 positionOffsetMatrix;
+        positionOffsetMatrix.translation(mPositionOffset);
+
+        positionOffsetMatrix.mul(mRendererModelMatrix);
+        mRendererModelMatrix = positionOffsetMatrix;
+    }
+
     IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
 }
 
 void MeshRenderer::preUpdate()
 {
-    mRendererModelMatrixDirty = mGameObject->mTransform->getModelMatrixDirty();
+    mRendererModelMatrixDirty = mRendererPositionOffsetDirty || mGameObject->mTransform->getModelMatrixDirty();
 }
 
 void MeshRenderer::update()
@@ -223,6 +233,13 @@ void MeshRenderer::setTextureRegion(const Rectangle& textureRegion)
 {
     mTextureRegion = textureRegion;
     mRegenerateTextureCoords = true;
+}
+
+void MeshRenderer::setPositionOffset(const Vector3& positionOffset)
+{
+    mPositionOffset = positionOffset;
+    mRegeneratePositions = true;
+    mRendererPositionOffsetDirty = true;
 }
 
 IMPLEMENT_SERIALIZATION(MeshRenderer)
