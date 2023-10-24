@@ -63,6 +63,8 @@ void MeshRenderer::calculateRendererModelMatrix()
     }
 
     IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
+    
+    mRendererPositionOffsetDirty = false;
 }
 
 void MeshRenderer::preUpdate()
@@ -77,7 +79,6 @@ void MeshRenderer::update()
     if(mRendererModelMatrixDirty)
     {
         calculateRendererModelMatrix();
-        mRendererModelMatrixDirty = false;
     }
 
     bool regenerateVertices = !mComponentData.mIsInstanced;
