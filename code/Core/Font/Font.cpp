@@ -118,6 +118,8 @@ origin(0,0) .              * X        X*                    .               v
 
         FontGlyphMetricsData metrics;
         metrics.mSize = Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
+        metrics.mBoundingBoxMin = Vector2(mFreeTypeFace->bbox.xMin >> 6, mFreeTypeFace->bbox.yMin >> 6);
+        metrics.mBoundingBoxMax = Vector2(mFreeTypeFace->bbox.xMax >> 6, mFreeTypeFace->bbox.yMax >> 6);
         metrics.mHoriBearing = Vector2(mFreeTypeFace->glyph->metrics.horiBearingX >> 6, mFreeTypeFace->glyph->metrics.horiBearingY >> 6);
         metrics.mHoriAdvance = mFreeTypeFace->glyph->metrics.horiAdvance >> 6;
         metrics.mVertBearing = Vector2(mFreeTypeFace->glyph->metrics.vertBearingX >> 6, mFreeTypeFace->glyph->metrics.vertBearingY >> 6);

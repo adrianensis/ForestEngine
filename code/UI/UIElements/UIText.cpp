@@ -68,17 +68,26 @@ void UIText::setText(const std::string& text)
 			FOR_RANGE(i, 0, text.length())
 			{
                 char character = text.at(i);
-                Vector2 glyphSize = GET_SYSTEM(UIManager).getGlyphData(character).mMetrics.mSize;
-                Vector2 glyphHorizontalBearing = glyphSize - GET_SYSTEM(UIManager).getGlyphData(character).mMetrics.mHoriBearing;
-                Vector2 topLeftCorner = GET_SYSTEM(UIManager).getGlyphData(character).mBitmapTopLeft;
+                const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
+                Vector2 glyphSize = glyphData.mMetrics.mSize;
+                 /*
+                    When displaying spaces, "xOffset += glyph->bitmap.width" will add a zero.
+                    Meaning: "This is a test!" will be displayed as "Thisisatest!".
+                */
+                glyphSize.x = glyphData.mAdvance.x;
+                Vector2 topLeftCorner = glyphData.mBitmapTopLeft;
                 Vector2 topLeftCornerScreenSpace = UIUtils::toScreenSpace(topLeftCorner);
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
-                Vector2 glyphHorizontalBearingScreenSpace = UIUtils::toScreenSpace(glyphHorizontalBearing);
+
+                Vector2 alignOffset(0, glyphData.mMetrics.mBoundingBoxMax.y - glyphData.mMetrics.mHoriBearing.y);
+                Vector2 alignOffsetScreenSpace = UIUtils::toScreenSpace(alignOffset);
+
+                f32 glyphPositionY = mConfig.mDisplaySize.y/2.0f - alignOffsetScreenSpace.y;
 
                 UIBuilder uiBuilder;
 
                 Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
-                setPosition(Vector2(offset,topLeftCornerScreenSpace.y -mConfig.mDisplaySize.y/2.0f)).
+                setPosition(Vector2(offset,glyphPositionY)).
                 setSize(glyphSizeScreenSpace).
                 setText(std::string() + character).
                 setLayer(mConfig.mLayer + 1).

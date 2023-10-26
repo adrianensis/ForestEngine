@@ -20,6 +20,8 @@ class FontGlyphMetricsData
 {
 public:
     Vector2 mSize;
+    Vector2 mBoundingBoxMin;
+    Vector2 mBoundingBoxMax;
     Vector2  mHoriBearing;
     f32  mHoriAdvance;
     Vector2  mVertBearing;
