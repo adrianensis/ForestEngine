@@ -23,6 +23,8 @@ void Engine::init()
     CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(Window);
 	GET_SYSTEM(Window).init();
+    CREATE_SYSTEM(GPUSharedContext);
+	GET_SYSTEM(GPUSharedContext).init();
     CREATE_SYSTEM(Input);
 	GET_SYSTEM(Input).init(Ptr<IWindowInputAdapter>::cast(GET_SYSTEM_PTR(Window)));
     CREATE_SYSTEM(TimerManager);
@@ -146,6 +148,8 @@ void Engine::terminate()
     REMOVE_SYSTEM(Time);
     REMOVE_SYSTEM(Input);
     REMOVE_SYSTEM(EngineConfig);
+	GET_SYSTEM(GPUSharedContext).terminate();
+    REMOVE_SYSTEM(GPUSharedContext);
 	GET_SYSTEM(Window).terminate();
     REMOVE_SYSTEM(Window);
     REMOVE_SYSTEM(GPUInterface);

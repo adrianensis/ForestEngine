@@ -2,6 +2,7 @@
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Shaders/ShaderBuilderFunctionsLibrary.hpp"
 
@@ -42,6 +43,9 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         const GPUVariableDefinitionData& outputVar = *it;
         get().attribute(outputVar);
     }
+
+    // const GPUBlock& gpuBlockMatrices = GET_SYSTEM(GPUSharedContext).mMatricesBlock;
+    // get().attributeBlock(gpuBlockMatrices.getGPUBlockData());
 
     ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
 

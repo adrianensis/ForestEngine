@@ -28,6 +28,26 @@ namespace ShaderBuilderNodes
         return {getIndent(indent) + locationStr + std::string(EnumsManager::toString(mGPUStorage)) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
     }
     
+    std::vector<std::string> AttributeBlock::toLines(u16 indent) const
+    {
+        std::vector<std::string> code;
+
+        code.push_back(getIndent(indent) + "layout (std140) uniform " + mGPUBlockData.mBlockName + " {");
+
+        const auto& variableDataArray = mGPUBlockData.mGPUVariableDataArray;
+        FOR_LIST(it, variableDataArray)
+        {
+            const GPUVariableData& variableData = *it;
+            const Variable variable(variableData);
+            auto statementCode = variable.toLines(indent + 1);
+            code.insert(code.end(), statementCode.begin(), statementCode.end());
+        }
+
+        code.push_back(getIndent(indent) + "} " + mGPUBlockData.mInstanceName + ";");
+
+        return code;
+    }
+    
     namespace Expressions
     {
         std::vector<std::string> Unary::toLines(u16 indent) const
@@ -173,6 +193,11 @@ namespace ShaderBuilderNodes
         return mAttributes.emplace_back(attribute);
     }
 
+    AttributeBlock& Program::attributeBlock(const AttributeBlock& attributeBlock)
+    {
+        return mAttributeBlocks.emplace_back(attributeBlock);
+    }
+
     const Attribute& Program::getAttribute(const std::string_view& attributeName) const
     {
         FOR_LIST(it, mAttributes)
@@ -186,6 +211,19 @@ namespace ShaderBuilderNodes
         return mNullAttribute;
     }
 
+    const AttributeBlock& Program::getAttributeBlock(const std::string_view& attributeBlockName) const
+    {
+        FOR_LIST(it, mAttributeBlocks)
+        {
+            if(it->mGPUBlockData.mInstanceName == attributeBlockName)
+            {
+                return *it;
+            }
+        }
+
+        return mNullAttributeBlock;
+    }
+
     std::vector<std::string> Program::toLines(u16 indent) const
     {
         std::vector<std::string> code;
@@ -193,6 +231,12 @@ namespace ShaderBuilderNodes
         code.push_back("#version " + std::to_string(mVersion));
 
         FOR_LIST(it, mAttributes)
+        {
+            auto statementCode = it->toLines(indent);
+            code.insert(code.end(), statementCode.begin(), statementCode.end());
+        }
+
+        FOR_LIST(it, mAttributeBlocks)
         {
             auto statementCode = it->toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());

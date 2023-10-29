@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
+#include "Graphics/GPU/GPUBlock.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 class GPUBuiltIn
@@ -44,6 +45,26 @@ public:
         inline static const GPUVariableDefinitionData mBaseColor{GPUStorage::UNIFORM, Types::mVector4, "baseColor"};
         
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, Types::mSampler2D, "uSampler"};
+    };
+
+    class UniformBlocks
+    {
+    public:
+        inline static const GPUBlockData mMatrices
+        {
+            {
+                {GPUStorage::UNIFORM, Types::mMatrix4, "projectionMatrix"},
+                {GPUStorage::UNIFORM, Types::mMatrix4, "viewMatrix"}
+            },
+            "Matrices",
+            "matrices"
+        };
+        class GPUBlockDataMatricesWrapper
+        {
+        public:
+            inline static const GPUVariableDefinitionData mProjectionMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "matrices.projectionMatrix"};
+            inline static const GPUVariableDefinitionData mViewMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "matrices.viewMatrix"};
+        };
     };
 
     class VertexInput

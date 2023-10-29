@@ -36,6 +36,11 @@ public:
     {
         setDataUBOAnyTypeRaw(UBO, sizeof(T), data.size(), data.data());
     }
+    template<class T>
+    void setDataUBOAnyStruct(u32 UBO, const T& data)
+    {
+        setDataUBOAnyTypeRaw(UBO, sizeof(T), 1, &data);
+    }
 
     void deleteVAO(u32 VAO);
     void deleteVBO(u32 VBO);

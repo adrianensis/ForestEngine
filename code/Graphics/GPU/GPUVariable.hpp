@@ -29,7 +29,7 @@ DECLARE_ENUM(GPUStorage,
     VARYING, "varying",
     ATTRIBUTE, "attribute",
     CONST, "const",
-    UNIFORM, "uniform"
+    UNIFORM, "uniform",
 );
 
 enum class GPUPrimitiveType : u32
