@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUBlock.hpp"
+#include "Graphics/GPU/GPUSharedBlock.hpp"
 
 namespace ShaderBuilderNodes
 {
@@ -126,11 +126,11 @@ namespace ShaderBuilderNodes
     class AttributeBlock : public Statement
     {
     public:
-        AttributeBlock(const GPUBlockData& gpuBlockData) : mGPUBlockData(gpuBlockData) {};
+        AttributeBlock(const GPUSharedBlockData& gpuBlockData) : mGPUSharedBlockData(gpuBlockData) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
-        GPUBlockData mGPUBlockData;
+        GPUSharedBlockData mGPUSharedBlockData;
     }; 
 
     // EXPRESSIONS
@@ -293,7 +293,7 @@ namespace ShaderBuilderNodes
         u16 mVersion = 420;
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
-        inline static AttributeBlock mNullAttributeBlock {GPUBlockData{}};
+        inline static AttributeBlock mNullAttributeBlock {GPUSharedBlockData{}};
     };
 
 }

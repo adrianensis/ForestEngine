@@ -32,9 +32,9 @@ namespace ShaderBuilderNodes
     {
         std::vector<std::string> code;
 
-        code.push_back(getIndent(indent) + "layout (std140) uniform " + mGPUBlockData.mBlockName + " {");
+        code.push_back(getIndent(indent) + "layout (std140) uniform " + mGPUSharedBlockData.mBlockName + " {");
 
-        const auto& variableDataArray = mGPUBlockData.mGPUVariableDataArray;
+        const auto& variableDataArray = mGPUSharedBlockData.mGPUVariableDataArray;
         FOR_LIST(it, variableDataArray)
         {
             const GPUVariableData& variableData = *it;
@@ -43,7 +43,7 @@ namespace ShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        code.push_back(getIndent(indent) + "} " + mGPUBlockData.mInstanceName + ";");
+        code.push_back(getIndent(indent) + "} " + mGPUSharedBlockData.mInstanceName + ";");
 
         return code;
     }
@@ -215,7 +215,7 @@ namespace ShaderBuilderNodes
     {
         FOR_LIST(it, mAttributeBlocks)
         {
-            if(it->mGPUBlockData.mInstanceName == attributeBlockName)
+            if(it->mGPUSharedBlockData.mInstanceName == attributeBlockName)
             {
                 return *it;
             }

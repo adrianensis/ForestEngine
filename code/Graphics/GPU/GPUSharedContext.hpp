@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUBlock.hpp"
+#include "Graphics/GPU/GPUSharedBlock.hpp"
 
 
 class GPUSharedContextMatricesData
@@ -19,5 +19,5 @@ public:
     void terminate();
     
 public:
-	GPUBlock mMatricesBlock;
+	GPUSharedBlock mMatricesBlock;
 };

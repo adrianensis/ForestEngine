@@ -44,8 +44,8 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         get().attribute(outputVar);
     }
 
-    const GPUBlock& gpuBlockMatrices = GET_SYSTEM(GPUSharedContext).mMatricesBlock;
-    get().attributeBlock(gpuBlockMatrices.getGPUBlockData());
+    const GPUSharedBlock& gpuBlockMatrices = GET_SYSTEM(GPUSharedContext).mMatricesBlock;
+    get().attributeBlock(gpuBlockMatrices.getGPUSharedBlockData());
 
     ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
 
@@ -61,7 +61,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& color = get().getAttribute(GPUBuiltIn::VertexInput::mColor.mName);
     auto& textureCoord = get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);    
 
-    GPUBuiltIn::UniformBlocks::GPUBlockDataMatricesWrapper matrices;
+    GPUBuiltIn::UniformBlocks::GPUSharedBlockDataMatricesWrapper matrices;
     Variable projectionMatrix(matrices.mProjectionMatrix);
     Variable viewMatrix(matrices.mViewMatrix);
     
