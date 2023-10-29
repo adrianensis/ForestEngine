@@ -64,6 +64,12 @@ GLuint GPUInterface::createUBO()
 	return UBO;
 }
 
+void GPUInterface::bindUBO(u32 UBO, u32 bindingPoint)
+{
+    // define the range of the buffer that links to a uniform binding point
+    glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, UBO);
+}
+
 void GPUInterface::resizeVBO(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
 	resizeVBOAnyType(VBO, sizeof(f32), size,drawMode);

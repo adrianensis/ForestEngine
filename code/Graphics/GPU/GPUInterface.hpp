@@ -16,6 +16,7 @@ public:
     GLuint createVAO();
     GLuint createEBO();
     GLuint createUBO();
+    void bindUBO(u32 UBO, u32 bindingPoint);
     void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);

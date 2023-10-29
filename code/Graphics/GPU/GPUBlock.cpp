@@ -1,10 +1,11 @@
 #include "Graphics/GPU/GPUBlock.hpp"
 
-void GPUBlock::init(const GPUBlockData& gpuBlockData, bool isStatic)
+void GPUBlock::init(u32 bindingPoint, const GPUBlockData& gpuBlockData, bool isStatic)
 {
 	mGPUBlockData = gpuBlockData;
     mIsStatic = isStatic;
 	mUBO = GET_SYSTEM(GPUInterface).createUBO();
+    mBindingPoint = bindingPoint;
 
     mSizeInBytes = 0;
     FOR_ARRAY(i, mGPUBlockData.mGPUVariableDataArray)
@@ -12,6 +13,9 @@ void GPUBlock::init(const GPUBlockData& gpuBlockData, bool isStatic)
         const GPUVariableData& gpuVariableData = mGPUBlockData.mGPUVariableDataArray[i];
         mSizeInBytes += gpuVariableData.mGPUDataType.mTypeSizeInBytes;
     }
+
+	GET_SYSTEM(GPUInterface).bindUBO(mUBO, mBindingPoint);
+    resize(mSizeInBytes);
 }
 
 void GPUBlock::terminate()

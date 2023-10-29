@@ -21,7 +21,7 @@ class GPUBlock
 public:
 	GPUBlock() = default;
 
-    void init(const GPUBlockData& gpuBlockData, bool isStatic);
+    void init(u32 bindingPoint, const GPUBlockData& gpuBlockData, bool isStatic);
     void resize(u32 size);
     template <class T>
     void setData(const T& data)
@@ -32,6 +32,7 @@ public:
 
 protected:
     GPUBlockData mGPUBlockData;
+	u32 mBindingPoint = 0;
 	u32 mUBO = 0;
     bool mIsStatic = false;
     u32 mSizeInBytes = 0;

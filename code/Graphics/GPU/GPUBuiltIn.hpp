@@ -37,8 +37,6 @@ public:
     class Uniforms
     {
     public:
-        inline static const GPUVariableDefinitionData mProjectionMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "projectionMatrix"};
-        inline static const GPUVariableDefinitionData mViewMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "viewMatrix"};
         inline static const GPUVariableDefinitionData mTime{GPUStorage::UNIFORM, Types::mFloat, "time"};
         inline static const GPUVariableDefinitionData mWindowSize{GPUStorage::UNIFORM, Types::mVector2, "windowSize"};
         inline static const GPUVariableDefinitionData mBonesTransform{{GPUStorage::UNIFORM, Types::mMatrix4, "bonesTransform"}, "", Consts::MAX_BONES.mName};

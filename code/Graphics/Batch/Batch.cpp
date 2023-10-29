@@ -8,6 +8,7 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Shaders/Shader.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
+#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Scene/Module.hpp"
@@ -48,6 +49,17 @@ void Batch::enable()
     mMeshBatcher.enable();
     mShader->enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
+
+	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
+
+	const Matrix4& projectionMatrix = camera->mProjectionMatrix;
+	const Matrix4& viewMatrix = camera->mViewMatrix;
+
+    Matrix4 ortho;
+    ortho.ortho(-1, 1, -1, 1, -1000, 1000);
+
+    GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? projectionMatrix : ortho, mBatchData.mIsWorldSpace ? viewMatrix : Matrix4::smIdentity};
+	GET_SYSTEM(GPUSharedContext).mMatricesBlock.setData(gpuMatricesData);
 
     if(mBatchData.mStencilData.mUseStencil)
     {

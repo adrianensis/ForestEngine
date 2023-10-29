@@ -5,7 +5,7 @@
 
 void GPUSharedContext::init()
 {
-    // mMatricesBlock.init(GPUBuiltIn::UniformBlocks::mMatrices, false);
+    mMatricesBlock.init(0, GPUBuiltIn::UniformBlocks::mMatrices, false);
 }
 
 void GPUSharedContext::terminate()
