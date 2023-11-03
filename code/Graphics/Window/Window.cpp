@@ -44,7 +44,7 @@ void Window::init()
         VAR(gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4);
         // matrices * 16 = floats
         // floats * 4 = bytes
-        i32 gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES = gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4*16*4;
+        i32 gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES = gl_MAX_VERTEX_UNIFORM_VECTORS * 4;
         VAR(gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES);
 
         ECHO("UNIFORM BUFFER");
@@ -54,6 +54,9 @@ void Window::init()
         i32 gl_MAX_UNIFORM_BLOCK_SIZE;
         glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
         VAR(gl_MAX_UNIFORM_BLOCK_SIZE);
+        // vectors / 4 components = matrices
+        i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_UNIFORM_BLOCK_SIZE/4/4);
+        VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4);
 
         ECHO("SHADER STORAGE");
         i32 gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS;
@@ -62,6 +65,9 @@ void Window::init()
         i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE;
         glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
         VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
+        // vectors / 4 components = matrices
+        i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_SHADER_STORAGE_BLOCK_SIZE/4/4);
+        VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4);
 
 		glfwSwapInterval(0);
 
