@@ -51,14 +51,10 @@ void Batch::enable()
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
 
 	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
-
-	const Matrix4& projectionMatrix = camera->mProjectionMatrix;
-	const Matrix4& viewMatrix = camera->mViewMatrix;
-
     Matrix4 ortho;
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
-    GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? projectionMatrix : ortho, mBatchData.mIsWorldSpace ? viewMatrix : Matrix4::smIdentity};
+    GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
 	GET_SYSTEM(GPUSharedContext).mMatricesBlock.setData(gpuMatricesData);
 
     if(mBatchData.mStencilData.mUseStencil)

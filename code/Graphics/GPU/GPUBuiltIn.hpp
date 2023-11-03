@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
-#include "Graphics/GPU/GPUSharedBlock.hpp"
+#include "Graphics/GPU/GPUUniformBlock.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 class GPUBuiltIn
@@ -48,7 +48,7 @@ public:
     class UniformBlocks
     {
     public:
-        inline static const GPUSharedBlockData mMatrices
+        inline static const GPUUniformBlockData mMatrices
         {
             {
                 {GPUStorage::UNIFORM, Types::mMatrix4, "projectionMatrix"},
@@ -56,12 +56,6 @@ public:
             },
             "Matrices",
             "matrices"
-        };
-        class GPUSharedBlockDataMatricesWrapper
-        {
-        public:
-            inline static const GPUVariableDefinitionData mProjectionMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "matrices.projectionMatrix"};
-            inline static const GPUVariableDefinitionData mViewMatrix{GPUStorage::UNIFORM, Types::mMatrix4, "matrices.viewMatrix"};
         };
     };
 

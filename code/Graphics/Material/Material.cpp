@@ -17,29 +17,31 @@ void Material::init(const MaterialData& materialData, u32 id)
 
     loadTextures();
     
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
-    mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
+    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
+    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
+    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
+    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
+
+    mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mMatrices);
 
     if(materialData.mIsSkinned)
     {
-        mUniforms.push_back(GPUBuiltIn::Uniforms::mBonesTransform);
+        mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBonesTransform);
 
-        mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
-        mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
+        mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
+        mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }
 
-    mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
+    mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     if(mMaterialData.mUseVertexColor)
     {
-        mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
+        mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     
-    mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
-    mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
+    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
+    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
-    mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
+    mMaterialShaderVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
 void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const
@@ -90,16 +92,13 @@ void Material::loadTextures()
 
 void MaterialFont::loadTextures()
 {
-    if(!mMaterialData.mFontData.mPath.empty())
-    {
-        TextureData textureData;
-        textureData.mPath = mMaterialData.mFontData.mPath;
-        textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
-        textureData.mFontData = mMaterialData.mFontData;
-        mTextures[(u32)TextureType::BASE_COLOR] = Ptr<const Texture>::cast(GET_SYSTEM(MaterialManager).loadTextureFont(textureData));
-    }
+    CHECK_MSG(!mMaterialData.mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+    TextureData textureData;
+    textureData.mPath = mMaterialData.mFontData.mPath;
+    textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
+    textureData.mFontData = mMaterialData.mFontData;
+    mTextures[(u32)TextureType::BASE_COLOR] = Ptr<const Texture>::cast(GET_SYSTEM(MaterialManager).loadTextureFont(textureData));
 }
-
 
 IMPLEMENT_SERIALIZATION(Material)
 {

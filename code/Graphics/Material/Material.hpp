@@ -2,6 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
+#include "Graphics/GPU/GPUUniformBlock.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 
@@ -168,6 +169,17 @@ public:
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 };
 
+class MaterialShaderVariables
+{
+public:
+    std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUUniformBlockData> mUniformBlocks;
+    std::vector<GPUVariableDefinitionData> mConsts;
+    std::vector<GPUVariableDefinitionData> mVertexOutputs;
+    std::vector<GPUVariableDefinitionData> mFragmentInputs;
+    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
+};
+
 class Material: public ObjectBase
 {
     GENERATE_METADATA(Material)
@@ -185,20 +197,12 @@ protected:
     MaterialData mMaterialData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
-    std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUVariableDefinitionData> mConsts;
-    std::vector<GPUVariableDefinitionData> mVertexOutputs;
-    std::vector<GPUVariableDefinitionData> mFragmentInputs;
-    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
+    MaterialShaderVariables mMaterialShaderVariables;
     u32 mID = 0;
 
 public:
     CRGET(MaterialData)
-    CRGET(Uniforms)
-    CRGET(Consts)
-    CRGET(VertexOutputs)
-    CRGET(FragmentInputs)
-    CRGET(FragmentOutputs)
+    CRGET(MaterialShaderVariables)
 };
 
 class MaterialFont: public Material
