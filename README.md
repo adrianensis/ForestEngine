@@ -79,7 +79,7 @@ Here in my blog you can find all the devlogs of my Game Engine, from 2D initial 
 - Stencil
 - Math module
 - Simple scripting
-- Loading 3D models with ASSIMP
+- Loading 3D models with GLTF
 
 ---
 
