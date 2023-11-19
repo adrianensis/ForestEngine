@@ -53,14 +53,14 @@ void Engine::init()
     //REGISTER_ENGINE_SYSTEM(Ptr<EngineSystem>::cast(RenderEngine::getInstancePtr()));
 }
 
-void Engine::initEngineSystems()
+void Engine::initSceneSystems()
 {
 	f32 sceneSize = GET_SYSTEM(ScenesManager).getCurrentScene()->getSize();
 	GET_SYSTEM(RenderEngine).init(sceneSize);
 	GET_SYSTEM(ScriptEngine).init();
 }
 
-void Engine::terminateSubSystems()
+void Engine::terminateSceneSystems()
 {
 	GET_SYSTEM(ScriptEngine).terminate();
 	GET_SYSTEM(RenderEngine).terminate();
@@ -85,9 +85,9 @@ void Engine::run()
 
 		if (GET_SYSTEM(ScenesManager).getSceneHasChanged())
 		{
-			terminateSubSystems();
+			terminateSceneSystems();
 			GET_SYSTEM(ScenesManager).loadCurrentScene();
-			initEngineSystems();
+			initSceneSystems();
 		}
 
 		GET_SYSTEM(Input).update();
@@ -124,7 +124,7 @@ void Engine::terminate()
 
     REMOVE_SYSTEM(ScenesManager);
 
-	terminateSubSystems();
+	terminateSceneSystems();
 
 	GET_SYSTEM(UIManager).terminate();
     REMOVE_SYSTEM(UIManager);

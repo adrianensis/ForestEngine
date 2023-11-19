@@ -8,8 +8,8 @@ class Engine: public ObjectBase, public Singleton<Engine>
 
 public:
     void init();
-    void initEngineSystems();
-    void terminateSubSystems();
+    void initSceneSystems();
+    void terminateSceneSystems();
     void run();
     void terminate();
 
