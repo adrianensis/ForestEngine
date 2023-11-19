@@ -5,10 +5,10 @@
 
 void DefaultCommands::registerDefaultCommands()
 {
-CommandLine& cmd = GET_SYSTEM(CommandLine);
+    CommandLine& cmd = GET_SYSTEM(CommandLine);
 
-cmd.registerCommand("echo", [](const Command& command)
-{
-    ECHO(command.getArgumentsString());
-});
+    cmd.registerCommand("echo", [](const Command& command)
+    {
+        ECHO(command.getArgumentsString());
+    });
 }
