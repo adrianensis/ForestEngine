@@ -20,7 +20,6 @@ public:
     void readFromJsonFile(const std::string& path);
     void writeToJsonFile(const std::string& path);
     void init();
-    void clear();
     bool contains(std::string& key) const;
 
 private:

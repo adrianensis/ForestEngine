@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 
-class File
+class FileUtils
 {
 public:
     static void init();

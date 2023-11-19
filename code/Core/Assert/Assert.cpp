@@ -2,7 +2,7 @@
 #include "Core/Log/Log.hpp"
 #include <csignal>
 
-void AssertUtils::internalCheckMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message /*= smEmptyAssert*/)
+void AssertUtils::checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message /*= smEmptyAssert*/)
 {
 	if (!condition)
 	{
@@ -10,11 +10,11 @@ void AssertUtils::internalCheckMsg(bool condition, const std::string& conditionS
 		assertMsg += "[" + conditionString + "] ";
 		assertMsg += message;
         Log::customEcho("ASSERT", assertMsg);
-		raiseAssert();
+		sendAssertSignal();
 	}
 }
 
-void AssertUtils::raiseAssert()
+void AssertUtils::sendAssertSignal()
 {
     std::raise(SIGTRAP);
 }

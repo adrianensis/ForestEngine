@@ -11,7 +11,7 @@
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory/Memory.hpp"
 #include "Core/Functor.hpp"
-#include "Core/File/File.hpp"
+#include "Core/File/FileUtils.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Config/ConfigObject.hpp"
 #include "Core/Config/Paths.hpp"

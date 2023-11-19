@@ -55,8 +55,6 @@ void Scene::loadScene(const std::string& path)
 {
 	mPath = path;
 
-	mLoadSceneConfig.clear();
-
 	mLoadSceneConfig.readFromJsonFile(mPath); // TODO: do async / in other thread.
 
 	mSize = mLoadSceneConfig.at("size").get<f32>();

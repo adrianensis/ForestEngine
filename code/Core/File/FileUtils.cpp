@@ -1,11 +1,10 @@
-#include "Core/File/File.hpp"
+#include "Core/File/FileUtils.hpp"
 #include "Core/Log/Log.hpp"
 
-
-void File::init() {
+void FileUtils::init() {
 
 }
-void File::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
+void FileUtils::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
 {
 	std::ifstream file;
 	file.open(path);
@@ -21,7 +20,7 @@ void File::readFile(const std::string& path, std::function<void(std::ifstream& f
 	file.close();
 }
 
-void File::writeFile(const std::string& path, std::function<void(std::ofstream& file)> callback)
+void FileUtils::writeFile(const std::string& path, std::function<void(std::ofstream& file)> callback)
 {
 	std::ofstream file;
 	file.open(path);
