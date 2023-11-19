@@ -8,7 +8,7 @@ void EngineSystem::registerComponentClass(ClassId classId)
 
 bool EngineSystem::isComponentClassAccepted(ClassId classId)
 {
-    return mAcceptedEngineSystemComponentClasses.find(classId) != mAcceptedEngineSystemComponentClasses.end();
+    return mAcceptedEngineSystemComponentClasses.contains(classId);
 }
 
 void EngineSystem::addComponent(Ptr<EngineSystemComponent> component)
