@@ -49,10 +49,9 @@
 
 /*
     NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassId()"
-    may cause "struct"-like classes to become virtual and require a virtual destructor 
-    completely obliterating the engine. Related with virtual destructors.
-
-    The "Virtual" param is only used from ObjectMeta.
+    may cause "struct"-like classes to have a VTable, which increases the struct size.
+    For example: Vector3 is sizeof(f32) * 3 = 4*3 = 12, but with VTable is goes up to 24!!
+    Engine heavily depends on the exact size of a Vector3 (and other classes).
 */
 #define DECLARE_METADATA_METHODS(Virtual, Override) \
 	constexpr static ClassId getClassIdStatic() { return smClassId; }; \
@@ -70,7 +69,7 @@
     private: \
         GENERATE_METADATA_BASE(__VA_ARGS__)             \
     public:                                             \
-        DECLARE_METADATA_METHODS(EMPTY_MACRO(), override) \
+        DECLARE_METADATA_METHODS(virtual, override) \
     private:                                            \
         DECLARE_GET_PTR_THIS()               \
         \
