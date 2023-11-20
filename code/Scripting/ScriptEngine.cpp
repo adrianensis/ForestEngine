@@ -6,7 +6,7 @@ void ScriptEngine::init()
 {
 	TRACE()
 
-	REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(Script);
+	registerComponentClass(Script::getClassIdStatic());
 
 	mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
 }

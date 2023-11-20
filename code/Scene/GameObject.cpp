@@ -31,7 +31,7 @@ Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
 	comp->mGameObject = getPtrToThis();
 	comp->onComponentAdded();
 
-	ADD_COMPONENT_TO_ENGINE_SYSTEM(comp);
+	EngineSystemsManager::getInstance().addComponentToEngineSystem(comp);
 
     return comp;
 }

@@ -4,12 +4,6 @@
 #include "Core/Object/Singleton.hpp"
 #include "Core/Object/ObjectBase.hpp"
 
-#define REGISTER_COMPONENT_CLASS_IN_ENGINE_SYSTEM(...) \
-    registerComponentClass(__VA_ARGS__::getClassIdStatic());
-
-#define ADD_COMPONENT_TO_ENGINE_SYSTEM(engineSystemComponent) \
-    EngineSystemsManager::getInstance().addComponentToEngineSystem(engineSystemComponent);
-
 class EngineSystemComponent: public ObjectBase
 {
     GENERATE_METADATA(EngineSystemComponent)
