@@ -37,17 +37,17 @@ void EventsManager::removeMapContent()
 
 bool EventsManager::ownerExists(ObjectBase *eventOwner) const
 {
-	return MAP_CONTAINS(mOwnersMap, eventOwner);
+	return mOwnersMap.contains(eventOwner);
 }
 
 bool EventsManager::ownerHasEventType(ObjectBase *eventOwner, ClassId eventClassId) const
 {
-	return MAP_CONTAINS(mOwnersMap.at(eventOwner), eventClassId);
+	return mOwnersMap.at(eventOwner).contains(eventClassId);
 }
 
 bool EventsManager::eventTypeHasReceiver(ObjectBase *eventOwner, ClassId eventClassId, ObjectBase *eventReceiver) const
 {
-	return MAP_CONTAINS(mOwnersMap.at(eventOwner).at(eventClassId), eventReceiver);
+	return mOwnersMap.at(eventOwner).at(eventClassId).contains(eventReceiver);
 }
 
 void EventsManager::insertEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback)

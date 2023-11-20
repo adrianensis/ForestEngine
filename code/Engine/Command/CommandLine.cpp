@@ -122,7 +122,7 @@ void CommandLine::execute(const std::string& commandLine)
 
     std::string commandName = matchCommand[1];
 
-    if(isCommand and MAP_CONTAINS(mCommandsMap, commandName))
+    if(isCommand and mCommandsMap.contains(commandName))
     {
         //writeLine("command: " + commandName);
 
@@ -188,7 +188,7 @@ std::string CommandLine::autocomplete(const std::string& commandLine)
 
 void CommandLine::registerCommand(const std::string& commandName, CommandCallback callback)
 {
-    CHECK_MSG(!MAP_CONTAINS(mCommandsMap, commandName), "Command " + commandName + " already registered!");
+    CHECK_MSG(!mCommandsMap.contains(commandName), "Command " + commandName + " already registered!");
 
     Command command;
     command.setName(commandName);

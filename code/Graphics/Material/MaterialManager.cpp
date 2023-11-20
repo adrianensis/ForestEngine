@@ -31,7 +31,7 @@ void MaterialManager::init()
 
 Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)
 {
-	if (!MAP_CONTAINS(mTexturesMap, textureData.mPath))
+	if (!mTexturesMap.contains(textureData.mPath))
 	{
         OwnerPtr<TextureImage> texture = OwnerPtr<TextureImage>::newObject();
         MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
@@ -45,7 +45,7 @@ Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)
 
 Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textureData)
 {
-	if (!MAP_CONTAINS(mTexturesMap, textureData.mPath))
+	if (!mTexturesMap.contains(textureData.mPath))
 	{
         OwnerPtr<TextureFont> texture = OwnerPtr<TextureFont>::newObject();
         MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
@@ -60,7 +60,7 @@ Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textu
 Ptr<const Material> MaterialManager::createMaterial(const MaterialData& materialData)
 {
     u32 index = mMaterialIDCounter;
-    if (!MAP_CONTAINS(mMaterials, index))
+    if (!mMaterials.contains(index))
     {
         MAP_INSERT(mMaterials, index, OwnerPtr<Material>::newObject());
         Ptr<Material> material = mMaterials.at(index);
@@ -74,7 +74,7 @@ Ptr<const Material> MaterialManager::createMaterial(const MaterialData& material
 Ptr<const MaterialFont> MaterialManager::createMaterialFont(const MaterialData& materialData)
 {
     u32 index = mMaterialIDCounter;
-    if (!MAP_CONTAINS(mMaterials, index))
+    if (!mMaterials.contains(index))
     {
         OwnerPtr<MaterialFont> materialFont = OwnerPtr<MaterialFont>::newObject();
         MAP_INSERT(mMaterials, index, OwnerPtr<Material>::moveCast(materialFont));

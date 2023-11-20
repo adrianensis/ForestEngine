@@ -203,7 +203,7 @@ const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
     if (mComponentData.mMaterial.isValid())
 	{
         const auto& textureAnimationsMap = mComponentData.mMaterial->getMaterialData().mTextureAnimations;
-		if (MAP_CONTAINS(textureAnimationsMap, mCurrentTextureAnimationKey))
+		if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
 		{
 			currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
 		}

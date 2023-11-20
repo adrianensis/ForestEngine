@@ -22,7 +22,7 @@ public:
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)
 	{
-		if (!MAP_CONTAINS(mGroups, groupName))
+		if (!mGroups.contains(groupName))
 		{
 			MAP_INSERT(mGroups, groupName, OwnerPtr<UIGroup>::newObject());
             Ptr<UIGroup> group = mGroups.at(groupName);

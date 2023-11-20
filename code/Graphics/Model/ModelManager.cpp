@@ -13,7 +13,7 @@ void ModelManager::terminate()
 
 Ptr<const Model> ModelManager::loadModel(const std::string& path)
 {
-    if (!MAP_CONTAINS(mModelMap, path))
+    if (!mModelMap.contains(path))
 	{
 		MAP_INSERT(mModelMap, path, OwnerPtr<Model>::newObject());
 		mModelMap.at(path)->init(path);

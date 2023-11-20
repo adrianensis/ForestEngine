@@ -18,7 +18,7 @@ const EnumInfo& EnumsManager::getEnumInfo(const std::string_view& enumName)
 
 const EnumInfo& EnumsManager::create(const std::string_view& enumName, const std::vector<std::string_view>& names)
 {
-    if(!MAP_CONTAINS(mEnumsMapByName, enumName))
+    if(!mEnumsMapByName.contains(enumName))
     {
         MAP_INSERT(mEnumsMapByName, enumName, EnumInfo(enumName, names));
     }

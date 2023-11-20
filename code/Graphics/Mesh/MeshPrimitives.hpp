@@ -15,7 +15,7 @@ public:
 	template <class T> T_EXTENDS(T, Shape)
 	Ptr<const Mesh> getPrimitive()
 	{
-		if(!MAP_CONTAINS(mPrimitivesMap, T::getClassIdStatic()))
+		if(!mPrimitivesMap.contains(T::getClassIdStatic()))
 		{
 			MAP_INSERT(mPrimitivesMap, T::getClassIdStatic(), createPrimitive<T>());
 		}

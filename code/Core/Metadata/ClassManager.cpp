@@ -40,12 +40,12 @@ ObjectBase* ClassManager::instance(const std::string_view& className)
 
 ClassInfo& ClassManager::getOrCreate(const std::string_view& className, ClassId classId)
 {
-    if(!MAP_CONTAINS(mClassMapByName, className))
+    if(!mClassMapByName.contains(className))
     {
         MAP_INSERT(mClassMapByName, className, ClassInfo(className, classId));
     }
 
-    if(!MAP_CONTAINS(mClassMapById, classId))
+    if(!mClassMapById.contains(classId))
     {
         MAP_INSERT(mClassMapById, classId, &mClassMapByName.at(className));
     }

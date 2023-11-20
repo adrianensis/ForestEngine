@@ -38,7 +38,7 @@ public:
 			className = typeid(T).name();
 		}
 
-		if (!MAP_CONTAINS(mAllocationsCounter, className))
+		if (!mAllocationsCounter.contains(className))
         {
 			MAP_INSERT(mAllocationsCounter, className, AllocationInfo());
 		}
@@ -65,7 +65,7 @@ public:
 			className = typeid(T).name();
 		}
 
-        CHECK_MSG(MAP_CONTAINS(mAllocationsCounter, className), "No prevoius allocation for class: " + std::string(className));
+        CHECK_MSG(mAllocationsCounter.contains(className), "No prevoius allocation for class: " + std::string(className));
         mAllocationsCounter[className].mCurrentAllocations -= 1;
 #endif
 		delete pointer;

@@ -241,7 +241,6 @@
 // --------------------------------------------------------
 
 #define MAP_INSERT(map, key, value) (map).insert_or_assign((key), (value));
-#define MAP_CONTAINS(map, key) ((map).contains((key)))
 
 #define MAP_DELETE_CONTENT(map)           \
 	FOR_MAP(_internal_it, map)            \

@@ -83,7 +83,7 @@ void Model::loadGLTFMaterials()
                 }
             }
 
-            if(! MAP_CONTAINS(mGLTFMaterials, &cgltfMaterial))
+            if(! mGLTFMaterials.contains(&cgltfMaterial))
             {
                 Ptr<const Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
                 MAP_INSERT(mGLTFMaterials, &cgltfMaterial, newMaterial )
@@ -238,7 +238,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
         MAP_INSERT(mNodeToBoneId, &node, i);
         std::string boneName(node.name);
 
-        if (! MAP_CONTAINS(mBonesMapping, boneName)) 
+        if (! mBonesMapping.contains(boneName)) 
         {
             BoneData boneData;
             boneData.mId = i;
@@ -322,7 +322,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         CHECK_MSG(channel.sampler->interpolation == cgltf_interpolation_type_linear, "Interpolation is not linear. Only linear supported!");
         
         i32 boneIndex = -1;
-        if(MAP_CONTAINS(mNodeToBoneId, channel.target_node))
+        if(mNodeToBoneId.contains(channel.target_node))
         {
             boneIndex = mNodeToBoneId.at(channel.target_node);
         }

@@ -15,7 +15,7 @@ void UIFontsManager::terminate()
 
 Ptr<UIFont> UIFontsManager::loadFont(const std::string& fontFile)
 {
-    if(!MAP_CONTAINS(mFontsMap, fontFile))
+    if(!mFontsMap.contains(fontFile))
     {
         MAP_INSERT(mFontsMap, fontFile, OwnerPtr<UIFont>::newObject());
 		Ptr<UIFont> font = mFontsMap.at(fontFile);
