@@ -197,7 +197,7 @@ void CommandLine::registerCommand(const std::string& commandName, CommandCallbac
     functor.setCallback(callback);
     functor.mCommand = command;
 
-    MAP_INSERT(mCommandsMap, commandName, functor)
+    mCommandsMap.insert_or_assign(commandName, functor);
 }
 
 void CommandLine::open()

@@ -74,7 +74,7 @@ public:
     void createEngineSystem()
     {
         OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
-        MAP_INSERT(mEngineSystems, T::getClassIdStatic(), OwnerPtr<EngineSystem>::moveCast(newEngineSystem));
+        mEngineSystems.insert_or_assign(T::getClassIdStatic(), OwnerPtr<EngineSystem>::moveCast(newEngineSystem));
     }
 
     template<typename T> T_EXTENDS(T, EngineSystem)

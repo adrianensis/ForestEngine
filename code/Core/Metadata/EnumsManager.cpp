@@ -20,7 +20,7 @@ const EnumInfo& EnumsManager::create(const std::string_view& enumName, const std
 {
     if(!mEnumsMapByName.contains(enumName))
     {
-        MAP_INSERT(mEnumsMapByName, enumName, EnumInfo(enumName, names));
+        mEnumsMapByName.insert_or_assign(enumName, EnumInfo(enumName, names));
     }
 
     return mEnumsMapByName.at(enumName);

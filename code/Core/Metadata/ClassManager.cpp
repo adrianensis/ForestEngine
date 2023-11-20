@@ -23,7 +23,7 @@ ClassInfo::ClassInfo(const std::string_view& className, ClassId classId, const C
 
 MemberRegister::MemberRegister(const std::string_view& ownerClassName, const std::string_view& name, const std::string_view& className, ClassId classId)
 {
-    MAP_INSERT(ClassManager::getClassInfoInternal(ownerClassName).mMembersMap, name, MemberInfo(name, className, classId));
+    ClassManager::getClassInfoInternal(ownerClassName).mMembersMap.insert_or_assign(name, MemberInfo(name, className, classId));
 }
 
 MemberInfo::MemberInfo(const std::string_view& name, const std::string_view& className, ClassId classId)
@@ -42,12 +42,12 @@ ClassInfo& ClassManager::getOrCreate(const std::string_view& className, ClassId 
 {
     if(!mClassMapByName.contains(className))
     {
-        MAP_INSERT(mClassMapByName, className, ClassInfo(className, classId));
+        mClassMapByName.insert_or_assign(className, ClassInfo(className, classId));
     }
 
     if(!mClassMapById.contains(classId))
     {
-        MAP_INSERT(mClassMapById, classId, &mClassMapByName.at(className));
+        mClassMapById.insert_or_assign(classId, &mClassMapByName.at(className));
     }
 
     return mClassMapByName.at(className);

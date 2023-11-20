@@ -57,7 +57,7 @@ void EventsManager::insertEventCallback(ClassId eventClassId, ObjectBase *eventO
 	eventFunctor.mEventClassId = eventClassId;
 	eventFunctor.mEventReceiver = eventReceiver;
 
-	MAP_INSERT(mOwnersMap.at(eventOwner).at(eventClassId), eventReceiver, eventFunctor);
+	mOwnersMap.at(eventOwner).at(eventClassId).insert_or_assign(eventReceiver, eventFunctor);
 }
 
 void EventsManager::removeEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver)
@@ -74,12 +74,12 @@ void EventsManager::subscribe(ClassId eventClassId, ObjectBase *eventOwner, Obje
 {
 	if (!ownerExists(eventOwner))
 	{
-		MAP_INSERT(mOwnersMap, eventOwner, EventReceiversMap())
+		mOwnersMap.insert_or_assign(eventOwner, EventReceiversMap());
 	}
 
 	if (!ownerHasEventType(eventOwner, eventClassId))
 	{
-		MAP_INSERT(mOwnersMap.at(eventOwner), eventClassId, ReceiversFunctorMap())
+		mOwnersMap.at(eventOwner).insert_or_assign(eventClassId, ReceiversFunctorMap());
 	}
 
 	insertEventCallback(eventClassId, eventOwner, eventReceiver, eventCallback);

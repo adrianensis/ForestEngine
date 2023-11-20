@@ -45,7 +45,7 @@ public:
 	template<class T> T_EXTENDS(T, UIStyle)
 	void addStyle()
 	{
-		MAP_INSERT(mStyles, T::getClassIdStatic(), Memory::newObject<T>());
+		mStyles.insert_or_assign(T::getClassIdStatic(), Memory::newObject<T>());
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)

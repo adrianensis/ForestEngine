@@ -24,7 +24,7 @@ public:
 	{
 		if (!mGroups.contains(groupName))
 		{
-			MAP_INSERT(mGroups, groupName, OwnerPtr<UIGroup>::newObject());
+			mGroups.insert_or_assign(groupName, OwnerPtr<UIGroup>::newObject());
             Ptr<UIGroup> group = mGroups.at(groupName);
             group->init();
             group->mName = groupName;

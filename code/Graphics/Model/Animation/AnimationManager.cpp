@@ -22,7 +22,7 @@ void AnimationManager::createAnimationState(Ptr<const Animation> animation)
 
 	if(!mSkeletonStates.contains(model))
 	{
-		MAP_INSERT(mSkeletonStates, model, OwnerPtr<SkeletonState>::newObject());
+		mSkeletonStates.insert_or_assign(model, OwnerPtr<SkeletonState>::newObject());
 		mSkeletonStates.at(model)->init(animation->mModel);
 	}
 

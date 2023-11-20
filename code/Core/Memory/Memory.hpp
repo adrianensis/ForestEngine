@@ -40,7 +40,7 @@ public:
 
 		if (!mAllocationsCounter.contains(className))
         {
-			MAP_INSERT(mAllocationsCounter, className, AllocationInfo());
+			mAllocationsCounter.insert_or_assign(className, AllocationInfo());
 		}
 
         mAllocationsCounter[className].mCurrentAllocations += 1;

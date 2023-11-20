@@ -30,7 +30,7 @@ private:
 public:
 
     void clearArguments() { mArguments.clear(); };
-    void addArgument(const CommandArgument& arg) { MAP_INSERT(mArguments, arg.getName(), arg); };
+    void addArgument(const CommandArgument& arg) { mArguments.insert_or_assign(arg.getName(), arg); };
     bool argumentExists(const std::string& argName) const { return mArguments.contains(argName); };
     const std::string& getValue(const std::string& argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
 

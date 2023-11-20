@@ -34,7 +34,7 @@ Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)
 	if (!mTexturesMap.contains(textureData.mPath))
 	{
         OwnerPtr<TextureImage> texture = OwnerPtr<TextureImage>::newObject();
-        MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
+        mTexturesMap.insert_or_assign(textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
 		
 		Ptr<Texture> texturePtr = mTexturesMap.at(textureData.mPath);
         texturePtr->init(textureData);
@@ -48,7 +48,7 @@ Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textu
 	if (!mTexturesMap.contains(textureData.mPath))
 	{
         OwnerPtr<TextureFont> texture = OwnerPtr<TextureFont>::newObject();
-        MAP_INSERT(mTexturesMap, textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
+        mTexturesMap.insert_or_assign(textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
 		
 		Ptr<Texture> texturePtr = mTexturesMap.at(textureData.mPath);
         texturePtr->init(textureData);
@@ -62,7 +62,7 @@ Ptr<const Material> MaterialManager::createMaterial(const MaterialData& material
     u32 index = mMaterialIDCounter;
     if (!mMaterials.contains(index))
     {
-        MAP_INSERT(mMaterials, index, OwnerPtr<Material>::newObject());
+        mMaterials.insert_or_assign(index, OwnerPtr<Material>::newObject());
         Ptr<Material> material = mMaterials.at(index);
         material->init(materialData, index);
         mMaterialIDCounter++;
@@ -77,7 +77,7 @@ Ptr<const MaterialFont> MaterialManager::createMaterialFont(const MaterialData& 
     if (!mMaterials.contains(index))
     {
         OwnerPtr<MaterialFont> materialFont = OwnerPtr<MaterialFont>::newObject();
-        MAP_INSERT(mMaterials, index, OwnerPtr<Material>::moveCast(materialFont));
+        mMaterials.insert_or_assign(index, OwnerPtr<Material>::moveCast(materialFont));
         Ptr<Material> material = mMaterials.at(index);
         material->init(materialData, index);
         mMaterialIDCounter++;

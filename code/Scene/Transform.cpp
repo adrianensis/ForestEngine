@@ -204,7 +204,7 @@ void Transform::setScale(const Vector3& vec)
 void Transform::addChild(Ptr<Transform> child)
 {
     child->mParent = getPtrToThis();
-    MAP_INSERT(mChildren, child->getObjectId(), child);
+    mChildren.insert_or_assign(child->getObjectId(), child);
 }
 
 void Transform::removeChild(Ptr<Transform> child)

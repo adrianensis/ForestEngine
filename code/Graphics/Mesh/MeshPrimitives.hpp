@@ -17,7 +17,7 @@ public:
 	{
 		if(!mPrimitivesMap.contains(T::getClassIdStatic()))
 		{
-			MAP_INSERT(mPrimitivesMap, T::getClassIdStatic(), createPrimitive<T>());
+			mPrimitivesMap.insert_or_assign(T::getClassIdStatic(), createPrimitive<T>());
 		}
 		
 		return Ptr<Mesh>(mPrimitivesMap.at(T::getClassIdStatic()));

@@ -86,7 +86,7 @@ void Model::loadGLTFMaterials()
             if(! mGLTFMaterials.contains(&cgltfMaterial))
             {
                 Ptr<const Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
-                MAP_INSERT(mGLTFMaterials, &cgltfMaterial, newMaterial )
+                mGLTFMaterials.insert_or_assign(&cgltfMaterial, newMaterial);
             }
         }
     }
@@ -235,7 +235,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     {
         const cgltf_node& node = *skin.joints[i];
         mBonesToNode[i] = &node;
-        MAP_INSERT(mNodeToBoneId, &node, i);
+        mNodeToBoneId.insert_or_assign(&node, i);
         std::string boneName(node.name);
 
         if (! mBonesMapping.contains(boneName)) 
@@ -291,7 +291,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             boneData.mParentId = parentIndex;
             boneData.mName = boneName;
 
-            MAP_INSERT(mBonesMapping, boneName, boneData);
+            mBonesMapping.insert_or_assign(boneName, boneData);
             mBones.push_back(boneData);
         }
     }

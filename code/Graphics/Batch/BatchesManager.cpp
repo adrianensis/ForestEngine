@@ -9,7 +9,7 @@ void BatchesManager::addRenderer(Ptr<MeshRenderer> renderer)
 
 	if (!mBatches.contains(BatchData))
 	{
-		MAP_INSERT(mBatches, BatchData, OwnerPtr<Batch>::newObject());
+		mBatches.insert_or_assign(BatchData, OwnerPtr<Batch>::newObject());
         (mBatches).at(BatchData)->init(BatchData);
 	}
 
