@@ -1,6 +1,5 @@
 #include "Test/Test.hpp"
-#include "Maths/Quaternion.hpp"
-#include <cmath>
+#include "Core/Maths/Quaternion.hpp"
 
 Quaternion mul(Quaternion q1, Quaternion q2)
 {
@@ -59,7 +58,7 @@ int main()
 	test_show(f.toEuler());
 	test_expected_bool(f.toEuler().eq(Vector3(-180, 10, 10), 0.1f), true);*/
 
-	Matrix4 *m = NEW(Matrix4);
+	Matrix4 *m = Memory::newObject<Matrix4>();
 	m->zeros();
 
 	Quaternion i(0, 0, 0, 1);

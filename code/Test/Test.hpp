@@ -19,14 +19,14 @@
                    << "===========  " << #theClass << "  ===========" << std::endl \
                    << std::endl;                                                   \
     theClass __test__any;                                                          \
-    bool __test__bool;                                                             \
-    f32 __test__float;                                                             \
-    f64 __test__float_precision;                                                   \
-    i64 __test__sint;                                                              \
-    u64 __test__uint;                                                              \
+    bool __test__bool = 0;                                                             \
+    f32 __test__float = 0;                                                             \
+    f64 __test__float_precision = 0;                                                   \
+    i64 __test__sint = 0;                                                              \
+    u64 __test__uint = 0;                                                              \
     int __test__ok = 0;                                                            \
     int __test__total = 0;                                                         \
-    bool __test__b;
+    bool __test__b = false;
 
 #define test_title(text)                                                      \
     __test__output << std::endl                                               \

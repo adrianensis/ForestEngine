@@ -1,7 +1,6 @@
 #include "Test/Test.hpp"
-#include "Maths/Vector2.hpp"
-#include "Maths/MathUtils.hpp"
-#include <cmath>
+#include "Core/Maths/Vector2.hpp"
+#include "Core/Maths/MathUtils.hpp"
 
 int main()
 {

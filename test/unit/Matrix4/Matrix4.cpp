@@ -1,11 +1,11 @@
 #include "Test/Test.hpp"
-#include "Maths/Matrix4.hpp"
+#include "Core/Maths/Matrix4.hpp"
 
 int main()
 {
 	test(Matrix4);
 
-	Matrix4 *m = NEW(Matrix4);
+	Matrix4 *m = Memory::newObject<Matrix4>();
 
 	m->init(1);
 
@@ -46,7 +46,7 @@ int main()
 	test_expected_uint(m->get(3, 2), 3);
 	test_expected_uint(m->get(3, 3), 3);
 
-	Matrix4 *m2 = NEW(Matrix4);
+	Matrix4 *m2 = Memory::newObject<Matrix4>();
 
 	m2->init(*m);
 
@@ -55,7 +55,7 @@ int main()
 	std::array<f32, 16> array;
 	array.fill(1);
 
-	Matrix4 *m3 = NEW(Matrix4);
+	Matrix4 *m3 = Memory::newObject<Matrix4>();
 
 	m3->init(array);
 
