@@ -8,7 +8,7 @@ project(${PROJECTNAME} LANGUAGES CXX C)
 # FUNCTIONS
 # ----------------------------------------------------------------------------
 
-function(build_single_program path prefix program_name)
+function(build_program path prefix program_name)
 
   set(PROGRAM_PATH "${path}/${program_name}")
   message("BUILD PROGRAM ${PROGRAM_PATH}")
@@ -29,11 +29,9 @@ endfunction()
 # ----------------------------------------------------------------------------
 # CPP CONFIG
 # ----------------------------------------------------------------------------
-# set(CMAKE_CXX_COMPILER /usr/bin/g++)
-set(CMAKE_CXX_STANDARD 23)
 
-# set(CMAKE_CXX_FLAGS_ALL "-std=c++17 -Wall") # this macro was invented by me
-set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Wall")
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(ENABLE_LOGS)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D DE_ENABLE_LOGS")
@@ -43,12 +41,13 @@ if(ENABLE_PROFILER)
   set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D BUILD_WITH_EASY_PROFILER")
 endif(ENABLE_PROFILER)
 
-if(ENABLE_ADDRESS_SANITIZER)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -fsanitize=address -static-libasan")
-endif(ENABLE_ADDRESS_SANITIZER)
-
 if(UNIX)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Werror=return-type -fmodules-ts")
+  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -Wall -Werror=return-type")
+
+  if(ENABLE_ADDRESS_SANITIZER)
+    set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -fsanitize=address -static-libasan")
+  endif(ENABLE_ADDRESS_SANITIZER)
+
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D DE_DEBUG -mavx -ftree-vectorize")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_ALL} -O3 -mavx")
 endif(UNIX)
@@ -63,15 +62,6 @@ endif(WIN32)
 # OUTPUT DIRECTORIES
 # ----------------------------------------------------------------------------
 
-# set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/compiledLibs")
-# set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/binaries")
-
-# set(LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
-# set(ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
-# set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries")
-
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/compiledLibs")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE}")
 # ----------------------------------------------------------------------------
 
@@ -184,11 +174,19 @@ endif(ENABLE_PROFILER)
 # ----------------------------------------------------------------------------
 
 if(BUILD_UNIT_TESTS)
-  build_programs("test/unit" "test_unit")
+    set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test/unit)
+    file(GLOB TESTS RELATIVE ${TEST_DIR} ${TEST_DIR}/*)
+    FOREACH(TEST ${TESTS})
+        build_program("test/unit" "test_unit" ${TEST})
+    ENDFOREACH()
 endif(BUILD_UNIT_TESTS)
 
 if(BUILD_INTEGRATION_TESTS)
-  build_programs("test/integration" "test_integration")
+    set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test/integration)
+    file(GLOB TESTS RELATIVE ${TEST_DIR} ${TEST_DIR}/*)
+    FOREACH(TEST ${TESTS})
+        build_program("test/integration" "test_integration" ${TEST})
+    ENDFOREACH()
 endif(BUILD_INTEGRATION_TESTS)
 
 # ----------------------------------------------------------------------------
@@ -197,7 +195,7 @@ endif(BUILD_INTEGRATION_TESTS)
 
 message("Tools to build: ${TOOLS_TO_BUILD}")
 FOREACH(TOOL ${TOOLS_TO_BUILD})
-build_single_program("tools" "tool" ${TOOL})
+    build_program("tools" "tool" ${TOOL})
 ENDFOREACH()
 # ----------------------------------------------------------------------------
 # GAMES
@@ -205,5 +203,5 @@ ENDFOREACH()
 
 message("Apps to build: ${APPS_TO_BUILD}")
 FOREACH(APP ${APPS_TO_BUILD})
-  build_single_program("apps" "app" ${APP})
+    build_program("apps" "app" ${APP})
 ENDFOREACH()
