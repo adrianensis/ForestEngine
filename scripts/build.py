@@ -7,7 +7,11 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 cwd = os.path.join(cwd, "..")
 os.chdir(cwd)
 print(cwd)
-  
+
+##########################################
+########## DATA ###########
+##########################################
+
 buildDir="build"
 dependenciesDir="dependencies"
 binariesDir="binaries"
@@ -89,18 +93,13 @@ elif system_name == "Windows":
 #     # Windows...
 #     pass
 
-if not os.path.isdir(buildDir):
-      os.mkdir(buildDir)
-if not os.path.isdir(buildTargetDir):
-      os.mkdir(buildTargetDir)
-
 ##########################################
-########## PRE BUILD ###########
+########## FUNCTIONS ###########
 ##########################################
 
-# easy_profiler GUI
-if enableProfiler:
-    os.chdir(profilerDepencencyDir)
+# build a CMake project
+def build_cmake(projectDir, buildCommandArgs):
+    os.chdir(projectDir)
 
     if not os.path.isdir(buildDir):
         os.mkdir(buildDir)
@@ -109,52 +108,40 @@ if enableProfiler:
 
     os.chdir(buildTargetDir)
 
-    buildProfilerCommandArgs = [
+    buildCommandArgsString =" ".join(buildCommandArgs)
+
+    buildCommand = 'cmake {cmake_generator} {buildCommandArgsString} ../..'.format(
+    cmake_generator = cmake_generator,
+    buildCommandArgsString = buildCommandArgsString)
+    print(buildCommand)
+    os.system(buildCommand)
+    os.system(systemBuildCommand)
+    # go back
+    os.chdir(cwd)
+
+##########################################
+########## PRE BUILD ###########
+##########################################
+
+# easy_profiler GUI
+if enableProfiler:
+    buildCommandArgs = [
         "-DCMAKE_BUILD_TYPE=" + buildType
     ]
 
-    buildProfilerCommandArgsString =" ".join(buildProfilerCommandArgs)
+    build_cmake(profilerDepencencyDir, buildCommandArgs)
 
-    buildProfilerCommand = 'cmake {cmake_generator} {buildProfilerCommandArgsString} ../..'.format(
-    cmake_generator = cmake_generator,
-    buildProfilerCommandArgsString = buildProfilerCommandArgsString)
-    print(buildProfilerCommand)
-    os.system(buildProfilerCommand)
-    os.system(systemBuildCommand)
-
-# go back
-os.chdir(cwd)
 
 # freetype
-os.chdir(freetypeDepencencyDir)
-
-if not os.path.isdir(buildDir):
-    os.mkdir(buildDir)
-if not os.path.isdir(buildTargetDir):
-    os.mkdir(buildTargetDir)
-
-os.chdir(buildTargetDir)
-
-buildFreetypeCommandArgs = [
+buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType
 ]
 
-buildFreetypeCommandArgsString =" ".join(buildFreetypeCommandArgs)
-
-buildFreetypeCommand = 'cmake {cmake_generator} {buildFreetypeCommandArgsString} ../..'.format(
-cmake_generator = cmake_generator,
-buildFreetypeCommandArgsString = buildFreetypeCommandArgsString)
-print(buildFreetypeCommand)
-os.system(buildFreetypeCommand)
-os.system(systemBuildCommand)
-
-# go back
-os.chdir(cwd)
+build_cmake(freetypeDepencencyDir, buildCommandArgs)
 
 ##########################################
 ########## BUILD ###########
 ##########################################
-os.chdir(os.path.join(cwd, buildTargetDir))
 
 buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType,
@@ -167,18 +154,7 @@ buildCommandArgs = [
     "-DENABLE_ADDRESS_SANITIZER=" + str(enableAddressSanitizer),
 ]
 
-buildCommandArgsString =" ".join(buildCommandArgs)
-
-buildCommand = 'cmake {cmake_generator} {buildCommandArgsString} ../..'.format(
-  cmake_generator = cmake_generator,
-  buildCommandArgsString = buildCommandArgsString)
-print(buildCommand)
-os.system(buildCommand)
-
-os.system(systemBuildCommand)
-
-# go back to root folder after build
-os.chdir(cwd)
+build_cmake(cwd, buildCommandArgs)
 
 ##########################################
 ########## POST BUILD ###########
