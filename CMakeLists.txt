@@ -58,18 +58,16 @@ if(WIN32)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_ALL}")
 endif(WIN32)
 
+message("Compiler: ${CMAKE_CXX_COMPILER}")
+message("Release: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("Debug: ${CMAKE_CXX_FLAGS_DEBUG}")
+message("Selected Build target: ${CMAKE_BUILD_TYPE}")
+
 # ----------------------------------------------------------------------------
 # OUTPUT DIRECTORIES
 # ----------------------------------------------------------------------------
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE}")
-# ----------------------------------------------------------------------------
-
-message("Compiler: ${CMAKE_CXX_COMPILER}")
-message("Release: ${CMAKE_CXX_FLAGS_RELEASE}")
-message("Debug: ${CMAKE_CXX_FLAGS_DEBUG}")
-
-message("Selected Build target: ${CMAKE_BUILD_TYPE}")
 
 # ----------------------------------------------------------------------------
 # DEPENDENCIES
