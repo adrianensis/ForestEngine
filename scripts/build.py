@@ -156,8 +156,6 @@ os.chdir(cwd)
 ##########################################
 os.chdir(os.path.join(cwd, buildTargetDir))
 
-# -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
-
 buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType,
     "-DBUILD_UNIT_TESTS=" + str(buildUnitTests),
