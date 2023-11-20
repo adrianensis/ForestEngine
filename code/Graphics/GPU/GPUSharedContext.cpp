@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
