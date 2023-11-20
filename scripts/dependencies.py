@@ -33,7 +33,7 @@ os.chdir(cwd)
 #print(cwd)
 
 destiny="dependencies"
-origin_path_base="scripts/dependencies-zip"
+zipArchivesDir="scripts/dependencies-zip"
 
 installSystemDepencencies=False
 
@@ -96,36 +96,36 @@ if installSystemDepencencies:
 # ------------------------------------------------------------------------
 
 # GLFW
-extract(os.path.join(origin_path_base, "glfw-3.3.4.zip"), destiny)
+extract(os.path.join(zipArchivesDir, "glfw-3.3.4.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
 # glad
-extract(os.path.join(origin_path_base, "glad.zip"), destiny + "/glad")
+extract(os.path.join(zipArchivesDir, "glad.zip"), destiny + "/glad")
 
 # ------------------------------------------------------------------------
 
 # JSON https://github.com/nlohmann/json
-extract(os.path.join(origin_path_base, "json-3.9.1.zip"), destiny)
+extract(os.path.join(zipArchivesDir, "json-3.9.1.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
 # Easy Profiler https://github.com/yse/easy_profiler
-extract(os.path.join(origin_path_base, "easy_profiler-2.1.0.zip"), destiny)
+extract(os.path.join(zipArchivesDir, "easy_profiler-2.1.0.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
 # stb https://github.com/nothings/stb
-extract(os.path.join(origin_path_base, "stb.zip"), destiny)
+extract(os.path.join(zipArchivesDir, "stb.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
 # cgltf https://github.com/jkuhlmann/cgltf
-extract(os.path.join(origin_path_base, "cgltf-1.13.zip"), destiny)
+extract(os.path.join(zipArchivesDir, "cgltf-1.13.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
 # freetype https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz
-extract(os.path.join(origin_path_base, "freetype-2.10.1.tar.gz"), destiny)
+extract(os.path.join(zipArchivesDir, "freetype-2.10.1.tar.gz"), destiny)
 
 # ------------------------------------------------------------------------
