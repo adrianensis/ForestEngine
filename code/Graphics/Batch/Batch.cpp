@@ -55,7 +55,7 @@ void Batch::enable()
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
     GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
-	GET_SYSTEM(GPUSharedContext).mMatricesBlock.setData(gpuMatricesData);
+	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
 
     if(mBatchData.mStencilData.mUseStencil)
     {

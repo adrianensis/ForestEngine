@@ -48,14 +48,14 @@ public:
     class UniformBlocks
     {
     public:
-        inline static const GPUUniformBlockData mMatrices
+        inline static const GPUUniformBlockData mGlobalMatrices
         {
             {
                 {GPUStorage::UNIFORM, Types::mMatrix4, "projectionMatrix"},
                 {GPUStorage::UNIFORM, Types::mMatrix4, "viewMatrix"}
             },
-            "Matrices",
-            "matrices"
+            "GlobalMatrices",
+            "globalMatrices"
         };
     };
 

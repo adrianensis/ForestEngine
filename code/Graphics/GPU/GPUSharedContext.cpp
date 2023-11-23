@@ -3,10 +3,10 @@
 
 void GPUSharedContext::init()
 {
-    mMatricesBlock.init(0, GPUBuiltIn::UniformBlocks::mMatrices, false);
+    mGlobalMatricesBlock.init(0, GPUBuiltIn::UniformBlocks::mGlobalMatrices, false);
 }
 
 void GPUSharedContext::terminate()
 {
-    mMatricesBlock.terminate();
+    mGlobalMatricesBlock.terminate();
 }

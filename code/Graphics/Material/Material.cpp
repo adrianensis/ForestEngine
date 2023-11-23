@@ -22,7 +22,7 @@ void Material::init(const MaterialData& materialData, u32 id)
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
-    mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mMatrices);
+    mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mGlobalMatrices);
 
     if(materialData.mIsSkinned)
     {

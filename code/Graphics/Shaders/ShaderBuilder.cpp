@@ -65,9 +65,9 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& color = get().getAttribute(GPUBuiltIn::VertexInput::mColor.mName);
     auto& textureCoord = get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);    
     
-    auto& matricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mMatrices.mInstanceName);    
-    Variable projectionMatrix(matricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
-    Variable viewMatrix(matricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(1));
+    auto& globalMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mGlobalMatrices.mInstanceName);    
+    Variable projectionMatrix(globalMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+    Variable viewMatrix(globalMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(1));
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);

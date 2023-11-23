@@ -19,5 +19,5 @@ public:
     void terminate();
     
 public:
-	GPUUniformBlock mMatricesBlock;
+	GPUUniformBlock mGlobalMatricesBlock;
 };
