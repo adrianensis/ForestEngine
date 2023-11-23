@@ -7,8 +7,8 @@ ClassRegister::ClassRegister(const ClassDefinition& classDefinition)
 
 ClassRegister::ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback): ClassRegister(classDefinition)
 {
-    ClassManager::insert(classDefinition);
-    ClassManager::getClassMetadataInternal(classDefinition.mName).mCallback = callback;
+    ClassMetadata& classMetadata = ClassManager::insert(classDefinition);
+    classMetadata.mCallback = callback;
 }
 
 ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
