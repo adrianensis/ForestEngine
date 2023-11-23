@@ -72,7 +72,7 @@
     private:                                            \
         DECLARE_GET_PTR_THIS()               \
         \
-        inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(#__VA_ARGS__##sv, (ClassId) Hash::hashString(#__VA_ARGS__##sv), [](){ \
+        inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(smClassName, smClassId, [](){ \
             return Memory::newObject<__VA_ARGS__>(); \
         }); \
     private: // NOTE: notice the last blank space " "
