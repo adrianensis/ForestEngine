@@ -14,7 +14,7 @@ void EventsManager::send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Ev
 {
 	if (ownerExists(eventOwner))
 	{
-		ClassId eventClassId = event->getClassId();
+		ClassId eventClassId = event->getClassDefinition().mId;
 		if (ownerHasEventType(eventOwner, eventClassId))
 		{
 			ReceiversFunctorMap receiversFunctorMapCopy = getReceiversFunctorMap(eventOwner, eventClassId);

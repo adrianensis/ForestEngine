@@ -3,30 +3,27 @@
 #include "Core/Std.hpp"
 
 #define REGISTER_CLASS(...) \
-    inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(__VA_ARGS__::getClassNameStatic(), __VA_ARGS__::getClassIdStatic(), [](){ \
+    inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(__VA_ARGS__::getClassDefinitionStatic(), [](){ \
         return Memory::newObject<__VA_ARGS__>(); \
     });
 
 #define REGISTER_MEMBER(...) \
-    inline static const MemberRegister memberRegister_##__VA_ARGS__ = MemberRegister(ThisClass::getClassNameStatic(), #__VA_ARGS__, decltype(__VA_ARGS__)::getClassNameStatic(), decltype(__VA_ARGS__)::getClassIdStatic());
+    inline static const MemberRegister memberRegister_##__VA_ARGS__ = MemberRegister(ThisClass::getClassDefinitionStatic().mName, #__VA_ARGS__, decltype(__VA_ARGS__)::getClassDefinitionStatic());
 
 /*
-    NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassId()"
+    NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassDefinition().mId"
     may cause "struct"-like classes to have a VTable, which increases the struct size.
     For example: Vector3 is sizeof(f32) * 3 = 4*3 = 12, but with VTable is goes up to 24!!
     Engine heavily depends on the exact size of a Vector3 (and other classes).
 */
 #define DECLARE_METADATA_METHODS(Virtual, Override) \
-	constexpr static ClassId getClassIdStatic() { return smClassId; }; \
-    constexpr static const std::string_view& getClassNameStatic() { return smClassName; }; \
-	constexpr Virtual ClassId getClassId() const Override { return ThisClass::getClassIdStatic(); }; \
-	constexpr Virtual const std::string_view& getClassName() const Override { return ThisClass::getClassNameStatic(); };
+	constexpr static const ClassDefinition& getClassDefinitionStatic() { return smClassDefinition; }; \
+	constexpr Virtual const ClassDefinition& getClassDefinition() const Override { return getClassDefinitionStatic(); };
 
 #define DECLARE_METADATA_VARIABLES(...)                                    \
     private:                                                               \
         using ThisClass = __VA_ARGS__;                                     \
-        constexpr inline static const std::string_view smClassName = #__VA_ARGS__##sv; \
-        constexpr inline static const ClassId smClassId = Hash::hashString(ThisClass::smClassName); 
+        constexpr inline static const ClassDefinition smClassDefinition {#__VA_ARGS__##sv, Hash::hashString(#__VA_ARGS__##sv)};
 
 #define GENERATE_METADATA(...)                      \
     private: \
@@ -49,6 +46,20 @@ class ObjectBase;
 
 using ClassRegisterCallback = std::function<ObjectBase*()>;
 
+class ClassDefinition
+{
+public:
+    std::string_view mName;
+    ClassId mId = 0;
+};
+
+class MemberDefinition
+{
+public:
+    std::string_view mName;
+    ClassDefinition mClassDefinition;
+};
+
 // --------------------------------------------------------
 // MEMBER
 // --------------------------------------------------------
@@ -56,16 +67,14 @@ using ClassRegisterCallback = std::function<ObjectBase*()>;
 class MemberRegister
 {
 public:
-    MemberRegister(const std::string_view& ownerClassName, const std::string_view& name, const std::string_view& className, ClassId classId);
+    MemberRegister(const std::string_view& ownerClassName, const MemberDefinition& memberDefinition);
 };
 
-class MemberInfo
+class MemberMetadata
 {
 public:
-    MemberInfo(const std::string_view& name, const std::string_view& className, ClassId classId);
-    std::string_view mName;
-    std::string_view mClassName;
-    ClassId mClassId;
+    MemberMetadata(const MemberDefinition& memberDefinition);
+    MemberDefinition mMemberDefinition;
 };
 
 // --------------------------------------------------------
@@ -75,20 +84,19 @@ public:
 class ClassRegister
 {
 public:
-    ClassRegister(const std::string_view& className, ClassId classId);
-    ClassRegister(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback);
+    ClassRegister(const ClassDefinition& classDefinition);
+    ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback);
 };
 
-class ClassInfo
+class ClassMetadata
 {
 public:
-    ClassInfo(const std::string_view& className, ClassId classId);
-    ClassInfo(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback);
+    ClassMetadata(const ClassDefinition& classDefinition);
+    ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback);
 
-    std::string_view mClassName;
-    ClassId mClassId;
+    ClassDefinition mClassDefinition;
     ClassRegisterCallback mCallback;
-    std::unordered_map<std::string_view, MemberInfo> mMembersMap;
+    std::unordered_map<std::string_view, MemberMetadata> mMembersMap;
 };
 
 // --------------------------------------------------------
@@ -109,12 +117,12 @@ public:
 
     static ObjectBase* instance(const std::string_view& className);
 
-    static const ClassInfo& getClassInfoByClassName(const std::string_view& className);
-    static const ClassInfo& getClassInfoByClassId(const ClassId classId);
+    static const ClassMetadata& getClassMetadataByName(const std::string_view& className);
+    static const ClassMetadata& getClassMetadataById(const ClassId classId);
 
 private:
-    static ClassInfo& insert(const std::string_view& className, ClassId classId);
-    static ClassInfo& getClassInfoInternal(const std::string_view& className);
-    inline static std::unordered_map<std::string_view, ClassInfo> mClassMapByName;
-    inline static std::unordered_map<ClassId, ClassInfo*> mClassMapById;
+    static ClassMetadata& insert(const ClassDefinition& classDefinition);
+    static ClassMetadata& getClassMetadataInternal(const std::string_view& className);
+    inline static std::unordered_map<std::string_view, ClassMetadata> mClassMapByName;
+    inline static std::unordered_map<ClassId, ClassMetadata*> mClassMapById;
 };

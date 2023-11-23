@@ -45,21 +45,21 @@ public:
 	template<class T> T_EXTENDS(T, UIStyle)
 	void addStyle()
 	{
-		mStyles.insert_or_assign(T::getClassIdStatic(), Memory::newObject<T>());
+		mStyles.insert_or_assign(T::getClassDefinitionStatic().mId, Memory::newObject<T>());
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getStyle()
 	{
-		CHECK_MSG(mStyles.contains(T::getClassIdStatic()), "Style not found");
+		CHECK_MSG(mStyles.contains(T::getClassDefinitionStatic().mId), "Style not found");
 
-		return *(static_cast<T*>(mStyles.at(T::getClassIdStatic())));
+		return *(static_cast<T*>(mStyles.at(T::getClassDefinitionStatic().mId)));
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getOrAddStyle()
 	{
-		if(!mStyles.contains(T::getClassIdStatic()))
+		if(!mStyles.contains(T::getClassDefinitionStatic().mId))
 		{
 			addStyle<T>();
 		}

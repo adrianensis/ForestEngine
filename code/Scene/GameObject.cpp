@@ -85,7 +85,7 @@ void GameObject::destroy()
 
 IMPLEMENT_SERIALIZATION(GameObject)
 {
-	SERIALIZE("class", getClassName())
+	SERIALIZE("class", getClassDefinition().mName)
 
 	SERIALIZE("is_static", mIsStatic)
 	SERIALIZE("should_persist", mShouldPersist)

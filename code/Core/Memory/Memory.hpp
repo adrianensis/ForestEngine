@@ -31,7 +31,7 @@ public:
 
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
-			className = object->getClassName();
+			className = object->getClassDefinition().mName;
 		}
 		else
 		{
@@ -58,7 +58,7 @@ public:
 		std::string_view className;
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
-			className = pointer->getClassName();
+			className = pointer->getClassDefinition().mName;
 		}
 		else
 		{

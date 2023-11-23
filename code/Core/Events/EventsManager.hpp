@@ -23,13 +23,13 @@ public:
 	template <class E> T_EXTENDS(E, Event)
 	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
 	{
-        subscribe(E::getClassIdStatic(), eventOwner, eventReceiver, eventCallback);
+        subscribe(E::getClassDefinitionStatic().mId, eventOwner, eventReceiver, eventCallback);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
 	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
 	{
-        unsubscribe(E::getClassIdStatic(), eventOwner, eventReceiver);
+        unsubscribe(E::getClassDefinitionStatic().mId, eventOwner, eventReceiver);
 	}
 
     void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);

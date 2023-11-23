@@ -15,12 +15,12 @@ public:
 	template <class T> T_EXTENDS(T, Shape)
 	Ptr<const Mesh> getPrimitive()
 	{
-		if(!mPrimitivesMap.contains(T::getClassIdStatic()))
+		if(!mPrimitivesMap.contains(T::getClassDefinitionStatic().mId))
 		{
-			mPrimitivesMap.insert_or_assign(T::getClassIdStatic(), createPrimitive<T>());
+			mPrimitivesMap.insert_or_assign(T::getClassDefinitionStatic().mId, createPrimitive<T>());
 		}
 		
-		return Ptr<Mesh>(mPrimitivesMap.at(T::getClassIdStatic()));
+		return Ptr<Mesh>(mPrimitivesMap.at(T::getClassDefinitionStatic().mId));
 	}
 
 private:

@@ -1,37 +1,35 @@
 #include "Core/Metadata/ClassManager.hpp"
 
-ClassRegister::ClassRegister(const std::string_view& className, ClassId classId)
+ClassRegister::ClassRegister(const ClassDefinition& classDefinition)
 {
-    ClassManager::insert(className, classId);
+    ClassManager::insert(classDefinition);
 }
 
-ClassRegister::ClassRegister(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback): ClassRegister(className, classId)
+ClassRegister::ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback): ClassRegister(classDefinition)
 {
-    ClassManager::insert(className, classId);
-    ClassManager::getClassInfoInternal(className).mCallback = callback;
+    ClassManager::insert(classDefinition);
+    ClassManager::getClassMetadataInternal(classDefinition.mName).mCallback = callback;
 }
 
-ClassInfo::ClassInfo(const std::string_view& className, ClassId classId)
+ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
 {
-    mClassName = className;
+    mClassDefinition = classDefinition;
 }
 
-ClassInfo::ClassInfo(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback): ClassInfo(className, classId)
+ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback): ClassMetadata(classDefinition)
 {
-    mClassName = className;
+    mClassDefinition = classDefinition;
     mCallback = callback;
 }
 
-MemberRegister::MemberRegister(const std::string_view& ownerClassName, const std::string_view& name, const std::string_view& className, ClassId classId)
+MemberRegister::MemberRegister(const std::string_view& ownerClassName, const MemberDefinition& memberDefinition)
 {
-    ClassManager::getClassInfoInternal(ownerClassName).mMembersMap.insert_or_assign(name, MemberInfo(name, className, classId));
+    ClassManager::getClassMetadataInternal(ownerClassName).mMembersMap.insert_or_assign(memberDefinition.mName, MemberMetadata(memberDefinition));
 }
 
-MemberInfo::MemberInfo(const std::string_view& name, const std::string_view& className, ClassId classId)
+MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
 {
-    mName = name;
-    mClassName = className;
-    mClassId = classId;
+    mMemberDefinition = memberDefinition;
 }
 
 ObjectBase* ClassManager::instance(const std::string_view& className)
@@ -39,32 +37,32 @@ ObjectBase* ClassManager::instance(const std::string_view& className)
     return mClassMapByName.at(className).mCallback();
 }
 
-ClassInfo& ClassManager::insert(const std::string_view& className, ClassId classId)
+ClassMetadata& ClassManager::insert(const ClassDefinition& classDefinition)
 {
-    if(!mClassMapByName.contains(className))
+    if(!mClassMapByName.contains(classDefinition.mName))
     {
-        mClassMapByName.insert_or_assign(className, ClassInfo(className, classId));
+        mClassMapByName.insert_or_assign(classDefinition.mName, ClassMetadata(classDefinition));
     }
 
-    if(!mClassMapById.contains(classId))
+    if(!mClassMapById.contains(classDefinition.mId))
     {
-        mClassMapById.insert_or_assign(classId, &mClassMapByName.at(className));
+        mClassMapById.insert_or_assign(classDefinition.mId, &mClassMapByName.at(classDefinition.mName));
     }
 
-    return mClassMapByName.at(className);
+    return mClassMapByName.at(classDefinition.mName);
 }
 
-ClassInfo& ClassManager::getClassInfoInternal(const std::string_view& className)
+ClassMetadata& ClassManager::getClassMetadataInternal(const std::string_view& className)
 {
     return mClassMapByName.at(className);
 }
 
-const ClassInfo& ClassManager::getClassInfoByClassName(const std::string_view& className)
+const ClassMetadata& ClassManager::getClassMetadataByName(const std::string_view& className)
 {
     return mClassMapByName.at(className);
 }
 
-const ClassInfo& ClassManager::getClassInfoByClassId(const ClassId classId)
+const ClassMetadata& ClassManager::getClassMetadataById(const ClassId classId)
 {
     return *mClassMapById.at(classId);
 }

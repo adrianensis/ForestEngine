@@ -23,6 +23,6 @@ public:
 	template <class T>
 	bool isSameClass() const
 	{
-		return this->getClassId() == T::getClassIdStatic();
+		return this->getClassDefinition().mId == T::getClassDefinitionStatic().mId;
 	}
 };

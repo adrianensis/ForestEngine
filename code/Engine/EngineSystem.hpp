@@ -68,19 +68,19 @@ public:
     void createEngineSystem()
     {
         OwnerPtr<T> newEngineSystem = OwnerPtr<T>::newObject();
-        mEngineSystems.insert_or_assign(T::getClassIdStatic(), OwnerPtr<EngineSystem>::moveCast(newEngineSystem));
+        mEngineSystems.insert_or_assign(T::getClassDefinitionStatic().mId, OwnerPtr<EngineSystem>::moveCast(newEngineSystem));
     }
 
     template<typename T> T_EXTENDS(T, EngineSystem)
     Ptr<T> getEngineSystem() const
     {
-        return Ptr<T>::cast(mEngineSystems.at(T::getClassIdStatic()));
+        return Ptr<T>::cast(mEngineSystems.at(T::getClassDefinitionStatic().mId));
     }
 
     template<typename T> T_EXTENDS(T, EngineSystem)
     void removeEngineSystem()
     {
-        mEngineSystems.erase(T::getClassIdStatic());
+        mEngineSystems.erase(T::getClassDefinitionStatic().mId);
     }
 
 private:

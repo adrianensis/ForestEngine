@@ -16,7 +16,7 @@ void RenderEngine::init(f32 sceneSize)
 {
 	TRACE()
 
-	registerComponentClass(MeshRenderer::getClassIdStatic());
+	registerComponentClass(MeshRenderer::getClassDefinitionStatic().mId);
 
 	mCameraDirtyTranslation = true;
 

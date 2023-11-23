@@ -10,7 +10,7 @@ enum class EnumName : u8\
     MAX\
 };\
 template <>\
-inline const std::string_view& EnumsManager::getEnumNameFromTemplate<EnumName>() { static std::string_view enumName = #EnumName; return enumName; } \
+inline const std::string_view& EnumsManager::getEnumNameFromTemplate<EnumName>() { static std::string_view name = #EnumName; return name; } \
 inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { FOR_EACH_EVEN(ADD_TRAIL_COMMA, __VA_ARGS__) });
 
 // --------------------------------------------------------
@@ -20,16 +20,16 @@ inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { F
 class EnumRegister
 {
 public:
-    EnumRegister(const std::string_view& enumName, const std::vector<std::string_view>& names);
+    EnumRegister(const std::string_view& name, const std::vector<std::string_view>& valueNames);
 };
 
-class EnumInfo
+class EnumDefinition
 {
 public:
-    EnumInfo(const std::string_view& enumName, const std::vector<std::string_view>& names);
+    EnumDefinition(const std::string_view& name, const std::vector<std::string_view>& valueNames);
 
-    std::string_view mEnumName;
-    std::vector<std::string_view> mNames;
+    std::string_view mName;
+    std::vector<std::string_view> mValueNames;
 };
 
 class EnumsManager
@@ -45,21 +45,21 @@ public:
     template <typename E>
     static const std::string_view& toString(E enumToken)
     {
-        return getEnumInfo<E>().mNames[static_cast<u8>(enumToken)];
+        return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
     }
-    static const std::string_view& toString(const std::string_view& enumName, u8 enumToken)
+    static const std::string_view& toString(const std::string_view& name, u8 enumToken)
     {
-        return getEnumInfo(enumName).mNames[enumToken];
+        return getEnumMetadata(name).mValueNames[enumToken];
     }
     template <typename E>
-    static const EnumInfo& getEnumInfo()
+    static const EnumDefinition& getEnumMetadata()
     {
-        return getEnumInfo(getEnumNameFromTemplate<E>());
+        return getEnumMetadata(getEnumNameFromTemplate<E>());
     }
-    static const EnumInfo& getEnumInfo(const std::string_view& enumName);
+    static const EnumDefinition& getEnumMetadata(const std::string_view& name);
 private:
-    static const EnumInfo& create(const std::string_view& enumName, const std::vector<std::string_view>& names);
+    static const EnumDefinition& create(const std::string_view& name, const std::vector<std::string_view>& valueNames);
 private:
-    inline static std::unordered_map<std::string_view, EnumInfo> mEnumsMapByName;
+    inline static std::unordered_map<std::string_view, EnumDefinition> mEnumsMapByName;
     inline static std::string_view mEmptyName;
 };
