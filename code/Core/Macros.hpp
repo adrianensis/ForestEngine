@@ -150,8 +150,8 @@
 // COPY
 // --------------------------------------------------------
 
-#define DECLARE_COPY(...)                                                             \
-    __VA_ARGS__ &operator=(const __VA_ARGS__ &other)                                  \
+#define DECLARE_COPY()                                                             \
+    ThisClass &operator=(const ThisClass &other)                                  \
     {                                                                                 \
         if (this != &other)                                                           \
         {                                                                             \
@@ -160,13 +160,13 @@
         return *this;                                                                 \
     }                                                                                 \
                                                                                       \
-    void __specificCopy(const __VA_ARGS__ &other)
+    void __specificCopy(const ThisClass &other)
 
 #define DO_COPY(MemberName) MemberName = other.MemberName;
 
 
-#define DECLARE_MOVE(...)                                                             \
-    __VA_ARGS__ &operator=(__VA_ARGS__ &&other)                                  \
+#define DECLARE_MOVE()                                                             \
+    ThisClass &operator=(ThisClass &&other)                                  \
     {                                                                                 \
         if (this != &other)                                                           \
         {                                                                             \
@@ -175,7 +175,7 @@
         return *this;                                                                 \
     }                                                                                 \
                                                                                       \
-    void __specificMove(__VA_ARGS__ &other)
+    void __specificMove(ThisClass &other)
 
 // --------------------------------------------------------
 // FOR LOOPS

@@ -90,6 +90,8 @@ friend class OwnerPtr;
 template<class W>
 friend class Ptr;
 
+GENERATE_METADATA_STRUCT(Ptr<T>);
+
 public:
     template <class OtherClass>
     static Ptr<T> cast(const Ptr<OtherClass>& other)
@@ -134,7 +136,7 @@ public:
         set(nullptr, nullptr);
     }
 
-    DECLARE_COPY(Ptr<T>) { assign(other); }
+    DECLARE_COPY() { assign(other); }
     bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     operator bool() const { return this->isValid(); }
@@ -319,6 +321,7 @@ class SharedPtr : public RefCountedPtrBase<T>
 template<class U>
 friend class Ptr;
 
+GENERATE_METADATA_STRUCT(SharedPtr<T>);
 public:
     template <class OtherClass>
     static SharedPtr<T> cast(const SharedPtr<OtherClass>& other)
@@ -331,7 +334,7 @@ public:
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
     SharedPtr(SharedPtr<T>&& other) { assign(other); }
     operator SharedPtr<const T>() const { return SharedPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
-    DECLARE_COPY(SharedPtr<T>) { assign(other); }
+    DECLARE_COPY() { assign(other); }
 
     template <typename ... Args>
 	static SharedPtr<T> newObject(Args&&... args)
@@ -359,6 +362,7 @@ private:
 template<class T>
 class OwnerPtr : public BaseOwnerPtr, public RefCountedPtrBase<T>
 {
+    GENERATE_METADATA_STRUCT(OwnerPtr<T>);
 public:
     template <class OtherClass>
     static OwnerPtr<T> moveCast(OwnerPtr<OtherClass>& other)
@@ -375,7 +379,7 @@ public:
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
     //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
-    DECLARE_MOVE(OwnerPtr<T>) { assign(other); }
+    DECLARE_MOVE() { assign(other); }
 
     template <typename ... Args>
 	static OwnerPtr<T> newObject(Args&&... args)

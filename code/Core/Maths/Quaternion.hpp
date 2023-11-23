@@ -120,7 +120,7 @@ public:
 	* functions can not have constant qualification.
 	*/
 
-	DECLARE_COPY(Quaternion)
+	DECLARE_COPY()
 	{
         set(other);
 	}

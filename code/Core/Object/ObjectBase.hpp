@@ -32,7 +32,7 @@ public:
 	}
     
 	// Assignment
-	DECLARE_COPY(ObjectBase)
+	DECLARE_COPY()
 	{
         // empty to avoid copying mObjectId
 	}
