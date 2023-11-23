@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/BasicTypes.hpp"
+#include "Core/Std.hpp"
 
 #define DECLARE_ENUM(EnumName, ...) \
 enum class EnumName : u8\

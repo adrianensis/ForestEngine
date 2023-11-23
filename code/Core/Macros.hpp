@@ -32,10 +32,6 @@
 // CLASS - METADATA MACROS
 // --------------------------------------------------------
 
-#define CLASS_MACRO_CONSTRUCTOR(ClassName) \
-	ClassName() = default;        \
-	~ClassName() override = default;
-
 #define DECLARE_GET_PTR_THIS() \
 	Ptr<ThisClass> getPtrToThis()                                               \
 	{                                                                             \
@@ -45,43 +41,6 @@
 	{                                                                             \
 		return getPtrToThisCasted<const ThisClass>();  \
 	}
-
-/*
-    NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassId()"
-    may cause "struct"-like classes to have a VTable, which increases the struct size.
-    For example: Vector3 is sizeof(f32) * 3 = 4*3 = 12, but with VTable is goes up to 24!!
-    Engine heavily depends on the exact size of a Vector3 (and other classes).
-*/
-#define DECLARE_METADATA_METHODS(Virtual, Override) \
-	constexpr static ClassId getClassIdStatic() { return smClassId; }; \
-    constexpr static const std::string_view& getClassNameStatic() { return smClassName; }; \
-	constexpr Virtual ClassId getClassId() const Override { return ThisClass::getClassIdStatic(); }; \
-	constexpr Virtual const std::string_view& getClassName() const Override { return ThisClass::getClassNameStatic(); };
-
-#define GENERATE_METADATA_BASE(...)                                    \
-    private:                                                               \
-        using ThisClass = __VA_ARGS__;                                     \
-        constexpr inline static const std::string_view smClassName = #__VA_ARGS__##sv; \
-        constexpr inline static const ClassId smClassId = Hash::hashString(ThisClass::smClassName); 
-
-#define GENERATE_METADATA(...)                      \
-    private: \
-        GENERATE_METADATA_BASE(__VA_ARGS__)             \
-    public:                                             \
-        DECLARE_METADATA_METHODS(virtual, override) \
-    private:                                            \
-        DECLARE_GET_PTR_THIS()               \
-        \
-        inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(smClassName, smClassId, [](){ \
-            return Memory::newObject<__VA_ARGS__>(); \
-        }); \
-    private: // NOTE: notice the last blank space " "
-
-#define GENERATE_METADATA_STRUCT(...)              \
-        GENERATE_METADATA_BASE(__VA_ARGS__)            \
-    public:                                            \
-        DECLARE_METADATA_METHODS(EMPTY_MACRO(), EMPTY_MACRO()) \
-    private: // NOTE: notice the last blank space " "
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS

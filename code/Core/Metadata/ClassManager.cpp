@@ -2,12 +2,13 @@
 
 ClassRegister::ClassRegister(const std::string_view& className, ClassId classId)
 {
-    ClassManager::getOrCreate(className, classId);
+    ClassManager::insert(className, classId);
 }
 
 ClassRegister::ClassRegister(const std::string_view& className, ClassId classId, const ClassRegisterCallback& callback): ClassRegister(className, classId)
 {
-    ClassManager::getOrCreate(className, classId).mCallback = callback;
+    ClassManager::insert(className, classId);
+    ClassManager::getClassInfoInternal(className).mCallback = callback;
 }
 
 ClassInfo::ClassInfo(const std::string_view& className, ClassId classId)
@@ -38,7 +39,7 @@ ObjectBase* ClassManager::instance(const std::string_view& className)
     return mClassMapByName.at(className).mCallback();
 }
 
-ClassInfo& ClassManager::getOrCreate(const std::string_view& className, ClassId classId)
+ClassInfo& ClassManager::insert(const std::string_view& className, ClassId classId)
 {
     if(!mClassMapByName.contains(className))
     {
@@ -58,7 +59,12 @@ ClassInfo& ClassManager::getClassInfoInternal(const std::string_view& className)
     return mClassMapByName.at(className);
 }
 
-const ClassInfo& ClassManager::getClassInfo(const std::string_view& className)
+const ClassInfo& ClassManager::getClassInfoByClassName(const std::string_view& className)
 {
-    return getClassInfoInternal(className);
+    return mClassMapByName.at(className);
+}
+
+const ClassInfo& ClassManager::getClassInfoByClassId(const ClassId classId)
+{
+    return *mClassMapById.at(classId);
 }

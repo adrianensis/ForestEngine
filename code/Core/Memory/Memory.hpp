@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/BasicTypes.hpp"
+#include "Core/Std.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Object/ObjectMetadata.hpp"
 

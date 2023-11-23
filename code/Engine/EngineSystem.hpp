@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/BasicTypes.hpp"
+#include "Core/Std.hpp"
 #include "Core/Object/Singleton.hpp"
 #include "Core/Object/ObjectBase.hpp"
 

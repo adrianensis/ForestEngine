@@ -1,5 +1,5 @@
 #include "Core/Log/Log.hpp"
-#include "Core/BasicTypes.hpp"
+#include "Core/Std.hpp"
 
 
 void Log::init()

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/BasicTypes.hpp"
+#include "Core/Std.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/Metadata/EnumsManager.hpp"
 #include "Core/Memory/Pointers.hpp"

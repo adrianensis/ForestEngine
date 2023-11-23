@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Core/BasicTypes.hpp"
+#include "Core/Std.hpp"
+#include "Core/Metadata.hpp"
 #include "Core/Hash.hpp"
 
 // Metadata for base object
 class ObjectMeta
 {
 private:
-    GENERATE_METADATA_BASE(ObjectMeta)
+    DECLARE_METADATA_VARIABLES(ObjectMeta)
 public:
     DECLARE_METADATA_METHODS(virtual, EMPTY_MACRO())
 public:
