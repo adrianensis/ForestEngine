@@ -128,10 +128,6 @@ endforeach()
 # include source code root
 include_directories("code")
 
-# ----------------------------------------------------------------------------
-# OBJECT FILES
-# ----------------------------------------------------------------------------
-
 # object libraries
 # Alternative: CMakeLists.txt with this code into source directory.
 # add_subdirectory(source)
