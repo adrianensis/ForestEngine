@@ -125,14 +125,26 @@ void RenderEngine::renderBatches()
 {
 	PROFILER_CPU()
 
+    PROFILER_BLOCK_CPU("renderStencil");
 	mBatchesManager.renderStencil();
+    PROFILER_END_BLOCK();
+    PROFILER_BLOCK_CPU("render");
 	mBatchesManager.render();
+    PROFILER_END_BLOCK();
+    PROFILER_BLOCK_CPU("render");
 	mShapeBatchRenderer.render();
+    PROFILER_END_BLOCK();
     
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
     
+    PROFILER_BLOCK_CPU("renderScreenSpaceStencil");
 	mBatchesManager.renderScreenSpaceStencil();
+    PROFILER_END_BLOCK();
+    PROFILER_BLOCK_CPU("renderScreenSpace");
 	mBatchesManager.renderScreenSpace();
+    PROFILER_END_BLOCK();
+    PROFILER_BLOCK_CPU("render");
 	mShapeBatchRendererScreenSpace.render();
+    PROFILER_END_BLOCK();
 }

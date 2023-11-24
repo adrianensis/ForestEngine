@@ -55,7 +55,7 @@ void Window::init()
         glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
         VAR(gl_MAX_UNIFORM_BLOCK_SIZE);
         // vectors / 4 components = matrices
-        i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_UNIFORM_BLOCK_SIZE/4/4);
+        i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_UNIFORM_BLOCK_SIZE/(sizeof(f32)*16));
         VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4);
 
         ECHO("SHADER STORAGE");
@@ -66,7 +66,7 @@ void Window::init()
         glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
         VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
         // vectors / 4 components = matrices
-        i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_SHADER_STORAGE_BLOCK_SIZE/4/4);
+        i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_SHADER_STORAGE_BLOCK_SIZE/(sizeof(f32)*16));
         VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4);
 
 		glfwSwapInterval(0);

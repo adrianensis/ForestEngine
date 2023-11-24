@@ -7,11 +7,13 @@ class GPUUniformBlockData
 {
 public:
 	GPUUniformBlockData() = default;
-	GPUUniformBlockData(const std::vector<GPUVariableData>& gpuVariableDataArray, const std::string& blockName): mGPUVariableDataArray(gpuVariableDataArray), mBlockName(blockName) {}
-	GPUUniformBlockData(const std::vector<GPUVariableData>& gpuVariableDataArray, const std::string& blockName, const std::string& instanceName): mGPUVariableDataArray(gpuVariableDataArray), mBlockName(blockName), mInstanceName(instanceName) {}
+	GPUUniformBlockData(const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName):
+        mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBlockName(blockName) {}
+	GPUUniformBlockData(const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName, const std::string& instanceName):
+        mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBlockName(blockName), mInstanceName(instanceName) {}
 
 public:
-    std::vector<GPUVariableData> mGPUVariableDataArray;
+    std::vector<GPUVariableDefinitionData> mGPUVariableDefinitionDataArray;
     std::string mBlockName;
     std::string mInstanceName;
 
@@ -31,15 +33,21 @@ public:
     {
 	    GET_SYSTEM(GPUInterface).setDataUBOAnyStruct(mUBO, data);
     }
+    template <class T>
+    void setDataArray(const std::vector<T>& data)
+    {
+	    GET_SYSTEM(GPUInterface).setDataUBOAnyType(mUBO, data);
+    }
     void terminate();
 
 protected:
-    GPUUniformBlockData mGPUUniformBlockData;
 	u32 mBindingPoint = 0;
+    GPUUniformBlockData mGPUUniformBlockData;
 	u32 mUBO = 0;
     bool mIsStatic = false;
     u32 mSizeInBytes = 0;
 public:
     GET(SizeInBytes)
+    GET(BindingPoint)
     CRGET(GPUUniformBlockData)
 };

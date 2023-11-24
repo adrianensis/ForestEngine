@@ -2,6 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
+#include "Graphics/GPU/GPUUniformBlock.hpp"
 
 class Mesh;
 
@@ -25,7 +26,7 @@ public:
     void resizeMeshData(const Mesh& mesh);
     void resizeInstancesData(u32 maxInstances);
     void setMeshData(const Mesh& mesh);
-    void setInstancesData(const std::vector<Matrix4>& matrices);
+    void setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
     void setIndexesData(const Mesh& mesh);
     void enable();
     void disable();
@@ -35,6 +36,8 @@ private:
 
 private:
     GPUMeshBufferData mGPUMeshBufferData;
+	GPUUniformBlock mModelMatricesBlock;
+
     u32 mVAO = 0;
     
     u32 mVBOPosition = 0;
@@ -42,7 +45,7 @@ private:
 	u32 mVBOColor = 0;
 	u32 mVBOBonesIDs = 0;
 	u32 mVBOBonesWeights = 0;
-	u32 mVBOModelMatrix = 0;
+	u32 mVBOInstanceIDs = 0;
 
     GPUVertexBuffersLayout mGPUVertexBuffersLayout;
 
@@ -52,4 +55,5 @@ private:
 
 public:
     CRGET(GPUVertexBuffersLayout)
+    CRGET(ModelMatricesBlock)
 };

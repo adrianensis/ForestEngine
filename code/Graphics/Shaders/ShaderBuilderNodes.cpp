@@ -34,11 +34,11 @@ namespace ShaderBuilderNodes
 
         code.push_back(getIndent(indent) + "layout (std140) uniform " + mGPUUniformBlockData.mBlockName + " {");
 
-        const auto& variableDataArray = mGPUUniformBlockData.mGPUVariableDataArray;
-        FOR_LIST(it, variableDataArray)
+        const auto& variableDefinitionDataArray = mGPUUniformBlockData.mGPUVariableDefinitionDataArray;
+        FOR_LIST(it, variableDefinitionDataArray)
         {
-            const GPUVariableData& variableData = *it;
-            const Variable variable(variableData);
+            const GPUVariableDefinitionData& variableDefinitionData = *it;
+            const Variable variable(variableDefinitionData);
             auto statementCode = variable.toLines(indent + 1);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }

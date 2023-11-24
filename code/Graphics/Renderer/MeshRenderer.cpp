@@ -55,6 +55,7 @@ void MeshRenderer::calculateRendererModelMatrix()
 
     if(!mPositionOffset.eq(Vector3(0,0,0)))
     {
+        PROFILER_BLOCK_CPU("Position offset");
         Matrix4 positionOffsetMatrix;
         positionOffsetMatrix.translation(mPositionOffset);
 
@@ -107,6 +108,7 @@ void MeshRenderer::update()
 
 void MeshRenderer::updatePositions()
 {
+	PROFILER_CPU()
     mMeshInstance->appendToPositions(mComponentData.mMesh->mPositions);
 
     if(mUseDepth)
@@ -122,6 +124,7 @@ void MeshRenderer::updatePositions()
 
 void MeshRenderer::updateTextureCoords()
 {
+	PROFILER_CPU()
     mMeshInstance->appendToTextureCoordinates(mComponentData.mMesh->mTextureCoordinates);
 
     updateTextureRegion();
@@ -180,6 +183,7 @@ void MeshRenderer::setColor(const Vector4& color)
 
 void MeshRenderer::updateTextureRegion()
 {
+	PROFILER_CPU()
 	if (mComponentData.mMaterial.isValid())
 	{
 		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();

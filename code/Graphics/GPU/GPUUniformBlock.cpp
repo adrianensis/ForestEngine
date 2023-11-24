@@ -2,7 +2,7 @@
 
 GPUVariableData GPUUniformBlockData::getScopedGPUVariableData(u32 i) const
 {
-    GPUVariableData data = mGPUVariableDataArray[i];
+    GPUVariableData data = mGPUVariableDefinitionDataArray[i];
     data.mName = mInstanceName + "." + data.mName;
     return data;
 }
@@ -10,19 +10,18 @@ GPUVariableData GPUUniformBlockData::getScopedGPUVariableData(u32 i) const
 void GPUUniformBlock::init(u32 bindingPoint, const GPUUniformBlockData& gpuBlockData, bool isStatic)
 {
 	mGPUUniformBlockData = gpuBlockData;
+    mBindingPoint = bindingPoint;
     mIsStatic = isStatic;
 	mUBO = GET_SYSTEM(GPUInterface).createUBO();
-    mBindingPoint = bindingPoint;
 
     mSizeInBytes = 0;
-    FOR_ARRAY(i, mGPUUniformBlockData.mGPUVariableDataArray)
+    FOR_ARRAY(i, mGPUUniformBlockData.mGPUVariableDefinitionDataArray)
     {
-        const GPUVariableData& gpuVariableData = mGPUUniformBlockData.mGPUVariableDataArray[i];
+        const GPUVariableData& gpuVariableData = mGPUUniformBlockData.mGPUVariableDefinitionDataArray[i];
         mSizeInBytes += gpuVariableData.mGPUDataType.mTypeSizeInBytes;
     }
 
 	GET_SYSTEM(GPUInterface).bindUBO(mUBO, mBindingPoint);
-    resize(mSizeInBytes);
 }
 
 void GPUUniformBlock::terminate()
@@ -32,5 +31,5 @@ void GPUUniformBlock::terminate()
 
 void GPUUniformBlock::resize(u32 size)
 {
-	GET_SYSTEM(GPUInterface).resizeUBOAnyType(mUBO, mSizeInBytes, 1, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(GPUInterface).resizeUBOAnyType(mUBO, mSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }

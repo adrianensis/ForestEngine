@@ -23,6 +23,16 @@ void Batch::init(const BatchData& batchData)
     
     mShader = OwnerPtr<Shader>::newObject();
     mShader->init(gpuVertexBuffersLayout, mBatchData.mMaterial);
+    
+    mShader->bindUniformBlock(
+        mMeshBatcher.mGPUMeshBuffer.getModelMatricesBlock().getBindingPoint(),
+        GPUBuiltIn::UniformBlocks::mModelMatrices.mBlockName
+    );
+    
+    mShader->bindUniformBlock(
+        GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.getBindingPoint(),
+        GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.getGPUUniformBlockData().mBlockName
+    );
 }
 
 void Batch::render()
@@ -55,6 +65,7 @@ void Batch::enable()
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
     GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
+	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
 
     if(mBatchData.mStencilData.mUseStencil)
@@ -89,26 +100,32 @@ void Batch::processRenderers()
 	u32 newSize = mRenderers.size();
 	mMeshBatcher.resize(newSize);
 	
+    PROFILER_BLOCK_CPU("preUpdate");
 	FOR_LIST(it, mRenderers)
 	{
 		Ptr<MeshRenderer> renderer = *it;
 
 		if (shouldRemoveRenderer(renderer))
 		{
+            PROFILER_BLOCK_CPU("remove renderer");
 			internalRemoveRenderer(it);
 		}
 		else
 		{
+            PROFILER_BLOCK_CPU("preUpdate");
 			renderer->preUpdate();
 		}
 	}
+    PROFILER_END_BLOCK();
 
+    PROFILER_BLOCK_CPU("update");
     FOR_LIST(it, mRenderers)
 	{
 		Ptr<MeshRenderer> renderer = *it;
         renderer->update();
 		addToVertexBuffer(renderer);
 	}
+    PROFILER_END_BLOCK();
 
     mNewRendererAdded = false;
     mRegenerateBuffersRequested = false;

@@ -5,6 +5,7 @@
 
 void Editor::init()
 {
+    PROFILER_CPU();
 	SUBSCRIBE_TO_EVENT(InputEventKeyPressed, nullptr, this, [&](const Event *event)
 	{
 		handlePressedKeys();
@@ -13,7 +14,7 @@ void Editor::init()
 
 void Editor::firstUpdate()
 {
-
+    PROFILER_CPU();
 	// i32 size = 7;
 	// for(i32 x = 0; x < size; ++x)
 	// {
@@ -62,12 +63,21 @@ void Editor::firstUpdate()
 	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,60,60), 20.0f, 0);
-	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
+	// importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
+	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+
+    size = 15;
+    for(i32 x = -size; x < size; ++x)
+	{
+		for(i32 y = -size; y < size; ++y)
+		{
+			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x,y,0), 20.0f, 0);
+		}
+	}
     
     // Vector3 pos(0,0,0);
     // FOR_RANGE(x, -10, 10)
@@ -111,173 +121,28 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	UIBuilder uiBuilder;
-
-	uiBuilder.
-	// setPosition(Vector2(0,0)).
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5, 0.05f));
-
-    // uiBuilder.
-	// setText("ABC").
-	// // setText("ABC").
-	// create<UIButton>();
-    // uiBuilder.
-	// setText("DEF").
-	// // setText("ABC").
-	// create<UIButton>();
-
-
-	uiBuilder.
-	setText("File").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("New", [&](UIElement *uiElement)
-	{
-
-	}).
-	addOption("Open", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Save", [&](UIElement *uiElement)
-	{
-	});
-
-	uiBuilder.
-	setText("Sprites").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
-
-	uiBuilder.
-	setText("Edit").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
-
-	uiBuilder.
-	setText("View").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("Grid", [&](UIElement *uiElement)
-	{
-
-	}).
-	addOption("Colliders", [&](UIElement *uiElement)
-	{
-	});
-
-    uiBuilder.
-	setText("abcd").
-	create<UIEditableText>();
-
-	uiBuilder.restoreAll();
+	// UIBuilder uiBuilder;
 
 	// uiBuilder.
-	// setLayout(UILayout::HORIZONTAL).
-	// setPosition(Vector2(-1,0.5f)).
-	// setAdjustSizeToText(false).
-	// setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditorToolButton>()).
-	// setGroup("toggleButtons").
-	// setSize(Vector2(0.1f, 0.1f));
-
-    // MaterialData materialData;
-    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/EventPoint.png";
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
-
-	// uiBuilder.
-	// getUIElement<UIToggleButton>()->simulateClick();
-
-    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/PlayerStart.png";
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
-
-	// uiBuilder.
-	// nextRow();
-
-    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/SpawnPoint.png";
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
-
-    // materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/editor-icons/WayPoint.png";
-	// uiBuilder.
-	// setMaterial(GET_SYSTEM(MaterialManager).createMaterial(materialData)).
-	// create<UIToggleButton>().
-	// getUIElement<UIToggleButton>()->
-	// setOnPressedCallback([&](UIElement* uiElement){
-	// });
-
-	// uiBuilder.
-	// nextRow();
-
-	// uiBuilder.restoreMaterial();
-	// uiBuilder.restoreStyle();
-	// uiBuilder.restoreGroup();
-
-	// uiBuilder.
-	// setText("Test Button").
-	// setAdjustSizeToText(true).
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Option1", [&](UIElement *uiElement)
-	// {
-
-	// }).
-	// addOption("Option2", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Option3", [&](UIElement *uiElement)
-	// {
-	// });
-
-	// uiBuilder.
-	// nextRow();
-
-	// uiBuilder.
-	// setText("Test Button").
-	// setAdjustSizeToText(false).
-	// setSize(Vector2(0.1f, 0.3f)).
-	// create<UIList>().
-	// getUIElement<UIList>()->
-	// addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
-	// addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
-	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	// toggle();
-
-	// uiBuilder.
-	// setText("Test Button").
-	// setAdjustSizeToText(false).
-	// setSize(Vector2(0.1f, 0.3f)).
-	// create<UIList>().
-	// getUIElement<UIList>()->
-	// addOption("Option 1", [](UIElement *uiElement){ ECHO("OPTION 1") }).
-	// addOption("Option 2", [](UIElement *uiElement){ ECHO("OPTION 2") }).
-	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	// addOption("Option 3", [](UIElement *uiElement){ ECHO("OPTION 3") }).
-	// toggle();
-
-	// uiBuilder.
+	// // setPosition(Vector2(0,0)).
 	// setPosition(Vector2(-1,1)).
 	// setAdjustSizeToText(true).
-	// setSize(Vector2(0.5f, 0.05f));
+	// setSize(Vector2(0.5, 0.05f));
+
+	// uiBuilder.
+	// setText("File").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("New", [&](UIElement *uiElement)
+	// {
+
+	// }).
+	// addOption("Open", [&](UIElement *uiElement)
+	// {
+	// }).
+	// addOption("Save", [&](UIElement *uiElement)
+	// {
+	// });
 
 	// uiBuilder.
 	// setText("Sprites").
@@ -286,12 +151,30 @@ void Editor::firstUpdate()
 	// setOnPressedCallback([&, this](UIElement *uiElement){
 	// });
 
-    // uiBuilder.
-	// nextRow();
+	// uiBuilder.
+	// setText("Edit").
+	// create<UIButton>().
+	// getUIElement<UIButton>()->
+	// setOnPressedCallback([&, this](UIElement *uiElement){
+	// });
+
+	// uiBuilder.
+	// setText("View").
+	// create<UIDropdown>().
+	// getUIElement<UIDropdown>()->
+	// addOption("Grid", [&](UIElement *uiElement)
+	// {
+
+	// }).
+	// addOption("Colliders", [&](UIElement *uiElement)
+	// {
+	// });
 
     // uiBuilder.
-	// setText("Edit").
+	// setText("abcd").
 	// create<UIEditableText>();
+
+	// uiBuilder.restoreAll();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->getCameraGameObject();
 }
@@ -317,7 +200,7 @@ void Editor::update()
 
 	y += 30 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
-
+    PROFILER_BLOCK_CPU("Editor Camera");
 	Transform* cameraTransform = &cameraGameObject->mTransform.get();
 	Matrix4 cameraRotationMatrix = cameraGameObject->mTransform->getRotationMatrix();
 	cameraRotationMatrix.invert();
@@ -343,43 +226,45 @@ void Editor::update()
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
 	}
 
-	if(!mousePosition.eq(currentMousePosition))
-	{
-		Vector2 mouseVector = (currentMousePosition - mousePosition).nor() * speed;
-		Vector3 direction;
+	// if(!mousePosition.eq(currentMousePosition))
+	// {
+	// 	Vector2 mouseVector = (currentMousePosition - mousePosition).nor() * speed;
+	// 	Vector3 direction;
 
-		f32 yaw = mouseVector.x;
-		f32 pitch = mouseVector.y;
+	// 	f32 yaw = mouseVector.x;
+	// 	f32 pitch = mouseVector.y;
 
-		cameraTransform->rotate(Vector3(pitch, -yaw, 0));
-	}
+	// 	cameraTransform->rotate(Vector3(pitch, -yaw, 0));
+	// }
 
-	mousePosition = currentMousePosition;
+	// mousePosition = currentMousePosition;
+    // PROFILER_END_BLOCK();
 
+    // PROFILER_BLOCK_CPU("Draw Editor Lines");
+    // // -x to x
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
 
-    // -x to x
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
+    // // x
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
+    // // -x
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,50,0)), 1, true, Vector4(1,1,0,1));
 
-    // x
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
-    // -x
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,50,0)), 1, true, Vector4(1,1,0,1));
+    // // -y to y
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
 
-    // -y to y
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
+    // // -z to z
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
 
-    // -z to z
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
+    // // z
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
+    // // -z
+	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
 
-    // z
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
-    // -z
-	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
-
-	for(i32 x = -1000; x < 1000; x+=50)
-	{
-		GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
-	}
+	// for(i32 x = -1000; x < 1000; x+=50)
+	// {
+	// 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
+	// }
+    // PROFILER_END_BLOCK();
 }
 
 void Editor::terminate()
@@ -436,7 +321,7 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
-    //modelRendererData.mIsInstanced = true;
+    modelRendererData.mIsInstanced = true;
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
     return gameObject;

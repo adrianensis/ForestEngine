@@ -97,6 +97,12 @@ void Shader::addBool(bool value, const std::string& name)
 	glUniform1ui(location, value);
 }
 
+void Shader::bindUniformBlock(u32 bindingPoint, const std::string& blockName)
+{
+    u32 location = glGetUniformBlockIndex(mProgram, blockName.c_str());   
+    glUniformBlockBinding(mProgram, location, bindingPoint);
+}
+
 void Shader::initFromFileContents(const std::string& vertex, const std::string& fragment)
 {
     mVertexShader = glCreateShader(GL_VERTEX_SHADER);

@@ -57,6 +57,15 @@ public:
             "GlobalMatrices",
             "globalMatrices"
         };
+        
+        inline static const GPUUniformBlockData mModelMatrices
+        {
+            {
+                {{GPUStorage::UNIFORM, Types::mMatrix4, "modelMatrices"}, "", std::to_string(500)},
+            },
+            "ModelMatrices",
+            "modelMatrices"
+        };
     };
 
     class VertexInput
@@ -65,9 +74,9 @@ public:
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, Types::mVector3, "position"};
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, Types::mVector2, "texcoord"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, Types::mVector4, "color"};
-        inline static const GPUVariableDefinitionData mModelMatrix{GPUStorage::IN, Types::mMatrix4, "modelMatrix"};
         inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, Types::mBoneIDs, "BoneIDs"};
         inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, Types::mBoneWeights, "Weights"};
+        inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, Types::mUnsignedInt, "instanceID"};
     };
 
     class VertexOutput

@@ -307,6 +307,8 @@ void OcTree::addOcTreeElement(Ptr<IOcTreeElement> element)
 
 void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax)
 {
+    PROFILER_CPU()
+
     Vector3 maxWorld = modelMatrix.mulVector(Vector4(AABBMax, 1));
     Vector3 minWorld = modelMatrix.mulVector(Vector4(AABBMin, 1));
     Vector3 diffWorld(maxWorld - minWorld);

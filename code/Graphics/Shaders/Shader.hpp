@@ -26,6 +26,7 @@ public:
     void addVector3(const Vector3& value, const std::string& name);
     void addVector2(const Vector2& value, const std::string& name);
     void addBool(bool value, const std::string& name);
+    void bindUniformBlock(u32 bindingPoint, const std::string& blockName);
 
 private:
     void initFromFilePaths(const std::string& vertex, const std::string& fragment);

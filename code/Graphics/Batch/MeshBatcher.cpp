@@ -26,14 +26,29 @@ void MeshBatcher::init(const BatchData batchData)
 void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     PROFILER_CPU()
+
+    PROFILER_BLOCK_CPU("Positions");
     mMeshBuilder.appendToPositions(meshInstance->mPositions);
+    PROFILER_END_BLOCK();
+
+    PROFILER_BLOCK_CPU("TextureCoordinates");
     mMeshBuilder.appendToTextureCoordinates(meshInstance->mTextureCoordinates);
+    PROFILER_END_BLOCK();
+
+    PROFILER_BLOCK_CPU("Colors");
     if(mBatchData.mMaterial->getMaterialData().mUseVertexColor)
     {
         mMeshBuilder.appendToColors(meshInstance->mColors);
     }
+    PROFILER_END_BLOCK();
+
+    PROFILER_BLOCK_CPU("BonesVertexIDsData");
     mMeshBuilder.appendToBonesVertexIDsData(meshInstance->mBonesVertexIDsData);
+    PROFILER_END_BLOCK();
+
+    PROFILER_BLOCK_CPU("BonesVertexWeightsData");
     mMeshBuilder.appendToBonesVertexWeightsData(meshInstance->mBonesVertexWeightsData);
+    PROFILER_END_BLOCK();
 }
 
 void MeshBatcher::resize(u32 size)
@@ -44,6 +59,7 @@ void MeshBatcher::resize(u32 size)
 
 	if (size > mMaxMeshesThreshold)
 	{
+        PROFILER_BLOCK_CPU("new size");
 		if(mMaxMeshesThreshold == 0)
 		{
 			mMaxMeshesThreshold = size;
@@ -54,6 +70,7 @@ void MeshBatcher::resize(u32 size)
 		}
 
         resizeInternal(mMaxMeshesThreshold);
+        PROFILER_END_BLOCK();
 	}
 
 	mMeshesIndex = 0;
@@ -63,6 +80,7 @@ void MeshBatcher::resize(u32 size)
 
 void MeshBatcher::initInternal(u32 maxInstances)
 {
+	PROFILER_CPU()
     mMeshBuilder.init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mFacesCount * maxInstances);
     generateFacesData(maxInstances);
     mGPUMeshBuffer.resizeMeshData(mMeshBuilder);
@@ -70,6 +88,7 @@ void MeshBatcher::initInternal(u32 maxInstances)
 
 void MeshBatcher::initSingleMeshData()
 {
+	PROFILER_CPU()
     initInternal(1);
     mGPUMeshBuffer.setMeshData(mBatchData.mMesh.get());
     addMeshDataToBuffers(mBatchData.mMesh);
@@ -77,10 +96,33 @@ void MeshBatcher::initSingleMeshData()
 
 void MeshBatcher::resizeInternal(u32 maxInstances)
 {
-    mGPUMeshBuffer.resizeInstancesData(mMaxMeshesThreshold);
+	PROFILER_CPU()
+
+    mMatrices.reserve(maxInstances);
+
+    PROFILER_BLOCK_CPU("instances IDs");
+    mInstanceIDs.clear();
+    mInstanceIDs.reserve(maxInstances * (mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount));
+    FOR_RANGE(meshId, 0, maxInstances)
+    {
+        if(mBatchData.mIsInstanced)
+        {
+            mInstanceIDs.push_back(meshId);
+        }
+        else
+        {
+            FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
+            {
+                mInstanceIDs.push_back(meshId);
+            }
+        }
+    }
+    PROFILER_END_BLOCK();
+
+    mGPUMeshBuffer.resizeInstancesData(maxInstances);
     if (!mBatchData.mIsInstanced)
     {
-        initInternal(mMaxMeshesThreshold);
+        initInternal(maxInstances);
     }
 }
 
@@ -88,19 +130,15 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
 {
 	PROFILER_CPU()
 
+    mMatrices.push_back(modelMatrix);
+
     if(mBatchData.mIsInstanced)
 	{
         PROFILER_BLOCK_CPU("Instanced");
-	    mMatrices.push_back(modelMatrix);
     }
     else
     {
         PROFILER_BLOCK_CPU("Non Instanced");
-        FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
-        {
-            mMatrices.push_back(modelMatrix);
-        }
-
         addMeshDataToBuffers(meshInstance);
     }
 
@@ -168,6 +206,6 @@ void MeshBatcher::sendDataToGPU()
 	{
         mGPUMeshBuffer.setMeshData(mMeshBuilder);
     }
-    mGPUMeshBuffer.setInstancesData(mMatrices);
+    mGPUMeshBuffer.setInstancesData(mMatrices, mInstanceIDs);
     mDataSentToGPU = true;
 }

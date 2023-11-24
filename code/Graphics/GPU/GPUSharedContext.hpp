@@ -2,7 +2,6 @@
 
 #include "Graphics/GPU/GPUUniformBlock.hpp"
 
-
 class GPUSharedContextMatricesData
 {
 public:
@@ -17,7 +16,12 @@ public:
 
     void init();
     void terminate();
+    u32 requestUniformBufferBindingPoint();
     
 public:
 	GPUUniformBlock mGlobalMatricesBlock;
+
+private:
+    u32 mBindingPointsIndex = 0;
+    i32 mMaxUniformBufferBindingPoints = 0;
 };
