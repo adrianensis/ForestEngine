@@ -27,7 +27,7 @@ void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 	}
 
 	// should never get here - more bones than we have space for
-	//CHECK_MSG(false, "should never get here - more bones than we have space for");
+	CHECK_MSG(false, "should never get here - more bones than we have space for");
 }
 
 std::vector<Vector3> Mesh::calculateSkinnedVertices() const
