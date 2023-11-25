@@ -27,6 +27,7 @@ public:
     void resizeInstancesData(u32 maxInstances);
     void setMeshData(const Mesh& mesh);
     void setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
+    void setBonesTransforms(const std::vector<Matrix4>& transforms);
     void setIndexesData(const Mesh& mesh);
     void enable();
     void disable();
@@ -37,6 +38,7 @@ private:
 private:
     GPUMeshBufferData mGPUMeshBufferData;
 	GPUUniformBlock mModelMatricesBlock;
+	GPUUniformBlock mBonesMatricesBlock;
 
     u32 mVAO = 0;
     
@@ -56,4 +58,5 @@ private:
 public:
     CRGET(GPUVertexBuffersLayout)
     CRGET(ModelMatricesBlock)
+    CRGET(BonesMatricesBlock)
 };

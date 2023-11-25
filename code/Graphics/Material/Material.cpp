@@ -27,8 +27,7 @@ void Material::init(const MaterialData& materialData, u32 id)
 
     if(materialData.mIsSkinned)
     {
-        mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBonesTransform);
-
+        mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mBonesMatrices);
         mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
         mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }
@@ -55,20 +54,8 @@ void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr
 	}
 
 	shader->addVector4(mMaterialData.mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
-
 	shader->addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
-
 	shader->addVector2(GET_SYSTEM(Window).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
-
-	if(mesh->mModel)
-	{
-		bool isAnimated = mesh->mModel->isAnimated();
-        if(isAnimated)
-        {
-            const std::vector<Matrix4> & transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mesh->mModel);
-            shader->addMatrixArray(transforms, GPUBuiltIn::Uniforms::mBonesTransform.mName);
-        }
-	}
 }
 
 bool Material::hasTexture() const

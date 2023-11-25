@@ -13,6 +13,7 @@ public:
     void init(const BatchData batchData);
     void resize(u32 size);
     void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
+    void update();
     void drawCall();
     void enable();
     void disable();

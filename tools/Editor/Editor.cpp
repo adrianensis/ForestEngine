@@ -65,17 +65,17 @@ void Editor::firstUpdate()
 
 	// importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-150,0,0), 20.0f, 0);
+	gameObject = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-500,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    size = 15;
+    size = 10;
     for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x,y,0), 20.0f, 0);
+			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*10,y*10,0), 20.0f, 0);
 		}
 	}
     
@@ -226,19 +226,19 @@ void Editor::update()
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
 	}
 
-	// if(!mousePosition.eq(currentMousePosition))
-	// {
-	// 	Vector2 mouseVector = (currentMousePosition - mousePosition).nor() * speed;
-	// 	Vector3 direction;
+	if(!mousePosition.eq(currentMousePosition))
+	{
+		Vector2 mouseVector = (currentMousePosition - mousePosition).nor() * speed;
+		Vector3 direction;
 
-	// 	f32 yaw = mouseVector.x;
-	// 	f32 pitch = mouseVector.y;
+		f32 yaw = mouseVector.x;
+		f32 pitch = mouseVector.y;
 
-	// 	cameraTransform->rotate(Vector3(pitch, -yaw, 0));
-	// }
+		cameraTransform->rotate(Vector3(pitch, -yaw, 0));
+	}
 
-	// mousePosition = currentMousePosition;
-    // PROFILER_END_BLOCK();
+	mousePosition = currentMousePosition;
+    PROFILER_END_BLOCK();
 
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x

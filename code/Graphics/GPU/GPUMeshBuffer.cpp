@@ -45,6 +45,10 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestUniformBufferBindingPoint();
     mModelMatricesBlock.init(modelMatricesBindingPoint, GPUBuiltIn::UniformBlocks::mModelMatrices, mGPUMeshBufferData.mIsStatic);
+
+    u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestUniformBufferBindingPoint();
+    mBonesMatricesBlock.init(bonesMatricesBindingPoint, GPUBuiltIn::UniformBlocks::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
+    mBonesMatricesBlock.resize(Mesh::MAX_BONES);
 }
 
 void GPUMeshBuffer::terminate()
@@ -53,6 +57,7 @@ void GPUMeshBuffer::terminate()
     GET_SYSTEM(GPUInterface).deleteVAO(mVAO);
     GET_SYSTEM(GPUInterface).deleteEBO(mEBO);
     mModelMatricesBlock.terminate();
+    mBonesMatricesBlock.terminate();
 }
 
 void GPUMeshBuffer::resizeMeshData(const Mesh& mesh)
@@ -101,6 +106,13 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("UBO matrices");
     mModelMatricesBlock.setDataArray(matrices);
+    PROFILER_END_BLOCK();
+}
+
+void GPUMeshBuffer::setBonesTransforms(const std::vector<Matrix4>& transforms)
+{
+    PROFILER_BLOCK_CPU("UBO Bones Transforms");
+    mBonesMatricesBlock.setDataArray(transforms);
     PROFILER_END_BLOCK();
 }
 

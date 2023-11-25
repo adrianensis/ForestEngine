@@ -9,14 +9,7 @@
 - [ ] OpenGL - Compress textures? Why/When?
 - [ ] OpenGL - Bindless Textures
 - [ ] OpenGL - DSA - Direct State Access
-- OpenGL - Uniform Buffer Objects that allow us to declare a set of global uniform variables that remain the same over any number of shader programs
-  - [ ] For Model Matrices
-  - [ ] For Bones Matrices
-  - [x] For View and Projection Matrices
-  - Plan:
-    1. RenderEngine should store all the visible Renderer
-    2. Use Octree to calculate visibility? (frustum culling with octree?)
-    3. Before ```renderBatches()``` we should fill UBO with all model matrices (and bone matrices? and ViewProj matrices?)
+- Use Octree to calculate visibility? (frustum culling with octree?). Don't put model matrix in UBO if occluded.
 - Threads - split render and logic in different threads
   - Scripting Engine - Put scripting engine in another thread???
   - Tasks system - threaded?

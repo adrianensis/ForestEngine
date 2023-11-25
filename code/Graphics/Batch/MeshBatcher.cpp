@@ -1,6 +1,7 @@
 #include "Graphics/Batch/MeshBatcher.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
+#include "Graphics/Model/Animation/AnimationManager.hpp"
 
 void MeshBatcher::init(const BatchData batchData)
 {
@@ -154,6 +155,19 @@ void MeshBatcher::drawCall()
 		    sendDataToGPU();
         }
 		GET_SYSTEM(GPUInterface).drawElements(mBatchData.mMesh->mFaces.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
+	}
+}
+
+void MeshBatcher::update()
+{	
+	if(mBatchData.mMesh->mModel)
+	{
+		bool isAnimated = mBatchData.mMesh->mModel->isAnimated();
+        if(isAnimated)
+        {
+            const std::vector<Matrix4>& transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mBatchData.mMesh->mModel);
+            mGPUMeshBuffer.setBonesTransforms(transforms);
+        }
 	}
 }
 

@@ -39,7 +39,6 @@ public:
     public:
         inline static const GPUVariableDefinitionData mTime{GPUStorage::UNIFORM, Types::mFloat, "time"};
         inline static const GPUVariableDefinitionData mWindowSize{GPUStorage::UNIFORM, Types::mVector2, "windowSize"};
-        inline static const GPUVariableDefinitionData mBonesTransform{{GPUStorage::UNIFORM, Types::mMatrix4, "bonesTransform"}, "", Consts::MAX_BONES.mName};
         inline static const GPUVariableDefinitionData mBaseColor{GPUStorage::UNIFORM, Types::mVector4, "baseColor"};
         
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, Types::mSampler2D, "uSampler"};
@@ -65,6 +64,15 @@ public:
             },
             "ModelMatrices",
             "modelMatrices"
+        };
+
+        inline static const GPUUniformBlockData mBonesMatrices
+        {
+            {
+                {{GPUStorage::UNIFORM, Types::mMatrix4, "bonesTransform"}, "", "50"},
+            },
+            "BonesMatrices",
+            "bonesMatrices"
         };
     };
 

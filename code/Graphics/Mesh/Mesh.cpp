@@ -47,9 +47,6 @@ Vector3 Mesh::calculateSkinnedVertex(u32 i) const
 {
     Vector3 vertexPosition = mPositions[i];
 
-    const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
-    const u32 MAX_BONES = 50;
-
     const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mModel);
 
     Vector4 skinnedVertexPosition = Vector4(0,0,0,0);

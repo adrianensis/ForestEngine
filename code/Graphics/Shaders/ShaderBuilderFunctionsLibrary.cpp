@@ -15,7 +15,8 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
     auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
     auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
 
-    auto& bonesTransform = program.getAttribute(GPUBuiltIn::Uniforms::mBonesTransform.mName);
+    auto& bonesMatricesblock = program.getAttributeBlock(GPUBuiltIn::UniformBlocks::mBonesMatrices.mInstanceName);    
+    Variable bonesTransform(bonesMatricesblock.mGPUUniformBlockData.getScopedGPUVariableData(0));
     
     Variable finalPositon;
     Variable localPosition;

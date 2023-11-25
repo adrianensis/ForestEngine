@@ -37,6 +37,10 @@ private:
     Vector3 calculateSkinnedVertex(u32 i) const;
 
 public:
+
+    inline static const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
+    inline static const u32 MAX_BONES = 50;
+
 	std::vector<Vector3> mPositions;
 	std::vector<Vector3> mNormals;
 	std::vector<Vector2> mTextureCoordinates;

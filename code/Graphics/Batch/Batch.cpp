@@ -33,6 +33,11 @@ void Batch::init(const BatchData& batchData)
         GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.getBindingPoint(),
         GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.getGPUUniformBlockData().mBlockName
     );
+
+    mShader->bindUniformBlock(
+        mMeshBatcher.mGPUMeshBuffer.getBonesMatricesBlock().getBindingPoint(),
+        GPUBuiltIn::UniformBlocks::mBonesMatrices.mBlockName
+    );
 }
 
 void Batch::render()
@@ -67,6 +72,8 @@ void Batch::enable()
     GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
+
+    mMeshBatcher.update();
 
     if(mBatchData.mStencilData.mUseStencil)
     {
