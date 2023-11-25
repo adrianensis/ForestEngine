@@ -2,7 +2,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Shaders/Shader.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/RenderEngine.hpp"
@@ -44,7 +44,7 @@ void Material::init(const MaterialData& materialData, u32 id)
     mMaterialShaderVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
-void Material::bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const
+void Material::bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const
 {
 	PROFILER_CPU()
 

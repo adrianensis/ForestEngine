@@ -1,5 +1,5 @@
 #include "Graphics/Batch/ShapeBatchRenderer.hpp"
-#include "Graphics/Shaders/Shader.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
@@ -33,7 +33,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxShapes * 2 * 4); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxShapes * 2);		 // 1 index per vertex
 
-	mShaderLine = OwnerPtr<Shader>::newObject();
+	mShaderLine = OwnerPtr<GPUShader>::newObject();
 	mShaderLine->initDebug();
 
 	bind();

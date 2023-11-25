@@ -3,17 +3,18 @@
 #include "Core/Module.hpp"
 
 class GPUVertexBuffersLayout;
-class Material;
+class GPUUniformBlock;
 
-class Shader: public ObjectBase
+class GPUShader: public ObjectBase
 {
-    GENERATE_METADATA(Shader)
+    GENERATE_METADATA(GPUShader)
 public:
 
-    Shader();
-	~Shader() override = default;
+    GPUShader();
+	~GPUShader() override = default;
 
-    void init(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
+    void initFromFilePaths(const std::string& vertex, const std::string& fragment);
+    void initFromFileContents(const std::string& vertex, const std::string& fragment);
     void initDebug();
     void enable() const;
     void disable() const;
@@ -26,12 +27,8 @@ public:
     void addVector3(const Vector3& value, const std::string& name);
     void addVector2(const Vector2& value, const std::string& name);
     void addBool(bool value, const std::string& name);
-    void bindUniformBlock(u32 bindingPoint, const std::string& blockName);
+    void bindUniformBlock(const GPUUniformBlock& uniformBlock);
 
-private:
-    void initFromFilePaths(const std::string& vertex, const std::string& fragment);
-    void initFromFileContents(const std::string& vertex, const std::string& fragment);
-	
 private:
 	u32 mVertexShader = 0;
 	u32 mFragmentShader = 0;

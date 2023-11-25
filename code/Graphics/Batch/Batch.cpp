@@ -6,7 +6,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/Shaders/Shader.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
@@ -21,23 +21,17 @@ void Batch::init(const BatchData& batchData)
 
     const GPUVertexBuffersLayout& gpuVertexBuffersLayout = mMeshBatcher.getGPUVertexBuffersLayout();
     
-    mShader = OwnerPtr<Shader>::newObject();
-    mShader->init(gpuVertexBuffersLayout, mBatchData.mMaterial);
-    
-    mShader->bindUniformBlock(
-        mMeshBatcher.mGPUMeshBuffer.getModelMatricesBlock().getBindingPoint(),
-        GPUBuiltIn::UniformBlocks::mModelMatrices.mBlockName
-    );
-    
-    mShader->bindUniformBlock(
-        GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.getBindingPoint(),
-        GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.getGPUUniformBlockData().mBlockName
-    );
+    ShaderBuilder sbVert;
+    sbVert.createVertexShader(gpuVertexBuffersLayout, mBatchData.mMaterial);
+    ShaderBuilder sbFrag;
+    sbFrag.createFragmentShader(gpuVertexBuffersLayout, mBatchData.mMaterial);
 
-    mShader->bindUniformBlock(
-        mMeshBatcher.mGPUMeshBuffer.getBonesMatricesBlock().getBindingPoint(),
-        GPUBuiltIn::UniformBlocks::mBonesMatrices.mBlockName
-    );
+    mShader = OwnerPtr<GPUShader>::newObject();
+    mShader->initFromFileContents(sbVert.getCode(), sbFrag.getCode());
+    
+    mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock);
+    
+    mMeshBatcher.bindUniforms(mShader);
 }
 
 void Batch::render()

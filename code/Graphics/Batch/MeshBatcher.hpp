@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUMeshBuffer.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/Batch/BatchData.hpp"
 
 class MeshBatcher: public ObjectBase
@@ -13,6 +14,7 @@ public:
     void init(const BatchData batchData);
     void resize(u32 size);
     void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
+    void bindUniforms(Ptr<GPUShader> shader);
     void update();
     void drawCall();
     void enable();

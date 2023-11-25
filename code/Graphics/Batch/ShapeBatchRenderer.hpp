@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Shaders/Shader.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 
 
 class ShapeBatchRenderer: public ObjectBase
@@ -24,7 +24,7 @@ private:
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
 private: 
-	OwnerPtr<Shader> mShaderLine;
+	OwnerPtr<GPUShader> mShaderLine;
 	u32 mVAO = 0;
 	u32 mVBOPosition = 0;
 	u32 mVBOColor = 0;

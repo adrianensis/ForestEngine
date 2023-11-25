@@ -24,6 +24,12 @@ void MeshBatcher::init(const BatchData batchData)
     disable();
 }
 
+void MeshBatcher::bindUniforms(Ptr<GPUShader> shader)
+{
+    shader->bindUniformBlock(mGPUMeshBuffer.getModelMatricesBlock());
+    shader->bindUniformBlock(mGPUMeshBuffer.getBonesMatricesBlock());
+}
+
 void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     PROFILER_CPU()

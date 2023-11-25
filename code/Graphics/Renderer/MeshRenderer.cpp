@@ -1,7 +1,7 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
-#include "Graphics/Shaders/Shader.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Texture.hpp"

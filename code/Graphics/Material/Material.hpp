@@ -152,7 +152,7 @@ enum class TextureType
     UNKNOWN,
 };
 
-class Shader;
+class GPUShader;
 class Mesh;
 
 class MaterialData
@@ -187,7 +187,7 @@ class Material: public ObjectBase
 
 public:
     void init(const MaterialData& materialData, u32 id);
-    void bind(Ptr<Shader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const;
+    void bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const;
     bool hasTexture() const;
 
 protected:
