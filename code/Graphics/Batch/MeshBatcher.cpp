@@ -164,7 +164,7 @@ void MeshBatcher::drawCall()
 	}
 }
 
-void MeshBatcher::update()
+void MeshBatcher::updateBoneTransforms()
 {	
 	if(mBatchData.mMesh->mModel)
 	{

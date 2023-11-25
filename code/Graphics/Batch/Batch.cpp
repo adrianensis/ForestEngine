@@ -55,8 +55,8 @@ void Batch::render()
 
 void Batch::enable()
 {
-    mMeshBatcher.enable();
     mShader->enable();
+    mMeshBatcher.enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
 
 	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
@@ -67,7 +67,7 @@ void Batch::enable()
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
 
-    mMeshBatcher.update();
+    mMeshBatcher.updateBoneTransforms();
 
     if(mBatchData.mStencilData.mUseStencil)
     {
