@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
-#include "Graphics/Batch/Batch.hpp"
+#include "Graphics/BatchRenderer/BatchRenderer.hpp"
 
 class BatchesManager: public ObjectBase
 {
@@ -24,7 +24,7 @@ private:
     std::set<ObjectId> mMasksDrawn;
 
 private:
-	using BatchMapByBatchData = std::unordered_map<BatchData, OwnerPtr<Batch>, BatchData::BatchDataFunctor>;
+	using BatchMapByBatchData = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 
 	BatchMapByBatchData mBatches;
 };

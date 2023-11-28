@@ -1,4 +1,4 @@
-#include "Graphics/Batch/Batch.hpp"
+#include "Graphics/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
@@ -14,7 +14,7 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Shaders/ShaderBuilder.hpp"
 
-void Batch::init(const BatchData& batchData)
+void BatchRenderer::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
@@ -34,7 +34,7 @@ void Batch::init(const BatchData& batchData)
     mMeshBatcher.bindUniforms(mShader);
 }
 
-void Batch::render()
+void BatchRenderer::render()
 {
 	PROFILER_CPU()
 
@@ -53,7 +53,7 @@ void Batch::render()
 	}
 }
 
-void Batch::enable()
+void BatchRenderer::enable()
 {
     mShader->enable();
     mMeshBatcher.enable();
@@ -75,7 +75,7 @@ void Batch::enable()
     }
 }
 
-void Batch::disable()
+void BatchRenderer::disable()
 {
     if(mBatchData.mStencilData.mUseStencil)
     {
@@ -86,15 +86,15 @@ void Batch::disable()
     mMeshBatcher.disable();
 }
 
-void Batch::addRenderer(Ptr<MeshRenderer> renderer)
+void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRenderers.push_back(renderer);
-	renderer->setBatch(getPtrToThis());
+	renderer->setBatchRenderer(getPtrToThis());
 
 	mNewRendererAdded = true;
 }
 
-void Batch::processRenderers()
+void BatchRenderer::processRenderers()
 {
 	PROFILER_CPU()
 
@@ -132,7 +132,7 @@ void Batch::processRenderers()
     mRegenerateBuffersRequested = false;
 }
 
-bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
+bool BatchRenderer::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
 {
 	bool toRemove = false;
 
@@ -151,14 +151,14 @@ bool Batch::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
 	return toRemove;
 }
 
-void Batch::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
+void BatchRenderer::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
 {
 	PROFILER_CPU()
 
 	Ptr<MeshRenderer> renderer = *it;
 	if(renderer)
 	{
-		renderer->setBatch(Ptr<Batch>());
+		renderer->setBatchRenderer(Ptr<BatchRenderer>());
 
         if (!mBatchData.mIsWorldSpace)
         {
@@ -177,7 +177,7 @@ void Batch::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
 	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
 }
 
-void Batch::addToVertexBuffer(Ptr<MeshRenderer> renderer)
+void BatchRenderer::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
 
@@ -185,7 +185,7 @@ void Batch::addToVertexBuffer(Ptr<MeshRenderer> renderer)
     mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
 }
 
-bool Batch::shouldRegenerateBuffers() const
+bool BatchRenderer::shouldRegenerateBuffers() const
 {
     // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
 	return mNewRendererAdded || !mBatchData.mIsStatic || mRegenerateBuffersRequested;

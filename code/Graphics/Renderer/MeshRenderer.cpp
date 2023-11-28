@@ -9,7 +9,7 @@
 #include "Graphics/Mesh/MeshPrimitives.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/Batch/Batch.hpp"
+#include "Graphics/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
@@ -161,9 +161,9 @@ void MeshRenderer::setMaterial(Ptr<const Material> material)
     if(mComponentData.mMaterial != material)
     {
         mComponentData.mMaterial = material;
-        if(mBatch)
+        if(mBatchRenderer)
         {
-            mBatch->requestRegenerateBuffers();
+            mBatchRenderer->requestRegenerateBuffers();
         }
     }
 }
@@ -174,9 +174,9 @@ void MeshRenderer::setColor(const Vector4& color)
     {
         mColor = color;
         mRegenerateColor = true;
-        if(mBatch)
+        if(mBatchRenderer)
         {
-            mBatch->requestRegenerateBuffers();
+            mBatchRenderer->requestRegenerateBuffers();
         }
     }
 }

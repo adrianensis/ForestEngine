@@ -2,7 +2,7 @@
 
 #include "Graphics/GPU/GPUMeshBuffer.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
-#include "Graphics/Batch/BatchData.hpp"
+#include "Graphics/BatchRenderer/BatchData.hpp"
 
 class MeshBatcher: public ObjectBase
 {

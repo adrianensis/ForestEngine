@@ -1,4 +1,4 @@
-#include "Graphics/Batch/BatchesManager.hpp"
+#include "Graphics/BatchRenderer/BatchesManager.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Scene/Module.hpp"
 
@@ -9,7 +9,7 @@ void BatchesManager::addRenderer(Ptr<MeshRenderer> renderer)
 
 	if (!mBatches.contains(BatchData))
 	{
-		mBatches.insert_or_assign(BatchData, OwnerPtr<Batch>::newObject());
+		mBatches.insert_or_assign(BatchData, OwnerPtr<BatchRenderer>::newObject());
         (mBatches).at(BatchData)->init(BatchData);
 	}
 
@@ -76,7 +76,7 @@ void BatchesManager::renderScreenSpaceStencil()
 
     mMasksDrawn.clear();
 
-    std::vector<Ptr<Batch>> sortedBatches;
+    std::vector<Ptr<BatchRenderer>> sortedBatches;
     FOR_MAP(it, mBatches)
 	{
 		if(it->first.mStencilData.mUseStencil and !it->first.mIsWorldSpace)
@@ -85,7 +85,7 @@ void BatchesManager::renderScreenSpaceStencil()
         }
     }
 
-    auto compareStencilBatch = [](Ptr<Batch> b1, Ptr<Batch> b2)
+    auto compareStencilBatch = [](Ptr<BatchRenderer> b1, Ptr<BatchRenderer> b2)
     {
         ObjectId o1 = b1->getBatchData().mStencilData.mMaskObjectId > 0 ? b1->getBatchData().mStencilData.mMaskObjectId : b1->getBatchData().mStencilData.mThisObjectId;
         ObjectId o2 = b2->getBatchData().mStencilData.mMaskObjectId > 0 ? b2->getBatchData().mStencilData.mMaskObjectId : b2->getBatchData().mStencilData.mThisObjectId;

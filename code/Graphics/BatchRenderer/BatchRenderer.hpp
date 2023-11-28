@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Batch/MeshBatcher.hpp"
-#include "Graphics/Batch/BatchData.hpp"
+#include "Graphics/BatchRenderer/MeshBatcher.hpp"
+#include "Graphics/BatchRenderer/BatchData.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
 
-class Batch: public ObjectBase
+class BatchRenderer: public ObjectBase
 {
-    GENERATE_METADATA(Batch)
+    GENERATE_METADATA(BatchRenderer)
 
 public:
     void init(const BatchData& batchData);

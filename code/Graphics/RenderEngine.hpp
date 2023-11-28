@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Batch/BatchesManager.hpp"
-#include "Graphics/Batch/ShapeBatchRenderer.hpp"
+#include "Graphics/BatchRenderer/BatchesManager.hpp"
+#include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"

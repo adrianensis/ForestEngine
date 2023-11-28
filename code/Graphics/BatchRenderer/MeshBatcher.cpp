@@ -1,4 +1,4 @@
-#include "Graphics/Batch/MeshBatcher.hpp"
+#include "Graphics/BatchRenderer/MeshBatcher.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"

@@ -7,7 +7,7 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-class Batch;
+class BatchRenderer;
 
 class StencilData
 {
@@ -79,7 +79,7 @@ protected:
 
 private:
     Vector4 mColor;
-    Ptr<Batch> mBatch;
+    Ptr<BatchRenderer> mBatchRenderer;
     Matrix4 mRendererModelMatrix;
     bool mRendererModelMatrixDirty = true;
     bool mRendererPositionOffsetDirty = true;
@@ -97,6 +97,6 @@ private:
 
 public:
     CGET(MeshInstance)
-    CRGET_SET(Batch)
+    CRGET_SET(BatchRenderer)
     CRGET(RendererModelMatrix)
 };
