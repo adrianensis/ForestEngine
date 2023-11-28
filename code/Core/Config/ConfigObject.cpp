@@ -24,7 +24,7 @@ void ConfigObject::init()
 {
 }
 
-bool ConfigObject::contains(std::string& key) const
+bool ConfigObject::contains(const std::string& key) const
 {
 	return mJson.contains(key);
 }

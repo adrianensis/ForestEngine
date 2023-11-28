@@ -12,7 +12,7 @@ u32 GPUSharedContext::requestUniformBufferBindingPoint()
 {
     u32 bindingPoint = mBindingPointsIndex;
     mBindingPointsIndex++;
-    CHECK_MSG(mBindingPointsIndex <= mMaxUniformBufferBindingPoints, "Max Binding Points reached!");
+    CHECK_MSG((i32)mBindingPointsIndex <= mMaxUniformBufferBindingPoints, "Max Binding Points reached!");
     return bindingPoint;
 }
 

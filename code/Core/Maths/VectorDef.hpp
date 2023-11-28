@@ -30,10 +30,10 @@
 #define VECTOR4_PARAMS() VECTOR3_PARAMS(), f32 w
 #define VECTOR_PARAMS(n) VECTOR##n##_PARAMS()
 
-#define VECTOR_OP_VECTOR(comp, op) this->comp = this->comp op rhs.comp;
-#define VECTOR_OP_F32(comp, op) this->comp = this->comp op rhs;
-#define VECTOR_SET_VECTOR(comp) this->comp = rhs.comp;
-#define VECTOR_SET_F32(comp) this->comp = comp;
+#define VECTOR_SET_OP_VECTOR(comp, op) this->comp = this->comp op rhs.comp;
+#define VECTOR_SET_OP_F32(comp, op) this->comp = this->comp op rhs;
+#define VECTOR_SET_VECTOR_PARAM(comp) this->comp = rhs.comp;
+#define VECTOR_SET_F32_PARAM(comp) this->comp = comp;
 #define VECTOR_APPLY_FUNC(comp, func) this->comp = func(comp);
 
 #define VECTOR2_DOT(v) (this->x * v.x) + (this->y * v.y)
@@ -79,18 +79,18 @@ public:\
     VECTOR_FOR_EACH(n, VECTOR_DEFINE_COMPONENTS); \
     \
     Vector##n() {}\
-    Vector##n(VECTOR_PARAMS(n)) {VECTOR_FOR_EACH(n, VECTOR_SET_F32); }\
-    Vector##n(const ThisClass& rhs) {VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR);}\
-    ThisClass& set(VECTOR_PARAMS(n)) {VECTOR_FOR_EACH(n, VECTOR_SET_F32); return *this; }\
-    ThisClass& set(const ThisClass& rhs) {VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR); return *this; }\
-    ThisClass& add(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_VECTOR, +); return *this; }\
-    ThisClass& sub(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_VECTOR, -); return *this; }\
-    ThisClass& mul(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_VECTOR, *); return *this; }\
-    ThisClass& div(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_VECTOR, /); return *this; }\
-    ThisClass& add(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_F32, +); return *this; }\
-    ThisClass& sub(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_F32, -); return *this; }\
-    ThisClass& mul(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_F32, *); return *this; }\
-    ThisClass& div(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_OP_F32, /); return *this; }\
+    Vector##n(VECTOR_PARAMS(n)) {VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); }\
+    Vector##n(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); }\
+    ThisClass& set(VECTOR_PARAMS(n)) { VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); return *this; }\
+    ThisClass& set(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); return *this; }\
+    ThisClass& add(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, +); return *this; }\
+    ThisClass& sub(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, -); return *this; }\
+    ThisClass& mul(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, *); return *this; }\
+    ThisClass& div(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, /); return *this; }\
+    ThisClass& add(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, +); return *this; }\
+    ThisClass& sub(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, -); return *this; }\
+    ThisClass& mul(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, *); return *this; }\
+    ThisClass& div(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, /); return *this; }\
     ThisClass& abs() { VECTOR_FOR_EACH(n, VECTOR_APPLY_FUNC, std::abs); return *this; }\
     f32 dot(const ThisClass& v) const { return VECTOR_DOT(n, v); } \
     f32 sqrlen() const { return this->dot(*this); } \

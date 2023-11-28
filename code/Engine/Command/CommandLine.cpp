@@ -17,7 +17,7 @@ void CommandLine::init()
     {
         if(mIsOpen)
         {
-            const InputEventChar *e = (InputEventChar*) event;
+            const InputEventChar *e = (const InputEventChar*) event;
             char c = e->mChar;
             mBuffer.push_back(c);
             writeLine(mBuffer, false);
@@ -53,7 +53,7 @@ void CommandLine::init()
     {
         if(mIsOpen)
         {
-            const InputEventKeyArrow *e = (InputEventKeyArrow*) event;
+            const InputEventKeyArrow *e = (const InputEventKeyArrow*) event;
 
             switch (e->mArrowButton)
             {

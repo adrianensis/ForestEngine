@@ -64,8 +64,10 @@ const TextureAnimationFrame& TextureAnimationUpdater::nextFrame()
 {
 	f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
 	mTimeAccumulator += GET_SYSTEM(Time).getDeltaTimeMillis();
+    mHasFrameChanged = false;
 	if (mTimeAccumulator >= time)
 	{
+        mHasFrameChanged = true;
 		mTimeAccumulator = 0.0f;
 		mCurrentFrameNumber = (mCurrentFrameNumber + 1) % mTextureAnimation->mFrames.size();
 	}

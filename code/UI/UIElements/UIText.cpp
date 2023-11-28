@@ -75,8 +75,8 @@ void UIText::setText(const std::string& text)
                     Meaning: "This is a test!" will be displayed as "Thisisatest!".
                 */
                 glyphSize.x = glyphData.mAdvance.x;
-                Vector2 topLeftCorner = glyphData.mBitmapTopLeft;
-                Vector2 topLeftCornerScreenSpace = UIUtils::toScreenSpace(topLeftCorner);
+                // Vector2 topLeftCorner = glyphData.mBitmapTopLeft;
+                // Vector2 topLeftCornerScreenSpace = UIUtils::toScreenSpace(topLeftCorner);
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
 
                 Vector2 alignOffset(0, glyphData.mMetrics.mBoundingBoxMax.y - glyphData.mMetrics.mHoriBearing.y);

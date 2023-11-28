@@ -192,7 +192,7 @@ void MeshRenderer::updateTextureRegion()
 		{
             mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
 			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
-			if(mCurrentTextureAnimationUpdater.isNewFrame())
+			if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
             {
                 mTextureRegion.set(frame.mPosition, Vector2(frame.mWidth, frame.mHeight));
                 mRegenerateTextureCoords = true;
