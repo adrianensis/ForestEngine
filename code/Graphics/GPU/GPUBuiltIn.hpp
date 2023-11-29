@@ -81,6 +81,7 @@ public:
     public:
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, Types::mVector3, "position"};
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, Types::mVector2, "texcoord"};
+        inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, Types::mVector3, "normal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, Types::mVector4, "color"};
         inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, Types::mBoneIDs, "BoneIDs"};
         inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, Types::mBoneWeights, "Weights"};
@@ -92,6 +93,7 @@ public:
     public:
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::OUT, Types::mVector4, "gl_Position"};
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::OUT, Types::mVector2, "vTexcoord"};
+        inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, Types::mVector3, "vNormal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, Types::mVector4, "vColor"};
     };
 
@@ -100,6 +102,7 @@ public:
     public:
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, VertexOutput::mTextureCoord};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, VertexOutput::mColor};
+        inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, VertexOutput::mNormal};
     };
 
     class FragmentOutput

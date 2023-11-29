@@ -62,6 +62,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     // retrieve the needed attributes
     auto& position = get().getAttribute(GPUBuiltIn::VertexInput::mPosition.mName);
     auto& color = get().getAttribute(GPUBuiltIn::VertexInput::mColor.mName);
+    auto& normal = get().getAttribute(GPUBuiltIn::VertexInput::mNormal.mName);
     auto& textureCoord = get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);
     auto& instanceId = get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
     
@@ -74,6 +75,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
+    auto& outNormal = get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
 
     auto& mainFunc = get().function("void", "main");
 
@@ -92,7 +94,8 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     mainFunc.body().variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix)).
     set(finalPositon, modelMatrices.at(instanceId).mul(finalPositon)).
     set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon)).
-    set(outTextureCoord, textureCoord);
+    set(outTextureCoord, textureCoord).
+    set(outNormal, normal);
 
     if(material->getMaterialData().mUseVertexColor)
     {
@@ -136,6 +139,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& inTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
+    auto& inNormal = get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
     auto& outColor = get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
 
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);

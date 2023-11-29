@@ -160,6 +160,15 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 mesh->addToTextureCoordinates(texCoord);
             }
         }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
+        {
+            FOR_RANGE(vertexIt, 0, attribute.data->count)
+            {
+                Vector3* normalArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                Vector3& normal = normalArray[vertexIt];
+                mesh->addToNormals(normal);
+            }
+        }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
         {
             if ((attribute.data->component_type == cgltf_component_type_r_8u) && (attribute.data->type == cgltf_type_vec4))

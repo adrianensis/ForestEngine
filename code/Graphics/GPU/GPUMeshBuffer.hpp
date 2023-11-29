@@ -45,6 +45,7 @@ private:
     u32 mVBOPosition = 0;
 	u32 mVBOTexture = 0;
 	u32 mVBOColor = 0;
+	u32 mVBONormal = 0;
 	u32 mVBOBonesIDs = 0;
 	u32 mVBOBonesWeights = 0;
 	u32 mVBOInstanceIDs = 0;

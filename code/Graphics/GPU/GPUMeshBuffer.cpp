@@ -27,6 +27,9 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
         mVBOColor = mGPUVertexBuffersLayout.addBuffer(bufferDataColor);
     }
 
+    GPUVertexBufferData bufferNormal(GPUBuiltIn::VertexInput::mNormal);
+    mVBONormal = mGPUVertexBuffersLayout.addBuffer(bufferNormal);
+
     GPUVertexBufferData bufferDataBonesIDs(GPUBuiltIn::VertexInput::mBonesIDs);
     mVBOBonesIDs = mGPUVertexBuffersLayout.addBuffer(bufferDataBonesIDs);
 
@@ -69,6 +72,7 @@ void GPUMeshBuffer::resizeMeshData(const Mesh& mesh)
     {
 	    mGPUVertexBuffersLayout.getBuffer(mVBOColor).resize(mesh.mColors.capacity());
     }
+	mGPUVertexBuffersLayout.getBuffer(mVBONormal).resize(mesh.mNormals.capacity());
 	mGPUVertexBuffersLayout.getBuffer(mVBOBonesIDs).resize(mesh.mBonesVertexIDsData.capacity());
 	mGPUVertexBuffersLayout.getBuffer(mVBOBonesWeights).resize(mesh.mBonesVertexWeightsData.capacity());
 }
@@ -93,6 +97,7 @@ void GPUMeshBuffer::setMeshData(const Mesh& mesh)
     {
 	    mGPUVertexBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
     }
+	mGPUVertexBuffersLayout.getBuffer(mVBONormal).setData(mesh.mNormals);
 	mGPUVertexBuffersLayout.getBuffer(mVBOBonesIDs).setData(mesh.mBonesVertexIDsData);
 	mGPUVertexBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
 }
