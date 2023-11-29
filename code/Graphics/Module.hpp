@@ -14,6 +14,7 @@
 #include "Graphics/Model/Animation/Animation.hpp"
 #include "Graphics/Renderer/ModelRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
+#include "Graphics/Light/Light.hpp"
 
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Material.hpp"
