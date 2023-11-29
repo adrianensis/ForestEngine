@@ -60,7 +60,7 @@ public:
         inline static const GPUUniformBlockData mModelMatrices
         {
             {
-                {{GPUStorage::UNIFORM, Types::mMatrix4, "modelMatrices"}, "", std::to_string(500)},
+                {{GPUStorage::UNIFORM, Types::mMatrix4, "modelMatrices"}, "", std::to_string(1024/*GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(f32)*Matrix4::smMatrixSize)*/)},
             },
             "ModelMatrices",
             "modelMatrices"
@@ -73,6 +73,15 @@ public:
             },
             "BonesMatrices",
             "bonesMatrices"
+        };
+
+        inline static const GPUUniformBlockData mLights
+        {
+            {
+                //{{GPUStorage::UNIFORM, Types::mMatrix4, "modelMatrices"}, "", std::to_string(GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(Light)))},
+            },
+            "Lights",
+            "lights"
         };
     };
 
