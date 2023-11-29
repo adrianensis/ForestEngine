@@ -16,6 +16,7 @@ public:
     GLuint createVAO();
     GLuint createEBO();
     GLuint createUBO();
+    u32 getMaxElementsInUBO(u32 elementSizeInBytes);
     void bindUBO(u32 UBO, u32 bindingPoint);
     void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);

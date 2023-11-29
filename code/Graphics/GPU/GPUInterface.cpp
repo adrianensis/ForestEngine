@@ -64,6 +64,16 @@ GLuint GPUInterface::createUBO()
 	return UBO;
 }
 
+u32 GPUInterface::getMaxElementsInUBO(u32 elementSizeInBytes)
+{
+    i32 gl_MAX_UNIFORM_BLOCK_SIZE;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
+    // vectors / 4 components = matrices
+    i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS = (gl_MAX_UNIFORM_BLOCK_SIZE/elementSizeInBytes);
+    VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS);
+    return gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS;
+}
+
 void GPUInterface::bindUBO(u32 UBO, u32 bindingPoint)
 {
     // define the range of the buffer that links to a uniform binding point
