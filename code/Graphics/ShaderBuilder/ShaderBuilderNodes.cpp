@@ -1,4 +1,4 @@
-#include "Graphics/Shaders/ShaderBuilder.hpp"
+#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
 
 namespace ShaderBuilderNodes
 {

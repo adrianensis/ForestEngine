@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Shaders/ShaderBuilderNodes.hpp"
+#include "Graphics/ShaderBuilder/ShaderBuilderNodes.hpp"
 
 class GPUVertexBuffersLayout;
 class Material;

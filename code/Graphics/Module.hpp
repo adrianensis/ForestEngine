@@ -20,6 +20,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
-#include "Graphics/Shaders/ShaderBuilder.hpp"
+#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
 
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"

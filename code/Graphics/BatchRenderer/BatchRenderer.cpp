@@ -13,7 +13,7 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Shaders/ShaderBuilder.hpp"
+#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
 
 void BatchRenderer::init(const BatchData& batchData)
 {
