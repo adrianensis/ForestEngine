@@ -12,14 +12,20 @@ public:
 	Ptr<const Model> mModel;
 };
 
-class ModelRenderer: public ComponentWithData<ModelRendererData>
+class ModelRenderer: public Component
 {
     GENERATE_METADATA(ModelRenderer)
 	DECLARE_SERIALIZATION()
 	
 public:
-    void init(ModelRendererData& data) override;
+    void init(const ModelRendererData& data);
     
     void onComponentAdded() override;
     void onDestroy() override;
+
+private:
+    ModelRendererData mModelRendererData;
+
+public:
+    CRGET(ModelRendererData)
 };

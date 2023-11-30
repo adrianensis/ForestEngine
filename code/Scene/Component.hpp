@@ -12,8 +12,6 @@ class Component: public SystemComponent
 public:
     Component();
 
-	virtual void init() {};
-
 	virtual void onComponentAdded()
 	{
 
@@ -37,20 +35,4 @@ public:
 	Ptr<GameObject> mGameObject;
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
-};
-
-template<class T>
-class ComponentWithData: public Component
-{
-public:
-	virtual void init(T& data)
-    {
-        mComponentData = data;
-    };
-
-protected:
-    T mComponentData;
-
-public:
-    CRGET(ComponentData)
 };

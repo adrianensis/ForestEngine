@@ -8,10 +8,16 @@ public:
     Vector3 mPosition;
 };
 
-class Light: public ComponentWithData<LightData>
+class Light: public Component
 {
     GENERATE_METADATA(Light)
 
 public:
-    void init() {};
+    void init(const LightData& data);
+
+private:
+    LightData mLightData;
+
+public:
+    CRGET(LightData)
 };

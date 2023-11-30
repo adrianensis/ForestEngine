@@ -39,7 +39,7 @@ public:
     Ptr<const Material> mMaterial;
 };
 
-class MeshRenderer: public ComponentWithData<RendererData>, public IOcTreeElement
+class MeshRenderer: public Component, public IOcTreeElement
 {
     GENERATE_METADATA(MeshRenderer)
 	DECLARE_SERIALIZATION()
@@ -47,7 +47,7 @@ class MeshRenderer: public ComponentWithData<RendererData>, public IOcTreeElemen
 public:
     ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
 
-    virtual void init(RendererData& data) override;
+    void init(const RendererData& data);
     void onComponentAdded() override;
     bool getIsWorldSpace() const;
     void preUpdate();
@@ -69,24 +69,17 @@ private:
     const TextureAnimation* getCurrentTextureAnimation() const;
     void updateTextureRegion();
 
-protected:
+private:
+    RendererData mRendererData;
 	OwnerPtr<Mesh> mMeshInstance;
     bool mRegenerateColor = false;
     bool mRegeneratePositions = false;
     bool mRegenerateTextureCoords = false;
-
-private:
     Vector4 mColor;
     Ptr<BatchRenderer> mBatchRenderer;
     Matrix4 mRendererModelMatrix;
     bool mRendererModelMatrixDirty = true;
     bool mRendererPositionOffsetDirty = true;
-
-public:
-    std::string mCurrentTextureAnimationKey;
-    bool mUseDepth = false; // overrides Z with Depth
-
-private:
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
     Rectangle mTextureRegion = Rectangle(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
     bool mInvertAxisX = false;
@@ -94,7 +87,12 @@ private:
     Vector3 mPositionOffset;
 
 public:
+    std::string mCurrentTextureAnimationKey;
+    bool mUseDepth = false; // overrides Z with Depth
+
+public:
     CGET(MeshInstance)
     CRGET_SET(BatchRenderer)
     CRGET(RendererModelMatrix)
+    CRGET(RendererData)
 };

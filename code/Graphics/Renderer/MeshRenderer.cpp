@@ -14,14 +14,13 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
-void MeshRenderer::init(RendererData& data) 
+void MeshRenderer::init(const RendererData& data) 
 {
-    ComponentWithData::init(data);
-
+    mRendererData = data;
     mMeshInstance = OwnerPtr<Mesh>::newObject();
-    mMeshInstance->init(mComponentData.mMesh->mVertexCount, mComponentData.mMesh->mFacesCount);
-    mMeshInstance->appendToBonesVertexIDsData(mComponentData.mMesh->mBonesVertexIDsData);
-    mMeshInstance->appendToBonesVertexWeightsData(mComponentData.mMesh->mBonesVertexWeightsData);
+    mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mFacesCount);
+    mMeshInstance->appendToBonesVertexIDsData(mRendererData.mMesh->mBonesVertexIDsData);
+    mMeshInstance->appendToBonesVertexWeightsData(mRendererData.mMesh->mBonesVertexWeightsData);
 
     setColor(Vector4(0, 0, 0, 1));
     mRegeneratePositions = true;
@@ -53,7 +52,7 @@ void MeshRenderer::calculateRendererModelMatrix()
         mRendererModelMatrix = positionOffsetMatrix;
     }
 
-    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax, getIsStatic());
+    IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     
     mRendererPositionOffsetDirty = false;
 }
@@ -72,7 +71,7 @@ void MeshRenderer::update()
         calculateRendererModelMatrix();
     }
 
-    bool regenerateVertices = !mComponentData.mIsInstanced;
+    bool regenerateVertices = !mRendererData.mIsInstanced;
     if(regenerateVertices)
     {
         if(mRegeneratePositions)
@@ -89,7 +88,7 @@ void MeshRenderer::update()
         }
     }
 
-    if(mRegenerateColor && mComponentData.mMaterial and mComponentData.mMaterial->getMaterialData().mUseVertexColor)
+    if(mRegenerateColor && mRendererData.mMaterial and mRendererData.mMaterial->getMaterialData().mUseVertexColor)
     {
         mMeshInstance->setColor(mColor);
         mRegenerateColor = false;
@@ -99,7 +98,7 @@ void MeshRenderer::update()
 void MeshRenderer::updatePositions()
 {
 	PROFILER_CPU()
-    mMeshInstance->appendToPositions(mComponentData.mMesh->mPositions);
+    mMeshInstance->appendToPositions(mRendererData.mMesh->mPositions);
 
     if(mUseDepth)
     {
@@ -115,12 +114,12 @@ void MeshRenderer::updatePositions()
 void MeshRenderer::updateTextureCoords()
 {
 	PROFILER_CPU()
-    mMeshInstance->appendToTextureCoordinates(mComponentData.mMesh->mTextureCoordinates);
+    mMeshInstance->appendToTextureCoordinates(mRendererData.mMesh->mTextureCoordinates);
 
     updateTextureRegion();
     FOR_RANGE(i, 0, mMeshInstance->mVertexCount)
     {
-        Vector2 vertexTexture = mComponentData.mMesh->mTextureCoordinates[i];
+        Vector2 vertexTexture = mRendererData.mMesh->mTextureCoordinates[i];
         Vector2 regionSize = mTextureRegion.getSize();
         Vector2 regionPosition = mTextureRegion.getLeftTopFront();
 
@@ -148,9 +147,9 @@ void MeshRenderer::onDestroy()
 
 void MeshRenderer::setMaterial(Ptr<const Material> material)
 {
-    if(mComponentData.mMaterial != material)
+    if(mRendererData.mMaterial != material)
     {
-        mComponentData.mMaterial = material;
+        mRendererData.mMaterial = material;
         if(mBatchRenderer)
         {
             mBatchRenderer->requestRegenerateBuffers();
@@ -174,7 +173,7 @@ void MeshRenderer::setColor(const Vector4& color)
 void MeshRenderer::updateTextureRegion()
 {
 	PROFILER_CPU()
-	if (mComponentData.mMaterial.isValid())
+	if (mRendererData.mMaterial.isValid())
 	{
 		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
 
@@ -194,9 +193,9 @@ void MeshRenderer::updateTextureRegion()
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    if (mComponentData.mMaterial.isValid())
+    if (mRendererData.mMaterial.isValid())
 	{
-        const auto& textureAnimationsMap = mComponentData.mMaterial->getMaterialData().mTextureAnimations;
+        const auto& textureAnimationsMap = mRendererData.mMaterial->getMaterialData().mTextureAnimations;
 		if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
 		{
 			currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
@@ -261,5 +260,5 @@ IMPLEMENT_DESERIALIZATION(MeshRenderer)
 	//mMaterial = GET_SYSTEM(MaterialManager).loadMaterial(materialPath);
 
 	// DESERIALIZE("region", mTextureRegion)
-	// DESERIALIZE("depth", mComponentData.mDepth)
+	// DESERIALIZE("depth", mRendererData.mDepth)
 }

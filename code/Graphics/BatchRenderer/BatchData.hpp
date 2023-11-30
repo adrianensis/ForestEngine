@@ -18,12 +18,12 @@ public:
 
 	void init(Ptr<MeshRenderer> renderer)
     {
-        mMaterial = renderer->getComponentData().mMaterial;
-        mMesh = renderer->getComponentData().mMesh;
+        mMaterial = renderer->getRendererData().mMaterial;
+        mMesh = renderer->getRendererData().mMesh;
         mIsStatic = renderer->isStatic();
         mIsWorldSpace = renderer->getIsWorldSpace();
-        mIsInstanced = renderer->getComponentData().mIsInstanced;
-        mStencilData = renderer->getComponentData().mStencilData;
+        mIsInstanced = renderer->getRendererData().mIsInstanced;
+        mStencilData = renderer->getRendererData().mStencilData;
     }
 
 	bool operator==(const BatchData& otherBatchData) const

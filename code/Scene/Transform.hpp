@@ -41,7 +41,7 @@ public:
 	static const Vector3 smRight;
 	static const Vector3 smUp;
 	static const Vector3 smForward;
-    void init() override;
+    void init();
     void onDestroy() override;
     Vector3 getWorldPosition() const;
     Vector3 getWorldScale() const;
