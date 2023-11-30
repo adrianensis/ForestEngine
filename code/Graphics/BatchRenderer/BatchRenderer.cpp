@@ -119,32 +119,21 @@ void BatchRenderer::processRenderers()
 	u32 newSize = mRenderers.size();
 	mMeshBatcher.resize(newSize);
 	
-    PROFILER_BLOCK_CPU("preUpdate");
-	FOR_LIST(it, mRenderers)
+    FOR_LIST(it, mRenderers)
 	{
 		Ptr<MeshRenderer> renderer = *it;
-
-		if (shouldRemoveRenderer(renderer))
+        if (shouldRemoveRenderer(renderer))
 		{
             PROFILER_BLOCK_CPU("remove renderer");
 			internalRemoveRenderer(it);
 		}
 		else
 		{
-            PROFILER_BLOCK_CPU("preUpdate");
-			renderer->preUpdate();
+            PROFILER_BLOCK_CPU("update");
+			renderer->update();
+		    addToVertexBuffer(renderer);
 		}
 	}
-    PROFILER_END_BLOCK();
-
-    PROFILER_BLOCK_CPU("update");
-    FOR_LIST(it, mRenderers)
-	{
-		Ptr<MeshRenderer> renderer = *it;
-        renderer->update();
-		addToVertexBuffer(renderer);
-	}
-    PROFILER_END_BLOCK();
 
     mNewRendererAdded = false;
     mRegenerateBuffersRequested = false;

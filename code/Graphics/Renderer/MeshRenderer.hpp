@@ -50,7 +50,6 @@ public:
     void init(const RendererData& data);
     void onComponentAdded() override;
     bool getIsWorldSpace() const;
-    void preUpdate();
     void update();
     void onDestroy() override;
     void setMaterial(Ptr<const Material> material);
@@ -78,7 +77,6 @@ private:
     Vector4 mColor;
     Ptr<BatchRenderer> mBatchRenderer;
     Matrix4 mRendererModelMatrix;
-    bool mRendererModelMatrixDirty = true;
     bool mRendererPositionOffsetDirty = true;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
     Rectangle mTextureRegion = Rectangle(Vector2(0.0, 0.0), Vector2(1.0, 1.0));

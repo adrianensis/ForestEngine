@@ -57,16 +57,11 @@ void MeshRenderer::calculateRendererModelMatrix()
     mRendererPositionOffsetDirty = false;
 }
 
-void MeshRenderer::preUpdate()
-{
-    mRendererModelMatrixDirty = mRendererPositionOffsetDirty || mGameObject->mTransform->getModelMatrixDirty();
-}
-
 void MeshRenderer::update()
 {
 	PROFILER_CPU()
 
-    if(mRendererModelMatrixDirty)
+    if(mRendererPositionOffsetDirty || mGameObject->mTransform->getModelMatrixDirty())
     {
         calculateRendererModelMatrix();
     }
