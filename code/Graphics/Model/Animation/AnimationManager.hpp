@@ -5,7 +5,7 @@
 
 class Model;
 
-class AnimationManager: public EngineSystem
+class AnimationManager: public System
 {
 	GENERATE_METADATA(AnimationManager)
 

@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 #include "Core/Object/ObjectBase.hpp"
-#include "Engine/EngineSystem.hpp"
+#include "Engine/System.hpp"
 #include <chrono>
 
 
@@ -55,7 +55,7 @@ public:
 	GET(IsStarted)
 };
 
-class Time: public EngineSystem
+class Time: public System
 {
 	GENERATE_METADATA(Time)	
 

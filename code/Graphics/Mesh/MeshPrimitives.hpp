@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
-class MeshPrimitives: public EngineSystem
+class MeshPrimitives: public System
 {
 	GENERATE_METADATA(MeshPrimitives)
 

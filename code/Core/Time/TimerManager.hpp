@@ -45,7 +45,7 @@ public:
 	}
 };
 
-class TimerManager: public EngineSystem
+class TimerManager: public System
 {
 	GENERATE_METADATA(TimerManager)
 	

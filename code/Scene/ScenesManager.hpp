@@ -4,7 +4,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 
-class ScenesManager: public EngineSystem
+class ScenesManager: public System
 {
 	GENERATE_METADATA(ScenesManager)
 

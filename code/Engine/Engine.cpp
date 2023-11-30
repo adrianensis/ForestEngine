@@ -50,7 +50,7 @@ void Engine::init()
     CREATE_SYSTEM(RenderEngine);
     CREATE_SYSTEM(ScriptEngine);
 
-    //REGISTER_ENGINE_SYSTEM(Ptr<EngineSystem>::cast(RenderEngine::getInstancePtr()));
+    //REGISTER_ENGINE_SYSTEM(Ptr<System>::cast(RenderEngine::getInstancePtr()));
 }
 
 void Engine::initSceneSystems()
@@ -155,7 +155,7 @@ void Engine::terminate()
 	GET_SYSTEM(Profiler).terminate();
 	REMOVE_SYSTEM(Profiler);
 
-	EngineSystemsManager::deleteInstance();
+	SystemsManager::deleteInstance();
 
 	Memory::terminate();
 }

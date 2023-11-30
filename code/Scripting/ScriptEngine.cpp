@@ -11,9 +11,9 @@ void ScriptEngine::init()
 	mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
 }
 
-void ScriptEngine::addComponent(Ptr<EngineSystemComponent> component)
+void ScriptEngine::addComponent(Ptr<SystemComponent> component)
 {
-	EngineSystem::addComponent(component);
+	System::addComponent(component);
 
     Ptr<Script> script = Ptr<Script>::cast(component);
     CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");

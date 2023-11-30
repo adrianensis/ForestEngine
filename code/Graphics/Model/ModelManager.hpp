@@ -4,7 +4,7 @@
 
 class Model;
 
-class ModelManager: public EngineSystem
+class ModelManager: public System
 {
 	GENERATE_METADATA(ModelManager)
 

@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 #include "Core/Object/ObjectBase.hpp"
-#include "Engine/EngineSystem.hpp"
+#include "Engine/System.hpp"
 #include "Core/Time/TimeUtils.hpp"
 
 #ifdef BUILD_WITH_EASY_PROFILER
@@ -22,7 +22,7 @@
 #define PROFILER_END_BLOCK()
 #endif
 
-class Profiler : public EngineSystem
+class Profiler : public System
 {
 	GENERATE_METADATA(Profiler)
 

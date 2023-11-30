@@ -4,7 +4,7 @@
 #include "Core/Input/Input.hpp"
 #include "GLFW/glfw3.h"
 
-class Window : public EngineSystem, public IWindowInputAdapter
+class Window : public System, public IWindowInputAdapter
 {
     GENERATE_METADATA(Window)
 public:

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Object/ObjectBase.hpp"
-#include "Engine/EngineSystem.hpp"
+#include "Engine/System.hpp"
 
 #include "Core/Maths/Vector2.hpp"
 
@@ -17,7 +17,7 @@ public:
     virtual Vector2 getMousePosition() const = 0;
 };
 
-class Input: public EngineSystem
+class Input: public System
 {
 	GENERATE_METADATA(Input)
 public:

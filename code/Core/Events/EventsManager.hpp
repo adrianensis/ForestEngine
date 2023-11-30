@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Events/Event.hpp"
-#include "Engine/EngineSystem.hpp"
+#include "Engine/System.hpp"
 
 /*
   Macros for (un)susbscribing and sending events.
@@ -11,7 +11,7 @@
 #define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(EventsManager).unsubscribe<EventClassName>(owner, receiver);
 #define SEND_EVENT(owner, instigator, event) GET_SYSTEM(EventsManager).send(owner, instigator, &event);
 
-class EventsManager: public EngineSystem
+class EventsManager: public System
 {
 	GENERATE_METADATA(EventsManager)
 

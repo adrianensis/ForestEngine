@@ -10,7 +10,7 @@ class Script: public Component
     GENERATE_METADATA(Script)
 
 public:
-    ClassId getEngineSystemComponentId() const override { return getClassDefinitionStatic().mId; }
+    ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
 
     virtual void init();
     virtual void firstUpdate();

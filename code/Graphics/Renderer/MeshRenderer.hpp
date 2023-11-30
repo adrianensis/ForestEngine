@@ -45,7 +45,7 @@ class MeshRenderer: public ComponentWithData<RendererData>, public IOcTreeElemen
 	DECLARE_SERIALIZATION()
 	
 public:
-    ClassId getEngineSystemComponentId() const override { return getClassDefinitionStatic().mId; }
+    ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
 
     virtual void init(RendererData& data) override;
     void onComponentAdded() override;

@@ -57,9 +57,9 @@ void RenderEngine::terminate()
 	mShapeBatchRendererScreenSpace.terminate();
 }
 
-void RenderEngine::addComponent(Ptr<EngineSystemComponent> component)
+void RenderEngine::addComponent(Ptr<SystemComponent> component)
 {
-	EngineSystem::addComponent(component);
+	System::addComponent(component);
 
     Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
     CHECK_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");

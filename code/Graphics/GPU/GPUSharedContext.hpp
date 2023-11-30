@@ -9,7 +9,7 @@ public:
 	Matrix4 mViewMatrix;
 };
 
-class GPUSharedContext : public EngineSystem
+class GPUSharedContext : public System
 {
 public:
 	GPUSharedContext() = default;

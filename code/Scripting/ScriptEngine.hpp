@@ -4,13 +4,13 @@
 #include "Scripting/Script.hpp"
 
 
-class ScriptEngine: public EngineSystem
+class ScriptEngine: public System
 {
 	GENERATE_METADATA(ScriptEngine)
 
 public:
     void init();
-    void addComponent(Ptr<EngineSystemComponent> component) override;
+    void addComponent(Ptr<SystemComponent> component) override;
     void update();
     void terminate();
 

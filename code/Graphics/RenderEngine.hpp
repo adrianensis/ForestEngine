@@ -7,7 +7,7 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
 
-class RenderEngine : public EngineSystem
+class RenderEngine : public System
 {
 	GENERATE_METADATA(RenderEngine)
 
@@ -17,7 +17,7 @@ public:
     void update();
     void terminate();
     
-    void addComponent(Ptr<EngineSystemComponent> component) override;
+    void addComponent(Ptr<SystemComponent> component) override;
 
     void assignBatch(Ptr<MeshRenderer> renderer);
 

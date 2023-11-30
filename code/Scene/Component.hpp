@@ -4,7 +4,7 @@
 
 class GameObject;
 
-class Component: public EngineSystemComponent
+class Component: public SystemComponent
 {
     GENERATE_METADATA(Component)
 	DECLARE_SERIALIZATION()

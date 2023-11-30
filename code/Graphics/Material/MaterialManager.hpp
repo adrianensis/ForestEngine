@@ -4,7 +4,7 @@
 
 #include "Graphics/Material/Material.hpp"
 
-class MaterialManager: public EngineSystem
+class MaterialManager: public System
 {
 	GENERATE_METADATA(MaterialManager)
 

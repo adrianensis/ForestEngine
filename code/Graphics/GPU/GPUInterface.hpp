@@ -5,7 +5,7 @@
 
 class Camera;
 
-class GPUInterface : public EngineSystem
+class GPUInterface : public System
 {
 public:
     void clearDepth();
