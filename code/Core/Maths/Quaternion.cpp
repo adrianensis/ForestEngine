@@ -140,12 +140,12 @@ Quaternion& Quaternion::nor()
 
 bool Quaternion::eq(const Quaternion& q, f32 e) const
 {
-	return v.eq(q.v, e) and MathUtils::eqf(this->w, q.w, e);
+	return v.eq(q.v, e) && MathUtils::eqf(this->w, q.w, e);
 }
 
 bool Quaternion::eq(const Quaternion& q) const
 {
-	return v.eq(q.v) and MathUtils::eqf(this->w, q.w);
+	return v.eq(q.v) && MathUtils::eqf(this->w, q.w);
 }
 
 Quaternion& Quaternion::conj()
@@ -165,7 +165,7 @@ f32 Quaternion::angle(const Quaternion& q) const
 	/*
 	* angle is acute (positive dot product)
 	* perpendicular (zero dot product)
-	* or obtuse (negative dot product).
+	* || obtuse (negative dot product).
 	*/
     Quaternion copyThis = *this;
     Quaternion copyOther = q;
@@ -207,7 +207,7 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
         cosHalfTheta = -cosHalfTheta;
     }
 
-	// // if qa=qb or qa=-qb then theta = 0 and we can return qa
+	// // if qa=qb || qa=-qb then theta = 0 && we can return qa
 	if (std::abs(cosHalfTheta) >= 1.0)
     {
         *this = qa;

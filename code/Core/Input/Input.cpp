@@ -54,7 +54,7 @@ void Input::update()
 
 bool Input::isKeyPressedOnce(i32 key)
 {
-	return smKeyJustPressed and key == smLastKeyPressed;
+	return smKeyJustPressed && key == smLastKeyPressed;
 }
 
 bool Input::isKeyPressed(i32 key)
@@ -69,7 +69,7 @@ bool Input::isModifierPressed(i32 modifier)
 
 bool Input::isMouseButtonPressedOnce(i32 button)
 {
-	return smButtonJustPressed and button == smLastMouseButtonPressed;
+	return smButtonJustPressed && button == smLastMouseButtonPressed;
 }
 
 bool Input::isMouseButtonPressed(i32 button)

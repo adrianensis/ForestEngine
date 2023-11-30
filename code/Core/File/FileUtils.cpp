@@ -9,7 +9,7 @@ void FileUtils::readFile(const std::string& path, std::function<void(std::ifstre
 	std::ifstream file;
 	file.open(path);
 
-	if(file.good() and !file.fail())
+	if(file.good() && !file.fail())
 	{
 		if (callback)
 		{
@@ -25,7 +25,7 @@ void FileUtils::writeFile(const std::string& path, std::function<void(std::ofstr
 	std::ofstream file;
 	file.open(path);
 
-	if(file.good() and !file.fail())
+	if(file.good() && !file.fail())
 	{
 		if (callback)
 		{

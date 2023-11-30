@@ -26,7 +26,7 @@ bool Geometry::testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
     bool yB = (cube.getLeftTopFront().y - cube.getSize().y - sphere.getRadius() - eps) <= sphere.getCenter().y;
     bool zA = (cube.getLeftTopFront().z + sphere.getRadius() + eps) >= sphere.getCenter().z;
     bool zB = (cube.getLeftTopFront().z - cube.getSize().z - sphere.getRadius() - eps) <= sphere.getCenter().z;
-    return xA and xB and yA and yB and zA and zB;
+    return xA && xB && yA && yB && zA && zB;
 }
 
 bool Geometry::testSphereInsideCube(const Cube& cube, const Sphere& sphere)
@@ -37,7 +37,7 @@ bool Geometry::testSphereInsideCube(const Cube& cube, const Sphere& sphere)
     bool yB = (cube.getLeftTopFront().y - cube.getSize().y + sphere.getRadius()) <= sphere.getCenter().y;
     bool zA = (cube.getLeftTopFront().z - sphere.getRadius()) >= sphere.getCenter().z;
     bool zB = (cube.getLeftTopFront().z - cube.getSize().z + sphere.getRadius()) <= sphere.getCenter().z;
-    return xA and xB and yA and yB and zA and zB;
+    return xA && xB && yA && yB && zA && zB;
 }
 
 bool Geometry::testCubePoint(const Cube& cube, const Vector3& point, f32 eps)
@@ -65,7 +65,7 @@ bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& inter
 
     f32 s = Vector3(dc).cross(db).dot(Vector3(da).cross(db)) / Vector3(da).cross(db).sqrlen();
 
-    if (s >= 0.0 and s <= 1.0)
+    if (s >= 0.0 && s <= 1.0)
     {
         intersectionResult = lineA.getStart() + (da * s);
         return true;
@@ -157,7 +157,7 @@ bool Geometry::testLinePoint(const Line& line, const Vector3& point, f32 eps)
 
     bool pointIsInLine = false;
 
-    if (d1 + d2 >= lineLen - eps and d1 + d2 <= lineLen + eps)
+    if (d1 + d2 >= lineLen - eps && d1 + d2 <= lineLen + eps)
     {
         pointIsInLine = true;
     }

@@ -132,7 +132,7 @@ void Scene::addGameObject(OwnerPtr<GameObject>&& gameObject)
 
 void Scene::removeGameObject(Ptr<GameObject> gameObject)
 {
-	if (gameObject and !gameObject->getIsDestroyed() and !gameObject->getIsPendingToBeDestroyed())
+	if (gameObject && !gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
 	{
         gameObject->destroy();
         gameObject->finallyDestroy();

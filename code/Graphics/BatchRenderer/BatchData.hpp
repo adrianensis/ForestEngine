@@ -28,8 +28,8 @@ public:
 
 	bool operator==(const BatchData& otherBatchData) const
 	{
-        return mMaterial == otherBatchData.mMaterial and mMesh == otherBatchData.mMesh and
-        mIsStatic == otherBatchData.mIsStatic and mIsWorldSpace == otherBatchData.mIsWorldSpace and mIsInstanced == otherBatchData.mIsInstanced and
+        return mMaterial == otherBatchData.mMaterial && mMesh == otherBatchData.mMesh and
+        mIsStatic == otherBatchData.mIsStatic && mIsWorldSpace == otherBatchData.mIsWorldSpace && mIsInstanced == otherBatchData.mIsInstanced and
         mStencilData == otherBatchData.mStencilData;
 	}
 

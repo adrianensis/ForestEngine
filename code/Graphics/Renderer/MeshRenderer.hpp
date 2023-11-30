@@ -25,7 +25,7 @@ public:
         mUseStencil == other.mUseStencil and
         mMaskStencilValue == other.mMaskStencilValue and
         mMaskObjectId == other.mMaskObjectId and
-        mThisObjectId == other.mThisObjectId and 
+        mThisObjectId == other.mThisObjectId && 
         mStencilFunction == other.mStencilFunction;
 	}
 };

@@ -50,7 +50,7 @@ public:
     template<typename T> T_EXTENDS(T, SystemComponent)
     void addComponentToSystem(Ptr<T> component)
     {
-        if (component and !component->mAlreadyAddedToSystem)
+        if (component && !component->mAlreadyAddedToSystem)
         {
             ClassId componentClassId = component->getSystemComponentId();
             FOR_MAP(itSystem, mSystems)

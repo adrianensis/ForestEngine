@@ -83,7 +83,7 @@ void MeshRenderer::update()
         }
     }
 
-    if(mRegenerateColor && mRendererData.mMaterial and mRendererData.mMaterial->getMaterialData().mUseVertexColor)
+    if(mRegenerateColor && mRendererData.mMaterial && mRendererData.mMaterial->getMaterialData().mUseVertexColor)
     {
         mMeshInstance->setColor(mColor);
         mRegenerateColor = false;
@@ -172,7 +172,7 @@ void MeshRenderer::updateTextureRegion()
 	{
 		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
 
-		if (currentTextureAnimation and !currentTextureAnimation->mFrames.empty())
+		if (currentTextureAnimation && !currentTextureAnimation->mFrames.empty())
 		{
             mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
 			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();

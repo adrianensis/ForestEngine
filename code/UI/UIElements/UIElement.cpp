@@ -435,7 +435,7 @@ void UIElement::loseFocus()
 void UIElement::obtainFocus()
 {
 	Ptr<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
-	if (lastFocusedElement and lastFocusedElement->isActive())
+	if (lastFocusedElement && lastFocusedElement->isActive())
 	{
 		lastFocusedElement->loseFocus();
 	}

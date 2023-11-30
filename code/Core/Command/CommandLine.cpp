@@ -52,7 +52,7 @@ void CommandLine::init()
     {
         if(mIsOpen)
         {
-            // TODO: GLFW_KEY_UP and DOWN creates a dependency with Graphics/Window module 
+            // TODO: GLFW_KEY_UP && DOWN creates a dependency with Graphics/Window module 
 
             // const InputEventKeyArrow *e = (const InputEventKeyArrow*) event;
 
@@ -60,7 +60,7 @@ void CommandLine::init()
             // {
             //     case GLFW_KEY_UP:
             //     {
-            //         if(!mHistory.empty() and mHistoryIterator != mHistory.begin())
+            //         if(!mHistory.empty() && mHistoryIterator != mHistory.begin())
             //         {
             //             --mHistoryIterator;
             //             mBuffer = *mHistoryIterator;
@@ -69,7 +69,7 @@ void CommandLine::init()
             //     }
             //     case GLFW_KEY_DOWN:
             //     {
-            //         if(!mHistory.empty() and mHistoryIterator != mHistory.end())
+            //         if(!mHistory.empty() && mHistoryIterator != mHistory.end())
             //         {
             //             ++mHistoryIterator;
             //             if(mHistoryIterator == mHistory.end())
@@ -123,7 +123,7 @@ void CommandLine::execute(const std::string& commandLine)
 
     std::string commandName = matchCommand[1];
 
-    if(isCommand and mCommandsMap.contains(commandName))
+    if(isCommand && mCommandsMap.contains(commandName))
     {
         //writeLine("command: " + commandName);
 

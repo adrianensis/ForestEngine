@@ -260,7 +260,7 @@ public:
             CHECK_MSG(mReferenceBlock->isReferenced(), "Weak references are already 0!")
             decrement();
             
-            if(!mReferenceBlock->isReferenced() and !mReferenceBlock->isWeakReferenced())
+            if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
                 Memory::deleteObject(mReferenceBlock);
             }

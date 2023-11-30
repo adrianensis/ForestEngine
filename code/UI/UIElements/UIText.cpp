@@ -126,7 +126,7 @@ void UIText::setVisibility(bool visibility)
 
 void UIText::setIsEditable(bool editable)
 {
-	if(editable and !getIsEditable())
+	if(editable && !getIsEditable())
 	{
 		subscribeToMouseEvents();
 		subscribeToEnterEvent();
@@ -135,7 +135,7 @@ void UIText::setIsEditable(bool editable)
 		mOnlyReleaseOnClickOutside = true;
 	}
 
-	if(!editable and getIsEditable())
+	if(!editable && getIsEditable())
 	{
 		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
 		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);

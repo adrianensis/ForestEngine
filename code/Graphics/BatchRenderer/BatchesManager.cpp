@@ -22,7 +22,7 @@ void BatchesManager::render()
 
 	FOR_MAP(it, mBatches)
 	{
-		if( ! it->first.mStencilData.mUseStencil and it->first.mIsWorldSpace)
+		if( ! it->first.mStencilData.mUseStencil && it->first.mIsWorldSpace)
 		{
 			it->second->render();
 		}
@@ -35,7 +35,7 @@ void BatchesManager::renderStencil()
 
     // FOR_MAP(it, mBatches)
 	// {
-	// 	if(it->first.mStencilData.mUseStencil and it->first.mIsWorldSpace)
+	// 	if(it->first.mStencilData.mUseStencil && it->first.mIsWorldSpace)
 	// 	{
     //         ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
     //         if(maskObjectId > 0)
@@ -52,7 +52,7 @@ void BatchesManager::renderStencilMask(ObjectId maskObjectId)
 {
     // FOR_MAP(it, mBatches)
 	// {
-	// 	if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and it->first.mIsWorldSpace)
+	// 	if(it->first.mStencilData.mUseStencil && maskObjectId == it->first.mStencilData.mThisObjectId && it->first.mIsWorldSpace)
 	// 	{
     //         if(it->first.mStencilData.mMaskObjectId > 0)
     //         {
@@ -79,7 +79,7 @@ void BatchesManager::renderScreenSpaceStencil()
     std::vector<Ptr<BatchRenderer>> sortedBatches;
     FOR_MAP(it, mBatches)
 	{
-		if(it->first.mStencilData.mUseStencil and !it->first.mIsWorldSpace)
+		if(it->first.mStencilData.mUseStencil && !it->first.mIsWorldSpace)
 		{
             sortedBatches.push_back(it->second);
         }
@@ -104,7 +104,7 @@ void BatchesManager::renderScreenSpaceStencil()
             GET_SYSTEM(GPUInterface).clearStencil();
         }
 
-		if((*it)->getBatchData().mStencilData.mUseStencil and !(*it)->getBatchData().mIsWorldSpace)
+		if((*it)->getBatchData().mStencilData.mUseStencil && !(*it)->getBatchData().mIsWorldSpace)
 		{
             if(!mMasksDrawn.contains((*it)->getBatchData().mStencilData.mThisObjectId) || (*it)->getBatchData().mStencilData.mThisObjectId == 0)
             {
@@ -126,7 +126,7 @@ void BatchesManager::renderScreenSpaceStencilMask(ObjectId maskObjectId)
 {    
     FOR_MAP(it, mBatches)
 	{
-		if(it->first.mStencilData.mUseStencil and maskObjectId == it->first.mStencilData.mThisObjectId and !it->first.mIsWorldSpace)
+		if(it->first.mStencilData.mUseStencil && maskObjectId == it->first.mStencilData.mThisObjectId && !it->first.mIsWorldSpace)
 		{
             if(it->first.mStencilData.mMaskObjectId > 0)
             {
@@ -150,7 +150,7 @@ void BatchesManager::renderScreenSpace()
 
 	FOR_MAP(it, mBatches)
 	{
-		if( ! it->first.mStencilData.mUseStencil and !it->first.mIsWorldSpace)
+		if( ! it->first.mStencilData.mUseStencil && !it->first.mIsWorldSpace)
 		{
 			it->second->render();
 		}

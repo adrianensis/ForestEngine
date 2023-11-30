@@ -128,7 +128,7 @@ FOR_LIST(__it, Var)\
 SerializationUtils::deserializeTemplated<decltype(Var)>(Var, json[Name]);
 
 #define DESERIALIZE_LIST(Name, Var, ConstructionLambda)\
-if(!json.empty() and json.contains(Name))\
+if(!json.empty() && json.contains(Name))\
 {\
     FOR_LIST(__it, json[Name])\
     {\
@@ -139,7 +139,7 @@ if(!json.empty() and json.contains(Name))\
 }
 
 // #define DESERIALIZE_MAP(Name, Var, ConstructionLambda)
-// if(!json.empty() and json.contains(Name))
+// if(!json.empty() && json.contains(Name))
 // {
 //     FOR_LIST(__it, json[Name])
 //     {

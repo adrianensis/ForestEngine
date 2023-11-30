@@ -89,7 +89,7 @@ Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 
 void UIBuilder::calculateConfig()
 {
-	if (mConfig.mIsAffectedByLayout and mMakeRelativeToLastConfig)
+	if (mConfig.mIsAffectedByLayout && mMakeRelativeToLastConfig)
 	{
 		Vector2 offset = calculateNextElementOffset(mNewRowOrColumn ? getOppositeLayout(mCurrentLayout) : mCurrentLayout);
 		mConfig.mPosition = mLastConfig.mPosition + offset;
