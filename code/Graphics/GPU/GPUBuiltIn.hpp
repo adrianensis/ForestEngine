@@ -2,12 +2,12 @@
 
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUUniformBlock.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
 
 class GPUBuiltIn
 {
 public:
-    class Types
+
+    class PrimitiveTypes
     {
     public:
         inline static const GPUDataType mBool{"bool",sizeof(bool), GPUPrimitiveType::BOOL};
@@ -21,27 +21,37 @@ public:
         inline static const GPUDataType mVector4{"vec4",sizeof(Vector4), GPUPrimitiveType::FLOAT};
         inline static const GPUDataType mVector4i{"ivec4",sizeof(i32) * 4, GPUPrimitiveType::INT};
         inline static const GPUDataType mMatrix4{"mat4",sizeof(Matrix4), GPUPrimitiveType::FLOAT};
-        inline static const GPUDataType mBoneIDs{"ivec4",sizeof(BoneVertexIDsData), GPUPrimitiveType::INT};
-        inline static const GPUDataType mBoneWeights{"vec4",sizeof(BoneVertexWeightsData), GPUPrimitiveType::FLOAT};
         inline static const GPUDataType mSampler2D{"sampler2D",0, GPUPrimitiveType::INT};
+    };
+
+    class StructDefinitions
+    {
+    public:
+        inline static const GPUStructDefinition mLight{"light", {{PrimitiveTypes::mVector3, "position"}}};
+    };
+
+    class StructTypes
+    {
+    public:
+        inline static const GPUDataType mLight{StructDefinitions::mLight.mName, StructDefinitions::mLight.getPrimitiveTypeSizeInBytes(), GPUPrimitiveType::STRUCT};
     };
 
     class Consts
     {
     public:
         // TODO: unsigned int?
-        inline static const GPUVariableDefinitionData MAX_BONES{{GPUStorage::CONST, Types::mInt, "MAX_BONES"}, "50"};
-        inline static const GPUVariableDefinitionData MAX_BONE_INFLUENCE{{GPUStorage::CONST, Types::mInt, "MAX_BONE_INFLUENCE"}, "4"};
+        inline static const GPUVariableDefinitionData MAX_BONES{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONES"}, "50"};
+        inline static const GPUVariableDefinitionData MAX_BONE_INFLUENCE{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONE_INFLUENCE"}, "4"};
     };
 
     class Uniforms
     {
     public:
-        inline static const GPUVariableDefinitionData mTime{GPUStorage::UNIFORM, Types::mFloat, "time"};
-        inline static const GPUVariableDefinitionData mWindowSize{GPUStorage::UNIFORM, Types::mVector2, "windowSize"};
-        inline static const GPUVariableDefinitionData mBaseColor{GPUStorage::UNIFORM, Types::mVector4, "baseColor"};
+        inline static const GPUVariableDefinitionData mTime{GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "time"};
+        inline static const GPUVariableDefinitionData mWindowSize{GPUStorage::UNIFORM, PrimitiveTypes::mVector2, "windowSize"};
+        inline static const GPUVariableDefinitionData mBaseColor{GPUStorage::UNIFORM, PrimitiveTypes::mVector4, "baseColor"};
         
-        inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, Types::mSampler2D, "uSampler"};
+        inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
     };
 
     class UniformBlocks
@@ -50,8 +60,8 @@ public:
         inline static const GPUUniformBlockData mGlobalMatrices
         {
             {
-                {GPUStorage::UNIFORM, Types::mMatrix4, "projectionMatrix"},
-                {GPUStorage::UNIFORM, Types::mMatrix4, "viewMatrix"}
+                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
+                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"}
             },
             "GlobalMatrices",
             "globalMatrices"
@@ -60,7 +70,7 @@ public:
         inline static const GPUUniformBlockData mModelMatrices
         {
             {
-                {{GPUStorage::UNIFORM, Types::mMatrix4, "modelMatrices"}, "", std::to_string(1024/*GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(f32)*Matrix4::smMatrixSize)*/)},
+                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "modelMatrices"}, "", std::to_string(1024/*GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(f32)*Matrix4::smMatrixSize)*/)},
             },
             "ModelMatrices",
             "modelMatrices"
@@ -69,7 +79,7 @@ public:
         inline static const GPUUniformBlockData mBonesMatrices
         {
             {
-                {{GPUStorage::UNIFORM, Types::mMatrix4, "bonesTransform"}, "", "50"},
+                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", "50"},
             },
             "BonesMatrices",
             "bonesMatrices"
@@ -78,7 +88,7 @@ public:
         inline static const GPUUniformBlockData mLights
         {
             {
-                //{{GPUStorage::UNIFORM, Types::mMatrix4, "modelMatrices"}, "", std::to_string(GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(Light)))},
+                {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},
             },
             "Lights",
             "lights"
@@ -88,22 +98,22 @@ public:
     class VertexInput
     {
     public:
-        inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, Types::mVector3, "position"};
-        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, Types::mVector2, "texcoord"};
-        inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, Types::mVector3, "normal"};
-        inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, Types::mVector4, "color"};
-        inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, Types::mBoneIDs, "BoneIDs"};
-        inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, Types::mBoneWeights, "Weights"};
-        inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, Types::mUnsignedInt, "instanceID"};
+        inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, PrimitiveTypes::mVector3, "position"};
+        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, PrimitiveTypes::mVector2, "texcoord"};
+        inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, PrimitiveTypes::mVector3, "normal"};
+        inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, PrimitiveTypes::mVector4, "color"};
+        inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, PrimitiveTypes::mVector4i, "BoneIDs"};
+        inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, PrimitiveTypes::mVector4, "Weights"};
+        inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "instanceID"};
     };
 
     class VertexOutput
     {
     public:
-        inline static const GPUVariableDefinitionData mPosition{GPUStorage::OUT, Types::mVector4, "gl_Position"};
-        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::OUT, Types::mVector2, "vTexcoord"};
-        inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, Types::mVector3, "vNormal"};
-        inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, Types::mVector4, "vColor"};
+        inline static const GPUVariableDefinitionData mPosition{GPUStorage::OUT, PrimitiveTypes::mVector4, "gl_Position"};
+        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord"};
+        inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, PrimitiveTypes::mVector3, "vNormal"};
+        inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "vColor"};
     };
 
     class FragmentInput
@@ -117,6 +127,6 @@ public:
     class FragmentOutput
     {
     public:
-        inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, Types::mVector4, "FragColor"};
+        inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "FragColor"};
     };
 };

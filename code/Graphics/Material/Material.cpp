@@ -17,6 +17,8 @@ void Material::init(const MaterialData& materialData, u32 id)
 
     loadTextures();
     
+    mMaterialShaderVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
+
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
@@ -24,6 +26,7 @@ void Material::init(const MaterialData& materialData, u32 id)
 
     mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mGlobalMatrices);
     mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mModelMatrices);
+    mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mLights);
 
     if(materialData.mIsSkinned)
     {

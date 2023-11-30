@@ -6,8 +6,8 @@
 ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
     using namespace ShaderBuilderNodes;
-    Variable pos = Variable(GPUBuiltIn::Types::mVector4.mName, "pos");
-    FunctionDefinition func(GPUBuiltIn::Types::mVector4.mName, "calculateSkinnedPosition", {pos});
+    Variable pos = Variable(GPUBuiltIn::PrimitiveTypes::mVector4.mName, "pos");
+    FunctionDefinition func(GPUBuiltIn::PrimitiveTypes::mVector4.mName, "calculateSkinnedPosition", {pos});
     
     auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
     auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);

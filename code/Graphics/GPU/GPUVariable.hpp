@@ -34,6 +34,7 @@ DECLARE_ENUM(GPUStorage,
 
 enum class GPUPrimitiveType : u32
 {
+    STRUCT = 0,
     INT = GL_INT,
     FLOAT = GL_FLOAT,
     BOOL = GL_BOOL,
@@ -46,26 +47,29 @@ public:
     u32 mTypeSizeInBytes;
     GPUPrimitiveType mPrimitiveType = GPUPrimitiveType::FLOAT;
 
-    u32 getPrimitiveTypeSizeInBytes()
+    u32 getPrimitiveTypeSizeInBytes() const
     {
-        u32 primitiveTypeSize = 0;
+        u32 primitiveTypeSizeInBytes = 0;
         switch (mPrimitiveType)
         {
             case GPUPrimitiveType::FLOAT:
-                primitiveTypeSize = sizeof(f32);
+                primitiveTypeSizeInBytes = sizeof(f32);
             break;
             case GPUPrimitiveType::INT:
-                primitiveTypeSize = sizeof(i32);
+                primitiveTypeSizeInBytes = sizeof(i32);
             break;
             case GPUPrimitiveType::BOOL:
-                primitiveTypeSize = sizeof(bool);
+                primitiveTypeSizeInBytes = sizeof(bool);
+            break;
+            case GPUPrimitiveType::STRUCT:
+                primitiveTypeSizeInBytes = mTypeSizeInBytes;
             break;
         }
 
-        return primitiveTypeSize;
+        return primitiveTypeSizeInBytes;
     }
 
-    u32 getSizePrimitiveType()
+    u32 getSizePrimitiveType() const
     {
         u32 primitiveTypeSizeInBytes = getPrimitiveTypeSizeInBytes();
         u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
@@ -110,4 +114,33 @@ public:
     {}   
     std::string mValue;
     std::string mArraySize;
+};
+
+class GPUStructDefinition
+{
+public:
+    class GPUStructVariable
+    {
+    public:
+        GPUDataType mGPUDataType;
+        std::string mName;
+    };
+
+    std::string mName;
+    std::vector<GPUStructVariable> mPrimitiveVariables;
+
+    GPUStructDefinition() = default;
+    GPUStructDefinition(const std::string& name, const std::vector<GPUStructVariable>& primitiveVariables):
+        mName(name), mPrimitiveVariables(primitiveVariables){}
+
+    u32 getPrimitiveTypeSizeInBytes() const
+    {
+        u32 primitiveTypeSizeInBytes = 0;
+        FOR_ARRAY(i, mPrimitiveVariables)
+        {
+            primitiveTypeSizeInBytes += mPrimitiveVariables[i].mGPUDataType.getPrimitiveTypeSizeInBytes();
+        }
+
+        return primitiveTypeSizeInBytes;
+    }
 };

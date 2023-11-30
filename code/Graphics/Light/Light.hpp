@@ -2,7 +2,7 @@
 
 #include "Scene/Component.hpp"
 
-class LightData: public ComponentData
+class LightData
 {
 public:
     Vector3 mPosition;

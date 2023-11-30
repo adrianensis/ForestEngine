@@ -30,7 +30,7 @@ public:
 	}
 };
 
-class RendererData: public ComponentData
+class RendererData
 {
 public:
     StencilData mStencilData;

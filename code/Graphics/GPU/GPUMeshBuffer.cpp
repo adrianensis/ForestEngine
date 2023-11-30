@@ -37,7 +37,6 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
     mVBOBonesWeights = mGPUVertexBuffersLayout.addBuffer(bufferDataBonesWeights);
 
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID);
-    bufferDataInstanceIDs.mAttributeDivisorSizeInPrimitiveTypes = 1;
 	if(mGPUMeshBufferData.mIsInstanced)
 	{
         bufferDataInstanceIDs.mInstanceDivisor = 1;

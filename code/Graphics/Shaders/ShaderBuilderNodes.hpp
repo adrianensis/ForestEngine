@@ -54,6 +54,15 @@ namespace ShaderBuilderNodes
         std::string mArraySize;
     };
 
+    class Struct : public Statement
+    {
+    public:
+        Struct(const GPUStructDefinition& structDefinition): mStructDefinition(structDefinition) {};
+        std::vector<std::string> toLines(u16 indent) const override;
+
+        GPUStructDefinition mStructDefinition;
+    };
+
     class Variable : public Statement
     {
     public:
@@ -271,10 +280,12 @@ namespace ShaderBuilderNodes
     public:
         Program()
         {
+            mAttributes.reserve(50);
             mAttributes.reserve(100);
             mAttributeBlocks.reserve(50);
             mFunctionDefinitions.reserve(50);
         }
+        Struct& structType(const Struct& structType);
         Attribute& attribute(const Attribute& attribute);
         AttributeBlock& attributeBlock(const AttributeBlock& attributeBlock);
         FunctionDefinition& function(auto&& ...args)
@@ -282,11 +293,13 @@ namespace ShaderBuilderNodes
             return mFunctionDefinitions.emplace_back(args...);
         }
 
+        const Struct& getStruct(const std::string_view& structName) const;
         const Attribute& getAttribute(const std::string_view& attributeName) const;
         const AttributeBlock& getAttributeBlock(const std::string_view& attributeBlockName) const;
 
         std::vector<std::string> toLines(u16 indent) const;
 
+        std::vector<Struct> mStructs;
         std::vector<Attribute> mAttributes;
         std::vector<AttributeBlock> mAttributeBlocks;
         std::vector<FunctionDefinition> mFunctionDefinitions;
@@ -294,6 +307,7 @@ namespace ShaderBuilderNodes
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
         inline static AttributeBlock mNullAttributeBlock {GPUUniformBlockData{}};
+        inline static Struct mNullStructDefinition {GPUStructDefinition{}};
     };
 
 }

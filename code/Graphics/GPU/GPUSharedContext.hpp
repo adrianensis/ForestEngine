@@ -20,6 +20,7 @@ public:
     
 public:
 	GPUUniformBlock mGlobalMatricesBlock;
+	GPUUniformBlock mLightsBlock;
 
 private:
     u32 mBindingPointsIndex = 0;

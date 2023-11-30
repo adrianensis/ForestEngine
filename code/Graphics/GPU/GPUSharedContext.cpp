@@ -6,6 +6,8 @@ void GPUSharedContext::init()
     glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &mMaxUniformBufferBindingPoints);
     u32 bindingPoint = requestUniformBufferBindingPoint();
     mGlobalMatricesBlock.init(bindingPoint, GPUBuiltIn::UniformBlocks::mGlobalMatrices, false);
+    bindingPoint = requestUniformBufferBindingPoint();
+    mLightsBlock.init(bindingPoint, GPUBuiltIn::UniformBlocks::mLights, false);
 }
 
 u32 GPUSharedContext::requestUniformBufferBindingPoint()
@@ -19,4 +21,5 @@ u32 GPUSharedContext::requestUniformBufferBindingPoint()
 void GPUSharedContext::terminate()
 {
     mGlobalMatricesBlock.terminate();
+    mLightsBlock.terminate();
 }

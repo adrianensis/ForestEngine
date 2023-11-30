@@ -11,6 +11,7 @@
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
+#include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Shaders/ShaderBuilder.hpp"
 
@@ -28,12 +29,15 @@ void BatchRenderer::init(const BatchData& batchData)
 
     mShader = OwnerPtr<GPUShader>::newObject();
     std::string stringShderVert = sbVert.getCode();
-    // ECHO(stringShderVert);
+    ECHO(stringShderVert);
     std::string stringShderFrag = sbFrag.getCode();
-    // ECHO(stringShderFrag);
+    ECHO(stringShderFrag);
     mShader->initFromFileContents(stringShderVert, stringShderFrag);
     
     mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock);
+	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
+    mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mLightsBlock);
+	GET_SYSTEM(GPUSharedContext).mLightsBlock.resize(10);
     
     mMeshBatcher.bindUniforms(mShader);
 }
@@ -68,8 +72,12 @@ void BatchRenderer::enable()
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
     GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
-	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
+
+    std::vector<LightData> ligths;
+    ligths.resize(10);
+    ligths[0].mPosition.x = 0;
+	GET_SYSTEM(GPUSharedContext).mLightsBlock.setDataArray(ligths);
 
     mMeshBatcher.updateBoneTransforms();
 

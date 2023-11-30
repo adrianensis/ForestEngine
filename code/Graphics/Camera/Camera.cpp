@@ -140,14 +140,14 @@ void Camera::calculateViewMatrix()
 	Matrix4 viewTranslationMatrix;
 	viewTranslationMatrix.translation(-originalPosition);
 
-	Vector3 worldUp(0,1,0);
+	// Vector3 worldUp(0,1,0);
 
-	Vector3 forward(0,0,1);
-	// forward = forward * -1;
+	// Vector3 forward(0,0,1);
+	// // forward = forward * -1;
 
-	Vector3 right = Vector3(worldUp).cross(forward).nor();
+	// Vector3 right = Vector3(worldUp).cross(forward).nor();
 
-	Vector3 up = Vector3(forward).cross(right).nor();
+	// Vector3 up = Vector3(forward).cross(right).nor();
 
 	Matrix4 viewRotationMatrix;
 	viewRotationMatrix.identity();

@@ -39,13 +39,7 @@ public:
 	GET(IsDestroyed)
 };
 
-class ComponentData
-{
-public:
-    virtual ~ComponentData() = default;
-};
-
-template<class T> T_EXTENDS(T, ComponentData)
+template<class T>
 class ComponentWithData: public Component
 {
 public:

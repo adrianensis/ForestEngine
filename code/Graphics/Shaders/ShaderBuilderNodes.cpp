@@ -13,6 +13,24 @@ namespace ShaderBuilderNodes
         return str;
     };
 
+    std::vector<std::string> Struct::toLines(u16 indent) const
+    {
+        std::vector<std::string> code;
+
+        code.push_back(getIndent(indent) + "struct " + mStructDefinition.mName + "{");
+
+        FOR_LIST(it, mStructDefinition.mPrimitiveVariables)
+        {
+            Variable var(it->mGPUDataType.mName, it->mName);
+            auto varCode = var.toLines(indent + 1);
+            code.insert(code.end(), varCode.begin(), varCode.end());
+        }
+
+        code.push_back(getIndent(indent) + "};");
+
+        return code;
+    }
+
     std::vector<std::string> Variable::toLines(u16 indent) const
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
@@ -187,6 +205,11 @@ namespace ShaderBuilderNodes
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;
     }
+    
+    Struct& Program::structType(const Struct& structType)
+    {
+        return mStructs.emplace_back(structType);
+    }
 
     Attribute& Program::attribute(const Attribute& attribute)
     {
@@ -196,6 +219,19 @@ namespace ShaderBuilderNodes
     AttributeBlock& Program::attributeBlock(const AttributeBlock& attributeBlock)
     {
         return mAttributeBlocks.emplace_back(attributeBlock);
+    }
+    
+    const Struct& Program::getStruct(const std::string_view& structName) const
+    {
+        FOR_LIST(it, mStructs)
+        {
+            if(it->mStructDefinition.mName == structName)
+            {
+                return *it;
+            }
+        }
+
+        return mNullStructDefinition;
     }
 
     const Attribute& Program::getAttribute(const std::string_view& attributeName) const
@@ -229,6 +265,12 @@ namespace ShaderBuilderNodes
         std::vector<std::string> code;
 
         code.push_back("#version " + std::to_string(mVersion));
+
+        FOR_LIST(it, mStructs)
+        {
+            auto statementCode = it->toLines(indent);
+            code.insert(code.end(), statementCode.begin(), statementCode.end());
+        }
 
         FOR_LIST(it, mAttributes)
         {

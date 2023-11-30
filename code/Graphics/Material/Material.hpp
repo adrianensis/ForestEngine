@@ -172,6 +172,7 @@ public:
 class MaterialShaderVariables
 {
 public:
+    std::vector<GPUStructDefinition> mStructDefinitions;
     std::vector<GPUVariableDefinitionData> mUniforms;
     std::vector<GPUUniformBlockData> mUniformBlocks;
     std::vector<GPUVariableDefinitionData> mConsts;

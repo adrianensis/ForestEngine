@@ -2,7 +2,6 @@
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Shaders/ShaderBuilderFunctionsLibrary.hpp"
 
@@ -15,6 +14,13 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
 {
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
+
+    const std::vector<GPUStructDefinition>& structDefinitions = material->getMaterialShaderVariables().mStructDefinitions;
+    FOR_LIST(it, structDefinitions)
+    {
+        const GPUStructDefinition& structDefinition = *it;
+        get().structType(structDefinition);
+    }
     
     const std::vector<GPUVariableDefinitionData>& consts = material->getMaterialShaderVariables().mConsts;
     FOR_LIST(it, consts)
@@ -70,8 +76,11 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     Variable projectionMatrix(globalMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
     Variable viewMatrix(globalMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(1));
 
-    auto& modelMatricesblock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mModelMatrices.mInstanceName);    
-    Variable modelMatrices(modelMatricesblock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+    auto& modelMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mModelMatrices.mInstanceName);    
+    Variable modelMatrices(modelMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+
+    auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mLights.mInstanceName);    
+    Variable lights(ligthsBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
@@ -109,6 +118,13 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
     
+    const std::vector<GPUStructDefinition>& structDefinitions = material->getMaterialShaderVariables().mStructDefinitions;
+    FOR_LIST(it, structDefinitions)
+    {
+        const GPUStructDefinition& structDefinition = *it;
+        get().structType(structDefinition);
+    }
+    
     const std::vector<GPUVariableDefinitionData>& consts = material->getMaterialShaderVariables().mConsts;
     FOR_LIST(it, consts)
     {
@@ -121,6 +137,13 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     {
         const GPUVariableDefinitionData& uniformVar = *it;
         get().attribute(uniformVar);
+    }
+
+    const std::vector<GPUUniformBlockData>& uniformBlocks = material->getMaterialShaderVariables().mUniformBlocks;
+    FOR_LIST(it, uniformBlocks)
+    {
+        const GPUUniformBlockData& block = *it;
+        get().attributeBlock(block);
     }
 
     const std::vector<GPUVariableDefinitionData>& fragmentInputs = material->getMaterialShaderVariables().mFragmentInputs;
