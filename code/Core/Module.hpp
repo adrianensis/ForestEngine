@@ -22,3 +22,5 @@
 #include "Core/Profiler/Profiler.hpp"
 #include "Core/Image/ImageUtils.hpp"
 #include "Core/Font/Font.hpp"
+#include "Core/Systems/System.hpp"
+#include "Core/Command/CommandLine.hpp"

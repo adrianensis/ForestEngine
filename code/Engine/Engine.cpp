@@ -1,6 +1,6 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Engine/Command/CommandLine.hpp"
+#include "Core/Command/CommandLine.hpp"
 #include "Graphics/Module.hpp"
 #include "Scripting/Module.hpp"
 
