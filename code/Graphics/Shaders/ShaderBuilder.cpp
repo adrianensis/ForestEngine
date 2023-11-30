@@ -79,8 +79,11 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& modelMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mModelMatrices.mInstanceName);    
     Variable modelMatrices(modelMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
 
-    auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mLights.mInstanceName);    
-    Variable lights(ligthsBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+    if(material->getMaterialData().mReceiveLight)
+    {
+        auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mLights.mInstanceName);    
+        Variable lights(ligthsBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+    }
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);

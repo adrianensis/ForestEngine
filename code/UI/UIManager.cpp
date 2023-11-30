@@ -10,6 +10,13 @@ void UIManager::init()
     mDefaultFont = Paths::mResources + "fonts/Arial.ttf";
     mFontsManager.init();
     mFontsManager.loadFont(mDefaultFont);
+
+    MaterialData materialData;
+    materialData.mAlphaEnabled = true;
+    materialData.mReceiveLight = false;
+    materialData.mUseColorAsTint = true;
+    materialData.mUseVertexColor = true;
+    GET_SYSTEM(MaterialManager).createMaterial(materialData);
 }
 
 void UIManager::terminate()

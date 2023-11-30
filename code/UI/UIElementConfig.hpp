@@ -19,7 +19,7 @@ class UIElementConfig: public ObjectBase
     GENERATE_METADATA(UIElementConfig)
 
 public:
-    void init(const Vector2& position, const Vector2& size, i32 layer, std::string text = std::string());
+    void init(const Vector2& position, const Vector2& size, i32 layer, Ptr<const Material> material, std::string text = std::string());
 
 public:
 	const UIStyle* mStyle = nullptr;

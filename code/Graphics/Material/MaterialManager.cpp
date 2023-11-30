@@ -19,14 +19,6 @@ void MaterialManager::init()
     mNoTextureMaterial = OwnerPtr<Material>::newObject();
 	mNoTextureMaterial->init(materialData, mMaterialIDCounter);
 	mMaterialIDCounter++;
-
-    MaterialData materialDataVertexColor;
-    materialDataVertexColor.mAlphaEnabled = true;
-    materialDataVertexColor.mUseColorAsTint = true;
-    materialDataVertexColor.mUseVertexColor = true;
-    mNoTextureMaterialVertexColor = OwnerPtr<Material>::newObject();
-	mNoTextureMaterialVertexColor->init(materialDataVertexColor, mMaterialIDCounter);
-	mMaterialIDCounter++;
 }
 
 Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)

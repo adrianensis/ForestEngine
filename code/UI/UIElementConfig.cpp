@@ -4,7 +4,7 @@
 #include "Graphics/Module.hpp"
 
 
-void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 layer, std::string text /*= std::string()*/)
+void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 layer, Ptr<const Material> material, std::string text /*= std::string()*/)
 {
 	mStyle = &UIStyleManager::getInstance().getDefaultStyle();
 	mUIElementClassId = 0;
@@ -17,7 +17,7 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	// mTextSize = GET_SYSTEM(UIManager).getDefaultFontSize();
 	mAdjustSizeToText = false;
 	mIsAffectedByLayout = true;
-	mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterialVertexColor();
+	mMaterial = material;
 	mGroup = "";
 	mParent.invalidate();
 	mSeparatorSize = 0.01f;

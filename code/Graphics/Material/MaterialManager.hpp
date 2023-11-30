@@ -23,9 +23,7 @@ private:
 	std::unordered_map<std::string, OwnerPtr<Texture>> mTexturesMap;
     std::unordered_map<u32, OwnerPtr<Material>> mMaterials;
 	OwnerPtr<Material> mNoTextureMaterial;
-	OwnerPtr<Material> mNoTextureMaterialVertexColor;
 
 public:
     CGET(NoTextureMaterial)
-    CGET(NoTextureMaterialVertexColor)
 };

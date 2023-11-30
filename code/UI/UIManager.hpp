@@ -42,4 +42,8 @@ private:
 	Ptr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     std::string mDefaultFont;
+    Ptr<const Material> mDefaultUIMaterial;
+
+public:
+    GET(DefaultUIMaterial)
 };
