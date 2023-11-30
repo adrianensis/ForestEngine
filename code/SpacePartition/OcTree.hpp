@@ -68,16 +68,14 @@ public:
 class IOcTreeElement
 {
 public:
-    void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax);
-	virtual bool isOcTreeElementStatic() const { return false;}
-	virtual bool isOcTreeTransformChanged() const { return false;}
+    void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax, bool isStatic);
     // void addNode(u32 nodeHash);
     // void removeNode(u32 nodeHash);
     // bool isInNode(u32 nodeHash) const;
 
 private:
     Cube mOcTreeBoundingBox;
-
+    bool mIsStatic = false;
 
     // TODO: CONTINUE HERE
     // track current octancts to avoid re-insertions
@@ -90,4 +88,5 @@ public:
 
 public:
     CRGET(OcTreeBoundingBox)
+    GET(IsStatic)
 };

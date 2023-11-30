@@ -115,7 +115,7 @@ void OcTree::OcTreeNode::addOcTreeElementToLeaf(Ptr<IOcTreeElement> element)
 {
     PROFILER_CPU()
     auto* octreeNodeElements = &mOcTreeElementsStatic;
-    if(!element->isOcTreeElementStatic())
+    if(!element->getIsStatic())
     {
         octreeNodeElements = &mOcTreeElementsDynamic;
     }
@@ -305,10 +305,11 @@ void OcTree::addOcTreeElement(Ptr<IOcTreeElement> element)
     mRoot.addOcTreeElement(element);
 }
 
-void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax)
+void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax, bool isStatic)
 {
     PROFILER_CPU()
 
+    mIsStatic = isStatic;
     Vector3 maxWorld = modelMatrix.mulVector(Vector4(AABBMax, 1));
     Vector3 minWorld = modelMatrix.mulVector(Vector4(AABBMin, 1));
     Vector3 diffWorld(maxWorld - minWorld);

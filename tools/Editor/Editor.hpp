@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.hpp"
-#include "UI/UIStyle.hpp"
+#include "UI/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 class UIStyleEditorToolButton: public UIStyleDefault
@@ -36,6 +36,7 @@ private:
 	f32 rotation = 0;
 	f32 y = 0;
 	Vector3 position;
+    Ptr<UIText> fpsCounter;
     Ptr<GameObject> gameObject;
 	Ptr<GameObject> cameraGameObject;
 

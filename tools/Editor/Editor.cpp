@@ -121,13 +121,18 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	// UIBuilder uiBuilder;
+	UIBuilder uiBuilder;
 
-	// uiBuilder.
-	// // setPosition(Vector2(0,0)).
-	// setPosition(Vector2(-1,1)).
-	// setAdjustSizeToText(true).
-	// setSize(Vector2(0.5, 0.05f));
+	uiBuilder.
+	// setPosition(Vector2(0,0)).
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
+	setSize(Vector2(0.5, 0.05f));
+
+    fpsCounter = uiBuilder.
+	setText("100").
+	create<UIText>().
+    getUIElement<UIText>();
 
 	// uiBuilder.
 	// setText("File").
@@ -265,6 +270,10 @@ void Editor::update()
 	// 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
 	// }
     // PROFILER_END_BLOCK();
+
+    f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+    fpsCounter->setText(std::to_string((u32)fps));
+    //VAR(fps)
 }
 
 void Editor::terminate()

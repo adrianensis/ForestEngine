@@ -14,16 +14,6 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
-bool MeshRenderer::isOcTreeElementStatic() const
-{
-    return isStatic();
-}
-
-bool MeshRenderer::isOcTreeTransformChanged() const
-{
-    return mGameObject->mTransform->getModelMatrixDirty();
-}
-
 void MeshRenderer::init(RendererData& data) 
 {
     ComponentWithData::init(data);
@@ -63,7 +53,7 @@ void MeshRenderer::calculateRendererModelMatrix()
         mRendererModelMatrix = positionOffsetMatrix;
     }
 
-    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax);
+    IOcTreeElement::init(mRendererModelMatrix, getComponentData().mMesh->mMin, getComponentData().mMesh->mMax, getIsStatic());
     
     mRendererPositionOffsetDirty = false;
 }

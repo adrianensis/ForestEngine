@@ -9,15 +9,6 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
     Variable pos = Variable(GPUBuiltIn::PrimitiveTypes::mVector4.mName, "pos");
     FunctionDefinition func(GPUBuiltIn::PrimitiveTypes::mVector4.mName, "calculateSkinnedPosition", {pos});
     
-    auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
-    auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
-
-    auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
-    auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
-
-    auto& bonesMatricesblock = program.getAttributeBlock(GPUBuiltIn::UniformBlocks::mBonesMatrices.mInstanceName);    
-    Variable bonesTransform(bonesMatricesblock.mGPUUniformBlockData.getScopedGPUVariableData(0));
-    
     Variable finalPositon;
     Variable localPosition;
     
@@ -26,6 +17,13 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
 
     if(material->getMaterialData().mIsSkinned)
     {
+        auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
+        auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
+        auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
+        auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
+        auto& bonesMatricesblock = program.getAttributeBlock(GPUBuiltIn::UniformBlocks::mBonesMatrices.mInstanceName);    
+        Variable bonesTransform(bonesMatricesblock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+
         func.body().
         set(finalPositon, call("vec4", {{"0.0f"}})).
         forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
