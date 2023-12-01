@@ -65,7 +65,6 @@ void SkeletonState::createAnimationState(Ptr<const Animation> animation)
 		mAnimationStates.at(animationId)->init(animation);
 	}
 
-    // TMP: grab the first anim state for testing
     if(! mCurrentAnimation)
     {
         mCurrentAnimation = mAnimationStates.at(animationId);
