@@ -179,7 +179,6 @@ void MeshRenderer::updateTextureRegion()
 			if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
             {
                 mTextureRegion.set(frame.mPosition, Vector2(frame.mWidth, frame.mHeight));
-                mRegenerateTextureCoords = true;
             }
 		}
 	}
