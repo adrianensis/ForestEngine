@@ -42,20 +42,22 @@ void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
     mMeshBuilder.appendToTextureCoordinates(meshInstance->mTextureCoordinates);
     PROFILER_END_BLOCK();
 
-    PROFILER_BLOCK_CPU("Colors");
     if(mBatchData.mMaterial->getMaterialData().mUseVertexColor)
     {
+        PROFILER_BLOCK_CPU("Colors");
         mMeshBuilder.appendToColors(meshInstance->mColors);
     }
-    PROFILER_END_BLOCK();
 
-    PROFILER_BLOCK_CPU("BonesVertexIDsData");
-    mMeshBuilder.appendToBonesVertexIDsData(meshInstance->mBonesVertexIDsData);
-    PROFILER_END_BLOCK();
+    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
+    {
+        PROFILER_BLOCK_CPU("BonesVertexIDsData");
+        mMeshBuilder.appendToBonesVertexIDsData(meshInstance->mBonesVertexIDsData);
+        PROFILER_END_BLOCK();
 
-    PROFILER_BLOCK_CPU("BonesVertexWeightsData");
-    mMeshBuilder.appendToBonesVertexWeightsData(meshInstance->mBonesVertexWeightsData);
-    PROFILER_END_BLOCK();
+        PROFILER_BLOCK_CPU("BonesVertexWeightsData");
+        mMeshBuilder.appendToBonesVertexWeightsData(meshInstance->mBonesVertexWeightsData);
+        PROFILER_END_BLOCK();
+    }
 }
 
 void MeshBatcher::resize(u32 size)
