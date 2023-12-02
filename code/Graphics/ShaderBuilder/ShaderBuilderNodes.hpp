@@ -280,7 +280,7 @@ namespace ShaderBuilderNodes
     public:
         Program()
         {
-            mAttributes.reserve(50);
+            mStructs.reserve(50);
             mAttributes.reserve(100);
             mAttributeBlocks.reserve(50);
             mFunctionDefinitions.reserve(50);
