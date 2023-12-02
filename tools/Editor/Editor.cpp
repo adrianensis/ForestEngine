@@ -70,12 +70,12 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    size = 10;
+    size = 12;
     for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*10,y*10,0), 20.0f, 0);
+			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*100,y*100,0), 20.0f, 0);
 		}
 	}
     
@@ -121,18 +121,18 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	UIBuilder uiBuilder;
+	// UIBuilder uiBuilder;
 
-	uiBuilder.
-	// setPosition(Vector2(0,0)).
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5, 0.05f));
+	// uiBuilder.
+	// // setPosition(Vector2(0,0)).
+	// setPosition(Vector2(-1,1)).
+	// setAdjustSizeToText(true).
+	// setSize(Vector2(0.5, 0.05f));
 
-    fpsCounter = uiBuilder.
-	setText("100").
-	create<UIText>().
-    getUIElement<UIText>();
+    // fpsCounter = uiBuilder.
+	// setText("100").
+	// create<UIText>().
+    // getUIElement<UIText>();
 
 	// uiBuilder.
 	// setText("File").
@@ -271,8 +271,8 @@ void Editor::update()
 	// }
     // PROFILER_END_BLOCK();
 
-    f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
-    fpsCounter->setText(std::to_string((u32)fps));
+    // f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+    // fpsCounter->setText(std::to_string((u32)fps));
     //VAR(fps)
 }
 

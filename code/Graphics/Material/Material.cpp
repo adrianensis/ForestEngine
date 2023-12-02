@@ -45,10 +45,12 @@ void Material::init(const MaterialData& materialData, u32 id)
         mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+    mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
     
     mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
     mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
     mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
 
     mMaterialShaderVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }

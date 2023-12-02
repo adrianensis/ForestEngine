@@ -36,8 +36,11 @@ void BatchRenderer::init(const BatchData& batchData)
     
     mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock);
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
-    mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mLightsBlock);
-	GET_SYSTEM(GPUSharedContext).mLightsBlock.resize(10);
+
+    if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
+    {
+        mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mLightsBlock);
+    }
     
     mMeshBatcher.bindUniforms(mShader);
 }
@@ -73,14 +76,6 @@ void BatchRenderer::enable()
 
     GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
-    
-    if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
-    {
-        std::vector<LightData> ligths;
-        ligths.resize(10);
-        ligths[0].mPosition.x = 0;
-        GET_SYSTEM(GPUSharedContext).mLightsBlock.setDataArray(ligths);
-    }
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {

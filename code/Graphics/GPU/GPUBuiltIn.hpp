@@ -114,6 +114,7 @@ public:
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord"};
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, PrimitiveTypes::mVector3, "vNormal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "vColor"};
+        inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::OUT, PrimitiveTypes::mVector3, "vPosition"};
     };
 
     class FragmentInput
@@ -122,6 +123,7 @@ public:
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, VertexOutput::mTextureCoord};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, VertexOutput::mColor};
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, VertexOutput::mNormal};
+        inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::IN, VertexOutput::mFragPosition};
     };
 
     class FragmentOutput
