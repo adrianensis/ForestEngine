@@ -16,7 +16,7 @@ void UIManager::init()
     materialData.mReceiveLight = false;
     materialData.mUseColorAsTint = true;
     materialData.mUseVertexColor = true;
-    GET_SYSTEM(MaterialManager).createMaterial(materialData);
+    mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 }
 
 void UIManager::terminate()

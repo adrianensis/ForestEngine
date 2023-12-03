@@ -121,63 +121,63 @@ void Editor::firstUpdate()
 	//importModel("resources/cs_havana.obj", Vector3(0,0,0),  1);
 
 
-	// UIBuilder uiBuilder;
+	UIBuilder uiBuilder;
 
-	// uiBuilder.
-	// // setPosition(Vector2(0,0)).
-	// setPosition(Vector2(-1,1)).
-	// setAdjustSizeToText(true).
-	// setSize(Vector2(0.5, 0.05f));
+	uiBuilder.
+	// setPosition(Vector2(0,0)).
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
+	setSize(Vector2(0.5, 0.05f));
 
-    // fpsCounter = uiBuilder.
-	// setText("100").
-	// create<UIText>().
-    // getUIElement<UIText>();
+    fpsCounter = uiBuilder.
+	setText("100").
+	create<UIText>().
+    getUIElement<UIText>();
 
-	// uiBuilder.
-	// setText("File").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("New", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("New", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Open", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Save", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.
-	// setText("Sprites").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("Edit").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Edit").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("View").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Grid", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Grid", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Colliders", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
 
-    // uiBuilder.
-	// setText("abcd").
-	// create<UIEditableText>();
+    uiBuilder.
+	setText("abcd").
+	create<UIEditableText>();
 
 	// uiBuilder.restoreAll();
 
@@ -271,8 +271,8 @@ void Editor::update()
 	// }
     // PROFILER_END_BLOCK();
 
-    // f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
-    // fpsCounter->setText(std::to_string((u32)fps));
+    f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+    fpsCounter->setText(std::to_string((u32)fps));
     //VAR(fps)
 }
 
