@@ -12,7 +12,7 @@ void MaterialManager::init()
 {
 	LOG_TRACE()
 
-	// reserve index 0 and 1 for no textured material
+	// reserve index 0 for no textured material
     MaterialData materialData;
     materialData.mAlphaEnabled = true;
     materialData.mUseColorAsTint = true;
