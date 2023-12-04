@@ -60,7 +60,7 @@ void Matrix4::init(f32 n)
 
 void Matrix4::init(const Matrix4& other)
 {
-	init(other.mData); //TRACE()
+	init(other.mData); //LOG_TRACE()
 }
 
 void Matrix4::init(const std::array<f32, 16> &data)

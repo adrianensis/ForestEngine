@@ -9,7 +9,7 @@
 
 void Server::init(u16 port)
 {
-	TRACE()
+	LOG_TRACE()
 
 	mStatus = ServerStatus::UNINITIALIZED;
 
@@ -141,13 +141,13 @@ JSON Server::readSimpleJSON(u32 size  /*= DEFAULT_SOCKET_READ_SIZE*/) const
 
 	if (!data.empty())
 	{
-		ECHO(data);
+		LOG(data);
 
 		json = JSON::parse(data);
 
 		if (!json.empty())
 		{
-			ECHO(json.dump());
+			LOG(json.dump());
 		}
 	}
 

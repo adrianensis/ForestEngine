@@ -13,7 +13,7 @@ Profiler::~Profiler()
 void Profiler::init()
 {
 #ifdef BUILD_WITH_EASY_PROFILER
-    ECHO("PROFILER ENABLED!")
+    LOG("PROFILER ENABLED!")
 	EASY_PROFILER_ENABLE;
     profiler::startListen();
 #endif

@@ -27,7 +27,7 @@ void CommandLine::init()
     {
         if(mIsOpen)
         {
-            BRLINE();
+            LOG_BRLINE();
             execute(mBuffer);
             mBuffer.clear();
             writeLine("", false);
@@ -40,7 +40,7 @@ void CommandLine::init()
         {
             if(!mBuffer.empty())
             {
-                BACKSPACE()
+                LOG_BACKSPACE()
                 mBuffer.pop_back();
             }
             
@@ -94,11 +94,11 @@ void CommandLine::writeLine(const std::string& line, bool newLine /*= true*/) co
 {
     if(newLine)
     {
-        CUSTOM_ECHO("CMD", line)
+        LOG_TAG("CMD", line)
     }
     else
     {
-        CUSTOM_ECHO_APPEND("CMD", line)
+        LOG_TAG_APPEND("CMD", line)
     }
 }
 
@@ -147,7 +147,7 @@ void CommandLine::execute(const std::string& commandLine)
             auto argumentlistEnd = std::sregex_iterator();
         
             //writeLine("arguments");
-            //VAL(std::distance(argumentlistBegin, argumentlistEnd))
+            //LOG_VAL(std::distance(argumentlistBegin, argumentlistEnd))
         
             functor.mCommand.setArgumentsString(argumentList);
 
@@ -161,8 +161,8 @@ void CommandLine::execute(const std::string& commandLine)
                 std::regex_search(argumentStr, matchPair, regexPair);
                 //bool isPair = !matchPair.empty();
 
-                //VAL(matchPair[1].str())
-                //VAL(matchPair[3].str())
+                //LOG_VAL(matchPair[1].str())
+                //LOG_VAL(matchPair[3].str())
 
                 CommandArgument arg;
                 arg.setName(matchPair[1].str());

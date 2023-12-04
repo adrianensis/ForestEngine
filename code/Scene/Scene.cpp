@@ -17,7 +17,7 @@ Scene::~Scene()
 
 void Scene::init()
 {
-	TRACE()
+	LOG_TRACE()
 
 	mSize = 0;
 

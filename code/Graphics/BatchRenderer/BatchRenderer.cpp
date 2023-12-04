@@ -29,9 +29,9 @@ void BatchRenderer::init(const BatchData& batchData)
 
     mShader = OwnerPtr<GPUShader>::newObject();
     std::string stringShderVert = sbVert.getCode();
-    ECHO(stringShderVert);
+    LOG(stringShderVert);
     std::string stringShderFrag = sbFrag.getCode();
-    ECHO(stringShderFrag);
+    LOG(stringShderFrag);
     mShader->initFromFileContents(stringShderVert, stringShderFrag);
     
     mShader->bindUniformBlock(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock);

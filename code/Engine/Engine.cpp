@@ -115,7 +115,7 @@ void Engine::run()
 
 void Engine::terminate()
 {
-	TRACE();
+	LOG_TRACE();
 	
 	GET_SYSTEM(CommandLine).terminate();
     REMOVE_SYSTEM(CommandLine);

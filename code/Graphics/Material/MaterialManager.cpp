@@ -10,7 +10,7 @@ MaterialManager::~MaterialManager()
 
 void MaterialManager::init()
 {
-	TRACE()
+	LOG_TRACE()
 
 	// reserve index 0 and 1 for no textured material
     MaterialData materialData;

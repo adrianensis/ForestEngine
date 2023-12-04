@@ -9,12 +9,12 @@ void Memory::init()
 void Memory::terminate()
 {
 #ifdef DE_DEBUG
-	ECHO("-------- MEM SUMMARY --------")
+	LOG("-------- MEM SUMMARY --------")
 	FOR_MAP(it, Memory::mAllocationsCounter)
 	{
 		std::cout << it->first << ": " << it->second.mCurrentAllocations << " (max: " << it->second.mMaxAllocations << ")" << std::endl;
 	}
-	ECHO("-----------------------------")
+	LOG("-----------------------------")
 #endif
 
 }

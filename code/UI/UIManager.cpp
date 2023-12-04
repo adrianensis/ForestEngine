@@ -21,7 +21,7 @@ void UIManager::init()
 
 void UIManager::terminate()
 {
-	TRACE()
+	LOG_TRACE()
     mGroups.clear();
 	UIStyleManager::deleteInstance();
     mFontsManager.terminate();

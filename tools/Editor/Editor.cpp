@@ -273,7 +273,7 @@ void Editor::update()
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
     fpsCounter->setText(std::to_string((u32)fps));
-    //VAR(fps)
+    //LOG_VAR(fps)
 }
 
 void Editor::terminate()

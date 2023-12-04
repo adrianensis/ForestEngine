@@ -4,7 +4,7 @@
 
 void ScriptEngine::init()
 {
-	TRACE()
+	LOG_TRACE()
 
 	registerComponentClass(Script::getClassDefinitionStatic().mId);
 
@@ -59,7 +59,7 @@ void ScriptEngine::update()
 
 void ScriptEngine::terminate()
 {
-	TRACE()
+	LOG_TRACE()
 
 
 }

@@ -4,7 +4,7 @@
 
 void Input::init(const Ptr<IWindowInputAdapter>& windowInputAdapter)
 {
-	TRACE()
+	LOG_TRACE()
 
     mWindowInputAdapter = windowInputAdapter;
 

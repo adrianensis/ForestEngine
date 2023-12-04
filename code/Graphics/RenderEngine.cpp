@@ -14,7 +14,7 @@
 
 void RenderEngine::init(f32 sceneSize)
 {
-	TRACE()
+	LOG_TRACE()
 
 	registerComponentClass(MeshRenderer::getClassDefinitionStatic().mId);
 
@@ -51,7 +51,7 @@ void RenderEngine::update()
 
 void RenderEngine::terminate()
 {
-	TRACE()
+	LOG_TRACE()
 
 	mShapeBatchRenderer.terminate();
 	mShapeBatchRendererScreenSpace.terminate();

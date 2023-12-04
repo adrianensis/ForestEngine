@@ -28,22 +28,10 @@ void Log::append(const std::string_view& str)
 
 void Log::trace(const std::string_view file, u32 line, const std::string_view function, const std::string_view message /*= emptyMessage*/)
 {
-	writeLine("TRACE > [" + std::string(function) + ":" + std::to_string(line) + "] > " + std::string(message));
+    log(Prefixes::smTrace + " [" + std::string(function) + ":" + std::to_string(line) + "]", message, true);
 }
 
-void Log::echo(const std::string_view& message, bool newLine /*= true*/)
-{
-	if(newLine)
-	{
-		writeLine("ECHO > " + std::string(message));
-	}
-	else
-	{
-		append("ECHO > " + std::string(message));
-	}
-}
-
-void Log::customEcho(const std::string_view& tag, const std::string_view& message, bool newLine /*= true*/)
+void Log::log(const std::string_view& tag, const std::string_view& message, bool newLine /*= true*/)
 {
 	if(newLine)
 	{
@@ -53,11 +41,6 @@ void Log::customEcho(const std::string_view& tag, const std::string_view& messag
 	{
 		append(std::string(tag) + " > " + std::string(message));
 	}
-}
-
-void Log::error(const std::string_view& message)
-{
-	writeLine("ERROR > " + std::string(message));
 }
 
 void Log::brline()

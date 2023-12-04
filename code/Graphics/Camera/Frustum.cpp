@@ -5,7 +5,7 @@
 
 void Frustum::init(Camera *camera)
 {
-	TRACE()
+	LOG_TRACE()
 
 	mCamera = camera;
 

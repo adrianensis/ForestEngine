@@ -9,6 +9,6 @@ void DefaultCommands::registerDefaultCommands()
 
     cmd.registerCommand("echo", [](const Command& command)
     {
-        ECHO(command.getArgumentsString());
+        LOG(command.getArgumentsString());
     });
 }

@@ -8,7 +8,7 @@ GPUShader::GPUShader()
 
 void GPUShader::initDebug()
 {
-	TRACE()
+	LOG_TRACE()
 
 	initFromFilePaths("resources/shaders/vertexDebug.shader", "resources/shaders/fragmentDebug.shader");
 }
@@ -103,7 +103,7 @@ void GPUShader::initFromFileContents(const std::string& vertex, const std::strin
 	if (!success)
 	{
 		glGetShaderInfoLog(mVertexShader, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
+		std::cout << "LOG_ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
 				<< infoLog << std::endl
 				<< vertex
 				<< std::endl;
@@ -119,7 +119,7 @@ void GPUShader::initFromFileContents(const std::string& vertex, const std::strin
 	if (!success)
 	{
 		glGetShaderInfoLog(mVertexShader, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
+		std::cout << "LOG_ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
 				<< infoLog << std::endl
 				<< fragment
 				<< std::endl;
@@ -135,7 +135,7 @@ void GPUShader::initFromFileContents(const std::string& vertex, const std::strin
 	if (!success)
 	{
 		glGetProgramInfoLog(mProgram, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n"
+		std::cout << "LOG_ERROR::SHADER::PROGRAM::LINK_FAILED\n"
 				<< infoLog << std::endl;
 	}
 
@@ -145,7 +145,7 @@ void GPUShader::initFromFileContents(const std::string& vertex, const std::strin
 
 void GPUShader::initFromFilePaths(const std::string& vertex, const std::string& fragment)
 {
-	TRACE()
+	LOG_TRACE()
 
     std::ifstream vertex_ifs;
 	vertex_ifs.open(vertex.c_str(), std::ifstream::in);

@@ -4,11 +4,8 @@
 
 class AssertUtils
 {
-private:
-	inline static const std::string smEmptyAssert = "?";
-
 public:
-    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message = smEmptyAssert);
+    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message);
 private:
     static void sendAssertSignal();
 };

@@ -337,7 +337,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         }
         else
         {
-            ECHO("Animation channel for a node not in the armature");
+            LOG("Animation channel for a node not in the armature");
             continue;
         }
 

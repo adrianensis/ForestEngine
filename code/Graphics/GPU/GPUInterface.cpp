@@ -70,7 +70,7 @@ u32 GPUInterface::getMaxElementsInUBO(u32 elementSizeInBytes)
     glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
     // vectors / 4 components = matrices
     i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS = (gl_MAX_UNIFORM_BLOCK_SIZE/elementSizeInBytes);
-    VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS);
+    LOG_VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS);
     return gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS;
 }
 

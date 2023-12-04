@@ -8,6 +8,16 @@ public:
 	inline static const std::string_view emptyMessage;
 	inline static std::ofstream logFile;
 
+    class Prefixes
+    {
+    public:
+        inline static const std::string smLog = "Log";
+        inline static const std::string smVar = "Var";
+        inline static const std::string smTrace = "Trace";
+        inline static const std::string smError = "Error";
+        inline static const std::string smAssert = "Assert";
+    };
+
 	Log() = default;
 	~Log() = default;
 
@@ -24,7 +34,7 @@ public:
 			valueStr = std::to_string(var);
 		}
 
-		writeLine("VAR > " + std::string(varname) + " : " + valueStr);
+		log(Prefixes::smVar, std::string(varname) + " : " + valueStr, true);
 	};
 
 	template <class T>
@@ -40,15 +50,13 @@ public:
 			valueStr = std::to_string(var);
 		}
 
-		writeLine("VAL > " + valueStr);
+		log(Prefixes::smLog, valueStr, true);
 	};
 
     static void init();
     static void terminate();
     static void trace(const std::string_view file, u32 line, const std::string_view function, const std::string_view message = emptyMessage);
-    static void echo(const std::string_view& message, bool newLine = true);
-    static void customEcho(const std::string_view& tag, const std::string_view& message, bool newLine = true);
-    static void error(const std::string_view& message);
+    static void log(const std::string_view& tag, const std::string_view& message, bool newLine);
     static void brline();
     static void backspace();
 
@@ -58,27 +66,25 @@ private:
 };
 
 #ifdef DE_ENABLE_LOGS
-#define TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-#define TO_STR(s) #s
-#define ECHO(x) Log::echo(x);
-#define ECHO_APPEND(x) Log::echo(x, false);
-#define CUSTOM_ECHO(Tag, x) Log::customEcho(Tag, x);
-#define CUSTOM_ECHO_APPEND(Tag, x) Log::customEcho(Tag, x, false);
-#define VAR(x) Log::var<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(#x, x);
-#define VAL(x) Log::val<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(x);
-#define ERROR(x) Log::error(x);
-#define BRLINE() Log::brline();
-#define BACKSPACE() Log::backspace();
+#define LOG_TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__);
+#define LOG(x) Log::log(Log::Prefixes::smLog, x, true);
+#define LOG_APPEND(x) Log::log(Log::Prefixes::smLog, x, false);
+#define LOG_TAG(Tag, x) Log::log(Tag, x, true);
+#define LOG_TAG_APPEND(Tag, x) Log::log(Tag, x, false);
+#define LOG_VAR(x) Log::var<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(#x, x);
+#define LOG_VAL(x) Log::val<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(x);
+#define LOG_ERROR(x) Log::log(Log::Prefixes::smError, x, true);
+#define LOG_BRLINE() Log::brline();
+#define LOG_BACKSPACE() Log::backspace();
 #else
-#define TRACE()
-#define TO_STR(s)
-#define ECHO(x)
-#define ECHO_APPEND(x)
-#define CUSTOM_ECHO(Tag, x)
-#define CUSTOM_ECHO_APPEND(Tag, x)
-#define VAR(x)
-#define VAL(x)
-#define ERROR(x)
-#define BRLINE()
-#define BACKSPACE()
+#define LOG_TRACE()
+#define LOG(x)
+#define LOG_APPEND(x)
+#define LOG_TAG(Tag, x)
+#define LOG_TAG_APPEND(Tag, x)
+#define LOG_VAR(x)
+#define LOG_VAL(x)
+#define LOG_ERROR(x)
+#define LOG_BRLINE()
+#define LOG_BACKSPACE()
 #endif
