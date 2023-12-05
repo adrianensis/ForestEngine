@@ -52,10 +52,22 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	Vector3 topLeftBack(-0.5f, 0.5f, -0.5f); // top right back
 	Vector3 topRightBack(0.5f, 0.5f, -0.5f); // top left back
 
+	Vector3 leftNormal(-1,0,0); // left
+	Vector3 rightNormal(1,0,0); // right
+	Vector3 frontNormal(0,0,1); // front
+	Vector3 backNormal(0,0,-1); // back
+	Vector3 topNormal(0,1,0); // top
+	Vector3 bottomNormal(0,-1,0); // bottom
+
 	mesh->addToPositions(bottomLeftFront);
 	mesh->addToPositions(bottomRightFront);
 	mesh->addToPositions(topRightFront);
 	mesh->addToPositions(topLeftFront);
+	
+    mesh->addToNormals(frontNormal);
+	mesh->addToNormals(frontNormal);
+	mesh->addToNormals(frontNormal);
+	mesh->addToNormals(frontNormal);
 
 	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
 	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
@@ -71,6 +83,11 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->addToPositions(bottomLeftFront);
 	mesh->addToPositions(topLeftFront);
 	mesh->addToPositions(topLeftBack);
+	
+    mesh->addToNormals(leftNormal);
+	mesh->addToNormals(leftNormal);
+	mesh->addToNormals(leftNormal);
+	mesh->addToNormals(leftNormal);
 
 	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
 	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
@@ -86,6 +103,11 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->addToPositions(bottomLeftBack);
 	mesh->addToPositions(topLeftBack);
 	mesh->addToPositions(topRightBack);
+	
+    mesh->addToNormals(backNormal);
+	mesh->addToNormals(backNormal);
+	mesh->addToNormals(backNormal);
+	mesh->addToNormals(backNormal);
 
 	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
 	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
@@ -101,6 +123,11 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->addToPositions(bottomRightBack);
 	mesh->addToPositions(topRightBack);
 	mesh->addToPositions(topRightFront);
+	
+    mesh->addToNormals(rightNormal);
+	mesh->addToNormals(rightNormal);
+	mesh->addToNormals(rightNormal);
+	mesh->addToNormals(rightNormal);
 
 	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
 	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
@@ -116,6 +143,11 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->addToPositions(topRightFront);
 	mesh->addToPositions(topRightBack);
 	mesh->addToPositions(topLeftBack);
+	
+    mesh->addToNormals(topNormal);
+	mesh->addToNormals(topNormal);
+	mesh->addToNormals(topNormal);
+	mesh->addToNormals(topNormal);
 
 	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
 	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
@@ -131,6 +163,11 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->addToPositions(bottomRightBack);
 	mesh->addToPositions(bottomRightFront);
 	mesh->addToPositions(bottomLeftFront);
+	
+    mesh->addToNormals(bottomNormal);
+	mesh->addToNormals(bottomNormal);
+	mesh->addToNormals(bottomNormal);
+	mesh->addToNormals(bottomNormal);
 
 	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
 	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
