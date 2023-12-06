@@ -13,7 +13,7 @@ function(build_program path prefix program_name)
   set(PROGRAM_PATH "${path}/${program_name}")
   message("BUILD PROGRAM ${PROGRAM_PATH}")
 
-  file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp" "${PROGRAM_PATH}/*.hpp")
+  file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp")
 
   include_directories("${PROGRAM_PATH}")
 
@@ -131,7 +131,7 @@ include_directories("code")
 # Alternative: CMakeLists.txt with this code into source directory.
 # add_subdirectory(source)
 foreach(PACKAGE ${PACKAGES})
-  file(GLOB_RECURSE PACKAGE_SOURCE "code/${PACKAGE}/*")
+  file(GLOB_RECURSE PACKAGE_SOURCE "code/${PACKAGE}/*.cpp")
   add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCE})
 endforeach()
 

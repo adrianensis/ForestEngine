@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
-#include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/GPUSharedBuffer.hpp"
 
 class GPUBuiltIn
 {
@@ -54,11 +54,12 @@ public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
     };
 
-    class UniformBuffers
+    class SharedBuffers
     {
     public:
-        inline static const GPUUniformBufferData mGlobalMatrices
+        inline static const GPUSharedBufferData mGlobalMatrices
         {
+            GPUSharedBufferType::UNIFORM,
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"}
@@ -67,17 +68,19 @@ public:
             "globalMatrices"
         };
         
-        inline static const GPUUniformBufferData mModelMatrices
+        inline static const GPUSharedBufferData mModelMatrices
         {
+            GPUSharedBufferType::STORAGE,
             {
-                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "modelMatrices"}, "", std::to_string(1024/*GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(f32)*Matrix4::smMatrixSize)*/)},
+                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "modelMatrices"}, "", " "},
             },
             "ModelMatrices",
             "modelMatrices"
         };
 
-        inline static const GPUUniformBufferData mBonesMatrices
+        inline static const GPUSharedBufferData mBonesMatrices
         {
+            GPUSharedBufferType::UNIFORM,
             {
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", "50"},
             },
@@ -85,8 +88,9 @@ public:
             "bonesMatrices"
         };
 
-        inline static const GPUUniformBufferData mLights
+        inline static const GPUSharedBufferData mLights
         {
+            GPUSharedBufferType::UNIFORM,
             {
                 {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},
             },

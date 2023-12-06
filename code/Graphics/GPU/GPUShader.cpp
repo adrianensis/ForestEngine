@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
-#include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/GPUSharedBuffer.hpp"
 
 GPUShader::GPUShader()
 {
@@ -80,10 +80,23 @@ void GPUShader::addBool(bool value, const std::string& name)
 	glUniform1ui(location, value);
 }
 
-void GPUShader::bindUniformBuffer(const GPUUniformBuffer& uniformBlock)
+void GPUShader::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
 {
-    u32 location = glGetUniformBlockIndex(mProgram, uniformBlock.getGPUUniformBufferData().mBlockName.c_str());   
-    glUniformBlockBinding(mProgram, location, uniformBlock.getBindingPoint());
+    switch (sharedBuffer.getGPUSharedBufferData().mType)
+    {
+    case UNIFORM:
+    {
+        u32 location = glGetProgramResourceIndex(mProgram, GL_UNIFORM_BLOCK, sharedBuffer.getGPUSharedBufferData().mBufferName.c_str());   
+        glUniformBlockBinding(mProgram, location, sharedBuffer.getBindingPoint());
+        break;
+    }
+    case STORAGE:
+    {
+        u32 location = glGetProgramResourceIndex(mProgram, GL_SHADER_STORAGE_BLOCK, sharedBuffer.getGPUSharedBufferData().mBufferName.c_str());   
+        glShaderStorageBlockBinding(mProgram, location, sharedBuffer.getBindingPoint());
+        break;
+    }
+    }
 }
 
 void GPUShader::initFromFileContents(const std::string& vertex, const std::string& fragment)

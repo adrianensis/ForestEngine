@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 
 class GPUVertexBuffersLayout;
-class GPUUniformBuffer;
+class GPUSharedBuffer;
 
 class GPUShader: public ObjectBase
 {
@@ -27,7 +27,7 @@ public:
     void addVector3(const Vector3& value, const std::string& name);
     void addVector2(const Vector2& value, const std::string& name);
     void addBool(bool value, const std::string& name);
-    void bindUniformBuffer(const GPUUniformBuffer& uniformBlock);
+    void bindSharedBuffer(const GPUSharedBuffer& sharedBuffer);
 
 private:
 	u32 mVertexShader = 0;

@@ -4,7 +4,7 @@
 - [ ] OpenGL - Cache uniform locations
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back
-- [ ] Batch different meshes under same batch if same material
+- [ ] Add Option for SSBO to be readonly
 
 ## Interesting / Nice To Have / Optimizations
 - [ ] Animation Blending

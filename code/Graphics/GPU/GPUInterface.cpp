@@ -64,6 +64,13 @@ GLuint GPUInterface::createUBO()
 	return UBO;
 }
 
+GLuint GPUInterface::createSSBO()
+{
+	u32 SSBO;
+	glGenBuffers(1, &SSBO);
+	return SSBO;
+}
+
 u32 GPUInterface::getMaxElementsInUBO(u32 elementSizeInBytes)
 {
     i32 gl_MAX_UNIFORM_BLOCK_SIZE;
@@ -78,6 +85,12 @@ void GPUInterface::bindUBO(u32 UBO, u32 bindingPoint)
 {
     // define the range of the buffer that links to a uniform binding point
     glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, UBO);
+}
+
+void GPUInterface::bindSSBO(u32 SSBO, u32 bindingPoint)
+{
+    // define the range of the buffer that links to a uniform binding point
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bindingPoint, SSBO);
 }
 
 void GPUInterface::resizeVBO(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
@@ -108,6 +121,12 @@ void GPUInterface::resizeUBOAnyType(u32 UBO, u32 typeSizeInBytes, u32 size, u32 
 	glBufferData(GL_UNIFORM_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
 }
 
+void GPUInterface::resizeSSBOAnyType(u32 SSBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+{
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
+}
+
 void GPUInterface::setDataVBO(u32 VBO, const std::vector<f32>& data)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -130,6 +149,12 @@ void GPUInterface::setDataUBOAnyTypeRaw(u32 UBO, u32 typeSize, u32 size, const v
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, UBO);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, typeSize * size, data);
+}
+
+void GPUInterface::setDataSSBOAnyTypeRaw(u32 SSBO, u32 typeSize, u32 size, const void* data)
+{
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBO);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, typeSize * size, data);
 }
 
 void GPUInterface::setDataEBO(u32 EBO, const std::vector<Face>& data)
@@ -162,6 +187,11 @@ void GPUInterface::deleteEBO(u32 EBO)
 void GPUInterface::deleteUBO(u32 UBO)
 {
     glDeleteBuffers(1, &UBO);
+}
+
+void GPUInterface::deleteSSBO(u32 SSBO)
+{
+    glDeleteBuffers(1, &SSBO);
 }
 
 void GPUInterface::enableProperty(u32 propertyArrayIndex)

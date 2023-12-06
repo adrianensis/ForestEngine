@@ -45,11 +45,11 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 
 	mEBO = GET_SYSTEM(GPUInterface).createEBO();
 
-    u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestUniformBufferBindingPoint();
-    mModelMatricesBlock.init(modelMatricesBindingPoint, GPUBuiltIn::UniformBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
+    u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
+    mModelMatricesBlock.init(modelMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
 
-    u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestUniformBufferBindingPoint();
-    mBonesMatricesBlock.init(bonesMatricesBindingPoint, GPUBuiltIn::UniformBuffers::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
+    u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
+    mBonesMatricesBlock.init(bonesMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
     mBonesMatricesBlock.resize(Mesh::MAX_BONES);
 }
 
@@ -83,7 +83,7 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
     u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mVertexCount;
     mGPUVertexBuffersLayout.getBuffer(mVBOInstanceIDs).resize(mMaxInstances * matricesBufferSizeMultiplier);
     // TODO: 1024
-    CHECK_MSG(mMaxInstances <= 1024, "Max matrices reached (+1024)");
+    //CHECK_MSG(mMaxInstances <= 1024, "Max matrices reached (+1024)");
     mModelMatricesBlock.resize(mMaxInstances);
 }
 
@@ -104,7 +104,7 @@ void GPUMeshBuffer::setMeshData(const Mesh& mesh)
 void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs)
 {
     PROFILER_CPU()
-    CHECK_MSG(matrices.size() <= 1024, "Max matrices reached (+1024)");
+    // CHECK_MSG(matrices.size() <= 1024, "Max matrices reached (+1024)");
     PROFILER_BLOCK_CPU("VBO instanceIDs");
 	mGPUVertexBuffersLayout.getBuffer(mVBOInstanceIDs).setData(instanceIDs);
     PROFILER_END_BLOCK();

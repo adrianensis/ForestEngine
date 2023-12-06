@@ -70,12 +70,12 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    size = 12;
+    size = 115;
     for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*100,y*100,0), 20.0f, 0);
+			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*30,y*30,0), 20.0f, 0);
 		}
 	}
     
@@ -328,11 +328,16 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
 	gameObject->mTransform->setRotation(Vector3(0,rot,0));
 
-    ModelRendererData modelRendererData;
-    modelRendererData.mModel = model;
-    modelRendererData.mIsInstanced = true;
+    // ModelRendererData modelRendererData;
+    // modelRendererData.mModel = model;
+    // modelRendererData.mIsInstanced = true;
 
-	gameObject->createComponent<ModelRenderer>(modelRendererData);
+    RendererData data;
+    data.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
+    data.mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
+    data.mIsInstanced = true;
+
+	gameObject->createComponent<MeshRenderer>(data)->setColor(Vector4(1,0,0,1));
     return gameObject;
 }
 

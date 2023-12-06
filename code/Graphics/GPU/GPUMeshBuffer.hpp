@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
-#include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/GPUSharedBuffer.hpp"
 
 class Mesh;
 
@@ -37,8 +37,8 @@ private:
 
 private:
     GPUMeshBufferData mGPUMeshBufferData;
-	GPUUniformBuffer mModelMatricesBlock;
-	GPUUniformBuffer mBonesMatricesBlock;
+	GPUSharedBuffer mModelMatricesBlock;
+	GPUSharedBuffer mBonesMatricesBlock;
 
     u32 mVAO = 0;
     

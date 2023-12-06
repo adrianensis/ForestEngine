@@ -21,8 +21,8 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
         auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
         auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
         auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
-        auto& bonesMatricesblock = program.getAttributeBlock(GPUBuiltIn::UniformBuffers::mBonesMatrices.mInstanceName);    
-        Variable bonesTransform(bonesMatricesblock.mGPUUniformBufferData.getScopedGPUVariableData(0));
+        auto& bonesMatricesblock = program.getAttributeBlock(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
+        Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
 
         func.body().
         set(finalPositon, call("vec4", {{"0.0f"}})).

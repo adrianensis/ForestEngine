@@ -16,13 +16,16 @@ public:
     GLuint createVAO();
     GLuint createEBO();
     GLuint createUBO();
+    GLuint createSSBO();
     u32 getMaxElementsInUBO(u32 elementSizeInBytes);
     void bindUBO(u32 UBO, u32 bindingPoint);
+    void bindSSBO(u32 SSBO, u32 bindingPoint);
     void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     void resizeUBOAnyType(u32 UBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    void resizeSSBOAnyType(u32 SSBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
     
     void setDataVBO(u32 VBO, const std::vector<f32>& data);
     void setDataVBOU32(u32 VBO, const std::vector<u32>& data);
@@ -44,10 +47,22 @@ public:
         setDataUBOAnyTypeRaw(UBO, sizeof(T), 1, &data);
     }
 
+    template<class T>
+    void setDataSSBOAnyType(u32 SSBO, const std::vector<T>& data)
+    {
+        setDataSSBOAnyTypeRaw(SSBO, sizeof(T), data.size(), data.data());
+    }
+    template<class T>
+    void setDataSSBOAnyStruct(u32 SSBO, const T& data)
+    {
+        setDataSSBOAnyTypeRaw(SSBO, sizeof(T), 1, &data);
+    }
+
     void deleteVAO(u32 VAO);
     void deleteVBO(u32 VBO);
     void deleteEBO(u32 EBO);
     void deleteUBO(u32 UBO);
+    void deleteSSBO(u32 SSBO);
 
     void enableProperty(u32 propertyArrayIndex);
     void disableProperty(u32 propertyArrayIndex);
@@ -70,4 +85,5 @@ public:
 private:
     void setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const void* data);
     void setDataUBOAnyTypeRaw(u32 UBO, u32 typeSize, u32 size, const void* data);
+    void setDataSSBOAnyTypeRaw(u32 SSBO, u32 typeSize, u32 size, const void* data);
 };
