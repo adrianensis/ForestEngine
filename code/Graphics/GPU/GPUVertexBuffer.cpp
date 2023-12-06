@@ -5,14 +5,14 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
 	mData = data;
     mAttributeLocation = attributeLocation;
     mIsStatic = isStatic;
-	mVBO = GET_SYSTEM(GPUInterface).createVBO();
+	mVBO = GET_SYSTEM(GPUInterface).createBuffer();
 
     attribute(mData.mGPUVariableData.mGPUDataType.mPrimitiveType);
 }
 
 void GPUVertexBuffer::terminate()
 {
-    GET_SYSTEM(GPUInterface).deleteVBO(mVBO);
+    GET_SYSTEM(GPUInterface).deleteBuffer(mVBO);
 }
 
 void GPUVertexBuffer::resize(u32 size)

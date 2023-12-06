@@ -19,7 +19,7 @@ void GPUInterface::clear()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-GLuint GPUInterface::createVBO()
+GLuint GPUInterface::createBuffer()
 {
 	u32 VBO;
 	glGenBuffers(1, &VBO);
@@ -48,27 +48,6 @@ GLuint GPUInterface::createVAO()
 	glGenVertexArrays(1, &VAO);
 	enableVAO(VAO);
 	return VAO;
-}
-
-GLuint GPUInterface::createEBO()
-{
-	u32 EBO;
-	glGenBuffers(1, &EBO);
-	return EBO;
-}
-
-GLuint GPUInterface::createUBO()
-{
-	u32 UBO;
-	glGenBuffers(1, &UBO);
-	return UBO;
-}
-
-GLuint GPUInterface::createSSBO()
-{
-	u32 SSBO;
-	glGenBuffers(1, &SSBO);
-	return SSBO;
 }
 
 u32 GPUInterface::getMaxElementsInUBO(u32 elementSizeInBytes)
@@ -174,24 +153,9 @@ void GPUInterface::deleteVAO(u32 VAO)
     glDeleteVertexArrays(1, &VAO);
 }
 
-void GPUInterface::deleteVBO(u32 VBO)
+void GPUInterface::deleteBuffer(u32 bufferId)
 {
-    glDeleteBuffers(1, &VBO);
-}
-
-void GPUInterface::deleteEBO(u32 EBO)
-{
-    glDeleteBuffers(1, &EBO);
-}
-
-void GPUInterface::deleteUBO(u32 UBO)
-{
-    glDeleteBuffers(1, &UBO);
-}
-
-void GPUInterface::deleteSSBO(u32 SSBO)
-{
-    glDeleteBuffers(1, &SSBO);
+    glDeleteBuffers(1, &bufferId);
 }
 
 void GPUInterface::enableProperty(u32 propertyArrayIndex)

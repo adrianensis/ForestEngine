@@ -43,7 +43,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 	}
     mVBOInstanceIDs = mGPUVertexBuffersLayout.addBuffer(bufferDataInstanceIDs);
 
-	mEBO = GET_SYSTEM(GPUInterface).createEBO();
+	mEBO = GET_SYSTEM(GPUInterface).createBuffer();
 
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
     mModelMatricesBlock.init(modelMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
@@ -57,7 +57,7 @@ void GPUMeshBuffer::terminate()
 {
     disable();
     GET_SYSTEM(GPUInterface).deleteVAO(mVAO);
-    GET_SYSTEM(GPUInterface).deleteEBO(mEBO);
+    GET_SYSTEM(GPUInterface).deleteBuffer(mEBO);
     mModelMatricesBlock.terminate();
     mBonesMatricesBlock.terminate();
 }

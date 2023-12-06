@@ -13,8 +13,8 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 void ShapeBatchRenderer::terminate()
 {
 	GET_SYSTEM(GPUInterface).deleteVAO(mVAO);
-	GET_SYSTEM(GPUInterface).deleteVBO(mVBOPosition);
-	GET_SYSTEM(GPUInterface).deleteVBO(mEBO);
+	GET_SYSTEM(GPUInterface).deleteBuffer(mVBOPosition);
+	GET_SYSTEM(GPUInterface).deleteBuffer(mEBO);
 
 	mPositionBuffer.clear();
 	mColorBuffer.clear();
@@ -75,11 +75,11 @@ void ShapeBatchRenderer::render()
 void ShapeBatchRenderer::bind()
 {
 	mVAO = GET_SYSTEM(GPUInterface).createVAO();
-	mVBOPosition = GET_SYSTEM(GPUInterface).createVBO();
+	mVBOPosition = GET_SYSTEM(GPUInterface).createBuffer();
 	GET_SYSTEM(GPUInterface).attribute(0, 3, GL_FLOAT, 3 * sizeof(f32), 0, 0);
-	mVBOColor = GET_SYSTEM(GPUInterface).createVBO();
+	mVBOColor = GET_SYSTEM(GPUInterface).createBuffer();
 	GET_SYSTEM(GPUInterface).attribute(1, 4, GL_FLOAT, 4 * sizeof(f32), 0, 0);
-	mEBO = GET_SYSTEM(GPUInterface).createEBO();
+	mEBO = GET_SYSTEM(GPUInterface).createBuffer();
 
 	GET_SYSTEM(GPUInterface).resizeVBO(mVBOPosition, mPositionBuffer.capacity());
 	GET_SYSTEM(GPUInterface).resizeVBO(mVBOColor, mColorBuffer.capacity());

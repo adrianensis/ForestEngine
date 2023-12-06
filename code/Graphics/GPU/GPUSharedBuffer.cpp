@@ -13,15 +13,7 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBlock
     mBindingPoint = bindingPoint;
     mIsStatic = isStatic;
 
-    switch (mGPUSharedBufferData.mType)
-    {
-    case UNIFORM:
-        mBufferId = GET_SYSTEM(GPUInterface).createUBO();
-        break;
-    case STORAGE:
-        mBufferId = GET_SYSTEM(GPUInterface).createSSBO();
-        break;
-    }
+    mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
 
     mSizeInBytes = 0;
     FOR_ARRAY(i, mGPUSharedBufferData.mGPUVariableDefinitionDataArray)
@@ -43,15 +35,7 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBlock
 
 void GPUSharedBuffer::terminate()
 {
-    switch (mGPUSharedBufferData.mType)
-    {
-    case UNIFORM:
-        GET_SYSTEM(GPUInterface).deleteUBO(mBufferId);
-        break;
-    case STORAGE:
-        GET_SYSTEM(GPUInterface).deleteSSBO(mBufferId);
-        break;
-    }
+    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
 }
 
 void GPUSharedBuffer::resize(u32 size)

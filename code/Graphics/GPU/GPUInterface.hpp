@@ -11,12 +11,9 @@ public:
     void clearDepth();
     void clearStencil();
     void clear();
-    GLuint createVBO();
+    GLuint createBuffer();
     void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
     GLuint createVAO();
-    GLuint createEBO();
-    GLuint createUBO();
-    GLuint createSSBO();
     u32 getMaxElementsInUBO(u32 elementSizeInBytes);
     void bindUBO(u32 UBO, u32 bindingPoint);
     void bindSSBO(u32 SSBO, u32 bindingPoint);
@@ -59,10 +56,7 @@ public:
     }
 
     void deleteVAO(u32 VAO);
-    void deleteVBO(u32 VBO);
-    void deleteEBO(u32 EBO);
-    void deleteUBO(u32 UBO);
-    void deleteSSBO(u32 SSBO);
+    void deleteBuffer(u32 bufferId);
 
     void enableProperty(u32 propertyArrayIndex);
     void disableProperty(u32 propertyArrayIndex);
