@@ -3,13 +3,13 @@
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 
-class GPUUniformBlockData
+class GPUUniformBufferData
 {
 public:
-	GPUUniformBlockData() = default;
-	GPUUniformBlockData(const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName):
+	GPUUniformBufferData() = default;
+	GPUUniformBufferData(const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName):
         mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBlockName(blockName) {}
-	GPUUniformBlockData(const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName, const std::string& instanceName):
+	GPUUniformBufferData(const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName, const std::string& instanceName):
         mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBlockName(blockName), mInstanceName(instanceName) {}
 
 public:
@@ -21,12 +21,12 @@ public:
     GPUVariableData getScopedGPUVariableData(u32 i) const;
 };
 
-class GPUUniformBlock
+class GPUUniformBuffer
 {
 public:
-	GPUUniformBlock() = default;
+	GPUUniformBuffer() = default;
 
-    void init(u32 bindingPoint, const GPUUniformBlockData& gpuBlockData, bool isStatic);
+    void init(u32 bindingPoint, const GPUUniformBufferData& gpuBlockData, bool isStatic);
     void resize(u32 size);
     template <class T>
     void setData(const T& data)
@@ -42,12 +42,12 @@ public:
 
 protected:
 	u32 mBindingPoint = 0;
-    GPUUniformBlockData mGPUUniformBlockData;
+    GPUUniformBufferData mGPUUniformBufferData;
 	u32 mUBO = 0;
     bool mIsStatic = false;
     u32 mSizeInBytes = 0;
 public:
     GET(SizeInBytes)
     GET(BindingPoint)
-    CRGET(GPUUniformBlockData)
+    CRGET(GPUUniformBufferData)
 };

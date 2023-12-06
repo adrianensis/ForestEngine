@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUUniformBlock.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 class GPUSharedContextMatricesData
 {
@@ -19,8 +19,8 @@ public:
     u32 requestUniformBufferBindingPoint();
     
 public:
-	GPUUniformBlock mGlobalMatricesBlock;
-	GPUUniformBlock mLightsBlock;
+	GPUUniformBuffer mGlobalMatricesBlock;
+	GPUUniformBuffer mLightsBlock;
 
 private:
     u32 mBindingPointsIndex = 0;

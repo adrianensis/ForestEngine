@@ -23,18 +23,18 @@ void Material::init(const MaterialData& materialData, u32 id)
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
-    mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mGlobalMatrices);
-    mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mModelMatrices);
+    mMaterialShaderVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalMatrices);
+    mMaterialShaderVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
 
     if(materialData.mReceiveLight)
     {
-        mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mLights);
+        mMaterialShaderVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mLights);
         mMaterialShaderVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
     }
 
     if(materialData.mIsSkinned)
     {
-        mMaterialShaderVariables.mUniformBlocks.push_back(GPUBuiltIn::UniformBlocks::mBonesMatrices);
+        mMaterialShaderVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mBonesMatrices);
         mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
         mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }

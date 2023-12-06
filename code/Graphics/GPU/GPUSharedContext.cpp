@@ -6,9 +6,9 @@ void GPUSharedContext::init()
 {
     glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &mMaxUniformBufferBindingPoints);
     u32 bindingPoint = requestUniformBufferBindingPoint();
-    mGlobalMatricesBlock.init(bindingPoint, GPUBuiltIn::UniformBlocks::mGlobalMatrices, false);
+    mGlobalMatricesBlock.init(bindingPoint, GPUBuiltIn::UniformBuffers::mGlobalMatrices, false);
     bindingPoint = requestUniformBufferBindingPoint();
-    mLightsBlock.init(bindingPoint, GPUBuiltIn::UniformBlocks::mLights, false);
+    mLightsBlock.init(bindingPoint, GPUBuiltIn::UniformBuffers::mLights, false);
     GET_SYSTEM(GPUSharedContext).mLightsBlock.resize(10);
 
     std::vector<LightData> ligths;

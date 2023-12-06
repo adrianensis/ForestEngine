@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
-#include "Graphics/GPU/GPUUniformBlock.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 
@@ -175,7 +175,7 @@ class MaterialShaderVariables
 public:
     std::vector<GPUStructDefinition> mStructDefinitions;
     std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUUniformBlockData> mUniformBlocks;
+    std::vector<GPUUniformBufferData> mUniformBuffers;
     std::vector<GPUVariableDefinitionData> mConsts;
     std::vector<GPUVariableDefinitionData> mVertexOutputs;
     std::vector<GPUVariableDefinitionData> mFragmentInputs;

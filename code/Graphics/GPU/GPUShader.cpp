@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
-#include "Graphics/GPU/GPUUniformBlock.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 GPUShader::GPUShader()
 {
@@ -80,9 +80,9 @@ void GPUShader::addBool(bool value, const std::string& name)
 	glUniform1ui(location, value);
 }
 
-void GPUShader::bindUniformBlock(const GPUUniformBlock& uniformBlock)
+void GPUShader::bindUniformBuffer(const GPUUniformBuffer& uniformBlock)
 {
-    u32 location = glGetUniformBlockIndex(mProgram, uniformBlock.getGPUUniformBlockData().mBlockName.c_str());   
+    u32 location = glGetUniformBlockIndex(mProgram, uniformBlock.getGPUUniformBufferData().mBlockName.c_str());   
     glUniformBlockBinding(mProgram, location, uniformBlock.getBindingPoint());
 }
 

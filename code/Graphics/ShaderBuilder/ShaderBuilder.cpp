@@ -43,10 +43,10 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         get().attribute(uniformVar);
     }
 
-    const std::vector<GPUUniformBlockData>& uniformBlocks = material->getMaterialShaderVariables().mUniformBlocks;
+    const std::vector<GPUUniformBufferData>& uniformBlocks = material->getMaterialShaderVariables().mUniformBuffers;
     FOR_LIST(it, uniformBlocks)
     {
-        const GPUUniformBlockData& block = *it;
+        const GPUUniformBufferData& block = *it;
         get().attributeBlock(block);
     }
 
@@ -72,17 +72,17 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& textureCoord = get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);
     auto& instanceId = get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
     
-    auto& globalMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mGlobalMatrices.mInstanceName);    
-    Variable projectionMatrix(globalMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
-    Variable viewMatrix(globalMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(1));
+    auto& globalMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBuffers::mGlobalMatrices.mInstanceName);    
+    Variable projectionMatrix(globalMatricesBlock.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    Variable viewMatrix(globalMatricesBlock.mGPUUniformBufferData.getScopedGPUVariableData(1));
 
-    auto& modelMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mModelMatrices.mInstanceName);    
-    Variable modelMatrices(modelMatricesBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+    auto& modelMatricesBlock = get().getAttributeBlock(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);    
+    Variable modelMatrices(modelMatricesBlock.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     if(material->getMaterialData().mReceiveLight)
     {
-        auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mLights.mInstanceName);    
-        Variable lights(ligthsBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+        auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBuffers::mLights.mInstanceName);    
+        Variable lights(ligthsBlock.mGPUUniformBufferData.getScopedGPUVariableData(0));
     }
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
@@ -144,10 +144,10 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
         get().attribute(uniformVar);
     }
 
-    const std::vector<GPUUniformBlockData>& uniformBlocks = material->getMaterialShaderVariables().mUniformBlocks;
+    const std::vector<GPUUniformBufferData>& uniformBlocks = material->getMaterialShaderVariables().mUniformBuffers;
     FOR_LIST(it, uniformBlocks)
     {
-        const GPUUniformBlockData& block = *it;
+        const GPUUniformBufferData& block = *it;
         get().attributeBlock(block);
     }
 
@@ -189,8 +189,8 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
     if(material->getMaterialData().mReceiveLight)
     {
-        auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBlocks::mLights.mInstanceName);    
-        Variable lights(ligthsBlock.mGPUUniformBlockData.getScopedGPUVariableData(0));
+        auto& ligthsBlock = get().getAttributeBlock(GPUBuiltIn::UniformBuffers::mLights.mInstanceName);    
+        Variable lights(ligthsBlock.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
         Variable norm;
         Variable lightDir;

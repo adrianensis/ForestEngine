@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
-#include "Graphics/GPU/GPUUniformBlock.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 class GPUBuiltIn
 {
@@ -54,10 +54,10 @@ public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
     };
 
-    class UniformBlocks
+    class UniformBuffers
     {
     public:
-        inline static const GPUUniformBlockData mGlobalMatrices
+        inline static const GPUUniformBufferData mGlobalMatrices
         {
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
@@ -67,7 +67,7 @@ public:
             "globalMatrices"
         };
         
-        inline static const GPUUniformBlockData mModelMatrices
+        inline static const GPUUniformBufferData mModelMatrices
         {
             {
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "modelMatrices"}, "", std::to_string(1024/*GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(f32)*Matrix4::smMatrixSize)*/)},
@@ -76,7 +76,7 @@ public:
             "modelMatrices"
         };
 
-        inline static const GPUUniformBlockData mBonesMatrices
+        inline static const GPUUniformBufferData mBonesMatrices
         {
             {
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", "50"},
@@ -85,7 +85,7 @@ public:
             "bonesMatrices"
         };
 
-        inline static const GPUUniformBlockData mLights
+        inline static const GPUUniformBufferData mLights
         {
             {
                 {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},

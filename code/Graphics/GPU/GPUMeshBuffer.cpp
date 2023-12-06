@@ -46,10 +46,10 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 	mEBO = GET_SYSTEM(GPUInterface).createEBO();
 
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestUniformBufferBindingPoint();
-    mModelMatricesBlock.init(modelMatricesBindingPoint, GPUBuiltIn::UniformBlocks::mModelMatrices, mGPUMeshBufferData.mIsStatic);
+    mModelMatricesBlock.init(modelMatricesBindingPoint, GPUBuiltIn::UniformBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
 
     u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestUniformBufferBindingPoint();
-    mBonesMatricesBlock.init(bonesMatricesBindingPoint, GPUBuiltIn::UniformBlocks::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
+    mBonesMatricesBlock.init(bonesMatricesBindingPoint, GPUBuiltIn::UniformBuffers::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
     mBonesMatricesBlock.resize(Mesh::MAX_BONES);
 }
 

@@ -26,8 +26,8 @@ void MeshBatcher::init(const BatchData batchData)
 
 void MeshBatcher::bindUniforms(Ptr<GPUShader> shader)
 {
-    shader->bindUniformBlock(mGPUMeshBuffer.getModelMatricesBlock());
-    shader->bindUniformBlock(mGPUMeshBuffer.getBonesMatricesBlock());
+    shader->bindUniformBuffer(mGPUMeshBuffer.getModelMatricesBlock());
+    shader->bindUniformBuffer(mGPUMeshBuffer.getBonesMatricesBlock());
 }
 
 void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
