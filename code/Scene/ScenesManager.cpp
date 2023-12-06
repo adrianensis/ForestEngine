@@ -12,7 +12,10 @@ ScenesManager::ScenesManager()
 
 ScenesManager::~ScenesManager() 
 {
-	mGameObjectController->destroy();
+    if(mGameObjectController)
+    {
+	    mGameObjectController->destroy();
+    }
     mGameObjectController.invalidate();
 }
 
@@ -71,6 +74,9 @@ void ScenesManager::internalLoadScene()
 		mCurrentScene->loadScene(sceneName);
 	}
 
-	mGameObjectController->mScene = (mCurrentScene);
+    if(mGameObjectController)
+    {
+	    mGameObjectController->mScene = (mCurrentScene);
+    }
 	GET_SYSTEM(RenderEngine).mCamera = (mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
 }

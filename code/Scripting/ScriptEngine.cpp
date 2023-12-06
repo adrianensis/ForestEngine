@@ -8,7 +8,10 @@ void ScriptEngine::init()
 
 	registerComponentClass(Script::getClassDefinitionStatic().mId);
 
-	mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
+    if(GET_SYSTEM(ScenesManager).getGameObjectController())
+    {
+	    mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
+    }
 }
 
 void ScriptEngine::addComponent(Ptr<SystemComponent> component)
