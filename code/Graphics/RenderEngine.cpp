@@ -121,9 +121,22 @@ void RenderEngine::swap()
 	GET_SYSTEM(Window).swap();
 }
 
+void RenderEngine::updateGPUSharedContext(bool isWorldSpace)
+{
+	PROFILER_CPU()
+
+    Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
+    Matrix4 ortho;
+    ortho.ortho(-1, 1, -1, 1, -1000, 1000);
+
+    GPUSharedContextMatricesData gpuMatricesData = {isWorldSpace ? camera->mProjectionMatrix : ortho, isWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
+	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
+}
 void RenderEngine::renderBatches()
 {
 	PROFILER_CPU()
+
+    updateGPUSharedContext(true);
 
     PROFILER_BLOCK_CPU("renderStencil");
 	mBatchesManager.renderStencil();
@@ -137,6 +150,8 @@ void RenderEngine::renderBatches()
     
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
+
+    updateGPUSharedContext(false);
     
     PROFILER_BLOCK_CPU("renderScreenSpaceStencil");
 	mBatchesManager.renderScreenSpaceStencil();

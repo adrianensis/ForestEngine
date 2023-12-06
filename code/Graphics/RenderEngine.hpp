@@ -28,6 +28,7 @@ public:
 private:
     void swap();
     void renderBatches();
+    void updateGPUSharedContext(bool isWorldSpace);
 private:
 	BatchesManager mBatchesManager;
 

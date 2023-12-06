@@ -70,13 +70,6 @@ void BatchRenderer::enable()
     mMeshBatcher.enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
 
-	Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
-    Matrix4 ortho;
-    ortho.ortho(-1, 1, -1, 1, -1000, 1000);
-
-    GPUSharedContextMatricesData gpuMatricesData = {mBatchData.mIsWorldSpace ? camera->mProjectionMatrix : ortho, mBatchData.mIsWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
-	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.setData(gpuMatricesData);
-
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
         mMeshBatcher.updateBoneTransforms();
