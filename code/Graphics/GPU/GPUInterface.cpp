@@ -14,7 +14,7 @@ GLuint GPUInterface::createBuffer()
 
 void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
 {
-	enableProperty(propertyArrayIndex);
+	enableAttribute(propertyArrayIndex);
 	if(primitiveType == GL_INT)
 	{
 		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, strideSize, reinterpret_cast<byte*>(pointerOffset));
@@ -102,14 +102,14 @@ void GPUInterface::deleteBuffer(u32 bufferId)
     glDeleteBuffers(1, &bufferId);
 }
 
-void GPUInterface::enableProperty(u32 propertyArrayIndex)
+void GPUInterface::enableAttribute(u32 attributeIndex)
 {
-	glEnableVertexAttribArray(propertyArrayIndex);
+	glEnableVertexAttribArray(attributeIndex);
 }
 
-void GPUInterface::disableProperty(u32 propertyArrayIndex)
+void GPUInterface::disableAttribute(u32 attributeIndex)
 {
-	glDisableVertexAttribArray(propertyArrayIndex);
+	glDisableVertexAttribArray(attributeIndex);
 }
 
 void GPUInterface::enableVertexBufferLayout(u32 vertexBufferLayout)

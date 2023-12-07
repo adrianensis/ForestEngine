@@ -21,9 +21,9 @@ public:
     void enableVertexBufferLayout(u32 vertexBufferLayout);
     void deleteVertexBufferLayout(u32 vertexBufferLayout);
 
-    // Property / Attribute
-    void enableProperty(u32 propertyArrayIndex);
-    void disableProperty(u32 propertyArrayIndex);
+    // Attribute
+    void enableAttribute(u32 attributeIndex);
+    void disableAttribute(u32 attributeIndex);
     void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
 
     // Buffer
