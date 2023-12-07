@@ -4,27 +4,12 @@
 
 #include <stddef.h>
 
-void GPUInterface::clearDepth()
-{
-	glClear(GL_DEPTH_BUFFER_BIT);
-}
-
-void GPUInterface::clearStencil()
-{
-	glClear(GL_STENCIL_BUFFER_BIT);
-}
-
-void GPUInterface::clear()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-}
-
 GLuint GPUInterface::createBuffer()
 {
-	u32 VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	return VBO;
+	u32 bufferId;
+	glGenBuffers(1, &bufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+	return bufferId;
 }
 
 void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
@@ -42,115 +27,74 @@ void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primit
     glVertexAttribDivisor(propertyArrayIndex, divisor);
 }
 
-GLuint GPUInterface::createVAO()
+GLuint GPUInterface::createVertexBufferLayout()
 {
-	u32 VAO;
-	glGenVertexArrays(1, &VAO);
-	enableVAO(VAO);
-	return VAO;
+	u32 vertexBufferLayout;
+	glGenVertexArrays(1, &vertexBufferLayout);
+	enableVertexBufferLayout(vertexBufferLayout);
+	return vertexBufferLayout;
 }
 
-u32 GPUInterface::getMaxElementsInUBO(u32 elementSizeInBytes)
+u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes)
 {
-    i32 gl_MAX_UNIFORM_BLOCK_SIZE;
-    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
-    // vectors / 4 components = matrices
-    i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS = (gl_MAX_UNIFORM_BLOCK_SIZE/elementSizeInBytes);
-    LOG_VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS);
-    return gl_MAX_UNIFORM_BLOCK_SIZE_IN_ELEMENTS;
+    i32 maxBlockSize;
+    switch (bufferType)
+    {
+    case UNIFORM:
+        glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxBlockSize);
+        break;
+    case STORAGE:
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &maxBlockSize);
+        break;
+    default:
+        CHECK_MSG(false, "Ilegal GPUBufferType!");
+        break;
+    }
+
+    i32 maxElements = (maxBlockSize/elementSizeInBytes);
+    return maxElements;
 }
 
-void GPUInterface::bindUBO(u32 UBO, u32 bindingPoint)
+u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
+{
+    i32 maxBindingPoints;
+    switch (bufferType)
+    {
+    case UNIFORM:
+        glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxBindingPoints);
+        break;
+    case STORAGE:
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, &maxBindingPoints);
+        break;
+    default:
+        CHECK_MSG(false, "Ilegal GPUBufferType!");
+        break;
+    }
+
+    return maxBindingPoints;
+}
+
+void GPUInterface::bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
 {
     // define the range of the buffer that links to a uniform binding point
-    glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, UBO);
+    glBindBufferBase(bufferType, bindingPoint, bufferId);
 }
 
-void GPUInterface::bindSSBO(u32 SSBO, u32 bindingPoint)
+void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
-    // define the range of the buffer that links to a uniform binding point
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, bindingPoint, SSBO);
+	glBindBuffer(bufferType, bufferId);
+	glBufferData(bufferType, typeSizeInBytes * size, nullptr, drawMode);
 }
 
-void GPUInterface::resizeVBO(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
 {
-	resizeVBOAnyType(VBO, sizeof(f32), size,drawMode);
+	glBindBuffer(bufferType, bufferId);
+	glBufferSubData(bufferType, 0, typeSize * size, data);
 }
 
-void GPUInterface::resizeVBOU32(u32 VBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+void GPUInterface::deleteVertexBufferLayout(u32 vertexBufferLayout)
 {
-	resizeVBOAnyType(VBO, sizeof(u32), size,drawMode);
-}
-
-void GPUInterface::resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
-}
-
-void GPUInterface::resizeEBO(u32 EBO, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
-{
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * size, nullptr, drawMode);
-}
-
-void GPUInterface::resizeUBOAnyType(u32 UBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, UBO);
-	glBufferData(GL_UNIFORM_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
-}
-
-void GPUInterface::resizeSSBOAnyType(u32 SSBO, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
-{
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, typeSizeInBytes * size, nullptr, drawMode);
-}
-
-void GPUInterface::setDataVBO(u32 VBO, const std::vector<f32>& data)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(f32) * data.size(), data.data());
-}
-
-void GPUInterface::setDataVBOU32(u32 VBO, const std::vector<u32>& data)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());
-}
-
-void GPUInterface::setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const void* data)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, typeSize * size, data);
-}
-
-void GPUInterface::setDataUBOAnyTypeRaw(u32 UBO, u32 typeSize, u32 size, const void* data)
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, UBO);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, typeSize * size, data);
-}
-
-void GPUInterface::setDataSSBOAnyTypeRaw(u32 SSBO, u32 typeSize, u32 size, const void* data)
-{
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBO);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, typeSize * size, data);
-}
-
-void GPUInterface::setDataEBO(u32 EBO, const std::vector<Face>& data)
-{
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(Face) * data.size(), data.data());
-}
-
-void GPUInterface::setDataEBORaw(u32 EBO, const std::vector<u32>& data)
-{
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(u32) * data.size(), data.data());
-}
-
-void GPUInterface::deleteVAO(u32 VAO)
-{
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &vertexBufferLayout);
 }
 
 void GPUInterface::deleteBuffer(u32 bufferId)
@@ -168,9 +112,9 @@ void GPUInterface::disableProperty(u32 propertyArrayIndex)
 	glDisableVertexAttribArray(propertyArrayIndex);
 }
 
-void GPUInterface::enableVAO(u32 VAO)
+void GPUInterface::enableVertexBufferLayout(u32 vertexBufferLayout)
 {
-	glBindVertexArray(VAO);
+	glBindVertexArray(vertexBufferLayout);
 }
 
 void GPUInterface::enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp)
@@ -299,4 +243,19 @@ void GPUInterface::drawElements(u32 indicesCount, u32 instancesCount, bool insta
 void GPUInterface::drawLines(u32 linesCount)
 {
 	glDrawElements(GL_LINES, linesCount * 2, GL_UNSIGNED_INT, 0);
+}
+
+void GPUInterface::clearDepth()
+{
+	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void GPUInterface::clearStencil()
+{
+	glClear(GL_STENCIL_BUFFER_BIT);
+}
+
+void GPUInterface::clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }

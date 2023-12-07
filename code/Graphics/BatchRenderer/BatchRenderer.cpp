@@ -34,12 +34,12 @@ void BatchRenderer::init(const BatchData& batchData)
     LOG(stringShderFrag);
     mShader->initFromFileContents(stringShderVert, stringShderFrag);
     
-    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock);
-	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBlock.resize(1);
+    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);
+	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.resize(1);
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightsBlock);
+        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightsBuffer);
     }
     
     mMeshBatcher.bindUniforms(mShader);

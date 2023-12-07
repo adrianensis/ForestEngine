@@ -7,9 +7,9 @@ GPUVariableData GPUSharedBufferData::getScopedGPUVariableData(u32 i) const
     return data;
 }
 
-void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBlockData, bool isStatic)
+void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBufferData, bool isStatic)
 {
-	mGPUSharedBufferData = gpuBlockData;
+	mGPUSharedBufferData = gpuBufferData;
     mBindingPoint = bindingPoint;
     mIsStatic = isStatic;
 
@@ -22,15 +22,7 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBlock
         mSizeInBytes += gpuVariableData.mGPUDataType.mTypeSizeInBytes;
     }
 
-    switch (mGPUSharedBufferData.mType)
-    {
-    case UNIFORM:
-        GET_SYSTEM(GPUInterface).bindUBO(mBufferId, mBindingPoint);
-        break;
-    case STORAGE:
-        GET_SYSTEM(GPUInterface).bindSSBO(mBufferId, mBindingPoint);
-        break;
-    }
+    GET_SYSTEM(GPUInterface).bindSharedBuffer(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
 }
 
 void GPUSharedBuffer::terminate()
@@ -40,13 +32,5 @@ void GPUSharedBuffer::terminate()
 
 void GPUSharedBuffer::resize(u32 size)
 {
-    switch (mGPUSharedBufferData.mType)
-    {
-    case UNIFORM:
-	    GET_SYSTEM(GPUInterface).resizeUBOAnyType(mBufferId, mSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-        break;
-    case STORAGE:
-	    GET_SYSTEM(GPUInterface).resizeSSBOAnyType(mBufferId, mSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-        break;
-    }
+    GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, mSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }

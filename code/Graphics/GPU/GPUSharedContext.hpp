@@ -16,11 +16,11 @@ public:
 
     void init();
     void terminate();
-    u32 requestSharedBufferBindingPoint(GPUSharedBufferType gpuSharedBufferType);
+    u32 requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType);
     
 public:
-	GPUSharedBuffer mGlobalMatricesBlock;
-	GPUSharedBuffer mLightsBlock;
+	GPUSharedBuffer mGlobalMatricesBuffer;
+	GPUSharedBuffer mLightsBuffer;
 
 private:
     u32 mBindingPointsIndexUniform = 0;

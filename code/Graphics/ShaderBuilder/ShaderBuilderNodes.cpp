@@ -46,7 +46,7 @@ namespace ShaderBuilderNodes
         return {getIndent(indent) + locationStr + std::string(EnumsManager::toString(mGPUStorage)) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
     }
     
-    std::vector<std::string> AttributeBlock::toLines(u16 indent) const
+    std::vector<std::string> SharedBuffer::toLines(u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -58,6 +58,9 @@ namespace ShaderBuilderNodes
             break;
         case STORAGE:
             layoutStr = "layout (std430) buffer";
+            break;
+        default:
+            CHECK_MSG(false, "Ilegal GPUBufferType!");
             break;
         }
 
@@ -227,9 +230,9 @@ namespace ShaderBuilderNodes
         return mAttributes.emplace_back(attribute);
     }
 
-    AttributeBlock& Program::attributeBlock(const AttributeBlock& attributeBlock)
+    SharedBuffer& Program::sharedBuffer(const SharedBuffer& sharedBuffer)
     {
-        return mAttributeBlocks.emplace_back(attributeBlock);
+        return mSharedBuffers.emplace_back(sharedBuffer);
     }
     
     const Struct& Program::getStruct(const std::string_view& structName) const
@@ -258,17 +261,17 @@ namespace ShaderBuilderNodes
         return mNullAttribute;
     }
 
-    const AttributeBlock& Program::getAttributeBlock(const std::string_view& attributeBlockName) const
+    const SharedBuffer& Program::getSharedBuffer(const std::string_view& sharedBufferName) const
     {
-        FOR_LIST(it, mAttributeBlocks)
+        FOR_LIST(it, mSharedBuffers)
         {
-            if(it->mGPUSharedBufferData.mInstanceName == attributeBlockName)
+            if(it->mGPUSharedBufferData.mInstanceName == sharedBufferName)
             {
                 return *it;
             }
         }
 
-        return mNullAttributeBlock;
+        return mNullSharedBuffer;
     }
 
     std::vector<std::string> Program::toLines(u16 indent) const
@@ -289,7 +292,7 @@ namespace ShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        FOR_LIST(it, mAttributeBlocks)
+        FOR_LIST(it, mSharedBuffers)
         {
             auto statementCode = it->toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());

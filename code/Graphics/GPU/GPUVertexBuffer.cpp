@@ -17,7 +17,7 @@ void GPUVertexBuffer::terminate()
 
 void GPUVertexBuffer::resize(u32 size)
 {
-	GET_SYSTEM(GPUInterface).resizeVBOAnyType(mVBO, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mVBO, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
 u32 GPUVertexBuffer::attribute(GPUPrimitiveType primitiveType)

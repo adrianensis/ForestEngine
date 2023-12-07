@@ -25,7 +25,7 @@ private:
     void addColor(const Vector4& color);
 private: 
 	OwnerPtr<GPUShader> mShaderLine;
-	u32 mVAO = 0;
+	u32 mVertexBufferLayout = 0;
 	u32 mVBOPosition = 0;
 	u32 mVBOColor = 0;
 	u32 mEBO = 0;

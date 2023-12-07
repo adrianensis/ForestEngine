@@ -56,7 +56,7 @@ void Window::init()
         glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
         LOG_VAR(gl_MAX_UNIFORM_BLOCK_SIZE);
         // vectors / 4 components = matrices
-        i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4 = GET_SYSTEM(GPUInterface).getMaxElementsInUBO(sizeof(f32)*Matrix4::smMatrixSize);
+        i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4 = GET_SYSTEM(GPUInterface).getMaxElementsInSharedBuffer(GPUBufferType::UNIFORM, sizeof(f32)*Matrix4::smMatrixSize);
         LOG_VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4);
 
         LOG("SHADER STORAGE");

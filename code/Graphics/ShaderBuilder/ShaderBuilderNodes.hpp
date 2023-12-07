@@ -132,10 +132,10 @@ namespace ShaderBuilderNodes
         i32 mLocation = -1;
     };
 
-    class AttributeBlock : public Statement
+    class SharedBuffer : public Statement
     {
     public:
-        AttributeBlock(const GPUSharedBufferData& gpuBlockData) : mGPUSharedBufferData(gpuBlockData) {};
+        SharedBuffer(const GPUSharedBufferData& gpuBlockData) : mGPUSharedBufferData(gpuBlockData) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
@@ -282,12 +282,12 @@ namespace ShaderBuilderNodes
         {
             mStructs.reserve(50);
             mAttributes.reserve(100);
-            mAttributeBlocks.reserve(50);
+            mSharedBuffers.reserve(50);
             mFunctionDefinitions.reserve(50);
         }
         Struct& structType(const Struct& structType);
         Attribute& attribute(const Attribute& attribute);
-        AttributeBlock& attributeBlock(const AttributeBlock& attributeBlock);
+        SharedBuffer& sharedBuffer(const SharedBuffer& sharedBuffer);
         FunctionDefinition& function(auto&& ...args)
         {
             return mFunctionDefinitions.emplace_back(args...);
@@ -295,18 +295,18 @@ namespace ShaderBuilderNodes
 
         const Struct& getStruct(const std::string_view& structName) const;
         const Attribute& getAttribute(const std::string_view& attributeName) const;
-        const AttributeBlock& getAttributeBlock(const std::string_view& attributeBlockName) const;
+        const SharedBuffer& getSharedBuffer(const std::string_view& sharedBufferName) const;
 
         std::vector<std::string> toLines(u16 indent) const;
 
         std::vector<Struct> mStructs;
         std::vector<Attribute> mAttributes;
-        std::vector<AttributeBlock> mAttributeBlocks;
+        std::vector<SharedBuffer> mSharedBuffers;
         std::vector<FunctionDefinition> mFunctionDefinitions;
         u16 mVersion = 430;
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
-        inline static AttributeBlock mNullAttributeBlock {GPUSharedBufferData{}};
+        inline static SharedBuffer mNullSharedBuffer {GPUSharedBufferData{}};
         inline static Struct mNullStructDefinition {GPUStructDefinition{}};
     };
 

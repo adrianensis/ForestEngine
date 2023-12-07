@@ -26,7 +26,7 @@ public:
     template <class T>
     void setData(const std::vector<T>& data)
     {
-	    GET_SYSTEM(GPUInterface).setDataVBOAnyType<T>(mVBO, data);
+	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBO, data);
     }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;

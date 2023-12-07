@@ -5,67 +5,55 @@
 
 class Camera;
 
+enum GPUBufferType
+{
+    VERTEX = GL_ARRAY_BUFFER,
+    INDEX = GL_ELEMENT_ARRAY_BUFFER,
+    UNIFORM = GL_UNIFORM_BUFFER,
+    STORAGE = GL_SHADER_STORAGE_BUFFER
+};
+
 class GPUInterface : public System
 {
 public:
-    void clearDepth();
-    void clearStencil();
-    void clear();
-    GLuint createBuffer();
-    void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
-    GLuint createVAO();
-    u32 getMaxElementsInUBO(u32 elementSizeInBytes);
-    void bindUBO(u32 UBO, u32 bindingPoint);
-    void bindSSBO(u32 SSBO, u32 bindingPoint);
-    void resizeVBO(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    void resizeVBOU32(u32 VBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    void resizeVBOAnyType(u32 VBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    void resizeEBO(u32 EBO, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    void resizeUBOAnyType(u32 UBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    void resizeSSBOAnyType(u32 SSBO, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
-    
-    void setDataVBO(u32 VBO, const std::vector<f32>& data);
-    void setDataVBOU32(u32 VBO, const std::vector<u32>& data);
-    template<class T>
-    void setDataVBOAnyType(u32 VBO, const std::vector<T>& data)
-    {
-        setDataVBOAnyTypeRaw(VBO, sizeof(T), data.size(), data.data());
-    }
-    void setDataEBO(u32 EBO, const std::vector<Face>& data);
-    void setDataEBORaw(u32 EBO, const std::vector<u32>& data);
-    template<class T>
-    void setDataUBOAnyType(u32 UBO, const std::vector<T>& data)
-    {
-        setDataUBOAnyTypeRaw(UBO, sizeof(T), data.size(), data.data());
-    }
-    template<class T>
-    void setDataUBOAnyStruct(u32 UBO, const T& data)
-    {
-        setDataUBOAnyTypeRaw(UBO, sizeof(T), 1, &data);
-    }
+    // Vertex buffers layout
+    GLuint createVertexBufferLayout();
+    void enableVertexBufferLayout(u32 vertexBufferLayout);
+    void deleteVertexBufferLayout(u32 vertexBufferLayout);
 
-    template<class T>
-    void setDataSSBOAnyType(u32 SSBO, const std::vector<T>& data)
-    {
-        setDataSSBOAnyTypeRaw(SSBO, sizeof(T), data.size(), data.data());
-    }
-    template<class T>
-    void setDataSSBOAnyStruct(u32 SSBO, const T& data)
-    {
-        setDataSSBOAnyTypeRaw(SSBO, sizeof(T), 1, &data);
-    }
-
-    void deleteVAO(u32 VAO);
-    void deleteBuffer(u32 bufferId);
-
+    // Property / Attribute
     void enableProperty(u32 propertyArrayIndex);
     void disableProperty(u32 propertyArrayIndex);
+    void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
 
-    void enableVAO(u32 VAO);
+    // Buffer
+    GLuint createBuffer();
+    void resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+
+    template<class T>
+    void setBufferDataArray(GPUBufferType bufferType, u32 bufferId, const std::vector<T>& data)
+    {
+        setBufferDataRaw(bufferType, bufferId, sizeof(T), data.size(), data.data());
+    }
+
+    template<class T>
+    void setBufferDataStruct(GPUBufferType bufferType, u32 bufferId, const T& data)
+    {
+        setBufferDataRaw(bufferType, bufferId, sizeof(T), 1, &data);
+    }
+
+    void deleteBuffer(u32 bufferId);
+
+    // Shared Buffer
+    u32 getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes);
+    u32 getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType);
+    void bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint);
     
+    // Stencil
     void enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp);
     void disableStencil();
 
+    // Texture
     GLuint createTexture(u32 width, u32 height, u32 format, const byte* data, bool createMipMap);
     GLuint createTextureFont(u32 width, u32 height, u32 format, const byte* data);
     void subTexture(u32 x, u32 y, u32 width, u32 height, u32 format,  const byte* data);
@@ -73,11 +61,15 @@ public:
     void enableTexture(u32 textureId);
     void disableTexture();
 
+    // Draw Call
     void drawElements(u32 indicesCount, u32 instancesCount, bool instanced);
     void drawLines(u32 linesCount);
 
+    // Clear
+    void clearDepth();
+    void clearStencil();
+    void clear();
+
 private:
-    void setDataVBOAnyTypeRaw(u32 VBO, u32 typeSize, u32 size, const void* data);
-    void setDataUBOAnyTypeRaw(u32 UBO, u32 typeSize, u32 size, const void* data);
-    void setDataSSBOAnyTypeRaw(u32 SSBO, u32 typeSize, u32 size, const void* data);
+    void setBufferDataRaw(GPUBufferType bufferType, u32 VBO, u32 typeSize, u32 size, const void* data);
 };

@@ -59,7 +59,7 @@ public:
     public:
         inline static const GPUSharedBufferData mGlobalMatrices
         {
-            GPUSharedBufferType::UNIFORM,
+            GPUBufferType::UNIFORM,
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"}
@@ -70,7 +70,7 @@ public:
         
         inline static const GPUSharedBufferData mModelMatrices
         {
-            GPUSharedBufferType::STORAGE,
+            GPUBufferType::STORAGE,
             {
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "modelMatrices"}, "", " "},
             },
@@ -80,7 +80,7 @@ public:
 
         inline static const GPUSharedBufferData mBonesMatrices
         {
-            GPUSharedBufferType::UNIFORM,
+            GPUBufferType::UNIFORM,
             {
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", "50"},
             },
@@ -90,7 +90,7 @@ public:
 
         inline static const GPUSharedBufferData mLights
         {
-            GPUSharedBufferType::UNIFORM,
+            GPUBufferType::UNIFORM,
             {
                 {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},
             },

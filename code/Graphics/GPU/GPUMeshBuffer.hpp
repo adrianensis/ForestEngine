@@ -37,10 +37,10 @@ private:
 
 private:
     GPUMeshBufferData mGPUMeshBufferData;
-	GPUSharedBuffer mModelMatricesBlock;
-	GPUSharedBuffer mBonesMatricesBlock;
+	GPUSharedBuffer mModelMatricesBuffer;
+	GPUSharedBuffer mBonesMatricesBuffer;
 
-    u32 mVAO = 0;
+    u32 mVertexBufferLayout = 0;
     
     u32 mVBOPosition = 0;
 	u32 mVBOTexture = 0;
@@ -58,6 +58,6 @@ private:
 
 public:
     CRGET(GPUVertexBuffersLayout)
-    CRGET(ModelMatricesBlock)
-    CRGET(BonesMatricesBlock)
+    CRGET(ModelMatricesBuffer)
+    CRGET(BonesMatricesBuffer)
 };

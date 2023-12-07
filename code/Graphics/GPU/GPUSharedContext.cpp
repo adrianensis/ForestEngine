@@ -4,21 +4,21 @@
 
 void GPUSharedContext::init()
 {
-    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &mMaxSharedBufferBindingPointsUniform);
-    glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, &mMaxSharedBufferBindingPointsStorage);
+    mMaxSharedBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::UNIFORM);
+    mMaxSharedBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::STORAGE);
     u32 bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mGlobalMatrices.mType);
-    mGlobalMatricesBlock.init(bindingPoint, GPUBuiltIn::SharedBuffers::mGlobalMatrices, false);
+    mGlobalMatricesBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mGlobalMatrices, false);
     bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mLights.mType);
-    mLightsBlock.init(bindingPoint, GPUBuiltIn::SharedBuffers::mLights, false);
-    GET_SYSTEM(GPUSharedContext).mLightsBlock.resize(10);
+    mLightsBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mLights, false);
+    GET_SYSTEM(GPUSharedContext).mLightsBuffer.resize(10);
 
     std::vector<LightData> ligths;
     ligths.resize(10);
     ligths[0].mPosition.x = 0;
-    mLightsBlock.setDataArray(ligths);
+    mLightsBuffer.setDataArray(ligths);
 }
 
-u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUSharedBufferType gpuSharedBufferType)
+u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
 {
     u32 bindingPoint = 0;
     switch (gpuSharedBufferType)
@@ -40,6 +40,6 @@ u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUSharedBufferType gpuSha
 
 void GPUSharedContext::terminate()
 {
-    mGlobalMatricesBlock.terminate();
-    mLightsBlock.terminate();
+    mGlobalMatricesBuffer.terminate();
+    mLightsBuffer.terminate();
 }
