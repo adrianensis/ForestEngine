@@ -36,40 +36,6 @@ void Window::init()
 			LOG("Failed to initialize GLAD");
 		}
         
-        LOG("UNIFORM");
-        i32 gl_MAX_VERTEX_UNIFORM_VECTORS;
-        glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &gl_MAX_VERTEX_UNIFORM_VECTORS);
-        LOG_VAR(gl_MAX_VERTEX_UNIFORM_VECTORS);
-        // vectors / 4 components = matrices
-        i32 gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4 = (gl_MAX_VERTEX_UNIFORM_VECTORS/4);
-        LOG_VAR(gl_MAX_VERTEX_UNIFORM_VECTORS_IN_MATRICES_4x4);
-        // matrices * 16 = floats
-        // floats * 4 = bytes
-        i32 gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES = gl_MAX_VERTEX_UNIFORM_VECTORS * 4;
-        LOG_VAR(gl_MAX_VERTEX_UNIFORM_VECTORS_IN_BYTES);
-
-        LOG("UNIFORM BUFFER");
-        i32 gl_MAX_UNIFORM_BUFFER_BINDINGS;
-        glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &gl_MAX_UNIFORM_BUFFER_BINDINGS);
-        LOG_VAR(gl_MAX_UNIFORM_BUFFER_BINDINGS);
-        i32 gl_MAX_UNIFORM_BLOCK_SIZE;
-        glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &gl_MAX_UNIFORM_BLOCK_SIZE);
-        LOG_VAR(gl_MAX_UNIFORM_BLOCK_SIZE);
-        // vectors / 4 components = matrices
-        i32 gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4 = GET_SYSTEM(GPUInterface).getMaxElementsInSharedBuffer(GPUBufferType::UNIFORM, sizeof(f32)*Matrix4::smMatrixSize);
-        LOG_VAR(gl_MAX_UNIFORM_BLOCK_SIZE_IN_MATRICES_4x4);
-
-        LOG("SHADER STORAGE");
-        i32 gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS;
-        glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, &gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
-        LOG_VAR(gl_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
-        i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE;
-        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
-        LOG_VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE);
-        // vectors / 4 components = matrices
-        i32 gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4 = (gl_MAX_SHADER_STORAGE_BLOCK_SIZE/(sizeof(f32)*16));
-        LOG_VAR(gl_MAX_SHADER_STORAGE_BLOCK_SIZE_IN_MATRICES_4x4);
-
 		glfwSwapInterval(0);
 
 
