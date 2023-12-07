@@ -12,14 +12,13 @@ public:
 	GPUSharedBufferData(GPUBufferType gpuSharedBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName, const std::string& instanceName):
         mType(gpuSharedBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBufferName(blockName), mInstanceName(instanceName) {}
 
+    GPUVariableData getScopedGPUVariableData(u32 i) const;
+
 public:
     GPUBufferType mType = GPUBufferType::UNIFORM;
     std::vector<GPUVariableDefinitionData> mGPUVariableDefinitionDataArray;
     std::string mBufferName;
     std::string mInstanceName;
-
-public:
-    GPUVariableData getScopedGPUVariableData(u32 i) const;
 };
 
 class GPUSharedBuffer

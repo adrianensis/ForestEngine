@@ -17,6 +17,7 @@ public:
 	void requestRegenerateBuffers() { mRegenerateBuffersRequested = true; }
 
 private:
+    void bindSharedBuffers();
     void enable();
     void disable();
     void processRenderers();

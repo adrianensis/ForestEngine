@@ -53,10 +53,10 @@ namespace ShaderBuilderNodes
         std::string layoutStr;
         switch (mGPUSharedBufferData.mType)
         {
-        case UNIFORM:
+        case GPUBufferType::UNIFORM:
             layoutStr = "layout (std140) uniform";
             break;
-        case STORAGE:
+        case GPUBufferType::STORAGE:
             layoutStr = "layout (std430) buffer";
             break;
         default:

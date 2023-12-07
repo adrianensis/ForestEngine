@@ -34,15 +34,25 @@ void BatchRenderer::init(const BatchData& batchData)
     LOG(stringShderFrag);
     mShader->initFromFileContents(stringShderVert, stringShderFrag);
     
+    bindSharedBuffers();
+}
+
+void BatchRenderer::bindSharedBuffers()
+{
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.resize(1);
+
+    mShader->bindSharedBuffer(mMeshBatcher.mGPUMeshBuffer.getModelMatricesBuffer());
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
         mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightsBuffer);
     }
-    
-    mMeshBatcher.bindSharedBuffersToShader(mShader);
+
+    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
+    {
+        mShader->bindSharedBuffer(mMeshBatcher.mGPUMeshBuffer.getBonesMatricesBuffer());
+    }
 }
 
 void BatchRenderer::render()

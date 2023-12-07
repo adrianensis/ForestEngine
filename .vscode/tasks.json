@@ -7,7 +7,7 @@
 			"command": "python3",
 			"args": [
 				"scripts/build.py",
-				"-lp",
+				"-l",
 				"--tool=Editor"
 			],
 			"problemMatcher": [
@@ -24,7 +24,7 @@
 			"command": "python3",
 			"args": [
 				"scripts/build.py",
-				"-lpr",
+				"-lr",
 				"--tool=Editor",
 			],
 			"problemMatcher": [

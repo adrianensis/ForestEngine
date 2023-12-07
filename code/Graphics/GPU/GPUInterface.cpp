@@ -40,10 +40,10 @@ u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 ele
     i32 maxBlockSize;
     switch (bufferType)
     {
-    case UNIFORM:
+    case GPUBufferType::UNIFORM:
         glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxBlockSize);
         break;
-    case STORAGE:
+    case GPUBufferType::STORAGE:
         glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &maxBlockSize);
         break;
     default:
@@ -60,10 +60,10 @@ u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
     i32 maxBindingPoints;
     switch (bufferType)
     {
-    case UNIFORM:
+    case GPUBufferType::UNIFORM:
         glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxBindingPoints);
         break;
-    case STORAGE:
+    case GPUBufferType::STORAGE:
         glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, &maxBindingPoints);
         break;
     default:
@@ -77,19 +77,19 @@ u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
 void GPUInterface::bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
 {
     // define the range of the buffer that links to a uniform binding point
-    glBindBufferBase(bufferType, bindingPoint, bufferId);
+    glBindBufferBase(static_cast<u32>(bufferType), bindingPoint, bufferId);
 }
 
 void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
 {
-	glBindBuffer(bufferType, bufferId);
-	glBufferData(bufferType, typeSizeInBytes * size, nullptr, drawMode);
+	glBindBuffer(static_cast<u32>(bufferType), bufferId);
+	glBufferData(static_cast<u32>(bufferType), typeSizeInBytes * size, nullptr, drawMode);
 }
 
 void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
 {
-	glBindBuffer(bufferType, bufferId);
-	glBufferSubData(bufferType, 0, typeSize * size, data);
+	glBindBuffer(static_cast<u32>(bufferType), bufferId);
+	glBufferSubData(static_cast<u32>(bufferType), 0, typeSize * size, data);
 }
 
 void GPUInterface::deleteVertexBufferLayout(u32 vertexBufferLayout)

@@ -23,12 +23,12 @@ u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBuf
     u32 bindingPoint = 0;
     switch (gpuSharedBufferType)
     {
-    case UNIFORM:
+    case GPUBufferType::UNIFORM:
         bindingPoint = mBindingPointsIndexUniform;
         mBindingPointsIndexUniform++;
         CHECK_MSG((i32)mBindingPointsIndexUniform <= mMaxSharedBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
         break;
-    case STORAGE:
+    case GPUBufferType::STORAGE:
         bindingPoint = mBindingPointsIndexStorage;
         mBindingPointsIndexStorage++;
         CHECK_MSG((i32)mBindingPointsIndexStorage <= mMaxSharedBufferBindingPointsStorage, "Max Storage Binding Points reached!");
