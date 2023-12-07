@@ -42,7 +42,7 @@ void BatchRenderer::init(const BatchData& batchData)
         mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightsBuffer);
     }
     
-    mMeshBatcher.bindUniforms(mShader);
+    mMeshBatcher.bindSharedBuffersToShader(mShader);
 }
 
 void BatchRenderer::render()
@@ -117,9 +117,13 @@ void BatchRenderer::processRenderers()
 		}
 		else
 		{
-            PROFILER_BLOCK_CPU("update");
-			renderer->update();
-		    addToVertexBuffer(renderer);
+            //Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
+            //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getScale().x))
+            {
+                PROFILER_BLOCK_CPU("update");
+                renderer->update();
+                addToVertexBuffer(renderer);
+            }
 		}
 	}
 

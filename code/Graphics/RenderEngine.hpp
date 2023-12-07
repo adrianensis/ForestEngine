@@ -13,7 +13,6 @@ class RenderEngine : public System
 
 public:
     void init(f32 sceneSize);
-    bool frustumTestSphere(const Vector3& center, f32 radius);
     void update();
     void terminate();
     

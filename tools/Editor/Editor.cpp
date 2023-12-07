@@ -70,7 +70,7 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    size = 115;
+    size = 50;
     for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)

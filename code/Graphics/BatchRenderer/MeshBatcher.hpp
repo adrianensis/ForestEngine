@@ -14,7 +14,7 @@ public:
     void init(const BatchData batchData);
     void resize(u32 size);
     void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
-    void bindUniforms(Ptr<GPUShader> shader);
+    void bindSharedBuffersToShader(Ptr<GPUShader> shader);
     void updateBoneTransforms();
     void drawCall();
     void enable();

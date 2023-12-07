@@ -82,17 +82,16 @@ void GPUShader::addBool(bool value, const std::string& name)
 
 void GPUShader::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
 {
+    u32 location = glGetProgramResourceIndex(mProgram, sharedBuffer.getGPUSharedBufferData().mType, sharedBuffer.getGPUSharedBufferData().mBufferName.c_str());
     switch (sharedBuffer.getGPUSharedBufferData().mType)
     {
     case UNIFORM:
     {
-        u32 location = glGetProgramResourceIndex(mProgram, GL_UNIFORM_BLOCK, sharedBuffer.getGPUSharedBufferData().mBufferName.c_str());   
         glUniformBlockBinding(mProgram, location, sharedBuffer.getBindingPoint());
         break;
     }
     case STORAGE:
     {
-        u32 location = glGetProgramResourceIndex(mProgram, GL_SHADER_STORAGE_BLOCK, sharedBuffer.getGPUSharedBufferData().mBufferName.c_str());   
         glShaderStorageBlockBinding(mProgram, location, sharedBuffer.getBindingPoint());
         break;
     }

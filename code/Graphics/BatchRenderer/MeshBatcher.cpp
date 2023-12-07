@@ -24,7 +24,7 @@ void MeshBatcher::init(const BatchData batchData)
     disable();
 }
 
-void MeshBatcher::bindUniforms(Ptr<GPUShader> shader)
+void MeshBatcher::bindSharedBuffersToShader(Ptr<GPUShader> shader)
 {
     shader->bindSharedBuffer(mGPUMeshBuffer.getModelMatricesBuffer());
     shader->bindSharedBuffer(mGPUMeshBuffer.getBonesMatricesBuffer());

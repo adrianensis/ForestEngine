@@ -26,11 +26,6 @@ void RenderEngine::init(f32 sceneSize)
 	// octree.init(5000);
 }
 
-bool RenderEngine::frustumTestSphere(const Vector3& center, f32 radius)
-{
-	return mCamera && mCamera->mFrustum.testSphere(center, radius);
-}
-
 void RenderEngine::update()
 {
 	PROFILER_CPU()
@@ -125,11 +120,10 @@ void RenderEngine::updateGPUSharedContext(bool isWorldSpace)
 {
 	PROFILER_CPU()
 
-    Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
     Matrix4 ortho;
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
-    GPUSharedContextMatricesData gpuMatricesData = {isWorldSpace ? camera->mProjectionMatrix : ortho, isWorldSpace ? camera->mViewMatrix : Matrix4::smIdentity};
+    GPUSharedContextMatricesData gpuMatricesData = {isWorldSpace ? mCamera->mProjectionMatrix : ortho, isWorldSpace ? mCamera->mViewMatrix : Matrix4::smIdentity};
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.setDataStruct(gpuMatricesData);
 }
 void RenderEngine::renderBatches()
