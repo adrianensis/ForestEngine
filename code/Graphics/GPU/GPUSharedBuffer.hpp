@@ -29,9 +29,9 @@ public:
     void init(u32 bindingPoint, const GPUSharedBufferData& gpuBufferData, bool isStatic);
     void resize(u32 size);
     template <class T>
-    void setDataStruct(const T& data)
+    void setData(const T& data)
     {
-        GET_SYSTEM(GPUInterface).setBufferDataStruct(mGPUSharedBufferData.mType, mBufferId, data);
+        GET_SYSTEM(GPUInterface).setBufferData(mGPUSharedBufferData.mType, mBufferId, data);
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)

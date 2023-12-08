@@ -37,7 +37,7 @@ public:
     }
 
     template<class T>
-    void setBufferDataStruct(GPUBufferType bufferType, u32 bufferId, const T& data)
+    void setBufferData(GPUBufferType bufferType, u32 bufferId, const T& data)
     {
         setBufferDataRaw(bufferType, bufferId, sizeof(T), 1, &data);
     }

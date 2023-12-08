@@ -124,7 +124,7 @@ void RenderEngine::updateGPUSharedContext(bool isWorldSpace)
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
     GPUSharedContextMatricesData gpuMatricesData = {isWorldSpace ? mCamera->mProjectionMatrix : ortho, isWorldSpace ? mCamera->mViewMatrix : Matrix4::smIdentity};
-	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.setDataStruct(gpuMatricesData);
+	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.setData(gpuMatricesData);
 }
 void RenderEngine::renderBatches()
 {
