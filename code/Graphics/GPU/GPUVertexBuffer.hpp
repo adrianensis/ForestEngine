@@ -24,7 +24,7 @@ public:
     void init(u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic);
     void resize(u32 size);
     template <class T>
-    void setData(const std::vector<T>& data)
+    void setDataArray(const std::vector<T>& data)
     {
 	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBO, data);
     }

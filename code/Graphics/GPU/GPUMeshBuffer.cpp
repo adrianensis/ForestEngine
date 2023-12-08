@@ -90,15 +90,15 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
 void GPUMeshBuffer::setMeshData(const Mesh& mesh)
 {
     PROFILER_CPU()
-	mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setData(mesh.mPositions);
-	mGPUVertexBuffersLayout.getBuffer(mVBOTexture).setData(mesh.mTextureCoordinates);
+	mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setDataArray(mesh.mPositions);
+	mGPUVertexBuffersLayout.getBuffer(mVBOTexture).setDataArray(mesh.mTextureCoordinates);
     if(mGPUMeshBufferData.mUseVertexColor)
     {
-	    mGPUVertexBuffersLayout.getBuffer(mVBOColor).setData(mesh.mColors);
+	    mGPUVertexBuffersLayout.getBuffer(mVBOColor).setDataArray(mesh.mColors);
     }
-	mGPUVertexBuffersLayout.getBuffer(mVBONormal).setData(mesh.mNormals);
-	mGPUVertexBuffersLayout.getBuffer(mVBOBonesIDs).setData(mesh.mBonesVertexIDsData);
-	mGPUVertexBuffersLayout.getBuffer(mVBOBonesWeights).setData(mesh.mBonesVertexWeightsData);
+	mGPUVertexBuffersLayout.getBuffer(mVBONormal).setDataArray(mesh.mNormals);
+	mGPUVertexBuffersLayout.getBuffer(mVBOBonesIDs).setDataArray(mesh.mBonesVertexIDsData);
+	mGPUVertexBuffersLayout.getBuffer(mVBOBonesWeights).setDataArray(mesh.mBonesVertexWeightsData);
 }
 
 void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs)
@@ -106,7 +106,7 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const
     PROFILER_CPU()
     // CHECK_MSG(matrices.size() <= 1024, "Max matrices reached (+1024)");
     PROFILER_BLOCK_CPU("VBO instanceIDs");
-	mGPUVertexBuffersLayout.getBuffer(mVBOInstanceIDs).setData(instanceIDs);
+	mGPUVertexBuffersLayout.getBuffer(mVBOInstanceIDs).setDataArray(instanceIDs);
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("UBO matrices");
     mModelMatricesBuffer.setDataArray(matrices);
