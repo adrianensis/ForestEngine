@@ -5,19 +5,19 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
 	mData = data;
     mAttributeLocation = attributeLocation;
     mIsStatic = isStatic;
-	mVBO = GET_SYSTEM(GPUInterface).createBuffer();
+	mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
 
     attribute(mData.mGPUVariableData.mGPUDataType.mPrimitiveType);
 }
 
 void GPUVertexBuffer::terminate()
 {
-    GET_SYSTEM(GPUInterface).deleteBuffer(mVBO);
+    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
 }
 
 void GPUVertexBuffer::resize(u32 size)
 {
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mVBO, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mBufferId, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 }
 
 u32 GPUVertexBuffer::attribute(GPUPrimitiveType primitiveType)

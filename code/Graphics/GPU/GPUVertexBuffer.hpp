@@ -26,7 +26,7 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBO, data);
+	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
@@ -38,7 +38,7 @@ private:
 public:
     GPUVertexBufferData mData;
 private:
-	u32 mVBO = 0; // TODO: change u32 for GLuint
+	u32 mBufferId = 0;
     u32 mAttributeLocation = 0;
     u32 mAttributeOffset = 0;
     u32 mPreviousOffsetInBytes = 0;
