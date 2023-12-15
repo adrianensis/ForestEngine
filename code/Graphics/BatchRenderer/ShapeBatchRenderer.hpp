@@ -33,8 +33,6 @@ private:
 	std::vector<Vector4> mColorBuffer;
 	std::vector<u32> mIndicesBuffer;
 
-	f32 mSize = 0.0f;
-
 protected:
 	u32 mMaxShapes = 10000;
 	u32 mShapesCounter = 0;
