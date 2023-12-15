@@ -6,13 +6,6 @@ GPUShader::GPUShader()
 {
 };
 
-void GPUShader::initDebug()
-{
-	LOG_TRACE()
-
-	initFromFilePaths("resources/shaders/vertexDebug.shader", "resources/shaders/fragmentDebug.shader");
-}
-
 void GPUShader::enable() const
 {
 	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);

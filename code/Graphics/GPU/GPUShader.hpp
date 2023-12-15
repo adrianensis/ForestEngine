@@ -16,7 +16,6 @@ public:
 
     void initFromFilePaths(const std::string& vertex, const std::string& fragment);
     void initFromFileContents(const std::string& vertex, const std::string& fragment);
-    void initDebug();
     void enable() const;
     void disable() const;
     template<class T>
