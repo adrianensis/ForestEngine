@@ -245,6 +245,11 @@ void GPUInterface::drawLines(u32 linesCount)
 	glDrawElements(GL_LINES, linesCount * 2, GL_UNSIGNED_INT, 0);
 }
 
+void GPUInterface::setClearColor(const Vector3& color)
+{
+    glClearColor(color.x, color.y, color.z ,1);
+}
+
 void GPUInterface::clearDepth()
 {
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -258,4 +263,130 @@ void GPUInterface::clearStencil()
 void GPUInterface::clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
+
+void GPUInterface::setViewport(u32 x, u32 y, u32 width, u32 height)
+{
+    glViewport(x, y, width, height);
+}
+
+void GPUInterface::enableFlag(u32 flag)
+{
+    glEnable(flag);
+}
+
+void GPUInterface::disableFlag(u32 flag)
+{
+    glDisable(flag);
+}
+
+void GPUInterface::setBlendFunc(u32 sfactor, u32 dfactor)
+{
+    glBlendFunc(sfactor, dfactor);
+}
+
+void GPUInterface::setDepthFunc(u32 depthFunc)
+{
+    glDepthFunc(depthFunc);
+}
+
+void GPUInterface::setFaceMode(bool enableCull, u32 cullMode, u32 frontFaceOrientation)
+{
+    if(enableCull)
+    {
+        enableFlag(GL_CULL_FACE);	 // BACK by default
+    }
+    else
+    {
+        disableFlag(GL_CULL_FACE);
+    }
+
+    glCullFace(cullMode);
+    glFrontFace(frontFaceOrientation);
+}
+
+void GPUInterface::enableProgram(u32 programId)
+{
+    glUseProgram(programId);
+}
+
+void GPUInterface::disableProgram(u32 programId)
+{
+    glUseProgram(0);
+}
+
+u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const std::string& fragmentShaderString)
+{
+    u32 vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+
+	const char* vertexCString = vertexShaderString.c_str();
+	const char* fragmentCString = fragmentShaderString.c_str();
+
+	glShaderSource(vertexShaderId, 1, &vertexCString, nullptr);
+	glCompileShader(vertexShaderId);
+
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShaderId, 512, nullptr, infoLog);
+        LOG_ERROR("COMPILATION FAILED - VERTEX SHADER");
+        LOG_ERROR(infoLog);
+        LOG_ERROR(vertexShaderString);
+	}
+
+	u32 fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(fragmentShaderId, 1, &fragmentCString, nullptr);
+	glCompileShader(fragmentShaderId);
+
+	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShaderId, 512, nullptr, infoLog);
+        LOG_ERROR("COMPILATION FAILED - FRAGMENT SHADER");
+        LOG_ERROR(infoLog);
+        LOG_ERROR(fragmentShaderString);
+	}
+
+	u32 programId = glCreateProgram();
+
+	glAttachShader(programId, vertexShaderId);
+	glAttachShader(programId, fragmentShaderId);
+	glLinkProgram(programId);
+
+	glGetProgramiv(programId, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(programId, 512, nullptr, infoLog);
+        LOG_ERROR("LINK FAILED - PROGRAM");
+        LOG_ERROR(infoLog);
+	}
+
+	glDeleteShader(vertexShaderId);
+	glDeleteShader(fragmentShaderId);
+
+    return programId;
+}
+
+void GPUInterface::bindSharedBuffer(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint)
+{
+    switch (bufferType)
+    {
+        case GPUBufferType::UNIFORM:
+        {
+            u32 location = glGetUniformBlockIndex(programId, bufferName.c_str());   
+            glUniformBlockBinding(programId, location, bindingPoint);
+            break;
+        }
+        case GPUBufferType::STORAGE:
+        {
+            u32 location = glGetProgramResourceIndex(programId, GL_SHADER_STORAGE_BLOCK, bufferName.c_str());
+            glShaderStorageBlockBinding(programId, location, bindingPoint);
+            break;
+        }
+    }
 }

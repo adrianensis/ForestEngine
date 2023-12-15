@@ -64,9 +64,9 @@ void Material::bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, 
         mTextures[(u32)TextureType::BASE_COLOR]->bind();
 	}
 
-	shader->addVector4(mMaterialData.mBaseColor, GPUBuiltIn::Uniforms::mBaseColor.mName);
-	shader->addFloat(GET_SYSTEM(Time).getDeltaTimeSeconds(), GPUBuiltIn::Uniforms::mTime.mName);
-	shader->addVector2(GET_SYSTEM(Window).getWindowSize(), GPUBuiltIn::Uniforms::mWindowSize.mName);
+	shader->bindUniformValue(GPUBuiltIn::Uniforms::mBaseColor.mName, mMaterialData.mBaseColor);
+	shader->bindUniformValue(GPUBuiltIn::Uniforms::mTime.mName, GET_SYSTEM(Time).getDeltaTimeSeconds());
+	shader->bindUniformValue(GPUBuiltIn::Uniforms::mWindowSize.mName, GET_SYSTEM(Window).getWindowSize());
 }
 
 bool Material::hasTexture() const

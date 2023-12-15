@@ -66,9 +66,73 @@ public:
     void drawLines(u32 linesCount);
 
     // Clear
+    void setClearColor(const Vector3& color);
     void clearDepth();
     void clearStencil();
     void clear();
+
+    // Viewport
+    void setViewport(u32 x, u32 y, u32 width, u32 height);
+
+    // Flags
+    void enableFlag(u32 flag);
+    void disableFlag(u32 flag);
+
+    // Blend
+    void setBlendFunc(u32 sfactor, u32 dfactor);
+
+    // Depth
+    void setDepthFunc(u32 depthFunc);
+
+    // Face mode
+    void setFaceMode(bool enableCull, u32 cullMode, u32 frontFaceOrientation);
+
+    // Shaders
+    void enableProgram(u32 programId);
+    void disableProgram(u32 programId);
+    u32 compileProgram(const std::string& vertexShaderString, const std::string& fragmentShaderString);
+    void bindSharedBuffer(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint);
+    
+    template<class T>
+    void bindUniformValue(u32 programId, const std::string& name, const T& value)
+    {
+        u32 location = glGetUniformLocation(programId, name.c_str());
+        if constexpr (std::is_integral_v<T>)
+        {
+            if constexpr (std::is_unsigned_v<T>)
+            {
+                glUniform1ui(location, value);
+            }
+            else
+            {
+                glUniform1i(location, value);
+            }
+        }
+        else if constexpr (std::is_floating_point_v<T>)
+        {
+            glUniform1f(location, value);
+        }
+        else if constexpr (std::is_same_v<T, Vector2>)
+        {
+            glUniform2fv(location, 1, &value.x);
+        }
+        else if constexpr (std::is_same_v<T, Vector3>)
+        {
+            glUniform3fv(location, 1, &value.x);
+        }
+        else if constexpr (std::is_same_v<T, Vector4>)
+        {
+            glUniform4fv(location, 1, &value.x);
+        }
+        else if constexpr (std::is_same_v<T, Matrix4>)
+        {
+            glUniformMatrix4fv(location, 1, GL_FALSE, value.getData());
+        }
+        else
+        {
+            LOG_ERROR("Uniform type not supported!");
+        }
+    }
 
 private:
     void setBufferDataRaw(GPUBufferType bufferType, u32 VBO, u32 typeSize, u32 size, const void* data);

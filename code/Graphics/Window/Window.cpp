@@ -39,15 +39,13 @@ void Window::init()
 		glfwSwapInterval(0);
 
 
-		glClearColor(0,0.3,0.3,1);
-		glEnable(GL_DEPTH_TEST); // Enable depth testing
-		glDepthFunc(GL_LEQUAL);
-		// glEnable(GL_CULL_FACE);	 // BACK by default
-		// glCullFace(GL_BACK);
-		// glFrontFace(GL_CCW);
+		GET_SYSTEM(GPUInterface).setClearColor(Vector3(0,0.3,0.3));
+		GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
+		GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
+        // GET_SYSTEM(GPUInterface).setFaceMode(true, GL_BACK, GL_CCW);
 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
+		GET_SYSTEM(GPUInterface).setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GET_SYSTEM(GPUInterface).enableFlag(GL_BLEND);
 
 		GET_SYSTEM(GPUInterface).clear();
 	}
@@ -91,7 +89,7 @@ void Window::setCursorVisibility(bool visible)
 void Window::onResize(GLFWwindow *window, int width, int height)
 {
 	mWindowSize.set(width, height);
-	glViewport(0, 0, mWindowSize.x, mWindowSize.y);
+	GET_SYSTEM(GPUInterface).setViewport(0, 0, mWindowSize.x, mWindowSize.y);
 	GET_SYSTEM(RenderEngine).mCamera->onResize();
 }
 

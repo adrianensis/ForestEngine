@@ -54,8 +54,8 @@ void ShapeBatchRenderer::render()
 		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera->mProjectionMatrix;
 		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera->mViewMatrix;
 
-		mShaderLine->addMatrix(mIsWorldSpace ? projectionMatrix : Matrix4::smIdentity, "projectionMatrix");
-		mShaderLine->addMatrix(mIsWorldSpace ? viewMatrix : Matrix4::smIdentity, "viewMatrix");
+		mShaderLine->bindUniformValue("projectionMatrix", mIsWorldSpace ? projectionMatrix : Matrix4::smIdentity);
+		mShaderLine->bindUniformValue("viewMatrix", mIsWorldSpace ? viewMatrix : Matrix4::smIdentity);
 
 		GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBOPosition, mPositionBuffer);
 		GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBOColor, mColorBuffer);
