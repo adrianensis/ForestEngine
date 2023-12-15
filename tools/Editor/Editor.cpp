@@ -70,12 +70,16 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    size = 50;
+    size = 6;
     for(i32 x = -size; x < size; ++x)
 	{
 		for(i32 y = -size; y < size; ++y)
 		{
-			importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*30,y*30,0), 20.0f, 0);
+			for(i32 z = -size; z < size; ++z)
+            {
+                auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*150,y*150,z*150), 20.0f, 0);
+                mGameObjectsArray.push_back(obj);
+            }
 		}
 	}
     
@@ -243,6 +247,13 @@ void Editor::update()
 	}
 
 	mousePosition = currentMousePosition;
+
+    FOR_ARRAY(i, mGameObjectsArray)
+    {
+        Ptr<Transform> transform = mGameObjectsArray[i]->mTransform;
+        transform->rotate(Vector3(speed/2.0f, speed/2.0f, speed/2.0f));
+    }
+
     PROFILER_END_BLOCK();
 
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
@@ -328,16 +339,17 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
 	gameObject->mTransform->setRotation(Vector3(0,rot,0));
 
-    // ModelRendererData modelRendererData;
-    // modelRendererData.mModel = model;
-    // modelRendererData.mIsInstanced = true;
+    ModelRendererData modelRendererData;
+    modelRendererData.mModel = model;
+    modelRendererData.mIsInstanced = true;
+	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
-    RendererData data;
-    data.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
-    data.mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
-    data.mIsInstanced = true;
+    // RendererData data;
+    // data.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
+    // data.mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
+    // data.mIsInstanced = true;
 
-	gameObject->createComponent<MeshRenderer>(data)->setColor(Vector4(1,0,0,1));
+	// gameObject->createComponent<MeshRenderer>(data)->setColor(Vector4(1,0,0,1));
     return gameObject;
 }
 

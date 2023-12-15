@@ -40,5 +40,7 @@ private:
     Ptr<GameObject> gameObject;
 	Ptr<GameObject> cameraGameObject;
 
+    std::vector<Ptr<GameObject>> mGameObjectsArray;
+
 	Vector2 mousePosition;
 };
