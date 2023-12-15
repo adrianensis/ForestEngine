@@ -61,7 +61,7 @@ void MeshRenderer::update()
 {
 	PROFILER_CPU()
 
-    if(mRendererPositionOffsetDirty || mGameObject->mTransform->getModelMatrixDirty())
+    if(!isStatic())
     {
         calculateRendererModelMatrix();
     }

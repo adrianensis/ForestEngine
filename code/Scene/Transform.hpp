@@ -89,7 +89,6 @@ public:
     CRGET(LocalPosition)
     CRGET(Rotation)
     CRGET(Scale)
-    GET(ModelMatrixDirty)
     GET(ModelMatrixNoScale)
     GET_SET(IgnoreParentScale)
 };
