@@ -48,9 +48,6 @@ void ShapeBatchRenderer::render()
 
 		GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayout);
 
-		GET_SYSTEM(GPUInterface).enableAttribute(0);
-		GET_SYSTEM(GPUInterface).enableAttribute(1);
-
 		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera->mProjectionMatrix;
 		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera->mViewMatrix;
 
@@ -60,9 +57,6 @@ void ShapeBatchRenderer::render()
 		GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBOPosition, mPositionBuffer);
 		GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBOColor, mColorBuffer);
 		GET_SYSTEM(GPUInterface).drawLines(mShapesCounter);
-
-		GET_SYSTEM(GPUInterface).disableAttribute(0);
-		GET_SYSTEM(GPUInterface).disableAttribute(1);
 
 		GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 
