@@ -8,9 +8,10 @@ void GPUSharedContext::init()
     mMaxSharedBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::STORAGE);
     u32 bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mGlobalMatrices.mType);
     mGlobalMatricesBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mGlobalMatrices, false);
+    mGlobalMatricesBuffer.resize(1);
     bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mLights.mType);
     mLightsBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mLights, false);
-    GET_SYSTEM(GPUSharedContext).mLightsBuffer.resize(10);
+    mLightsBuffer.resize(10);
 
     std::vector<LightData> ligths;
     ligths.resize(10);

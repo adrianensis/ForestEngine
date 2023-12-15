@@ -40,7 +40,6 @@ void BatchRenderer::init(const BatchData& batchData)
 void BatchRenderer::bindSharedBuffers()
 {
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);
-	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.resize(1);
 
     mShader->bindSharedBuffer(mMeshBatcher.mGPUMeshBuffer.getModelMatricesBuffer());
 
