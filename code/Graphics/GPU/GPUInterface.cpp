@@ -226,23 +226,18 @@ void GPUInterface::disableTexture()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GPUInterface::drawElements(u32 indicesCount, u32 instancesCount, bool instanced)
+void GPUInterface::drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced)
 {
 	if(instanced)
 	{
-		glDrawElementsInstanced(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0, instancesCount);
+		glDrawElementsInstanced(elementType, indicesCount, GL_UNSIGNED_INT, 0, instancesCount);
 	}
 	else
 	{
-		glDrawElements(GL_TRIANGLES, instancesCount * indicesCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(elementType, instancesCount * indicesCount, GL_UNSIGNED_INT, 0);
 	}
 
 	glBindVertexArray(0);
-}
-
-void GPUInterface::drawLines(u32 linesCount)
-{
-	glDrawElements(GL_LINES, linesCount * 2, GL_UNSIGNED_INT, 0);
 }
 
 void GPUInterface::setClearColor(const Vector3& color)

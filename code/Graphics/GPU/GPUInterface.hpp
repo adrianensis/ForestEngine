@@ -62,8 +62,7 @@ public:
     void disableTexture();
 
     // Draw Call
-    void drawElements(u32 indicesCount, u32 instancesCount, bool instanced);
-    void drawLines(u32 linesCount);
+    void drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced);
 
     // Clear
     void setClearColor(const Vector3& color);

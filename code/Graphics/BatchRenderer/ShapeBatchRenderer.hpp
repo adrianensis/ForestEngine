@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
-
+#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 
 class ShapeBatchRenderer: public ObjectBase
 {
@@ -20,7 +20,6 @@ public:
 	void addLine(const Line& shape, const Vector4& color);
 
 private:
-    void bind();
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
 private: 
@@ -29,8 +28,9 @@ private:
 	u32 mVBOPosition = 0;
 	u32 mVBOColor = 0;
 	u32 mEBO = 0;
-	std::vector<f32> mPositionBuffer;
-	std::vector<f32> mColorBuffer;
+    GPUVertexBuffersLayout mGPUVertexBuffersLayout;
+	std::vector<Vector3> mPositionBuffer;
+	std::vector<Vector4> mColorBuffer;
 	std::vector<u32> mIndicesBuffer;
 
 	f32 mSize = 0.0f;
@@ -38,6 +38,6 @@ private:
 protected:
 	u32 mMaxShapes = 10000;
 	u32 mShapesCounter = 0;
-	u32 mPositionsPerShape = 0;
+	u32 mVerticesPerShape = 0;
 	bool mIsWorldSpace = true;
 };

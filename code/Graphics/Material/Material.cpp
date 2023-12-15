@@ -24,7 +24,11 @@ void Material::init(const MaterialData& materialData, u32 id)
     mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
     mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalMatrices);
-    mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
+
+    if(materialData.mUseModelMatrix)
+    {
+        mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    }
 
     if(materialData.mReceiveLight)
     {
@@ -39,17 +43,33 @@ void Material::init(const MaterialData& materialData, u32 id)
         mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }
 
-    mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
+    if(hasTexture())
+    {
+        mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
+    }
+    
     if(mMaterialData.mUseVertexColor)
     {
         mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
-    mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+    
+    if(materialData.mUseModelMatrix && materialData.mUseNormals)
+    {
+        mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+    }
     mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
     
-    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
+    if(hasTexture())
+    {
+        mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
+    }
+
     mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
-    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+
+    if(materialData.mUseModelMatrix && materialData.mUseNormals)
+    {
+        mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+    }
     mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
 
     mMaterialShaderVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);

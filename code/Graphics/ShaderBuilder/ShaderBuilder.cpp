@@ -76,8 +76,12 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     Variable projectionMatrix(globalMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     Variable viewMatrix(globalMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
 
-    auto& modelMatricesBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);    
-    Variable modelMatrices(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& modelMatricesBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
+    Variable modelMatrices;
+    if(material->getMaterialData().mUseModelMatrix)
+    {
+        modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    }
 
     if(material->getMaterialData().mReceiveLight)
     {
@@ -104,12 +108,28 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         set(finalPositon, call(functionCalculateSkinnedPosition.mName, {finalPositon}));
     }
 
-    mainFunc.body().variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix)).
-    set(finalPositon, modelMatrices.at(instanceId).mul(finalPositon)).
-    set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon)).
-    set(outTextureCoord, textureCoord).
-    set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(normal)).
-    set(fragPosition, call("vec3", {finalPositon}));
+    mainFunc.body().variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix));
+
+    if(material->getMaterialData().mUseModelMatrix)
+    {
+        mainFunc.body().set(finalPositon, modelMatrices.at(instanceId).mul(finalPositon));
+    }
+
+    mainFunc.body().
+    set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon));
+
+    if(material->hasTexture())
+    {
+        mainFunc.body().
+        set(outTextureCoord, textureCoord);
+    }
+    
+    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    {
+        mainFunc.body().set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(normal));
+    }
+
+    mainFunc.body().set(fragPosition, call("vec3", {finalPositon}));
 
     if(material->getMaterialData().mUseVertexColor)
     {
@@ -198,8 +218,20 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
         Variable diffuse;
 
         mainFunc.body().
-        set(ambient, call("vec3", {{"0.0"}, {"0.1"}, {"0.0"}})).
-        variable(norm, "vec3", "norm", call("normalize", {inNormal})).
+        set(ambient, call("vec3", {{"0.0"}, {"0.1"}, {"0.0"}}));
+
+        if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+        {
+            mainFunc.body().
+            variable(norm, "vec3", "norm", call("normalize", {inNormal}));
+        }
+        else
+        {
+            mainFunc.body().
+            set(norm, call("vec3", {{"0.0"}, {"0.0"}, {"0.0"}}));
+        }
+
+        mainFunc.body().
         variable(lightDir, "vec3", "lightDir", call("normalize", {call("vec3",{{"400"},{"0"},{"300"}}).sub(inPosition)})).
         variable(diff, "float", "diff", call("max", {call("dot", {norm, lightDir}), {"-1"}})).
         variable(diffuse, "vec3", "diffuse", diff.mul(call("vec3", {{"0.8"}, {"0.8"}, {"0.8"}})));
@@ -242,8 +274,11 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
         }
     }
 
-    mainFunc.body().
-    set(outColor, outColor.add(call("vec4", {diffuseFinal.add(ambient), {"1"}})));
+    if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    {
+        mainFunc.body().
+        set(outColor, outColor.add(call("vec4", {diffuseFinal.add(ambient), {"1"}})));
+    }
     
     if(material->getMaterialData().mAlphaEnabled)
     {

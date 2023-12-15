@@ -1,10 +1,13 @@
 #include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Engine/EngineConfig.hpp"
-
+#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 
 {
@@ -13,7 +16,6 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 void ShapeBatchRenderer::terminate()
 {
 	GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayout);
-	GET_SYSTEM(GPUInterface).deleteBuffer(mVBOPosition);
 	GET_SYSTEM(GPUInterface).deleteBuffer(mEBO);
 
 	mPositionBuffer.clear();
@@ -27,16 +29,53 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 {
 	mIsWorldSpace = isWorldSpace;
 
-	mPositionsPerShape = verticesPerShape;
+	mVerticesPerShape = verticesPerShape;
 
-	mPositionBuffer.reserve(mMaxShapes * 2 * 3); // 2 vertex per line * 3 floats per vertex
-	mColorBuffer.reserve(mMaxShapes * 2 * 4); // 2 vertex per line * 4 floats per vertex
-	mIndicesBuffer.reserve(mMaxShapes * 2);		 // 1 index per vertex
+	mPositionBuffer.reserve(mMaxShapes * mVerticesPerShape); // 2 vertex per line * 3 floats per vertex
+	mColorBuffer.reserve(mMaxShapes * mVerticesPerShape); // 2 vertex per line * 4 floats per vertex
+	mIndicesBuffer.reserve(mMaxShapes * mVerticesPerShape);		 // 1 index per vertex
+
+    MaterialData materialData;
+    materialData.mReceiveLight = false;
+    materialData.mUseVertexColor = true;
+    materialData.mUseNormals = false;
+    materialData.mUseModelMatrix = false;
+    Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+
+    mVertexBufferLayout = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
+	mEBO = GET_SYSTEM(GPUInterface).createBuffer();
+
+    mGPUVertexBuffersLayout.init(false);
+    GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
+    mVBOPosition = mGPUVertexBuffersLayout.addBuffer(bufferDataPosition);
+    GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
+    mVBOColor = mGPUVertexBuffersLayout.addBuffer(bufferDataColor);
+
+	FOR_RANGE(i, 0, mMaxShapes * mVerticesPerShape)
+	{
+		mIndicesBuffer.push_back(i);
+	}
+
+	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(u32), mIndicesBuffer.size());
+	GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mEBO, mIndicesBuffer);
+
+	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 
 	mShaderLine = OwnerPtr<GPUShader>::newObject();
-	mShaderLine->initDebug();
 
-	bind();
+    ShaderBuilder sbVert;
+    sbVert.createVertexShader(mGPUVertexBuffersLayout, lineMaterial);
+    ShaderBuilder sbFrag;
+    sbFrag.createFragmentShader(mGPUVertexBuffersLayout, lineMaterial);
+
+    mShaderLine = OwnerPtr<GPUShader>::newObject();
+    std::string stringShderVert = sbVert.getCode();
+    LOG(stringShderVert);
+    std::string stringShderFrag = sbFrag.getCode();
+    LOG(stringShderFrag);
+    mShaderLine->initFromFileContents(stringShderVert, stringShderFrag);
+
+    mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);
 }
 
 void ShapeBatchRenderer::render()
@@ -47,17 +86,11 @@ void ShapeBatchRenderer::render()
 		mShaderLine->enable();
 
 		GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayout);
-
-		const Matrix4& projectionMatrix = GET_SYSTEM(RenderEngine).mCamera->mProjectionMatrix;
-		const Matrix4& viewMatrix = GET_SYSTEM(RenderEngine).mCamera->mViewMatrix;
-
-		mShaderLine->bindUniformValue("projectionMatrix", mIsWorldSpace ? projectionMatrix : Matrix4::smIdentity);
-		mShaderLine->bindUniformValue("viewMatrix", mIsWorldSpace ? viewMatrix : Matrix4::smIdentity);
-
-		GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBOPosition, mPositionBuffer);
-		GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mVBOColor, mColorBuffer);
-		GET_SYSTEM(GPUInterface).drawLines(mShapesCounter);
-
+        mGPUVertexBuffersLayout.getBuffer(mVBOPosition).resize(mPositionBuffer.size());
+        mGPUVertexBuffersLayout.getBuffer(mVBOColor).resize(mColorBuffer.size());
+        mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setDataArray(mPositionBuffer);
+        mGPUVertexBuffersLayout.getBuffer(mVBOColor).setDataArray(mColorBuffer);
+		GET_SYSTEM(GPUInterface).drawElements(GL_LINES, mIndicesBuffer.size(), mShapesCounter, false);
 		GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 
 		mPositionBuffer.clear();
@@ -66,44 +99,16 @@ void ShapeBatchRenderer::render()
 	}
 }
 
-void ShapeBatchRenderer::bind()
-{
-	mVertexBufferLayout = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
-	mVBOPosition = GET_SYSTEM(GPUInterface).createBuffer();
-	GET_SYSTEM(GPUInterface).attribute(0, 3, GL_FLOAT, 3 * sizeof(f32), 0, 0);
-	mVBOColor = GET_SYSTEM(GPUInterface).createBuffer();
-	GET_SYSTEM(GPUInterface).attribute(1, 4, GL_FLOAT, 4 * sizeof(f32), 0, 0);
-	mEBO = GET_SYSTEM(GPUInterface).createBuffer();
-
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mVBOPosition, sizeof(f32), mPositionBuffer.capacity());
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mVBOColor, sizeof(f32), mColorBuffer.capacity());
-
-	FOR_RANGE(i, 0, mMaxShapes * mPositionsPerShape)
-	{
-		mIndicesBuffer.push_back(i);
-	}
-
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(u32), mIndicesBuffer.size());
-	GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mEBO, mIndicesBuffer);
-
-	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
-}
-
 void ShapeBatchRenderer::addPosition(const Vector3& position)
 {
     PROFILER_CPU()
-	mPositionBuffer.push_back(position.x);
-	mPositionBuffer.push_back(position.y);
-	mPositionBuffer.push_back(position.z);
+	mPositionBuffer.push_back(position);
 }
 
 void ShapeBatchRenderer::addColor(const Vector4& color)
 {
     PROFILER_CPU()
-	mColorBuffer.push_back(color.x);
-	mColorBuffer.push_back(color.y);
-	mColorBuffer.push_back(color.z);
-	mColorBuffer.push_back(color.w);
+	mColorBuffer.push_back(color);
 }
 
 void ShapeBatchRenderer::addLine(const Line& shape, const Vector4& color)

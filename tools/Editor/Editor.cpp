@@ -276,10 +276,10 @@ void Editor::update()
     // // -z
 	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
 
-	// for(i32 x = -1000; x < 1000; x+=50)
-	// {
-	// 	GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
-	// }
+	for(i32 x = -1000; x < 1000; x+=50)
+	{
+		GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
+	}
     // PROFILER_END_BLOCK();
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
