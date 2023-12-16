@@ -7,7 +7,7 @@
 class Memory
 {
 private:
-#ifdef DE_DEBUG
+#ifdef ENGINE_DEBUG
 	class AllocationInfo
     {
     public:
@@ -26,7 +26,7 @@ public:
 	static T *newObject(Args&&... args)
 	{
 		T *object = new T(args...);
-#ifdef DE_DEBUG
+#ifdef ENGINE_DEBUG
 		std::string_view className;
 
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
@@ -54,7 +54,7 @@ public:
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
-#ifdef DE_DEBUG
+#ifdef ENGINE_DEBUG
 		std::string_view className;
 		if constexpr (std::is_base_of<ObjectMeta, T>::value)
 		{
@@ -72,7 +72,7 @@ public:
 	}
 
 private:
-#ifdef DE_DEBUG
+#ifdef ENGINE_DEBUG
 	inline static std::unordered_map<std::string_view, AllocationInfo> mAllocationsCounter;
 #endif
 };

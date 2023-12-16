@@ -8,7 +8,7 @@ void Memory::init()
 
 void Memory::terminate()
 {
-#ifdef DE_DEBUG
+#ifdef ENGINE_DEBUG
 	LOG("-------- MEM SUMMARY --------")
 	FOR_MAP(it, Memory::mAllocationsCounter)
 	{
