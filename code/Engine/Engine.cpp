@@ -53,18 +53,18 @@ void Engine::init()
     //REGISTER_ENGINE_SYSTEM(Ptr<System>::cast(RenderEngine::getInstancePtr()));
 }
 
-void Engine::initSceneSystems()
+void Engine::preSceneChanged()
 {
 	f32 sceneSize = GET_SYSTEM(ScenesManager).getCurrentScene()->getSize();
 	GET_SYSTEM(RenderEngine).init(sceneSize);
 	GET_SYSTEM(ScriptEngine).init();
 }
 
-void Engine::terminateSceneSystems()
+void Engine::postSceneChanged()
 {
 	GET_SYSTEM(ScriptEngine).terminate();
 	GET_SYSTEM(RenderEngine).terminate();
-    //GET_SYSTEM(RenderEngine).terminate();
+
 
 	GET_SYSTEM(TimerManager).terminate();
 }
@@ -85,9 +85,9 @@ void Engine::run()
 
 		if (GET_SYSTEM(ScenesManager).getSceneHasChanged())
 		{
-			terminateSceneSystems();
+			preSceneChanged();
 			GET_SYSTEM(ScenesManager).loadCurrentScene();
-			initSceneSystems();
+			postSceneChanged();
 		}
 
 		GET_SYSTEM(Input).update();
@@ -120,9 +120,13 @@ void Engine::terminate()
 	GET_SYSTEM(CommandLine).terminate();
     REMOVE_SYSTEM(CommandLine);
 
+	GET_SYSTEM(ScenesManager).terminate();
     REMOVE_SYSTEM(ScenesManager);
 
-	terminateSceneSystems();
+	GET_SYSTEM(ScriptEngine).terminate();
+    REMOVE_SYSTEM(ScriptEngine);
+	GET_SYSTEM(RenderEngine).terminate();
+    REMOVE_SYSTEM(RenderEngine);
 
 	GET_SYSTEM(UIManager).terminate();
     REMOVE_SYSTEM(UIManager);
@@ -138,10 +142,9 @@ void Engine::terminate()
 	GET_SYSTEM(MeshPrimitives).terminate();
     REMOVE_SYSTEM(MeshPrimitives);
 
-    REMOVE_SYSTEM(ScriptEngine);
-    REMOVE_SYSTEM(RenderEngine);
 	GET_SYSTEM(EventsManager).terminate();
     REMOVE_SYSTEM(EventsManager);
+	GET_SYSTEM(TimerManager).terminate();
     REMOVE_SYSTEM(TimerManager);
     REMOVE_SYSTEM(Time);
     REMOVE_SYSTEM(Input);

@@ -12,6 +12,11 @@ ScenesManager::ScenesManager()
 
 ScenesManager::~ScenesManager() 
 {
+    terminate();
+}
+
+void ScenesManager::terminate() 
+{
     if(mGameObjectController)
     {
 	    mGameObjectController->destroy();
