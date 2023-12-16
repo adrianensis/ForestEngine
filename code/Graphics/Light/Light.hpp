@@ -1,22 +1,17 @@
 #pragma once
 
 #include "Scene/Component.hpp"
-
-class LightData
-{
-public:
-    Vector3 mPosition;
-};
+#include "Graphics/GPU/GPULight.hpp"
 
 class Light: public Component
 {
     GENERATE_METADATA(Light)
 
 public:
-    void init(const LightData& data);
+    void init(const GPULightData& data);
 
 private:
-    LightData mLightData;
+    GPULightData mLightData;
 
 public:
     CRGET(LightData)

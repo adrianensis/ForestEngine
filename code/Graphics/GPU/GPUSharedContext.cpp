@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/Light/Light.hpp"
+#include "Graphics/GPU/GPULight.hpp"
 
 void GPUSharedContext::init()
 {
@@ -13,7 +13,7 @@ void GPUSharedContext::init()
     mLightsBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mLights, false);
     mLightsBuffer.resize(10);
 
-    std::vector<LightData> ligths;
+    std::vector<GPULightData> ligths;
     ligths.resize(10);
     ligths[0].mPosition.x = 0;
     mLightsBuffer.setDataArray(ligths);
