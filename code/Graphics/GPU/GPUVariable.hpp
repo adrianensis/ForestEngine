@@ -44,7 +44,7 @@ class GPUDataType
 {
 public:
     std::string mName;
-    u32 mTypeSizeInBytes;
+    u32 mTypeSizeInBytes = 0;
     GPUPrimitiveType mPrimitiveType = GPUPrimitiveType::FLOAT;
 
     u32 getPrimitiveTypeSizeInBytes() const
@@ -133,14 +133,14 @@ public:
     GPUStructDefinition(const std::string& name, const std::vector<GPUStructVariable>& primitiveVariables):
         mName(name), mPrimitiveVariables(primitiveVariables){}
 
-    u32 getPrimitiveTypeSizeInBytes() const
+    u32 getTypeSizeInBytes() const
     {
-        u32 primitiveTypeSizeInBytes = 0;
+        u32 typeSizeInBytes = 0;
         FOR_ARRAY(i, mPrimitiveVariables)
         {
-            primitiveTypeSizeInBytes += mPrimitiveVariables[i].mGPUDataType.getPrimitiveTypeSizeInBytes();
+            typeSizeInBytes += mPrimitiveVariables[i].mGPUDataType.mTypeSizeInBytes;
         }
 
-        return primitiveTypeSizeInBytes;
+        return typeSizeInBytes;
     }
 };

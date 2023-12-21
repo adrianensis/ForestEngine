@@ -5,6 +5,7 @@
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back
 - [ ] Add Option for SSBO to be readonly
+- [ ] put these macros "mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW" inside the GPUInterface corresponding call
 
 ## Interesting / Nice To Have / Optimizations
 - [ ] Animation Blending

@@ -28,6 +28,7 @@ buildIntegrationTests=False
 enableLogs=False
 enableProfiler=False
 enableAddressSanitizer=False
+enableGPUDebug=False
 
 appsToBuild = []
 toolsToBuild = []
@@ -37,7 +38,7 @@ if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, "uilcpr", ["app=", "tool=", "asan"])
+  opts, args = getopt.getopt(argv, "uilcpr", ["app=", "tool=", "asan", "gpuDbg"])
 except:
   print("Error parsing options!")
   exit(1)
@@ -63,6 +64,8 @@ for opt, arg in opts:
       enableProfiler=True
     elif opt in ['--asan']:
       enableAddressSanitizer=True
+    elif opt in ['--gpuDbg']:
+      enableGPUDebug=True
 
 buildTargetDir=os.path.join(buildDir, buildType)
 
@@ -152,6 +155,7 @@ buildCommandArgs = [
     "-DENABLE_LOGS=" + str(enableLogs),
     "-DENABLE_PROFILER=" + str(enableProfiler),
     "-DENABLE_ADDRESS_SANITIZER=" + str(enableAddressSanitizer),
+    "-DENABLE_GPU_DEBUG=" + str(enableGPUDebug),
 ]
 
 build_cmake(cwd, buildCommandArgs)

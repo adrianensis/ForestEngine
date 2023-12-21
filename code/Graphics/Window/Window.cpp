@@ -23,6 +23,10 @@ void Window::init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE); // https://stackoverflow.com/questions/50412575/is-there-a-way-to-remove-60-fps-cap-in-glfw
 
+    #ifdef ENGINE_ENABLE_GPU_DEBUG
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    #endif
+
 	mWindowSize.set(1080, 720);
 
 	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
@@ -38,6 +42,9 @@ void Window::init()
         
 		glfwSwapInterval(0);
 
+        #ifdef ENGINE_ENABLE_GPU_DEBUG
+        GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
+        #endif
 
 		GET_SYSTEM(GPUInterface).setClearColor(Vector3(0,0.3,0.3));
 		GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing

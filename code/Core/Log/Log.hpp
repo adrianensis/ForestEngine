@@ -65,7 +65,7 @@ private:
     static void append(const std::string_view& str);
 };
 
-#ifdef DE_ENABLE_LOGS
+#ifdef ENGINE_ENABLE_LOGS
 #define LOG_TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 #define LOG(x) Log::log(Log::Prefixes::smLog, x, true);
 #define LOG_APPEND(x) Log::log(Log::Prefixes::smLog, x, false);

@@ -13,6 +13,14 @@ enum class GPUBufferType
     STORAGE = GL_SHADER_STORAGE_BUFFER
 };
 
+class GPUError
+{
+public:
+    u32 mErrorCode = 0;
+    bool mErrorDetected = false;
+    std::string mErrorMessage;
+};
+
 class GPUInterface : public System
 {
 public:
@@ -28,7 +36,7 @@ public:
 
     // Buffer
     GLuint createBuffer();
-    void resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, u32 drawMode = GL_DYNAMIC_DRAW);
+    void resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic);
 
     template<class T>
     void setBufferDataArray(GPUBufferType bufferType, u32 bufferId, const std::vector<T>& data)
@@ -132,6 +140,14 @@ public:
             LOG_ERROR("Uniform type not supported!");
         }
     }
+
+    // Check Errors
+    void setupGPUErrorHandling();
+    void checkGPUErrors();
+    void checkFramebufferErrors();
+    void checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError);
+    void checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError);
+    static void gpuErrorMessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
 private:
     void setBufferDataRaw(GPUBufferType bufferType, u32 VBO, u32 typeSize, u32 size, const void* data);

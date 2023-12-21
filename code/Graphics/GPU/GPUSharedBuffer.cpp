@@ -32,5 +32,5 @@ void GPUSharedBuffer::terminate()
 
 void GPUSharedBuffer::resize(u32 size)
 {
-    GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, mSizeInBytes, size, mIsStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+    GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, mSizeInBytes, size, mIsStatic);
 }

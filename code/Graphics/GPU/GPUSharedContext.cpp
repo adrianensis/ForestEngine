@@ -16,6 +16,7 @@ void GPUSharedContext::init()
     std::vector<GPULightData> ligths;
     ligths.resize(10);
     ligths[0].mPosition.x = 0;
+    mLightsBuffer.resize(ligths.size());
     mLightsBuffer.setDataArray(ligths);
 }
 

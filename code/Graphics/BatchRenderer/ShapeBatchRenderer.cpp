@@ -56,7 +56,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 		mIndicesBuffer.push_back(i);
 	}
 
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(u32), mIndicesBuffer.size());
+	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(u32), mIndicesBuffer.size(), false);
 	GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mEBO, mIndicesBuffer);
 
 	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);

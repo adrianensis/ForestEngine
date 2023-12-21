@@ -80,10 +80,11 @@ void GPUInterface::bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 
     glBindBufferBase(static_cast<u32>(bufferType), bindingPoint, bufferId);
 }
 
-void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, u32 drawMode /*= GL_DYNAMIC_DRAW*/)
+void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic)
 {
 	glBindBuffer(static_cast<u32>(bufferType), bufferId);
-	glBufferData(static_cast<u32>(bufferType), typeSizeInBytes * size, nullptr, drawMode);
+    u32 usageHint = bufferType == GPUBufferType::STORAGE ? (isStatic ? GL_STATIC_COPY : GL_DYNAMIC_COPY) : (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	glBufferData(static_cast<u32>(bufferType), typeSizeInBytes * size, nullptr, usageHint);
 }
 
 void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
@@ -312,54 +313,25 @@ void GPUInterface::disableProgram(u32 programId)
 
 u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const std::string& fragmentShaderString)
 {
-    u32 vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 
 	const char* vertexCString = vertexShaderString.c_str();
 	const char* fragmentCString = fragmentShaderString.c_str();
 
+    u32 vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderId, 1, &vertexCString, nullptr);
 	glCompileShader(vertexShaderId);
-
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShaderId, 512, nullptr, infoLog);
-        LOG_ERROR("COMPILATION FAILED - VERTEX SHADER");
-        LOG_ERROR(infoLog);
-        LOG_ERROR(vertexShaderString);
-	}
+    checkShaderErrors(vertexShaderId, GL_COMPILE_STATUS, "VERTEX SHADER", vertexShaderString);
 
 	u32 fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-
 	glShaderSource(fragmentShaderId, 1, &fragmentCString, nullptr);
 	glCompileShader(fragmentShaderId);
-
-	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShaderId, 512, nullptr, infoLog);
-        LOG_ERROR("COMPILATION FAILED - FRAGMENT SHADER");
-        LOG_ERROR(infoLog);
-        LOG_ERROR(fragmentShaderString);
-	}
+    checkShaderErrors(fragmentShaderId, GL_COMPILE_STATUS, "FRAGMENT SHADER", fragmentShaderString);
 
 	u32 programId = glCreateProgram();
-
 	glAttachShader(programId, vertexShaderId);
 	glAttachShader(programId, fragmentShaderId);
 	glLinkProgram(programId);
-
-	glGetProgramiv(programId, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(programId, 512, nullptr, infoLog);
-        LOG_ERROR("LINK FAILED - PROGRAM");
-        LOG_ERROR(infoLog);
-	}
+    checkProgramErrors(programId, GL_LINK_STATUS, "PROGRAM LINK", "-");
 
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);
@@ -384,4 +356,171 @@ void GPUInterface::bindSharedBuffer(u32 programId, GPUBufferType bufferType, con
             break;
         }
     }
+}
+
+void GPUInterface::setupGPUErrorHandling()
+{
+    int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    {
+        // initialize debug output 
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+        glDebugMessageCallback(gpuErrorMessageCallback, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    }
+}
+
+#define GPU_LOG_CASE(enumError, errorMessageOut) case enumError: errorMessageOut = #enumError; break;
+#define GPU_LOG_CASE_DEFAULT(Tag, errorMessageOut) default : errorMessageOut = "Unknown " Tag " error"; break;
+
+void GPUInterface::checkGPUErrors()
+{
+    i32 errorCode = glGetError();
+	bool errorDetected = false;
+    std::string errorMessage;
+
+    const u32 MAX_GPU_LOGS = 50;
+    u32 errorsIndex = 0;
+	while(errorCode != GL_NO_ERROR)
+	{
+		errorDetected = true;
+		switch(errorCode)
+		{
+			GPU_LOG_CASE(GL_INVALID_ENUM, errorMessage)
+			GPU_LOG_CASE(GL_INVALID_VALUE, errorMessage)
+			GPU_LOG_CASE(GL_INVALID_OPERATION, errorMessage)
+			GPU_LOG_CASE(GL_OUT_OF_MEMORY, errorMessage)
+			GPU_LOG_CASE(GL_STACK_OVERFLOW, errorMessage)
+			GPU_LOG_CASE(GL_STACK_UNDERFLOW, errorMessage)
+			GPU_LOG_CASE_DEFAULT("GL_ERROR", errorMessage)
+		}
+		LOG_ERROR(errorMessage);
+		errorCode = glGetError();
+
+        errorsIndex++;
+        if(errorsIndex == MAX_GPU_LOGS)
+        {
+            LOG_ERROR("MAX GPU ERRORS REACHED");
+            break;
+        }
+	}
+
+    CHECK_MSG(!errorDetected, "GPU ERRORS DETECTED!");
+}
+
+void GPUInterface::checkFramebufferErrors()
+{
+    i32 errorCode = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    // checkGPUErrors();
+	bool errorDetected = false;
+    std::string errorMessage;
+
+    if(errorCode != GL_FRAMEBUFFER_COMPLETE)
+    {
+        errorDetected = true;
+        switch(errorCode)
+        {
+            GPU_LOG_CASE(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT, errorMessage)
+            GPU_LOG_CASE(GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT, errorMessage)
+            GPU_LOG_CASE(GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER, errorMessage)
+            GPU_LOG_CASE(GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER, errorMessage)
+            GPU_LOG_CASE(GL_FRAMEBUFFER_UNSUPPORTED, errorMessage)
+            GPU_LOG_CASE(GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE, errorMessage)
+            GPU_LOG_CASE(GL_FRAMEBUFFER_UNDEFINED, errorMessage)
+            GPU_LOG_CASE_DEFAULT("GL_FRAMEBUFFER", errorMessage)
+        }
+    }
+
+    CHECK_MSG(!errorDetected, "GPU ERRORS DETECTED!");
+}
+
+void GPUInterface::checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
+{
+    i32 success;
+    glGetShaderiv(shaderId, statusToCheck, &success);
+	if (!success)
+	{
+        i32 logSize = 0;
+        glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logSize );
+		if(logSize > 0)
+        {
+	        char* infoLog = new char[logSize];
+            glGetShaderInfoLog(shaderId, logSize, nullptr, infoLog);
+            LOG_ERROR(tag);
+            LOG_ERROR(infoLog);
+            delete[] infoLog;
+            LOG_ERROR(logIfError);
+        }
+	}
+
+    CHECK_MSG(success, "SHADER ERRORS DETECTED!");
+}
+
+void GPUInterface::checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
+{
+    i32 success;
+    glGetProgramiv(programId, statusToCheck, &success);
+	if (!success)
+	{
+        i32 logSize = 0;
+        glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logSize );
+		if(logSize > 0)
+        {
+	        char* infoLog = new char[logSize];
+            glGetProgramInfoLog(programId, logSize, nullptr, infoLog);
+            LOG_ERROR(tag);
+            LOG_ERROR(infoLog);
+            delete[] infoLog;
+            LOG_ERROR(logIfError);
+        }
+	}
+
+    CHECK_MSG(success, "SHADER ERRORS DETECTED!");
+}
+
+void GPUInterface::gpuErrorMessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+    std::string logMessage;
+
+    // ignore non-significant error/warning codes
+    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
+
+    switch (source)
+    {
+        GPU_LOG_CASE(GL_DEBUG_SOURCE_API,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SOURCE_WINDOW_SYSTEM,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SOURCE_SHADER_COMPILER,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SOURCE_THIRD_PARTY,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SOURCE_APPLICATION,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SOURCE_OTHER,logMessage)
+    }
+    LOG_TAG("GPU DEBUG", logMessage);
+
+    switch (type)
+    {
+        GPU_LOG_CASE(GL_DEBUG_TYPE_ERROR,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_PORTABILITY,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_PERFORMANCE,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_MARKER,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_PUSH_GROUP,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_POP_GROUP,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_TYPE_OTHER,logMessage)
+    }
+    LOG_TAG("GPU DEBUG", logMessage);
+    
+    switch (severity)
+    {
+        GPU_LOG_CASE(GL_DEBUG_SEVERITY_HIGH,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SEVERITY_MEDIUM,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SEVERITY_LOW,logMessage)
+        GPU_LOG_CASE(GL_DEBUG_SEVERITY_NOTIFICATION,logMessage)
+    }
+    LOG_TAG("GPU DEBUG", logMessage);
+    LOG_TAG("GPU DEBUG", std::to_string(id));
+    LOG_TAG("GPU DEBUG", message);
+
+    CHECK_MSG(type != GL_DEBUG_TYPE_ERROR, "GPU ERROR DETECTED!");
 }

@@ -33,7 +33,7 @@ public:
     class StructTypes
     {
     public:
-        inline static const GPUDataType mLight{StructDefinitions::mLight.mName, StructDefinitions::mLight.getPrimitiveTypeSizeInBytes(), GPUPrimitiveType::STRUCT};
+        inline static const GPUDataType mLight{StructDefinitions::mLight.mName, StructDefinitions::mLight.getTypeSizeInBytes(), GPUPrimitiveType::STRUCT};
     };
 
     class Consts

@@ -123,7 +123,7 @@ void GPUMeshBuffer::setBonesTransforms(const std::vector<Matrix4>& transforms)
 void GPUMeshBuffer::setIndexesData(const Mesh& mesh)
 {
     PROFILER_CPU()
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(u32), mesh.mFaces.size() * 3, mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(Face), mesh.mFaces.size(), mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced);
 	GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mEBO, mesh.mFaces);
 }
 

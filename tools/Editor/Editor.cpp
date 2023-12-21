@@ -77,8 +77,8 @@ void Editor::firstUpdate()
 		{
 			for(i32 z = -size; z < size; ++z)
             {
-                auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*150,y*150,z*150), 20.0f, 0);
-                mGameObjectsArray.push_back(obj);
+                // auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*150,y*150,z*150), 20.0f, 0);
+                // mGameObjectsArray.push_back(obj);
             }
 		}
 	}
