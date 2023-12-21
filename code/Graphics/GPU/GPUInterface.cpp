@@ -6,7 +6,7 @@
 
 GLuint GPUInterface::createBuffer()
 {
-	u32 bufferId;
+	u32 bufferId = 0;
 	glGenBuffers(1, &bufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
 	return bufferId;
@@ -29,7 +29,7 @@ void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primit
 
 GLuint GPUInterface::createVertexBufferLayout()
 {
-	u32 vertexBufferLayout;
+	u32 vertexBufferLayout = 0;
 	glGenVertexArrays(1, &vertexBufferLayout);
 	enableVertexBufferLayout(vertexBufferLayout);
 	return vertexBufferLayout;
@@ -37,7 +37,7 @@ GLuint GPUInterface::createVertexBufferLayout()
 
 u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes)
 {
-    i32 maxBlockSize;
+    i32 maxBlockSize = 0;
     switch (bufferType)
     {
     case GPUBufferType::UNIFORM:
@@ -57,7 +57,7 @@ u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 ele
 
 u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
 {
-    i32 maxBindingPoints;
+    i32 maxBindingPoints = 0;
     switch (bufferType)
     {
     case GPUBufferType::UNIFORM:
@@ -155,7 +155,7 @@ void GPUInterface::disableStencil()
 
 GLuint GPUInterface::createTexture(u32 width, u32 height, u32 format, const byte* data, bool createMipMap)
 {
-    u32 textureId;
+    u32 textureId = 0;
     glGenTextures(1, &textureId);
 
     enableTexture(textureId);
@@ -188,7 +188,7 @@ GLuint GPUInterface::createTexture(u32 width, u32 height, u32 format, const byte
 
 GLuint GPUInterface::createTextureFont(u32 width, u32 height, u32 format, const byte* data)
 {
-    u32 textureId;
+    u32 textureId = 0;
     glGenTextures(1, &textureId);
 
     enableTexture(textureId);
@@ -437,7 +437,7 @@ void GPUInterface::checkFramebufferErrors()
 
 void GPUInterface::checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
 {
-    i32 success;
+    i32 success = 0;
     glGetShaderiv(shaderId, statusToCheck, &success);
 	if (!success)
 	{
@@ -459,7 +459,7 @@ void GPUInterface::checkShaderErrors(u32 shaderId, u32 statusToCheck, const std:
 
 void GPUInterface::checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
 {
-    i32 success;
+    i32 success = 0;
     glGetProgramiv(programId, statusToCheck, &success);
 	if (!success)
 	{
