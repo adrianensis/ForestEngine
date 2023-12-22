@@ -8,8 +8,13 @@ GLuint GPUInterface::createBuffer()
 {
 	u32 bufferId = 0;
 	glGenBuffers(1, &bufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+    bindBuffer(GPUBufferType::VERTEX, bufferId);
 	return bufferId;
+}
+
+void GPUInterface::bindBuffer(GPUBufferType bufferType, u32 bufferId)
+{
+    glBindBuffer(static_cast<u32>(bufferType), bufferId);
 }
 
 void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
@@ -74,7 +79,7 @@ u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
     return maxBindingPoints;
 }
 
-void GPUInterface::bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
+void GPUInterface::bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
 {
     // define the range of the buffer that links to a uniform binding point
     glBindBufferBase(static_cast<u32>(bufferType), bindingPoint, bufferId);
@@ -82,14 +87,14 @@ void GPUInterface::bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 
 
 void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic)
 {
-	glBindBuffer(static_cast<u32>(bufferType), bufferId);
+	bindBuffer(bufferType, bufferId);
     u32 usageHint = bufferType == GPUBufferType::STORAGE ? (isStatic ? GL_STATIC_COPY : GL_DYNAMIC_COPY) : (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	glBufferData(static_cast<u32>(bufferType), typeSizeInBytes * size, nullptr, usageHint);
 }
 
 void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
 {
-	glBindBuffer(static_cast<u32>(bufferType), bufferId);
+	bindBuffer(bufferType, bufferId);
 	glBufferSubData(static_cast<u32>(bufferType), 0, typeSize * size, data);
 }
 
@@ -339,7 +344,7 @@ u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const st
     return programId;
 }
 
-void GPUInterface::bindSharedBuffer(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint)
+void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint)
 {
     switch (bufferType)
     {

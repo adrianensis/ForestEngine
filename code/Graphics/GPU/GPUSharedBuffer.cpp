@@ -22,7 +22,7 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBuffe
         mSizeInBytes += gpuVariableData.mGPUDataType.mTypeSizeInBytes;
     }
 
-    GET_SYSTEM(GPUInterface).bindSharedBuffer(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
+    GET_SYSTEM(GPUInterface).bindSharedBufferToBindingPoint(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
 }
 
 void GPUSharedBuffer::terminate()

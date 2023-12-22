@@ -18,7 +18,7 @@ void GPUShader::disable() const
 
 void GPUShader::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
 {
-    GET_SYSTEM(GPUInterface).bindSharedBuffer(mProgramId,
+    GET_SYSTEM(GPUInterface).bindSharedBufferToShader(mProgramId,
     sharedBuffer.getGPUSharedBufferData().mType,
     sharedBuffer.getGPUSharedBufferData().mBufferName,
     sharedBuffer.getBindingPoint());

@@ -5,7 +5,7 @@
 
 class Camera;
 
-enum class GPUBufferType
+enum class GPUBufferType : u32
 {
     VERTEX = GL_ARRAY_BUFFER,
     INDEX = GL_ELEMENT_ARRAY_BUFFER,
@@ -36,6 +36,7 @@ public:
 
     // Buffer
     GLuint createBuffer();
+    void bindBuffer(GPUBufferType bufferType, u32 bufferId);
     void resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic);
 
     template<class T>
@@ -55,8 +56,8 @@ public:
     // Shared Buffer
     u32 getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes);
     u32 getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType);
-    void bindSharedBuffer(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint);
-    
+    void bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint);
+
     // Stencil
     void enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp);
     void disableStencil();
@@ -98,7 +99,7 @@ public:
     void enableProgram(u32 programId);
     void disableProgram(u32 programId);
     u32 compileProgram(const std::string& vertexShaderString, const std::string& fragmentShaderString);
-    void bindSharedBuffer(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint);
+    void bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint);
     
     template<class T>
     void bindUniformValue(u32 programId, const std::string& name, const T& value)
