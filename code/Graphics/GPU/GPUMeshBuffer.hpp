@@ -3,8 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
-
-class Mesh;
+#include "Graphics/GPU/GPUMesh.hpp"
 
 class GPUMeshBufferData
 {
@@ -23,12 +22,12 @@ public:
     ~GPUMeshBuffer();
 
     void init(const GPUMeshBufferData& gpuMeshBufferData);
-    void resizeMeshData(const Mesh& mesh);
+    void resizeMeshData(Ptr<const GPUMesh> mesh);
     void resizeInstancesData(u32 maxInstances);
-    void setMeshData(const Mesh& mesh);
+    void setMeshData(Ptr<const GPUMesh> mesh);
     void setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
     void setBonesTransforms(const std::vector<Matrix4>& transforms);
-    void setIndexesData(const Mesh& mesh);
+    void setIndicesData(Ptr<const GPUMesh> mesh);
     void enable();
     void disable();
 
@@ -39,16 +38,14 @@ private:
     GPUMeshBufferData mGPUMeshBufferData;
 	GPUSharedBuffer mModelMatricesBuffer;
 	GPUSharedBuffer mBonesMatricesBuffer;
-
-    u32 mVertexBufferLayout = 0;
     
-    u32 mVBOPosition = 0;
-	u32 mVBOTexture = 0;
-	u32 mVBOColor = 0;
-	u32 mVBONormal = 0;
-	u32 mVBOBonesIDs = 0;
-	u32 mVBOBonesWeights = 0;
-	u32 mVBOInstanceIDs = 0;
+    u32 mBufferPositionId = 0;
+	u32 mBufferTextureId = 0;
+	u32 mBufferColorId = 0;
+	u32 mBufferNormalId = 0;
+	u32 mBufferBonesIDsId = 0;
+	u32 mBufferBonesWeightsId = 0;
+	u32 mBufferInstanceIDsId = 0;
 
     GPUVertexBuffersLayout mGPUVertexBuffersLayout;
 

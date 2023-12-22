@@ -15,9 +15,7 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 }
 void ShapeBatchRenderer::terminate()
 {
-	GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayout);
-	GET_SYSTEM(GPUInterface).deleteBuffer(mEBO);
-
+	mGPUVertexBuffersLayout.terminate();
 	mPositionBuffer.clear();
 	mColorBuffer.clear();
 	mIndicesBuffer.clear();
@@ -30,10 +28,11 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mIsWorldSpace = isWorldSpace;
 
 	mVerticesPerShape = verticesPerShape;
+    mMaxVertices = mMaxShapes * mVerticesPerShape;
 
-	mPositionBuffer.reserve(mMaxShapes * mVerticesPerShape); // 2 vertex per line * 3 floats per vertex
-	mColorBuffer.reserve(mMaxShapes * mVerticesPerShape); // 2 vertex per line * 4 floats per vertex
-	mIndicesBuffer.reserve(mMaxShapes * mVerticesPerShape);		 // 1 index per vertex
+	mPositionBuffer.reserve(mMaxVertices); // 2 vertex per line * 3 floats per vertex
+	mColorBuffer.reserve(mMaxVertices); // 2 vertex per line * 4 floats per vertex
+	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
@@ -42,24 +41,22 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     materialData.mUseModelMatrix = false;
     Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
-    mVertexBufferLayout = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
-	mEBO = GET_SYSTEM(GPUInterface).createBuffer();
-
     mGPUVertexBuffersLayout.init(false);
+    mGPUVertexBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
-    mVBOPosition = mGPUVertexBuffersLayout.addBuffer(bufferDataPosition);
+    mVBOPosition = mGPUVertexBuffersLayout.createBuffer(bufferDataPosition);
     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-    mVBOColor = mGPUVertexBuffersLayout.addBuffer(bufferDataColor);
+    mVBOColor = mGPUVertexBuffersLayout.createBuffer(bufferDataColor);
 
-	FOR_RANGE(i, 0, mMaxShapes * mVerticesPerShape)
-	{
-		mIndicesBuffer.push_back(i);
-	}
+    FOR_RANGE(i, 0, mMaxVertices)
+    {
+        mIndicesBuffer.push_back(i);
+    }
 
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mEBO, sizeof(u32), mIndicesBuffer.size(), false);
-	GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mEBO, mIndicesBuffer);
+    mGPUVertexBuffersLayout.getIndicesBuffer().resize(mIndicesBuffer.size());
+    mGPUVertexBuffersLayout.getIndicesBuffer().setDataArray(mIndicesBuffer);
 
-	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
+	mGPUVertexBuffersLayout.disable();
 
 	mShaderLine = OwnerPtr<GPUShader>::newObject();
 
@@ -85,16 +82,18 @@ void ShapeBatchRenderer::render()
 	{
 		mShaderLine->enable();
 
-		GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayout);
+		mGPUVertexBuffersLayout.enable();
+
         mGPUVertexBuffersLayout.getBuffer(mVBOPosition).resize(mPositionBuffer.size());
         mGPUVertexBuffersLayout.getBuffer(mVBOColor).resize(mColorBuffer.size());
         mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setDataArray(mPositionBuffer);
         mGPUVertexBuffersLayout.getBuffer(mVBOColor).setDataArray(mColorBuffer);
 		GET_SYSTEM(GPUInterface).drawElements(GL_LINES, mIndicesBuffer.size(), mShapesCounter, false);
-		GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
+        mGPUVertexBuffersLayout.disable();
 
 		mPositionBuffer.clear();
 		mColorBuffer.clear();
+		mIndicesBuffer.clear();
 		mShapesCounter = 0;
 	}
 }
@@ -111,13 +110,13 @@ void ShapeBatchRenderer::addColor(const Vector4& color)
 	mColorBuffer.push_back(color);
 }
 
-void ShapeBatchRenderer::addLine(const Line& shape, const Vector4& color)
+void ShapeBatchRenderer::addLine(const Line& line, const Vector4& color)
 {
     PROFILER_CPU()
     if(mShapesCounter < mMaxShapes)
     {
-        addPosition(shape.getStart());
-        addPosition(shape.getEnd());
+        addPosition(line.getStart());
+        addPosition(line.getEnd());
 
         addColor(color);
         addColor(color);

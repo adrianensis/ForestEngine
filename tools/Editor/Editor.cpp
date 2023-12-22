@@ -64,21 +64,23 @@ void Editor::firstUpdate()
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
 	// importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
-	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 1.0f, 0);
+	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	gameObject = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-500,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    size = 6;
+    size = 1;
     for(i32 x = -size; x < size; ++x)
 	{
+        // auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*150,0,0), 20.0f, 0);
+        // mGameObjectsArray.push_back(obj);
+
 		for(i32 y = -size; y < size; ++y)
 		{
 			for(i32 z = -size; z < size; ++z)
             {
-                // auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(x*150,y*150,z*150), 20.0f, 0);
-                // mGameObjectsArray.push_back(obj);
+                
             }
 		}
 	}
@@ -251,7 +253,7 @@ void Editor::update()
     FOR_ARRAY(i, mGameObjectsArray)
     {
         Ptr<Transform> transform = mGameObjectsArray[i]->mTransform;
-        transform->rotate(Vector3(speed/2.0f, speed/2.0f, speed/2.0f));
+        transform->rotate(Vector3(speed, speed, speed));
     }
 
     PROFILER_END_BLOCK();

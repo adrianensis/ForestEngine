@@ -50,4 +50,5 @@ public:
     GET(SizeInBytes)
     GET(BindingPoint)
     CRGET(GPUSharedBufferData)
+    GET(BufferId)
 };
