@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Component.hpp"
+#include "Core/Module.hpp"
 
 class GPULightData
 {
