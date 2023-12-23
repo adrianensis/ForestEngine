@@ -34,13 +34,6 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxVertices); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
-    MaterialData materialData;
-    materialData.mReceiveLight = false;
-    materialData.mUseVertexColor = true;
-    materialData.mUseNormals = false;
-    materialData.mUseModelMatrix = false;
-    Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
-
     mGPUVertexBuffersLayout.init(false);
     mGPUVertexBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
@@ -57,6 +50,13 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     mGPUVertexBuffersLayout.getIndicesBuffer().setDataArray(mIndicesBuffer);
 
 	mGPUVertexBuffersLayout.disable();
+
+    MaterialData materialData;
+    materialData.mReceiveLight = false;
+    materialData.mUseVertexColor = true;
+    materialData.mUseNormals = false;
+    materialData.mUseModelMatrix = false;
+    Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
 	mShaderLine = OwnerPtr<GPUShader>::newObject();
 
@@ -83,7 +83,6 @@ void ShapeBatchRenderer::render()
 		mShaderLine->enable();
 
 		mGPUVertexBuffersLayout.enable();
-
         mGPUVertexBuffersLayout.getBuffer(mVBOPosition).resize(mPositionBuffer.size());
         mGPUVertexBuffersLayout.getBuffer(mVBOColor).resize(mColorBuffer.size());
         mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setDataArray(mPositionBuffer);
@@ -93,7 +92,6 @@ void ShapeBatchRenderer::render()
 
 		mPositionBuffer.clear();
 		mColorBuffer.clear();
-		mIndicesBuffer.clear();
 		mShapesCounter = 0;
 	}
 }

@@ -12,8 +12,10 @@ class RenderEngine : public System
 	GENERATE_METADATA(RenderEngine)
 
 public:
-    void init(f32 sceneSize);
+    void init();
     void update();
+    void preSceneChanged();
+    void postSceneChanged();
     void terminate();
     
     void addComponent(Ptr<SystemComponent> component) override;

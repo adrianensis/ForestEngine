@@ -12,7 +12,7 @@
 #include "Engine/EngineConfig.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 
-void RenderEngine::init(f32 sceneSize)
+void RenderEngine::init()
 {
 	LOG_TRACE()
 
@@ -20,8 +20,8 @@ void RenderEngine::init(f32 sceneSize)
 
 	mCameraDirtyTranslation = true;
 
-	//mShapeBatchRenderer.init(true, 2);
-	//mShapeBatchRendererScreenSpace.init(false, 2);
+	mShapeBatchRenderer.init(true, 2);
+	mShapeBatchRendererScreenSpace.init(false, 2);
 
 	// octree.init(5000);
 }
@@ -44,12 +44,22 @@ void RenderEngine::update()
 	swap();
 }
 
+void RenderEngine::preSceneChanged()
+{
+	LOG_TRACE()
+}
+
+void RenderEngine::postSceneChanged()
+{
+	LOG_TRACE()
+}
+
 void RenderEngine::terminate()
 {
 	LOG_TRACE()
 
-	//mShapeBatchRenderer.terminate();
-	//mShapeBatchRendererScreenSpace.terminate();
+	mShapeBatchRenderer.terminate();
+	mShapeBatchRendererScreenSpace.terminate();
 }
 
 void RenderEngine::addComponent(Ptr<SystemComponent> component)
@@ -76,11 +86,11 @@ void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorl
     PROFILER_CPU()
 	if (isWorldSpace)
 	{
-		//mShapeBatchRenderer.addLine(line, color);
+		mShapeBatchRenderer.addLine(line, color);
 	}
 	else
 	{
-		//mShapeBatchRendererScreenSpace.addLine(line, color);
+		mShapeBatchRendererScreenSpace.addLine(line, color);
 	}
 }
 
@@ -139,7 +149,7 @@ void RenderEngine::renderBatches()
 	mBatchesManager.render();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("render");
-	//mShapeBatchRenderer.render();
+	mShapeBatchRenderer.render();
     PROFILER_END_BLOCK();
     
     GET_SYSTEM(GPUInterface).clearDepth();
@@ -154,6 +164,6 @@ void RenderEngine::renderBatches()
 	mBatchesManager.renderScreenSpace();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("render");
-	//mShapeBatchRendererScreenSpace.render();
+	mShapeBatchRendererScreenSpace.render();
     PROFILER_END_BLOCK();
 }

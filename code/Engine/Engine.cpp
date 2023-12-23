@@ -39,6 +39,8 @@ void Engine::init()
 	GET_SYSTEM(AnimationManager).init();
     CREATE_SYSTEM(ModelManager);
 	GET_SYSTEM(ModelManager).init();
+    CREATE_SYSTEM(RenderEngine);
+	GET_SYSTEM(RenderEngine).init();
     CREATE_SYSTEM(UIManager);
 	GET_SYSTEM(UIManager).init();
     CREATE_SYSTEM(ScenesManager);
@@ -47,26 +49,23 @@ void Engine::init()
     CREATE_SYSTEM(CommandLine);
 	GET_SYSTEM(CommandLine).init();
 
-    CREATE_SYSTEM(RenderEngine);
     CREATE_SYSTEM(ScriptEngine);
+	GET_SYSTEM(ScriptEngine).init();
 
     //REGISTER_ENGINE_SYSTEM(Ptr<System>::cast(RenderEngine::getInstancePtr()));
 }
 
 void Engine::preSceneChanged()
 {
-	f32 sceneSize = GET_SYSTEM(ScenesManager).getCurrentScene()->getSize();
-	GET_SYSTEM(RenderEngine).init(sceneSize);
-	GET_SYSTEM(ScriptEngine).init();
+	GET_SYSTEM(ScriptEngine).preSceneChanged();
+	GET_SYSTEM(RenderEngine).preSceneChanged();
+	GET_SYSTEM(TimerManager).terminate();
 }
 
 void Engine::postSceneChanged()
 {
-	GET_SYSTEM(ScriptEngine).terminate();
-	GET_SYSTEM(RenderEngine).terminate();
-
-
-	GET_SYSTEM(TimerManager).terminate();
+	GET_SYSTEM(RenderEngine).postSceneChanged();
+	GET_SYSTEM(ScriptEngine).postSceneChanged();
 }
 
 void Engine::run()
@@ -117,19 +116,20 @@ void Engine::terminate()
 {
 	LOG_TRACE();
 	
+	GET_SYSTEM(ScriptEngine).terminate();
+    REMOVE_SYSTEM(ScriptEngine);
+
 	GET_SYSTEM(CommandLine).terminate();
     REMOVE_SYSTEM(CommandLine);
 
 	GET_SYSTEM(ScenesManager).terminate();
     REMOVE_SYSTEM(ScenesManager);
 
-	GET_SYSTEM(ScriptEngine).terminate();
-    REMOVE_SYSTEM(ScriptEngine);
-	GET_SYSTEM(RenderEngine).terminate();
-    REMOVE_SYSTEM(RenderEngine);
-
 	GET_SYSTEM(UIManager).terminate();
     REMOVE_SYSTEM(UIManager);
+
+	GET_SYSTEM(RenderEngine).terminate();
+    REMOVE_SYSTEM(RenderEngine);
 
 	GET_SYSTEM(ModelManager).terminate();
     REMOVE_SYSTEM(ModelManager);

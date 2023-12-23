@@ -7,11 +7,6 @@ void ScriptEngine::init()
 	LOG_TRACE()
 
 	registerComponentClass(Script::getClassDefinitionStatic().mId);
-
-    if(GET_SYSTEM(ScenesManager).getGameObjectController())
-    {
-	    mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
-    }
 }
 
 void ScriptEngine::addComponent(Ptr<SystemComponent> component)
@@ -63,8 +58,17 @@ void ScriptEngine::update()
 void ScriptEngine::terminate()
 {
 	LOG_TRACE()
+}
 
+void ScriptEngine::preSceneChanged()
+{
+	LOG_TRACE()
+    retrieveControllerFromScene();
+}
 
+void ScriptEngine::postSceneChanged()
+{
+	LOG_TRACE()
 }
 
 void ScriptEngine::internalRemoveScript(std::list<Ptr<Script>>::iterator & it)
@@ -76,4 +80,12 @@ void ScriptEngine::internalRemoveScript(std::list<Ptr<Script>>::iterator & it)
 
 	it = mScripts.erase(it);
 	--it;
+}
+
+void ScriptEngine::retrieveControllerFromScene()
+{
+    if(GET_SYSTEM(ScenesManager).getGameObjectController())
+    {
+	    mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
+    }
 }
