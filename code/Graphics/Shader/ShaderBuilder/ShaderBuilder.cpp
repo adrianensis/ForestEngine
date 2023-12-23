@@ -1,9 +1,10 @@
-#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
 
 ShaderBuilder::ShaderBuilder()
 {

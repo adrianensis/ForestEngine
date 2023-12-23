@@ -6,7 +6,8 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 
@@ -58,19 +59,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     materialData.mUseModelMatrix = false;
     Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
-	mShaderLine = OwnerPtr<GPUShader>::newObject();
-
-    ShaderBuilder sbVert;
-    sbVert.createVertexShader(mGPUVertexBuffersLayout, lineMaterial);
-    ShaderBuilder sbFrag;
-    sbFrag.createFragmentShader(mGPUVertexBuffersLayout, lineMaterial);
-
-    mShaderLine = OwnerPtr<GPUShader>::newObject();
-    std::string stringShderVert = sbVert.getCode();
-    LOG(stringShderVert);
-    std::string stringShderFrag = sbFrag.getCode();
-    LOG(stringShderFrag);
-    mShaderLine->initFromFileContents(stringShderVert, stringShderFrag);
+    mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersLayout, lineMaterial);
 
     mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);
 }

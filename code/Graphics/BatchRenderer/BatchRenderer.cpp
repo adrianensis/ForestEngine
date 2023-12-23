@@ -13,7 +13,8 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderUtils.hpp"
 
 void BatchRenderer::init(const BatchData& batchData)
 {
@@ -22,17 +23,7 @@ void BatchRenderer::init(const BatchData& batchData)
 
     const GPUVertexBuffersLayout& gpuVertexBuffersLayout = mMeshBatcher.getGPUVertexBuffersLayout();
     
-    ShaderBuilder sbVert;
-    sbVert.createVertexShader(gpuVertexBuffersLayout, mBatchData.mMaterial);
-    ShaderBuilder sbFrag;
-    sbFrag.createFragmentShader(gpuVertexBuffersLayout, mBatchData.mMaterial);
-
-    mShader = OwnerPtr<GPUShader>::newObject();
-    std::string stringShderVert = sbVert.getCode();
-    LOG(stringShderVert);
-    std::string stringShderFrag = sbFrag.getCode();
-    LOG(stringShderFrag);
-    mShader->initFromFileContents(stringShderVert, stringShderFrag);
+    mShader = ShaderUtils::createShader(gpuVertexBuffersLayout, mBatchData.mMaterial);
     
     bindSharedBuffers();
 }

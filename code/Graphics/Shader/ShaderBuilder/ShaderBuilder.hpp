@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/ShaderBuilder/ShaderBuilderNodes.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 
 class GPUVertexBuffersLayout;
 class Material;
+class Shader;
 
 class ShaderBuilder
 {
