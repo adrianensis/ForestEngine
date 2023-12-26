@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Lights
 - [ ] OpenGL - Cache uniform locations
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back
