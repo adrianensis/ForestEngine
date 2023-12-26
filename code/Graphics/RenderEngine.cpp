@@ -3,6 +3,7 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/Light/Light.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
@@ -17,6 +18,7 @@ void RenderEngine::init()
 	LOG_TRACE()
 
 	registerComponentClass(MeshRenderer::getClassDefinitionStatic().mId);
+	registerComponentClass(Light::getClassDefinitionStatic().mId);
 
 	mCameraDirtyTranslation = true;
 
@@ -66,13 +68,23 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 {
 	System::addComponent(component);
 
-    Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-    CHECK_MSG(renderer.isValid(), "Trying to add a not valid MeshRenderer derived component.");
-    mBatchesManager.addRenderer(renderer);
-
-    if(renderer->getIsWorldSpace())
+    if(component->getSystemComponentId() == MeshRenderer::getClassDefinitionStatic().mId)
     {
-        //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
+        Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
+        mBatchesManager.addRenderer(renderer);
+
+        if(renderer->getIsWorldSpace())
+        {
+            //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
+        }
+    }
+    else if(component->getSystemComponentId() == Light::getClassDefinitionStatic().mId)
+    {
+        mLights.push_back(Ptr<Light>::cast(component));
+    }
+    else
+    {
+        CHECK_MSG(false, "Trying to add a not valid component.");
     }
 }
 
@@ -135,6 +147,15 @@ void RenderEngine::updateGPUSharedContext(bool isWorldSpace)
 
     GPUSharedContextMatricesData gpuMatricesData = {isWorldSpace ? mCamera->mProjectionMatrix : ortho, isWorldSpace ? mCamera->mViewMatrix : Matrix4::smIdentity};
 	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.setData(gpuMatricesData);
+
+    std::vector<GPULightData> gpuLights;
+    FOR_ARRAY(i, mLights)
+    {
+        gpuLights.push_back(mLights[i]->getLightData());
+    }
+
+    GET_SYSTEM(GPUSharedContext).mLightsBuffer.resize(gpuLights.size());
+    GET_SYSTEM(GPUSharedContext).mLightsBuffer.setDataArray(gpuLights);
 }
 void RenderEngine::renderBatches()
 {

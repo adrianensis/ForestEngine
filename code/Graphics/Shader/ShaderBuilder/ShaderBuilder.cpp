@@ -233,7 +233,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
         }
 
         mainFunc.body().
-        variable(lightDir, "vec3", "lightDir", call("normalize", {call("vec3",{{"400"},{"0"},{"300"}}).sub(inPosition)})).
+        variable(lightDir, "vec3", "lightDir", call("normalize", {lights.at("0").dot(GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0].mName).sub(inPosition)})).
         variable(diff, "float", "diff", call("max", {call("dot", {norm, lightDir}), {"-1"}})).
         variable(diffuse, "vec3", "diffuse", diff.mul(call("vec3", {{"0.8"}, {"0.8"}, {"0.8"}})));
 

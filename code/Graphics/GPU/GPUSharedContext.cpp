@@ -12,12 +12,6 @@ void GPUSharedContext::init()
     bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mLights.mType);
     mLightsBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mLights, false);
     mLightsBuffer.resize(10);
-
-    std::vector<GPULightData> ligths;
-    ligths.resize(10);
-    ligths[0].mPosition.x = 0;
-    mLightsBuffer.resize(ligths.size());
-    mLightsBuffer.setDataArray(ligths);
 }
 
 u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)

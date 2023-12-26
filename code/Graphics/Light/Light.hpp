@@ -8,6 +8,7 @@ class Light: public Component
     GENERATE_METADATA(Light)
 
 public:
+    ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
     void init(const GPULightData& data);
 
 private:

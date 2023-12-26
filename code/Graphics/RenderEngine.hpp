@@ -7,6 +7,8 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
 
+class Light;
+
 class RenderEngine : public System
 {
 	GENERATE_METADATA(RenderEngine)
@@ -32,6 +34,7 @@ private:
     void updateGPUSharedContext(bool isWorldSpace);
 private:
 	BatchesManager mBatchesManager;
+    std::vector<Ptr<Light>> mLights;
 
 	ShapeBatchRenderer mShapeBatchRenderer;
 	ShapeBatchRenderer mShapeBatchRendererScreenSpace;

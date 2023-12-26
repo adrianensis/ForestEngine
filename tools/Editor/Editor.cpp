@@ -346,12 +346,10 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
     modelRendererData.mIsInstanced = true;
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
-    // RendererData data;
-    // data.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
-    // data.mMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
-    // data.mIsInstanced = true;
+    GPULightData data;
+    data.mPosition = v;
 
-	// gameObject->createComponent<MeshRenderer>(data)->setColor(Vector4(1,0,0,1));
+	gameObject->createComponent<Light>(data);
     return gameObject;
 }
 

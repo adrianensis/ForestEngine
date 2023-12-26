@@ -8,6 +8,7 @@
 			"args": [
 				"scripts/build.py",
 				"-l",
+				"--gpuDbg",
 				"--tool=Editor"
 			],
 			"problemMatcher": [
