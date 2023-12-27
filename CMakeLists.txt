@@ -10,19 +10,19 @@ project(${PROJECTNAME} LANGUAGES CXX C)
 
 function(build_program path prefix program_name)
 
-  set(PROGRAM_PATH "${path}/${program_name}")
-  message("BUILD PROGRAM ${PROGRAM_PATH}")
+    set(PROGRAM_PATH "${path}/${program_name}")
+    message("BUILD PROGRAM ${PROGRAM_PATH}")
 
-  file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp")
+    file(GLOB_RECURSE PROGRAM_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp")
 
-  include_directories("${PROGRAM_PATH}")
+    include_directories("${PROGRAM_PATH}")
 
 #   get_filename_component(PROGRAM_NAME ${PROGRAM_PATH} NAME_WE) # NAME_WE = name with extension
 
-  set(PROGRAM_FINAL_NAME "${prefix}_${program_name}" )
-  add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
-  target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
-  install(TARGETS ${PROGRAM_FINAL_NAME})
+    set(PROGRAM_FINAL_NAME "${prefix}_${program_name}" )
+    add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
+    target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
+    install(TARGETS ${PROGRAM_FINAL_NAME})
 
 endfunction()
 
@@ -34,31 +34,31 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(ENABLE_LOGS)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D ENGINE_ENABLE_LOGS")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_ENABLE_LOGS")
 endif(ENABLE_LOGS)
 
 if(ENABLE_GPU_DEBUG)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D ENGINE_ENABLE_GPU_DEBUG")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_ENABLE_GPU_DEBUG")
 endif(ENABLE_GPU_DEBUG)
 
 if(ENABLE_PROFILER)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -D BUILD_WITH_EASY_PROFILER")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D BUILD_WITH_EASY_PROFILER")
 endif(ENABLE_PROFILER)
 
 if(UNIX)
-  set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -mavx -Wall -Werror=return-type -Wcast-align -Wcast-qual -Wpointer-arith -Wfloat-equal")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -mavx -Wall -Werror=return-type -Wcast-align -Wcast-qual -Wpointer-arith -Wfloat-equal")
   
-  if(ENABLE_ADDRESS_SANITIZER)
-    set(CMAKE_CXX_FLAGS_ALL "${CMAKE_CXX_FLAGS_ALL} -fsanitize=address -static-libasan")
-  endif(ENABLE_ADDRESS_SANITIZER)
+    if(ENABLE_ADDRESS_SANITIZER)
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -fsanitize=address -static-libasan")
+    endif(ENABLE_ADDRESS_SANITIZER)
 
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D ENGINE_DEBUG -ftree-vectorize")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_ALL} -O3")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_DEBUG -ftree-vectorize")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${PROJECT_COMMON_CXX_FLAGS} -O3")
 endif(UNIX)
 
 if(WIN32)
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_ALL} -D ENGINE_DEBUG /m /TP")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_DEBUG /m /TP")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 endif(WIN32)
 
 message("Compiler: ${CMAKE_CXX_COMPILER}")
@@ -120,39 +120,38 @@ include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")
 # PROJECT PACKAGES
 # ----------------------------------------------------------------------------
 
-file(GLOB PACKAGES_PATHS "code/*")
-set(PACKAGES "")
-
-foreach(PACKAGE_PATH ${PACKAGES_PATHS})
-  get_filename_component(PACKAGE_NAME ${PACKAGE_PATH} NAME_WE) # NAME_WE = name with extension
-  list(APPEND PACKAGES ${PACKAGE_NAME})
-endforeach()
-
 # include source code root
 include_directories("code")
 
-# object libraries
-# Alternative: CMakeLists.txt with this code into source directory.
-# add_subdirectory(source)
-foreach(PACKAGE ${PACKAGES})
-  file(GLOB_RECURSE PACKAGE_SOURCE "code/${PACKAGE}/*.cpp")
-  add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCE})
-endforeach()
+file(GLOB PACKAGES_PATHS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/*")
+set(PACKAGES "")
+set(OBJECTS "")
 
-# list of objects
-foreach(PACKAGE ${PACKAGES})
-  list(APPEND OBJS $<TARGET_OBJECTS:${PACKAGE}>)
+foreach(PACKAGE_PATH ${PACKAGES_PATHS})
+    message("PACKAGE " ${PACKAGE_PATH})
+    get_filename_component(PACKAGE ${PACKAGE_PATH} NAME_WE) # NAME_WE = name with extension
+
+    file(GLOB_RECURSE PACKAGE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/${PACKAGE}/*.cpp")
+
+    foreach(OBJECT_SOURCE ${PACKAGE_SOURCES})
+        get_filename_component(OBJECT_SOURCE_WE ${OBJECT_SOURCE} NAME_WE) # NAME_WE = name with extension
+        message("OBJECT " ${OBJECT_SOURCE_WE})
+    endforeach()
+
+    add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCES})
+
+    list(APPEND OBJECTS $<TARGET_OBJECTS:${PACKAGE}>)
 endforeach()
 
 # ----------------------------------------------------------------------------
-# DEFINE LIBRARY
+# PROJECT LIBRARY
 # ----------------------------------------------------------------------------
 
 # single library
-add_library(${PROJECTNAME} ${OBJS} ${GLAD_SOURCE})
+add_library(${PROJECTNAME} STATIC ${OBJECTS} ${GLAD_SOURCE})
 
 # ----------------------------------------------------------------------------
-# LINK LIBRARIES
+# LINK EXTERNAL LIBRARIES
 # ----------------------------------------------------------------------------
 
 # link libraries with forest library
