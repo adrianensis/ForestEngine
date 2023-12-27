@@ -17,18 +17,18 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
 	mesh->init(4*1, 2*1);
 
-	mesh->addToPositions(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
-	mesh->addToPositions(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
-	mesh->addToPositions(Vector3(0.5f, 0.5f, 0.0f)); // top right
-	mesh->addToPositions(Vector3(-0.5f, 0.5f, 0.0f)); // top left
+	mesh->mPositions.pushBack(Vector3(-0.5f, -0.5f, 0.0f)); // bottom left
+	mesh->mPositions.pushBack(Vector3(0.5f, -0.5f, 0.0f)); // bottom right
+	mesh->mPositions.pushBack(Vector3(0.5f, 0.5f, 0.0f)); // top right
+	mesh->mPositions.pushBack(Vector3(-0.5f, 0.5f, 0.0f)); // top left
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f)); // bottom left
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f)); // bottom right
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f)); // top right
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f)); // top left
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f)); // bottom left
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f)); // bottom right
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f)); // top right
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f)); // top left
 
-	mesh->addToFaces(Face(0,1,2));
-	mesh->addToFaces(Face(2,3,0));
+	mesh->mFaces.pushBack(Face(0,1,2));
+	mesh->mFaces.pushBack(Face(2,3,0));
 
 	return mesh;
 }
@@ -59,123 +59,123 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	Vector3 topNormal(0,1,0); // top
 	Vector3 bottomNormal(0,-1,0); // bottom
 
-	mesh->addToPositions(bottomLeftFront);
-	mesh->addToPositions(bottomRightFront);
-	mesh->addToPositions(topRightFront);
-	mesh->addToPositions(topLeftFront);
+	mesh->mPositions.pushBack(bottomLeftFront);
+	mesh->mPositions.pushBack(bottomRightFront);
+	mesh->mPositions.pushBack(topRightFront);
+	mesh->mPositions.pushBack(topLeftFront);
 	
-    mesh->addToNormals(frontNormal);
-	mesh->addToNormals(frontNormal);
-	mesh->addToNormals(frontNormal);
-	mesh->addToNormals(frontNormal);
+    mesh->mNormals.pushBack(frontNormal);
+	mesh->mNormals.pushBack(frontNormal);
+	mesh->mNormals.pushBack(frontNormal);
+	mesh->mNormals.pushBack(frontNormal);
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f));
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh->addToPositions(bottomLeftBack);
-	mesh->addToPositions(bottomLeftFront);
-	mesh->addToPositions(topLeftFront);
-	mesh->addToPositions(topLeftBack);
+	mesh->mPositions.pushBack(bottomLeftBack);
+	mesh->mPositions.pushBack(bottomLeftFront);
+	mesh->mPositions.pushBack(topLeftFront);
+	mesh->mPositions.pushBack(topLeftBack);
 	
-    mesh->addToNormals(leftNormal);
-	mesh->addToNormals(leftNormal);
-	mesh->addToNormals(leftNormal);
-	mesh->addToNormals(leftNormal);
+    mesh->mNormals.pushBack(leftNormal);
+	mesh->mNormals.pushBack(leftNormal);
+	mesh->mNormals.pushBack(leftNormal);
+	mesh->mNormals.pushBack(leftNormal);
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f));
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh->addToPositions(bottomRightBack);
-	mesh->addToPositions(bottomLeftBack);
-	mesh->addToPositions(topLeftBack);
-	mesh->addToPositions(topRightBack);
+	mesh->mPositions.pushBack(bottomRightBack);
+	mesh->mPositions.pushBack(bottomLeftBack);
+	mesh->mPositions.pushBack(topLeftBack);
+	mesh->mPositions.pushBack(topRightBack);
 	
-    mesh->addToNormals(backNormal);
-	mesh->addToNormals(backNormal);
-	mesh->addToNormals(backNormal);
-	mesh->addToNormals(backNormal);
+    mesh->mNormals.pushBack(backNormal);
+	mesh->mNormals.pushBack(backNormal);
+	mesh->mNormals.pushBack(backNormal);
+	mesh->mNormals.pushBack(backNormal);
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f));
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh->addToPositions(bottomRightFront);
-	mesh->addToPositions(bottomRightBack);
-	mesh->addToPositions(topRightBack);
-	mesh->addToPositions(topRightFront);
+	mesh->mPositions.pushBack(bottomRightFront);
+	mesh->mPositions.pushBack(bottomRightBack);
+	mesh->mPositions.pushBack(topRightBack);
+	mesh->mPositions.pushBack(topRightFront);
 	
-    mesh->addToNormals(rightNormal);
-	mesh->addToNormals(rightNormal);
-	mesh->addToNormals(rightNormal);
-	mesh->addToNormals(rightNormal);
+    mesh->mNormals.pushBack(rightNormal);
+	mesh->mNormals.pushBack(rightNormal);
+	mesh->mNormals.pushBack(rightNormal);
+	mesh->mNormals.pushBack(rightNormal);
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f));
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh->addToPositions(topLeftFront);
-	mesh->addToPositions(topRightFront);
-	mesh->addToPositions(topRightBack);
-	mesh->addToPositions(topLeftBack);
+	mesh->mPositions.pushBack(topLeftFront);
+	mesh->mPositions.pushBack(topRightFront);
+	mesh->mPositions.pushBack(topRightBack);
+	mesh->mPositions.pushBack(topLeftBack);
 	
-    mesh->addToNormals(topNormal);
-	mesh->addToNormals(topNormal);
-	mesh->addToNormals(topNormal);
-	mesh->addToNormals(topNormal);
+    mesh->mNormals.pushBack(topNormal);
+	mesh->mNormals.pushBack(topNormal);
+	mesh->mNormals.pushBack(topNormal);
+	mesh->mNormals.pushBack(topNormal);
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f));
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
-	mesh->addToPositions(bottomLeftBack);
-	mesh->addToPositions(bottomRightBack);
-	mesh->addToPositions(bottomRightFront);
-	mesh->addToPositions(bottomLeftFront);
+	mesh->mPositions.pushBack(bottomLeftBack);
+	mesh->mPositions.pushBack(bottomRightBack);
+	mesh->mPositions.pushBack(bottomRightFront);
+	mesh->mPositions.pushBack(bottomLeftFront);
 	
-    mesh->addToNormals(bottomNormal);
-	mesh->addToNormals(bottomNormal);
-	mesh->addToNormals(bottomNormal);
-	mesh->addToNormals(bottomNormal);
+    mesh->mNormals.pushBack(bottomNormal);
+	mesh->mNormals.pushBack(bottomNormal);
+	mesh->mNormals.pushBack(bottomNormal);
+	mesh->mNormals.pushBack(bottomNormal);
 
-	mesh->addToTextureCoordinates(Vector2(0.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 0.0f));
-	mesh->addToTextureCoordinates(Vector2(1.0f, 1.0f));
-	mesh->addToTextureCoordinates(Vector2(0.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 0.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(1.0f, 1.0f));
+	mesh->mTextureCoordinates.pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->addToFaces(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->addToFaces(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 

@@ -2,12 +2,6 @@
 
 #include "Core/Module.hpp"
 
-#define ADD_TO_BYTEBUFFER(BaseName) \
-    template <class T> void addTo##BaseName(const T & newElement) { m##BaseName.pushBack(newElement); } \
-    template <class T> void appendTo##BaseName(const std::vector<T> & otherVector) { m##BaseName.append(otherVector); } \
-    void appendTo##BaseName(const ByteBuffer & otherVector) { m##BaseName.append(otherVector); } \
-    void clear##BaseName() { m##BaseName.clear(); }
-
 inline static const u32 smMaxBonesPerVertex = 4;
 
 class BoneVertexIDsData
@@ -48,12 +42,4 @@ public:
 
     Vector3 mMin;
     Vector3 mMax;
-
-	ADD_TO_BYTEBUFFER(Positions)
-	ADD_TO_BYTEBUFFER(Normals)
-	ADD_TO_BYTEBUFFER(TextureCoordinates)
-	ADD_TO_BYTEBUFFER(Colors)
-	ADD_TO_BYTEBUFFER(Faces)
-	ADD_TO_BYTEBUFFER(BonesVertexIDsData)
-	ADD_TO_BYTEBUFFER(BonesVertexWeightsData)
 };

@@ -147,7 +147,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 Vector3* positionsArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& position = positionsArray[vertexIt];
-                mesh->addToPositions(position);
+                mesh->mPositions.pushBack(position);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
@@ -157,7 +157,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector2& texCoord = texCoordArray[vertexIt];
                 texCoord.y = 1.0f - texCoord.y;
-                mesh->addToTextureCoordinates(texCoord);
+                mesh->mTextureCoordinates.pushBack(texCoord);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
@@ -166,7 +166,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 Vector3* normalArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& normal = normalArray[vertexIt];
-                mesh->addToNormals(normal);
+                mesh->mNormals.pushBack(normal);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
@@ -184,7 +184,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }
 
-                    mesh->addToBonesVertexIDsData(boneVertexIDsData);
+                    mesh->mBonesVertexIDsData.pushBack(boneVertexIDsData);
                 }
             }
             else if ((attribute.data->component_type == cgltf_component_type_r_16u) && (attribute.data->type == cgltf_type_vec4))
@@ -200,7 +200,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }
 
-                    mesh->addToBonesVertexIDsData(boneVertexIDsData);
+                    mesh->mBonesVertexIDsData.pushBack(boneVertexIDsData);
                 }
             }
             else
@@ -216,7 +216,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 {
                     BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<BoneVertexWeightsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                     BoneVertexWeightsData& boneVertexWeightsData = boneVertexWeightsDataArray[vertexIt];
-                    mesh->addToBonesVertexWeightsData(boneVertexWeightsData);
+                    mesh->mBonesVertexWeightsData.pushBack(boneVertexWeightsData);
                 }
             }
         }
@@ -226,7 +226,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     {
         GLTFFace* facesArray = reinterpret_cast<GLTFFace*>(reinterpret_cast<byte*>(primitive.indices->buffer_view->buffer->data) + primitive.indices->offset + primitive.indices->buffer_view->offset);
         GLTFFace& face = facesArray[faceIt];
-        mesh->addToFaces(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
+        mesh->mFaces.pushBack(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
     }
 }
 

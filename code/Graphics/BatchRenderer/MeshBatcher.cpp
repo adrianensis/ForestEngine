@@ -33,27 +33,27 @@ void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
     PROFILER_CPU()
 
     PROFILER_BLOCK_CPU("Positions");
-    mInternalMesh->appendToPositions(meshInstance->mPositions);
+    mInternalMesh->mPositions.append(meshInstance->mPositions);
     PROFILER_END_BLOCK();
 
     PROFILER_BLOCK_CPU("TextureCoordinates");
-    mInternalMesh->appendToTextureCoordinates(meshInstance->mTextureCoordinates);
+    mInternalMesh->mTextureCoordinates.append(meshInstance->mTextureCoordinates);
     PROFILER_END_BLOCK();
 
     if(mBatchData.mMaterial->getMaterialData().mUseVertexColor)
     {
         PROFILER_BLOCK_CPU("Colors");
-        mInternalMesh->appendToColors(meshInstance->mColors);
+        mInternalMesh->mColors.append(meshInstance->mColors);
     }
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
         PROFILER_BLOCK_CPU("BonesVertexIDsData");
-        mInternalMesh->appendToBonesVertexIDsData(meshInstance->mBonesVertexIDsData);
+        mInternalMesh->mBonesVertexIDsData.append(meshInstance->mBonesVertexIDsData);
         PROFILER_END_BLOCK();
 
         PROFILER_BLOCK_CPU("BonesVertexWeightsData");
-        mInternalMesh->appendToBonesVertexWeightsData(meshInstance->mBonesVertexWeightsData);
+        mInternalMesh->mBonesVertexWeightsData.append(meshInstance->mBonesVertexWeightsData);
         PROFILER_END_BLOCK();
     }
 }
@@ -212,7 +212,7 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
 
-			mInternalMesh->addToFaces(newFace);
+			mInternalMesh->mFaces.pushBack(newFace);
 		}
 	}
 

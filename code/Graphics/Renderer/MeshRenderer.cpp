@@ -19,8 +19,8 @@ void MeshRenderer::init(const RendererData& data)
     mRendererData = data;
     mMeshInstance = OwnerPtr<Mesh>::newObject();
     mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mFacesCount);
-    mMeshInstance->appendToBonesVertexIDsData(mRendererData.mMesh->mBonesVertexIDsData);
-    mMeshInstance->appendToBonesVertexWeightsData(mRendererData.mMesh->mBonesVertexWeightsData);
+    mMeshInstance->mBonesVertexIDsData.append(mRendererData.mMesh->mBonesVertexIDsData);
+    mMeshInstance->mBonesVertexWeightsData.append(mRendererData.mMesh->mBonesVertexWeightsData);
 
     setColor(Vector4(0, 0, 0, 1));
     mRegeneratePositions = true;
@@ -71,13 +71,13 @@ void MeshRenderer::update()
     {
         if(mRegeneratePositions)
         {
-            mMeshInstance->clearPositions();
+            mMeshInstance->mPositions.clear();
             updatePositions();
             mRegeneratePositions = false;
         }
         if(mRegenerateTextureCoords)
         {
-            mMeshInstance->clearTextureCoordinates();
+            mMeshInstance->mTextureCoordinates.clear();
             updateTextureCoords();
             mRegenerateTextureCoords = false;
         }
@@ -93,7 +93,7 @@ void MeshRenderer::update()
 void MeshRenderer::updatePositions()
 {
 	PROFILER_CPU()
-    mMeshInstance->appendToPositions(mRendererData.mMesh->mPositions);
+    mMeshInstance->mPositions.append(mRendererData.mMesh->mPositions);
 
     if(mUseDepth)
     {
@@ -109,7 +109,7 @@ void MeshRenderer::updatePositions()
 void MeshRenderer::updateTextureCoords()
 {
 	PROFILER_CPU()
-    mMeshInstance->appendToTextureCoordinates(mRendererData.mMesh->mTextureCoordinates);
+    mMeshInstance->mTextureCoordinates.append(mRendererData.mMesh->mTextureCoordinates);
 
     updateTextureRegion();
     FOR_RANGE(i, 0, mMeshInstance->mVertexCount)

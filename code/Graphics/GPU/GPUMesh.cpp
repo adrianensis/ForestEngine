@@ -10,13 +10,13 @@ void GPUMesh::init(u32 vertexCount, u32 facesCount)
 
 void GPUMesh::clear()
 {
-	clearPositions();
-	clearNormals();
-	clearTextureCoordinates();
-	clearColors();
-	clearFaces();
-	clearBonesVertexIDsData();
-	clearBonesVertexWeightsData();
+	mPositions.clear();
+	mNormals.clear();
+	mTextureCoordinates.clear();
+	mColors.clear();
+	mFaces.clear();
+	mBonesVertexIDsData.clear();
+	mBonesVertexWeightsData.clear();
 
 	mPositions.reserve<Vector3>(mVertexCount);
 	mTextureCoordinates.reserve<Vector2>(mVertexCount);
