@@ -10,6 +10,7 @@ class Mesh: public GPUMesh
     GENERATE_METADATA(Mesh)
 
 public:
+    void addBoneWeight(u32 vertexId, i32 id, f32 weight);
     std::vector<Vector3> calculateSkinnedVertices() const;
 
 private:

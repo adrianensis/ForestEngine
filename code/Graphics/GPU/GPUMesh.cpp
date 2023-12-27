@@ -8,26 +8,6 @@ void GPUMesh::init(u32 vertexCount, u32 facesCount)
 	clear();
 }
 
-void GPUMesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
-{
-	BoneVertexIDsData& boneVertexIDsData = mBonesVertexIDsData[vertexId]; //.setBoneWeight(id, weight);
-	BoneVertexWeightsData& boneVertexWeightsData = mBonesVertexWeightsData[vertexId]; //.setBoneWeight(id, weight);
-
-    FOR_RANGE(i, 0, smMaxBonesPerVertex)
-	{
-		if (boneVertexIDsData.mBonesIDs[i] == -1)
-		{
-			boneVertexIDsData.mBonesIDs[i] = id;
-			boneVertexWeightsData.mBonesWeights[i] = weight;
-			//printf("bone %d weight %f index %i\n", id, weight, i);
-			return;
-		}
-	}
-
-	// should never get here - more bones than we have space for
-	CHECK_MSG(false, "should never get here - more bones than we have space for");
-}
-
 void GPUMesh::clear()
 {
 	clearPositions();

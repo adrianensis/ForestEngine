@@ -360,6 +360,9 @@ void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferT
             glShaderStorageBlockBinding(programId, location, bindingPoint);
             break;
         }
+        default:
+            CHECK_MSG(false, "Not supported Buffer Type!");
+        break;
     }
 }
 

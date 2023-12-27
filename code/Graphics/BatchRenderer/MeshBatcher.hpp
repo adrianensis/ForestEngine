@@ -33,7 +33,7 @@ public:
 
 private:
     BatchData mBatchData;
-	OwnerPtr<Mesh> mMeshBuilder;
+	OwnerPtr<Mesh> mInternalMesh;
 	std::vector<Matrix4> mMatrices;
     std::vector<u32> mInstanceIDs;
 
