@@ -28,6 +28,11 @@ public:
     {
 	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
+    template <class T>
+    void setDataArray(const ByteBuffer& data)
+    {
+	    GET_SYSTEM(GPUInterface).setBufferDataArray<T>(GPUBufferType::VERTEX, mBufferId, data);
+    }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
     void terminate();
@@ -58,6 +63,11 @@ public:
     void setDataArray(const std::vector<T>& data)
     {
 	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
+    }
+    template <class T>
+    void setDataArray(const ByteBuffer& data)
+    {
+	    GET_SYSTEM(GPUInterface).setBufferDataArray<T>(GPUBufferType::VERTEX, mBufferId, data);
     }
     void terminate();
 

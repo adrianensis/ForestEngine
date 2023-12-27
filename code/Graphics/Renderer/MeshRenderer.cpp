@@ -97,11 +97,11 @@ void MeshRenderer::updatePositions()
 
     if(mUseDepth)
     {
-        FOR_RANGE(i, 0, mMeshInstance->mPositions.size())
+        FOR_RANGE(i, 0, mMeshInstance->mPositions.size<Vector3>())
         {
-            Vector3 vertexPosition = mMeshInstance->mPositions[i];
+            Vector3 vertexPosition = mMeshInstance->mPositions.get<Vector3>(i);
             vertexPosition.z = mDepth;
-            mMeshInstance->mPositions[i] = vertexPosition;
+            mMeshInstance->mPositions.get<Vector3>(i) = vertexPosition;
         }
     }
 }
@@ -114,7 +114,7 @@ void MeshRenderer::updateTextureCoords()
     updateTextureRegion();
     FOR_RANGE(i, 0, mMeshInstance->mVertexCount)
     {
-        Vector2 vertexTexture = mRendererData.mMesh->mTextureCoordinates[i];
+        Vector2 vertexTexture = mRendererData.mMesh->mTextureCoordinates.get<Vector2>(i);
         Vector2 regionSize = mTextureRegion.getSize();
         Vector2 regionPosition = mTextureRegion.getLeftTopFront();
 
@@ -131,7 +131,7 @@ void MeshRenderer::updateTextureCoords()
             }
         }
 
-        mMeshInstance->mTextureCoordinates[i] = textureCoord;
+        mMeshInstance->mTextureCoordinates.get<Vector2>(i) = textureCoord;
     }
 }
 

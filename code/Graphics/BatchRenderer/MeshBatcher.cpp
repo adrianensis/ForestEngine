@@ -160,7 +160,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(GPUInterface).drawElements(GL_TRIANGLES, mBatchData.mMesh->mFaces.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
+		GET_SYSTEM(GPUInterface).drawElements(GL_TRIANGLES, mBatchData.mMesh->mFaces.size<Face>() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 	}
 }
 
@@ -205,9 +205,9 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 	{
 		u32 offset = (i * mBatchData.mMesh->mVertexCount);
 		
-		FOR_RANGE(faceIndex, 0, mBatchData.mMesh->mFaces.size())
+		FOR_RANGE(faceIndex, 0, mBatchData.mMesh->mFaces.size<Face>())
 		{
-			Face newFace = mBatchData.mMesh->mFaces[faceIndex];
+			Face newFace = mBatchData.mMesh->mFaces.get<Face>(faceIndex);
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;

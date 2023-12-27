@@ -18,18 +18,18 @@ void GPUMesh::clear()
 	clearBonesVertexIDsData();
 	clearBonesVertexWeightsData();
 
-	mPositions.reserve(mVertexCount);
-	mTextureCoordinates.reserve(mVertexCount);
-	mColors.reserve(mVertexCount);
-	mNormals.reserve(mVertexCount);
-	mFaces.reserve(mFacesCount);
-	mBonesVertexIDsData.reserve(mVertexCount);
-	mBonesVertexWeightsData.reserve(mVertexCount);
+	mPositions.reserve<Vector3>(mVertexCount);
+	mTextureCoordinates.reserve<Vector2>(mVertexCount);
+	mColors.reserve<Vector4>(mVertexCount);
+	mNormals.reserve<Vector3>(mVertexCount);
+	mFaces.reserve<Face>(mFacesCount);
+	mBonesVertexIDsData.reserve<BoneVertexIDsData>(mVertexCount);
+	mBonesVertexWeightsData.reserve<BoneVertexWeightsData>(mVertexCount);
 }
 
 void GPUMesh::setColor(const Vector4 &color)
 {
     mColors.clear();
-    mColors.resize(mVertexCount);
-    std::fill(mColors.begin(), mColors.end(), color);
+    mColors.resize<Vector4>(mVertexCount);
+    mColors.fill(color);
 }

@@ -4,8 +4,8 @@
 
 void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 {
-	BoneVertexIDsData& boneVertexIDsData = mBonesVertexIDsData[vertexId]; //.setBoneWeight(id, weight);
-	BoneVertexWeightsData& boneVertexWeightsData = mBonesVertexWeightsData[vertexId]; //.setBoneWeight(id, weight);
+	BoneVertexIDsData& boneVertexIDsData = mBonesVertexIDsData.get<BoneVertexIDsData>(vertexId); //.setBoneWeight(id, weight);
+	BoneVertexWeightsData& boneVertexWeightsData = mBonesVertexWeightsData.get<BoneVertexWeightsData>(vertexId); //.setBoneWeight(id, weight);
 
     FOR_RANGE(i, 0, smMaxBonesPerVertex)
 	{
@@ -37,15 +37,15 @@ std::vector<Vector3> Mesh::calculateSkinnedVertices() const
 
 Vector3 Mesh::calculateSkinnedVertex(u32 i) const
 {
-    Vector3 vertexPosition = mPositions[i];
+    Vector3 vertexPosition = mPositions.get<Vector3>(i);
 
     const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mModel);
 
     Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
     for(u32 boneIt = 0 ; boneIt < (i32)MAX_BONE_INFLUENCE ; boneIt++)
     {
-        const BoneVertexIDsData& IDsData = mBonesVertexIDsData[i];
-        const BoneVertexWeightsData& wightsData = mBonesVertexWeightsData[i];
+        const BoneVertexIDsData& IDsData = mBonesVertexIDsData.get<BoneVertexIDsData>(i);
+        const BoneVertexWeightsData& wightsData = mBonesVertexWeightsData.get<BoneVertexWeightsData>(i);
         if(IDsData.mBonesIDs[boneIt] > -1)
         {
             if(IDsData.mBonesIDs[boneIt] >= (i32)MAX_BONES) 

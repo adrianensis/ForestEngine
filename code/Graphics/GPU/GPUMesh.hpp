@@ -2,6 +2,12 @@
 
 #include "Core/Module.hpp"
 
+#define ADD_TO_BYTEBUFFER(BaseName) \
+    template <class T> void addTo##BaseName(const T & newElement) { m##BaseName.pushBack(newElement); } \
+    template <class T> void appendTo##BaseName(const std::vector<T> & otherVector) { m##BaseName.append(otherVector); } \
+    void appendTo##BaseName(const ByteBuffer & otherVector) { m##BaseName.append(otherVector); } \
+    void clear##BaseName() { m##BaseName.clear(); }
+
 inline static const u32 smMaxBonesPerVertex = 4;
 
 class BoneVertexIDsData
@@ -29,13 +35,13 @@ public:
     inline static const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
     inline static const u32 MAX_BONES = 50;
 
-	std::vector<Vector3> mPositions;
-	std::vector<Vector3> mNormals;
-	std::vector<Vector2> mTextureCoordinates;
-	std::vector<Vector4> mColors;
-    std::vector<Face> mFaces;
-	std::vector<BoneVertexIDsData> mBonesVertexIDsData;
-	std::vector<BoneVertexWeightsData> mBonesVertexWeightsData;
+	ByteBuffer mPositions;
+    ByteBuffer mNormals;
+	ByteBuffer mTextureCoordinates;
+	ByteBuffer mColors;
+    ByteBuffer mFaces;
+	ByteBuffer mBonesVertexIDsData;
+	ByteBuffer mBonesVertexWeightsData;
 
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;
@@ -43,11 +49,11 @@ public:
     Vector3 mMin;
     Vector3 mMax;
 
-	ADD_TO_VECTOR(Positions)
-	ADD_TO_VECTOR(Normals)
-	ADD_TO_VECTOR(TextureCoordinates)
-	ADD_TO_VECTOR(Colors)
-	ADD_TO_VECTOR(Faces)
-	ADD_TO_VECTOR(BonesVertexIDsData)
-	ADD_TO_VECTOR(BonesVertexWeightsData)
+	ADD_TO_BYTEBUFFER(Positions)
+	ADD_TO_BYTEBUFFER(Normals)
+	ADD_TO_BYTEBUFFER(TextureCoordinates)
+	ADD_TO_BYTEBUFFER(Colors)
+	ADD_TO_BYTEBUFFER(Faces)
+	ADD_TO_BYTEBUFFER(BonesVertexIDsData)
+	ADD_TO_BYTEBUFFER(BonesVertexWeightsData)
 };

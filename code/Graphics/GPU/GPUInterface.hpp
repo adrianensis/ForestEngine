@@ -44,6 +44,11 @@ public:
     {
         setBufferDataRaw(bufferType, bufferId, sizeof(T), data.size(), data.data());
     }
+    template<class T>
+    void setBufferDataArray(GPUBufferType bufferType, u32 bufferId, const ByteBuffer& data)
+    {
+        setBufferDataRaw(bufferType, bufferId, sizeof(T), data.size<T>(), data.data());
+    }
 
     template<class T>
     void setBufferData(GPUBufferType bufferType, u32 bufferId, const T& data)
