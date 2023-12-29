@@ -11,6 +11,7 @@ public:
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
 	bool mUseVertexColor = false;
+	GPUVertexInputBuffers mGPUVertexInputBuffers;
     u32 mVertexCount = 0;
 };
 
@@ -18,7 +19,6 @@ class GPUMeshBuffer
 {
 public:
 	GPUMeshBuffer() = default;
-	
     ~GPUMeshBuffer();
 
     void init(const GPUMeshBufferData& gpuMeshBufferData);
@@ -38,22 +38,12 @@ private:
     GPUMeshBufferData mGPUMeshBufferData;
 	GPUSharedBuffer mModelMatricesBuffer;
 	GPUSharedBuffer mBonesMatricesBuffer;
-    
-    u32 mBufferPositionId = 0;
-	u32 mBufferTextureId = 0;
-	u32 mBufferColorId = 0;
-	u32 mBufferNormalId = 0;
-	u32 mBufferBonesIDsId = 0;
-	u32 mBufferBonesWeightsId = 0;
-	u32 mBufferInstanceIDsId = 0;
-
     GPUVertexBuffersLayout mGPUVertexBuffersLayout;
 
     u32 mMaxInstances = 0;
 
-	u32 mEBO = 0;
-
 public:
+    CRGET(GPUMeshBufferData)
     CRGET(GPUVertexBuffersLayout)
     CRGET(ModelMatricesBuffer)
     CRGET(BonesMatricesBuffer)

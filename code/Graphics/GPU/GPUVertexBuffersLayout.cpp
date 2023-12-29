@@ -28,7 +28,10 @@ u32 GPUVertexBuffersLayout::createBuffer(const GPUVertexBufferData& data)
     GPUVertexBuffer& gpuVertexBuffer = mBuffers.emplace_back();
     gpuVertexBuffer.init(mAttributeIndex, data, mIsStatic);
 
-    return mBuffers.size() - 1;
+    u32 index = mBuffers.size() - 1;
+    mBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);
+
+    return index;
 }
 
 void GPUVertexBuffersLayout::setIndicesBuffer(const GPUDataType& gpuDataType)
@@ -40,6 +43,18 @@ void GPUVertexBuffersLayout::setIndicesBuffer(const GPUDataType& gpuDataType)
 GPUVertexBuffer& GPUVertexBuffersLayout::getBuffer(u32 index)
 {
     return mBuffers.at(index);
+}
+
+GPUVertexBuffer& GPUVertexBuffersLayout::getBuffer(const std::string& bufferName)
+{
+    CHECK_MSG(mBuffersMap.contains(bufferName), bufferName + " not found in GPUVertexBuffersLayout!");
+    u32 index = mBuffersMap.at(bufferName);
+    return getBuffer(index);
+}
+
+GPUVertexBuffer& GPUVertexBuffersLayout::getBuffer(const GPUVertexBufferData& data)
+{
+    return getBuffer(data.mGPUVariableData.mName);
 }
 
 void GPUVertexBuffersLayout::terminate()

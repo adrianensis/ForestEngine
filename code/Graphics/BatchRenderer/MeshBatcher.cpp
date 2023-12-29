@@ -2,6 +2,7 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 
 void MeshBatcher::init(const BatchData batchData)
 {
@@ -15,6 +16,7 @@ void MeshBatcher::init(const BatchData batchData)
 	gpuMeshBufferData.mIsStatic = mBatchData.mIsStatic;
 	gpuMeshBufferData.mIsInstanced = mBatchData.mIsInstanced;
 	gpuMeshBufferData.mUseVertexColor = mBatchData.mMaterial->getMaterialData().mUseVertexColor;
+	gpuMeshBufferData.mGPUVertexInputBuffers = mBatchData.mMesh->mGPUVertexInputBuffers;
 
 	mGPUMeshBuffer.init(gpuMeshBufferData);
 	

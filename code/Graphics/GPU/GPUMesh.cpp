@@ -5,6 +5,8 @@ void GPUMesh::init(u32 vertexCount, u32 facesCount)
 	mVertexCount = vertexCount;
 	mFacesCount = facesCount;
 
+    mGPUVertexInputBuffers = smDefaultGPUVertexInputBuffers;
+
 	clear();
 }
 

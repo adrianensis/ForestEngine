@@ -16,31 +16,39 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 
     mGPUVertexBuffersLayout.init(mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced);
     mGPUVertexBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace);
-    GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
-    mBufferPositionId = mGPUVertexBuffersLayout.createBuffer(bufferDataPosition);
-    GPUVertexBufferData bufferDataTexture(GPUBuiltIn::VertexInput::mTextureCoord);
-    mBufferTextureId = mGPUVertexBuffersLayout.createBuffer(bufferDataTexture);
-    if(mGPUMeshBufferData.mUseVertexColor)
+
+    FOR_ARRAY(i, mGPUMeshBufferData.mGPUVertexInputBuffers.mBuffers)
     {
-        GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-        mBufferColorId = mGPUVertexBuffersLayout.createBuffer(bufferDataColor);
+        const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mGPUVertexInputBuffers.mBuffers[i];
+        GPUVertexBufferData bufferData(gpuVariableData);
+        mGPUVertexBuffersLayout.createBuffer(bufferData);
     }
 
-    GPUVertexBufferData bufferNormal(GPUBuiltIn::VertexInput::mNormal);
-    mBufferNormalId = mGPUVertexBuffersLayout.createBuffer(bufferNormal);
+    // GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
+    // mGPUVertexBuffersLayout.createBuffer(bufferDataPosition);
+    // GPUVertexBufferData bufferDataTexture(GPUBuiltIn::VertexInput::mTextureCoord);
+    // mGPUVertexBuffersLayout.createBuffer(bufferDataTexture);
+    // if(mGPUMeshBufferData.mUseVertexColor)
+    // {
+    //     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
+    //     mGPUVertexBuffersLayout.createBuffer(bufferDataColor);
+    // }
 
-    GPUVertexBufferData bufferDataBonesIDs(GPUBuiltIn::VertexInput::mBonesIDs);
-    mBufferBonesIDsId = mGPUVertexBuffersLayout.createBuffer(bufferDataBonesIDs);
+    // GPUVertexBufferData bufferNormal(GPUBuiltIn::VertexInput::mNormal);
+    // mGPUVertexBuffersLayout.createBuffer(bufferNormal);
 
-    GPUVertexBufferData bufferDataBonesWeights(GPUBuiltIn::VertexInput::mBonesWeights);
-    mBufferBonesWeightsId = mGPUVertexBuffersLayout.createBuffer(bufferDataBonesWeights);
+    // GPUVertexBufferData bufferDataBonesIDs(GPUBuiltIn::VertexInput::mBonesIDs);
+    // mGPUVertexBuffersLayout.createBuffer(bufferDataBonesIDs);
+
+    // GPUVertexBufferData bufferDataBonesWeights(GPUBuiltIn::VertexInput::mBonesWeights);
+    // mGPUVertexBuffersLayout.createBuffer(bufferDataBonesWeights);
 
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID);
 	if(mGPUMeshBufferData.mIsInstanced)
 	{
         bufferDataInstanceIDs.mInstanceDivisor = 1;
 	}
-    mBufferInstanceIDsId = mGPUVertexBuffersLayout.createBuffer(bufferDataInstanceIDs);
+    mGPUVertexBuffersLayout.createBuffer(bufferDataInstanceIDs);
 
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
     mModelMatricesBuffer.init(modelMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
@@ -63,15 +71,15 @@ void GPUMeshBuffer::terminate()
 void GPUMeshBuffer::resizeMeshData(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
-	mGPUVertexBuffersLayout.getBuffer(mBufferPositionId).resize(mesh->mPositions.capacity<Vector3>());
-	mGPUVertexBuffersLayout.getBuffer(mBufferTextureId).resize(mesh->mTextureCoordinates.capacity<Vector2>());
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mPosition).resize(mesh->mPositions.capacity<Vector3>());
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mTextureCoord).resize(mesh->mTextureCoordinates.capacity<Vector2>());
     if(mGPUMeshBufferData.mUseVertexColor)
     {
-	    mGPUVertexBuffersLayout.getBuffer(mBufferColorId).resize(mesh->mColors.capacity<Vector4>());
+	    mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mColor).resize(mesh->mColors.capacity<Vector4>());
     }
-	mGPUVertexBuffersLayout.getBuffer(mBufferNormalId).resize(mesh->mNormals.capacity<Vector3>());
-	mGPUVertexBuffersLayout.getBuffer(mBufferBonesIDsId).resize(mesh->mBonesVertexIDsData.capacity<BoneVertexIDsData>());
-	mGPUVertexBuffersLayout.getBuffer(mBufferBonesWeightsId).resize(mesh->mBonesVertexWeightsData.capacity<BoneVertexWeightsData>());
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mNormal).resize(mesh->mNormals.capacity<Vector3>());
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mBonesIDs).resize(mesh->mBonesVertexIDsData.capacity<BoneVertexIDsData>());
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mBonesWeights).resize(mesh->mBonesVertexWeightsData.capacity<BoneVertexWeightsData>());
 }
 
 void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
@@ -79,29 +87,29 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
     PROFILER_CPU()
     mMaxInstances = maxInstances;
     u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mVertexCount;
-    mGPUVertexBuffersLayout.getBuffer(mBufferInstanceIDsId).resize(mMaxInstances * matricesBufferSizeMultiplier);
+    mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
     mModelMatricesBuffer.resize(mMaxInstances);
 }
 
 void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
-	mGPUVertexBuffersLayout.getBuffer(mBufferPositionId).setDataArray<Vector3>(mesh->mPositions);
-	mGPUVertexBuffersLayout.getBuffer(mBufferTextureId).setDataArray<Vector2>(mesh->mTextureCoordinates);
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mPosition).setDataArray<Vector3>(mesh->mPositions);
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mTextureCoord).setDataArray<Vector2>(mesh->mTextureCoordinates);
     if(mGPUMeshBufferData.mUseVertexColor)
     {
-	    mGPUVertexBuffersLayout.getBuffer(mBufferColorId).setDataArray<Vector4>(mesh->mColors);
+	    mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mColor).setDataArray<Vector4>(mesh->mColors);
     }
-	mGPUVertexBuffersLayout.getBuffer(mBufferNormalId).setDataArray<Vector3>(mesh->mNormals);
-	mGPUVertexBuffersLayout.getBuffer(mBufferBonesIDsId).setDataArray<BoneVertexIDsData>(mesh->mBonesVertexIDsData);
-	mGPUVertexBuffersLayout.getBuffer(mBufferBonesWeightsId).setDataArray<BoneVertexWeightsData>(mesh->mBonesVertexWeightsData);
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mNormal).setDataArray<Vector3>(mesh->mNormals);
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mBonesIDs).setDataArray<BoneVertexIDsData>(mesh->mBonesVertexIDsData);
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mBonesWeights).setDataArray<BoneVertexWeightsData>(mesh->mBonesVertexWeightsData);
 }
 
 void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs)
 {
     PROFILER_CPU()
     PROFILER_BLOCK_CPU("VBO instanceIDs");
-	mGPUVertexBuffersLayout.getBuffer(mBufferInstanceIDsId).setDataArray(instanceIDs);
+	mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("UBO matrices");
     mModelMatricesBuffer.setDataArray(matrices);
