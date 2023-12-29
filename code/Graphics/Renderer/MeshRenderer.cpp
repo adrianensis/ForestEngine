@@ -97,7 +97,7 @@ void MeshRenderer::updatePositions()
 
     if(mUseDepth)
     {
-        FOR_RANGE(i, 0, mMeshInstance->mPositions.size<Vector3>())
+        FOR_RANGE(i, 0, mMeshInstance->mPositions.size())
         {
             Vector3 vertexPosition = mMeshInstance->mPositions.get<Vector3>(i);
             vertexPosition.z = mDepth;

@@ -50,13 +50,13 @@ public:
 
     GPUVertexInputBuffers mGPUVertexInputBuffers;
 
-	ByteBuffer mPositions;
-    ByteBuffer mNormals;
-	ByteBuffer mTextureCoordinates;
-	ByteBuffer mColors;
-    ByteBuffer mFaces;
-	ByteBuffer mBonesVertexIDsData;
-	ByteBuffer mBonesVertexWeightsData;
+	ByteBuffer mPositions = ByteBuffer(sizeof(Vector3));
+	ByteBuffer mTextureCoordinates = ByteBuffer(sizeof(Vector2));
+	ByteBuffer mColors = ByteBuffer(sizeof(Vector4));
+    ByteBuffer mNormals = ByteBuffer(sizeof(Vector3));
+    ByteBuffer mFaces = ByteBuffer(sizeof(Face));
+	ByteBuffer mBonesVertexIDsData = ByteBuffer(sizeof(BoneVertexIDsData));
+	ByteBuffer mBonesVertexWeightsData = ByteBuffer(sizeof(BoneVertexWeightsData));
 
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;

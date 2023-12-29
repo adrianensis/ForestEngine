@@ -1,23 +1,28 @@
 #pragma once
 
 #include "Core/Std.hpp"
+#include "Core/Memory/Pointers.hpp"
 
 class ByteBuffer
 {
 public:
+    ByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
+
     template<class T>
     void pushBack(const T& element)
     {
+        checkType<T>();
         const byte* bytePtr = reinterpret_cast<const byte*>(&element);
-        mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + sizeof(T));
+        mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + mElementSizeInBytes);
     }
     template<class T>
     void append(const std::vector<T>& elements)
     {
+        checkType<T>();
         if(!elements.empty())
         {
             const byte* bytePtr = reinterpret_cast<const byte*>(&elements[0]);
-            mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + (elements.size() * sizeof(T)));
+            mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + (elements.size() * mElementSizeInBytes));
         }
     }
     void append(const ByteBuffer& elements)
@@ -30,28 +35,26 @@ public:
     template<class T>
     T& get(u32 index)
     {
-        u32 sizeOfT = sizeof(T);
-        return *reinterpret_cast<T*>(&mBuffer.at(index * sizeOfT));
+        checkType<T>();
+        return *reinterpret_cast<T*>(&mBuffer.at(index * mElementSizeInBytes));
     }
     template<class T>
     const T& get(u32 index) const
     {
-        u32 sizeOfT = sizeof(T);
-        return *reinterpret_cast<const T*>(&mBuffer.at(index * sizeOfT));
+        checkType<T>();
+        return *reinterpret_cast<const T*>(&mBuffer.at(index * mElementSizeInBytes));
     }
     void clear()
     {
         mBuffer.clear();
     }
-    template<class T>
     u32 size() const
     {
-        return mBuffer.size() / sizeof(T);
+        return mBuffer.size() / mElementSizeInBytes;
     }
-    template<class T>
     u32 capacity() const
     {
-        return mBuffer.capacity() / sizeof(T);
+        return mBuffer.capacity() / mElementSizeInBytes;
     }
     byte* data()
     {
@@ -61,20 +64,19 @@ public:
     {
         return mBuffer.data();
     }
-    template<class T>
     void reserve(u32 size)
     {
-        mBuffer.reserve(size * sizeof(T));
+        mBuffer.reserve(size * mElementSizeInBytes);
     }
-    template<class T>
     void resize(u32 size)
     {
-        mBuffer.resize(size * sizeof(T));
+        mBuffer.resize(size * mElementSizeInBytes);
     }
     template<class T>
     void fill(const T& element)
     {
-        u32 typedSize = size<T>();
+        checkType<T>();
+        u32 typedSize = size();
         FOR_RANGE(i, 0, typedSize)
         {
             get<T>(i) = element;
@@ -82,5 +84,16 @@ public:
     }
 
 private:
+    template<class T>
+    void checkType() const
+    {
+        CHECK_MSG(sizeof(T) == mElementSizeInBytes, "Type size does not match!");
+    }
+
+private:
     std::vector<byte> mBuffer;
+    u32 mElementSizeInBytes = 0;
+
+public:
+    GET(ElementSizeInBytes);
 };
