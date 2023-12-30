@@ -128,12 +128,8 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
 
     mMatrices.push_back(modelMatrix);
 
-    if(mBatchData.mIsInstanced)
+    if(!mBatchData.mIsInstanced)
 	{
-        PROFILER_BLOCK_CPU("Instanced");
-    }
-    else
-    {
         PROFILER_BLOCK_CPU("Non Instanced");
         addMeshDataToBuffers(meshInstance);
     }
