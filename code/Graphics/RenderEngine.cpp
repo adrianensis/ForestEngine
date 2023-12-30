@@ -59,7 +59,8 @@ void RenderEngine::postSceneChanged()
 void RenderEngine::terminate()
 {
 	LOG_TRACE()
-
+    
+    mBatchesManager.terminate();
 	mShapeBatchRenderer.terminate();
 	mShapeBatchRendererScreenSpace.terminate();
 }

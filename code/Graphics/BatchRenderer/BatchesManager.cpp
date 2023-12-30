@@ -2,6 +2,14 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Scene/Module.hpp"
 
+void BatchesManager::terminate()
+{
+    FOR_MAP(it, mBatches)
+	{
+        it->second->terminate();
+	}
+}
+
 void BatchesManager::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	BatchData BatchData;

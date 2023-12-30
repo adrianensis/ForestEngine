@@ -28,6 +28,11 @@ void BatchRenderer::init(const BatchData& batchData)
     bindSharedBuffers();
 }
 
+void BatchRenderer::terminate()
+{
+    mMeshBatcher.terminate();
+}
+
 void BatchRenderer::bindSharedBuffers()
 {
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);

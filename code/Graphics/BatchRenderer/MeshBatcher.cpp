@@ -17,7 +17,7 @@ void MeshBatcher::init(const BatchData batchData)
 	gpuMeshBufferData.mIsInstanced = mBatchData.mIsInstanced;
 	gpuMeshBufferData.mUseVertexColor = mBatchData.mMaterial->getMaterialData().mUseVertexColor;
 	gpuMeshBufferData.mIsSkinned = mBatchData.mMaterial->getMaterialData().mIsSkinned;
-	gpuMeshBufferData.mGPUVertexInputBuffers = mBatchData.mMesh->mGPUVertexInputBuffers;
+	gpuMeshBufferData.mMesh = Ptr<const GPUMesh>::cast(mBatchData.mMesh);
 
 	mGPUMeshBuffer.init(gpuMeshBufferData);
 	
@@ -29,6 +29,11 @@ void MeshBatcher::init(const BatchData batchData)
 	}
 
     disable();
+}
+
+void MeshBatcher::terminate()
+{
+    mGPUMeshBuffer.terminate();
 }
 
 void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
@@ -74,7 +79,7 @@ void MeshBatcher::initInternal(u32 maxInstances)
 	PROFILER_CPU()
     mInternalMesh->init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mFacesCount * maxInstances, mBatchData.mMesh->mGPUVertexInputBuffers);
     generateFacesData(maxInstances);
-    mGPUMeshBuffer.resizeMeshData(Ptr<const GPUMesh>::cast(mInternalMesh));
+    mGPUMeshBuffer.resizeMeshData(maxInstances);
 }
 
 void MeshBatcher::initSingleMeshData()

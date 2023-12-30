@@ -10,6 +10,7 @@ class BatchesManager: public ObjectBase
 
 public:
 
+    void terminate();
     void addRenderer(Ptr<MeshRenderer> renderer);
     void render();
     void renderStencil();

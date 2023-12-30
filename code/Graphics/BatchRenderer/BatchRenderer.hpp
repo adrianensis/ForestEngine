@@ -11,6 +11,7 @@ class BatchRenderer: public ObjectBase
 
 public:
     void init(const BatchData& batchData);
+    void terminate();
 
     void render();
     void addRenderer(Ptr<MeshRenderer> renderer);

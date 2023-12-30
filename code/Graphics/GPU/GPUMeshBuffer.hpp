@@ -14,16 +14,17 @@ public:
 	bool mIsSkinned = false;
 	GPUVertexInputBuffers mGPUVertexInputBuffers;
     u32 mVertexCount = 0;
+    Ptr<const GPUMesh> mMesh;
 };
 
 class GPUMeshBuffer
 {
 public:
 	GPUMeshBuffer() = default;
-    ~GPUMeshBuffer();
 
     void init(const GPUMeshBufferData& gpuMeshBufferData);
-    void resizeMeshData(Ptr<const GPUMesh> mesh);
+    void terminate();
+    void resizeMeshData(u32 maxInstances);
     void resizeInstancesData(u32 maxInstances);
     void setMeshData(Ptr<const GPUMesh> mesh);
     void setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
@@ -31,9 +32,6 @@ public:
     void setIndicesData(Ptr<const GPUMesh> mesh);
     void enable();
     void disable();
-
-private:
-    void terminate();
 
 private:
     GPUMeshBufferData mGPUMeshBufferData;

@@ -11,6 +11,7 @@ public:
 	MeshBatcher() = default;
 
     void init(const BatchData batchData);
+    void terminate();
     void resize(u32 size);
     void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
     void updateBoneTransforms();
