@@ -19,7 +19,7 @@ void MeshRenderer::init(const RendererData& data)
     mRendererData = data;
 
     mMeshInstance = OwnerPtr<Mesh>::newObject();
-    mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mFacesCount, mRendererData.mMesh->mGPUVertexInputBuffers);
+    mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mIndicesCount, mRendererData.mMesh->mGPUVertexInputBuffers);
     if(mRendererData.mMaterial->getMaterialData().mIsSkinned)
     {
         mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).append(mRendererData.mMesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName));

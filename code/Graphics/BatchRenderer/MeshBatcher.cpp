@@ -12,11 +12,8 @@ void MeshBatcher::init(const BatchData batchData)
     mInternalMesh = OwnerPtr<Mesh>::newObject();
 
     GPUMeshBufferData gpuMeshBufferData;
-	gpuMeshBufferData.mVertexCount = mBatchData.mMesh->mVertexCount;
 	gpuMeshBufferData.mIsStatic = mBatchData.mIsStatic;
 	gpuMeshBufferData.mIsInstanced = mBatchData.mIsInstanced;
-	gpuMeshBufferData.mUseVertexColor = mBatchData.mMaterial->getMaterialData().mUseVertexColor;
-	gpuMeshBufferData.mIsSkinned = mBatchData.mMaterial->getMaterialData().mIsSkinned;
 	gpuMeshBufferData.mMesh = Ptr<const GPUMesh>::cast(mBatchData.mMesh);
 
 	mGPUMeshBuffer.init(gpuMeshBufferData);
@@ -77,8 +74,8 @@ void MeshBatcher::resize(u32 size)
 void MeshBatcher::initInternal(u32 maxInstances)
 {
 	PROFILER_CPU()
-    mInternalMesh->init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mFacesCount * maxInstances, mBatchData.mMesh->mGPUVertexInputBuffers);
-    generateFacesData(maxInstances);
+    mInternalMesh->init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mIndicesCount * maxInstances, mBatchData.mMesh->mGPUVertexInputBuffers);
+    generateIndicesData(maxInstances);
     mGPUMeshBuffer.resizeMeshData(maxInstances);
 }
 
@@ -96,24 +93,7 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
 
     mMatrices.reserve(maxInstances);
 
-    PROFILER_BLOCK_CPU("instances IDs");
-    mInstanceIDs.clear();
-    mInstanceIDs.reserve(maxInstances * (mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount));
-    FOR_RANGE(meshId, 0, maxInstances)
-    {
-        if(mBatchData.mIsInstanced)
-        {
-            mInstanceIDs.push_back(meshId);
-        }
-        else
-        {
-            FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
-            {
-                mInstanceIDs.push_back(meshId);
-            }
-        }
-    }
-    PROFILER_END_BLOCK();
+    generateInstanceIDsData(maxInstances);
 
     mGPUMeshBuffer.resizeInstancesData(maxInstances);
     if (!mBatchData.mIsInstanced)
@@ -145,7 +125,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(GPUInterface).drawElements(GL_TRIANGLES, mBatchData.mMesh->mFaces.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
+		GET_SYSTEM(GPUInterface).drawElements(GL_TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 	}
 }
 
@@ -182,7 +162,7 @@ void MeshBatcher::clear()
     mMatrices.clear();
 }
 
-void MeshBatcher::generateFacesData(u32 meshesCount)
+void MeshBatcher::generateIndicesData(u32 meshesCount)
 {
 	PROFILER_CPU()
 
@@ -190,18 +170,40 @@ void MeshBatcher::generateFacesData(u32 meshesCount)
 	{
 		u32 offset = (i * mBatchData.mMesh->mVertexCount);
 		
-		FOR_RANGE(faceIndex, 0, mBatchData.mMesh->mFaces.size())
+		FOR_RANGE(faceIndex, 0, mBatchData.mMesh->mIndices.size())
 		{
-			Face newFace = mBatchData.mMesh->mFaces.get<Face>(faceIndex);
+			Face newFace = mBatchData.mMesh->mIndices.get<Face>(faceIndex);
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
 
-			mInternalMesh->mFaces.pushBack(newFace);
+			mInternalMesh->mIndices.pushBack(newFace);
 		}
 	}
 
 	mGPUMeshBuffer.setIndicesData(Ptr<const GPUMesh>::cast(mInternalMesh));
+}
+
+void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
+{
+	PROFILER_CPU()
+
+	mInstanceIDs.clear();
+    mInstanceIDs.reserve(meshesCount * (mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount));
+    FOR_RANGE(meshId, 0, meshesCount)
+    {
+        if(mBatchData.mIsInstanced)
+        {
+            mInstanceIDs.push_back(meshId);
+        }
+        else
+        {
+            FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
+            {
+                mInstanceIDs.push_back(meshId);
+            }
+        }
+    }
 }
 
 void MeshBatcher::sendDataToGPU()

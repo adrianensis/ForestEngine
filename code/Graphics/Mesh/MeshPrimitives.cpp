@@ -33,8 +33,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f)); // top right
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f)); // top left
 
-	mesh->mFaces.pushBack(Face(0,1,2));
-	mesh->mFaces.pushBack(Face(2,3,0));
+	mesh->mIndices.pushBack(Face(0,1,2));
+	mesh->mIndices.pushBack(Face(2,3,0));
 
 	return mesh;
 }
@@ -86,8 +86,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
@@ -106,8 +106,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
@@ -126,8 +126,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
@@ -146,8 +146,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
@@ -166,8 +166,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 
@@ -186,8 +186,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
 	mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
 
-	mesh->mFaces.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
-	mesh->mFaces.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
+	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
+	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
 	elementOffset += elementOffsetIncrement;
 

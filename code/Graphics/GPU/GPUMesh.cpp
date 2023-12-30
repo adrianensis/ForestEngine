@@ -1,9 +1,9 @@
 #include "Graphics/GPU/GPUMesh.hpp"
 
-void GPUMesh::init(u32 vertexCount, u32 facesCount, const GPUVertexInputBuffers gpuVertexInputBuffers)
+void GPUMesh::init(u32 vertexCount, u32 indicesCount, const GPUVertexInputBuffers gpuVertexInputBuffers)
 {
 	mVertexCount = vertexCount;
-	mFacesCount = facesCount;
+	mIndicesCount = indicesCount;
 
     mGPUVertexInputBuffers = gpuVertexInputBuffers;
 
@@ -25,8 +25,8 @@ void GPUMesh::clear()
         it->second.reserve(mVertexCount);
     }
 
-	mFaces.clear();
-	mFaces.reserve(mFacesCount);
+	mIndices.clear();
+	mIndices.reserve(mIndicesCount);
 }
 
 void GPUMesh::setColor(const Vector4 &color)

@@ -26,7 +26,8 @@ private:
     void resizeInternal(u32 maxInstances);
     void addMeshDataToBuffers(Ptr<const Mesh> meshInstance);
     void clear();
-    void generateFacesData(u32 meshesCount);
+    void generateIndicesData(u32 meshesCount);
+    void generateInstanceIDsData(u32 meshesCount);
     void sendDataToGPU();
 	
 public:

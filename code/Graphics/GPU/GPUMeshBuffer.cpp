@@ -54,7 +54,7 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
 {
     PROFILER_CPU()
     mMaxInstances = maxInstances;
-    u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mVertexCount;
+    u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mMesh->mVertexCount;
     mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
     mModelMatricesBuffer.resize(mMaxInstances);
 }
@@ -90,8 +90,8 @@ void GPUMeshBuffer::setBonesTransforms(const std::vector<Matrix4>& transforms)
 void GPUMeshBuffer::setIndicesData(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
-    mGPUVertexBuffersLayout.getIndicesBuffer().resize(mesh->mFaces.size());
-    mGPUVertexBuffersLayout.getIndicesBuffer().setDataArray(mesh->mFaces);
+    mGPUVertexBuffersLayout.getIndicesBuffer().resize(mesh->mIndices.size());
+    mGPUVertexBuffersLayout.getIndicesBuffer().setDataArray(mesh->mIndices);
 }
 
 void GPUMeshBuffer::enable()

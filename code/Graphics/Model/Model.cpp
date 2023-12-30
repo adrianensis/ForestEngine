@@ -251,9 +251,9 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     FOR_RANGE(faceIt, 0, primitive.indices->count / 3)
     {
-        GLTFFace* facesArray = reinterpret_cast<GLTFFace*>(reinterpret_cast<byte*>(primitive.indices->buffer_view->buffer->data) + primitive.indices->offset + primitive.indices->buffer_view->offset);
-        GLTFFace& face = facesArray[faceIt];
-        mesh->mFaces.pushBack(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
+        GLTFFace* indicesArray = reinterpret_cast<GLTFFace*>(reinterpret_cast<byte*>(primitive.indices->buffer_view->buffer->data) + primitive.indices->offset + primitive.indices->buffer_view->offset);
+        GLTFFace& face = indicesArray[faceIt];
+        mesh->mIndices.pushBack(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
     }
 }
 

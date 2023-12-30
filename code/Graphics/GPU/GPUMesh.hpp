@@ -35,7 +35,7 @@ class GPUMesh: public ObjectBase
     GENERATE_METADATA(GPUMesh)
 
 public:
-    void init(u32 vertexCount, u32 facesCount, const GPUVertexInputBuffers gpuVertexInputBuffers);
+    void init(u32 vertexCount, u32 indicesCount, const GPUVertexInputBuffers gpuVertexInputBuffers);
     void setColor(const Vector4& color);
     void clear();
 
@@ -45,10 +45,10 @@ public:
 
     GPUVertexInputBuffers mGPUVertexInputBuffers;
     GPUMeshByteBuffers mGPUMeshByteBuffers;
-    ByteBuffer mFaces = ByteBuffer(sizeof(Face));
+    ByteBuffer mIndices = ByteBuffer(sizeof(Face));
 
 	u32 mVertexCount = 0;
-	u32 mFacesCount = 0;
+	u32 mIndicesCount = 0;
 
     Vector3 mMin;
     Vector3 mMax;
