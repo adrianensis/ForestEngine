@@ -19,11 +19,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
         mGPUVertexBuffersLayout.createBuffer(bufferData);
     }
 
-    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID);
-	if(mGPUMeshBufferData.mIsInstanced)
-	{
-        bufferDataInstanceIDs.mInstanceDivisor = 1;
-	}
+    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mGPUMeshBufferData.mIsInstanced ? 1 : 0);
     mGPUVertexBuffersLayout.createBuffer(bufferDataInstanceIDs);
 
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);

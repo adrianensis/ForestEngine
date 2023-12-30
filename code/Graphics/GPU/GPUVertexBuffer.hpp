@@ -8,6 +8,7 @@ class GPUVertexBufferData
 public:
 	GPUVertexBufferData() = default;
     GPUVertexBufferData(const GPUVariableData& gpuVariableData): mGPUVariableData(gpuVariableData) {};
+    GPUVertexBufferData(const GPUVariableData& gpuVariableData, u32 instanceDivisor): mGPUVariableData(gpuVariableData), mInstanceDivisor(instanceDivisor) {};
     
 public:
     GPUVariableData mGPUVariableData;
