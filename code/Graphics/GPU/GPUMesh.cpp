@@ -1,37 +1,37 @@
 #include "Graphics/GPU/GPUMesh.hpp"
 
-void GPUMesh::init(u32 vertexCount, u32 facesCount)
+void GPUMesh::init(u32 vertexCount, u32 facesCount, const GPUVertexInputBuffers gpuVertexInputBuffers)
 {
 	mVertexCount = vertexCount;
 	mFacesCount = facesCount;
 
-    mGPUVertexInputBuffers = smDefaultGPUVertexInputBuffers;
+    mGPUVertexInputBuffers = gpuVertexInputBuffers;
+
+    mGPUMeshByteBuffers.mBuffers.clear();
+    FOR_ARRAY(i, gpuVertexInputBuffers.mBuffers)
+    {
+        const GPUVariableData& gpuVariableData = gpuVertexInputBuffers.mBuffers[i];
+        mGPUMeshByteBuffers.mBuffers.emplace(gpuVariableData.mName, gpuVariableData.mGPUDataType.mTypeSizeInBytes);
+    }
 
 	clear();
 }
 
 void GPUMesh::clear()
 {
-	mPositions.clear();
-	mNormals.clear();
-	mTextureCoordinates.clear();
-	mColors.clear();
-	mFaces.clear();
-	mBonesVertexIDsData.clear();
-	mBonesVertexWeightsData.clear();
+    FOR_MAP(it, mGPUMeshByteBuffers.mBuffers)
+    {
+        it->second.clear();
+        it->second.reserve(mVertexCount);
+    }
 
-	mPositions.reserve(mVertexCount);
-	mTextureCoordinates.reserve(mVertexCount);
-	mColors.reserve(mVertexCount);
-	mNormals.reserve(mVertexCount);
+	mFaces.clear();
 	mFaces.reserve(mFacesCount);
-	mBonesVertexIDsData.reserve(mVertexCount);
-	mBonesVertexWeightsData.reserve(mVertexCount);
 }
 
 void GPUMesh::setColor(const Vector4 &color)
 {
-    mColors.clear();
-    mColors.resize(mVertexCount);
-    mColors.fill(color);
+    mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).clear();
+    mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).resize(mVertexCount);
+    mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).fill(color);
 }

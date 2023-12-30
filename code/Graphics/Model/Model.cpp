@@ -4,13 +4,9 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"
-
-Model::~Model()
-{
-    //cgltf_free(mCGLTFData);
-}
 
 void Model::init(const std::string& path)
 {
@@ -111,18 +107,6 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     Ptr<Mesh> mesh = mMeshes.emplace_back(OwnerPtr<Mesh>::newObject());
     mesh->mModel = (getPtrToThis());
 
-    FOR_RANGE(attributeIt, 0, primitive.attributes_count)
-    {
-        cgltf_attribute& attribute = primitive.attributes[attributeIt];
-        if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_position)
-        {
-            mesh->init(attribute.data->count, primitive.indices->count / 3);
-            break;
-        }
-    }
-
-    mesh->setColor(Vector4(0,0,0,1));
-
     Ptr<const Material> meshMaterial;
     if(primitive.material)
     {
@@ -134,6 +118,49 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     }
 
     mMeshMaterials[mesh] = meshMaterial;
+
+    GPUVertexInputBuffers gpuVertexInputBuffers;
+    if(meshMaterial->getMaterialData().mUseVertexColor)
+    {
+        gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
+    }
+
+    FOR_RANGE(attributeIt, 0, primitive.attributes_count)
+    {
+        cgltf_attribute& attribute = primitive.attributes[attributeIt];
+        if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_position)
+        {
+            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
+        }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
+        {
+            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+        }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
+        {
+            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
+        }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
+        {
+            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mBonesIDs);
+            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
+        }
+    }
+
+    FOR_RANGE(attributeIt, 0, primitive.attributes_count)
+    {
+        cgltf_attribute& attribute = primitive.attributes[attributeIt];
+        if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_position)
+        {
+            mesh->init(attribute.data->count, primitive.indices->count / 3, gpuVertexInputBuffers);
+            break;
+        }
+    }
+
+    if(meshMaterial->getMaterialData().mUseVertexColor)
+    {
+        mesh->setColor(Vector4(0,0,0,1));
+    }
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
     {
@@ -147,7 +174,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 Vector3* positionsArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& position = positionsArray[vertexIt];
-                mesh->mPositions.pushBack(position);
+                mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).pushBack(position);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
@@ -157,7 +184,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector2& texCoord = texCoordArray[vertexIt];
                 texCoord.y = 1.0f - texCoord.y;
-                mesh->mTextureCoordinates.pushBack(texCoord);
+                mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(texCoord);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
@@ -166,7 +193,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 Vector3* normalArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& normal = normalArray[vertexIt];
-                mesh->mNormals.pushBack(normal);
+                mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(normal);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
@@ -184,7 +211,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }
 
-                    mesh->mBonesVertexIDsData.pushBack(boneVertexIDsData);
+                    mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).pushBack(boneVertexIDsData);
                 }
             }
             else if ((attribute.data->component_type == cgltf_component_type_r_16u) && (attribute.data->type == cgltf_type_vec4))
@@ -200,7 +227,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }
 
-                    mesh->mBonesVertexIDsData.pushBack(boneVertexIDsData);
+                    mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).pushBack(boneVertexIDsData);
                 }
             }
             else
@@ -216,7 +243,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 {
                     BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<BoneVertexWeightsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                     BoneVertexWeightsData& boneVertexWeightsData = boneVertexWeightsDataArray[vertexIt];
-                    mesh->mBonesVertexWeightsData.pushBack(boneVertexWeightsData);
+                    mesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).pushBack(boneVertexWeightsData);
                 }
             }
         }

@@ -16,6 +16,7 @@ void MeshBatcher::init(const BatchData batchData)
 	gpuMeshBufferData.mIsStatic = mBatchData.mIsStatic;
 	gpuMeshBufferData.mIsInstanced = mBatchData.mIsInstanced;
 	gpuMeshBufferData.mUseVertexColor = mBatchData.mMaterial->getMaterialData().mUseVertexColor;
+	gpuMeshBufferData.mIsSkinned = mBatchData.mMaterial->getMaterialData().mIsSkinned;
 	gpuMeshBufferData.mGPUVertexInputBuffers = mBatchData.mMesh->mGPUVertexInputBuffers;
 
 	mGPUMeshBuffer.init(gpuMeshBufferData);
@@ -34,29 +35,10 @@ void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     PROFILER_CPU()
 
-    PROFILER_BLOCK_CPU("Positions");
-    mInternalMesh->mPositions.append(meshInstance->mPositions);
-    PROFILER_END_BLOCK();
-
-    PROFILER_BLOCK_CPU("TextureCoordinates");
-    mInternalMesh->mTextureCoordinates.append(meshInstance->mTextureCoordinates);
-    PROFILER_END_BLOCK();
-
-    if(mBatchData.mMaterial->getMaterialData().mUseVertexColor)
+    FOR_ARRAY(i, mInternalMesh->mGPUVertexInputBuffers.mBuffers)
     {
-        PROFILER_BLOCK_CPU("Colors");
-        mInternalMesh->mColors.append(meshInstance->mColors);
-    }
-
-    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
-    {
-        PROFILER_BLOCK_CPU("BonesVertexIDsData");
-        mInternalMesh->mBonesVertexIDsData.append(meshInstance->mBonesVertexIDsData);
-        PROFILER_END_BLOCK();
-
-        PROFILER_BLOCK_CPU("BonesVertexWeightsData");
-        mInternalMesh->mBonesVertexWeightsData.append(meshInstance->mBonesVertexWeightsData);
-        PROFILER_END_BLOCK();
+        const GPUVariableData& gpuVariableData = mInternalMesh->mGPUVertexInputBuffers.mBuffers[i];
+        mInternalMesh->mGPUMeshByteBuffers.mBuffers.at(gpuVariableData.mName).append(meshInstance->mGPUMeshByteBuffers.mBuffers.at(gpuVariableData.mName));
     }
 }
 
@@ -90,7 +72,7 @@ void MeshBatcher::resize(u32 size)
 void MeshBatcher::initInternal(u32 maxInstances)
 {
 	PROFILER_CPU()
-    mInternalMesh->init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mFacesCount * maxInstances);
+    mInternalMesh->init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mFacesCount * maxInstances, mBatchData.mMesh->mGPUVertexInputBuffers);
     generateFacesData(maxInstances);
     mGPUMeshBuffer.resizeMeshData(Ptr<const GPUMesh>::cast(mInternalMesh));
 }

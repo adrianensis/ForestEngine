@@ -24,39 +24,28 @@ public:
     std::vector<GPUVariableData> mBuffers;
 };
 
+class GPUMeshByteBuffers
+{
+public:
+    std::unordered_map<std::string, ByteBuffer> mBuffers;
+};
+
 class GPUMesh: public ObjectBase
 {
     GENERATE_METADATA(GPUMesh)
 
 public:
-    void init(u32 vertexCount, u32 facesCount);
+    void init(u32 vertexCount, u32 facesCount, const GPUVertexInputBuffers gpuVertexInputBuffers);
     void setColor(const Vector4& color);
     void clear();
 
 public:
     inline static const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
     inline static const u32 MAX_BONES = 50;
-    inline static const GPUVertexInputBuffers smDefaultGPUVertexInputBuffers =
-    {
-        {
-            GPUBuiltIn::VertexInput::mPosition,
-            GPUBuiltIn::VertexInput::mTextureCoord,
-            GPUBuiltIn::VertexInput::mColor,
-            GPUBuiltIn::VertexInput::mNormal,
-            GPUBuiltIn::VertexInput::mBonesIDs,
-            GPUBuiltIn::VertexInput::mBonesWeights,
-        }
-    };
 
     GPUVertexInputBuffers mGPUVertexInputBuffers;
-
-	ByteBuffer mPositions = ByteBuffer(sizeof(Vector3));
-	ByteBuffer mTextureCoordinates = ByteBuffer(sizeof(Vector2));
-	ByteBuffer mColors = ByteBuffer(sizeof(Vector4));
-    ByteBuffer mNormals = ByteBuffer(sizeof(Vector3));
+    GPUMeshByteBuffers mGPUMeshByteBuffers;
     ByteBuffer mFaces = ByteBuffer(sizeof(Face));
-	ByteBuffer mBonesVertexIDsData = ByteBuffer(sizeof(BoneVertexIDsData));
-	ByteBuffer mBonesVertexWeightsData = ByteBuffer(sizeof(BoneVertexWeightsData));
 
 	u32 mVertexCount = 0;
 	u32 mFacesCount = 0;

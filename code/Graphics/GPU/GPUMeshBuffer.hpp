@@ -11,6 +11,7 @@ public:
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
 	bool mUseVertexColor = false;
+	bool mIsSkinned = false;
 	GPUVertexInputBuffers mGPUVertexInputBuffers;
     u32 mVertexCount = 0;
 };

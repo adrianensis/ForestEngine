@@ -34,8 +34,6 @@ class Model: public ObjectBase
     GENERATE_METADATA(Model)
 
 public:
-    ~Model() override;
-
     void init(const std::string& path);
     bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }
 
