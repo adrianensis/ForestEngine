@@ -45,6 +45,7 @@ protected:
 
 public:
     CRGET(MaterialData)
+    GET(ID)
 };
 
 class MaterialFont: public Material

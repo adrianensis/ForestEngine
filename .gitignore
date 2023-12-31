@@ -4,6 +4,7 @@ generated-code/
 compiledLibs/
 binaries/
 dependencies/
+output/
 log.txt
 cmake-build-*
 .idea
