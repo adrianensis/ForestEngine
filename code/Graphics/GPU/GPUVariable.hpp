@@ -35,6 +35,7 @@ DECLARE_ENUM(GPUStorage,
 enum class GPUPrimitiveType : u32
 {
     STRUCT = 0,
+    VOID,
     INT = GL_INT,
     FLOAT = GL_FLOAT,
     BOOL = GL_BOOL,
@@ -63,6 +64,9 @@ public:
             break;
             case GPUPrimitiveType::STRUCT:
                 primitiveTypeSizeInBytes = mTypeSizeInBytes;
+            break;
+            case GPUPrimitiveType::VOID:
+                CHECK_MSG(false, "GPU Variable cannot be void!");
             break;
         }
 
@@ -143,4 +147,12 @@ public:
 
         return typeSizeInBytes;
     }
+};
+
+class GPUFunctionDefinition
+{
+public:
+    GPUDataType mType;
+    std::string mName;
+    std::vector<GPUVariableData> mParameters;
 };

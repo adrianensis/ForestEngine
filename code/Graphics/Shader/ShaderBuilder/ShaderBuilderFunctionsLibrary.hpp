@@ -8,7 +8,9 @@ class Material;
 class ShaderBuilderFunctionsLibrary
 {
 public:
-    ShaderBuilderNodes::FunctionDefinition getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
+    void init(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
+private:
+    void registerFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
 public:
-    std::unordered_map<std::string_view, ShaderBuilderNodes::FunctionDefinition> mFunctions;
+    std::unordered_map<std::string, ShaderBuilderNodes::FunctionDefinition> mFunctions;
 };

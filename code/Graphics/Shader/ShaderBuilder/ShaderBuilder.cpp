@@ -6,25 +6,12 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
 
-ShaderBuilder::ShaderBuilder()
-{
-
-}
-
 void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
 
     registerVertexShaderData(gpuVertexBuffersLayout, material);
-
-    ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
-
-    FunctionDefinition functionCalculateSkinnedPosition = shaderBuilderFunctionsLibrary.getFunctionCalculateSkinnedPosition(get(), material);
-    if(material->getMaterialData().mIsSkinned)
-    {
-        get().function(functionCalculateSkinnedPosition);
-    }
 
     // retrieve the needed attributes
     auto& position = get().getAttribute(GPUBuiltIn::VertexInput::mPosition.mName);
@@ -55,7 +42,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& outNormal = get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
     auto& fragPosition = get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
 
-    auto& mainFunc = get().function("void", "main");
+    auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
     Variable finalPositon;
     Variable PVMatrix;
@@ -66,7 +53,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     if(material->getMaterialData().mIsSkinned)
     {
         mainFunc.body().
-        set(finalPositon, call(functionCalculateSkinnedPosition.mName, {finalPositon}));
+        set(finalPositon, call(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mName, {finalPositon}));
     }
 
     mainFunc.body().variable(PVMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "PV_Matrix", projectionMatrix.mul(viewMatrix));
@@ -115,7 +102,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
     auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
 
-    auto& mainFunc = get().function("void", "main");
+    auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
     Variable color;
     Variable ambient;
@@ -210,6 +197,9 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
 ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material) const
 {
+    using namespace ShaderBuilderNodes;
+    using namespace ShaderBuilderNodes::Expressions;
+
     ShaderBuilderData shaderBuilderData;
     
     shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
@@ -280,6 +270,9 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
 
 void ShaderBuilder::registerVertexShaderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
+    using namespace ShaderBuilderNodes;
+    using namespace ShaderBuilderNodes::Expressions;
+
     ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
 
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
@@ -311,6 +304,13 @@ void ShaderBuilder::registerVertexShaderData(const GPUVertexBuffersLayout& gpuVe
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs)
     {
         get().attribute(*it);
+    }
+
+    ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
+    shaderBuilderFunctionsLibrary.init(get(), material);
+    if(material->getMaterialData().mIsSkinned)
+    {
+        get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mName));
     }
 }
 

@@ -3,17 +3,22 @@
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Material/Material.hpp"
 
-ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
+void ShaderBuilderFunctionsLibrary::init(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
+{
+    registerFunctionCalculateSkinnedPosition(program, material);
+}
+
+void ShaderBuilderFunctionsLibrary::registerFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
     using namespace ShaderBuilderNodes;
-    Variable pos = Variable(GPUBuiltIn::PrimitiveTypes::mVector4.mName, "pos");
-    FunctionDefinition func(GPUBuiltIn::PrimitiveTypes::mVector4.mName, "calculateSkinnedPosition", {pos});
+    FunctionDefinition func(GPUBuiltIn::Functions::mCalculateSkinnedPosition);
+    Variable pos = Variable(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mParameters[0]);
     
     Variable finalPositon;
     Variable localPosition;
     
     func.body().
-    variable(finalPositon, "vec4", "finalPositon", pos);
+    variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", pos);
 
     if(material->getMaterialData().mIsSkinned)
     {
@@ -25,7 +30,7 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
         Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
 
         func.body().
-        set(finalPositon, call("vec4", {{"0.0f"}})).
+        set(finalPositon, call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {{"0.0f"}})).
         forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
             ifBlock(bonesIDs.at("i"), "==", {"-1"}).
                 line("continue").
@@ -34,7 +39,7 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
                 set(finalPositon, pos).
                 line("break").
             end().
-            variable(localPosition, "vec4", "localPosition", bonesTransform.at(bonesIDs.at("i")).mul(pos).getNameOrValue()).
+            variable(localPosition, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "localPosition", bonesTransform.at(bonesIDs.at("i")).mul(pos).getNameOrValue()).
             set(finalPositon, finalPositon.add(localPosition.mul(bonesWeights.at("i")))).
         end();
     }
@@ -42,5 +47,5 @@ ShaderBuilderNodes::FunctionDefinition ShaderBuilderFunctionsLibrary::getFunctio
     func.body().
     ret(finalPositon);
 
-    return func;
+    mFunctions.insert_or_assign(func.mName, func);
 }

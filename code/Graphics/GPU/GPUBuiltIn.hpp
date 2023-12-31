@@ -10,6 +10,7 @@ public:
     class PrimitiveTypes
     {
     public:
+        inline static const GPUDataType mVoid{"void",0, GPUPrimitiveType::VOID};
         inline static const GPUDataType mBool{"bool",sizeof(bool), GPUPrimitiveType::BOOL};
         inline static const GPUDataType mInt{"int",sizeof(i32), GPUPrimitiveType::INT};
         inline static const GPUDataType mUnsignedInt{"uint",sizeof(u32), GPUPrimitiveType::INT};
@@ -135,5 +136,23 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "FragColor"};
+    };
+
+    class Functions
+    {
+    public:
+        inline static const GPUFunctionDefinition mMain
+        {
+            PrimitiveTypes::mVoid,
+            "main"
+        };
+        inline static const GPUFunctionDefinition mCalculateSkinnedPosition
+        {
+            PrimitiveTypes::mVector4,
+            "calculateSkinnedPosition",
+            {
+                {GPUStorage::NONE, PrimitiveTypes::mVector4, "pos"}
+            }
+        };
     };
 };

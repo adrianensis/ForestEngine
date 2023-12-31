@@ -214,7 +214,7 @@ namespace ShaderBuilderNodes
             }
         }
 
-        code.push_back(getIndent(indent) + mType + " " + mName + "(" + paramsStr + ")");
+        code.push_back(getIndent(indent) + mType.mName + " " + mName + "(" + paramsStr + ")");
         auto statementCode = mBlockStatement.toLines(indent);
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;

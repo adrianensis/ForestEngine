@@ -13,7 +13,7 @@ class Shader;
 class ShaderBuilder
 {
 public:
-    ShaderBuilder();
+    ShaderBuilder() = default;
 
     void createVertexShader(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
     void createFragmentShader(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
