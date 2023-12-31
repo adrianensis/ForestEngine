@@ -18,61 +18,61 @@ void Material::init(const MaterialData& materialData, u32 id)
     loadTextures();
     
 
-    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
-    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
-    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
-    mMaterialShaderVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
+    mMaterialShaderVariables.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
+    mMaterialShaderVariables.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
+    mMaterialShaderVariables.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
+    mMaterialShaderVariables.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
-    mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalMatrices);
+    mMaterialShaderVariables.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalMatrices);
 
     if(materialData.mUseModelMatrix)
     {
-        mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
+        mMaterialShaderVariables.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
     }
 
     if(materialData.mReceiveLight)
     {
-        mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLights);
-        mMaterialShaderVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
+        mMaterialShaderVariables.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLights);
+        mMaterialShaderVariables.mCommonVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
     }
 
     if(materialData.mIsSkinned)
     {
-        mMaterialShaderVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
-        mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
-        mMaterialShaderVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
+        mMaterialShaderVariables.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
+        mMaterialShaderVariables.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
+        mMaterialShaderVariables.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }
 
     if(hasTexture())
     {
-        mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
+        mMaterialShaderVariables.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     }
     
     if(mMaterialData.mUseVertexColor)
     {
-        mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
+        mMaterialShaderVariables.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     
     if(materialData.mUseModelMatrix && materialData.mUseNormals)
     {
-        mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+        mMaterialShaderVariables.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
     }
-    mMaterialShaderVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
+    mMaterialShaderVariables.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
     
     if(hasTexture())
     {
-        mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
+        mMaterialShaderVariables.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
     }
 
-    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
+    mMaterialShaderVariables.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
     if(materialData.mUseModelMatrix && materialData.mUseNormals)
     {
-        mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+        mMaterialShaderVariables.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
     }
-    mMaterialShaderVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
+    mMaterialShaderVariables.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
 
-    mMaterialShaderVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
+    mMaterialShaderVariables.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
 void Material::bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const

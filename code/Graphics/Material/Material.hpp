@@ -26,16 +26,34 @@ public:
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 };
 
-class MaterialShaderVariables
+class MaterialCommonShaderVariables
 {
 public:
     std::vector<GPUStructDefinition> mStructDefinitions;
     std::vector<GPUVariableDefinitionData> mUniforms;
     std::vector<GPUSharedBufferData> mSharedBuffers;
     std::vector<GPUVariableDefinitionData> mConsts;
+};
+
+class MaterialVertexShaderVariables
+{
+public:
     std::vector<GPUVariableDefinitionData> mVertexOutputs;
+};
+
+class MaterialFragmentShaderVariables
+{
+public:
     std::vector<GPUVariableDefinitionData> mFragmentInputs;
     std::vector<GPUVariableDefinitionData> mFragmentOutputs;
+};
+
+class MaterialShaderVariables
+{
+public:
+    MaterialCommonShaderVariables mCommonVariables;
+    MaterialVertexShaderVariables mVertexVariables;
+    MaterialFragmentShaderVariables mFragmentVariables;
 };
 
 class Material: public ObjectBase

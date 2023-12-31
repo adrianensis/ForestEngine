@@ -39,7 +39,6 @@ private:
     u32 mMaxInstances = 0;
 
 public:
-    CRGET(GPUMeshBufferData)
     CRGET(GPUVertexBuffersLayout)
     CRGET(ModelMatricesBuffer)
     CRGET(BonesMatricesBuffer)
