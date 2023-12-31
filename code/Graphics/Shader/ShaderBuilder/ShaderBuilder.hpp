@@ -52,6 +52,8 @@ private:
     };
 
     ShaderBuilderData generateShaderBuilderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material) const;
+    void registerVertexShaderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
+    void registerFragmentShaderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
     ShaderBuilderNodes::Program& get() { return mProgram; }
 
 private:

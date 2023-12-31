@@ -16,38 +16,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
 
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
-
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
-    {
-        get().structType(*it);
-    }
-    
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts)
-    {
-        get().attribute(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexInputs)
-    {
-        const GPUVertexBuffer& inputVar = *it;
-        get().attribute({inputVar.mData.mGPUVariableData, inputVar.getAttributeLocation()});
-    }
-
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms)
-    {
-        get().attribute(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers)
-    {
-        get().sharedBuffer(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs)
-    {
-        get().attribute(*it);
-    }
+    registerVertexShaderData(gpuVertexBuffersLayout, material);
 
     ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
 
@@ -92,7 +61,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     Variable PVMatrix;
 
     mainFunc.body().
-    variable(finalPositon, "vec4", "finalPositon", call("vec4", {position, {"1.0f"}}));
+    variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {position, {"1.0f"}}));
     
     if(material->getMaterialData().mIsSkinned)
     {
@@ -100,7 +69,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         set(finalPositon, call(functionCalculateSkinnedPosition.mName, {finalPositon}));
     }
 
-    mainFunc.body().variable(PVMatrix, "mat4", "PV_Matrix", projectionMatrix.mul(viewMatrix));
+    mainFunc.body().variable(PVMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "PV_Matrix", projectionMatrix.mul(viewMatrix));
 
     if(material->getMaterialData().mUseModelMatrix)
     {
@@ -121,7 +90,7 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         mainFunc.body().set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(normal));
     }
 
-    mainFunc.body().set(fragPosition, call("vec3", {finalPositon}));
+    mainFunc.body().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {finalPositon}));
 
     if(material->getMaterialData().mUseVertexColor)
     {
@@ -135,37 +104,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
 
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
-    
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
-    {
-        get().structType(*it);
-    }
-    
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts)
-    {
-        get().attribute(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms)
-    {
-        get().attribute(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers)
-    {
-        get().sharedBuffer(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs)
-    {
-        get().attribute(*it);
-    }
-
-    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs)
-    {
-        get().attribute(*it);
-    }
+    registerFragmentShaderData(gpuVertexBuffersLayout, material);
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& inTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
@@ -178,16 +117,14 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
     auto& mainFunc = get().function("void", "main");
 
-    Variable t;
     Variable color;
     Variable ambient;
-    Variable diffuse;
     Variable diffuseFinal;
 
     mainFunc.body().
-    variable(color, "vec4", "color").
-    variable(ambient, "vec3", "ambient", call("vec3", {{"0.0"}, {"0.0"}, {"0.0"}})).
-    variable(diffuseFinal, "vec3", "diffuseFinal", call("vec3", {{"0.0"}, {"0.0"}, {"0.0"}}));
+    variable(color, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "color").
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}})).
+    variable(diffuseFinal, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuseFinal", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
     if(material->getMaterialData().mReceiveLight)
     {
@@ -200,23 +137,23 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
         Variable diffuse;
 
         mainFunc.body().
-        set(ambient, call("vec3", {{"0.0"}, {"0.1"}, {"0.0"}}));
+        set(ambient, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.1"}, {"0.0"}}));
 
         if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
         {
             mainFunc.body().
-            variable(norm, "vec3", "norm", call("normalize", {inNormal}));
+            variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call("normalize", {inNormal}));
         }
         else
         {
             mainFunc.body().
-            variable(norm, "vec3", "norm", call("vec3", {{"0.0"}, {"0.0"}, {"0.0"}}));
+            variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
         }
 
         mainFunc.body().
-        variable(lightDir, "vec3", "lightDir", call("normalize", {lights.at("0").dot(GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0].mName).sub(inPosition)})).
-        variable(diff, "float", "diff", call("max", {call("dot", {norm, lightDir}), {"-1"}})).
-        variable(diffuse, "vec3", "diffuse", diff.mul(call("vec3", {{"0.8"}, {"0.8"}, {"0.8"}})));
+        variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0].mName).sub(inPosition)})).
+        variable(diff, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diff", call("max", {call("dot", {norm, lightDir}), {"-1"}})).
+        variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", diff.mul(call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.8"}, {"0.8"}, {"0.8"}})));
 
         mainFunc.body().
         set(diffuseFinal, diffuse);
@@ -259,7 +196,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
     {
         mainFunc.body().
-        set(outColor, outColor.add(call("vec4", {diffuseFinal.add(ambient), {"1"}})));
+        set(outColor, outColor.add(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {diffuseFinal.add(ambient), {"1"}})));
     }
     
     if(material->getMaterialData().mAlphaEnabled)
@@ -339,6 +276,77 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
     shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 
     return shaderBuilderData;
+}
+
+void ShaderBuilder::registerVertexShaderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+{
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
+
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
+    {
+        get().structType(*it);
+    }
+    
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts)
+    {
+        get().attribute(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexInputs)
+    {
+        const GPUVertexBuffer& inputVar = *it;
+        get().attribute({inputVar.mData.mGPUVariableData, inputVar.getAttributeLocation()});
+    }
+
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms)
+    {
+        get().attribute(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers)
+    {
+        get().sharedBuffer(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs)
+    {
+        get().attribute(*it);
+    }
+}
+
+void ShaderBuilder::registerFragmentShaderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+{
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
+    
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
+    {
+        get().structType(*it);
+    }
+    
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts)
+    {
+        get().attribute(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms)
+    {
+        get().attribute(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers)
+    {
+        get().sharedBuffer(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs)
+    {
+        get().attribute(*it);
+    }
+
+    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs)
+    {
+        get().attribute(*it);
+    }
 }
 
 std::string ShaderBuilder::getCode() const
