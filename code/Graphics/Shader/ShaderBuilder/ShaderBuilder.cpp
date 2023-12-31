@@ -6,11 +6,11 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
 
+using namespace ShaderBuilderNodes;
+using namespace ShaderBuilderNodes::Expressions;
+
 void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
-    using namespace ShaderBuilderNodes;
-    using namespace ShaderBuilderNodes::Expressions;
-
     registerVertexShaderData(gpuVertexBuffersLayout, material);
 
     // retrieve the needed attributes
@@ -88,9 +88,6 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
 
 void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
-    using namespace ShaderBuilderNodes;
-    using namespace ShaderBuilderNodes::Expressions;
-
     registerFragmentShaderData(gpuVertexBuffersLayout, material);
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
@@ -106,49 +103,17 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
     Variable color;
     Variable ambient;
-    Variable diffuseFinal;
+    Variable diffuse;
 
     mainFunc.body().
     variable(color, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "color").
     variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}})).
-    variable(diffuseFinal, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuseFinal", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
+    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
     if(material->getMaterialData().mReceiveLight)
     {
-        auto& ligthsBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLights.mInstanceName);    
-        Variable lights(ligthsBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-
-        Variable norm;
-        Variable lightDir;
-        Variable diff;
-        Variable diffuse;
-
         mainFunc.body().
-        set(ambient, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.1"}, {"0.0"}}));
-
-        if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
-        {
-            mainFunc.body().
-            variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call("normalize", {inNormal}));
-        }
-        else
-        {
-            mainFunc.body().
-            variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
-        }
-
-        mainFunc.body().
-        variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0].mName).sub(inPosition)})).
-        variable(diff, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diff", call("max", {call("dot", {norm, lightDir}), {"-1"}})).
-        variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", diff.mul(call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.8"}, {"0.8"}, {"0.8"}})));
-
-        mainFunc.body().
-        set(diffuseFinal, diffuse);
-
-        // vec3 norm = normalize(Normal);
-        // vec3 lightDir = normalize(light.position - FragPos);
-        // float diff = max(dot(norm, lightDir), 0.0);
-        // vec3 diffuse = light.diffuse * (diff * material.diffuse);
+        set(diffuse, call(GPUBuiltIn::Functions::mCalculateDiffuse.mName, {}));
     }
 
     if(material->getMaterialData().mUseVertexColor)
@@ -183,7 +148,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
     {
         mainFunc.body().
-        set(outColor, outColor.add(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {diffuseFinal.add(ambient), {"1"}})));
+        set(outColor, outColor.add(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {diffuse, {"1"}})));
     }
     
     if(material->getMaterialData().mAlphaEnabled)
@@ -197,9 +162,6 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
 ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material) const
 {
-    using namespace ShaderBuilderNodes;
-    using namespace ShaderBuilderNodes::Expressions;
-
     ShaderBuilderData shaderBuilderData;
     
     shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
@@ -270,9 +232,6 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
 
 void ShaderBuilder::registerVertexShaderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
-    using namespace ShaderBuilderNodes;
-    using namespace ShaderBuilderNodes::Expressions;
-
     ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
 
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
@@ -346,6 +305,13 @@ void ShaderBuilder::registerFragmentShaderData(const GPUVertexBuffersLayout& gpu
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs)
     {
         get().attribute(*it);
+    }
+
+    ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
+    shaderBuilderFunctionsLibrary.init(get(), material);
+    if(material->getMaterialData().mReceiveLight)
+    {
+        get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateDiffuse.mName));
     }
 }
 

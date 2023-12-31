@@ -146,6 +146,7 @@ public:
             PrimitiveTypes::mVoid,
             "main"
         };
+
         inline static const GPUFunctionDefinition mCalculateSkinnedPosition
         {
             PrimitiveTypes::mVector4,
@@ -153,6 +154,12 @@ public:
             {
                 {GPUStorage::NONE, PrimitiveTypes::mVector4, "pos"}
             }
+        };
+
+        inline static const GPUFunctionDefinition mCalculateDiffuse
+        {
+            PrimitiveTypes::mVector3,
+            "calculateDiffuse"
         };
     };
 };
