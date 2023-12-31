@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/GPU/GPUVertexBuffer.hpp"
-#include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 
@@ -26,36 +24,6 @@ public:
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 };
 
-class MaterialCommonShaderVariables
-{
-public:
-    std::vector<GPUStructDefinition> mStructDefinitions;
-    std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUSharedBufferData> mSharedBuffers;
-    std::vector<GPUVariableDefinitionData> mConsts;
-};
-
-class MaterialVertexShaderVariables
-{
-public:
-    std::vector<GPUVariableDefinitionData> mVertexOutputs;
-};
-
-class MaterialFragmentShaderVariables
-{
-public:
-    std::vector<GPUVariableDefinitionData> mFragmentInputs;
-    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
-};
-
-class MaterialShaderVariables
-{
-public:
-    MaterialCommonShaderVariables mCommonVariables;
-    MaterialVertexShaderVariables mVertexVariables;
-    MaterialFragmentShaderVariables mFragmentVariables;
-};
-
 class Material: public ObjectBase
 {
     GENERATE_METADATA(Material)
@@ -73,12 +41,10 @@ protected:
     MaterialData mMaterialData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
-    MaterialShaderVariables mMaterialShaderVariables;
     u32 mID = 0;
 
 public:
     CRGET(MaterialData)
-    CRGET(MaterialShaderVariables)
 };
 
 class MaterialFont: public Material

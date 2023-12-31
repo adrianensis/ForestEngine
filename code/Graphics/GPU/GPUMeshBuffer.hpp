@@ -10,6 +10,7 @@ class GPUMeshBufferData
 public:
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
+	bool mIsSkinned = false;
 	GPUVertexInputBuffers mGPUVertexInputBuffers;
     Ptr<const GPUMesh> mMesh;
 };

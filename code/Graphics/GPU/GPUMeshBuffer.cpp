@@ -25,9 +25,12 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
     mModelMatricesBuffer.init(modelMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
 
-    u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
-    mBonesMatricesBuffer.init(bonesMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
-    mBonesMatricesBuffer.resize(GPUMesh::MAX_BONES);
+    if(mGPUMeshBufferData.mIsSkinned)
+    {
+        u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
+        mBonesMatricesBuffer.init(bonesMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
+        mBonesMatricesBuffer.resize(GPUMesh::MAX_BONES);
+    }
 
     mGPUVertexBuffersLayout.disable();
 }
@@ -37,7 +40,10 @@ void GPUMeshBuffer::terminate()
     disable();
     mGPUVertexBuffersLayout.terminate();
     mModelMatricesBuffer.terminate();
-    mBonesMatricesBuffer.terminate();
+    if(mGPUMeshBufferData.mIsSkinned)
+    {
+        mBonesMatricesBuffer.terminate();
+    }
 }
 
 void GPUMeshBuffer::resizeMeshData(u32 maxInstances)
@@ -82,9 +88,12 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const
 
 void GPUMeshBuffer::setBonesTransforms(const std::vector<Matrix4>& transforms)
 {
-    PROFILER_BLOCK_CPU("UBO Bones Transforms");
-    mBonesMatricesBuffer.setDataArray(transforms);
-    PROFILER_END_BLOCK();
+    if(mGPUMeshBufferData.mIsSkinned)
+    {
+        PROFILER_BLOCK_CPU("UBO Bones Transforms");
+        mBonesMatricesBuffer.setDataArray(transforms);
+        PROFILER_END_BLOCK();
+    }
 }
 
 void GPUMeshBuffer::setIndicesData(Ptr<const GPUMesh> mesh)

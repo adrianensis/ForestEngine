@@ -16,46 +16,37 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
 
-    const std::vector<GPUStructDefinition>& structDefinitions = material->getMaterialShaderVariables().mCommonVariables.mStructDefinitions;
-    FOR_LIST(it, structDefinitions)
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
+
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
     {
-        const GPUStructDefinition& structDefinition = *it;
-        get().structType(structDefinition);
+        get().structType(*it);
     }
     
-    const std::vector<GPUVariableDefinitionData>& consts = material->getMaterialShaderVariables().mCommonVariables.mConsts;
-    FOR_LIST(it, consts)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts)
     {
-        const GPUVariableDefinitionData& constVar = *it;
-        get().attribute(constVar);
+        get().attribute(*it);
     }
 
-    const std::vector<GPUVertexBuffer>& gpuVertexBuffers = gpuVertexBuffersLayout.getBuffers();
-    FOR_LIST(it, gpuVertexBuffers)
+    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexInputs)
     {
-        const GPUVertexBuffer& gpuVertexBuffer = *it;
-        get().attribute({gpuVertexBuffer.mData.mGPUVariableData, gpuVertexBuffer.getAttributeLocation()});
+        const GPUVertexBuffer& inputVar = *it;
+        get().attribute({inputVar.mData.mGPUVariableData, inputVar.getAttributeLocation()});
     }
 
-    const std::vector<GPUVariableDefinitionData>& uniforms = material->getMaterialShaderVariables().mCommonVariables.mUniforms;
-    FOR_LIST(it, uniforms)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms)
     {
-        const GPUVariableDefinitionData& uniformVar = *it;
-        get().attribute(uniformVar);
+        get().attribute(*it);
     }
 
-    const std::vector<GPUSharedBufferData>& sharedBuffers = material->getMaterialShaderVariables().mCommonVariables.mSharedBuffers;
-    FOR_LIST(it, sharedBuffers)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers)
     {
-        const GPUSharedBufferData& block = *it;
-        get().sharedBuffer(block);
+        get().sharedBuffer(*it);
     }
 
-    const std::vector<GPUVariableDefinitionData>& outputs = material->getMaterialShaderVariables().mVertexVariables.mVertexOutputs;
-    FOR_LIST(it, outputs)
+    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs)
     {
-        const GPUVariableDefinitionData& outputVar = *it;
-        get().attribute(outputVar);
+        get().attribute(*it);
     }
 
     ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
@@ -143,47 +134,37 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 {
     using namespace ShaderBuilderNodes;
     using namespace ShaderBuilderNodes::Expressions;
+
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
     
-    const std::vector<GPUStructDefinition>& structDefinitions = material->getMaterialShaderVariables().mCommonVariables.mStructDefinitions;
-    FOR_LIST(it, structDefinitions)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
     {
-        const GPUStructDefinition& structDefinition = *it;
-        get().structType(structDefinition);
+        get().structType(*it);
     }
     
-    const std::vector<GPUVariableDefinitionData>& consts = material->getMaterialShaderVariables().mCommonVariables.mConsts;
-    FOR_LIST(it, consts)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts)
     {
-        const GPUVariableDefinitionData& constVar = *it;
-        get().attribute(constVar);
+        get().attribute(*it);
     }
 
-    const std::vector<GPUVariableDefinitionData>& uniforms = material->getMaterialShaderVariables().mCommonVariables.mUniforms;
-    FOR_LIST(it, uniforms)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms)
     {
-        const GPUVariableDefinitionData& uniformVar = *it;
-        get().attribute(uniformVar);
+        get().attribute(*it);
     }
 
-    const std::vector<GPUSharedBufferData>& sharedBuffers = material->getMaterialShaderVariables().mCommonVariables.mSharedBuffers;
-    FOR_LIST(it, sharedBuffers)
+    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers)
     {
-        const GPUSharedBufferData& block = *it;
-        get().sharedBuffer(block);
+        get().sharedBuffer(*it);
     }
 
-    const std::vector<GPUVariableDefinitionData>& fragmentInputs = material->getMaterialShaderVariables().mFragmentVariables.mFragmentInputs;
-    FOR_LIST(it, fragmentInputs)
+    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs)
     {
-        const GPUVariableDefinitionData& inputVar = *it;
-        get().attribute(inputVar);
+        get().attribute(*it);
     }
 
-    const std::vector<GPUVariableDefinitionData>& fragmentOutputs = material->getMaterialShaderVariables().mFragmentVariables.mFragmentOutputs;
-    FOR_LIST(it, fragmentOutputs)
+    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs)
     {
-        const GPUVariableDefinitionData& outputVar = *it;
-        get().attribute(outputVar);
+        get().attribute(*it);
     }
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
@@ -288,6 +269,76 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
             line("discard").
         end();
     }
+}
+
+ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material) const
+{
+    ShaderBuilderData shaderBuilderData;
+    
+    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
+    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
+    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
+    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
+
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalMatrices);
+
+    if(material->getMaterialData().mUseModelMatrix)
+    {
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    }
+
+    if(material->getMaterialData().mReceiveLight)
+    {
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLights);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
+    }
+
+    if(material->getMaterialData().mIsSkinned)
+    {
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
+        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
+        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
+    }
+
+    const std::vector<GPUVertexBuffer>& gpuVertexBuffers = gpuVertexBuffersLayout.getBuffers();
+    FOR_LIST(it, gpuVertexBuffers)
+    {
+        const GPUVertexBuffer& gpuVertexBuffer = *it;
+        shaderBuilderData.mVertexVariables.mVertexInputs.push_back(gpuVertexBuffer);
+    }
+
+    if(material->hasTexture())
+    {
+        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
+    }
+    
+    if(material->getMaterialData().mUseVertexColor)
+    {
+        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
+    }
+    
+    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    {
+        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+    }
+    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
+    
+    if(material->hasTexture())
+    {
+        shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
+    }
+
+    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
+
+    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    {
+        shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+    }
+    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
+
+    shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
+
+    return shaderBuilderData;
 }
 
 std::string ShaderBuilder::getCode() const

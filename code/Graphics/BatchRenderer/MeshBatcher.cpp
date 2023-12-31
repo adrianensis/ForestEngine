@@ -14,6 +14,7 @@ void MeshBatcher::init(const BatchData batchData)
     GPUMeshBufferData gpuMeshBufferData;
 	gpuMeshBufferData.mIsStatic = mBatchData.mIsStatic;
 	gpuMeshBufferData.mIsInstanced = mBatchData.mIsInstanced;
+	gpuMeshBufferData.mIsSkinned = mBatchData.mMaterial->getMaterialData().mIsSkinned;
 	gpuMeshBufferData.mMesh = Ptr<const GPUMesh>::cast(mBatchData.mMesh);
 
 	mGPUMeshBuffer.init(gpuMeshBufferData);
@@ -133,7 +134,7 @@ void MeshBatcher::updateBoneTransforms()
 {	
 	if(mBatchData.mMesh->mModel)
 	{
-		bool isAnimated = mBatchData.mMesh->mModel->isAnimated();
+		bool isAnimated = mBatchData.mMesh->mModel->isAnimated() && mBatchData.mMaterial->getMaterialData().mIsSkinned;
         if(isAnimated)
         {
             const std::vector<Matrix4>& transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mBatchData.mMesh->mModel);
