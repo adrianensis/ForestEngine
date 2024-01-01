@@ -9,7 +9,7 @@ void ShaderBuilderFunctionsLibrary::init(const ShaderBuilderNodes::Program& prog
 {
     if(material->getMaterialData().mIsSkinned)
     {
-        registerFunctionCalculateSkinnedPosition(program, material);
+        registerFunctionCalculateBoneTransform(program, material);
     }
     
     if(material->getMaterialData().mReceiveLight)
@@ -18,43 +18,37 @@ void ShaderBuilderFunctionsLibrary::init(const ShaderBuilderNodes::Program& prog
     }
 }
 
-void ShaderBuilderFunctionsLibrary::registerFunctionCalculateSkinnedPosition(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
+void ShaderBuilderFunctionsLibrary::registerFunctionCalculateBoneTransform(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
-    FunctionDefinition func(GPUBuiltIn::Functions::mCalculateSkinnedPosition);
-    Variable pos = Variable(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mParameters[0]);
+    FunctionDefinition func(GPUBuiltIn::Functions::mCalculateBoneTransform);
     
-    Variable finalPositon;
-    Variable localPosition;
+    Variable finalBoneTransform;
+    
+    auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
+    auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
+    auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
+    auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
+    auto& bonesMatricesblock = program.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
+    Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
+
+    Variable currentBoneTransform;
+    Variable currentBoneTransformMulWeight;
+    func.body().
+    variable(finalBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "finalBoneTransform", call(GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, {{"0.0f"}})).
+    forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
+        ifBlock(bonesIDs.at("i"), "==", {"-1"}).
+            line("continue").
+        end().
+        ifBlock(bonesIDs.at("i"), ">=", MAX_BONES).
+            line("break").
+        end().
+        variable(currentBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "currentBoneTransform", bonesTransform.at(bonesIDs.at("i"))).
+        variable(currentBoneTransformMulWeight, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "currentBoneTransformMulWeight", currentBoneTransform.mul(bonesWeights.at("i"))).
+        set(finalBoneTransform, finalBoneTransform.add(currentBoneTransformMulWeight)).
+    end();
     
     func.body().
-    variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", pos);
-
-    if(material->getMaterialData().mIsSkinned)
-    {
-        auto& bonesIDs = program.getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
-        auto& bonesWeights = program.getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
-        auto& MAX_BONES = program.getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
-        auto& MAX_BONE_INFLUENCE = program.getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
-        auto& bonesMatricesblock = program.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
-        Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
-
-        func.body().
-        set(finalPositon, call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {{"0.0f"}})).
-        forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
-            ifBlock(bonesIDs.at("i"), "==", {"-1"}).
-                line("continue").
-            end().
-            ifBlock(bonesIDs.at("i"), ">=", MAX_BONES).
-                set(finalPositon, pos).
-                line("break").
-            end().
-            variable(localPosition, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "localPosition", bonesTransform.at(bonesIDs.at("i")).mul(pos).getNameOrValue()).
-            set(finalPositon, finalPositon.add(localPosition.mul(bonesWeights.at("i")))).
-        end();
-    }
-    
-    func.body().
-    ret(finalPositon);
+    ret(finalBoneTransform);
 
     mFunctions.insert_or_assign(func.mName, func);
 }

@@ -153,13 +153,10 @@ public:
             "main"
         };
 
-        inline static const GPUFunctionDefinition mCalculateSkinnedPosition
+        inline static const GPUFunctionDefinition mCalculateBoneTransform
         {
-            PrimitiveTypes::mVector4,
-            "calculateSkinnedPosition",
-            {
-                {GPUStorage::NONE, PrimitiveTypes::mVector4, "pos"}
-            }
+            PrimitiveTypes::mMatrix4,
+            "calculateBoneTransform"
         };
 
         inline static const GPUFunctionDefinition mCalculateDiffuse

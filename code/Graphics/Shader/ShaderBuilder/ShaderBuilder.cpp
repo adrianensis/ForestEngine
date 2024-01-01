@@ -45,15 +45,32 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
     Variable finalPositon;
+    Variable finalNormal;
     Variable PVMatrix;
 
     mainFunc.body().
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {position, {"1.0f"}}));
+
+    if(material->getMaterialData().mUseNormals)
+    {
+        mainFunc.body().
+        variable(finalNormal, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "finalNormal", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {normal}));
+    }
     
     if(material->getMaterialData().mIsSkinned)
     {
+        Variable boneMatrix;
         mainFunc.body().
-        set(finalPositon, call(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mName, {finalPositon}));
+        variable(boneMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "boneMatrix", call(GPUBuiltIn::Functions::mCalculateBoneTransform.mName, {})).
+        set(finalPositon, boneMatrix.mul(finalPositon));
+        
+        if(material->getMaterialData().mUseNormals)
+        {
+            Variable transformedNormal;
+            mainFunc.body().
+            variable(transformedNormal, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "transformedNormal", boneMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {finalNormal, {"1.0f"}}))).
+            set(finalNormal, transformedNormal.dot("xyz"));
+        }
     }
 
     mainFunc.body().variable(PVMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "PV_Matrix", projectionMatrix.mul(viewMatrix));
@@ -72,12 +89,18 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
         set(outTextureCoord, textureCoord);
     }
     
-    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    if(material->getMaterialData().mUseNormals)
     {
-        mainFunc.body().
-        set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(normal));
-        // mainFunc.body().
-        // set(outNormal, normal);
+        if(material->getMaterialData().mUseModelMatrix)
+        {
+            mainFunc.body().
+            set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(finalNormal));
+        }
+        else
+        {
+            mainFunc.body().
+            set(outNormal, finalNormal);
+        }
     }
 
     mainFunc.body().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {finalPositon}));
@@ -263,7 +286,8 @@ void ShaderBuilder::registerVertexShaderData(const GPUVertexBuffersLayout& gpuVe
     shaderBuilderFunctionsLibrary.init(get(), material);
     if(material->getMaterialData().mIsSkinned)
     {
-        get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mName));
+        // get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateSkinnedPosition.mName));
+        get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateBoneTransform.mName));
     }
 }
 
