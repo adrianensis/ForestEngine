@@ -29,7 +29,13 @@ public:
     class StructDefinitions
     {
     public:
-        inline static const GPUStructDefinition mLight{"light", {{PrimitiveTypes::mVector3, "position"}}};
+        inline static const GPUStructDefinition mLight{"light",
+            {
+                {PrimitiveTypes::mVector3, "position"},
+                {PrimitiveTypes::mVector4, "color"},
+                {PrimitiveTypes::mFloat, "strength"}
+            }
+        };
     };
 
     class StructTypes
@@ -158,7 +164,7 @@ public:
 
         inline static const GPUFunctionDefinition mCalculateDiffuse
         {
-            PrimitiveTypes::mVector3,
+            PrimitiveTypes::mVector4,
             "calculateDiffuse"
         };
     };

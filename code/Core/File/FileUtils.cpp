@@ -1,9 +1,6 @@
 #include "Core/File/FileUtils.hpp"
 #include "Core/Log/Log.hpp"
 
-void FileUtils::init() {
-
-}
 void FileUtils::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
 {
 	std::ifstream file;

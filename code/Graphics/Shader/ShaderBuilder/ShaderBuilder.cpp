@@ -74,7 +74,10 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     
     if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
     {
-        mainFunc.body().set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(normal));
+        mainFunc.body().
+        set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(normal));
+        // mainFunc.body().
+        // set(outNormal, normal);
     }
 
     mainFunc.body().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {finalPositon}));
@@ -92,8 +95,6 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& inTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
-    auto& inNormal = get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
-    auto& inPosition = get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
     auto& outColor = get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
 
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
@@ -106,15 +107,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     Variable diffuse;
 
     mainFunc.body().
-    variable(color, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "color").
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}})).
-    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
-
-    if(material->getMaterialData().mReceiveLight)
-    {
-        mainFunc.body().
-        set(diffuse, call(GPUBuiltIn::Functions::mCalculateDiffuse.mName, {}));
-    }
+    variable(color, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "color", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {{"0.0"}, {"0.0"}, {"0.0"}, {"1.0"}}));
 
     if(material->getMaterialData().mUseVertexColor)
     {
@@ -148,7 +141,8 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
     {
         mainFunc.body().
-        set(outColor, outColor.add(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {diffuse, {"1"}})));
+        variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "diffuse", call(GPUBuiltIn::Functions::mCalculateDiffuse.mName, {})).
+        set(outColor, outColor.mul(diffuse));
     }
     
     if(material->getMaterialData().mAlphaEnabled)

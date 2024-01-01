@@ -79,11 +79,13 @@ namespace ShaderBuilderNodes
         Variable(const std::string& type, const std::string& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
         Variable(const std::string& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
         Variable(const GPUVariableDefinitionData& gpuVariableData) : mType(gpuVariableData.mGPUDataType.mName), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize){};
+        Variable(const GPUStructDefinition::GPUStructVariable& gpuStructVariableData) : mType(gpuStructVariableData.mGPUDataType.mName), mName(gpuStructVariableData.mName) {};
         std::vector<std::string> toLines(u16 indent) const override;
 
         const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
         bool isEmpty() const {return getNameOrValue().empty(); };
-        Variable dot(const std::string& member) const { return Variable(getNameOrValue() + "." + member); }
+        Variable dot(const std::string& other) const { return Variable(getNameOrValue() + "." + other); }
+        Variable dot(const Variable& other) const { return Variable(getNameOrValue() + "." + other.getNameOrValue()); }
 
         Variable at(const std::string& i) const { return Variable(getNameOrValue() + "[" + i + "]"); }
         Variable at(const Variable& i) const { return at(i.getNameOrValue()); }

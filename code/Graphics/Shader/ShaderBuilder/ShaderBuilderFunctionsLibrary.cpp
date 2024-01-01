@@ -71,12 +71,13 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const Shade
 
     Variable norm;
     Variable lightDir;
-    Variable diff;
-    Variable diffuse;
+    Variable lightPos = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0]};
+    Variable lightColor = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[1]};
+    Variable lightStrength = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[2]};
     Variable ambient;
 
     func.body().
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.1"}, {"0.0"}}));
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "ambient", "0.2");
 
     func.body().
     variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
@@ -87,13 +88,17 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const Shade
         set(norm, call("normalize", {inNormal}));
     }
 
+    Variable diffuse;
     func.body().
-    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0].mName).sub(inPosition)})).
-    variable(diff, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diff", call("max", {call("dot", {norm, lightDir}), {"-1"}})).
-    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", diff.mul(call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.8"}, {"0.8"}, {"0.8"}})));
+    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(inPosition)})).
+    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuse", call("max", {call("dot", {norm, lightDir}), {"0"}}));
 
+    Variable diffuseColor;
+    Variable diffusePlusAmbient;
     func.body().
-    set(diffuse, diffuse.add(ambient));
+    variable(diffusePlusAmbient, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffusePlusAmbient", diffuse.add(ambient)).
+    variable(diffuseColor, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "diffuseColor", lights.at("0").dot(lightColor).mul(diffusePlusAmbient)).
+    set(diffuseColor.dot("a"), "1");
 
     // vec3 norm = normalize(Normal);
     // vec3 lightDir = normalize(light.position - FragPos);
@@ -101,7 +106,7 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const Shade
     // vec3 diffuse = light.diffuse * (diff * material.diffuse);
 
     func.body().
-    ret(diffuse);
+    ret(diffuseColor);
 
     mFunctions.insert_or_assign(func.mName, func);
 }
