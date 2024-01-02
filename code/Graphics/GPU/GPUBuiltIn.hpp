@@ -69,22 +69,24 @@ public:
     {
     public:
 
-        class GPUGlobalMatricesData
+        class GPUGlobalData
         {
         public:
             Matrix4 mProjectionMatrix;
             Matrix4 mViewMatrix;
+            alignas(16) Vector3 mCameraPosition;
         };
 
-        inline static const GPUSharedBufferData mGlobalMatrices
+        inline static const GPUSharedBufferData mGlobalData
         {
             GPUBufferType::UNIFORM,
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"}
+                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"},
+                {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"}
             },
-            "GlobalMatrices",
-            "globalMatrices"
+            "GlobalData",
+            "globalData"
         };
         
         inline static const GPUSharedBufferData mModelMatrices

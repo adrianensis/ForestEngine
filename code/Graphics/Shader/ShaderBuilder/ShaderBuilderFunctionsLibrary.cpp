@@ -56,6 +56,9 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateBoneTransform(const
 void ShaderBuilderFunctionsLibrary::registerFunctionCalculatePhong(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
     FunctionDefinition func(GPUBuiltIn::Functions::mCalculatePhong);
+
+    auto& globalDataBuffer = program.getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
+    Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
     
     auto& inNormal = program.getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
     auto& fragPosition = program.getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
@@ -76,7 +79,7 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculatePhong(const ShaderB
     func.body().
     variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    if(material->getMaterialData().mUseNormals)
     {
         func.body().
         set(norm, call("normalize", {inNormal}));
@@ -95,7 +98,7 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculatePhong(const ShaderB
     Variable specularValue;
     Variable specular;
     func.body().
-    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", /*call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})*/ call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0"},{"0"},{"0"}})).
+    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
     variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
     variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), {"32"}})).
     variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightColor)));

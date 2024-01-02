@@ -12,7 +12,7 @@ public:
     u32 requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType);
     
 public:
-	GPUSharedBuffer mGlobalMatricesBuffer;
+	GPUSharedBuffer mGlobalDataBuffer;
 	GPUSharedBuffer mLightDataBuffer;
 
 private:

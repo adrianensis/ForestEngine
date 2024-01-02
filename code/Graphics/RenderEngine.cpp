@@ -146,8 +146,13 @@ void RenderEngine::updateGPUSharedContext(bool isWorldSpace)
     Matrix4 ortho;
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
-    GPUBuiltIn::SharedBuffers::GPUGlobalMatricesData gpuMatricesData = {isWorldSpace ? mCamera->mProjectionMatrix : ortho, isWorldSpace ? mCamera->mViewMatrix : Matrix4::smIdentity};
-	GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer.setData(gpuMatricesData);
+    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuMatricesData =
+    {
+        isWorldSpace ? mCamera->mProjectionMatrix : ortho,
+        isWorldSpace ? mCamera->mViewMatrix : Matrix4::smIdentity,
+        mCamera->mGameObject->mTransform->getWorldPosition()
+    };
+	GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer.setData(gpuMatricesData);
 
     GPULightsData gpuLightsData;
     FOR_ARRAY(i, mLights)

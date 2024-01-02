@@ -61,7 +61,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 
     mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersLayout, lineMaterial);
 
-    mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalMatricesBuffer);
+    mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer);
 }
 
 void ShapeBatchRenderer::render()

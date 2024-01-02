@@ -20,9 +20,9 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     auto& textureCoord = get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);
     auto& instanceId = get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
     
-    auto& globalMatricesBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalMatrices.mInstanceName);    
-    Variable projectionMatrix(globalMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    Variable viewMatrix(globalMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
+    auto& globalDataBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
+    Variable projectionMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    Variable viewMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
 
     auto& modelMatricesBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
     Variable modelMatrices;
@@ -167,7 +167,7 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
         }
     }
 
-    if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseNormals)
     {
         Variable phong;
         mainFunc.body().
@@ -193,7 +193,7 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
     shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
     shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalMatrices);
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
 
     if(material->getMaterialData().mUseModelMatrix)
     {
@@ -230,7 +230,7 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     
-    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    if(material->getMaterialData().mUseNormals)
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
     }
@@ -243,7 +243,7 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
 
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
-    if(material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
+    if(material->getMaterialData().mUseNormals)
     {
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
     }
