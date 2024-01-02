@@ -29,7 +29,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
     {
         u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
         mBonesMatricesBuffer.init(bonesMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mBonesMatrices, mGPUMeshBufferData.mIsStatic);
-        mBonesMatricesBuffer.resize(GPUMesh::MAX_BONES);
+        mBonesMatricesBuffer.resize<Matrix4>(GPUMesh::MAX_BONES);
     }
 
     mGPUVertexBuffersLayout.disable();
@@ -62,7 +62,7 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
     mMaxInstances = maxInstances;
     u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mMesh->mVertexCount;
     mGPUVertexBuffersLayout.getBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
-    mModelMatricesBuffer.resize(mMaxInstances);
+    mModelMatricesBuffer.resize<Matrix4>(mMaxInstances);
 }
 
 void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)

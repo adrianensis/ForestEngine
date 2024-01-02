@@ -59,6 +59,7 @@ public:
 
     // Shared Buffer
     u32 getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes);
+    u32 getMaxBytesInSharedBuffer(GPUBufferType bufferType);
     u32 getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType);
     void bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint);
 

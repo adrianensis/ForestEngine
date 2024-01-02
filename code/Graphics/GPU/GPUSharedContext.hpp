@@ -2,13 +2,6 @@
 
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 
-class GPUSharedContextMatricesData
-{
-public:
-	Matrix4 mProjectionMatrix;
-	Matrix4 mViewMatrix;
-};
-
 class GPUSharedContext : public System
 {
 public:
@@ -20,7 +13,7 @@ public:
     
 public:
 	GPUSharedBuffer mGlobalMatricesBuffer;
-	GPUSharedBuffer mLightsBuffer;
+	GPUSharedBuffer mLightDataBuffer;
 
 private:
     u32 mBindingPointsIndexUniform = 0;

@@ -29,7 +29,9 @@ public:
     class StructDefinitions
     {
     public:
-        inline static const GPUStructDefinition mLight{"light",
+        inline static const GPUStructDefinition mLight
+        {
+            "light",
             {
                 {PrimitiveTypes::mVector3, "position"},
                 {PrimitiveTypes::mVector4, "color"},
@@ -65,6 +67,14 @@ public:
     class SharedBuffers
     {
     public:
+
+        class GPUGlobalMatricesData
+        {
+        public:
+            Matrix4 mProjectionMatrix;
+            Matrix4 mViewMatrix;
+        };
+
         inline static const GPUSharedBufferData mGlobalMatrices
         {
             GPUBufferType::UNIFORM,
@@ -96,14 +106,15 @@ public:
             "bonesMatrices"
         };
 
-        inline static const GPUSharedBufferData mLights
+        inline static const GPUSharedBufferData mLightsData
         {
             GPUBufferType::UNIFORM,
             {
                 {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},
+                {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambient"},
             },
-            "Lights",
-            "lights"
+            "LightsData",
+            "lightsData"
         };
     };
 

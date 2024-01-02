@@ -42,22 +42,27 @@ GLuint GPUInterface::createVertexBufferLayout()
 
 u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes)
 {
-    i32 maxBlockSize = 0;
+    i32 maxElements = (getMaxBytesInSharedBuffer(bufferType)/elementSizeInBytes);
+    return maxElements;
+}
+
+u32 GPUInterface::getMaxBytesInSharedBuffer(GPUBufferType bufferType)
+{
+    i32 maxBytes = 0;
     switch (bufferType)
     {
     case GPUBufferType::UNIFORM:
-        glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxBlockSize);
+        glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxBytes);
         break;
     case GPUBufferType::STORAGE:
-        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &maxBlockSize);
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &maxBytes);
         break;
     default:
         CHECK_MSG(false, "Ilegal GPUBufferType!");
         break;
     }
 
-    i32 maxElements = (maxBlockSize/elementSizeInBytes);
-    return maxElements;
+    return maxBytes;
 }
 
 u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)

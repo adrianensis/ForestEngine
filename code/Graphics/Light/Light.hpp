@@ -9,10 +9,10 @@ class Light: public Component
 
 public:
     ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
-    void init(const GPULightData& data);
+    void init(const GPULight& data);
 
 private:
-    GPULightData mLightData;
+    GPULight mLightData;
 
 public:
     CRGET(LightData)

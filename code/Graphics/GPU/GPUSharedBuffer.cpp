@@ -15,13 +15,6 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBuffe
 
     mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
 
-    mSizeInBytes = 0;
-    FOR_ARRAY(i, mGPUSharedBufferData.mGPUVariableDefinitionDataArray)
-    {
-        const GPUVariableData& gpuVariableData = mGPUSharedBufferData.mGPUVariableDefinitionDataArray[i];
-        mSizeInBytes += gpuVariableData.mGPUDataType.mTypeSizeInBytes;
-    }
-
     GET_SYSTEM(GPUInterface).bindSharedBufferToBindingPoint(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
 }
 
@@ -30,7 +23,8 @@ void GPUSharedBuffer::terminate()
     GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
 }
 
-void GPUSharedBuffer::resize(u32 size)
+void GPUSharedBuffer::checkMaxSize(u32 bytes) const
 {
-    GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, mSizeInBytes, size, mIsStatic);
+    u32 maxBytes = GET_SYSTEM(GPUInterface).getMaxBytesInSharedBuffer(mGPUSharedBufferData.mType);
+    CHECK_MSG(bytes <= maxBytes, "Max bytes reached in Shared Buffer!");
 }

@@ -41,7 +41,7 @@ void BatchRenderer::bindSharedBuffers()
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightsBuffer);
+        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightDataBuffer);
     }
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)

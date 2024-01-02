@@ -60,8 +60,9 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const Shade
     auto& inNormal = program.getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
     auto& inPosition = program.getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
 
-    auto& ligthsBuffer = program.getSharedBuffer(GPUBuiltIn::SharedBuffers::mLights.mInstanceName);    
-    Variable lights(ligthsBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& ligthsDataBuffer = program.getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
+    Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    Variable ambientValue(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
 
     Variable norm;
     Variable lightDir;
@@ -71,7 +72,7 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const Shade
     Variable ambient;
 
     func.body().
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "ambient", "0.2");
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "ambient", ambientValue);
 
     func.body().
     variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));

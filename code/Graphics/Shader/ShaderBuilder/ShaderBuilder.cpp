@@ -33,8 +33,8 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
 
     if(material->getMaterialData().mReceiveLight)
     {
-        auto& ligthsBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLights.mInstanceName);    
-        Variable lights(ligthsBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        auto& ligthsDataBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
+        Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     }
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
@@ -195,7 +195,7 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
 
     if(material->getMaterialData().mReceiveLight)
     {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLights);
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLightsData);
         shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
     }
 
