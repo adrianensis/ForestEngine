@@ -97,6 +97,7 @@ namespace ShaderBuilderNodes
         Variable sub(const Variable& other) const { return binOp(other, "-"); }
         Variable eq(const Variable& other) const { return binOp(other, "=="); }
         Variable notEq(const Variable& other) const { return binOp(other, "!="); }
+        Variable neg() const { return Variable("-" + getNameOrValue()); }
 
         std::string mType = "";
         std::string mName = "";
@@ -120,6 +121,10 @@ namespace ShaderBuilderNodes
         }
         callStr += ")";
         return Variable(callStr);
+    }
+    inline static Variable paren(const Variable& variable)
+    {
+        return Variable("("+variable.getNameOrValue()+")");
     }
 
     class Attribute : public Variable

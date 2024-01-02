@@ -91,16 +91,25 @@ void ShaderBuilder::createVertexShader(const GPUVertexBuffersLayout& gpuVertexBu
     
     if(material->getMaterialData().mUseNormals)
     {
-        if(material->getMaterialData().mUseModelMatrix)
-        {
-            mainFunc.body().
-            set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(finalNormal));
-        }
-        else
-        {
+        // if(material->getMaterialData().mUseModelMatrix)
+        // {
+        //     /*
+        //         - NOTE - 
+        //         There are many sources online that tell you that you need the transpose of the inverse of the world matrix in order to
+        //         transform the normal vector. This is correct, however, we usually don't need to go that far. Our world matrices are
+        //         always orthogonal (their vectors are always orthogonal). Since the inverse of an orthogonal matrix is equal to its transpose,
+        //         the transpose of the inverse is actually the transpose of the transpose, so we end up with the original matrix.
+        //         As long as we avoid doing distortions (scaling one axis differently than the rest) we are fine with the approach I presented above. 
+            
+        //     */
+        //     mainFunc.body().
+        //     set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(finalNormal));
+        // }
+        // else
+        // {
             mainFunc.body().
             set(outNormal, finalNormal);
-        }
+        // }
     }
 
     mainFunc.body().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {finalPositon}));
@@ -126,9 +135,6 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
     auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
     Variable color;
-    Variable ambient;
-    Variable diffuse;
-
     mainFunc.body().
     variable(color, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "color", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {{"0.0"}, {"0.0"}, {"0.0"}, {"1.0"}}));
 
@@ -163,9 +169,10 @@ void ShaderBuilder::createFragmentShader(const GPUVertexBuffersLayout& gpuVertex
 
     if(material->getMaterialData().mReceiveLight && material->getMaterialData().mUseModelMatrix && material->getMaterialData().mUseNormals)
     {
+        Variable phong;
         mainFunc.body().
-        variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "diffuse", call(GPUBuiltIn::Functions::mCalculateDiffuse.mName, {})).
-        set(outColor, outColor.mul(diffuse));
+        variable(phong, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "phong", call(GPUBuiltIn::Functions::mCalculatePhong.mName, {})).
+        set(outColor, outColor.mul(phong));
     }
     
     if(material->getMaterialData().mAlphaEnabled)
@@ -329,7 +336,7 @@ void ShaderBuilder::registerFragmentShaderData(const GPUVertexBuffersLayout& gpu
     shaderBuilderFunctionsLibrary.init(get(), material);
     if(material->getMaterialData().mReceiveLight)
     {
-        get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateDiffuse.mName));
+        get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculatePhong.mName));
     }
 }
 

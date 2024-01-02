@@ -11,7 +11,7 @@ public:
     void init(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
 private:
     void registerFunctionCalculateBoneTransform(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
-    void registerFunctionCalculateDiffuse(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
+    void registerFunctionCalculatePhong(const ShaderBuilderNodes::Program& program, Ptr<const Material> material);
 public:
     std::unordered_map<std::string, ShaderBuilderNodes::FunctionDefinition> mFunctions;
 };

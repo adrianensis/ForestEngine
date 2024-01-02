@@ -34,8 +34,9 @@ public:
             "light",
             {
                 {PrimitiveTypes::mVector3, "position"},
-                {PrimitiveTypes::mVector4, "color"},
-                {PrimitiveTypes::mFloat, "strength"}
+                {PrimitiveTypes::mVector3, "color"},
+                {PrimitiveTypes::mFloat, "ambientIntensity"},
+                {PrimitiveTypes::mFloat, "specularIntensity"}
             }
         };
     };
@@ -111,7 +112,7 @@ public:
             GPUBufferType::UNIFORM,
             {
                 {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambient"},
+                // {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambientIntensity"},
             },
             "LightsData",
             "lightsData"
@@ -170,10 +171,10 @@ public:
             "calculateBoneTransform"
         };
 
-        inline static const GPUFunctionDefinition mCalculateDiffuse
+        inline static const GPUFunctionDefinition mCalculatePhong
         {
             PrimitiveTypes::mVector4,
-            "calculateDiffuse"
+            "calculatePhong"
         };
     };
 };

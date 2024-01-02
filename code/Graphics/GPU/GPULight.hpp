@@ -6,13 +6,13 @@ class GPULight
 {
 public:
     alignas(16) Vector3 mPosition = Vector3(0,0,0);
-    alignas(16) Vector4 mColor = Vector4(1,1,1,1);
-    alignas(16) f32 mStrength = 0.2f;
+    alignas(16) Vector3 mColor = Vector3(1,1,1);
+    f32 mAmbientIntensity = 0.2f;
+    f32 mSpecularIntensity = 0.5f;
 };
 
 class GPULightsData
 {
 public:
-    alignas(16) GPULight mLights[10];
-    alignas(16) f32 mAmbient = 0.2f;
+    GPULight mLights[10];
 };

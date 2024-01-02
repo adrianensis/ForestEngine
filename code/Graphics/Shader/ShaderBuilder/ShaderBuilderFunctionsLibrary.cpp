@@ -14,7 +14,7 @@ void ShaderBuilderFunctionsLibrary::init(const ShaderBuilderNodes::Program& prog
     
     if(material->getMaterialData().mReceiveLight)
     {
-        registerFunctionCalculateDiffuse(program, material);
+        registerFunctionCalculatePhong(program, material);
     }
 }
 
@@ -53,27 +53,26 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateBoneTransform(const
     mFunctions.insert_or_assign(func.mName, func);
 }
 
-void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
+void ShaderBuilderFunctionsLibrary::registerFunctionCalculatePhong(const ShaderBuilderNodes::Program& program, Ptr<const Material> material)
 {
-    FunctionDefinition func(GPUBuiltIn::Functions::mCalculateDiffuse);
+    FunctionDefinition func(GPUBuiltIn::Functions::mCalculatePhong);
     
     auto& inNormal = program.getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
-    auto& inPosition = program.getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
+    auto& fragPosition = program.getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
 
     auto& ligthsDataBuffer = program.getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
     Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    Variable ambientValue(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
 
-    Variable norm;
-    Variable lightDir;
     Variable lightPos = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0]};
     Variable lightColor = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[1]};
-    Variable lightStrength = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[2]};
+    Variable lightAmbientIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[2]};
+    Variable lightSpecularIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[3]};
+
     Variable ambient;
-
     func.body().
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "ambient", ambientValue);
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightColor)));
 
+    Variable norm;
     func.body().
     variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
@@ -83,25 +82,28 @@ void ShaderBuilderFunctionsLibrary::registerFunctionCalculateDiffuse(const Shade
         set(norm, call("normalize", {inNormal}));
     }
 
+    Variable lightDir;
+    Variable diffuseValue;
     Variable diffuse;
     func.body().
-    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(inPosition)})).
-    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuse", call("max", {call("dot", {norm, lightDir}), {"0"}}));
+    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
+    variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
+    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", diffuseValue.mul(lights.at("0").dot(lightColor)));
 
-    Variable diffuseColor;
-    Variable diffusePlusAmbient;
+    Variable viewDir;
+    Variable reflectDir;
+    Variable specularValue;
+    Variable specular;
     func.body().
-    variable(diffusePlusAmbient, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffusePlusAmbient", diffuse.add(ambient)).
-    variable(diffuseColor, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "diffuseColor", lights.at("0").dot(lightColor).mul(diffusePlusAmbient)).
-    set(diffuseColor.dot("a"), "1");
+    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", /*call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})*/ call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0"},{"0"},{"0"}})).
+    variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
+    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), {"32"}})).
+    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightColor)));
 
-    // vec3 norm = normalize(Normal);
-    // vec3 lightDir = normalize(light.position - FragPos);
-    // float diff = max(dot(norm, lightDir), 0.0);
-    // vec3 diffuse = light.diffuse * (diff * material.diffuse);
-
+    Variable phong;
     func.body().
-    ret(diffuseColor);
+    variable(phong, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "phong", ambient.add(diffuse).add(specular)).
+    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {phong, {"1"}}));
 
     mFunctions.insert_or_assign(func.mName, func);
 }
