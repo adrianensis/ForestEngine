@@ -82,10 +82,3 @@ Here in my blog you can find all the devlogs of my Game Engine, from 2D initial 
 - Loading 3D models with GLTF
 
 ---
-
-## Bugs and TODOs
-
-- The chunk system remains 2D while the space is now 3D.
-   - I programmed a Spatial Partition module (octree) that came to replace the linear system of chunks.
-
----
