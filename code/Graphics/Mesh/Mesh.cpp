@@ -4,8 +4,8 @@
 
 void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 {
-	BoneVertexIDsData& boneVertexIDsData = mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).get<BoneVertexIDsData>(vertexId); //.setBoneWeight(id, weight);
-	BoneVertexWeightsData& boneVertexWeightsData = mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).get<BoneVertexWeightsData>(vertexId); //.setBoneWeight(id, weight);
+	BoneVertexIDsData& boneVertexIDsData = mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).get<BoneVertexIDsData>(vertexId); //.setBoneWeight(id, weight);
+	BoneVertexWeightsData& boneVertexWeightsData = mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).get<BoneVertexWeightsData>(vertexId); //.setBoneWeight(id, weight);
 
     FOR_RANGE(i, 0, smMaxBonesPerVertex)
 	{
@@ -37,15 +37,15 @@ std::vector<Vector3> Mesh::calculateSkinnedVertices() const
 
 Vector3 Mesh::calculateSkinnedVertex(u32 i) const
 {
-    Vector3 vertexPosition = mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).get<Vector3>(i);
+    Vector3 vertexPosition = mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).get<Vector3>(i);
 
     const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mModel);
 
     Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
     for(u32 boneIt = 0 ; boneIt < (i32)MAX_BONE_INFLUENCE ; boneIt++)
     {
-        const BoneVertexIDsData& IDsData = mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).get<BoneVertexIDsData>(i);
-        const BoneVertexWeightsData& wightsData = mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).get<BoneVertexWeightsData>(i);
+        const BoneVertexIDsData& IDsData = mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).get<BoneVertexIDsData>(i);
+        const BoneVertexWeightsData& wightsData = mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).get<BoneVertexWeightsData>(i);
         if(IDsData.mBonesIDs[boneIt] > -1)
         {
             if(IDsData.mBonesIDs[boneIt] >= (i32)MAX_BONES) 

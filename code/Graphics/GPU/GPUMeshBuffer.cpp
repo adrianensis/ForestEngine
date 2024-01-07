@@ -71,7 +71,7 @@ void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)
     FOR_ARRAY(i, mesh->mGPUVertexInputBuffers.mBuffers)
     {
         const GPUVariableData& gpuVariableData = mesh->mGPUVertexInputBuffers.mBuffers[i];
-        mGPUVertexBuffersLayout.getBuffer(gpuVariableData).setDataArray(mesh->mGPUMeshByteBuffers.mBuffers.at(gpuVariableData.mName));
+        mGPUVertexBuffersLayout.getBuffer(gpuVariableData).setDataArray(mesh->mBuffers.at(gpuVariableData.mName));
     }
 }
 

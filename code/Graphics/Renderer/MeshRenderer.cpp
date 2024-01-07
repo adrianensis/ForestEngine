@@ -22,8 +22,8 @@ void MeshRenderer::init(const RendererData& data)
     mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mIndicesCount, mRendererData.mMesh->mGPUVertexInputBuffers);
     if(mRendererData.mMaterial->getMaterialData().mIsSkinned)
     {
-        mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).append(mRendererData.mMesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName));
-        mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
+        mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName));
+        mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
     }
 
     setColor(Vector4(0, 0, 0, 1));
@@ -75,13 +75,13 @@ void MeshRenderer::update()
     {
         if(mRegeneratePositions)
         {
-            mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).clear();
+            mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).clear();
             updatePositions();
             mRegeneratePositions = false;
         }
         if(mRegenerateTextureCoords)
         {
-            mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).clear();
+            mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).clear();
             updateTextureCoords();
             mRegenerateTextureCoords = false;
         }
@@ -97,8 +97,8 @@ void MeshRenderer::update()
 void MeshRenderer::updatePositions()
 {
 	PROFILER_CPU()
-    ByteBuffer& bufferRef = mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName);
-    bufferRef.append(mRendererData.mMesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName));
+    ByteBuffer& bufferRef = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName);
+    bufferRef.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName));
 
     if(mUseDepth)
     {
@@ -114,13 +114,13 @@ void MeshRenderer::updatePositions()
 void MeshRenderer::updateTextureCoords()
 {
 	PROFILER_CPU()
-    ByteBuffer& bufferRef = mMeshInstance->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName);
-    bufferRef.append(mRendererData.mMesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
+    ByteBuffer& bufferRef = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName);
+    bufferRef.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
 
     updateTextureRegion();
     FOR_RANGE(i, 0, mMeshInstance->mVertexCount)
     {
-        Vector2 vertexTexture = mRendererData.mMesh->mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).get<Vector2>(i);
+        Vector2 vertexTexture = mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).get<Vector2>(i);
         Vector2 regionSize = mTextureRegion.getSize();
         Vector2 regionPosition = mTextureRegion.getLeftTopFront();
 

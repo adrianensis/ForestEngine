@@ -24,12 +24,6 @@ public:
     std::vector<GPUVariableData> mBuffers;
 };
 
-class GPUMeshByteBuffers
-{
-public:
-    std::unordered_map<std::string, ByteBuffer> mBuffers;
-};
-
 class GPUMesh: public ObjectBase
 {
     GENERATE_METADATA(GPUMesh)
@@ -44,7 +38,7 @@ public:
     inline static const u32 MAX_BONES = 50;
 
     GPUVertexInputBuffers mGPUVertexInputBuffers;
-    GPUMeshByteBuffers mGPUMeshByteBuffers;
+    std::unordered_map<std::string, ByteBuffer> mBuffers;
     ByteBuffer mIndices = ByteBuffer(sizeof(Face));
 
 	u32 mVertexCount = 0;

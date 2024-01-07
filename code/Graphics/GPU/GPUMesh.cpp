@@ -7,11 +7,11 @@ void GPUMesh::init(u32 vertexCount, u32 indicesCount, const GPUVertexInputBuffer
 
     mGPUVertexInputBuffers = gpuVertexInputBuffers;
 
-    mGPUMeshByteBuffers.mBuffers.clear();
+    mBuffers.clear();
     FOR_ARRAY(i, gpuVertexInputBuffers.mBuffers)
     {
         const GPUVariableData& gpuVariableData = gpuVertexInputBuffers.mBuffers[i];
-        mGPUMeshByteBuffers.mBuffers.emplace(gpuVariableData.mName, gpuVariableData.mGPUDataType.mTypeSizeInBytes);
+        mBuffers.emplace(gpuVariableData.mName, gpuVariableData.mGPUDataType.mTypeSizeInBytes);
     }
 
 	clear();
@@ -19,7 +19,7 @@ void GPUMesh::init(u32 vertexCount, u32 indicesCount, const GPUVertexInputBuffer
 
 void GPUMesh::clear()
 {
-    FOR_MAP(it, mGPUMeshByteBuffers.mBuffers)
+    FOR_MAP(it, mBuffers)
     {
         it->second.clear();
         it->second.reserve(mVertexCount);
@@ -31,7 +31,7 @@ void GPUMesh::clear()
 
 void GPUMesh::setColor(const Vector4 &color)
 {
-    mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).clear();
-    mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).resize(mVertexCount);
-    mGPUMeshByteBuffers.mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).fill(color);
+    mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).clear();
+    mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).resize(mVertexCount);
+    mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).fill(color);
 }
