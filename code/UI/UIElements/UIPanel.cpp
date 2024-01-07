@@ -28,20 +28,19 @@ void UIArea::calculateConfig()
 
 	if (mConfig.mAdjustSizeToText)
 	{
-        Vector2 textSize;
+        Vector2 textSize(0,0);
+        f32 maxAscender = 0;
+        f32 maxDescender = 0;
         FOR_ARRAY(i, mConfig.mText)
         {
             char character = mConfig.mText.at(i);
             const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
-            Vector2 alignOffset(0, glyphData.mMetrics.mBoundingBoxMax.y - glyphData.mMetrics.mHoriBearing.y);
 
-            /*
-                When displaying spaces, "xOffset += glyph->bitmap.width" will add a zero.
-                Meaning: "This is a test!" will be displayed as "Thisisatest!".
-            */
             textSize.x += glyphData.mAdvance.x;
-            textSize.y = std::max(glyphData.mMetrics.mSize.y + alignOffset.y, textSize.y);
+            maxAscender = std::max(glyphData.mMetrics.mHoriBearing.y, maxAscender);
+            maxDescender = std::max(glyphData.mMetrics.mSize.y - glyphData.mMetrics.mHoriBearing.y, maxDescender);
         }
+        textSize.y = maxAscender + maxDescender;
 
 		mConfig.mSize = textSize;
 		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);

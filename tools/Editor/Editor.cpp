@@ -63,10 +63,12 @@ void Editor::firstUpdate()
 	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	// importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
+	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
+    // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
-	gameObject = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-500,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
+	// gameObject = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-500,0,0), 20.0f, 0);
+	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
+    mGameObjectsArray.push_back(obj);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
@@ -135,6 +137,18 @@ void Editor::firstUpdate()
 	setAdjustSizeToText(true).
 	setSize(Vector2(0.5, 0.05f));
 
+    // uiBuilder.
+	// setText("cApgfy").
+	// create<UIText>().
+	// getUIElement<UIText>();
+
+    uiBuilder.
+	setText("AcgFSCBHPXc g").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
+
     fpsCounter = uiBuilder.
 	setText("100").
 	create<UIText>().
@@ -185,7 +199,7 @@ void Editor::firstUpdate()
 	setText("abcd").
 	create<UIEditableText>();
 
-	// uiBuilder.restoreAll();
+	uiBuilder.restoreAll();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->getCameraGameObject();
 }
@@ -236,6 +250,14 @@ void Editor::update()
 	{
 		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
 	}
+	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_UP))
+	{
+		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,speed,0)));
+	}
+	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
+	{
+		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,-speed,0)));
+	}
 
 	if(!mousePosition.eq(currentMousePosition))
 	{
@@ -253,7 +275,7 @@ void Editor::update()
     FOR_ARRAY(i, mGameObjectsArray)
     {
         Ptr<Transform> transform = mGameObjectsArray[i]->mTransform;
-        transform->rotate(Vector3(speed, speed, speed));
+        transform->rotate(Vector3(speed/30.0f, speed/30.0f, speed/30.0f));
     }
 
     PROFILER_END_BLOCK();
@@ -286,7 +308,6 @@ void Editor::update()
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
     fpsCounter->setText(std::to_string((u32)fps));
-    //LOG_VAR(fps)
 }
 
 void Editor::terminate()
@@ -346,8 +367,10 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
     modelRendererData.mIsInstanced = true;
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
-    GPULightData data;
-    data.mPosition = v;
+    GPULight data;
+    data.mPosition = v + Vector3(0,500,0);
+    data.mAmbientIntensity = 0.5f;
+    data.mSpecularIntensity = 1.8f;
 
 	gameObject->createComponent<Light>(data);
     return gameObject;

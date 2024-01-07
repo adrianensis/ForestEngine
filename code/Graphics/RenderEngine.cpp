@@ -174,7 +174,7 @@ void RenderEngine::renderBatches()
     PROFILER_BLOCK_CPU("render");
 	mBatchesManager.render();
     PROFILER_END_BLOCK();
-    PROFILER_BLOCK_CPU("render");
+    PROFILER_BLOCK_CPU("render shapes");
 	mShapeBatchRenderer.render();
     PROFILER_END_BLOCK();
     
@@ -189,7 +189,7 @@ void RenderEngine::renderBatches()
     PROFILER_BLOCK_CPU("renderScreenSpace");
 	mBatchesManager.renderScreenSpace();
     PROFILER_END_BLOCK();
-    PROFILER_BLOCK_CPU("render");
+    PROFILER_BLOCK_CPU("renderScreenSpace shapes");
 	mShapeBatchRendererScreenSpace.render();
     PROFILER_END_BLOCK();
 }

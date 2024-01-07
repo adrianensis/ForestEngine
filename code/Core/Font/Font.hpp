@@ -22,10 +22,8 @@ public:
     Vector2 mSize;
     Vector2 mBoundingBoxMin;
     Vector2 mBoundingBoxMax;
-    Vector2  mHoriBearing;
-    f32  mHoriAdvance;
-    Vector2  mVertBearing;
-    f32  mVertAdvance;
+    Vector2 mHoriBearing;
+    Vector2 mVertBearing;
 };
 
 class FontGlyphData
