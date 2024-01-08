@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUMesh.hpp"
 
-void GPUMesh::init(u32 vertexCount, u32 indicesCount, const GPUVertexInputBuffers gpuVertexInputBuffers)
+void GPUMesh::init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers)
 {
 	mVertexCount = vertexCount;
 	mIndicesCount = indicesCount;
@@ -8,9 +8,9 @@ void GPUMesh::init(u32 vertexCount, u32 indicesCount, const GPUVertexInputBuffer
     mGPUVertexInputBuffers = gpuVertexInputBuffers;
 
     mBuffers.clear();
-    FOR_ARRAY(i, gpuVertexInputBuffers.mBuffers)
+    FOR_ARRAY(i, mGPUVertexInputBuffers)
     {
-        const GPUVariableData& gpuVariableData = gpuVertexInputBuffers.mBuffers[i];
+        const GPUVariableData& gpuVariableData = mGPUVertexInputBuffers[i];
         mBuffers.emplace(gpuVariableData.mName, gpuVariableData.mGPUDataType.mTypeSizeInBytes);
     }
 

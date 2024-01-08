@@ -11,7 +11,7 @@ public:
 	bool mIsStatic = false;
 	bool mIsInstanced = false;
 	bool mIsSkinned = false;
-	GPUVertexInputBuffers mGPUVertexInputBuffers;
+	std::vector<GPUVariableData> mGPUVertexInputBuffers;
     Ptr<const GPUMesh> mMesh;
 };
 

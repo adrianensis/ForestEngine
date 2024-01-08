@@ -119,10 +119,10 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     mMeshMaterials[mesh] = meshMaterial;
 
-    GPUVertexInputBuffers gpuVertexInputBuffers;
+    std::vector<GPUVariableData> gpuVertexInputBuffers;
     if(meshMaterial->getMaterialData().mUseVertexColor)
     {
-        gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
+        gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
     }
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
@@ -130,20 +130,20 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         cgltf_attribute& attribute = primitive.attributes[attributeIt];
         if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_position)
         {
-            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
         {
-            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
         {
-            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
         {
-            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mBonesIDs);
-            gpuVertexInputBuffers.mBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesIDs);
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
         }
     }
 

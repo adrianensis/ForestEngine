@@ -38,9 +38,9 @@ void MeshBatcher::addMeshDataToBuffers(Ptr<const Mesh> meshInstance)
 {
     PROFILER_CPU()
 
-    FOR_ARRAY(i, mInternalMesh->mGPUVertexInputBuffers.mBuffers)
+    FOR_ARRAY(i, mInternalMesh->mGPUVertexInputBuffers)
     {
-        const GPUVariableData& gpuVariableData = mInternalMesh->mGPUVertexInputBuffers.mBuffers[i];
+        const GPUVariableData& gpuVariableData = mInternalMesh->mGPUVertexInputBuffers[i];
         mInternalMesh->mBuffers.at(gpuVariableData.mName).append(meshInstance->mBuffers.at(gpuVariableData.mName));
     }
 }
