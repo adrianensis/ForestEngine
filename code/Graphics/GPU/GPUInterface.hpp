@@ -13,6 +13,14 @@ enum class GPUBufferType : u32
     STORAGE = GL_SHADER_STORAGE_BUFFER
 };
 
+enum class GPUFramebufferAttachmentType: u32
+{
+    COLOR = GL_COLOR_ATTACHMENT0,
+    DEPTH = GL_DEPTH_ATTACHMENT,
+    STENCIL = GL_STENCIL_ATTACHMENT,
+    DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT
+};
+
 class GPUError
 {
 public:
@@ -74,6 +82,12 @@ public:
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId);
     void disableTexture();
+
+    // Framebuffer
+    u32 createFramebuffer(u32 width, u32 height);
+    u32 createFramebufferAttachment(GPUFramebufferAttachmentType attachmentType, u32 width, u32 height);
+    void enableFramebuffer(u32 FBO);
+    void disableFramebuffer();
 
     // Draw Call
     void drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced);

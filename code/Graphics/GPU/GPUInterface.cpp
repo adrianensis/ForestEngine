@@ -237,6 +237,74 @@ void GPUInterface::disableTexture()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+u32 GPUInterface::createFramebuffer(u32 width, u32 height)
+{
+    u32 FBO = 0;
+    // Create the FBO
+    glGenFramebuffers(1, &FBO);
+    enableFramebuffer(FBO);
+
+    // Restore the default framebuffer
+    // disableTexture();
+    disableFramebuffer();
+
+    return FBO;
+}
+
+u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attachmentType, u32 width, u32 height)
+{
+    u32 mTextureId = 0;
+    glGenTextures(1, &mTextureId);
+    glBindTexture(GL_TEXTURE_2D, mTextureId);
+    
+    switch (attachmentType)
+    {
+        case GPUFramebufferAttachmentType::COLOR:
+        {
+            // Create the texture object for the primitive information buffer
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, width, height, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
+            break;
+        }
+        case GPUFramebufferAttachmentType::DEPTH:
+        {
+            // Create the texture object for the depth buffer
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
+            break;
+        }
+        case GPUFramebufferAttachmentType::STENCIL:
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_STENCIL_INDEX8, width, height, 0, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, NULL);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
+            break;
+        }
+        case GPUFramebufferAttachmentType::DEPTH_STENCIL:
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
+            break;
+        }
+    }
+
+    // Verify that the FBO is correct
+    // checkFramebufferErrors();
+
+    return mTextureId;
+}
+
+void GPUInterface::enableFramebuffer(u32 FBO)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+}
+
+void GPUInterface::disableFramebuffer()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void GPUInterface::drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced)
 {
 	if(instanced)
