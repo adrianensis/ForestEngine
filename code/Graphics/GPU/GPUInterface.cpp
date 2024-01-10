@@ -14,7 +14,7 @@ u32 GPUInterface::createBuffer()
 
 void GPUInterface::bindBuffer(GPUBufferType bufferType, u32 bufferId)
 {
-    glBindBuffer(static_cast<u32>(bufferType), bufferId);
+    glBindBuffer(TO_U32(bufferType), bufferId);
 }
 
 void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimitiveDataType primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
@@ -22,11 +22,11 @@ void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimiti
 	enableAttribute(propertyArrayIndex);
 	if(primitiveType == GPUPrimitiveDataType::INT || primitiveType == GPUPrimitiveDataType::UNSIGNED_INT)
 	{
-		glVertexAttribIPointer(propertyArrayIndex, elementSize, static_cast<u32>(primitiveType), strideSize, reinterpret_cast<byte*>(pointerOffset));
+		glVertexAttribIPointer(propertyArrayIndex, elementSize, TO_U32(primitiveType), strideSize, reinterpret_cast<byte*>(pointerOffset));
 	}
 	else
 	{
-		glVertexAttribPointer(propertyArrayIndex, elementSize, static_cast<u32>(primitiveType), GL_FALSE, strideSize, reinterpret_cast<byte*>(pointerOffset));
+		glVertexAttribPointer(propertyArrayIndex, elementSize, TO_U32(primitiveType), GL_FALSE, strideSize, reinterpret_cast<byte*>(pointerOffset));
 	}
 
     glVertexAttribDivisor(propertyArrayIndex, divisor);
@@ -87,20 +87,20 @@ u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
 void GPUInterface::bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
 {
     // define the range of the buffer that links to a uniform binding point
-    glBindBufferBase(static_cast<u32>(bufferType), bindingPoint, bufferId);
+    glBindBufferBase(TO_U32(bufferType), bindingPoint, bufferId);
 }
 
 void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic)
 {
 	bindBuffer(bufferType, bufferId);
     u32 usageHint = bufferType == GPUBufferType::STORAGE ? (isStatic ? GL_STATIC_COPY : GL_DYNAMIC_COPY) : (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-	glBufferData(static_cast<u32>(bufferType), typeSizeInBytes * size, nullptr, usageHint);
+	glBufferData(TO_U32(bufferType), typeSizeInBytes * size, nullptr, usageHint);
 }
 
 void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
 {
 	bindBuffer(bufferType, bufferId);
-	glBufferSubData(static_cast<u32>(bufferType), 0, typeSize * size, data);
+	glBufferSubData(TO_U32(bufferType), 0, typeSize * size, data);
 }
 
 void GPUInterface::deleteVertexBufferLayout(u32 vertexBufferLayout)
@@ -184,7 +184,7 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
         setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
     
-    setTextureFormatWithData(internalformat, width, height, format, GL_UNSIGNED_BYTE, data);
+    setTextureFormatWithData(internalformat, width, height, format, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
     
     if(createMipMap)
     {
@@ -205,7 +205,7 @@ u32 GPUInterface::createTextureFont(GPUTextureFormat internalformat, u32 width, 
 
     // disable byte-alignment restriction
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
-    setTextureFormatWithData(internalformat, width, height, format, GL_UNSIGNED_BYTE, data);
+    setTextureFormatWithData(internalformat, width, height, format, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
 
     setTextureParam(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     setTextureParam(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -217,9 +217,9 @@ u32 GPUInterface::createTextureFont(GPUTextureFormat internalformat, u32 width, 
     return textureId;
 }
 
-void GPUInterface::subTexture(u32 x, u32 y, u32 width, u32 height, u32 format, const byte* data)
+void GPUInterface::subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format, const byte* data)
 {
-    glTexSubImage2D(GL_TEXTURE_2D, 0, x, y , width, height, format, GL_UNSIGNED_BYTE, data);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, x, y , width, height, TO_U32(format), TO_U32(GPUPrimitiveDataType::UNSIGNED_BYTE), data);
 }
 
 void GPUInterface::setTextureParam(u32 param, u32 value)
@@ -227,12 +227,12 @@ void GPUInterface::setTextureParam(u32 param, u32 value)
     glTexParameteri(GL_TEXTURE_2D, param, value);
 }
 
-void GPUInterface::setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type, const void* data)
+void GPUInterface::setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data)
 {
-    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<u32>(internalformat), width, height, 0, static_cast<u32>(format), type, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, TO_U32(internalformat), width, height, 0, TO_U32(format), TO_U32(type), data);
 }
 
-void GPUInterface::setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type)
+void GPUInterface::setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type)
 {
     setTextureFormatWithData(internalformat, width, height, format, type, 0);
 }
@@ -281,7 +281,7 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
 
     if (attachmentType >= GPUFramebufferAttachmentType::COLOR0 && attachmentType <= GPUFramebufferAttachmentType::COLOR31)
     {
-        setTextureFormat(GPUTextureFormat::RGBA, width, height, GPUTexturePixelFormat::RGBA, static_cast<u32>(GPUPrimitiveDataType::FLOAT));
+        setTextureFormat(GPUTextureFormat::RGBA, width, height, GPUTexturePixelFormat::RGBA, GPUPrimitiveDataType::FLOAT);
 
         /*TODO: NEEDED?*/
         setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -290,15 +290,15 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
     } 
     else if (attachmentType == GPUFramebufferAttachmentType::DEPTH)
     {
-        setTextureFormat(GPUTextureFormat::DEPTH_COMPONENT, width, height, GPUTexturePixelFormat::DEPTH_COMPONENT, static_cast<u32>(GPUPrimitiveDataType::FLOAT));
+        setTextureFormat(GPUTextureFormat::DEPTH_COMPONENT, width, height, GPUTexturePixelFormat::DEPTH_COMPONENT, GPUPrimitiveDataType::FLOAT);
     } 
     else if (attachmentType == GPUFramebufferAttachmentType::STENCIL)
     {
-        setTextureFormat(GPUTextureFormat::STENCIL_INDEX, width, height, GPUTexturePixelFormat::STENCIL_INDEX, static_cast<u32>(GPUPrimitiveDataType::UNSIGNED_BYTE));
+        setTextureFormat(GPUTextureFormat::STENCIL_INDEX, width, height, GPUTexturePixelFormat::STENCIL_INDEX, GPUPrimitiveDataType::UNSIGNED_BYTE);
     }
     else if (attachmentType == GPUFramebufferAttachmentType::DEPTH_STENCIL)
     {
-        setTextureFormat(GPUTextureFormat::DEPTH_STENCIL, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
+        setTextureFormat(GPUTextureFormat::DEPTH_STENCIL, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GPUPrimitiveDataType::UNSIGNED_INT_24_8);
     }
 
     setFramebufferAttachment(mTextureId, attachmentType);
@@ -311,17 +311,17 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
 
 void GPUInterface::setFramebufferAttachment(u32 textureId, GPUFramebufferAttachmentType attachmentType)
 {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, static_cast<u32>(attachmentType), GL_TEXTURE_2D, textureId, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, TO_U32(attachmentType), GL_TEXTURE_2D, textureId, 0);
 }
 
 void GPUInterface::enableFramebuffer(GPUFramebufferOperationType op, u32 FBO)
 {
-    glBindFramebuffer(static_cast<u32>(op), FBO);
+    glBindFramebuffer(TO_U32(op), FBO);
 }
 
 void GPUInterface::disableFramebuffer(GPUFramebufferOperationType op)
 {
-    glBindFramebuffer(static_cast<u32>(op), 0);
+    glBindFramebuffer(TO_U32(op), 0);
 }
 
 void GPUInterface::setFramebufferAttachmentToRead(GPUFramebufferAttachmentType attachmentType)
@@ -329,25 +329,25 @@ void GPUInterface::setFramebufferAttachmentToRead(GPUFramebufferAttachmentType a
     CHECK_MSG(attachmentType == GPUFramebufferAttachmentType::NONE ||
         (attachmentType >= GPUFramebufferAttachmentType::COLOR0 &&
         attachmentType <= GPUFramebufferAttachmentType::COLOR31), "Only COLOR or NONE attachment is suitable for reading!");
-    glReadBuffer(static_cast<u32>(attachmentType));
+    glReadBuffer(TO_U32(attachmentType));
 }
 
 Vector4 GPUInterface::readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat format)
 {
     Vector4 pixelColor;
-    glReadPixels(x, y, 1, 1, static_cast<u32>(format), static_cast<u32>(GPUPrimitiveDataType::FLOAT), &pixelColor);
+    glReadPixels(x, y, 1, 1, TO_U32(format), TO_U32(GPUPrimitiveDataType::FLOAT), &pixelColor);
     return pixelColor;
 }
 
-void GPUInterface::drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced)
+void GPUInterface::drawElements(GPUDrawPrimitive drawPrimitive, u32 indicesCount, u32 instancesCount, bool instanced)
 {
 	if(instanced)
 	{
-		glDrawElementsInstanced(elementType, indicesCount, GL_UNSIGNED_INT, 0, instancesCount);
+		glDrawElementsInstanced(TO_U32(drawPrimitive), indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0, instancesCount);
 	}
 	else
 	{
-		glDrawElements(elementType, instancesCount * indicesCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(TO_U32(drawPrimitive), instancesCount * indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0);
 	}
 
 	glBindVertexArray(0);
@@ -475,7 +475,8 @@ void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferT
 
 void GPUInterface::setupGPUErrorHandling()
 {
-    int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    int flags;
+    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
         // initialize debug output 

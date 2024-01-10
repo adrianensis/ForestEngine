@@ -13,6 +13,12 @@ enum class GPUBufferType : u32
     STORAGE = GL_SHADER_STORAGE_BUFFER
 };
 
+enum class GPUDrawPrimitive: u32
+{
+    LINES = GL_LINES,
+    TRIANGLES = GL_TRIANGLES
+};
+
 enum class GPUFramebufferAttachmentType: u32
 {
     NONE = GL_NONE,
@@ -141,11 +147,14 @@ enum class GPUPrimitiveDataType : u32
     UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
     SHORT = GL_SHORT,
     UNSIGNED_INT = GL_UNSIGNED_INT,
+    UNSIGNED_INT_24_8 = GL_UNSIGNED_INT_24_8,
     INT = GL_INT,
     HALF_FLOAT = GL_HALF_FLOAT,
     FLOAT = GL_FLOAT,
     BOOL = GL_BOOL
 };
+
+#define TO_U32(x) static_cast<u32>(x)
 
 class GPUInterface : public System
 {
@@ -196,9 +205,9 @@ public:
     // Texture
     u32 createTexture(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data, bool createMipMap);
     u32 createTextureFont(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data);
-    void setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type, const void* data);
-    void setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type);
-    void subTexture(u32 x, u32 y, u32 width, u32 height, u32 format,  const byte* data);
+    void setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
+    void setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type);
+    void subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format,  const byte* data);
     void setTextureParam(u32 param, u32 value);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId);
@@ -215,7 +224,7 @@ public:
     Vector4 readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat format);
 
     // Draw Call
-    void drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced);
+    void drawElements(GPUDrawPrimitive drawPrimitive, u32 indicesCount, u32 instancesCount, bool instanced);
 
     // Clear
     void setClearColor(const Vector3& color);

@@ -76,7 +76,7 @@ void ShapeBatchRenderer::render()
         mGPUVertexBuffersLayout.getBuffer(mVBOColor).resize(mColorBuffer.size());
         mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setDataArray(mPositionBuffer);
         mGPUVertexBuffersLayout.getBuffer(mVBOColor).setDataArray(mColorBuffer);
-		GET_SYSTEM(GPUInterface).drawElements(GL_LINES, mIndicesBuffer.size(), mShapesCounter, false);
+		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersLayout.disable();
 
 		mPositionBuffer.clear();

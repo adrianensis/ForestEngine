@@ -126,7 +126,7 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
-		GET_SYSTEM(GPUInterface).drawElements(GL_TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
+		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 	}
 }
 
