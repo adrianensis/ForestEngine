@@ -15,35 +15,153 @@ enum class GPUBufferType : u32
 
 enum class GPUFramebufferAttachmentType: u32
 {
-    COLOR = GL_COLOR_ATTACHMENT0,
+    NONE = GL_NONE,
+    COLOR0 = GL_COLOR_ATTACHMENT0,
+    COLOR1 = GL_COLOR_ATTACHMENT1,
+    COLOR2 = GL_COLOR_ATTACHMENT2,
+    COLOR3 = GL_COLOR_ATTACHMENT3,
+    COLOR4 = GL_COLOR_ATTACHMENT4,
+    COLOR5 = GL_COLOR_ATTACHMENT5,
+    COLOR6 = GL_COLOR_ATTACHMENT6,
+    COLOR7 = GL_COLOR_ATTACHMENT7,
+    COLOR8 = GL_COLOR_ATTACHMENT8,
+    COLOR9 = GL_COLOR_ATTACHMENT9,
+    COLOR10 = GL_COLOR_ATTACHMENT10,
+    COLOR11 = GL_COLOR_ATTACHMENT11,
+    COLOR12 = GL_COLOR_ATTACHMENT12,
+    COLOR13 = GL_COLOR_ATTACHMENT13,
+    COLOR14 = GL_COLOR_ATTACHMENT14,
+    COLOR15 = GL_COLOR_ATTACHMENT15,
+    COLOR16 = GL_COLOR_ATTACHMENT16,
+    COLOR17 = GL_COLOR_ATTACHMENT17,
+    COLOR18 = GL_COLOR_ATTACHMENT18,
+    COLOR19 = GL_COLOR_ATTACHMENT19,
+    COLOR20 = GL_COLOR_ATTACHMENT20,
+    COLOR21 = GL_COLOR_ATTACHMENT21,
+    COLOR22 = GL_COLOR_ATTACHMENT22,
+    COLOR23 = GL_COLOR_ATTACHMENT23,
+    COLOR24 = GL_COLOR_ATTACHMENT24,
+    COLOR25 = GL_COLOR_ATTACHMENT25,
+    COLOR26 = GL_COLOR_ATTACHMENT26,
+    COLOR27 = GL_COLOR_ATTACHMENT27,
+    COLOR28 = GL_COLOR_ATTACHMENT28,
+    COLOR29 = GL_COLOR_ATTACHMENT29,
+    COLOR30 = GL_COLOR_ATTACHMENT30,
+    COLOR31 = GL_COLOR_ATTACHMENT31,
     DEPTH = GL_DEPTH_ATTACHMENT,
     STENCIL = GL_STENCIL_ATTACHMENT,
     DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT
 };
 
-class GPUError
+enum class GPUFramebufferOperationType: u32
 {
-public:
-    u32 mErrorCode = 0;
-    bool mErrorDetected = false;
-    std::string mErrorMessage;
+    READ = GL_READ_FRAMEBUFFER,
+    DRAW = GL_DRAW_FRAMEBUFFER,
+    READ_AND_DRAW = GL_FRAMEBUFFER
+};
+
+// aka internal format in OpenGL
+enum class GPUTextureFormat: u32
+{
+    // Unsized
+    RED = GL_RED,
+    RG = GL_RG,
+    RGB = GL_RGB,
+    RGBA = GL_RGBA,
+    DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
+    STENCIL_INDEX = GL_STENCIL_INDEX,
+    DEPTH_STENCIL = GL_DEPTH_STENCIL,
+    // Sized
+    R8 = GL_R8,
+    R8_SNORM = GL_R8_SNORM,
+    R16 = GL_R16,
+    R16_SNORM = GL_R16_SNORM,
+    RG8 = GL_RG8,
+    RG8_SNORM = GL_RG8_SNORM,
+    RG16 = GL_RG16,
+    RG16_SNORM = GL_RG16_SNORM,
+    RGB4 = GL_RGB4,
+    RGB8 = GL_RGB8,
+    RGB8_SNORM = GL_RGB8_SNORM,
+    RGB16_SNORM = GL_RGB16_SNORM,
+    RGBA8 = GL_RGBA8,
+    RGBA8_SNORM = GL_RGBA8_SNORM,
+    RGBA16 = GL_RGBA16,
+    SRGB8 = GL_SRGB8,
+    R16F = GL_R16F,
+    RG16F = GL_RG16F,
+    RGB16F = GL_RGB16F,
+    RGBA16F = GL_RGBA16F,
+    R32F = GL_R32F,
+    RG32F = GL_RG32F,
+    RGB32F = GL_RGB32F,
+    RGBA32F = GL_RGBA32F,
+    R8I = GL_R8I,
+    R8UI = GL_R8UI,
+    R16I = GL_R16I,
+    R16UI = GL_R16UI,
+    R32I = GL_R32I,
+    R32UI = GL_R32UI,
+    RG8I = GL_RG8I,
+    RG8UI = GL_RG8UI,
+    RG16I = GL_RG16I,
+    RG16UI = GL_RG16UI,
+    RG32I = GL_RG32I,
+    RG32UI = GL_RG32UI,
+    RGB8I = GL_RGB8I,
+    RGB8UI = GL_RGB8UI,
+    RGB16I = GL_RGB16I,
+    RGB16UI = GL_RGB16UI,
+    RGB32I = GL_RGB32I,
+    RGB32UI = GL_RGB32UI,
+    RGBA8I = GL_RGBA8I,
+    RGBA8UI = GL_RGBA8UI,
+    RGBA16I = GL_RGBA16I,
+    RGBA16UI = GL_RGBA16UI,
+    RGBA32I = GL_RGBA32I,
+    RGBA32UI = GL_RGBA32UI
+};
+
+enum class GPUTexturePixelFormat: u32
+{
+    RED = GL_RED,
+    RGB = GL_RGB,
+    RGBA = GL_RGBA,
+    STENCIL_INDEX = GL_STENCIL_INDEX,
+    DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
+    DEPTH_STENCIL = GL_DEPTH_STENCIL,
+};
+
+enum class GPUPrimitiveDataType : u32
+{
+    VOID,
+    STRUCT,
+    UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+    BYTE = GL_BYTE,
+    UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+    SHORT = GL_SHORT,
+    UNSIGNED_INT = GL_UNSIGNED_INT,
+    INT = GL_INT,
+    HALF_FLOAT = GL_HALF_FLOAT,
+    FLOAT = GL_FLOAT,
+    BOOL = GL_BOOL
 };
 
 class GPUInterface : public System
 {
 public:
     // Vertex buffers layout
-    GLuint createVertexBufferLayout();
+    u32 createVertexBufferLayout();
     void enableVertexBufferLayout(u32 vertexBufferLayout);
     void deleteVertexBufferLayout(u32 vertexBufferLayout);
 
     // Attribute
     void enableAttribute(u32 attributeIndex);
     void disableAttribute(u32 attributeIndex);
-    void attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
+    void attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimitiveDataType primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
 
     // Buffer
-    GLuint createBuffer();
+    u32 createBuffer();
     void bindBuffer(GPUBufferType bufferType, u32 bufferId);
     void resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic);
 
@@ -76,18 +194,25 @@ public:
     void disableStencil();
 
     // Texture
-    GLuint createTexture(u32 width, u32 height, u32 format, const byte* data, bool createMipMap);
-    GLuint createTextureFont(u32 width, u32 height, u32 format, const byte* data);
+    u32 createTexture(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data, bool createMipMap);
+    u32 createTextureFont(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data);
+    void setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type, const void* data);
+    void setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type);
     void subTexture(u32 x, u32 y, u32 width, u32 height, u32 format,  const byte* data);
+    void setTextureParam(u32 param, u32 value);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId);
     void disableTexture();
+    void setPixelStoreMode(u32 param, u32 value);
 
     // Framebuffer
     u32 createFramebuffer(u32 width, u32 height);
     u32 createFramebufferAttachment(GPUFramebufferAttachmentType attachmentType, u32 width, u32 height);
-    void enableFramebuffer(u32 FBO);
-    void disableFramebuffer();
+    void setFramebufferAttachment(u32 textureId, GPUFramebufferAttachmentType attachmentType);
+    void enableFramebuffer(GPUFramebufferOperationType op, u32 FBO);
+    void disableFramebuffer(GPUFramebufferOperationType op);
+    void setFramebufferAttachmentToRead(GPUFramebufferAttachmentType attachmentType);
+    Vector4 readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat format);
 
     // Draw Call
     void drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced);

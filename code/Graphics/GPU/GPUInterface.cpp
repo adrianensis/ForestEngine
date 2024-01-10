@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-GLuint GPUInterface::createBuffer()
+u32 GPUInterface::createBuffer()
 {
 	u32 bufferId = 0;
 	glGenBuffers(1, &bufferId);
@@ -17,22 +17,22 @@ void GPUInterface::bindBuffer(GPUBufferType bufferType, u32 bufferId)
     glBindBuffer(static_cast<u32>(bufferType), bufferId);
 }
 
-void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, u32 primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
+void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimitiveDataType primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
 {
 	enableAttribute(propertyArrayIndex);
-	if(primitiveType == GL_INT)
+	if(primitiveType == GPUPrimitiveDataType::INT || primitiveType == GPUPrimitiveDataType::UNSIGNED_INT)
 	{
-		glVertexAttribIPointer(propertyArrayIndex, elementSize, primitiveType, strideSize, reinterpret_cast<byte*>(pointerOffset));
+		glVertexAttribIPointer(propertyArrayIndex, elementSize, static_cast<u32>(primitiveType), strideSize, reinterpret_cast<byte*>(pointerOffset));
 	}
 	else
 	{
-		glVertexAttribPointer(propertyArrayIndex, elementSize, primitiveType, GL_FALSE, strideSize, reinterpret_cast<byte*>(pointerOffset));
+		glVertexAttribPointer(propertyArrayIndex, elementSize, static_cast<u32>(primitiveType), GL_FALSE, strideSize, reinterpret_cast<byte*>(pointerOffset));
 	}
 
     glVertexAttribDivisor(propertyArrayIndex, divisor);
 }
 
-GLuint GPUInterface::createVertexBufferLayout()
+u32 GPUInterface::createVertexBufferLayout()
 {
 	u32 vertexBufferLayout = 0;
 	glGenVertexArrays(1, &vertexBufferLayout);
@@ -163,28 +163,28 @@ void GPUInterface::disableStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 
-GLuint GPUInterface::createTexture(u32 width, u32 height, u32 format, const byte* data, bool createMipMap)
+u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data, bool createMipMap)
 {
     u32 textureId = 0;
     glGenTextures(1, &textureId);
 
     enableTexture(textureId);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    setTextureParam(GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    setTextureParam(GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     if(createMipMap)
     {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
     else
     {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
     
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    setTextureFormatWithData(internalformat, width, height, format, GL_UNSIGNED_BYTE, data);
     
     if(createMipMap)
     {
@@ -196,7 +196,7 @@ GLuint GPUInterface::createTexture(u32 width, u32 height, u32 format, const byte
     return textureId;
 }
 
-GLuint GPUInterface::createTextureFont(u32 width, u32 height, u32 format, const byte* data)
+u32 GPUInterface::createTextureFont(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data)
 {
     u32 textureId = 0;
     glGenTextures(1, &textureId);
@@ -204,13 +204,13 @@ GLuint GPUInterface::createTextureFont(u32 width, u32 height, u32 format, const 
     enableTexture(textureId);
 
     // disable byte-alignment restriction
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
+    setTextureFormatWithData(internalformat, width, height, format, GL_UNSIGNED_BYTE, data);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    setTextureParam(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    setTextureParam(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    setTextureParam(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    setTextureParam(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     disableTexture();
 
@@ -220,6 +220,21 @@ GLuint GPUInterface::createTextureFont(u32 width, u32 height, u32 format, const 
 void GPUInterface::subTexture(u32 x, u32 y, u32 width, u32 height, u32 format, const byte* data)
 {
     glTexSubImage2D(GL_TEXTURE_2D, 0, x, y , width, height, format, GL_UNSIGNED_BYTE, data);
+}
+
+void GPUInterface::setTextureParam(u32 param, u32 value)
+{
+    glTexParameteri(GL_TEXTURE_2D, param, value);
+}
+
+void GPUInterface::setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type, const void* data)
+{
+    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<u32>(internalformat), width, height, 0, static_cast<u32>(format), type, data);
+}
+
+void GPUInterface::setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, u32 type)
+{
+    setTextureFormatWithData(internalformat, width, height, format, type, 0);
 }
 
 void GPUInterface::deleteTexture(u32 textureId)
@@ -237,16 +252,21 @@ void GPUInterface::disableTexture()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void GPUInterface::setPixelStoreMode(u32 param, u32 value)
+{
+    glPixelStorei(param, value);
+}
+
 u32 GPUInterface::createFramebuffer(u32 width, u32 height)
 {
     u32 FBO = 0;
     // Create the FBO
     glGenFramebuffers(1, &FBO);
-    enableFramebuffer(FBO);
+    enableFramebuffer(GPUFramebufferOperationType::READ_AND_DRAW, FBO);
 
     // Restore the default framebuffer
     // disableTexture();
-    disableFramebuffer();
+    disableFramebuffer(GPUFramebufferOperationType::READ_AND_DRAW);
 
     return FBO;
 }
@@ -255,39 +275,33 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
 {
     u32 mTextureId = 0;
     glGenTextures(1, &mTextureId);
-    glBindTexture(GL_TEXTURE_2D, mTextureId);
-    
-    switch (attachmentType)
+    enableTexture(mTextureId);
+
+    CHECK_MSG(attachmentType > GPUFramebufferAttachmentType::NONE, "NONE is not valid attachment!");
+
+    if (attachmentType >= GPUFramebufferAttachmentType::COLOR0 && attachmentType <= GPUFramebufferAttachmentType::COLOR31)
     {
-        case GPUFramebufferAttachmentType::COLOR:
-        {
-            // Create the texture object for the primitive information buffer
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, width, height, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, NULL);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
-            break;
-        }
-        case GPUFramebufferAttachmentType::DEPTH:
-        {
-            // Create the texture object for the depth buffer
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
-            break;
-        }
-        case GPUFramebufferAttachmentType::STENCIL:
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_STENCIL_INDEX8, width, height, 0, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, NULL);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
-            break;
-        }
-        case GPUFramebufferAttachmentType::DEPTH_STENCIL:
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
-            break;
-        }
+        setTextureFormat(GPUTextureFormat::RGBA, width, height, GPUTexturePixelFormat::RGBA, static_cast<u32>(GPUPrimitiveDataType::FLOAT));
+
+        /*TODO: NEEDED?*/
+        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        /*TODO: NEEDED?*/
+    } 
+    else if (attachmentType == GPUFramebufferAttachmentType::DEPTH)
+    {
+        setTextureFormat(GPUTextureFormat::DEPTH_COMPONENT, width, height, GPUTexturePixelFormat::DEPTH_COMPONENT, static_cast<u32>(GPUPrimitiveDataType::FLOAT));
+    } 
+    else if (attachmentType == GPUFramebufferAttachmentType::STENCIL)
+    {
+        setTextureFormat(GPUTextureFormat::STENCIL_INDEX, width, height, GPUTexturePixelFormat::STENCIL_INDEX, static_cast<u32>(GPUPrimitiveDataType::UNSIGNED_BYTE));
     }
+    else if (attachmentType == GPUFramebufferAttachmentType::DEPTH_STENCIL)
+    {
+        setTextureFormat(GPUTextureFormat::DEPTH_STENCIL, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
+    }
+
+    setFramebufferAttachment(mTextureId, attachmentType);
 
     // Verify that the FBO is correct
     // checkFramebufferErrors();
@@ -295,14 +309,34 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
     return mTextureId;
 }
 
-void GPUInterface::enableFramebuffer(u32 FBO)
+void GPUInterface::setFramebufferAttachment(u32 textureId, GPUFramebufferAttachmentType attachmentType)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, static_cast<u32>(attachmentType), GL_TEXTURE_2D, textureId, 0);
 }
 
-void GPUInterface::disableFramebuffer()
+void GPUInterface::enableFramebuffer(GPUFramebufferOperationType op, u32 FBO)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(static_cast<u32>(op), FBO);
+}
+
+void GPUInterface::disableFramebuffer(GPUFramebufferOperationType op)
+{
+    glBindFramebuffer(static_cast<u32>(op), 0);
+}
+
+void GPUInterface::setFramebufferAttachmentToRead(GPUFramebufferAttachmentType attachmentType)
+{
+    CHECK_MSG(attachmentType == GPUFramebufferAttachmentType::NONE ||
+        (attachmentType >= GPUFramebufferAttachmentType::COLOR0 &&
+        attachmentType <= GPUFramebufferAttachmentType::COLOR31), "Only COLOR or NONE attachment is suitable for reading!");
+    glReadBuffer(static_cast<u32>(attachmentType));
+}
+
+Vector4 GPUInterface::readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat format)
+{
+    Vector4 pixelColor;
+    glReadPixels(x, y, 1, 1, static_cast<u32>(format), static_cast<u32>(GPUPrimitiveDataType::FLOAT), &pixelColor);
+    return pixelColor;
 }
 
 void GPUInterface::drawElements(u32 elementType, u32 indicesCount, u32 instancesCount, bool instanced)

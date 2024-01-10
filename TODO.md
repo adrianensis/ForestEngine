@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Mesh Buffers - Configure mesh buffers based on MeshBuffersLayout (or MaterialData?) (use positions, use color, use texture...)
 - [ ] OpenGL - Cache uniform locations
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back

@@ -7,7 +7,7 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
     mIsStatic = isStatic;
 	mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
 
-    attribute(mData.mGPUVariableData.mGPUDataType.mPrimitiveType);
+    attribute(mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType);
 }
 
 void GPUVertexBuffer::terminate()
@@ -20,12 +20,12 @@ void GPUVertexBuffer::resize(u32 size)
 	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mBufferId, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
 }
 
-u32 GPUVertexBuffer::attribute(GPUPrimitiveType primitiveType)
+u32 GPUVertexBuffer::attribute(GPUPrimitiveDataType primitiveType)
 {
     // sizeInPrimitiveTypes: size of the object divided in primitive types
     // ex: Vector3 -> 3 floats
     u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
-    GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, static_cast<u32>(primitiveType), mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
+    GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, primitiveType, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
     // accumulative offset in bytes
     u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;

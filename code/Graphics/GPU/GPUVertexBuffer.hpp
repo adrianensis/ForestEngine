@@ -38,7 +38,7 @@ public:
     void terminate();
 
 private:
-    u32 attribute(GPUPrimitiveType primitiveType);
+    u32 attribute(GPUPrimitiveDataType primitiveType);
 
 public:
     GPUVertexBufferData mData;
