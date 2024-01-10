@@ -6,6 +6,7 @@
 - [ ] Add Option for SSBO to be readonly
 
 ## Interesting / Nice To Have / Optimizations
+- [ ] OpenGL - Renderbuffers for readonly framebuffers
 - [ ] Animation Blending
 - [ ] OpenGL - Compress textures? Why/When?
 - [ ] OpenGL - Bindless Textures
