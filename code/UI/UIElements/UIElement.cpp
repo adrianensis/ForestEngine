@@ -525,10 +525,10 @@ StencilData UIElement::calculateStencilData() const
     if(mClipChildren)
     {
         stencilData.mUseStencil = true;
-        stencilData.mMaskStencilValue = 0;
+        stencilData.mStencilValue = 0;
         stencilData.mStencilFunction = GL_EQUAL;
         stencilData.mStencilPassOp = GL_INCR;
-        stencilData.mThisObjectId = this->getObjectId();
+        stencilData.mId = this->getObjectId();
 
         if(mConfig.mParent)
         {
@@ -541,8 +541,8 @@ StencilData UIElement::calculateStencilData() const
                 // if direct parent is clipping shape, then increment mask
                 if(parentUIElement->mClipChildren)
                 {
-                    stencilData.mMaskStencilValue++;
-                    stencilData.mMaskObjectId = parentStencilData.mThisObjectId;
+                    stencilData.mStencilValue++;
+                    stencilData.mParentId = parentStencilData.mId;
                 }
             }
         }
@@ -560,14 +560,14 @@ StencilData UIElement::calculateStencilData() const
                 // if direct parent is clipping shape, then increment mask
                 if(parentUIElement->mClipChildren)
                 {
-                    stencilData.mMaskStencilValue++;
-                    stencilData.mMaskObjectId = parentStencilData.mThisObjectId;
+                    stencilData.mStencilValue++;
+                    stencilData.mParentId = parentStencilData.mId;
                 }
              
                 stencilData.mStencilPassOp = GL_KEEP;
             }
 
-            stencilData.mThisObjectId = 0;
+            stencilData.mId = 0;
         }
     }
 

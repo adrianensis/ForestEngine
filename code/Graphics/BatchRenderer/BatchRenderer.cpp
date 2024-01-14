@@ -82,7 +82,7 @@ void BatchRenderer::enable()
 
     if(mBatchData.mStencilData.mUseStencil)
     {
-        GET_SYSTEM(GPUInterface).enableStencil(mBatchData.mStencilData.mMaskStencilValue, mBatchData.mStencilData.mStencilFunction, mBatchData.mStencilData.mStencilPassOp);
+        GET_SYSTEM(GPUInterface).enableStencil(mBatchData.mStencilData.mStencilValue, mBatchData.mStencilData.mStencilFunction, mBatchData.mStencilData.mStencilPassOp);
     }
 }
 

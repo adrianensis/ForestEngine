@@ -13,19 +13,20 @@ class StencilData
 {
 public:
     bool mUseStencil = false;
-    u32 mMaskStencilValue = 0;
+    // aka ref
+    u32 mStencilValue = 0;
     u32 mStencilFunction = GL_NOTEQUAL;
     u32 mStencilPassOp = GL_KEEP;
-    ObjectId mMaskObjectId = 0;
-    ObjectId mThisObjectId = 0;
+    u64 mParentId = 0;
+    u64 mId = 0;
 
     bool operator==(const StencilData& other) const
 	{
         return
         mUseStencil == other.mUseStencil and
-        mMaskStencilValue == other.mMaskStencilValue and
-        mMaskObjectId == other.mMaskObjectId and
-        mThisObjectId == other.mThisObjectId && 
+        mStencilValue == other.mStencilValue and
+        mParentId == other.mParentId and
+        mId == other.mId && 
         mStencilFunction == other.mStencilFunction;
 	}
 };

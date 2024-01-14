@@ -45,10 +45,10 @@ void BatchesManager::renderStencil()
 	// {
 	// 	if(it->first.mStencilData.mUseStencil && it->first.mIsWorldSpace)
 	// 	{
-    //         ObjectId maskObjectId = it->first.mStencilData.mMaskObjectId;
-    //         if(maskObjectId > 0)
+    //         u64 maskId = it->first.mStencilData.mParentId;
+    //         if(maskId > 0)
     //         {
-    //             renderStencilMask(maskObjectId);
+    //             renderStencilMask(maskId);
     //         }
 
 	// 		it->second->render();
@@ -56,15 +56,15 @@ void BatchesManager::renderStencil()
 	// }
 }
 
-void BatchesManager::renderStencilMask(ObjectId maskObjectId)
+void BatchesManager::renderStencilMask(u64 maskId)
 {
     // FOR_MAP(it, mBatches)
 	// {
-	// 	if(it->first.mStencilData.mUseStencil && maskObjectId == it->first.mStencilData.mThisObjectId && it->first.mIsWorldSpace)
+	// 	if(it->first.mStencilData.mUseStencil && maskId == it->first.mStencilData.mId && it->first.mIsWorldSpace)
 	// 	{
-    //         if(it->first.mStencilData.mMaskObjectId > 0)
+    //         if(it->first.mStencilData.mParentId > 0)
     //         {
-    //             renderStencilMask(it->first.mStencilData.mMaskObjectId);
+    //             renderStencilMask(it->first.mStencilData.mParentId);
 
     //             it->second->render();
     //         }
@@ -95,17 +95,17 @@ void BatchesManager::renderScreenSpaceStencil()
 
     auto compareStencilBatch = [](Ptr<BatchRenderer> b1, Ptr<BatchRenderer> b2)
     {
-        ObjectId o1 = b1->getBatchData().mStencilData.mMaskObjectId > 0 ? b1->getBatchData().mStencilData.mMaskObjectId : b1->getBatchData().mStencilData.mThisObjectId;
-        ObjectId o2 = b2->getBatchData().mStencilData.mMaskObjectId > 0 ? b2->getBatchData().mStencilData.mMaskObjectId : b2->getBatchData().mStencilData.mThisObjectId;
+        u64 o1 = b1->getBatchData().mStencilData.mParentId > 0 ? b1->getBatchData().mStencilData.mParentId : b1->getBatchData().mStencilData.mId;
+        u64 o2 = b2->getBatchData().mStencilData.mParentId > 0 ? b2->getBatchData().mStencilData.mParentId : b2->getBatchData().mStencilData.mId;
         return (o1 < o2);
     };
   
     std::sort(sortedBatches.begin(), sortedBatches.end(), compareStencilBatch);
 
-    ObjectId currentMaskId = 0;
+    u64 currentMaskId = 0;
     FOR_LIST(it, sortedBatches)
 	{
-        ObjectId maskId = (*it)->getBatchData().mStencilData.mMaskObjectId > 0 ? (*it)->getBatchData().mStencilData.mMaskObjectId : (*it)->getBatchData().mStencilData.mThisObjectId;
+        u64 maskId = (*it)->getBatchData().mStencilData.mParentId > 0 ? (*it)->getBatchData().mStencilData.mParentId : (*it)->getBatchData().mStencilData.mId;
         if(currentMaskId != maskId)
         {
             currentMaskId = maskId;
@@ -114,14 +114,14 @@ void BatchesManager::renderScreenSpaceStencil()
 
 		if((*it)->getBatchData().mStencilData.mUseStencil && !(*it)->getBatchData().mIsWorldSpace)
 		{
-            if(!mMasksDrawn.contains((*it)->getBatchData().mStencilData.mThisObjectId) || (*it)->getBatchData().mStencilData.mThisObjectId == 0)
+            if(!mMasksDrawn.contains((*it)->getBatchData().mStencilData.mId) || (*it)->getBatchData().mStencilData.mId == 0)
             {
-                mMasksDrawn.insert((*it)->getBatchData().mStencilData.mThisObjectId);
+                mMasksDrawn.insert((*it)->getBatchData().mStencilData.mId);
                 
-                ObjectId maskObjectId = (*it)->getBatchData().mStencilData.mMaskObjectId;
-                if(maskObjectId > 0)
+                u64 maskId = (*it)->getBatchData().mStencilData.mParentId;
+                if(maskId > 0)
                 {
-                    renderScreenSpaceStencilMask(maskObjectId);
+                    renderScreenSpaceStencilMask(maskId);
                 }
                 
 			    (*it)->render();
@@ -130,20 +130,20 @@ void BatchesManager::renderScreenSpaceStencil()
 	}
 }
 
-void BatchesManager::renderScreenSpaceStencilMask(ObjectId maskObjectId)
+void BatchesManager::renderScreenSpaceStencilMask(u64 maskId)
 {    
     FOR_MAP(it, mBatches)
 	{
-		if(it->first.mStencilData.mUseStencil && maskObjectId == it->first.mStencilData.mThisObjectId && !it->first.mIsWorldSpace)
+		if(it->first.mStencilData.mUseStencil && maskId == it->first.mStencilData.mId && !it->first.mIsWorldSpace)
 		{
-            if(it->first.mStencilData.mMaskObjectId > 0)
+            if(it->first.mStencilData.mParentId > 0)
             {
-                renderScreenSpaceStencilMask(it->first.mStencilData.mMaskObjectId);
+                renderScreenSpaceStencilMask(it->first.mStencilData.mParentId);
             }
 
-            if(!mMasksDrawn.contains(it->first.mStencilData.mThisObjectId))
+            if(!mMasksDrawn.contains(it->first.mStencilData.mId))
             {
-                mMasksDrawn.insert(it->first.mStencilData.mThisObjectId);
+                mMasksDrawn.insert(it->first.mStencilData.mId);
                 it->second->render();
             }
 

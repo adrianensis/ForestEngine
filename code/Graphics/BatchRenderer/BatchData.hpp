@@ -41,8 +41,8 @@ public:
 			return key.mMaterial->getObjectId() ^ key.mMesh->getObjectId() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
             (u64)key.mStencilData.mUseStencil ^ 
-			(u64)key.mStencilData.mMaskStencilValue ^ static_cast<u64>(key.mStencilData.mStencilFunction) ^
-            (u64)key.mStencilData.mMaskObjectId ^ (u64)key.mStencilData.mThisObjectId;
+			(u64)key.mStencilData.mStencilValue ^ static_cast<u64>(key.mStencilData.mStencilFunction) ^
+            (u64)key.mStencilData.mParentId ^ (u64)key.mStencilData.mId;
 		}
 	};
 };

@@ -7,6 +7,7 @@
 
 ## Interesting / Nice To Have / Optimizations
 - [ ] OpenGL - Renderbuffers for readonly framebuffers
+- [ ] OpenGL - glMultiDrawElementsIndirect - struct DrawElementsIndirectCommand
 - [ ] Animation Blending
 - [ ] OpenGL - Compress textures? Why/When?
 - [ ] OpenGL - Bindless Textures
