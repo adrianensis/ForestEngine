@@ -94,6 +94,8 @@ bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, f32 
 
 u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
 {
+
+
     f32 radiusEps = sphere.getRadius() + eps;
 
     bool lineIntersectsSphere = false;
@@ -106,42 +108,38 @@ u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vec
     f32 B = 2.0f * dVector.dot(startToCenter);
     f32 C = startToCenter.sqrlen() - radiusEps * radiusEps;
 
-    // discriminant
-    f32 delta = B * B - 4.0f * A * C;
+    f32 det = B * B - 4.0f * A * C;
 
-    if(delta > 0.0f)
+    if ( det == MathUtils::FLOAT_EPSILON )
     {
-        if (delta > MathUtils::FLOAT_EPSILON)
-        {
 
-            f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
+        f32 t = -B/(2*A);
 
-            intersectionResult1.x = line.getStart().x + t1*(dVector.x);
-            intersectionResult1.y = line.getStart().y + t1*(dVector.y);
-            intersectionResult1.z = line.getStart().z + t1*(dVector.z);
-            
-            f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
+        intersectionResult1.x = line.getStart().x + t*(dVector.x);
+        intersectionResult1.y = line.getStart().y + t*(dVector.y);
+        intersectionResult1.z = line.getStart().z + t*(dVector.z);
 
-            intersectionResult2.x = line.getStart().x + t2*(dVector.x);
-            intersectionResult2.y = line.getStart().y + t2*(dVector.y);
-            intersectionResult2.z = line.getStart().z + t2*(dVector.z);
-
-            return 2;
-        }
-        else if (delta < MathUtils::FLOAT_EPSILON)
-        {
-
-            f32 t = -B/(2*A);
-
-            intersectionResult1.x = line.getStart().x + t*(dVector.x);
-            intersectionResult1.y = line.getStart().y + t*(dVector.y);
-            intersectionResult1.z = line.getStart().z + t*(dVector.z);
-
-            return 1;
-        }
+        return 1;
     }
 
-    // delta negative: no solution
+    if ( det > MathUtils::FLOAT_EPSILON )
+    {
+
+        f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
+
+        intersectionResult1.x = line.getStart().x + t1*(dVector.x);
+        intersectionResult1.y = line.getStart().y + t1*(dVector.y);
+        intersectionResult1.z = line.getStart().z + t1*(dVector.z);
+        
+        f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
+
+        intersectionResult2.x = line.getStart().x + t2*(dVector.x);
+        intersectionResult2.y = line.getStart().y + t2*(dVector.y);
+        intersectionResult2.z = line.getStart().z + t2*(dVector.z);
+
+        return 2;
+    }
+
     return 0;
 }
 
