@@ -97,7 +97,7 @@ void Window::onResize(GLFWwindow *window, int width, int height)
 {
 	mWindowSize.set(width, height);
 	GET_SYSTEM(GPUInterface).setViewport(0, 0, mWindowSize.x, mWindowSize.y);
-	GET_SYSTEM(RenderEngine).mCamera->onResize();
+	GET_SYSTEM(RenderEngine).onResize();
 }
 
 void Window::onResizeGLFW(GLFWwindow *window, int width, int height)

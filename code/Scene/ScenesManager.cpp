@@ -83,5 +83,6 @@ void ScenesManager::internalLoadScene()
     {
 	    mGameObjectController->mScene = (mCurrentScene);
     }
-	GET_SYSTEM(RenderEngine).mCamera = (mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
+
+    mCurrentCamera = mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>();
 }

@@ -2,7 +2,6 @@
 
 #include "Graphics/Module.hpp"
 
-#include "Scene/Transform.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIStyle.hpp"
 #include "UI/UIGroup.hpp"
@@ -60,7 +59,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 	if(mTransform->mAffectedByProjection)
 	{
-		mousePosition = GET_SYSTEM(RenderEngine).mCamera->screenToWorld(GET_SYSTEM(Input).getMousePosition());
+		mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}
 
     // GET_SYSTEM(RenderEngine).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);

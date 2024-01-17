@@ -6,6 +6,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
+#include "Graphics/RenderPipeline/RenderPipeline.hpp"
 
 class Light;
 
@@ -18,6 +19,7 @@ public:
     void update();
     void preSceneChanged();
     void postSceneChanged();
+    void onResize();
     void terminate();
     
     void addComponent(Ptr<SystemComponent> component) override;
@@ -30,18 +32,16 @@ public:
 
 private:
     void swap();
-    void renderBatches();
-    void updateGPUSharedContext(bool isWorldSpace);
+    void render();
 private:
+    RenderPipelineData mRenderPipelineData;
+    RenderPipeline mRenderPipeline;
 	BatchesManager mBatchesManager;
-    std::vector<Ptr<Light>> mLights;
-
 	ShapeBatchRenderer mShapeBatchRenderer;
 	ShapeBatchRenderer mShapeBatchRendererScreenSpace;
 
 	bool mCameraDirtyTranslation = false;
 
 public:
-	Ptr<Camera> mCamera;
 	OcTree octree;
 };
