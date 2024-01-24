@@ -18,7 +18,6 @@ void Camera::init()
 
 void Camera::onComponentAdded()
 {
-	mTransformState = TransformState(mGameObject->mTransform.get());
     recalculateProjectionMatrix();
 }
 
@@ -26,18 +25,9 @@ void Camera::update()
 {
 	PROFILER_CPU()
 	
-	TransformState currentTransformState(mGameObject->mTransform.get());
-	if(!currentTransformState.eq(mTransformState))
-	{
-		mFrustum.build();
-
-		mInversePVMatrixNeedsUpdate = true;
-
-		calculateProjectionViewMatrix();
-
-		mTransformState = currentTransformState;
-	}
-
+	mFrustum.build();
+    mInversePVMatrixNeedsUpdate = true;
+    calculateProjectionViewMatrix();
 }
 
 void Camera::recalculateProjectionMatrix()

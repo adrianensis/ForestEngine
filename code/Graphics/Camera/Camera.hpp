@@ -45,8 +45,6 @@ private:
 	f32 mAspect = 0.0f;
 	f32 mFov = 0.0f;
 
-	TransformState mTransformState;
-
 public:
 	Matrix4 mProjectionMatrix;
 	mutable Matrix4 mViewMatrix;

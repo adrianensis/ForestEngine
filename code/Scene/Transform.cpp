@@ -1,21 +1,6 @@
 #include "Scene/Transform.hpp"
 #include "Scene/GameObject.hpp"
 
-
-TransformState::TransformState(const Transform& transform)
-{
-	mPosition = transform.getWorldPosition();
-	mRotation = transform.getRotation();
-	mScale = transform.getScale();
-}
-
-TransformState::TransformState(const Vector3& position, const Vector3& rotation, const Vector3& scale)
-{
-	mPosition = position;
-	mRotation = rotation;
-	mScale = scale;
-}
-
 void Transform::init() 
 {
 	mTranslationMatrix.identity();
