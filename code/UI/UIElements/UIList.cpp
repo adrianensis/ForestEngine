@@ -31,8 +31,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 {
 	UIElement::initFromConfig(config);
 
-	mTransform->setPosition(mConfig.mDisplayPosition);
-	mTransform->setScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
+	mTransform->setLocalPosition(mConfig.mDisplayPosition);
+	mTransform->setLocalScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
 	mTransform->mAffectedByProjection = (false);
 
     RendererData rendererData;
@@ -76,7 +76,7 @@ void UIList::toggle()
 	// TODO : Temporary
 	if (mButtons.empty())
 	{
-		Vector3 scale = mTransform->getScale();
+		Vector3 scale = mTransform->getLocalScale();
 		scale.x = scale.x * GET_SYSTEM(Window).getAspectRatio();
 
 		UIBuilder uiBuilder;
@@ -127,11 +127,11 @@ void UIList::setEntriesVisibility(bool visible)
 			std::string& label = it->mLabel;
 			UIElementCallback onPressedCallback = it->mCallback;
 
-			Vector3 scale = mTransform->getScale();
+			Vector3 scale = mTransform->getLocalScale();
 			scale.x = scale.x * GET_SYSTEM(Window).getAspectRatio();
 
 			GET_SYSTEM(UIManager).getBuilder()->saveData()->
-				setPosition(Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
+				setLocalPosition(Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
 				setSize(scale)->
 				setText(label)->
 				setAdjustSizeToText(true)->
@@ -177,7 +177,7 @@ void UIList::onScroll(f32 scroll)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				(*it)->mTransform->translate(Vector2(0,0.005f * -scroll));
+				(*it)->mTransform->addLocalTranslation(Vector2(0,0.005f * -scroll));
 			}
 		}
 	}

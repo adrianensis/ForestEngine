@@ -206,11 +206,7 @@ void Matrix4::zeros()
 
 void Matrix4::identity()
 {
-	this->zeros();
-	this->set(0, 0, 1.0f);
-	this->set(1, 1, 1.0f);
-	this->set(2, 2, 1.0f);
-	this->set(3, 3, 1.0f);
+	init(smIdentity);
 }
 
 void Matrix4::translation(const Vector3& vector)
@@ -287,4 +283,13 @@ void Matrix4::perspective(f32 near, f32 far, f32 aspect, f32 fovy)
 	this->set(2, 2, (-(far + near)) / zRange);
     this->set(2, 3, (-(2.0f * far * near)) / zRange);
 	this->set(3, 2, -1.0f);
+}
+
+Matrix4 Matrix4::transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale)
+{
+    Matrix4 translationCopy = translation;
+    Matrix4 rotationCopy = rotation;
+    rotationCopy.mul(scale);
+    translationCopy.mul(rotationCopy);
+    return translationCopy;
 }

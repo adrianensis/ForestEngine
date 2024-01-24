@@ -149,7 +149,7 @@ void Camera::calculateViewMatrix()
 	// 	Vector4(0, 0, 0, 1)
 	// );
 	
-	Matrix4 rotationMatrix = mGameObject->mTransform->getRotationMatrix();
+	Matrix4 rotationMatrix = mGameObject->mTransform->getLocalRotationMatrix();
 
 	mViewMatrix.init(viewRotationMatrix);
 	mViewMatrix.mul(rotationMatrix);

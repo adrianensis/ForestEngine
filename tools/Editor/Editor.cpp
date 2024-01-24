@@ -227,36 +227,36 @@ void Editor::update()
 
     PROFILER_BLOCK_CPU("Editor Camera");
 	Transform* cameraTransform = &cameraGameObject->mTransform.get();
-	Matrix4 cameraRotationMatrix = cameraGameObject->mTransform->getRotationMatrix();
+	Matrix4 cameraRotationMatrix = cameraGameObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
 
 	f32 speed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
-    //gameObject->mTransform->translate(Vector3(0,0,-0.5));
+    //gameObject->mTransform->addTranslation(Vector3(0,0,-0.5));
 
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
-        cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector3(-speed,0,0)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
-        cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(speed,0,0)));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector3(speed,0,0)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_UP))
 	{
-		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,-speed)));
+		cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector3(0,0,-speed)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
-		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
+		cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector3(0,0,speed)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_UP))
 	{
-		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,speed,0)));
+		cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector3(0,speed,0)));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
 	{
-		cameraTransform->translate(cameraRotationMatrix.mulVector(Vector3(0,-speed,0)));
+		cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector3(0,-speed,0)));
 	}
 
 	if(!mousePosition.eq(currentMousePosition))
@@ -267,7 +267,7 @@ void Editor::update()
 		f32 yaw = mouseVector.x;
 		f32 pitch = mouseVector.y;
 
-		cameraTransform->rotate(Vector3(pitch, -yaw, 0));
+		cameraTransform->addLocalRotation(Vector3(pitch, -yaw, 0));
 	}
 
 	mousePosition = currentMousePosition;
@@ -275,7 +275,7 @@ void Editor::update()
     FOR_ARRAY(i, mGameObjectsArray)
     {
         Ptr<Transform> transform = mGameObjectsArray[i]->mTransform;
-        transform->rotate(Vector3(speed/30.0f, speed/30.0f, speed/30.0f));
+        transform->addLocalRotation(Vector3(speed/30.0f, speed/30.0f, speed/30.0f));
     }
 
     PROFILER_END_BLOCK();
@@ -319,8 +319,8 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
-	gameObject->mTransform->setPosition(v);
-	gameObject->mTransform->setScale(Vector3(size,size,size));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
     RendererData rendererData;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Cube>();
@@ -340,9 +340,9 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
 
     Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = true;
-	gameObject->mTransform->setPosition(v);
-	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
-	gameObject->mTransform->setRotation(Vector3(0,rot,0));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Vector3(1,1,1) * size);
+	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
@@ -358,9 +358,9 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
-	gameObject->mTransform->setPosition(v);
-	gameObject->mTransform->setScale(Vector3(1,1,1) * size);
-	gameObject->mTransform->setRotation(Vector3(0,rot,0));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Vector3(1,1,1) * size);
+	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;

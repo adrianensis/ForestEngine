@@ -26,7 +26,7 @@ void Scene::init()
 	mCameraGameObject = OwnerPtr<GameObject>::newObject();
 	mCameraGameObject->init();
 
-	mCameraGameObject->mTransform->translate(Vector3(0, 0, 100.0f));
+	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 100.0f));
 
     Ptr<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
 	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
@@ -78,7 +78,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 			{
 				Transform *t = &(*it)->mTransform.get();
 				Vector3 worldPosition = t->getWorldPosition();
-				Vector3 scale = t->getScale();
+				Vector3 scale = t->getLocalScale();
 
 				f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
 				maxSize = std::max(std::max(maxSize, std::abs(worldPosition.x) + maxObjectScale),

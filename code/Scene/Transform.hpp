@@ -2,38 +2,37 @@
 
 #include "Scene/Component.hpp"
 
-
-class Transform;
-
 class Transform: public Component
 {
     GENERATE_METADATA(Transform)
 	DECLARE_SERIALIZATION()
 
 public:
-	static const Vector3 smRight;
-	static const Vector3 smUp;
-	static const Vector3 smForward;
+	inline static const Vector3 smRight = Vector3(1,0,0);
+	inline static const Vector3 smUp = Vector3(0,1,0);
+	inline static const Vector3 smForward = Vector3(0,0,1);
     void init();
     void onDestroy() override;
-    Vector3 getWorldPosition() const;
-    Vector3 getWorldScale() const;
-    Vector3 getWorldRotation() const;
+
+	void addLocalTranslation(const Vector3& vector);
+	void addLocalRotation(const Vector3& vector);
+	void addLocalScale(const Vector3& vector);
     void lookAt(const Vector3& targetPosition);
-    const Matrix4& getTranslationMatrix() const;
-    const Matrix4& getRotationMatrix() const;
-    const Matrix4& getScaleMatrix() const;
+
     const Matrix4& calculateModelMatrix() const;
-
-	void translate(const Vector3& vector);
-	void rotate(const Vector3& vector);
-
-    void setPosition(const Vector3& vec);
-	void setRotation(const Vector3& vec);
-	void setScale(const Vector3& vec);
 
     void addChild(Ptr<Transform> child);
     void removeChild(Ptr<Transform> child);
+
+    Vector3 getWorldPosition() const;
+    Vector3 getWorldScale() const;
+    Vector3 getWorldRotation() const;
+    const Matrix4& getLocalTranslationMatrix() const;
+    const Matrix4& getLocalRotationMatrix() const;
+    const Matrix4& getLocalScaleMatrix() const;
+    void setLocalPosition(const Vector3& vec);
+	void setLocalRotation(const Vector3& vec);
+	void setLocalScale(const Vector3& vec);
 
 private:
     void notifyModelMatrixDirty();
@@ -43,10 +42,13 @@ private:
     Ptr<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
+    mutable bool mLocalTranslationMatrixDirty = true;
+    mutable bool mLocalRotationMatrixDirty = true;
+    mutable bool mLocalScaleMatrixDirty = true;
 
 	Vector3 mLocalPosition = Vector3(0,0,0);
-	Vector3 mRotation = Vector3(0,0,0);
-	Vector3 mScale = Vector3(1,1,1);
+	Vector3 mLocalRotation = Vector3(0,0,0);
+	Vector3 mLocalScale = Vector3(1,1,1);
 
 	mutable Matrix4 mModelMatrix;
 	mutable Matrix4 mModelMatrixNoScale;
@@ -60,8 +62,8 @@ public:
 
 public:
     CRGET(LocalPosition)
-    CRGET(Rotation)
-    CRGET(Scale)
+    CRGET(LocalRotation)
+    CRGET(LocalScale)
     GET(ModelMatrixNoScale)
     GET_SET(IgnoreParentScale)
 };

@@ -123,7 +123,7 @@ void BatchRenderer::processRenderers()
 		else
 		{
             //Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
-            //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getScale().x))
+            //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getLocalScale().x))
             {
                 PROFILER_BLOCK_CPU("update");
                 renderer->update();

@@ -75,6 +75,8 @@ public:
     void ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void perspective(f32 near, f32 far, f32 aspect, f32 fovy);
 
+    static Matrix4 transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale);
+
     DECLARE_COPY()
 	{
 		init(other);
