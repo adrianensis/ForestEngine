@@ -13,11 +13,13 @@ public:
     void disable();
     void terminate();
     u32 createVertexBuffer(const GPUVertexBufferData& data);
-    GPUVertexBuffer& getVertexBuffer(u32 index);
-    GPUVertexBuffer& getVertexBuffer(const std::string& bufferName);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     void setIndicesBuffer(const GPUDataType& gpuDataType);
 
+private:
+    GPUVertexBuffer& getVertexBuffer(u32 index);
+    GPUVertexBuffer& getVertexBuffer(const std::string& bufferName);
+    
 private:
     u32 mVertexBufferLayoutId = 0;
     std::vector<GPUVertexBuffer> mVertexBuffers;
@@ -27,7 +29,5 @@ private:
 	bool mIsStatic = false;
 public:
     CRGET(VertexBuffers)
-    CRGET(VertexBuffersMap)
     RGET(IndicesBuffer)
-    CRGET(VertexBufferLayoutId)
 };

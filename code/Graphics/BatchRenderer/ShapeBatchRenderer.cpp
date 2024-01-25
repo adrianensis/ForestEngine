@@ -72,10 +72,10 @@ void ShapeBatchRenderer::render()
 		mShaderLine->enable();
 
 		mGPUBuffersLayout.enable();
-        mGPUBuffersLayout.getVertexBuffer(mVBOPosition).resize(mPositionBuffer.size());
-        mGPUBuffersLayout.getVertexBuffer(mVBOColor).resize(mColorBuffer.size());
-        mGPUBuffersLayout.getVertexBuffer(mVBOPosition).setDataArray(mPositionBuffer);
-        mGPUBuffersLayout.getVertexBuffer(mVBOColor).setDataArray(mColorBuffer);
+        mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).resize(mPositionBuffer.size());
+        mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mColor).resize(mColorBuffer.size());
+        mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).setDataArray(mPositionBuffer);
+        mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mColor).setDataArray(mColorBuffer);
 		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUBuffersLayout.disable();
 
