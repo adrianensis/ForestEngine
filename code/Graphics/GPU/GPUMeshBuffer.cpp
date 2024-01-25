@@ -14,7 +14,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 
     FOR_ARRAY(i, mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers)
     {
-        const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers[i].mGPUVariableData;
+        const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers[i];
         GPUVertexBufferData bufferData(gpuVariableData);
         mGPUBuffersLayout.createVertexBuffer(bufferData);
     }
@@ -49,7 +49,7 @@ void GPUMeshBuffer::resizeMeshData(u32 maxInstances)
     PROFILER_CPU()
     FOR_ARRAY(i, mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers)
     {
-        const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers[i].mGPUVariableData;
+        const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers[i];
         mGPUBuffersLayout.getVertexBuffer(gpuVariableData).resize(mGPUMeshBufferData.mMesh->mVertexCount * maxInstances);
     }
 }
@@ -68,7 +68,7 @@ void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)
     PROFILER_CPU()
     FOR_ARRAY(i, mesh->mGPUVertexInputBuffers)
     {
-        const GPUVariableData& gpuVariableData = mesh->mGPUVertexInputBuffers[i].mGPUVariableData;
+        const GPUVariableData& gpuVariableData = mesh->mGPUVertexInputBuffers[i];
         mGPUBuffersLayout.getVertexBuffer(gpuVariableData).setDataArray(mesh->mBuffers.at(gpuVariableData.mName));
     }
 }

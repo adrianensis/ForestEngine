@@ -14,11 +14,11 @@ void MeshPrimitives::terminate()
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
-    std::vector<GPUVertexInputBufferData> gpuVertexInputBuffers;
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mPosition, false});
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mTextureCoord, false});
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mNormal, false});
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mColor, false});
+    std::vector<GPUVariableData> gpuVertexInputBuffers;
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
 
 	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
 	mesh->init(4*1, 2*1, gpuVertexInputBuffers);
@@ -42,11 +42,11 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 {
-    std::vector<GPUVertexInputBufferData> gpuVertexInputBuffers;
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mPosition, false});
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mTextureCoord, false});
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mNormal, false});
-    gpuVertexInputBuffers.push_back({GPUBuiltIn::VertexInput::mColor, false});
+    std::vector<GPUVariableData> gpuVertexInputBuffers;
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
 
 	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
 	mesh->init(4*6, 2*6, gpuVertexInputBuffers);
