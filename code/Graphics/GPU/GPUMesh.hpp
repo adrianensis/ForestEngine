@@ -18,12 +18,19 @@ public:
     f32 mBonesWeights[smMaxBonesPerVertex] = {0.0f, 0.0f, 0.0f, 0.0f};
 };
 
+class GPUVertexInputBufferData
+{
+public:
+    GPUVariableData mGPUVariableData;
+    bool mPerInstance = false;
+};
+
 class GPUMesh: public ObjectBase
 {
     GENERATE_METADATA(GPUMesh)
 
 public:
-    void init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers);
+    void init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVertexInputBufferData>& gpuVertexInputBuffers);
     void setColor(const Vector4& color);
     void clear();
 
@@ -31,7 +38,7 @@ public:
     inline static const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
     inline static const u32 MAX_BONES = 50;
 
-    std::vector<GPUVariableData> mGPUVertexInputBuffers;
+    std::vector<GPUVertexInputBufferData> mGPUVertexInputBuffers;
     std::unordered_map<std::string, ByteBuffer> mBuffers;
     ByteBuffer mIndices = ByteBuffer(sizeof(Face));
 

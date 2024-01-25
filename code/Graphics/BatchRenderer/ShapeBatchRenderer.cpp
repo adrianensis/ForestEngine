@@ -38,9 +38,9 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     mGPUVertexBuffersLayout.init(false);
     mGPUVertexBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
-    mVBOPosition = mGPUVertexBuffersLayout.createBuffer(bufferDataPosition);
+    mVBOPosition = mGPUVertexBuffersLayout.createVertexBuffer(bufferDataPosition);
     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-    mVBOColor = mGPUVertexBuffersLayout.createBuffer(bufferDataColor);
+    mVBOColor = mGPUVertexBuffersLayout.createVertexBuffer(bufferDataColor);
 
     FOR_RANGE(i, 0, mMaxVertices)
     {
@@ -72,10 +72,10 @@ void ShapeBatchRenderer::render()
 		mShaderLine->enable();
 
 		mGPUVertexBuffersLayout.enable();
-        mGPUVertexBuffersLayout.getBuffer(mVBOPosition).resize(mPositionBuffer.size());
-        mGPUVertexBuffersLayout.getBuffer(mVBOColor).resize(mColorBuffer.size());
-        mGPUVertexBuffersLayout.getBuffer(mVBOPosition).setDataArray(mPositionBuffer);
-        mGPUVertexBuffersLayout.getBuffer(mVBOColor).setDataArray(mColorBuffer);
+        mGPUVertexBuffersLayout.getVertexBuffer(mVBOPosition).resize(mPositionBuffer.size());
+        mGPUVertexBuffersLayout.getVertexBuffer(mVBOColor).resize(mColorBuffer.size());
+        mGPUVertexBuffersLayout.getVertexBuffer(mVBOPosition).setDataArray(mPositionBuffer);
+        mGPUVertexBuffersLayout.getVertexBuffer(mVBOColor).setDataArray(mColorBuffer);
 		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersLayout.disable();
 
