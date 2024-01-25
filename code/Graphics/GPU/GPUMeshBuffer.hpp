@@ -32,7 +32,6 @@ public:
 
 private:
     GPUMeshBufferData mGPUMeshBufferData;
-	GPUSharedBuffer mModelMatricesBuffer;
 	GPUSharedBuffer mBonesMatricesBuffer;
     GPUBuffersLayout mGPUBuffersLayout;
 
@@ -40,6 +39,5 @@ private:
 
 public:
     CRGET(GPUBuffersLayout)
-    CRGET(ModelMatricesBuffer)
     CRGET(BonesMatricesBuffer)
 };

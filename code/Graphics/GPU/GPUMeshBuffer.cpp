@@ -22,8 +22,7 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mGPUMeshBufferData.mIsInstanced ? 1 : 0);
     mGPUBuffersLayout.createVertexBuffer(bufferDataInstanceIDs);
 
-    u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
-    mModelMatricesBuffer.init(modelMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
+    mGPUBuffersLayout.createInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices);
 
     if(mGPUMeshBufferData.mIsSkinned)
     {
@@ -39,7 +38,6 @@ void GPUMeshBuffer::terminate()
 {
     disable();
     mGPUBuffersLayout.terminate();
-    mModelMatricesBuffer.terminate();
     if(mGPUMeshBufferData.mIsSkinned)
     {
         mBonesMatricesBuffer.terminate();
@@ -62,7 +60,7 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
     mMaxInstances = maxInstances;
     u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mMesh->mVertexCount;
     mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
-    mModelMatricesBuffer.resize<Matrix4>(mMaxInstances);
+    mGPUBuffersLayout.getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mMaxInstances);
 }
 
 void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)
@@ -82,7 +80,7 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const
 	mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("UBO matrices");
-    mModelMatricesBuffer.setDataArray(matrices);
+    mGPUBuffersLayout.getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(matrices);
     PROFILER_END_BLOCK();
 }
 

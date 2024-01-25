@@ -38,9 +38,9 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     mGPUBuffersLayout.init(false);
     mGPUBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
-    mVBOPosition = mGPUBuffersLayout.createVertexBuffer(bufferDataPosition);
+    mGPUBuffersLayout.createVertexBuffer(bufferDataPosition);
     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-    mVBOColor = mGPUBuffersLayout.createVertexBuffer(bufferDataColor);
+    mGPUBuffersLayout.createVertexBuffer(bufferDataColor);
 
     FOR_RANGE(i, 0, mMaxVertices)
     {

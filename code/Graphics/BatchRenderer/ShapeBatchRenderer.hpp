@@ -23,8 +23,6 @@ private:
     void addColor(const Vector4& color);
 private: 
 	OwnerPtr<GPUShader> mShaderLine;
-	u32 mVBOPosition = 0;
-	u32 mVBOColor = 0;
     GPUBuffersLayout mGPUBuffersLayout;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;

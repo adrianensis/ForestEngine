@@ -37,7 +37,7 @@ void BatchRenderer::bindSharedBuffers()
 {
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer);
 
-    mShader->bindSharedBuffer(mMeshBatcher.mGPUMeshBuffer.getModelMatricesBuffer());
+    mShader->bindSharedBuffer(mMeshBatcher.mGPUMeshBuffer.getGPUBuffersLayout().getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
