@@ -88,12 +88,9 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const
 
 void GPUMeshBuffer::setBonesTransforms(const std::vector<Matrix4>& transforms)
 {
-    if(mGPUMeshBufferData.mIsSkinned)
-    {
-        PROFILER_BLOCK_CPU("UBO Bones Transforms");
-        mBonesMatricesBuffer.setDataArray(transforms);
-        PROFILER_END_BLOCK();
-    }
+    PROFILER_BLOCK_CPU("UBO Bones Transforms");
+    mBonesMatricesBuffer.setDataArray(transforms);
+    PROFILER_END_BLOCK();
 }
 
 void GPUMeshBuffer::setIndicesData(Ptr<const GPUMesh> mesh)
