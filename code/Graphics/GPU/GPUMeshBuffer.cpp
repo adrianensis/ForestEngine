@@ -9,18 +9,18 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
 
 	mGPUMeshBufferData = gpuMeshBufferData;
 
-    mGPUVertexBuffersLayout.init(mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced);
-    mGPUVertexBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace);
+    mGPUBuffersLayout.init(mGPUMeshBufferData.mIsStatic || mGPUMeshBufferData.mIsInstanced);
+    mGPUBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace);
 
     FOR_ARRAY(i, mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers)
     {
         const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers[i].mGPUVariableData;
         GPUVertexBufferData bufferData(gpuVariableData);
-        mGPUVertexBuffersLayout.createVertexBuffer(bufferData);
+        mGPUBuffersLayout.createVertexBuffer(bufferData);
     }
 
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mGPUMeshBufferData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersLayout.createVertexBuffer(bufferDataInstanceIDs);
+    mGPUBuffersLayout.createVertexBuffer(bufferDataInstanceIDs);
 
     u32 modelMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
     mModelMatricesBuffer.init(modelMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mModelMatrices, mGPUMeshBufferData.mIsStatic);
@@ -32,13 +32,13 @@ void GPUMeshBuffer::init(const GPUMeshBufferData& gpuMeshBufferData)
         mBonesMatricesBuffer.resize<Matrix4>(GPUMesh::MAX_BONES);
     }
 
-    mGPUVertexBuffersLayout.disable();
+    mGPUBuffersLayout.disable();
 }
 
 void GPUMeshBuffer::terminate()
 {
     disable();
-    mGPUVertexBuffersLayout.terminate();
+    mGPUBuffersLayout.terminate();
     mModelMatricesBuffer.terminate();
     if(mGPUMeshBufferData.mIsSkinned)
     {
@@ -52,7 +52,7 @@ void GPUMeshBuffer::resizeMeshData(u32 maxInstances)
     FOR_ARRAY(i, mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers)
     {
         const GPUVariableData& gpuVariableData = mGPUMeshBufferData.mMesh->mGPUVertexInputBuffers[i].mGPUVariableData;
-        mGPUVertexBuffersLayout.getVertexBuffer(gpuVariableData).resize(mGPUMeshBufferData.mMesh->mVertexCount * maxInstances);
+        mGPUBuffersLayout.getVertexBuffer(gpuVariableData).resize(mGPUMeshBufferData.mMesh->mVertexCount * maxInstances);
     }
 }
 
@@ -61,7 +61,7 @@ void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
     PROFILER_CPU()
     mMaxInstances = maxInstances;
     u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mMesh->mVertexCount;
-    mGPUVertexBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
+    mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
     mModelMatricesBuffer.resize<Matrix4>(mMaxInstances);
 }
 
@@ -71,7 +71,7 @@ void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)
     FOR_ARRAY(i, mesh->mGPUVertexInputBuffers)
     {
         const GPUVariableData& gpuVariableData = mesh->mGPUVertexInputBuffers[i].mGPUVariableData;
-        mGPUVertexBuffersLayout.getVertexBuffer(gpuVariableData).setDataArray(mesh->mBuffers.at(gpuVariableData.mName));
+        mGPUBuffersLayout.getVertexBuffer(gpuVariableData).setDataArray(mesh->mBuffers.at(gpuVariableData.mName));
     }
 }
 
@@ -79,7 +79,7 @@ void GPUMeshBuffer::setInstancesData(const std::vector<Matrix4>& matrices, const
 {
     PROFILER_CPU()
     PROFILER_BLOCK_CPU("VBO instanceIDs");
-	mGPUVertexBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
+	mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("UBO matrices");
     mModelMatricesBuffer.setDataArray(matrices);
@@ -96,16 +96,16 @@ void GPUMeshBuffer::setBonesTransforms(const std::vector<Matrix4>& transforms)
 void GPUMeshBuffer::setIndicesData(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
-    mGPUVertexBuffersLayout.getIndicesBuffer().resize(mesh->mIndices.size());
-    mGPUVertexBuffersLayout.getIndicesBuffer().setDataArray(mesh->mIndices);
+    mGPUBuffersLayout.getIndicesBuffer().resize(mesh->mIndices.size());
+    mGPUBuffersLayout.getIndicesBuffer().setDataArray(mesh->mIndices);
 }
 
 void GPUMeshBuffer::enable()
 {
-	mGPUVertexBuffersLayout.enable();
+	mGPUBuffersLayout.enable();
 }
 
 void GPUMeshBuffer::disable()
 {
-	mGPUVertexBuffersLayout.disable();
+	mGPUBuffersLayout.disable();
 }

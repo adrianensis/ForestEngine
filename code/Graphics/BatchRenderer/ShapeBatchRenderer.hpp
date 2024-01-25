@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
-#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 
 class ShapeBatchRenderer: public ObjectBase
 {
@@ -25,7 +25,7 @@ private:
 	OwnerPtr<GPUShader> mShaderLine;
 	u32 mVBOPosition = 0;
 	u32 mVBOColor = 0;
-    GPUVertexBuffersLayout mGPUVertexBuffersLayout;
+    GPUBuffersLayout mGPUBuffersLayout;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;
 	std::vector<u32> mIndicesBuffer;

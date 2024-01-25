@@ -3,10 +3,10 @@
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 
-class GPUVertexBuffersLayout
+class GPUBuffersLayout
 {
 public:
-	GPUVertexBuffersLayout() = default;
+	GPUBuffersLayout() = default;
 
     void init(bool isStatic);
     void enable();

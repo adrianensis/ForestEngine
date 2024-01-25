@@ -1,6 +1,6 @@
-#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 
-void GPUVertexBuffersLayout::init(bool isStatic)
+void GPUBuffersLayout::init(bool isStatic)
 {
 	PROFILER_CPU()
 
@@ -8,17 +8,17 @@ void GPUVertexBuffersLayout::init(bool isStatic)
     mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
 }
 
-void GPUVertexBuffersLayout::enable()
+void GPUBuffersLayout::enable()
 {
 	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
 }
 
-void GPUVertexBuffersLayout::disable()
+void GPUBuffersLayout::disable()
 {
 	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 }
 
-u32 GPUVertexBuffersLayout::createVertexBuffer(const GPUVertexBufferData& data)
+u32 GPUBuffersLayout::createVertexBuffer(const GPUVertexBufferData& data)
 {
     if(mVertexBuffers.size() > 0)
     {
@@ -34,30 +34,30 @@ u32 GPUVertexBuffersLayout::createVertexBuffer(const GPUVertexBufferData& data)
     return index;
 }
 
-void GPUVertexBuffersLayout::setIndicesBuffer(const GPUDataType& gpuDataType)
+void GPUBuffersLayout::setIndicesBuffer(const GPUDataType& gpuDataType)
 {
     mIndicesBuffer.terminate();
     mIndicesBuffer.init(gpuDataType, mIsStatic);
 }
 
-GPUVertexBuffer& GPUVertexBuffersLayout::getVertexBuffer(u32 index)
+GPUVertexBuffer& GPUBuffersLayout::getVertexBuffer(u32 index)
 {
     return mVertexBuffers.at(index);
 }
 
-GPUVertexBuffer& GPUVertexBuffersLayout::getVertexBuffer(const std::string& bufferName)
+GPUVertexBuffer& GPUBuffersLayout::getVertexBuffer(const std::string& bufferName)
 {
-    CHECK_MSG(mVertexBuffersMap.contains(bufferName), bufferName + " not found in GPUVertexBuffersLayout!");
+    CHECK_MSG(mVertexBuffersMap.contains(bufferName), bufferName + " not found in GPUBuffersLayout!");
     u32 index = mVertexBuffersMap.at(bufferName);
     return getVertexBuffer(index);
 }
 
-GPUVertexBuffer& GPUVertexBuffersLayout::getVertexBuffer(const GPUVertexBufferData& data)
+GPUVertexBuffer& GPUBuffersLayout::getVertexBuffer(const GPUVertexBufferData& data)
 {
     return getVertexBuffer(data.mGPUVariableData.mName);
 }
 
-void GPUVertexBuffersLayout::terminate()
+void GPUBuffersLayout::terminate()
 {
     mIndicesBuffer.terminate();
     FOR_MAP(it, mVertexBuffers)

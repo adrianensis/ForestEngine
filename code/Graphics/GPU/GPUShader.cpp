@@ -1,5 +1,5 @@
 #include "Graphics/GPU/GPUShader.hpp"
-#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 
 GPUShader::GPUShader()

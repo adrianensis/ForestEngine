@@ -16,7 +16,7 @@ ShapeBatchRenderer::~ShapeBatchRenderer()
 }
 void ShapeBatchRenderer::terminate()
 {
-	mGPUVertexBuffersLayout.terminate();
+	mGPUBuffersLayout.terminate();
 	mPositionBuffer.clear();
 	mColorBuffer.clear();
 	mIndicesBuffer.clear();
@@ -35,22 +35,22 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxVertices); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
-    mGPUVertexBuffersLayout.init(false);
-    mGPUVertexBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt);
+    mGPUBuffersLayout.init(false);
+    mGPUBuffersLayout.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
-    mVBOPosition = mGPUVertexBuffersLayout.createVertexBuffer(bufferDataPosition);
+    mVBOPosition = mGPUBuffersLayout.createVertexBuffer(bufferDataPosition);
     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-    mVBOColor = mGPUVertexBuffersLayout.createVertexBuffer(bufferDataColor);
+    mVBOColor = mGPUBuffersLayout.createVertexBuffer(bufferDataColor);
 
     FOR_RANGE(i, 0, mMaxVertices)
     {
         mIndicesBuffer.push_back(i);
     }
 
-    mGPUVertexBuffersLayout.getIndicesBuffer().resize(mIndicesBuffer.size());
-    mGPUVertexBuffersLayout.getIndicesBuffer().setDataArray(mIndicesBuffer);
+    mGPUBuffersLayout.getIndicesBuffer().resize(mIndicesBuffer.size());
+    mGPUBuffersLayout.getIndicesBuffer().setDataArray(mIndicesBuffer);
 
-	mGPUVertexBuffersLayout.disable();
+	mGPUBuffersLayout.disable();
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
@@ -59,7 +59,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     materialData.mUseModelMatrix = false;
     Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
-    mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersLayout, lineMaterial);
+    mShaderLine = ShaderUtils::createShader(mGPUBuffersLayout, lineMaterial);
 
     mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer);
 }
@@ -71,13 +71,13 @@ void ShapeBatchRenderer::render()
 	{
 		mShaderLine->enable();
 
-		mGPUVertexBuffersLayout.enable();
-        mGPUVertexBuffersLayout.getVertexBuffer(mVBOPosition).resize(mPositionBuffer.size());
-        mGPUVertexBuffersLayout.getVertexBuffer(mVBOColor).resize(mColorBuffer.size());
-        mGPUVertexBuffersLayout.getVertexBuffer(mVBOPosition).setDataArray(mPositionBuffer);
-        mGPUVertexBuffersLayout.getVertexBuffer(mVBOColor).setDataArray(mColorBuffer);
+		mGPUBuffersLayout.enable();
+        mGPUBuffersLayout.getVertexBuffer(mVBOPosition).resize(mPositionBuffer.size());
+        mGPUBuffersLayout.getVertexBuffer(mVBOColor).resize(mColorBuffer.size());
+        mGPUBuffersLayout.getVertexBuffer(mVBOPosition).setDataArray(mPositionBuffer);
+        mGPUBuffersLayout.getVertexBuffer(mVBOColor).setDataArray(mColorBuffer);
 		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
-        mGPUVertexBuffersLayout.disable();
+        mGPUBuffersLayout.disable();
 
 		mPositionBuffer.clear();
 		mColorBuffer.clear();

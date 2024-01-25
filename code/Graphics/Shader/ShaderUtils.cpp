@@ -2,7 +2,7 @@
 #include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Material.hpp"
 
-OwnerPtr<GPUShader> ShaderUtils::createShader(const GPUVertexBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+OwnerPtr<GPUShader> ShaderUtils::createShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
 {
 	OwnerPtr<GPUShader> shader = OwnerPtr<GPUShader>::newObject();
     ShaderBuilder sbVert;

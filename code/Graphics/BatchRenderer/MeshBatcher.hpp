@@ -18,7 +18,7 @@ public:
     void drawCall();
     void enable();
     void disable();
-    const GPUVertexBuffersLayout& getGPUVertexBuffersLayout() const { return mGPUMeshBuffer.getGPUVertexBuffersLayout(); }
+    const GPUBuffersLayout& getGPUBuffersLayout() const { return mGPUMeshBuffer.getGPUBuffersLayout(); }
 
 private:
     void initInternal(u32 maxInstances);

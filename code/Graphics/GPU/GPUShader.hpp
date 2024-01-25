@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 
-class GPUVertexBuffersLayout;
+class GPUBuffersLayout;
 class GPUSharedBuffer;
 
 class GPUShader: public ObjectBase

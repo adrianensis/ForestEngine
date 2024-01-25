@@ -21,7 +21,7 @@ void BatchRenderer::init(const BatchData& batchData)
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
 
-    const GPUVertexBuffersLayout& gpuVertexBuffersLayout = mMeshBatcher.getGPUVertexBuffersLayout();
+    const GPUBuffersLayout& gpuVertexBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
     mShader = ShaderUtils::createShader(gpuVertexBuffersLayout, mBatchData.mMaterial);
     

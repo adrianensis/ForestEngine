@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/GPU/GPUVertexBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/GPU/GPUMesh.hpp"
 
@@ -34,12 +34,12 @@ private:
     GPUMeshBufferData mGPUMeshBufferData;
 	GPUSharedBuffer mModelMatricesBuffer;
 	GPUSharedBuffer mBonesMatricesBuffer;
-    GPUVertexBuffersLayout mGPUVertexBuffersLayout;
+    GPUBuffersLayout mGPUBuffersLayout;
 
     u32 mMaxInstances = 0;
 
 public:
-    CRGET(GPUVertexBuffersLayout)
+    CRGET(GPUBuffersLayout)
     CRGET(ModelMatricesBuffer)
     CRGET(BonesMatricesBuffer)
 };
