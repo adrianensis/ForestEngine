@@ -9,9 +9,9 @@
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
-void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-    registerVertexShaderData(gpuVertexBuffersLayout, material);
+    registerVertexShaderData(gpuBuffersLayout, material);
 
     // retrieve the needed attributes
     auto& position = get().getAttribute(GPUBuiltIn::VertexInput::mPosition.mName);
@@ -122,9 +122,9 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuVertexBuffersL
     }
 }
 
-void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-    registerFragmentShaderData(gpuVertexBuffersLayout, material);
+    registerFragmentShaderData(gpuBuffersLayout, material);
 
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& inTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
@@ -189,7 +189,7 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuVertexBuffer
     }
 }
 
-ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material) const
+ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material) const
 {
     ShaderBuilderData shaderBuilderData;
     
@@ -218,7 +218,7 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }
 
-    const std::vector<GPUVertexBuffer>& gpuVertexBuffers = gpuVertexBuffersLayout.getVertexBuffers();
+    const std::vector<GPUVertexBuffer>& gpuVertexBuffers = gpuBuffersLayout.getVertexBuffers();
     FOR_LIST(it, gpuVertexBuffers)
     {
         const GPUVertexBuffer& gpuVertexBuffer = *it;
@@ -263,9 +263,9 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
     return shaderBuilderData;
 }
 
-void ShaderBuilder::registerVertexShaderData(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+void ShaderBuilder::registerVertexShaderData(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuBuffersLayout, material);
 
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
     {
@@ -307,9 +307,9 @@ void ShaderBuilder::registerVertexShaderData(const GPUBuffersLayout& gpuVertexBu
     }
 }
 
-void ShaderBuilder::registerFragmentShaderData(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
+void ShaderBuilder::registerFragmentShaderData(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersLayout, material);
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuBuffersLayout, material);
     
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions)
     {

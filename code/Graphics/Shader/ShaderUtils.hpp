@@ -11,5 +11,5 @@ class Shader;
 class ShaderUtils
 {
 public:
-    static OwnerPtr<GPUShader> createShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
+    static OwnerPtr<GPUShader> createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
 };

@@ -15,8 +15,8 @@ class ShaderBuilder
 public:
     ShaderBuilder() = default;
 
-    void createVertexShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
-    void createFragmentShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
+    void createVertexShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
+    void createFragmentShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
     std::string getCode() const;
 
 private:
@@ -51,9 +51,9 @@ private:
         ShaderBuilderDataFragment mFragmentVariables;
     };
 
-    ShaderBuilderData generateShaderBuilderData(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material) const;
-    void registerVertexShaderData(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
-    void registerFragmentShaderData(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material);
+    ShaderBuilderData generateShaderBuilderData(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material) const;
+    void registerVertexShaderData(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
+    void registerFragmentShaderData(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
     ShaderBuilderNodes::Program& get() { return mProgram; }
 
 private:
