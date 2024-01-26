@@ -34,9 +34,7 @@ private:
     GPUMeshBufferData mGPUMeshBufferData;
 	GPUSharedBuffer mBonesMatricesBuffer;
     GPUBuffersLayout mGPUBuffersLayout;
-
-    u32 mMaxInstances = 0;
-
+    
 public:
     CRGET(GPUBuffersLayout)
     CRGET(BonesMatricesBuffer)

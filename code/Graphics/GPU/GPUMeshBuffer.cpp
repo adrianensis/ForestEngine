@@ -57,10 +57,9 @@ void GPUMeshBuffer::resizeMeshData(u32 maxInstances)
 void GPUMeshBuffer::resizeInstancesData(u32 maxInstances)
 {
     PROFILER_CPU()
-    mMaxInstances = maxInstances;
     u32 matricesBufferSizeMultiplier = mGPUMeshBufferData.mIsInstanced ? 1 : mGPUMeshBufferData.mMesh->mVertexCount;
-    mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(mMaxInstances * matricesBufferSizeMultiplier);
-    mGPUBuffersLayout.getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mMaxInstances);
+    mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * matricesBufferSizeMultiplier);
+    mGPUBuffersLayout.getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
 }
 
 void GPUMeshBuffer::setMeshData(Ptr<const GPUMesh> mesh)
