@@ -32,7 +32,6 @@ private:
     OwnerPtr<GPUShader> mShader;
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;
-    MaterialInstance mMaterialInstance;
 
 	bool mNewRendererAdded = false;
 	bool mRegenerateBuffersRequested = false;

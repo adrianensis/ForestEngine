@@ -84,6 +84,7 @@ private:
     bool mInvertAxisX = false;
     i32 mDepth = 0;
     Vector3 mPositionOffset;
+    MaterialInstance mMaterialInstance;
 
 public:
     std::string mCurrentTextureAnimationKey;
@@ -94,4 +95,5 @@ public:
     CRGET_SET(BatchRenderer)
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
+    CRGET(MaterialInstance)
 };

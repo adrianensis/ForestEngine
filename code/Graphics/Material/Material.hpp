@@ -12,7 +12,7 @@ class Mesh;
 class MaterialInstancedProperties
 {
 public:
-    Vector4 mColor = Vector4(1,0,0,1);
+    Vector4 mColor = Vector4(0,0,0,1);
 };
 
 class MaterialInstancedPropertiesGPUData
@@ -33,9 +33,9 @@ public:
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
     FontData mFontData;
-    MaterialInstancedProperties mMaterialInstancedProperties;
     std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
+    MaterialInstancedProperties mMaterialInstancedProperties;
 };
 
 class Material;
@@ -43,17 +43,8 @@ class Material;
 class MaterialInstance
 {
 public:
-    void init(Ptr<const Material> material);
-    
-    template<class T>
-    void setInstancedProperties(const std::vector<T>& instancedPropertiesArray)
-    {
-        mInstancedPropertiesSharedBuffer.resize<T>(instancedPropertiesArray.size());
-        mInstancedPropertiesSharedBuffer.setDataArray<T>(instancedPropertiesArray);
-    }
-public:
     Ptr<const Material> mMaterial;
-	GPUSharedBuffer mInstancedPropertiesSharedBuffer;
+    MaterialInstancedProperties mMaterialInstancedProperties;
 };
 
 class Material: public ObjectBase

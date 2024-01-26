@@ -24,10 +24,10 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     Variable projectionMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     Variable viewMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
 
-    auto& modelMatricesBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
     Variable modelMatrices;
     if(material->getMaterialData().mUseModelMatrix)
     {
+        auto& modelMatricesBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
         modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     }
     
@@ -196,14 +196,15 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
     shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
 
     shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(material->getInstancedPropertiesStructDefinition());
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(material->getInstancedPropertiesSharedBufferData());
+
+    const std::vector<GPUSharedBuffer>& gpuSharedBuffers = gpuBuffersLayout.getSharedBuffers();
+    FOR_LIST(it, gpuSharedBuffers)
+    {
+        const GPUSharedBuffer& gpuSharedBuffer = *it;
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(gpuSharedBuffer.getGPUSharedBufferData());
+    }
 
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
-
-    if(material->getMaterialData().mUseModelMatrix)
-    {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
-    }
 
     if(material->getMaterialData().mReceiveLight)
     {
@@ -213,7 +214,6 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
 
     if(material->getMaterialData().mIsSkinned)
     {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
     }

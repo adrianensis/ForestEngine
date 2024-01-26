@@ -71,12 +71,15 @@ void Model::loadGLTFMaterials()
 
             if(cgltfMaterial.has_pbr_metallic_roughness)
             {
-                cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                materialData.mMaterialInstancedProperties.mColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
                     materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = texturePath;
+                }
+                else
+                {
+                    cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
+                    materialData.mMaterialInstancedProperties.mColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 }
             }
 

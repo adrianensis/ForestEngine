@@ -26,6 +26,8 @@ void MeshRenderer::init(const RendererData& data)
         mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
     }
 
+    mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
+
     setColor(Vector4(0, 0, 0, 1));
     mRegeneratePositions = true;
     mRegenerateTextureCoords = true;

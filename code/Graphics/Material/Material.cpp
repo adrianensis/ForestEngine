@@ -11,15 +11,6 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void MaterialInstance::init(Ptr<const Material> material)
-{
-    mMaterial = material;
-
-    u32 bindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(mMaterial->getInstancedPropertiesSharedBufferData().mType);
-    mInstancedPropertiesSharedBuffer.init(bindingPoint, mMaterial->getInstancedPropertiesSharedBufferData(), false);
-    // mInstancedPropertiesSharedBuffer.resize<Matrix4>(GPUMesh::MAX_BONES);
-}
-
 void Material::init(const MaterialData& materialData, u32 id)
 {
     mMaterialData = materialData;
@@ -89,7 +80,8 @@ void Material::loadTextures()
 MaterialInstance Material::createMaterialInstance() const
 {
     MaterialInstance instance;
-    instance.init(getPtrToThis());
+    instance.mMaterial = getPtrToThis();
+    instance.mMaterialInstancedProperties = mMaterialData.mMaterialInstancedProperties;
     return instance;
 }
 

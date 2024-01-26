@@ -20,7 +20,6 @@ void BatchRenderer::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
-    mMaterialInstance = mBatchData.mMaterial->createMaterialInstance();
 
     const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
@@ -50,7 +49,7 @@ void BatchRenderer::bindSharedBuffers()
         mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersLayout().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
     
-    mShader->bindSharedBuffer(mMaterialInstance.mInstancedPropertiesSharedBuffer);
+    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersLayout().getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()));
 }
 
 void BatchRenderer::render()
@@ -77,14 +76,6 @@ void BatchRenderer::enable()
     mShader->enable();
     mMeshBatcher.enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
-
-	std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray = 
-    {
-        MaterialInstancedProperties{Vector4(1,0,0,1)},
-        MaterialInstancedProperties{Vector4(0,1,0,1)}
-    };
-
-    mMaterialInstance.setInstancedProperties<MaterialInstancedProperties>(mMaterialInstancedPropertiesArray);
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
@@ -197,7 +188,7 @@ void BatchRenderer::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 	PROFILER_CPU()
 
     const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-    mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
+    mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance(), renderer->getMaterialInstance().mMaterialInstancedProperties);
 }
 
 bool BatchRenderer::shouldRegenerateBuffers() const

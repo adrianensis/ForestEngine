@@ -30,10 +30,11 @@ private:
     u32 mAttributeIndex = 0;
     std::vector<GPUVertexBuffer> mVertexBuffers;
     std::unordered_map<std::string, u32> mVertexBuffersMap;
-    std::vector<GPUSharedBuffer> mInstanceBuffers;
-    std::unordered_map<std::string, u32> mInstanceBuffersMap;
+    std::vector<GPUSharedBuffer> mSharedBuffers;
+    std::unordered_map<std::string, u32> mSharedBuffersMap;
 	bool mIsStatic = false;
 public:
     CRGET(VertexBuffers)
+    CRGET(SharedBuffers)
     RGET(IndicesBuffer)
 };

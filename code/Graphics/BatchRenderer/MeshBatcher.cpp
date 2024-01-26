@@ -81,6 +81,7 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
 	PROFILER_CPU()
 
     mMatrices.reserve(maxInstances);
+    mMaterialInstancedPropertiesArray.reserve(maxInstances);
 
     generateInstanceIDsData(maxInstances);
 
@@ -91,11 +92,12 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
     }
 }
 
-void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance)
+void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance, const MaterialInstancedProperties& materialInstancedProperties)
 {
 	PROFILER_CPU()
 
     mMatrices.push_back(modelMatrix);
+    mMaterialInstancedPropertiesArray.push_back(materialInstancedProperties);
 
     if(!mBatchData.mIsInstanced)
 	{
@@ -149,6 +151,7 @@ void MeshBatcher::clear()
 		mInternalMesh->clear();
 	}
     mMatrices.clear();
+    mMaterialInstancedPropertiesArray.clear();
 }
 
 void MeshBatcher::generateIndicesData(u32 meshesCount)
@@ -202,7 +205,7 @@ void MeshBatcher::sendDataToGPU()
 	{
         setMeshBuffers(Ptr<const GPUMesh>::cast(mInternalMesh));
     }
-    setInstancedBuffers(mMatrices, mInstanceIDs);
+    setInstancedBuffers(mMatrices, mInstanceIDs, mMaterialInstancedPropertiesArray);
     mDataSentToGPU = true;
 }
 
@@ -225,8 +228,12 @@ void MeshBatcher::initBuffers()
     
     mGPUBuffersLayout.disable();
 
-    mGPUBuffersLayout.createSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
+    {
+        mGPUBuffersLayout.createSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    }
 
+    mGPUBuffersLayout.createSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData());
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
@@ -250,7 +257,11 @@ void MeshBatcher::resizeInstancedBuffers(u32 maxInstances)
     PROFILER_CPU()
     u32 matricesBufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
     mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * matricesBufferSizeMultiplier);
-    mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
+    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
+    {
+        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
+    }
+    mGPUBuffersLayout.getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()).resize<Matrix4>(maxInstances);
 }
 
 void MeshBatcher::setMeshBuffers(Ptr<const GPUMesh> mesh)
@@ -263,22 +274,24 @@ void MeshBatcher::setMeshBuffers(Ptr<const GPUMesh> mesh)
     }
 }
 
-void MeshBatcher::setInstancedBuffers(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs)
+void MeshBatcher::setInstancedBuffers(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs, const std::vector<MaterialInstancedProperties>& materialInstancedPropertiesArray)
 {
     PROFILER_CPU()
-    PROFILER_BLOCK_CPU("VBO instanceIDs");
 	mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
-    PROFILER_END_BLOCK();
-    PROFILER_BLOCK_CPU("UBO matrices");
-    mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(matrices);
-    PROFILER_END_BLOCK();
+    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
+    {
+        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(matrices);
+    }
+
+    GPUSharedBuffer& materialInstancedPropertiesSharedBuffer = mGPUBuffersLayout.getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData());
+    materialInstancedPropertiesSharedBuffer.resize<MaterialInstancedProperties>(materialInstancedPropertiesArray.size());
+    materialInstancedPropertiesSharedBuffer.setDataArray<MaterialInstancedProperties>(materialInstancedPropertiesArray);
 }
 
 void MeshBatcher::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
 {
-    PROFILER_BLOCK_CPU("UBO Bones Transforms");
+    PROFILER_CPU()
     mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
-    PROFILER_END_BLOCK();
 }
 
 void MeshBatcher::setIndicesBuffer(Ptr<const GPUMesh> mesh)

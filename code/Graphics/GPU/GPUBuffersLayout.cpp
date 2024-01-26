@@ -47,21 +47,21 @@ const GPUVertexBuffer& GPUBuffersLayout::getVertexBuffer(const GPUVertexBufferDa
 void GPUBuffersLayout::createSharedBuffer(const GPUSharedBufferData& data)
 {
     u32 bindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(data.mType);
-    GPUSharedBuffer& gpuInstanceBuffer = mInstanceBuffers.emplace_back();
+    GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
     gpuInstanceBuffer.init(bindingPoint, data, mIsStatic);
 
-    u32 index = mInstanceBuffers.size() - 1;
-    mInstanceBuffersMap.insert_or_assign(data.mBufferName, index);
+    u32 index = mSharedBuffers.size() - 1;
+    mSharedBuffersMap.insert_or_assign(data.mBufferName, index);
 }
 
 GPUSharedBuffer& GPUBuffersLayout::getSharedBuffer(const GPUSharedBufferData& data)
 {
-    return mInstanceBuffers.at(findIndex(mInstanceBuffersMap, data.mBufferName));
+    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
 }
 
 const GPUSharedBuffer& GPUBuffersLayout::getSharedBuffer(const GPUSharedBufferData& data) const
 {
-    return mInstanceBuffers.at(findIndex(mInstanceBuffersMap, data.mBufferName));
+    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
 }
 
 u32 GPUBuffersLayout::findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name) const
@@ -79,7 +79,7 @@ void GPUBuffersLayout::setIndicesBuffer(const GPUDataType& gpuDataType)
 
 void GPUBuffersLayout::terminate()
 {
-    FOR_MAP(it, mInstanceBuffers)
+    FOR_MAP(it, mSharedBuffers)
     {
         it->terminate();
     }
