@@ -35,10 +35,6 @@ private:
     void setInstancedBuffers(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
     void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
     void setIndicesBuffer(Ptr<const GPUMesh> mesh);
-	
-public:
-	// GPUMeshBuffer mGPUMeshBuffer;
-    GPUBuffersLayout mGPUBuffersLayout;
 
 private:
     BatchData mBatchData;
@@ -46,7 +42,7 @@ private:
 	std::vector<Matrix4> mMatrices;
     std::vector<u32> mInstanceIDs;
 
-	GPUSharedBuffer mBonesMatricesBuffer;
+    GPUBuffersLayout mGPUBuffersLayout;
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;
@@ -56,5 +52,4 @@ private:
 
 public:
     CRGET(GPUBuffersLayout)
-    CRGET(BonesMatricesBuffer)
 };

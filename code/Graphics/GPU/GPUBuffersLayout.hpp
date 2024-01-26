@@ -16,9 +16,9 @@ public:
     void createVertexBuffer(const GPUVertexBufferData& data);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     const GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data) const;
-    void createInstanceBuffer(const GPUSharedBufferData& data);
-    GPUSharedBuffer& getInstanceBuffer(const GPUSharedBufferData& data);
-    const GPUSharedBuffer& getInstanceBuffer(const GPUSharedBufferData& data) const;
+    void createSharedBuffer(const GPUSharedBufferData& data);
+    GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data);
+    const GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data) const;
     void setIndicesBuffer(const GPUDataType& gpuDataType);
 
 private:

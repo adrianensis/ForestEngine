@@ -28,10 +28,6 @@ void MeshBatcher::terminate()
 {
     disable();
     mGPUBuffersLayout.terminate();
-    // if(mGPUMeshBufferData.mIsSkinned)
-    // {
-    //     mBonesMatricesBuffer.terminate();
-    // }
 }
 
 void MeshBatcher::addInstanceMeshData(Ptr<const Mesh> meshInstance)
@@ -229,13 +225,13 @@ void MeshBatcher::initBuffers()
     
     mGPUBuffersLayout.disable();
 
-    mGPUBuffersLayout.createInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    mGPUBuffersLayout.createSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices);
+
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
-        u32 bonesMatricesBindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
-        mBonesMatricesBuffer.init(bonesMatricesBindingPoint, GPUBuiltIn::SharedBuffers::mBonesMatrices, mBatchData.mIsStatic);
-        mBonesMatricesBuffer.resize<Matrix4>(GPUMesh::MAX_BONES);
+        mGPUBuffersLayout.createSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices);
+        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUMesh::MAX_BONES);
     }
 }
 
@@ -254,7 +250,7 @@ void MeshBatcher::resizeInstancedBuffers(u32 maxInstances)
     PROFILER_CPU()
     u32 matricesBufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
     mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * matricesBufferSizeMultiplier);
-    mGPUBuffersLayout.getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
+    mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
 }
 
 void MeshBatcher::setMeshBuffers(Ptr<const GPUMesh> mesh)
@@ -274,14 +270,14 @@ void MeshBatcher::setInstancedBuffers(const std::vector<Matrix4>& matrices, cons
 	mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("UBO matrices");
-    mGPUBuffersLayout.getInstanceBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(matrices);
+    mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(matrices);
     PROFILER_END_BLOCK();
 }
 
 void MeshBatcher::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
 {
     PROFILER_BLOCK_CPU("UBO Bones Transforms");
-    mBonesMatricesBuffer.setDataArray(transforms);
+    mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
     PROFILER_END_BLOCK();
 }
 
