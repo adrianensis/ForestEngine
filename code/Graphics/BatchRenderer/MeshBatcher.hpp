@@ -21,21 +21,20 @@ public:
 
 private:
     void initInternal(u32 maxInstances);
-    void initSingleMeshData();
     void resizeInternal(u32 maxInstances);
-    void addMeshDataToBuffers(Ptr<const Mesh> meshInstance);
+    void addInstanceMeshData(Ptr<const Mesh> meshInstance);
     void clear();
     void generateIndicesData(u32 meshesCount);
     void generateInstanceIDsData(u32 meshesCount);
     void sendDataToGPU();
 
     void initBuffers();
-    void resizeMeshData(u32 maxInstances);
-    void resizeInstancesData(u32 maxInstances);
-    void setMeshData(Ptr<const GPUMesh> mesh);
-    void setInstancesData(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
-    void setBonesTransforms(const std::vector<Matrix4>& transforms);
-    void setIndicesData(Ptr<const GPUMesh> mesh);
+    void resizeBuffers(u32 maxInstances);
+    void resizeInstancedBuffers(u32 maxInstances);
+    void setMeshBuffers(Ptr<const GPUMesh> mesh);
+    void setInstancedBuffers(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs);
+    void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
+    void setIndicesBuffer(Ptr<const GPUMesh> mesh);
 	
 public:
 	// GPUMeshBuffer mGPUMeshBuffer;
