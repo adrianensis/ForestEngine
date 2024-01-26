@@ -82,7 +82,6 @@ protected:
 
 public:
     CRGET(MaterialData)
-    CRGET(InstancedProperties)
     CRGET(InstancedPropertiesSharedBufferData)
     CRGET(InstancedPropertiesStructDefinition)
     GET(ID)
