@@ -32,6 +32,13 @@ DECLARE_ENUM(GPUStorage,
     UNIFORM, "uniform",
 );
 
+DECLARE_ENUM(GPUInterpolation,
+    NONE, "",
+    FLAT, "flat",
+    NOPERSPECTIVE, "noperspective",
+    SMOOTH, "smooth"
+);
+
 class GPUDataType
 {
 public:
@@ -95,8 +102,8 @@ class GPUVariableDefinitionData: public GPUVariableData
 {
 public:
     GPUVariableDefinitionData() = default;
-    GPUVariableDefinitionData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const std::string& name):
-    GPUVariableData(gpuStorage, gpuDataType, name)
+    GPUVariableDefinitionData(GPUInterpolation gpuInterpolation, GPUStorage gpuStorage, const GPUDataType& gpuDataType, const std::string& name):
+    GPUVariableData(gpuStorage, gpuDataType, name), mGPUInterpolation(gpuInterpolation)
     {}
     GPUVariableDefinitionData(const GPUVariableData& gpuVariableData):
     GPUVariableData(gpuVariableData)
@@ -109,7 +116,18 @@ public:
     {}
     GPUVariableDefinitionData(GPUStorage gpuStorage, const GPUVariableData& gpuVariableData):
     GPUVariableData(gpuStorage, gpuVariableData)
-    {}   
+    {}
+    GPUVariableDefinitionData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const std::string& name):
+    GPUVariableData(gpuStorage, gpuDataType, name)
+    {}
+    GPUVariableDefinitionData(GPUInterpolation gpuInterpolation, const GPUVariableData& gpuVariableData, const std::string& value, const std::string& arraySize):
+    GPUVariableData(gpuVariableData), mGPUInterpolation(gpuInterpolation), mValue(value), mArraySize(arraySize)
+    {}
+    GPUVariableDefinitionData(GPUInterpolation gpuInterpolation, GPUStorage gpuStorage, const GPUVariableData& gpuVariableData):
+    GPUVariableData(gpuStorage, gpuVariableData), mGPUInterpolation(gpuInterpolation)
+    {}
+
+    GPUInterpolation mGPUInterpolation = GPUInterpolation::NONE;
     std::string mValue;
     std::string mArraySize;
 };

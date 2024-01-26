@@ -43,7 +43,9 @@ namespace ShaderBuilderNodes
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
         std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ") ";
-        return {getIndent(indent) + locationStr + std::string(EnumsManager::toString(mGPUStorage)) + " " + mType + " " + mName + arrayStr + valueStr + ";"};
+        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : std::string(EnumsManager::toString(mGPUInterpolation)) + " ";
+        std::string storageStr = std::string(EnumsManager::toString(mGPUStorage)) + " ";
+        return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType + " " + mName + arrayStr + valueStr + ";"};
     }
     
     std::vector<std::string> SharedBuffer::toLines(u16 indent) const

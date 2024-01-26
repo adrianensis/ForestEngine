@@ -3,6 +3,7 @@
 
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/RenderEngine.hpp"
@@ -10,10 +11,47 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
+void MaterialInstance::init(Ptr<const Material> material)
+{
+    mMaterial = material;
+
+    u32 bindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(mMaterial->getInstancedPropertiesSharedBufferData().mType);
+    mInstancedPropertiesSharedBuffer.init(bindingPoint, mMaterial->getInstancedPropertiesSharedBufferData(), false);
+    // mInstancedPropertiesSharedBuffer.resize<Matrix4>(GPUMesh::MAX_BONES);
+}
+
 void Material::init(const MaterialData& materialData, u32 id)
 {
     mMaterialData = materialData;
 	mID = id;
+
+    addInstancedProperty(MaterialInstancedPropertiesGPUData::mColor);
+
+    std::vector<GPUStructDefinition::GPUStructVariable> gpuStructVariableaArray;
+    FOR_LIST(it, mInstancedProperties)
+    {
+        const GPUVariableData& gpuVariableData = *it;
+        gpuStructVariableaArray.push_back({gpuVariableData.mGPUDataType, gpuVariableData.mName});
+    }
+
+    mInstancedPropertiesStructDefinition = 
+    {
+        "instancedPropertiesStruct",
+        {
+            gpuStructVariableaArray
+        }
+    };
+
+    GPUDataType instancedPropertiesStructDataType = {mInstancedPropertiesStructDefinition.mName, mInstancedPropertiesStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
+    
+    mInstancedPropertiesSharedBufferData = {
+        GPUBufferType::STORAGE,
+        {
+            {{GPUStorage::UNIFORM, instancedPropertiesStructDataType, "instancedPropertiesArray"}, "", " "}
+        },
+        "InstancedProperties",
+        "instancedProperties"
+    };
 
     loadTextures();
 }
@@ -26,10 +64,6 @@ void Material::bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, 
 	{
         mTextures[(u32)TextureType::BASE_COLOR]->bind();
 	}
-
-	shader->bindUniformValue(GPUBuiltIn::Uniforms::mBaseColor.mName, mMaterialData.mBaseColor);
-	shader->bindUniformValue(GPUBuiltIn::Uniforms::mTime.mName, GET_SYSTEM(Time).getDeltaTimeSeconds());
-	shader->bindUniformValue(GPUBuiltIn::Uniforms::mWindowSize.mName, GET_SYSTEM(Window).getWindowSize());
 }
 
 bool Material::hasTexture() const
@@ -50,6 +84,13 @@ void Material::loadTextures()
             mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
         }
     }
+}
+
+MaterialInstance Material::createMaterialInstance() const
+{
+    MaterialInstance instance;
+    instance.init(getPtrToThis());
+    return instance;
 }
 
 void MaterialFont::loadTextures()

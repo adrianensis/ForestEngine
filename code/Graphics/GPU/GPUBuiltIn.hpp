@@ -58,10 +58,6 @@ public:
     class Uniforms
     {
     public:
-        inline static const GPUVariableDefinitionData mTime{GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "time"};
-        inline static const GPUVariableDefinitionData mWindowSize{GPUStorage::UNIFORM, PrimitiveTypes::mVector2, "windowSize"};
-        inline static const GPUVariableDefinitionData mBaseColor{GPUStorage::UNIFORM, PrimitiveTypes::mVector4, "baseColor"};
-        
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
     };
 
@@ -75,6 +71,8 @@ public:
             Matrix4 mProjectionMatrix;
             Matrix4 mViewMatrix;
             alignas(16) Vector3 mCameraPosition;
+            alignas(16) f32 mTime = 0;
+            alignas(16) Vector2 mWindowSize;
         };
 
         inline static const GPUSharedBufferData mGlobalData
@@ -83,7 +81,9 @@ public:
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"}
+                {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"},
+                {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "time"},
+                {GPUStorage::UNIFORM, PrimitiveTypes::mVector2, "windowSize"}
             },
             "GlobalData",
             "globalData"
@@ -124,13 +124,13 @@ public:
     class VertexInput
     {
     public:
-        inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, PrimitiveTypes::mVector3, "position"};
-        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, PrimitiveTypes::mVector2, "texcoord"};
-        inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, PrimitiveTypes::mVector3, "normal"};
-        inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, PrimitiveTypes::mVector4, "color"};
-        inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, PrimitiveTypes::mVector4i, "BoneIDs"};
-        inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, PrimitiveTypes::mVector4, "Weights"};
-        inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "instanceID"};
+        inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, PrimitiveTypes::mVector3, "in_position"};
+        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, PrimitiveTypes::mVector2, "in_texcoord"};
+        inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, PrimitiveTypes::mVector3, "in_normal"};
+        inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, PrimitiveTypes::mVector4, "in_color"};
+        inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, PrimitiveTypes::mVector4i, "in_BoneIDs"};
+        inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, PrimitiveTypes::mVector4, "in_Weights"};
+        inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_instanceID"};
     };
 
     class VertexOutput
@@ -141,6 +141,7 @@ public:
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, PrimitiveTypes::mVector3, "vNormal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "vColor"};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::OUT, PrimitiveTypes::mVector3, "vPosition"};
+        inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vInstanceID"};
     };
 
     class FragmentInput
@@ -150,6 +151,7 @@ public:
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, VertexOutput::mColor};
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, VertexOutput::mNormal};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::IN, VertexOutput::mFragPosition};
+        inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mInstanceID};
     };
 
     class FragmentOutput

@@ -20,6 +20,7 @@ void BatchRenderer::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
+    mMaterialInstance = mBatchData.mMaterial->createMaterialInstance();
 
     const GPUBuffersLayout& gpuVertexBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
     
@@ -48,6 +49,8 @@ void BatchRenderer::bindSharedBuffers()
     {
         mShader->bindSharedBuffer(mMeshBatcher.mGPUMeshBuffer.getBonesMatricesBuffer());
     }
+    
+    mShader->bindSharedBuffer(mMaterialInstance.mInstancedPropertiesSharedBuffer);
 }
 
 void BatchRenderer::render()
@@ -74,6 +77,14 @@ void BatchRenderer::enable()
     mShader->enable();
     mMeshBatcher.enable();
     mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
+
+	std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray = 
+    {
+        MaterialInstancedProperties{Vector4(1,0,0,1)},
+        MaterialInstancedProperties{Vector4(0,1,0,1)}
+    };
+
+    mMaterialInstance.setInstancedProperties<MaterialInstancedProperties>(mMaterialInstancedPropertiesArray);
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {

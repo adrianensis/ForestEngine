@@ -5,6 +5,7 @@
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
+#include "Graphics/Window/Window.hpp"
 
 void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace)
 {
@@ -53,7 +54,9 @@ void RenderPipeline::updateGlobalMatrices(RenderPipelineData& renderData, bool i
     {
         isWorldSpace ? renderData.mCamera->mProjectionMatrix : ortho,
         isWorldSpace ? renderData.mCamera->mViewMatrix : Matrix4::smIdentity,
-        renderData.mCamera->mGameObject->mTransform->getWorldPosition()
+        renderData.mCamera->mGameObject->mTransform->getWorldPosition(),
+        GET_SYSTEM(Time).getDeltaTimeSeconds(),
+        GET_SYSTEM(Window).getWindowSize()
     };
 	GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer.setData(gpuMatricesData);
 }

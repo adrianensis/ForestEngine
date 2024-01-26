@@ -3,14 +3,27 @@
 #include "Core/Module.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUSharedBuffer.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 
 class GPUShader;
 class Mesh;
 
+class MaterialInstancedProperties
+{
+public:
+    Vector4 mColor = Vector4(1,0,0,1);
+};
+
+class MaterialInstancedPropertiesGPUData
+{
+public:
+    inline static const GPUVariableDefinitionData mColor{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "color"};
+};
+
 class MaterialData
 {
 public:
-    std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
 	bool mAlphaEnabled = true;
 	bool mReceiveLight = true;
 	bool mUseVertexColor = false;
@@ -20,8 +33,27 @@ public:
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
     FontData mFontData;
-	Vector4 mBaseColor = Vector4(0,0,0,1);
+    MaterialInstancedProperties mMaterialInstancedProperties;
+    std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
+};
+
+class Material;
+
+class MaterialInstance
+{
+public:
+    void init(Ptr<const Material> material);
+    
+    template<class T>
+    void setInstancedProperties(const std::vector<T>& instancedPropertiesArray)
+    {
+        mInstancedPropertiesSharedBuffer.resize<T>(instancedPropertiesArray.size());
+        mInstancedPropertiesSharedBuffer.setDataArray<T>(instancedPropertiesArray);
+    }
+public:
+    Ptr<const Material> mMaterial;
+	GPUSharedBuffer mInstancedPropertiesSharedBuffer;
 };
 
 class Material: public ObjectBase
@@ -31,20 +63,28 @@ class Material: public ObjectBase
 
 public:
     void init(const MaterialData& materialData, u32 id);
+    void addInstancedProperty(const GPUVariableData& gpuVariableData) { mInstancedProperties.push_back(gpuVariableData); }
     void bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const;
     bool hasTexture() const;
-
+    MaterialInstance createMaterialInstance() const;
+    
 protected:
     virtual void loadTextures();
 
 protected:
     MaterialData mMaterialData;
+    std::vector<GPUVariableData> mInstancedProperties;
+	GPUStructDefinition mInstancedPropertiesStructDefinition;
+    GPUSharedBufferData mInstancedPropertiesSharedBufferData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
 
     u32 mID = 0;
 
 public:
     CRGET(MaterialData)
+    CRGET(InstancedProperties)
+    CRGET(InstancedPropertiesSharedBufferData)
+    CRGET(InstancedPropertiesStructDefinition)
     GET(ID)
 };
 

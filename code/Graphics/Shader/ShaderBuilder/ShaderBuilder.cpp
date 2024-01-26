@@ -30,17 +30,12 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuVertexBuffersL
     {
         modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     }
-
-    if(material->getMaterialData().mReceiveLight)
-    {
-        auto& ligthsDataBuffer = get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
-        Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    }
     
     auto& outColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& outTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
     auto& outNormal = get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
     auto& fragPosition = get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
+    auto& outInstanceId = get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
 
     auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
@@ -119,6 +114,12 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuVertexBuffersL
        mainFunc.body().
        set(outColor, color);
     }
+
+    if(!instanceId.isEmpty())
+    {
+        mainFunc.body().
+        set(outInstanceId, instanceId);
+    }
 }
 
 void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuVertexBuffersLayout, Ptr<const Material> material)
@@ -128,9 +129,13 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuVertexBuffer
     auto& inColor = get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
     auto& inTextureCoord = get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
     auto& outColor = get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& instanceId = get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
 
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
-    auto& baseColor = get().getAttribute(GPUBuiltIn::Uniforms::mBaseColor.mName);
+
+    auto& instancedPropertiesBuffer = get().getSharedBuffer(material->getInstancedPropertiesSharedBufferData().mInstanceName);
+    Variable instancedProperties(material->getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
+    Variable baseColor = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[0]};
 
     auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
@@ -146,7 +151,7 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuVertexBuffer
     else
     {
         mainFunc.body().
-        set(color, baseColor);
+        set(color, instancedProperties.at(instanceId).dot(baseColor));
     }
 
     mainFunc.body().
@@ -188,10 +193,10 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
 {
     ShaderBuilderData shaderBuilderData;
     
-    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mTime);
-    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mWindowSize);
-    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mBaseColor);
     shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
+
+    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(material->getInstancedPropertiesStructDefinition());
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(material->getInstancedPropertiesSharedBufferData());
 
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
 
@@ -235,6 +240,8 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
     }
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
+
+    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
     
     if(material->hasTexture())
     {
@@ -248,6 +255,8 @@ ShaderBuilder::ShaderBuilderData ShaderBuilder::generateShaderBuilderData(const 
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
     }
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
+
+    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
 
     shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 
