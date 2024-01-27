@@ -124,11 +124,6 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     mMeshMaterials[mesh] = meshMaterial;
 
     std::vector<GPUVariableData> gpuVertexInputBuffers;
-    if(meshMaterial->getMaterialData().mUseVertexColor)
-    {
-        gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
-    }
-
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)
     {
         cgltf_attribute& attribute = primitive.attributes[attributeIt];
@@ -139,6 +134,10 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
         {
             gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+        }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_color)
+        {
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
         {
@@ -159,11 +158,6 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             mesh->init(attribute.data->count, primitive.indices->count / 3, gpuVertexInputBuffers);
             break;
         }
-    }
-
-    if(meshMaterial->getMaterialData().mUseVertexColor)
-    {
-        mesh->setColor(Vector4(0,0,0,1));
     }
 
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)

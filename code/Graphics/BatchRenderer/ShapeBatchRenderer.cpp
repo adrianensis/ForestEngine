@@ -54,9 +54,9 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
-    materialData.mUseVertexColor = true;
     materialData.mUseNormals = false;
     materialData.mUseModelMatrix = false;
+    materialData.mUseVertexColor = true;
     Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
     mShaderLine = ShaderUtils::createShader(mGPUBuffersLayout, lineMaterial);

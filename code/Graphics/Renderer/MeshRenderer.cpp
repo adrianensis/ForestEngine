@@ -28,7 +28,6 @@ void MeshRenderer::init(const RendererData& data)
 
     mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
 
-    setColor(Vector4(0, 0, 0, 1));
     mRegeneratePositions = true;
     mRegenerateTextureCoords = true;
 }
@@ -87,12 +86,6 @@ void MeshRenderer::update()
             updateTextureCoords();
             mRegenerateTextureCoords = false;
         }
-    }
-
-    if(mRegenerateColor && mRendererData.mMaterial && mRendererData.mMaterial->getMaterialData().mUseVertexColor)
-    {
-        mMeshInstance->setColor(mColor);
-        mRegenerateColor = false;
     }
 }
 
@@ -153,19 +146,6 @@ void MeshRenderer::setMaterial(Ptr<const Material> material)
     if(mRendererData.mMaterial != material)
     {
         mRendererData.mMaterial = material;
-        if(mBatchRenderer)
-        {
-            mBatchRenderer->requestRegenerateBuffers();
-        }
-    }
-}
-
-void MeshRenderer::setColor(const Vector4& color)
-{
-    if(mColor != color)
-    {
-        mColor = color;
-        mRegenerateColor = true;
         if(mBatchRenderer)
         {
             mBatchRenderer->requestRegenerateBuffers();

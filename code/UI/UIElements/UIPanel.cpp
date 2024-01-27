@@ -63,7 +63,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
     renderer->mUseDepth = (true);
 	renderer->setDepth(mConfig.mLayer);
-	renderer->setColor(mConfig.mStyle->mBackgroundColor);
+	renderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mBackgroundColor;
     
     setComponentsCache();
 }

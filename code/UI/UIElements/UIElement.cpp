@@ -482,7 +482,7 @@ void UIElement::setColorPressed()
 {
     if(mRenderer)
     {
-	    mRenderer->setColor(mConfig.mStyle->mColorPressed);
+	    mRenderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mColorPressed;
     }
 }
 
@@ -493,14 +493,14 @@ void UIElement::setColorRelease()
 	{
         if(mRenderer)
         {
-		    mRenderer->setColor(mConfig.mStyle->mColorHovered);
+		    mRenderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mColorHovered;
         }
 	}
 	else
 	{
         if(mRenderer)
         {
-		    mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
+		    mRenderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mBackgroundColor;
         }
 	}
 }
@@ -510,11 +510,11 @@ void UIElement::setColorHover()
 	bool cursorInside = isMouseCursorInsideElement();
 	if (cursorInside)
 	{
-		mRenderer->setColor(mConfig.mStyle->mColorHovered);
+		mRenderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mColorHovered;
 	}
 	else
 	{
-		mRenderer->setColor(mConfig.mStyle->mBackgroundColor);
+		mRenderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mBackgroundColor;
 	}
 }
 

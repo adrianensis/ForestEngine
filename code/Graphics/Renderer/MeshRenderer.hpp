@@ -54,7 +54,6 @@ public:
     void update();
     void onDestroy() override;
     void setMaterial(Ptr<const Material> material);
-    void setColor(const Vector4& color);
     void setDepth(i32 depth);
     void setInvertAxisX(bool invertAxisX);
     void setTextureRegion(const Rectangle& textureRegion);
@@ -72,10 +71,8 @@ private:
 private:
     RendererData mRendererData;
 	OwnerPtr<Mesh> mMeshInstance;
-    bool mRegenerateColor = false;
     bool mRegeneratePositions = false;
     bool mRegenerateTextureCoords = false;
-    Vector4 mColor;
     Ptr<BatchRenderer> mBatchRenderer;
     Matrix4 mRendererModelMatrix;
     bool mRendererPositionOffsetDirty = true;
@@ -95,5 +92,5 @@ public:
     CRGET_SET(BatchRenderer)
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
-    CRGET(MaterialInstance)
+    RGET(MaterialInstance)
 };
