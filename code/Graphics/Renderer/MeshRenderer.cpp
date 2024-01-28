@@ -48,20 +48,7 @@ void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
     mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
-
-    if(!mPositionOffset.eq(Vector3(0,0,0)))
-    {
-        PROFILER_BLOCK_CPU("Position offset");
-        Matrix4 positionOffsetMatrix;
-        positionOffsetMatrix.translation(mPositionOffset);
-
-        positionOffsetMatrix.mul(mRendererModelMatrix);
-        mRendererModelMatrix = positionOffsetMatrix;
-    }
-
     IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
-    
-    mRendererPositionOffsetDirty = false;
 }
 
 void MeshRenderer::update()
@@ -106,7 +93,8 @@ void MeshRenderer::updateTextureRegion()
 			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
 			if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
             {
-                setTextureRegion(Rectangle(frame.mPosition, Vector2(frame.mWidth, frame.mHeight)));
+                mMaterialInstance.mMaterialInstancedProperties.mTextureRegionLeftTop = frame.mPosition;
+                mMaterialInstance.mMaterialInstancedProperties.mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
             }
 		}
 	}
@@ -125,23 +113,6 @@ const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 	}
 
     return currentTextureAnimation;
-}
-
-void MeshRenderer::setDepth(i32 depth)
-{
-    mMaterialInstance.mMaterialInstancedProperties.mDepth = depth;
-}
-
-void MeshRenderer::setTextureRegion(const Rectangle& textureRegion)
-{
-    mMaterialInstance.mMaterialInstancedProperties.mTextureRegionTopLeft = textureRegion.getLeftTopFront();
-    mMaterialInstance.mMaterialInstancedProperties.mTextureRegionSize = textureRegion.getSize();
-}
-
-void MeshRenderer::setPositionOffset(const Vector3& positionOffset)
-{
-    mPositionOffset = positionOffset;
-    mRendererPositionOffsetDirty = true;
 }
 
 IMPLEMENT_SERIALIZATION(MeshRenderer)

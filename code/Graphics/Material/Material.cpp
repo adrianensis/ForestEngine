@@ -17,7 +17,7 @@ void Material::init(const MaterialData& materialData, u32 id)
 	mID = id;
 
     addInstancedProperty(MaterialInstancedPropertiesGPUData::mColor);
-    addInstancedProperty(MaterialInstancedPropertiesGPUData::mTextureRegionTopLeft);
+    addInstancedProperty(MaterialInstancedPropertiesGPUData::mTextureRegionLeftTop);
     addInstancedProperty(MaterialInstancedPropertiesGPUData::mTextureRegionSize);
     addInstancedProperty(MaterialInstancedPropertiesGPUData::mDepth);
 

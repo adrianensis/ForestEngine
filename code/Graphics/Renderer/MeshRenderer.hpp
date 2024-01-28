@@ -54,9 +54,6 @@ public:
     void update();
     void onDestroy() override;
     void setMaterial(Ptr<const Material> material);
-    void setDepth(i32 depth);
-    void setTextureRegion(const Rectangle& textureRegion);
-    void setPositionOffset(const Vector3& positionOffset);
 
 private:
     void calculateRendererModelMatrix();
@@ -71,7 +68,6 @@ private:
     bool mRendererPositionOffsetDirty = true;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
     MaterialInstance mMaterialInstance;
-    Vector3 mPositionOffset;
 
 public:
     std::string mCurrentTextureAnimationKey;

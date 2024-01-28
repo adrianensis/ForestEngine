@@ -13,7 +13,7 @@ class MaterialInstancedProperties
 {
 public:
     Vector4 mColor = Vector4(0,0,0,1);
-    Vector2 mTextureRegionTopLeft = Vector2(0.0, 0.0);
+    Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
 };
@@ -22,7 +22,7 @@ class MaterialInstancedPropertiesGPUData
 {
 public:
     inline static const GPUVariableDefinitionData mColor{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "color"};
-    inline static const GPUVariableDefinitionData mTextureRegionTopLeft{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionTopLeft"};
+    inline static const GPUVariableDefinitionData mTextureRegionLeftTop{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"};
     inline static const GPUVariableDefinitionData mTextureRegionSize{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"};
     inline static const GPUVariableDefinitionData mDepth{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mInt, "depth"};
 };

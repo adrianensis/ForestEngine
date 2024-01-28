@@ -38,7 +38,7 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     auto& outInstanceId = get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
 
     Variable instancedProperties(material->getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
-    Variable textureRegionTopLeft = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[1]};
+    Variable textureRegionLeftTop = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[1]};
     Variable textureRegionSize = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[2]};
     Variable depth = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[3]};
 
@@ -97,8 +97,8 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
         mainFunc.body().
         set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2.mName,
         {
-            outTextureCoord.dot("x").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("x")).add(instancedProperties.at(instanceId).dot(textureRegionTopLeft).dot("x")),
-            outTextureCoord.dot("y").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("y")).add(instancedProperties.at(instanceId).dot(textureRegionTopLeft).dot("y"))
+            outTextureCoord.dot("x").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("x")).add(instancedProperties.at(instanceId).dot(textureRegionLeftTop).dot("x")),
+            outTextureCoord.dot("y").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("y")).add(instancedProperties.at(instanceId).dot(textureRegionLeftTop).dot("y"))
         }));
     }
     
