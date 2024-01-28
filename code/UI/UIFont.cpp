@@ -37,6 +37,7 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
     MaterialData materialData;
     materialData.mCreateMipMap = false;
     materialData.mReceiveLight = false;
+    materialData.mUseDepth = true;
     // materialData.mAlphaEnabled = false;
     materialData.mFontData = mFontData;
     mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialFont(materialData);

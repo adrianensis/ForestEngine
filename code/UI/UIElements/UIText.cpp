@@ -19,7 +19,6 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     rendererData.mStencilData = calculateStencilData();
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
-    renderer->mUseDepth = (true);
     renderer->setDepth(mConfig.mLayer);
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
     renderer->setTextureRegion(textureRegion);

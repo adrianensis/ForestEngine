@@ -26,10 +26,12 @@ void MeshRenderer::init(const RendererData& data)
         mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
     }
 
-    mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
+    ByteBuffer& bufferRefPosition = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName);
+    bufferRefPosition.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName));
+    ByteBuffer& bufferRefTexCoord = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName);
+    bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
 
-    mRegeneratePositions = true;
-    mRegenerateTextureCoords = true;
+    mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -71,69 +73,7 @@ void MeshRenderer::update()
         calculateRendererModelMatrix();
     }
 
-    bool regenerateVertices = !mRendererData.mIsInstanced;
-    if(regenerateVertices)
-    {
-        if(mRegeneratePositions)
-        {
-            mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).clear();
-            updatePositions();
-            mRegeneratePositions = false;
-        }
-        if(mRegenerateTextureCoords)
-        {
-            mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).clear();
-            updateTextureCoords();
-            mRegenerateTextureCoords = false;
-        }
-    }
-}
-
-void MeshRenderer::updatePositions()
-{
-	PROFILER_CPU()
-    ByteBuffer& bufferRef = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName);
-    bufferRef.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName));
-
-    if(mUseDepth)
-    {
-        FOR_RANGE(i, 0, bufferRef.size())
-        {
-            Vector3 vertexPosition = bufferRef.get<Vector3>(i);
-            vertexPosition.z = mDepth;
-            bufferRef.get<Vector3>(i) = vertexPosition;
-        }
-    }
-}
-
-void MeshRenderer::updateTextureCoords()
-{
-	PROFILER_CPU()
-    ByteBuffer& bufferRef = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName);
-    bufferRef.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
-
     updateTextureRegion();
-    FOR_RANGE(i, 0, mMeshInstance->mVertexCount)
-    {
-        Vector2 vertexTexture = mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).get<Vector2>(i);
-        Vector2 regionSize = mTextureRegion.getSize();
-        Vector2 regionPosition = mTextureRegion.getLeftTopFront();
-
-        Vector2 textureCoord(vertexTexture.x * regionSize.x + regionPosition.x, vertexTexture.y * regionSize.y + regionPosition.y);
-
-        if (mInvertAxisX)
-        {
-            textureCoord.x = 1.0f - textureCoord.x;
-
-            const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
-            if (currentTextureAnimation)
-            {
-                textureCoord.x = textureCoord.x - (1.0f - (currentTextureAnimation->getNumberOfFrames() * regionSize.x));
-            }
-        }
-
-        bufferRef.get<Vector2>(i) = textureCoord;
-    }
 }
 
 void MeshRenderer::onDestroy() 
@@ -166,7 +106,7 @@ void MeshRenderer::updateTextureRegion()
 			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
 			if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
             {
-                mTextureRegion.set(frame.mPosition, Vector2(frame.mWidth, frame.mHeight));
+                setTextureRegion(Rectangle(frame.mPosition, Vector2(frame.mWidth, frame.mHeight)));
             }
 		}
 	}
@@ -189,32 +129,18 @@ const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 
 void MeshRenderer::setDepth(i32 depth)
 {
-    if(mDepth != depth)
-    {
-        mDepth = depth;
-        mRegeneratePositions = true;
-    }
-}
-
-void MeshRenderer::setInvertAxisX(bool invertAxisX)
-{
-    if(mInvertAxisX != invertAxisX)
-    {
-        mInvertAxisX = invertAxisX;
-        mRegenerateTextureCoords = true;
-    }
+    mMaterialInstance.mMaterialInstancedProperties.mDepth = depth;
 }
 
 void MeshRenderer::setTextureRegion(const Rectangle& textureRegion)
 {
-    mTextureRegion = textureRegion;
-    mRegenerateTextureCoords = true;
+    mMaterialInstance.mMaterialInstancedProperties.mTextureRegionTopLeft = textureRegion.getLeftTopFront();
+    mMaterialInstance.mMaterialInstancedProperties.mTextureRegionSize = textureRegion.getSize();
 }
 
 void MeshRenderer::setPositionOffset(const Vector3& positionOffset)
 {
     mPositionOffset = positionOffset;
-    mRegeneratePositions = true;
     mRendererPositionOffsetDirty = true;
 }
 

@@ -17,6 +17,9 @@ void Material::init(const MaterialData& materialData, u32 id)
 	mID = id;
 
     addInstancedProperty(MaterialInstancedPropertiesGPUData::mColor);
+    addInstancedProperty(MaterialInstancedPropertiesGPUData::mTextureRegionTopLeft);
+    addInstancedProperty(MaterialInstancedPropertiesGPUData::mTextureRegionSize);
+    addInstancedProperty(MaterialInstancedPropertiesGPUData::mDepth);
 
     std::vector<GPUStructDefinition::GPUStructVariable> gpuStructVariableaArray;
     FOR_LIST(it, mInstancedProperties)

@@ -15,6 +15,7 @@ void UIManager::init()
     materialData.mAlphaEnabled = true;
     materialData.mReceiveLight = false;
     materialData.mUseColorAsTint = true;
+    materialData.mUseDepth = true;
     mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 }
 

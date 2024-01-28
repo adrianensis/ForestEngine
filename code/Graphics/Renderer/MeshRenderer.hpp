@@ -55,13 +55,8 @@ public:
     void onDestroy() override;
     void setMaterial(Ptr<const Material> material);
     void setDepth(i32 depth);
-    void setInvertAxisX(bool invertAxisX);
     void setTextureRegion(const Rectangle& textureRegion);
     void setPositionOffset(const Vector3& positionOffset);
-
-protected:
-    void updatePositions();
-    void updateTextureCoords();
 
 private:
     void calculateRendererModelMatrix();
@@ -71,21 +66,15 @@ private:
 private:
     RendererData mRendererData;
 	OwnerPtr<Mesh> mMeshInstance;
-    bool mRegeneratePositions = false;
-    bool mRegenerateTextureCoords = false;
     Ptr<BatchRenderer> mBatchRenderer;
     Matrix4 mRendererModelMatrix;
     bool mRendererPositionOffsetDirty = true;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    Rectangle mTextureRegion = Rectangle(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
-    bool mInvertAxisX = false;
-    i32 mDepth = 0;
-    Vector3 mPositionOffset;
     MaterialInstance mMaterialInstance;
+    Vector3 mPositionOffset;
 
 public:
     std::string mCurrentTextureAnimationKey;
-    bool mUseDepth = false; // overrides Z with Depth
 
 public:
     CGET(MeshInstance)

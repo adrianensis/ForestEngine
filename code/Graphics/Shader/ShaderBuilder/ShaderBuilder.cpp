@@ -37,6 +37,11 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     auto& fragPosition = get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
     auto& outInstanceId = get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
 
+    Variable instancedProperties(material->getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
+    Variable textureRegionTopLeft = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[1]};
+    Variable textureRegionSize = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[2]};
+    Variable depth = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[3]};
+
     auto& mainFunc = get().function(GPUBuiltIn::Functions::mMain);
 
     Variable finalPositon;
@@ -45,6 +50,12 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
 
     mainFunc.body().
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {position, {"1.0f"}}));
+
+    if(material->getMaterialData().mUseDepth)
+    {
+        mainFunc.body().
+        set(finalPositon.dot("z"), instancedProperties.at(instanceId).dot(depth));
+    }
 
     if(material->getMaterialData().mUseNormals)
     {
@@ -82,6 +93,13 @@ void ShaderBuilder::createVertexShader(const GPUBuffersLayout& gpuBuffersLayout,
     {
         mainFunc.body().
         set(outTextureCoord, textureCoord);
+
+        mainFunc.body().
+        set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2.mName,
+        {
+            outTextureCoord.dot("x").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("x")).add(instancedProperties.at(instanceId).dot(textureRegionTopLeft).dot("x")),
+            outTextureCoord.dot("y").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("y")).add(instancedProperties.at(instanceId).dot(textureRegionTopLeft).dot("y"))
+        }));
     }
     
     if(material->getMaterialData().mUseNormals)
@@ -133,7 +151,6 @@ void ShaderBuilder::createFragmentShader(const GPUBuffersLayout& gpuBuffersLayou
 
     auto& sampler = get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
 
-    auto& instancedPropertiesBuffer = get().getSharedBuffer(material->getInstancedPropertiesSharedBufferData().mInstanceName);
     Variable instancedProperties(material->getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
     Variable baseColor = {material->getInstancedPropertiesStructDefinition().mPrimitiveVariables[0]};
 
