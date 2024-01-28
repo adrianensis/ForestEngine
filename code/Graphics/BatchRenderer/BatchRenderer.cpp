@@ -110,9 +110,6 @@ void BatchRenderer::processRenderers()
 {
 	PROFILER_CPU()
 
-	u32 newSize = mRenderers.size();
-	mMeshBatcher.resize(newSize);
-	
     std::list<Ptr<MeshRenderer>> newList;
     FOR_LIST(it, mRenderers)
 	{
@@ -135,6 +132,9 @@ void BatchRenderer::processRenderers()
     mRenderers.clear();
     mRenderers = newList;
 
+	u32 newSize = mRenderers.size();
+	mMeshBatcher.resize(newSize);
+	
     FOR_LIST(it, mRenderers)
 	{
 		Ptr<MeshRenderer> renderer = *it;
