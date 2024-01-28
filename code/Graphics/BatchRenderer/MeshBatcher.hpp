@@ -13,7 +13,7 @@ public:
     void init(const BatchData batchData);
     void terminate();
     void resize(u32 size);
-    void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance, const MaterialInstancedProperties& materialInstancedProperties);
+    void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
     void setMaterialInstanceProperties(u32 index, const MaterialInstancedProperties& materialInstancedProperties);
     void updateBoneTransforms();
     void drawCall();

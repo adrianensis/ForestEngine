@@ -92,12 +92,12 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
     }
 }
 
-void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance, const MaterialInstancedProperties& materialInstancedProperties)
+void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance)
 {
 	PROFILER_CPU()
 
     mMatrices.push_back(modelMatrix);
-    mMaterialInstancedPropertiesArray.push_back(materialInstancedProperties);
+    mMaterialInstancedPropertiesArray.push_back(MaterialInstancedProperties());
 
     if(!mBatchData.mIsInstanced)
 	{

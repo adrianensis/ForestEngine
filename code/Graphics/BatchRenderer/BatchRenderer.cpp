@@ -147,7 +147,7 @@ void BatchRenderer::updateBuffers()
             PROFILER_BLOCK_CPU("update");
             renderer->update();
             const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-            mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance(), renderer->getMaterialInstance().mMaterialInstancedProperties);
+            mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
         }
     }
 
