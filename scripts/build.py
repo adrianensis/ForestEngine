@@ -71,16 +71,22 @@ buildTargetDir=os.path.join(buildDir, buildType)
 
 system_name = platform.system()
 system_info = str(platform.uname())
+max_cpu_cores = os.cpu_count()
+system_reserved_cores = 4
+compilation_cores = max_cpu_cores - system_reserved_cores
 
 print(system_name)
 print(system_info)
+print("max_cpu_cores: " + str(max_cpu_cores))
+print("system_reserved_cores: " + str(system_reserved_cores))
+print("compilation_cores: " + str(compilation_cores))
 
 cmake_generator = ""
 systemBuildCommand=""
 if system_name == "Linux" or system_name == "Linux2":
     # linux
     cmake_generator = '-G "Unix Makefiles"'
-    systemBuildCommand = 'make -j8'
+    systemBuildCommand = 'make -j{compilation_cores}'.format(compilation_cores = compilation_cores)
 elif system_name == "Darwin":
     # OS X
     pass
