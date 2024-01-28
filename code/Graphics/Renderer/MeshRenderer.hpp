@@ -53,7 +53,6 @@ public:
     bool getIsWorldSpace() const;
     void update();
     void onDestroy() override;
-    void setMaterial(Ptr<const Material> material);
 
 private:
     void calculateRendererModelMatrix();

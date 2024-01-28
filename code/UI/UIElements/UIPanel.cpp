@@ -58,6 +58,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
     rendererData.mMaterial = (mConfig.mMaterial);
+    rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);

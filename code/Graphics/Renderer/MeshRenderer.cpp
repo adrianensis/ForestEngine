@@ -65,18 +65,9 @@ void MeshRenderer::update()
 
 void MeshRenderer::onDestroy() 
 {
-
-}
-
-void MeshRenderer::setMaterial(Ptr<const Material> material)
-{
-    if(mRendererData.mMaterial != material)
+    if(mBatchRenderer)
     {
-        mRendererData.mMaterial = material;
-        if(mBatchRenderer)
-        {
-            mBatchRenderer->requestRegenerateBuffers();
-        }
+        mBatchRenderer->requestRegenerateBuffers();
     }
 }
 
