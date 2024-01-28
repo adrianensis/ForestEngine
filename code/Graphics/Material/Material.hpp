@@ -61,7 +61,6 @@ class Material: public ObjectBase
 
 public:
     void init(const MaterialData& materialData, u32 id);
-    void addInstancedProperty(const GPUVariableData& gpuVariableData) { mInstancedProperties.push_back(gpuVariableData); }
     void enable() const;
     void disable() const;
     bool hasTexture() const;
