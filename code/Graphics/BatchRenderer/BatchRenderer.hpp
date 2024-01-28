@@ -22,8 +22,6 @@ private:
     void enable();
     void disable();
     void processRenderers();
-    bool shouldRemoveRenderer(Ptr<const MeshRenderer> renderer);
-    void internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it);
     void addToVertexBuffer(Ptr<MeshRenderer> renderer);
     bool shouldRegenerateBuffers() const;
 
@@ -33,7 +31,6 @@ private:
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;
 
-	bool mNewRendererAdded = false;
 	bool mRegenerateBuffersRequested = false;
 
 public:

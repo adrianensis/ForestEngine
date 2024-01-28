@@ -16,7 +16,6 @@ public:
     void renderStencil();
     void renderScreenSpaceStencil();
     void renderScreenSpace();
-    void requestRegenerateBuffers();
 
 private:
     void renderScreenSpaceStencilMask(ObjectId maskObjectId);

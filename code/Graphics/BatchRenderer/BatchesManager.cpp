@@ -164,11 +164,3 @@ void BatchesManager::renderScreenSpace()
 		}
 	}
 }
-
-void BatchesManager::requestRegenerateBuffers()
-{
-	FOR_MAP(it, mBatches)
-	{
-		it->second->requestRegenerateBuffers();
-	}
-}

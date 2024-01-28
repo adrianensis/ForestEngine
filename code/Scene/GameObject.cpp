@@ -80,7 +80,6 @@ void GameObject::destroy()
 	}
 
 	mComponents.clear();
-
 }
 
 IMPLEMENT_SERIALIZATION(GameObject)

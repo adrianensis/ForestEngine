@@ -103,8 +103,7 @@ void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRenderers.push_back(renderer);
 	renderer->setBatchRenderer(getPtrToThis());
-
-	mNewRendererAdded = true;
+	mRegenerateBuffersRequested = true;
 }
 
 void BatchRenderer::processRenderers()
@@ -114,73 +113,42 @@ void BatchRenderer::processRenderers()
 	u32 newSize = mRenderers.size();
 	mMeshBatcher.resize(newSize);
 	
+    std::list<Ptr<MeshRenderer>> newList;
     FOR_LIST(it, mRenderers)
 	{
+        PROFILER_BLOCK_CPU("remove");
+
 		Ptr<MeshRenderer> renderer = *it;
-        if (shouldRemoveRenderer(renderer))
-		{
-            PROFILER_BLOCK_CPU("remove renderer");
-			internalRemoveRenderer(it);
-		}
-		else
-		{
-            //Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
-            //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getLocalScale().x))
-            {
-                PROFILER_BLOCK_CPU("update");
-                renderer->update();
-                addToVertexBuffer(renderer);
-            }
-		}
-	}
-
-    mNewRendererAdded = false;
-    mRegenerateBuffersRequested = false;
-}
-
-bool BatchRenderer::shouldRemoveRenderer(Ptr<const MeshRenderer> renderer)
-{
-	bool toRemove = false;
-
-	if(renderer.isValid())
-	{
-		if (renderer->getIsPendingToBeDestroyed())
-        {
-            toRemove = true;
-        }
-	}
-	else
-	{
-		toRemove = true;
-	}
-
-	return toRemove;
-}
-
-void BatchRenderer::internalRemoveRenderer(std::list<Ptr<MeshRenderer>>::iterator& it)
-{
-	PROFILER_CPU()
-
-	Ptr<MeshRenderer> renderer = *it;
-	if(renderer)
-	{
-		renderer->setBatchRenderer(Ptr<BatchRenderer>());
-
-        if (!mBatchData.mIsWorldSpace)
+        if(renderer.isValid())
         {
             if (renderer->getIsPendingToBeDestroyed())
             {
                 renderer->finallyDestroy();
             }
+            else
+            {
+                newList.push_back(renderer);
+            }
         }
 	}
 
-    it->invalidate();
+    mRenderers.clear();
+    mRenderers = newList;
 
-    mRegenerateBuffersRequested = true;
+    FOR_LIST(it, mRenderers)
+	{
+		Ptr<MeshRenderer> renderer = *it;
 
-	it = mRenderers.erase(it);
-	--it; // go back to the previous it, so the FOR LOOP can do ++it with no problem
+		//Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
+        //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getLocalScale().x))
+        {
+            PROFILER_BLOCK_CPU("update");
+            renderer->update();
+            addToVertexBuffer(renderer);
+        }
+	}
+
+	mRegenerateBuffersRequested = false;
 }
 
 void BatchRenderer::addToVertexBuffer(Ptr<MeshRenderer> renderer)
@@ -194,5 +162,5 @@ void BatchRenderer::addToVertexBuffer(Ptr<MeshRenderer> renderer)
 bool BatchRenderer::shouldRegenerateBuffers() const
 {
     // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
-	return mNewRendererAdded || !mBatchData.mIsStatic || mRegenerateBuffersRequested;
+	return mRegenerateBuffersRequested || !mBatchData.mIsStatic;
 }
