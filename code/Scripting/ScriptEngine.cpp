@@ -21,17 +21,6 @@ void ScriptEngine::addComponent(Ptr<SystemComponent> component)
 void ScriptEngine::update()
 {
 	PROFILER_CPU()
-	
-	if (mController)
-	{
-		if (!mController->getFirstUpdateDone())
-		{
-			mController->firstUpdate();
-			mController->firstUpdateDone();
-		}
-
-		mController->update();
-	}
 
 	FOR_LIST(it, mScripts)
 	{
