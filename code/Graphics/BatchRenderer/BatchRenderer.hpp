@@ -21,12 +21,12 @@ private:
     void bindSharedBuffers();
     void enable();
     void disable();
-    void processRenderers();
-    void addToVertexBuffer(Ptr<MeshRenderer> renderer);
+    void updateBuffers();
+    void updateMaterialProperties();
     bool shouldRegenerateBuffers() const;
 
 private:
-	std::list<Ptr<MeshRenderer>> mRenderers;
+	std::vector<Ptr<MeshRenderer>> mRenderers;
     OwnerPtr<GPUShader> mShader;
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;

@@ -62,8 +62,10 @@ void BatchRenderer::render()
 
 		if(shouldRegenerateBuffers())
 		{
-			processRenderers();
+			updateBuffers();
 		}
+
+        updateMaterialProperties();
 
         mMeshBatcher.drawCall();
 
@@ -106,16 +108,16 @@ void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
 	mRegenerateBuffersRequested = true;
 }
 
-void BatchRenderer::processRenderers()
+void BatchRenderer::updateBuffers()
 {
 	PROFILER_CPU()
-
-    std::list<Ptr<MeshRenderer>> newList;
-    FOR_LIST(it, mRenderers)
-	{
+    
+    std::vector<Ptr<MeshRenderer>> newList;
+    FOR_ARRAY(i, mRenderers)
+    {
         PROFILER_BLOCK_CPU("remove");
 
-		Ptr<MeshRenderer> renderer = *it;
+        Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             if (renderer->getIsPendingToBeDestroyed())
@@ -127,36 +129,39 @@ void BatchRenderer::processRenderers()
                 newList.push_back(renderer);
             }
         }
-	}
+    }
 
     mRenderers.clear();
     mRenderers = newList;
 
-	u32 newSize = mRenderers.size();
-	mMeshBatcher.resize(newSize);
-	
-    FOR_LIST(it, mRenderers)
-	{
-		Ptr<MeshRenderer> renderer = *it;
+    u32 newSize = mRenderers.size();
+    mMeshBatcher.resize(newSize);
 
-		//Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
+    FOR_ARRAY(i, mRenderers)
+    {
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+
+        //Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
         //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getLocalScale().x))
         {
             PROFILER_BLOCK_CPU("update");
             renderer->update();
-            addToVertexBuffer(renderer);
+            const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
+            mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance(), renderer->getMaterialInstance().mMaterialInstancedProperties);
         }
-	}
+    }
 
-	mRegenerateBuffersRequested = false;
+    mRegenerateBuffersRequested = false;
 }
 
-void BatchRenderer::addToVertexBuffer(Ptr<MeshRenderer> renderer)
+void BatchRenderer::updateMaterialProperties()
 {
 	PROFILER_CPU()
-
-    const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-    mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance(), renderer->getMaterialInstance().mMaterialInstancedProperties);
+    FOR_ARRAY(i, mRenderers)
+    {
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+        mMeshBatcher.setMaterialInstanceProperties(i, renderer->getMaterialInstance().mMaterialInstancedProperties);
+    }
 }
 
 bool BatchRenderer::shouldRegenerateBuffers() const

@@ -14,6 +14,7 @@ public:
     void terminate();
     void resize(u32 size);
     void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance, const MaterialInstancedProperties& materialInstancedProperties);
+    void setMaterialInstanceProperties(u32 index, const MaterialInstancedProperties& materialInstancedProperties);
     void updateBoneTransforms();
     void drawCall();
     void enable();
@@ -32,7 +33,8 @@ private:
     void resizeBuffers(u32 maxInstances);
     void resizeInstancedBuffers(u32 maxInstances);
     void setMeshBuffers(Ptr<const GPUMesh> mesh);
-    void setInstancedBuffers(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs, const std::vector<MaterialInstancedProperties>& materialInstancedPropertiesArray);
+    void setInstancedBuffers();
+    void setMaterialInstancePropertiesBuffers();
     void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
     void setIndicesBuffer(Ptr<const GPUMesh> mesh);
 

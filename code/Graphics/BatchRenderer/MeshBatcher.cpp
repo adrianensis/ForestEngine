@@ -108,6 +108,11 @@ void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshIn
 	mMeshesIndex++;
 }
 
+void MeshBatcher::setMaterialInstanceProperties(u32 index, const MaterialInstancedProperties& materialInstancedProperties)
+{
+    mMaterialInstancedPropertiesArray[index] = materialInstancedProperties;
+}
+
 void MeshBatcher::drawCall()
 {	
 	if (mMeshesIndex > 0)
@@ -116,6 +121,8 @@ void MeshBatcher::drawCall()
         {
 		    sendDataToGPU();
         }
+
+        setMaterialInstancePropertiesBuffers();
 		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 	}
 }
@@ -205,7 +212,7 @@ void MeshBatcher::sendDataToGPU()
 	{
         setMeshBuffers(Ptr<const GPUMesh>::cast(mInternalMesh));
     }
-    setInstancedBuffers(mMatrices, mInstanceIDs, mMaterialInstancedPropertiesArray);
+    setInstancedBuffers();
     mDataSentToGPU = true;
 }
 
@@ -274,18 +281,23 @@ void MeshBatcher::setMeshBuffers(Ptr<const GPUMesh> mesh)
     }
 }
 
-void MeshBatcher::setInstancedBuffers(const std::vector<Matrix4>& matrices, const std::vector<u32>& instanceIDs, const std::vector<MaterialInstancedProperties>& materialInstancedPropertiesArray)
+void MeshBatcher::setInstancedBuffers()
 {
     PROFILER_CPU()
-	mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(instanceIDs);
+	mGPUBuffersLayout.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mInstanceIDs);
     if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
     {
-        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(matrices);
+        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
     }
+}
+
+void MeshBatcher::setMaterialInstancePropertiesBuffers()
+{
+    PROFILER_CPU()
 
     GPUSharedBuffer& materialInstancedPropertiesSharedBuffer = mGPUBuffersLayout.getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData());
-    materialInstancedPropertiesSharedBuffer.resize<MaterialInstancedProperties>(materialInstancedPropertiesArray.size());
-    materialInstancedPropertiesSharedBuffer.setDataArray<MaterialInstancedProperties>(materialInstancedPropertiesArray);
+    materialInstancedPropertiesSharedBuffer.resize<MaterialInstancedProperties>(mMaterialInstancedPropertiesArray.size());
+    materialInstancedPropertiesSharedBuffer.setDataArray<MaterialInstancedProperties>(mMaterialInstancedPropertiesArray);
 }
 
 void MeshBatcher::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
