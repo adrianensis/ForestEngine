@@ -162,7 +162,8 @@ class Texture: public ObjectBase
 public:
     ~Texture() override;
     virtual void init(const TextureData& textureData) {};
-    void bind() const;
+    void enable() const;
+    void disable() const;
 
 protected:
 	u32 mTextureId = 0;

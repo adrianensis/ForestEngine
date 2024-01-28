@@ -50,13 +50,23 @@ void Material::init(const MaterialData& materialData, u32 id)
     loadTextures();
 }
 
-void Material::bind(Ptr<GPUShader> shader, bool isWorldSpace, bool isInstanced, Ptr<const Mesh> mesh) const
+void Material::enable() const
 {
 	PROFILER_CPU()
 
 	if (mTextures[(u32)TextureType::BASE_COLOR])
 	{
-        mTextures[(u32)TextureType::BASE_COLOR]->bind();
+        mTextures[(u32)TextureType::BASE_COLOR]->enable();
+	}
+}
+
+void Material::disable() const
+{
+	PROFILER_CPU()
+
+	if (mTextures[(u32)TextureType::BASE_COLOR])
+	{
+        mTextures[(u32)TextureType::BASE_COLOR]->disable();
 	}
 }
 

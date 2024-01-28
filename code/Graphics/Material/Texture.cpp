@@ -6,9 +6,14 @@ Texture::~Texture()
     GET_SYSTEM(GPUInterface).deleteTexture(mTextureId);
 }
 
-void Texture::bind() const
+void Texture::enable() const
 {
     GET_SYSTEM(GPUInterface).enableTexture(mTextureId);
+}
+
+void Texture::disable() const
+{
+    GET_SYSTEM(GPUInterface).disableTexture();
 }
 
 void TextureImage::init(const TextureData& textureData)

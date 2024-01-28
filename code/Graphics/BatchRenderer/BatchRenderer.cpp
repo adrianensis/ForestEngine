@@ -77,7 +77,7 @@ void BatchRenderer::enable()
 {
     mShader->enable();
     mMeshBatcher.enable();
-    mBatchData.mMaterial->bind(mShader, mBatchData.mIsWorldSpace, mBatchData.mIsInstanced, mBatchData.mMesh);
+    mBatchData.mMaterial->enable();
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
@@ -97,8 +97,9 @@ void BatchRenderer::disable()
         GET_SYSTEM(GPUInterface).disableStencil();
     }
 
-    mShader->disable();
+    mBatchData.mMaterial->disable();
     mMeshBatcher.disable();
+    mShader->disable();
 }
 
 void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
