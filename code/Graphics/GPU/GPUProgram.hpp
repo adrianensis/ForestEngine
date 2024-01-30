@@ -6,13 +6,13 @@
 class GPUBuffersLayout;
 class GPUSharedBuffer;
 
-class GPUShader: public ObjectBase
+class GPUProgram: public ObjectBase
 {
-    GENERATE_METADATA(GPUShader)
+    GENERATE_METADATA(GPUProgram)
 public:
 
-    GPUShader();
-	~GPUShader() override = default;
+    GPUProgram();
+	~GPUProgram() override = default;
 
     void initFromFilePaths(const std::string& vertex, const std::string& fragment);
     void initFromFileContents(const std::string& vertex, const std::string& fragment);

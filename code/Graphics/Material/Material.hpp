@@ -6,9 +6,9 @@
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
-class GPUShader;
+class GPUProgram;
 class Mesh;
 
 class MaterialInstancedProperties

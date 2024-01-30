@@ -1,10 +1,10 @@
-#include "Graphics/Shader/ShaderUtils.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderUtils.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Material.hpp"
 
-OwnerPtr<GPUShader> ShaderUtils::createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
+OwnerPtr<GPUProgram> ShaderUtils::createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
-	OwnerPtr<GPUShader> shader = OwnerPtr<GPUShader>::newObject();
+	OwnerPtr<GPUProgram> shader = OwnerPtr<GPUProgram>::newObject();
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;

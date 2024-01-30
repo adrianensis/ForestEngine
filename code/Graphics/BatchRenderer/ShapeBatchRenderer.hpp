@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersLayout.hpp"
 
 class ShapeBatchRenderer: public ObjectBase
@@ -22,7 +22,7 @@ private:
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
 private: 
-	OwnerPtr<GPUShader> mShaderLine;
+	OwnerPtr<GPUProgram> mShaderLine;
     GPUBuffersLayout mGPUBuffersLayout;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;

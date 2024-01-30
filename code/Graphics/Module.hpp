@@ -19,8 +19,8 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Shader/ShaderUtils.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderUtils.hpp"
 
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"

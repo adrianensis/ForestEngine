@@ -1,22 +1,22 @@
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 
-GPUShader::GPUShader()
+GPUProgram::GPUProgram()
 {
 };
 
-void GPUShader::enable() const
+void GPUProgram::enable() const
 {
 	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);
 }
 
-void GPUShader::disable() const
+void GPUProgram::disable() const
 {
 	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUShader::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
+void GPUProgram::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
 {
     GET_SYSTEM(GPUInterface).bindSharedBufferToShader(mProgramId,
     sharedBuffer.getGPUSharedBufferData().mType,
@@ -24,12 +24,12 @@ void GPUShader::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
     sharedBuffer.getBindingPoint());
 }
 
-void GPUShader::initFromFileContents(const std::string& vertex, const std::string& fragment)
+void GPUProgram::initFromFileContents(const std::string& vertex, const std::string& fragment)
 {
     mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
 }
 
-void GPUShader::initFromFilePaths(const std::string& vertex, const std::string& fragment)
+void GPUProgram::initFromFilePaths(const std::string& vertex, const std::string& fragment)
 {
 	LOG_TRACE()
 

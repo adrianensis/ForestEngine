@@ -1,5 +1,5 @@
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 

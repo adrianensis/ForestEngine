@@ -2,7 +2,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Window/Window.hpp"
@@ -10,7 +10,7 @@
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
 
 void Material::init(const MaterialData& materialData, u32 id)
 {

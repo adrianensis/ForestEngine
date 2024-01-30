@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"

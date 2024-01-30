@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/BatchRenderer/MeshBatcher.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 
 class BatchRenderer: public ObjectBase
 {
@@ -27,7 +27,7 @@ private:
 
 private:
 	std::vector<Ptr<MeshRenderer>> mRenderers;
-    OwnerPtr<GPUShader> mShader;
+    OwnerPtr<GPUProgram> mShader;
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;
 

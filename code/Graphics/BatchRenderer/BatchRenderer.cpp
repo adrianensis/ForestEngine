@@ -6,15 +6,15 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Shader/ShaderUtils.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderUtils.hpp"
 
 void BatchRenderer::init(const BatchData& batchData)
 {

@@ -1,5 +1,5 @@
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Material/Material.hpp"
 

@@ -1,4 +1,4 @@
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
 void ShaderBuilder::setVariableInCache(ShaderBuilderNodes::Variable& variable)
 {

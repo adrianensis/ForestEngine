@@ -1,13 +1,13 @@
 #include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Shader/ShaderUtils.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
 ShapeBatchRenderer::~ShapeBatchRenderer() 

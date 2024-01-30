@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
+#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 
 class Material;
 
