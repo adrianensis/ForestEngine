@@ -205,7 +205,6 @@ void Material::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shade
 {
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
 
-    auto& color = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mColor.mName);
     auto& textureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);
     auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
     mainFunc.body().
@@ -475,7 +474,7 @@ void Material::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffe
         fragmentShaderTexture(shaderBuilder);
     }
 
-    if(mMaterialData.mReceiveLight && mMaterialData.mUseNormals)
+    if(mMaterialData.mReceiveLight)
     {
         fragmentShaderShadingModel(shaderBuilder);
     }
@@ -490,17 +489,15 @@ void Material::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuild
 {
     FunctionDefinition func(GPUBuiltIn::Functions::mCalculateBoneTransform);
     
-    Variable finalBoneTransform;
-    
     auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
     auto& bonesWeights = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
     auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
     auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
     auto& bonesMatricesblock = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
     Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
-
     Variable currentBoneTransform;
     Variable currentBoneTransformMulWeight;
+    Variable finalBoneTransform;
     func.body().
     variable(finalBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "finalBoneTransform", call(GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, {{"0.0f"}})).
     forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
@@ -527,13 +524,10 @@ void Material::registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) cons
 
     auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
     Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
-    
     auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
     auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
-
     auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
     Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-
     Variable lightPos = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0]};
     Variable lightColor = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[1]};
     Variable lightAmbientIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[2]};
@@ -542,7 +536,6 @@ void Material::registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) cons
     Variable ambient;
     func.body().
     variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightColor)));
-
     Variable norm;
     func.body().
     variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
@@ -560,7 +553,6 @@ void Material::registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) cons
     variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
     variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
     variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", diffuseValue.mul(lights.at("0").dot(lightColor)));
-
     Variable viewDir;
     Variable reflectDir;
     Variable specularValue;
@@ -570,7 +562,6 @@ void Material::registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) cons
     variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
     variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), {"32"}})).
     variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightColor)));
-
     Variable phong;
     func.body().
     variable(phong, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "phong", ambient.add(diffuse).add(specular)).
