@@ -5,10 +5,11 @@
 OwnerPtr<GPUShader> ShaderUtils::createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material)
 {
 	OwnerPtr<GPUShader> shader = OwnerPtr<GPUShader>::newObject();
+
     ShaderBuilder sbVert;
-    sbVert.createVertexShader(gpuBuffersLayout, material);
     ShaderBuilder sbFrag;
-    sbFrag.createFragmentShader(gpuBuffersLayout, material);
+    material->createVertexShader(sbVert, gpuBuffersLayout);
+    material->createFragmentShader(sbFrag, gpuBuffersLayout);
 
     std::string stringShderVert = sbVert.getCode();
     FileUtils::writeFile(Paths::mOutputShaders + std::to_string(material->getID()) + ".vs", [stringShderVert](std::ofstream& file)

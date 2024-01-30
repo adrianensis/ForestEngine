@@ -276,6 +276,19 @@ namespace ShaderBuilderNodes
         return mNullSharedBuffer;
     }
 
+    FunctionDefinition& Program::getFunctionDefinition(const std::string_view& functionDefinitionName)
+    {
+        FOR_LIST(it, mFunctionDefinitions)
+        {
+            if(it->mName == functionDefinitionName)
+            {
+                return *it;
+            }
+        }
+
+        return mNullFunctionDefinition;
+    }
+
     std::vector<std::string> Program::toLines(u16 indent) const
     {
         std::vector<std::string> code;

@@ -4,7 +4,9 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
+#include "Graphics/GPU/GPUBuffersLayout.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
 class GPUShader;
 class Mesh;
@@ -45,6 +47,37 @@ public:
     MaterialInstancedProperties mMaterialInstancedProperties;
 };
 
+class ShaderBuilderDataCommon
+{
+public:
+    std::vector<GPUStructDefinition> mStructDefinitions;
+    std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUSharedBufferData> mSharedBuffers;
+    std::vector<GPUVariableDefinitionData> mConsts;
+};
+
+class ShaderBuilderDataVertex
+{
+public:
+    std::vector<GPUVertexBuffer> mVertexInputs;
+    std::vector<GPUVariableDefinitionData> mVertexOutputs;
+};
+
+class ShaderBuilderDataFragment
+{
+public:
+    std::vector<GPUVariableDefinitionData> mFragmentInputs;
+    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
+};
+
+class ShaderBuilderData
+{
+public:
+    ShaderBuilderDataCommon mCommonVariables;
+    ShaderBuilderDataVertex mVertexVariables;
+    ShaderBuilderDataFragment mFragmentVariables;
+};
+
 class Material;
 
 class MaterialInstance
@@ -66,8 +99,28 @@ public:
     bool hasTexture() const;
     MaterialInstance createMaterialInstance() const;
     
+    void createVertexShader(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
+    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
+
 protected:
     virtual void loadTextures();
+
+    void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
+    void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
+    void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
+    void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
+    void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
+    void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
+    void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
+
+    void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
+    void fragmentShaderTexture(ShaderBuilder& shaderBuilder) const;
+    void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
+    void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
+
+    ShaderBuilderData generateShaderBuilderData(const GPUBuffersLayout& gpuBuffersLayout) const;
+    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
+    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
 
 protected:
     MaterialData mMaterialData;

@@ -309,6 +309,7 @@ namespace ShaderBuilderNodes
         const Struct& getStruct(const std::string_view& structName) const;
         const Attribute& getAttribute(const std::string_view& attributeName) const;
         const SharedBuffer& getSharedBuffer(const std::string_view& sharedBufferName) const;
+        FunctionDefinition& getFunctionDefinition(const std::string_view& functionDefinitionName);
 
         std::vector<std::string> toLines(u16 indent) const;
 
@@ -321,6 +322,7 @@ namespace ShaderBuilderNodes
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
         inline static SharedBuffer mNullSharedBuffer {GPUSharedBufferData{}};
         inline static Struct mNullStructDefinition {GPUStructDefinition{}};
+        inline static FunctionDefinition mNullFunctionDefinition {GPUFunctionDefinition{}};
     };
 
 }
