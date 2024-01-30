@@ -10,7 +10,6 @@
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderFunctionsLibrary.hpp"
 
 void Material::init(const MaterialData& materialData, u32 id)
 {
@@ -408,11 +407,9 @@ void Material::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUB
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
 
-    ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
-    shaderBuilderFunctionsLibrary.init(shaderBuilder.get(), getPtrToThis());
     if(mMaterialData.mIsSkinned)
     {
-        shaderBuilder.get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculateBoneTransform.mName));
+        registerFunctionCalculateBoneTransform(shaderBuilder);
     }
 }
 
@@ -426,11 +423,9 @@ void Material::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GP
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
 
-    ShaderBuilderFunctionsLibrary shaderBuilderFunctionsLibrary;
-    shaderBuilderFunctionsLibrary.init(shaderBuilder.get(), getPtrToThis());
     if(mMaterialData.mReceiveLight)
     {
-        shaderBuilder.get().function(shaderBuilderFunctionsLibrary.mFunctions.at(GPUBuiltIn::Functions::mCalculatePhong.mName));
+        registerFunctionCalculatePhong(shaderBuilder);
     }
 }
 
@@ -489,6 +484,99 @@ void Material::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffe
     {
         fragmentShaderAlphaDiscard(shaderBuilder);
     }
+}
+
+void Material::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const
+{
+    FunctionDefinition func(GPUBuiltIn::Functions::mCalculateBoneTransform);
+    
+    Variable finalBoneTransform;
+    
+    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
+    auto& bonesWeights = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
+    auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
+    auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
+    auto& bonesMatricesblock = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
+    Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
+
+    Variable currentBoneTransform;
+    Variable currentBoneTransformMulWeight;
+    func.body().
+    variable(finalBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "finalBoneTransform", call(GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, {{"0.0f"}})).
+    forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
+        ifBlock(bonesIDs.at("i"), "==", {"-1"}).
+            line("continue").
+        end().
+        ifBlock(bonesIDs.at("i"), ">=", MAX_BONES).
+            line("break").
+        end().
+        variable(currentBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "currentBoneTransform", bonesTransform.at(bonesIDs.at("i"))).
+        variable(currentBoneTransformMulWeight, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "currentBoneTransformMulWeight", currentBoneTransform.mul(bonesWeights.at("i"))).
+        set(finalBoneTransform, finalBoneTransform.add(currentBoneTransformMulWeight)).
+    end();
+    
+    func.body().
+    ret(finalBoneTransform);
+
+    shaderBuilder.get().function(func);
+}
+
+void Material::registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const
+{
+    FunctionDefinition func(GPUBuiltIn::Functions::mCalculatePhong);
+
+    auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
+    Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
+    
+    auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
+    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
+
+    auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
+    Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+
+    Variable lightPos = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0]};
+    Variable lightColor = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[1]};
+    Variable lightAmbientIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[2]};
+    Variable lightSpecularIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[3]};
+
+    Variable ambient;
+    func.body().
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightColor)));
+
+    Variable norm;
+    func.body().
+    variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
+
+    if(mMaterialData.mUseNormals)
+    {
+        func.body().
+        set(norm, call("normalize", {inNormal}));
+    }
+
+    Variable lightDir;
+    Variable diffuseValue;
+    Variable diffuse;
+    func.body().
+    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
+    variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
+    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", diffuseValue.mul(lights.at("0").dot(lightColor)));
+
+    Variable viewDir;
+    Variable reflectDir;
+    Variable specularValue;
+    Variable specular;
+    func.body().
+    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
+    variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
+    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), {"32"}})).
+    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightColor)));
+
+    Variable phong;
+    func.body().
+    variable(phong, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "phong", ambient.add(diffuse).add(specular)).
+    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {phong, {"1"}}));
+
+    shaderBuilder.get().function(func);
 }
 
 IMPLEMENT_SERIALIZATION(Material)

@@ -122,6 +122,9 @@ protected:
     void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
     void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
 
+    void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
+    void registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const;
+
 protected:
     MaterialData mMaterialData;
     std::vector<GPUVariableData> mInstancedProperties;
