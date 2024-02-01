@@ -3,6 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
+#include "cgltf.h"
 
 class Animation;
 class Material;
@@ -57,9 +58,10 @@ private:
     void loadGLTFAnimations();
     Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms) const;
     static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
-    static void getTranslationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Vector3& out);
-    static void getScaleAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Vector3& out);
-    static void getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Quaternion& out);
+    static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
+    static void getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
+    static void getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Quaternion& out);
+    bool isSkinned() const;
 
 private:
     class GLTFFace
@@ -102,7 +104,6 @@ private:
     std::vector<OwnerPtr<Animation>> mAnimations;
     std::unordered_map<cgltf_material*, Ptr<const Material>> mGLTFMaterials;
     std::unordered_map<Ptr<const Mesh>, Ptr<const Material>> mMeshMaterials;
-    bool mIsSkinned = false;
     std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mOriginalFrameTransforms;

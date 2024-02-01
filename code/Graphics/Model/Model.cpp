@@ -32,7 +32,6 @@ void Model::init(const std::string& path)
     if (result == cgltf_result_success)
 	{
         CHECK_MSG(mCGLTFData->skins_count <= 1, "Only 1 Skin allowed!")
-        mIsSkinned = mCGLTFData->skins_count == 1;
 
         loadGLTFMaterials();
 
@@ -40,7 +39,7 @@ void Model::init(const std::string& path)
         {
             loadGLTFMeshes();
 
-            if (mIsSkinned)
+            if (isSkinned())
             {
                 const cgltf_skin& skin = mCGLTFData->skins[0];
                 loadGLTFBones(skin);
@@ -58,6 +57,11 @@ void Model::init(const std::string& path)
     cgltf_free(mCGLTFData);
 }
 
+bool Model::isSkinned() const
+{
+    return mCGLTFData->skins_count == 1;
+}
+
 void Model::loadGLTFMaterials()
 {
     if(mCGLTFData->materials_count > 0)
@@ -66,7 +70,7 @@ void Model::loadGLTFMaterials()
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
-            materialData.mIsSkinned = mIsSkinned;
+            materialData.mIsSkinned = isSkinned();
             materialData.mUseColorAsTint = true;
 
             if(cgltfMaterial.has_pbr_metallic_roughness)
@@ -146,7 +150,14 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_joints)
         {
             gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesIDs);
+        }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_weights)
+        {
             gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
+        }
+        else
+        {
+            CHECK_MSG(false, "Attribute not supported!");
         }
     }
 
@@ -185,6 +196,15 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(texCoord);
             }
         }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_color)
+        {
+            FOR_RANGE(vertexIt, 0, attribute.data->count)
+            {
+                Vector4* colorArray = reinterpret_cast<Vector4*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                Vector4& color = colorArray[vertexIt];
+                mesh->mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).pushBack(color);
+            }
+        }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_normal)
         {
             FOR_RANGE(vertexIt, 0, attribute.data->count)
@@ -216,13 +236,13 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 FOR_RANGE(vertexIt, 0, attribute.data->count)
                 {
-                    GLTFBoneVertexIDsData<i16>* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData<i16>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
-                    GLTFBoneVertexIDsData<i16>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
+                    GLTFBoneVertexIDsData<i16>* boneVertexIDsDataU16Array = reinterpret_cast<GLTFBoneVertexIDsData<i16>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GLTFBoneVertexIDsData<i16>& boneVertexIDsDataU16 = boneVertexIDsDataU16Array[vertexIt];
 
                     BoneVertexIDsData boneVertexIDsData;
                     FOR_RANGE(i, 0, GPUBuiltIn::MAX_BONE_INFLUENCE)
                     {
-                        boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
+                        boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU16.mBonesIDs[i];
                     }
 
                     mesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).pushBack(boneVertexIDsData);
@@ -244,6 +264,14 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                     mesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).pushBack(boneVertexWeightsData);
                 }
             }
+            else
+            {
+                CHECK_MSG(false, "Weights attribute data format not supported, use vec4 f32");
+            }
+        }
+        else
+        {
+            CHECK_MSG(false, "Attribute not supported!");
         }
     }
 
@@ -353,8 +381,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
     {
         cgltf_animation_channel& channel = gltfAnim.channels[channelIt];
-        CHECK_MSG(channel.sampler->interpolation == cgltf_interpolation_type_linear, "Interpolation is not linear. Only linear supported!");
-        
+
         i32 boneIndex = -1;
         if(mNodeToBoneId.contains(channel.target_node))
         {
@@ -378,6 +405,10 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         {
             mChannels[boneIndex].scale = &channel;
         }
+        else
+        {
+            CHECK_MSG(false, "Channel not supported!");
+        }
     }
 }
 
@@ -397,19 +428,19 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
             Vector3 translation(0, 0, 0);
             if (mChannels[boneIt].translate)
             {
-                getTranslationAtTime(mChannels[boneIt].translate->sampler->input, mChannels[boneIt].translate->sampler->output, currentAnimationTime, translation);
+                getTranslationAtTime(mChannels[boneIt].translate->sampler->input, mChannels[boneIt].translate->sampler->interpolation, mChannels[boneIt].translate->sampler->output, currentAnimationTime, translation);
             }
             
             Quaternion rotation(0, 0, 0, 1);
             if (mChannels[boneIt].rotate)
             {
-                getRotationAtTime(mChannels[boneIt].rotate->sampler->input, mChannels[boneIt].rotate->sampler->output, currentAnimationTime, rotation);
+                getRotationAtTime(mChannels[boneIt].rotate->sampler->input, mChannels[boneIt].rotate->sampler->interpolation, mChannels[boneIt].rotate->sampler->output, currentAnimationTime, rotation);
             }
 
             Vector3 scale(1, 1, 1);
             if (mChannels[boneIt].scale)
             {
-                getScaleAtTime(mChannels[boneIt].scale->sampler->input, mChannels[boneIt].scale->sampler->output, currentAnimationTime, scale);
+                getScaleAtTime(mChannels[boneIt].scale->sampler->input, mChannels[boneIt].scale->sampler->interpolation, mChannels[boneIt].scale->sampler->output, currentAnimationTime, scale);
             }
 
             Matrix4 translationMatrix;
@@ -510,31 +541,45 @@ bool Model::findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeDat
     return true;
 }
 
-void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Vector3& out)
+void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out)
 {
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
-
     CHECK_MSG(result, "Error obtaining keyframe data!");
     CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
     CHECK_MSG(output->type == cgltf_type_vec3, "Type is not vec3!");
 
-    Vector3 v1;
-    Vector3 v2;
-    cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3);
-    CHECK_MSG(readResult1, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
-    cgltf_bool readResult2 = cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3);
-    CHECK_MSG(readResult2, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+    if(interpolation == cgltf_interpolation_type_linear)
+    {
+        Vector3 v1;
+        Vector3 v2;
+        cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3);
+        CHECK_MSG(readResult1, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+        cgltf_bool readResult2 = cgltf_accessor_read_float(output, keyframeData.mKeyframe+1, (cgltf_float*)&v2, 3);
+        CHECK_MSG(readResult2, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
 
-    out = v1;
-    out.lerp(v2, keyframeData.mInterpolationValue);
+        out = v1;
+        out.lerp(v2, keyframeData.mInterpolationValue);
+    }
+    else if(interpolation == cgltf_interpolation_type_step)
+    {
+        Vector3 v1;
+        cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&v1, 3);
+        CHECK_MSG(readResult1, "Couldn't read Translation/Scale data at time: " + std::to_string(currentTime));
+
+        out = v1;
+    }
+    else
+    {
+        CHECK_MSG(false, "Unsuported Interpolation Type!");
+    }
 }
-void Model::getScaleAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Vector3& out)
+void Model::getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out)
 {
     // use same code as Translation
-    return getTranslationAtTime(input, output, currentTime, out);
+    return getTranslationAtTime(input, interpolation, output, currentTime, out);
 }
-void Model::getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32 currentTime, Quaternion& out)
+void Model::getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Quaternion& out)
 {
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
@@ -543,13 +588,29 @@ void Model::getRotationAtTime(cgltf_accessor *input, cgltf_accessor *output, f32
     CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
     CHECK_MSG(output->type == cgltf_type_vec4, "Type is not vec4!");
     
-    Quaternion q1;
-    Quaternion q2;
-    cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4);
-    CHECK_MSG(readResult1, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
-    cgltf_bool readResult2 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q2, 4);
-    CHECK_MSG(readResult2, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+    
+    if(interpolation == cgltf_interpolation_type_linear)
+    {
+        Quaternion q1;
+        Quaternion q2;
+        cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4);
+        CHECK_MSG(readResult1, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+        cgltf_bool readResult2 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q2, 4);
+        CHECK_MSG(readResult2, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
 
-    out = q1;
-    out.slerp(q2, keyframeData.mInterpolationValue);
+        out = q1;
+        out.slerp(q2, keyframeData.mInterpolationValue);
+    }
+    else if(interpolation == cgltf_interpolation_type_step)
+    {
+        Quaternion q1;
+        cgltf_bool readResult1 = cgltf_accessor_read_float(output, keyframeData.mKeyframe, (cgltf_float*)&q1, 4);
+        CHECK_MSG(readResult1, "Couldn't read Rotation data at time: " + std::to_string(currentTime));
+
+        out = q1;
+    }
+    else
+    {
+        CHECK_MSG(false, "Unsuported Interpolation Type!");
+    }
 }
