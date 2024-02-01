@@ -1,6 +1,5 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/RenderEngine.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
@@ -47,7 +46,6 @@ void Model::init(const std::string& path)
 
                 mGLTFMaterials.clear();
                 mChannels.clear();
-                mBonesToNode.clear();
                 mNodeToBoneId.clear();
                 mOriginalFrameTransforms.clear();
             }
@@ -288,7 +286,6 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     mBonesIndexCount = (u32)skin.joints_count;
     mBones.reserve(mBonesIndexCount);
     mChannels.resize(mBonesIndexCount);
-    mBonesToNode.resize(mBonesIndexCount);
 
     std::vector<Matrix4> originalBindMatrices;
     originalBindMatrices.resize(mBonesIndexCount);
@@ -296,7 +293,6 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     FOR_RANGE(i, 0, mBonesIndexCount)
     {
         const cgltf_node& node = *skin.joints[i];
-        mBonesToNode[i] = &node;
         mNodeToBoneId.insert_or_assign(&node, i);
         std::string boneName(node.name);
 
@@ -389,7 +385,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         }
         else
         {
-            LOG("Animation channel for a node not in the armature");
+            CHECK_MSG(false, "Animation channel for a node not in the armature");
             continue;
         }
 

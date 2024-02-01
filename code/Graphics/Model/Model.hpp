@@ -107,7 +107,6 @@ private:
     std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mOriginalFrameTransforms;
-    std::vector<const cgltf_node*> mBonesToNode;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
