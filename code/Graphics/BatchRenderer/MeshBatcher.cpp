@@ -245,7 +245,7 @@ void MeshBatcher::initBuffers()
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
         mGPUBuffersLayout.createSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices);
-        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUMesh::MAX_BONES);
+        mGPUBuffersLayout.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
     }
 }
 

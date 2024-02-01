@@ -80,7 +80,7 @@ private:
     class GLTFBoneVertexIDsData
     {
     public:
-        T mBonesIDs[smMaxBonesPerVertex] = {-1, -1, -1, -1};
+        T mBonesIDs[GPUBuiltIn::MAX_BONE_INFLUENCE] = {-1, -1, -1, -1};
     };
 
     class GLTFChannels

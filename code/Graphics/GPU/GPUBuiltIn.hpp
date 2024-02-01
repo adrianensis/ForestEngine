@@ -7,6 +7,9 @@ class GPUBuiltIn
 {
 public:
 
+    inline static const u32 MAX_BONE_INFLUENCE = 4;
+    inline static const u32 MAX_BONES = 65;
+
     class PrimitiveTypes
     {
     public:
@@ -51,8 +54,8 @@ public:
     {
     public:
         // TODO: unsigned int?
-        inline static const GPUVariableDefinitionData MAX_BONES{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONES"}, "50"};
-        inline static const GPUVariableDefinitionData MAX_BONE_INFLUENCE{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONE_INFLUENCE"}, "4"};
+        inline static const GPUVariableDefinitionData mMaxBones{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONES"}, std::to_string(MAX_BONES)};
+        inline static const GPUVariableDefinitionData mMaxBoneInfluence{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONE_INFLUENCE"}, std::to_string(MAX_BONE_INFLUENCE)};
     };
 
     class Uniforms
@@ -103,7 +106,7 @@ public:
         {
             GPUBufferType::UNIFORM,
             {
-                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", "50"},
+                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", std::to_string(MAX_BONES)},
             },
             "BonesMatrices",
             "bonesMatrices"

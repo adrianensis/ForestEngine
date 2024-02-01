@@ -204,7 +204,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                     GLTFBoneVertexIDsData<i8>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
 
                     BoneVertexIDsData boneVertexIDsData;
-                    FOR_RANGE(i, 0, smMaxBonesPerVertex)
+                    FOR_RANGE(i, 0, GPUBuiltIn::MAX_BONE_INFLUENCE)
                     {
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }
@@ -220,7 +220,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                     GLTFBoneVertexIDsData<i16>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
 
                     BoneVertexIDsData boneVertexIDsData;
-                    FOR_RANGE(i, 0, smMaxBonesPerVertex)
+                    FOR_RANGE(i, 0, GPUBuiltIn::MAX_BONE_INFLUENCE)
                     {
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
                     }

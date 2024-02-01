@@ -353,8 +353,8 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUBuffersLayout& gp
 
     if(mMaterialData.mIsSkinned)
     {
-        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONES);
-        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE);
+        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
+        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
     }
 
     FOR_LIST(it, gpuBuffersLayout.getVertexBuffers())
@@ -491,8 +491,8 @@ void Material::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuild
     
     auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
     auto& bonesWeights = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
-    auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::MAX_BONES.mName);
-    auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::MAX_BONE_INFLUENCE.mName);
+    auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBones.mName);
+    auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBoneInfluence.mName);
     auto& bonesMatricesblock = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
     Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
     Variable currentBoneTransform;

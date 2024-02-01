@@ -4,18 +4,16 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-inline static const u32 smMaxBonesPerVertex = 4;
-
 class BoneVertexIDsData
 {
 public:
-    i32 mBonesIDs[smMaxBonesPerVertex] = {-1, -1, -1, -1};
+    i32 mBonesIDs[GPUBuiltIn::MAX_BONE_INFLUENCE] = {-1, -1, -1, -1};
 };
 
 class BoneVertexWeightsData
 {
 public:
-    f32 mBonesWeights[smMaxBonesPerVertex] = {0.0f, 0.0f, 0.0f, 0.0f};
+    f32 mBonesWeights[GPUBuiltIn::MAX_BONE_INFLUENCE] = {0.0f, 0.0f, 0.0f, 0.0f};
 };
 
 class GPUMesh: public ObjectBase
@@ -28,8 +26,6 @@ public:
     void clear();
 
 public:
-    inline static const u32 MAX_BONE_INFLUENCE = smMaxBonesPerVertex;
-    inline static const u32 MAX_BONES = 50;
 
     std::vector<GPUVariableData> mGPUVertexInputBuffers;
     std::unordered_map<std::string, ByteBuffer> mBuffers;
