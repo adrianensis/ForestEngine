@@ -13,7 +13,7 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
 
     updateLights(renderData);
 
-    updateGlobalMatrices(renderData, true);
+    updateGlobalData(renderData, true);
 
 	GET_SYSTEM(GPUInterface).clear();
 
@@ -30,7 +30,7 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
 
-    updateGlobalMatrices(renderData, false);
+    updateGlobalData(renderData, false);
     
     PROFILER_BLOCK_CPU("renderScreenSpaceStencil");
 	batchesManager.renderScreenSpaceStencil();
@@ -43,7 +43,7 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
     PROFILER_END_BLOCK();
 }
 
-void RenderPipeline::updateGlobalMatrices(RenderPipelineData& renderData, bool isWorldSpace)
+void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace)
 {
 	PROFILER_CPU()
 
@@ -58,7 +58,7 @@ void RenderPipeline::updateGlobalMatrices(RenderPipelineData& renderData, bool i
         GET_SYSTEM(Time).getDeltaTimeSeconds(),
         GET_SYSTEM(Window).getWindowSize()
     };
-	GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer.setData(gpuMatricesData);
+	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuMatricesData);
 }
 
 void RenderPipeline::updateLights(RenderPipelineData& renderData)
@@ -71,5 +71,5 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
         gpuLightsData.mLights[i] = renderData.mLights[i]->getLightData();
     }
 
-    GET_SYSTEM(GPUSharedContext).mLightDataBuffer.setData(gpuLightsData);
+    GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).setData(gpuLightsData);
 }

@@ -315,10 +315,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
         }
 
         const cgltf_node& node = *skin.joints[i];
-        mNodeToBoneId.insert_or_assign(&node, i);
-        std::string boneName(node.name);
-
-        if (! mBonesMapping.contains(boneName)) 
+        if (! mNodeToBoneId.contains(&node)) 
         {
             BoneData boneData;
             boneData.mId = i;
@@ -366,10 +363,17 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
                 }
             }
 
+            mNodeToBoneId.insert_or_assign(&node, i);
+            std::string boneName;
+
+            if(node.name)
+            {
+                boneName = std::string((node.name));
+            }
+
             boneData.mParentId = parentIndex;
             boneData.mName = boneName;
 
-            mBonesMapping.insert_or_assign(boneName, boneData);
             mBones.push_back(boneData);
         }
     }
@@ -405,7 +409,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         }
         else
         {
-            CHECK_MSG(false, "Animation channel for a node not in the armature");
+            LOG("Animation channel for a node not in the armature");
             continue;
         }
 

@@ -1,26 +1,24 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-void GPUBuffersContainer::init(bool isStatic)
+void GPUVertexBuffersContainer::init()
 {
 	PROFILER_CPU()
 
-	mIsStatic = isStatic;
     mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
 }
 
-void GPUBuffersContainer::enable()
+void GPUVertexBuffersContainer::enable()
 {
 	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
 }
 
-void GPUBuffersContainer::disable()
+void GPUVertexBuffersContainer::disable()
 {
 	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 }
 
-void GPUBuffersContainer::createVertexBuffer(const GPUVertexBufferData& data)
+void GPUVertexBuffersContainer::createVertexBuffer(const GPUVertexBufferData& data, bool isStatic)
 {
     if(mVertexBuffers.size() > 0)
     {
@@ -28,62 +26,31 @@ void GPUBuffersContainer::createVertexBuffer(const GPUVertexBufferData& data)
     }
 
     GPUVertexBuffer& gpuVertexBuffer = mVertexBuffers.emplace_back();
-    gpuVertexBuffer.init(mAttributeIndex, data, mIsStatic);
+    gpuVertexBuffer.init(mAttributeIndex, data, isStatic);
 
     u32 index = mVertexBuffers.size() - 1;
     mVertexBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);
 }
 
-GPUVertexBuffer& GPUBuffersContainer::getVertexBuffer(const GPUVertexBufferData& data)
+GPUVertexBuffer& GPUVertexBuffersContainer::getVertexBuffer(const GPUVertexBufferData& data)
 {
     return mVertexBuffers.at(findIndex(mVertexBuffersMap, data.mGPUVariableData.mName));
 }
 
-const GPUVertexBuffer& GPUBuffersContainer::getVertexBuffer(const GPUVertexBufferData& data) const
+const GPUVertexBuffer& GPUVertexBuffersContainer::getVertexBuffer(const GPUVertexBufferData& data) const
 {
     return mVertexBuffers.at(findIndex(mVertexBuffersMap, data.mGPUVariableData.mName));
 }
 
-void GPUBuffersContainer::createSharedBuffer(const GPUSharedBufferData& data)
+u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name) const
 {
-    u32 bindingPoint = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(data.mType);
-    GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
-    gpuInstanceBuffer.init(bindingPoint, data, mIsStatic);
-
-    u32 index = mSharedBuffers.size() - 1;
-    mSharedBuffersMap.insert_or_assign(data.mBufferName, index);
-}
-
-GPUSharedBuffer& GPUBuffersContainer::getSharedBuffer(const GPUSharedBufferData& data)
-{
-    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
-}
-
-const GPUSharedBuffer& GPUBuffersContainer::getSharedBuffer(const GPUSharedBufferData& data) const
-{
-    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
-}
-
-u32 GPUBuffersContainer::findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name) const
-{
-    CHECK_MSG(indexMap.contains(name), name + " not found in GPUBuffersContainer!");
+    CHECK_MSG(indexMap.contains(name), name + " not found in GPUVertexBuffersContainer!");
     u32 index = indexMap.at(name);
     return index;
 }
 
-void GPUBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType)
-{
-    mIndicesBuffer.terminate();
-    mIndicesBuffer.init(gpuDataType, mIsStatic);
-}
-
-void GPUBuffersContainer::terminate()
-{
-    FOR_MAP(it, mSharedBuffers)
-    {
-        it->terminate();
-    }
-    
+void GPUVertexBuffersContainer::terminate()
+{   
     mIndicesBuffer.terminate();
     FOR_MAP(it, mVertexBuffers)
     {
@@ -91,4 +58,44 @@ void GPUBuffersContainer::terminate()
     }
 
     GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
+}
+
+void GPUSharedBuffersContainer::createSharedBuffer(u32 bindingPoint, const GPUSharedBufferData& data, bool isStatic)
+{
+    GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
+    gpuInstanceBuffer.init(bindingPoint, data, isStatic);
+
+    u32 index = mSharedBuffers.size() - 1;
+    mSharedBuffersMap.insert_or_assign(data.mBufferName, index);
+}
+
+GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(const GPUSharedBufferData& data)
+{
+    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
+}
+
+const GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(const GPUSharedBufferData& data) const
+{
+    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
+}
+
+u32 GPUSharedBuffersContainer::findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name) const
+{
+    CHECK_MSG(indexMap.contains(name), name + " not found in GPUVertexBuffersContainer!");
+    u32 index = indexMap.at(name);
+    return index;
+}
+
+void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic)
+{
+    mIndicesBuffer.terminate();
+    mIndicesBuffer.init(gpuDataType, isStatic);
+}
+
+void GPUSharedBuffersContainer::terminate()
+{
+    FOR_MAP(it, mSharedBuffers)
+    {
+        it->terminate();
+    }
 }

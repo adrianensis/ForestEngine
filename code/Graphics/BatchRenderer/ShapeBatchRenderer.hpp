@@ -23,7 +23,7 @@ private:
     void addColor(const Vector4& color);
 private: 
 	OwnerPtr<GPUProgram> mShaderLine;
-    GPUBuffersContainer mGPUBuffersContainer;
+    GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;
 	std::vector<u32> mIndicesBuffer;

@@ -45,7 +45,8 @@ private:
     std::vector<u32> mInstanceIDs;
     std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
 
-    GPUBuffersContainer mGPUBuffersContainer;
+    GPUVertexBuffersContainer mGPUVertexBuffersContainer;
+    GPUSharedBuffersContainer mGPUSharedBuffersContainer;
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;
@@ -54,6 +55,8 @@ private:
 	bool mDataSentToGPU = false;
 
 public:
-    RGET(GPUBuffersContainer)
-    CRGET(GPUBuffersContainer)
+    RGET(GPUVertexBuffersContainer)
+    CRGET(GPUVertexBuffersContainer)
+    RGET(GPUSharedBuffersContainer)
+    CRGET(GPUSharedBuffersContainer)
 };

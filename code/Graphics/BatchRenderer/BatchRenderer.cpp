@@ -21,9 +21,10 @@ void BatchRenderer::init(const BatchData& batchData)
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
 
-    const GPUBuffersContainer& gpuBuffersContainer = mMeshBatcher.getGPUBuffersContainer();
+    const GPUVertexBuffersContainer& gpuVertexBuffersContainer = mMeshBatcher.getGPUVertexBuffersContainer();
+    const GPUSharedBuffersContainer& gpuSharedBuffersContainer = mMeshBatcher.getGPUSharedBuffersContainer();
     
-    mShader = ShaderUtils::createShader(gpuBuffersContainer, mBatchData.mMaterial);
+    mShader = ShaderUtils::createShader(gpuVertexBuffersContainer, gpuSharedBuffersContainer, mBatchData.mMaterial);
     
     bindSharedBuffers();
 }
@@ -35,21 +36,21 @@ void BatchRenderer::terminate()
 
 void BatchRenderer::bindSharedBuffers()
 {
-    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer);
+    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 
-    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mLightDataBuffer);
+        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData));
     }
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
-        mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
+        mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
     
-    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersContainer().getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()));
+    mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()));
 }
 
 void BatchRenderer::render()

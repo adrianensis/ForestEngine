@@ -21,6 +21,6 @@ class RenderPipeline: public ObjectBase
 public:
     void render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace);
 protected:
-    void updateGlobalMatrices(RenderPipelineData& renderData, bool isWorldSpace);
+    void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
     void updateLights(RenderPipelineData& renderData);
 };

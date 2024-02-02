@@ -99,8 +99,8 @@ public:
     bool hasTexture() const;
     MaterialInstance createMaterialInstance() const;
     
-    void createVertexShader(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
-    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
+    void createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
 protected:
     virtual void loadTextures();
@@ -118,9 +118,9 @@ protected:
     void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
     void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
 
-    ShaderBuilderData generateShaderBuilderData(const GPUBuffersContainer& gpuBuffersContainer) const;
-    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
-    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
+    ShaderBuilderData generateShaderBuilderData(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
     void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
     void registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const;

@@ -104,7 +104,6 @@ private:
     std::vector<OwnerPtr<Animation>> mAnimations;
     std::unordered_map<cgltf_material*, Ptr<const Material>> mGLTFMaterials;
     std::unordered_map<Ptr<const Mesh>, Ptr<const Material>> mMeshMaterials;
-    std::unordered_map<std::string, BoneData> mBonesMapping;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mInverseBindMatrices;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;

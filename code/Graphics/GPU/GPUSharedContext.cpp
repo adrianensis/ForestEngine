@@ -7,11 +7,14 @@ void GPUSharedContext::init()
     mMaxSharedBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::UNIFORM);
     mMaxSharedBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::STORAGE);
     u32 bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mGlobalData.mType);
-    mGlobalDataBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mGlobalData, false);
-    mGlobalDataBuffer.resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
-    bindingPoint = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mLightsData.mType);
-    mLightDataBuffer.init(bindingPoint, GPUBuiltIn::SharedBuffers::mLightsData, false);
-    mLightDataBuffer.resize<GPULightsData>(1);
+
+    u32 bindingPointGlobalData = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
+    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointGlobalData, GPUBuiltIn::SharedBuffers::mGlobalData, false);
+    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
+
+    u32 bindingPointLightsData = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mLightsData.mType);
+    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, GPUBuiltIn::SharedBuffers::mLightsData, false);
+    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).resize<GPULightsData>(1);
 }
 
 u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
@@ -43,6 +46,5 @@ u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBuf
 
 void GPUSharedContext::terminate()
 {
-    mGlobalDataBuffer.terminate();
-    mLightDataBuffer.terminate();
+    mGPUSharedBuffersContainer.terminate();
 }

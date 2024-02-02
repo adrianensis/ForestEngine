@@ -330,7 +330,7 @@ void Material::fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const
     end();
 }
 
-ShaderBuilderData Material::generateShaderBuilderData(const GPUBuffersContainer& gpuBuffersContainer) const
+ShaderBuilderData Material::generateShaderBuilderData(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     ShaderBuilderData shaderBuilderData;
     
@@ -338,7 +338,7 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUBuffersContainer&
 
     shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(mInstancedPropertiesStructDefinition);
 
-    FOR_LIST(it, gpuBuffersContainer.getSharedBuffers())
+    FOR_LIST(it, gpuSharedBuffersContainer.getSharedBuffers())
     {
         shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(it->getGPUSharedBufferData());
     }
@@ -357,7 +357,7 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUBuffersContainer&
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
     }
 
-    FOR_LIST(it, gpuBuffersContainer.getVertexBuffers())
+    FOR_LIST(it, gpuVertexBuffersContainer.getVertexBuffers())
     {
         shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
     }
@@ -396,9 +396,9 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUBuffersContainer&
     return shaderBuilderData;
 }
 
-void Material::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const
+void Material::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuBuffersContainer);
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
@@ -412,9 +412,9 @@ void Material::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUB
     }
 }
 
-void Material::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const
+void Material::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuBuffersContainer);
+    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
@@ -428,9 +428,9 @@ void Material::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GP
     }
 }
 
-void Material::createVertexShader(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const
+void Material::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    registerVertexShaderData(shaderBuilder, gpuBuffersContainer);
+    registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
     auto& mainFunc = shaderBuilder.get().function(GPUBuiltIn::Functions::mMain);
 
@@ -461,9 +461,9 @@ void Material::createVertexShader(ShaderBuilder& shaderBuilder, const GPUBuffers
     vertexShaderCalculateInstanceIdOutput(shaderBuilder);
 }
 
-void Material::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const
+void Material::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    registerFragmentShaderData(shaderBuilder, gpuBuffersContainer);
+    registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
     auto& mainFunc = shaderBuilder.get().function(GPUBuiltIn::Functions::mMain);
 
