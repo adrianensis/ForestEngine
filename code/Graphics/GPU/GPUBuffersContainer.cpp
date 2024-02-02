@@ -49,6 +49,12 @@ u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<std::string, u
     return index;
 }
 
+void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic)
+{
+    mIndicesBuffer.terminate();
+    mIndicesBuffer.init(gpuDataType, isStatic);
+}
+
 void GPUVertexBuffersContainer::terminate()
 {   
     mIndicesBuffer.terminate();
@@ -84,12 +90,6 @@ u32 GPUSharedBuffersContainer::findIndex(const std::unordered_map<std::string, u
     CHECK_MSG(indexMap.contains(name), name + " not found in GPUVertexBuffersContainer!");
     u32 index = indexMap.at(name);
     return index;
-}
-
-void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic)
-{
-    mIndicesBuffer.terminate();
-    mIndicesBuffer.init(gpuDataType, isStatic);
 }
 
 void GPUSharedBuffersContainer::terminate()
