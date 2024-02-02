@@ -4,7 +4,7 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
@@ -99,8 +99,8 @@ public:
     bool hasTexture() const;
     MaterialInstance createMaterialInstance() const;
     
-    void createVertexShader(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
-    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
+    void createVertexShader(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
+    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
 
 protected:
     virtual void loadTextures();
@@ -118,9 +118,9 @@ protected:
     void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
     void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
 
-    ShaderBuilderData generateShaderBuilderData(const GPUBuffersLayout& gpuBuffersLayout) const;
-    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
-    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersLayout& gpuBuffersLayout) const;
+    ShaderBuilderData generateShaderBuilderData(const GPUBuffersContainer& gpuBuffersContainer) const;
+    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
+    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUBuffersContainer& gpuBuffersContainer) const;
 
     void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
     void registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const;

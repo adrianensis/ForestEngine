@@ -1,5 +1,5 @@
 #include "Graphics/GPU/GPUProgram.hpp"
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 
 GPUProgram::GPUProgram()

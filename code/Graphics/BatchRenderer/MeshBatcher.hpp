@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
 
 class MeshBatcher: public ObjectBase
@@ -45,7 +45,7 @@ private:
     std::vector<u32> mInstanceIDs;
     std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
 
-    GPUBuffersLayout mGPUBuffersLayout;
+    GPUBuffersContainer mGPUBuffersContainer;
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;
@@ -54,6 +54,6 @@ private:
 	bool mDataSentToGPU = false;
 
 public:
-    RGET(GPUBuffersLayout)
-    CRGET(GPUBuffersLayout)
+    RGET(GPUBuffersContainer)
+    CRGET(GPUBuffersContainer)
 };

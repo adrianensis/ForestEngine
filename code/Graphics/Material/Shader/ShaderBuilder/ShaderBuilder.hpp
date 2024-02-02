@@ -3,7 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 
 class ShaderBuilder

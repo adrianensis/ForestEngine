@@ -21,9 +21,9 @@ void BatchRenderer::init(const BatchData& batchData)
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
 
-    const GPUBuffersLayout& gpuBuffersLayout = mMeshBatcher.getGPUBuffersLayout();
+    const GPUBuffersContainer& gpuBuffersContainer = mMeshBatcher.getGPUBuffersContainer();
     
-    mShader = ShaderUtils::createShader(gpuBuffersLayout, mBatchData.mMaterial);
+    mShader = ShaderUtils::createShader(gpuBuffersContainer, mBatchData.mMaterial);
     
     bindSharedBuffers();
 }
@@ -37,7 +37,7 @@ void BatchRenderer::bindSharedBuffers()
 {
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).mGlobalDataBuffer);
 
-    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersLayout().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
@@ -46,10 +46,10 @@ void BatchRenderer::bindSharedBuffers()
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
-        mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersLayout().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
+        mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
     
-    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersLayout().getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()));
+    mShader->bindSharedBuffer(mMeshBatcher.getGPUBuffersContainer().getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()));
 }
 
 void BatchRenderer::render()

@@ -4,10 +4,10 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 
-class GPUBuffersLayout
+class GPUBuffersContainer
 {
 public:
-	GPUBuffersLayout() = default;
+	GPUBuffersContainer() = default;
 
     void init(bool isStatic);
     void enable();

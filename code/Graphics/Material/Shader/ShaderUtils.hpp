@@ -4,12 +4,12 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 
-class GPUBuffersLayout;
+class GPUBuffersContainer;
 class Material;
 class Shader;
 
 class ShaderUtils
 {
 public:
-    static OwnerPtr<GPUProgram> createShader(const GPUBuffersLayout& gpuBuffersLayout, Ptr<const Material> material);
+    static OwnerPtr<GPUProgram> createShader(const GPUBuffersContainer& gpuBuffersContainer, Ptr<const Material> material);
 };

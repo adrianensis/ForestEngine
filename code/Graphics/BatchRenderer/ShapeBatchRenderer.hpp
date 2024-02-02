@@ -2,7 +2,7 @@
 
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
-#include "Graphics/GPU/GPUBuffersLayout.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 
 class ShapeBatchRenderer: public ObjectBase
 {
@@ -23,7 +23,7 @@ private:
     void addColor(const Vector4& color);
 private: 
 	OwnerPtr<GPUProgram> mShaderLine;
-    GPUBuffersLayout mGPUBuffersLayout;
+    GPUBuffersContainer mGPUBuffersContainer;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;
 	std::vector<u32> mIndicesBuffer;
