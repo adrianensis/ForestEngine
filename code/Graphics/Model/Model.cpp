@@ -153,6 +153,10 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         {
             gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
         }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_tangent)
+        {
+            // TODO: implement
+        }
         else
         {
             CHECK_MSG(false, "Attribute not supported!");
@@ -266,6 +270,10 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 CHECK_MSG(false, "Weights attribute data format not supported, use vec4 f32");
             }
+        }
+        else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_tangent)
+        {
+            // TODO: implement
         }
         else
         {
