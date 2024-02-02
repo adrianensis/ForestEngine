@@ -46,8 +46,8 @@ void Model::init(const std::string& path)
 
                 mGLTFMaterials.clear();
                 mChannels.clear();
+                mInverseBindMatrices.clear();
                 mNodeToBoneId.clear();
-                mOriginalFrameTransforms.clear();
             }
         }
     }
@@ -286,12 +286,26 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     mBonesIndexCount = (u32)skin.joints_count;
     mBones.reserve(mBonesIndexCount);
     mChannels.resize(mBonesIndexCount);
+    mInverseBindMatrices.resize(mBonesIndexCount);
 
     std::vector<Matrix4> originalBindMatrices;
     originalBindMatrices.resize(mBonesIndexCount);
 
     FOR_RANGE(i, 0, mBonesIndexCount)
     {
+        if(skin.inverse_bind_matrices)
+        {
+            f32 inverseMatrixData[Matrix4::smMatrixSize];
+            cgltf_accessor_read_float(skin.inverse_bind_matrices, i, inverseMatrixData, Matrix4::smMatrixSize);
+            Matrix4 inverse;
+            inverse.init(inverseMatrixData);
+            mInverseBindMatrices[i]  = inverse;
+        }
+        else
+        {
+            CHECK_MSG(false, "No inverse bind matrices!");
+        }
+
         const cgltf_node& node = *skin.joints[i];
         mNodeToBoneId.insert_or_assign(&node, i);
         std::string boneName(node.name);
@@ -313,9 +327,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             if(node.has_rotation)
             {
                 Quaternion rotation(node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]);
-                //rotationMatrix.rotation(Vector3(node.rotation[0], node.rotation[1], node.rotation[2]));
                 rotation.toMatrix(&rotationMatrix);
-                rotationMatrix.transpose();
             }
 
             Matrix4 scaleMatrix;
@@ -415,8 +427,8 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
     FOR_RANGE(frameIt, 0, animation->mDurationInTicks)
     {
         animation->mFrames[frameIt].mTransforms.resize(mBonesIndexCount);
-        mOriginalFrameTransforms.clear();
-        mOriginalFrameTransforms.resize(mBonesIndexCount);
+        std::vector<Matrix4> originalFrameTransforms;
+        originalFrameTransforms.resize(mBonesIndexCount);
 
         f32 currentAnimationTime = frameIt*smAnimationFrameRateSeconds;
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
@@ -452,20 +464,19 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
             rotationMatrix.mul(scaleMatrix);
             boneFrameMatrix.mul(rotationMatrix);
 
-            mOriginalFrameTransforms[boneIt] = boneFrameMatrix;
+            originalFrameTransforms[boneIt] = boneFrameMatrix;
             animation->mFrames[frameIt].mTransforms[boneIt] = boneFrameMatrix;
         }
 
         FOR_RANGE(i, 0, mBonesIndexCount)
         {
-            animation->mFrames[frameIt].mTransforms[i] = calculateHierarchicalBoneTransform(i, mOriginalFrameTransforms);
+            animation->mFrames[frameIt].mTransforms[i] = calculateHierarchicalBoneTransform(i, originalFrameTransforms);
         }
 
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
         {
+            Matrix4 inverseBindMatrix = mInverseBindMatrices[boneIt];
             Matrix4 boneFrameMatrix = animation->mFrames[frameIt].mTransforms[boneIt];
-            Matrix4 inverseBindMatrix = mBones[boneIt].mBindMatrix;
-            inverseBindMatrix.invert();
             boneFrameMatrix.mul(inverseBindMatrix);
 
             animation->mFrames[frameIt].mTransforms[boneIt] = boneFrameMatrix;
