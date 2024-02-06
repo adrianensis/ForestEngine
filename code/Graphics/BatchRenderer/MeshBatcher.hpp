@@ -13,7 +13,7 @@ public:
     void init(const BatchData batchData);
     void terminate();
     void resize(u32 size);
-    void addInstance(const Matrix4& modelMatrix,Ptr<const Mesh> meshInstance);
+    void addInstanceData(const GPUInstanceSlot& gpuInstanceSlot, Ptr<const Mesh> meshInstance);
     void setMaterialInstanceProperties(u32 index, const MaterialInstancedProperties& materialInstancedProperties);
     void updateBoneTransforms();
     void drawCall();
@@ -41,8 +41,8 @@ private:
 private:
     BatchData mBatchData;
 	OwnerPtr<Mesh> mInternalMesh;
-	std::vector<Matrix4> mMatrices;
     std::vector<u32> mInstanceIDs;
+    std::vector<u32> mMatrixIDs;
     std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;

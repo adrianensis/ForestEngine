@@ -37,12 +37,52 @@ void RenderEngine::update()
 		mRenderPipelineData.mCamera->update();
 	}
 
+    std::vector<Ptr<MeshRenderer>> newList;
+    FOR_ARRAY(i, mRenderers)
+    {
+        PROFILER_BLOCK_CPU("remove renderers");
+
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+        if(renderer.isValid())
+        {
+            if (renderer->getIsPendingToBeDestroyed())
+            {
+                renderer->finallyDestroy();
+                GET_SYSTEM(GPUSharedContext).freeInstanceSlot(renderer->getGPUInstanceSlot());
+            }
+            else
+            {
+                newList.push_back(renderer);
+            }
+        }
+    }
+
+    mRenderers.clear();
+    mRenderers = newList;
+
+    FOR_ARRAY(i, mRenderers)
+    {
+        PROFILER_BLOCK_CPU("update renderers");
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+        renderer->update();
+        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
+        GET_SYSTEM(GPUSharedContext).setInstanceMatrix(renderer->getGPUInstanceSlot(), rendererModelMatrix);
+    }
+
+    updateMatrices();
+
 	GET_SYSTEM(AnimationManager).update();
 
 	// octree.update();
 
 	render();
 	swap();
+}
+
+void RenderEngine::updateMatrices()
+{
+	PROFILER_CPU()
+	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(GET_SYSTEM(GPUSharedContext).getMatrices());
 }
 
 void RenderEngine::preSceneChanged()
@@ -78,6 +118,12 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     if(component->getSystemComponentId() == MeshRenderer::getClassDefinitionStatic().mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
+        mRenderers.push_back(renderer);
+
+        GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
+        CHECK_MSG(slot.getIsValid(), "Invalid GPUInstanceSlot");
+        renderer->setGPUInstanceSlot(slot);
+
         mBatchesManager.addRenderer(renderer);
 
         if(renderer->getIsWorldSpace())

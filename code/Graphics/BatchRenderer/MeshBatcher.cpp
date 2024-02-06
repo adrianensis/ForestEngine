@@ -80,7 +80,7 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
 {
 	PROFILER_CPU()
 
-    mMatrices.reserve(maxInstances);
+    // mMatrices.reserve(maxInstances);
     mMaterialInstancedPropertiesArray.reserve(maxInstances);
 
     generateInstanceIDsData(maxInstances);
@@ -92,16 +92,24 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
     }
 }
 
-void MeshBatcher::addInstance(const Matrix4& modelMatrix, Ptr<const Mesh> meshInstance)
+void MeshBatcher::addInstanceData(const GPUInstanceSlot& gpuInstanceSlot, Ptr<const Mesh> meshInstance)
 {
 	PROFILER_CPU()
 
-    mMatrices.push_back(modelMatrix);
+    // mMatrices.push_back(modelMatrix);
     mMaterialInstancedPropertiesArray.push_back(MaterialInstancedProperties());
 
-    if(!mBatchData.mIsInstanced)
+    if(mBatchData.mIsInstanced)
+    {
+        mMatrixIDs.push_back(gpuInstanceSlot.getSlot());
+    }
+    else
 	{
-        PROFILER_BLOCK_CPU("Non Instanced");
+        FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
+        {
+            mMatrixIDs.push_back(gpuInstanceSlot.getSlot());
+        }
+        
         addInstanceMeshData(meshInstance);
     }
 
@@ -157,8 +165,9 @@ void MeshBatcher::clear()
 	{
 		mInternalMesh->clear();
 	}
-    mMatrices.clear();
+    // mMatrices.clear();
     mMaterialInstancedPropertiesArray.clear();
+    mMatrixIDs.clear();
 }
 
 void MeshBatcher::generateIndicesData(u32 meshesCount)
@@ -187,8 +196,13 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 {
 	PROFILER_CPU()
 
+    u32 totalSize = meshesCount * (mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount);
+
+	mMatrixIDs.clear();
+	mMatrixIDs.reserve(totalSize);
+
 	mInstanceIDs.clear();
-    mInstanceIDs.reserve(meshesCount * (mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount));
+    mInstanceIDs.reserve(totalSize);
     FOR_RANGE(meshId, 0, meshesCount)
     {
         if(mBatchData.mIsInstanced)
@@ -233,14 +247,17 @@ void MeshBatcher::initBuffers()
 
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mBatchData.mIsInstanced ? 1 : 0);
     mGPUVertexBuffersContainer.createVertexBuffer(bufferDataInstanceIDs, isStatic);
+
+    GPUVertexBufferData bufferDataMarixIDs(GPUBuiltIn::VertexInput::mMatrixID, mBatchData.mIsInstanced ? 1 : 0);
+    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataMarixIDs, isStatic);
     
     mGPUVertexBuffersContainer.disable();
 
-    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
-    {
-        u32 bindingPointmodelMatrices = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
-        mGPUSharedBuffersContainer.createSharedBuffer(bindingPointmodelMatrices, GPUBuiltIn::SharedBuffers::mModelMatrices, isStatic);
-    }
+    // if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
+    // {
+    //     u32 bindingPointmodelMatrices = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
+    //     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointmodelMatrices, GPUBuiltIn::SharedBuffers::mModelMatrices, isStatic);
+    // }
 
     u32 bindingPointInstancedProperties = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData().mType);
     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointInstancedProperties, mBatchData.mMaterial->getInstancedPropertiesSharedBufferData(), isStatic);
@@ -270,7 +287,8 @@ void MeshBatcher::resizeInstancedBuffers(u32 maxInstances)
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * matricesBufferSizeMultiplier);
     if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
     {
-        mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
+	    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMatrixID).resize(maxInstances * matricesBufferSizeMultiplier);
+        // mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(maxInstances);
     }
     mGPUSharedBuffersContainer.getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()).resize<Matrix4>(maxInstances);
 }
@@ -291,7 +309,8 @@ void MeshBatcher::setInstancedBuffers()
 	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mInstanceIDs);
     if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
     {
-        mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
+	    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMatrixID).setDataArray(mMatrixIDs);
+    //     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
     }
 }
 

@@ -133,7 +133,8 @@ public:
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, PrimitiveTypes::mVector4, "in_color"};
         inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, PrimitiveTypes::mVector4i, "in_BoneIDs"};
         inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, PrimitiveTypes::mVector4, "in_Weights"};
-        inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_instanceID"};
+        inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_instanceID"};
+        inline static const GPUVariableDefinitionData mMatrixID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_matrixID"};
     };
 
     class VertexOutput

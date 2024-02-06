@@ -31,9 +31,12 @@ public:
     void drawCube(const Cube& cube, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
 
 private:
+    void updateMatrices();
+
     void swap();
     void render();
 private:
+	std::vector<Ptr<MeshRenderer>> mRenderers;
     RenderPipelineData mRenderPipelineData;
     RenderPipeline mRenderPipeline;
 	BatchesManager mBatchesManager;

@@ -50,7 +50,7 @@ void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWor
     Matrix4 ortho;
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
-    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuMatricesData =
+    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
         isWorldSpace ? renderData.mCamera->mProjectionMatrix : ortho,
         isWorldSpace ? renderData.mCamera->mViewMatrix : Matrix4::smIdentity,
@@ -58,7 +58,7 @@ void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWor
         GET_SYSTEM(Time).getDeltaTimeSeconds(),
         GET_SYSTEM(Window).getWindowSize()
     };
-	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuMatricesData);
+	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 void RenderPipeline::updateLights(RenderPipelineData& renderData)

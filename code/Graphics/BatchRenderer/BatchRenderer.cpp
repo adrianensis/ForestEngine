@@ -38,7 +38,7 @@ void BatchRenderer::bindSharedBuffers()
 {
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 
-    mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
@@ -107,6 +107,7 @@ void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRenderers.push_back(renderer);
 	renderer->setBatchRenderer(getPtrToThis());
+
 	mRegenerateBuffersRequested = true;
 }
 
@@ -122,14 +123,7 @@ void BatchRenderer::updateBuffers()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            if (renderer->getIsPendingToBeDestroyed())
-            {
-                renderer->finallyDestroy();
-            }
-            else
-            {
-                newList.push_back(renderer);
-            }
+            newList.push_back(renderer);
         }
     }
 
@@ -142,15 +136,8 @@ void BatchRenderer::updateBuffers()
     FOR_ARRAY(i, mRenderers)
     {
         Ptr<MeshRenderer> renderer = mRenderers[i];
-
-        //Ptr<Camera> camera = GET_SYSTEM(RenderEngine).mCamera;
-        //if(camera && camera->mFrustum.testSphere(renderer->mGameObject->mTransform->getWorldPosition(), renderer->mGameObject->mTransform->getLocalScale().x))
-        {
-            PROFILER_BLOCK_CPU("update");
-            renderer->update();
-            const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-            mMeshBatcher.addInstance(rendererModelMatrix, renderer->getMeshInstance());
-        }
+        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
+        mMeshBatcher.addInstanceData(renderer->getGPUInstanceSlot(), renderer->getMeshInstance());
     }
 
     mRegenerateBuffersRequested = false;

@@ -6,6 +6,7 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUSharedContext.hpp"
 
 class BatchRenderer;
 
@@ -63,6 +64,7 @@ private:
     RendererData mRendererData;
 	OwnerPtr<Mesh> mMeshInstance;
     Ptr<BatchRenderer> mBatchRenderer;
+    GPUInstanceSlot mGPUInstanceSlot; 
     Matrix4 mRendererModelMatrix;
     bool mRendererPositionOffsetDirty = true;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
@@ -77,4 +79,5 @@ public:
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
     RGET(MaterialInstance)
+    RGET_SET(GPUInstanceSlot)
 };
