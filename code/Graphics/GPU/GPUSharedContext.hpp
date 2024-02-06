@@ -40,7 +40,6 @@ public:
 private:
     GPUSharedBuffersContainer mGPUSharedBuffersContainer;
 	std::vector<Matrix4> mMatrices;
-	std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
     std::vector<u32> mAvailableSlots;
 
 private:
