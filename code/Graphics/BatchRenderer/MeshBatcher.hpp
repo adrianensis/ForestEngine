@@ -42,7 +42,7 @@ private:
     BatchData mBatchData;
 	OwnerPtr<Mesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
-    std::vector<u32> mMatrixIDs;
+    std::vector<u32> mObjectIDs;
     std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;

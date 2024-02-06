@@ -150,8 +150,8 @@ void Material::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder)
         Variable modelMatrices;
         auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
         modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-        auto& matrixId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMatrixID.mName);
-        mainFunc.body().set(finalPositon, modelMatrices.at(matrixId).mul(finalPositon));
+        auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
+        mainFunc.body().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
     }
         
     Variable PVMatrix = shaderBuilder.getVariableFromCache("PV_Matrix");

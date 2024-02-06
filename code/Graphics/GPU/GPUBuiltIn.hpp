@@ -134,7 +134,7 @@ public:
         inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, PrimitiveTypes::mVector4i, "in_BoneIDs"};
         inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, PrimitiveTypes::mVector4, "in_Weights"};
         inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_instanceID"};
-        inline static const GPUVariableDefinitionData mMatrixID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_matrixID"};
+        inline static const GPUVariableDefinitionData mObjectID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_objectId"};
     };
 
     class VertexOutput
