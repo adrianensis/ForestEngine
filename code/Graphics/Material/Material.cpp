@@ -16,36 +16,8 @@ void Material::init(const MaterialData& materialData, u32 id)
     mMaterialData = materialData;
 	mID = id;
 
-    mInstancedProperties.push_back(MaterialInstancedPropertiesGPUData::mColor);
-    mInstancedProperties.push_back(MaterialInstancedPropertiesGPUData::mTextureRegionLeftTop);
-    mInstancedProperties.push_back(MaterialInstancedPropertiesGPUData::mTextureRegionSize);
-    mInstancedProperties.push_back(MaterialInstancedPropertiesGPUData::mDepth);
-
-    std::vector<GPUStructDefinition::GPUStructVariable> gpuStructVariableaArray;
-    FOR_LIST(it, mInstancedProperties)
-    {
-        const GPUVariableData& gpuVariableData = *it;
-        gpuStructVariableaArray.push_back({gpuVariableData.mGPUDataType, gpuVariableData.mName});
-    }
-
-    mInstancedPropertiesStructDefinition = 
-    {
-        "instancedPropertiesStruct",
-        {
-            gpuStructVariableaArray
-        }
-    };
-
-    GPUDataType instancedPropertiesStructDataType = {mInstancedPropertiesStructDefinition.mName, mInstancedPropertiesStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
-    
-    mInstancedPropertiesSharedBufferData = {
-        GPUBufferType::STORAGE,
-        {
-            {{GPUStorage::UNIFORM, instancedPropertiesStructDataType, "instancedPropertiesArray"}, "", " "}
-        },
-        "InstancedProperties",
-        "instancedProperties"
-    };
+    mInstancedPropertiesStructDefinition = DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesStructDefinition;
+    mInstancedPropertiesSharedBufferData = DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData;
 
     loadTextures();
 }

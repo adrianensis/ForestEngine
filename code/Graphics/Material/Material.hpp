@@ -20,13 +20,36 @@ public:
     alignas(16) i32 mDepth = 0;
 };
 
-class MaterialInstancedPropertiesGPUData
+class DefaultMaterialInstancedPropertiesGPUData
 {
 public:
-    inline static const GPUVariableDefinitionData mColor{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "color"};
-    inline static const GPUVariableDefinitionData mTextureRegionLeftTop{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"};
-    inline static const GPUVariableDefinitionData mTextureRegionSize{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"};
-    inline static const GPUVariableDefinitionData mDepth{GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mInt, "depth"};
+    inline static const std::vector<GPUStructDefinition::GPUStructVariable> smDefaultInstancedProperties = 
+    {
+        {GPUBuiltIn::PrimitiveTypes::mVector4, "color"},
+        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
+        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"},
+        {GPUBuiltIn::PrimitiveTypes::mInt, "depth"},
+    };
+
+	inline static const GPUStructDefinition smDefaultInstancedPropertiesStructDefinition =
+    {
+        "instancedPropertiesStruct",
+        {
+            smDefaultInstancedProperties
+        }
+    };
+
+    inline static const GPUDataType smDefaultInstancedPropertiesStructDataType = {smDefaultInstancedPropertiesStructDefinition.mName, smDefaultInstancedPropertiesStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
+    
+    inline static const GPUSharedBufferData smDefaultInstancedPropertiesSharedBufferData =
+    {
+        GPUBufferType::STORAGE,
+        {
+            {{GPUStorage::UNIFORM, smDefaultInstancedPropertiesStructDataType, "instancedPropertiesArray"}, "", " "}
+        },
+        "InstancedProperties",
+        "instancedProperties"
+    };
 };
 
 class MaterialData
@@ -127,7 +150,6 @@ protected:
 
 protected:
     MaterialData mMaterialData;
-    std::vector<GPUVariableData> mInstancedProperties;
 	GPUStructDefinition mInstancedPropertiesStructDefinition;
     GPUSharedBufferData mInstancedPropertiesSharedBufferData;
     std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
