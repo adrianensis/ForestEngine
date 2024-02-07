@@ -107,6 +107,15 @@ namespace ShaderBuilderNodes
         }
     }
 
+    void BlockStatement::terminate()
+    {
+        FOR_LIST(it, mStatements)
+        {
+            delete *it;
+        }
+        mStatements.clear();
+    }
+
     BlockStatement& BlockStatement::set(const Variable& a, const Variable& b)
     {
         Statement* newStatement = new Expressions::Assign(a, b);
@@ -321,4 +330,13 @@ namespace ShaderBuilderNodes
 
         return code;
     }
+
+    void Program::terminate()
+    {
+        FOR_LIST(it, mStructs) { it->terminate(); }
+        FOR_LIST(it, mAttributes) { it->terminate(); }
+        FOR_LIST(it, mSharedBuffers) { it->terminate(); }
+        FOR_LIST(it, mFunctionDefinitions) { it->terminate(); }
+    }
+
 }

@@ -11,6 +11,7 @@ namespace ShaderBuilderNodes
     public:
         Statement() = default;
         virtual ~Statement() = default;
+        virtual void terminate() {};
         virtual std::string toString() const { std::vector<std::string> lines = toLines(0); return std::accumulate(lines.begin(), lines.end(), std::string("")); };
         virtual std::vector<std::string> toLines(u16 indent) const { return {"// none"}; };
     protected:
@@ -228,6 +229,7 @@ namespace ShaderBuilderNodes
         BlockStatement& end();
 
         std::vector<std::string> toLines(u16 indent) const override;
+        void terminate() override;
 
         BlockStatement* mParent = nullptr;
         std::vector<Statement*> mStatements;
@@ -298,6 +300,8 @@ namespace ShaderBuilderNodes
             mSharedBuffers.reserve(50);
             mFunctionDefinitions.reserve(50);
         }
+        ~Program() { terminate(); }
+        
         Struct& structType(const Struct& structType);
         Attribute& attribute(const Attribute& attribute);
         SharedBuffer& sharedBuffer(const SharedBuffer& sharedBuffer);
@@ -312,6 +316,7 @@ namespace ShaderBuilderNodes
         FunctionDefinition& getFunctionDefinition(const std::string_view& functionDefinitionName);
 
         std::vector<std::string> toLines(u16 indent) const;
+        void terminate();
 
         std::vector<Struct> mStructs;
         std::vector<Attribute> mAttributes;
