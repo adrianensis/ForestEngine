@@ -162,6 +162,8 @@ buildCommandArgs = [
     "-DENABLE_PROFILER=" + str(enableProfiler),
     "-DENABLE_ADDRESS_SANITIZER=" + str(enableAddressSanitizer),
     "-DENABLE_GPU_DEBUG=" + str(enableGPUDebug),
+    # "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold",
+    # "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold",
 ]
 
 build_cmake(cwd, buildCommandArgs)

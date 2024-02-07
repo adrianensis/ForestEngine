@@ -75,6 +75,7 @@ if installSystemDepencencies:
             os.system("sudo apt-get -y install xorg-dev") # glfw3 dependency
             os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
             os.system("sudo apt-get -y install qtbase5-dev") # easy_profiler dependency
+            os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install doxygen graphviz")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")

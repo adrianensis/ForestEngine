@@ -61,6 +61,12 @@ if(WIN32)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 endif(WIN32)
 
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    set(CMAKE_CUDA_COMPILER_LAUNCHER "${CCACHE_PROGRAM}") # CMake 3.9+
+endif()
+
 message("Compiler: ${CMAKE_CXX_COMPILER}")
 message("Release: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("Debug: ${CMAKE_CXX_FLAGS_DEBUG}")
