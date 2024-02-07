@@ -134,7 +134,6 @@ void BatchRenderer::updateBuffers()
     FOR_ARRAY(i, mRenderers)
     {
         Ptr<MeshRenderer> renderer = mRenderers[i];
-        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
         mMeshBatcher.addInstanceData(renderer->getGPUInstanceSlot(), renderer->getMeshInstance());
     }
 
