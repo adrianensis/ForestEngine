@@ -33,5 +33,3 @@
 ## Bugs
 - -
 
-## Potential Bugs
-- RenderContext::createVBO() performs a glBindBuffer but createEBO() and createUBO() don't. Is that correct? Unify in a single createBuffer() method?
