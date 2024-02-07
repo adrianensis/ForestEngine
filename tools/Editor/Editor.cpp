@@ -59,18 +59,22 @@ void Editor::firstUpdate()
 
 	// importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	// importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
-	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
-	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
+	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
+	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,60,0), 20.0f, 0);
 
 	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
-	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
+	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// gameObject = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-500,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
-    mGameObjectsArray.push_back(obj);
+    // mGameObjectsArray.push_back(obj);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+    // importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(-300,0,-300), 20.0f, 0);
+    importModel2("Rumba/Rumba.gltf", Vector3(-300,0,-300), 1, 0);
+	// importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(0,0,-300), 1, 0);
 
     size = 1;
     for(i32 x = -size; x < size; ++x)
@@ -137,7 +141,7 @@ void Editor::firstUpdate()
 	setAdjustSizeToText(true).
 	setSize(Vector2(0.5, 0.05f));
 
-    // uiBuilder.
+    // uiBuilder. 
 	// setText("cApgfy").
 	// create<UIText>().
 	// getUIElement<UIText>();
@@ -196,7 +200,7 @@ void Editor::firstUpdate()
 	});
 
     uiBuilder.
-	setText("abcd").
+	setText("a").
 	create<UIEditableText>();
 
 	uiBuilder.restoreAll();
