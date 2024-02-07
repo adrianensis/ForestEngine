@@ -31,7 +31,7 @@ public:
     void drawCube(const Cube& cube, f32 thickness= 1, bool isWorldSpace = true, Vector4 color = Vector4(1,1,1,1));
 
 private:
-    void updateMatrices();
+    void updateInstancesData();
 
     void swap();
     void render();

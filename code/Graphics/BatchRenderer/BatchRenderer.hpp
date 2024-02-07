@@ -22,7 +22,6 @@ private:
     void enable();
     void disable();
     void updateBuffers();
-    void updateMaterialProperties();
     bool shouldRegenerateBuffers() const;
 
 private:

@@ -27,6 +27,11 @@ void GPUSharedContext::init()
     u32 bindingPointModelMatrices = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointModelMatrices, GPUBuiltIn::SharedBuffers::mModelMatrices, false);
     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(size);
+
+    mMaterialInstancedPropertiesArray.resize(size);
+    u32 bindingPointMaterialInstancedProperties = requestSharedBufferBindingPoint(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData.mType);
+    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointMaterialInstancedProperties, DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData, false);
+    mGPUSharedBuffersContainer.getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData).resize<MaterialInstancedProperties>(size);
 }
 
 u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
@@ -82,6 +87,11 @@ void GPUSharedContext::freeInstanceSlot(GPUInstanceSlot& slot)
 void GPUSharedContext::setInstanceMatrix(const GPUInstanceSlot& slot, const Matrix4& matrix)
 {
     mMatrices.at(slot.getSlot()) = matrix;
+}
+
+void GPUSharedContext::setMaterialInstanceProperties(const GPUInstanceSlot& slot, const MaterialInstancedProperties& materialInstanceProperties)
+{
+    mMaterialInstancedPropertiesArray.at(slot.getSlot()) = materialInstanceProperties;
 }
 
 void GPUSharedContext::terminate()

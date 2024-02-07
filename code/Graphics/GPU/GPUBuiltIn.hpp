@@ -146,6 +146,7 @@ public:
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "vColor"};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::OUT, PrimitiveTypes::mVector3, "vPosition"};
         inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vInstanceID"};
+        inline static const GPUVariableDefinitionData mObjectID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vObjectId"};
     };
 
     class FragmentInput
@@ -156,6 +157,7 @@ public:
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, VertexOutput::mNormal};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::IN, VertexOutput::mFragPosition};
         inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mInstanceID};
+        inline static const GPUVariableDefinitionData mObjectID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mObjectID};
     };
 
     class FragmentOutput

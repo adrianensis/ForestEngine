@@ -50,7 +50,7 @@ void BatchRenderer::bindSharedBuffers()
         mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
     
-    mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(mBatchData.mMaterial->getInstancedPropertiesSharedBufferData()));
+    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData));
 }
 
 void BatchRenderer::render()
@@ -65,8 +65,6 @@ void BatchRenderer::render()
 		{
 			updateBuffers();
 		}
-
-        updateMaterialProperties();
 
         mMeshBatcher.drawCall();
 
@@ -141,16 +139,6 @@ void BatchRenderer::updateBuffers()
     }
 
     mRegenerateBuffersRequested = false;
-}
-
-void BatchRenderer::updateMaterialProperties()
-{
-	PROFILER_CPU()
-    FOR_ARRAY(i, mRenderers)
-    {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
-        mMeshBatcher.setMaterialInstanceProperties(i, renderer->getMaterialInstance().mMaterialInstancedProperties);
-    }
 }
 
 bool BatchRenderer::shouldRegenerateBuffers() const

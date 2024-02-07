@@ -103,11 +103,11 @@ void Material::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder)
 
     Variable instancedProperties(getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
     Variable depth = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[3]};
-    auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
+    auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
     if(mMaterialData.mUseDepth)
     {
         mainFunc.body().
-        set(finalPositon.dot("z"), instancedProperties.at(instanceId).dot(depth));
+        set(finalPositon.dot("z"), instancedProperties.at(objectId).dot(depth));
     }
 
     if(mMaterialData.mIsSkinned)
@@ -186,12 +186,12 @@ void Material::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shade
     Variable instancedProperties(getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
     Variable textureRegionLeftTop = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[1]};
     Variable textureRegionSize = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[2]};
-    auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
+    auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
     mainFunc.body().
     set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2.mName,
     {
-        outTextureCoord.dot("x").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("x")).add(instancedProperties.at(instanceId).dot(textureRegionLeftTop).dot("x")),
-        outTextureCoord.dot("y").mul(instancedProperties.at(instanceId).dot(textureRegionSize).dot("y")).add(instancedProperties.at(instanceId).dot(textureRegionLeftTop).dot("y"))
+        outTextureCoord.dot("x").mul(instancedProperties.at(objectId).dot(textureRegionSize).dot("x")).add(instancedProperties.at(objectId).dot(textureRegionLeftTop).dot("x")),
+        outTextureCoord.dot("y").mul(instancedProperties.at(objectId).dot(textureRegionSize).dot("y")).add(instancedProperties.at(objectId).dot(textureRegionLeftTop).dot("y"))
     }));
 }
 
@@ -208,12 +208,19 @@ void Material::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilde
 {
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
     auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
+    auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
     auto& outInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
+    auto& outObjectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mObjectID.mName);
 
     if(!instanceId.isEmpty())
     {
         mainFunc.body().
         set(outInstanceId, instanceId);
+    }
+    if(!objectId.isEmpty())
+    {
+        mainFunc.body().
+        set(outObjectId, objectId);
     }
 }
 
@@ -233,7 +240,7 @@ void Material::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
 {
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
     auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
-    auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
+    auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mObjectID.mName);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
     
     Variable baseColor;
@@ -250,7 +257,7 @@ void Material::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
         Variable instancedProperties(getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
         Variable instanceColor = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[0]};
         mainFunc.body().
-        set(baseColor, instancedProperties.at(instanceId).dot(instanceColor));
+        set(baseColor, instancedProperties.at(objectId).dot(instanceColor));
     }
 
     mainFunc.body().
@@ -318,6 +325,7 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUVertexBuffersCont
 
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData);
 
     if(mMaterialData.mReceiveLight)
     {
@@ -352,6 +360,7 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUVertexBuffersCont
     }
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
+    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     
     if(hasTexture())
     {
@@ -365,6 +374,7 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUVertexBuffersCont
     }
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
+    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
     shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 
     return shaderBuilderData;

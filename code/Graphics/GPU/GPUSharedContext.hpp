@@ -36,10 +36,12 @@ public:
     GPUInstanceSlot requestInstanceSlot();
     void freeInstanceSlot(GPUInstanceSlot& slot);
     void setInstanceMatrix(const GPUInstanceSlot& slot, const Matrix4& matrix);
-    
+    void setMaterialInstanceProperties(const GPUInstanceSlot& slot, const MaterialInstancedProperties& materialInstanceProperties);
+
 private:
     GPUSharedBuffersContainer mGPUSharedBuffersContainer;
 	std::vector<Matrix4> mMatrices;
+	std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
     std::vector<u32> mAvailableSlots;
 
 private:
@@ -52,4 +54,5 @@ public:
     RGET(GPUSharedBuffersContainer)
     CRGET(GPUSharedBuffersContainer)
     CRGET(Matrices)
+    CRGET(MaterialInstancedPropertiesArray)
 };

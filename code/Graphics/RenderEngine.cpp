@@ -67,9 +67,10 @@ void RenderEngine::update()
         renderer->update();
         const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
         GET_SYSTEM(GPUSharedContext).setInstanceMatrix(renderer->getGPUInstanceSlot(), rendererModelMatrix);
+        GET_SYSTEM(GPUSharedContext).setMaterialInstanceProperties(renderer->getGPUInstanceSlot(), renderer->getMaterialInstance().mMaterialInstancedProperties);
     }
 
-    updateMatrices();
+    updateInstancesData();
 
 	GET_SYSTEM(AnimationManager).update();
 
@@ -79,10 +80,11 @@ void RenderEngine::update()
 	swap();
 }
 
-void RenderEngine::updateMatrices()
+void RenderEngine::updateInstancesData()
 {
 	PROFILER_CPU()
 	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(GET_SYSTEM(GPUSharedContext).getMatrices());
+	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData).setDataArray(GET_SYSTEM(GPUSharedContext).getMaterialInstancedPropertiesArray());
 }
 
 void RenderEngine::preSceneChanged()

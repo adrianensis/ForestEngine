@@ -14,7 +14,6 @@ public:
     void terminate();
     void resize(u32 size);
     void addInstanceData(const GPUInstanceSlot& gpuInstanceSlot, Ptr<const Mesh> meshInstance);
-    void setMaterialInstanceProperties(u32 index, const MaterialInstancedProperties& materialInstancedProperties);
     void updateBoneTransforms();
     void drawCall();
     void enable();
@@ -34,7 +33,6 @@ private:
     void resizeInstancedBuffers(u32 maxInstances);
     void setMeshBuffers(Ptr<const GPUMesh> mesh);
     void setInstancedBuffers();
-    void setMaterialInstancePropertiesBuffers();
     void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
     void setIndicesBuffer(Ptr<const GPUMesh> mesh);
 
@@ -43,7 +41,6 @@ private:
 	OwnerPtr<Mesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;
-    std::vector<MaterialInstancedProperties> mMaterialInstancedPropertiesArray;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
     GPUSharedBuffersContainer mGPUSharedBuffersContainer;
