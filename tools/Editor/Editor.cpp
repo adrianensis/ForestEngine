@@ -61,19 +61,20 @@ void Editor::firstUpdate()
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(200,60,0), 20.0f, 0);
 	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
+	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(100,100,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
-	importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
+	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// gameObject = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-500,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
-    // importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(-300,0,-300), 20.0f, 0);
-    importModel2("Rumba/Rumba.gltf", Vector3(-300,0,-300), 1, 0);
+    // importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(-300,0,-120), 20.0f, 0);
+    importModel2("Rumba/Rumba.gltf", Vector3(-300,0,-200), 1, 0);
+    importModel2("Run/Run.gltf", Vector3(300,0,-200), 1, 0);
 	// importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(0,0,-300), 1, 0);
 
     size = 1;
