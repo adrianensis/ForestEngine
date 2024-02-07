@@ -45,14 +45,7 @@ void RenderEngine::update()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            if (renderer->getIsPendingToBeDestroyed())
-            {
-                renderer->finallyDestroy();
-            }
-            else
-            {
-                newList.push_back(renderer);
-            }
+            newList.push_back(renderer);
         }
     }
 

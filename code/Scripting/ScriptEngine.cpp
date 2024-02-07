@@ -22,26 +22,35 @@ void ScriptEngine::update()
 {
 	PROFILER_CPU()
 
-	FOR_LIST(it, mScripts)
+    std::vector<Ptr<Script>> newList;
+    FOR_ARRAY(i, mScripts)
+    {
+        PROFILER_BLOCK_CPU("remove scripts");
+
+        Ptr<Script> script = mScripts[i];
+        if(script.isValid())
+        {
+            newList.push_back(script);
+        }
+    }
+
+    mScripts.clear();
+    mScripts = newList;
+
+    FOR_ARRAY(i, mScripts)
 	{
-		Ptr<Script> script = *it;
+        Ptr<Script> script = mScripts[i];
+        if (script->isActive())
+        {
+            if (!script->getFirstUpdateDone())
+            {
+                script->firstUpdate();
+                script->firstUpdateDone();
+            }
 
-		if (script->isActive())
-		{
-			if (!script->getFirstUpdateDone())
-			{
-				script->firstUpdate();
-				script->firstUpdateDone();
-			}
-
-			script->update();
-		}
-		else if (script->getIsPendingToBeDestroyed())
-		{
-			internalRemoveScript(it);
-		}
+            script->update();
+        }
 	}
-
 }
 
 void ScriptEngine::terminate()
@@ -58,17 +67,6 @@ void ScriptEngine::preSceneChanged()
 void ScriptEngine::postSceneChanged()
 {
 	LOG_TRACE()
-}
-
-void ScriptEngine::internalRemoveScript(std::list<Ptr<Script>>::iterator & it)
-{
-	Ptr<Script> script = *it;
-
-	script->terminate();
-	script->finallyDestroy();
-
-	it = mScripts.erase(it);
-	--it;
 }
 
 void ScriptEngine::retrieveControllerFromScene()

@@ -19,6 +19,7 @@ public:
     virtual void onCollision(GameObject *otherGameObject);
     virtual void onExitCollision(GameObject *otherGameObject);
     virtual void terminate();
+    void onDestroy() override;
 	
 	void firstUpdateDone()
 	{

@@ -30,3 +30,8 @@ void Script::onExitCollision(GameObject *otherGameObject)
 void Script::terminate()
 {
 }
+
+void Script::onDestroy()
+{
+    terminate();
+}

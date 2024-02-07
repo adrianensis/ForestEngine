@@ -17,10 +17,9 @@ public:
     void terminate();
 
 private:
-    void internalRemoveScript(std::list<Ptr<Script>>::iterator & it);
     void retrieveControllerFromScene();
 
 private:
-	std::list<Ptr<Script>> mScripts;
+	std::vector<Ptr<Script>> mScripts;
 	Ptr<Script> mController;
 };

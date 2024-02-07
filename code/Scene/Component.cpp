@@ -15,28 +15,20 @@ bool Component::isStatic() const
 
 bool Component::isActive() const
 {
-	return (mIsDestroyed || mIsPendingToBeDestroyed || !mGameObject) ? false : mIsActive;
+	return (mIsDestroyed || !mGameObject) ? false : mIsActive;
 }
 
 void Component::setIsActive(bool isActive)
 {
-	mIsActive = (mIsDestroyed || mIsPendingToBeDestroyed || !mGameObject) ? false : isActive;
-}
-
-void Component::finallyDestroy()
-{
-	mIsDestroyed = true;
-	mIsPendingToBeDestroyed = false;
+	mIsActive = (mIsDestroyed || !mGameObject) ? false : isActive;
 }
 
 void Component::destroy()
 {
-	if (!(getIsDestroyed() || getIsPendingToBeDestroyed()))
-	{
-		mIsPendingToBeDestroyed = true;
-		mIsActive = false;
-		onDestroy();
-	}
+	CHECK_MSG(!getIsDestroyed(), "Component already destroyed");
+    mIsDestroyed = true;
+    mIsActive = false;
+    onDestroy();
 }
 
 void Component::onDestroy()
