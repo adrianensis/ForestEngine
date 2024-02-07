@@ -75,25 +75,26 @@ GPUInstanceSlot GPUSharedContext::requestInstanceSlot()
         }
     }
 
+    CHECK_MSG(slot.getIsValid(), "Invalid slot!");
     return slot;
 }
 
 void GPUSharedContext::freeInstanceSlot(GPUInstanceSlot& slot)
 {
-    if(slot.getIsValid())
-    {
-        mAvailableSlots[slot.getSlot()] = true;
-        slot.reset();
-    }
+    CHECK_MSG(slot.getIsValid(), "Invalid slot!");
+    mAvailableSlots[slot.getSlot()] = true;
+    slot.reset();
 }
 
 void GPUSharedContext::setInstanceMatrix(const GPUInstanceSlot& slot, const Matrix4& matrix)
 {
+    CHECK_MSG(slot.getIsValid(), "Invalid slot!");
     mMatrices.at(slot.getSlot()) = matrix;
 }
 
 void GPUSharedContext::setMaterialInstanceProperties(const GPUInstanceSlot& slot, const MaterialInstancedProperties& materialInstanceProperties)
 {
+    CHECK_MSG(slot.getIsValid(), "Invalid slot!");
     mMaterialInstancedPropertiesArray.at(slot.getSlot()) = materialInstanceProperties;
 }
 

@@ -38,7 +38,6 @@ void MeshRenderer::init(const RendererData& data)
     mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
 
     GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
-    CHECK_MSG(slot.getIsValid(), "Invalid GPUInstanceSlot");
     mGPUInstanceSlot = slot;
 }
 
