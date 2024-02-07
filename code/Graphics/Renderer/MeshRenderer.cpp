@@ -2,6 +2,7 @@
 
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Texture.hpp"
@@ -35,6 +36,10 @@ void MeshRenderer::init(const RendererData& data)
     }
 
     mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
+
+    GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
+    CHECK_MSG(slot.getIsValid(), "Invalid GPUInstanceSlot");
+    mGPUInstanceSlot = slot;
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -68,6 +73,8 @@ void MeshRenderer::update()
 
 void MeshRenderer::onDestroy() 
 {
+    GET_SYSTEM(GPUSharedContext).freeInstanceSlot(mGPUInstanceSlot);
+
     if(mBatchRenderer)
     {
         mBatchRenderer->requestRegenerateBuffers();

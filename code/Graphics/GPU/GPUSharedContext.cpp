@@ -80,8 +80,11 @@ GPUInstanceSlot GPUSharedContext::requestInstanceSlot()
 
 void GPUSharedContext::freeInstanceSlot(GPUInstanceSlot& slot)
 {
-    mAvailableSlots[slot.getSlot()] = true;
-    slot.reset();
+    if(slot.getIsValid())
+    {
+        mAvailableSlots[slot.getSlot()] = true;
+        slot.reset();
+    }
 }
 
 void GPUSharedContext::setInstanceMatrix(const GPUInstanceSlot& slot, const Matrix4& matrix)

@@ -48,7 +48,6 @@ void RenderEngine::update()
             if (renderer->getIsPendingToBeDestroyed())
             {
                 renderer->finallyDestroy();
-                GET_SYSTEM(GPUSharedContext).freeInstanceSlot(renderer->getGPUInstanceSlot());
             }
             else
             {
@@ -121,10 +120,6 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderers.push_back(renderer);
-
-        GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
-        CHECK_MSG(slot.getIsValid(), "Invalid GPUInstanceSlot");
-        renderer->setGPUInstanceSlot(slot);
 
         mBatchesManager.addRenderer(renderer);
 
