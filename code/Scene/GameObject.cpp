@@ -2,15 +2,10 @@
 #include "Scene/Component.hpp"
 #include "Scene/Transform.hpp"
 
-
 GameObject::GameObject()
 {
 	mIsActive = true;
 	mShouldPersist = false;
-}
-
-GameObject::~GameObject() 
-{
 }
 
 void GameObject::init()

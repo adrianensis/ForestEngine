@@ -16,8 +16,6 @@ class GameObject: public ObjectBase
 	
 public:
     GameObject();
-    ~GameObject() override;
-
 
     virtual void init();
 
