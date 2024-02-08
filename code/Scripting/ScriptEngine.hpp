@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Core/Systems/System.hpp"
 #include "Scripting/Script.hpp"
-
 
 class ScriptEngine: public System
 {

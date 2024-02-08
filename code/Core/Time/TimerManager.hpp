@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Systems/System.hpp"
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Functor.hpp"
 

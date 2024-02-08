@@ -2,6 +2,7 @@
 
 #include "glad/glad.h"
 #include "Core/Module.hpp"
+#include "Core/Systems/System.hpp"
 
 class Camera;
 

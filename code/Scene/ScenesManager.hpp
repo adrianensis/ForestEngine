@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Core/Systems/System.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 

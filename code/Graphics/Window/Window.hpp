@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Systems/System.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Core/Input/Input.hpp"
 #include "GLFW/glfw3.h"

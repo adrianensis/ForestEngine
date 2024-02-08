@@ -2,6 +2,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
+#include "Core/Input/Input.hpp"
 
 void Editor::init()
 {

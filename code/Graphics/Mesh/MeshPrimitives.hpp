@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Core/Systems/System.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 
 class MeshPrimitives: public System

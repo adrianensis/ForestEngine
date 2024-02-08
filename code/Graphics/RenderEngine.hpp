@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Core/Systems/System.hpp"
 #include "Graphics/BatchRenderer/BatchesManager.hpp"
 #include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"

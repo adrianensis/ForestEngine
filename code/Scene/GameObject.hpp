@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Core/Events/Event.hpp"
 #include "Scene/Component.hpp"
-
 
 class Transform;
 class Scene;

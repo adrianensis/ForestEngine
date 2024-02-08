@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
+#include "Core/Font/Font.hpp"
 
 enum class TextureType
 {

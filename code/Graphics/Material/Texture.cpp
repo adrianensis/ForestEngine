@@ -1,5 +1,6 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
+#include "Core/Image/ImageUtils.hpp"
 
 Texture::~Texture() 
 {

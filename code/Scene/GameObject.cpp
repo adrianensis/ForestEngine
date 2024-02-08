@@ -1,6 +1,7 @@
 #include "Scene/GameObject.hpp"
 #include "Scene/Component.hpp"
 #include "Scene/Transform.hpp"
+#include "Core/Events/EventsManager.hpp"
 
 GameObject::GameObject()
 {

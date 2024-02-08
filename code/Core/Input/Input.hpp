@@ -2,9 +2,7 @@
 
 #include "Core/Object/ObjectBase.hpp"
 #include "Core/Systems/System.hpp"
-
 #include "Core/Maths/Vector2.hpp"
-
 #include "Core/Input/InputEvents.hpp"
 
 class IWindowInputAdapter

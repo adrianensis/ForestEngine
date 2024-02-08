@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/Systems/System.hpp"
-#include "Core/Functor.hpp"
 #include "Core/Command/Command.hpp"
 
 using CommandCallback = std::function<void(const Command& command)>;
