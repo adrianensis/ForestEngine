@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
-#include "Core/Object/ObjectBase.hpp"
-#include "Core/Serialization/Serialization.hpp"
+#include "Core/StdCore.hpp"
 
 /*
 	example for constant config object:
@@ -11,10 +9,8 @@
 	conf.setF32("key", 1.0f);
 */
 
-class ConfigObject: public ObjectBase
+class ConfigObject
 {
-    GENERATE_METADATA(ConfigObject)
-
 public:
 	const JSON& at(const std::string& key) const { return mJson.at(key); }
     void readFromJsonFile(const std::string& path);

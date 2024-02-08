@@ -195,7 +195,7 @@ void CommandLine::registerCommand(const std::string& commandName, CommandCallbac
     command.setName(commandName);
 
     CommandFunctor functor;
-    functor.setCallback(callback);
+    functor.mCallback = callback;
     functor.mCommand = command;
 
     mCommandsMap.insert_or_assign(commandName, functor);

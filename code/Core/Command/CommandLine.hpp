@@ -9,8 +9,6 @@ using CommandCallback = std::function<void(const Command& command)>;
 
 class CommandFunctor: public Functor<CommandCallback>
 {
-	GENERATE_METADATA(CommandFunctor)
-    
 public:
 
 	void execute() override

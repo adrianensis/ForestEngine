@@ -1,10 +1,6 @@
 #pragma once
 
-#include "json.hpp"
-
-#include "Core/Std.hpp"
-
-using JSON = nlohmann::ordered_json;
+#include "Core/StdPrimitiveTypes.hpp"
 
 // TODO : use ordered_json only for debug and release? but json for ship version?
 // ordered_json will keep the data order, json will sort the data alphabetically

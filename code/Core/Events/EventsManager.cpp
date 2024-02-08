@@ -53,7 +53,7 @@ bool EventsManager::eventTypeHasReceiver(ObjectBase *eventOwner, ClassId eventCl
 void EventsManager::insertEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback)
 {
 	EventFunctor<Event> eventFunctor;
-	eventFunctor.setCallback(eventCallback);
+	eventFunctor.mCallback = eventCallback;
 	eventFunctor.mEventClassId = eventClassId;
 	eventFunctor.mEventReceiver = eventReceiver;
 

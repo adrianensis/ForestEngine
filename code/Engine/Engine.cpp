@@ -7,6 +7,8 @@
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
 
+#include <thread>
+
 using namespace std::chrono_literals;
 
 void Engine::init()

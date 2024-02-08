@@ -1,16 +1,13 @@
 #pragma once
 
-#include "Core/Object/ObjectMetadata.hpp"
-#include "Core/Serialization/Serialization.hpp"
-#include "Core/Assert/Assert.hpp"
-#include "Core/Memory/Pointers.hpp"
-#include "Core/Memory/Pool.hpp"
-#include "Core/Metadata/ClassManager.hpp"
+#include "Core/StdFull.hpp"
 
-class ObjectBase: public ObjectMeta, public ISerializable, public IPoolable, public PointedObject, public EnablePtrFromThis
+class ObjectBase: public IMemoryTrackedObject, public ISerializable, public IPoolable, public PointedObject, public EnablePtrFromThis
 {
 private:
-	GENERATE_METADATA(ObjectBase)
+    DECLARE_METADATA_VARIABLES(ObjectBase)
+public:
+    DECLARE_METADATA_METHODS(virtual, EMPTY_MACRO())
 
 public:
 	ObjectBase()
@@ -35,6 +32,23 @@ public:
 	DECLARE_COPY()
 	{
         // empty to avoid copying mObjectId
+	}
+
+    const std::string_view& getMemoryTrackName() const override
+    {
+        return getClassDefinition().mName;
+    };
+
+    template <class T>
+	bool isDerivedClass() const
+	{
+		return dynamic_cast<const T *>(this) != nullptr;
+	}
+
+	template <class T>
+	bool isSameClass() const
+	{
+		return this->getClassDefinition().mId == T::getClassDefinitionStatic().mId;
 	}
 
 private:

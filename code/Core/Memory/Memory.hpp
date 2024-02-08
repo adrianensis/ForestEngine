@@ -1,8 +1,16 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdPrimitiveTypes.hpp"
 #include "Core/Assert/Assert.hpp"
-#include "Core/Object/ObjectMetadata.hpp"
+#include "Core/Hash.hpp"
+
+// Metadata for base object
+class IMemoryTrackedObject
+{
+public:
+	IMemoryTrackedObject() = default;
+	virtual const std::string_view& getMemoryTrackName() const = 0;
+};
 
 class Memory
 {
@@ -29,22 +37,22 @@ public:
 #ifdef ENGINE_DEBUG
 		std::string_view className;
 
-		if constexpr (std::is_base_of<ObjectMeta, T>::value)
+		if constexpr (std::is_base_of<IMemoryTrackedObject, T>::value)
 		{
-			className = object->getClassDefinition().mName;
+			className = object->getMemoryTrackName();
 		}
 		else
 		{
 			className = typeid(T).name();
 		}
 
-		if (!mAllocationsCounter.contains(className))
+		if (!smAllocationsCounter.contains(className))
         {
-			mAllocationsCounter.insert_or_assign(className, AllocationInfo());
+			smAllocationsCounter.insert_or_assign(className, AllocationInfo());
 		}
 
-        mAllocationsCounter[className].mCurrentAllocations += 1;
-        mAllocationsCounter[className].mMaxAllocations = std::max(mAllocationsCounter[className].mCurrentAllocations, mAllocationsCounter[className].mMaxAllocations);
+        smAllocationsCounter[className].mCurrentAllocations += 1;
+        smAllocationsCounter[className].mMaxAllocations = std::max(smAllocationsCounter[className].mCurrentAllocations, smAllocationsCounter[className].mMaxAllocations);
 #endif
 		return object;
 	}
@@ -56,23 +64,23 @@ public:
 
 #ifdef ENGINE_DEBUG
 		std::string_view className;
-		if constexpr (std::is_base_of<ObjectMeta, T>::value)
+		if constexpr (std::is_base_of<IMemoryTrackedObject, T>::value)
 		{
-			className = pointer->getClassDefinition().mName;
+			className = pointer->getMemoryTrackName();
 		}
 		else
 		{
 			className = typeid(T).name();
 		}
 
-        CHECK_MSG(mAllocationsCounter.contains(className), "No prevoius allocation for class: " + std::string(className));
-        mAllocationsCounter[className].mCurrentAllocations -= 1;
+        CHECK_MSG(smAllocationsCounter.contains(className), "No prevoius allocation for class: " + std::string(className));
+        smAllocationsCounter[className].mCurrentAllocations -= 1;
 #endif
 		delete pointer;
 	}
 
 private:
 #ifdef ENGINE_DEBUG
-	inline static std::unordered_map<std::string_view, AllocationInfo> mAllocationsCounter;
+	inline static std::unordered_map<std::string_view, AllocationInfo> smAllocationsCounter;
 #endif
 };

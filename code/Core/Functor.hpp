@@ -1,22 +1,19 @@
 #pragma once
 
-#include "Core/Object/ObjectBase.hpp"
+#include "Core/StdPrimitiveTypes.hpp"
 
 template <class T>
-class Functor: public ObjectBase
+class Functor
 {
 public:
 	virtual void execute() = 0;
 
-protected:
-	T mCallback; 
 public:
-	SET(Callback)
+	T mCallback;
 };
 
 class FunctorVoid: public Functor<std::function<void()>>
 {
-	GENERATE_METADATA(FunctorVoid)
 public:	
 	void execute() override
 	{

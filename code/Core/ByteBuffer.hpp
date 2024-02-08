@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
-#include "Core/Memory/Pointers.hpp"
+#include "Core/StdCore.hpp"
 
 class ByteBuffer
 {

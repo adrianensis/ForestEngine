@@ -20,8 +20,6 @@ using UIElementCallback = std::function<void(UIElement *uiElement)>;
 
 class FunctorUIElement: public Functor<UIElementCallback>
 {
-	GENERATE_METADATA(FunctorUIElement)
-
 public:
 	void execute() override
 	{

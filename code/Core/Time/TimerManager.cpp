@@ -7,7 +7,7 @@ void Timer::init(f32 duration, TimerDurationType durationType, std::function<voi
 {
 	mDurationType = durationType;
 	mDuration = duration;
-	mFunctor.setCallback(callback);
+	mFunctor.mCallback = callback;
 }
 
 void TimerManager::endTimer(Timer * timer)

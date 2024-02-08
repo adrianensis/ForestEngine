@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
-#include "Core/Metadata.hpp"
-#include "Core/Serialization/Serialization.hpp"
+#include "Core/StdCore.hpp"
 #include "Core/Maths/VectorDef.hpp"
 
 class Vector2;

@@ -91,25 +91,25 @@ bool UIElement::isVisible()
 void UIElement::setOnPressedCallback(UIElementCallback callback)
 {
 	mOnPressedFunctor.mUIElement = this;
-	mOnPressedFunctor.setCallback(callback);
+	mOnPressedFunctor.mCallback = callback;
 }
 
 void UIElement::setOnReleasedCallback(UIElementCallback callback)
 {
 	mOnReleasedFunctor.mUIElement = this;
-	mOnReleasedFunctor.setCallback(callback);
+	mOnReleasedFunctor.mCallback = callback;
 }
 
 void UIElement::setOnTextChangedCallback(UIElementCallback callback)
 {
 	mOnTextChangedFunctor.mUIElement = this;
-	mOnTextChangedFunctor.setCallback(callback);
+	mOnTextChangedFunctor.mCallback = callback;
 }
 
 void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 {
 	mOnFocusLostFunctor.mUIElement = this;
-	mOnFocusLostFunctor.setCallback(callback);
+	mOnFocusLostFunctor.mCallback = callback;
 }
 
 void UIElement::setComponentsCache()

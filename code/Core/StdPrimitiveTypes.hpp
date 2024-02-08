@@ -6,7 +6,6 @@
 #include <limits>
 #include <string>
 #include <string_view>
-
 using namespace std::literals;
 
 #include <vector>
@@ -16,25 +15,7 @@ using namespace std::literals;
 #include <map>
 #include <unordered_map>
 #include <set>
-
-#include <iostream>
-#include <fstream>
-#include <regex>
-#include <filesystem>
-
-#include <type_traits>
-#include <typeinfo>
-#include <typeindex>
-
 #include <functional>
-#include <tuple>
-#include <future> // std::async, std::future
-#include <thread>
-#include <algorithm>
-#include <execution>
-#include <memory>
-
-#include "Core/Macros.hpp"
 
 using f32 = float;
 using f64 = double;
@@ -52,3 +33,6 @@ using u64 = std::uint64_t;
 
 using ClassId = u64;
 using ObjectId = u64;
+
+#include "Core/Macros.hpp"
+#include "Core/Json.hpp"

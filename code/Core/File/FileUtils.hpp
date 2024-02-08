@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Core/Module.hpp"
+#include "Core/StdPrimitiveTypes.hpp"
+#include <filesystem>
+#include <fstream>
 
 class FileUtils
 {
