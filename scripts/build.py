@@ -72,8 +72,8 @@ buildTargetDir=os.path.join(buildDir, buildType)
 system_name = platform.system()
 system_info = str(platform.uname())
 max_cpu_cores = os.cpu_count()
-system_reserved_cores = 4
-compilation_cores = max_cpu_cores - system_reserved_cores
+system_reserved_cores = 6
+compilation_cores = max(max_cpu_cores - system_reserved_cores, 2)
 
 print(system_name)
 print(system_info)
