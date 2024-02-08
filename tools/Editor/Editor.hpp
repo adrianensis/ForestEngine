@@ -2,7 +2,6 @@
 
 #include "Scripting/Script.hpp"
 #include "UI/Module.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
 
 class UIStyleEditorToolButton: public UIStyleDefault
 {
