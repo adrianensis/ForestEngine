@@ -2,13 +2,10 @@
 
 #include "Core/Module.hpp"
 
-
 class Camera;
 
-class Frustum: public ObjectBase
+class Frustum
 {
-    GENERATE_METADATA(Frustum)
-
 public:
     void init(Camera *camera);
     bool testSphere(const Vector3& center, f32 radius) const;

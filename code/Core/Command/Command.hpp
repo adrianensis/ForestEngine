@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/Object/ObjectBase.hpp"
+#include "Core/StdCore.hpp"
 
-class CommandArgument: public ObjectBase
+class CommandArgument
 {
-    GENERATE_METADATA(CommandArgument)
+    GENERATE_METADATA_STRUCT(CommandArgument)
 
 private:
     std::string mName;
@@ -16,9 +16,9 @@ public:
     CRGET_SET(Value)
 };
 
-class Command: public ObjectBase
+class Command
 {
-    GENERATE_METADATA(Command)
+    GENERATE_METADATA_STRUCT(Command)
 
 private:
     std::string mName;

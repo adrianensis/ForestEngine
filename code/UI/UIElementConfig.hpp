@@ -14,10 +14,8 @@ enum class UILayout
 	VERTICAL
 };
 
-class UIElementConfig: public ObjectBase
+class UIElementConfig
 {
-    GENERATE_METADATA(UIElementConfig)
-
 public:
     void init(const Vector2& position, const Vector2& size, i32 layer, Ptr<const Material> material, std::string text = std::string());
 

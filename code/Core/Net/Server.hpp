@@ -12,10 +12,8 @@ enum class ServerStatus
 
 #define DEFAULT_SOCKET_READ_SIZE 1024
 
-class Server: public ObjectBase
+class Server
 {
-    GENERATE_METADATA(Server)
-
 public:
     void init(u16 port);
     bool checkConnectionRequest();

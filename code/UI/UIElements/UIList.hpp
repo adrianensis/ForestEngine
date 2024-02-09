@@ -4,10 +4,8 @@
 
 class UIButton;
 
-class UIListEntry: public ObjectBase
+class UIListEntry
 {
-	GENERATE_METADATA(UIListEntry)
-
 public:
 	std::string mLabel;
 	UIElementCallback mCallback;

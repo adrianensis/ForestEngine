@@ -5,17 +5,11 @@
 class IOcTreeElement;
 
 // Parent class for QuadTree and OcTree
-class OcTree: public ObjectBase
+class OcTree
 {
-	GENERATE_METADATA(OcTree)
-
 public:
-	~OcTree() override {};
-
-public:
-	class OcTreeNode: public ObjectBase
+	class OcTreeNode
 	{
-		GENERATE_METADATA(OcTreeNode)
     friend IOcTreeElement;
 	private:
 		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsStatic;

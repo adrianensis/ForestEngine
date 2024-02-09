@@ -18,10 +18,8 @@ public:
 	GET_SET(ParentDropdown)
 };
 
-class UIDropdownEntry: public ObjectBase
+class UIDropdownEntry
 {
-	GENERATE_METADATA(UIDropdownEntry)
-
 public:
 	UIDropdownEntry() = default;
     UIDropdownEntry(const std::string& label, UIElementCallback callback);

@@ -38,14 +38,13 @@ class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 	GENERATE_METADATA(UIStyleManager)
 	
 public:
-    ~UIStyleManager() override;
-
     void init();
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	void addStyle()
-	{
-		mStyles.insert_or_assign(T::getClassDefinitionStatic().mId, Memory::newObject<T>());
+	{   
+        OwnerPtr<T> newStyle = OwnerPtr<T>::newObject();
+		mStyles.insert_or_assign(T::getClassDefinitionStatic().mId, OwnerPtr<UIStyle>::moveCast(newStyle));
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
@@ -53,7 +52,7 @@ public:
 	{
 		CHECK_MSG(mStyles.contains(T::getClassDefinitionStatic().mId), "Style not found");
 
-		return *(static_cast<T*>(mStyles.at(T::getClassDefinitionStatic().mId)));
+		return Ptr<T>::cast(mStyles.at(T::getClassDefinitionStatic().mId)).get();
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
@@ -69,7 +68,7 @@ public:
 
 private:
 	UIStyleDefault mDefaultStyle;
-	std::unordered_map<ClassId, UIStyle*> mStyles;
+	std::unordered_map<ClassId, OwnerPtr<UIStyle>> mStyles;
 
 public:
 	CRGET(DefaultStyle)

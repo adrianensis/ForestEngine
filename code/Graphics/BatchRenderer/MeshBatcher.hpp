@@ -3,10 +3,8 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
 
-class MeshBatcher: public ObjectBase
+class MeshBatcher
 {
-    GENERATE_METADATA(MeshBatcher)
-
 public:
 	MeshBatcher() = default;
 

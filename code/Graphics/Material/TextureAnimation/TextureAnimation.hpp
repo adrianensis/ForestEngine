@@ -3,11 +3,8 @@
 #include "Core/Module.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 
-class TextureAnimation: public ObjectBase
+class TextureAnimation
 {
-    GENERATE_METADATA(TextureAnimation)
-	DECLARE_SERIALIZATION()
-	
 public:
 
 	/**

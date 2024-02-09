@@ -10,10 +10,6 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
-ShapeBatchRenderer::~ShapeBatchRenderer() 
-{
-
-}
 void ShapeBatchRenderer::terminate()
 {
 	mGPUVertexBuffersContainer.terminate();

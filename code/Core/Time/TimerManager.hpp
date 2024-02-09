@@ -11,10 +11,8 @@ enum class TimerDurationType
 	NEXT_FRAME
 };
 
-class Timer: public ObjectBase
+class Timer
 {
-    GENERATE_METADATA(Timer)
-
 public:
     void init(f32 duration, TimerDurationType durationType, std::function<void()> callback);
 
@@ -31,9 +29,8 @@ public:
 	GET(DurationType)
 };
 
-class TimerHandle: public ObjectBase
+class TimerHandle
 {
-    GENERATE_METADATA(TimerHandle)
 	friend class TimerManager;
 
 private:

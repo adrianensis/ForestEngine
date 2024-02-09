@@ -5,11 +5,8 @@
 #include "Core/Systems/System.hpp"
 #include <chrono>
 
-
-class TimeMark: public ObjectBase
+class TimeMark
 {
-    GENERATE_METADATA(TimeMark)
-
 public:
     void init();
     void start();
@@ -29,10 +26,8 @@ public:
 	GET(IsStarted)
 };
 
-class TimeMarkGPU: public ObjectBase
+class TimeMarkGPU
 {
-    GENERATE_METADATA(TimeMarkGPU)
-
 public:
 
     void init();

@@ -3,11 +3,8 @@
 #include "Core/Module.hpp"
 
 
-class TextureAnimationFrame: public ObjectBase
+class TextureAnimationFrame
 {
-    GENERATE_METADATA(TextureAnimationFrame)
-    DECLARE_SERIALIZATION()
-
 public:
     void init(const Vector2& position, f32 width, f32 height);
 

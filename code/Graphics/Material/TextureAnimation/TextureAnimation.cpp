@@ -86,22 +86,3 @@ void TextureAnimationUpdater::setTextureAnimation(const TextureAnimation& textur
 	mTimeAccumulator = 0.0f;
     mTextureAnimation = &textureAnimation;
 }
-
-IMPLEMENT_SERIALIZATION(TextureAnimation)
-{
-	SERIALIZE("name", mName);
-	SERIALIZE("speed", mSpeed);
-	SERIALIZE_LIST("frames", mFrames);
-}
-
-IMPLEMENT_DESERIALIZATION(TextureAnimation)
-{
-	DESERIALIZE("name", mName);
-	DESERIALIZE("speed", mSpeed);
-	DESERIALIZE_LIST("frames", mFrames, [](const JSON& json)
-	{
-		TextureAnimationFrame frame;
-		frame.deserialize(json);
-		return frame;
-	});
-}

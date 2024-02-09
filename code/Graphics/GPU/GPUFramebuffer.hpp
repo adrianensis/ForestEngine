@@ -10,10 +10,8 @@ public:
     GPUFramebufferAttachmentType mAttachmentType;
 };
 
-class GPUFramebuffer: public ObjectBase
+class GPUFramebuffer
 {
-    GENERATE_METADATA(GPUFramebuffer)
-
 public:
     void init(const std::vector<GPUFramebufferAttachmentData>& attachments, u32 width, u32 height);
     Vector4 readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const;

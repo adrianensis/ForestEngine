@@ -4,10 +4,8 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/BatchRenderer/BatchRenderer.hpp"
 
-class BatchesManager: public ObjectBase
+class BatchesManager
 {
-    GENERATE_METADATA(BatchesManager)
-
 public:
 
     void terminate();

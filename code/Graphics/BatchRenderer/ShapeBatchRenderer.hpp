@@ -4,13 +4,10 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 
-class ShapeBatchRenderer: public ObjectBase
+class ShapeBatchRenderer
 {
-	GENERATE_METADATA(ShapeBatchRenderer)
-
 public:
 	ShapeBatchRenderer() = default;
-    ~ShapeBatchRenderer() override;
 
     void init(bool isWorldSpace, u32 verticesPerShape);
     void terminate();
