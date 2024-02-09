@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/MathUtils.hpp"
-#include "Core/Log/Log.hpp"
 
 class Cube;
 class Sphere;
@@ -40,51 +38,26 @@ public:
     u32 mIndex2 = 0;
 };
 
-class Shape: public ObjectBase
+class Line
 {
-    GENERATE_METADATA(Shape)
-    
-protected: 
-    u32 mVerticesCount = 0;
-    Vector3 mCenter;
-    f32 mRadius;
-
-public:
-
-    virtual bool isZero() const { return true; };
-    void serialize(JSON& json) const override { }
-	void deserialize(const JSON& json) override { }
-
-    GET(VerticesCount)
-    CRGET(Center)
-    GET(Radius)
-};
-
-class Line: public Shape
-{
-    GENERATE_METADATA(Line)
+    GENERATE_METADATA_STRUCT(Line)
 
 private: 
     Vector3 mStart;
     Vector3 mEnd;
 
 public:
-    Line() { mVerticesCount = 2; }
-
-    Line(f32 xStart, f32 yStart, f32 xEnd, f32 yEnd): Line()
+    Line() = default;
+    Line(f32 xStart, f32 yStart, f32 xEnd, f32 yEnd)
     {
         mStart.set(xStart,yStart, 0);
         mEnd.set(xEnd, yEnd, 0);
-        mCenter = Geometry::midPoint(*this);
-        mRadius = toVector().len();
     }
 
-    Line(const Vector3& start, const Vector3& end): Line()
+    Line(const Vector3& start, const Vector3& end)
     {
         mStart.set(start);
         mEnd.set(end);
-        mCenter = Geometry::midPoint(*this);
-        mRadius = toVector().len();
     }
 
     Vector3 toVector() const
@@ -92,25 +65,9 @@ public:
         return mEnd - mStart;
     }
 
-    bool isZero() const override
+    bool isZero() const
     {
         return toVector().len() <= MathUtils::FLOAT_EPSILON;
-    }
-
-    void serialize(JSON& json) const override
-    {
-        Shape::serialize(json);
-
-        SERIALIZE("start", mStart)
-        SERIALIZE("end", mEnd)
-    }
-
-    void deserialize(const JSON& json) override
-    {
-        Shape::deserialize(json);
-
-        DESERIALIZE("start", mStart)
-        DESERIALIZE("end", mEnd)
     }
 
     CRGET(Start)
@@ -119,51 +76,35 @@ public:
 
 class Cube;
 
-class Rectangle: public Shape
+class Rectangle
 {
-    GENERATE_METADATA(Rectangle)
+    GENERATE_METADATA_STRUCT(Rectangle)
 
-protected: 
+private: 
     Vector3 mLeftTopFront;
     Vector3 mSize;
 
 public:
-    Rectangle() { mVerticesCount = 4; }
-
-    Rectangle(const Vector3& leftTopFront, const Vector3& size): Rectangle()
+    Rectangle() = default;
+    Rectangle(const Vector3& leftTopFront, const Vector3& size)
     {
         set(leftTopFront, size);
     }
 
     Rectangle(const Cube& cube);
 
-    virtual void set(const Vector3& leftTopFront, const Vector3& size)
+    void set(const Vector3& leftTopFront, const Vector3& size)
     {
         mLeftTopFront.set(leftTopFront);
         mSize.set(Vector2(size));
-        mCenter = mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f);
-        mRadius = mSize.max();
     }
 
-    bool isZero() const override
+    Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
+    f32 getRadius() const { return mSize.max(); }
+
+    bool isZero() const
     {
         return getSize().len() <= MathUtils::FLOAT_EPSILON;
-    }
-
-    void serialize(JSON& json) const override
-    {
-        Shape::serialize(json);
-
-        SERIALIZE("left_top", mLeftTopFront)
-        SERIALIZE("size", mSize)
-    }
-
-    void deserialize(const JSON& json) override
-    {
-        Shape::deserialize(json);
-
-        DESERIALIZE("left_top", mLeftTopFront);
-        DESERIALIZE("size", mSize);
     }
 
     CRGET(LeftTopFront)
@@ -172,42 +113,55 @@ public:
 
 class Cube: public Rectangle
 {
-    GENERATE_METADATA(Cube)
+    GENERATE_METADATA_STRUCT(Cube)
+
+private: 
+    Vector3 mLeftTopFront;
+    Vector3 mSize;
 
 public:
-    Cube() { mVerticesCount = 8; }
-
-    Cube(const Vector3& leftTopFront, const Vector3& size): Cube()
+    Cube() = default;
+    Cube(const Vector3& leftTopFront, const Vector3& size)
     {
         set(leftTopFront, size);
     }
 
     Cube(const Rectangle& rectangle);
 
-    void set(const Vector3& leftTopFront, const Vector3& size) override
+    void set(const Vector3& leftTopFront, const Vector3& size)
     {
         mLeftTopFront.set(leftTopFront);
         mSize.set(size);
-        mCenter = mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f);
-        mRadius = mSize.max();
     }
+
+    Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
+    f32 getRadius() const { return mSize.max(); }
+
+    CRGET(LeftTopFront)
+    CRGET(Size)
 };
 
-class Sphere: public Shape
+class Sphere
 {
-    GENERATE_METADATA(Sphere)
+    GENERATE_METADATA_STRUCT(Sphere)
 
 public:
-    Sphere() { mVerticesCount = 0; }
-
-    Sphere(const Vector3& center, f32 radius): Sphere()
+    Sphere() = default;
+    Sphere(const Vector3& center, f32 radius)
     {
         mCenter.set(center);
         mRadius = radius;
     }
 
-    bool isZero() const override
+    bool isZero() const
     {
         return mRadius <= MathUtils::FLOAT_EPSILON;
     }
+
+private:
+    Vector3 mCenter;
+    f32 mRadius;
+public:
+    CRGET(Center)
+    GET(Radius)
 };

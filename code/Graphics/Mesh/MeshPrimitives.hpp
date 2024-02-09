@@ -13,7 +13,7 @@ public:
 
     void terminate();
 
-	template <class T> T_EXTENDS(T, Shape)
+	template <class T>
 	Ptr<const Mesh> getPrimitive()
 	{
 		if(!mPrimitivesMap.contains(T::getClassDefinitionStatic().mId))
@@ -25,7 +25,7 @@ public:
 	}
 
 private:
-	template <class T> T_EXTENDS(T, Shape)
+	template <class T>
 	OwnerPtr<Mesh> createPrimitive() const
 	{
 		CHECK_MSG(false, "Mesh Primitive not implemented");
