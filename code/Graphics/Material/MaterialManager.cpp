@@ -3,11 +3,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 
-MaterialManager::~MaterialManager() 
-{
-
-}
-
 void MaterialManager::init()
 {
 	LOG_TRACE()
@@ -16,8 +11,7 @@ void MaterialManager::init()
     MaterialData materialData;
     materialData.mAlphaEnabled = true;
     materialData.mUseColorAsTint = true;
-    mNoTextureMaterial = OwnerPtr<Material>::newObject();
-	mNoTextureMaterial->init(materialData, mMaterialIDCounter);
+	mMaterials[mMaterialIDCounter].init(materialData, mMaterialIDCounter);
 	mMaterialIDCounter++;
 }
 
@@ -49,36 +43,20 @@ Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textu
 	return Ptr<const TextureFont>::cast(mTexturesMap.at(textureData.mPath));
 }
 
-Ptr<const Material> MaterialManager::createMaterial(const MaterialData& materialData)
+u32 MaterialManager::createMaterial(const MaterialData& materialData)
 {
     u32 index = mMaterialIDCounter;
-    if (!mMaterials.contains(index))
+    if (mMaterials[index].getID() == 0)
     {
-        mMaterials.insert_or_assign(index, OwnerPtr<Material>::newObject());
-        Ptr<Material> material = mMaterials.at(index);
-        material->init(materialData, index);
+        Material& material = mMaterials.at(index);
+        material.init(materialData, index);
         mMaterialIDCounter++;
     }
 
-    return mMaterials[index];
+    return index;
 }
 
-Ptr<const MaterialFont> MaterialManager::createMaterialFont(const MaterialData& materialData)
-{
-    u32 index = mMaterialIDCounter;
-    if (!mMaterials.contains(index))
-    {
-        OwnerPtr<MaterialFont> materialFont = OwnerPtr<MaterialFont>::newObject();
-        mMaterials.insert_or_assign(index, OwnerPtr<Material>::moveCast(materialFont));
-        Ptr<Material> material = mMaterials.at(index);
-        material->init(materialData, index);
-        mMaterialIDCounter++;
-    }
-
-    return Ptr<const MaterialFont>::cast(mMaterials[index]);
-}
-
-Ptr<const Material> MaterialManager::getMaterial(u32 index) const
+const Material& MaterialManager::getMaterial(u32 index) const
 {
     return mMaterials.at(index);
 }

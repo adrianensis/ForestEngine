@@ -37,7 +37,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
     RendererData rendererData;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-	rendererData.mMaterial = (mConfig.mMaterial);
+	rendererData.mMaterialId = mConfig.mMaterialId;
     rendererData.mIsInstanced = true;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();

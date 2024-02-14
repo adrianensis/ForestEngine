@@ -9,21 +9,20 @@ class MaterialManager: public System
 	GENERATE_METADATA(MaterialManager)
 
 public:
-    ~MaterialManager() override;
-    
     void init();
     Ptr<const Texture> loadTexture(const TextureData& textureData);
     Ptr<const TextureFont> loadTextureFont(const TextureData& textureData);
-    Ptr<const Material> createMaterial(const MaterialData& materialData);
-    Ptr<const MaterialFont> createMaterialFont(const MaterialData& materialData);
-    Ptr<const Material> getMaterial(u32 index) const;
+    u32 createMaterial(const MaterialData& materialData);
+    const Material& getMaterial(u32 index) const;
 
 private:
+    inline constexpr static const u32 smMaxMaterials = 3000;
     u32 mMaterialIDCounter = 0;
 	std::unordered_map<std::string, OwnerPtr<Texture>> mTexturesMap;
-    std::unordered_map<u32, OwnerPtr<Material>> mMaterials;
-	OwnerPtr<Material> mNoTextureMaterial;
+    std::array<Material, smMaxMaterials> mMaterials;
+
+    u32 mNoTextureMaterial = 0;
 
 public:
-    CGET(NoTextureMaterial)
+    GET(NoTextureMaterial)
 };

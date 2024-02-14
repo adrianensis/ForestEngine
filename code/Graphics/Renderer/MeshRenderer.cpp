@@ -21,7 +21,7 @@ void MeshRenderer::init(const RendererData& data)
 
     mMeshInstance = OwnerPtr<Mesh>::newObject();
     mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mIndicesCount, mRendererData.mMesh->mGPUVertexInputBuffers);
-    if(mRendererData.mMaterial->getMaterialData().mIsSkinned)
+    if(GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterialId).getMaterialData().mIsSkinned)
     {
         mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName));
         mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
@@ -35,7 +35,7 @@ void MeshRenderer::init(const RendererData& data)
         bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
     }
 
-    mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
+    mMaterialInstance = GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterialId).createMaterialInstance();
 
     GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
     mGPUInstanceSlot = slot;
@@ -83,34 +83,28 @@ void MeshRenderer::onDestroy()
 void MeshRenderer::updateTextureRegion()
 {
 	PROFILER_CPU()
-	if (mRendererData.mMaterial.isValid())
-	{
-		const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
 
-		if (currentTextureAnimation && !currentTextureAnimation->mFrames.empty())
-		{
-            mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
-			const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
-			if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
-            {
-                mMaterialInstance.mMaterialInstancedProperties.mTextureRegionLeftTop = frame.mPosition;
-                mMaterialInstance.mMaterialInstancedProperties.mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
-            }
-		}
-	}
+	const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
+    if (currentTextureAnimation && !currentTextureAnimation->mFrames.empty())
+    {
+        mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
+        const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
+        if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
+        {
+            mMaterialInstance.mMaterialInstancedProperties.mTextureRegionLeftTop = frame.mPosition;
+            mMaterialInstance.mMaterialInstancedProperties.mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+        }
+    }
 }
 
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    if (mRendererData.mMaterial.isValid())
-	{
-        const auto& textureAnimationsMap = mRendererData.mMaterial->getMaterialData().mTextureAnimations;
-		if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
-		{
-			currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
-		}
-	}
+    const auto& textureAnimationsMap = GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterialId).getMaterialData().mTextureAnimations;
+    if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
+    {
+        currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
+    }
 
     return currentTextureAnimation;
 }
@@ -118,26 +112,9 @@ const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 IMPLEMENT_SERIALIZATION(MeshRenderer)
 {
 	Component::serialize(json);
-
-	std::string materialPath = "";
-
-//	if(mMaterial->mTexture)
-//	{
-//		materialPath = mMaterial->mTexture->mPath;
-//	}
-
-	SERIALIZE("material", materialPath)
-	// SERIALIZE("region", mTextureRegion)
-	// SERIALIZE("depth", mDepth)
 }
 
 IMPLEMENT_DESERIALIZATION(MeshRenderer)
 {
-	std::string materialPath = "";
-	DESERIALIZE("material", materialPath)
 
-	//mMaterial = GET_SYSTEM(MaterialManager).loadMaterial(materialPath);
-
-	// DESERIALIZE("region", mTextureRegion)
-	// DESERIALIZE("depth", mRendererData.mDepth)
 }

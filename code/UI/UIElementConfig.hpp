@@ -17,7 +17,7 @@ enum class UILayout
 class UIElementConfig
 {
 public:
-    void init(const Vector2& position, const Vector2& size, i32 layer, Ptr<const Material> material, std::string text = std::string());
+    void init(const Vector2& position, const Vector2& size, i32 layer, u32 materialId, std::string text = std::string());
 
 public:
 	const UIStyle* mStyle = nullptr;
@@ -32,7 +32,7 @@ public:
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
-	Ptr<const Material> mMaterial;
+	u32 mMaterialId = 0;
 	std::string mGroup;
 	Ptr<GameObject> mParent;
 	f32 mSeparatorSize = 0.0f;

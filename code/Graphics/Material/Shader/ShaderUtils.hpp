@@ -12,5 +12,5 @@ class Shader;
 class ShaderUtils
 {
 public:
-    static OwnerPtr<GPUProgram> createShader(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, Ptr<const Material> material);
+    static OwnerPtr<GPUProgram> createShader(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material);
 };

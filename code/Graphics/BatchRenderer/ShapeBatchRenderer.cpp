@@ -53,9 +53,9 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     materialData.mUseNormals = false;
     materialData.mUseModelMatrix = false;
     materialData.mUseVertexColor = true;
-    Ptr<const Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+    u32 lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
-    mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersContainer, {}, lineMaterial);
+    mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersContainer, {}, GET_SYSTEM(MaterialManager).getMaterial(lineMaterial));
 
     mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 }

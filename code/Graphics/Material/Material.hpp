@@ -64,6 +64,7 @@ public:
 	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
+    bool mIsFont = false;
     FontData mFontData;
     std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
@@ -106,7 +107,7 @@ class Material;
 class MaterialInstance
 {
 public:
-    Ptr<const Material> mMaterial;
+    u32 mMaterialId;
     MaterialInstancedProperties mMaterialInstancedProperties;
 };
 
@@ -161,11 +162,4 @@ public:
     CRGET(InstancedPropertiesSharedBufferData)
     CRGET(InstancedPropertiesStructDefinition)
     GET(ID)
-};
-
-class MaterialFont: public Material
-{
-    GENERATE_METADATA(MaterialFont)
-protected:
-    virtual void loadTextures() override;
 };

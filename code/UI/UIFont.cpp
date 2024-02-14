@@ -39,8 +39,9 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
     materialData.mReceiveLight = false;
     materialData.mUseDepth = true;
     // materialData.mAlphaEnabled = false;
+    materialData.mIsFont = true;
     materialData.mFontData = mFontData;
-    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterialFont(materialData);
+    mFontMaterialId = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
     mFontData.freeGlyphsBuffers();
 }

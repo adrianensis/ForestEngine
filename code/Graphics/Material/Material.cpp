@@ -47,15 +47,27 @@ bool Material::hasTexture() const
 
 void Material::loadTextures()
 {
-    FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
+    if(mMaterialData.mIsFont)
     {
-        if(!mMaterialData.mTexturePaths[i].empty())
+        CHECK_MSG(!mMaterialData.mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+        TextureData textureData;
+        textureData.mPath = mMaterialData.mFontData.mPath;
+        textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
+        textureData.mFontData = mMaterialData.mFontData;
+        mTextures[(u32)TextureType::BASE_COLOR] = Ptr<const Texture>::cast(GET_SYSTEM(MaterialManager).loadTextureFont(textureData));
+    }
+    else
+    {
+        FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
         {
-            TextureData textureData;
-            textureData.mPath = mMaterialData.mTexturePaths[i];
-            textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
-                
-            mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
+            if(!mMaterialData.mTexturePaths[i].empty())
+            {
+                TextureData textureData;
+                textureData.mPath = mMaterialData.mTexturePaths[i];
+                textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
+                    
+                mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
+            }
         }
     }
 }
@@ -63,19 +75,9 @@ void Material::loadTextures()
 MaterialInstance Material::createMaterialInstance() const
 {
     MaterialInstance instance;
-    instance.mMaterial = getPtrToThis();
+    instance.mMaterialId = mID;
     instance.mMaterialInstancedProperties = mMaterialData.mMaterialInstancedProperties;
     return instance;
-}
-
-void MaterialFont::loadTextures()
-{
-    CHECK_MSG(!mMaterialData.mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
-    TextureData textureData;
-    textureData.mPath = mMaterialData.mFontData.mPath;
-    textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
-    textureData.mFontData = mMaterialData.mFontData;
-    mTextures[(u32)TextureType::BASE_COLOR] = Ptr<const Texture>::cast(GET_SYSTEM(MaterialManager).loadTextureFont(textureData));
 }
 
 using namespace ShaderBuilderNodes;
