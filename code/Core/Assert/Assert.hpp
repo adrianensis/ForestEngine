@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
+#include <string>
 
 class AssertUtils
 {
 public:
-    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message);
+    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, unsigned int line, const std::string& function, const std::string& message);
 private:
     static void sendAssertSignal();
 };

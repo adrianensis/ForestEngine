@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
-#include "Core/Object/ObjectBase.hpp"
+#include "Core/Std.hpp"
 #include "Core/Systems/System.hpp"
 
 #ifdef BUILD_WITH_EASY_PROFILER

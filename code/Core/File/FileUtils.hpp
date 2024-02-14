@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
-#include <filesystem>
+#include "Core/Std.hpp"
 #include <fstream>
 
 class FileUtils

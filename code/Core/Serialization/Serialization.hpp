@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
+#include "Core/StdCore.hpp"
+#include "Core/Json.hpp"
 
 // TODO : use ordered_json only for debug and release? but json for ship version?
 // ordered_json will keep the data order, json will sort the data alphabetically

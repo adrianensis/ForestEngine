@@ -3,7 +3,6 @@
 #include "glad/glad.h"
 #include "Core/Module.hpp"
 #include "Core/Systems/System.hpp"
-#include "Core/ByteBuffer.hpp"
 
 class Camera;
 

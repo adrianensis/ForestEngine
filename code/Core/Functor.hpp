@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
+#include <functional>
+#include "Core/Assert/Assert.hpp"
 
 template <class T>
 class Functor

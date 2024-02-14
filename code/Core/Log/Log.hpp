@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/File/FileUtils.hpp"
+#include "Core/StdCore.hpp"
+#include <fstream>
 
 class Log
 {

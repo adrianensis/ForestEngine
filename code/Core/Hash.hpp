@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
+#include "Core/StdCore.hpp"
 
 namespace Hash
 {

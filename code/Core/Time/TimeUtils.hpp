@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/Std.hpp"
 #include "Core/Object/ObjectBase.hpp"
 #include "Core/Systems/System.hpp"
 #include <chrono>

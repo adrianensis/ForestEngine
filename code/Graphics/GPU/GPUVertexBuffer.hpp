@@ -2,7 +2,6 @@
 
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Core/ByteBuffer.hpp"
 
 class GPUVertexBufferData
 {

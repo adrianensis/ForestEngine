@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Memory/Pointers.hpp"
+#include "Core/Std.hpp"
 
 template <class T>
 class Singleton

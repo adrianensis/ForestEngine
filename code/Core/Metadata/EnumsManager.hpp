@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
+#include "Core/StdCore.hpp"
+#include <unordered_map>
+#include <vector>
 
 #define DECLARE_ENUM(EnumName, ...) \
 enum class EnumName : u8\

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
+#include "Core/Assert/Assert.hpp"
 
 class ByteBuffer
 {

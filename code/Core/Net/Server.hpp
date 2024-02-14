@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/Std.hpp"
 #include <netinet/in.h>
 
 enum class ServerStatus

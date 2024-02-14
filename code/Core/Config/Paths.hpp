@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdPrimitiveTypes.hpp"
+#include "Core/Std.hpp"
 
 class Paths
 {

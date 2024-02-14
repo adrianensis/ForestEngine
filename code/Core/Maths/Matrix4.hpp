@@ -72,10 +72,14 @@ public:
 
     static Matrix4 transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale);
 
-    DECLARE_COPY()
-	{
-		init(other);
-	}
+    Matrix4 operator=(const Matrix4& other)
+    {
+        if (this != &other)
+        {
+            init(other);
+        }
+        return *this;
+    }
 
 public:
 	inline static const u16 smColumnSize = 4;

@@ -1,19 +1,13 @@
 #include "Core/Memory/Memory.hpp"
 #include "Core/Log/Log.hpp"
+#include "Core/Assert/Assert.hpp"
 
 void Memory::init()
 {
+    MemoryTracking::init();
 }
 
 void Memory::terminate()
 {
-#ifdef ENGINE_DEBUG
-	LOG("-------- MEM SUMMARY --------")
-	FOR_MAP(it, Memory::smAllocationsCounter)
-	{
-		LOG(std::string(it->first) + ": " + std::to_string(it->second.mCurrentAllocations) + " (max: " + std::to_string(it->second.mMaxAllocations) + ")");
-	}
-	LOG("-----------------------------")
-#endif
-
+    MemoryTracking::terminate();
 }

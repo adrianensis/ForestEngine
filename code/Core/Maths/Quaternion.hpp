@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/Std.hpp"
 #include "Core/Maths/Matrix4.hpp"
 
 class Quaternion
@@ -118,10 +118,14 @@ public:
 	* functions can not have constant qualification.
 	*/
 
-	DECLARE_COPY()
-	{
-        set(other);
-	}
+    Quaternion operator=(const Quaternion& other)
+    {
+        if (this != &other)
+        {
+            set(other);
+        }
+        return *this;
+    }
 
 	Quaternion& operator+=(const Quaternion& rhs)
 	{
