@@ -4,12 +4,12 @@
 
 Texture::~Texture() 
 {
-    GET_SYSTEM(GPUInterface).deleteTexture(mTextureId);
+    GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
 }
 
 void Texture::enable() const
 {
-    GET_SYSTEM(GPUInterface).enableTexture(mTextureId);
+    GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId);
 }
 
 void Texture::disable() const
@@ -24,7 +24,7 @@ void TextureImage::init(const TextureData& textureData)
     imageData = ImageUtils::loadImage(textureData.mPath);
     mWidth = imageData.mWidth;
     mHeight = imageData.mHeight;
-    mTextureId = GET_SYSTEM(GPUInterface).createTexture(GPUTextureFormat::RGBA, mWidth, mHeight, GPUTexturePixelFormat::RGBA, imageData.mData, textureData.mCreateMipMap);
+    mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture(GPUTextureFormat::RGBA, mWidth, mHeight, GPUTexturePixelFormat::RGBA, imageData.mData, textureData.mCreateMipMap);
     CHECK_MSG(imageData.mData, "Error loading image " + mTextureData.mPath);
     ImageUtils::freeImage(imageData);
 }
@@ -34,9 +34,9 @@ void TextureFont::init(const TextureData& textureData)
     mTextureData = textureData;
     mWidth = mTextureData.mFontData.mWidth;
     mHeight = mTextureData.mFontData.mHeight;
-    mTextureId = GET_SYSTEM(GPUInterface).createTextureFont(GPUTextureFormat::RED, mWidth, mHeight, GPUTexturePixelFormat::RED, nullptr);
+    mGPUTextureId = GET_SYSTEM(GPUInterface).createTextureFont(GPUTextureFormat::RED, mWidth, mHeight, GPUTexturePixelFormat::RED, nullptr);
 
-    GET_SYSTEM(GPUInterface).enableTexture(mTextureId);
+    GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId);
 
     u32 texPos = 0;
     FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())

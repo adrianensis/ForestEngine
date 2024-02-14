@@ -167,7 +167,7 @@ public:
     void disable() const;
 
 protected:
-	u32 mTextureId = 0;
+	u32 mGPUTextureId = 0;
 	u32 mWidth = 0;
 	u32 mHeight = 0;
 	TextureData mTextureData;
