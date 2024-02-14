@@ -21,7 +21,7 @@ void MeshRenderer::init(const RendererData& data)
 
     mMeshInstance = OwnerPtr<Mesh>::newObject();
     mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mIndicesCount, mRendererData.mMesh->mGPUVertexInputBuffers);
-    if(GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterialId).getMaterialData().mIsSkinned)
+    if(GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterial.getIndex()).getMaterialData().mIsSkinned)
     {
         mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName));
         mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
@@ -35,7 +35,7 @@ void MeshRenderer::init(const RendererData& data)
         bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
     }
 
-    mMaterialInstance = GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterialId).createMaterialInstance();
+    mMaterialInstance = GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterial.getIndex()).createMaterialInstance();
 
     GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
     mGPUInstanceSlot = slot;
@@ -100,7 +100,7 @@ void MeshRenderer::updateTextureRegion()
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    const auto& textureAnimationsMap = GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterialId).getMaterialData().mTextureAnimations;
+    const auto& textureAnimationsMap = GET_SYSTEM(MaterialManager).getMaterial(mRendererData.mMaterial.getIndex()).getMaterialData().mTextureAnimations;
     if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
     {
         currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);

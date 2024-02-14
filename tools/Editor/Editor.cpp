@@ -333,7 +333,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
     MaterialData materialData;
     materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = "resources/snorlax-fill.png";
-	rendererData.mMaterialId = (GET_SYSTEM(MaterialManager).createMaterial(materialData));
+	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial(materialData));
 
 	gameObject->createComponent<MeshRenderer>(rendererData);
 

@@ -38,7 +38,7 @@ public:
     StencilData mStencilData;
     bool mIsInstanced = false;
     Ptr<const Mesh> mMesh;
-    u32 mMaterialId;
+    Handler mMaterial;
 };
 
 class MeshRenderer: public Component, public IOcTreeElement

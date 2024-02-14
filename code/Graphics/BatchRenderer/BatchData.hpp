@@ -9,7 +9,7 @@ class BatchData
 public:
 	BatchData() = default;
 	
-	u32 mMaterialId;
+	Handler mMaterial;
 	Ptr<const Mesh> mMesh;
 	bool mIsStatic = true;
 	bool mIsWorldSpace = true;
@@ -18,7 +18,7 @@ public:
 
 	void init(Ptr<MeshRenderer> renderer)
     {
-        mMaterialId = renderer->getRendererData().mMaterialId;
+        mMaterial = renderer->getRendererData().mMaterial;
         mMesh = renderer->getRendererData().mMesh;
         mIsStatic = renderer->isStatic();
         mIsWorldSpace = renderer->getIsWorldSpace();
@@ -28,7 +28,7 @@ public:
 
 	bool operator==(const BatchData& otherBatchData) const
 	{
-        return mMaterialId == otherBatchData.mMaterialId && mMesh == otherBatchData.mMesh and
+        return mMaterial.getIndex() == otherBatchData.mMaterial.getIndex() && mMesh == otherBatchData.mMesh and
         mIsStatic == otherBatchData.mIsStatic && mIsWorldSpace == otherBatchData.mIsWorldSpace && mIsInstanced == otherBatchData.mIsInstanced and
         mStencilData == otherBatchData.mStencilData;
 	}
@@ -38,7 +38,7 @@ public:
 	public:
 		size_t operator()(const BatchData& key) const
 		{
-			return key.mMaterialId ^ key.mMesh->getObjectId() ^
+			return key.mMaterial.getIndex() ^ key.mMesh->getObjectId() ^
 			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsWorldSpace) ^ static_cast<u64>(key.mIsInstanced) ^
             (u64)key.mStencilData.mUseStencil ^ 
 			(u64)key.mStencilData.mStencilValue ^ static_cast<u64>(key.mStencilData.mStencilFunction) ^

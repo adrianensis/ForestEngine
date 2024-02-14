@@ -15,7 +15,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-    rendererData.mMaterialId = GET_SYSTEM(UIManager).getFontMaterialId();
+    rendererData.mMaterial = GET_SYSTEM(UIManager).getFontMaterial();
     rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
 

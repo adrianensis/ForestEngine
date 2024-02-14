@@ -31,15 +31,15 @@ void UIManager::terminate()
 const FontGlyphData& UIManager::getGlyphData(char character) const
 {
     const auto& font = mFontsManager.getFont(mDefaultFont);
-    const auto& glyphsArray = GET_SYSTEM(MaterialManager).getMaterial(font->getFontMaterialId()).getMaterialData().mFontData.mGlyphs;
+    const auto& glyphsArray = GET_SYSTEM(MaterialManager).getMaterial(font->getFontMaterial()).getMaterialData().mFontData.mGlyphs;
     const FontGlyphData& glyph = glyphsArray.at(character);
     return glyph;
 }
 
-u32 UIManager::getFontMaterialId() const
+Handler UIManager::getFontMaterial() const
 {
     const auto& f = mFontsManager.getFont(mDefaultFont);
-    return f->getFontMaterialId();
+    return f->getFontMaterial();
 }
 
 void UIManager::setFocusedElement(Ptr<UIElement> focusedElement)

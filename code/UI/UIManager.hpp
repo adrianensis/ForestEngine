@@ -19,7 +19,7 @@ public:
     void terminate();
 
     const FontGlyphData& getGlyphData(char character) const;
-    u32 getFontMaterialId() const;
+    Handler getFontMaterial() const;
 
 	UIGroup& getOrCreateGroup(const std::string& groupName)
 	{
@@ -43,7 +43,7 @@ private:
 	Ptr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     std::string mDefaultFont;
-    u32 mDefaultUIMaterial = 0;
+    Handler mDefaultUIMaterial;
 
 public:
     GET(DefaultUIMaterial)

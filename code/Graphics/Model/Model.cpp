@@ -88,7 +88,7 @@ void Model::loadGLTFMaterials()
 
             if(! mGLTFMaterials.contains(&cgltfMaterial))
             {
-                u32 newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+                Handler newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
                 mGLTFMaterials.insert_or_assign(&cgltfMaterial, newMaterial);
             }
         }
@@ -114,7 +114,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     Ptr<Mesh> mesh = mMeshes.emplace_back(OwnerPtr<Mesh>::newObject());
     mesh->mModel = (getPtrToThis());
 
-    u32 meshMaterial;
+    Handler meshMaterial;
     if(primitive.material)
     {
         meshMaterial = mGLTFMaterials[primitive.material];

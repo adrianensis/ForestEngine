@@ -25,7 +25,7 @@ void BatchRenderer::init(const BatchData& batchData)
     const GPUVertexBuffersContainer& gpuVertexBuffersContainer = mMeshBatcher.getGPUVertexBuffersContainer();
     const GPUSharedBuffersContainer& gpuSharedBuffersContainer = mMeshBatcher.getGPUSharedBuffersContainer();
     
-    mShader = ShaderUtils::createShader(gpuVertexBuffersContainer, gpuSharedBuffersContainer, GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterialId));
+    mShader = ShaderUtils::createShader(gpuVertexBuffersContainer, gpuSharedBuffersContainer, GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()));
     
     bindSharedBuffers();
 }
@@ -41,12 +41,12 @@ void BatchRenderer::bindSharedBuffers()
 
     mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
-    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterialId).getMaterialData().mReceiveLight)
+    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mReceiveLight)
     {
         mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData));
     }
 
-    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterialId).getMaterialData().mIsSkinned)
+    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mIsSkinned)
     {
         mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
@@ -77,9 +77,9 @@ void BatchRenderer::enable()
 {
     mShader->enable();
     mMeshBatcher.enable();
-    GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterialId).enable();
+    GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).enable();
 
-    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterialId).getMaterialData().mIsSkinned)
+    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mIsSkinned)
     {
         mMeshBatcher.updateBoneTransforms();
     }
@@ -97,7 +97,7 @@ void BatchRenderer::disable()
         GET_SYSTEM(GPUInterface).disableStencil();
     }
 
-    GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterialId).disable();
+    GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).disable();
     mMeshBatcher.disable();
     mShader->disable();
 }

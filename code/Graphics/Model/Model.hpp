@@ -102,8 +102,8 @@ private:
 	std::filesystem::path mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
     std::vector<OwnerPtr<Animation>> mAnimations;
-    std::unordered_map<cgltf_material*, u32> mGLTFMaterials;
-    std::unordered_map<Ptr<const Mesh>, u32> mMeshMaterials;
+    std::unordered_map<cgltf_material*, Handler> mGLTFMaterials;
+    std::unordered_map<Ptr<const Mesh>, Handler> mMeshMaterials;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mInverseBindMatrices;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;

@@ -75,7 +75,7 @@ void Material::loadTextures()
 MaterialInstance Material::createMaterialInstance() const
 {
     MaterialInstance instance;
-    instance.mMaterialId = mID;
+    instance.mMaterial = Handler(mID);
     instance.mMaterialInstancedProperties = mMaterialData.mMaterialInstancedProperties;
     return instance;
 }

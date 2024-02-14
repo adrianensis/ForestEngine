@@ -107,7 +107,7 @@ class Material;
 class MaterialInstance
 {
 public:
-    u32 mMaterialId;
+    Handler mMaterial;
     MaterialInstancedProperties mMaterialInstancedProperties;
 };
 

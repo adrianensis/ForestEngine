@@ -53,7 +53,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     materialData.mUseNormals = false;
     materialData.mUseModelMatrix = false;
     materialData.mUseVertexColor = true;
-    u32 lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+    Handler lineMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
     mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersContainer, {}, GET_SYSTEM(MaterialManager).getMaterial(lineMaterial));
 

@@ -11,7 +11,8 @@ void MaterialManager::init()
     MaterialData materialData;
     materialData.mAlphaEnabled = true;
     materialData.mUseColorAsTint = true;
-	mMaterials[mMaterialIDCounter].init(materialData, mMaterialIDCounter);
+	
+    mNoTextureMaterial = createMaterial(materialData);mMaterials[mMaterialIDCounter].init(materialData, mMaterialIDCounter);
 	mMaterialIDCounter++;
 }
 
@@ -43,20 +44,21 @@ Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textu
 	return Ptr<const TextureFont>::cast(mTexturesMap.at(textureData.mPath));
 }
 
-u32 MaterialManager::createMaterial(const MaterialData& materialData)
+Handler MaterialManager::createMaterial(const MaterialData& materialData)
 {
-    u32 index = mMaterialIDCounter;
-    if (mMaterials[index].getID() == 0)
+    Handler handler(mMaterialIDCounter);
+    if (mMaterials[handler.getIndex()].getID() == 0)
     {
-        Material& material = mMaterials.at(index);
-        material.init(materialData, index);
+        Material& material = mMaterials.at(handler.getIndex());
+        material.init(materialData, handler.getIndex());
         mMaterialIDCounter++;
     }
 
-    return index;
+    return handler;
 }
 
-const Material& MaterialManager::getMaterial(u32 index) const
+const Material& MaterialManager::getMaterial(const Handler& handler) const
 {
-    return mMaterials.at(index);
+    CHECK_MSG(handler.isValid(), "Invalid handler!");
+    return mMaterials.at(handler.getIndex());
 }

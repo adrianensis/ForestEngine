@@ -28,8 +28,8 @@ public:
     void init(UIFontsManager& fontsManager, const std::string& fontFile);
 private:
     FontData mFontData;
-    u32 mFontMaterialId = 0;
+    Handler mFontMaterial;
 public:
-    GET(FontMaterialId)
+    GET(FontMaterial)
     CRGET(FontData)
 };
