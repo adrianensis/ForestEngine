@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/StdFull.hpp"
+#include "Core/StdCore.hpp"
 
-class ObjectBase: public IMemoryTrackedObject, public ISerializable, public IPoolable, public PointedObject, public EnablePtrFromThis
+class ObjectBase: public IMemoryTrackedObject, public ISerializable, public PointedObject, public EnablePtrFromThis
 {
 private:
     DECLARE_METADATA_VARIABLES(ObjectBase)

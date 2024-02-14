@@ -3,6 +3,7 @@
 #include "Core/Module.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Core/ByteBuffer.hpp"
 
 class BoneVertexIDsData
 {

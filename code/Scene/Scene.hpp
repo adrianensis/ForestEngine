@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Module.hpp"
-
+#include "Core/Config/ConfigObject.hpp"
 
 class GameObject;
 

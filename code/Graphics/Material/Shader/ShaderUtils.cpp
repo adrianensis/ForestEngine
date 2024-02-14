@@ -1,6 +1,8 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Core/Config/Paths.hpp"
+#include "Core/File/FileUtils.hpp"
 
 OwnerPtr<GPUProgram> ShaderUtils::createShader(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, Ptr<const Material> material)
 {

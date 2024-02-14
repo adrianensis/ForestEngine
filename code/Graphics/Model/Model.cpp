@@ -3,6 +3,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
+#include "Core/Config/Paths.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"

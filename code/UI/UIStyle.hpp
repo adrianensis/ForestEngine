@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Core/Module.hpp"
-
+#include "Core/Object/ObjectBase.hpp"
+#include "Core/Object/Singleton.hpp"
 
 class UIStyle: public ObjectBase
 {

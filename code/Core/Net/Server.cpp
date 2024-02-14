@@ -1,4 +1,5 @@
 #include "Core/Net/Server.hpp"
+#include "Core/Log/Log.hpp"
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
