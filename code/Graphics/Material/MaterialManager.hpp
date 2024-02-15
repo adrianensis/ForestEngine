@@ -11,7 +11,6 @@ class MaterialManager: public System
 public:
     void init();
     Ptr<const Texture> loadTexture(const TextureData& textureData);
-    Ptr<const TextureFont> loadTextureFont(const TextureData& textureData);
     Handler createMaterial(const MaterialData& materialData);
     const Material& getMaterial(const Handler& handler) const;
 

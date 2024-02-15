@@ -20,28 +20,14 @@ Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)
 {
 	if (!mTexturesMap.contains(textureData.mPath))
 	{
-        OwnerPtr<TextureImage> texture = OwnerPtr<TextureImage>::newObject();
-        mTexturesMap.insert_or_assign(textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
+        OwnerPtr<Texture> texture = OwnerPtr<Texture>::newObject();
+        mTexturesMap.insert_or_assign(textureData.mPath, std::move(texture));
 		
 		Ptr<Texture> texturePtr = mTexturesMap.at(textureData.mPath);
         texturePtr->init(textureData);
 	}
 
 	return mTexturesMap.at(textureData.mPath);
-}
-
-Ptr<const TextureFont> MaterialManager::loadTextureFont(const TextureData& textureData)
-{
-	if (!mTexturesMap.contains(textureData.mPath))
-	{
-        OwnerPtr<TextureFont> texture = OwnerPtr<TextureFont>::newObject();
-        mTexturesMap.insert_or_assign(textureData.mPath, OwnerPtr<Texture>::moveCast(texture));
-		
-		Ptr<Texture> texturePtr = mTexturesMap.at(textureData.mPath);
-        texturePtr->init(textureData);
-	}
-
-	return Ptr<const TextureFont>::cast(mTexturesMap.at(textureData.mPath));
 }
 
 Handler MaterialManager::createMaterial(const MaterialData& materialData)
