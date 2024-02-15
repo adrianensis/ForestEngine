@@ -15,7 +15,7 @@ public:
     const Material& getMaterial(const Handler& handler) const;
 
 private:
-    inline constexpr static const u32 smMaxMaterials = 3000;
+    inline constexpr static const u32 smMaxMaterials = 500;
     u32 mMaterialIDCounter = 0;
 	std::unordered_map<std::string, OwnerPtr<Texture>> mTexturesMap;
     std::array<Material, smMaxMaterials> mMaterials;

@@ -32,13 +32,11 @@ Ptr<const Texture> MaterialManager::loadTexture(const TextureData& textureData)
 
 Handler MaterialManager::createMaterial(const MaterialData& materialData)
 {
+    CHECK_MSG(mMaterialIDCounter < smMaxMaterials, "Max materials reached!");
     Handler handler(mMaterialIDCounter);
-    if (mMaterials[handler.getIndex()].getID() == 0)
-    {
-        Material& material = mMaterials.at(handler.getIndex());
-        material.init(materialData, handler.getIndex());
-        mMaterialIDCounter++;
-    }
+    Material& material = mMaterials.at(handler.getIndex());
+    material.init(materialData, handler.getIndex());
+    mMaterialIDCounter++;
 
     return handler;
 }
