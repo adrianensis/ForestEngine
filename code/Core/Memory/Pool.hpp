@@ -3,39 +3,28 @@
 #include "Core/StdCore.hpp"
 #include "Core/ByteBuffer.hpp"
 
-class IPoolable
-{
-public:
-    virtual void poolReset() { }
-};
-
+template <class T>
 class ObjectPool;
 
+template <class T>
 class PoolHandler
 {
 public:
     PoolHandler() = default;
-    PoolHandler(i32 index, ObjectPool* pool)
+    PoolHandler(i32 index, ObjectPool<T>* pool)
     {
         mIndex = index;
         mPool = pool;
     }
-    template<class T> T_EXTENDS(T, IPoolable)
-    T& get() const
-    {
-        return mPool->get(*this);
-    }
+
+    T& get() const;
+
     bool isValid() const { return mPool && mIndex > INVALID_INDEX; }
 
-    bool operator==(const PoolHandler& other) const
+    bool operator==(const PoolHandler<T>& other) const
 	{
-		return mPool == other.mPool && mIndex == other.mIndex;
+		return isValid() && other.isValid() && mPool == other.mPool && mIndex == other.mIndex;
 	}
-
-    operator bool() const
-    {
-        return isValid();
-    }
 
     void reset()
     {
@@ -47,26 +36,27 @@ public:
 
 private:
     i32 mIndex = INVALID_INDEX;
-    ObjectPool* mPool = nullptr;
+    ObjectPool<T>* mPool = nullptr;
 };
 
+template <class T>
 class ObjectPool
 {
 public:
-    ObjectPool(u32 elementSizeInBytes) 
+    ObjectPool() 
     {
-        mObjects = ByteBuffer(elementSizeInBytes);
-        mObjects.reserve(10);
-        mAvailableObjects.reserve(10);
+        // mObjects.reserve(100);
+        // mAvailableObjects.reserve(100);
     }
 
-    template <class T, typename ... Args> T_EXTENDS(T, IPoolable)
-    PoolHandler allocate(Args&&... args)
+    template <typename ... Args>
+    PoolHandler<T> allocate(Args&&... args)
     {
         u32 index = 0;
         if (mAvailableObjects.empty())
         {
-            mObjects.emplaceBack(args...);
+            T object(args...);
+            mObjects.emplace_back(object);
             index = mObjects.size() - 1;
         }
         else
@@ -75,26 +65,35 @@ public:
             mAvailableObjects.pop_back();
         }
         
-        PoolHandler handle(index, this);
+        PoolHandler<T> handle(index, this);
         return handle;
     }
 
-    template<class T> T_EXTENDS(T, IPoolable)
-    T& get(const PoolHandler& handle)
+    T& get(const PoolHandler<T>& handle)
     {
         CHECK_MSG(handle.isValid(), "Invalid handle!");
-        return mObjects[handle.getIndex()];
+        return mObjects.at(handle.getIndex());
     }
 
-    template<class T> T_EXTENDS(T, IPoolable)
-    void free(PoolHandler& handle)
+    const T& get(const PoolHandler<T>& handle) const
     {
-        handle.get().poolReset();
+        CHECK_MSG(handle.isValid(), "Invalid handle!");
+        return mObjects.at(handle.getIndex());
+    }
+
+    void free(PoolHandler<T>& handle)
+    {
         mAvailableObjects.push_back(handle.getIndex());
         handle.reset();
     }
 
 private:
-    ByteBuffer mObjects;
+    std::vector<T> mObjects;
     std::vector<u32> mAvailableObjects;
 };
+
+template<class T>
+T& PoolHandler<T>::get() const
+{
+    return mPool->get(*this);
+}

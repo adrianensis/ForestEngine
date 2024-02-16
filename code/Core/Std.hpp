@@ -24,4 +24,5 @@
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/Metadata/EnumsManager.hpp"
 #include "Core/Handler.hpp"
+#include "Core/Memory/Pool.hpp"
 #include "Core/Log/Log.hpp"
