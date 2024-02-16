@@ -2,7 +2,7 @@
 #include "Core/Log/Log.hpp"
 #include <csignal>
 
-void AssertUtils::checkMsg(bool condition, const std::string& conditionString, const std::string& file, unsigned int line, const std::string& function, const std::string& message)
+void AssertUtils::checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message)
 {
 	if (!condition)
 	{

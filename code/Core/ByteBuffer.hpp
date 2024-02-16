@@ -2,6 +2,7 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/Assert/Assert.hpp"
+#include <vector>
 
 class ByteBuffer
 {
@@ -83,6 +84,8 @@ public:
         }
     }
 
+    u32 getElementSizeInBytes() const { return mElementSizeInBytes; };
+
 private:
     template<class T>
     void checkType() const
@@ -93,7 +96,4 @@ private:
 private:
     std::vector<byte> mBuffer;
     u32 mElementSizeInBytes = 0;
-
-public:
-    GET(ElementSizeInBytes);
 };
