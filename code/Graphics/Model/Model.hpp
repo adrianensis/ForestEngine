@@ -21,8 +21,8 @@ class BoneData
 {
 public:
 
-    i32 mId = -1;
-    i32 mParentId = -1;
+    i32 mId = INVALID_INDEX;
+    i32 mParentId = INVALID_INDEX;
     std::string mName;
     // offset matrix transforms vertex from model space to bone space
 	Matrix4 mBindMatrix;

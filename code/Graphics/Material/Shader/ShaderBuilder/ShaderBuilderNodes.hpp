@@ -138,7 +138,7 @@ namespace ShaderBuilderNodes
 
         GPUInterpolation mGPUInterpolation = GPUInterpolation::NONE;
         GPUStorage mGPUStorage = GPUStorage::NONE;
-        i32 mLocation = -1;
+        i32 mLocation = INVALID_INDEX;
     };
 
     class SharedBuffer : public Statement

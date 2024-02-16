@@ -9,20 +9,20 @@ public:
     Handler(u32 index)
     {
         mIndex = index;
-        mIsValid = true;
     }
 
     void reset()
     {
-        mIndex = 0;
-        mIsValid = false;
+        mIndex = INVALID_INDEX;
+    }
+
+    u32 getIndex() const { return (u32)mIndex; } 
+    bool isValid() const { return mIndex > INVALID_INDEX; } 
+    operator bool() const
+    {
+        return isValid();
     }
 
 private:
-    u32 mIndex = 0;
-    bool mIsValid = false;
-
-public:
-    u32 getIndex() const { return mIndex; } 
-    bool isValid() const { return mIsValid; } 
+    i32 mIndex = INVALID_INDEX;
 };

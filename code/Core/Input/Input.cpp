@@ -9,9 +9,9 @@ void Input::init(const Ptr<IWindowInputAdapter>& windowInputAdapter)
     mWindowInputAdapter = windowInputAdapter;
 
 	smMouseCoordinates = Vector2();
-	smLastMouseButtonPressed = -1;
-	smLastKeyPressed = -1;
-	smModifier = -1;
+	smLastMouseButtonPressed = INVALID_INDEX;
+	smLastKeyPressed = INVALID_INDEX;
+	smModifier = INVALID_INDEX;
 	smKeyJustPressed = false;
 	smButtonJustPressed = false;
 	smScroll = 0;
@@ -89,15 +89,15 @@ f32 Input::getScroll()
 
 void Input::clearMouseButton()
 {
-	smLastMouseButtonPressed = -1;
-	smModifier = -1;
+	smLastMouseButtonPressed = INVALID_INDEX;
+	smModifier = INVALID_INDEX;
 	smButtonJustPressed = false;
 }
 
 void Input::clearKey()
 {
-	smLastKeyPressed = -1;
-	smModifier = -1;
+	smLastKeyPressed = INVALID_INDEX;
+	smModifier = INVALID_INDEX;
 	smKeyJustPressed = false;
 }
 

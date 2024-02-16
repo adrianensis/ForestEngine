@@ -28,7 +28,7 @@ TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool 
 	{
 		start = frameCount - 1;
 		end = 0;
-		delta = -1;
+		delta = INVALID_INDEX;
 	}
 
 	for (i32 i = start; i != end; i += delta)

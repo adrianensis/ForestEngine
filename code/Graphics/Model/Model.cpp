@@ -351,7 +351,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             originalBindMatrices[i] = bindMatrix;
 
             // Find parent bone index
-            i32 parentIndex = -1;
+            i32 parentIndex = INVALID_INDEX;
 
             FOR_RANGE(j, 0, mBonesIndexCount)
             {
@@ -403,7 +403,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     {
         cgltf_animation_channel& channel = gltfAnim.channels[channelIt];
 
-        i32 boneIndex = -1;
+        i32 boneIndex = INVALID_INDEX;
         if(mNodeToBoneId.contains(channel.target_node))
         {
             boneIndex = mNodeToBoneId.at(channel.target_node);

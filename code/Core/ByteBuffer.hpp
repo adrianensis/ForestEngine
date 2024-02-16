@@ -7,6 +7,7 @@
 class ByteBuffer
 {
 public:
+    ByteBuffer() = default;
     ByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
 
     template<class T>
@@ -15,6 +16,13 @@ public:
         checkType<T>();
         const byte* bytePtr = reinterpret_cast<const byte*>(&element);
         mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + mElementSizeInBytes);
+    }
+    template <class T, typename ... Args>
+    void emplaceBack(Args&&... args)
+    {
+        checkType<T>();
+        T element(args...);
+        pushBack(element);
     }
     template<class T>
     void append(const std::vector<T>& elements)
@@ -90,6 +98,7 @@ private:
     template<class T>
     void checkType() const
     {
+        CHECK_MSG(mElementSizeInBytes > 0, "Type size is 0!");
         CHECK_MSG(sizeof(T) == mElementSizeInBytes, "Type size does not match!");
     }
 

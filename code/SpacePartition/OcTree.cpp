@@ -13,7 +13,7 @@ void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, u8 index, const 
 
     FOR_RANGE(i, 0, smMaxChildNumber)
     {
-        mActiveChildren[i] = -1;
+        mActiveChildren[i] = INVALID_INDEX;
     }
 
 	if(isDivisible())
@@ -321,7 +321,7 @@ void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, co
 
     // FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
     // {
-    //     mNodes[i] = -1;
+    //     mNodes[i] = INVALID_INDEX;
     // }
 }
 
@@ -355,7 +355,7 @@ void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, co
 //     {
 //         if(mNodes[i] == (i32)(nodeHash))
 //         {
-//             mNodes[i] = -1;
+//             mNodes[i] = INVALID_INDEX;
 //             break;
 //         }
 //     }
