@@ -16,20 +16,17 @@ void MaterialManager::init()
 	mMaterialIDCounter++;
 }
 
-Handler MaterialManager::loadTexture(const TextureData& textureData)
+PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData)
 {
-    Handler handler;
 	if (!mTexturesByPath.contains(textureData.mPath))
 	{
-        CHECK_MSG(mTextureIDCounter < smMaxTextures, "Max textures reached!");
-        handler = Handler(mTextureIDCounter);
-        Texture& texure = mTextures.at(handler.getIndex());
+        PoolHandler<Texture> handler = mTextures.allocate();
         mTexturesByPath.insert_or_assign(textureData.mPath, handler);
-        texure.init(textureData, mTextureIDCounter);
-        mTextureIDCounter++;
+        Texture& texure = mTextures.get(handler);
+        texure.init(textureData, handler.getIndex());
 	}
 
-	return handler;
+	return mTexturesByPath.at(textureData.mPath);
 }
 
 Handler MaterialManager::createMaterial(const MaterialData& materialData)
@@ -47,10 +44,4 @@ const Material& MaterialManager::getMaterial(const Handler& handler) const
 {
     CHECK_MSG(handler.isValid(), "Invalid handler!");
     return mMaterials.at(handler.getIndex());
-}
-
-const Texture& MaterialManager::getTexture(const Handler& handler) const
-{
-    CHECK_MSG(handler.isValid(), "Invalid handler!");
-    return mTextures.at(handler.getIndex());
 }

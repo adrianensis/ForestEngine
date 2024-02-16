@@ -2,11 +2,6 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Core/Image/ImageUtils.hpp"
 
-Texture::~Texture() 
-{
-    GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
-}
-
 void Texture::enable() const
 {
     GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId);
@@ -52,4 +47,9 @@ void Texture::init(const TextureData& textureData, u32 id)
         CHECK_MSG(imageData.mData, "Error loading image " + mTextureData.mPath);
         ImageUtils::freeImage(imageData);
     }
+}
+
+void Texture::terminate() 
+{
+    GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
 }

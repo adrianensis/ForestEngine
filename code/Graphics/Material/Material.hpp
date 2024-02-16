@@ -118,6 +118,7 @@ class Material: public ObjectBase
 
 public:
     void init(const MaterialData& materialData, u32 id);
+    void terminate();
     void enable() const;
     void disable() const;
     bool hasTexture() const;
@@ -153,7 +154,7 @@ protected:
     MaterialData mMaterialData;
 	GPUStructDefinition mInstancedPropertiesStructDefinition;
     GPUSharedBufferData mInstancedPropertiesSharedBufferData;
-    std::array<Handler, (u32)TextureType::MAX> mTextures;
+    std::array<PoolHandler<Texture>, (u32)TextureType::MAX> mTextures;
 
     u32 mID = 0;
 

@@ -22,12 +22,20 @@ void Material::init(const MaterialData& materialData, u32 id)
     loadTextures();
 }
 
+void Material::terminate()
+{
+    FOR_RANGE(i, 0, mTextures.size())
+    {
+        mTextures[i].get().terminate();
+    }
+}
+
 void Material::enable() const
 {
 	PROFILER_CPU()
 	if (mTextures[(u32)TextureType::BASE_COLOR].isValid())
 	{
-        GET_SYSTEM(MaterialManager).getTexture(mTextures[(u32)TextureType::BASE_COLOR]).enable();
+        mTextures[(u32)TextureType::BASE_COLOR].get().enable();
 	}
 }
 
@@ -36,7 +44,7 @@ void Material::disable() const
 	PROFILER_CPU()
 	if (mTextures[(u32)TextureType::BASE_COLOR].isValid())
 	{
-        GET_SYSTEM(MaterialManager).getTexture(mTextures[(u32)TextureType::BASE_COLOR]).disable();
+        mTextures[(u32)TextureType::BASE_COLOR].get().disable();
 	}
 }
 
