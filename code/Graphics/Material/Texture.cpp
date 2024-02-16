@@ -17,10 +17,11 @@ void Texture::disable() const
     GET_SYSTEM(GPUInterface).disableTexture();
 }
 
-void Texture::init(const TextureData& textureData)
+void Texture::init(const TextureData& textureData, u32 id)
 {
     mTextureData = textureData;
-    
+    mID = id;
+
     if(textureData.mIsFont)
     {
         mWidth = mTextureData.mFontData.mWidth;

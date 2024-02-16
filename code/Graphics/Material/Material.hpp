@@ -153,7 +153,7 @@ protected:
     MaterialData mMaterialData;
 	GPUStructDefinition mInstancedPropertiesStructDefinition;
     GPUSharedBufferData mInstancedPropertiesSharedBufferData;
-    std::array<Ptr<const Texture>, (u32)TextureType::MAX> mTextures;
+    std::array<Handler, (u32)TextureType::MAX> mTextures;
 
     u32 mID = 0;
 

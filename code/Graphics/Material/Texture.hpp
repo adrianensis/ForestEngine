@@ -163,13 +163,17 @@ class Texture: public ObjectBase
     GENERATE_METADATA(Texture)
 public:
     ~Texture() override;
-    void init(const TextureData& textureData);
+    void init(const TextureData& textureData, u32 id);
     void enable() const;
     void disable() const;
 
-protected:
+private:
 	u32 mGPUTextureId = 0;
 	u32 mWidth = 0;
 	u32 mHeight = 0;
+	u32 mID = 0;
 	TextureData mTextureData;
+
+public:
+    GET(ID)
 };
