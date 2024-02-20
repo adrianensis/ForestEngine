@@ -27,7 +27,7 @@ public:
     virtual void addComponent(Ptr<SystemComponent> component);
 
 private:
-    std::set<ClassId> mAcceptedSystemComponentClasses;
+    std::unordered_set<ClassId> mAcceptedSystemComponentClasses;
 };
 
 #define GET_SYSTEM_PTR(...) \

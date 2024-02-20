@@ -2,6 +2,7 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/ByteBuffer.hpp"
+#include <unordered_set>
 
 template <class T>
 class ObjectPool;
@@ -16,6 +17,12 @@ public:
         mIndex = index;
         CHECK_MSG(pool, "Invalid pool!");
         mPool = pool;
+        mPool->registerHandler(*this);
+    }
+
+    ~PoolHandler()
+    {
+        reset();
     }
 
     u32 getIndex() const { return (u32)mIndex; }
@@ -30,6 +37,10 @@ public:
 
     void reset()
     {
+        if(mPool)
+        {
+            mPool->unregisterHandler(*this);
+        }
         mIndex = INVALID_INDEX;
         mPool = nullptr;
     }
@@ -47,6 +58,14 @@ public:
     {
         // mObjects.reserve(100);
         // mAvailableObjects.reserve(100);
+    }
+
+    ~ObjectPool() 
+    {
+        FOR_MAP(it, mHandlers)
+        {
+            (*it)->reset();
+        }
     }
 
     template <typename ... Args>
@@ -69,6 +88,16 @@ public:
         return handle;
     }
 
+    void registerHandler(PoolHandler<T>& handle)
+    {
+        mHandlers.insert(&handle);
+    }
+
+    void unregisterHandler(PoolHandler<T>& handle)
+    {
+        mHandlers.erase(&handle);
+    }
+
     T& get(const PoolHandler<T>& handle)
     {
         CHECK_MSG(handle.isValid(), "Invalid handle!");
@@ -89,6 +118,7 @@ public:
 
 private:
     std::vector<T> mObjects;
+    std::unordered_set<PoolHandler<T>*> mHandlers;
     std::vector<u32> mAvailableObjects;
 };
 

@@ -53,7 +53,6 @@ bool Geometry::testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f3
 
 bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps)
 {
-
     Vector3 da = lineA.getEnd() - lineA.getStart(); 
     Vector3 db = lineB.getEnd() - lineB.getStart();
     Vector3 dc = lineB.getStart() - lineA.getStart();

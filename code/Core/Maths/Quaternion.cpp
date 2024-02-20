@@ -102,7 +102,6 @@ Quaternion& Quaternion::mul(f32 rhs)
 
 Quaternion& Quaternion::div(f32 rhs)
 {
-	CHECK_MSG(rhs != 0, "Division by zero.");
 	v.div(rhs);
 	w = w / rhs;
 	return *this;
