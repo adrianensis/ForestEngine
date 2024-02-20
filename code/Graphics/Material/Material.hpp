@@ -107,7 +107,7 @@ class Material;
 class MaterialInstance
 {
 public:
-    Handler mMaterial;
+    // PoolHandler<Material> mMaterial;
     MaterialInstancedProperties mMaterialInstancedProperties;
 };
 

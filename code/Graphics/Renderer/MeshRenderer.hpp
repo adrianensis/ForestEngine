@@ -38,7 +38,7 @@ public:
     StencilData mStencilData;
     bool mIsInstanced = false;
     Ptr<const Mesh> mMesh;
-    Handler mMaterial;
+    PoolHandler<Material> mMaterial;
 };
 
 class MeshRenderer: public Component, public IOcTreeElement

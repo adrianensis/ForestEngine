@@ -128,7 +128,7 @@ void MeshBatcher::updateBoneTransforms()
 {	
 	if(mBatchData.mMesh->mModel)
 	{
-		bool isAnimated = mBatchData.mMesh->mModel->isAnimated() && GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mIsSkinned;
+		bool isAnimated = mBatchData.mMesh->mModel->isAnimated() && mBatchData.mMaterial->getMaterialData().mIsSkinned;
         if(isAnimated)
         {
             const std::vector<Matrix4>& transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mBatchData.mMesh->mModel);
@@ -240,7 +240,7 @@ void MeshBatcher::initBuffers()
     
     mGPUVertexBuffersContainer.disable();
 
-    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mIsSkinned)
+    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
         u32 bindingPointBoneMatrices = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
         mGPUSharedBuffersContainer.createSharedBuffer(bindingPointBoneMatrices, GPUBuiltIn::SharedBuffers::mBonesMatrices, isStatic);
@@ -263,7 +263,7 @@ void MeshBatcher::resizeInstancedBuffers(u32 maxInstances)
     PROFILER_CPU()
     u32 matricesBufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * matricesBufferSizeMultiplier);
-    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mUseModelMatrix)
+    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
     {
 	    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances * matricesBufferSizeMultiplier);
     }
@@ -283,7 +283,7 @@ void MeshBatcher::setInstancedBuffers()
 {
     PROFILER_CPU()
 	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mInstanceIDs);
-    if(GET_SYSTEM(MaterialManager).getMaterial(mBatchData.mMaterial.getIndex()).getMaterialData().mUseModelMatrix)
+    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
     {
 	    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mObjectIDs);
     }

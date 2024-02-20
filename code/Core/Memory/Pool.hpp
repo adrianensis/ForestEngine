@@ -14,12 +14,14 @@ public:
     PoolHandler(i32 index, ObjectPool<T>* pool)
     {
         mIndex = index;
+        CHECK_MSG(pool, "Invalid pool!");
         mPool = pool;
     }
 
+    u32 getIndex() const { return (u32)mIndex; }
     T& get() const;
-
     bool isValid() const { return mPool && mIndex > INVALID_INDEX; }
+    T* operator->() const { return &get(); }
 
     bool operator==(const PoolHandler<T>& other) const
 	{
@@ -31,8 +33,6 @@ public:
         mIndex = INVALID_INDEX;
         mPool = nullptr;
     }
-
-    u32 getIndex() const { return (u32)mIndex; }
 
 private:
     i32 mIndex = INVALID_INDEX;

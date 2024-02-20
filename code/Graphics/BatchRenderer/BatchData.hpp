@@ -9,7 +9,7 @@ class BatchData
 public:
 	BatchData() = default;
 	
-	Handler mMaterial;
+	PoolHandler<Material> mMaterial;
 	Ptr<const Mesh> mMesh;
 	bool mIsStatic = true;
 	bool mIsWorldSpace = true;

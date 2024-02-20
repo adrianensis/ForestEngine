@@ -28,7 +28,7 @@ public:
     void init(UIFontsManager& fontsManager, const std::string& fontFile);
 private:
     FontData mFontData;
-    Handler mFontMaterial;
+    PoolHandler<Material> mFontMaterial;
 public:
     GET(FontMaterial)
     CRGET(FontData)

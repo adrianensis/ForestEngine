@@ -12,8 +12,8 @@ void MaterialManager::init()
     materialData.mAlphaEnabled = true;
     materialData.mUseColorAsTint = true;
 	
-    mNoTextureMaterial = createMaterial(materialData);mMaterials[mMaterialIDCounter].init(materialData, mMaterialIDCounter);
-	mMaterialIDCounter++;
+    mNoTextureMaterial = createMaterial(materialData);
+    mMaterials.get(mNoTextureMaterial).init(materialData, mNoTextureMaterial.getIndex());
 }
 
 PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData)
@@ -29,19 +29,17 @@ PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData
 	return mTexturesByPath.at(textureData.mPath);
 }
 
-Handler MaterialManager::createMaterial(const MaterialData& materialData)
+PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materialData)
 {
-    CHECK_MSG(mMaterialIDCounter < smMaxMaterials, "Max materials reached!");
-    Handler handler(mMaterialIDCounter);
-    Material& material = mMaterials.at(handler.getIndex());
+    PoolHandler<Material> handler = mMaterials.allocate();
+    Material& material = mMaterials.get(handler);
     material.init(materialData, handler.getIndex());
-    mMaterialIDCounter++;
 
     return handler;
 }
 
-const Material& MaterialManager::getMaterial(const Handler& handler) const
+const Material& MaterialManager::getMaterial(const PoolHandler<Material>& handler) const
 {
     CHECK_MSG(handler.isValid(), "Invalid handler!");
-    return mMaterials.at(handler.getIndex());
+    return mMaterials.get(handler);
 }
