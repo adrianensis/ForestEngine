@@ -94,7 +94,7 @@ public:
     void set(const Vector3& leftTopFront, const Vector3& size)
     {
         mLeftTopFront.set(leftTopFront);
-        mSize.set(Vector2(size));
+        mSize.set(size.x, size.y, 0);
     }
 
     Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
@@ -109,7 +109,7 @@ public:
     CRGET(Size)
 };
 
-class Cube: public Rectangle
+class Cube
 {
     GENERATE_METADATA_STRUCT(Cube)
 
