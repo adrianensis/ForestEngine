@@ -22,7 +22,7 @@
 
 #define VECTOR_FOR_EACH(n, macro, ...) VECTOR_FOR_EACH_##n(macro, __VA_ARGS__)
 
-#define VECTOR_DEFINE_COMPONENTS(comp) f32 comp = 0;
+#define VECTOR_DEFINE_COMPONENT(comp) f32 comp = 0;
 
 #define VECTOR2_PARAMS() f32 x, f32 y
 #define VECTOR3_PARAMS() VECTOR2_PARAMS(), f32 z 
@@ -57,52 +57,38 @@
 #define VECTOR_EQ(n, v) VECTOR##n##_EQ(v)
 
 #define VECTOR_BASE_DEFINITION(n) \
-GENERATE_METADATA_STRUCT(Vector##n)  \
-\
 private:\
-    void checkBoundaries(u32 index) const\
-    {\
-        CHECK_MSG(index >= 0 && index < n, "Index out of bounds.");\
-    }\
-    f32& get(u32 index)\
-    {\
-        checkBoundaries(index);\
-        return *(&x + index);\
-    }\
-    const f32& get(u32 index) const\
-    {\
-        checkBoundaries(index);\
-        return *(&x + index);\
-    }\
+    void checkBoundaries(u32 index) const { CHECK_MSG(index >= 0 && index < n, "Index out of bounds."); } \
+    using ThisVectorClass = Vector##n;\
 public:\
-    VECTOR_FOR_EACH(n, VECTOR_DEFINE_COMPONENTS); \
+    VECTOR_FOR_EACH(n, VECTOR_DEFINE_COMPONENT); \
     \
     Vector##n() {}\
     Vector##n(VECTOR_PARAMS(n)) {VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); }\
-    Vector##n(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); }\
-    ThisClass& set(VECTOR_PARAMS(n)) { VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); return *this; }\
-    ThisClass& set(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); return *this; }\
-    ThisClass& add(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, +); return *this; }\
-    ThisClass& sub(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, -); return *this; }\
-    ThisClass& mul(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, *); return *this; }\
-    ThisClass& div(const ThisClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, /); return *this; }\
-    ThisClass& add(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, +); return *this; }\
-    ThisClass& sub(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, -); return *this; }\
-    ThisClass& mul(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, *); return *this; }\
-    ThisClass& div(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, /); return *this; }\
-    ThisClass& abs() { VECTOR_FOR_EACH(n, VECTOR_APPLY_FUNC, std::abs); return *this; }\
-    f32 dot(const ThisClass& v) const { return VECTOR_DOT(n, v); } \
+    Vector##n(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); }\
+    ThisVectorClass& set(VECTOR_PARAMS(n)) { VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); return *this; }\
+    ThisVectorClass& set(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); return *this; }\
+    ThisVectorClass& add(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, +); return *this; }\
+    ThisVectorClass& sub(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, -); return *this; }\
+    ThisVectorClass& mul(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, *); return *this; }\
+    ThisVectorClass& div(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, /); return *this; }\
+    ThisVectorClass& add(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, +); return *this; }\
+    ThisVectorClass& sub(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, -); return *this; }\
+    ThisVectorClass& mul(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, *); return *this; }\
+    ThisVectorClass& div(f32 rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_F32, /); return *this; }\
+    ThisVectorClass& abs() { VECTOR_FOR_EACH(n, VECTOR_APPLY_FUNC, std::abs); return *this; }\
+    f32 dot(const ThisVectorClass& v) const { return VECTOR_DOT(n, v); } \
     f32 sqrlen() const { return this->dot(*this); } \
-    f32 sqrdst(const ThisClass& v) const { ThisClass sub = ThisClass(v) - (*this); return sub.dot(sub); } \
+    f32 sqrdst(const ThisVectorClass& v) const { ThisVectorClass sub = ThisVectorClass(v) - (*this); return sub.dot(sub); } \
     f32 len() const { return sqrtf(this->sqrlen()); } \
     f32 max() const { return VECTOR_MAX(n); } \
     f32 min() const { return VECTOR_MIN(n); } \
-    ThisClass& nor() { this->div(this->len()); return *this; } \
-    f32 dst(const ThisClass& v) const { return sqrtf(this->sqrdst(v)); } \
-    bool eq(const ThisClass& v, f32 e) const { return VECTOR_EQ_E(n,v,e); } \
-    bool eq(const ThisClass& v) const { return VECTOR_EQ(n,v); } \
-    ThisClass& lerp(const ThisClass& target, f32 t) { (*this) += ((ThisClass(target) - (*this)) * t); return *this; } \
-    ThisClass& clamp(f32 maxLength)\
+    ThisVectorClass& nor() { this->div(this->len()); return *this; } \
+    f32 dst(const ThisVectorClass& v) const { return sqrtf(this->sqrdst(v)); } \
+    bool eq(const ThisVectorClass& v, f32 e) const { return VECTOR_EQ_E(n,v,e); } \
+    bool eq(const ThisVectorClass& v) const { return VECTOR_EQ(n,v); } \
+    ThisVectorClass& lerp(const ThisVectorClass& target, f32 t) { (*this) += ((ThisVectorClass(target) - (*this)) * t); return *this; } \
+    ThisVectorClass& clamp(f32 maxLength)\
     {\
         if (this->sqrlen() > (maxLength * maxLength))\
         {\
@@ -112,28 +98,26 @@ public:\
         \
         return *this;\
     }\
-    ThisClass& operator+=(const ThisClass& rhs) {return add(rhs); }\
-    ThisClass& operator-=(const ThisClass& rhs) {return sub(rhs); }\
-    ThisClass& operator*=(const ThisClass& rhs) {return mul(rhs); }\
-    ThisClass& operator/=(const ThisClass& rhs) {return div(rhs); }\
-    ThisClass& operator+=(f32 rhs) {return add(rhs); }\
-    ThisClass& operator-=(f32 rhs) {return sub(rhs); }\
-    ThisClass& operator*=(f32 rhs) {return mul(rhs); }\
-    ThisClass& operator/=(f32 rhs) {return div(rhs); }\
-    bool operator==(const ThisClass& rhs) const {return eq(rhs); }\
-    bool operator!=(const ThisClass& rhs) const {return !((*this) == rhs); }\
-    ThisClass operator+(const ThisClass& rhs) const {return ThisClass(*this) += rhs; }\
-    ThisClass operator-(const ThisClass& rhs) const {return ThisClass(*this) -= rhs; }\
-    ThisClass operator*(const ThisClass& rhs) const {return ThisClass(*this) *= rhs; }\
-    ThisClass operator/(const ThisClass& rhs) const {return ThisClass(*this) /= rhs; }\
-    ThisClass operator+(f32 rhs) const {return ThisClass(*this) += rhs; }\
-    ThisClass operator-(f32 rhs) const {return ThisClass(*this) -= rhs; }\
-    ThisClass operator-() const{ return ThisClass(*this) *= -1; }\
-    ThisClass operator*(f32 rhs) const {return ThisClass(*this) *= rhs; }\
-    ThisClass operator/(f32 rhs) const {return ThisClass(*this) /= rhs; }\
-    f32& operator[](const size_t index) { return get(index); }\
-    f32 operator[](const size_t index) const { return get(index); }\
+    ThisVectorClass& operator+=(const ThisVectorClass& rhs) {return add(rhs); }\
+    ThisVectorClass& operator-=(const ThisVectorClass& rhs) {return sub(rhs); }\
+    ThisVectorClass& operator*=(const ThisVectorClass& rhs) {return mul(rhs); }\
+    ThisVectorClass& operator/=(const ThisVectorClass& rhs) {return div(rhs); }\
+    ThisVectorClass& operator+=(f32 rhs) {return add(rhs); }\
+    ThisVectorClass& operator-=(f32 rhs) {return sub(rhs); }\
+    ThisVectorClass& operator*=(f32 rhs) {return mul(rhs); }\
+    ThisVectorClass& operator/=(f32 rhs) {return div(rhs); }\
+    bool operator==(const ThisVectorClass& rhs) const {return eq(rhs); }\
+    bool operator!=(const ThisVectorClass& rhs) const {return !((*this) == rhs); }\
+    ThisVectorClass operator+(const ThisVectorClass& rhs) const {return ThisVectorClass(*this) += rhs; }\
+    ThisVectorClass operator-(const ThisVectorClass& rhs) const {return ThisVectorClass(*this) -= rhs; }\
+    ThisVectorClass operator*(const ThisVectorClass& rhs) const {return ThisVectorClass(*this) *= rhs; }\
+    ThisVectorClass operator/(const ThisVectorClass& rhs) const {return ThisVectorClass(*this) /= rhs; }\
+    ThisVectorClass operator+(f32 rhs) const {return ThisVectorClass(*this) += rhs; }\
+    ThisVectorClass operator-(f32 rhs) const {return ThisVectorClass(*this) -= rhs; }\
+    ThisVectorClass operator-() const{ return ThisVectorClass(*this) *= -1; }\
+    ThisVectorClass operator*(f32 rhs) const {return ThisVectorClass(*this) *= rhs; }\
+    ThisVectorClass operator/(f32 rhs) const {return ThisVectorClass(*this) /= rhs; }\
+    f32& operator[](const size_t index) { checkBoundaries(index); return *(&x + index); }\
+    f32 operator[](const size_t index) const { checkBoundaries(index); return *(&x + index); }\
     ; 
-
-
-
+    

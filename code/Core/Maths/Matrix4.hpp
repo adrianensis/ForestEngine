@@ -22,8 +22,6 @@
 
 class Matrix4
 {
-    GENERATE_METADATA_STRUCT(Matrix4);
-	
 private:
     void setRows(const std::array<f32, 4> &row0, const std::array<f32, 4> &row1, const std::array<f32, 4> &row2, const std::array<f32, 4> &row3);
     void setRows(const f32 *row0, const f32 *row1, const f32 *row2, const f32 *row3);

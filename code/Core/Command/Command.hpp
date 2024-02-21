@@ -4,8 +4,6 @@
 
 class CommandArgument
 {
-    GENERATE_METADATA_STRUCT(CommandArgument)
-
 private:
     std::string mName;
     std::string mValue;
@@ -18,8 +16,6 @@ public:
 
 class Command
 {
-    GENERATE_METADATA_STRUCT(Command)
-
 private:
     std::string mName;
     std::string mArgumentsString;

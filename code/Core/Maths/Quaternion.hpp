@@ -5,8 +5,6 @@
 
 class Quaternion
 {
-	GENERATE_METADATA_STRUCT(Quaternion);
-	
 public:
 
 	Vector3 v = Vector3(0,0,0);
@@ -67,56 +65,7 @@ public:
         return eulerVec;
 	}
 
-	/*void fromMatrix(const Matrix4& m){
-
-		f32 t = m.get(0, 0) + m.get(1, 1) + m.get(2, 2);
-
-		if (t >= 0){ // |w| >= .5
-
-			f32 s = sqrtf(t + 1); // |s|>=1 ...
-			w = 0.5f * s;
-			s = 0.5f / s;                 // so this division isn't bad
-			v.x = (m.get(1, 2) - m.get(2, 1)) * s;
-			v.y = (m.get(2, 0) - m.get(0, 2)) * s;
-			v.z = (m.get(0, 1) - m.get(1, 0)) * s;
-
-		} else if ((m.get(0, 0) > m.get(1, 1)) && (m.get(0, 0) > m.get(2, 2))){
-			f32 s = sqrtf(1.0f + m.get(0, 0) - m.get(1, 1) - m.get(2, 2)); // |s|>=1
-			v.x = s * 0.5f; // |x| >= .5
-			s = 0.5f / s;
-			v.y = (m.get(0, 1) + m.get(1, 0)) * s;
-			v.z = (m.get(2, 0) + m.get(0, 2)) * s;
-			w = (m.get(1, 2) - m.get(2, 1)) * s;
-
-		} else if (m.get(1, 1) > m.get(2, 2)){
-			f32 s = sqrtf(1.0f + m.get(1, 1) - m.get(0, 0) - m.get(2, 2)); // |s|>=1
-			v.y = s * 0.5f; // |y| >= .5
-			s = 0.5f / s;
-			v.x = (m.get(0, 1) + m.get(1, 0)) * s;
-			v.z = (m.get(1, 2) + m.get(2, 1)) * s;
-			w = (m.get(2, 0) - m.get(0, 2)) * s;
-
-		} else {
-			f32 s = sqrtf(1.0f + m.get(2, 2) - m.get(0, 0) - m.get(1, 1)); // |s|>=1
-			v.z = s * 0.5f; // |z| >= .5
-			s = 0.5f / s;
-			v.x = (m.get(2, 0) + m.get(0, 2)) * s;
-			v.y = (m.get(1, 2) + m.get(2, 1)) * s;
-			w = (m.get(0, 1) - m.get(1, 0)) * s;
-
-		}
-
-	}*/
-
     void toMatrix(Matrix4 *outMatrix) const;
-
-
-	/*
-	* & -> it's a reference, not a full copy.
-	* Quaternion& -> it's a constant reference.
-	* operator=(...) const -> the method promises not to change *this. Non-member
-	* functions can not have constant qualification.
-	*/
 
     Quaternion operator=(const Quaternion& other)
     {
@@ -127,95 +76,24 @@ public:
         return *this;
     }
 
-	Quaternion& operator+=(const Quaternion& rhs)
-	{
-		return this->add(rhs);
-	}
-
-	Quaternion& operator-=(const Quaternion& rhs)
-	{
-		return this->sub(rhs);
-	}
-
-	Quaternion& operator*=(const Quaternion& rhs)
-	{
-		return this->mul(rhs);
-	}
-
-	Quaternion& operator/=(const Quaternion& rhs)
-	{
-		return this->div(rhs);
-	}
-
-	Quaternion& operator+=(f32 rhs)
-	{
-		return this->add(rhs);
-	}
-
-	Quaternion& operator-=(f32 rhs)
-	{
-		return this->sub(rhs);
-	}
-
-	Quaternion& operator*=(f32 rhs)
-	{
-		return this->mul(rhs);
-	}
-
-	Quaternion& operator/=(f32 rhs)
-	{
-		return this->div(rhs);
-	}
-
-	bool operator==(const Quaternion& rhs) const
-	{
-		return this->eq(rhs);
-	}
-
-	bool operator!=(const Quaternion& rhs) const
-	{
-		return !((*this) == rhs);
-	}
-
-	Quaternion operator+(const Quaternion& rhs) const
-	{
-		return Quaternion(*this) += rhs;
-	}
-
-	Quaternion operator-(const Quaternion& rhs) const
-	{
-		return Quaternion(*this) -= rhs;
-	}
-
-	Quaternion operator*(const Quaternion& rhs) const
-	{
-		return Quaternion(*this) *= rhs;
-	}
-
-	Quaternion operator/(const Quaternion& rhs) const
-	{
-		return Quaternion(*this) /= rhs;
-	}
-
-	Quaternion operator+(f32 rhs) const
-	{
-		return Quaternion(*this) += rhs;
-	}
-
-	Quaternion operator-(f32 rhs) const
-	{
-		return Quaternion(*this) -= rhs;
-	}
-
-	Quaternion operator*(f32 rhs) const
-	{
-		return Quaternion(*this) *= rhs;
-	}
-
-	Quaternion operator/(f32 rhs) const
-	{
-		return Quaternion(*this) /= rhs;
-	}
+	Quaternion& operator+=(const Quaternion& rhs) { return this->add(rhs); }
+	Quaternion& operator-=(const Quaternion& rhs) { return this->sub(rhs); }
+	Quaternion& operator*=(const Quaternion& rhs) { return this->mul(rhs); }
+	Quaternion& operator/=(const Quaternion& rhs) { return this->div(rhs); }
+	Quaternion& operator+=(f32 rhs) { return this->add(rhs); }
+	Quaternion& operator-=(f32 rhs) { return this->sub(rhs); }
+	Quaternion& operator*=(f32 rhs) { return this->mul(rhs); }
+	Quaternion& operator/=(f32 rhs) { return this->div(rhs); }
+	bool operator==(const Quaternion& rhs) const { return this->eq(rhs); }
+	bool operator!=(const Quaternion& rhs) const { return !((*this) == rhs); }
+	Quaternion operator+(const Quaternion& rhs) const { return Quaternion(*this) += rhs; }
+	Quaternion operator-(const Quaternion& rhs) const { return Quaternion(*this) -= rhs; }
+	Quaternion operator*(const Quaternion& rhs) const { return Quaternion(*this) *= rhs; }
+	Quaternion operator/(const Quaternion& rhs) const { return Quaternion(*this) /= rhs; }
+	Quaternion operator+(f32 rhs) const { return Quaternion(*this) += rhs; }
+	Quaternion operator-(f32 rhs) const { return Quaternion(*this) -= rhs; }
+	Quaternion operator*(f32 rhs) const { return Quaternion(*this) *= rhs; }
+	Quaternion operator/(f32 rhs) const { return Quaternion(*this) /= rhs; }
 
 	f32& operator[](size_t index)
 	{

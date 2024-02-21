@@ -27,8 +27,6 @@ public:
 
 class Face
 {
-	GENERATE_METADATA_STRUCT(Face);
-	
 public:
     Face(u32 index0, u32 index1, u32 index2);
 
