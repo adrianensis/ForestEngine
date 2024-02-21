@@ -65,17 +65,10 @@ template <typename V>
 struct get_ptr_type;
 
 // BASE
-// Needed in Core/Macros.h CGETTER_TYPE
-class BasePtr
-{
-
-};
-
-// Needed in Core/Macros.h SETTER_TYPE
-class BaseOwnerPtr
-{
-
-};
+// Needed in Core/MetadataMacros.h CGETTER_TYPE
+class BasePtr {};
+// Needed in Core/MetadataMacros.h SETTER_TYPE
+class BaseOwnerPtr {};
 
 // PTR
 
@@ -223,8 +216,8 @@ private:
     ReferenceBlock* mReferenceBlock = nullptr;
 
 public:
-    GET(InternalPointer);
-    GET(ReferenceBlock);
+    T* getInternalPointer() const { return mInternalPointer; };
+    ReferenceBlock* getReferenceBlock() const { return mReferenceBlock; };
 };
 
 class EnablePtrFromThis
@@ -316,8 +309,8 @@ protected:
     ReferenceBlock* mReferenceBlock = nullptr;
 
 public:
-    GET(InternalPointer);
-    GET(ReferenceBlock);
+    T* getInternalPointer() const { return mInternalPointer; };
+    ReferenceBlock* getReferenceBlock() const { return mReferenceBlock; };
 };
 
 // SHARED PTR

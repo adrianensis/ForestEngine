@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
+#include "Core/Memory/Pointers.hpp"
+#include "Core/Metadata/MetadataMacros.hpp"
 #include <unordered_map>
 #include <functional>
 

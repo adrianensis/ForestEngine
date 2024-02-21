@@ -22,4 +22,4 @@ using u64 = std::uint64_t;
 using ClassId = u64;
 using ObjectId = u64;
 
-#include "Core/Macros.hpp"
+#include "Core/StdMacros.hpp"
