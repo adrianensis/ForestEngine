@@ -221,36 +221,6 @@ void Matrix4::rotation(const Vector3& vector)
 {
 	Quaternion q(vector);
 	q.toMatrix(this);
-
-	/*this->identity();
-
-	f32 radians, cos, sin;
-
-	if (vector.x != 0){
-		radians = MathUtils::rad(vector.x);
-		sin = sinf(radians);
-		cos = cosf(radians);
-		this->set(1, 1, cos);
-		this->set(1, 2, -sin);
-		this->set(2, 1, sin);
-		this->set(2, 2, cos);
-	} else if (vector.y != 0){
-		radians = MathUtils::rad(vector.y);
-		sin = sinf(radians);
-		cos = cosf(radians);
-		this->set(0, 0, cos);
-		this->set(0, 2, sin);
-		this->set(2, 0, -sin);
-		this->set(2, 2, cos);
-	} else if (vector.z != 0){
-		radians = MathUtils::rad(vector.z);
-		sin = sinf(radians);
-		cos = cosf(radians);
-		this->set(0, 0, cos);
-		this->set(0, 1, -sin);
-		this->set(1, 0, sin);
-		this->set(1, 1, cos);
-	}*/
 }
 
 void Matrix4::scale(const Vector3& vector)

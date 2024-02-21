@@ -53,12 +53,16 @@ bool Geometry::testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f3
 
 bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps)
 {
+    // https://gist.github.com/hanigamal/6556506
     Vector3 da = lineA.getEnd() - lineA.getStart(); 
     Vector3 db = lineB.getEnd() - lineB.getStart();
     Vector3 dc = lineB.getStart() - lineA.getStart();
 
-    if (dc.dot(Vector3(da).cross(db)) != 0.0) // lines are not coplanar
+    // If the dot product is 0, then either the length of one or both is 0,
+    // or the angle between them is 90 degrees.
+    if (dc.dot(Vector3(da).cross(db)) != 0.0)
     {
+        // lines are not coplanar
         return false;
     }
 
