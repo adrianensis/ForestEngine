@@ -94,7 +94,7 @@ public:
     void set(const Vector3& leftTopFront, const Vector3& size)
     {
         mLeftTopFront.set(leftTopFront);
-        mSize.set(size.x, size.y, 0);
+        mSize.set(Vector2(size));
     }
 
     Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
