@@ -98,13 +98,8 @@ bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, f32 
 u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
 {
     f32 radiusEps = sphere.getRadius() + eps;
-
-    bool lineIntersectsSphere = false;
-
     Vector3 dVector = line.toVector();
-
     Vector3 startToCenter = line.getStart() - sphere.getCenter();
-
     f32 A = dVector.sqrlen();
     f32 B = 2.0f * dVector.dot(startToCenter);
     f32 C = startToCenter.sqrlen() - radiusEps * radiusEps;
@@ -116,15 +111,12 @@ u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vec
     {
         if (delta > MathUtils::FLOAT_EPSILON)
         {
-
             f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
-
             intersectionResult1.x = line.getStart().x + t1*(dVector.x);
             intersectionResult1.y = line.getStart().y + t1*(dVector.y);
             intersectionResult1.z = line.getStart().z + t1*(dVector.z);
             
             f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
-
             intersectionResult2.x = line.getStart().x + t2*(dVector.x);
             intersectionResult2.y = line.getStart().y + t2*(dVector.y);
             intersectionResult2.z = line.getStart().z + t2*(dVector.z);
@@ -133,9 +125,7 @@ u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vec
         }
         else if (delta < MathUtils::FLOAT_EPSILON)
         {
-
             f32 t = -B/(2*A);
-
             intersectionResult1.x = line.getStart().x + t*(dVector.x);
             intersectionResult1.y = line.getStart().y + t*(dVector.y);
             intersectionResult1.z = line.getStart().z + t*(dVector.z);
