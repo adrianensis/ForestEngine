@@ -70,16 +70,6 @@ void MeshRenderer::update()
     updateTextureRegion();
 }
 
-void MeshRenderer::onDestroy() 
-{
-    GET_SYSTEM(GPUSharedContext).freeInstanceSlot(mGPUInstanceSlot);
-
-    if(mBatchRenderer)
-    {
-        mBatchRenderer->requestRegenerateBuffers();
-    }
-}
-
 void MeshRenderer::updateTextureRegion()
 {
 	PROFILER_CPU()

@@ -37,11 +37,11 @@ void GameObject::removeComponent(Ptr<Component> component)
     CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
     CHECK_MSG(component->mGameObject == getPtrToThis(), "Component is assigned to another GameObject!");
 
-	component->destroy();
-
     auto it = std::find(mComponents.begin(), mComponents.end(), component);
     if (it != mComponents.end())
     {
+        SystemsManager::getInstance().removeComponentFromSystem(component);
+	    component->destroy();
         mComponents.erase(it);
     }
 }
@@ -70,7 +70,7 @@ void GameObject::destroy()
 	{
         if(*it)
         {
-            (*it)->mGameObject.invalidate();
+            SystemsManager::getInstance().removeComponentFromSystem(Ptr<Component>(*it));
             (*it)->destroy();
         }
 	}

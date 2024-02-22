@@ -25,6 +25,7 @@ public:
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);
     virtual void addComponent(Ptr<SystemComponent> component);
+    virtual void removeComponent(Ptr<SystemComponent> component);
 
 private:
     std::unordered_set<ClassId> mAcceptedSystemComponentClasses;
@@ -59,6 +60,23 @@ public:
                 if (sub->isComponentClassAccepted(componentClassId))
                 {
                     sub->addComponent(Ptr<SystemComponent>::cast(component));
+                }
+            }
+        }
+    }
+
+    template<typename T> T_EXTENDS(T, SystemComponent)
+    void removeComponentFromSystem(Ptr<T> component)
+    {
+        if (component && component->mAlreadyAddedToSystem)
+        {
+            ClassId componentClassId = component->getSystemComponentId();
+            FOR_MAP(itSystem, mSystems)
+            {
+                Ptr<System> sub = (itSystem->second);
+                if (sub->isComponentClassAccepted(componentClassId))
+                {
+                    sub->removeComponent(Ptr<SystemComponent>::cast(component));
                 }
             }
         }

@@ -15,3 +15,8 @@ void System::addComponent(Ptr<SystemComponent> component)
 {
     component->mAlreadyAddedToSystem = true;
 }
+
+void System::removeComponent(Ptr<SystemComponent> component)
+{
+    component->mAlreadyAddedToSystem = false;
+}

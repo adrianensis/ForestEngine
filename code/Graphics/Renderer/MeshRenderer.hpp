@@ -53,7 +53,6 @@ public:
     void onComponentAdded() override;
     bool getIsWorldSpace() const;
     void update();
-    void onDestroy() override;
 
 private:
     void calculateRendererModelMatrix();
@@ -75,7 +74,6 @@ public:
 
 public:
     CGET(MeshInstance)
-    CRGET_SET(BatchRenderer)
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
     RGET(MaterialInstance)

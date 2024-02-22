@@ -14,8 +14,8 @@ public:
     void terminate();
 
     void render();
-    void addRenderer(Ptr<MeshRenderer> renderer);
-	void requestRegenerateBuffers() { mRegenerateBuffersRequested = true; }
+    void onAddRenderer(Ptr<MeshRenderer> renderer);
+    void onRemoveRenderer(Ptr<MeshRenderer> renderer);
 
 private:
     void bindSharedBuffers();

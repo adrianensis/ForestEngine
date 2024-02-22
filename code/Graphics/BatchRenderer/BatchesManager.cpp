@@ -10,18 +10,25 @@ void BatchesManager::terminate()
 	}
 }
 
-void BatchesManager::addRenderer(Ptr<MeshRenderer> renderer)
+void BatchesManager::onRendererAdded(Ptr<MeshRenderer> renderer)
 {
-	BatchData BatchData;
-	BatchData.init(renderer);
+	BatchData batchData;
+	batchData.init(renderer);
 
-	if (!mBatches.contains(BatchData))
+	if (!mBatches.contains(batchData))
 	{
-		mBatches.insert_or_assign(BatchData, OwnerPtr<BatchRenderer>::newObject());
-        (mBatches).at(BatchData)->init(BatchData);
+		mBatches.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
+        mBatches.at(batchData)->init(batchData);
 	}
 
-	(mBatches).at(BatchData)->addRenderer(renderer);
+	mBatches.at(batchData)->onAddRenderer(renderer);
+}
+
+void BatchesManager::onRendererRemoved(Ptr<MeshRenderer> renderer)
+{
+    BatchData batchData;
+	batchData.init(renderer);
+    mBatches.at(batchData)->onRemoveRenderer(renderer);
 }
 
 void BatchesManager::render()

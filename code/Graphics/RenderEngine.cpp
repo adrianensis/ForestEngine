@@ -114,7 +114,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderers.push_back(renderer);
 
-        mBatchesManager.addRenderer(renderer);
+        mBatchesManager.onRendererAdded(renderer);
 
         if(renderer->getIsWorldSpace())
         {
@@ -131,9 +131,21 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     }
 }
 
-void RenderEngine::assignBatch(Ptr<MeshRenderer> renderer)
+void RenderEngine::removeComponent(Ptr<SystemComponent> component)
 {
-	mBatchesManager.addRenderer(renderer);
+    if(component->getSystemComponentId() == MeshRenderer::getClassDefinitionStatic().mId)
+    {
+        Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
+        GET_SYSTEM(GPUSharedContext).freeInstanceSlot(renderer->getGPUInstanceSlot());
+        mBatchesManager.onRendererRemoved(renderer);
+    }
+    else if(component->getSystemComponentId() == Light::getClassDefinitionStatic().mId)
+    {
+    }
+    else
+    {
+        CHECK_MSG(false, "Trying to remove a not valid component.");
+    }
 }
 
 void RenderEngine::drawLine(const Line& line, f32 thickness /*= 1*/, bool isWorldSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)

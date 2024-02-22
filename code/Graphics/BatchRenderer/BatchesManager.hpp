@@ -9,7 +9,8 @@ class BatchesManager
 public:
 
     void terminate();
-    void addRenderer(Ptr<MeshRenderer> renderer);
+    void onRendererAdded(Ptr<MeshRenderer> renderer);
+    void onRendererRemoved(Ptr<MeshRenderer> renderer);
     void render();
     void renderStencil();
     void renderScreenSpaceStencil();

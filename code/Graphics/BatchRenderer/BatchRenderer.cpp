@@ -102,11 +102,14 @@ void BatchRenderer::disable()
     mShader->disable();
 }
 
-void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
+void BatchRenderer::onAddRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRenderers.push_back(renderer);
-	renderer->setBatchRenderer(getPtrToThis());
+	mRegenerateBuffersRequested = true;
+}
 
+void BatchRenderer::onRemoveRenderer(Ptr<MeshRenderer> renderer)
+{
 	mRegenerateBuffersRequested = true;
 }
 
