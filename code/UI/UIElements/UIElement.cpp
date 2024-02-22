@@ -3,7 +3,6 @@
 #include "Graphics/Module.hpp"
 
 #include "UI/UIManager.hpp"
-#include "UI/UIStyle.hpp"
 #include "UI/UIGroup.hpp"
 
 void UIElement::initFromConfig(const UIElementConfig& config)
@@ -36,7 +35,7 @@ void UIElement::onDestroy()
 
 bool UIElement::hasFocus() const
 {
-	return getPtrToThis() == GET_SYSTEM(UIManager).getFocusedElement();
+	return getPtrToThis<UIElement>() == GET_SYSTEM(UIManager).getFocusedElement();
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -439,7 +438,7 @@ void UIElement::obtainFocus()
 		lastFocusedElement->loseFocus();
 	}
 
-	GET_SYSTEM(UIManager).setFocusedElement(getPtrToThis());
+	GET_SYSTEM(UIManager).setFocusedElement(getPtrToThis<UIElement>());
 
 	mInputString.clear();
 	setText(mInputString);
@@ -458,7 +457,7 @@ void UIElement::releaseOtherToggleElements()
 	FOR_LIST(it, group.getUIElements())
 	{
 		Ptr<UIElement> other = *it;
-		if(other != getPtrToThis())
+		if(other != getPtrToThis<UIElement>())
 		{
 			if(other->getToggleEnabled() and
 			other->getState() == UIElementState::TOGGLED and

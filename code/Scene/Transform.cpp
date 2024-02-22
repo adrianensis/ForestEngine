@@ -18,7 +18,7 @@ void Transform::onDestroy()
 {
     if(mParent)
     {
-        mParent->removeChild(getPtrToThis());
+        mParent->removeChild(getPtrToThis<Transform>());
     }
 }
 
@@ -191,7 +191,7 @@ void Transform::setLocalScale(const Vector3& vec)
 
 void Transform::addChild(Ptr<Transform> child)
 {
-    child->mParent = getPtrToThis();
+    child->mParent = getPtrToThis<Transform>();
     mChildren.insert_or_assign(child->getObjectId(), child);
 }
 

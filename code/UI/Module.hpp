@@ -2,8 +2,6 @@
 
 #include "UI/UIManager.hpp"
 
-#include "UI/UIStyle.hpp"
-
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIElements/UIButton.hpp"
 #include "UI/UIElements/UIEditableText.hpp"

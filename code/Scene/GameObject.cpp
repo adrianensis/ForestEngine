@@ -24,7 +24,7 @@ Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
 
 	Ptr<Component> comp = mComponents.emplace_back(std::move(component));
 
-	comp->mGameObject = getPtrToThis();
+	comp->mGameObject = getPtrToThis<GameObject>();
 	comp->onComponentAdded();
 
 	SystemsManager::getInstance().addComponentToSystem(comp);
@@ -35,7 +35,7 @@ Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
 void GameObject::removeComponent(Ptr<Component> component)
 {
     CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
-    CHECK_MSG(component->mGameObject == getPtrToThis(), "Component is assigned to another GameObject!");
+    CHECK_MSG(component->mGameObject == getPtrToThis<GameObject>(), "Component is assigned to another GameObject!");
 
     auto it = std::find(mComponents.begin(), mComponents.end(), component);
     if (it != mComponents.end())

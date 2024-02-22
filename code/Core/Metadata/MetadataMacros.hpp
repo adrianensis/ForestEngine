@@ -9,20 +9,6 @@
 #define IS_OWNER_POINTER(Class) IS_BASE_OF(BaseOwnerPtr, REMOVE_REF(Class))
 
 // --------------------------------------------------------
-// CLASS - METADATA MACROS
-// --------------------------------------------------------
-
-#define DECLARE_GET_PTR_THIS() \
-	Ptr<ThisClass> getPtrToThis()                                               \
-	{                                                                             \
-		return getPtrToThisCasted<ThisClass>();  \
-	}                                \
-    Ptr<const ThisClass> getPtrToThis() const                                               \
-	{                                                                             \
-		return getPtrToThisCasted<const ThisClass>();  \
-	}
-
-// --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
 // --------------------------------------------------------
 

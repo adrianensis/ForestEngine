@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
-#include "Core/Memory/Pointers.hpp"
 #include "Core/Metadata/MetadataMacros.hpp"
 #include <unordered_map>
 #include <functional>
@@ -35,7 +34,6 @@
     public:                                             \
         DECLARE_METADATA_METHODS(virtual, override) \
     private:                                            \
-        DECLARE_GET_PTR_THIS()               \
         REGISTER_CLASS(__VA_ARGS__) \
     private: // NOTE: notice the last blank space " "
 
@@ -46,9 +44,12 @@
     private: // NOTE: notice the last blank space " "
 
 
-class ObjectBase;
+class IObjectMetadata
+{
 
-using ClassRegisterCallback = std::function<ObjectBase*()>;
+};
+
+using ClassRegisterCallback = std::function<IObjectMetadata*()>;
 
 class ClassDefinition
 {
@@ -119,7 +120,7 @@ public:
         return static_cast<T*>(instance(className));
     }
 
-    static ObjectBase* instance(const std::string_view& className);
+    static IObjectMetadata* instance(const std::string_view& className);
 
     static const ClassMetadata& getClassMetadataByName(const std::string_view& className);
     static const ClassMetadata& getClassMetadataById(const ClassId classId);

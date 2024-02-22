@@ -100,7 +100,7 @@ void UIText::setText(const std::string& text)
                 setLayer(mConfig.mLayer + 1).
                 setIsStatic(false).
                 setIsAffectedByLayout(false).
-                setParent(Ptr<GameObject>::cast(getPtrToThis())).
+                setParent(Ptr<GameObject>::cast(getPtrToThis<UIText>())).
                 create<UITextGlyph>().
                 getUIElement<UITextGlyph>();
 

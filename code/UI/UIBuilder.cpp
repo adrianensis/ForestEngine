@@ -1,8 +1,6 @@
 #include "UI/UIBuilder.hpp"
 #include "Graphics/Module.hpp"
 #include "UI/UIManager.hpp"
-#include "UI/UIStyle.hpp"
-
 
 UIBuilder::UIBuilder()
 {

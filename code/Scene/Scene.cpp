@@ -125,7 +125,7 @@ void Scene::addGameObject(OwnerPtr<GameObject>&& gameObject)
 {
     if(gameObject)
     {
-        gameObject->mScene = getPtrToThis();
+        gameObject->mScene = getPtrToThis<Scene>();
         mNewGameObjects.emplace_back(std::move(gameObject));
     }
 }

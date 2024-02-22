@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Core/Module.hpp"
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/Object/Singleton.hpp"
 
-class UIStyle: public ObjectBase
+class UIStyle
 {
-    GENERATE_METADATA(UIStyle)
-
+    GENERATE_METADATA_STRUCT(UIStyle)
 public:
 	UIStyle()
 	{
@@ -22,8 +20,7 @@ public:
 
 class UIStyleDefault: public UIStyle
 {
-    GENERATE_METADATA(UIStyleDefault)
-
+    GENERATE_METADATA_STRUCT(UIStyleDefault)
 public:
 	UIStyleDefault()
 	{
@@ -44,8 +41,8 @@ public:
 	template<class T> T_EXTENDS(T, UIStyle)
 	void addStyle()
 	{   
-        OwnerPtr<T> newStyle = OwnerPtr<T>::newObject();
-		mStyles.insert_or_assign(T::getClassDefinitionStatic().mId, OwnerPtr<UIStyle>::moveCast(newStyle));
+        T newStyle;
+		mStyles.insert_or_assign(T::getClassDefinitionStatic().mId, newStyle);
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
@@ -53,7 +50,7 @@ public:
 	{
 		CHECK_MSG(mStyles.contains(T::getClassDefinitionStatic().mId), "Style not found");
 
-		return Ptr<T>::cast(mStyles.at(T::getClassDefinitionStatic().mId)).get();
+		return static_cast<T&>(mStyles.at(T::getClassDefinitionStatic().mId));
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
@@ -69,7 +66,7 @@ public:
 
 private:
 	UIStyleDefault mDefaultStyle;
-	std::unordered_map<ClassId, OwnerPtr<UIStyle>> mStyles;
+	std::unordered_map<ClassId, UIStyle> mStyles;
 
 public:
 	CRGET(DefaultStyle)

@@ -32,7 +32,7 @@ MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
     mMemberDefinition = memberDefinition;
 }
 
-ObjectBase* ClassManager::instance(const std::string_view& className)
+IObjectMetadata* ClassManager::instance(const std::string_view& className)
 {
     return mClassMapByName.at(className).mCallback();
 }

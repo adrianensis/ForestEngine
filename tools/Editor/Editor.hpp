@@ -5,7 +5,7 @@
 
 class UIStyleEditorToolButton: public UIStyleDefault
 {
-    GENERATE_METADATA(UIStyleEditorToolButton)
+    GENERATE_METADATA_STRUCT(UIStyleEditorToolButton)
 
 public:
 	UIStyleEditorToolButton()

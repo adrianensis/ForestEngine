@@ -23,10 +23,10 @@ public:
     u32 mReferenceCounter = 0;
 };
 
-class PointedObject
+class IPointedObject
 {
 public:
-    virtual ~PointedObject() = default;
+    virtual ~IPointedObject() = default;
 };
 
 
@@ -227,13 +227,13 @@ friend class RefCountedPtrBase;
 
 protected:
     template<class OtherClass>
-    Ptr<OtherClass> getPtrToThisCasted() { CHECK_MSG(mPtrToThis, "Invalid PtrToThis"); return Ptr<OtherClass>::cast(mPtrToThis); }
+    Ptr<OtherClass> getPtrToThis() { CHECK_MSG(mPtrToThis, "Invalid PtrToThis"); return Ptr<OtherClass>::cast(mPtrToThis); }
     template<class OtherClass>
-    Ptr<const OtherClass> getPtrToThisCasted() const { CHECK_MSG(mPtrToThis, "Invalid PtrToThis"); return Ptr<const OtherClass>::cast(mPtrToThis); }
+    Ptr<const OtherClass> getPtrToThis() const { CHECK_MSG(mPtrToThis, "Invalid PtrToThis"); return Ptr<const OtherClass>::cast(mPtrToThis); }
 private:
     template <class OtherClass>
-    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<PointedObject>::cast(ptr); }
-    Ptr<PointedObject> mPtrToThis;
+    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>::cast(ptr); }
+    Ptr<IPointedObject> mPtrToThis;
 };
 
 // REF COUNTED PTR BASE
@@ -286,7 +286,7 @@ protected:
         if(mInternalPointer && mReferenceBlock)
         {
             increment();
-            if (IS_BASE_OF(EnablePtrFromThis, T))
+            if constexpr (IS_BASE_OF(EnablePtrFromThis, T))
             {
                 EnablePtrFromThis* enablePtrFromThis = dynamic_cast<EnablePtrFromThis*>(reference);
                 if(enablePtrFromThis)

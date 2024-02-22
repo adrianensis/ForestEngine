@@ -89,7 +89,7 @@ void UIList::toggle()
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
-            setParent(Ptr<GameObject>::cast(getPtrToThis()));
+            setParent(Ptr<GameObject>::cast(getPtrToThis<UIList>()));
 
 		FOR_LIST(it, mEntries)
 		{

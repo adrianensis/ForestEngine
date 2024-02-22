@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Std.hpp"
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/Systems/System.hpp"
 #include <chrono>
 

@@ -76,7 +76,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 				Ptr<UIDropdownButton> button = uiBuilder.getUIElement<UIDropdownButton>();
 				button->setOnPressedCallback(onPressedCallback);
 
-				button->setParentDropdown(getPtrToThis());
+				button->setParentDropdown(getPtrToThis<UIDropdown>());
 
 				mButtons.push_back(button);
 			}

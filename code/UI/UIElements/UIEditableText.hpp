@@ -6,7 +6,7 @@
 
 class UIStyleEditableTextBackground: public UIStyle
 {
-    GENERATE_METADATA(UIStyleEditableTextBackground)
+    GENERATE_METADATA_STRUCT(UIStyleEditableTextBackground)
 public:
 	UIStyleEditableTextBackground()
 	{

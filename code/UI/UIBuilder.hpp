@@ -8,7 +8,6 @@
 #include "UI/UIElements/UIText.hpp"
 #include "UI/UIElements/UIPanel.hpp"
 #include "UI/UIElementConfig.hpp"
-#include "UI/UIStyle.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Scene/Module.hpp"
 
