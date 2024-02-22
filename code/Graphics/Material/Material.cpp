@@ -26,7 +26,7 @@ void Material::terminate()
 {
     FOR_RANGE(i, 0, mTextures.size())
     {
-        mTextures[i].get().terminate();
+        mTextures[i].reset();
     }
 }
 

@@ -16,6 +16,10 @@ void MaterialManager::init()
     mMaterials.get(mNoTextureMaterial).init(materialData, mNoTextureMaterial.getIndex());
 }
 
+void MaterialManager::terminate()
+{
+}
+
 PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData)
 {
 	if (!mTexturesByPath.contains(textureData.mPath))
@@ -29,6 +33,11 @@ PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData
 	return mTexturesByPath.at(textureData.mPath);
 }
 
+void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
+{
+    mTextures.free(texture);
+}
+
 PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materialData)
 {
     PoolHandler<Material> handler = mMaterials.allocate();
@@ -36,6 +45,11 @@ PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materi
     material.init(materialData, handler.getIndex());
 
     return handler;
+}
+
+void MaterialManager::removeMaterial(PoolHandler<Material>& material)
+{
+    mMaterials.free(material);
 }
 
 const Material& MaterialManager::getMaterial(const PoolHandler<Material>& handler) const

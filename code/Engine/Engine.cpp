@@ -139,6 +139,7 @@ void Engine::terminate()
 	GET_SYSTEM(ModelManager).terminate();
     REMOVE_SYSTEM(ModelManager);
 
+	GET_SYSTEM(MaterialManager).terminate();
     REMOVE_SYSTEM(MaterialManager);
 
 	GET_SYSTEM(AnimationManager).terminate();

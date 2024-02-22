@@ -119,6 +119,7 @@ class Material: public ObjectBase
 public:
     void init(const MaterialData& materialData, u32 id);
     void terminate();
+    virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
     bool hasTexture() const;

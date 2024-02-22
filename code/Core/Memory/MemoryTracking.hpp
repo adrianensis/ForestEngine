@@ -60,7 +60,7 @@ public:
 	}
 
 	template <class T>
-	static void deleteObject(T* pointer)
+	static void unregisterDeletedObject(T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 

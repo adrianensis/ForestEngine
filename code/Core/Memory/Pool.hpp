@@ -3,16 +3,17 @@
 #include "Core/StdCore.hpp"
 #include "Core/ByteBuffer.hpp"
 #include <unordered_set>
+#include "Core/Memory/MemoryTracking.hpp"
 
 template <class T>
-class ObjectPool;
+class Pool;
 
 template <class T>
 class PoolHandler
 {
 public:
     PoolHandler() = default;
-    PoolHandler(i32 index, ObjectPool<T>* pool)
+    PoolHandler(i32 index, Pool<T>* pool)
     {
         mIndex = index;
         CHECK_MSG(pool, "Invalid pool!");
@@ -47,55 +48,86 @@ public:
 
 private:
     i32 mIndex = INVALID_INDEX;
-    ObjectPool<T>* mPool = nullptr;
+    Pool<T>* mPool = nullptr;
 };
 
 template <class T>
-class ObjectPool
+class Pool;
+
+class IPoolable
+{
+template <class T>
+friend class Pool;
+public:
+    virtual void onPoolAllocate() {};
+    virtual void onPoolFree() {};
+};
+
+template <class T>
+class Pool
 {
 public:
-    ObjectPool() 
+    Pool() = default;
+
+    ~Pool() 
     {
-        // mObjects.reserve(100);
-        // mAvailableObjects.reserve(100);
+        clear();
     }
 
-    ~ObjectPool() 
+    void clear() 
     {
-        FOR_MAP(it, mHandlers)
+        FOR_MAP(it, mAllocatedObjects)
         {
-            (*it)->reset();
+            internalFreeObject(*it);
         }
+
+        mObjects.clear();
+        mHandlers.clear();
+        mFreeObjects.clear();
+        mAllocatedObjects.clear();
     }
 
     template <typename ... Args>
     PoolHandler<T> allocate(Args&&... args)
     {
         u32 index = 0;
-        if (mAvailableObjects.empty())
+        if (mFreeObjects.empty())
         {
             T object(args...);
             mObjects.emplace_back(object);
+            mHandlers.emplace_back();
             index = mObjects.size() - 1;
+
+            MemoryTracking::registerNewObject<T>(&mObjects.at(index));
         }
         else
         {
-            index = mAvailableObjects.back();
-            mAvailableObjects.pop_back();
+            index = *mFreeObjects.begin();
+            mFreeObjects.erase(index);
         }
         
+        mAllocatedObjects.insert(index);
+        
         PoolHandler<T> handle(index, this);
+
+        if constexpr (IS_BASE_OF(IPoolable, T))
+        {
+            get(handle).onPoolAllocate();
+        }
+
         return handle;
     }
 
     void registerHandler(PoolHandler<T>& handle)
     {
-        mHandlers.insert(&handle);
+        CHECK_MSG(handle.isValid(), "Invalid handle!");
+        mHandlers[handle.getIndex()].insert(&handle);
     }
 
     void unregisterHandler(PoolHandler<T>& handle)
     {
-        mHandlers.erase(&handle);
+        CHECK_MSG(handle.isValid(), "Invalid handle!");
+        mHandlers[handle.getIndex()].erase(&handle);
     }
 
     T& get(const PoolHandler<T>& handle)
@@ -112,18 +144,42 @@ public:
 
     void free(PoolHandler<T>& handle)
     {
-        mAvailableObjects.push_back(handle.getIndex());
-        handle.reset();
+        if(handle.isValid())
+        {
+            u32 index = handle.getIndex();
+            FOR_MAP(it, mHandlers[index])
+            {
+                (*it)->reset();
+            }
+
+            mFreeObjects.insert(index);
+            mAllocatedObjects.erase(index);
+
+            internalFreeObject(index);
+        }
+    }
+
+private:
+    void internalFreeObject(u32 index)
+    {
+        if constexpr (IS_BASE_OF(IPoolable, T))
+        {
+            mObjects.at(index).onPoolFree();
+        }
+
+        MemoryTracking::unregisterDeletedObject<T>(&mObjects.at(index));
     }
 
 private:
     std::vector<T> mObjects;
-    std::unordered_set<PoolHandler<T>*> mHandlers;
-    std::vector<u32> mAvailableObjects;
+    std::vector<std::unordered_set<PoolHandler<T>*>> mHandlers;
+    std::unordered_set<u32> mFreeObjects;
+    std::unordered_set<u32> mAllocatedObjects;
 };
 
 template<class T>
 T& PoolHandler<T>::get() const
 {
+    CHECK_MSG(isValid(), "Invalid handle!");
     return mPool->get(*this);
 }

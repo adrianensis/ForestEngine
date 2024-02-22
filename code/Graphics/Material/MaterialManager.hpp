@@ -10,14 +10,17 @@ class MaterialManager: public System
 
 public:
     void init();
+    void terminate();
     PoolHandler<Texture> loadTexture(const TextureData& textureData);
+    void unloadTexture(PoolHandler<Texture>& texture);
     PoolHandler<Material> createMaterial(const MaterialData& materialData);
+    void removeMaterial(PoolHandler<Material>& material);
     const Material& getMaterial(const PoolHandler<Material>& handler) const;
 
 private:
-    ObjectPool<Texture> mTextures;
+    Pool<Texture> mTextures;
     std::unordered_map<std::string, PoolHandler<Texture>> mTexturesByPath;
-    ObjectPool<Material> mMaterials;
+    Pool<Material> mMaterials;
 
     PoolHandler<Material> mNoTextureMaterial;
 

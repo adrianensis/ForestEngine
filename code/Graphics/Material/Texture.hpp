@@ -164,6 +164,7 @@ class Texture: public ObjectBase
 public:
     void init(const TextureData& textureData, u32 id);
     void terminate();
+    virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
 

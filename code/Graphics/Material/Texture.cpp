@@ -51,5 +51,9 @@ void Texture::init(const TextureData& textureData, u32 id)
 
 void Texture::terminate() 
 {
-    GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
+    if(mGPUTextureId > 0)
+    {
+        GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
+        mGPUTextureId = 0;
+    }
 }

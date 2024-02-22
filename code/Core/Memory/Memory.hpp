@@ -24,7 +24,7 @@ public:
 	static void deleteObject(T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
-        MemoryTracking::deleteObject(pointer);
+        MemoryTracking::unregisterDeletedObject(pointer);
 		delete pointer;
 	}
 };
