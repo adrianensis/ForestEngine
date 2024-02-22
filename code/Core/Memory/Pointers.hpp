@@ -23,13 +23,6 @@ public:
     u32 mReferenceCounter = 0;
 };
 
-class IPointedObject
-{
-public:
-    virtual ~IPointedObject() = default;
-};
-
-
 // SNIFAE
 
 // Example:
@@ -220,7 +213,13 @@ public:
     ReferenceBlock* getReferenceBlock() const { return mReferenceBlock; };
 };
 
-class EnablePtrFromThis
+class IPointedObject
+{
+public:
+    virtual ~IPointedObject() = default;
+};
+
+class EnablePtrFromThis: public IPointedObject
 {
 template<class U>
 friend class RefCountedPtrBase;
