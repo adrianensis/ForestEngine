@@ -226,12 +226,12 @@ friend class RefCountedPtrBase;
 
 protected:
     template<class OtherClass>
-    Ptr<OtherClass> getPtrToThis() { CHECK_MSG(mPtrToThis, "Invalid PtrToThis"); return Ptr<OtherClass>::cast(mPtrToThis); }
+    Ptr<OtherClass> getPtrToThis() { return Ptr<OtherClass>::cast(mPtrToThis); }
     template<class OtherClass>
-    Ptr<const OtherClass> getPtrToThis() const { CHECK_MSG(mPtrToThis, "Invalid PtrToThis"); return Ptr<const OtherClass>::cast(mPtrToThis); }
+    Ptr<const OtherClass> getPtrToThis() const { return Ptr<const OtherClass>::cast(mPtrToThis); }
 private:
     template <class OtherClass>
-    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>::cast(ptr); }
+    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>::cast(ptr); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
     Ptr<IPointedObject> mPtrToThis;
 };
 
