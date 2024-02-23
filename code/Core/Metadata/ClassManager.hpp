@@ -6,12 +6,13 @@
 #include <functional>
 
 #define REGISTER_CLASS(...) \
-    inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(__VA_ARGS__::getClassDefinitionStatic(), [](){ \
+    inline static const ClassRegister classRegister = ClassRegister(smClassDefinition, [](){ \
         return Memory::newObject<__VA_ARGS__>(); \
     });
 
-#define REGISTER_MEMBER(...) \
-    inline static const MemberRegister memberRegister_##__VA_ARGS__ = MemberRegister(ThisClass::getClassDefinitionStatic().mName, #__VA_ARGS__, decltype(__VA_ARGS__)::getClassDefinitionStatic());
+#define REGISTER_MEMBER(memberName, ...) \
+    constexpr inline static const MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
+    inline static const MemberRegister memberRegister_##memberName = MemberRegister(ThisClass::getClassDefinitionStatic().mName, smMemberDefinition_##memberName);
 
 /*
     NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassDefinition().mId"
@@ -19,21 +20,21 @@
     For example: Vector3 is sizeof(f32) * 3 = 4*3 = 12, but with VTable is goes up to 24!!
     Engine heavily depends on the exact size of a Vector3 (and other classes).
 */
-#define DECLARE_METADATA_METHODS(Virtual, Override) \
-	constexpr static const ClassDefinition& getClassDefinitionStatic() { return smClassDefinition; }; \
-	constexpr Virtual const ClassDefinition& getClassDefinition() const Override { return getClassDefinitionStatic(); };
-
 #define DECLARE_METADATA_VARIABLES(...)                                    \
     private:                                                               \
         using ThisClass = __VA_ARGS__;                                     \
         constexpr inline static const ClassDefinition smClassDefinition {#__VA_ARGS__##sv, Hash::hashString(#__VA_ARGS__##sv)};
+
+#define DECLARE_METADATA_METHODS(Virtual, Override) \
+	constexpr inline static const ClassDefinition& getClassDefinitionStatic() { return smClassDefinition; }; \
+	Virtual const ClassDefinition& getClassDefinition() const Override { return getClassDefinitionStatic(); };
 
 #define GENERATE_METADATA(...)                      \
     private: \
         DECLARE_METADATA_VARIABLES(__VA_ARGS__)             \
     public:                                             \
         DECLARE_METADATA_METHODS(virtual, override) \
-    private:                                            \
+    private: \
         REGISTER_CLASS(__VA_ARGS__) \
     private: // NOTE: notice the last blank space " "
 
@@ -41,7 +42,7 @@
         DECLARE_METADATA_VARIABLES(__VA_ARGS__)            \
     public:                                            \
         DECLARE_METADATA_METHODS(EMPTY_MACRO(), EMPTY_MACRO()) \
-    private:                                            \
+    private: \
         REGISTER_CLASS(__VA_ARGS__) \
     private: // NOTE: notice the last blank space " "
 
@@ -59,7 +60,8 @@ class MemberDefinition
 {
 public:
     std::string_view mName;
-    ClassDefinition mClassDefinition;
+    std::string_view mClassName;
+    u32 mOffset = 0;
 };
 
 // --------------------------------------------------------
