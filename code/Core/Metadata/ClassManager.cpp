@@ -1,22 +1,11 @@
 #include "Core/Metadata/ClassManager.hpp"
 
-ClassRegister::ClassRegister(const ClassDefinition& classDefinition)
+ClassRegister::ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback)
 {
-    ClassManager::insert(classDefinition);
+    ClassManager::insert(ClassMetadata(classDefinition, callback));
 }
 
-ClassRegister::ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback): ClassRegister(classDefinition)
-{
-    ClassMetadata& classMetadata = ClassManager::insert(classDefinition);
-    classMetadata.mCallback = callback;
-}
-
-ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
-{
-    mClassDefinition = classDefinition;
-}
-
-ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback): ClassMetadata(classDefinition)
+ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback)
 {
     mClassDefinition = classDefinition;
     mCallback = callback;
@@ -32,24 +21,22 @@ MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
     mMemberDefinition = memberDefinition;
 }
 
-IObjectMetadata* ClassManager::instance(const std::string_view& className)
+void* ClassManager::instance(const std::string_view& className)
 {
     return mClassMapByName.at(className).mCallback();
 }
 
-ClassMetadata& ClassManager::insert(const ClassDefinition& classDefinition)
+void ClassManager::insert(const ClassMetadata& classMetadata)
 {
-    if(!mClassMapByName.contains(classDefinition.mName))
+    if(!mClassMapByName.contains(classMetadata.mClassDefinition.mName))
     {
-        mClassMapByName.insert_or_assign(classDefinition.mName, ClassMetadata(classDefinition));
+        mClassMapByName.insert_or_assign(classMetadata.mClassDefinition.mName, classMetadata);
     }
 
-    if(!mClassMapById.contains(classDefinition.mId))
+    if(!mClassMapById.contains(classMetadata.mClassDefinition.mId))
     {
-        mClassMapById.insert_or_assign(classDefinition.mId, &mClassMapByName.at(classDefinition.mName));
+        mClassMapById.insert_or_assign(classMetadata.mClassDefinition.mId, &mClassMapByName.at(classMetadata.mClassDefinition.mName));
     }
-
-    return mClassMapByName.at(classDefinition.mName);
 }
 
 ClassMetadata& ClassManager::getClassMetadataInternal(const std::string_view& className)

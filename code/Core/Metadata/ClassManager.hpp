@@ -41,15 +41,12 @@
         DECLARE_METADATA_VARIABLES(__VA_ARGS__)            \
     public:                                            \
         DECLARE_METADATA_METHODS(EMPTY_MACRO(), EMPTY_MACRO()) \
+    private:                                            \
+        REGISTER_CLASS(__VA_ARGS__) \
     private: // NOTE: notice the last blank space " "
 
 
-class IObjectMetadata
-{
-
-};
-
-using ClassRegisterCallback = std::function<IObjectMetadata*()>;
+using ClassRegisterCallback = std::function<void*()>;
 
 class ClassDefinition
 {
@@ -89,14 +86,12 @@ public:
 class ClassRegister
 {
 public:
-    ClassRegister(const ClassDefinition& classDefinition);
     ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback);
 };
 
 class ClassMetadata
 {
 public:
-    ClassMetadata(const ClassDefinition& classDefinition);
     ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback);
 
     ClassDefinition mClassDefinition;
@@ -114,19 +109,19 @@ friend ClassRegister;
 friend MemberRegister;
 
 public:
-    template<typename T>
+template<typename T>
     static T* instance(const std::string_view& className)
     {
         return static_cast<T*>(instance(className));
     }
 
-    static IObjectMetadata* instance(const std::string_view& className);
+    static void* instance(const std::string_view& className);
 
     static const ClassMetadata& getClassMetadataByName(const std::string_view& className);
     static const ClassMetadata& getClassMetadataById(const ClassId classId);
 
 private:
-    static ClassMetadata& insert(const ClassDefinition& classDefinition);
+    static void insert(const ClassMetadata& classMetadata);
     static ClassMetadata& getClassMetadataInternal(const std::string_view& className);
     inline static std::unordered_map<std::string_view, ClassMetadata> mClassMapByName;
     inline static std::unordered_map<ClassId, ClassMetadata*> mClassMapById;

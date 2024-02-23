@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 
-class ObjectBase: public IObjectMetadata, public IMemoryTrackedObject, public ISerializable, public IPoolable, public EnablePtrFromThis
+class ObjectBase: public IMemoryTrackedObject, public ISerializable, public IPoolable, public EnablePtrFromThis
 {
 private:
     DECLARE_METADATA_VARIABLES(ObjectBase)
