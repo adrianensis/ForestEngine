@@ -1,6 +1,6 @@
-#include "Core/Input/Input.hpp"
+#include "Engine/Input/Input.hpp"
 #include "Core/Log/Log.hpp"
-#include "Core/Profiler/Profiler.hpp"
+#include "Engine/Profiler/Profiler.hpp"
 
 void Input::init(const Ptr<IWindowInputAdapter>& windowInputAdapter)
 {

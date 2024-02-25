@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Systems/System.hpp"
+#include "Engine/Systems/System.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Core/Input/Input.hpp"
+#include "Engine/Input/Input.hpp"
 #include "GLFW/glfw3.h"
 
 class Window : public System, public IWindowInputAdapter

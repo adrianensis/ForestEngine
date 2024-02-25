@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Module.hpp"
+#include "Engine/Minimal.hpp"
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIElements/UIButton.hpp"
 #include "UI/UIElements/UIEditableText.hpp"

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
-#include "Core/Systems/System.hpp"
+#include "Core/StdCore.hpp"
 
 #ifdef BUILD_WITH_EASY_PROFILER
 #include "easy/profiler.h"
@@ -20,15 +19,9 @@
 #define PROFILER_END_BLOCK()
 #endif
 
-class Profiler : public System
+class Profiler
 {
-	
-
 public:
-    Profiler();
-    ~Profiler() override;
-
-    void init();
-    void terminate();
+    static void init();
+    static void terminate();
 };
-REGISTER_CLASS(Profiler);

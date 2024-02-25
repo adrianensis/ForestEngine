@@ -1,5 +1,5 @@
-#include "Core/Time/TimerManager.hpp"
-#include "Core/Profiler/Profiler.hpp"
+#include "Engine/Time/TimerManager.hpp"
+#include "Engine/Profiler/Profiler.hpp"
 #include "Core/Log/Log.hpp"
 
 

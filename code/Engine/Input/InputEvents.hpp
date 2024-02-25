@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Events/EventsManager.hpp"
+#include "Engine/Events/EventsManager.hpp"
 
 #define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(Input), event);
 

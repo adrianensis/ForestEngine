@@ -1,14 +1,5 @@
-#include "Core/Profiler/Profiler.hpp"
+#include "Engine/Profiler/Profiler.hpp"
 #include "Core/Log/Log.hpp"
-
-Profiler::Profiler()
-{
-
-}
-Profiler::~Profiler() 
-{
-
-}
 
 void Profiler::init()
 {

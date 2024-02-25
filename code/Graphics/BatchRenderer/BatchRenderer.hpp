@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Module.hpp"
+#include "Engine/Minimal.hpp"
 #include "Graphics/BatchRenderer/MeshBatcher.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"

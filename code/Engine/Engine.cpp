@@ -1,9 +1,9 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Core/Command/CommandLine.hpp"
-#include "Core/Time/TimerManager.hpp"
-#include "Core/Input/Input.hpp"
-#include "Core/Events/EventsManager.hpp"
+#include "Engine/Command/CommandLine.hpp"
+#include "Engine/Time/TimerManager.hpp"
+#include "Engine/Input/Input.hpp"
+#include "Engine/Events/EventsManager.hpp"
 #include "Graphics/Module.hpp"
 #include "Scripting/Module.hpp"
 
@@ -19,9 +19,7 @@ void Engine::init()
 	mFPS = 500;
 
 	Memory::init();
-
-    CREATE_SYSTEM(Profiler);
-	GET_SYSTEM(Profiler).init();
+	Profiler::init();
 
     CREATE_SYSTEM(EngineConfig);
 	GET_SYSTEM(EngineConfig).init();
@@ -161,8 +159,7 @@ void Engine::terminate()
     REMOVE_SYSTEM(Window);
     REMOVE_SYSTEM(GPUInterface);
 
-	GET_SYSTEM(Profiler).terminate();
-	REMOVE_SYSTEM(Profiler);
+	Profiler:terminate();
 
 	SystemsManager::deleteInstance();
 

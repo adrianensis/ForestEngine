@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Systems/System.hpp"
-#include "Core/Events/Event.hpp"
+#include "Engine/Systems/System.hpp"
+#include "Engine/Events/Event.hpp"
 
 /*
   Macros for (un)susbscribing and sending events.

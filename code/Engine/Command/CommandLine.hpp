@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Systems/System.hpp"
-#include "Core/Command/Command.hpp"
+#include "Engine/Systems/System.hpp"
+#include "Engine/Command/Command.hpp"
 
 using CommandCallback = std::function<void(const Command& command)>;
 

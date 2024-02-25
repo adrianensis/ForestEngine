@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Module.hpp"
+#include "Engine/Minimal.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Module.hpp"
+#include "Engine/Minimal.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 
 class TextureAnimation

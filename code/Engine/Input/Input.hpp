@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Systems/System.hpp"
+#include "Engine/Systems/System.hpp"
 #include "Core/Maths/Vector2.hpp"
-#include "Core/Input/InputEvents.hpp"
+#include "Engine/Input/InputEvents.hpp"
 
 class IWindowInputAdapter
 {
