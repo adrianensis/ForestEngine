@@ -6,7 +6,7 @@
 
 class MeshPrimitives: public System
 {
-	GENERATE_METADATA(MeshPrimitives)
+	
 
 public:
     void init();
@@ -16,12 +16,12 @@ public:
 	template <class T>
 	Ptr<const Mesh> getPrimitive()
 	{
-		if(!mPrimitivesMap.contains(T::getClassDefinitionStatic().mId))
+		if(!mPrimitivesMap.contains(ClassManager::getClassMetadata<T>().mClassDefinition.mId))
 		{
-			mPrimitivesMap.insert_or_assign(T::getClassDefinitionStatic().mId, createPrimitive<T>());
+			mPrimitivesMap.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.mId, createPrimitive<T>());
 		}
 		
-		return Ptr<Mesh>(mPrimitivesMap.at(T::getClassDefinitionStatic().mId));
+		return Ptr<Mesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId));
 	}
 
 private:
@@ -35,6 +35,7 @@ private:
 private:
 	std::unordered_map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
 };
+REGISTER_CLASS(MeshPrimitives);
 
 template <>
 OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;

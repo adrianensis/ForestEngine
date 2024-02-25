@@ -45,7 +45,7 @@ public:
 
 class TimerManager: public System
 {
-	GENERATE_METADATA(TimerManager)
+	
 	
 public:
 	~TimerManager() override = default;
@@ -62,3 +62,4 @@ private:
 private:
 	std::list<Timer *> mTimers;
 };
+REGISTER_CLASS(TimerManager);

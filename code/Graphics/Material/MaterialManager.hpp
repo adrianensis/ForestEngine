@@ -6,7 +6,7 @@
 
 class MaterialManager: public System
 {
-	GENERATE_METADATA(MaterialManager)
+	
 
 public:
     void init();
@@ -27,3 +27,4 @@ private:
 public:
     GET(NoTextureMaterial)
 };
+REGISTER_CLASS(MaterialManager);

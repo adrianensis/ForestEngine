@@ -6,7 +6,7 @@ class GameObject;
 
 class Component: public SystemComponent
 {
-    GENERATE_METADATA(Component)
+    
 	DECLARE_SERIALIZATION()
 	
 public:
@@ -28,3 +28,4 @@ public:
 	Ptr<GameObject> mGameObject;
 	GET(IsDestroyed)
 };
+REGISTER_CLASS(Component);

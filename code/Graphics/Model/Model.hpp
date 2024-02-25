@@ -32,7 +32,7 @@ class Mesh;
 
 class Model: public ObjectBase
 {
-    GENERATE_METADATA(Model)
+    
 
 public:
     void init(const std::string& path);
@@ -114,3 +114,4 @@ public:
     CRGET(Meshes)
     CRGET(MeshMaterials)
 };
+REGISTER_CLASS(Model);

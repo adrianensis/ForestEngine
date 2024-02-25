@@ -6,7 +6,7 @@
 
 class SystemComponent: public ObjectBase
 {
-    GENERATE_METADATA(SystemComponent)
+    
 
 public:
     // Important: Override this in ONLY those component classes allowed to be injected into engine systems
@@ -16,10 +16,11 @@ public:
 public:
     bool mAlreadyAddedToSystem = false;
 };
+REGISTER_CLASS(SystemComponent);
 
 class System: public ObjectBase
 {
-    GENERATE_METADATA(System)
+    
 
 public:
     void registerComponentClass(ClassId classId);
@@ -30,6 +31,7 @@ public:
 private:
     std::unordered_set<ClassId> mAcceptedSystemComponentClasses;
 };
+REGISTER_CLASS(System);
 
 #define GET_SYSTEM_PTR(...) \
     SystemsManager::getInstance().getSystem<__VA_ARGS__>()
@@ -45,7 +47,7 @@ private:
 
 class SystemsManager : public ObjectBase, public Singleton<SystemsManager>
 {
-    GENERATE_METADATA(SystemsManager)
+    
 
 public:
     template<typename T> T_EXTENDS(T, SystemComponent)
@@ -86,21 +88,22 @@ public:
     void createSystem()
     {
         OwnerPtr<T> newSystem = OwnerPtr<T>::newObject();
-        mSystems.insert_or_assign(T::getClassDefinitionStatic().mId, OwnerPtr<System>::moveCast(newSystem));
+        mSystems.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.mId, OwnerPtr<System>::moveCast(newSystem));
     }
 
     template<typename T> T_EXTENDS(T, System)
     Ptr<T> getSystem() const
     {
-        return Ptr<T>::cast(mSystems.at(T::getClassDefinitionStatic().mId));
+        return Ptr<T>::cast(mSystems.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId));
     }
 
     template<typename T> T_EXTENDS(T, System)
     void removeSystem()
     {
-        mSystems.erase(T::getClassDefinitionStatic().mId);
+        mSystems.erase(ClassManager::getClassMetadata<T>().mClassDefinition.mId);
     }
 
 private:
     std::unordered_map<ClassId, OwnerPtr<System>> mSystems;
 };
+REGISTER_CLASS(SystemsManager);

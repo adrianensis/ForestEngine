@@ -7,7 +7,7 @@ class Material;
 
 class Mesh: public GPUMesh
 {
-    GENERATE_METADATA(Mesh)
+    
 
 public:
     void addBoneWeight(u32 vertexId, i32 id, f32 weight);
@@ -19,3 +19,4 @@ private:
 public:
     Ptr<const Model> mModel;
 };
+REGISTER_CLASS(Mesh);

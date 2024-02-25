@@ -7,7 +7,7 @@ class GameObject;
 
 class Scene: public ObjectBase
 {
-    GENERATE_METADATA(Scene)
+    
     DECLARE_SERIALIZATION()
 
 public:
@@ -54,4 +54,4 @@ public:
 	GET(Size)
 	GET(Path)
 };
-
+REGISTER_CLASS(Scene);

@@ -6,7 +6,7 @@ class UIPanel;
 
 class UITextGlyph: public UIArea
 {
-    GENERATE_METADATA(UITextGlyph)
+    
 
 public:
     void initFromConfig(const UIElementConfig& config) override;
@@ -14,10 +14,11 @@ public:
 private:
     char mCharacter;
 };
+REGISTER_CLASS(UITextGlyph);
 
 class UIText: public UIArea
 {
-    GENERATE_METADATA(UIText)
+    
 
 public:
     void initFromConfig(const UIElementConfig& config) override;
@@ -42,3 +43,4 @@ public:
 	CRGET(String)
 	SET(Layer)
 };
+REGISTER_CLASS(UIText);

@@ -7,7 +7,7 @@ class UIFont;
 
 class UIFontsManager: public ObjectBase
 {
-    GENERATE_METADATA(UIFontsManager)
+    
 public:
     void init();
     void terminate();
@@ -20,10 +20,11 @@ private:
 public:
     RGET(FontsLibrary)
 };
+REGISTER_CLASS(UIFontsManager);
 
 class UIFont: public ObjectBase
 {
-    GENERATE_METADATA(UIFont)
+    
 public:
     void init(UIFontsManager& fontsManager, const std::string& fontFile);
 private:
@@ -33,3 +34,4 @@ public:
     GET(FontMaterial)
     CRGET(FontData)
 };
+REGISTER_CLASS(UIFont);

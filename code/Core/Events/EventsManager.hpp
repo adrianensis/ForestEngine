@@ -9,11 +9,11 @@
 
 #define SUBSCRIBE_TO_EVENT(EventClassName, owner, receiver, eventCallback) GET_SYSTEM(EventsManager).subscribe<EventClassName>(owner, receiver, eventCallback);
 #define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(EventsManager).unsubscribe<EventClassName>(owner, receiver);
-#define SEND_EVENT(owner, instigator, event) GET_SYSTEM(EventsManager).send(owner, instigator, &event);
+#define SEND_EVENT(owner, instigator, event) GET_SYSTEM(EventsManager).send<REMOVE_REFERENCE(decltype(event))>(owner, instigator, &event);
 
 class EventsManager: public System
 {
-	GENERATE_METADATA(EventsManager)
+	
 
 public:
     void init();
@@ -23,16 +23,21 @@ public:
 	template <class E> T_EXTENDS(E, Event)
 	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
 	{
-        subscribe(E::getClassDefinitionStatic().mId, eventOwner, eventReceiver, eventCallback);
+        subscribe(ClassManager::getClassMetadata<E>().mClassDefinition.mId, eventOwner, eventReceiver, eventCallback);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
 	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
 	{
-        unsubscribe(E::getClassDefinitionStatic().mId, eventOwner, eventReceiver);
+        unsubscribe(ClassManager::getClassMetadata<E>().mClassDefinition.mId, eventOwner, eventReceiver);
 	}
 
-    void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);
+	template <class E> T_EXTENDS(E, Event)
+    void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
+    {
+        ClassId eventClassId = ClassManager::getClassMetadata<E>().mClassDefinition.mId;
+        send(eventClassId, eventOwner, eventInstigator, event);
+    }
 
 private:
 	using ReceiversFunctorMap = std::unordered_map<ObjectBase *, EventFunctor<Event>>;
@@ -50,4 +55,6 @@ private:
     EventsManager::ReceiversFunctorMap& getReceiversFunctorMap(ObjectBase *eventOwner, ClassId eventClassId);
     void subscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback);
     void unsubscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver);
+    void send(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);
 };
+REGISTER_CLASS(EventsManager);

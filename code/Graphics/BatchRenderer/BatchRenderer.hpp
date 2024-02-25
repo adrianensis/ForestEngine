@@ -7,7 +7,7 @@
 
 class BatchRenderer: public ObjectBase
 {
-    GENERATE_METADATA(BatchRenderer)
+    
 
 public:
     void init(const BatchData& batchData);
@@ -35,3 +35,4 @@ private:
 public:
     CRGET(BatchData)
 };
+REGISTER_CLASS(BatchRenderer);

@@ -7,7 +7,7 @@ class UIText;
 
 class UIButton: public UIPanel
 {
-    GENERATE_METADATA(UIButton)
+    
 	
 public:
     void init() override;
@@ -23,10 +23,12 @@ private:
 public:
 	GET(Text)
 };
+REGISTER_CLASS(UIButton);
 
 class UIToggleButton: public UIButton
 {
-    GENERATE_METADATA(UIToggleButton)
+    
 public:
     void init() override;
 };
+REGISTER_CLASS(UIToggleButton);

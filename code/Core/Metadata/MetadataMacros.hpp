@@ -5,8 +5,8 @@
 // --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
-#define IS_SMART_POINTER(Class) IS_BASE_OF(BasePtr, REMOVE_REF(Class))
-#define IS_OWNER_POINTER(Class) IS_BASE_OF(BaseOwnerPtr, REMOVE_REF(Class))
+#define IS_SMART_POINTER(Class) IS_BASE_OF(BasePtr, REMOVE_REFERENCE(Class))
+#define IS_OWNER_POINTER(Class) IS_BASE_OF(BaseOwnerPtr, REMOVE_REFERENCE(Class))
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
@@ -23,7 +23,7 @@
         Type,                                     \
         COND_TYPE(                                \
             IS_ARITHMETIC(Type) || IS_ENUM(Type), \
-            REMOVE_REF(Type),                     \
+            REMOVE_REFERENCE(Type),                     \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
                 typename get_ptr_type<Type>::type,       \
@@ -38,7 +38,7 @@
         ADD_POINTER(ADD_CONST(REMOVE_POINTER(Type))), \
         COND_TYPE(                                    \
             IS_ARITHMETIC(Type) || IS_ENUM(Type),     \
-            REMOVE_REF(Type),                         \
+            REMOVE_REFERENCE(Type),                         \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
                 typename get_const_ptr_type<Type>::type,       \
@@ -53,7 +53,7 @@
         ADD_CONST(Type),                          \
         COND_TYPE(                                \
             IS_ARITHMETIC(Type) || IS_ENUM(Type), \
-            REMOVE_REF(Type),                     \
+            REMOVE_REFERENCE(Type),                     \
             COND_TYPE(                                \
                 IS_OWNER_POINTER(Type),               \
                 Type&&,       \
@@ -112,33 +112,4 @@
     void appendTo##BaseName(const decltype(m##BaseName) & otherVector) { m##BaseName.insert(m##BaseName.end(), otherVector.begin(), otherVector.end()); } \
     void clear##BaseName() { m##BaseName.clear(); }
 
-// --------------------------------------------------------
-// COPY
-// --------------------------------------------------------
-
-#define DECLARE_COPY()                                                             \
-    ThisClass &operator=(const ThisClass &other)                                  \
-    {                                                                                 \
-        if (this != &other)                                                           \
-        {                                                                             \
-            __specificCopy(other);                                               \
-        }                                                                             \
-        return *this;                                                                 \
-    }                                                                                 \
-                                                                                      \
-    void __specificCopy(const ThisClass &other)
-
-#define DO_COPY(MemberName) MemberName = other.MemberName;
-
-
-#define DECLARE_MOVE()                                                             \
-    ThisClass &operator=(ThisClass &&other)                                  \
-    {                                                                                 \
-        if (this != &other)                                                           \
-        {                                                                             \
-            __specificMove(other);                                               \
-        }                                                                             \
-        return *this;                                                                 \
-    }                                                                                 \
-                                                                                      \
-    void __specificMove(ThisClass &other)
+    

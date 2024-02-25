@@ -12,7 +12,7 @@ public:
 
 class Animation: public ObjectBase
 {
-    GENERATE_METADATA(Animation)
+    
 
 public:
     void init(f32 animDurationInSeconds, Ptr<const Model> model);
@@ -26,10 +26,11 @@ public:
     u32 mDurationInTicks = 0;
     f32 mDurationInSeconds = 0;
 };
+REGISTER_CLASS(Animation);
 
 class AnimationState: public ObjectBase
 {
-    GENERATE_METADATA(AnimationState)
+    
 
 public:
     void init(Ptr<const Animation> animation);
@@ -44,10 +45,11 @@ public:
     CGET(Animation)
     GET(AnimationTime)
 };
+REGISTER_CLASS(AnimationState);
 
 class SkeletonState: public ObjectBase
 {
-    GENERATE_METADATA(SkeletonState)
+    
 
 public:
     void init(Ptr<const Model> model);
@@ -66,3 +68,4 @@ private:
 public:
     CRGET(CurrentBoneTransforms)
 };
+REGISTER_CLASS(SkeletonState);

@@ -160,7 +160,7 @@ public:
 
 class Texture: public ObjectBase
 {
-    GENERATE_METADATA(Texture)
+    
 public:
     void init(const TextureData& textureData, u32 id);
     void terminate();
@@ -178,3 +178,4 @@ private:
 public:
     GET(ID)
 };
+REGISTER_CLASS(Texture);

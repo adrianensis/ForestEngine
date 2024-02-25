@@ -5,10 +5,10 @@
 
 class Light: public Component
 {
-    GENERATE_METADATA(Light)
+    
 
 public:
-    ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
+    ClassId getSystemComponentId() const override;
     void init(const GPULight& data);
 
 private:
@@ -17,3 +17,4 @@ private:
 public:
     CRGET(LightData)
 };
+REGISTER_CLASS(Light);

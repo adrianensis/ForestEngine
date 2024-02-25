@@ -43,11 +43,11 @@ public:
 
 class MeshRenderer: public Component, public IOcTreeElement
 {
-    GENERATE_METADATA(MeshRenderer)
+    
 	DECLARE_SERIALIZATION()
 	
 public:
-    ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
+    ClassId getSystemComponentId() const override;
 
     void init(const RendererData& data);
     void onComponentAdded() override;
@@ -79,3 +79,4 @@ public:
     RGET(MaterialInstance)
     RGET_SET(GPUInstanceSlot)
 };
+REGISTER_CLASS(MeshRenderer);

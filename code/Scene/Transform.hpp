@@ -4,7 +4,7 @@
 
 class Transform: public Component
 {
-    GENERATE_METADATA(Transform)
+    
 	DECLARE_SERIALIZATION()
 
 public:
@@ -67,3 +67,4 @@ public:
     GET(ModelMatrixNoScale)
     GET_SET(IgnoreParentScale)
 };
+REGISTER_CLASS(Transform);

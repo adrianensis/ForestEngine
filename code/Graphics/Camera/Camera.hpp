@@ -7,7 +7,7 @@
 
 class Camera: public Component
 {
-    GENERATE_METADATA(Camera)
+    
 
 public:
 
@@ -53,4 +53,4 @@ public:
 	Frustum mFrustum;
 	f32 mZoom = 1.0f;
 };
-
+REGISTER_CLASS(Camera);

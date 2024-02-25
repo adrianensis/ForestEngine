@@ -38,7 +38,6 @@ void Component::onDestroy()
 
 IMPLEMENT_SERIALIZATION(Component)
 {
-	SERIALIZE("class", getClassDefinition().mName)
 }
 
 IMPLEMENT_DESERIALIZATION(Component)

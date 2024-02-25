@@ -12,7 +12,7 @@ class Scene;
 
 class UIManager: public System
 {
-	GENERATE_METADATA(UIManager)
+	
 public:
 
     void init();
@@ -48,3 +48,4 @@ private:
 public:
     GET(DefaultUIMaterial)
 };
+REGISTER_CLASS(UIManager);

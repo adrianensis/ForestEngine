@@ -32,7 +32,8 @@ void Input::update()
 		smMouseCoordinates.set(newMouseCoordinates);
 
 		InputEventMouseMoved event;
-		SEND_INPUT_EVENT(event);
+		
+        SEND_INPUT_EVENT(event);
 	}
 
 	if(smLastMouseButtonPressed != -1)

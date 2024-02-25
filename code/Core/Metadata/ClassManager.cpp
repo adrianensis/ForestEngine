@@ -1,14 +1,13 @@
 #include "Core/Metadata/ClassManager.hpp"
 
-ClassRegister::ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback)
+ClassRegister::ClassRegister(const ClassDefinition& classDefinition)
 {
-    ClassManager::insert(ClassMetadata(classDefinition, callback));
+    ClassManager::insert(ClassMetadata(classDefinition));
 }
 
-ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback)
+ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
 {
     mClassDefinition = classDefinition;
-    mCallback = callback;
 }
 
 MemberRegister::MemberRegister(const std::string_view& ownerClassName, const MemberDefinition& memberDefinition)
@@ -21,35 +20,39 @@ MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
     mMemberDefinition = memberDefinition;
 }
 
-void* ClassManager::instance(const std::string_view& className)
-{
-    return mClassMapByName.at(className).mCallback();
-}
-
 void ClassManager::insert(const ClassMetadata& classMetadata)
 {
-    if(!mClassMapByName.contains(classMetadata.mClassDefinition.mName))
+    if(!smClassMapByName.contains(classMetadata.mClassDefinition.mName))
     {
-        mClassMapByName.insert_or_assign(classMetadata.mClassDefinition.mName, classMetadata);
-    }
-
-    if(!mClassMapById.contains(classMetadata.mClassDefinition.mId))
-    {
-        mClassMapById.insert_or_assign(classMetadata.mClassDefinition.mId, &mClassMapByName.at(classMetadata.mClassDefinition.mName));
+        smClassMapByName.insert_or_assign(classMetadata.mClassDefinition.mName, classMetadata);
+        smClassMapById.insert_or_assign(classMetadata.mClassDefinition.mId, &smClassMapByName.at(classMetadata.mClassDefinition.mName));
     }
 }
 
 ClassMetadata& ClassManager::getClassMetadataInternal(const std::string_view& className)
 {
-    return mClassMapByName.at(className);
+    return smClassMapByName.at(className);
 }
 
 const ClassMetadata& ClassManager::getClassMetadataByName(const std::string_view& className)
 {
-    return mClassMapByName.at(className);
+    return smClassMapByName.at(className);
 }
 
 const ClassMetadata& ClassManager::getClassMetadataById(const ClassId classId)
 {
-    return *mClassMapById.at(classId);
+    return *smClassMapById.at(classId);
+}
+
+void ClassManager::registerDynamicClass(u64 pointer, ClassId classId)
+{
+    if(!smPointersToDynamicClass.contains(pointer))
+    {
+        smPointersToDynamicClass.insert_or_assign(pointer, smClassMapById.at(classId));
+    }
+}
+
+void ClassManager::unregisterDynamicClass(u64 pointer)
+{
+    smPointersToDynamicClass.erase(pointer);
 }

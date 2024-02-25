@@ -3,57 +3,26 @@
 #include "Core/StdCore.hpp"
 #include "Core/Metadata/MetadataMacros.hpp"
 #include <unordered_map>
-#include <functional>
+#include "Core/Assert/Assert.hpp"
 
 #define REGISTER_CLASS(...) \
-    inline static const ClassRegister classRegister = ClassRegister(smClassDefinition, [](){ \
-        return Memory::newObject<__VA_ARGS__>(); \
-    });
+constexpr inline static const ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, Hash::hashString(#__VA_ARGS__##sv), sizeof(__VA_ARGS__)}; \
+inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(smClassDefinition_##__VA_ARGS__); \
+template<> \
+inline const ClassMetadata& ClassManager::getClassMetadata<__VA_ARGS__>() { return ClassManager::getClassMetadataById(smClassDefinition_##__VA_ARGS__.mId); } \
+template<> \
+inline const ClassMetadata& ClassManager::getClassMetadataNoAssert<__VA_ARGS__>() { return getClassMetadata<__VA_ARGS__>(); }
 
 #define REGISTER_MEMBER(memberName, ...) \
     constexpr inline static const MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
-    inline static const MemberRegister memberRegister_##memberName = MemberRegister(ThisClass::getClassDefinitionStatic().mName, smMemberDefinition_##memberName);
-
-/*
-    NOTE: tagging methods as virtual here have consecuences: "virtual ClassId getClassDefinition().mId"
-    may cause "struct"-like classes to have a VTable, which increases the struct size.
-    For example: Vector3 is sizeof(f32) * 3 = 4*3 = 12, but with VTable is goes up to 24!!
-    Engine heavily depends on the exact size of a Vector3 (and other classes).
-*/
-#define DECLARE_METADATA_VARIABLES(...)                                    \
-    private:                                                               \
-        using ThisClass = __VA_ARGS__;                                     \
-        constexpr inline static const ClassDefinition smClassDefinition {#__VA_ARGS__##sv, Hash::hashString(#__VA_ARGS__##sv)};
-
-#define DECLARE_METADATA_METHODS(Virtual, Override) \
-	constexpr inline static const ClassDefinition& getClassDefinitionStatic() { return smClassDefinition; }; \
-	Virtual const ClassDefinition& getClassDefinition() const Override { return getClassDefinitionStatic(); };
-
-#define GENERATE_METADATA(...)                      \
-    private: \
-        DECLARE_METADATA_VARIABLES(__VA_ARGS__)             \
-    public:                                             \
-        DECLARE_METADATA_METHODS(virtual, override) \
-    private: \
-        REGISTER_CLASS(__VA_ARGS__) \
-    private: // NOTE: notice the last blank space " "
-
-#define GENERATE_METADATA_STRUCT(...)              \
-        DECLARE_METADATA_VARIABLES(__VA_ARGS__)            \
-    public:                                            \
-        DECLARE_METADATA_METHODS(EMPTY_MACRO(), EMPTY_MACRO()) \
-    private: \
-        REGISTER_CLASS(__VA_ARGS__) \
-    private: // NOTE: notice the last blank space " "
-
-
-using ClassRegisterCallback = std::function<void*()>;
+    inline static const MemberRegister memberRegister_##memberName = MemberRegister(ClassManager::getClassMetadata<ThisClass>().mClassDefinition.mName, smMemberDefinition_##memberName);
 
 class ClassDefinition
 {
 public:
     std::string_view mName;
     ClassId mId = 0;
+    u32 mTypeSize = 0;
 };
 
 class MemberDefinition
@@ -88,16 +57,15 @@ public:
 class ClassRegister
 {
 public:
-    ClassRegister(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback);
+    ClassRegister(const ClassDefinition& classDefinition);
 };
 
 class ClassMetadata
 {
 public:
-    ClassMetadata(const ClassDefinition& classDefinition, const ClassRegisterCallback& callback);
+    ClassMetadata(const ClassDefinition& classDefinition);
 
     ClassDefinition mClassDefinition;
-    ClassRegisterCallback mCallback;
     std::unordered_map<std::string_view, MemberMetadata> mMembersMap;
 };
 
@@ -111,20 +79,51 @@ friend ClassRegister;
 friend MemberRegister;
 
 public:
-template<typename T>
-    static T* instance(const std::string_view& className)
-    {
-        return static_cast<T*>(instance(className));
-    }
-
-    static void* instance(const std::string_view& className);
-
     static const ClassMetadata& getClassMetadataByName(const std::string_view& className);
     static const ClassMetadata& getClassMetadataById(const ClassId classId);
 
+    inline static const ClassDefinition smNullClassDefinition = ClassDefinition();
+    inline static const ClassMetadata smNullClassMetadata = ClassMetadata(smNullClassDefinition);
+    template<class T>
+    static const ClassMetadata& getClassMetadata()
+    {
+        CHECK_MSG(false, "getClassDefinition not specialized!");
+        return smNullClassMetadata;
+    }
+
+    template<class T>
+    static const ClassMetadata& getClassMetadataNoAssert()
+    {
+        return smNullClassMetadata;
+    }
+
+    template<class T>
+    static const ClassMetadata& getDynamicClassMetadata(const T* pointer)
+    {
+        if(smPointersToDynamicClass.contains(reinterpret_cast<u64>(pointer)))
+        {
+            return *smPointersToDynamicClass.at(reinterpret_cast<u64>(pointer));
+        }
+
+        return smNullClassMetadata;
+    }
+
+    template<class T>
+    static void registerDynamicClass(const T* pointer)
+    {
+        registerDynamicClass(reinterpret_cast<u64>(pointer), ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.mId);
+    }
+    template<class T>
+    static void unregisterDynamicClass(const T* pointer)
+    {
+        unregisterDynamicClass(reinterpret_cast<u64>(pointer));
+    }
 private:
     static void insert(const ClassMetadata& classMetadata);
     static ClassMetadata& getClassMetadataInternal(const std::string_view& className);
-    inline static std::unordered_map<std::string_view, ClassMetadata> mClassMapByName;
-    inline static std::unordered_map<ClassId, ClassMetadata*> mClassMapById;
+    static void registerDynamicClass(u64 pointer, ClassId classId);
+    static void unregisterDynamicClass(u64 pointer);
+    inline static std::unordered_map<std::string_view, ClassMetadata> smClassMapByName;
+    inline static std::unordered_map<ClassId, ClassMetadata*> smClassMapById;
+    inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
 };

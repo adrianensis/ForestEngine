@@ -9,7 +9,7 @@ class Camera;
 
 class ScenesManager: public System
 {
-	GENERATE_METADATA(ScenesManager)
+	
 
 public:
     ScenesManager();
@@ -40,3 +40,4 @@ public:
 	GET(GameObjectController)
 	SETMOVE(GameObjectController)
 };
+REGISTER_CLASS(ScenesManager);

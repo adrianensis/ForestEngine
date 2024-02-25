@@ -57,3 +57,4 @@ public:
     CRGET(Matrices)
     CRGET(MaterialInstancedPropertiesArray)
 };
+REGISTER_CLASS(GPUSharedContext)

@@ -10,11 +10,10 @@ void EventsManager::terminate()
 	removeMapContent();
 }
 
-void EventsManager::send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
+void EventsManager::send(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
 {
 	if (ownerExists(eventOwner))
 	{
-		ClassId eventClassId = event->getClassDefinition().mId;
 		if (ownerHasEventType(eventOwner, eventClassId))
 		{
 			ReceiversFunctorMap receiversFunctorMapCopy = getReceiversFunctorMap(eventOwner, eventClassId);

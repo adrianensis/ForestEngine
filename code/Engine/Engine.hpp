@@ -5,7 +5,7 @@
 
 class Engine: public ObjectBase, public Singleton<Engine>
 {
-	GENERATE_METADATA(Engine)
+	
 
 public:
     void init();
@@ -17,3 +17,4 @@ public:
 private:
 	f32 mFPS = 0.0f;
 };
+REGISTER_CLASS(Engine);

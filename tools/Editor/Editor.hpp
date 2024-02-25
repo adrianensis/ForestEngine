@@ -5,8 +5,6 @@
 
 class UIStyleEditorToolButton: public UIStyleDefault
 {
-    GENERATE_METADATA_STRUCT(UIStyleEditorToolButton)
-
 public:
 	UIStyleEditorToolButton()
 	{
@@ -15,11 +13,10 @@ public:
 		mColorHovered = Vector4(0.4f, 0.4f, 0.4f, 1);
 	}
 };
+REGISTER_CLASS(UIStyleEditorToolButton)
 
 class Editor: public Script
 {
-    GENERATE_METADATA(Editor)
-
 public:
     void init();
     void firstUpdate();
@@ -43,3 +40,4 @@ private:
 
 	Vector2 mousePosition;
 };
+REGISTER_CLASS(Editor)

@@ -15,7 +15,7 @@ public:
 
 class UIList: public UIElement
 {
-    GENERATE_METADATA(UIList)
+    
     
 public:
 	void init() override;
@@ -35,3 +35,4 @@ private:
 	std::list<UIListEntry> mEntries;
 
 };
+REGISTER_CLASS(UIList);

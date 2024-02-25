@@ -16,7 +16,7 @@ public:
 
 class RenderPipeline: public ObjectBase
 {
-    GENERATE_METADATA(RenderPipeline)
+    
 
 public:
     void render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace);
@@ -24,3 +24,4 @@ protected:
     void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
     void updateLights(RenderPipelineData& renderData);
 };
+REGISTER_CLASS(RenderPipeline);

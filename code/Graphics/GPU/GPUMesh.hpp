@@ -18,7 +18,7 @@ public:
 
 class GPUMesh: public ObjectBase
 {
-    GENERATE_METADATA(GPUMesh)
+    
 
 public:
     void init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers);
@@ -37,3 +37,4 @@ public:
     Vector3 mMin;
     Vector3 mMax;
 };
+REGISTER_CLASS(GPUMesh);

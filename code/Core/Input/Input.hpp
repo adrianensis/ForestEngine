@@ -16,7 +16,7 @@ public:
 
 class Input: public System
 {
-	GENERATE_METADATA(Input)
+	
 public:
     void init(const Ptr<IWindowInputAdapter>& windowInputAdapter);
     void update();
@@ -45,3 +45,4 @@ private:
 public:
     GET(WindowInputAdapter);
 };
+REGISTER_CLASS(Input);

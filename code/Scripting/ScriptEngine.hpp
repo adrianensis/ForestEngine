@@ -6,7 +6,7 @@
 
 class ScriptEngine: public System
 {
-	GENERATE_METADATA(ScriptEngine)
+	
 
 public:
     void init();
@@ -23,3 +23,4 @@ private:
 	std::vector<Ptr<Script>> mScripts;
 	Ptr<Script> mController;
 };
+REGISTER_CLASS(ScriptEngine);

@@ -8,7 +8,7 @@ class Model;
 
 class AnimationManager: public System
 {
-	GENERATE_METADATA(AnimationManager)
+	
 
 public:
     void init();
@@ -20,3 +20,4 @@ public:
 private:
     std::unordered_map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
 };
+REGISTER_CLASS(AnimationManager);

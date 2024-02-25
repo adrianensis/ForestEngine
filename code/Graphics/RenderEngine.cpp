@@ -17,8 +17,8 @@ void RenderEngine::init()
 {
 	LOG_TRACE()
 
-	registerComponentClass(MeshRenderer::getClassDefinitionStatic().mId);
-	registerComponentClass(Light::getClassDefinitionStatic().mId);
+	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId);
+	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.mId);
 
 	mCameraDirtyTranslation = true;
 
@@ -109,7 +109,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 {
 	System::addComponent(component);
 
-    if(component->getSystemComponentId() == MeshRenderer::getClassDefinitionStatic().mId)
+    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderers.push_back(renderer);
@@ -121,7 +121,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
             //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
         }
     }
-    else if(component->getSystemComponentId() == Light::getClassDefinitionStatic().mId)
+    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
     {
         mRenderPipelineData.mLights.push_back(Ptr<Light>::cast(component));
     }
@@ -133,13 +133,13 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 
 void RenderEngine::removeComponent(Ptr<SystemComponent> component)
 {
-    if(component->getSystemComponentId() == MeshRenderer::getClassDefinitionStatic().mId)
+    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         GET_SYSTEM(GPUSharedContext).freeInstanceSlot(renderer->getGPUInstanceSlot());
         mBatchesManager.onRendererRemoved(renderer);
     }
-    else if(component->getSystemComponentId() == Light::getClassDefinitionStatic().mId)
+    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
     {
     }
     else

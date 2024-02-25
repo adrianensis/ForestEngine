@@ -7,7 +7,7 @@
 
 class Window : public System, public IWindowInputAdapter
 {
-    GENERATE_METADATA(Window)
+    
 public:
     Vector2 getWindowSize();
     f32 getAspectRatio();
@@ -43,3 +43,4 @@ public:
     CGET(GLTFWindow);
     CRGET(WindowSize);
 };
+REGISTER_CLASS(Window);

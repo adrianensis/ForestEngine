@@ -13,7 +13,7 @@ class Light;
 
 class RenderEngine : public System
 {
-	GENERATE_METADATA(RenderEngine)
+	
 
 public:
     void init();
@@ -48,3 +48,4 @@ private:
 public:
 	OcTree octree;
 };
+REGISTER_CLASS(RenderEngine);

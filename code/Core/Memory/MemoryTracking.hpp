@@ -5,14 +5,7 @@
 #include <unordered_map>
 #include <typeinfo>
 #include "Core/Assert/Assert.hpp"
-
-// Metadata for base object
-class IMemoryTrackedObject
-{
-public:
-	IMemoryTrackedObject() = default;
-	virtual const std::string_view& getMemoryTrackName() const = 0;
-};
+#include "Core/Metadata/ClassManager.hpp"
 
 class MemoryTracking
 {
@@ -40,9 +33,9 @@ public:
 #ifdef ENGINE_DEBUG
 		std::string_view className;
 
-		if constexpr (std::is_base_of<IMemoryTrackedObject, T>::value)
+		if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.mId > 0)
 		{
-			className = object->getMemoryTrackName();
+			className = ClassManager::getClassMetadata<T>().mClassDefinition.mName;
 		}
 		else
 		{
@@ -66,9 +59,9 @@ public:
 
 #ifdef ENGINE_DEBUG
 		std::string_view className;
-		if constexpr (std::is_base_of<IMemoryTrackedObject, T>::value)
+		if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mId > 0)
 		{
-			className = pointer->getMemoryTrackName();
+			className = ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mName;
 		}
 		else
 		{

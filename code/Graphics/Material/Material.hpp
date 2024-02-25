@@ -113,7 +113,7 @@ public:
 
 class Material: public ObjectBase
 {
-    GENERATE_METADATA(Material)
+    
 	DECLARE_SERIALIZATION()
 
 public:
@@ -165,3 +165,4 @@ public:
     CRGET(InstancedPropertiesStructDefinition)
     GET(ID)
 };
+REGISTER_CLASS(Material);

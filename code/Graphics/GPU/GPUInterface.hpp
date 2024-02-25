@@ -307,3 +307,4 @@ public:
 private:
     void setBufferDataRaw(GPUBufferType bufferType, u32 VBO, u32 typeSize, u32 size, const void* data);
 };
+REGISTER_CLASS(GPUInterface)

@@ -72,8 +72,8 @@ private:
 #define LOG_APPEND(x) Log::log(Log::Prefixes::smLog, x, false);
 #define LOG_TAG(Tag, x) Log::log(Tag, x, true);
 #define LOG_TAG_APPEND(Tag, x) Log::log(Tag, x, false);
-#define LOG_VAR(x) Log::var<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(#x, x);
-#define LOG_VAL(x) Log::val<REMOVE_POINTER(REMOVE_REF(decltype(x)))>(x);
+#define LOG_VAR(x) Log::var<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(#x, x);
+#define LOG_VAL(x) Log::val<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(x);
 #define LOG_ERROR(x) Log::log(Log::Prefixes::smError, x, true);
 #define LOG_BRLINE() Log::brline();
 #define LOG_BACKSPACE() Log::backspace();

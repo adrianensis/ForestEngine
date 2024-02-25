@@ -22,7 +22,7 @@ public:
 
 class CommandLine: public System
 {
-	GENERATE_METADATA(CommandLine)
+	
 
 private:
 	std::unordered_map<std::string, CommandFunctor> mCommandsMap;
@@ -50,3 +50,4 @@ public:
 
 	CRGET(Buffer)
 };
+REGISTER_CLASS(CommandLine);

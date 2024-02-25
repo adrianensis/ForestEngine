@@ -16,14 +16,15 @@
 
 #define COND_TYPE(Bool, T1, T2) typename std::conditional<Bool, T1, T2>::type
 
-#define REMOVE_REF(Class) typename std::remove_reference<Class>::type
+#define ADD_POINTER(Class) typename std::add_pointer<Class>::type
 #define REMOVE_POINTER(Class) typename std::remove_pointer<Class>::type
-#define IS_RAW_POINTER(Class) std::is_pointer<REMOVE_REF(Class)>::value
-#define IS_ARITHMETIC(Class) std::is_arithmetic<REMOVE_REF(Class)>::value
+#define ADD_REFERENCE(Class) typename std::add_lvalue_reference<Class>::type
+#define REMOVE_REFERENCE(Class) typename std::remove_reference<Class>::type
+#define IS_RAW_POINTER(Class) std::is_pointer<REMOVE_REFERENCE(Class)>::value
+#define IS_ARITHMETIC(Class) std::is_arithmetic<REMOVE_REFERENCE(Class)>::value
 #define IS_ENUM(Class) std::is_enum<Class>::value
 #define ADD_CONST(Class) typename std::add_const<Class>::type
-#define ADD_REFERENCE(Class) typename std::add_lvalue_reference<Class>::type
-#define ADD_POINTER(Class) typename std::add_pointer<Class>::type
+#define REMOVE_CONST(Class) typename std::remove_const<Class>::type
 
 #define T_EXTENDS(Class, BaseClass) requires std::derived_from<Class, BaseClass>
 

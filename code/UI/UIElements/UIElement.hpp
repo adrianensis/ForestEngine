@@ -35,7 +35,7 @@ public:
 
 class UIElement: public GameObject
 {
-    GENERATE_METADATA(UIElement)
+    
 
 public:
     virtual void initFromConfig(const UIElementConfig& config);
@@ -150,3 +150,4 @@ public:
 	GET(State)
 	GET(OnlyReleaseOnClickOutside)
 };
+REGISTER_CLASS(UIElement);

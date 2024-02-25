@@ -8,7 +8,7 @@ class GPUSharedBuffer;
 
 class GPUProgram: public ObjectBase
 {
-    GENERATE_METADATA(GPUProgram)
+    
 public:
 
     GPUProgram();
@@ -28,3 +28,4 @@ public:
 private:
 	u32 mProgramId = 0;
 };
+REGISTER_CLASS(GPUProgram);

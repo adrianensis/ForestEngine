@@ -7,7 +7,7 @@ class UIElement;
 
 class UIGroup: public ObjectBase
 {
-    GENERATE_METADATA(UIGroup)
+    
 
 public:
     void init();
@@ -26,3 +26,4 @@ public:
 	GET(Visible)
 	CRGET(UIElements)
 };
+REGISTER_CLASS(UIGroup);

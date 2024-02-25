@@ -2,6 +2,7 @@
 
 #include "Core/Assert/Assert.hpp"
 #include "Core/Memory/MemoryTracking.hpp"
+#include "Core/Metadata/ClassManager.hpp"
 
 class Memory
 {
@@ -16,6 +17,10 @@ public:
 	{
 		T *object = new T(args...);
 		CHECK_MSG(object != nullptr, "pointer is nullptr");
+        if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.mId > 0)
+		{
+            ClassManager::registerDynamicClass<T>(object);
+		}
         MemoryTracking::registerNewObject(object);
 		return object;
 	}
@@ -24,7 +29,11 @@ public:
 	static void deleteObject(T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
-        MemoryTracking::unregisterDeletedObject(pointer);
-		delete pointer;
+        if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mId > 0)
+		{
+            MemoryTracking::unregisterDeletedObject(pointer);
+        }
+		ClassManager::unregisterDynamicClass<T>(pointer);
+        delete pointer;
 	}
 };

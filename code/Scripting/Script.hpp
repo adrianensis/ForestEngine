@@ -7,10 +7,10 @@ class GameObject;
 
 class Script: public Component
 {
-    GENERATE_METADATA(Script)
+    
 
 public:
-    ClassId getSystemComponentId() const override { return getClassDefinitionStatic().mId; }
+    ClassId getSystemComponentId() const override;
 
     virtual void init();
     virtual void firstUpdate();
@@ -32,3 +32,4 @@ private:
 public:
 	GET(FirstUpdateDone)
 };
+REGISTER_CLASS(Script);

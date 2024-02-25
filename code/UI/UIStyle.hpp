@@ -5,7 +5,6 @@
 
 class UIStyle
 {
-    GENERATE_METADATA_STRUCT(UIStyle)
 public:
 	UIStyle()
 	{
@@ -17,10 +16,10 @@ public:
 	Vector4 mColorPressed;
 	Vector4 mColorHovered;
 };
+REGISTER_CLASS(UIStyle)
 
 class UIStyleDefault: public UIStyle
 {
-    GENERATE_METADATA_STRUCT(UIStyleDefault)
 public:
 	UIStyleDefault()
 	{
@@ -30,10 +29,11 @@ public:
 		mColorHovered = Vector4(0.7f, 0.7f, 0.7f, 1);
 	}
 };
+REGISTER_CLASS(UIStyleDefault)
 
 class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
 {
-	GENERATE_METADATA(UIStyleManager)
+	
 	
 public:
     void init();
@@ -42,21 +42,21 @@ public:
 	void addStyle()
 	{   
         T newStyle;
-		mStyles.insert_or_assign(T::getClassDefinitionStatic().mId, newStyle);
+		mStyles.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.mId, newStyle);
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getStyle()
 	{
-		CHECK_MSG(mStyles.contains(T::getClassDefinitionStatic().mId), "Style not found");
+		CHECK_MSG(mStyles.contains(ClassManager::getClassMetadata<T>().mClassDefinition.mId), "Style not found");
 
-		return static_cast<T&>(mStyles.at(T::getClassDefinitionStatic().mId));
+		return static_cast<T&>(mStyles.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId));
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getOrAddStyle()
 	{
-		if(!mStyles.contains(T::getClassDefinitionStatic().mId))
+		if(!mStyles.contains(ClassManager::getClassMetadata<T>().mClassDefinition.mId))
 		{
 			addStyle<T>();
 		}
@@ -71,3 +71,4 @@ private:
 public:
 	CRGET(DefaultStyle)
 };
+REGISTER_CLASS(UIStyleManager);

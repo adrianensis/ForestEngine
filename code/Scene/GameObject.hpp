@@ -7,11 +7,13 @@
 class Transform;
 class Scene;
 
-class EventOnDestroy: public Event { GENERATE_METADATA(EventOnDestroy) };
+class EventOnDestroy: public Event
+{ };
+REGISTER_CLASS(EventOnDestroy);
 
 class GameObject: public ObjectBase
 {
-    GENERATE_METADATA(GameObject)
+    
 	DECLARE_SERIALIZATION()
 	
 public:
@@ -111,3 +113,4 @@ public:
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 };
+REGISTER_CLASS(GameObject);

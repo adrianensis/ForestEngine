@@ -7,7 +7,7 @@ class UIDropdown;
 
 class UIDropdownButton: public UIButton
 {
-    GENERATE_METADATA(UIDropdownButton)
+    
 
 public:
     void onPostReleased() override;
@@ -28,10 +28,11 @@ public:
 	std::string mLabel;
 	UIElementCallback mCallback;
 };
+REGISTER_CLASS(UIDropdownButton);
 
 class UIDropdown: public UIButton
 {
-    GENERATE_METADATA(UIDropdown)
+    
 	friend UIDropdownButton;
 public:
     void init() override;
@@ -48,3 +49,4 @@ private:
 	std::list<UIDropdownEntry> mEntries;
 
 };
+REGISTER_CLASS(UIDropdown);

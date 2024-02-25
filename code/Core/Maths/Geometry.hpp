@@ -38,8 +38,6 @@ public:
 
 class Line
 {
-    GENERATE_METADATA_STRUCT(Line)
-
 private: 
     Vector3 mStart;
     Vector3 mEnd;
@@ -71,13 +69,12 @@ public:
     CRGET(Start)
     CRGET(End)
 };
+REGISTER_CLASS(Line)
 
 class Cube;
 
 class Rectangle
 {
-    GENERATE_METADATA_STRUCT(Rectangle)
-
 private: 
     Vector3 mLeftTopFront;
     Vector3 mSize;
@@ -108,11 +105,10 @@ public:
     CRGET(LeftTopFront)
     CRGET(Size)
 };
+REGISTER_CLASS(Rectangle)
 
 class Cube
 {
-    GENERATE_METADATA_STRUCT(Cube)
-
 private: 
     Vector3 mLeftTopFront;
     Vector3 mSize;
@@ -138,11 +134,10 @@ public:
     CRGET(LeftTopFront)
     CRGET(Size)
 };
+REGISTER_CLASS(Cube)
 
 class Sphere
 {
-    GENERATE_METADATA_STRUCT(Sphere)
-
 public:
     Sphere() = default;
     Sphere(const Vector3& center, f32 radius)
@@ -163,3 +158,4 @@ public:
     CRGET(Center)
     GET(Radius)
 };
+REGISTER_CLASS(Sphere)

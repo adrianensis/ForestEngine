@@ -98,7 +98,7 @@ public:
             mHandlers.emplace_back();
             index = mObjects.size() - 1;
 
-            MemoryTracking::registerNewObject<T>(&mObjects.at(index));
+            // MemoryTracking::registerNewObject<T>(&mObjects.at(index));
         }
         else
         {
@@ -167,7 +167,7 @@ private:
             mObjects.at(index).onPoolFree();
         }
 
-        MemoryTracking::unregisterDeletedObject<T>(&mObjects.at(index));
+        // MemoryTracking::unregisterDeletedObject<T>(&mObjects.at(index));
     }
 
 private:

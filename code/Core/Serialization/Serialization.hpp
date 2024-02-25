@@ -20,7 +20,7 @@ public:
 	static JSON serializeTemplated(const T& value)
 	{
 		JSON json;
-		if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REF(T))))
+		if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REFERENCE(T))))
 		{
 			if constexpr (IS_RAW_POINTER(T))
 			{
@@ -47,7 +47,7 @@ public:
 	{
 		if(!json.empty())
         {
-            if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REF(T))))
+            if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REFERENCE(T))))
             {
                 if constexpr (IS_RAW_POINTER(T))
                 {

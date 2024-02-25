@@ -14,7 +14,7 @@ public:
 
 class ModelRenderer: public Component
 {
-    GENERATE_METADATA(ModelRenderer)
+    
 	DECLARE_SERIALIZATION()
 	
 public:
@@ -29,3 +29,4 @@ private:
 public:
     CRGET(ModelRendererData)
 };
+REGISTER_CLASS(ModelRenderer);

@@ -51,7 +51,7 @@ public:
 
 class Time: public System
 {
-	GENERATE_METADATA(Time)	
+	
 
 public:
 	void init(){mInternalTimeMark.init();}
@@ -65,4 +65,4 @@ public:
 private:
 	TimeMark mInternalTimeMark;
 };
-
+REGISTER_CLASS(Time);

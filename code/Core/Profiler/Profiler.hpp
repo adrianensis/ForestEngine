@@ -22,7 +22,7 @@
 
 class Profiler : public System
 {
-	GENERATE_METADATA(Profiler)
+	
 
 public:
     Profiler();
@@ -31,3 +31,4 @@ public:
     void init();
     void terminate();
 };
+REGISTER_CLASS(Profiler);

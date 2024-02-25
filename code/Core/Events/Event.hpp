@@ -5,14 +5,13 @@
 
 class Event: public ObjectBase
 {
-    GENERATE_METADATA(Event)
-
 public:
 	f32 mDelayAmount = 0.0f;
 	TimerDurationType mDelayType;
 	ObjectBase* mInstigator = nullptr;
 	
 };
+REGISTER_CLASS(Event);
 
 using EventCallback = std::function<void(const Event *)>;
 

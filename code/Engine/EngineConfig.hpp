@@ -5,7 +5,7 @@
 
 class EngineConfig: public System
 {
-	GENERATE_METADATA(EngineConfig)
+	
 public:
     void init();
 
@@ -15,3 +15,4 @@ private:
 public:
 	CRGET(Config)
 };
+REGISTER_CLASS(EngineConfig);

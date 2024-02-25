@@ -7,7 +7,7 @@ class Model;
 
 class ModelManager: public System
 {
-	GENERATE_METADATA(ModelManager)
+	
 
 public:
     void init();
@@ -18,3 +18,4 @@ public:
 private:
     std::unordered_map<std::string, OwnerPtr<Model>> mModelMap;
 };
+REGISTER_CLASS(ModelManager);
