@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene/Module.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Engine/Window/Window.hpp"
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIUtils.hpp"
 #include "Engine/Input/Input.hpp"

@@ -6,12 +6,9 @@
 
 class MeshPrimitives: public System
 {
-	
-
 public:
-    void init();
-
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
 
 	template <class T>
 	Ptr<const Mesh> getPrimitive()

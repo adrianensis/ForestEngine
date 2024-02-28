@@ -13,15 +13,13 @@ class Light;
 
 class RenderEngine : public System
 {
-	
-
 public:
-    void init();
+    virtual void init() override;
+    virtual void terminate() override;
     void update();
     void preSceneChanged();
     void postSceneChanged();
     void onResize();
-    void terminate();
     
     void addComponent(Ptr<SystemComponent> component) override;
     void removeComponent(Ptr<SystemComponent> component) override;

@@ -6,11 +6,9 @@
 
 class MaterialManager: public System
 {
-	
-
 public:
-    void init();
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
     PoolHandler<Texture> loadTexture(const TextureData& textureData);
     void unloadTexture(PoolHandler<Texture>& texture);
     PoolHandler<Material> createMaterial(const MaterialData& materialData);

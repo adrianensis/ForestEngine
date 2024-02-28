@@ -8,14 +8,12 @@ class Model;
 
 class AnimationManager: public System
 {
-	
-
 public:
-    void init();
+    virtual void init() override;
+    virtual void terminate() override;
     void update();
     void createAnimationState(Ptr<const Animation> animation);
     const std::vector<Matrix4>& getBoneTransforms(Ptr<const Model> model) const;
-    void terminate();
 
 private:
     std::unordered_map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;

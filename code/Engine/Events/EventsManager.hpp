@@ -13,12 +13,9 @@
 
 class EventsManager: public System
 {
-	
-
 public:
-    void init();
-
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
 
 	template <class E> T_EXTENDS(E, Event)
 	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)

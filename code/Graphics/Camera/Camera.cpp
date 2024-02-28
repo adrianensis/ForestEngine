@@ -2,7 +2,7 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/RenderEngine.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Engine/Window/Window.hpp"
 
 void Camera::init()
 {

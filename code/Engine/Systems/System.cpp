@@ -20,3 +20,14 @@ void System::removeComponent(Ptr<SystemComponent> component)
 {
     component->mAlreadyAddedToSystem = false;
 }
+
+void SystemsManager::terminate()
+{
+    for (auto it = mSystemsInOrder.rbegin(); it != mSystemsInOrder.rend(); ++it)
+    {
+        (*it)->terminate();
+        mSystems.erase(ClassManager::getDynamicClassMetadata<System>((*it).getInternalPointer()).mClassDefinition.mId);
+    }
+
+    mSystemsInOrder.clear();
+}

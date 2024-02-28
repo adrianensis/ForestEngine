@@ -29,10 +29,8 @@ public:
 class GPUSharedContext : public System
 {
 public:
-	GPUSharedContext() = default;
-
-    void init();
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
     u32 requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType);
     GPUInstanceSlot requestInstanceSlot();
     void freeInstanceSlot(GPUInstanceSlot& slot);

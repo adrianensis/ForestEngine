@@ -9,14 +9,12 @@ class Camera;
 
 class ScenesManager: public System
 {
-	
-
 public:
     ScenesManager();
     ~ScenesManager() override;
 	
-    void init();
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
     void update();
     void loadCurrentScene();
     void setScene(u32 i);

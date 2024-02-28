@@ -7,11 +7,9 @@ class Model;
 
 class ModelManager: public System
 {
-	
-
 public:
-    void init();
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
 
     Ptr<const Model> loadModel(const std::string& path);
 

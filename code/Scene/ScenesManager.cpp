@@ -22,6 +22,8 @@ void ScenesManager::terminate()
 	    mGameObjectController->destroy();
     }
     mGameObjectController.invalidate();
+
+    mScenes.clear();
 }
 
 void ScenesManager::init()

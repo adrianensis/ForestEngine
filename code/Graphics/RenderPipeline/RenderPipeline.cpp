@@ -5,7 +5,7 @@
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Engine/Window/Window.hpp"
 
 void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace)
 {

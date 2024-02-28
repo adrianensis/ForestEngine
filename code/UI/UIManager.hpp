@@ -12,11 +12,9 @@ class Scene;
 
 class UIManager: public System
 {
-	
 public:
-
-    void init();
-    void terminate();
+    virtual void init() override;
+    virtual void terminate() override;
 
     const FontGlyphData& getGlyphData(char character) const;
     PoolHandler<Material> getFontMaterial() const;

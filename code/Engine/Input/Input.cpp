@@ -1,12 +1,14 @@
 #include "Engine/Input/Input.hpp"
+#include "Engine/Window/Window.hpp"
 #include "Core/Log/Log.hpp"
 #include "Engine/Profiler/Profiler.hpp"
 
-void Input::init(const Ptr<IWindowInputAdapter>& windowInputAdapter)
+void Input::init()
 {
 	LOG_TRACE()
 
-    mWindowInputAdapter = windowInputAdapter;
+    CHECK_MSG(GET_SYSTEM_PTR(Window).isValid(), "Window system not found!");
+    mWindowInputAdapter = Ptr<IWindowInputAdapter>::cast(GET_SYSTEM_PTR(Window));
 
 	smMouseCoordinates = Vector2();
 	smLastMouseButtonPressed = INVALID_INDEX;

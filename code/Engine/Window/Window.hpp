@@ -7,14 +7,13 @@
 
 class Window : public System, public IWindowInputAdapter
 {
-    
 public:
     Vector2 getWindowSize();
     f32 getAspectRatio();
-    void init();
+    virtual void init() override;
+    virtual void terminate() override;
     bool isClosed();
     void swap();
-    void terminate();
 
     void pollEvents() const;
     

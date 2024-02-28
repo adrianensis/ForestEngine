@@ -2,12 +2,13 @@
 
 #include "Core/Std.hpp"
 #include "Core/Object/Singleton.hpp"
-#include "Core/Object/ObjectBase.hpp"
 #include "Engine/Systems/SystemComponent.hpp"
 
 class System: public ObjectBase
 {
 public:
+    virtual void init() { };
+    virtual void terminate() { };
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);
     virtual void addComponent(Ptr<SystemComponent> component);
@@ -25,12 +26,9 @@ REGISTER_CLASS(System);
     GET_SYSTEM_PTR(__VA_ARGS__).get()
 
 #define CREATE_SYSTEM(...) \
-    SystemsManager::getInstance().createSystem<__VA_ARGS__>();
+    SystemsManager::getInstance().createSystem<__VA_ARGS__>().get();
 
-#define REMOVE_SYSTEM(...) \
-    SystemsManager::getInstance().removeSystem<__VA_ARGS__>();
-
-class SystemsManager : public ObjectBase, public Singleton<SystemsManager>
+class SystemsManager: public Singleton<SystemsManager>
 {
 public:
     template<typename T> T_EXTENDS(T, SystemComponent)
@@ -42,7 +40,7 @@ public:
             FOR_MAP(itSystem, mSystems)
             {
                 Ptr<System> sub = (itSystem->second);
-                if (sub->isComponentClassAccepted(componentClassId))
+                if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
                 {
                     sub->addComponent(Ptr<SystemComponent>::cast(component));
                 }
@@ -59,7 +57,7 @@ public:
             FOR_MAP(itSystem, mSystems)
             {
                 Ptr<System> sub = (itSystem->second);
-                if (sub->isComponentClassAccepted(componentClassId))
+                if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
                 {
                     sub->removeComponent(Ptr<SystemComponent>::cast(component));
                 }
@@ -68,25 +66,29 @@ public:
     }
 
     template<typename T> T_EXTENDS(T, System)
-    void createSystem()
+    Ptr<T> createSystem()
     {
+        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        CHECK_MSG(!mSystems.contains(classId), "System already created");
         OwnerPtr<T> newSystem = OwnerPtr<T>::newObject();
-        mSystems.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.mId, OwnerPtr<System>::moveCast(newSystem));
+        mSystems.insert_or_assign(classId, OwnerPtr<System>::moveCast(newSystem));
+        mSystemsInOrder.emplace_back(mSystems.at(classId));
+        Ptr<T> systemPtr = Ptr<T>::cast(mSystems.at(classId));
+        systemPtr->init();
+        return systemPtr;
     }
 
     template<typename T> T_EXTENDS(T, System)
     Ptr<T> getSystem() const
     {
-        return Ptr<T>::cast(mSystems.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId));
+        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        CHECK_MSG(mSystems.contains(classId), "System not found!");
+        return Ptr<T>::cast(mSystems.at(classId));
     }
 
-    template<typename T> T_EXTENDS(T, System)
-    void removeSystem()
-    {
-        mSystems.erase(ClassManager::getClassMetadata<T>().mClassDefinition.mId);
-    }
+    void terminate();
 
 private:
     std::unordered_map<ClassId, OwnerPtr<System>> mSystems;
+    std::vector<Ptr<System>> mSystemsInOrder;
 };
-REGISTER_CLASS(SystemsManager);

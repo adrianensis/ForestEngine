@@ -6,15 +6,13 @@
 
 class ScriptEngine: public System
 {
-	
-
 public:
-    void init();
+    virtual void init() override;
+    virtual void terminate() override;
     void addComponent(Ptr<SystemComponent> component) override;
     void update();
     void preSceneChanged();
     void postSceneChanged();
-    void terminate();
 
 private:
     void retrieveControllerFromScene();

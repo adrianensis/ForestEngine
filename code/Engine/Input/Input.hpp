@@ -16,9 +16,8 @@ public:
 
 class Input: public System
 {
-	
 public:
-    void init(const Ptr<IWindowInputAdapter>& windowInputAdapter);
+    virtual void init() override;
     void update();
     bool isKeyPressedOnce(i32 key);
     bool isKeyPressed(i32 key);

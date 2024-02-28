@@ -51,10 +51,8 @@ public:
 
 class Time: public System
 {
-	
-
 public:
-	void init(){mInternalTimeMark.init();}
+	virtual void init() override {mInternalTimeMark.init();}
 	void startFrame() { mInternalTimeMark.start(); }
 	void endFrame() { mInternalTimeMark.end(); }
 	f32 getElapsedTimeMillis() { return mInternalTimeMark.getElapsedTimeMillis(); }

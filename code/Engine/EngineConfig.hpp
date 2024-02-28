@@ -7,7 +7,7 @@ class EngineConfig: public System
 {
 	
 public:
-    void init();
+    void init() override;
 
 private:
 	ConfigObject mConfig;
