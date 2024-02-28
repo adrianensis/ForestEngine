@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Core/Font/Font.hpp"
+#include "Assets/Font/Font.hpp"
 
 enum class TextureType
 {

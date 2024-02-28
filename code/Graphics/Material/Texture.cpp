@@ -1,6 +1,6 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Core/Image/ImageUtils.hpp"
+#include "Assets/Image/ImageUtils.hpp"
 
 void Texture::enable() const
 {

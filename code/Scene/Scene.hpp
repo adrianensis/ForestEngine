@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Core/Config/ConfigObject.hpp"
+#include "Assets/Config/ConfigObject.hpp"
 
 class GameObject;
 
