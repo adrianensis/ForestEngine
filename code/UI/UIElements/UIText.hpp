@@ -10,7 +10,7 @@ public:
     void initFromConfig(const UIElementConfig& config) override;
 
 private:
-    char mCharacter;
+    char mCharacter = 0;
 };
 REGISTER_CLASS(UITextGlyph);
 
