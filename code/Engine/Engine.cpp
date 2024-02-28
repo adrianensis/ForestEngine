@@ -16,7 +16,7 @@ using namespace std::chrono_literals;
 
 void Engine::init()
 {
-	mFPS = 500;
+	mFPS = 60;
 
 	Memory::init();
 	Profiler::init();
