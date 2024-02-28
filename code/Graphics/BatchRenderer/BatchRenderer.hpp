@@ -7,8 +7,6 @@
 
 class BatchRenderer: public ObjectBase
 {
-    
-
 public:
     void init(const BatchData& batchData);
     void terminate();

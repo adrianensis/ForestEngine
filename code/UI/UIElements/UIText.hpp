@@ -6,8 +6,6 @@ class UIPanel;
 
 class UITextGlyph: public UIArea
 {
-    
-
 public:
     void initFromConfig(const UIElementConfig& config) override;
 
@@ -18,8 +16,6 @@ REGISTER_CLASS(UITextGlyph);
 
 class UIText: public UIArea
 {
-    
-
 public:
     void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;

@@ -16,8 +16,6 @@ REGISTER_CLASS(UIStyleEditableTextBackground)
 
 class UIEditableText: public UIText
 {
-    
-
 public:
     void init() override;
     

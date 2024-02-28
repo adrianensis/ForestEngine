@@ -18,8 +18,6 @@ public:
 
 class GPUMesh: public ObjectBase
 {
-    
-
 public:
     void init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers);
     void setColor(const Vector4& color);

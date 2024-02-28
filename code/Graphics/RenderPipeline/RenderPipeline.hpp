@@ -16,8 +16,6 @@ public:
 
 class RenderPipeline: public ObjectBase
 {
-    
-
 public:
     void render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace);
 protected:

@@ -5,8 +5,6 @@
 
 class Light: public Component
 {
-    
-
 public:
     ClassId getSystemComponentId() const override;
     void init(const GPULight& data);

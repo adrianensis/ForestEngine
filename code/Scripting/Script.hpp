@@ -7,8 +7,6 @@ class GameObject;
 
 class Script: public Component
 {
-    
-
 public:
     ClassId getSystemComponentId() const override;
 

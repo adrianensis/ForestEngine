@@ -35,8 +35,6 @@ public:
 
 class UIElement: public GameObject
 {
-    
-
 public:
     virtual void initFromConfig(const UIElementConfig& config);
     virtual void onDestroy();

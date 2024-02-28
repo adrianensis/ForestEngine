@@ -7,8 +7,6 @@
 
 class Camera: public Component
 {
-    
-
 public:
 
     void init();

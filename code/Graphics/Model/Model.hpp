@@ -32,8 +32,6 @@ class Mesh;
 
 class Model: public ObjectBase
 {
-    
-
 public:
     void init(const std::string& path);
     bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }

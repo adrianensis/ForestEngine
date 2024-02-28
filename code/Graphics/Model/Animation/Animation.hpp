@@ -12,8 +12,6 @@ public:
 
 class Animation: public ObjectBase
 {
-    
-
 public:
     void init(f32 animDurationInSeconds, Ptr<const Model> model);
 
@@ -30,8 +28,6 @@ REGISTER_CLASS(Animation);
 
 class AnimationState: public ObjectBase
 {
-    
-
 public:
     void init(Ptr<const Animation> animation);
     void update();
@@ -49,8 +45,6 @@ REGISTER_CLASS(AnimationState);
 
 class SkeletonState: public ObjectBase
 {
-    
-
 public:
     void init(Ptr<const Model> model);
     void createAnimationState(Ptr<const Animation> animation);

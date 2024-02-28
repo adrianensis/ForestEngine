@@ -7,8 +7,6 @@ class UIDropdown;
 
 class UIDropdownButton: public UIButton
 {
-    
-
 public:
     void onPostReleased() override;
 

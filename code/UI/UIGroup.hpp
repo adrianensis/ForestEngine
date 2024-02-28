@@ -7,8 +7,6 @@ class UIElement;
 
 class UIGroup: public ObjectBase
 {
-    
-
 public:
     void init();
     void addUIElement(Ptr<UIElement> uiElement);

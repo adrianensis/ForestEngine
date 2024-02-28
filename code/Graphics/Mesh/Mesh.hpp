@@ -7,8 +7,6 @@ class Material;
 
 class Mesh: public GPUMesh
 {
-    
-
 public:
     void addBoneWeight(u32 vertexId, i32 id, f32 weight);
     std::vector<Vector3> calculateSkinnedVertices() const;
