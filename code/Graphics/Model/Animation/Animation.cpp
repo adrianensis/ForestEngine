@@ -1,6 +1,5 @@
 #include "Graphics/Model/Animation/Animation.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/RenderEngine.hpp"
 
 void Animation::init(f32 animDurationInSeconds, Ptr<const Model> model)
 {

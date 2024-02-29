@@ -3,8 +3,6 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
-#include "Graphics/RenderEngine.hpp"
-#include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"

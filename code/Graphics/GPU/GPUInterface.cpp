@@ -1,7 +1,4 @@
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/RenderEngine.hpp"
-#include "Graphics/Camera/Camera.hpp"
-
 #include <stddef.h>
 
 u32 GPUInterface::createBuffer()

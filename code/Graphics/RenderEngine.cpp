@@ -7,7 +7,6 @@
 #include "Engine/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
-#include "Graphics/Camera/Frustum.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
