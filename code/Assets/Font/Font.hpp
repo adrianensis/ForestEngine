@@ -42,7 +42,7 @@ public:
 class FontData
 {
 public:
-	void loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile);
+	void loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile, u32 fontSize);
 	void freeGlyphsBuffers();
 public:
     inline static const u32 MAX_GLYPHS = 128;

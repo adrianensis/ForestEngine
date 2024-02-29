@@ -12,6 +12,7 @@
 - [ ] OpenGL - Compress textures? Why/When?
 - [ ] OpenGL - Bindless Textures
 - [ ] OpenGL - DSA - Direct State Access
+- [ ] A display list stores a group of OpenGL commands so that they can be used repeatedly just by calling the display list
 - Use Octree to calculate visibility? (frustum culling with octree?). Don't put model matrix in UBO if occluded.
 - Threads - split render and logic in different threads
   - Scripting Engine - Put scripting engine in another thread???

@@ -21,9 +21,11 @@ void FontGlyphData::freeBuffer()
     mData = nullptr;
 }
 
-void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
+void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile, u32 fontSize)
 {
     mPath = fontFile;
+
+    CHECK_MSG(fontSize > 0, "Font Size must be greater than 0");
 
     // Create a new font
     FT_Error _error;
@@ -41,7 +43,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile)
     // // set size to load glyphs as
     // FT_Set_Pixel_Sizes(mFreeTypeFace, 0, 48);
 
-    _error = FT_Set_Char_Size ( mFreeTypeFace, 48 * 64, 48 * 64, 72, 72);
+    _error = FT_Set_Char_Size ( mFreeTypeFace, 0, fontSize * 64, 96, 96);
     CHECK_MSG(!_error, "Failed to set char size");
 
     // _error = FT_Set_Char_Size(

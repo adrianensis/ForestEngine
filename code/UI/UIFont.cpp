@@ -13,13 +13,13 @@ void UIFontsManager::terminate()
     mFontsLibrary.terminate();
 }
 
-Ptr<UIFont> UIFontsManager::loadFont(const std::string& fontFile)
+Ptr<UIFont> UIFontsManager::loadFont(const std::string& fontFile, u32 fontSize)
 {
     if(!mFontsMap.contains(fontFile))
     {
         mFontsMap.insert_or_assign(fontFile, OwnerPtr<UIFont>::newObject());
 		Ptr<UIFont> font = mFontsMap.at(fontFile);
-		font->init(*this, fontFile);
+		font->init(*this, fontFile, fontSize);
     }
 
     return mFontsMap.at(fontFile);
@@ -30,9 +30,9 @@ Ptr<UIFont> UIFontsManager::getFont(const std::string& fontFile) const
     return mFontsMap.at(fontFile);
 }
 
-void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile)
+void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32 fontSize)
 {
-    mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile);
+    mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile, fontSize);
 
     MaterialData materialData;
     materialData.mCreateMipMap = false;
