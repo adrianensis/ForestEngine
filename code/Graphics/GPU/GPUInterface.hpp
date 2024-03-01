@@ -1,8 +1,8 @@
 #pragma once
 
-#include "glad/glad.h"
 #include "Engine/Minimal.hpp"
 #include "Engine/Systems/System.hpp"
+#include "glad/glad.h"
 
 class Camera;
 

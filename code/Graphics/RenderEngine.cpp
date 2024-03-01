@@ -4,7 +4,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Engine/Window/Window.hpp"
+#include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"

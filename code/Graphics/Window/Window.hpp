@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Engine/Systems/System.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Engine/Input/Input.hpp"
+#include "Graphics/GPU/GPUInterface.hpp"
+#define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
 class Window : public System, public IWindowInputAdapter

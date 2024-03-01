@@ -5,7 +5,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Engine/Window/Window.hpp"
+#include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"

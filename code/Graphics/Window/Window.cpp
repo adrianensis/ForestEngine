@@ -1,6 +1,5 @@
-#include "Engine/Window/Window.hpp"
+#include "Graphics/Window/Window.hpp"
 #include "Graphics/RenderEngine.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 
 Vector2 Window::getWindowSize()
 {
