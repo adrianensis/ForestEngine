@@ -285,10 +285,14 @@ void Material::fragmentShaderTexture(ShaderBuilder& shaderBuilder) const
     mainFunc.body().
     set(outColor, call("texture2D", {sampler, inTextureCoord}));
 
+    if(mMaterialData.mAlphaEnabled)
+    {
+        fragmentShaderAlphaDiscard(shaderBuilder);
+    }
+    
     if(mMaterialData.mUseColorAsTint)
     {
         Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
-
         mainFunc.body().
         set(outColor.dot("r"), outColor.dot("r").add(baseColor.dot("r"))).
         set(outColor.dot("g"), outColor.dot("g").add(baseColor.dot("g"))).
@@ -466,15 +470,17 @@ void Material::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVerte
     {
         fragmentShaderTexture(shaderBuilder);
     }
+    else
+    {
+        if(mMaterialData.mAlphaEnabled)
+        {
+            fragmentShaderAlphaDiscard(shaderBuilder);
+        }
+    }
 
     if(mMaterialData.mReceiveLight)
     {
         fragmentShaderShadingModel(shaderBuilder);
-    }
-    
-    if(mMaterialData.mAlphaEnabled)
-    {
-        fragmentShaderAlphaDiscard(shaderBuilder);
     }
 }
 

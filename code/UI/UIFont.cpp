@@ -37,10 +37,12 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32
     MaterialData materialData;
     materialData.mCreateMipMap = false;
     materialData.mReceiveLight = false;
+    materialData.mUseColorAsTint = true;
     materialData.mUseDepth = true;
     // materialData.mAlphaEnabled = false;
     materialData.mIsFont = true;
     materialData.mFontData = mFontData;
+    materialData.mMaterialInstancedProperties.mColor = Vector4(1,1,1,1);
     mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
     mFontData.freeGlyphsBuffers();
