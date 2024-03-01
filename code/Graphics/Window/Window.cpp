@@ -28,6 +28,7 @@ void Window::init()
 	mWindowSize.set(1080, 720);
 
 	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
+    glfwMaximizeWindow(mGLTFWindow);
 
 	if (mGLTFWindow)
 	{
