@@ -2,6 +2,7 @@ import sys
 import os
 import getopt
 import platform
+import shutil
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 cwd = os.path.join(cwd, "..")
@@ -119,6 +120,9 @@ def build_cmake(projectDir, buildCommandArgs):
 
     buildCommandArgsString =" ".join(buildCommandArgs)
 
+    # -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++
+    # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
+    
     buildCommand = 'cmake {cmake_generator} {buildCommandArgsString} ../..'.format(
     cmake_generator = cmake_generator,
     buildCommandArgsString = buildCommandArgsString)
@@ -182,3 +186,6 @@ if enableProfiler:
        pass   
 
     os.symlink(easy_profiler_bin_path_source, bin_gui_path_destiny)
+
+compileCommandsJson = "compile_commands.json"
+shutil.copy(os.path.join(buildTargetDir, compileCommandsJson), compileCommandsJson)

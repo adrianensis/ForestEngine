@@ -33,6 +33,13 @@ endfunction()
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# set(CMAKE_CXX_CLANG_TIDY
+#   clang-tidy;
+#   -header-filter=.;
+#   -checks=*;
+# # -warnings-as-errors=*;
+# )
+
 if(ENABLE_LOGS)
     set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_ENABLE_LOGS")
 endif(ENABLE_LOGS)
@@ -49,7 +56,7 @@ if(UNIX)
     set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -mavx -Wall -Werror=return-type -Wcast-align -Wcast-qual -Wpointer-arith -Wfloat-equal")
   
     if(ENABLE_ADDRESS_SANITIZER)
-    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -fsanitize=address -static-libasan")
+        set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -fsanitize=address -static-libasan")
     endif(ENABLE_ADDRESS_SANITIZER)
 
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_DEBUG -ftree-vectorize")
@@ -61,14 +68,14 @@ if(WIN32)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 endif(WIN32)
 
-find_program(CCACHE_PROGRAM ccache)
-if(CCACHE_PROGRAM)
-    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-    set(CMAKE_CUDA_COMPILER_LAUNCHER "${CCACHE_PROGRAM}") # CMake 3.9+
-    message("Using CCACHE")
-else()
-    message("Not Using CCACHE")
-endif()
+# find_program(CCACHE_PROGRAM ccache)
+# if(CCACHE_PROGRAM)
+#     set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+#     set(CMAKE_CUDA_COMPILER_LAUNCHER "${CCACHE_PROGRAM}") # CMake 3.9+
+#     message("Using CCACHE")
+# else()
+#     message("Not Using CCACHE")
+# endif()
 
 message("Compiler: ${CMAKE_CXX_COMPILER}")
 message("Release: ${CMAKE_CXX_FLAGS_RELEASE}")

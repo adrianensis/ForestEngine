@@ -8,3 +8,4 @@ output/
 log.txt
 cmake-build-*
 .idea
+.cache
