@@ -3,18 +3,6 @@
 #include "Scripting/Script.hpp"
 #include "UI/Module.hpp"
 
-class UIStyleEditorToolButton: public UIStyleDefault
-{
-public:
-	UIStyleEditorToolButton()
-	{
-		mBackgroundColor = Vector4(0.0f, 0.0f, 0.0f, 1);
-		mColorPressed = Vector4(-0.3f, -0.3f, -0.3f, 1);
-		mColorHovered = Vector4(0.4f, 0.4f, 0.4f, 1);
-	}
-};
-REGISTER_CLASS(UIStyleEditorToolButton)
-
 class Editor: public Script
 {
 public:
@@ -25,19 +13,18 @@ public:
 
 private:
 	Ptr<GameObject> createSprite(const Vector3& v, f32 size);
+	Ptr<GameObject> mousePick();
     Ptr<GameObject> importModel(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
     Ptr<GameObject> importModel2(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
 	void handlePressedKeys();
+	void handleMouse();
 private:
-	f32 rotation = 0;
-	f32 y = 0;
-	Vector3 position;
     Ptr<UIText> fpsCounter;
-    Ptr<GameObject> gameObject;
-	Ptr<GameObject> cameraGameObject;
+	Ptr<GameObject> mCameraGameObject;
+	Ptr<GameObject> mSelectedGameObject;
 
     std::vector<Ptr<GameObject>> mGameObjectsArray;
 
-	Vector2 mousePosition;
+    Vector2 mLastMousePosition;
 };
 REGISTER_CLASS(Editor)

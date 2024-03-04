@@ -1,5 +1,6 @@
 #include "Core/File/FileUtils.hpp"
 #include "Core/Assert/Assert.hpp"
+#include <iostream>
 
 void FileUtils::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
 {

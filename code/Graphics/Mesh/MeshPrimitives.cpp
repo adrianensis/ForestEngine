@@ -35,6 +35,9 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 	mesh->mIndices.pushBack(Face(0,1,2));
 	mesh->mIndices.pushBack(Face(2,3,0));
 
+    mesh->mMin = mesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).get<Vector3>(0);
+    mesh->mMax = mesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).get<Vector3>(2);
+
 	return mesh;
 }
 
@@ -187,7 +190,8 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
 
-	elementOffset += elementOffsetIncrement;
+    mesh->mMin = bottomLeftBack;
+    mesh->mMax = topRightFront;
 
 	return mesh;
 }

@@ -16,7 +16,8 @@ public:
     void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void setPerspective(f32 near, f32 far, f32 aspect, f32 fov);
     void onResize();
-    Vector3 screenToWorld(const Vector2& screenPosition);
+    Vector3 screenToWorld(const Vector3& screenPosition);
+    Vector2 worldToScreen(const Vector3& worldPosition);
     void setZoom(f32 zoom);
     void zoomIn(f32 zoomDelta);
     void zoomOut(f32 zoomDelta);

@@ -57,7 +57,7 @@ void Camera::setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 fa
 	mNear = near;
 	mFar = far;
 
-	mProjectionMatrix.ortho(mLeft * GET_SYSTEM(Window).getAspectRatio() * mZoom, mRight * GET_SYSTEM(Window).getAspectRatio() * mZoom, mBottom* mZoom,
+	mProjectionMatrix.ortho(mLeft * mZoom, mRight * mZoom, mBottom* mZoom,
 							mTop* mZoom, mNear, mFar);
 }
 
@@ -75,19 +75,42 @@ void Camera::setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
 
 void Camera::onResize()
 {
+    // if (mIsOrtho)
+	// {
+    //     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
+    //     setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, mNear, mFar);
+	// }
+	// else
+	// {
+	// 	setPerspective(mNear, mFar, GET_SYSTEM(Window).getAspectRatio(), mFov);
+	// }
+
 	recalculateProjectionMatrix();
 }
 
-Vector3 Camera::screenToWorld(const Vector2& screenPosition)
+Vector3 Camera::screenToWorld(const Vector3& screenPosition)
 {	
 	calculateInverseMatrix();
-	Vector4 v = mInversePVMatrix.mulVector(Vector4(screenPosition.x, screenPosition.y, 0, 1.0));
+    Matrix4 inverse;
+    inverse.init(mProjectionMatrix);		
+    inverse.invert();
+	Vector4 v = inverse.mulVector(Vector4(screenPosition.x, screenPosition.y, screenPosition.z, 1.0));
 
-	v.x = v.x / v.w;
-	v.y = v.y / v.w;
-	v.z = v.z / v.w;
+    Vector3 result = v;
+	result = result / v.w;
 
-	return v;
+	return result;
+}
+
+Vector2 Camera::worldToScreen(const Vector3& worldPosition)
+{	
+    calculateProjectionViewMatrix();
+	Vector4 v = mProjectionViewMatrix.mulVector(Vector4(worldPosition.x, worldPosition.y, worldPosition.z, 1.0));
+
+    Vector2 result = v;
+	result = result / v.w;
+
+	return result;
 }
 
 void Camera::setZoom(f32 zoom)
@@ -128,32 +151,11 @@ void Camera::calculateViewMatrix()
 
 	Matrix4 viewTranslationMatrix;
 	viewTranslationMatrix.translation(-originalPosition);
-
-	// Vector3 worldUp(0,1,0);
-
-	// Vector3 forward(0,0,1);
-	// // forward = forward * -1;
-
-	// Vector3 right = Vector3(worldUp).cross(forward).nor();
-
-	// Vector3 up = Vector3(forward).cross(right).nor();
-
-	Matrix4 viewRotationMatrix;
-	viewRotationMatrix.identity();
-
-	// viewRotationMatrix.init(
-	// 	Vector4(right.x, right.y, right.z, 0),
-	// 	Vector4(up.x, up.y, up.z, 0),
-	// 	Vector4(forward.x, forward.y, forward.z, 0),
-	// 	Vector4(0, 0, 0, 1)
-	// );
-	
 	Matrix4 rotationMatrix = mGameObject->mTransform->getLocalRotationMatrix();
 
-	mViewMatrix.init(viewRotationMatrix);
+	mViewMatrix.identity();
 	mViewMatrix.mul(rotationMatrix);
 	mViewMatrix.mul(viewTranslationMatrix);
-	// mViewMatrix.init(viewTranslationMatrix);
 }
 
 void Camera::calculateProjectionViewMatrix()
@@ -169,7 +171,6 @@ void Camera::calculateInverseMatrix(bool force /*= false*/)
 	{
 		calculateProjectionViewMatrix();
 
-		Matrix4 inverseProjectionMatrix;
 		mInversePVMatrix.init(mProjectionViewMatrix);		
 		mInversePVMatrix.invert();
 

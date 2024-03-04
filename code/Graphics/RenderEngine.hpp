@@ -19,7 +19,7 @@ public:
     void update();
     void preSceneChanged();
     void postSceneChanged();
-    void onResize();
+    void onResize(u32 width, u32 height);
     
     void addComponent(Ptr<SystemComponent> component) override;
     void removeComponent(Ptr<SystemComponent> component) override;

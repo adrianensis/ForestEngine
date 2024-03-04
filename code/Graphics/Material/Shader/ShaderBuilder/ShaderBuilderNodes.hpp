@@ -217,13 +217,7 @@ namespace ShaderBuilderNodes
         BlockStatement& ifBlock(const Variable& a, const std::string& op , const Variable& b);
         BlockStatement& ifBlock(const Variable& boolean);
         BlockStatement& elseBlock();
-        BlockStatement& forBlock(auto&& ...args)
-        {
-            BlockStatement* newStatement = new ForStatement(args...);
-            newStatement->mParent = this;
-            mStatements.push_back((Statement*)newStatement);
-            return *newStatement;
-        }
+        BlockStatement& forBlock(auto&& ...args);
         BlockStatement& line(const std::string& line);
         BlockStatement& ret(const Variable& a);
         BlockStatement& end();
@@ -268,6 +262,14 @@ namespace ShaderBuilderNodes
         Expressions::Binary mContinueExpression;
         Expressions::Unary mAdvanceExpression;
     };
+
+    BlockStatement& BlockStatement::forBlock(auto&& ...args)
+    {
+        BlockStatement* newStatement = new ForStatement(args...);
+        newStatement->mParent = this;
+        mStatements.push_back((Statement*)newStatement);
+        return *newStatement;
+    }
 
     // FUNCTION DEFINITION
 

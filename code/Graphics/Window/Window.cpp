@@ -25,10 +25,9 @@ void Window::init()
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     #endif
 
-	mWindowSize.set(1080, 720);
+	mWindowSize.set(1080*1.3, 720*1.3);
 
 	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
-    glfwMaximizeWindow(mGLTFWindow);
 
 	if (mGLTFWindow)
 	{
@@ -95,8 +94,7 @@ void Window::setCursorVisibility(bool visible)
 void Window::onResize(GLFWwindow *window, int width, int height)
 {
 	mWindowSize.set(width, height);
-	GET_SYSTEM(GPUInterface).setViewport(0, 0, mWindowSize.x, mWindowSize.y);
-	GET_SYSTEM(RenderEngine).onResize();
+	GET_SYSTEM(RenderEngine).onResize(width, height);
 }
 
 void Window::onResizeGLFW(GLFWwindow *window, int width, int height)
@@ -232,9 +230,11 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 			InputEventMouseButtonReleased event;
 			event.mButton = button;
 			event.mMods = mods;
+			
+            GET_SYSTEM(Input).clearMouseButton();
+
 			SEND_INPUT_EVENT(event);
 
-			GET_SYSTEM(Input).clearMouseButton();
 			break;
 		}
 	}

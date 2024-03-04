@@ -89,9 +89,10 @@ void RenderEngine::postSceneChanged()
     mRenderPipelineData.mCamera = GET_SYSTEM(ScenesManager).getCurrentCamera();
 }
 
-void RenderEngine::onResize()
+void RenderEngine::onResize(u32 width, u32 height)
 {
 	LOG_TRACE()
+	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
     mRenderPipelineData.mCamera->onResize();
 }
 
