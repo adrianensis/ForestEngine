@@ -60,10 +60,10 @@ void Sandbox::firstUpdate()
 
 	// importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	// importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
-	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(200,60,0), 20.0f, 0);
-	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,60,0), 20.0f, 0);
+	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(200,60,0), 20.0f, 0);
+	importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,60,0), 20.0f, 0);
 
 	// auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(100,100,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
@@ -74,8 +74,8 @@ void Sandbox::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
     // importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(-300,0,-120), 20.0f, 0);
-    // importModel2("Rumba/Rumba.gltf", Vector3(-300,0,-200), 1, 0);
-    // importModel2("Run/Run.gltf", Vector3(300,0,-200), 1, 0);
+    importModel2("Rumba/Rumba.gltf", Vector3(-300,0,-200), 1, 0);
+    importModel2("Run/Run.gltf", Vector3(300,0,-200), 1, 0);
 	// importModel2("Vanguard-gltf/Vanguard.gltf", Vector3(0,0,-300), 1, 0);
 
     size = 1;
@@ -159,57 +159,57 @@ void Sandbox::firstUpdate()
 	setText("A").
 	create<UIText>();
 
-    // fpsCounter = uiBuilder.
-	// setText("100").
-	// create<UIText>().
-    // getUIElement<UIText>();
+    fpsCounter = uiBuilder.
+	setText("100").
+	create<UIText>().
+    getUIElement<UIText>();
 
-	// uiBuilder.
-	// setText("File").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("New", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("New", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Open", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Save", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
 
-	// uiBuilder.
-	// setText("Sprites").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("Edit").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Edit").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("View").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Grid", [&](UIElement *uiElement)
-	// {
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Grid", [&](UIElement *uiElement)
+	{
 
-	// }).
-	// addOption("Colliders", [&](UIElement *uiElement)
-	// {
-	// });
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
 
-    // uiBuilder.
-	// setText("a").
-	// create<UIEditableText>();
+    uiBuilder.
+	setText("a").
+	create<UIEditableText>();
 
-	// uiBuilder.restoreAll();
+	uiBuilder.restoreAll();
 
 	cameraGameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->getCameraGameObject();
 }
@@ -312,7 +312,7 @@ void Sandbox::update()
 
 	for(i32 x = -1000; x < 1000; x+=50)
 	{
-		// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
+		GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
 	}
     // PROFILER_END_BLOCK();
 
