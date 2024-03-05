@@ -9,7 +9,7 @@ void UIElementConfig::init(const Vector2& position, const Vector2& size, i32 lay
 	mStyle = &UIStyleManager::getInstance().getDefaultStyle();
 	mUIElementClassId = 0;
 	mPosition = position;
-	mDisplayPosition = Vector2(0, 0);
+	mDisplayPosition = Vector2::smZero;
 	mSize = size;
 	mIsStatic = true;
 	mText = text;

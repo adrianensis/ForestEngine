@@ -8,9 +8,6 @@ class Transform: public Component
 	DECLARE_SERIALIZATION()
 
 public:
-	inline static const Vector3 smRight = Vector3(1,0,0);
-	inline static const Vector3 smUp = Vector3(0,1,0);
-	inline static const Vector3 smForward = Vector3(0,0,1);
     void init();
     void onDestroy() override;
 
@@ -46,9 +43,9 @@ private:
     mutable bool mLocalRotationMatrixDirty = true;
     mutable bool mLocalScaleMatrixDirty = true;
 
-	Vector3 mLocalPosition = Vector3(0,0,0);
-	Vector3 mLocalRotation = Vector3(0,0,0);
-	Vector3 mLocalScale = Vector3(1,1,1);
+	Vector3 mLocalPosition = Vector3::smZero;
+	Vector3 mLocalRotation = Vector3::smZero;
+	Vector3 mLocalScale = Vector3::smOne;
 
 	mutable Matrix4 mModelMatrix;
 	mutable Matrix4 mModelMatrixNoScale;

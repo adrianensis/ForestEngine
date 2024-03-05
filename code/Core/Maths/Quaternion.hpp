@@ -7,7 +7,7 @@ class Quaternion
 {
 public:
 
-	Vector3 v = Vector3(0,0,0);
+	Vector3 v = Vector3::smZero;
 	f32 w = 0;
 
 	Quaternion();

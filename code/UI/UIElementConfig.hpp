@@ -22,10 +22,10 @@ public:
 public:
 	const UIStyle* mStyle = nullptr;
 	ClassId mUIElementClassId;
-	Vector2 mPosition = Vector2(0,0);
-	Vector2 mSize = Vector2(1,1);
-	Vector2 mDisplayPosition = Vector2(0,0);
-	Vector2 mDisplaySize = Vector2(1,1);
+	Vector2 mPosition = Vector2::smZero;
+	Vector2 mSize = Vector2::smOne;
+	Vector2 mDisplayPosition = Vector2::smZero;
+	Vector2 mDisplaySize = Vector2::smOne;
 	bool mIsStatic = true;
 	// Vector2 mTextSize;
 	std::string mText;

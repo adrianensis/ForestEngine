@@ -24,10 +24,15 @@
 
 #define VECTOR_DEFINE_COMPONENT(comp) f32 comp = 0;
 
-#define VECTOR2_PARAMS() f32 x, f32 y
-#define VECTOR3_PARAMS() VECTOR2_PARAMS(), f32 z 
-#define VECTOR4_PARAMS() VECTOR3_PARAMS(), f32 w
-#define VECTOR_PARAMS(n) VECTOR##n##_PARAMS()
+#define VECTOR2_PARAMS_DECL() f32 x, f32 y
+#define VECTOR3_PARAMS_DECL() VECTOR2_PARAMS_DECL(), f32 z 
+#define VECTOR4_PARAMS_DECL() VECTOR3_PARAMS_DECL(), f32 w
+#define VECTOR_PARAMS_DECL(n) VECTOR##n##_PARAMS_DECL()
+
+#define VECTOR2_PARAMS(p) p, p
+#define VECTOR3_PARAMS(p) VECTOR2_PARAMS(p), p 
+#define VECTOR4_PARAMS(p) VECTOR3_PARAMS(p), p
+#define VECTOR_PARAMS(n, p) VECTOR##n##_PARAMS(p)
 
 #define VECTOR_SET_OP_VECTOR(comp, op) this->comp = this->comp op rhs.comp;
 #define VECTOR_SET_OP_F32(comp, op) this->comp = this->comp op rhs;
@@ -56,6 +61,10 @@
 #define VECTOR4_EQ(v) VECTOR3_EQ(v) && MathUtils::eqf(this->w, v.w)
 #define VECTOR_EQ(n, v) VECTOR##n##_EQ(v)
 
+#define VECTOR_STATIC_DEFINITION(n) \
+inline const Vector##n Vector##n::smZero = Vector##n(VECTOR_PARAMS(n, 0)) ; \
+inline const Vector##n Vector##n::smOne = Vector##n(VECTOR_PARAMS(n, 1)) ; \
+
 #define VECTOR_BASE_DEFINITION(n) \
 private:\
     void checkBoundaries(u32 index) const { CHECK_MSG(index >= 0 && index < n, "Index out of bounds."); } \
@@ -63,10 +72,13 @@ private:\
 public:\
     VECTOR_FOR_EACH(n, VECTOR_DEFINE_COMPONENT); \
     \
+    static const ThisVectorClass smZero; \
+    static const ThisVectorClass smOne; \
+    \
     Vector##n() {}\
-    Vector##n(VECTOR_PARAMS(n)) {VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); }\
+    Vector##n(VECTOR_PARAMS_DECL(n)) {VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); }\
     Vector##n(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); }\
-    ThisVectorClass& set(VECTOR_PARAMS(n)) { VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); return *this; }\
+    ThisVectorClass& set(VECTOR_PARAMS_DECL(n)) { VECTOR_FOR_EACH(n, VECTOR_SET_F32_PARAM); return *this; }\
     ThisVectorClass& set(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_VECTOR_PARAM); return *this; }\
     ThisVectorClass& add(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, +); return *this; }\
     ThisVectorClass& sub(const ThisVectorClass& rhs) { VECTOR_FOR_EACH(n, VECTOR_SET_OP_VECTOR, -); return *this; }\

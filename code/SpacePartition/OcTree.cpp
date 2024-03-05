@@ -22,7 +22,7 @@ void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, u8 index, const 
 		// front +z
             // left -x
                 // up +y
-                mChildrenBoundingBoxes[0] = Cube(mCube.getLeftTopFront() + Vector3(0,0,0), halfSize);
+                mChildrenBoundingBoxes[0] = Cube(mCube.getLeftTopFront() + Vector3::smZero, halfSize);
                 // down -y
                 mChildrenBoundingBoxes[1] = Cube(mCube.getLeftTopFront() + Vector3(0,-halfSize.y,0), halfSize);
 

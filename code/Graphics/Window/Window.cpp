@@ -25,7 +25,7 @@ void Window::init()
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     #endif
 
-	mWindowSize.set(1080*1.3, 720*1.3);
+	mWindowSize.set(1080, 720);
 
 	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
 

@@ -17,5 +17,5 @@ public:
     Vector4(const Vector3& other, f32 w);
     Vector4(const Vector2& other, f32 z, f32 w);
 };
-
+VECTOR_STATIC_DEFINITION(4)
 TEMPLATED_SERIALIZATION(Vector4)

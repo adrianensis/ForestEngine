@@ -28,14 +28,14 @@ void Editor::firstUpdate()
     PROFILER_CPU();
     
 	mCameraGameObject = mGameObject->mScene->getCameraGameObject();
-	mCameraGameObject->mTransform->setLocalPosition(Vector3(0,0,0));
+	mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
     Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
     createSprite(Vector3(-100,0,0), 100);
     createSprite(Vector3(100,0,0), 100);
-    createSprite(Vector3(0,0,0), 10);
+    createSprite(Vector3::smZero, 10);
 
 	UIBuilder uiBuilder;
 
@@ -274,7 +274,7 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
     Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = true;
 	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalScale(Vector3(1,1,1) * size);
+	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
 	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
 
     ModelRendererData modelRendererData;
@@ -292,7 +292,7 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalScale(Vector3(1,1,1) * size);
+	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
 	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
 
     ModelRendererData modelRendererData;

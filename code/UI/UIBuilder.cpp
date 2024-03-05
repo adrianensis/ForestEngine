@@ -7,7 +7,7 @@ UIBuilder::UIBuilder()
 	mCurrentLayout = UILayout::HORIZONTAL;
 	mMakeRelativeToLastConfig = false;
 
-	mDefaultConfig.init(Vector2(0,0), Vector2(1,1), 0, GET_SYSTEM(UIManager).getDefaultUIMaterial());
+	mDefaultConfig.init(Vector2::smZero, Vector2::smOne, 0, GET_SYSTEM(UIManager).getDefaultUIMaterial());
 	mConfig = mDefaultConfig;
 }
 
@@ -66,7 +66,7 @@ UILayout UIBuilder::getOppositeLayout(UILayout layout)
 
 Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 {
-	Vector2 offset = Vector2(0, 0);
+	Vector2 offset = Vector2::smZero;
 
 	switch (layout)
 	{

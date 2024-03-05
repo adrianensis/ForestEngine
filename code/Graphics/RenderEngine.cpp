@@ -180,7 +180,7 @@ void RenderEngine::drawCube(const Cube& cube, f32 thickness/*= 1*/, bool isWorld
 	Vector3 leftTopBack = leftTopFront - Vector3(0,0,size.z);
 	drawRectangle(Rectangle(leftTopFront, size), thickness, isWorldSpace, color);
 	drawRectangle(Rectangle(leftTopBack, size), thickness, isWorldSpace, color);
-	drawLine(Line(leftTopFront + Vector3(0,0,0), leftTopBack + Vector3(0,0,0)), thickness, isWorldSpace, color);
+	drawLine(Line(leftTopFront + Vector3::smZero, leftTopBack + Vector3::smZero), thickness, isWorldSpace, color);
 	drawLine(Line(leftTopFront + Vector3(size.x,0,0), leftTopBack + Vector3(size.x,0,0)), thickness, isWorldSpace, color);
 	drawLine(Line(leftTopFront + Vector3(size.x,-size.y,0), leftTopBack + Vector3(size.x,-size.y,0)), thickness, isWorldSpace, color);
 	drawLine(Line(leftTopFront + Vector3(0,-size.y,0), leftTopBack + Vector3(0,-size.y,0)), thickness, isWorldSpace, color);

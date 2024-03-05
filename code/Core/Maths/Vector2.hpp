@@ -17,5 +17,5 @@ public:
 
     f32 angle(const Vector2& v) const;
 };
-
+VECTOR_STATIC_DEFINITION(2)
 TEMPLATED_SERIALIZATION(Vector2)
