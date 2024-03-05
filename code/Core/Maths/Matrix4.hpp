@@ -85,6 +85,7 @@ public:
 	static const Matrix4 smIdentity;
 	
 private:
-	inline static bool smIdentityCreated = false;
 	f32 mData[smMatrixSize];
 };
+
+inline const Matrix4 Matrix4::smIdentity = Matrix4({1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1});

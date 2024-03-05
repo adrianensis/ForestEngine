@@ -4,8 +4,6 @@
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Quaternion.hpp"
 
-const Matrix4 Matrix4::smIdentity = Matrix4({1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1});
-
 Matrix4::Matrix4()
 {
 	zeros();
