@@ -24,11 +24,3 @@ public:
 	GET(Text)
 };
 REGISTER_CLASS(UIButton);
-
-class UIToggleButton: public UIButton
-{
-    
-public:
-    void init() override;
-};
-REGISTER_CLASS(UIToggleButton);

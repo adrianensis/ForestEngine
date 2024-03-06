@@ -71,11 +71,3 @@ void UIButton::setVisibility(bool visibility)
 		mText->setVisibility(visibility);
 	}
 }
-
-void UIToggleButton::init() 
-{
-	UIButton::init();
-
-	mToggleEnabled = true;
-	mReleaseOnSameGroupPressed = true;
-}

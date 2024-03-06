@@ -27,6 +27,8 @@ public:
 	Vector2 mDisplayPosition = Vector2::smZero;
 	Vector2 mDisplaySize = Vector2::smOne;
 	bool mIsStatic = true;
+    bool mToggleEnabled = false;
+	bool mReleaseOnSameGroupPressed = false;
 	// Vector2 mTextSize;
 	std::string mText;
 	bool mAdjustSizeToText = false;

@@ -287,7 +287,7 @@ void UIElement::onReleasedEventReceived()
                     }
                     else
                     {
-                        if(!mToggleEnabled || (mState != UIElementState::TOGGLED))
+                        if(!mConfig.mToggleEnabled || (mState != UIElementState::TOGGLED))
                         {
                             markAsReleased();
                         }
@@ -307,11 +307,11 @@ void UIElement::tryRelease(bool force)
 
 	bool shouldRelease = false;
 
-	if(mToggleEnabled)
+	if(mConfig.mToggleEnabled)
 	{
 		if(mState == UIElementState::TOGGLED)
 		{
-			if(!mReleaseOnSameGroupPressed)
+			if(!mConfig.mReleaseOnSameGroupPressed)
 			{
 				shouldRelease = true;
 			}
@@ -459,9 +459,9 @@ void UIElement::releaseOtherToggleElements()
 		Ptr<UIElement> other = *it;
 		if(other != getPtrToThis<UIElement>())
 		{
-			if(other->getToggleEnabled() and
+			if(other->getConfig().mToggleEnabled and
 			other->getState() == UIElementState::TOGGLED and
-			other->getReleaseOnSameGroupPressed() and
+			other->getConfig().mReleaseOnSameGroupPressed and
 			!other->getConfig().mGroup.empty() and
 			other->getConfig().mGroup == mConfig.mGroup)
 			{

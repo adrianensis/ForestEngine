@@ -132,8 +132,6 @@ protected:
 	std::string mInputString;
 	bool mConsumeInput = true;
 	UIElementState mState = UIElementState::RELEASED;
-	bool mToggleEnabled = false;
-	bool mReleaseOnSameGroupPressed = false;
     bool mOnlyReleaseOnClickOutside = false;
     
     bool mClipChildren = false;
@@ -143,8 +141,6 @@ public:
 	GET(Renderer)
 	GET(InputString)
 	GET_SET(ConsumeInput)
-	GET(ToggleEnabled)
-	GET_SET(ReleaseOnSameGroupPressed)
 	GET(State)
 	GET(OnlyReleaseOnClickOutside)
 };
