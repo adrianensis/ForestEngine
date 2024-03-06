@@ -8,7 +8,7 @@ class UIDropdown;
 class UIDropdownButton: public UIButton
 {
 public:
-    void onPostReleased() override;
+    void onPostPressed() override;
 
 private:
     Ptr<UIDropdown> mParentDropdown;
@@ -35,7 +35,7 @@ class UIDropdown: public UIButton
 public:
     void init() override;
     void onDestroy() override;
-    void onPostReleased() override;
+    void onPostPressed() override;
     UIDropdown& addOption(const std::string& label, UIElementCallback onPressedCallback);
     void toggle();
 

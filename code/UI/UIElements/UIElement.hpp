@@ -11,7 +11,7 @@ class UIGroup;
 
 enum class UIElementState
 {
-	PRESSED, RELEASED, TOGGLED
+	PRESSED, RELEASED, //TOGGLED
 };
 
 class UIElement;
@@ -37,14 +37,8 @@ class UIElement: public GameObject
 {
 public:
     virtual void initFromConfig(const UIElementConfig& config);
+    void postInit();
     virtual void onDestroy();
-
-	void simulateClick()
-	{
-		markAsPressed();
-		executePressed();
-		tryRelease(true);
-	}
 
     bool hasFocus() const;
     bool isMouseCursorInsideElement() const;
@@ -54,11 +48,8 @@ public:
     virtual void setVisibility(bool visibility);
     bool isVisible();
     void setOnPressedCallback(UIElementCallback callback);
-    void setOnReleasedCallback(UIElementCallback callback);
     void setOnTextChangedCallback(UIElementCallback callback);
     void setOnFocusLostCallback(UIElementCallback callback);
-    void setComponentsCache();
-
 
 protected:
     void subscribeToKeyEvents();
@@ -69,17 +60,9 @@ protected:
     void subscribeToEscEvent();
 
 private:
-	
     void onPressedEventReceived();
-    void executePressed();
-
-    void markAsPressed();
-
     void onReleasedEventReceived();
-    void tryRelease(bool force);
-    void executeRelease();
-    void markAsReleased();
-    void onMouseOverEventReceived();
+    void onMouseMovedEventReceived();
     void onScrollEventReceived(f32 scrollValue);
 
     void onCharEventReceived(char character);
@@ -87,13 +70,12 @@ private:
     void onEnterEventReceived();
     void onEscEventReceived();
 
-    void loseFocus();
-    void obtainFocus();
+    void releaseFocus();
+    void requestFocus();
 
     void scroll(f32 scrollValue);
 
-    void releaseOtherToggleElements();
-    void markAsToggled();
+    // void releaseOtherToggleElements();
 
     void setColorPressed();
     void setColorRelease();
@@ -101,9 +83,7 @@ private:
 
 protected:
 	virtual void onPrePressed() { }
-	virtual void onPreReleased() { }
     virtual void onPostPressed() { }
-	virtual void onPostReleased() { }
 	virtual void onChar(char character) { }
     virtual void onBackspace() { }
 	virtual void onEnter() { }
@@ -121,14 +101,11 @@ protected:
 	UIElementConfig mConfig;
 
 	FunctorUIElement mOnPressedFunctor;
-	FunctorUIElement mOnReleasedFunctor;
-
 	FunctorUIElement mOnScrollFunctor;
-
 	FunctorUIElement mOnTextChangedFunctor;
 	FunctorUIElement mOnFocusLostFunctor;
 
-	MeshRenderer* mRenderer = nullptr;
+	Ptr<MeshRenderer> mRenderer;
 	std::string mInputString;
 	bool mConsumeInput = true;
 	UIElementState mState = UIElementState::RELEASED;
@@ -138,9 +115,7 @@ protected:
 
 public:
 	CRGET_SET(Config)
-	GET(Renderer)
 	GET(InputString)
-	GET_SET(ConsumeInput)
 	GET(State)
 	GET(OnlyReleaseOnClickOutside)
 };

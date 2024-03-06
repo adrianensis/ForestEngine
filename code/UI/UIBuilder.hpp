@@ -58,6 +58,7 @@ public:
         calculateConfig();
 	    Ptr<T> uiElement = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<T>();
         uiElement->initFromConfig(mConfig);
+        uiElement->postInit();
 
         registerUIElement(Ptr<UIElement>::cast(uiElement));
 		return *this;

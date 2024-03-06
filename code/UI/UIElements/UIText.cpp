@@ -24,8 +24,6 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
     renderer->getMaterialInstance().mMaterialInstancedProperties.mTextureRegionLeftTop = textureRegion.getLeftTopFront();
     renderer->getMaterialInstance().mMaterialInstancedProperties.mTextureRegionSize = textureRegion.getSize();
-
-	setComponentsCache();
 }
 
 void UIText::initFromConfig(const UIElementConfig& config) 
@@ -37,8 +35,6 @@ void UIText::initFromConfig(const UIElementConfig& config)
 	setBackground(mConfig);
 
 	setText(mConfig.mText);
-
-	setComponentsCache();
 }
 
 void UIText::onDestroy() 
@@ -111,8 +107,6 @@ void UIText::setText(const std::string& text)
 		}
 
 		mString = text;
-
-		setComponentsCache();
 	}
 }
 

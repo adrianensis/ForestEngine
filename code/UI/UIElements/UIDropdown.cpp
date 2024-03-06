@@ -7,9 +7,9 @@
 #include "Scene/Scene.hpp"
 
 
-void UIDropdownButton::onPostReleased() 
+void UIDropdownButton::onPostPressed() 
 {
-	UIButton::onPostReleased();
+	UIButton::onPostPressed();
 	mParentDropdown->setEntriesVisibility(false);
 }
 
@@ -29,9 +29,9 @@ void UIDropdown::onDestroy()
 	UIButton::onDestroy();
 }
 
-void UIDropdown::onPostReleased() 
+void UIDropdown::onPostPressed() 
 {
-	UIButton::onPostReleased();
+	UIButton::onPostPressed();
 	toggle();
 }
 
