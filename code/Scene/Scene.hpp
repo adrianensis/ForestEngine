@@ -20,11 +20,11 @@ public:
     void unloadScene();
     void addGameObject(OwnerPtr<GameObject>&& gameObject);
 
-    template <class T, typename ... Args> T_EXTENDS(T, GameObject)
-	Ptr<T> createGameObject(Args&&... args)
+    template <class T> T_EXTENDS(T, GameObject)
+	Ptr<T> createGameObject()
 	{
 		OwnerPtr<T> gameObject = OwnerPtr<T>::newObject();
-        gameObject->init(args...);
+        gameObject->init();
 		Ptr<T> gameObjectPtr = gameObject;
         addGameObject(std::move(OwnerPtr<GameObject>::moveCast(gameObject)));
         return gameObjectPtr;
