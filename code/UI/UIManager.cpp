@@ -10,7 +10,7 @@ void UIManager::init()
 	UIStyleManager::getInstance().init();
     mDefaultFont = Paths::mResources + "fonts/Arial.ttf";
     mFontsManager.init();
-    mFontsManager.loadFont(mDefaultFont, 32);
+    mFontsManager.loadFont(mDefaultFont, 12);
 
     MaterialData materialData;
     materialData.mAlphaEnabled = true;
