@@ -9,7 +9,7 @@
 				"scripts/build.py",
 				"-l",
 				"--gpuDbg",
-				"--app=Sandbox"
+				"--tool=Editor"
 			],
 			"problemMatcher": [
 				"$gcc"
@@ -26,7 +26,7 @@
 			"args": [
 				"scripts/build.py",
 				"-lr",
-				"--app=Sandbox",
+				"--tool=Editor",
 			],
 			"problemMatcher": [
 				"$gcc"
