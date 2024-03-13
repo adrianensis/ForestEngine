@@ -88,18 +88,18 @@ void Camera::onResize()
 	recalculateProjectionMatrix();
 }
 
-Vector3 Camera::screenToWorld(const Vector3& screenPosition)
+Vector3 Camera::screenToWorld(const Vector2& screenPosition, f32 depth)
 {	
 	calculateInverseMatrix();
-    Matrix4 inverse;
-    inverse.init(mProjectionMatrix);		
-    inverse.invert();
-	Vector4 v = inverse.mulVector(Vector4(screenPosition.x, screenPosition.y, screenPosition.z, 1.0));
 
-    Vector3 result = v;
-	result = result / v.w;
+    Vector4 viewVector = mInverseProjectionMatrix.mulVector(Vector4(screenPosition.x, screenPosition.y, -1.0f, 1.0f));
+    Vector3 distanceToCameraVector = mViewMatrix.mulVector(Vector4(0,0,depth,1));
+    distanceToCameraVector = -distanceToCameraVector;
+    // intersect view vector with object Z plane (in view)
+    Vector4 view_space_intersect = Vector4(Vector3(viewVector) * distanceToCameraVector.z, 1.0f);
+    Vector4 point_world = mInverseViewMatrix.mulVector(view_space_intersect);
 
-	return result;
+	return point_world;
 }
 
 Vector2 Camera::worldToScreen(const Vector3& worldPosition)
@@ -170,6 +170,11 @@ void Camera::calculateInverseMatrix(bool force /*= false*/)
 	if(mInversePVMatrixNeedsUpdate || force)
 	{
 		calculateProjectionViewMatrix();
+
+        mInverseProjectionMatrix = mProjectionMatrix;
+        mInverseProjectionMatrix.invert();
+        mInverseViewMatrix = mViewMatrix;
+        mInverseViewMatrix.invert();
 
 		mInversePVMatrix.init(mProjectionViewMatrix);		
 		mInversePVMatrix.invert();

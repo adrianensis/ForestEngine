@@ -58,7 +58,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 	if(mTransform->mAffectedByProjection)
 	{
-		mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input).getMousePosition());
+		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}
 
     // GET_SYSTEM(RenderEngine).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);

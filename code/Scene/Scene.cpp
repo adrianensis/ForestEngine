@@ -26,7 +26,7 @@ void Scene::init()
 	mCameraGameObject = OwnerPtr<GameObject>::newObject();
 	mCameraGameObject->init();
 
-	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 100.0f));
+	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));
 
     Ptr<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
 	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);

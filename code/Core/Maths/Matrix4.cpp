@@ -98,74 +98,107 @@ void Matrix4::transpose()
 
 void Matrix4::invert()
 {
-	f32 tmp_0 = this->get(2, 2) * this->get(3, 3);
-	f32 tmp_1 = this->get(3, 2) * this->get(2, 3);
-	f32 tmp_2 = this->get(1, 2) * this->get(3, 3);
-	f32 tmp_3 = this->get(3, 2) * this->get(1, 3);
-	f32 tmp_4 = this->get(1, 2) * this->get(2, 3);
-	f32 tmp_5 = this->get(2, 2) * this->get(1, 3);
-	f32 tmp_6 = this->get(0, 2) * this->get(3, 3);
-	f32 tmp_7 = this->get(3, 2) * this->get(0, 3);
-	f32 tmp_8 = this->get(0, 2) * this->get(2, 3);
-	f32 tmp_9 = this->get(2, 2) * this->get(0, 3);
-	f32 tmp_10 = this->get(0, 2) * this->get(1, 3);
-	f32 tmp_11 = this->get(1, 2) * this->get(0, 3);
-	f32 tmp_12 = this->get(2, 0) * this->get(3, 1);
-	f32 tmp_13 = this->get(3, 0) * this->get(2, 1);
-	f32 tmp_14 = this->get(1, 0) * this->get(3, 1);
-	f32 tmp_15 = this->get(3, 0) * this->get(1, 1);
-	f32 tmp_16 = this->get(1, 0) * this->get(2, 1);
-	f32 tmp_17 = this->get(2, 0) * this->get(1, 1);
-	f32 tmp_18 = this->get(0, 0) * this->get(3, 1);
-	f32 tmp_19 = this->get(3, 0) * this->get(0, 1);
-	f32 tmp_20 = this->get(0, 0) * this->get(2, 1);
-	f32 tmp_21 = this->get(2, 0) * this->get(0, 1);
-	f32 tmp_22 = this->get(0, 0) * this->get(1, 1);
-	f32 tmp_23 = this->get(1, 0) * this->get(0, 1);
+    f32 n11 = (*this).get(0,0), n12 = (*this).get(1,0), n13 = (*this).get(2,0), n14 = (*this).get(3,0);
+    f32 n21 = (*this).get(0,1), n22 = (*this).get(1,1), n23 = (*this).get(2,1), n24 = (*this).get(3,1);
+    f32 n31 = (*this).get(0,2), n32 = (*this).get(1,2), n33 = (*this).get(2,2), n34 = (*this).get(3,2);
+    f32 n41 = (*this).get(0,3), n42 = (*this).get(1,3), n43 = (*this).get(2,3), n44 = (*this).get(3,3);
 
-	f32 t0 = ((tmp_0 * this->get(1, 1) + tmp_3 * this->get(2, 1) + tmp_4 * this->get(3, 1)) - (tmp_1 * this->get(1, 1) + tmp_2 * this->get(2, 1) + tmp_5 * this->get(3, 1)));
-	f32 t1 = ((tmp_1 * this->get(0, 1) + tmp_6 * this->get(2, 1) + tmp_9 * this->get(3, 1)) - (tmp_0 * this->get(0, 1) + tmp_7 * this->get(2, 1) + tmp_8 * this->get(3, 1)));
-	f32 t2 = ((tmp_2 * this->get(0, 1) + tmp_7 * this->get(1, 1) + tmp_10 * this->get(3, 1)) - (tmp_3 * this->get(0, 1) + tmp_6 * this->get(1, 1) + tmp_11 * this->get(3, 1)));
-	f32 t3 = ((tmp_5 * this->get(0, 1) + tmp_8 * this->get(1, 1) + tmp_11 * this->get(2, 1)) - (tmp_4 * this->get(0, 1) + tmp_9 * this->get(1, 1) + tmp_10 * this->get(2, 1)));
+    f32 t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
+    f32 t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
+    f32 t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
+    f32 t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
 
-	f32 d = 1.0 / (this->get(0, 0) * t0 + this->get(1, 0) * t1 + this->get(2, 0) * t2 + this->get(3, 0) * t3);
+    f32 det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+    f32 idet = 1.0f / det;
 
-	f32 out_00 = d * t0;
-	f32 out_01 = d * t1;
-	f32 out_02 = d * t2;
-	f32 out_03 = d * t3;
+    this->set(0, 0, t11 * idet);
+    this->set(0, 1, (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * idet);
+    this->set(0, 2, (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * idet);
+    this->set(0, 3, (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * idet);
 
-	f32 out_10 = d * ((tmp_1 * this->get(1, 0) + tmp_2 * this->get(2, 0) + tmp_5 * this->get(3, 0)) - (tmp_0 * this->get(1, 0) + tmp_3 * this->get(2, 0) + tmp_4 * this->get(3, 0)));
-	f32 out_11 = d * ((tmp_0 * this->get(0, 0) + tmp_7 * this->get(2, 0) + tmp_8 * this->get(3, 0)) - (tmp_1 * this->get(0, 0) + tmp_6 * this->get(2, 0) + tmp_9 * this->get(3, 0)));
-	f32 out_12 = d * ((tmp_3 * this->get(0, 0) + tmp_6 * this->get(1, 0) + tmp_11 * this->get(3, 0)) - (tmp_2 * this->get(0, 0) + tmp_7 * this->get(1, 0) + tmp_10 * this->get(3, 0)));
-	f32 out_13 = d * ((tmp_4 * this->get(0, 0) + tmp_9 * this->get(1, 0) + tmp_10 * this->get(2, 0)) - (tmp_5 * this->get(0, 0) + tmp_8 * this->get(1, 0) + tmp_11 * this->get(2, 0)));
+    this->set(1, 0, t12 * idet);
+    this->set(1, 1, (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * idet);
+    this->set(1, 2, (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * idet);
+    this->set(1, 3, (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * idet);
 
-	f32 out_20 = d * ((tmp_12 * this->get(1, 3) + tmp_15 * this->get(2, 3) + tmp_16 * this->get(3, 3)) - (tmp_13 * this->get(1, 3) + tmp_14 * this->get(2, 3) + tmp_17 * this->get(3, 3)));
-	f32 out_21 = d * ((tmp_13 * this->get(0, 3) + tmp_18 * this->get(2, 3) + tmp_21 * this->get(3, 3)) - (tmp_12 * this->get(0, 3) + tmp_19 * this->get(2, 3) + tmp_20 * this->get(3, 3)));
-	f32 out_22 = d * ((tmp_14 * this->get(0, 3) + tmp_19 * this->get(1, 3) + tmp_22 * this->get(3, 3)) - (tmp_15 * this->get(0, 3) + tmp_18 * this->get(1, 3) + tmp_23 * this->get(3, 3)));
-	f32 out_23 = d * ((tmp_17 * this->get(0, 3) + tmp_20 * this->get(1, 3) + tmp_23 * this->get(2, 3)) - (tmp_16 * this->get(0, 3) + tmp_21 * this->get(1, 3) + tmp_22 * this->get(2, 3)));
+    this->set(2, 0, t13 * idet);
+    this->set(2, 1, (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * idet);
+    this->set(2, 2, (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * idet);
+    this->set(2, 3, (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * idet);
 
-	f32 out_30 = d * ((tmp_14 * this->get(2, 2) + tmp_17 * this->get(3, 2) + tmp_13 * this->get(1, 2)) - (tmp_16 * this->get(3, 2) + tmp_12 * this->get(1, 2) + tmp_15 * this->get(2, 2)));
-	f32 out_31 = d * ((tmp_20 * this->get(3, 2) + tmp_12 * this->get(0, 2) + tmp_19 * this->get(2, 2)) - (tmp_18 * this->get(2, 2) + tmp_21 * this->get(3, 2) + tmp_13 * this->get(0, 2)));
-	f32 out_32 = d * ((tmp_18 * this->get(1, 2) + tmp_23 * this->get(3, 2) + tmp_15 * this->get(0, 2)) - (tmp_22 * this->get(3, 2) + tmp_14 * this->get(0, 2) + tmp_19 * this->get(1, 2)));
-	f32 out_33 = d * ((tmp_22 * this->get(2, 2) + tmp_16 * this->get(0, 2) + tmp_21 * this->get(1, 2)) - (tmp_20 * this->get(1, 2) + tmp_23 * this->get(2, 2) + tmp_17 * this->get(0, 2)));
+    this->set(3, 0, t14 * idet);
+    this->set(3, 1, (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * idet);
+    this->set(3, 2, (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * idet);
+    this->set(3, 3, (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * idet);
 
-	set(0, 0, out_00);
-	set(0, 1, out_01);
-	set(0, 2, out_02);
-	set(0, 3, out_03);
-	set(1, 0, out_10);
-	set(1, 1, out_11);
-	set(1, 2, out_12);
-	set(1, 3, out_13);
-	set(2, 0, out_20);
-	set(2, 1, out_21);
-	set(2, 2, out_22);
-	set(2, 3, out_23);
-	set(3, 0, out_30);
-	set(3, 1, out_31);
-	set(3, 2, out_32);
-	set(3, 3, out_33);
+	// f32 tmp_0 = this->get(2, 2) * this->get(3, 3);
+	// f32 tmp_1 = this->get(3, 2) * this->get(2, 3);
+	// f32 tmp_2 = this->get(1, 2) * this->get(3, 3);
+	// f32 tmp_3 = this->get(3, 2) * this->get(1, 3);
+	// f32 tmp_4 = this->get(1, 2) * this->get(2, 3);
+	// f32 tmp_5 = this->get(2, 2) * this->get(1, 3);
+	// f32 tmp_6 = this->get(0, 2) * this->get(3, 3);
+	// f32 tmp_7 = this->get(3, 2) * this->get(0, 3);
+	// f32 tmp_8 = this->get(0, 2) * this->get(2, 3);
+	// f32 tmp_9 = this->get(2, 2) * this->get(0, 3);
+	// f32 tmp_10 = this->get(0, 2) * this->get(1, 3);
+	// f32 tmp_11 = this->get(1, 2) * this->get(0, 3);
+	// f32 tmp_12 = this->get(2, 0) * this->get(3, 1);
+	// f32 tmp_13 = this->get(3, 0) * this->get(2, 1);
+	// f32 tmp_14 = this->get(1, 0) * this->get(3, 1);
+	// f32 tmp_15 = this->get(3, 0) * this->get(1, 1);
+	// f32 tmp_16 = this->get(1, 0) * this->get(2, 1);
+	// f32 tmp_17 = this->get(2, 0) * this->get(1, 1);
+	// f32 tmp_18 = this->get(0, 0) * this->get(3, 1);
+	// f32 tmp_19 = this->get(3, 0) * this->get(0, 1);
+	// f32 tmp_20 = this->get(0, 0) * this->get(2, 1);
+	// f32 tmp_21 = this->get(2, 0) * this->get(0, 1);
+	// f32 tmp_22 = this->get(0, 0) * this->get(1, 1);
+	// f32 tmp_23 = this->get(1, 0) * this->get(0, 1);
+
+	// f32 t0 = ((tmp_0 * this->get(1, 1) + tmp_3 * this->get(2, 1) + tmp_4 * this->get(3, 1)) - (tmp_1 * this->get(1, 1) + tmp_2 * this->get(2, 1) + tmp_5 * this->get(3, 1)));
+	// f32 t1 = ((tmp_1 * this->get(0, 1) + tmp_6 * this->get(2, 1) + tmp_9 * this->get(3, 1)) - (tmp_0 * this->get(0, 1) + tmp_7 * this->get(2, 1) + tmp_8 * this->get(3, 1)));
+	// f32 t2 = ((tmp_2 * this->get(0, 1) + tmp_7 * this->get(1, 1) + tmp_10 * this->get(3, 1)) - (tmp_3 * this->get(0, 1) + tmp_6 * this->get(1, 1) + tmp_11 * this->get(3, 1)));
+	// f32 t3 = ((tmp_5 * this->get(0, 1) + tmp_8 * this->get(1, 1) + tmp_11 * this->get(2, 1)) - (tmp_4 * this->get(0, 1) + tmp_9 * this->get(1, 1) + tmp_10 * this->get(2, 1)));
+
+	// f32 d = 1.0 / (this->get(0, 0) * t0 + this->get(1, 0) * t1 + this->get(2, 0) * t2 + this->get(3, 0) * t3);
+
+	// f32 out_00 = d * t0;
+	// f32 out_01 = d * t1;
+	// f32 out_02 = d * t2;
+	// f32 out_03 = d * t3;
+
+	// f32 out_10 = d * ((tmp_1 * this->get(1, 0) + tmp_2 * this->get(2, 0) + tmp_5 * this->get(3, 0)) - (tmp_0 * this->get(1, 0) + tmp_3 * this->get(2, 0) + tmp_4 * this->get(3, 0)));
+	// f32 out_11 = d * ((tmp_0 * this->get(0, 0) + tmp_7 * this->get(2, 0) + tmp_8 * this->get(3, 0)) - (tmp_1 * this->get(0, 0) + tmp_6 * this->get(2, 0) + tmp_9 * this->get(3, 0)));
+	// f32 out_12 = d * ((tmp_3 * this->get(0, 0) + tmp_6 * this->get(1, 0) + tmp_11 * this->get(3, 0)) - (tmp_2 * this->get(0, 0) + tmp_7 * this->get(1, 0) + tmp_10 * this->get(3, 0)));
+	// f32 out_13 = d * ((tmp_4 * this->get(0, 0) + tmp_9 * this->get(1, 0) + tmp_10 * this->get(2, 0)) - (tmp_5 * this->get(0, 0) + tmp_8 * this->get(1, 0) + tmp_11 * this->get(2, 0)));
+
+	// f32 out_20 = d * ((tmp_12 * this->get(1, 3) + tmp_15 * this->get(2, 3) + tmp_16 * this->get(3, 3)) - (tmp_13 * this->get(1, 3) + tmp_14 * this->get(2, 3) + tmp_17 * this->get(3, 3)));
+	// f32 out_21 = d * ((tmp_13 * this->get(0, 3) + tmp_18 * this->get(2, 3) + tmp_21 * this->get(3, 3)) - (tmp_12 * this->get(0, 3) + tmp_19 * this->get(2, 3) + tmp_20 * this->get(3, 3)));
+	// f32 out_22 = d * ((tmp_14 * this->get(0, 3) + tmp_19 * this->get(1, 3) + tmp_22 * this->get(3, 3)) - (tmp_15 * this->get(0, 3) + tmp_18 * this->get(1, 3) + tmp_23 * this->get(3, 3)));
+	// f32 out_23 = d * ((tmp_17 * this->get(0, 3) + tmp_20 * this->get(1, 3) + tmp_23 * this->get(2, 3)) - (tmp_16 * this->get(0, 3) + tmp_21 * this->get(1, 3) + tmp_22 * this->get(2, 3)));
+
+	// f32 out_30 = d * ((tmp_14 * this->get(2, 2) + tmp_17 * this->get(3, 2) + tmp_13 * this->get(1, 2)) - (tmp_16 * this->get(3, 2) + tmp_12 * this->get(1, 2) + tmp_15 * this->get(2, 2)));
+	// f32 out_31 = d * ((tmp_20 * this->get(3, 2) + tmp_12 * this->get(0, 2) + tmp_19 * this->get(2, 2)) - (tmp_18 * this->get(2, 2) + tmp_21 * this->get(3, 2) + tmp_13 * this->get(0, 2)));
+	// f32 out_32 = d * ((tmp_18 * this->get(1, 2) + tmp_23 * this->get(3, 2) + tmp_15 * this->get(0, 2)) - (tmp_22 * this->get(3, 2) + tmp_14 * this->get(0, 2) + tmp_19 * this->get(1, 2)));
+	// f32 out_33 = d * ((tmp_22 * this->get(2, 2) + tmp_16 * this->get(0, 2) + tmp_21 * this->get(1, 2)) - (tmp_20 * this->get(1, 2) + tmp_23 * this->get(2, 2) + tmp_17 * this->get(0, 2)));
+
+	// set(0, 0, out_00);
+	// set(0, 1, out_01);
+	// set(0, 2, out_02);
+	// set(0, 3, out_03);
+	// set(1, 0, out_10);
+	// set(1, 1, out_11);
+	// set(1, 2, out_12);
+	// set(1, 3, out_13);
+	// set(2, 0, out_20);
+	// set(2, 1, out_21);
+	// set(2, 2, out_22);
+	// set(2, 3, out_23);
+	// set(3, 0, out_30);
+	// set(3, 1, out_31);
+	// set(3, 2, out_32);
+	// set(3, 3, out_33);
 }
 
 void Matrix4::mul(const Matrix4& other)

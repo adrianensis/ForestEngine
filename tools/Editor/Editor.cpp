@@ -28,14 +28,14 @@ void Editor::firstUpdate()
     PROFILER_CPU();
     
 	mCameraGameObject = mGameObject->mScene->getCameraGameObject();
-	mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
+	// mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
     Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
-    camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
+    // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
     createSprite(Vector3(-100,0,0), 100);
     createSprite(Vector3(100,0,0), 100);
-    createSprite(Vector3::smZero, 10);
+    createSprite(Vector3(0,0,-100), 10);
 
 	UIBuilder uiBuilder;
 
@@ -133,35 +133,43 @@ void Editor::update()
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_UP))
 	{
-		// cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
-		cameraTransform->addLocalTranslation(Vector3(0,speed,0));
+		cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
+		// cameraTransform->addLocalTranslation(Vector3(0,speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
-		// cameraTransform->addLocalTranslation(Vector3(0,0,speed));
-		cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
+		cameraTransform->addLocalTranslation(Vector3(0,0,speed));
+		// cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_UP))
 	{
-		// cameraTransform->addLocalTranslation(Vector3(0,speed,0));
+		cameraTransform->addLocalTranslation(Vector3(0,speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
 	{
-		// cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
+		cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
+	}
+    else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_HOME))
+	{
+		cameraTransform->addLocalRotation(Vector3(0,-speed/10,0));
+	}
+	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_END))
+	{
+		cameraTransform->addLocalRotation(Vector3(0,speed/10,0));
 	}
 
+    Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
+    // currentMousePosition.set(-1,0,0);
+    LOG_VAR(currentMousePosition.x);
+    LOG_VAR(currentMousePosition.y);
     if(mSelectedGameObject)
     {
-    	Vector3 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
-        LOG("mouse");
-        LOG_VAR(currentMousePosition.x);
-        LOG_VAR(currentMousePosition.y);
-        Vector3 position = camera->screenToWorld(currentMousePosition);
+        Vector3 position = camera->screenToWorld(currentMousePosition, mSelectedGameObject->mTransform->getWorldPosition().z);
+        // position.z = mSelectedGameObject->mTransform->getLocalPosition().z;
+        mSelectedGameObject->mTransform->setLocalPosition(position);
         LOG_VAR(position.x);
         LOG_VAR(position.y);
         LOG_VAR(position.z);
-        position.z = mSelectedGameObject->mTransform->getLocalPosition().z;
-        mSelectedGameObject->mTransform->setLocalPosition(position);
     }
 
 	// if(!mousePosition.eq(currentMousePosition))

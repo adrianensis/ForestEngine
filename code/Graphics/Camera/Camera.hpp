@@ -16,7 +16,7 @@ public:
     void setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
     void setPerspective(f32 near, f32 far, f32 aspect, f32 fov);
     void onResize();
-    Vector3 screenToWorld(const Vector3& screenPosition);
+    Vector3 screenToWorld(const Vector2& screenPosition, f32 depth);
     Vector2 worldToScreen(const Vector3& worldPosition);
     void setZoom(f32 zoom);
     void zoomIn(f32 zoomDelta);
@@ -29,7 +29,9 @@ private:
     void calculateInverseMatrix(bool force = false);
 
 private:
-	Matrix4 mInversePVMatrix; // used in screen to world calculations.
+	Matrix4 mInverseProjectionMatrix;
+	Matrix4 mInverseViewMatrix;
+	Matrix4 mInversePVMatrix;
 
 	mutable bool mProjectionViewMatrixNeedsUpdate = true;
 	mutable bool mInversePVMatrixNeedsUpdate = true;
