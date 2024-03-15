@@ -49,8 +49,8 @@ void Window::init()
 		GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
         // GET_SYSTEM(GPUInterface).setFaceMode(true, GL_BACK, GL_CCW);
 
-		GET_SYSTEM(GPUInterface).setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		GET_SYSTEM(GPUInterface).enableFlag(GL_BLEND);
+		GET_SYSTEM(GPUInterface).setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		GET_SYSTEM(GPUInterface).clear();
 	}
