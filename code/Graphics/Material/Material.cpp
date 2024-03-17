@@ -293,11 +293,25 @@ void Material::fragmentShaderTexture(ShaderBuilder& shaderBuilder) const
     if(mMaterialData.mUseColorAsTint)
     {
         Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
-        mainFunc.body().
-        set(outColor.dot("r"), outColor.dot("r").add(baseColor.dot("r"))).
-        set(outColor.dot("g"), outColor.dot("g").add(baseColor.dot("g"))).
-        set(outColor.dot("b"), outColor.dot("b").add(baseColor.dot("b"))).
-        set(outColor.dot("a"), outColor.dot("a").add(baseColor.dot("a")));
+        
+        if(mMaterialData.mIsFont)
+        {
+            mainFunc.body().
+            set(outColor.dot("a"), outColor.dot("r"));
+            
+            mainFunc.body().
+            set(outColor.dot("r"), baseColor.dot("r")).
+            set(outColor.dot("g"), baseColor.dot("g")).
+            set(outColor.dot("b"), baseColor.dot("b"));
+        }
+        else
+        {
+            mainFunc.body().
+            set(outColor.dot("r"), outColor.dot("r").add(baseColor.dot("r"))).
+            set(outColor.dot("g"), outColor.dot("g").add(baseColor.dot("g"))).
+            set(outColor.dot("b"), outColor.dot("b").add(baseColor.dot("b"))).
+            set(outColor.dot("a"), outColor.dot("a").add(baseColor.dot("a")));
+        }
     }
 }
 

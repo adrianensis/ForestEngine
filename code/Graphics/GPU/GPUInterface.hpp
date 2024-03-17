@@ -205,7 +205,7 @@ public:
 
     // Texture
     u32 createTexture(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data, bool createMipMap);
-    u32 createTextureFont(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data);
+    u32 createTexture1ByteChannel(u32 width, u32 height, const byte* data);
     void setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
     void setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type);
     void subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format,  const byte* data);

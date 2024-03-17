@@ -193,7 +193,7 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
     return textureId;
 }
 
-u32 GPUInterface::createTextureFont(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data)
+u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* data)
 {
     u32 textureId = 0;
     glGenTextures(1, &textureId);
@@ -202,7 +202,7 @@ u32 GPUInterface::createTextureFont(GPUTextureFormat internalformat, u32 width, 
 
     // disable byte-alignment restriction
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
-    setTextureFormatWithData(internalformat, width, height, format, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
+    setTextureFormatWithData(GPUTextureFormat::RED, width, height, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
 
     setTextureParam(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     setTextureParam(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

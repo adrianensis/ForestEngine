@@ -21,7 +21,8 @@ void Texture::init(const TextureData& textureData, u32 id)
     {
         mWidth = mTextureData.mFontData.mWidth;
         mHeight = mTextureData.mFontData.mHeight;
-        mGPUTextureId = GET_SYSTEM(GPUInterface).createTextureFont(GPUTextureFormat::RED, mWidth, mHeight, GPUTexturePixelFormat::RED, nullptr);
+
+        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture1ByteChannel(mWidth, mHeight, nullptr);
 
         GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId);
 
