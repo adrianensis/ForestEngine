@@ -235,8 +235,8 @@ void MeshBatcher::initBuffers()
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mBatchData.mIsInstanced ? 1 : 0);
     mGPUVertexBuffersContainer.createVertexBuffer(bufferDataInstanceIDs, isStatic);
 
-    GPUVertexBufferData bufferDataMarixIDs(GPUBuiltIn::VertexInput::mObjectID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataMarixIDs, isStatic);
+    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, mBatchData.mIsInstanced ? 1 : 0);
+    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataObjectIDs, isStatic);
     
     mGPUVertexBuffersContainer.disable();
 
@@ -263,10 +263,7 @@ void MeshBatcher::resizeInstancedBuffers(u32 maxInstances)
     PROFILER_CPU()
     u32 matricesBufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * matricesBufferSizeMultiplier);
-    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
-    {
-	    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances * matricesBufferSizeMultiplier);
-    }
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances * matricesBufferSizeMultiplier);
 }
 
 void MeshBatcher::setMeshBuffers(Ptr<const GPUMesh> mesh)
@@ -283,10 +280,7 @@ void MeshBatcher::setInstancedBuffers()
 {
     PROFILER_CPU()
 	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mInstanceIDs);
-    if(mBatchData.mMaterial->getMaterialData().mUseModelMatrix)
-    {
-	    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mObjectIDs);
-    }
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mObjectIDs);
 }
 
 void MeshBatcher::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
