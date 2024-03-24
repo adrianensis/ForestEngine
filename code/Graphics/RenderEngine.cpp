@@ -61,21 +61,14 @@ void RenderEngine::update()
         GET_SYSTEM(GPUSharedContext).setMaterialInstanceProperties(renderer->getGPUInstanceSlot(), renderer->getMaterialInstance().mMaterialInstancedProperties);
     }
 
-    updateInstancesData();
-
+    GET_SYSTEM(GPUSharedContext).update();
+    
 	GET_SYSTEM(AnimationManager).update();
 
 	// octree.update();
 
 	render();
 	swap();
-}
-
-void RenderEngine::updateInstancesData()
-{
-	PROFILER_CPU()
-	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(GET_SYSTEM(GPUSharedContext).getMatrices());
-	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData).setDataArray(GET_SYSTEM(GPUSharedContext).getMaterialInstancedPropertiesArray());
 }
 
 void RenderEngine::preSceneChanged()

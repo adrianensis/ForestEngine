@@ -31,6 +31,7 @@ class GPUSharedContext : public System
 public:
     virtual void init() override;
     virtual void terminate() override;
+    void update();
     u32 requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType);
     GPUInstanceSlot requestInstanceSlot();
     void freeInstanceSlot(GPUInstanceSlot& slot);
@@ -52,7 +53,5 @@ private:
 public:
     RGET(GPUSharedBuffersContainer)
     CRGET(GPUSharedBuffersContainer)
-    CRGET(Matrices)
-    CRGET(MaterialInstancedPropertiesArray)
 };
 REGISTER_CLASS(GPUSharedContext)

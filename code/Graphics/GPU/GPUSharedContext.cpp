@@ -33,6 +33,13 @@ void GPUSharedContext::init()
     mGPUSharedBuffersContainer.getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData).resize<MaterialInstancedProperties>(size);
 }
 
+void GPUSharedContext::update()
+{
+	PROFILER_CPU()
+	mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
+	mGPUSharedBuffersContainer.getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData).setDataArray(mMaterialInstancedPropertiesArray);
+}
+
 u32 GPUSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
 {
     u32 bindingPoint = 0;
