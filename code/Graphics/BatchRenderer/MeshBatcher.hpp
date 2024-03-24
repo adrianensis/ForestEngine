@@ -12,7 +12,6 @@ public:
     void terminate();
     void resize(u32 size);
     void addInstanceData(const GPUInstanceSlot& gpuInstanceSlot, Ptr<const Mesh> meshInstance);
-    void updateBoneTransforms();
     void drawCall();
     void enable();
     void disable();
@@ -20,14 +19,15 @@ public:
 private:
     void initInternal(u32 maxInstances);
     void resizeInternal(u32 maxInstances);
-    void addInstanceMeshData(Ptr<const Mesh> meshInstance);
+    void appendMeshData(Ptr<const Mesh> mesh);
     void clear();
     void generateIndicesData(u32 meshesCount);
     void generateInstanceIDsData(u32 meshesCount);
+    void updateBoneTransforms();
     void sendDataToGPU();
 
     void initBuffers();
-    void resizeBuffers(u32 maxInstances);
+    void resizeMeshBuffers(u32 maxInstances);
     void resizeInstancedBuffers(u32 maxInstances);
     void setMeshBuffers(Ptr<const GPUMesh> mesh);
     void setInstancedBuffers();

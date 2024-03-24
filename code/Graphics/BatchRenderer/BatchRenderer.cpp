@@ -72,11 +72,6 @@ void BatchRenderer::enable()
     mMeshBatcher.enable();
     mBatchData.mMaterial->enable();
 
-    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
-    {
-        mMeshBatcher.updateBoneTransforms();
-    }
-
     if(mBatchData.mStencilData.mUseStencil)
     {
         GET_SYSTEM(GPUInterface).enableStencil(mBatchData.mStencilData.mStencilValue, mBatchData.mStencilData.mStencilFunction, mBatchData.mStencilData.mStencilPassOp);
