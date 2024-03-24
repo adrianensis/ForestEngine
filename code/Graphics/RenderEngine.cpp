@@ -118,14 +118,12 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     {
         mRenderPipelineData.mLights.push_back(Ptr<Light>::cast(component));
     }
-    else
-    {
-        CHECK_MSG(false, "Trying to add a not valid component.");
-    }
 }
 
 void RenderEngine::removeComponent(Ptr<SystemComponent> component)
 {
+	System::removeComponent(component);
+
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
@@ -134,10 +132,6 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
     {
-    }
-    else
-    {
-        CHECK_MSG(false, "Trying to remove a not valid component.");
     }
 }
 

@@ -28,6 +28,9 @@ REGISTER_CLASS(System);
 #define CREATE_SYSTEM(...) \
     SystemsManager::getInstance().createSystem<__VA_ARGS__>().get();
 
+#define CHECK_SYSTEM_COMPONENT(c) \
+    CHECK_MSG(isComponentClassAccepted(c->getSystemComponentId()), "Component class is not valid for this system: " + std::to_string(component->getSystemComponentId()));
+
 class SystemsManager: public Singleton<SystemsManager>
 {
 public:
