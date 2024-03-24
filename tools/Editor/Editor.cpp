@@ -187,27 +187,27 @@ void Editor::update()
 
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
 
     // // x
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
     // // -x
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,50,0)), 1, true, Vector4(1,1,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,50,0)), 1, true, Vector4(1,1,0,1));
 
     // // -y to y
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
 
     // // -z to z
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
 
     // // z
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
     // // -z
-	// GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
 
 	for(i32 x = -1000; x < 1000; x+=50)
 	{
-		GET_SYSTEM(RenderEngine).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
+		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
 	}
     // PROFILER_END_BLOCK();
 
@@ -258,15 +258,15 @@ Ptr<GameObject> Editor::mousePick()
             camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
         );
 
-        // GET_SYSTEM(RenderEngine).drawCube(bboxScreenSpace, 1, false, Vector4(0.3,0,1,1));
+        // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(0.3,0,1,1));
 
         Vector3 mousePosition = GET_SYSTEM(Input).getMousePosition();
         bool hit = Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
         if(hit)
         {
             Cube hitMarker = Cube(mousePosition, Vector3(0.01,0.01,0.01));
-            GET_SYSTEM(RenderEngine).drawCube(hitMarker, 1, false, Vector4(1,0,0,1));
-            GET_SYSTEM(RenderEngine).drawCube(bboxScreenSpace, 1, false, Vector4(1,0,0,1));
+            GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, false, Vector4(1,0,0,1));
+            GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(1,0,0,1));
 
             obj = *it;
         }

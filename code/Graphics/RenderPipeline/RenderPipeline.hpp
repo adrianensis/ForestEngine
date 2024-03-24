@@ -17,7 +17,7 @@ public:
 class RenderPipeline: public ObjectBase
 {
 public:
-    void render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace);
+    void render(RenderPipelineData& renderData, BatchesManager& batchesManager);
 protected:
     void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
     void updateLights(RenderPipelineData& renderData);

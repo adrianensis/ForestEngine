@@ -33,6 +33,7 @@ void Engine::init()
     CREATE_SYSTEM(AnimationManager);
     CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
+    CREATE_SYSTEM(DebugRenderer);
     CREATE_SYSTEM(UIManager);
     CREATE_SYSTEM(ScenesManager);
     CREATE_SYSTEM(CommandLine);

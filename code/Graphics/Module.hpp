@@ -24,3 +24,4 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
+#include "Graphics/Debug/DebugRenderer.hpp"

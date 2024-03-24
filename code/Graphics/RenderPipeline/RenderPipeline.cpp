@@ -6,8 +6,9 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Window/Window.hpp"
+#include "Graphics/Debug/DebugRenderer.hpp"
 
-void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batchesManager, ShapeBatchRenderer& shapeBatchRenderer, ShapeBatchRenderer& shapeBatchRendererScreenSpace)
+void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batchesManager)
 {
 	PROFILER_CPU()
 
@@ -24,7 +25,7 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
 	batchesManager.render();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("render shapes");
-	shapeBatchRenderer.render();
+	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
     PROFILER_END_BLOCK();
     
     GET_SYSTEM(GPUInterface).clearDepth();
@@ -39,7 +40,7 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
 	batchesManager.renderScreenSpace();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("renderScreenSpace shapes");
-	shapeBatchRendererScreenSpace.render();
+	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
     PROFILER_END_BLOCK();
 }
 

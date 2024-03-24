@@ -61,7 +61,7 @@ bool UIElement::isMouseCursorInsideElement() const
 		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}
 
-    // GET_SYSTEM(RenderEngine).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);
+    // GET_SYSTEM(DebugRenderer).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);
 
 	return Geometry::testCubePoint(
 		Rectangle(getLeftTopPosition(), mConfig.mDisplaySize),
