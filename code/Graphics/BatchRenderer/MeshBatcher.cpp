@@ -64,9 +64,7 @@ void MeshBatcher::resize(u32 size)
         PROFILER_END_BLOCK();
 	}
 
-	mMeshesIndex = 0;
-
-	mDataSentToGPU = false;
+	mDataSubmittedToGPU = false;
 }
 
 void MeshBatcher::initInternal(u32 maxInstances)
@@ -109,23 +107,6 @@ void MeshBatcher::addInstanceData(Ptr<MeshRenderer> renderer)
         
         appendMeshData(renderer->getMeshInstance());
     }
-
-	mMeshesIndex++;
-}
-
-void MeshBatcher::drawCall()
-{	
-	if (mMeshesIndex == 0)
-    {
-        return;
-    }
-
-    if(!mDataSentToGPU)
-    {
-        sendDataToGPU();
-    }
-
-    GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mMeshesIndex, mBatchData.mIsInstanced);
 }
 
 void MeshBatcher::updateBoneTransforms()
@@ -218,15 +199,18 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
     }
 }
 
-void MeshBatcher::sendDataToGPU()
+void MeshBatcher::submitDataToGPU()
 {	
     PROFILER_CPU()
-    if(!mBatchData.mIsInstanced)
-	{
-        setMeshBuffers(Ptr<const GPUMesh>::cast(mInternalMesh));
+    if(!mDataSubmittedToGPU)
+    {
+        if(!mBatchData.mIsInstanced)
+        {
+            setMeshBuffers(Ptr<const GPUMesh>::cast(mInternalMesh));
+        }
+        setInstancedBuffers();
+        mDataSubmittedToGPU = true;
     }
-    setInstancedBuffers();
-    mDataSentToGPU = true;
 }
 
 void MeshBatcher::initBuffers()

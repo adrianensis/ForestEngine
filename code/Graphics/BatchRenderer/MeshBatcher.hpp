@@ -13,7 +13,7 @@ public:
     void terminate();
     void resize(u32 size);
     void addInstanceData(Ptr<MeshRenderer> renderer);
-    void drawCall();
+    void submitDataToGPU();
     void enable();
     void disable();
 
@@ -25,7 +25,6 @@ private:
     void generateIndicesData(u32 meshesCount);
     void generateInstanceIDsData(u32 meshesCount);
     void updateBoneTransforms();
-    void sendDataToGPU();
 
     void initBuffers();
     void resizeMeshBuffers(u32 maxInstances);
@@ -47,9 +46,8 @@ private:
 
 	u32 mMaxMeshesThreshold = 0;
 	const u32 mMaxMeshesIncrement = 100;
-	u32 mMeshesIndex = 0;
 
-	bool mDataSentToGPU = false;
+	bool mDataSubmittedToGPU = false;
 
 public:
     RGET(GPUVertexBuffersContainer)

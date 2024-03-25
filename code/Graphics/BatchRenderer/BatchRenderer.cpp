@@ -60,7 +60,9 @@ void BatchRenderer::render()
 			updateBuffers();
 		}
 
-        mMeshBatcher.drawCall();
+        mMeshBatcher.submitDataToGPU();
+
+        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderers.size(), mBatchData.mIsInstanced);
 
         disable();
 	}
