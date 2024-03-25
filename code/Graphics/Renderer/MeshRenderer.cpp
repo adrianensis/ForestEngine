@@ -45,6 +45,12 @@ void MeshRenderer::onComponentAdded()
     calculateRendererModelMatrix();
 }
 
+void MeshRenderer::onDestroy() 
+{
+    GET_SYSTEM(RenderSharedContext).getRenderInstancesSlotsManager().freeSlot(mRenderInstanceSlot);
+    GET_SYSTEM(RenderSharedContext).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
+}
+
 bool MeshRenderer::getIsWorldSpace() const
 {
 	return mGameObject->mTransform->mAffectedByProjection;

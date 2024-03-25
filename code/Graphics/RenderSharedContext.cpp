@@ -15,7 +15,7 @@ void RenderSharedContext::init()
     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, GPUBuiltIn::SharedBuffers::mLightsData, false);
     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).resize<GPULightsData>(1);
 
-    mRenderInstancesSlotsManager.init(5000);
+    mRenderInstancesSlotsManager.init(mMaxInstances);
 
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     u32 bindingPointModelMatrices = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
@@ -79,12 +79,16 @@ void RenderSharedContext::initMaterialInstancePropertiesSharedBuffer(const PoolH
 
     mMaterialInstancesDataMap.emplace(materialID, SharedContextMaterialInstancedData());
 
-    u32 size = 1000;
-    u32 instancedPropertiesSizeBytes = material->getMaterialData().mMaterialInstancedPropertiesBuffer.getByteBuffer().sizeInBytes();
+    u32 size = material->getMaterialData().mAllowInstances ? material->getMaterialData().mMaxInstances : 1;
+    u32 instancedPropertiesSizeBytes = material->getMaterialData().mSharedMaterialInstancedPropertiesBuffer.getByteBuffer().sizeInBytes();
     mMaterialInstancesDataMap.at(materialID).mMaterial = material;
     mMaterialInstancesDataMap.at(materialID).mSlotsManager.init(size);
     mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray = ByteBuffer(instancedPropertiesSizeBytes);
     mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray.resize(size);
+
+    // Reserve index 0 for default material instance
+    Slot defaultSlot = mMaterialInstancesDataMap.at(materialID).mSlotsManager.requestSlot();
+    mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray.get<MaterialInstancedProperties>(defaultSlot.getSlot()) = material->getMaterialData().mSharedMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>();
 
     const GPUSharedBufferData& instancedPropertiesSharedBufferData = material->getInstancedPropertiesSharedBufferData();
     u32 bindingPointMaterialInstancedProperties = requestSharedBufferBindingPoint(instancedPropertiesSharedBufferData.mType);
@@ -92,13 +96,17 @@ void RenderSharedContext::initMaterialInstancePropertiesSharedBuffer(const PoolH
     mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.getSharedBuffer(instancedPropertiesSharedBufferData).resizeBytes(instancedPropertiesSizeBytes * size);
 }
 
-void RenderSharedContext::setMaterialInstanceProperties(const Slot& slot, const PoolHandler<Material>& material, const MaterialInstance& materialInstance)
+void RenderSharedContext::setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance)
 {
+    PoolHandler<Material> material = materialInstance.mMaterial;
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
     CHECK_MSG(mMaterialInstancesDataMap.contains(materialID), "Invalid material!");
 
-    mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray.get<MaterialInstancedProperties>(slot.getSlot()) = materialInstance.mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>();
+    if(material->getMaterialData().mAllowInstances)
+    {
+        mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray.get<MaterialInstancedProperties>(slot.getSlot()) = materialInstance.mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>();
+    }
 }
 
 const GPUSharedBuffer& RenderSharedContext::getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const
@@ -111,13 +119,27 @@ const GPUSharedBuffer& RenderSharedContext::getMaterialPropertiesGPUSharedBuffer
 Slot RenderSharedContext::requestMaterialInstanceSlot(const PoolHandler<Material>& material)
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
-    return mMaterialInstancesDataMap.at(material->getID()).mSlotsManager.requestSlot();
+
+    Slot slot;
+    if(material->getMaterialData().mAllowInstances)
+    {
+        slot = mMaterialInstancesDataMap.at(material->getID()).mSlotsManager.requestSlot();
+    }
+    else
+    {
+        slot.set(0);
+    }
+
+    return slot;
 }
 
 void RenderSharedContext::freeMaterialInstanceSlot(const PoolHandler<Material>& material, Slot& slot)
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
-    mMaterialInstancesDataMap.at(material->getID()).mSlotsManager.freeSlot(slot);
+    if(material->getMaterialData().mAllowInstances)
+    {
+        mMaterialInstancesDataMap.at(material->getID()).mSlotsManager.freeSlot(slot);
+    }
 }
 
 void RenderSharedContext::terminate()

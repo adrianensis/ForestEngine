@@ -55,7 +55,7 @@ void RenderEngine::update()
         renderer->update();
         const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
         GET_SYSTEM(RenderSharedContext).setInstanceMatrix(renderer->getRenderInstanceSlot(), rendererModelMatrix);
-        GET_SYSTEM(RenderSharedContext).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getRendererData().mMaterial, renderer->getMaterialInstance());
+        GET_SYSTEM(RenderSharedContext).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
     }
 
     GET_SYSTEM(RenderSharedContext).update();
@@ -122,8 +122,6 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-        GET_SYSTEM(RenderSharedContext).getRenderInstancesSlotsManager().freeSlot(renderer->getRenderInstanceSlot());
-        GET_SYSTEM(RenderSharedContext).freeMaterialInstanceSlot(renderer->getRendererData().mMaterial, renderer->getMaterialInstanceSlot());
         mBatchesManager.onRendererRemoved(renderer);
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)

@@ -51,6 +51,7 @@ public:
 
     void init(const RendererData& data);
     void onComponentAdded() override;
+    void onDestroy() override;
     bool getIsWorldSpace() const;
     void update();
 

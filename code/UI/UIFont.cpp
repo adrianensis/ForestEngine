@@ -42,7 +42,7 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32
     // materialData.mAlphaEnabled = false;
     materialData.mIsFont = true;
     materialData.mFontData = mFontData;
-    materialData.mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mColor = Vector4(1,1,1,1);
+    materialData.mSharedMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mColor = Vector4(1,1,1,1);
     mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
 
     mFontData.freeGlyphsBuffers();

@@ -13,7 +13,7 @@ public:
     void update();
     u32 requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType);
     void setInstanceMatrix(const Slot& slot, const Matrix4& matrix);
-    void setMaterialInstanceProperties(const Slot& slot, const PoolHandler<Material>& material, const MaterialInstance& materialInstance);
+    void setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance);
     void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
     const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
@@ -39,6 +39,8 @@ private:
     u32 mBindingPointsIndexStorage = 0;
     i32 mMaxSharedBufferBindingPointsUniform = 0;
     i32 mMaxSharedBufferBindingPointsStorage = 0;
+
+    u32 mMaxInstances = 5000;
 
 public:
     RGET(GPUSharedBuffersContainer)

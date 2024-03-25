@@ -55,7 +55,7 @@ MaterialInstance MaterialManager::createMaterialInstance(const PoolHandler<Mater
     Material& material = mMaterials.get(handler);
     MaterialInstance instance;
     instance.mMaterial = handler;
-    instance.mMaterialInstancedPropertiesBuffer = material.getMaterialData().mMaterialInstancedPropertiesBuffer;
+    instance.mMaterialInstancedPropertiesBuffer = material.getMaterialData().mSharedMaterialInstancedPropertiesBuffer;
     return instance;
 }
 

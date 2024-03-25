@@ -54,7 +54,7 @@ class MaterialData
 public:
     MaterialData()
     {
-        mMaterialInstancedPropertiesBuffer.set<MaterialInstancedProperties>();
+        mSharedMaterialInstancedPropertiesBuffer.set<MaterialInstancedProperties>();
     }
 
 	bool mAlphaEnabled = true;
@@ -66,12 +66,14 @@ public:
 	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
+    bool mAllowInstances = true;
+    u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
     std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 
-    MaterialInstancedPropertiesBuffer mMaterialInstancedPropertiesBuffer;
+    MaterialInstancedPropertiesBuffer mSharedMaterialInstancedPropertiesBuffer;
 };
 
 class ShaderBuilderDataCommon
