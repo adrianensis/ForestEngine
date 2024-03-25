@@ -160,16 +160,16 @@ void Editor::update()
 
     Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
     // currentMousePosition.set(-1,0,0);
-    LOG_VAR(currentMousePosition.x);
-    LOG_VAR(currentMousePosition.y);
+    // LOG_VAR(currentMousePosition.x);
+    // LOG_VAR(currentMousePosition.y);
     if(mSelectedGameObject)
     {
         Vector3 position = camera->screenToWorld(currentMousePosition, mSelectedGameObject->mTransform->getWorldPosition().z);
         // position.z = mSelectedGameObject->mTransform->getLocalPosition().z;
         mSelectedGameObject->mTransform->setLocalPosition(position);
-        LOG_VAR(position.x);
-        LOG_VAR(position.y);
-        LOG_VAR(position.z);
+        // LOG_VAR(position.x);
+        // LOG_VAR(position.y);
+        // LOG_VAR(position.z);
     }
 
 	// if(!mousePosition.eq(currentMousePosition))

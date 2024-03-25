@@ -28,8 +28,12 @@ public:
     template <class T>
     void resize(u32 size)
     {
-        checkMaxSize(sizeof(T) * size);
-        GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, sizeof(T), size, mIsStatic);
+        resizeBytes(size * sizeof(T));
+    }
+    void resizeBytes(u32 bytes)
+    {
+        checkMaxSize(bytes);
+        GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, 1, bytes, mIsStatic);
     }
     template <class T>
     void setData(const T& data)
@@ -42,6 +46,10 @@ public:
     {
         checkMaxSize(sizeof(T) * data.size());
         GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+    }
+    void setDataArray(const ByteBuffer& data)
+    {
+	    GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
     }
     void terminate();
 

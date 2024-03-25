@@ -2,6 +2,7 @@
 
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 
 class MeshBatcher
 {
@@ -11,7 +12,7 @@ public:
     void init(const BatchData batchData);
     void terminate();
     void resize(u32 size);
-    void addInstanceData(const GPUInstanceSlot& gpuInstanceSlot, Ptr<const Mesh> meshInstance);
+    void addInstanceData(Ptr<MeshRenderer> renderer);
     void drawCall();
     void enable();
     void disable();
@@ -39,6 +40,7 @@ private:
 	OwnerPtr<Mesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;
+    std::vector<u32> mMaterialInstanceIDs;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
     GPUSharedBuffersContainer mGPUSharedBuffersContainer;

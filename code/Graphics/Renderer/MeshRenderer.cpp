@@ -2,7 +2,7 @@
 
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
+#include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
@@ -35,10 +35,9 @@ void MeshRenderer::init(const RendererData& data)
         bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
     }
 
-    mMaterialInstance = mRendererData.mMaterial->createMaterialInstance();
-
-    GPUInstanceSlot slot = GET_SYSTEM(GPUSharedContext).requestInstanceSlot();
-    mGPUInstanceSlot = slot;
+    mRenderInstanceSlot = GET_SYSTEM(RenderSharedContext).getRenderInstancesSlotsManager().requestSlot();
+    mMaterialInstance = GET_SYSTEM(MaterialManager).createMaterialInstance(mRendererData.mMaterial);
+    mMaterialInstanceSlot = GET_SYSTEM(RenderSharedContext).requestMaterialInstanceSlot(mRendererData.mMaterial);
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -81,8 +80,8 @@ void MeshRenderer::updateTextureRegion()
         const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
         if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
         {
-            mMaterialInstance.mMaterialInstancedProperties.mTextureRegionLeftTop = frame.mPosition;
-            mMaterialInstance.mMaterialInstancedProperties.mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+            mMaterialInstance.mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mTextureRegionLeftTop = frame.mPosition;
+            mMaterialInstance.mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
         }
     }
 }

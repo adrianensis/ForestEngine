@@ -20,10 +20,10 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     rendererData.mStencilData = calculateStencilData();
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
-    renderer->getMaterialInstance().mMaterialInstancedProperties.mDepth = mConfig.mLayer;
+    renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
-    renderer->getMaterialInstance().mMaterialInstancedProperties.mTextureRegionLeftTop = textureRegion.getLeftTopFront();
-    renderer->getMaterialInstance().mMaterialInstancedProperties.mTextureRegionSize = textureRegion.getSize();
+    renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
+    renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mTextureRegionSize = textureRegion.getSize();
 }
 
 void UIText::initFromConfig(const UIElementConfig& config) 

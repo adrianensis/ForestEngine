@@ -45,8 +45,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(Window).getAspectRatio(), mConfig.mSize.y)));
 	
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
-	renderer->getMaterialInstance().mMaterialInstancedProperties.mDepth = mConfig.mLayer;
-	renderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mBackgroundColor;
+	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mDepth = mConfig.mLayer;
+	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mColor = mConfig.mStyle->mBackgroundColor;
 
 	setOnPressedCallback([&](UIElement* uiElement) 
 	{

@@ -12,6 +12,7 @@ public:
     PoolHandler<Texture> loadTexture(const TextureData& textureData);
     void unloadTexture(PoolHandler<Texture>& texture);
     PoolHandler<Material> createMaterial(const MaterialData& materialData);
+    MaterialInstance createMaterialInstance(const PoolHandler<Material>& handler);
     void removeMaterial(PoolHandler<Material>& material);
     const Material& getMaterial(const PoolHandler<Material>& handler) const;
 

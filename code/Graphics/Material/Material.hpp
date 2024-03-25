@@ -20,41 +20,43 @@ public:
     alignas(16) i32 mDepth = 0;
 };
 
-class DefaultMaterialInstancedPropertiesGPUData
+class MaterialInstancedPropertiesBuffer
 {
 public:
-    inline static const std::vector<GPUStructDefinition::GPUStructVariable> smDefaultInstancedProperties = 
+    template<class T>
+    void set()
     {
-        {GPUBuiltIn::PrimitiveTypes::mVector4, "color"},
-        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
-        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"},
-        {GPUBuiltIn::PrimitiveTypes::mInt, "depth"},
-    };
+        mByteBuffer = ByteBuffer(sizeof(T));
+        mByteBuffer.emplaceBack<T>();
+    }
 
-	inline static const GPUStructDefinition smDefaultInstancedPropertiesStructDefinition =
+    template<class T>
+    T& get()
     {
-        "instancedPropertiesStruct",
-        {
-            smDefaultInstancedProperties
-        }
-    };
+        return mByteBuffer.get<T>(0);
+    }
 
-    inline static const GPUDataType smDefaultInstancedPropertiesStructDataType = {smDefaultInstancedPropertiesStructDefinition.mName, smDefaultInstancedPropertiesStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
-    
-    inline static const GPUSharedBufferData smDefaultInstancedPropertiesSharedBufferData =
+    template<class T>
+    const T& get() const
     {
-        GPUBufferType::STORAGE,
-        {
-            {{GPUStorage::UNIFORM, smDefaultInstancedPropertiesStructDataType, "instancedPropertiesArray"}, "", " "}
-        },
-        "InstancedProperties",
-        "instancedProperties"
-    };
+        return mByteBuffer.get<T>(0);
+    }
+
+private:
+    ByteBuffer mByteBuffer;
+
+public:
+    CRGET(ByteBuffer)
 };
 
 class MaterialData
 {
 public:
+    MaterialData()
+    {
+        mMaterialInstancedPropertiesBuffer.set<MaterialInstancedProperties>();
+    }
+
 	bool mAlphaEnabled = true;
 	bool mReceiveLight = true;
 	bool mUseVertexColor = false;
@@ -68,7 +70,8 @@ public:
     FontData mFontData;
     std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
-    MaterialInstancedProperties mMaterialInstancedProperties;
+
+    MaterialInstancedPropertiesBuffer mMaterialInstancedPropertiesBuffer;
 };
 
 class ShaderBuilderDataCommon
@@ -107,8 +110,8 @@ class Material;
 class MaterialInstance
 {
 public:
-    // PoolHandler<Material> mMaterial;
-    MaterialInstancedProperties mMaterialInstancedProperties;
+    PoolHandler<Material> mMaterial;
+    MaterialInstancedPropertiesBuffer mMaterialInstancedPropertiesBuffer;
 };
 
 class Material: public ObjectBase
@@ -123,12 +126,12 @@ public:
     void enable() const;
     void disable() const;
     bool hasTexture() const;
-    MaterialInstance createMaterialInstance() const;
     
     void createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
     void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
 protected:
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialInstanceProperties();
     virtual void loadTextures();
 
     void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;

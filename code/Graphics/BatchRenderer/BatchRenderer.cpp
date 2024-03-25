@@ -3,7 +3,7 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
+#include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
@@ -30,13 +30,13 @@ void BatchRenderer::terminate()
 
 void BatchRenderer::bindSharedBuffers()
 {
-    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 
-    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData));
+        mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData));
     }
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
@@ -44,7 +44,7 @@ void BatchRenderer::bindSharedBuffers()
         mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
     
-    mShader->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(DefaultMaterialInstancedPropertiesGPUData::smDefaultInstancedPropertiesSharedBufferData));
+    mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
 }
 
 void BatchRenderer::render()
@@ -125,8 +125,7 @@ void BatchRenderer::updateBuffers()
 
     FOR_ARRAY(i, mRenderers)
     {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
-        mMeshBatcher.addInstanceData(renderer->getGPUInstanceSlot(), renderer->getMeshInstance());
+        mMeshBatcher.addInstanceData(mRenderers[i]);
     }
 
     mRegenerateBuffersRequested = false;

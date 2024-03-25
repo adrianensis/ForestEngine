@@ -45,12 +45,14 @@ public:
     T& get(u32 index)
     {
         checkType<T>();
+        checkIndex(index);
         return *reinterpret_cast<T*>(&mBuffer.at(index * mElementSizeInBytes));
     }
     template<class T>
     const T& get(u32 index) const
     {
         checkType<T>();
+        checkIndex(index);
         return *reinterpret_cast<const T*>(&mBuffer.at(index * mElementSizeInBytes));
     }
     void clear()
@@ -60,6 +62,10 @@ public:
     u32 size() const
     {
         return mBuffer.size() / mElementSizeInBytes;
+    }
+    u32 sizeInBytes() const
+    {
+        return mBuffer.size();
     }
     u32 capacity() const
     {
@@ -100,6 +106,11 @@ private:
     {
         CHECK_MSG(mElementSizeInBytes > 0, "Type size is 0!");
         CHECK_MSG(sizeof(T) == mElementSizeInBytes, "Type size does not match!");
+    }
+    void checkIndex(u32 i) const
+    {
+        CHECK_MSG(i >= 0, "Index < 0!");
+        CHECK_MSG(i < size(), "Index out of bounds!");
     }
 
 private:

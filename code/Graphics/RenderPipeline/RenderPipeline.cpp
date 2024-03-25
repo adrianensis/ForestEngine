@@ -2,7 +2,7 @@
 #include "Graphics/BatchRenderer/BatchesManager.hpp"
 #include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
+#include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Window/Window.hpp"
@@ -59,7 +59,7 @@ void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWor
         GET_SYSTEM(Time).getDeltaTimeSeconds(),
         GET_SYSTEM(Window).getWindowSize()
     };
-	GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 void RenderPipeline::updateLights(RenderPipelineData& renderData)
@@ -72,5 +72,5 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
         gpuLightsData.mLights[i] = renderData.mLights[i]->getLightData();
     }
 
-    GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).setData(gpuLightsData);
+    GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).setData(gpuLightsData);
 }

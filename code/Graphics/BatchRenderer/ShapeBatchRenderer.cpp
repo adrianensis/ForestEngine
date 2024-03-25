@@ -2,7 +2,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
+#include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
@@ -56,7 +56,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
 
     mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersContainer, {}, lineMaterial.get());
 
-    mShaderLine->bindSharedBuffer(GET_SYSTEM(GPUSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    mShaderLine->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 }
 
 void ShapeBatchRenderer::render()

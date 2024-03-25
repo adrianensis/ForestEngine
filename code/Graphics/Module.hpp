@@ -2,7 +2,7 @@
 
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
+#include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/RenderEngine.hpp"
 
 #include "Graphics/Mesh/Mesh.hpp"

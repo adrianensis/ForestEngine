@@ -61,6 +61,6 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mStencilData = calculateStencilData();
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
-	renderer->getMaterialInstance().mMaterialInstancedProperties.mDepth = mConfig.mLayer;
-	renderer->getMaterialInstance().mMaterialInstancedProperties.mColor = mConfig.mStyle->mBackgroundColor;
+	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mDepth = mConfig.mLayer;
+	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mColor = mConfig.mStyle->mBackgroundColor;
 }

@@ -3,7 +3,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
-#include "Graphics/GPU/GPUSharedContext.hpp"
+#include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
 void MeshBatcher::init(const BatchData batchData)
@@ -90,22 +90,24 @@ void MeshBatcher::resizeInternal(u32 maxInstances)
     }
 }
 
-void MeshBatcher::addInstanceData(const GPUInstanceSlot& gpuInstanceSlot, Ptr<const Mesh> meshInstance)
+void MeshBatcher::addInstanceData(Ptr<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
 
     if(mBatchData.mIsInstanced)
     {
-        mObjectIDs.push_back(gpuInstanceSlot.getSlot());
+        mObjectIDs.push_back(renderer->getRenderInstanceSlot().getSlot());
+        mMaterialInstanceIDs.push_back(renderer->getMaterialInstanceSlot().getSlot());
     }
     else
 	{
         FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
         {
-            mObjectIDs.push_back(gpuInstanceSlot.getSlot());
+            mObjectIDs.push_back(renderer->getRenderInstanceSlot().getSlot());
+            mMaterialInstanceIDs.push_back(renderer->getMaterialInstanceSlot().getSlot());
         }
         
-        appendMeshData(meshInstance);
+        appendMeshData(renderer->getMeshInstance());
     }
 
 	mMeshesIndex++;
@@ -162,6 +164,7 @@ void MeshBatcher::clear()
 		mInternalMesh->clear();
 	}
     mObjectIDs.clear();
+    mMaterialInstanceIDs.clear();
 }
 
 void MeshBatcher::generateIndicesData(u32 meshesCount)
@@ -194,9 +197,11 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 
 	mObjectIDs.clear();
 	mObjectIDs.reserve(totalSize);
-
+	mMaterialInstanceIDs.clear();
+	mMaterialInstanceIDs.reserve(totalSize);
 	mInstanceIDs.clear();
     mInstanceIDs.reserve(totalSize);
+
     FOR_RANGE(meshId, 0, meshesCount)
     {
         if(mBatchData.mIsInstanced)
@@ -244,12 +249,15 @@ void MeshBatcher::initBuffers()
 
     GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, mBatchData.mIsInstanced ? 1 : 0);
     mGPUVertexBuffersContainer.createVertexBuffer(bufferDataObjectIDs, isStatic);
+
+    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, mBatchData.mIsInstanced ? 1 : 0);
+    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
     
     mGPUVertexBuffersContainer.disable();
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
-        u32 bindingPointBoneMatrices = GET_SYSTEM(GPUSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
+        u32 bindingPointBoneMatrices = GET_SYSTEM(RenderSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
         mGPUSharedBuffersContainer.createSharedBuffer(bindingPointBoneMatrices, GPUBuiltIn::SharedBuffers::mBonesMatrices, isStatic);
         mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
     }
@@ -271,6 +279,7 @@ void MeshBatcher::resizeInstancedBuffers(u32 maxInstances)
     u32 bufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * bufferSizeMultiplier);
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances * bufferSizeMultiplier);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).resize(maxInstances * bufferSizeMultiplier);
 }
 
 void MeshBatcher::setMeshBuffers(Ptr<const GPUMesh> mesh)
@@ -288,6 +297,7 @@ void MeshBatcher::setInstancedBuffers()
     PROFILER_CPU()
 	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mInstanceIDs);
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mObjectIDs);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).setDataArray(mMaterialInstanceIDs);
 }
 
 void MeshBatcher::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
