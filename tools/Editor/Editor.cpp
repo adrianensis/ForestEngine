@@ -230,6 +230,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
     RendererData rendererData;
+    rendererData.mIsInstanced = true;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 
     MaterialData materialData;

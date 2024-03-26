@@ -3,29 +3,38 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
+#include "Graphics/Model/Animation/AnimationManager.hpp"
 
 void BatchRenderer::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData);
+    initBuffers();
 
-    const GPUVertexBuffersContainer& gpuVertexBuffersContainer = mMeshBatcher.getGPUVertexBuffersContainer();
-    const GPUSharedBuffersContainer& gpuSharedBuffersContainer = mMeshBatcher.getGPUSharedBuffersContainer();
-    
-    mShader = ShaderUtils::createShader(gpuVertexBuffersContainer, gpuSharedBuffersContainer, mBatchData.mMaterial.get());
+    if(mBatchData.mIsInstanced)
+	{
+        mMeshBatcher.allocateInstances(1);
+        mMeshBatcher.appendMeshData(mBatchData.mMesh);
+        resizeMeshBuffers(1);
+        setMeshBuffers(Ptr<const GPUMesh>::cast(mBatchData.mMesh));
+	}
+
+    mShader = ShaderUtils::createShader(mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, mBatchData.mMaterial.get());
     
     bindSharedBuffers();
 }
 
 void BatchRenderer::terminate()
 {
-    mMeshBatcher.terminate();
+    mGPUVertexBuffersContainer.terminate();
+    mGPUSharedBuffersContainer.terminate();
 }
 
 void BatchRenderer::bindSharedBuffers()
@@ -41,7 +50,7 @@ void BatchRenderer::bindSharedBuffers()
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
-        mShader->bindSharedBuffer(mMeshBatcher.getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
+        mShader->bindSharedBuffer(mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
     }
     
     mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
@@ -60,9 +69,7 @@ void BatchRenderer::render()
 			updateBuffers();
 		}
 
-        mMeshBatcher.submitDataToGPU();
-
-        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderers.size(), mBatchData.mIsInstanced);
+        drawCall();
 
         disable();
 	}
@@ -71,7 +78,11 @@ void BatchRenderer::render()
 void BatchRenderer::enable()
 {
     mShader->enable();
-    mMeshBatcher.enable();
+    mGPUVertexBuffersContainer.enable();
+    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
+    {
+        updateBoneTransforms();
+    }
     mBatchData.mMaterial->enable();
 
     if(mBatchData.mStencilData.mUseStencil)
@@ -88,7 +99,7 @@ void BatchRenderer::disable()
     }
 
     mBatchData.mMaterial->disable();
-    mMeshBatcher.disable();
+    mGPUVertexBuffersContainer.disable();
     mShader->disable();
 }
 
@@ -123,13 +134,37 @@ void BatchRenderer::updateBuffers()
     mRenderers = newList;
 
     u32 newSize = mRenderers.size();
-    mMeshBatcher.resize(newSize);
+    mMeshBatcher.clear();
+
+    if (newSize > mMaxMeshesThreshold)
+    {
+        PROFILER_BLOCK_CPU("new size");
+		if(mMaxMeshesThreshold == 0)
+		{
+			mMaxMeshesThreshold = newSize;
+		}
+		else
+		{
+			mMaxMeshesThreshold += mMaxMeshesIncrement;
+		}
+
+        mMeshBatcher.resize(mMaxMeshesThreshold);
+        resizeInstancedBuffers(mMaxMeshesThreshold);
+        if(!mBatchData.mIsInstanced)
+        {
+            resizeMeshBuffers(mMaxMeshesThreshold);
+        }
+    	setIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+
+        PROFILER_END_BLOCK();
+    }
 
     FOR_ARRAY(i, mRenderers)
     {
         mMeshBatcher.addInstanceData(mRenderers[i]);
     }
 
+    mDataSubmittedToGPU = false;
     mRegenerateBuffersRequested = false;
 }
 
@@ -137,4 +172,118 @@ bool BatchRenderer::shouldRegenerateBuffers() const
 {
     // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
 	return mRegenerateBuffersRequested || !mBatchData.mIsStatic;
+}
+
+void BatchRenderer::updateBoneTransforms()
+{	
+	if(mBatchData.mMesh->mModel)
+	{
+		bool isAnimated = mBatchData.mMesh->mModel->isAnimated() && mBatchData.mMaterial->getMaterialData().mIsSkinned;
+        if(isAnimated)
+        {
+            const std::vector<Matrix4>& transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mBatchData.mMesh->mModel);
+            setBonesTransformsBuffer(transforms);
+        }
+	}
+}
+
+void BatchRenderer::initBuffers()
+{
+    PROFILER_CPU()
+
+    bool isStatic = mBatchData.mIsStatic || mBatchData.mIsInstanced;
+    mGPUVertexBuffersContainer.init();
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, isStatic);
+
+    FOR_ARRAY(i, mBatchData.mMesh->mGPUVertexInputBuffers)
+    {
+        const GPUVariableData& gpuVariableData = mBatchData.mMesh->mGPUVertexInputBuffers[i];
+        GPUVertexBufferData bufferData(gpuVariableData);
+        mGPUVertexBuffersContainer.createVertexBuffer(bufferData, isStatic);
+    }
+
+    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mBatchData.mIsInstanced ? 1 : 0);
+    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataInstanceIDs, isStatic);
+
+    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, mBatchData.mIsInstanced ? 1 : 0);
+    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataObjectIDs, isStatic);
+
+    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, mBatchData.mIsInstanced ? 1 : 0);
+    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
+    
+    mGPUVertexBuffersContainer.disable();
+
+    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
+    {
+        u32 bindingPointBoneMatrices = GET_SYSTEM(RenderSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
+        mGPUSharedBuffersContainer.createSharedBuffer(bindingPointBoneMatrices, GPUBuiltIn::SharedBuffers::mBonesMatrices, isStatic);
+        mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
+    }
+}
+
+void BatchRenderer::resizeMeshBuffers(u32 maxInstances)
+{
+    PROFILER_CPU()
+    FOR_ARRAY(i, mBatchData.mMesh->mGPUVertexInputBuffers)
+    {
+        const GPUVariableData& gpuVariableData = mBatchData.mMesh->mGPUVertexInputBuffers[i];
+        mGPUVertexBuffersContainer.getVertexBuffer(gpuVariableData).resize(mBatchData.mMesh->mVertexCount * maxInstances);
+    }
+}
+
+void BatchRenderer::resizeInstancedBuffers(u32 maxInstances)
+{
+    PROFILER_CPU()
+    u32 bufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * bufferSizeMultiplier);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances * bufferSizeMultiplier);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).resize(maxInstances * bufferSizeMultiplier);
+}
+
+void BatchRenderer::setMeshBuffers(Ptr<const GPUMesh> mesh)
+{
+    PROFILER_CPU()
+    FOR_ARRAY(i, mesh->mGPUVertexInputBuffers)
+    {
+        const GPUVariableData& gpuVariableData = mesh->mGPUVertexInputBuffers[i];
+        mGPUVertexBuffersContainer.getVertexBuffer(gpuVariableData).setDataArray(mesh->mBuffers.at(gpuVariableData.mName));
+    }
+}
+
+void BatchRenderer::setInstancedBuffers()
+{
+    PROFILER_CPU()
+	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mMeshBatcher.getInstanceIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mMeshBatcher.getObjectIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).setDataArray(mMeshBatcher.getMaterialInstanceIDs());
+}
+
+void BatchRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
+{
+    PROFILER_CPU()
+    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
+}
+
+void BatchRenderer::setIndicesBuffer(Ptr<const GPUMesh> mesh)
+{
+    PROFILER_CPU()
+    mGPUVertexBuffersContainer.getIndicesBuffer().resize(mesh->mIndices.size());
+    mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mesh->mIndices);
+}
+
+void BatchRenderer::drawCall()
+{	
+    PROFILER_CPU()
+    if(!mDataSubmittedToGPU)
+    {
+        if(!mBatchData.mIsInstanced)
+        {
+            setMeshBuffers(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+        }
+        setInstancedBuffers();
+        mDataSubmittedToGPU = true;
+    }
+
+    GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderers.size(), mBatchData.mIsInstanced);
+
 }

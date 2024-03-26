@@ -4,6 +4,7 @@
 #include "Graphics/BatchRenderer/MeshBatcher.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 
 class BatchRenderer: public ObjectBase
 {
@@ -21,6 +22,16 @@ private:
     void disable();
     void updateBuffers();
     bool shouldRegenerateBuffers() const;
+    void updateBoneTransforms();
+
+    void initBuffers();
+    void resizeMeshBuffers(u32 maxInstances);
+    void resizeInstancedBuffers(u32 maxInstances);
+    void setMeshBuffers(Ptr<const GPUMesh> mesh);
+    void setInstancedBuffers();
+    void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
+    void setIndicesBuffer(Ptr<const GPUMesh> mesh);
+    void drawCall();
 
 private:
 	std::vector<Ptr<MeshRenderer>> mRenderers;
@@ -28,7 +39,13 @@ private:
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;
 
+    GPUVertexBuffersContainer mGPUVertexBuffersContainer;
+    GPUSharedBuffersContainer mGPUSharedBuffersContainer;
+
+	u32 mMaxMeshesThreshold = 0;
+	const u32 mMaxMeshesIncrement = 100;
 	bool mRegenerateBuffersRequested = false;
+	bool mDataSubmittedToGPU = false;
 
 public:
     CRGET(BatchData)
