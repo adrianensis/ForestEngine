@@ -37,3 +37,13 @@ Vector4 GPUFramebuffer::readPixel(u32 x, u32 y, GPUFramebufferAttachmentType att
     GET_SYSTEM(GPUInterface).disableFramebuffer(GPUFramebufferOperationType::READ);
     return pixelColor;
 }
+
+void GPUFramebuffer::enable(GPUFramebufferOperationType op)
+{
+    GET_SYSTEM(GPUInterface).enableFramebuffer(op, mFramebufferId);
+}
+
+void GPUFramebuffer::disable(GPUFramebufferOperationType op)
+{
+    GET_SYSTEM(GPUInterface).disableFramebuffer(op);
+}

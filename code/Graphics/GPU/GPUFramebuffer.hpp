@@ -15,6 +15,9 @@ class GPUFramebuffer
 public:
     void init(const std::vector<GPUFramebufferAttachmentData>& attachments, u32 width, u32 height);
     Vector4 readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const;
+    void enable(GPUFramebufferOperationType op);
+    void disable(GPUFramebufferOperationType op);
+
 private:
     u32 mFramebufferId = 0;
     std::unordered_map<GPUFramebufferAttachmentType, GPUFramebufferAttachmentData> mAttachments;
