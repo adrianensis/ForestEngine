@@ -28,7 +28,16 @@ void MeshBatcher::appendMeshData(Ptr<const Mesh> mesh)
 void MeshBatcher::resize(u32 size)
 {
 	PROFILER_CPU()
+
+    u32 totalSize = size * (mIsInstanced ? 1 : mMesh->mVertexCount);
+	mObjectIDs.clear();
+	mObjectIDs.reserve(totalSize);
+	mMaterialInstanceIDs.clear();
+	mMaterialInstanceIDs.reserve(totalSize);
+	mInstanceIDs.clear();
+    mInstanceIDs.reserve(totalSize);
 	generateInstanceIDsData(size);
+
     if (!mIsInstanced)
     {
         allocateInstances(size);
@@ -77,18 +86,15 @@ void MeshBatcher::clear()
 void MeshBatcher::generateIndicesData(u32 meshesCount)
 {
 	PROFILER_CPU()
-
 	FOR_RANGE(i, 0, meshesCount)
 	{
 		u32 offset = (i * mMesh->mVertexCount);
-		
 		FOR_RANGE(faceIndex, 0, mMesh->mIndices.size())
 		{
 			Face newFace = mMesh->mIndices.get<Face>(faceIndex);
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
-
 			mInternalMesh->mIndices.pushBack(newFace);
 		}
 	}
@@ -97,16 +103,6 @@ void MeshBatcher::generateIndicesData(u32 meshesCount)
 void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 {
 	PROFILER_CPU()
-
-    u32 totalSize = meshesCount * (mIsInstanced ? 1 : mMesh->mVertexCount);
-
-	mObjectIDs.clear();
-	mObjectIDs.reserve(totalSize);
-	mMaterialInstanceIDs.clear();
-	mMaterialInstanceIDs.reserve(totalSize);
-	mInstanceIDs.clear();
-    mInstanceIDs.reserve(totalSize);
-
     FOR_RANGE(meshId, 0, meshesCount)
     {
         if(mIsInstanced)
