@@ -82,7 +82,7 @@ void Model::loadGLTFMaterials()
                 else
                 {
                     cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                    materialData.mSharedMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                    materialData.mSharedMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mDiffuse = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 }
             }
 

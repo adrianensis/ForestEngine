@@ -50,7 +50,10 @@ std::vector<GPUStructDefinition::GPUStructVariable> Material::generateMaterialIn
 {
     std::vector<GPUStructDefinition::GPUStructVariable> instancedProperties = 
     {
-        {GPUBuiltIn::PrimitiveTypes::mVector4, "color"},
+        {GPUBuiltIn::PrimitiveTypes::mVector4, "Ambient"},
+        {GPUBuiltIn::PrimitiveTypes::mVector4, "Diffuse"},
+        {GPUBuiltIn::PrimitiveTypes::mVector4, "Specular"},
+        {GPUBuiltIn::PrimitiveTypes::mVector4, "Shininess"},
         {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
         {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"},
         {GPUBuiltIn::PrimitiveTypes::mInt, "depth"},
@@ -141,7 +144,7 @@ void Material::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder)
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {position, {"1.0f"}}));
 
     Variable instancedProperties(getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
-    Variable depth = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[3]};
+    Variable depth = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[6]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
     if(mMaterialData.mUseDepth)
     {
@@ -223,8 +226,8 @@ void Material::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shade
     set(outTextureCoord, textureCoord);
 
     Variable instancedProperties(getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
-    Variable textureRegionLeftTop = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[1]};
-    Variable textureRegionSize = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[2]};
+    Variable textureRegionLeftTop = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[4]};
+    Variable textureRegionSize = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[5]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
     mainFunc.body().
     set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2.mName,
@@ -301,9 +304,9 @@ void Material::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
     else
     {
         Variable instancedProperties(getInstancedPropertiesSharedBufferData().getScopedGPUVariableData(0));
-        Variable instanceColor = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[0]};
+        Variable instanceDiffuse = {getInstancedPropertiesStructDefinition().mPrimitiveVariables[1]};
         mainFunc.body().
-        set(baseColor, instancedProperties.at(materialInstanceId).dot(instanceColor));
+        set(baseColor, instancedProperties.at(materialInstanceId).dot(instanceDiffuse));
     }
 
     mainFunc.body().

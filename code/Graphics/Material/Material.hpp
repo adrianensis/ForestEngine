@@ -14,39 +14,13 @@ class Mesh;
 class MaterialInstancedProperties
 {
 public:
-    Vector4 mColor = Vector4(0,0,0,1);
+    Vector4 mAmbient = Vector4(0,0,0,1);
+    Vector4 mDiffuse = Vector4(0,0,0,1);
+    Vector4 mSpecular = Vector4(0,0,0,1);
+    Vector4 mShininess = Vector4(0,0,0,1);
     Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
-};
-
-class MaterialInstancedPropertiesBuffer
-{
-public:
-    template<class T>
-    void set()
-    {
-        mByteBuffer = ByteBuffer(sizeof(T));
-        mByteBuffer.emplaceBack<T>();
-    }
-
-    template<class T>
-    T& get()
-    {
-        return mByteBuffer.get<T>(0);
-    }
-
-    template<class T>
-    const T& get() const
-    {
-        return mByteBuffer.get<T>(0);
-    }
-
-private:
-    ByteBuffer mByteBuffer;
-
-public:
-    CRGET(ByteBuffer)
 };
 
 class MaterialData
@@ -73,7 +47,7 @@ public:
     std::array<std::string, (u32)TextureType::MAX> mTexturePaths;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 
-    MaterialInstancedPropertiesBuffer mSharedMaterialInstancedPropertiesBuffer;
+    GenericObjectBuffer mSharedMaterialInstancedPropertiesBuffer;
 };
 
 class ShaderBuilderDataCommon
@@ -113,7 +87,7 @@ class MaterialInstance
 {
 public:
     PoolHandler<Material> mMaterial;
-    MaterialInstancedPropertiesBuffer mMaterialInstancedPropertiesBuffer;
+    GenericObjectBuffer mMaterialInstancedPropertiesBuffer;
 };
 
 class Material: public ObjectBase
