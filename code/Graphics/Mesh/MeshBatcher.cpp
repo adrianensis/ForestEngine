@@ -1,14 +1,17 @@
-#include "Graphics/BatchRenderer/MeshBatcher.hpp"
-#include "Graphics/Model/Model.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/Mesh/MeshBatcher.hpp"
 
-void MeshBatcher::init(const BatchData batchData)
+void MeshBatcher::init(Ptr<const Mesh> mesh, bool isInstanced)
 {
 	PROFILER_CPU()
-    mBatchData = batchData;
+    mMesh = mesh;
+    mIsInstanced = isInstanced;
     mInternalMesh = OwnerPtr<Mesh>::newObject();
+
+    if(mIsInstanced)
+    {
+        allocateInstances(1);
+        appendMeshData(mMesh);
+    }
 }
 
 void MeshBatcher::appendMeshData(Ptr<const Mesh> mesh)
@@ -25,10 +28,8 @@ void MeshBatcher::appendMeshData(Ptr<const Mesh> mesh)
 void MeshBatcher::resize(u32 size)
 {
 	PROFILER_CPU()
-
 	generateInstanceIDsData(size);
-
-    if (!mBatchData.mIsInstanced)
+    if (!mIsInstanced)
     {
         allocateInstances(size);
     }
@@ -37,35 +38,35 @@ void MeshBatcher::resize(u32 size)
 void MeshBatcher::allocateInstances(u32 maxInstances)
 {
 	PROFILER_CPU()
-    mInternalMesh->init(mBatchData.mMesh->mVertexCount * maxInstances, mBatchData.mMesh->mIndicesCount * maxInstances, mBatchData.mMesh->mGPUVertexInputBuffers);
+    mInternalMesh->init(mMesh->mVertexCount * maxInstances, mMesh->mIndicesCount * maxInstances, mMesh->mGPUVertexInputBuffers);
     generateIndicesData(maxInstances);
 }
 
-void MeshBatcher::addInstanceData(Ptr<MeshRenderer> renderer)
+void MeshBatcher::addInstanceData(Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId)
 {
 	PROFILER_CPU()
 
-    if(mBatchData.mIsInstanced)
+    if(mIsInstanced)
     {
-        mObjectIDs.push_back(renderer->getRenderInstanceSlot().getSlot());
-        mMaterialInstanceIDs.push_back(renderer->getMaterialInstanceSlot().getSlot());
+        mObjectIDs.push_back(objectId);
+        mMaterialInstanceIDs.push_back(materialInstanceId);
     }
     else
 	{
-        FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
+        FOR_RANGE(i, 0, mMesh->mVertexCount)
         {
-            mObjectIDs.push_back(renderer->getRenderInstanceSlot().getSlot());
-            mMaterialInstanceIDs.push_back(renderer->getMaterialInstanceSlot().getSlot());
+            mObjectIDs.push_back(objectId);
+            mMaterialInstanceIDs.push_back(materialInstanceId);
         }
         
-        appendMeshData(renderer->getMeshInstance());
+        appendMeshData(meshInstance);
     }
 }
 
 void MeshBatcher::clear()
 {
 	PROFILER_CPU()
-	if( ! mBatchData.mIsInstanced)
+	if( ! mIsInstanced)
 	{
 		mInternalMesh->clear();
 	}
@@ -79,11 +80,11 @@ void MeshBatcher::generateIndicesData(u32 meshesCount)
 
 	FOR_RANGE(i, 0, meshesCount)
 	{
-		u32 offset = (i * mBatchData.mMesh->mVertexCount);
+		u32 offset = (i * mMesh->mVertexCount);
 		
-		FOR_RANGE(faceIndex, 0, mBatchData.mMesh->mIndices.size())
+		FOR_RANGE(faceIndex, 0, mMesh->mIndices.size())
 		{
-			Face newFace = mBatchData.mMesh->mIndices.get<Face>(faceIndex);
+			Face newFace = mMesh->mIndices.get<Face>(faceIndex);
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;
@@ -97,7 +98,7 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 {
 	PROFILER_CPU()
 
-    u32 totalSize = meshesCount * (mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount);
+    u32 totalSize = meshesCount * (mIsInstanced ? 1 : mMesh->mVertexCount);
 
 	mObjectIDs.clear();
 	mObjectIDs.reserve(totalSize);
@@ -108,13 +109,13 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 
     FOR_RANGE(meshId, 0, meshesCount)
     {
-        if(mBatchData.mIsInstanced)
+        if(mIsInstanced)
         {
             mInstanceIDs.push_back(meshId);
         }
         else
         {
-            FOR_RANGE(i, 0, mBatchData.mMesh->mVertexCount)
+            FOR_RANGE(i, 0, mMesh->mVertexCount)
             {
                 mInstanceIDs.push_back(meshId);
             }

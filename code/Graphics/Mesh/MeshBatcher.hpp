@@ -1,26 +1,26 @@
 #pragma once
 
-#include "Graphics/BatchRenderer/BatchData.hpp"
-#include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/Mesh/Mesh.hpp"
 
 class MeshBatcher
 {
 public:
 	MeshBatcher() = default;
 
-    void init(const BatchData batchData);
+    void init(Ptr<const Mesh> mesh, bool isInstanced);
     void resize(u32 size);
-    void addInstanceData(Ptr<MeshRenderer> renderer);
-    void allocateInstances(u32 maxInstances);
-    void appendMeshData(Ptr<const Mesh> mesh);
+    void addInstanceData(Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId);
     void clear();
 
 private:
+    void appendMeshData(Ptr<const Mesh> mesh);
+    void allocateInstances(u32 maxInstances);
     void generateIndicesData(u32 meshesCount);
     void generateInstanceIDsData(u32 meshesCount);
 
 private:
-    BatchData mBatchData;
+    Ptr<const Mesh> mMesh;
+    bool mIsInstanced = false;
 	OwnerPtr<Mesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;

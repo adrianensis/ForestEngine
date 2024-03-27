@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/BatchRenderer/MeshBatcher.hpp"
+#include "Graphics/Mesh/MeshBatcher.hpp"
 #include "Graphics/BatchRenderer/BatchData.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
@@ -30,6 +30,7 @@ private:
     void setMeshBuffers(Ptr<const GPUMesh> mesh);
     void setInstancedBuffers();
     void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
+    void resizeIndicesBuffer(Ptr<const GPUMesh> mesh);
     void setIndicesBuffer(Ptr<const GPUMesh> mesh);
     void drawCall();
 

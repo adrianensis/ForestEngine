@@ -66,7 +66,7 @@ public:
     }
     void setDataArray(const ByteBuffer& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
+	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
     }
     void terminate();
 

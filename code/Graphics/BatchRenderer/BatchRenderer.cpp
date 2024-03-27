@@ -15,13 +15,11 @@
 void BatchRenderer::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
-	mMeshBatcher.init(mBatchData);
+	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);
     initBuffers();
 
     if(mBatchData.mIsInstanced)
 	{
-        mMeshBatcher.allocateInstances(1);
-        mMeshBatcher.appendMeshData(mBatchData.mMesh);
         resizeMeshBuffers(1);
         setMeshBuffers(Ptr<const GPUMesh>::cast(mBatchData.mMesh));
 	}
@@ -40,7 +38,6 @@ void BatchRenderer::terminate()
 void BatchRenderer::bindSharedBuffers()
 {
     mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
-
     mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
@@ -59,18 +56,14 @@ void BatchRenderer::bindSharedBuffers()
 void BatchRenderer::render()
 {
 	PROFILER_CPU()
-
 	if (!mRenderers.empty())
 	{
         enable();
-
 		if(shouldRegenerateBuffers())
 		{
 			updateBuffers();
 		}
-
         drawCall();
-
         disable();
 	}
 }
@@ -132,10 +125,9 @@ void BatchRenderer::updateBuffers()
 
     mRenderers.clear();
     mRenderers = newList;
-
     u32 newSize = mRenderers.size();
-    mMeshBatcher.clear();
 
+    mMeshBatcher.clear();
     if (newSize > mMaxMeshesThreshold)
     {
         PROFILER_BLOCK_CPU("new size");
@@ -154,14 +146,14 @@ void BatchRenderer::updateBuffers()
         {
             resizeMeshBuffers(mMaxMeshesThreshold);
         }
-    	setIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+    	resizeIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
 
         PROFILER_END_BLOCK();
     }
 
     FOR_ARRAY(i, mRenderers)
     {
-        mMeshBatcher.addInstanceData(mRenderers[i]);
+        mMeshBatcher.addInstanceData(mRenderers[i]->getMeshInstance(), mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstanceSlot().getSlot());
     }
 
     mDataSubmittedToGPU = false;
@@ -264,10 +256,15 @@ void BatchRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transfo
     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
 }
 
-void BatchRenderer::setIndicesBuffer(Ptr<const GPUMesh> mesh)
+void BatchRenderer::resizeIndicesBuffer(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
     mGPUVertexBuffersContainer.getIndicesBuffer().resize(mesh->mIndices.size());
+}
+
+void BatchRenderer::setIndicesBuffer(Ptr<const GPUMesh> mesh)
+{
+    PROFILER_CPU()
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mesh->mIndices);
 }
 
@@ -280,6 +277,7 @@ void BatchRenderer::drawCall()
         {
             setMeshBuffers(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
         }
+    	setIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
         setInstancedBuffers();
         mDataSubmittedToGPU = true;
     }
