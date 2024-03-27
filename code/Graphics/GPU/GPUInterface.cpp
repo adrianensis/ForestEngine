@@ -426,21 +426,24 @@ u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const st
 	const char* vertexCString = vertexShaderString.c_str();
 	const char* fragmentCString = fragmentShaderString.c_str();
 
+    bool success = true;
     u32 vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderId, 1, &vertexCString, nullptr);
 	glCompileShader(vertexShaderId);
-    checkShaderErrors(vertexShaderId, GL_COMPILE_STATUS, "VERTEX SHADER", vertexShaderString);
+    success = success && checkShaderErrors(vertexShaderId, GL_COMPILE_STATUS, "VERTEX SHADER", vertexShaderString);
 
 	u32 fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShaderId, 1, &fragmentCString, nullptr);
 	glCompileShader(fragmentShaderId);
-    checkShaderErrors(fragmentShaderId, GL_COMPILE_STATUS, "FRAGMENT SHADER", fragmentShaderString);
+    success = success && checkShaderErrors(fragmentShaderId, GL_COMPILE_STATUS, "FRAGMENT SHADER", fragmentShaderString);
 
 	u32 programId = glCreateProgram();
 	glAttachShader(programId, vertexShaderId);
 	glAttachShader(programId, fragmentShaderId);
 	glLinkProgram(programId);
-    checkProgramErrors(programId, GL_LINK_STATUS, "PROGRAM LINK", "-");
+    success = success && checkProgramErrors(programId, GL_LINK_STATUS, "PROGRAM LINK", "-");
+
+    CHECK_MSG(success, "SHADER ERRORS DETECTED!");
 
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);
@@ -548,7 +551,7 @@ void GPUInterface::checkFramebufferErrors()
     CHECK_MSG(!errorDetected, "GPU ERRORS DETECTED!");
 }
 
-void GPUInterface::checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
+bool GPUInterface::checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
 {
     i32 success = 0;
     glGetShaderiv(shaderId, statusToCheck, &success);
@@ -567,10 +570,12 @@ void GPUInterface::checkShaderErrors(u32 shaderId, u32 statusToCheck, const std:
         }
 	}
 
-    CHECK_MSG(success, "SHADER ERRORS DETECTED!");
+    // CHECK_MSG(success, "SHADER ERRORS DETECTED!");
+
+    return success != 0;
 }
 
-void GPUInterface::checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
+bool GPUInterface::checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError)
 {
     i32 success = 0;
     glGetProgramiv(programId, statusToCheck, &success);
@@ -589,7 +594,8 @@ void GPUInterface::checkProgramErrors(u32 programId, u32 statusToCheck, const st
         }
 	}
 
-    CHECK_MSG(success, "SHADER ERRORS DETECTED!");
+    // CHECK_MSG(success, "SHADER ERRORS DETECTED!");
+    return success != 0;
 }
 
 void GPUInterface::gpuErrorMessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)

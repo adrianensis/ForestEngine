@@ -300,8 +300,8 @@ public:
     void setupGPUErrorHandling();
     void checkGPUErrors();
     void checkFramebufferErrors();
-    void checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError);
-    void checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError);
+    bool checkShaderErrors(u32 shaderId, u32 statusToCheck, const std::string& tag, const std::string& logIfError);
+    bool checkProgramErrors(u32 programId, u32 statusToCheck, const std::string& tag, const std::string& logIfError);
     static void gpuErrorMessageCallback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
 private:
