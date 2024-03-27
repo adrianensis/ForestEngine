@@ -37,8 +37,11 @@ public:
             "light",
             {
                 {PrimitiveTypes::mVector3, "position"},
-                {PrimitiveTypes::mVector3, "color"},
+                {PrimitiveTypes::mVector3, "ambient"},
+                {PrimitiveTypes::mVector3, "diffuse"},
+                {PrimitiveTypes::mVector3, "specular"},
                 {PrimitiveTypes::mFloat, "ambientIntensity"},
+                {PrimitiveTypes::mFloat, "diffuseIntensity"},
                 {PrimitiveTypes::mFloat, "specularIntensity"}
             }
         };

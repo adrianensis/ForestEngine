@@ -14,11 +14,11 @@ class Mesh;
 class MaterialInstancedProperties
 {
 public:
-    Vector4 mAmbient = Vector4(0,0,0,1);
-    Vector4 mDiffuse = Vector4(0,0,0,1);
-    Vector4 mSpecular = Vector4(0,0,0,1);
-    Vector4 mShininess = Vector4(0,0,0,1);
-    Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
+    Vector3 mAmbient = Vector3(0.5f,0.5f,0.5f);
+    alignas(16) Vector3 mDiffuse = Vector3(0,0,0);
+    alignas(16) Vector3 mSpecular = Vector3(0.2f,0.2f,0.2f);
+    alignas(16) Vector3 mShininess = Vector3(32,0,0);
+    alignas(16) Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
 };
