@@ -19,6 +19,7 @@
 #include "Core/Hash.hpp"
 #include "Core/Serialization/Serialization.hpp"
 #include "Core/ByteBuffer.hpp"
+#include "Core/GenericObject.hpp"
 #include "Core/Functor.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/Metadata/EnumsManager.hpp"
