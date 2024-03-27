@@ -133,7 +133,7 @@ public:
     void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialInstanceProperties();
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialInstancedProperties();
     virtual void loadTextures();
 
     void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;

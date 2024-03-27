@@ -19,7 +19,7 @@ void Material::init(const MaterialData& materialData, u32 id)
     {
         "instancedPropertiesStruct",
         {
-            generateMaterialInstanceProperties()
+            generateMaterialInstancedProperties()
         }
     };
 
@@ -46,7 +46,7 @@ void Material::init(const MaterialData& materialData, u32 id)
     loadTextures();
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> Material::generateMaterialInstanceProperties()
+std::vector<GPUStructDefinition::GPUStructVariable> Material::generateMaterialInstancedProperties()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> instancedProperties = 
     {
