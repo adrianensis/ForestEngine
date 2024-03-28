@@ -9,9 +9,9 @@ public:
     alignas(16) Vector3 mAmbient = Vector3::smOne;
     alignas(16) Vector3 mDiffuse = Vector3::smOne;
     alignas(16) Vector3 mSpecular = Vector3::smOne;
-    f32 mAmbientIntensity = 0.2f;
-    f32 mDiffuseIntensity = 0.2f;
-    f32 mSpecularIntensity = 0.5f;
+    f32 mAmbientIntensity = 1.0f;
+    f32 mDiffuseIntensity = 1.0f;
+    f32 mSpecularIntensity = 1.0f;
 };
 
 class GPULightsData
