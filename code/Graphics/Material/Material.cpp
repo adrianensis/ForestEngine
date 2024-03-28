@@ -73,24 +73,32 @@ void Material::terminate()
 void Material::enable() const
 {
 	PROFILER_CPU()
-	if (mTextures[(u32)TextureType::BASE_COLOR].isValid())
-	{
-        mTextures[(u32)TextureType::BASE_COLOR].get().enable();
-	}
+    u32 textureUnit = 0;
+    FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
+    {
+        if (mTextures[i].isValid())
+        {
+            mTextures[i].get().enable(textureUnit);
+            textureUnit++;
+        }
+    }
 }
 
 void Material::disable() const
 {
 	PROFILER_CPU()
-	if (mTextures[(u32)TextureType::BASE_COLOR].isValid())
-	{
-        mTextures[(u32)TextureType::BASE_COLOR].get().disable();
-	}
+    FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
+    {
+        if (mTextures[i].isValid())
+        {
+            mTextures[i].get().disable();
+        }
+    }
 }
 
 bool Material::hasTexture() const
 {
-    return mTextures[(u32)TextureType::BASE_COLOR].isValid();
+    return mTextures[(u32)TextureSampler::BASE_COLOR].isValid();
 }
 
 void Material::loadTextures()
@@ -101,18 +109,20 @@ void Material::loadTextures()
         TextureData textureData;
         textureData.mPath = mMaterialData.mFontData.mPath;
         textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
+        textureData.mStage = GPUPipelineStage::FRAGMENT;
         textureData.mIsFont = true;
         textureData.mFontData = mMaterialData.mFontData;
-        mTextures[(u32)TextureType::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
+        mTextures[(u32)TextureSampler::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
     }
     else
     {
-        FOR_RANGE(i, 0, mMaterialData.mTexturePaths.size())
+        FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
         {
-            if(!mMaterialData.mTexturePaths[i].empty())
+            if(!mMaterialData.mTextureBindings[i].mPath.empty())
             {
                 TextureData textureData;
-                textureData.mPath = mMaterialData.mTexturePaths[i];
+                textureData.mPath = mMaterialData.mTextureBindings[i].mPath;
+                textureData.mStage = mMaterialData.mTextureBindings[i].mStage;
                 textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
                 mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
             }
@@ -319,7 +329,7 @@ void Material::fragmentShaderTexture(ShaderBuilder& shaderBuilder) const
 {
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
     auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
-    auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::mSampler.mName);
+    auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureSampler>(TextureSampler::BASE_COLOR))).mName);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
     
     mainFunc.body().
@@ -381,7 +391,31 @@ ShaderBuilderData Material::generateShaderBuilderData(const GPUVertexBuffersCont
 {
     ShaderBuilderData shaderBuilderData;
     
-    shaderBuilderData.mCommonVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::mSampler);
+    if(mMaterialData.mIsFont)
+    {
+        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureSampler>(TextureSampler::BASE_COLOR))));
+    }
+    else
+    {
+        FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
+        {
+            if(!mMaterialData.mTextureBindings[i].mPath.empty())
+            {
+                switch (mMaterialData.mTextureBindings[i].mStage)
+                {
+                    case GPUPipelineStage::VERTEX:
+                        shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureSampler>(i))));
+                    break;
+                    case GPUPipelineStage::FRAGMENT:
+                        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureSampler>(i))));
+                    break;
+
+                    default:
+                        CHECK_MSG(false, "Invalid Stage for texture binding!");
+                }
+            }
+        }
+    }
 
     shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(mInstancedPropertiesStructDefinition);
 
@@ -454,8 +488,10 @@ void Material::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUV
     ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderBuilderData.mVertexVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderBuilderData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
 
@@ -470,7 +506,9 @@ void Material::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GP
     ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }

@@ -65,6 +65,12 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
+        static GPUVariableDefinitionData getSampler(const std::string& name)
+        {
+            GPUVariableDefinitionData numberedSampler = mSampler;
+            numberedSampler.mName = numberedSampler.mName + "_" + name;
+            return numberedSampler;
+        }
     };
 
     class SharedBuffers

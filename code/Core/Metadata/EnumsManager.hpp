@@ -9,7 +9,8 @@ enum class EnumName : u8\
 {\
     /* Notice extra MAX enum token! */ \
     FOR_EACH_ODD(ADD_TRAIL_COMMA, __VA_ARGS__) \
-    MAX\
+    MAX,\
+    UNKNOWN\
 };\
 template <>\
 inline const std::string_view& EnumsManager::getEnumNameFromTemplate<EnumName>() { static std::string_view name = #EnumName; return name; } \
@@ -46,6 +47,11 @@ public:
     }
     template <typename E>
     static const std::string_view& toString(E enumToken)
+    {
+        return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
+    }
+    template <typename E>
+    static const std::string_view& toString(u8 enumToken)
     {
         return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
     }

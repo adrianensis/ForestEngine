@@ -165,7 +165,7 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
     u32 textureId = 0;
     glGenTextures(1, &textureId);
 
-    enableTexture(textureId);
+    bindTexture(textureId);
 
     setTextureParam(GL_TEXTURE_WRAP_S, GL_REPEAT);	
     setTextureParam(GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -198,7 +198,7 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
     u32 textureId = 0;
     glGenTextures(1, &textureId);
 
-    enableTexture(textureId);
+    bindTexture(textureId);
 
     // disable byte-alignment restriction
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
@@ -239,19 +239,46 @@ void GPUInterface::deleteTexture(u32 textureId)
 	glDeleteTextures(1, &textureId);
 }
 
-void GPUInterface::enableTexture(u32 textureId)
+void GPUInterface::enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage)
+{
+    u32 maxTextureUntis = getMaxTextureUnits(stage);
+    CHECK_MSG(textureUnit < maxTextureUntis, "Max Texture Unit reached!");
+
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+	bindTexture(textureId);
+}
+
+void GPUInterface::bindTexture(u32 textureId)
 {
 	glBindTexture(GL_TEXTURE_2D, textureId);
 }
 
 void GPUInterface::disableTexture()
 {
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void GPUInterface::setPixelStoreMode(u32 param, u32 value)
 {
     glPixelStorei(param, value);
+}
+
+u32 GPUInterface::getMaxTextureUnits(GPUPipelineStage stage)
+{
+    i32 maxTextureImageUnits = 0;
+    switch (stage)
+    {
+        case GPUPipelineStage::NONE: CHECK_MSG(false, "Invalid GPUPipelineStages!"); break;
+        case GPUPipelineStage::VERTEX: glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+        case GPUPipelineStage::FRAGMENT: glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+        case GPUPipelineStage::GEOMETRY: glGetIntegerv(GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+        case GPUPipelineStage::TESS_CONTROL: glGetIntegerv(GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+        case GPUPipelineStage::TESS_EVALUATION: glGetIntegerv(GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+        case GPUPipelineStage::COMPUTE: glGetIntegerv(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+    }
+
+    return maxTextureImageUnits;
 }
 
 u32 GPUInterface::createFramebuffer(u32 width, u32 height)
@@ -272,7 +299,7 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
 {
     u32 mTextureId = 0;
     glGenTextures(1, &mTextureId);
-    enableTexture(mTextureId);
+    bindTexture(mTextureId);
 
     CHECK_MSG(attachmentType > GPUFramebufferAttachmentType::NONE, "NONE is not valid attachment!");
 

@@ -136,7 +136,18 @@ enum class GPUTexturePixelFormat: u32
     RGBA = GL_RGBA,
     STENCIL_INDEX = GL_STENCIL_INDEX,
     DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
-    DEPTH_STENCIL = GL_DEPTH_STENCIL,
+    DEPTH_STENCIL = GL_DEPTH_STENCIL
+};
+
+enum class GPUPipelineStage: u32
+{
+    NONE,
+    VERTEX,
+    FRAGMENT,
+    GEOMETRY,
+    TESS_CONTROL,
+    TESS_EVALUATION,
+    COMPUTE
 };
 
 enum class GPUPrimitiveDataType : u32
@@ -211,9 +222,11 @@ public:
     void subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format,  const byte* data);
     void setTextureParam(u32 param, u32 value);
     void deleteTexture(u32 textureId);
-    void enableTexture(u32 textureId);
+    void enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage);
+    void bindTexture(u32 textureId);
     void disableTexture();
     void setPixelStoreMode(u32 param, u32 value);
+    u32 getMaxTextureUnits(GPUPipelineStage stage);
 
     // Framebuffer
     u32 createFramebuffer(u32 width, u32 height);

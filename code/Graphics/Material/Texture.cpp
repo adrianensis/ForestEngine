@@ -1,10 +1,14 @@
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Assets/Image/ImageUtils.hpp"
 
-void Texture::enable() const
+void Texture::enable(u32 textureUnit) const
 {
-    GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId);
+    GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId, textureUnit, mTextureData.mStage);
+}
+
+void Texture::bind() const
+{
+    GET_SYSTEM(GPUInterface).bindTexture(mGPUTextureId);
 }
 
 void Texture::disable() const
@@ -24,7 +28,7 @@ void Texture::init(const TextureData& textureData, u32 id)
 
         mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture1ByteChannel(mWidth, mHeight, nullptr);
 
-        GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId);
+        GET_SYSTEM(GPUInterface).bindTexture(mGPUTextureId);
 
         u32 texPos = 0;
         FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())

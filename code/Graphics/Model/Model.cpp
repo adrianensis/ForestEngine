@@ -77,7 +77,7 @@ void Model::loadGLTFMaterials()
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    materialData.mTexturePaths[(u32)TextureType::BASE_COLOR] = texturePath;
+                    materialData.mTextureBindings[(u32)TextureSampler::BASE_COLOR] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
                 }
                 else
                 {
