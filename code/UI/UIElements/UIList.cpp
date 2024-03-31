@@ -46,7 +46,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mDepth = mConfig.mLayer;
-	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mDiffuse = mConfig.mStyle->mBackgroundColor;
+	renderer->getMaterialInstance().mMaterialInstancedPropertiesBuffer.get<MaterialInstancedProperties>().mMaterialLightingModelPhong.mDiffuse = mConfig.mStyle->mBackgroundColor;
 
 	setOnPressedCallback([&](UIElement* uiElement) 
 	{

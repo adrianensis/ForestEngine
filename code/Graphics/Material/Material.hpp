@@ -11,7 +11,7 @@
 class GPUProgram;
 class Mesh;
 
-DECLARE_ENUM(TextureSampler,
+DECLARE_ENUM(TextureMap,
     /** Dummy value.
     *
     *  No texture, but the value to be used as 'texture semantic'
@@ -153,13 +153,24 @@ DECLARE_ENUM(TextureSampler,
 */
 // UNKNOWN
 
-class MaterialInstancedProperties
+DECLARE_ENUM(MaterialLightingModel,
+    PHONG, "PHONG",
+    PBR, "PBR"
+);
+
+class MaterialLightingModelPhong
 {
 public:
     Vector3 mAmbient = Vector3(1,1,1);
     alignas(16) Vector3 mDiffuse = Vector3(0,0,0);
     alignas(16) Vector3 mSpecular = Vector3(0.2f,0.2f,0.2f);
     alignas(16) Vector3 mShininess = Vector3(32,0,0);
+};
+
+class MaterialInstancedProperties
+{
+public:
+    MaterialLightingModelPhong mMaterialLightingModelPhong;
     alignas(16) Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
@@ -189,11 +200,12 @@ public:
 	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
+    MaterialLightingModel mMaterialLightingModel = MaterialLightingModel::PHONG;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
-    std::array<MaterialTextureBinding, (u32)TextureSampler::MAX> mTextureBindings;
+    std::array<MaterialTextureBinding, (u32)TextureMap::MAX> mTextureBindings;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedMaterialInstancedPropertiesBuffer;
@@ -285,14 +297,16 @@ protected:
 
 protected:
     MaterialData mMaterialData;
+	GPUStructDefinition mLightingModelStructDefinition;
 	GPUStructDefinition mInstancedPropertiesStructDefinition;
     GPUSharedBufferData mInstancedPropertiesSharedBufferData;
-    std::array<PoolHandler<Texture>, (u32)TextureSampler::MAX> mTextures;
+    std::array<PoolHandler<Texture>, (u32)TextureMap::MAX> mTextures;
 
     u32 mID = 0;
 
 public:
     CRGET(MaterialData)
+    CRGET(LightingModelStructDefinition)
     CRGET(InstancedPropertiesSharedBufferData)
     CRGET(InstancedPropertiesStructDefinition)
     GET(ID)

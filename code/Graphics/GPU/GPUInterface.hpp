@@ -193,7 +193,7 @@ public:
     }
     void setBufferDataArray(GPUBufferType bufferType, u32 bufferId, const ByteBuffer& data)
     {
-        setBufferDataRaw(bufferType, bufferId, data.getElementSizeInBytes(), data.size(), data.data());
+        setBufferDataRaw(bufferType, bufferId, 1, data.sizeInBytes(), data.data());
     }
 
     template<class T>

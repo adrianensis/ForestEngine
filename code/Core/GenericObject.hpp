@@ -8,7 +8,7 @@ public:
     template<class T>
     void set()
     {
-        mByteBuffer = ByteBuffer(sizeof(T));
+        mByteBuffer.clear();
         // mByteBuffer.reserve(1);
         mByteBuffer.emplaceBack<T>();
     }

@@ -8,30 +8,26 @@ class ByteBuffer
 {
 public:
     ByteBuffer() = default;
-    ByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
 
     template<class T>
     void pushBack(const T& element)
     {
-        checkType<T>();
         const byte* bytePtr = reinterpret_cast<const byte*>(&element);
-        mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + mElementSizeInBytes);
+        mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + sizeof(T));
     }
     template <class T, typename ... Args>
     void emplaceBack(Args&&... args)
     {
-        checkType<T>();
         T element(args...);
         pushBack(element);
     }
     template<class T>
     void append(const std::vector<T>& elements)
     {
-        checkType<T>();
         if(!elements.empty())
         {
             const byte* bytePtr = reinterpret_cast<const byte*>(&elements[0]);
-            mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + (elements.size() * mElementSizeInBytes));
+            mBuffer.insert(mBuffer.end(), bytePtr, bytePtr + (elements.size() * sizeof(T)));
         }
     }
     void append(const ByteBuffer& elements)
@@ -44,32 +40,30 @@ public:
     template<class T>
     T& get(u32 index)
     {
-        checkType<T>();
         checkIndex(index);
-        return *reinterpret_cast<T*>(&mBuffer.at(index * mElementSizeInBytes));
+        return *reinterpret_cast<T*>(&mBuffer.at(index * sizeof(T)));
     }
     template<class T>
     const T& get(u32 index) const
     {
-        checkType<T>();
         checkIndex(index);
-        return *reinterpret_cast<const T*>(&mBuffer.at(index * mElementSizeInBytes));
+        return *reinterpret_cast<const T*>(&mBuffer.at(index * sizeof(T)));
     }
     void clear()
     {
         mBuffer.clear();
     }
-    u32 size() const
-    {
-        return mBuffer.size() / mElementSizeInBytes;
-    }
     u32 sizeInBytes() const
     {
         return mBuffer.size();
     }
-    u32 capacity() const
+    virtual u32 size() const
     {
-        return mBuffer.capacity() / mElementSizeInBytes;
+        return sizeInBytes();
+    }
+    virtual u32 capacity() const
+    {
+        return mBuffer.capacity();
     }
     byte* data()
     {
@@ -79,23 +73,100 @@ public:
     {
         return mBuffer.data();
     }
-    void reserve(u32 size)
+    virtual void reserve(u32 size)
     {
-        mBuffer.reserve(size * mElementSizeInBytes);
+        mBuffer.reserve(size);
     }
-    void resize(u32 size)
+    virtual void resize(u32 size)
     {
-        mBuffer.resize(size * mElementSizeInBytes);
+        mBuffer.resize(size);
     }
     template<class T>
     void fill(const T& element)
     {
-        checkType<T>();
         u32 typedSize = size();
         FOR_RANGE(i, 0, typedSize)
         {
             get<T>(i) = element;
         }
+    }
+
+protected:
+    void checkIndex(u32 i) const
+    {
+        CHECK_MSG(i >= 0, "Index < 0!");
+        CHECK_MSG(i < size(), "Index out of bounds!");
+    }
+
+protected:
+    std::vector<byte> mBuffer;
+
+public:
+    CRGET(Buffer)
+};
+
+class TypedByteBuffer : public ByteBuffer
+{
+public:
+    TypedByteBuffer() = default;
+    TypedByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
+
+    template<class T>
+    void pushBack(const T& element)
+    {
+        checkType<T>();
+        ByteBuffer::pushBack<T>(element);
+    }
+    template <class T, typename ... Args>
+    void emplaceBack(Args&&... args)
+    {
+        checkType<T>();
+        ByteBuffer::emplaceBack<T, Args...>(args...);
+    }
+    template<class T>
+    void append(const std::vector<T>& elements)
+    {
+        checkType<T>();
+        ByteBuffer::append<T>(elements);
+    }
+    void append(const TypedByteBuffer& elements)
+    {
+        CHECK_MSG(mElementSizeInBytes == elements.mElementSizeInBytes, "Different element size!");
+        ByteBuffer::append(elements);
+    }
+    template<class T>
+    T& get(u32 index)
+    {
+        checkType<T>();
+        return ByteBuffer::get<T>(index);
+    }
+    template<class T>
+    const T& get(u32 index) const
+    {
+        checkType<T>();
+        return ByteBuffer::get<T>(index);
+    }
+    virtual u32 size() const override
+    {
+        return ByteBuffer::size() / mElementSizeInBytes;
+    }
+    virtual u32 capacity() const override
+    {
+        return ByteBuffer::capacity() / mElementSizeInBytes;
+    }
+    virtual void reserve(u32 size) override
+    {
+        ByteBuffer::reserve(size * mElementSizeInBytes);
+    }
+    virtual void resize(u32 size) override
+    {
+        ByteBuffer::resize(size * mElementSizeInBytes);
+    }
+    template<class T>
+    void fill(const T& element)
+    {
+        checkType<T>();
+        ByteBuffer::fill<T>(element);
     }
 
     u32 getElementSizeInBytes() const { return mElementSizeInBytes; };
@@ -106,11 +177,6 @@ private:
     {
         CHECK_MSG(mElementSizeInBytes > 0, "Type size is 0!");
         CHECK_MSG(sizeof(T) == mElementSizeInBytes, "Type size does not match!");
-    }
-    void checkIndex(u32 i) const
-    {
-        CHECK_MSG(i >= 0, "Index < 0!");
-        CHECK_MSG(i < size(), "Index out of bounds!");
     }
 
 private:

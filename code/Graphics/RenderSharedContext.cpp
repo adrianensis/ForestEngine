@@ -80,11 +80,10 @@ void RenderSharedContext::initMaterialInstancePropertiesSharedBuffer(const PoolH
     mMaterialInstancesDataMap.emplace(materialID, SharedContextMaterialInstancedData());
 
     u32 size = material->getMaterialData().mAllowInstances ? material->getMaterialData().mMaxInstances : 1;
-    u32 instancedPropertiesSizeBytes = material->getMaterialData().mSharedMaterialInstancedPropertiesBuffer.getByteBuffer().sizeInBytes();
+    u32 instancedPropertiesSizeBytes = material->getMaterialData().mSharedMaterialInstancedPropertiesBuffer.getByteBuffer().size();
     mMaterialInstancesDataMap.at(materialID).mMaterial = material;
     mMaterialInstancesDataMap.at(materialID).mSlotsManager.init(size);
-    mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray = ByteBuffer(instancedPropertiesSizeBytes);
-    mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray.resize(size);
+    mMaterialInstancesDataMap.at(materialID).mMaterialInstancedPropertiesArray.resize(size * instancedPropertiesSizeBytes);
 
     // Reserve index 0 for default material instance
     Slot defaultSlot = mMaterialInstancesDataMap.at(materialID).mSlotsManager.requestSlot();
