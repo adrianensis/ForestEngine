@@ -37,6 +37,19 @@ public:
             mBuffer.insert(mBuffer.end(), elements.mBuffer.begin(), elements.mBuffer.end());
         }
     }
+    void setAt(const ByteBuffer& elements, u32 offset)
+    {
+        if(!elements.mBuffer.empty())
+        {
+            CHECK_MSG(offset < sizeInBytes(), "offset out of bounds");
+            CHECK_MSG(elements.sizeInBytes() <= sizeInBytes(), "buffer is too large");
+            CHECK_MSG((elements.sizeInBytes() + offset) < sizeInBytes(), "no space enough");
+            FOR_RANGE(i, 0, elements.sizeInBytes())
+            {
+                mBuffer[i + offset] = elements.getBuffer()[i];
+            }
+        }
+    }
     template<class T>
     T& get(u32 index)
     {
@@ -81,15 +94,15 @@ public:
     {
         mBuffer.resize(size);
     }
-    template<class T>
-    void fill(const T& element)
-    {
-        u32 typedSize = size();
-        FOR_RANGE(i, 0, typedSize)
-        {
-            get<T>(i) = element;
-        }
-    }
+    // template<class T>
+    // void fill(const T& element)
+    // {
+    //     u32 typedSize = size();
+    //     FOR_RANGE(i, 0, typedSize)
+    //     {
+    //         get<T>(i) = element;
+    //     }
+    // }
 
 protected:
     void checkIndex(u32 i) const
@@ -166,7 +179,11 @@ public:
     void fill(const T& element)
     {
         checkType<T>();
-        ByteBuffer::fill<T>(element);
+        u32 typedSize = size();
+        FOR_RANGE(i, 0, typedSize)
+        {
+            get<T>(i) = element;
+        }
     }
 
     u32 getElementSizeInBytes() const { return mElementSizeInBytes; };

@@ -25,6 +25,12 @@ public:
         return mByteBuffer.get<T>(0);
     }
 
+    template<class T>
+    void append(T& element)
+    {
+        return mByteBuffer.append<T>(element);
+    }
+
 private:
     ByteBuffer mByteBuffer;
 
