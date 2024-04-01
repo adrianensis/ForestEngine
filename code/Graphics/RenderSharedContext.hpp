@@ -23,7 +23,7 @@ private:
     class SharedContextMaterialInstancedData
     {
     public:
-        ByteBuffer mMaterialInstancedPropertiesArray;
+        ByteBuffer mMaterialPropertiesBlockArray;
         GPUSharedBuffersContainer mGPUSharedBuffersContainer;
         PoolHandler<Material> mMaterial;
         SlotsManager mSlotsManager;

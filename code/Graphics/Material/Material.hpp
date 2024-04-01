@@ -167,7 +167,7 @@ public:
     alignas(16) Vector3 mShininess = Vector3(32,0,0);
 };
 
-class MaterialInstancedProperties
+class MaterialPropertiesBlock
 {
 public:
     MaterialLightingModelPhong mMaterialLightingModelPhong;
@@ -188,7 +188,7 @@ class MaterialData
 public:
     MaterialData()
     {
-        mSharedMaterialInstancedPropertiesBuffer.set<MaterialInstancedProperties>();
+        mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
     }
 
 	bool mAlphaEnabled = true;
@@ -208,7 +208,7 @@ public:
     std::array<MaterialTextureBinding, (u32)TextureMap::MAX> mTextureBindings;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 
-    GenericObjectBuffer mSharedMaterialInstancedPropertiesBuffer;
+    GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
 };
 
 class ShaderBuilderDataCommon
@@ -252,7 +252,7 @@ class MaterialInstance
 {
 public:
     PoolHandler<Material> mMaterial;
-    GenericObjectBuffer mMaterialInstancedPropertiesBuffer;
+    GenericObjectBuffer mMaterialPropertiesBlockBuffer;
 };
 
 class Material: public ObjectBase
@@ -272,7 +272,7 @@ public:
     void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialInstancedProperties();
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void loadTextures();
 
     void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
@@ -298,8 +298,8 @@ protected:
 protected:
     MaterialData mMaterialData;
 	GPUStructDefinition mLightingModelStructDefinition;
-	GPUStructDefinition mInstancedPropertiesStructDefinition;
-    GPUSharedBufferData mInstancedPropertiesSharedBufferData;
+	GPUStructDefinition mPropertiesBlockStructDefinition;
+    GPUSharedBufferData mPropertiesBlockSharedBufferData;
     std::array<PoolHandler<Texture>, (u32)TextureMap::MAX> mTextures;
 
     u32 mID = 0;
@@ -307,8 +307,8 @@ protected:
 public:
     CRGET(MaterialData)
     CRGET(LightingModelStructDefinition)
-    CRGET(InstancedPropertiesSharedBufferData)
-    CRGET(InstancedPropertiesStructDefinition)
+    CRGET(PropertiesBlockSharedBufferData)
+    CRGET(PropertiesBlockStructDefinition)
     GET(ID)
 };
 REGISTER_CLASS(Material);
