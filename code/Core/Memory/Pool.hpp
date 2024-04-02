@@ -93,8 +93,7 @@ public:
         u32 index = 0;
         if (mFreeObjects.empty())
         {
-            T object(args...);
-            mObjects.emplace_back(object);
+            mObjects.emplace_back(args...);
             mHandlers.emplace_back();
             index = mObjects.size() - 1;
 

@@ -10,8 +10,8 @@ OwnerPtr<GPUProgram> ShaderUtils::createShader(const GPUVertexBuffersContainer& 
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    material.createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-    material.createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    material.getMaterialRuntime()->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    material.getMaterialRuntime()->createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
     std::string stringShderVert = sbVert.getCode();
     FileUtils::writeFile(Paths::mOutputShaders + std::to_string(material.getID()) + ".vs", [stringShderVert](std::ofstream& file)

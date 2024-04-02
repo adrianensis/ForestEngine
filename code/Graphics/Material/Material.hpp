@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
+#include "Graphics/Material/MaterialRuntime.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
@@ -153,11 +154,6 @@ DECLARE_ENUM(TextureMap,
 */
 // UNKNOWN
 
-DECLARE_ENUM(MaterialLightingModel,
-    PHONG, "PHONG",
-    PBR, "PBR"
-);
-
 class MaterialLightingModelPhong
 {
 public:
@@ -200,7 +196,6 @@ public:
 	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
-    MaterialLightingModel mMaterialLightingModel = MaterialLightingModel::PHONG;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;
     bool mIsFont = false;
@@ -208,42 +203,8 @@ public:
     std::array<MaterialTextureBinding, (u32)TextureMap::MAX> mTextureBindings;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 
+    std::unordered_map<std::string, GPUStructDefinition> mGPUStructDefinitions;
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
-};
-
-class ShaderBuilderDataCommon
-{
-public:
-    std::vector<GPUStructDefinition> mStructDefinitions;
-    std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUSharedBufferData> mSharedBuffers;
-    std::vector<GPUVariableDefinitionData> mConsts;
-};
-
-class ShaderBuilderDataVertex
-{
-public:
-    std::vector<GPUVertexBuffer> mVertexInputs;
-    std::vector<GPUVariableDefinitionData> mVertexOutputs;
-    std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUVariableDefinitionData> mConsts;
-};
-
-class ShaderBuilderDataFragment
-{
-public:
-    std::vector<GPUVariableDefinitionData> mFragmentInputs;
-    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
-    std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUVariableDefinitionData> mConsts;
-};
-
-class ShaderBuilderData
-{
-public:
-    ShaderBuilderDataCommon mCommonVariables;
-    ShaderBuilderDataVertex mVertexVariables;
-    ShaderBuilderDataFragment mFragmentVariables;
 };
 
 class Material;
@@ -257,58 +218,31 @@ public:
 
 class Material: public ObjectBase
 {
-    
-	DECLARE_SERIALIZATION()
-
 public:
-    void init(const MaterialData& materialData, u32 id);
+    Material() = default;
+    void init(const MaterialData& materialData, u32 id, MaterialRuntime* runtime);
     void terminate();
     virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
     bool hasTexture() const;
-    
-    void createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void loadTextures();
-
-    void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
-
-    void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
-    void fragmentShaderTexture(ShaderBuilder& shaderBuilder) const;
-    void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
-    void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
-
-    ShaderBuilderData generateShaderBuilderData(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-
-    void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
-    void registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const;
 
 protected:
     MaterialData mMaterialData;
-	GPUStructDefinition mLightingModelStructDefinition;
-	GPUStructDefinition mPropertiesBlockStructDefinition;
-    GPUSharedBufferData mPropertiesBlockSharedBufferData;
+
     std::array<PoolHandler<Texture>, (u32)TextureMap::MAX> mTextures;
 
     u32 mID = 0;
 
+    // OwnerPtr<MaterialRuntime> mMaterialRuntime;
+    MaterialRuntime* mMaterialRuntime = nullptr;
+
 public:
     CRGET(MaterialData)
-    CRGET(LightingModelStructDefinition)
-    CRGET(PropertiesBlockSharedBufferData)
-    CRGET(PropertiesBlockStructDefinition)
     GET(ID)
+    CGET(MaterialRuntime)
 };
 REGISTER_CLASS(Material);

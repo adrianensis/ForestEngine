@@ -14,7 +14,6 @@ void MaterialManager::init()
     materialData.mUseColorAsTint = true;
 	
     mNoTextureMaterial = createMaterial(materialData);
-    mMaterials.get(mNoTextureMaterial).init(materialData, mNoTextureMaterial.getIndex());
 }
 
 void MaterialManager::terminate()
@@ -43,7 +42,11 @@ PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materi
 {
     PoolHandler<Material> handler = mMaterials.allocate();
     Material& material = mMaterials.get(handler);
-    material.init(materialData, handler.getIndex());
+
+    MaterialRuntime* materialRuntime = Memory::newObject<MaterialRuntime>();//OwnerPtr<MaterialRuntime>::newObject();
+    materialRuntime->init(handler);
+
+    material.init(materialData, handler.getIndex(), materialRuntime);
 
     GET_SYSTEM(RenderSharedContext).initMaterialInstancePropertiesSharedBuffer(handler);
 

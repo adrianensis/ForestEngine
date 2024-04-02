@@ -31,7 +31,7 @@ void RenderSharedContext::update()
     FOR_MAP(it, mMaterialInstancesDataMap)
     {
         PoolHandler<Material> material = it->second.mMaterial;
-        const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getPropertiesBlockSharedBufferData();
+        const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getMaterialRuntime()->getPropertiesBlockSharedBufferData();
 
         ByteBuffer& materialPropertiesBlockArray = it->second.mMaterialPropertiesBlockArray;
 	    it->second.mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).setDataArray(materialPropertiesBlockArray);
@@ -89,7 +89,7 @@ void RenderSharedContext::initMaterialInstancePropertiesSharedBuffer(const PoolH
     Slot defaultSlot = mMaterialInstancesDataMap.at(materialID).mSlotsManager.requestSlot();
     mMaterialInstancesDataMap.at(materialID).mMaterialPropertiesBlockArray.setAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
-    const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getPropertiesBlockSharedBufferData();
+    const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getMaterialRuntime()->getPropertiesBlockSharedBufferData();
     u32 bindingPointMaterialPropertiesBlock = requestSharedBufferBindingPoint(propertiesBlockSharedBufferData.mType);
     mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.createSharedBuffer(bindingPointMaterialPropertiesBlock, propertiesBlockSharedBufferData, false);
     mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).resizeBytes(propertiesBlockSizeBytes * size);
@@ -112,7 +112,7 @@ void RenderSharedContext::setMaterialInstanceProperties(const Slot& slot, const 
 const GPUSharedBuffer& RenderSharedContext::getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
-    const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getPropertiesBlockSharedBufferData();
+    const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getMaterialRuntime()->getPropertiesBlockSharedBufferData();
     return mMaterialInstancesDataMap.at(material->getID()).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData);
 }
 
