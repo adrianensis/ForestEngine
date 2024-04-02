@@ -12,6 +12,7 @@ void MaterialManager::init()
     MaterialData materialData;
     materialData.mAlphaEnabled = true;
     materialData.mUseColorAsTint = true;
+    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
 	
     mNoTextureMaterial = createMaterial(materialData);
 }

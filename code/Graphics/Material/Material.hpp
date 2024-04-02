@@ -179,11 +179,6 @@ public:
 class MaterialData
 {
 public:
-    MaterialData()
-    {
-        mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
-    }
-
 	bool mAlphaEnabled = true;
 	bool mReceiveLight = true;
 	bool mUseVertexColor = false;

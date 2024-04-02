@@ -71,6 +71,7 @@ void Model::loadGLTFMaterials()
             MaterialData materialData;
             materialData.mIsSkinned = isSkinned();
             materialData.mUseColorAsTint = true;
+            materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
 
             if(cgltfMaterial.has_pbr_metallic_roughness)
             {

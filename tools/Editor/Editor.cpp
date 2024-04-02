@@ -252,6 +252,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
     materialData.mAlphaEnabled = true;
 	materialData.mReceiveLight = false;
 	materialData.mUseColorAsTint = true;
+    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
     materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
 	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial(materialData));
 
