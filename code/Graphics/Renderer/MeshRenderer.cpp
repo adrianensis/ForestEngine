@@ -84,11 +84,11 @@ void MeshRenderer::updateTextureRegion()
     {
         mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
         const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
-        if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
-        {
-            mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
-            mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
-        }
+        // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
+        // {
+        //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
+        //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+        // }
     }
 }
 

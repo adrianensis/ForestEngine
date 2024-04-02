@@ -167,9 +167,6 @@ class MaterialPropertiesBlock
 {
 public:
     MaterialLightingModelPhong mMaterialLightingModelPhong;
-    alignas(16) Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
-    Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
-    alignas(16) i32 mDepth = 0;
 };
 
 class MaterialTextureBinding

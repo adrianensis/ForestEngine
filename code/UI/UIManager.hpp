@@ -6,6 +6,7 @@
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"
 #include "UI/UIFont.hpp"
+#include "UI/UIMaterial.hpp"
 
 class Material;
 class Scene;

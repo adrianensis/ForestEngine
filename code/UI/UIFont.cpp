@@ -1,6 +1,7 @@
 #include "UI/UIFont.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "UI/UIMaterial.hpp"
 
 void UIFontsManager::init()
 {
@@ -42,8 +43,9 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32
     // materialData.mAlphaEnabled = false;
     materialData.mIsFont = true;
     materialData.mFontData = mFontData;
-    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mMaterialLightingModelPhong.mDiffuse = Vector4(1,1,1,1);
-    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
+    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mMaterialLightingModelPhong.mDiffuse = Vector4(1,1,1,1);
+    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData, new MaterialRuntimeUI());
 
     mFontData.freeGlyphsBuffers();
 }

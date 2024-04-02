@@ -54,8 +54,9 @@ protected:
 
     void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
     void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const;
     void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
     void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
     void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
     void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;

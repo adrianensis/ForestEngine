@@ -61,6 +61,6 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mStencilData = calculateStencilData();
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
-	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mDepth = mConfig.mLayer;
-	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mMaterialLightingModelPhong.mDiffuse = mConfig.mStyle->mBackgroundColor;
+	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
+	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mMaterialLightingModelPhong.mDiffuse = mConfig.mStyle->mBackgroundColor;
 }

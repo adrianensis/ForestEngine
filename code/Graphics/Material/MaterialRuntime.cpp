@@ -14,7 +14,7 @@
 void MaterialRuntime::init(PoolHandler<Material> material)
 {
     mMaterial = material;
-    
+
     GPUStructDefinition propertiesBlockStructDefinition =
     {
         "propertiesBlockStruct",
@@ -55,10 +55,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntime::generateMat
 
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
-        {materialLightingModelStructDataType, "materialLighting"},
-        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
-        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"},
-        {GPUBuiltIn::PrimitiveTypes::mInt, "depth"},
+        {materialLightingModelStructDataType, "materialLighting"}
     };
 
     return propertiesBlock;
@@ -86,16 +83,7 @@ void MaterialRuntime::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderB
     Variable finalPositon;
     mainFunc.body().
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {position, {"1.0f"}}));
-
-    Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
-    Variable depth = {getPropertiesBlockStructDefinition().mPrimitiveVariables[3]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
-    if(mMaterial->getMaterialData().mUseDepth)
-    {
-        mainFunc.body().
-        set(finalPositon.dot("z"), propertiesBlock.at(materialInstanceId).dot(depth));
-    }
-
+    
     if(mMaterial->getMaterialData().mIsSkinned)
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
@@ -111,13 +99,22 @@ void MaterialRuntime::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderB
         auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
         mainFunc.body().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
     }
-        
+
+    shaderBuilder.setVariableInCache(finalPositon);
+    
+    vertexShaderCalculatePositionOutputCustom(shaderBuilder);
+
     Variable PVMatrix = shaderBuilder.getVariableFromCache("PV_Matrix");
     mainFunc.body().
     set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon));
 
     auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
     mainFunc.body().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {finalPositon}));
+}
+
+void MaterialRuntime::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
+{
+
 }
 
 void MaterialRuntime::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const
@@ -168,17 +165,6 @@ void MaterialRuntime::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder
     auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
     mainFunc.body().
     set(outTextureCoord, textureCoord);
-
-    Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
-    Variable textureRegionLeftTop = {getPropertiesBlockStructDefinition().mPrimitiveVariables[1]};
-    Variable textureRegionSize = {getPropertiesBlockStructDefinition().mPrimitiveVariables[2]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
-    mainFunc.body().
-    set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2.mName,
-    {
-        outTextureCoord.dot("x").mul(propertiesBlock.at(materialInstanceId).dot(textureRegionSize).dot("x")).add(propertiesBlock.at(materialInstanceId).dot(textureRegionLeftTop).dot("x")),
-        outTextureCoord.dot("y").mul(propertiesBlock.at(materialInstanceId).dot(textureRegionSize).dot("y")).add(propertiesBlock.at(materialInstanceId).dot(textureRegionLeftTop).dot("y"))
-    }));
 }
 
 void MaterialRuntime::vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const
