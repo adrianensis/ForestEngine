@@ -7,14 +7,6 @@
 void MaterialManager::init()
 {
 	LOG_TRACE()
-
-	// reserve index 0 for no textured material
-    MaterialData materialData;
-    materialData.mAlphaEnabled = true;
-    materialData.mUseColorAsTint = true;
-    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
-	
-    mNoTextureMaterial = createMaterial(materialData);
 }
 
 void MaterialManager::terminate()

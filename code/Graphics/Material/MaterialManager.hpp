@@ -21,10 +21,5 @@ private:
     Pool<Texture> mTextures;
     std::unordered_map<std::string, PoolHandler<Texture>> mTexturesByPath;
     Pool<Material> mMaterials;
-
-    PoolHandler<Material> mNoTextureMaterial;
-
-public:
-    GET(NoTextureMaterial)
 };
 REGISTER_CLASS(MaterialManager);

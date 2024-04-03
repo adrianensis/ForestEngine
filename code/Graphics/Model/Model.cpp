@@ -130,10 +130,6 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     {
         meshMaterial = mGLTFMaterials[primitive.material];
     }
-    else
-    {
-        meshMaterial = GET_SYSTEM(MaterialManager).getNoTextureMaterial();
-    }
 
     mMeshMaterials[mesh] = meshMaterial;
 

@@ -46,6 +46,7 @@ void Editor::firstUpdate()
 	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
+	importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
