@@ -127,6 +127,7 @@ Slot RenderSharedContext::requestMaterialInstanceSlot(const PoolHandler<Material
     }
     else
     {
+        // point to default material instance
         slot.set(0);
     }
 
