@@ -46,16 +46,9 @@ void MaterialRuntime::init(PoolHandler<Material> material)
 
 std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntime::generateMaterialPropertiesBlock()
 {
-    GPUDataType materialLightingModelStructDataType =
-    {
-        mLightingModelStructDefinition.mName,
-        mLightingModelStructDefinition.getTypeSizeInBytes(),
-        GPUPrimitiveDataType::STRUCT
-    };
-
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
-        {materialLightingModelStructDataType, "materialLighting"}
+        {GPUBuiltIn::PrimitiveTypes::mInt, "_emptyStructFixHack"}
     };
 
     return propertiesBlock;
@@ -219,8 +212,6 @@ void MaterialRuntime::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) cons
 {
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
     auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID.mName);
-    Variable lightingModel = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
     
     Variable baseColor;
@@ -231,13 +222,6 @@ void MaterialRuntime::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) cons
     {
         mainFunc.body().
         set(baseColor, inColor);
-    }
-    else
-    {
-        Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
-        Variable instanceDiffuse = {mLightingModelStructDefinition.mPrimitiveVariables[1]};
-        mainFunc.body().
-        set(baseColor, call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {propertiesBlock.at(materialInstanceId).dot(lightingModel).dot(instanceDiffuse), {"1.0"}}));
     }
 
     mainFunc.body().
@@ -308,10 +292,8 @@ void MaterialRuntime::fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) c
     end();
 }
 
-MaterialRuntime::ShaderBuilderData MaterialRuntime::generateShaderBuilderData(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void MaterialRuntime::generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData;
-    
     if(mMaterial->getMaterialData().mIsFont)
     {
         std::string samplerName = std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR));
@@ -341,7 +323,6 @@ MaterialRuntime::ShaderBuilderData MaterialRuntime::generateShaderBuilderData(co
         }
     }
 
-    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(mLightingModelStructDefinition);
     shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(getPropertiesBlockStructDefinition());
 
     FOR_LIST(it, gpuSharedBuffersContainer.getSharedBuffers())
@@ -404,13 +385,12 @@ MaterialRuntime::ShaderBuilderData MaterialRuntime::generateShaderBuilderData(co
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
     shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
-
-    return shaderBuilderData;
 }
 
 void MaterialRuntime::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    ShaderBuilderData shaderBuilderData;
+    generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mConsts) { shaderBuilder.get().attribute(*it); }
@@ -428,7 +408,8 @@ void MaterialRuntime::registerVertexShaderData(ShaderBuilder& shaderBuilder, con
 
 void MaterialRuntime::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData = generateShaderBuilderData(gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    ShaderBuilderData shaderBuilderData;
+    generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
@@ -437,11 +418,6 @@ void MaterialRuntime::registerFragmentShaderData(ShaderBuilder& shaderBuilder, c
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
-
-    if(mMaterial->getMaterialData().mReceiveLight)
-    {
-        registerFunctionCalculatePhong(shaderBuilder);
-    }
 }
 
 void MaterialRuntime::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -532,70 +508,6 @@ void MaterialRuntime::registerFunctionCalculateBoneTransform(ShaderBuilder& shad
     
     func.body().
     ret(finalBoneTransform);
-
-    shaderBuilder.get().function(func);
-}
-
-void MaterialRuntime::registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const
-{
-    FunctionDefinition func(GPUBuiltIn::Functions::mCalculatePhong);
-
-    auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
-    Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
-    auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal.mName);
-    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition.mName);
-    auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
-    Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    Variable lightPos = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0]};
-    Variable lightAmbient = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[1]};
-    Variable lightDiffuse = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[2]};
-    Variable lightSpecular = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[3]};
-    Variable lightAmbientIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[4]};
-    Variable lightDiffuseIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[5]};
-    Variable lightSpecularIntensity = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[6]};
-
-    Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
-    Variable lightingModel = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
-    Variable materialAmbient = {mLightingModelStructDefinition.mPrimitiveVariables[0]};
-    Variable materialDiffuse = {mLightingModelStructDefinition.mPrimitiveVariables[1]};
-    Variable materialSpecular = {mLightingModelStructDefinition.mPrimitiveVariables[2]};
-    Variable materialShininess = {mLightingModelStructDefinition.mPrimitiveVariables[3]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID.mName);
-    // propertiesBlock.at(materialInstanceId).dot(depth)
-
-    Variable ambient;
-    func.body().
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", propertiesBlock.at(materialInstanceId).dot(lightingModel).dot(materialAmbient).mul(lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightAmbient))));
-    Variable norm;
-    func.body().
-    variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
-
-    if(mMaterial->getMaterialData().mUseNormals)
-    {
-        func.body().
-        set(norm, call("normalize", {inNormal}));
-    }
-
-    Variable lightDir;
-    Variable diffuseValue;
-    Variable diffuse;
-    func.body().
-    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
-    variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
-    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", propertiesBlock.at(materialInstanceId).dot(lightingModel).dot(materialDiffuse).mul(lights.at("0").dot(lightSpecularIntensity).mul(diffuseValue.mul(lights.at("0").dot(lightDiffuse)))));
-    Variable viewDir;
-    Variable reflectDir;
-    Variable specularValue;
-    Variable specular;
-    func.body().
-    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
-    variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
-    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), propertiesBlock.at(materialInstanceId).dot(lightingModel).dot(materialShininess).dot("x")})).
-    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", propertiesBlock.at(materialInstanceId).dot(lightingModel).dot(materialSpecular).mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
-    Variable phong;
-    func.body().
-    variable(phong, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "phong", ambient.add(diffuse).add(specular)).
-    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {phong, {"1"}}));
 
     shaderBuilder.get().function(func);
 }

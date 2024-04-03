@@ -5,21 +5,6 @@
 
 class Material;
 
-class MaterialLightingModelPhong
-{
-public:
-    Vector3 mAmbient = Vector3(1,1,1);
-    alignas(16) Vector3 mDiffuse = Vector3(0,0,0);
-    alignas(16) Vector3 mSpecular = Vector3(0.2f,0.2f,0.2f);
-    alignas(16) Vector3 mShininess = Vector3(32,0,0);
-};
-
-class MaterialPropertiesBlockPhong
-{
-public:
-    MaterialLightingModelPhong mMaterialLightingModelPhong;
-};
-
 class MaterialRuntime
 {
 protected:
@@ -67,39 +52,28 @@ public:
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
 
-    void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
-    void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
 
-    void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
-    void fragmentShaderTexture(ShaderBuilder& shaderBuilder) const;
-    void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
-    void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderTexture(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
 
-    ShaderBuilderData generateShaderBuilderData(const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    virtual void generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 
     void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
-    void registerFunctionCalculatePhong(ShaderBuilder& shaderBuilder) const;
 
 protected:
     PoolHandler<Material> mMaterial;
-	GPUStructDefinition mLightingModelStructDefinition = 
-    {
-        "materialLightingModel",
-        {
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "Ambient"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "Diffuse"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "Specular"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "Shininess"},
-        }
-    };
 
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUSharedBufferData mPropertiesBlockSharedBufferData;

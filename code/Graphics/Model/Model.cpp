@@ -1,6 +1,7 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Material/MaterialRuntimeDefault.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
 #include "Assets/Config/Paths.hpp"
@@ -99,7 +100,7 @@ void Model::loadGLTFMaterials()
 
             if(! mGLTFMaterials.contains(&cgltfMaterial))
             {
-                PoolHandler<Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData);
+                PoolHandler<Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData, new MaterialRuntimePhong());
                 mGLTFMaterials.insert_or_assign(&cgltfMaterial, newMaterial);
             }
         }
