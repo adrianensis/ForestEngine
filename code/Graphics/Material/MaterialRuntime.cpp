@@ -345,7 +345,7 @@ void MaterialRuntime::generateShaderBuilderData(MaterialRuntime::ShaderBuilderDa
         shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    if(mMaterial->hasTexture())
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     }
@@ -364,7 +364,7 @@ void MaterialRuntime::generateShaderBuilderData(MaterialRuntime::ShaderBuilderDa
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    if(mMaterial->hasTexture())
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
     }
@@ -434,7 +434,7 @@ void MaterialRuntime::createVertexShader(ShaderBuilder& shaderBuilder, const GPU
         vertexShaderCalculateNormalOutput(shaderBuilder);
     }
 
-    if(mMaterial->hasTexture())
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
     }
@@ -455,7 +455,7 @@ void MaterialRuntime::createFragmentShader(ShaderBuilder& shaderBuilder, const G
 
     fragmentShaderBaseColor(shaderBuilder);
 
-    if(mMaterial->hasTexture())
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         fragmentShaderTexture(shaderBuilder);
     }

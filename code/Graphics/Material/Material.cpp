@@ -54,9 +54,9 @@ void Material::disable() const
     }
 }
 
-bool Material::hasTexture() const
+bool Material::hasTexture(TextureMap textureMap) const
 {
-    return mTextures[(u32)TextureMap::BASE_COLOR].isValid();
+    return mTextures[(u32)textureMap].isValid();
 }
 
 void Material::loadTextures()

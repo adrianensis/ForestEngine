@@ -216,7 +216,7 @@ public:
     virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
-    bool hasTexture() const;
+    bool hasTexture(TextureMap textureMap) const;
 
 protected:
     virtual void loadTextures();
