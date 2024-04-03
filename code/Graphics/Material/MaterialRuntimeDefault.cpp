@@ -21,6 +21,15 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimePhong::genera
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
+void MaterialRuntimePhong::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+{
+    MaterialRuntime::createFragmentShader(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    if(mMaterial->getMaterialData().mReceiveLight)
+    {
+        fragmentShaderShadingModel(shaderBuilder);
+    }
+}
+
 void MaterialRuntimePhong::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
 {
     MaterialRuntime::fragmentShaderBaseColor(shaderBuilder);
@@ -55,6 +64,13 @@ void MaterialRuntimePhong::fragmentShaderShadingModel(ShaderBuilder& shaderBuild
 void MaterialRuntimePhong::generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(mLightingModelStructDefinition);
+
+    if(mMaterial->getMaterialData().mReceiveLight)
+    {
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLightsData);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
+    }
+
     MaterialRuntime::generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 }
 

@@ -334,12 +334,6 @@ void MaterialRuntime::generateShaderBuilderData(MaterialRuntime::ShaderBuilderDa
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(getPropertiesBlockSharedBufferData());
 
-    if(mMaterial->getMaterialData().mReceiveLight)
-    {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLightsData);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
-    }
-
     if(mMaterial->getMaterialData().mIsSkinned)
     {
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
@@ -471,11 +465,6 @@ void MaterialRuntime::createFragmentShader(ShaderBuilder& shaderBuilder, const G
         {
             fragmentShaderAlphaDiscard(shaderBuilder);
         }
-    }
-
-    if(mMaterial->getMaterialData().mReceiveLight)
-    {
-        fragmentShaderShadingModel(shaderBuilder);
     }
 }
 

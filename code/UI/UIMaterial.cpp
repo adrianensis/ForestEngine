@@ -6,22 +6,34 @@ using namespace ShaderBuilderNodes::Expressions;
 
 std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimeUI::generateMaterialPropertiesBlock()
 {
-    GPUDataType materialLightingModelStructDataType =
-    {
-        mLightingModelStructDefinition.mName,
-        mLightingModelStructDefinition.getTypeSizeInBytes(),
-        GPUPrimitiveDataType::STRUCT
-    };
-
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
-        {materialLightingModelStructDataType, "materialLighting"},
+        {GPUBuiltIn::PrimitiveTypes::mVector4, "color"},
         {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
         {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"},
         {GPUBuiltIn::PrimitiveTypes::mInt, "depth"},
     };
 
     return propertiesBlock;
+}
+
+void MaterialRuntimeUI::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
+{
+    MaterialRuntime::fragmentShaderBaseColor(shaderBuilder);
+
+    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID.mName);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    Variable instanceColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
+    
+    Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
+
+    Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
+    mainFunc.body().
+    set(baseColor, propertiesBlock.at(materialInstanceId).dot(instanceColor));
+
+    mainFunc.body().
+    set(outColor, baseColor);
 }
 
 void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
