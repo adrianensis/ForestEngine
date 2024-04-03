@@ -5,6 +5,21 @@
 
 class Material;
 
+class MaterialLightingModelPhong
+{
+public:
+    Vector3 mAmbient = Vector3(1,1,1);
+    alignas(16) Vector3 mDiffuse = Vector3(0,0,0);
+    alignas(16) Vector3 mSpecular = Vector3(0.2f,0.2f,0.2f);
+    alignas(16) Vector3 mShininess = Vector3(32,0,0);
+};
+
+class MaterialPropertiesBlockPhong
+{
+public:
+    MaterialLightingModelPhong mMaterialLightingModelPhong;
+};
+
 class MaterialRuntime
 {
 protected:

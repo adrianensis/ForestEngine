@@ -79,8 +79,8 @@ void RenderSharedContext::initMaterialInstancePropertiesSharedBuffer(const PoolH
 
     mMaterialInstancesDataMap.emplace(materialID, SharedContextMaterialInstancedData());
 
-    u32 size = material->getMaterialData().mAllowInstances ? material->getMaterialData().mMaxInstances : 1;
-    u32 propertiesBlockSizeBytes = material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer().size();
+    u32 size = material->getMaterialData().getMaxInstances();
+    u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
     mMaterialInstancesDataMap.at(materialID).mMaterial = material;
     mMaterialInstancesDataMap.at(materialID).mSlotsManager.init(size);
     mMaterialInstancesDataMap.at(materialID).mMaterialPropertiesBlockArray.resize(size * propertiesBlockSizeBytes);
@@ -102,9 +102,9 @@ void RenderSharedContext::setMaterialInstanceProperties(const Slot& slot, const 
     u32 materialID = material->getID();
     CHECK_MSG(mMaterialInstancesDataMap.contains(materialID), "Invalid material!");
 
-    if(material->getMaterialData().mAllowInstances)
+    if(material->getMaterialData().allowInstances())
     {
-        u32 propertiesBlockSizeBytes = material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer().size();
+        u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
         mMaterialInstancesDataMap.at(materialID).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
     }
 }

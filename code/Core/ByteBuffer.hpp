@@ -43,7 +43,7 @@ public:
         {
             CHECK_MSG(offset < sizeInBytes(), "offset out of bounds");
             CHECK_MSG(elements.sizeInBytes() <= sizeInBytes(), "buffer is too large");
-            CHECK_MSG((elements.sizeInBytes() + offset) < sizeInBytes(), "no space enough");
+            CHECK_MSG((elements.sizeInBytes() + offset) <= sizeInBytes(), "no space enough");
             FOR_RANGE(i, 0, elements.sizeInBytes())
             {
                 mBuffer[i + offset] = elements.getBuffer()[i];

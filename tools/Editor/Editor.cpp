@@ -228,7 +228,10 @@ void Editor::update()
     // PROFILER_END_BLOCK();
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
-    fpsCounter->setText(std::to_string((u32)fps));
+    if(fpsCounter)
+    {
+        fpsCounter->setText(std::to_string((u32)fps));
+    }
 
     mousePick();
 }
@@ -253,7 +256,6 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
     materialData.mAlphaEnabled = true;
 	materialData.mReceiveLight = false;
 	materialData.mUseColorAsTint = true;
-    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlock>();
     materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
 	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial(materialData));
 

@@ -154,21 +154,6 @@ DECLARE_ENUM(TextureMap,
 */
 // UNKNOWN
 
-class MaterialLightingModelPhong
-{
-public:
-    Vector3 mAmbient = Vector3(1,1,1);
-    alignas(16) Vector3 mDiffuse = Vector3(0,0,0);
-    alignas(16) Vector3 mSpecular = Vector3(0.2f,0.2f,0.2f);
-    alignas(16) Vector3 mShininess = Vector3(32,0,0);
-};
-
-class MaterialPropertiesBlock
-{
-public:
-    MaterialLightingModelPhong mMaterialLightingModelPhong;
-};
-
 class MaterialTextureBinding
 {
 public:
@@ -197,6 +182,20 @@ public:
 
     std::unordered_map<std::string, GPUStructDefinition> mGPUStructDefinitions;
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
+
+    u32 getSharedMaterialPropertiesBlockBufferSize() const
+    {
+        return mSharedMaterialPropertiesBlockBuffer.getByteBuffer().size();
+    }
+    bool allowInstances() const
+    {
+        return mAllowInstances && mMaxInstances > 0 && getSharedMaterialPropertiesBlockBufferSize() > 0;
+    }
+
+    u32 getMaxInstances() const
+    {
+        return mAllowInstances ? mMaxInstances : 1;
+    }
 };
 
 class Material;
