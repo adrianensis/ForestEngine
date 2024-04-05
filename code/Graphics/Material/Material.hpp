@@ -180,7 +180,6 @@ public:
     std::array<MaterialTextureBinding, (u32)TextureMap::MAX> mTextureBindings;
     std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
 
-    std::unordered_map<std::string, GPUStructDefinition> mGPUStructDefinitions;
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
 
     u32 getSharedMaterialPropertiesBlockBufferSize() const
