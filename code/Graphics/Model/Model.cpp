@@ -86,7 +86,7 @@ void Model::loadGLTFMaterials()
                 else
                 {
                     cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMaterialLightingModel.mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 }
                 if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
                 {
@@ -97,8 +97,8 @@ void Model::loadGLTFMaterials()
                 {
                     cgltf_float metallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
                     cgltf_float roughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMaterialLightingModel.mMetallic = Vector3(metallic, metallic, metallic);
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMaterialLightingModel.mRoughness = Vector3(roughness, roughness, roughness);
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMetallic = Vector3(metallic, metallic, metallic);
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mRoughness = Vector3(roughness, roughness, roughness);
                 }
 
                 newMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimePBRMetallicRoughness>(materialData);
@@ -117,7 +117,7 @@ void Model::loadGLTFMaterials()
             //     else
             //     {
             //         cgltf_float* diffuse = cgltfMaterial.pbr_specular_glossiness.diffuse_factor;
-            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mMaterialLightingModel.mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
+            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
             //     }
             //     if(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture)
             //     {
@@ -128,8 +128,8 @@ void Model::loadGLTFMaterials()
             //     {
             //         cgltf_float* specular = cgltfMaterial.pbr_specular_glossiness.specular_factor;
             //         cgltf_float glossiness = cgltfMaterial.pbr_specular_glossiness.glossiness_factor;
-            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mMaterialLightingModel.mDiffuse = Vector3(specular[0], specular[1], specular[2]);
-            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mMaterialLightingModel.mGlossiness = Vector3(glossiness, glossiness, glossiness);
+            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mDiffuse = Vector3(specular[0], specular[1], specular[2]);
+            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mGlossiness = Vector3(glossiness, glossiness, glossiness);
             //     }
             // }
 
