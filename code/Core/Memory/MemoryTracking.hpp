@@ -26,9 +26,9 @@ public:
     static void terminate();
 	
 	template <class T>
-	static void registerNewObject(T* object)
+	static void registerNewObject(T* pointer)
 	{
-		CHECK_MSG(object != nullptr, "pointer is nullptr");
+		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
 		std::string_view className;
@@ -46,6 +46,8 @@ public:
         {
 			smAllocationsMap.insert_or_assign(className, AllocationInfo());
 		}
+
+        smPointersToDynamicClassName.insert_or_assign(reinterpret_cast<u64>(pointer), className);
 
         smAllocationsMap[className].mCurrentAllocations += 1;
         smAllocationsMap[className].mMaxAllocations = std::max(smAllocationsMap[className].mCurrentAllocations, smAllocationsMap[className].mMaxAllocations);
@@ -65,8 +67,10 @@ public:
 		}
 		else
 		{
-			className = typeid(T).name();
+			className = smPointersToDynamicClassName.at(reinterpret_cast<u64>(pointer));
 		}
+
+        smPointersToDynamicClassName.erase(reinterpret_cast<u64>(pointer));
 
         CHECK_MSG(smAllocationsMap.contains(className), "No prevoius allocation for class: " + std::string(className));
         smAllocationsMap[className].mCurrentAllocations -= 1;
@@ -76,5 +80,6 @@ public:
 private:
 #ifdef ENGINE_DEBUG
 	inline static std::unordered_map<std::string_view, AllocationInfo> smAllocationsMap;
+    inline static std::unordered_map<u64, std::string_view> smPointersToDynamicClassName;
 #endif
 };
