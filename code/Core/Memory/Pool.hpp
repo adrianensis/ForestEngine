@@ -16,9 +16,13 @@ public:
     PoolHandler(i32 index, Pool<T>* pool)
     {
         mIndex = index;
-        CHECK_MSG(pool, "Invalid pool!");
         mPool = pool;
+        CHECK_MSG(isValid(), "Invalid handle!");
         mPool->registerHandler(*this);
+    }
+
+    PoolHandler(i32 index, const Pool<T>* pool): PoolHandler(index, const_cast<Pool<T>*>(pool))
+    {
     }
 
     ~PoolHandler()
@@ -141,6 +145,16 @@ public:
         return mObjects.at(handle.getIndex());
     }
 
+    PoolHandler<T> getHandler(u32 index) const
+    {
+        PoolHandler<T> handler;
+        if(mAllocatedObjects.contains(index))
+        {
+            handler = PoolHandler<T>(index, this);
+        }
+        return handler;
+    }
+
     void free(PoolHandler<T>& handle)
     {
         if(handle.isValid())
@@ -171,7 +185,7 @@ private:
 
 private:
     std::vector<T> mObjects;
-    std::vector<std::unordered_set<PoolHandler<T>*>> mHandlers;
+    mutable std::vector<std::unordered_set<PoolHandler<T>*>> mHandlers;
     std::unordered_set<u32> mFreeObjects;
     std::unordered_set<u32> mAllocatedObjects;
 };
