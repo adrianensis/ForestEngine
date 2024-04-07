@@ -31,24 +31,15 @@ void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
     mTextures.free(texture);
 }
 
-PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materialData, OwnerPtr<MaterialRuntime> materialRuntime)
-{
-    PoolHandler<Material> handler = mMaterials.allocate();
-    Material& material = mMaterials.get(handler);
-
-    materialRuntime->init(handler);
-
-    material.init(materialData, handler.getIndex(), std::move(materialRuntime));
-
-    GET_SYSTEM(RenderSharedContext).initMaterialInstancePropertiesSharedBuffer(handler);
-
-    return handler;
-}
-
 PoolHandler<Material> MaterialManager::createMaterialBase(const MaterialData& materialData)
 {
     PoolHandler<Material> handler = createMaterial<MaterialRuntime>(materialData);
     return handler;
+}
+
+void MaterialManager::postMaterialCreated(const PoolHandler<Material>& handler)
+{
+    GET_SYSTEM(RenderSharedContext).initMaterialInstancePropertiesSharedBuffer(handler);
 }
 
 MaterialInstance MaterialManager::createMaterialInstance(const PoolHandler<Material>& handler)
@@ -69,4 +60,16 @@ const Material& MaterialManager::getMaterial(const PoolHandler<Material>& handle
 {
     CHECK_MSG(handler.isValid(), "Invalid handler!");
     return mMaterials.get(handler);
+}
+
+PoolHandler<Material> MaterialManager::getMaterialHandler(u32 id) const
+{
+    PoolHandler<Material> handler = mMaterials.getHandler(id);
+    CHECK_MSG(handler.isValid(), "Invalid handler!");
+    return handler;
+}
+
+const Material& MaterialManager::getMaterial(u32 id) const
+{
+    return getMaterialHandler(id).get();
 }

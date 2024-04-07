@@ -15,8 +15,11 @@ public:
     template<class T> T_EXTENDS(T, MaterialRuntime)
     PoolHandler<Material> createMaterial(const MaterialData& materialData)
     {
-        OwnerPtr<T> materialRuntime = OwnerPtr<T>::newObject();
-        PoolHandler<Material> handler = createMaterial(materialData, OwnerPtr<MaterialRuntime>::moveCast<>(materialRuntime));
+        // OwnerPtr<T> materialRuntime = OwnerPtr<T>::newObject();
+        PoolHandler<Material> handler = mMaterials.allocate();
+        handler->init<T>(materialData, handler.getIndex());
+        postMaterialCreated(handler);
+
         return handler;
     }
 
@@ -24,8 +27,11 @@ public:
     MaterialInstance createMaterialInstance(const PoolHandler<Material>& handler);
     void removeMaterial(PoolHandler<Material>& material);
     const Material& getMaterial(const PoolHandler<Material>& handler) const;
+    PoolHandler<Material> getMaterialHandler(u32 id) const;
+    const Material& getMaterial(u32 id) const;
+
 private:
-    PoolHandler<Material> createMaterial(const MaterialData& materialData, OwnerPtr<MaterialRuntime> materialRuntime);
+    void postMaterialCreated(const PoolHandler<Material>& handler);
 
 private:
     Pool<Texture> mTextures;

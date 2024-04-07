@@ -208,13 +208,23 @@ class Material: public ObjectBase
 {
 public:
     Material() = default;
-    void init(const MaterialData& materialData, u32 id, OwnerPtr<MaterialRuntime> runtime);
+
+    template<class T> T_EXTENDS(T, MaterialRuntime)
+    void init(const MaterialData& materialData, u32 id)
+    {
+        // OwnerPtr<T> materialRuntime = OwnerPtr<T>::newObject();
+        mMaterialRuntime = OwnerPtr<MaterialRuntime>::moveCast(OwnerPtr<T>::newObject());
+        internalInit(materialData, id);
+    }
+
     void terminate();
     virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
     bool hasTexture(TextureMap textureMap) const;
 
+private:
+    void internalInit(const MaterialData& materialData, u32 id);
 protected:
     virtual void loadTextures();
 
