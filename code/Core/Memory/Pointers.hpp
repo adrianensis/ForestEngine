@@ -258,13 +258,13 @@ public:
             CHECK_MSG(mReferenceBlock->isReferenced(), "Weak references are already 0!")
             decrement();
             
-            if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
-            {
-                Memory::deleteObject(mReferenceBlock);
-            }
             if(!mReferenceBlock->isReferenced())
             {
                 Memory::deleteObject(mInternalPointer);
+            }
+            if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
+            {
+                Memory::deleteObject(mReferenceBlock);
             }
         }
         set(nullptr, nullptr);
@@ -280,10 +280,12 @@ protected:
     }
     void set(T* reference, ReferenceBlock* referenceBlock)
     {
-        mInternalPointer = reference;
-        mReferenceBlock = referenceBlock;
-        if(mInternalPointer && mReferenceBlock)
+        mInternalPointer = nullptr;
+        mReferenceBlock = nullptr;
+        if(reference && referenceBlock)
         {
+            mInternalPointer = reference;
+            mReferenceBlock = referenceBlock;
             increment();
             if constexpr (IS_BASE_OF(EnablePtrFromThis, T))
             {
@@ -293,12 +295,6 @@ protected:
                     enablePtrFromThis->set(Ptr<T>(*this));
                 }
             }
-        }
-        else
-        {
-            // if one of them or both are invalid, force set to NULL
-            mInternalPointer = nullptr;
-            mReferenceBlock = nullptr;
         }
     }
     void increment() { mReferenceBlock->mReferenceCounter += 1;}
@@ -369,6 +365,14 @@ class OwnerPtr : public BaseOwnerPtr, public RefCountedPtrBase<T>
 public:
     template <class OtherClass>
     static OwnerPtr<T> moveCast(OwnerPtr<OtherClass>& other)
+    {
+        OwnerPtr<T> newPtr = OwnerPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        other.invalidate();
+        return newPtr;
+    }
+
+    template <class OtherClass>
+    static OwnerPtr<T> moveCast(OwnerPtr<OtherClass>&& other)
     {
         OwnerPtr<T> newPtr = OwnerPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
         other.invalidate();
