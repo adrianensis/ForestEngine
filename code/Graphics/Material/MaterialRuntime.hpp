@@ -45,6 +45,7 @@ protected:
 
 public:
     MaterialRuntime() = default;
+    virtual ~MaterialRuntime() = default;
     void init(PoolHandler<Material> material);
     virtual void createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;

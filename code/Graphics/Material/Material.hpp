@@ -39,7 +39,7 @@ DECLARE_ENUM(TextureMap,
      *  OR
      *  PBR Specular/Glossiness
      */
-    SPECULAR, "SPECULAR",
+    SPECULAR_GLOSSINESS, "SPECULAR_GLOSSINESS",
 
     /** The texture is combined with the result of the ambient
      *  lighting equation.
@@ -73,7 +73,7 @@ DECLARE_ENUM(TextureMap,
      *  function defined to map the linear color values in the
      *  texture to a suitable exponent. Have fun.
     */
-    SHININESS, "SHININESS",
+    GLOSSINESS, "GLOSSINESS",
 
     /** The texture defines per-pixel opacity.
      *
@@ -113,10 +113,8 @@ DECLARE_ENUM(TextureMap,
      */
 
     BASE_COLOR, "BASE_COLOR",
-    NORMAL_CAMERA, "NORMAL_CAMERA",
-    EMISSION_COLOR, "EMISSION_COLOR",
-    METALNESS, "METALNESS",
-    DIFFUSE_ROUGHNESS, "DIFFUSE_ROUGHNESS",
+    NORMAL, "NORMAL",
+    METALLIC_ROUGHNESS, "METALIC_ROUGHNESS",
     AMBIENT_OCCLUSION, "AMBIENT_OCCLUSION",
 
     /** PBR Material Modifiers
@@ -210,7 +208,7 @@ class Material: public ObjectBase
 {
 public:
     Material() = default;
-    void init(const MaterialData& materialData, u32 id, MaterialRuntime* runtime);
+    void init(const MaterialData& materialData, u32 id, OwnerPtr<MaterialRuntime> runtime);
     void terminate();
     virtual void onPoolFree() override { terminate(); };
     void enable() const;
@@ -227,8 +225,7 @@ protected:
 
     u32 mID = 0;
 
-    // OwnerPtr<MaterialRuntime> mMaterialRuntime;
-    MaterialRuntime* mMaterialRuntime = nullptr;
+    OwnerPtr<MaterialRuntime> mMaterialRuntime;
 
 public:
     CRGET(MaterialData)

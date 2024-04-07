@@ -11,11 +11,21 @@ public:
     virtual void terminate() override;
     PoolHandler<Texture> loadTexture(const TextureData& textureData);
     void unloadTexture(PoolHandler<Texture>& texture);
-    PoolHandler<Material> createMaterial(const MaterialData& materialData, MaterialRuntime* materialRuntime);
-    PoolHandler<Material> createMaterial(const MaterialData& materialData);
+
+    template<class T> T_EXTENDS(T, MaterialRuntime)
+    PoolHandler<Material> createMaterial(const MaterialData& materialData)
+    {
+        OwnerPtr<T> materialRuntime = OwnerPtr<T>::newObject();
+        PoolHandler<Material> handler = createMaterial(materialData, OwnerPtr<MaterialRuntime>::moveCast<>(materialRuntime));
+        return handler;
+    }
+
+    PoolHandler<Material> createMaterialBase(const MaterialData& materialData);
     MaterialInstance createMaterialInstance(const PoolHandler<Material>& handler);
     void removeMaterial(PoolHandler<Material>& material);
     const Material& getMaterial(const PoolHandler<Material>& handler) const;
+private:
+    PoolHandler<Material> createMaterial(const MaterialData& materialData, OwnerPtr<MaterialRuntime> materialRuntime);
 
 private:
     Pool<Texture> mTextures;

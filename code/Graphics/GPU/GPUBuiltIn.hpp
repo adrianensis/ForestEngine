@@ -192,11 +192,5 @@ public:
             PrimitiveTypes::mMatrix4,
             "calculateBoneTransform"
         };
-
-        inline static const GPUFunctionDefinition mCalculatePhong
-        {
-            PrimitiveTypes::mVector4,
-            "calculatePhong"
-        };
     };
 };

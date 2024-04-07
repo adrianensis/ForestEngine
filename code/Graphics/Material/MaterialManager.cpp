@@ -31,24 +31,23 @@ void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
     mTextures.free(texture);
 }
 
-PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materialData, MaterialRuntime* materialRuntime)
+PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materialData, OwnerPtr<MaterialRuntime> materialRuntime)
 {
     PoolHandler<Material> handler = mMaterials.allocate();
     Material& material = mMaterials.get(handler);
 
     materialRuntime->init(handler);
 
-    material.init(materialData, handler.getIndex(), materialRuntime);
+    material.init(materialData, handler.getIndex(), std::move(materialRuntime));
 
     GET_SYSTEM(RenderSharedContext).initMaterialInstancePropertiesSharedBuffer(handler);
 
     return handler;
 }
 
-PoolHandler<Material> MaterialManager::createMaterial(const MaterialData& materialData)
+PoolHandler<Material> MaterialManager::createMaterialBase(const MaterialData& materialData)
 {
-    MaterialRuntime* materialRuntime = Memory::newObject<MaterialRuntime>();//OwnerPtr<MaterialRuntime>::newObject();
-    PoolHandler<Material> handler = createMaterial(materialData, materialRuntime);
+    PoolHandler<Material> handler = createMaterial<MaterialRuntime>(materialData);
     return handler;
 }
 

@@ -10,14 +10,14 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void Material::init(const MaterialData& materialData, u32 id, MaterialRuntime* runtime)
+void Material::init(const MaterialData& materialData, u32 id, OwnerPtr<MaterialRuntime> runtime)
 {
     mMaterialData = materialData;
 	mID = id;
 
     loadTextures();
 
-    mMaterialRuntime = runtime;
+    mMaterialRuntime = std::move(runtime);
 }
 
 void Material::terminate()

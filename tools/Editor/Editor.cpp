@@ -33,9 +33,9 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    createSprite(Vector3(-100,0,0), 100);
-    createSprite(Vector3(100,0,0), 100);
-    createSprite(Vector3(0,0,-100), 10);
+    // createSprite(Vector3(-100,0,0), 100);
+    // createSprite(Vector3(100,0,0), 100);
+    // createSprite(Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
@@ -43,89 +43,16 @@ void Editor::firstUpdate()
 	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
+	// auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
-	importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
 	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-
-	UIBuilder uiBuilder;
-
-	uiBuilder.
-	// setPosition(Vector2(0,0)).
-	setPosition(Vector2(-1,1)).
-	setAdjustSizeToText(true).
-	setSize(Vector2(0.5, 0.05f));
-
-    // uiBuilder. 
-	// setText("cApgfy").
-	// create<UIText>().
-	// getUIElement<UIText>();
-
-    uiBuilder.
-	setText("Asdc hghjyYRTL").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});  
-    
-
-    fpsCounter = uiBuilder.
-	setText("100").
-	create<UIText>().
-    getUIElement<UIText>();
-
-	uiBuilder.
-	setText("File").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("New", [&](UIElement *uiElement)
-	{
-
-	}).
-	addOption("Open", [&](UIElement *uiElement)
-	{
-	}).
-	addOption("Save", [&](UIElement *uiElement)
-	{
-	});
-
-	uiBuilder.
-	setText("Sprites").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
-
-	uiBuilder.
-	setText("Edit").
-	create<UIButton>().
-	getUIElement<UIButton>()->
-	setOnPressedCallback([&, this](UIElement *uiElement){
-	});
-
-	uiBuilder.
-	setText("View").
-	create<UIDropdown>().
-	getUIElement<UIDropdown>()->
-	addOption("Grid", [&](UIElement *uiElement)
-	{
-
-	}).
-	addOption("Colliders", [&](UIElement *uiElement)
-	{
-	});
-
-    uiBuilder.
-	setText("a").
-	create<UIEditableText>();
-
-	uiBuilder.restoreAll();
-
+    // createUI();
     mousePick();
 }
 
@@ -257,7 +184,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	materialData.mReceiveLight = false;
 	// materialData.mUseColorAsTint = true;
     materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
-	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial(materialData));
+	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterialBase(materialData));
 
 	gameObject->createComponent<MeshRenderer>(rendererData);
 
@@ -355,4 +282,80 @@ void Editor::handleMouse()
     {
         mSelectedGameObject.invalidate();
     }
+}
+
+void Editor::createUI()
+{
+    	UIBuilder uiBuilder;
+
+	uiBuilder.
+	// setPosition(Vector2(0,0)).
+	setPosition(Vector2(-1,1)).
+	setAdjustSizeToText(true).
+	setSize(Vector2(0.5, 0.05f));
+
+    // uiBuilder. 
+	// setText("cApgfy").
+	// create<UIText>().
+	// getUIElement<UIText>();
+
+    uiBuilder.
+	setText("Asdc hghjyYRTL").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});  
+    
+
+    fpsCounter = uiBuilder.
+	setText("100").
+	create<UIText>().
+    getUIElement<UIText>();
+
+	uiBuilder.
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("New", [&](UIElement *uiElement)
+	{
+
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
+
+	uiBuilder.
+	setText("Sprites").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
+
+	uiBuilder.
+	setText("Edit").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
+
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Grid", [&](UIElement *uiElement)
+	{
+
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
+
+    uiBuilder.
+	setText("a").
+	create<UIEditableText>();
+
+	uiBuilder.restoreAll();
 }

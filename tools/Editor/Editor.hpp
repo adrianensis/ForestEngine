@@ -18,6 +18,7 @@ private:
     Ptr<GameObject> importModel2(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
 	void handlePressedKeys();
 	void handleMouse();
+    void createUI();
 private:
     Ptr<UIText> fpsCounter;
 	Ptr<GameObject> mCameraGameObject;

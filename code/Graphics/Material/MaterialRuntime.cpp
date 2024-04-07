@@ -272,13 +272,7 @@ void MaterialRuntime::fragmentShaderTexture(ShaderBuilder& shaderBuilder) const
 
 void MaterialRuntime::fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
 
-    Variable phong;
-    mainFunc.body().
-    variable(phong, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "phong", call(GPUBuiltIn::Functions::mCalculatePhong.mName, {})).
-    set(outColor, outColor.mul(phong));
 }
 
 void MaterialRuntime::fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const

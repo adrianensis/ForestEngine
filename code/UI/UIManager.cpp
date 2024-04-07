@@ -18,7 +18,7 @@ void UIManager::init()
     materialData.mUseColorAsTint = true;
     materialData.mUseDepth = true;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
-    mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData, new MaterialRuntimeUI());
+    mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeUI>(materialData);
 }
 
 void UIManager::terminate()

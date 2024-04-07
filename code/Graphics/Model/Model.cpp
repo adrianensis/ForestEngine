@@ -71,11 +71,13 @@ void Model::loadGLTFMaterials()
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
             materialData.mIsSkinned = isSkinned();
-            materialData.mUseColorAsTint = true;
-            materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockPhong>();
+            // materialData.mUseColorAsTint = true;
+            PoolHandler<Material> newMaterial;
 
             if(cgltfMaterial.has_pbr_metallic_roughness)
             {
+                materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockPBRMetallicRoughness>();
+
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
@@ -84,23 +86,55 @@ void Model::loadGLTFMaterials()
                 else
                 {
                     cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPhong>().mMaterialLightingModelPhong.mDiffuse = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMaterialLightingModel.mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 }
-                // if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
-                // {
-                //     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                //     materialData.mTextureBindings[(u32)TextureMap::METALNESS] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
-                // }
-                // else
-                // {
-                //     cgltf_float baseColor = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-                //     materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mMaterialLightingModelPhong.mDiffuse = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
-                // }
+                if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
+                {
+                    std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
+                    materialData.mTextureBindings[(u32)TextureMap::METALLIC_ROUGHNESS] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+                }
+                else
+                {
+                    cgltf_float metallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+                    cgltf_float roughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMaterialLightingModel.mMetallic = Vector3(metallic, metallic, metallic);
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMaterialLightingModel.mRoughness = Vector3(roughness, roughness, roughness);
+                }
+
+                newMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimePBRMetallicRoughness>(materialData);
             }
+
+            // if(cgltfMaterial.has_pbr_specular_glossiness)
+            // {
+            //     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockPBRSpecularGlossiness>();
+            //     materialRuntime = new MaterialRuntimePBRSpecularGlossiness();
+
+            //     if(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture)
+            //     {
+            //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture->image->uri);
+            //         materialData.mTextureBindings[(u32)TextureMap::DIFFUSE] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //     }
+            //     else
+            //     {
+            //         cgltf_float* diffuse = cgltfMaterial.pbr_specular_glossiness.diffuse_factor;
+            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mMaterialLightingModel.mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
+            //     }
+            //     if(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture)
+            //     {
+            //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture->image->uri);
+            //         materialData.mTextureBindings[(u32)TextureMap::SPECULAR_GLOSSINESS] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //     }
+            //     else
+            //     {
+            //         cgltf_float* specular = cgltfMaterial.pbr_specular_glossiness.specular_factor;
+            //         cgltf_float glossiness = cgltfMaterial.pbr_specular_glossiness.glossiness_factor;
+            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mMaterialLightingModel.mDiffuse = Vector3(specular[0], specular[1], specular[2]);
+            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRSpecularGlossiness>().mMaterialLightingModel.mGlossiness = Vector3(glossiness, glossiness, glossiness);
+            //     }
+            // }
 
             if(! mGLTFMaterials.contains(&cgltfMaterial))
             {
-                PoolHandler<Material> newMaterial = GET_SYSTEM(MaterialManager).createMaterial(materialData, new MaterialRuntimePhong());
                 mGLTFMaterials.insert_or_assign(&cgltfMaterial, newMaterial);
             }
         }
