@@ -31,9 +31,9 @@ public:
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
         if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mId > 0)
 		{
-            MemoryTracking::unregisterDeletedObject(pointer);
+		    ClassManager::unregisterDynamicClass<T>(pointer);
         }
-		ClassManager::unregisterDynamicClass<T>(pointer);
+        MemoryTracking::unregisterDeletedObject(pointer);
         delete pointer;
 	}
 };
