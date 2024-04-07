@@ -17,7 +17,7 @@ public:
     {
         mIndex = index;
         mPool = pool;
-        CHECK_MSG(isValid(), "Invalid handle!");
+        CHECK_MSG(isValid(), "Invalid handler!");
         mPool->registerHandler(*this);
     }
 
@@ -111,38 +111,38 @@ public:
         
         mAllocatedObjects.insert(index);
         
-        PoolHandler<T> handle(index, this);
+        PoolHandler<T> handler(index, this);
 
         if constexpr (IS_BASE_OF(IPoolable, T))
         {
-            get(handle).onPoolAllocate();
+            get(handler).onPoolAllocate();
         }
 
-        return handle;
+        return handler;
     }
 
-    void registerHandler(PoolHandler<T>& handle)
+    void registerHandler(PoolHandler<T>& handler)
     {
-        CHECK_MSG(handle.isValid(), "Invalid handle!");
-        mHandlers[handle.getIndex()].insert(&handle);
+        CHECK_MSG(handler.isValid(), "Invalid handler!");
+        mHandlers[handler.getIndex()].insert(&handler);
     }
 
-    void unregisterHandler(PoolHandler<T>& handle)
+    void unregisterHandler(PoolHandler<T>& handler)
     {
-        CHECK_MSG(handle.isValid(), "Invalid handle!");
-        mHandlers[handle.getIndex()].erase(&handle);
+        CHECK_MSG(handler.isValid(), "Invalid handler!");
+        mHandlers[handler.getIndex()].erase(&handler);
     }
 
-    T& get(const PoolHandler<T>& handle)
+    T& get(const PoolHandler<T>& handler)
     {
-        CHECK_MSG(handle.isValid(), "Invalid handle!");
-        return mObjects.at(handle.getIndex());
+        CHECK_MSG(handler.isValid(), "Invalid handler!");
+        return mObjects.at(handler.getIndex());
     }
 
-    const T& get(const PoolHandler<T>& handle) const
+    const T& get(const PoolHandler<T>& handler) const
     {
-        CHECK_MSG(handle.isValid(), "Invalid handle!");
-        return mObjects.at(handle.getIndex());
+        CHECK_MSG(handler.isValid(), "Invalid handler!");
+        return mObjects.at(handler.getIndex());
     }
 
     PoolHandler<T> getHandler(u32 index) const
@@ -155,11 +155,11 @@ public:
         return handler;
     }
 
-    void free(PoolHandler<T>& handle)
+    void free(PoolHandler<T>& handler)
     {
-        if(handle.isValid())
+        if(handler.isValid())
         {
-            u32 index = handle.getIndex();
+            u32 index = handler.getIndex();
             FOR_MAP(it, mHandlers[index])
             {
                 (*it)->reset();
@@ -193,6 +193,6 @@ private:
 template<class T>
 T& PoolHandler<T>::get() const
 {
-    CHECK_MSG(isValid(), "Invalid handle!");
+    CHECK_MSG(isValid(), "Invalid handler!");
     return mPool->get(*this);
 }
