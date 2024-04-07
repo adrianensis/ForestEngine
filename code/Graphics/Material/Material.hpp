@@ -212,7 +212,6 @@ public:
     template<class T> T_EXTENDS(T, MaterialRuntime)
     void init(const MaterialData& materialData, u32 id)
     {
-        // OwnerPtr<T> materialRuntime = OwnerPtr<T>::newObject();
         mMaterialRuntime = OwnerPtr<MaterialRuntime>::moveCast(OwnerPtr<T>::newObject());
         internalInit(materialData, id);
     }
