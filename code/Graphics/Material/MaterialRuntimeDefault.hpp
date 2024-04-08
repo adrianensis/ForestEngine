@@ -43,7 +43,7 @@ protected:
 class MaterialPropertiesBlockPBRMetallicRoughness
 {
 public:
-    Vector4 mBaseColor = Vector4(1,1,1,1);
+    Vector4 mBaseColor = Vector4(0,0,0,1);
     alignas(16) Vector3 mMetallic = Vector3(0.2f,0.2f,0.2f);
     alignas(16) Vector3 mRoughness = Vector3(32,0,0);
 };

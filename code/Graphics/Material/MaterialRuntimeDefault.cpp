@@ -183,7 +183,7 @@ void MaterialRuntimePBRMetallicRoughness::fragmentShaderShadingModel(ShaderBuild
     Variable PBRMetallicRoughness;
     mainFunc.body().
     variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "PBRMetallicRoughness", call(mCalculatePBRMetallicRoughness.mName, {})).
-    set(outColor, outColor.mul(PBRMetallicRoughness));
+    set(outColor, outColor.add(PBRMetallicRoughness));
 }
 
 void MaterialRuntimePBRMetallicRoughness::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -217,8 +217,8 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
 
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable materialBaseColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
-    Variable materialSpecular = {getPropertiesBlockStructDefinition().mPrimitiveVariables[1]};
-    Variable materialGlossiness = {getPropertiesBlockStructDefinition().mPrimitiveVariables[2]};
+    Variable materialMetallic = {getPropertiesBlockStructDefinition().mPrimitiveVariables[1]};
+    Variable materialRoughness = {getPropertiesBlockStructDefinition().mPrimitiveVariables[2]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID.mName);
 
     Variable materialBaseColor3;
@@ -256,11 +256,12 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
     func.body().
     variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
     variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
-    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), propertiesBlock.at(materialInstanceId).dot(materialGlossiness).dot("x")})).
-    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", propertiesBlock.at(materialInstanceId).dot(materialSpecular).mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
+    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x")})).
+    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", propertiesBlock.at(materialInstanceId).dot(materialMetallic).mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
     Variable PBRMetallicRoughness;
     func.body().
-    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "PBRMetallicRoughness", ambient.add(diffuse).add(specular)).
+    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "PBRMetallicRoughness", specular).
+    // variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "PBRMetallicRoughness", ambient.add(diffuse).add(specular)).
     ret(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {PBRMetallicRoughness, {"1"}}));
     // ret(propertiesBlock.at(materialInstanceId).dot(materialBaseColor));
 

@@ -71,6 +71,7 @@ void Model::loadGLTFMaterials()
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
             materialData.mIsSkinned = isSkinned();
+            materialData.mAlphaEnabled = false;
             // materialData.mUseColorAsTint = true;
             PoolHandler<Material> newMaterial;
 
@@ -97,8 +98,8 @@ void Model::loadGLTFMaterials()
                 {
                     cgltf_float metallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
                     cgltf_float roughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMetallic = Vector3(metallic, metallic, metallic);
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mRoughness = Vector3(roughness, roughness, roughness);
+                    // materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mMetallic = Vector3(metallic, metallic, metallic);
+                    // materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mRoughness = Vector3(roughness, roughness, roughness);
                 }
 
                 newMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimePBRMetallicRoughness>(materialData);
