@@ -166,6 +166,12 @@ enum class GPUPrimitiveDataType : u32
     BOOL = GL_BOOL
 };
 
+DECLARE_ENUM(GPUCullFaceType,
+    NONE = 0, "NONE",
+    FRONT = GL_FRONT, "FRONT",
+    BACK = GL_BACK, "BACK"
+);
+
 #define TO_U32(x) static_cast<u32>(x)
 
 class GPUInterface : public System
@@ -260,7 +266,7 @@ public:
     void setDepthFunc(u32 depthFunc);
 
     // Face mode
-    void setFaceMode(bool enableCull, u32 cullMode, u32 frontFaceOrientation);
+    void setFaceMode(GPUCullFaceType cullFaceType);
 
     // Shaders
     void enableProgram(u32 programId);

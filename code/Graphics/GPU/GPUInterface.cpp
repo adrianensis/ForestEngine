@@ -422,19 +422,19 @@ void GPUInterface::setDepthFunc(u32 depthFunc)
     glDepthFunc(depthFunc);
 }
 
-void GPUInterface::setFaceMode(bool enableCull, u32 cullMode, u32 frontFaceOrientation)
+void GPUInterface::setFaceMode(GPUCullFaceType cullFaceType)
 {
-    if(enableCull)
+    bool enable = cullFaceType != GPUCullFaceType::NONE;
+    if(enable)
     {
         enableFlag(GL_CULL_FACE);	 // BACK by default
+        glCullFace(static_cast<u32>(cullFaceType));
+        // glFrontFace(GL_CCW); // GL_CCW by default
     }
     else
     {
         disableFlag(GL_CULL_FACE);
     }
-
-    glCullFace(cullMode);
-    glFrontFace(frontFaceOrientation);
 }
 
 void GPUInterface::enableProgram(u32 programId)
