@@ -5,12 +5,11 @@
 #include <vector>
 
 #define DECLARE_ENUM(EnumName, ...) \
-enum class EnumName : u8\
+enum class EnumName : u32\
 {\
     /* Notice extra MAX enum token! */ \
     FOR_EACH_ODD(ADD_TRAIL_COMMA, __VA_ARGS__) \
-    MAX,\
-    UNKNOWN\
+    MAX\
 };\
 template <>\
 inline const std::string_view& EnumsManager::getEnumNameFromTemplate<EnumName>() { static std::string_view name = #EnumName; return name; } \
