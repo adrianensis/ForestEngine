@@ -41,6 +41,8 @@ void Material::enable() const
             textureUnit++;
         }
     }
+
+    GET_SYSTEM(GPUInterface).setFaceMode(mMaterialData.mCullFaceType);
 }
 
 void Material::disable() const

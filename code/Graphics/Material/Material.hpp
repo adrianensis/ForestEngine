@@ -171,6 +171,7 @@ public:
 	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
+    GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;
     bool mIsFont = false;
