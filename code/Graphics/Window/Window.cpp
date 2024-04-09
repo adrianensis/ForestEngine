@@ -47,7 +47,6 @@ void Window::init()
 		GET_SYSTEM(GPUInterface).setClearColor(Vector3(0,0.3,0.3));
 		GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
 		GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
-        // GET_SYSTEM(GPUInterface).setFaceMode(true, GL_BACK, GL_CCW);
 
 		GET_SYSTEM(GPUInterface).enableFlag(GL_BLEND);
 		GET_SYSTEM(GPUInterface).setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
