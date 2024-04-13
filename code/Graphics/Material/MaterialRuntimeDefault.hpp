@@ -25,7 +25,6 @@ protected:
 
     virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
     virtual void fragmentShaderTexture(ShaderBuilder& shaderBuilder) const;
-    virtual void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
     virtual void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
 
     virtual void generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
@@ -54,7 +53,7 @@ protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
 
     virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const override;
-    virtual void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const override;
+    virtual void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
 
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
 

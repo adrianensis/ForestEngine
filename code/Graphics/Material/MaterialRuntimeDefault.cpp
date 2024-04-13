@@ -216,11 +216,6 @@ void MaterialRuntimeDefault::fragmentShaderTexture(ShaderBuilder& shaderBuilder)
     }
 }
 
-void MaterialRuntimeDefault::fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const
-{
-
-}
-
 void MaterialRuntimeDefault::fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const
 {
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
@@ -460,9 +455,6 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimePBRMetallicRo
 
     return propertiesBlock;
 }
-
-using namespace ShaderBuilderNodes;
-using namespace ShaderBuilderNodes::Expressions;
 
 void MaterialRuntimePBRMetallicRoughness::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
