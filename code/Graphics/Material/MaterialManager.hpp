@@ -23,7 +23,6 @@ public:
         return handler;
     }
 
-    PoolHandler<Material> createMaterialBase(const MaterialData& materialData);
     MaterialInstance createMaterialInstance(const PoolHandler<Material>& handler);
     void removeMaterial(PoolHandler<Material>& material);
     const Material& getMaterial(const PoolHandler<Material>& handler) const;

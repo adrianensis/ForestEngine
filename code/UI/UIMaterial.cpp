@@ -19,7 +19,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimeUI::generateM
 
 void MaterialRuntimeUI::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
 {
-    MaterialRuntime::fragmentShaderBaseColor(shaderBuilder);
+    MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
 
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID.mName);
@@ -38,7 +38,7 @@ void MaterialRuntimeUI::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) co
 
 void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
 {
-    MaterialRuntime::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
+    MaterialRuntimeDefault::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
 
     auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
 

@@ -31,12 +31,6 @@ void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
     mTextures.free(texture);
 }
 
-PoolHandler<Material> MaterialManager::createMaterialBase(const MaterialData& materialData)
-{
-    PoolHandler<Material> handler = createMaterial<MaterialRuntime>(materialData);
-    return handler;
-}
-
 void MaterialManager::postMaterialCreated(const PoolHandler<Material>& handler)
 {
     GET_SYSTEM(RenderSharedContext).initMaterialInstancePropertiesSharedBuffer(handler);

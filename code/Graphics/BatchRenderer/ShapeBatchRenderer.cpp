@@ -8,6 +8,7 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Material/MaterialRuntimeDefault.hpp"
 
 void ShapeBatchRenderer::terminate()
 {
@@ -52,7 +53,7 @@ void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
     materialData.mUseNormals = false;
     materialData.mUseModelMatrix = false;
     materialData.mUseVertexColor = true;
-    PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterialBase(materialData);
+    PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData);
 
     mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersContainer, {}, lineMaterial.get());
 

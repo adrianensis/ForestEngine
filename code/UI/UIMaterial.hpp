@@ -12,7 +12,7 @@ public:
     alignas(16) i32 mDepth = 0;
 };
 
-class MaterialRuntimeUI : public MaterialRuntime
+class MaterialRuntimeUI : public MaterialRuntimeDefault
 {
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
