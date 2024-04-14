@@ -22,7 +22,7 @@ private:
     bool mIsValid = false;
 public:
     u32 getSlot() const { return mSlot; }
-    bool getIsValid() const { return mIsValid; }
+    bool isValid() const { return mIsValid; }
 };
 
 class SlotsManager
@@ -56,13 +56,13 @@ public:
             }
         }
 
-        CHECK_MSG(slot.getIsValid(), "Invalid slot!");
+        CHECK_MSG(slot.isValid(), "Invalid slot!");
         return slot;
     }
 
     void freeSlot(Slot& slot)
     {
-        CHECK_MSG(slot.getIsValid(), "Invalid slot!");
+        CHECK_MSG(slot.isValid(), "Invalid slot!");
         mAvailableSlots[slot.getSlot()] = true;
         slot.reset();
     }

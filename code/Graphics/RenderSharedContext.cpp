@@ -67,7 +67,7 @@ u32 RenderSharedContext::requestSharedBufferBindingPoint(GPUBufferType gpuShared
 
 void RenderSharedContext::setInstanceMatrix(const Slot& slot, const Matrix4& matrix)
 {
-    CHECK_MSG(slot.getIsValid(), "Invalid slot!");
+    CHECK_MSG(slot.isValid(), "Invalid slot!");
     mMatrices.at(slot.getSlot()) = matrix;
 }
 
