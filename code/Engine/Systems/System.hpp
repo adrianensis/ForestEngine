@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Std.hpp"
-#include "Core/Object/Singleton.hpp"
+#include "Core/Singleton.hpp"
 #include "Engine/Systems/SystemComponent.hpp"
 
 class System: public ObjectBase

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Std.hpp"
-#include "Core/Object/ObjectBase.hpp"
+#include "Engine/Object/ObjectBase.hpp"
 
 class SystemComponent: public ObjectBase
 {

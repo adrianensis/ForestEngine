@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Core/Object/Singleton.hpp"
+#include "Core/Singleton.hpp"
 
 class UIStyle
 {
