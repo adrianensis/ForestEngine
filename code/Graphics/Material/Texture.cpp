@@ -1,5 +1,5 @@
 #include "Graphics/Material/Texture.hpp"
-#include "Assets/Image/ImageUtils.hpp"
+#include "Engine/Assets/Image/ImageUtils.hpp"
 
 void Texture::enable(u32 textureUnit) const
 {

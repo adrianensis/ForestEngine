@@ -1,5 +1,5 @@
-#include "Assets/Font/Font.hpp"
-#include "Assets/Image/ImageUtils.hpp"
+#include "Engine/Assets/Font/Font.hpp"
+#include "Engine/Assets/Image/ImageUtils.hpp"
 
 void FontsLibrary::init()
 {
