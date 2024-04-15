@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/Material/MaterialRuntime.hpp"
+#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"

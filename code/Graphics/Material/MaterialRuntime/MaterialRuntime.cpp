@@ -1,4 +1,4 @@
-#include "Graphics/Material/MaterialRuntime.hpp"
+#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 

@@ -8,7 +8,7 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
 
 void ShapeBatchRenderer::terminate()
 {

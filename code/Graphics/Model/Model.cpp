@@ -1,7 +1,7 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/MaterialRuntime/MaterialRuntimePBR.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
 #include "Engine/Assets/Config/Paths.hpp"
@@ -103,7 +103,7 @@ void Model::loadGLTFMaterials()
                     // materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockPBRMetallicRoughness>().mRoughness = Vector3(roughness, roughness, roughness);
                 }
 
-                newMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimePBRMetallicRoughness>(materialData);
+                newMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimePBR>(materialData);
             }
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)

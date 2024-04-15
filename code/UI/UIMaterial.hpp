@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Material/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
 #include "Graphics/Material/Material.hpp"
 
 class MaterialPropertiesBlockUI
