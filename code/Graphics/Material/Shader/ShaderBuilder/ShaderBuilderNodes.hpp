@@ -174,7 +174,7 @@ namespace ShaderBuilderNodes
             Unary(const Variable& var, const std::string& op) : mOp(op), mVariable(var), mFront(false) {};
             std::vector<std::string> toLines(u16 indent) const override;
 
-            std::string mOp = "??";
+            std::string mOp;
             Variable mVariable;
             bool mFront = true;
         };
@@ -185,7 +185,7 @@ namespace ShaderBuilderNodes
             Binary(const Variable& a, const std::string& op, const Variable& b) : mOp(op), mVariableA(a), mVariableB(b) {};
             std::vector<std::string> toLines(u16 indent) const override;
 
-            std::string mOp = "??";
+            std::string mOp;
             Variable mVariableA;
             Variable mVariableB;
         };
@@ -295,7 +295,7 @@ namespace ShaderBuilderNodes
         std::vector<std::string> toLines(u16 indent) const override;
 
         GPUDataType mType;
-        std::string mName = "??";
+        std::string mName;
         std::vector<Variable> mParameters;
         BlockStatement mBlockStatement;
     };
