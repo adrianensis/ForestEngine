@@ -21,9 +21,9 @@ void MaterialRuntimeUI::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) co
 {
     MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
 
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     Variable instanceColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
     
     Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
@@ -40,16 +40,16 @@ void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuild
 {
     MaterialRuntimeDefault::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
 
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
+    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain);
 
-    auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
+    auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
 
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable textureRegionLeftTop = {getPropertiesBlockStructDefinition().mPrimitiveVariables[1]};
     Variable textureRegionSize = {getPropertiesBlockStructDefinition().mPrimitiveVariables[2]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
     mainFunc.body().
-    set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2.mName,
+    set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2,
     {
         outTextureCoord.dot("x").mul(propertiesBlock.at(materialInstanceId).dot(textureRegionSize).dot("x")).add(propertiesBlock.at(materialInstanceId).dot(textureRegionLeftTop).dot("x")),
         outTextureCoord.dot("y").mul(propertiesBlock.at(materialInstanceId).dot(textureRegionSize).dot("y")).add(propertiesBlock.at(materialInstanceId).dot(textureRegionLeftTop).dot("y"))
@@ -58,13 +58,13 @@ void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuild
 
 void MaterialRuntimeUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
+    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain);
     
     Variable finalPositon = shaderBuilder.getVariableFromCache("finalPositon");
 
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable depth = {getPropertiesBlockStructDefinition().mPrimitiveVariables[3]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
     if(mMaterial->getMaterialData().mUseDepth)
     {
         mainFunc.body().

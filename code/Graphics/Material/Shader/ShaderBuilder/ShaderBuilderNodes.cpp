@@ -21,7 +21,7 @@ namespace ShaderBuilderNodes
 
         FOR_LIST(it, mStructDefinition.mPrimitiveVariables)
         {
-            Variable var(it->mGPUDataType.mName, it->mName);
+            Variable var(it->mGPUDataType, it->mName);
             auto varCode = var.toLines(indent + 1);
             code.insert(code.end(), varCode.begin(), varCode.end());
         }
@@ -35,7 +35,7 @@ namespace ShaderBuilderNodes
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
-        return {getIndent(indent) + mType + " " + mName + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + mType.mName + " " + mName + arrayStr + valueStr + ";"};
     }
 
     std::vector<std::string> Attribute::toLines(u16 indent) const
@@ -45,7 +45,7 @@ namespace ShaderBuilderNodes
         std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ") ";
         std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : std::string(EnumsManager::toString(mGPUInterpolation)) + " ";
         std::string storageStr = std::string(EnumsManager::toString(mGPUStorage)) + " ";
-        return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType + " " + mName + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType.mName + " " + mName + arrayStr + valueStr + ";"};
     }
     
     std::vector<std::string> SharedBuffer::toLines(u16 indent) const
@@ -217,7 +217,7 @@ namespace ShaderBuilderNodes
         
         FOR_ARRAY(i, mParameters)
         {
-            paramsStr += "in " + mParameters[i].mType + " " + mParameters[i].mName;
+            paramsStr += "in " + mParameters[i].mType.mName + " " + mParameters[i].mName;
 
             if(i < (i32)mParameters.size() - 1)
             {
@@ -298,6 +298,26 @@ namespace ShaderBuilderNodes
         return mNullFunctionDefinition;
     }
 
+    const Struct& Program::getStruct(const Struct& structType) const
+    {
+        return getStruct(structType.mStructDefinition.mName);
+    }
+
+    const Attribute& Program::getAttribute(const Attribute& attribute) const
+    {
+        return getAttribute(attribute.mName);
+    }
+
+    const SharedBuffer& Program::getSharedBuffer(const SharedBuffer& sharedBuffer) const
+    {
+        return getSharedBuffer(sharedBuffer.mGPUSharedBufferData.mInstanceName);
+    }
+
+    FunctionDefinition& Program::getFunctionDefinition(const GPUFunctionDefinition& functionDefinition)
+    {
+        return getFunctionDefinition(functionDefinition.mName);
+    }
+
     std::vector<std::string> Program::toLines(u16 indent) const
     {
         std::vector<std::string> code;
@@ -328,6 +348,9 @@ namespace ShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
+        auto statementCode = mMainFunctionDefinition.toLines(indent);
+        code.insert(code.end(), statementCode.begin(), statementCode.end());
+
         return code;
     }
 
@@ -337,6 +360,7 @@ namespace ShaderBuilderNodes
         FOR_LIST(it, mAttributes) { it->terminate(); }
         FOR_LIST(it, mSharedBuffers) { it->terminate(); }
         FOR_LIST(it, mFunctionDefinitions) { it->terminate(); }
+        mMainFunctionDefinition.terminate();
     }
 
 }

@@ -5,28 +5,25 @@ using namespace ShaderBuilderNodes::Expressions;
 
 void MaterialRuntimeDefault::vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    
     Variable boneMatrix;
-    mainFunc.body().
-    variable(boneMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "boneMatrix", call(GPUBuiltIn::Functions::mCalculateBoneTransform.mName, {}));
+    shaderBuilder.getMain().
+    variable(boneMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4, "boneMatrix", call(GPUBuiltIn::Functions::mCalculateBoneTransform, {}));
 
     shaderBuilder.setVariableInCache(boneMatrix);
 }
 
 void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& position = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mPosition.mName);
+    auto& position = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mPosition);
 
     Variable finalPositon;
-    mainFunc.body().
-    variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {position, {"1.0f"}}));
+    shaderBuilder.getMain().
+    variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4, {position, {"1.0f"}}));
     
     if(mMaterial->getMaterialData().mIsSkinned)
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
-        mainFunc.body().
+        shaderBuilder.getMain().
         set(finalPositon, boneMatrix.mul(finalPositon));
     }
 
@@ -35,8 +32,8 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& 
         Variable modelMatrices;
         auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
         modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-        auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
-        mainFunc.body().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
+        auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
+        shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
     }
 
     shaderBuilder.setVariableInCache(finalPositon);
@@ -44,11 +41,11 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& 
     vertexShaderCalculatePositionOutputCustom(shaderBuilder);
 
     Variable PVMatrix = shaderBuilder.getVariableFromCache("PV_Matrix");
-    mainFunc.body().
+    shaderBuilder.getMain().
     set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon));
 
-    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition.mName);
-    mainFunc.body().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {finalPositon}));
+    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
+    shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
 }
 
 void MaterialRuntimeDefault::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
@@ -58,19 +55,18 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutputCustom(ShaderBui
 
 void MaterialRuntimeDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& normal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mNormal.mName);
+    auto& normal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mNormal);
 
     Variable finalNormal;
-    mainFunc.body().
-    variable(finalNormal, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "finalNormal", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {normal}));
+    shaderBuilder.getMain().
+    variable(finalNormal, GPUBuiltIn::PrimitiveTypes::mVector3, "finalNormal", call(GPUBuiltIn::PrimitiveTypes::mVector3, {normal}));
 
     if(mMaterial->getMaterialData().mIsSkinned)
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
         Variable transformedNormal;
-        mainFunc.body().
-        variable(transformedNormal, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "transformedNormal", boneMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {finalNormal, {"1.0f"}}))).
+        shaderBuilder.getMain().
+        variable(transformedNormal, GPUBuiltIn::PrimitiveTypes::mVector4, "transformedNormal", boneMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4, {finalNormal, {"1.0f"}}))).
         set(finalNormal, transformedNormal.dot("xyz"));
     }
 
@@ -85,92 +81,89 @@ void MaterialRuntimeDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& sh
     //         As long as we avoid doing distortions (scaling one axis differently than the rest) we are fine with the approach I presented above. 
         
     //     */
-    //     mainFunc.body().
+    //     shaderBuilder.getMain().
     //     set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(finalNormal));
     // }
     // else
     // {
-        auto& outNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal.mName);
-        mainFunc.body().
+        auto& outNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal);
+        shaderBuilder.getMain().
         set(outNormal, finalNormal);
     // }
 }
 
 void MaterialRuntimeDefault::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
 
-    auto& textureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord.mName);
-    auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
-    mainFunc.body().
+    auto& textureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord);
+    auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+    shaderBuilder.getMain().
     set(outTextureCoord, textureCoord);
 }
 
 void MaterialRuntimeDefault::vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& color = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mColor.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
-    mainFunc.body().
+    auto& color = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mColor);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor);
+    shaderBuilder.getMain().
     set(outColor, color);
 }
 
 void MaterialRuntimeDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID.mName);
-    auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID.mName);
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID.mName);
-    auto& outInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID.mName);
-    auto& outObjectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mObjectID.mName);
-    auto& outMaterialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID.mName);
+    auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID);
+    auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
+    auto& outInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mInstanceID);
+    auto& outObjectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mObjectID);
+    auto& outMaterialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
 
     if(!instanceId.isEmpty())
     {
-        mainFunc.body().
+        shaderBuilder.getMain().
         set(outInstanceId, instanceId);
     }
     if(!objectId.isEmpty())
     {
-        mainFunc.body().
+        shaderBuilder.getMain().
         set(outObjectId, objectId);
     }
     if(!materialInstanceId.isEmpty())
     {
-        mainFunc.body().
+        shaderBuilder.getMain().
         set(outMaterialInstanceId, materialInstanceId);
     }
 }
 
 void MaterialRuntimeDefault::vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
     auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
     Variable projectionMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     Variable viewMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
     Variable PVMatrix;
-    mainFunc.body().variable(PVMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "PV_Matrix", projectionMatrix.mul(viewMatrix));
+
+    shaderBuilder.getMain().
+    variable(PVMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4, "PV_Matrix", projectionMatrix.mul(viewMatrix));
 
     shaderBuilder.setVariableInCache(PVMatrix);
 }
 
 void MaterialRuntimeDefault::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     
     Variable baseColor;
-    mainFunc.body().
-    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "baseColor", call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {{"0.0"}, {"0.0"}, {"0.0"}, {"1.0"}}));
+    shaderBuilder.getMain().
+    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColor", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"1.0"}}));
 
     if(mMaterial->getMaterialData().mUseVertexColor)
     {
-        mainFunc.body().
+        shaderBuilder.getMain().
         set(baseColor, inColor);
     }
 
-    mainFunc.body().
+    shaderBuilder.getMain().
     set(outColor, baseColor);
 
     shaderBuilder.setVariableInCache(baseColor);
@@ -178,12 +171,11 @@ void MaterialRuntimeDefault::fragmentShaderBaseColor(ShaderBuilder& shaderBuilde
 
 void MaterialRuntimeDefault::fragmentShaderTexture(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
-    auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))).mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+    auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     
-    mainFunc.body().
+    shaderBuilder.getMain().
     set(outColor, call("texture2D", {sampler, inTextureCoord}));
 
     if(mMaterial->getMaterialData().mAlphaEnabled)
@@ -197,17 +189,17 @@ void MaterialRuntimeDefault::fragmentShaderTexture(ShaderBuilder& shaderBuilder)
         
         if(mMaterial->getMaterialData().mIsFont)
         {
-            mainFunc.body().
+            shaderBuilder.getMain().
             set(outColor.dot("a"), outColor.dot("r"));
             
-            mainFunc.body().
+            shaderBuilder.getMain().
             set(outColor.dot("r"), baseColor.dot("r")).
             set(outColor.dot("g"), baseColor.dot("g")).
             set(outColor.dot("b"), baseColor.dot("b"));
         }
         else
         {
-            mainFunc.body().
+            shaderBuilder.getMain().
             set(outColor.dot("r"), outColor.dot("r").add(baseColor.dot("r"))).
             set(outColor.dot("g"), outColor.dot("g").add(baseColor.dot("g"))).
             set(outColor.dot("b"), outColor.dot("b").add(baseColor.dot("b"))).
@@ -218,10 +210,9 @@ void MaterialRuntimeDefault::fragmentShaderTexture(ShaderBuilder& shaderBuilder)
 
 void MaterialRuntimeDefault::fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     
-    mainFunc.body().
+    shaderBuilder.getMain().
     ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
         line("discard").
     end();
@@ -359,8 +350,6 @@ void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, co
 {
     registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
-    auto& mainFunc = shaderBuilder.get().function(GPUBuiltIn::Functions::mMain);
-
     vertexShaderCalculateProjectionViewMatrix(shaderBuilder);
 
     if(mMaterial->getMaterialData().mIsSkinned)
@@ -391,9 +380,7 @@ void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, co
 void MaterialRuntimeDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-
-    auto& mainFunc = shaderBuilder.get().function(GPUBuiltIn::Functions::mMain);
-
+    
     fragmentShaderBaseColor(shaderBuilder);
 
     if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
@@ -413,17 +400,17 @@ void MaterialRuntimeDefault::registerFunctionCalculateBoneTransform(ShaderBuilde
 {
     FunctionDefinition func(GPUBuiltIn::Functions::mCalculateBoneTransform);
     
-    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs.mName);
-    auto& bonesWeights = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesWeights.mName);
-    auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBones.mName);
-    auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBoneInfluence.mName);
+    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs);
+    auto& bonesWeights = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesWeights);
+    auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBones);
+    auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBoneInfluence);
     auto& bonesMatricesblock = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
     Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
     Variable currentBoneTransform;
     Variable currentBoneTransformMulWeight;
     Variable finalBoneTransform;
     func.body().
-    variable(finalBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "finalBoneTransform", call(GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, {{"0.0f"}})).
+    variable(finalBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4, "finalBoneTransform", call(GPUBuiltIn::PrimitiveTypes::mMatrix4, {{"0.0f"}})).
     forBlock("i", "<", MAX_BONE_INFLUENCE, "++").
         ifBlock(bonesIDs.at("i"), "==", {"-1"}).
             line("continue").
@@ -431,8 +418,8 @@ void MaterialRuntimeDefault::registerFunctionCalculateBoneTransform(ShaderBuilde
         ifBlock(bonesIDs.at("i"), ">=", MAX_BONES).
             line("break").
         end().
-        variable(currentBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "currentBoneTransform", bonesTransform.at(bonesIDs.at("i"))).
-        variable(currentBoneTransformMulWeight, GPUBuiltIn::PrimitiveTypes::mMatrix4.mName, "currentBoneTransformMulWeight", currentBoneTransform.mul(bonesWeights.at("i"))).
+        variable(currentBoneTransform, GPUBuiltIn::PrimitiveTypes::mMatrix4, "currentBoneTransform", bonesTransform.at(bonesIDs.at("i"))).
+        variable(currentBoneTransformMulWeight, GPUBuiltIn::PrimitiveTypes::mMatrix4, "currentBoneTransformMulWeight", currentBoneTransform.mul(bonesWeights.at("i"))).
         set(finalBoneTransform, finalBoneTransform.add(currentBoneTransformMulWeight)).
     end();
     
@@ -469,30 +456,28 @@ void MaterialRuntimePBRMetallicRoughness::fragmentShaderBaseColor(ShaderBuilder&
 {
     MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
 
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     Variable lightingModel = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
     
     Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
 
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable instanceBaseColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
-    mainFunc.body().
+    shaderBuilder.getMain().
     set(baseColor, propertiesBlock.at(materialInstanceId).dot(instanceBaseColor));
 
-    mainFunc.body().
+    shaderBuilder.getMain().
     set(outColor, baseColor);
 }
 
 void MaterialRuntimePBRMetallicRoughness::fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const
 {
-    auto& mainFunc = shaderBuilder.get().getFunctionDefinition(GPUBuiltIn::Functions::mMain.mName);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor.mName);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
 
     Variable PBRMetallicRoughness;
-    mainFunc.body().
-    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "PBRMetallicRoughness", call(mCalculatePBRMetallicRoughness.mName, {})).
+    shaderBuilder.getMain().
+    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBRMetallicRoughness, {})).
     set(outColor, outColor.add(PBRMetallicRoughness));
 }
 
@@ -513,8 +498,8 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
 
     auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
     Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
-    auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal.mName);
-    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition.mName);
+    auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
+    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
     auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData.mInstanceName);    
     Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
     Variable lightPos = {GPUBuiltIn::StructDefinitions::mLight.mPrimitiveVariables[0]};
@@ -529,11 +514,11 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
     Variable materialBaseColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
     Variable materialMetallic = {getPropertiesBlockStructDefinition().mPrimitiveVariables[1]};
     Variable materialRoughness = {getPropertiesBlockStructDefinition().mPrimitiveVariables[2]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID.mName);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
 
     Variable materialBaseColor3;
     func.body().
-    variable(materialBaseColor3, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "materialBaseColor3", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {
+    variable(materialBaseColor3, GPUBuiltIn::PrimitiveTypes::mVector3, "materialBaseColor3", call(GPUBuiltIn::PrimitiveTypes::mVector3, {
         propertiesBlock.at(materialInstanceId).dot(materialBaseColor).dot("r"),
         propertiesBlock.at(materialInstanceId).dot(materialBaseColor).dot("g"),
         propertiesBlock.at(materialInstanceId).dot(materialBaseColor).dot("b")
@@ -541,10 +526,10 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
 
     Variable ambient;
     func.body().
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "ambient", materialBaseColor3.mul(lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightAmbient))));
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3, "ambient", materialBaseColor3.mul(lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightAmbient))));
     Variable norm;
     func.body().
-    variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3.mName, {{"0.0"}, {"0.0"}, {"0.0"}}));
+    variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
     if(mMaterial->getMaterialData().mUseNormals)
     {
@@ -556,9 +541,9 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
     Variable diffuseValue;
     Variable diffuse;
     func.body().
-    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
-    variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
-    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "diffuse", materialBaseColor3.mul(lights.at("0").dot(lightSpecularIntensity).mul(diffuseValue.mul(lights.at("0").dot(lightDiffuse)))));
+    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
+    variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
+    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse", materialBaseColor3.mul(lights.at("0").dot(lightSpecularIntensity).mul(diffuseValue.mul(lights.at("0").dot(lightDiffuse)))));
     Variable viewDir;
     Variable reflectDir;
     Variable specularValue;
@@ -567,30 +552,30 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
     Variable roughness;
     Variable metallic;
     func.body().
-    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x")).
-    variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic).dot("x"));
+    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x")).
+    variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic).dot("x"));
     if(mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
     {
         auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS))).mName);
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
 
         Variable metallicRoughnessPack;
         func.body().
-        variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "metallicRoughnessPack", call("texture2D", {samplerMetallicRoughness, inTextureCoord})).
+        variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture2D", {samplerMetallicRoughness, inTextureCoord})).
         set(roughness, metallicRoughnessPack.dot("b")).
         set(metallic, metallicRoughnessPack.dot("g"));
     }
 
     func.body().
-    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
-    variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
-    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), roughness})).
-    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", metallic.mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
+    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
+    variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3, "reflectDir", call("reflect", {viewDir.neg(), norm})).
+    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), roughness})).
+    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3, "specular", metallic.mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
     Variable PBRMetallicRoughness;
     func.body().
-    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "PBRMetallicRoughness", specular).
-    // variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "PBRMetallicRoughness", ambient.add(diffuse).add(specular)).
-    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4.mName, {PBRMetallicRoughness, {"1"}}));
+    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3, "PBRMetallicRoughness", specular).
+    // variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3, "PBRMetallicRoughness", ambient.add(diffuse).add(specular)).
+    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4, {PBRMetallicRoughness, {"1"}}));
     // ret(propertiesBlock.at(materialInstanceId).dot(materialBaseColor));
 
     shaderBuilder.get().function(func);

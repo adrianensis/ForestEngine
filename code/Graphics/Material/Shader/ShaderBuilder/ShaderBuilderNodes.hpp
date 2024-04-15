@@ -68,19 +68,19 @@ namespace ShaderBuilderNodes
     {
     public:
         Variable() = default;
-        Variable(const VariableData& VariableData) : mType(VariableData.mGPUDataType.mName), mName(VariableData.mName), mValue(VariableData.mValue), mArraySize(VariableData.mArraySize) {};
-        Variable(const VariableData& VariableData, const std::string& value) : mType(VariableData.mGPUDataType.mName), mName(VariableData.mName), mValue(value), mArraySize(VariableData.mArraySize) {};
-        Variable(const VariableData& VariableData, const Variable& value) : mType(VariableData.mGPUDataType.mName), mName(VariableData.mName), mValue(value.getNameOrValue()), mArraySize(VariableData.mArraySize) {};
+        Variable(const VariableData& VariableData) : mType(VariableData.mGPUDataType), mName(VariableData.mName), mValue(VariableData.mValue), mArraySize(VariableData.mArraySize) {};
+        Variable(const VariableData& VariableData, const std::string& value) : mType(VariableData.mGPUDataType), mName(VariableData.mName), mValue(value), mArraySize(VariableData.mArraySize) {};
+        Variable(const VariableData& VariableData, const Variable& value) : mType(VariableData.mGPUDataType), mName(VariableData.mName), mValue(value.getNameOrValue()), mArraySize(VariableData.mArraySize) {};
         Variable(const std::string& value) : mValue(value) {};
-        Variable(const std::string& type, const std::string& name) : mType(type), mName(name) {};
-        Variable(const std::string& type, const std::string& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
-        Variable(const std::string& type, const std::string& name, const Variable& value) : Variable(type, name, value.getNameOrValue()) {};
-        Variable(const std::string& type, const std::string& name, const std::string& value, const std::string& arraySize) : mType(type), mName(name), mValue(value), mArraySize(arraySize) {};
-        Variable(const std::string& type, const std::string& name, const Variable& value, const Variable& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize.getNameOrValue()) {};
-        Variable(const std::string& type, const std::string& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
-        Variable(const std::string& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
-        Variable(const GPUVariableDefinitionData& gpuVariableData) : mType(gpuVariableData.mGPUDataType.mName), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize){};
-        Variable(const GPUStructDefinition::GPUStructVariable& gpuStructVariableData) : mType(gpuStructVariableData.mGPUDataType.mName), mName(gpuStructVariableData.mName) {};
+        Variable(const GPUDataType& type, const std::string& name) : mType(type), mName(name) {};
+        Variable(const GPUDataType& type, const std::string& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
+        Variable(const GPUDataType& type, const std::string& name, const Variable& value) : Variable(type, name, value.getNameOrValue()) {};
+        Variable(const GPUDataType& type, const std::string& name, const std::string& value, const std::string& arraySize) : mType(type), mName(name), mValue(value), mArraySize(arraySize) {};
+        Variable(const GPUDataType& type, const std::string& name, const Variable& value, const Variable& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize.getNameOrValue()) {};
+        Variable(const GPUDataType& type, const std::string& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
+        Variable(const GPUDataType& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
+        Variable(const GPUVariableDefinitionData& gpuVariableData) : mType(gpuVariableData.mGPUDataType), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize){};
+        Variable(const GPUStructDefinition::GPUStructVariable& gpuStructVariableData) : mType(gpuStructVariableData.mGPUDataType), mName(gpuStructVariableData.mName) {};
         std::vector<std::string> toLines(u16 indent) const override;
 
         const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
@@ -100,7 +100,7 @@ namespace ShaderBuilderNodes
         Variable notEq(const Variable& other) const { return binOp(other, "!="); }
         Variable neg() const { return Variable("-" + getNameOrValue()); }
 
-        std::string mType = "";
+        GPUDataType mType;
         std::string mName = "";
         std::string mValue = "";
         std::string mArraySize = "";
@@ -122,6 +122,14 @@ namespace ShaderBuilderNodes
         }
         callStr += ")";
         return Variable(callStr);
+    }
+    inline static Variable call(const GPUDataType& dataType, const std::vector<Variable>& params)
+    {
+        return call(dataType.mName, params);
+    }
+    inline static Variable call(const GPUFunctionDefinition& funcDef, const std::vector<Variable>& params)
+    {
+        return call(funcDef.mName, params);
     }
     inline static Variable paren(const Variable& variable)
     {
@@ -252,7 +260,7 @@ namespace ShaderBuilderNodes
     {
     public:
         ForStatement(const std::string& varName, const std::string& op, const Variable& conditionVar, const std::string& advanceOp) :
-        mVariable("int", varName, "0"), mConditionVariable(conditionVar), mContinueExpression(mVariable, op, mConditionVariable),
+        mVariable(GPUBuiltIn::PrimitiveTypes::mInt, varName, "0"), mConditionVariable(conditionVar), mContinueExpression(mVariable, op, mConditionVariable),
         mAdvanceExpression(mVariable, advanceOp) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
@@ -307,15 +315,27 @@ namespace ShaderBuilderNodes
         Struct& structType(const Struct& structType);
         Attribute& attribute(const Attribute& attribute);
         SharedBuffer& sharedBuffer(const SharedBuffer& sharedBuffer);
+        FunctionDefinition& mainFunction(auto&& ...args)
+        {
+            return mMainFunctionDefinition = FunctionDefinition(args...);
+        }
         FunctionDefinition& function(auto&& ...args)
         {
             return mFunctionDefinitions.emplace_back(args...);
         }
 
         const Struct& getStruct(const std::string_view& structName) const;
+        const Struct& getStruct(const Struct& structType) const;
         const Attribute& getAttribute(const std::string_view& attributeName) const;
+        const Attribute& getAttribute(const Attribute& attribute) const;
         const SharedBuffer& getSharedBuffer(const std::string_view& sharedBufferName) const;
+        const SharedBuffer& getSharedBuffer(const SharedBuffer& sharedBuffer) const;
         FunctionDefinition& getFunctionDefinition(const std::string_view& functionDefinitionName);
+        FunctionDefinition& getFunctionDefinition(const GPUFunctionDefinition& functionDefinition);
+        FunctionDefinition& getMainFunctionDefinition()
+        {
+            return mMainFunctionDefinition;
+        }
 
         std::vector<std::string> toLines(u16 indent) const;
         void terminate();
@@ -324,6 +344,7 @@ namespace ShaderBuilderNodes
         std::vector<Attribute> mAttributes;
         std::vector<SharedBuffer> mSharedBuffers;
         std::vector<FunctionDefinition> mFunctionDefinitions;
+        FunctionDefinition mMainFunctionDefinition = GPUFunctionDefinition{};
         u16 mVersion = 430;
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};

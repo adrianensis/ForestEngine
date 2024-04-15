@@ -39,7 +39,7 @@ void Editor::firstUpdate()
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	// importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
+	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
 	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
@@ -47,12 +47,12 @@ void Editor::firstUpdate()
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    // createUI();
+    createUI();
     mousePick();
 }
 

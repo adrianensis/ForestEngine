@@ -1,5 +1,16 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
+ShaderBuilder::ShaderBuilder()
+{
+    auto& mainFunc = mProgram.mainFunction(GPUBuiltIn::Functions::mMain);
+}
+
+ShaderBuilderNodes::BlockStatement& ShaderBuilder::getMain()
+{
+    auto& mainFunc = mProgram.getMainFunctionDefinition();
+    return mainFunc.body();
+}
+
 void ShaderBuilder::setVariableInCache(ShaderBuilderNodes::Variable& variable)
 {
     CHECK_MSG(!mVariablesCache.contains(variable.getNameOrValue()), "Variable already found in cache!: " + variable.getNameOrValue());

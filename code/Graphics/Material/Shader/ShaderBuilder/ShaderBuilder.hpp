@@ -9,8 +9,9 @@
 class ShaderBuilder
 {
 public:
-    ShaderBuilder() = default;
+    ShaderBuilder();
     ShaderBuilderNodes::Program& get() { return mProgram; }
+    ShaderBuilderNodes::BlockStatement& getMain();
     std::string getCode() const;
 
     void setVariableInCache(ShaderBuilderNodes::Variable& variable);
