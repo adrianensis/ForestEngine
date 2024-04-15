@@ -25,7 +25,7 @@ protected:
 
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
 
-    void registerFunctionCalculatePBRSpecularGlossiness(ShaderBuilder& shaderBuilder) const;
+    void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;
 
 protected:
     inline static const GPUFunctionDefinition mCalculatePBR

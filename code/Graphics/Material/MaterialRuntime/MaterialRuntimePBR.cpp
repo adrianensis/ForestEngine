@@ -61,12 +61,12 @@ void MaterialRuntimePBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder
     
     if(mMaterial->getMaterialData().mReceiveLight)
     {
-        registerFunctionCalculatePBRSpecularGlossiness(shaderBuilder);
+        registerFunctionCalculatePBR(shaderBuilder);
     }
 }
 
 // TOOD: Make actul PBRMetallicRoughness, I'm just emulating Phong with PBRMetallicRoughness parameters for now.
-void MaterialRuntimePBR::registerFunctionCalculatePBRSpecularGlossiness(ShaderBuilder& shaderBuilder) const
+void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
 {
     FunctionDefinition func(mCalculatePBR);
 
