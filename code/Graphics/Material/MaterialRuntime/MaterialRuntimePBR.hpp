@@ -4,7 +4,7 @@
 
 // PBR METALLIC
 
-class MaterialPropertiesBlockPBRMetallicRoughness
+class MetallicRoughness
 {
 public:
     Vector4 mBaseColor = Vector4(0,0,0,1);
@@ -28,9 +28,9 @@ protected:
     void registerFunctionCalculatePBRSpecularGlossiness(ShaderBuilder& shaderBuilder) const;
 
 protected:
-    inline static const GPUFunctionDefinition mCalculatePBRMetallicRoughness
+    inline static const GPUFunctionDefinition mCalculatePBR
     {
         GPUBuiltIn::PrimitiveTypes::mVector4,
-        "calculatePBRMetallicRoughness"
+        "calculatePBR"
     };
 };

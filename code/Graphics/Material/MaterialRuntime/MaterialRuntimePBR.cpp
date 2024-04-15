@@ -51,7 +51,7 @@ void MaterialRuntimePBR::fragmentShaderShadingModel(ShaderBuilder& shaderBuilder
 
     Variable PBRMetallicRoughness;
     shaderBuilder.getMain().
-    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBRMetallicRoughness, {})).
+    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {})).
     set(outColor, outColor.add(PBRMetallicRoughness));
 }
 
@@ -68,7 +68,7 @@ void MaterialRuntimePBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder
 // TOOD: Make actul PBRMetallicRoughness, I'm just emulating Phong with PBRMetallicRoughness parameters for now.
 void MaterialRuntimePBR::registerFunctionCalculatePBRSpecularGlossiness(ShaderBuilder& shaderBuilder) const
 {
-    FunctionDefinition func(mCalculatePBRMetallicRoughness);
+    FunctionDefinition func(mCalculatePBR);
 
     auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
     Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
