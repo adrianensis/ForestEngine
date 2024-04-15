@@ -565,8 +565,10 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
     Variable specular;
 
     Variable roughness;
+    Variable metallic;
     func.body().
-    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x"));
+    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x")).
+    variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic).dot("x"));
     if(mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
     {
         auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS))).mName);
@@ -575,14 +577,15 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
         Variable metallicRoughnessPack;
         func.body().
         variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "metallicRoughnessPack", call("texture2D", {samplerMetallicRoughness, inTextureCoord})).
-        set(roughness, metallicRoughnessPack.dot("b"));
+        set(roughness, metallicRoughnessPack.dot("b")).
+        set(metallic, metallicRoughnessPack.dot("g"));
     }
 
     func.body().
     variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
     variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
     variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), roughness})).
-    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", propertiesBlock.at(materialInstanceId).dot(materialMetallic).mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
+    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", metallic.mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
     Variable PBRMetallicRoughness;
     func.body().
     variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "PBRMetallicRoughness", specular).
