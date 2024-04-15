@@ -25,12 +25,33 @@ protected:
 
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
 
+    void registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const;
     void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;
 
 protected:
-    inline static const GPUFunctionDefinition mCalculatePBR
-    {
-        GPUBuiltIn::PrimitiveTypes::mVector4,
-        "calculatePBR"
-    };
+    inline static const GPUFunctionDefinition mCalculatePBR { GPUBuiltIn::PrimitiveTypes::mVector4, "calculatePBR" };
+    inline static const GPUFunctionDefinition mGetNormalFromMap { GPUBuiltIn::PrimitiveTypes::mVector3, "getNormalFromMap" };
+    inline static const GPUFunctionDefinition mDistributionGGX { GPUBuiltIn::PrimitiveTypes::mFloat, "distributionGGX",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "N"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "H"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"}
+        }};
+    inline static const GPUFunctionDefinition mGeometrySchlickGGX { GPUBuiltIn::PrimitiveTypes::mFloat, "geometrySchlickGGX",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "NdotV"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"}
+        }};
+    inline static const GPUFunctionDefinition mGeometrySmith { GPUBuiltIn::PrimitiveTypes::mFloat, "geometrySmith",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "N"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "V"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "L"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"}
+        }};
+    inline static const GPUFunctionDefinition mFresnelSchlick { GPUBuiltIn::PrimitiveTypes::mVector3, "fresnelSchlick",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "cosTheta"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "F0"}
+        }};
 };

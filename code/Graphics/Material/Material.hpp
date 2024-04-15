@@ -58,14 +58,6 @@ DECLARE_ENUM(TextureMap,
      */
     HEIGHT, "HEIGHT",
 
-    /** The texture is a (tangent space) normal-map.
-     *
-     *  Again, there are several conventions for tangent-space
-     *  normal maps. Assimp does (intentionally) not
-     *  distinguish here.
-     */
-    NORMALS, "NORMALS",
-
     /** The texture defines the glossiness of the material.
      *
      *  The glossiness is in fact the exponent of the specular

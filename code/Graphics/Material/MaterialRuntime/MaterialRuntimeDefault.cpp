@@ -176,7 +176,7 @@ void MaterialRuntimeDefault::fragmentShaderTexture(ShaderBuilder& shaderBuilder)
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     
     shaderBuilder.getMain().
-    set(outColor, call("texture2D", {sampler, inTextureCoord}));
+    set(outColor, call("texture", {sampler, inTextureCoord}));
 
     if(mMaterial->getMaterialData().mAlphaEnabled)
     {

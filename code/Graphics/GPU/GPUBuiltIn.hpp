@@ -25,6 +25,7 @@ public:
         inline static const GPUDataType mFace = mVector3i;
         inline static const GPUDataType mVector4{"vec4",sizeof(Vector4), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mVector4i{"ivec4",sizeof(i32) * 4, GPUPrimitiveDataType::INT};
+        inline static const GPUDataType mMatrix3{"mat3",sizeof(f32) * 3 * 3, GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mMatrix4{"mat4",sizeof(Matrix4), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mSampler2D{"sampler2D",0, GPUPrimitiveDataType::INT};
     };
