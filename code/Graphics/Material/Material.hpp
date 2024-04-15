@@ -223,6 +223,8 @@ public:
     void disable() const;
     bool hasTexture(TextureMap textureMap) const;
 
+    void bindToShader(Ptr<GPUProgram> shader) const;
+
 private:
     void internalInit(const MaterialData& materialData, u32 id);
 protected:

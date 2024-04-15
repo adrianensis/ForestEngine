@@ -563,10 +563,25 @@ void MaterialRuntimePBRMetallicRoughness::registerFunctionCalculatePBRSpecularGl
     Variable reflectDir;
     Variable specularValue;
     Variable specular;
+
+    Variable roughness;
+    func.body().
+    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x"));
+    if(mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
+    {
+        auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS))).mName);
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord.mName);
+
+        Variable metallicRoughnessPack;
+        func.body().
+        variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4.mName, "metallicRoughnessPack", call("texture2D", {samplerMetallicRoughness, inTextureCoord})).
+        set(roughness, metallicRoughnessPack.dot("b"));
+    }
+
     func.body().
     variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
     variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "reflectDir", call("reflect", {viewDir.neg(), norm})).
-    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x")})).
+    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat.mName, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), roughness})).
     variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3.mName, "specular", propertiesBlock.at(materialInstanceId).dot(materialMetallic).mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
     Variable PBRMetallicRoughness;
     func.body().

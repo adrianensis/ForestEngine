@@ -278,7 +278,11 @@ public:
     void bindUniformValue(u32 programId, const std::string& name, const T& value)
     {
         u32 location = glGetUniformLocation(programId, name.c_str());
-        if constexpr (std::is_integral_v<T>)
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            glUniform1f(location, value);
+        }
+        else if constexpr (std::is_integral_v<T>)
         {
             if constexpr (std::is_unsigned_v<T>)
             {
@@ -288,10 +292,6 @@ public:
             {
                 glUniform1i(location, value);
             }
-        }
-        else if constexpr (std::is_floating_point_v<T>)
-        {
-            glUniform1f(location, value);
         }
         else if constexpr (std::is_same_v<T, Vector2>)
         {

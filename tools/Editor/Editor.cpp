@@ -33,9 +33,9 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    createSprite(Vector3(-100,0,0), 100);
-    createSprite(Vector3(100,0,0), 100);
-    createSprite(Vector3(0,0,-100), 10);
+    // createSprite(Vector3(-100,0,0), 100);
+    // createSprite(Vector3(100,0,0), 100);
+    // createSprite(Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
@@ -46,13 +46,13 @@ void Editor::firstUpdate()
 	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
-	importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    createUI();
+    // createUI();
     mousePick();
 }
 

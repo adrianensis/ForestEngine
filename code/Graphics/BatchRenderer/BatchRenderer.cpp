@@ -27,6 +27,8 @@ void BatchRenderer::init(const BatchData& batchData)
     mShader = ShaderUtils::createShader(mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, mBatchData.mMaterial.get());
     
     bindSharedBuffers();
+
+    mBatchData.mMaterial->bindToShader(mShader);
 }
 
 void BatchRenderer::terminate()
@@ -45,12 +47,10 @@ void BatchRenderer::bindSharedBuffers()
         mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData));
     }
 
-    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
+    FOR_LIST(it, mGPUSharedBuffersContainer.getSharedBuffers())
     {
-        mShader->bindSharedBuffer(mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices));
+        mShader->bindSharedBuffer(*it);
     }
-    
-    mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
 }
 
 void BatchRenderer::render()

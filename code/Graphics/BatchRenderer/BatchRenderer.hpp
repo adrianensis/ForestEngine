@@ -17,6 +17,7 @@ public:
     void onRemoveRenderer(Ptr<MeshRenderer> renderer);
 
 private:
+    void bindMaterial();
     void bindSharedBuffers();
     void enable();
     void disable();

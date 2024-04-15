@@ -35,7 +35,7 @@ void Material::enable() const
     u32 textureUnit = 0;
     FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
     {
-        if (mTextures[i].isValid())
+        if (hasTexture((TextureMap)i))
         {
             mTextures[i].get().enable(textureUnit);
             textureUnit++;
@@ -50,7 +50,7 @@ void Material::disable() const
 	PROFILER_CPU()
     FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
     {
-        if (mTextures[i].isValid())
+        if (hasTexture((TextureMap)i))
         {
             mTextures[i].get().disable();
         }
@@ -60,6 +60,27 @@ void Material::disable() const
 bool Material::hasTexture(TextureMap textureMap) const
 {
     return mTextures[(u32)textureMap].isValid();
+}
+
+
+void Material::bindToShader(Ptr<GPUProgram> shader) const
+{
+    shader->enable();
+
+    PoolHandler<Material> handler = GET_SYSTEM(MaterialManager).getMaterialHandler(mID);
+    shader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(handler));
+
+    u32 textureUnit = 0;
+    FOR_ARRAY(i, getMaterialData().mTextureBindings)
+    {
+        if(hasTexture((TextureMap)i))
+        {
+            shader->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>((TextureMap)i))).mName, textureUnit);
+            textureUnit++;
+        }
+    }
+    
+    shader->disable();
 }
 
 void Material::loadTextures()
