@@ -13,9 +13,7 @@ void UIManager::init()
     mFontsManager.loadFont(mDefaultFont, 12);
 
     MaterialData materialData;
-    materialData.mAlphaEnabled = true;
     materialData.mReceiveLight = false;
-    materialData.mUseColorAsTint = true;
     materialData.mUseDepth = true;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
     mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeUI>(materialData);

@@ -71,9 +71,7 @@ void Model::loadGLTFMaterials()
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
             materialData.mIsSkinned = isSkinned();
-            materialData.mAlphaEnabled = false;
             materialData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
-            // materialData.mUseColorAsTint = true;
             PoolHandler<Material> newMaterial;
 
             if(cgltfMaterial.has_pbr_metallic_roughness)

@@ -19,20 +19,43 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimeUI::generateM
 
 void MaterialRuntimeUI::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
 {
-    MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
+    // MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
 
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     Variable instanceColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
-    
-    Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
-
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
+    
+    Variable baseColor;
     shaderBuilder.getMain().
-    set(baseColor, propertiesBlock.at(materialInstanceId).dot(instanceColor));
+    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(materialInstanceId).dot(instanceColor));
 
     shaderBuilder.getMain().
     set(outColor, baseColor);
+    
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    {
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
+        shaderBuilder.getMain().
+        set(outColor, call("texture", {sampler, inTextureCoord}));
+
+        shaderBuilder.getMain().
+        ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+            line("discard").
+        end();
+
+        if(mMaterial->getMaterialData().mIsFont)
+        {
+            shaderBuilder.getMain().
+            set(outColor.dot("a"), outColor.dot("r"));
+            
+            shaderBuilder.getMain().
+            set(outColor.dot("r"), baseColor.dot("r")).
+            set(outColor.dot("g"), baseColor.dot("g")).
+            set(outColor.dot("b"), baseColor.dot("b"));
+        }
+    }
 }
 
 void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const

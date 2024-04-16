@@ -28,21 +28,28 @@ void MaterialRuntimePBR::createFragmentShader(ShaderBuilder& shaderBuilder, cons
 
 void MaterialRuntimePBR::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
 {
-    MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
+    // MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
 
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     Variable lightingModel = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
-    
-    Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
-
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable instanceBaseColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};
+    
+    Variable baseColor;
     shaderBuilder.getMain().
-    set(baseColor, propertiesBlock.at(materialInstanceId).dot(instanceBaseColor));
+    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(materialInstanceId).dot(instanceBaseColor));
 
     shaderBuilder.getMain().
     set(outColor, baseColor);
+
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    {
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
+        shaderBuilder.getMain().
+        set(outColor, call("texture", {sampler, inTextureCoord}));
+    }
 }
 
 void MaterialRuntimePBR::fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const

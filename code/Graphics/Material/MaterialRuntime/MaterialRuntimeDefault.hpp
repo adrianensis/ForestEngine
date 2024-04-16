@@ -24,8 +24,6 @@ protected:
     virtual void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
 
     virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
-    virtual void fragmentShaderTexture(ShaderBuilder& shaderBuilder) const;
-    virtual void fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const;
 
     virtual void generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
     virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;

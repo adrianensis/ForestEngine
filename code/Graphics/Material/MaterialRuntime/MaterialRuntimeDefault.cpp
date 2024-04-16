@@ -166,56 +166,13 @@ void MaterialRuntimeDefault::fragmentShaderBaseColor(ShaderBuilder& shaderBuilde
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    shaderBuilder.setVariableInCache(baseColor);
-}
-
-void MaterialRuntimeDefault::fragmentShaderTexture(ShaderBuilder& shaderBuilder) const
-{
-    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-    auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
-    
-    shaderBuilder.getMain().
-    set(outColor, call("texture", {sampler, inTextureCoord}));
-
-    if(mMaterial->getMaterialData().mAlphaEnabled)
+    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
-        fragmentShaderAlphaDiscard(shaderBuilder);
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
+        shaderBuilder.getMain().
+        set(outColor, call("texture", {sampler, inTextureCoord}));
     }
-    
-    if(mMaterial->getMaterialData().mUseColorAsTint)
-    {
-        Variable baseColor = shaderBuilder.getVariableFromCache("baseColor");
-        
-        if(mMaterial->getMaterialData().mIsFont)
-        {
-            shaderBuilder.getMain().
-            set(outColor.dot("a"), outColor.dot("r"));
-            
-            shaderBuilder.getMain().
-            set(outColor.dot("r"), baseColor.dot("r")).
-            set(outColor.dot("g"), baseColor.dot("g")).
-            set(outColor.dot("b"), baseColor.dot("b"));
-        }
-        else
-        {
-            shaderBuilder.getMain().
-            set(outColor.dot("r"), outColor.dot("r").add(baseColor.dot("r"))).
-            set(outColor.dot("g"), outColor.dot("g").add(baseColor.dot("g"))).
-            set(outColor.dot("b"), outColor.dot("b").add(baseColor.dot("b"))).
-            set(outColor.dot("a"), outColor.dot("a").add(baseColor.dot("a")));
-        }
-    }
-}
-
-void MaterialRuntimeDefault::fragmentShaderAlphaDiscard(ShaderBuilder& shaderBuilder) const
-{
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
-    
-    shaderBuilder.getMain().
-    ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-        line("discard").
-    end();
 }
 
 void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -384,18 +341,6 @@ void MaterialRuntimeDefault::createFragmentShader(ShaderBuilder& shaderBuilder, 
     registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     
     fragmentShaderBaseColor(shaderBuilder);
-
-    if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
-    {
-        fragmentShaderTexture(shaderBuilder);
-    }
-    else
-    {
-        if(mMaterial->getMaterialData().mAlphaEnabled)
-        {
-            fragmentShaderAlphaDiscard(shaderBuilder);
-        }
-    }
 }
 
 void MaterialRuntimeDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const

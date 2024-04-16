@@ -154,12 +154,10 @@ public:
 class MaterialData
 {
 public:
-	bool mAlphaEnabled = true;
 	bool mReceiveLight = true;
 	bool mUseVertexColor = false;
 	bool mUseNormals = true;
 	bool mUseModelMatrix = true;
-	bool mUseColorAsTint = false;
 	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
