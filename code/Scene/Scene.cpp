@@ -12,7 +12,12 @@ Scene::Scene()
 
 Scene::~Scene() 
 {
-	destroyGameObjects();
+	
+}
+
+void Scene::terminate()
+{
+    destroyGameObjects();
 }
 
 void Scene::init()

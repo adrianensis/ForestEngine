@@ -23,6 +23,11 @@ void ScenesManager::terminate()
     }
     mGameObjectController.invalidate();
 
+    FOR_LIST(it, mScenes)
+    {
+        (*it)->terminate();
+    }
+
     mScenes.clear();
 }
 

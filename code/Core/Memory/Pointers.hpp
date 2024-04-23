@@ -105,7 +105,7 @@ public:
     operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
     operator SharedPtr<T>() const { return SharedPtr<T>(mInternalPointer, mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
-    T* operator->() const { return &get(); }
+    T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     void invalidate()
     {
@@ -246,7 +246,7 @@ public:
     virtual ~RefCountedPtrBase() { invalidate(); }
     operator Ptr<const T>() const { return Ptr<const T>(dynamic_cast<const T*>(mInternalPointer), mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
-    T* operator->() const { return &get(); }
+    T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     operator bool() const { return this->isValid(); }
     bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }

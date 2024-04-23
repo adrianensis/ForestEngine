@@ -15,6 +15,7 @@ public:
     ~Scene() override;
 
     void init();
+    void terminate();
     void saveScene(const std::string& path);
     void loadScene(const std::string& path);
     void unloadScene();
