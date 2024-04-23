@@ -33,6 +33,7 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
+    // createLight(Vector3(0,150,0), 20);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
@@ -191,6 +192,34 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
+Ptr<GameObject> Editor::createLight(const Vector3& v, f32 size)
+{
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+	gameObject->mIsStatic = false;
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
+
+    RendererData rendererData;
+    rendererData.mIsInstanced = true;
+	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+
+    MaterialData materialData;
+	materialData.mReceiveLight = false;
+    materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
+	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData));
+
+	gameObject->createComponent<MeshRenderer>(rendererData);
+
+    GPULight data;
+    data.mPosition = v;
+    data.mAmbientIntensity = 10.0f;
+    data.mSpecularIntensity = 10.8f;
+
+	gameObject->createComponent<Light>(data);
+
+	return gameObject;
+}
+
 Ptr<GameObject> Editor::mousePick()
 {
     Ptr<GameObject> obj;
@@ -253,12 +282,6 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
     modelRendererData.mIsInstanced = true;
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
-    GPULight data;
-    data.mPosition = v + Vector3(0,500,0);
-    data.mAmbientIntensity = 0.5f;
-    data.mSpecularIntensity = 1.8f;
-
-	gameObject->createComponent<Light>(data);
     return gameObject;
 }
 
