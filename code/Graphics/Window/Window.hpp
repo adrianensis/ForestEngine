@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Systems/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Engine/Input/Input.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #define GLFW_INCLUDE_NONE

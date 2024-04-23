@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Engine/Systems/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Scripting/Script.hpp"
 
 class ScriptEngine: public System

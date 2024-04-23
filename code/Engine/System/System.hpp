@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 #include "Core/Memory/Singleton.hpp"
-#include "Engine/Systems/SystemComponent.hpp"
+#include "Engine/System/SystemComponent.hpp"
 
 class System: public ObjectBase
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Engine/Systems/SystemComponent.hpp"
+#include "Engine/System/SystemComponent.hpp"
 
 class GameObject;
 

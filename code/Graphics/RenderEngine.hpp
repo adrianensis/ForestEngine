@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Engine/Systems/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Graphics/BatchRenderer/BatchesManager.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"

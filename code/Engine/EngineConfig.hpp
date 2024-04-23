@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Systems/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Engine/Assets/Config/ConfigObject.hpp"
 
 class EngineConfig: public System

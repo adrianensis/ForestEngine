@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Systems/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Engine/Input/InputEvents.hpp"
 
