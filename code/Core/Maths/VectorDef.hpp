@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Hash.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
 #define VECTOR_COMPONENT_1 x

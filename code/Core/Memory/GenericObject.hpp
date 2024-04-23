@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ByteBuffer.hpp"
+#include "Core/Memory/ByteBuffer.hpp"
 
 class GenericObjectBuffer
 {

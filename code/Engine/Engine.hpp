@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Object/ObjectBase.hpp"
-#include "Core/Singleton.hpp"
+#include "Core/Memory/Singleton.hpp"
 
 class Engine: public ObjectBase, public Singleton<Engine>
 {

@@ -2,7 +2,6 @@
 
 #include "Engine/Systems/System.hpp"
 #include "Engine/Time/TimeUtils.hpp"
-#include "Core/Functor.hpp"
 
 enum class TimerDurationType
 {
