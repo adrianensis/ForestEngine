@@ -95,10 +95,8 @@ void Model::loadGLTFMaterials()
                 }
                 else
                 {
-                    cgltf_float metallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-                    cgltf_float roughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
-                    // materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mMetallic = Vector3(metallic, metallic, metallic);
-                    // materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mRoughness = Vector3(roughness, roughness, roughness);
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
                 }
 
                 newMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimePBR>(materialData);

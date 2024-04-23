@@ -10,8 +10,8 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimePBR::generate
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
         {GPUBuiltIn::PrimitiveTypes::mVector4, "BaseColor"},
-        {GPUBuiltIn::PrimitiveTypes::mVector3, "Metallic"},
-        {GPUBuiltIn::PrimitiveTypes::mVector3, "Roughness"}
+        {GPUBuiltIn::PrimitiveTypes::mFloat, "Metallic"},
+        {GPUBuiltIn::PrimitiveTypes::mFloat, "Roughness"}
     };
 
     return propertiesBlock;
@@ -272,8 +272,8 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
     Variable roughness;
     Variable metallic;
     func.body().
-    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness).dot("x")).
-    variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic).dot("x"));
+    variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness)).
+    variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
     if(mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
     {
         auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS))).mName);
