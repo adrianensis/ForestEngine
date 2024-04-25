@@ -148,7 +148,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateProjectionViewMatrix(ShaderBui
     shaderBuilder.setVariableInCache(PVMatrix);
 }
 
-void MaterialRuntimeDefault::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
+void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
@@ -340,7 +340,7 @@ void MaterialRuntimeDefault::createFragmentShader(ShaderBuilder& shaderBuilder, 
 {
     registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     
-    fragmentShaderBaseColor(shaderBuilder);
+    fragmentShaderCode(shaderBuilder);
 }
 
 void MaterialRuntimeDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const

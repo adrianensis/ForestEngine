@@ -33,22 +33,22 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    // createLight(Vector3(0,150,0), 20);
+    createLight(Vector3(0,300,0), 20);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
-	// // importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
+	// importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,0,0), 20.0f, 0);
+	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,150,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
-	importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -199,21 +199,22 @@ Ptr<GameObject> Editor::createLight(const Vector3& v, f32 size)
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
-    RendererData rendererData;
-    rendererData.mIsInstanced = true;
-	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+    // RendererData rendererData;
+    // rendererData.mIsInstanced = true;
+	// rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 
-    MaterialData materialData;
-	materialData.mReceiveLight = false;
-    materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
-	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData));
+    // MaterialData materialData;
+	// materialData.mReceiveLight = false;
+    // materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
+	// rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData));
 
-	gameObject->createComponent<MeshRenderer>(rendererData);
+	// gameObject->createComponent<MeshRenderer>(rendererData);
 
     GPULight data;
     data.mPosition = v;
-    data.mAmbientIntensity = 10.0f;
-    data.mSpecularIntensity = 10.8f;
+    data.mAmbient = Vector3(1,1,1) * 250000;
+    data.mAmbientIntensity = 0.1f;
+    data.mSpecularIntensity = 1.8f;
 
 	gameObject->createComponent<Light>(data);
 

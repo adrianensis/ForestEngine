@@ -14,14 +14,10 @@ public:
 
 class MaterialRuntimePBR : public MaterialRuntimeDefault
 {
-public:
-    void createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
 
-    virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const override;
-    virtual void fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
 
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
 

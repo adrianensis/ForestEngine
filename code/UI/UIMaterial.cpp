@@ -17,9 +17,9 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimeUI::generateM
     return propertiesBlock;
 }
 
-void MaterialRuntimeUI::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
+void MaterialRuntimeUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
-    // MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
+    // MaterialRuntimeDefault::fragmentShaderCode(shaderBuilder);
 
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);

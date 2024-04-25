@@ -23,7 +23,7 @@ protected:
     virtual void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
 
-    virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;
 
     virtual void generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
     virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;

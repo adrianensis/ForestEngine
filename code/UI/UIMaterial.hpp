@@ -17,7 +17,7 @@ class MaterialRuntimeUI : public MaterialRuntimeDefault
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
 
-    virtual void fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const override;
+    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
     virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const override;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const override;
 };

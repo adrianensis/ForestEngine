@@ -17,18 +17,9 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimePBR::generate
     return propertiesBlock;
 }
 
-void MaterialRuntimePBR::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void MaterialRuntimePBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
-    MaterialRuntimeDefault::createFragmentShader(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-    if(mMaterial->getMaterialData().mReceiveLight)
-    {
-        fragmentShaderShadingModel(shaderBuilder);
-    }
-}
-
-void MaterialRuntimePBR::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) const
-{
-    // MaterialRuntimeDefault::fragmentShaderBaseColor(shaderBuilder);
+    // MaterialRuntimeDefault::fragmentShaderCode(shaderBuilder);
 
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
@@ -50,16 +41,14 @@ void MaterialRuntimePBR::fragmentShaderBaseColor(ShaderBuilder& shaderBuilder) c
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
-}
 
-void MaterialRuntimePBR::fragmentShaderShadingModel(ShaderBuilder& shaderBuilder) const
-{
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
-
-    Variable PBRMetallicRoughness;
-    shaderBuilder.getMain().
-    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {})).
-    set(outColor, outColor.add(PBRMetallicRoughness));
+    if(mMaterial->getMaterialData().mReceiveLight)
+    {
+        Variable PBRMetallicRoughness;
+        shaderBuilder.getMain().
+        variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {})).
+        set(outColor, PBRMetallicRoughness);
+    }
 }
 
 void MaterialRuntimePBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -216,6 +205,8 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
 {
     FunctionDefinition func(mCalculatePBR);
 
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
+    
     auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
     Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
     auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
@@ -236,39 +227,6 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
     Variable materialRoughness = {getPropertiesBlockStructDefinition().mPrimitiveVariables[2]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
 
-    Variable materialBaseColor3;
-    func.body().
-    variable(materialBaseColor3, GPUBuiltIn::PrimitiveTypes::mVector3, "materialBaseColor3", call(GPUBuiltIn::PrimitiveTypes::mVector3, {
-        propertiesBlock.at(materialInstanceId).dot(materialBaseColor).dot("r"),
-        propertiesBlock.at(materialInstanceId).dot(materialBaseColor).dot("g"),
-        propertiesBlock.at(materialInstanceId).dot(materialBaseColor).dot("b")
-    }));
-
-    Variable ambient;
-    func.body().
-    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3, "ambient", materialBaseColor3.mul(lights.at("0").dot(lightAmbientIntensity).mul(lights.at("0").dot(lightAmbient))));
-    Variable norm;
-    func.body().
-    variable(norm, GPUBuiltIn::PrimitiveTypes::mVector3, "norm", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
-
-    if(mMaterial->getMaterialData().mUseNormals)
-    {
-        func.body().
-        set(norm, call("normalize", {inNormal}));
-    }
-
-    Variable lightDir;
-    Variable diffuseValue;
-    Variable diffuse;
-    func.body().
-    variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lights.at("0").dot(lightPos).sub(fragPosition)})).
-    variable(diffuseValue, GPUBuiltIn::PrimitiveTypes::mFloat, "diffuseValue", call("max", {call("dot", {norm, lightDir}), {"0"}})).
-    variable(diffuse, GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse", materialBaseColor3.mul(lights.at("0").dot(lightSpecularIntensity).mul(diffuseValue.mul(lights.at("0").dot(lightDiffuse)))));
-    Variable viewDir;
-    Variable reflectDir;
-    Variable specularValue;
-    Variable specular;
-
     Variable roughness;
     Variable metallic;
     func.body().
@@ -282,21 +240,161 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
         Variable metallicRoughnessPack;
         func.body().
         variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {samplerMetallicRoughness, inTextureCoord})).
-        set(roughness, metallicRoughnessPack.dot("b")).
-        set(metallic, metallicRoughnessPack.dot("g"));
+        set(roughness, metallicRoughnessPack.dot("g")).
+        set(metallic, metallicRoughnessPack.dot("b"));
     }
 
+    Variable albedo;
     func.body().
-    variable(viewDir, GPUBuiltIn::PrimitiveTypes::mVector3, "viewDir", call("normalize", {cameraPosition.sub(fragPosition)})).
-    variable(reflectDir, GPUBuiltIn::PrimitiveTypes::mVector3, "reflectDir", call("reflect", {viewDir.neg(), norm})).
-    variable(specularValue, GPUBuiltIn::PrimitiveTypes::mFloat, "specularValue", call("pow", {call("max", {call("dot", {viewDir, reflectDir}), {"0.0"}}), roughness})).
-    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3, "specular", metallic.mul(lights.at("0").dot(lightSpecularIntensity).mul(specularValue).mul(lights.at("0").dot(lightSpecular))));
-    Variable PBRMetallicRoughness;
+    variable(albedo, GPUBuiltIn::PrimitiveTypes::mVector3, "albedo", call(GPUBuiltIn::PrimitiveTypes::mVector3, {
+        outColor.dot("r"),
+        outColor.dot("g"),
+        outColor.dot("b")
+    }));
+
+    /*
+        vec3 N = normalize(Normal);
+        vec3 V = normalize(camPos - WorldPos);
+
+        // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
+        // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
+        vec3 F0 = vec3(0.04); 
+        F0 = mix(F0, albedo, metallic);
+    */
+
+    Variable N;
     func.body().
-    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3, "PBRMetallicRoughness", specular).
-    // variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector3, "PBRMetallicRoughness", ambient.add(diffuse).add(specular)).
-    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4, {PBRMetallicRoughness, {"1"}}));
-    // ret(propertiesBlock.at(materialInstanceId).dot(materialBaseColor));
+    variable(N, GPUBuiltIn::PrimitiveTypes::mVector3, "N", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
+
+    if(mMaterial->getMaterialData().mUseNormals)
+    {
+        func.body().
+        set(N, call("normalize", {inNormal}));
+    }
+
+    Variable V;
+    Variable F0;
+    func.body().
+    variable(V, GPUBuiltIn::PrimitiveTypes::mVector3, "V", call("normalize", {cameraPosition.sub(fragPosition)})).
+    variable(F0, GPUBuiltIn::PrimitiveTypes::mVector3, "F0", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0.04"s})).
+    set(F0, call("mix", {F0, albedo, metallic}));
+
+    /*
+        // reflectance equation
+        vec3 Lo = vec3(0.0);
+    */
+    Variable Lo;
+    func.body().
+    variable(Lo, GPUBuiltIn::PrimitiveTypes::mVector3, "Lo", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0"s}));
+
+    Variable L;
+    Variable H;
+    Variable distance;
+    Variable attenuation;
+    Variable radiance;
+
+    Variable NDF;
+    Variable G;
+    Variable F;
+    Variable numerator;
+    Variable denominator;
+    Variable specular;
+
+    Variable kS;
+    Variable kD;
+
+    Variable NdotL;
+
+    func.body().
+    forBlock("i", "<", Variable("1"), "++").
+
+    /*
+        // calculate per-light radiance
+        vec3 L = normalize(lightPositions[i] - WorldPos);
+        vec3 H = normalize(V + L);
+        float distance = length(lightPositions[i] - WorldPos);
+        float attenuation = 1.0 / (distance * distance);
+        vec3 radiance = lightColors[i] * attenuation;
+    */
+    variable(L, GPUBuiltIn::PrimitiveTypes::mVector3, "L", call("normalize", {lights.at("i").dot(lightPos).sub(fragPosition)})).
+    variable(H, GPUBuiltIn::PrimitiveTypes::mVector3, "H", call("normalize", {V.add(L)})).
+    variable(distance, GPUBuiltIn::PrimitiveTypes::mFloat, "distance", call("length", {lights.at("i").dot(lightPos).sub(fragPosition)})).
+    variable(attenuation, GPUBuiltIn::PrimitiveTypes::mFloat, "attenuation", Variable("1.0").div(paren(distance.mul(distance)))).
+    variable(radiance, GPUBuiltIn::PrimitiveTypes::mVector3, "radiance", lights.at("i").dot(lightAmbient).mul(attenuation)).
+
+    /*
+        // Cook-Torrance BRDF
+        float NDF = DistributionGGX(N, H, roughness);   
+        float G   = GeometrySmith(N, V, L, roughness);      
+        vec3 F    = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
+           
+        vec3 numerator    = NDF * G * F; 
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+        vec3 specular = numerator / denominator;
+    */
+    variable(NDF, GPUBuiltIn::PrimitiveTypes::mFloat, "NDF", call(mDistributionGGX, {N, H, roughness})).
+    variable(G, GPUBuiltIn::PrimitiveTypes::mFloat, "G", call(mGeometrySmith, {N, V, L, roughness})).
+    variable(F, GPUBuiltIn::PrimitiveTypes::mVector3, "F", call(mFresnelSchlick, {call("clamp",{call("dot", {N, H}), "0.0"s, "1.0"s}), F0})).
+    variable(numerator, GPUBuiltIn::PrimitiveTypes::mVector3, "numerator", NDF.mul(G).mul(F)).
+    variable(denominator, GPUBuiltIn::PrimitiveTypes::mFloat, "denominator",
+        Variable("4.0").
+        mul(call("max", {call("dot", {N, V}), "0.0"s})).
+        mul(call("max", {call("dot", {N, L}), "0.0"s})).
+        add("0.0001"s)
+    ).
+    variable(specular, GPUBuiltIn::PrimitiveTypes::mVector3, "specular", numerator.div(denominator)).
+
+    /*
+        // kS is equal to Fresnel
+        vec3 kS = F;
+        // for energy conservation, the diffuse and specular light can't
+        // be above 1.0 (unless the surface emits light); to preserve this
+        // relationship the diffuse component (kD) should equal 1.0 - kS.
+        vec3 kD = vec3(1.0) - kS;
+        // multiply kD by the inverse metalness such that only non-metals 
+        // have diffuse lighting, or a linear blend if partly metal (pure metals
+        // have no diffuse light).
+        kD *= 1.0 - metallic;	
+    */
+    variable(kS, GPUBuiltIn::PrimitiveTypes::mVector3, "kS", F).
+    variable(kD, GPUBuiltIn::PrimitiveTypes::mVector3, "kD", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0"s}).sub(kS)).
+    set(kD, kD.mul(paren(Variable("1.0").sub(metallic)))).
+
+    /*
+        // scale light by NdotL
+        float NdotL = max(dot(N, L), 0.0);        
+
+        // add to outgoing radiance Lo
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+    */
+    variable(NdotL, GPUBuiltIn::PrimitiveTypes::mFloat, "NdotL", call("max", {call("dot", {N, L}), "0.0"s})).
+    set(Lo, Lo.add(paren(paren(kD.mul(albedo).div(GPUBuiltIn::Consts::mPI).add(specular)).mul(radiance).mul(NdotL)))).
+    end();
+
+    /*
+        // ambient lighting (note that the next IBL tutorial will replace 
+        // this ambient lighting with environment lighting).
+        vec3 ambient = vec3(0.03) * albedo * ao;
+    */
+    Variable ambient;
+    func.body().
+    variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3, "ambient", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0.03"s}).mul(albedo)/*.mul(ao)*/);
+
+    /*
+        vec3 color = ambient + Lo;
+
+        // HDR tonemapping
+        color = color / (color + vec3(1.0));
+        // gamma correct
+        color = pow(color, vec3(1.0/2.2)); 
+    */
+
+    Variable PBRFinalColor;
+    func.body().
+    variable(PBRFinalColor, GPUBuiltIn::PrimitiveTypes::mVector3, "PBRFinalColor", ambient.add(Lo)).
+    set(PBRFinalColor, PBRFinalColor.div(paren(PBRFinalColor.add(call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0"s}))))).
+    set(PBRFinalColor, call("pow", {PBRFinalColor, call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0/2.2"s})})).
+    ret(call(GPUBuiltIn::PrimitiveTypes::mVector4, {PBRFinalColor, {"1"}}));
 
     shaderBuilder.get().function(func);
 }
