@@ -27,13 +27,16 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& 
         set(finalPositon, boneMatrix.mul(finalPositon));
     }
 
-    if(mMaterial->getMaterialData().mUseModelMatrix)
+    auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
+    if(modelMatricesBuffer.isValid())
     {
         Variable modelMatrices;
-        auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
         modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
         auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
-        shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
+        if(objectId.isValid())
+        {
+            shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
+        }
     }
 
     shaderBuilder.setVariableInCache(finalPositon);
@@ -157,7 +160,7 @@ void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) co
     shaderBuilder.getMain().
     variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColor", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"1.0"}}));
 
-    if(mMaterial->getMaterialData().mUseVertexColor)
+    if(inColor.isValid())
     {
         shaderBuilder.getMain().
         set(baseColor, inColor);
@@ -235,12 +238,12 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     }
     
-    if(mMaterial->getMaterialData().mUseVertexColor)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     
-    if(mMaterial->getMaterialData().mUseNormals)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
     }
@@ -255,7 +258,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
     }
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
-    if(mMaterial->getMaterialData().mUseNormals)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
     {
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
     }
@@ -318,7 +321,7 @@ void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, co
 
     vertexShaderCalculatePositionOutput(shaderBuilder);
 
-    if(mMaterial->getMaterialData().mUseNormals)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
     {
         vertexShaderCalculateNormalOutput(shaderBuilder);
     }
@@ -328,7 +331,7 @@ void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, co
         vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
     }
 
-    if(mMaterial->getMaterialData().mUseVertexColor)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
     {
         vertexShaderCalculateVertexColorOutput(shaderBuilder);
     }

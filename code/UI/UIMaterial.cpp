@@ -83,9 +83,6 @@ void MaterialRuntimeUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder&
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable depth = {getPropertiesBlockStructDefinition().mPrimitiveVariables[3]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
-    if(mMaterial->getMaterialData().mUseDepth)
-    {
-        shaderBuilder.getMain().
-        set(finalPositon.dot("z"), propertiesBlock.at(materialInstanceId).dot(depth));
-    }
+    shaderBuilder.getMain().
+    set(finalPositon.dot("z"), propertiesBlock.at(materialInstanceId).dot(depth));
 }

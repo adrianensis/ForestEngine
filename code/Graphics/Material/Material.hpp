@@ -155,10 +155,6 @@ class MaterialData
 {
 public:
 	bool mReceiveLight = true;
-	bool mUseVertexColor = false;
-	bool mUseNormals = true;
-	bool mUseModelMatrix = true;
-	bool mUseDepth = false;
     bool mIsSkinned = false;
     bool mCreateMipMap = true;
     GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;

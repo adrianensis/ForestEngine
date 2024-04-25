@@ -266,7 +266,7 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
     func.body().
     variable(N, GPUBuiltIn::PrimitiveTypes::mVector3, "N", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-    if(mMaterial->getMaterialData().mUseNormals)
+    if(inNormal.isValid())
     {
         func.body().
         set(N, call("normalize", {inNormal}));

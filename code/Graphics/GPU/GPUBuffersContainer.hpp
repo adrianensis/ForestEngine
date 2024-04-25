@@ -16,6 +16,7 @@ public:
     void createVertexBuffer(const GPUVertexBufferData& data, bool isStatic);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     const GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data) const;
+    bool containsVertexBuffer(const GPUVertexBufferData& data) const;
     void setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic);
 
 private:
@@ -41,6 +42,7 @@ public:
     void createSharedBuffer(u32 bindingPoint, const GPUSharedBufferData& data, bool isStatic);
     GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data);
     const GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data) const;
+    bool containsSharedBuffer(const GPUSharedBufferData& data) const;
 
 private:
     static u32 findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name);

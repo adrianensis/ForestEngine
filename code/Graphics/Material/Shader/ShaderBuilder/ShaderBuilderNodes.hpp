@@ -85,6 +85,7 @@ namespace ShaderBuilderNodes
 
         const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
         bool isEmpty() const {return getNameOrValue().empty(); };
+        bool isValid() const {return !isEmpty(); };
         Variable dot(const std::string& other) const { return Variable(getNameOrValue() + "." + other); }
         Variable dot(const Variable& other) const { return Variable(getNameOrValue() + "." + other.getNameOrValue()); }
 
@@ -155,6 +156,7 @@ namespace ShaderBuilderNodes
         SharedBuffer(const GPUSharedBufferData& gpuBlockData) : mGPUSharedBufferData(gpuBlockData) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
+        bool isValid() const { return !mGPUSharedBufferData.mInstanceName.empty(); }
 
         GPUSharedBufferData mGPUSharedBufferData;
     }; 
