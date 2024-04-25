@@ -48,7 +48,7 @@ void Texture::init(const TextureData& textureData, u32 id)
         imageData = ImageUtils::loadImage(textureData.mPath);
         mWidth = imageData.mWidth;
         mHeight = imageData.mHeight;
-        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture(GPUTextureFormat::RGBA, mWidth, mHeight, GPUTexturePixelFormat::RGBA, imageData.mData, textureData.mCreateMipMap);
+        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture(GPUTextureFormat::RGBA, mWidth, mHeight, GPUTexturePixelFormat::RGBA, imageData.mData, true);
         CHECK_MSG(imageData.mData, "Error loading image " + mTextureData.mPath);
         ImageUtils::freeImage(imageData);
     }

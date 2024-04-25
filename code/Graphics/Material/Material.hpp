@@ -156,7 +156,6 @@ class MaterialData
 public:
 	bool mReceiveLight = true;
     bool mIsSkinned = false;
-    bool mCreateMipMap = true;
     GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;

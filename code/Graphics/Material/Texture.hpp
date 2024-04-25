@@ -9,7 +9,6 @@ class TextureData
 public:
     std::string mPath;
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
-    bool mCreateMipMap = true;
     bool mIsFont = false;
     FontData mFontData;
 };

@@ -90,7 +90,6 @@ void Material::loadTextures()
         CHECK_MSG(!mMaterialData.mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
         TextureData textureData;
         textureData.mPath = mMaterialData.mFontData.mPath;
-        textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
         textureData.mStage = GPUPipelineStage::FRAGMENT;
         textureData.mIsFont = true;
         textureData.mFontData = mMaterialData.mFontData;
@@ -105,7 +104,6 @@ void Material::loadTextures()
                 TextureData textureData;
                 textureData.mPath = mMaterialData.mTextureBindings[i].mPath;
                 textureData.mStage = mMaterialData.mTextureBindings[i].mStage;
-                textureData.mCreateMipMap = mMaterialData.mCreateMipMap;
                 mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
             }
         }
