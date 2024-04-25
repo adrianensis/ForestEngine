@@ -11,9 +11,9 @@ void RenderSharedContext::init()
     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointGlobalData, GPUBuiltIn::SharedBuffers::mGlobalData, false);
     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
 
-    u32 bindingPointLightsData = requestSharedBufferBindingPoint(LightsBuiltIn::mLightsBufferData.mType);
-    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, LightsBuiltIn::mLightsBufferData, false);
-    mGPUSharedBuffersContainer.getSharedBuffer(LightsBuiltIn::mLightsBufferData).resize<LightsBuiltIn::LightsData>(1);
+    u32 bindingPointLightsData = requestSharedBufferBindingPoint(LightBuiltIn::mLightsBufferData.mType);
+    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, LightBuiltIn::mLightsBufferData, false);
+    mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
 
     mRenderInstancesSlotsManager.init(mMaxInstances);
 

@@ -212,15 +212,15 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
     Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
     auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
     auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
-    auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(LightsBuiltIn::mLightsBufferData.mInstanceName);    
+    auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    
     Variable lights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    Variable lightPos = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[0]};
-    Variable lightAmbient = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[1]};
-    Variable lightDiffuse = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[2]};
-    Variable lightSpecular = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[3]};
-    Variable lightAmbientIntensity = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[4]};
-    Variable lightDiffuseIntensity = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[5]};
-    Variable lightSpecularIntensity = {LightsBuiltIn::mLightStructDefinition.mPrimitiveVariables[6]};
+    Variable lightPos = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[0]};
+    Variable lightAmbient = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[1]};
+    Variable lightDiffuse = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[2]};
+    Variable lightSpecular = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[3]};
+    Variable lightAmbientIntensity = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[4]};
+    Variable lightDiffuseIntensity = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[5]};
+    Variable lightSpecularIntensity = {LightBuiltIn::mLightStructDefinition.mPrimitiveVariables[6]};
 
     Variable propertiesBlock(getPropertiesBlockSharedBufferData().getScopedGPUVariableData(0));
     Variable materialBaseColor = {getPropertiesBlockStructDefinition().mPrimitiveVariables[0]};

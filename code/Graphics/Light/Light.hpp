@@ -15,7 +15,7 @@ public:
     f32 mSpecularIntensity = 1.0f;
 };
 
-class LightsBuiltIn
+class LightBuiltIn
 {
 public:
 

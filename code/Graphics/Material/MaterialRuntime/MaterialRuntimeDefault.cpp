@@ -271,8 +271,8 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
 
     if(mMaterial->getMaterialData().mReceiveLight)
     {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightsBuiltIn::mLightsBufferData);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightsBuiltIn::mLightStructDefinition);
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mLightStructDefinition);
     }
 }
 

@@ -44,7 +44,7 @@ void BatchRenderer::bindSharedBuffers()
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightsBuiltIn::mLightsBufferData));
+        mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
     }
 
     FOR_LIST(it, mGPUSharedBuffersContainer.getSharedBuffers())
