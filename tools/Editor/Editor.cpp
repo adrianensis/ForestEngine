@@ -210,7 +210,7 @@ Ptr<GameObject> Editor::createLight(const Vector3& v, f32 size)
 
 	// gameObject->createComponent<MeshRenderer>(rendererData);
 
-    GPULight data;
+    LightData data;
     data.mPosition = v;
     data.mAmbient = Vector3(1,1,1) * 250000;
     data.mAmbientIntensity = 0.1f;

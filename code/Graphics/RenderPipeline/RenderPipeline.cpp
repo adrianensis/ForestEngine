@@ -66,11 +66,11 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()
 
-    GPULightsData gpuLightsData;
+    LightsBuiltIn::LightsData lightsData;
     FOR_ARRAY(i, renderData.mLights)
     {
-        gpuLightsData.mLights[i] = renderData.mLights[i]->getLightData();
+        lightsData.mLights[i] = renderData.mLights[i]->getLightData();
     }
 
-    GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).setData(gpuLightsData);
+    GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightsBuiltIn::mLightsBufferData).setData(lightsData);
 }

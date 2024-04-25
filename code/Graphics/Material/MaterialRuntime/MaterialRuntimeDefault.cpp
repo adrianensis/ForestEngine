@@ -1,5 +1,6 @@
 #include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Light/Light.hpp"
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
@@ -270,8 +271,8 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
 
     if(mMaterial->getMaterialData().mReceiveLight)
     {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mLightsData);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(GPUBuiltIn::StructDefinitions::mLight);
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightsBuiltIn::mLightsBufferData);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightsBuiltIn::mLightStructDefinition);
     }
 }
 

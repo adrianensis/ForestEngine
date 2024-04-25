@@ -2,7 +2,7 @@
 
 ClassId Light::getSystemComponentId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.mId; }
 
-void Light::init(const GPULight& data)
+void Light::init(const LightData& data)
 {
     mLightData = data;
 }

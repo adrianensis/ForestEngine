@@ -1,6 +1,6 @@
 #include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPULight.hpp"
+#include "Graphics/Light/Light.hpp"
 
 void RenderSharedContext::init()
 {
@@ -11,9 +11,9 @@ void RenderSharedContext::init()
     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointGlobalData, GPUBuiltIn::SharedBuffers::mGlobalData, false);
     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
 
-    u32 bindingPointLightsData = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mLightsData.mType);
-    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, GPUBuiltIn::SharedBuffers::mLightsData, false);
-    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mLightsData).resize<GPULightsData>(1);
+    u32 bindingPointLightsData = requestSharedBufferBindingPoint(LightsBuiltIn::mLightsBufferData.mType);
+    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, LightsBuiltIn::mLightsBufferData, false);
+    mGPUSharedBuffersContainer.getSharedBuffer(LightsBuiltIn::mLightsBufferData).resize<LightsBuiltIn::LightsData>(1);
 
     mRenderInstancesSlotsManager.init(mMaxInstances);
 

@@ -30,30 +30,6 @@ public:
         inline static const GPUDataType mSampler2D{"sampler2D",0, GPUPrimitiveDataType::INT};
     };
 
-    class StructDefinitions
-    {
-    public:
-        inline static const GPUStructDefinition mLight
-        {
-            "light",
-            {
-                {PrimitiveTypes::mVector3, "position"},
-                {PrimitiveTypes::mVector3, "ambient"},
-                {PrimitiveTypes::mVector3, "diffuse"},
-                {PrimitiveTypes::mVector3, "specular"},
-                {PrimitiveTypes::mFloat, "ambientIntensity"},
-                {PrimitiveTypes::mFloat, "diffuseIntensity"},
-                {PrimitiveTypes::mFloat, "specularIntensity"}
-            }
-        };
-    };
-
-    class StructTypes
-    {
-    public:
-        inline static const GPUDataType mLight{StructDefinitions::mLight.mName, StructDefinitions::mLight.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
-    };
-
     class Consts
     {
     public:
@@ -122,17 +98,6 @@ public:
             },
             "BonesMatrices",
             "bonesMatrices"
-        };
-
-        inline static const GPUSharedBufferData mLightsData
-        {
-            GPUBufferType::UNIFORM,
-            {
-                {{GPUStorage::UNIFORM, StructTypes::mLight, "lights"}, "", std::to_string(10)},
-                // {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambientIntensity"},
-            },
-            "LightsData",
-            "lightsData"
         };
     };
 
