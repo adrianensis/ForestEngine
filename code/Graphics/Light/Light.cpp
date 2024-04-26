@@ -2,7 +2,12 @@
 
 ClassId Light::getSystemComponentId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.mId; }
 
-void Light::init(const LightData& data)
+void PointLight::init(const PointLightData& data)
+{
+    mLightData = data;
+}
+
+void DirectionalLight::init(const DirectionalLightData& data)
 {
     mLightData = data;
 }

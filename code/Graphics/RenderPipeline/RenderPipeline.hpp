@@ -11,7 +11,8 @@ class RenderPipelineData
 {
 public:
     Ptr<Camera> mCamera;
-    std::vector<Ptr<Light>> mLights;
+    std::vector<Ptr<PointLight>> mPointLights;
+    Ptr<DirectionalLight> mDirectionalLight;
 };
 
 class RenderPipeline: public ObjectBase

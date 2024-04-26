@@ -272,7 +272,9 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
     if(mMaterial->getMaterialData().mReceiveLight)
     {
         shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mLightStructDefinition);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
     }
 }
 

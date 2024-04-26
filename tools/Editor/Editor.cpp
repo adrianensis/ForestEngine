@@ -33,7 +33,8 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    createLight(Vector3(0,300,0), 20);
+    createPointLight(Vector3(0,300,0), 20);
+    createDirectionalLight();
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
@@ -192,31 +193,30 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-Ptr<GameObject> Editor::createLight(const Vector3& v, f32 size)
+Ptr<GameObject> Editor::createPointLight(const Vector3& v, f32 size)
 {
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
-    // RendererData rendererData;
-    // rendererData.mIsInstanced = true;
-	// rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
-
-    // MaterialData materialData;
-	// materialData.mReceiveLight = false;
-    // materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
-	// rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData));
-
-	// gameObject->createComponent<MeshRenderer>(rendererData);
-
-    LightData data;
+    PointLightData data;
     data.mPosition = v;
-    data.mAmbient = Vector3(1,1,1) * 250000;
-    data.mAmbientIntensity = 0.1f;
-    data.mSpecularIntensity = 1.8f;
+    data.mDiffuse = Vector3(1,1,1) * 250000;
 
-	gameObject->createComponent<Light>(data);
+	gameObject->createComponent<PointLight>(data);
+
+	return gameObject;
+}
+
+Ptr<GameObject> Editor::createDirectionalLight()
+{
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+    
+    DirectionalLightData directionalLightData;
+    directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
+
+	gameObject->createComponent<DirectionalLight>(directionalLightData);
 
 	return gameObject;
 }

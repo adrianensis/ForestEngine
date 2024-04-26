@@ -3,43 +3,76 @@
 #include "Scene/Component.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-class LightData
+
+class DirectionalLightData
+{
+public:
+    alignas(16) Vector3 mDirection = Vector3::smOne;
+    alignas(16) Vector3 mDiffuse = Vector3::smZero;
+};
+
+class PointLightData
 {
 public:
     alignas(16) Vector3 mPosition = Vector3::smZero;
-    alignas(16) Vector3 mAmbient = Vector3::smOne;
-    alignas(16) Vector3 mDiffuse = Vector3::smOne;
-    alignas(16) Vector3 mSpecular = Vector3::smOne;
-    f32 mAmbientIntensity = 1.0f;
-    f32 mDiffuseIntensity = 1.0f;
-    f32 mSpecularIntensity = 1.0f;
+    alignas(16) Vector3 mDiffuse = Vector3::smZero;
+};
+
+class SpotLightData
+{
+public:
+    alignas(16) Vector3 mPosition = Vector3::smZero;
+    alignas(16) Vector3 mDirection = Vector3::smOne;
+    alignas(16) Vector3 mDiffuse = Vector3::smZero;
+    alignas(16) f32 mInnerCutOff = 0;
+    f32 mOuterCutOff = 0;
 };
 
 class LightBuiltIn
 {
 public:
 
-    inline static const GPUStructDefinition mLightStructDefinition
+    inline static const GPUStructDefinition mDirectionalLightStructDefinition
     {
-        "light",
+        "directionalLight",
         {
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "position"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "ambient"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "specular"},
-            {GPUBuiltIn::PrimitiveTypes::mFloat, "ambientIntensity"},
-            {GPUBuiltIn::PrimitiveTypes::mFloat, "diffuseIntensity"},
-            {GPUBuiltIn::PrimitiveTypes::mFloat, "specularIntensity"}
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "direction"},
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"}
         }
     };
 
-    inline static const GPUDataType mLightStructDataType{mLightStructDefinition.mName, mLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
+    inline static const GPUStructDefinition mPointLightStructDefinition
+    {
+        "pointLight",
+        {
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "position"},
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"}
+        }
+    };
+
+    inline static const GPUStructDefinition mSpotLightStructDefinition
+    {
+        "spotLight",
+        {
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "position"},
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "direction"},
+            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"},
+            {GPUBuiltIn::PrimitiveTypes::mFloat, "innerCutOff"},
+            {GPUBuiltIn::PrimitiveTypes::mFloat, "outerCutOff"}
+        }
+    };
+
+    inline static const GPUDataType mPointLightStructDataType{mPointLightStructDefinition.mName, mPointLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
+    inline static const GPUDataType mSpotLightStructDataType{mSpotLightStructDefinition.mName, mSpotLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
+    inline static const GPUDataType mDirectionalLightStructDataType{mDirectionalLightStructDefinition.mName, mDirectionalLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
 
     inline static const GPUSharedBufferData mLightsBufferData
     {
         GPUBufferType::UNIFORM,
         {
-            {{GPUStorage::UNIFORM, mLightStructDataType, "lights"}, "", std::to_string(10)},
+            {{GPUStorage::UNIFORM, mPointLightStructDataType, "pointLights"}, "", std::to_string(5)},
+            {{GPUStorage::UNIFORM, mSpotLightStructDataType, "spotLights"}, "", std::to_string(5)},
+            {{GPUStorage::UNIFORM, mDirectionalLightStructDataType, "directional"}},
             // {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambientIntensity"},
         },
         "LightsData",
@@ -49,7 +82,9 @@ public:
     class LightsData
     {
     public:
-        LightData mLights[10];
+        PointLightData mPointLights[5];
+        SpotLightData mSpotLights[5];
+        DirectionalLightData mDirectionalLight;
     };
 };
 
@@ -57,12 +92,31 @@ class Light: public Component
 {
 public:
     ClassId getSystemComponentId() const override;
-    void init(const LightData& data);
+};
+REGISTER_CLASS(Light);
+
+class PointLight: public Light
+{
+public:
+    void init(const PointLightData& data);
 
 private:
-    LightData mLightData;
+    PointLightData mLightData;
 
 public:
     CRGET(LightData)
 };
-REGISTER_CLASS(Light);
+REGISTER_CLASS(PointLight);
+
+class DirectionalLight: public Light
+{
+public:
+    void init(const DirectionalLightData& data);
+
+private:
+    DirectionalLightData mLightData;
+
+public:
+    CRGET(LightData)
+};
+REGISTER_CLASS(DirectionalLight);

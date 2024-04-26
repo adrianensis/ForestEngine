@@ -8,8 +8,6 @@
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 
-class Light;
-
 class RenderEngine : public System
 {
 public:

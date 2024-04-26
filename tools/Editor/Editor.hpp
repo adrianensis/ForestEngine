@@ -13,7 +13,8 @@ public:
 
 private:
 	Ptr<GameObject> createSprite(const Vector3& v, f32 size);
-	Ptr<GameObject> createLight(const Vector3& v, f32 size);
+	Ptr<GameObject> createPointLight(const Vector3& v, f32 size);
+	Ptr<GameObject> createDirectionalLight();
 	Ptr<GameObject> mousePick();
     Ptr<GameObject> importModel(const std::string& pFile, const Vector3& v, f32 size, f32 rot);
     Ptr<GameObject> importModel2(const std::string& pFile, const Vector3& v, f32 size, f32 rot);

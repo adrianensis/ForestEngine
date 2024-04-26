@@ -25,7 +25,21 @@ protected:
     void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;
 
 protected:
-    inline static const GPUFunctionDefinition mCalculatePBR { GPUBuiltIn::PrimitiveTypes::mVector4, "calculatePBR" };
+    inline static const GPUFunctionDefinition mCalculatePBR { GPUBuiltIn::PrimitiveTypes::mVector4, "calculatePBR",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "baseColor"}
+        }};
+    inline static const GPUFunctionDefinition mCalculatePBRSingleLight { GPUBuiltIn::PrimitiveTypes::mVector3, "calculatePBRSingleLight",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "albedo"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "V"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "N"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "F0"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDirection"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "lightColor"}
+        }};
     inline static const GPUFunctionDefinition mGetNormalFromMap { GPUBuiltIn::PrimitiveTypes::mVector3, "getNormalFromMap" };
     inline static const GPUFunctionDefinition mDistributionGGX { GPUBuiltIn::PrimitiveTypes::mFloat, "distributionGGX",
         {

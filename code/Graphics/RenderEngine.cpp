@@ -111,7 +111,14 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
     {
-        mRenderPipelineData.mLights.push_back(Ptr<Light>::cast(component));
+        if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.mId == ClassManager::getClassMetadata<PointLight>().mClassDefinition.mId)
+        {
+            mRenderPipelineData.mPointLights.push_back(Ptr<PointLight>::cast(component));
+        }
+        else if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.mId == ClassManager::getClassMetadata<DirectionalLight>().mClassDefinition.mId)
+        {
+            mRenderPipelineData.mDirectionalLight = Ptr<DirectionalLight>::cast(component);
+        }
     }
 }
 

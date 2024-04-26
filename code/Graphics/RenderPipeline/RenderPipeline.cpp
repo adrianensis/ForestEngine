@@ -67,9 +67,14 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
 	PROFILER_CPU()
 
     LightBuiltIn::LightsData lightsData;
-    FOR_ARRAY(i, renderData.mLights)
+    FOR_ARRAY(i, renderData.mPointLights)
     {
-        lightsData.mLights[i] = renderData.mLights[i]->getLightData();
+        lightsData.mPointLights[i] = renderData.mPointLights[i]->getLightData();
+    }
+
+    if(renderData.mDirectionalLight)
+    {
+        lightsData.mDirectionalLight = renderData.mDirectionalLight->getLightData();
     }
 
     GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
