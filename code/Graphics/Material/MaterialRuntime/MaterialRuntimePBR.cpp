@@ -349,6 +349,7 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
             set(metallic, metallicRoughnessPack.dot("b"));
         }
 
+        // base color gamma correct
         Variable albedo;
         funcCalculatePBR.body().
         variable(albedo, GPUBuiltIn::PrimitiveTypes::mVector3, "albedo", call("pow", {baseColor, "vec3(2.2)"s}));
