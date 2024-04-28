@@ -1,24 +1,16 @@
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 
-void GPUFramebuffer::init(const std::vector<GPUFramebufferAttachmentData>& attachments, u32 width, u32 height)
+void GPUFramebuffer::init(const GPUFramebufferData& framebufferData)
 {
-    mWidth = width;
-    mHeight = height;
-    
-    FOR_ARRAY(i, attachments)
-    {
-        const GPUFramebufferAttachmentData& attachmentData = attachments[i];
-        CHECK_MSG(!mAttachments.contains(attachmentData.mAttachmentType), "Duplicated Attachment!");
-        mAttachments.emplace(attachmentData.mAttachmentType, attachmentData);
-    }
+    mFrameBufferData = framebufferData;
 
-    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mWidth, mHeight);
+    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mFrameBufferData.mWidth, mFrameBufferData.mHeight);
     GET_SYSTEM(GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ_AND_DRAW, mFramebufferId);
 
-    FOR_MAP(it, mAttachments)
+    FOR_LIST(it, mFrameBufferData.mAttachments)
     {
-        const GPUFramebufferAttachmentData& attachmentData = it->second;
-        u32 id = GET_SYSTEM(GPUInterface).createFramebufferAttachment(attachmentData.mAttachmentType, mWidth, mHeight);
+        const GPUFramebufferAttachmentType& attachmentType = *it;
+        u32 id = GET_SYSTEM(GPUInterface).createFramebufferAttachment(attachmentType, mFrameBufferData.mWidth, mFrameBufferData.mHeight);
         mAttachmentIDs.push_back(id);
     }
 
@@ -28,10 +20,10 @@ void GPUFramebuffer::init(const std::vector<GPUFramebufferAttachmentData>& attac
 
 Vector4 GPUFramebuffer::readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const
 {
-    CHECK_MSG(mAttachments.contains(attachmentType), "Attachment not found!");
-    const GPUFramebufferAttachmentData& attachmentData = mAttachments.at(attachmentType);
+    CHECK_MSG(mFrameBufferData.mAttachments.contains(attachmentType), "Attachment not found!");
+
     GET_SYSTEM(GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ, mFramebufferId);
-    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(attachmentData.mAttachmentType);
+    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(attachmentType);
     Vector4 pixelColor = GET_SYSTEM(GPUInterface).readFramebufferPixel(x, y, GPUTexturePixelFormat::RGBA);
     GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(GPUFramebufferAttachmentType::NONE);
     GET_SYSTEM(GPUInterface).disableFramebuffer(GPUFramebufferOperationType::READ);

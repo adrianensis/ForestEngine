@@ -11,23 +11,12 @@
 
 void RenderPipeline::init()
 {
-    mRenderPassMap.insert_or_assign(
-        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.mId,
-        OwnerPtr<RenderPass>::moveCast(OwnerPtr<RenderPassGeometry>::newObject())
-    );
-    mRenderPassMap.insert_or_assign(
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId,
-        OwnerPtr<RenderPass>::moveCast(OwnerPtr<RenderPassUI>::newObject())
-    );
-    mRenderPassMap.insert_or_assign(
-        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
-        OwnerPtr<RenderPass>::moveCast(OwnerPtr<RenderPassUIStencil>::newObject())
-    );
-
-    FOR_MAP(it, mRenderPassMap)
-	{
-        it->second->init();
-	}
+    RenderPassData renderPassGeometryData;
+    initRenderPass<RenderPassGeometry>(renderPassGeometryData);
+    RenderPassData renderPassUIData;
+    initRenderPass<RenderPassUI>(renderPassUIData);
+    RenderPassData renderPassUIStencilData;
+    initRenderPass<RenderPassUIStencil>(renderPassUIStencilData);
 }
 
 void RenderPipeline::terminate()

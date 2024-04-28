@@ -2,9 +2,9 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
-void RenderPass::init()
+void RenderPass::init(const RenderPassData& renderPassData)
 {
-
+    mRenderPassData = renderPassData;
 }
 
 void RenderPass::terminate()

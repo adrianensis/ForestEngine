@@ -4,26 +4,26 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-class GPUFramebufferAttachmentData
+class GPUFramebufferData
 {
 public:
-    GPUFramebufferAttachmentType mAttachmentType;
+    std::unordered_set<GPUFramebufferAttachmentType> mAttachments;
+    u32 mWidth = 0;
+    u32 mHeight = 0;
 };
 
 class GPUFramebuffer
 {
 public:
-    void init(const std::vector<GPUFramebufferAttachmentData>& attachments, u32 width, u32 height);
+    void init(const GPUFramebufferData& framebufferData);
     Vector4 readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 
 private:
     u32 mFramebufferId = 0;
-    std::unordered_map<GPUFramebufferAttachmentType, GPUFramebufferAttachmentData> mAttachments;
     std::vector<u32> mAttachmentIDs;
-    u32 mWidth = 0;
-    u32 mHeight = 0;
+    GPUFramebufferData mFrameBufferData;
 
 public:
     GET(FramebufferId)

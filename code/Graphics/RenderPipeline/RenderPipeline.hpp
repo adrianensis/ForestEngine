@@ -29,9 +29,20 @@ private:
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)
+    void initRenderPass(const RenderPassData& renderPassData)
+    {
+        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        mRenderPassMap.insert_or_assign(
+            renderPassClassId,
+            OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
+        );
+        mRenderPassMap.at(renderPassClassId)->init(renderPassData);
+    }
+    template<class T> T_EXTENDS(T, RenderPass)
     void renderRenderPass()
     {
-        mRenderPassMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId)->render();
+        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        mRenderPassMap.at(renderPassClassId)->render();
     }
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
