@@ -6,6 +6,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
 void UIListEntry::init(const std::string& label, UIElementCallback callback)
 {
@@ -41,6 +42,10 @@ void UIList::initFromConfig(const UIElementConfig& config)
     rendererData.mIsInstanced = true;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();
+    rendererData.mRenderPassIDs = {
+        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId
+    };
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(Window).getAspectRatio(), mConfig.mSize.y)));
 	

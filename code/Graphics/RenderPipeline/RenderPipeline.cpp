@@ -1,5 +1,4 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/BatchRenderer/BatchesManager.hpp"
 #include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/RenderSharedContext.hpp"
@@ -7,8 +6,57 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
-void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batchesManager)
+void RenderPipeline::init()
+{
+    mRenderPassMap.insert_or_assign(
+        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.mId,
+        OwnerPtr<RenderPass>::moveCast(OwnerPtr<RenderPassGeometry>::newObject())
+    );
+    mRenderPassMap.insert_or_assign(
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId,
+        OwnerPtr<RenderPass>::moveCast(OwnerPtr<RenderPassUI>::newObject())
+    );
+    mRenderPassMap.insert_or_assign(
+        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
+        OwnerPtr<RenderPass>::moveCast(OwnerPtr<RenderPassUIStencil>::newObject())
+    );
+
+    FOR_MAP(it, mRenderPassMap)
+	{
+        it->second->init();
+	}
+}
+
+void RenderPipeline::terminate()
+{
+    FOR_MAP(it, mRenderPassMap)
+	{
+        it->second->terminate();
+	}
+}
+
+void RenderPipeline::onRendererAdded(Ptr<MeshRenderer> renderer)
+{
+    FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
+    {
+        CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
+        mRenderPassMap.at(*it)->onRendererAdded(renderer);
+    }
+}
+
+void RenderPipeline::onRendererRemoved(Ptr<MeshRenderer> renderer)
+{
+    FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
+    {
+        CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
+        mRenderPassMap.at(*it)->onRendererRemoved(renderer);
+    }
+}
+
+void RenderPipeline::render(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()
 
@@ -18,11 +66,9 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
 
 	GET_SYSTEM(GPUInterface).clear();
 
-    PROFILER_BLOCK_CPU("renderStencil");
-	batchesManager.renderStencil();
-    PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("render");
-	batchesManager.render();
+    mRenderPassMap.at(ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.mId)->render();
+
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("render shapes");
 	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
@@ -34,10 +80,10 @@ void RenderPipeline::render(RenderPipelineData& renderData, BatchesManager& batc
     updateGlobalData(renderData, false);
     
     PROFILER_BLOCK_CPU("renderScreenSpaceStencil");
-	batchesManager.renderScreenSpaceStencil();
+    mRenderPassMap.at(ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId)->render();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("renderScreenSpace");
-	batchesManager.renderScreenSpace();
+    mRenderPassMap.at(ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId)->render();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("renderScreenSpace shapes");
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();

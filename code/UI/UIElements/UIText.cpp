@@ -4,6 +4,7 @@
 #include "UI/UIElements/UIPanel.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Transform.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
 void UITextGlyph::initFromConfig(const UIElementConfig& config) 
 {
@@ -18,6 +19,10 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     rendererData.mMaterial = GET_SYSTEM(UIManager).getFontMaterial();
     rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
+    rendererData.mRenderPassIDs = {
+        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId
+    };
 
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
     renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;

@@ -2,8 +2,8 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/Light/Light.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 
-class BatchesManager;
 class ShapeBatchRenderer;
 class Camera;
 
@@ -18,9 +18,16 @@ public:
 class RenderPipeline: public ObjectBase
 {
 public:
-    void render(RenderPipelineData& renderData, BatchesManager& batchesManager);
+    void init();
+    void terminate();
+    void onRendererAdded(Ptr<MeshRenderer> renderer);
+    void onRendererRemoved(Ptr<MeshRenderer> renderer);
+    void render(RenderPipelineData& renderData);
 protected:
     void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
     void updateLights(RenderPipelineData& renderData);
+
+private:
+    std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
 };
 REGISTER_CLASS(RenderPipeline);

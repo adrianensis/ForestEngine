@@ -2,7 +2,6 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
-#include "Graphics/BatchRenderer/BatchesManager.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
@@ -30,7 +29,6 @@ private:
 	std::vector<Ptr<MeshRenderer>> mRenderers;
     RenderPipelineData mRenderPipelineData;
     RenderPipeline mRenderPipeline;
-	BatchesManager mBatchesManager;
 
 	bool mCameraDirtyTranslation = false;
 

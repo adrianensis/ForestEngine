@@ -4,6 +4,7 @@
 #include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIManager.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
 void UIArea::initFromConfig(const UIElementConfig& config) 
 {
@@ -59,7 +60,11 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mMaterial = mConfig.mMaterial;
     rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
-
+    rendererData.mRenderPassIDs = {
+        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId
+    };
+    
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;

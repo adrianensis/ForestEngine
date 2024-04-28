@@ -21,6 +21,8 @@ void RenderEngine::init()
 
 	mCameraDirtyTranslation = true;
 
+    mRenderPipeline.init();
+
 	// octree.init(5000);
 }
 
@@ -90,7 +92,7 @@ void RenderEngine::terminate()
 {
 	LOG_TRACE()
     
-    mBatchesManager.terminate();
+    mRenderPipeline.terminate();
 }
 
 void RenderEngine::addComponent(Ptr<SystemComponent> component)
@@ -102,7 +104,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderers.push_back(renderer);
 
-        mBatchesManager.onRendererAdded(renderer);
+        mRenderPipeline.onRendererAdded(renderer);
 
         if(renderer->getIsWorldSpace())
         {
@@ -129,7 +131,7 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-        mBatchesManager.onRendererRemoved(renderer);
+        mRenderPipeline.onRendererRemoved(renderer);
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
     {
@@ -147,5 +149,5 @@ void RenderEngine::render()
 {
 	PROFILER_CPU()
 
-    mRenderPipeline.render(mRenderPipelineData, mBatchesManager);
+    mRenderPipeline.render(mRenderPipelineData);
 }

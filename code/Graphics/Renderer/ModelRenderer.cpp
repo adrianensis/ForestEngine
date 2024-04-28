@@ -20,6 +20,7 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mMaterial = mModelRendererData.mModel->getMeshMaterials().at(*it);
 		rendererData.mIsInstanced = mModelRendererData.mIsInstanced;
 		rendererData.mStencilData = mModelRendererData.mStencilData;
+		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         mGameObject->createComponent<MeshRenderer>(rendererData);
 	}

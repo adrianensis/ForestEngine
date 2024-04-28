@@ -39,6 +39,7 @@ public:
     bool mIsInstanced = false;
     Ptr<const Mesh> mMesh;
     PoolHandler<Material> mMaterial;
+    std::unordered_set<ClassId> mRenderPassIDs;
 };
 
 class MeshRenderer: public Component, public IOcTreeElement
