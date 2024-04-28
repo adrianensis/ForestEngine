@@ -13,8 +13,8 @@ public:
     void terminate();
 
     void render();
-    void onAddRenderer(Ptr<MeshRenderer> renderer);
-    void onRemoveRenderer(Ptr<MeshRenderer> renderer);
+    void addRenderer(Ptr<MeshRenderer> renderer);
+    void removeRenderer(Ptr<MeshRenderer> renderer);
 
 private:
     void bindMaterial();

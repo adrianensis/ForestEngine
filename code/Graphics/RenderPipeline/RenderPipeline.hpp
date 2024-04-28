@@ -20,13 +20,19 @@ class RenderPipeline: public ObjectBase
 public:
     void init();
     void terminate();
-    void onRendererAdded(Ptr<MeshRenderer> renderer);
-    void onRendererRemoved(Ptr<MeshRenderer> renderer);
+    void addRenderer(Ptr<MeshRenderer> renderer);
+    void removeRenderer(Ptr<MeshRenderer> renderer);
     void render(RenderPipelineData& renderData);
-protected:
+
+private:
     void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
     void updateLights(RenderPipelineData& renderData);
 
+    template<class T> T_EXTENDS(T, RenderPass)
+    void renderRenderPass()
+    {
+        mRenderPassMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId)->render();
+    }
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
 };

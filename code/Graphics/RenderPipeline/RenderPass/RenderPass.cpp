@@ -15,7 +15,7 @@ void RenderPass::terminate()
 	}
 }
 
-void RenderPass::onRendererAdded(Ptr<MeshRenderer> renderer)
+void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	BatchData batchData;
 	batchData.init(renderer);
@@ -26,12 +26,12 @@ void RenderPass::onRendererAdded(Ptr<MeshRenderer> renderer)
         mBatchMap.at(batchData)->init(batchData);
 	}
 
-	mBatchMap.at(batchData)->onAddRenderer(renderer);
+	mBatchMap.at(batchData)->addRenderer(renderer);
 }
 
-void RenderPass::onRendererRemoved(Ptr<MeshRenderer> renderer)
+void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
 {
     BatchData batchData;
 	batchData.init(renderer);
-    mBatchMap.at(batchData)->onRemoveRenderer(renderer);
+    mBatchMap.at(batchData)->removeRenderer(renderer);
 }

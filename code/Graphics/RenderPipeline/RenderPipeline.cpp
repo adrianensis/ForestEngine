@@ -38,21 +38,21 @@ void RenderPipeline::terminate()
 	}
 }
 
-void RenderPipeline::onRendererAdded(Ptr<MeshRenderer> renderer)
+void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
 {
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
         CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
-        mRenderPassMap.at(*it)->onRendererAdded(renderer);
+        mRenderPassMap.at(*it)->addRenderer(renderer);
     }
 }
 
-void RenderPipeline::onRendererRemoved(Ptr<MeshRenderer> renderer)
+void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
 {
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
         CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
-        mRenderPassMap.at(*it)->onRendererRemoved(renderer);
+        mRenderPassMap.at(*it)->removeRenderer(renderer);
     }
 }
 
@@ -67,7 +67,7 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 	GET_SYSTEM(GPUInterface).clear();
 
     PROFILER_BLOCK_CPU("render");
-    mRenderPassMap.at(ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.mId)->render();
+    renderRenderPass<RenderPassGeometry>();
 
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("render shapes");
@@ -80,10 +80,10 @@ void RenderPipeline::render(RenderPipelineData& renderData)
     updateGlobalData(renderData, false);
     
     PROFILER_BLOCK_CPU("renderScreenSpaceStencil");
-    mRenderPassMap.at(ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId)->render();
+    renderRenderPass<RenderPassUIStencil>();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("renderScreenSpace");
-    mRenderPassMap.at(ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId)->render();
+    renderRenderPass<RenderPassUI>();
     PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("renderScreenSpace shapes");
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();

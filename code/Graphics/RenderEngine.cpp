@@ -104,7 +104,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderers.push_back(renderer);
 
-        mRenderPipeline.onRendererAdded(renderer);
+        mRenderPipeline.addRenderer(renderer);
 
         if(renderer->getIsWorldSpace())
         {
@@ -131,7 +131,7 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-        mRenderPipeline.onRendererRemoved(renderer);
+        mRenderPipeline.removeRenderer(renderer);
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
     {
