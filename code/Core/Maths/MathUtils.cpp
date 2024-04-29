@@ -1,6 +1,3 @@
-#include "Core/Maths/Vector2.hpp"
-#include "Core/Maths/Vector3.hpp"
-#include "Core/Maths/Geometry.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
 
