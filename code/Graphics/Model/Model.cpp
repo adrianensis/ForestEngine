@@ -4,7 +4,7 @@
 #include "Graphics/Material/MaterialRuntime/MaterialRuntimePBR.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
-#include "Engine/Assets/Config/Paths.hpp"
+#include "Engine/Config/Paths.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"

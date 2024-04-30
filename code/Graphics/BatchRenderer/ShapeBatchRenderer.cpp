@@ -4,7 +4,6 @@
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Engine/EngineConfig.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"

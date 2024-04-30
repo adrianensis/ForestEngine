@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Engine/Assets/Font/Font.hpp"
+#include "Core/Font/Font.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 
 class TextureData

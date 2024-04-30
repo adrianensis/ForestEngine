@@ -24,14 +24,15 @@ using u64 = std::uint64_t;
 
 using ClassId = u64;
 using ObjectId = u64;
+using HashValue = u64;
 
 namespace Hash
 {
     // Hash Algorithm: djb2
     // http://www.cse.yorku.ca/~oz/hash.html
-    constexpr inline static u64 hashString(const char *str, u32 size)
+    constexpr inline static HashValue hashString(const char *str, u32 size)
     {
-        u64 hashResult = 5381;
+        HashValue hashResult = 5381;
         FOR_RANGE(i, 0, size)
         {
             hashResult = ((hashResult << 5) + hashResult) + str[i]; /* hash * 33 + c */
@@ -40,18 +41,18 @@ namespace Hash
         return hashResult;
     }
 
-	inline static u64 hashString(std::string key)
+	inline static HashValue hashString(const std::string& key)
 	{
 		std::hash<std::string> hash_fn;
-		u64 hashResult = hash_fn(key);
+		HashValue hashResult = hash_fn(key);
 		return hashResult;
 	}
     
-    constexpr inline static u64 hashString(std::string_view key)
+    constexpr inline static HashValue hashString(const std::string_view& key)
 	{
 		// std::hash<std::string_view> hash_fn;
 		// u64 hashResult = hash_fn(key);
-		u64 hashResult = hashString(key.data(), key.size());
+		HashValue hashResult = hashString(key.data(), key.size());
 		return hashResult;
 	}
 }

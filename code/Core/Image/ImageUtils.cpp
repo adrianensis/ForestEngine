@@ -1,4 +1,4 @@
-#include "Engine/Assets/Image/ImageUtils.hpp"
+#include "Core/Image/ImageUtils.hpp"
 
 #include "png.h"
 #define STB_IMAGE_IMPLEMENTATION

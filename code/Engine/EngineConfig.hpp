@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/System/System.hpp"
-#include "Engine/Assets/Config/ConfigObject.hpp"
+#include "Engine/Config/ConfigObject.hpp"
 
 class EngineConfig: public System
 {

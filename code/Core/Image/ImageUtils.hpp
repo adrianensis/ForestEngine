@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdCore.hpp"
 
 class ImageData
 {
