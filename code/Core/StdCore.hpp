@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint> // std::uintptr_t
+#include <cstring>
 #include <string>
 #include <string_view>
 
@@ -28,12 +29,11 @@ using HashValue = u64;
 
 namespace Hash
 {
-    // Hash Algorithm: djb2
-    // http://www.cse.yorku.ca/~oz/hash.html
-    constexpr inline static HashValue hashString(const char *str, u32 size)
+    constexpr inline static HashValue hashString(const char *str)
     {
         HashValue hashResult = 5381;
-        FOR_RANGE(i, 0, size)
+        u32 strSize = std::strlen(str);
+        FOR_RANGE(i, 0, strSize)
         {
             hashResult = ((hashResult << 5) + hashResult) + str[i]; /* hash * 33 + c */
         }
@@ -41,18 +41,22 @@ namespace Hash
         return hashResult;
     }
 
-	inline static HashValue hashString(const std::string& key)
+    constexpr inline static HashValue hashString(const std::string& str)
 	{
-		std::hash<std::string> hash_fn;
-		HashValue hashResult = hash_fn(key);
-		return hashResult;
+		return hashString(str.c_str());
 	}
     
-    constexpr inline static HashValue hashString(const std::string_view& key)
+    constexpr inline static HashValue hashString(const std::string_view& str)
 	{
-		// std::hash<std::string_view> hash_fn;
-		// u64 hashResult = hash_fn(key);
-		HashValue hashResult = hashString(key.data(), key.size());
-		return hashResult;
+		return hashString(str.data());
 	}
 }
+
+template<>
+struct std::hash<const char *> 
+{
+    size_t operator()(const char * str) const 
+    {
+        return Hash::hashString(str);
+    }
+};

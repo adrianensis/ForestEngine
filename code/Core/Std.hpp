@@ -15,6 +15,8 @@
 #include "Core/StdCore.hpp"
 #include "Core/Memory/Memory.hpp"
 #include "Core/Memory/Pointers.hpp"
+#include "Core/ConstString/ConstString.hpp"
+#include "Core/Tag/Tag.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Serialization/Serialization.hpp"
 #include "Core/Memory/ByteBuffer.hpp"
