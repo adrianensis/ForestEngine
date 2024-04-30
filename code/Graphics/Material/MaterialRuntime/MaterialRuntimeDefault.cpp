@@ -173,7 +173,7 @@ void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) co
     if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR).get()));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
@@ -183,8 +183,8 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
 {
     if(mMaterial->getMaterialData().mIsFont)
     {
-        std::string samplerName = std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR));
-        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+        ConstString samplerName = EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR);
+        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName.get()));
     }
     else
     {
@@ -192,15 +192,15 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
         {
             if(!mMaterial->getMaterialData().mTextureBindings[i].mPath.empty())
             {
-                std::string samplerName = std::string(EnumsManager::toString<TextureMap>(i));
+                ConstString samplerName = EnumsManager::toString<TextureMap>(i);
 
                 switch (mMaterial->getMaterialData().mTextureBindings[i].mStage)
                 {
                     case GPUPipelineStage::VERTEX:
-                        shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                        shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName.get()));
                     break;
                     case GPUPipelineStage::FRAGMENT:
-                        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName.get()));
                     break;
 
                     default:

@@ -31,7 +31,7 @@ private:
     template<class T> T_EXTENDS(T, RenderPass)
     void initRenderPass(const RenderPassData& renderPassData)
     {
-        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
             OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
@@ -41,7 +41,7 @@ private:
     template<class T> T_EXTENDS(T, RenderPass)
     void renderRenderPass()
     {
-        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         mRenderPassMap.at(renderPassClassId)->render();
     }
 private:

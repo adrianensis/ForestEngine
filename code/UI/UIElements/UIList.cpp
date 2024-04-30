@@ -43,8 +43,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId
+        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.getId(),
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(Window).getAspectRatio(), mConfig.mSize.y)));

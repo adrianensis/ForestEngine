@@ -13,12 +13,12 @@ public:
 	template <class T>
 	Ptr<const Mesh> getPrimitive()
 	{
-		if(!mPrimitivesMap.contains(ClassManager::getClassMetadata<T>().mClassDefinition.mId))
+		if(!mPrimitivesMap.contains(ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
 		{
-			mPrimitivesMap.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.mId, createPrimitive<T>());
+			mPrimitivesMap.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.getId(), createPrimitive<T>());
 		}
 		
-		return Ptr<Mesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId));
+		return Ptr<Mesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
 	}
 
 private:

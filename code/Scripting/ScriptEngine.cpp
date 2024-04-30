@@ -6,7 +6,7 @@ void ScriptEngine::init()
 {
 	LOG_TRACE()
 
-	registerComponentClass(ClassManager::getClassMetadata<Script>().mClassDefinition.mId);
+	registerComponentClass(ClassManager::getClassMetadata<Script>().mClassDefinition.getId());
 }
 
 void ScriptEngine::addComponent(Ptr<SystemComponent> component)

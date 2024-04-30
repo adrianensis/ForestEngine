@@ -53,7 +53,7 @@ public:
 	template<class T> T_EXTENDS(T, UIElement)
 	UIBuilder& create()
 	{
-        mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
 	    Ptr<T> uiElement = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<T>();

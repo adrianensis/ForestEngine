@@ -13,7 +13,7 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"
 
-ClassId MeshRenderer::getSystemComponentId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId; }
+ClassId MeshRenderer::getSystemComponentId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
 
 void MeshRenderer::init(const RendererData& data) 
 {

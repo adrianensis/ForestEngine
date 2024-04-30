@@ -7,7 +7,9 @@
 class ConstString
 {
 public:
+    ConstString() = default;
     ConstString(const std::string_view& str);
+    ConstString(const char* str);
     const std::string& get() const;
     bool isValid() const;
     HashValue getHash() const { return mHash; }

@@ -16,8 +16,8 @@ void RenderEngine::init()
 {
 	LOG_TRACE()
 
-	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId);
-	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.mId);
+	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId());
+	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.getId());
 
 	mCameraDirtyTranslation = true;
 
@@ -99,7 +99,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 {
 	System::addComponent(component);
 
-    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
+    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderers.push_back(renderer);
@@ -111,13 +111,13 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
             //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
         }
     }
-    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
+    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
-        if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.mId == ClassManager::getClassMetadata<PointLight>().mClassDefinition.mId)
+        if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.getId() == ClassManager::getClassMetadata<PointLight>().mClassDefinition.getId())
         {
             mRenderPipelineData.mPointLights.push_back(Ptr<PointLight>::cast(component));
         }
-        else if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.mId == ClassManager::getClassMetadata<DirectionalLight>().mClassDefinition.mId)
+        else if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.getId() == ClassManager::getClassMetadata<DirectionalLight>().mClassDefinition.getId())
         {
             mRenderPipelineData.mDirectionalLight = Ptr<DirectionalLight>::cast(component);
         }
@@ -128,12 +128,12 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
 {
 	System::removeComponent(component);
 
-    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.mId)
+    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderPipeline.removeRenderer(renderer);
     }
-    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.mId)
+    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
     }
 }

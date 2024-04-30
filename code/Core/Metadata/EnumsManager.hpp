@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
+#include "Core/ConstString/ConstString.hpp"
 #include <unordered_map>
 #include <vector>
 
@@ -12,7 +13,7 @@ enum class EnumName : u32\
     MAX\
 };\
 template <>\
-inline const std::string_view& EnumsManager::getEnumNameFromTemplate<EnumName>() { static std::string_view name = #EnumName; return name; } \
+inline const ConstString& EnumsManager::getEnumNameFromTemplate<EnumName>() { static ConstString name = #EnumName; return name; } \
 inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { FOR_EACH_EVEN(ADD_TRAIL_COMMA, __VA_ARGS__) });
 
 // --------------------------------------------------------
@@ -22,16 +23,16 @@ inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { F
 class EnumRegister
 {
 public:
-    EnumRegister(const std::string_view& name, const std::vector<std::string_view>& valueNames);
+    EnumRegister(const ConstString& name, const std::vector<ConstString>& valueNames);
 };
 
 class EnumDefinition
 {
 public:
-    EnumDefinition(const std::string_view& name, const std::vector<std::string_view>& valueNames);
+    EnumDefinition(const ConstString& name, const std::vector<ConstString>& valueNames);
 
-    std::string_view mName;
-    std::vector<std::string_view> mValueNames;
+    ConstString mName;
+    std::vector<ConstString> mValueNames;
 };
 
 class EnumsManager
@@ -40,21 +41,21 @@ friend EnumRegister;
 
 public:
     template <typename E>
-    static const std::string_view& getEnumNameFromTemplate()
+    static const ConstString& getEnumNameFromTemplate()
     {
         return mEmptyName;
     }
     template <typename E>
-    static const std::string_view& toString(E enumToken)
+    static const ConstString& toString(E enumToken)
     {
         return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
     }
     template <typename E>
-    static const std::string_view& toString(u8 enumToken)
+    static const ConstString& toString(u8 enumToken)
     {
         return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
     }
-    static const std::string_view& toString(const std::string_view& name, u8 enumToken)
+    static const ConstString& toString(const ConstString& name, u8 enumToken)
     {
         return getEnumMetadata(name).mValueNames[enumToken];
     }
@@ -63,10 +64,10 @@ public:
     {
         return getEnumMetadata(getEnumNameFromTemplate<E>());
     }
-    static const EnumDefinition& getEnumMetadata(const std::string_view& name);
+    static const EnumDefinition& getEnumMetadata(const ConstString& name);
 private:
-    static const EnumDefinition& create(const std::string_view& name, const std::vector<std::string_view>& valueNames);
+    static const EnumDefinition& create(const ConstString& name, const std::vector<ConstString>& valueNames);
 private:
-    inline static std::unordered_map<std::string_view, EnumDefinition> mEnumsMapByName;
-    inline static std::string_view mEmptyName;
+    inline static std::unordered_map<ConstString, EnumDefinition> mEnumsMapByName;
+    inline static ConstString mEmptyName;
 };

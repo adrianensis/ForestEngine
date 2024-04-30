@@ -28,7 +28,7 @@ void SystemsManager::terminate()
     for (auto it = mSystemsInOrder.rbegin(); it != mSystemsInOrder.rend(); ++it)
     {
         (*it)->terminate();
-        mSystems.erase(ClassManager::getDynamicClassMetadata<System>((*it).getInternalPointer()).mClassDefinition.mId);
+        mSystems.erase(ClassManager::getDynamicClassMetadata<System>((*it).getInternalPointer()).mClassDefinition.getId());
     }
 
     mSystemsInOrder.clear();

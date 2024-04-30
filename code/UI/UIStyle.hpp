@@ -42,21 +42,21 @@ public:
 	void addStyle()
 	{   
         T newStyle;
-		mStyles.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.mId, newStyle);
+		mStyles.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.getId(), newStyle);
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getStyle()
 	{
-		CHECK_MSG(mStyles.contains(ClassManager::getClassMetadata<T>().mClassDefinition.mId), "Style not found");
+		CHECK_MSG(mStyles.contains(ClassManager::getClassMetadata<T>().mClassDefinition.getId()), "Style not found");
 
-		return static_cast<T&>(mStyles.at(ClassManager::getClassMetadata<T>().mClassDefinition.mId));
+		return static_cast<T&>(mStyles.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
 	}
 
 	template<class T> T_EXTENDS(T, UIStyle)
 	const T& getOrAddStyle()
 	{
-		if(!mStyles.contains(ClassManager::getClassMetadata<T>().mClassDefinition.mId))
+		if(!mStyles.contains(ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
 		{
 			addStyle<T>();
 		}

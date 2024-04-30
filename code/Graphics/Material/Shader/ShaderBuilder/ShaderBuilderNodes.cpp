@@ -43,8 +43,8 @@ namespace ShaderBuilderNodes
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
         std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ") ";
-        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : std::string(EnumsManager::toString(mGPUInterpolation)) + " ";
-        std::string storageStr = std::string(EnumsManager::toString(mGPUStorage)) + " ";
+        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : EnumsManager::toString(mGPUInterpolation).get() + " ";
+        std::string storageStr = EnumsManager::toString(mGPUStorage).get() + " ";
         return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType.mName + " " + mName + arrayStr + valueStr + ";"};
     }
     

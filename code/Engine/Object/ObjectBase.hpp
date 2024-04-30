@@ -28,7 +28,7 @@ public:
 	// template <class T>
 	// bool isSameClass() const
 	// {
-	// 	return this->getClassDefinition().mId == ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+	// 	return this->getClassDefinition().getId() == ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 	// }
 
 private:

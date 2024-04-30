@@ -71,7 +71,7 @@ public:
     template<typename T> T_EXTENDS(T, System)
     Ptr<T> createSystem()
     {
-        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         CHECK_MSG(!mSystems.contains(classId), "System already created");
         OwnerPtr<T> newSystem = OwnerPtr<T>::newObject();
         mSystems.insert_or_assign(classId, OwnerPtr<System>::moveCast(newSystem));
@@ -84,7 +84,7 @@ public:
     template<typename T> T_EXTENDS(T, System)
     Ptr<T> getSystem() const
     {
-        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.mId;
+        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         CHECK_MSG(mSystems.contains(classId), "System not found!");
         return Ptr<T>::cast(mSystems.at(classId));
     }

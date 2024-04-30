@@ -1,6 +1,6 @@
 #include "Graphics/Light/Light.hpp"
 
-ClassId Light::getSystemComponentId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.mId; }
+ClassId Light::getSystemComponentId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.getId(); }
 
 void PointLight::init(const PointLightData& data)
 {

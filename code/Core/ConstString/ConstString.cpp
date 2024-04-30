@@ -2,9 +2,9 @@
 
 #include "Core/ConstString/ConstString.hpp"
 
-ConstString::ConstString(const std::string_view& str)
+ConstString::ConstString(const char* str)
 {
-    if(str.empty())
+    if(std::strlen(str) == 0)
     {
         return;
     }
@@ -14,6 +14,9 @@ ConstString::ConstString(const std::string_view& str)
     {
         ConstStringsManager::registerString(str);
     }
+}
+ConstString::ConstString(const std::string_view& str) : ConstString(str.data())
+{
 }
 
 const std::string& ConstString::get() const

@@ -38,7 +38,7 @@ void MaterialRuntimePBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR))));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR).get()));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
@@ -92,7 +92,7 @@ void MaterialRuntimePBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilde
 
         if(mMaterial->hasTexture(TextureMap::NORMAL))
         {
-            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::NORMAL))).mName);
+            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::NORMAL).get()).mName);
             funcGetNormalFromMap.body().
             set(normalFromTexture, call("texture", {samplerNormal, inTextureCoord}));
         }
@@ -339,7 +339,7 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
         if(mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
         {
-            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(std::string(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS))).mName);
+            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS).get()).mName);
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);
 
             Variable metallicRoughnessPack;

@@ -11,7 +11,7 @@ void MemoryTracking::terminate()
 	LOG("-------- MEM SUMMARY --------")
 	FOR_MAP(it, MemoryTracking::smAllocationsMap)
 	{
-		LOG(std::string(it->first) + ": " + std::to_string(it->second.mCurrentAllocations) + " (max: " + std::to_string(it->second.mMaxAllocations) + ")");
+		LOG(it->first.get() + ": " + std::to_string(it->second.mCurrentAllocations) + " (max: " + std::to_string(it->second.mMaxAllocations) + ")");
 	}
 	LOG("-----------------------------")
 #endif

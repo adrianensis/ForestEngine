@@ -61,8 +61,8 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.mId,
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.mId
+        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.getId(),
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
     
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);

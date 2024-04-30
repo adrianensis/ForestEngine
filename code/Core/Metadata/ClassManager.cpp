@@ -10,7 +10,7 @@ ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
     mClassDefinition = classDefinition;
 }
 
-MemberRegister::MemberRegister(const std::string_view& ownerClassName, const MemberDefinition& memberDefinition)
+MemberRegister::MemberRegister(const ConstString& ownerClassName, const MemberDefinition& memberDefinition)
 {
     ClassManager::getClassMetadataInternal(ownerClassName).mMembersMap.insert_or_assign(memberDefinition.mName, MemberMetadata(memberDefinition));
 }
@@ -25,16 +25,16 @@ void ClassManager::insert(const ClassMetadata& classMetadata)
     if(!smClassMapByName.contains(classMetadata.mClassDefinition.mName))
     {
         smClassMapByName.insert_or_assign(classMetadata.mClassDefinition.mName, classMetadata);
-        smClassMapById.insert_or_assign(classMetadata.mClassDefinition.mId, &smClassMapByName.at(classMetadata.mClassDefinition.mName));
+        smClassMapById.insert_or_assign(classMetadata.mClassDefinition.getId(), &smClassMapByName.at(classMetadata.mClassDefinition.mName));
     }
 }
 
-ClassMetadata& ClassManager::getClassMetadataInternal(const std::string_view& className)
+ClassMetadata& ClassManager::getClassMetadataInternal(const ConstString& className)
 {
     return smClassMapByName.at(className);
 }
 
-const ClassMetadata& ClassManager::getClassMetadataByName(const std::string_view& className)
+const ClassMetadata& ClassManager::getClassMetadataByName(const ConstString& className)
 {
     return smClassMapByName.at(className);
 }

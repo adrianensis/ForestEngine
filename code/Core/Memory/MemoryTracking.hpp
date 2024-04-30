@@ -1,11 +1,10 @@
 #pragma once
 
-#include <string>
-#include <string_view>
 #include <unordered_map>
 #include <typeinfo>
 #include "Core/Assert/Assert.hpp"
 #include "Core/Metadata/ClassManager.hpp"
+#include "Core/ConstString/ConstString.hpp"
 
 class MemoryTracking
 {
@@ -31,9 +30,9 @@ public:
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
-		std::string_view className;
+		ConstString className;
 
-		if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.mId > 0)
+		if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
 		{
 			className = ClassManager::getClassMetadata<T>().mClassDefinition.mName;
 		}
@@ -60,8 +59,8 @@ public:
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
-		std::string_view className;
-		if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mId > 0)
+		ConstString className;
+		if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.getId() > 0)
 		{
 			className = ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mName;
 		}
@@ -72,14 +71,14 @@ public:
 
         smPointersToDynamicClassName.erase(reinterpret_cast<u64>(pointer));
 
-        CHECK_MSG(smAllocationsMap.contains(className), "No prevoius allocation for class: " + std::string(className));
+        CHECK_MSG(smAllocationsMap.contains(className), "No prevoius allocation for class: " + className.get());
         smAllocationsMap[className].mCurrentAllocations -= 1;
 #endif
 	}
 
 private:
 #ifdef ENGINE_DEBUG
-	inline static std::unordered_map<std::string_view, AllocationInfo> smAllocationsMap;
-    inline static std::unordered_map<u64, std::string_view> smPointersToDynamicClassName;
+	inline static std::unordered_map<ConstString, AllocationInfo> smAllocationsMap;
+    inline static std::unordered_map<u64, ConstString> smPointersToDynamicClassName;
 #endif
 };

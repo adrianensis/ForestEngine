@@ -17,7 +17,7 @@ public:
 	{
 		T *object = new T(args...);
 		CHECK_MSG(object != nullptr, "pointer is nullptr");
-        if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.mId > 0)
+        if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
 		{
             ClassManager::registerDynamicClass<T>(object);
 		}
@@ -29,7 +29,7 @@ public:
 	static void deleteObject(T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
-        if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mId > 0)
+        if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.getId() > 0)
 		{
 		    ClassManager::unregisterDynamicClass<T>(pointer);
         }

@@ -264,7 +264,7 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
     modelRendererData.mIsInstanced = true;
-    modelRendererData.mRenderPassIDs = {ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.mId};
+    modelRendererData.mRenderPassIDs = {ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId()};
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
     return gameObject;
@@ -283,7 +283,7 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
     modelRendererData.mIsInstanced = true;
-    modelRendererData.mRenderPassIDs = {ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.mId};
+    modelRendererData.mRenderPassIDs = {ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId()};
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
     return gameObject;
