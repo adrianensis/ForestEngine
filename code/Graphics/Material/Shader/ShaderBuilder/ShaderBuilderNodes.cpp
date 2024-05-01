@@ -17,7 +17,7 @@ namespace ShaderBuilderNodes
     {
         std::vector<std::string> code;
 
-        code.push_back(getIndent(indent) + "struct " + mStructDefinition.mName + "{");
+        code.push_back(getIndent(indent) + "struct " + mStructDefinition.mName.get() + "{");
 
         FOR_LIST(it, mStructDefinition.mPrimitiveVariables)
         {
@@ -35,7 +35,7 @@ namespace ShaderBuilderNodes
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
-        return {getIndent(indent) + mType.mName + " " + mName + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
 
     std::vector<std::string> Attribute::toLines(u16 indent) const
@@ -45,7 +45,7 @@ namespace ShaderBuilderNodes
         std::string locationStr = mLocation < 0 ? "" : "layout (location=" + std::to_string(mLocation) + ") ";
         std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : EnumsManager::toString(mGPUInterpolation).get() + " ";
         std::string storageStr = EnumsManager::toString(mGPUStorage).get() + " ";
-        return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType.mName + " " + mName + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
     
     std::vector<std::string> SharedBuffer::toLines(u16 indent) const
@@ -66,7 +66,7 @@ namespace ShaderBuilderNodes
             break;
         }
 
-        code.push_back(getIndent(indent) + layoutStr + " " + mGPUSharedBufferData.mBufferName + " {");
+        code.push_back(getIndent(indent) + layoutStr + " " + mGPUSharedBufferData.mBufferName.get() + " {");
 
         const auto& variableDefinitionDataArray = mGPUSharedBufferData.mGPUVariableDefinitionDataArray;
         FOR_LIST(it, variableDefinitionDataArray)
@@ -77,7 +77,7 @@ namespace ShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        code.push_back(getIndent(indent) + "} " + mGPUSharedBufferData.mInstanceName + ";");
+        code.push_back(getIndent(indent) + "} " + mGPUSharedBufferData.mInstanceName.get() + ";");
 
         return code;
     }
@@ -88,22 +88,22 @@ namespace ShaderBuilderNodes
         {
             if(mFront)
             {
-                return {getIndent(indent) + mOp + mVariable.getNameOrValue()};
+                return {getIndent(indent) + mOp.get() + mVariable.getNameOrValue()};
             }
             else
             {
-                return {getIndent(indent) + mVariable.getNameOrValue() + mOp};
+                return {getIndent(indent) + mVariable.getNameOrValue() + mOp.get()};
             }
         }
 
         std::vector<std::string> Binary::toLines(u16 indent) const
         {
-            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp + mVariableB.getNameOrValue()};
+            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp.get() + mVariableB.getNameOrValue()};
         }
 
         std::vector<std::string> Assign::toLines(u16 indent) const
         {
-            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp + mVariableB.getNameOrValue() + ";"};
+            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp.get() + mVariableB.getNameOrValue() + ";"};
         }
     }
 
@@ -126,7 +126,7 @@ namespace ShaderBuilderNodes
     {
         return set(a, Variable(value));
     }
-    BlockStatement& BlockStatement::ifBlock(const Variable& a, const std::string& op , const Variable& b)
+    BlockStatement& BlockStatement::ifBlock(const Variable& a, const ConstString& op , const Variable& b)
     {
         BlockStatement* newStatement = new IfStatement(a, op, b);
         newStatement->mParent = this;
@@ -217,7 +217,7 @@ namespace ShaderBuilderNodes
         
         FOR_ARRAY(i, mParameters)
         {
-            paramsStr += "in " + mParameters[i].mType.mName + " " + mParameters[i].mName;
+            paramsStr += "in " + mParameters[i].mType.mName.get() + " " + mParameters[i].mName.get();
 
             if(i < (i32)mParameters.size() - 1)
             {
@@ -225,7 +225,7 @@ namespace ShaderBuilderNodes
             }
         }
 
-        code.push_back(getIndent(indent) + mType.mName + " " + mName + "(" + paramsStr + ")");
+        code.push_back(getIndent(indent) + mType.mName.get() + " " + mName.get() + "(" + paramsStr + ")");
         auto statementCode = mBlockStatement.toLines(indent);
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;
@@ -246,7 +246,7 @@ namespace ShaderBuilderNodes
         return mSharedBuffers.emplace_back(sharedBuffer);
     }
     
-    const Struct& Program::getStruct(const std::string_view& structName) const
+    const Struct& Program::getStruct(const ConstString& structName) const
     {
         FOR_LIST(it, mStructs)
         {
@@ -259,7 +259,7 @@ namespace ShaderBuilderNodes
         return mNullStructDefinition;
     }
 
-    const Attribute& Program::getAttribute(const std::string_view& attributeName) const
+    const Attribute& Program::getAttribute(const ConstString& attributeName) const
     {
         FOR_LIST(it, mAttributes)
         {
@@ -272,7 +272,7 @@ namespace ShaderBuilderNodes
         return mNullAttribute;
     }
 
-    const SharedBuffer& Program::getSharedBuffer(const std::string_view& sharedBufferName) const
+    const SharedBuffer& Program::getSharedBuffer(const ConstString& sharedBufferName) const
     {
         FOR_LIST(it, mSharedBuffers)
         {
@@ -285,7 +285,7 @@ namespace ShaderBuilderNodes
         return mNullSharedBuffer;
     }
 
-    FunctionDefinition& Program::getFunctionDefinition(const std::string_view& functionDefinitionName)
+    FunctionDefinition& Program::getFunctionDefinition(const ConstString& functionDefinitionName)
     {
         FOR_LIST(it, mFunctionDefinitions)
         {

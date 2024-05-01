@@ -15,8 +15,8 @@ public:
 public:
     GPUBufferType mType = GPUBufferType::UNIFORM;
     std::vector<GPUVariableDefinitionData> mGPUVariableDefinitionDataArray;
-    std::string mBufferName;
-    std::string mInstanceName;
+    ConstString mBufferName;
+    ConstString mInstanceName;
 };
 
 class GPUSharedBuffer

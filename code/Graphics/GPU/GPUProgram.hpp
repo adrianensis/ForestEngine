@@ -19,7 +19,7 @@ public:
     void enable() const;
     void disable() const;
     template<class T>
-    void bindUniformValue(const std::string& name, const T& value)
+    void bindUniformValue(const ConstString& name, const T& value)
     {
         GET_SYSTEM(GPUInterface).bindUniformValue<T>(mProgramId, name, value);
     }

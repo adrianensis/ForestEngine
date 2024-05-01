@@ -90,9 +90,7 @@ void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWor
     {
         isWorldSpace ? renderData.mCamera->mProjectionMatrix : ortho,
         isWorldSpace ? renderData.mCamera->mViewMatrix : Matrix4::smIdentity,
-        renderData.mCamera->mGameObject->mTransform->getWorldPosition(),
-        GET_SYSTEM(Time).getDeltaTimeSeconds(),
-        GET_SYSTEM(Window).getWindowSize()
+        renderData.mCamera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }

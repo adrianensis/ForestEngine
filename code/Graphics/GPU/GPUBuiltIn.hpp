@@ -44,10 +44,10 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
-        static GPUVariableDefinitionData getSampler(const std::string& name)
+        static GPUVariableDefinitionData getSampler(const ConstString& name)
         {
             GPUVariableDefinitionData numberedSampler = mSampler;
-            numberedSampler.mName = numberedSampler.mName + "_" + name;
+            numberedSampler.mName = ConstString(numberedSampler.mName.get() + "_" + name.get());
             return numberedSampler;
         }
     };
@@ -62,8 +62,6 @@ public:
             Matrix4 mProjectionMatrix;
             Matrix4 mViewMatrix;
             alignas(16) Vector3 mCameraPosition;
-            alignas(16) f32 mTime = 0;
-            alignas(16) Vector2 mWindowSize;
         };
 
         inline static const GPUSharedBufferData mGlobalData
@@ -72,9 +70,7 @@ public:
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "time"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mVector2, "windowSize"}
+                {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"}
             },
             "GlobalData",
             "globalData"

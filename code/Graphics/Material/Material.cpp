@@ -75,7 +75,7 @@ void Material::bindToShader(Ptr<GPUProgram> shader) const
     {
         if(hasTexture((TextureMap)i))
         {
-            shader->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>((TextureMap)i).get()).mName, textureUnit);
+            shader->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>((TextureMap)i)).mName, textureUnit);
             textureUnit++;
         }
     }

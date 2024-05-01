@@ -122,17 +122,17 @@ void MaterialRuntimeDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder
     auto& outObjectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mObjectID);
     auto& outMaterialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
 
-    if(!instanceId.isEmpty())
+    if(instanceId.isValid())
     {
         shaderBuilder.getMain().
         set(outInstanceId, instanceId);
     }
-    if(!objectId.isEmpty())
+    if(objectId.isValid())
     {
         shaderBuilder.getMain().
         set(outObjectId, objectId);
     }
-    if(!materialInstanceId.isEmpty())
+    if(materialInstanceId.isValid())
     {
         shaderBuilder.getMain().
         set(outMaterialInstanceId, materialInstanceId);
@@ -173,7 +173,7 @@ void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) co
     if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR).get()));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
@@ -184,7 +184,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
     if(mMaterial->getMaterialData().mIsFont)
     {
         ConstString samplerName = EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR);
-        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName.get()));
+        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
     }
     else
     {
@@ -197,10 +197,10 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
                 switch (mMaterial->getMaterialData().mTextureBindings[i].mStage)
                 {
                     case GPUPipelineStage::VERTEX:
-                        shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName.get()));
+                        shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
                     break;
                     case GPUPipelineStage::FRAGMENT:
-                        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName.get()));
+                        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
                     break;
 
                     default:

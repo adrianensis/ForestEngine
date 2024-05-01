@@ -478,19 +478,19 @@ u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const st
     return programId;
 }
 
-void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const std::string& bufferName, u32 bindingPoint)
+void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const ConstString& bufferName, u32 bindingPoint)
 {
     switch (bufferType)
     {
         case GPUBufferType::UNIFORM:
         {
-            u32 location = glGetUniformBlockIndex(programId, bufferName.c_str());   
+            u32 location = glGetUniformBlockIndex(programId, bufferName.get().c_str());   
             glUniformBlockBinding(programId, location, bindingPoint);
             break;
         }
         case GPUBufferType::STORAGE:
         {
-            u32 location = glGetProgramResourceIndex(programId, GL_SHADER_STORAGE_BLOCK, bufferName.c_str());
+            u32 location = glGetProgramResourceIndex(programId, GL_SHADER_STORAGE_BLOCK, bufferName.get().c_str());
             glShaderStorageBlockBinding(programId, location, bindingPoint);
             break;
         }

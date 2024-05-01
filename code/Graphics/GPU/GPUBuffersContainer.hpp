@@ -20,14 +20,14 @@ public:
     void setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic);
 
 private:
-    static u32 findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name);
+    static u32 findIndex(const std::unordered_map<ConstString, u32>& indexMap, const ConstString& name);
 
 private:
     u32 mVertexBufferLayoutId = 0;
     GPUIndicesBuffer mIndicesBuffer;
     u32 mAttributeIndex = 0;
     std::vector<GPUVertexBuffer> mVertexBuffers;
-    std::unordered_map<std::string, u32> mVertexBuffersMap;
+    std::unordered_map<ConstString, u32> mVertexBuffersMap;
 public:
     CRGET(VertexBuffers)
     RGET(IndicesBuffer)
@@ -45,11 +45,11 @@ public:
     bool containsSharedBuffer(const GPUSharedBufferData& data) const;
 
 private:
-    static u32 findIndex(const std::unordered_map<std::string, u32>& indexMap, const std::string& name);
+    static u32 findIndex(const std::unordered_map<ConstString, u32>& indexMap, const ConstString& name);
 
 private:
     std::vector<GPUSharedBuffer> mSharedBuffers;
-    std::unordered_map<std::string, u32> mSharedBuffersMap;
+    std::unordered_map<ConstString, u32> mSharedBuffersMap;
 public:
     CRGET(SharedBuffers)
 };

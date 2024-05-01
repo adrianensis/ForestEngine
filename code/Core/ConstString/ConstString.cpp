@@ -14,6 +14,10 @@ ConstString::ConstString(const char* str)
     {
         ConstStringsManager::registerString(str);
     }
+
+    #ifdef ENGINE_DEBUG
+    mString = std::string(str, std::strlen(str));
+    #endif
 }
 ConstString::ConstString(const std::string_view& str) : ConstString(str.data())
 {

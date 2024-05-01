@@ -36,7 +36,7 @@ void MaterialRuntimeUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR).get()));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
 
