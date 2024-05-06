@@ -376,7 +376,6 @@ StencilData UIElement::calculateStencilData() const
         stencilData.mStencilValue = 0;
         stencilData.mStencilFunction = GL_EQUAL;
         stencilData.mStencilPassOp = GL_INCR;
-        stencilData.mId = this->getObjectId();
 
         if(mConfig.mParent)
         {
@@ -414,10 +413,10 @@ StencilData UIElement::calculateStencilData() const
              
                 stencilData.mStencilPassOp = GL_KEEP;
             }
-
-            stencilData.mId = 0;
         }
     }
+
+    stencilData.mId = this->getObjectId();
 
     return stencilData;
 }

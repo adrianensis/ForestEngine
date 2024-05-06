@@ -7,7 +7,7 @@ class RenderPassUI: public RenderPass
 public:
     virtual void render() override;
 private:
-    void renderStencil(u64 id);
+    void renderStencilCascade(u64 id);
 private:
     std::unordered_set<u64> mStencilsRendered;
 };
