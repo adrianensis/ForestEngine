@@ -61,10 +61,9 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.getId(),
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
+        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
-    
+
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;

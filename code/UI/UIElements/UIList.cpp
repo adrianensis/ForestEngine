@@ -43,7 +43,6 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.getId(),
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 

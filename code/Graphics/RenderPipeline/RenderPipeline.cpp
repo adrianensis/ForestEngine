@@ -15,8 +15,6 @@ void RenderPipeline::init()
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
     RenderPassData renderPassUIData;
     initRenderPass<RenderPassUI>(renderPassUIData);
-    RenderPassData renderPassUIStencilData;
-    initRenderPass<RenderPassUIStencil>(renderPassUIStencilData);
 }
 
 void RenderPipeline::terminate()
@@ -68,9 +66,6 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 
     updateGlobalData(renderData, false);
     
-    PROFILER_BLOCK_CPU("renderScreenSpaceStencil");
-    renderRenderPass<RenderPassUIStencil>();
-    PROFILER_END_BLOCK();
     PROFILER_BLOCK_CPU("renderScreenSpace");
     renderRenderPass<RenderPassUI>();
     PROFILER_END_BLOCK();

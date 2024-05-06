@@ -1,28 +1,19 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
-void RenderPassUI::render()
-{
-	PROFILER_CPU()
-	FOR_MAP(it, mBatchMap)
-	{
-		it->second->render();
-	}
-}
-
-void RenderPassUIStencil::renderStencilMask(ObjectId maskObjectId)
+void RenderPassUI::renderStencil(u64 id)
 {    
     FOR_MAP(it, mBatchMap)
 	{
-		if(it->first.mStencilData.mUseStencil && maskObjectId == it->first.mStencilData.mId && !it->first.mIsWorldSpace)
+		if(id == it->first.mStencilData.mId)
 		{
             if(it->first.mStencilData.mParentId > 0)
             {
-                renderStencilMask(it->first.mStencilData.mParentId);
+                renderStencil(it->first.mStencilData.mParentId);
             }
 
-            if(!mMasksDrawn.contains(it->first.mStencilData.mId))
+            if(!mStencilsRendered.contains(it->first.mStencilData.mId))
             {
-                mMasksDrawn.insert(it->first.mStencilData.mId);
+                mStencilsRendered.insert(it->first.mStencilData.mId);
                 it->second->render();
             }
 
@@ -31,19 +22,16 @@ void RenderPassUIStencil::renderStencilMask(ObjectId maskObjectId)
 	}
 }
 
-void RenderPassUIStencil::render()
+void RenderPassUI::render()
 {
 	PROFILER_CPU()
 
-    mMasksDrawn.clear();
+    mStencilsRendered.clear();
 
     std::vector<Ptr<BatchRenderer>> sortedBatches;
     FOR_MAP(it, mBatchMap)
 	{
-		if(it->first.mStencilData.mUseStencil && !it->first.mIsWorldSpace)
-		{
-            sortedBatches.push_back(it->second);
-        }
+        sortedBatches.push_back(it->second);
     }
 
     auto compareStencilBatch = [](Ptr<BatchRenderer> b1, Ptr<BatchRenderer> b2)
@@ -55,30 +43,27 @@ void RenderPassUIStencil::render()
   
     std::sort(sortedBatches.begin(), sortedBatches.end(), compareStencilBatch);
 
-    u64 currentMaskId = 0;
+    u64 currentId = 0;
     FOR_LIST(it, sortedBatches)
 	{
-        u64 maskId = (*it)->getBatchData().mStencilData.mParentId > 0 ? (*it)->getBatchData().mStencilData.mParentId : (*it)->getBatchData().mStencilData.mId;
-        if(currentMaskId != maskId)
+        u64 id = (*it)->getBatchData().mStencilData.mParentId > 0 ? (*it)->getBatchData().mStencilData.mParentId : (*it)->getBatchData().mStencilData.mId;
+        if(currentId != id)
         {
-            currentMaskId = maskId;
+            currentId = id;
             GET_SYSTEM(GPUInterface).clearStencil();
         }
 
-		if((*it)->getBatchData().mStencilData.mUseStencil && !(*it)->getBatchData().mIsWorldSpace)
-		{
-            if(!mMasksDrawn.contains((*it)->getBatchData().mStencilData.mId) || (*it)->getBatchData().mStencilData.mId == 0)
+        if(!mStencilsRendered.contains((*it)->getBatchData().mStencilData.mId) || (*it)->getBatchData().mStencilData.mId == 0)
+        {
+            mStencilsRendered.insert((*it)->getBatchData().mStencilData.mId);
+            
+            u64 parentId = (*it)->getBatchData().mStencilData.mParentId;
+            if(parentId > 0)
             {
-                mMasksDrawn.insert((*it)->getBatchData().mStencilData.mId);
-                
-                u64 maskId = (*it)->getBatchData().mStencilData.mParentId;
-                if(maskId > 0)
-                {
-                    renderStencilMask(maskId);
-                }
-                
-			    (*it)->render();
+                renderStencil(parentId);
             }
-		}
+            
+            (*it)->render();
+        }
 	}
 }

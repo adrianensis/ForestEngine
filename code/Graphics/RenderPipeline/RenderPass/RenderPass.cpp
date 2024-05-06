@@ -15,6 +15,15 @@ void RenderPass::terminate()
 	}
 }
 
+void RenderPass::renderBatches()
+{
+	PROFILER_CPU()
+    FOR_MAP(it, mBatchMap)
+	{
+        it->second->render();
+	}
+}
+
 void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 {
 	BatchData batchData;

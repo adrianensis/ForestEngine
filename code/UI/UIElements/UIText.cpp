@@ -20,7 +20,6 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUIStencil>().mClassDefinition.getId(),
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
