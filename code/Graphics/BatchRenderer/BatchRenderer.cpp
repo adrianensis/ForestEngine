@@ -271,17 +271,19 @@ void BatchRenderer::setIndicesBuffer(Ptr<const GPUMesh> mesh)
 void BatchRenderer::drawCall()
 {	
     PROFILER_CPU()
-    if(!mDataSubmittedToGPU)
+    if(!mRenderers.empty())
     {
-        if(!mBatchData.mIsInstanced)
+        if(!mDataSubmittedToGPU)
         {
-            setMeshBuffers(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+            if(!mBatchData.mIsInstanced)
+            {
+                setMeshBuffers(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+            }
+            setIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+            setInstancedBuffers();
+            mDataSubmittedToGPU = true;
         }
-    	setIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
-        setInstancedBuffers();
-        mDataSubmittedToGPU = true;
+
+        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderers.size(), mBatchData.mIsInstanced);
     }
-
-    GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderers.size(), mBatchData.mIsInstanced);
-
 }
