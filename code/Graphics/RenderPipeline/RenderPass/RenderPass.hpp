@@ -28,6 +28,6 @@ protected:
 	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;
     RenderPassData mRenderPassData;
-    GPUFramebuffer mGPUFramebuffer;
+    GPUFramebuffer mOutputGPUFramebuffer;
 };
 REGISTER_CLASS(RenderPass);

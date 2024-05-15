@@ -8,7 +8,7 @@ void RenderPass::init(const RenderPassData& renderPassData)
 
     if(mRenderPassData.mOutputFramebufferData.isValid())
     { 
-        mGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
+        mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
     }
 }
 
@@ -46,7 +46,7 @@ void RenderPass::preRender()
 	PROFILER_CPU()
     if(mRenderPassData.mOutputFramebufferData.isValid())
     { 
-        mGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
+        mOutputGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
     }
 }
 
@@ -55,13 +55,13 @@ void RenderPass::postRender()
 	PROFILER_CPU()
     if(mRenderPassData.mOutputFramebufferData.isValid())
     { 
-        mGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
+        mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
     }
 }
 
 void RenderPass::render()
 {
-    
+
 }
 
 void RenderPass::renderPass()
