@@ -7,12 +7,21 @@
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
 void RenderPipeline::init()
 {
     RenderPassData renderPassGeometryData;
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
+    RenderPassData renderPassShadowMap;
+    renderPassShadowMap.mOutputFramebufferData.set(
+        {
+            GPUFramebufferAttachmentType::DEPTH
+        },
+        1024, 1024
+    );
+    initRenderPass<RenderPassShadowMap>(renderPassShadowMap);
     RenderPassData renderPassUIData;
     initRenderPass<RenderPassUI>(renderPassUIData);
 }
@@ -53,25 +62,30 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 
 	GET_SYSTEM(GPUInterface).clear();
 
-    PROFILER_BLOCK_CPU("render");
-    renderRenderPass<RenderPassGeometry>();
+    FOR_ARRAY(i, renderData.mPointLights)
+    {
+        /*
+            TODO: Update global data for Shadow Map pass,
+            SM pass needs light matrix
+        */
+        Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+        // renderPassShadowMap->renderPass();
+    }
 
-    PROFILER_END_BLOCK();
-    PROFILER_BLOCK_CPU("render shapes");
+    Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+    renderPassGeometry->renderPass();
+
 	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
-    PROFILER_END_BLOCK();
     
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
 
     updateGlobalData(renderData, false);
     
-    PROFILER_BLOCK_CPU("renderScreenSpace");
-    renderRenderPass<RenderPassUI>();
-    PROFILER_END_BLOCK();
-    PROFILER_BLOCK_CPU("renderScreenSpace shapes");
+    Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+    renderPassUI->renderPass();
+
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
-    PROFILER_END_BLOCK();
 }
 
 void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace)

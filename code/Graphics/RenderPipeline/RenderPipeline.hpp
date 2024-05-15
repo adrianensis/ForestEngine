@@ -36,13 +36,16 @@ private:
             renderPassClassId,
             OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
         );
-        mRenderPassMap.at(renderPassClassId)->init(renderPassData);
+
+        Ptr<T> renderPass = getRenderPass<T>();
+        renderPass->init(renderPassData);
     }
+
     template<class T> T_EXTENDS(T, RenderPass)
-    void renderRenderPass()
+    Ptr<T> getRenderPass()
     {
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-        mRenderPassMap.at(renderPassClassId)->render();
+        return Ptr<T>::cast(mRenderPassMap.at(renderPassClassId));
     }
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;

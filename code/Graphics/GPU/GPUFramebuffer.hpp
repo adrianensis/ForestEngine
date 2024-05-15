@@ -7,9 +7,21 @@
 class GPUFramebufferData
 {
 public:
+    void set(const std::unordered_set<GPUFramebufferAttachmentType>& attachments, u32 width, u32 height)
+    {
+        mAttachments = attachments;
+        mWidth = width;
+        mHeight = height;
+        mIsValid = true;
+    }
+    bool isValid() const { return mIsValid; }
+
     std::unordered_set<GPUFramebufferAttachmentType> mAttachments;
     u32 mWidth = 0;
     u32 mHeight = 0;
+    
+private:
+    bool mIsValid = false;
 };
 
 class GPUFramebuffer

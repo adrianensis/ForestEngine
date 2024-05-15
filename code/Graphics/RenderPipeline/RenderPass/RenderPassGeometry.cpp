@@ -2,5 +2,9 @@
 
 void RenderPassGeometry::render()
 {
-	renderBatches();
+	PROFILER_CPU()
+    FOR_MAP(it, mBatchMap)
+	{
+        it->second->render();
+	}
 }

@@ -1,0 +1,10 @@
+#include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
+
+void RenderPassShadowMap::render()
+{
+	PROFILER_CPU()
+    FOR_MAP(it, mBatchMap)
+	{
+        it->second->render();
+	}
+}

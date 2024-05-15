@@ -20,11 +20,14 @@ public:
     void terminate();
     void addRenderer(Ptr<MeshRenderer> renderer);
     void removeRenderer(Ptr<MeshRenderer> renderer);
-    void renderBatches();
-    virtual void render() = 0;
+    virtual void renderPass();
 protected:
+    virtual void preRender();
+    virtual void render();
+    virtual void postRender();
 	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;
     RenderPassData mRenderPassData;
+    GPUFramebuffer mGPUFramebuffer;
 };
 REGISTER_CLASS(RenderPass);

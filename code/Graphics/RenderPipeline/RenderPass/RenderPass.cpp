@@ -5,6 +5,11 @@
 void RenderPass::init(const RenderPassData& renderPassData)
 {
     mRenderPassData = renderPassData;
+
+    if(mRenderPassData.mOutputFramebufferData.isValid())
+    { 
+        mGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
+    }
 }
 
 void RenderPass::terminate()
@@ -12,15 +17,6 @@ void RenderPass::terminate()
     FOR_MAP(it, mBatchMap)
 	{
         it->second->terminate();
-	}
-}
-
-void RenderPass::renderBatches()
-{
-	PROFILER_CPU()
-    FOR_MAP(it, mBatchMap)
-	{
-        it->second->render();
 	}
 }
 
@@ -43,4 +39,35 @@ void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
     BatchData batchData;
 	batchData.init(renderer);
     mBatchMap.at(batchData)->removeRenderer(renderer);
+}
+
+void RenderPass::preRender()
+{
+	PROFILER_CPU()
+    if(mRenderPassData.mOutputFramebufferData.isValid())
+    { 
+        mGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
+    }
+}
+
+void RenderPass::postRender()
+{
+	PROFILER_CPU()
+    if(mRenderPassData.mOutputFramebufferData.isValid())
+    { 
+        mGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
+    }
+}
+
+void RenderPass::render()
+{
+    
+}
+
+void RenderPass::renderPass()
+{
+	PROFILER_CPU()
+    preRender();
+    render();
+    postRender();
 }
