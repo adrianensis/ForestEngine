@@ -147,14 +147,14 @@ foreach(PACKAGE_PATH ${PACKAGES_PATHS})
     message("PACKAGE " ${PACKAGE_PATH})
     get_filename_component(PACKAGE ${PACKAGE_PATH} NAME_WE) # NAME_WE = name with extension
 
-    file(GLOB_RECURSE PACKAGE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/${PACKAGE}/*.cpp")
+    file(GLOB_RECURSE PACKAGE_SOURCES_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/${PACKAGE}/*.cpp")
 
-    foreach(OBJECT_SOURCE ${PACKAGE_SOURCES})
-        get_filename_component(OBJECT_SOURCE_WE ${OBJECT_SOURCE} NAME_WE) # NAME_WE = name with extension
-        message("OBJECT " ${OBJECT_SOURCE_WE})
+    foreach(PACKAGE_SOURCE ${PACKAGE_SOURCES_LIST})
+        get_filename_component(PACKAGE_SOURCE_WE ${PACKAGE_SOURCE} NAME_WE) # NAME_WE = name with extension
+        message("OBJECT " ${PACKAGE_SOURCE_WE})
     endforeach()
 
-    add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCES})
+    add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCES_LIST})
 
     list(APPEND OBJECTS $<TARGET_OBJECTS:${PACKAGE}>)
 endforeach()

@@ -12,4 +12,4 @@ def remove_folder(folder):
 
 remove_folder("binaries")
 remove_folder("build")
-remove_folder("generated-code")
+remove_folder("output")

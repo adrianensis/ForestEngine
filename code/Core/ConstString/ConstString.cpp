@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Core/ConstString/ConstString.hpp"
 
 ConstString::ConstString(const char* str)
