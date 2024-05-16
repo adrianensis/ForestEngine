@@ -146,16 +146,7 @@ void Camera::resetZoom()
 void Camera::calculateViewMatrix()
 {
 	PROFILER_CPU()
-
-	Vector3 originalPosition = mGameObject->mTransform->getWorldPosition();
-
-	Matrix4 viewTranslationMatrix;
-	viewTranslationMatrix.translation(-originalPosition);
-	Matrix4 rotationMatrix = mGameObject->mTransform->getLocalRotationMatrix();
-
-	mViewMatrix.identity();
-	mViewMatrix.mul(rotationMatrix);
-	mViewMatrix.mul(viewTranslationMatrix);
+	mViewMatrix = mGameObject->mTransform->getViewMatrix();
 }
 
 void Camera::calculateProjectionViewMatrix()

@@ -146,6 +146,7 @@ const Matrix4& Transform::calculateModelMatrix() const
 
 void Transform::notifyModelMatrixDirty()
 {
+    mViewMatrixDirty = true;
     mModelMatrixDirty = true;
     FOR_MAP(it, mChildren)
     {
@@ -187,6 +188,19 @@ void Transform::setLocalScale(const Vector3& vec)
     mLocalScale = vec;
     mLocalScaleMatrixDirty = true;
     notifyModelMatrixDirty();
+}
+
+const Matrix4& Transform::getViewMatrix() const
+{
+    if(mViewMatrixDirty)
+    {
+        Vector3 worldPosition = mGameObject->mTransform->getWorldPosition();
+        const Matrix4& rotationMatrix = mGameObject->mTransform->getLocalRotationMatrix();
+        mViewMatrix.view(worldPosition, rotationMatrix);
+        mViewMatrixDirty = false;
+    }
+
+    return mViewMatrix;
 }
 
 void Transform::addChild(Ptr<Transform> child)

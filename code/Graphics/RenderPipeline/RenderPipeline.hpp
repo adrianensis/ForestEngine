@@ -26,6 +26,7 @@ public:
 
 private:
     void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
+    void updateGlobalDataShadowMap(RenderPipelineData& renderData, const Matrix4& lightViewMatrix);
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)

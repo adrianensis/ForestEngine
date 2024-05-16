@@ -31,9 +31,11 @@ public:
 	void setLocalRotation(const Vector3& vec);
 	void setLocalScale(const Vector3& vec);
 
+    const Matrix4& getViewMatrix() const;
+
 private:
     void notifyModelMatrixDirty();
-
+    
 private:
     std::unordered_map<ObjectId, Ptr<Transform>> mChildren;
     Ptr<Transform> mParent;
@@ -42,6 +44,7 @@ private:
     mutable bool mLocalTranslationMatrixDirty = true;
     mutable bool mLocalRotationMatrixDirty = true;
     mutable bool mLocalScaleMatrixDirty = true;
+    mutable bool mViewMatrixDirty = true;
 
 	Vector3 mLocalPosition = Vector3::smZero;
 	Vector3 mLocalRotation = Vector3::smZero;
@@ -52,6 +55,7 @@ private:
 	mutable Matrix4 mTranslationMatrix;
 	mutable Matrix4 mRotationMatrix;
 	mutable Matrix4 mScaleMatrix;
+	mutable Matrix4 mViewMatrix;
 
 public:
 	bool mAffectedByProjection = true;

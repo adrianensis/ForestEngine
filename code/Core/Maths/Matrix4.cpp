@@ -286,6 +286,25 @@ void Matrix4::perspective(f32 near, f32 far, f32 aspect, f32 fovy)
 	this->set(3, 2, -1.0f);
 }
 
+void Matrix4::view(const Vector3& worldPosition, const Vector3& localRotation)
+{
+	Matrix4 rotationMatrix;
+    rotationMatrix.rotation(localRotation);
+    
+    view(worldPosition, rotationMatrix);
+}
+
+void Matrix4::view(const Vector3& worldPosition, const Matrix4& localRotationMatrix)
+{
+	this->identity();
+
+    Matrix4 viewTranslationMatrix;
+	viewTranslationMatrix.translation(-worldPosition);
+
+	this->mul(localRotationMatrix);
+	this->mul(viewTranslationMatrix);
+}
+
 Matrix4 Matrix4::transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale)
 {
     Matrix4 translationCopy = translation;
