@@ -23,6 +23,7 @@ void RenderPipeline::init()
     );
     initRenderPass<RenderPassShadowMap>(renderPassShadowMap);
     RenderPassData renderPassUIData;
+    renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
     initRenderPass<RenderPassUI>(renderPassUIData);
 }
 
@@ -62,18 +63,11 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 
     FOR_ARRAY(i, renderData.mPointLights)
     {
-        Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
-        const Matrix4& lightViewMatrix = pointLight->mGameObject->mTransform->getViewMatrix();
-        updateGlobalDataShadowMap(renderData, lightViewMatrix);
-        /*
-            TODO: Update global data for Shadow Map pass,
-            SM pass needs light matrix
-        */
         Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+        Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
+        renderPassShadowMap->mPointLight = pointLight;
         renderPassShadowMap->renderPass();
     }
-
-    updateGlobalData(renderData, GeometricSpace::WORLD);
 
     Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
     renderPassGeometry->renderPass();
@@ -83,45 +77,10 @@ void RenderPipeline::render(RenderPipelineData& renderData)
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
 
-    updateGlobalData(renderData, GeometricSpace::SCREEN);
-    
     Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
     renderPassUI->renderPass();
 
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
-}
-
-void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, GeometricSpace geometricSpace)
-{
-	PROFILER_CPU()
-
-    Matrix4 ortho;
-    ortho.ortho(-1, 1, -1, 1, -1000, 1000);
-
-    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
-    {
-        geometricSpace == GeometricSpace::WORLD ? renderData.mCamera->mProjectionMatrix : ortho,
-        geometricSpace == GeometricSpace::WORLD ? renderData.mCamera->mViewMatrix : Matrix4::smIdentity,
-        renderData.mCamera->mGameObject->mTransform->getWorldPosition()
-    };
-	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
-}
-
-void RenderPipeline::updateGlobalDataShadowMap(RenderPipelineData& renderData, const Matrix4& lightViewMatrix)
-{
-	PROFILER_CPU()
-
-    Matrix4 projectionMatrix;
-    projectionMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
-    // projectionMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
-
-    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
-    {
-        projectionMatrix,
-        lightViewMatrix,
-        renderData.mCamera->mGameObject->mTransform->getWorldPosition()
-    };
-	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 void RenderPipeline::updateLights(RenderPipelineData& renderData)

@@ -8,6 +8,7 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
@@ -19,8 +20,6 @@ void RenderEngine::init()
 	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId());
 	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.getId());
 
-	mCameraDirtyTranslation = true;
-
     mRenderPipeline.init();
 
 	// octree.init(5000);
@@ -30,9 +29,10 @@ void RenderEngine::update()
 {
 	PROFILER_CPU()
 
-	if (mRenderPipelineData.mCamera)
+    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+	if (camera)
 	{
-		mRenderPipelineData.mCamera->update();
+		camera->update();
 	}
 
     std::vector<Ptr<MeshRenderer>> newList;
@@ -78,14 +78,14 @@ void RenderEngine::preSceneChanged()
 void RenderEngine::postSceneChanged()
 {
 	LOG_TRACE()
-    mRenderPipelineData.mCamera = GET_SYSTEM(ScenesManager).getCurrentCamera();
 }
 
 void RenderEngine::onResize(u32 width, u32 height)
 {
 	LOG_TRACE()
 	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
-    mRenderPipelineData.mCamera->onResize();
+    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    camera->onResize();
 }
 
 void RenderEngine::terminate()

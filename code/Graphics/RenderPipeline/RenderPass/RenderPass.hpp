@@ -9,6 +9,7 @@ class MeshRenderer;
 class RenderPassData
 {
 public:
+    GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     std::unordered_set<ClassId> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
 };
@@ -27,6 +28,8 @@ protected:
     virtual void preRender();
     virtual void render();
     virtual void postRender();
+    virtual void updateGlobalData();
+protected:
 	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;
     RenderPassData mRenderPassData;

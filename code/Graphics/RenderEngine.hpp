@@ -2,7 +2,6 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
-#include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
@@ -29,8 +28,6 @@ private:
 	std::vector<Ptr<MeshRenderer>> mRenderers;
     RenderPipelineData mRenderPipelineData;
     RenderPipeline mRenderPipeline;
-
-	bool mCameraDirtyTranslation = false;
 
 public:
 	OcTree octree;

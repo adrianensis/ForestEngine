@@ -4,13 +4,9 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 
-class ShapeBatchRenderer;
-class Camera;
-
 class RenderPipelineData
 {
 public:
-    Ptr<Camera> mCamera;
     std::vector<Ptr<PointLight>> mPointLights;
     Ptr<DirectionalLight> mDirectionalLight;
 };
@@ -25,8 +21,6 @@ public:
     void render(RenderPipelineData& renderData);
 
 private:
-    void updateGlobalData(RenderPipelineData& renderData, GeometricSpace geometricSpace);
-    void updateGlobalDataShadowMap(RenderPipelineData& renderData, const Matrix4& lightViewMatrix);
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)

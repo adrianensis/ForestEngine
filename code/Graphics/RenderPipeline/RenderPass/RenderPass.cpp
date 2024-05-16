@@ -1,6 +1,8 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
+#include "Scene/GameObject.hpp"
 
 void RenderPass::init(const RenderPassData& renderPassData)
 {
@@ -54,6 +56,9 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::preRender()
 {
 	PROFILER_CPU()
+
+    updateGlobalData();
+
     if(mRenderPassData.mOutputFramebufferData.isValid())
     {
         preFramebufferEnabled();
@@ -82,4 +87,22 @@ void RenderPass::renderPass()
     preRender();
     render();
     postRender();
+}
+
+void RenderPass::updateGlobalData()
+{
+	PROFILER_CPU()
+
+    Matrix4 ortho;
+    ortho.ortho(-1, 1, -1, 1, -1000, 1000);
+
+    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+
+    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
+    {
+        mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho,
+        mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : Matrix4::smIdentity,
+        camera->mGameObject->mTransform->getWorldPosition()
+    };
+	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }

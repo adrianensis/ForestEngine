@@ -30,6 +30,7 @@ void Engine::init()
     CREATE_SYSTEM(EventsManager);
     CREATE_SYSTEM(MeshPrimitives);
     CREATE_SYSTEM(MaterialManager);
+    CREATE_SYSTEM(CameraManager);
     CREATE_SYSTEM(AnimationManager);
     CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
