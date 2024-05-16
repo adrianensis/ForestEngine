@@ -111,12 +111,13 @@ void RenderPipeline::updateGlobalDataShadowMap(RenderPipelineData& renderData, c
 {
 	PROFILER_CPU()
 
-    Matrix4 ortho;
-    ortho.ortho(-100, 100, -100, 100, -1000, 1000);
+    Matrix4 projectionMatrix;
+    projectionMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
+    // projectionMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
 
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
-        ortho,
+        projectionMatrix,
         lightViewMatrix,
         renderData.mCamera->mGameObject->mTransform->getWorldPosition()
     };
