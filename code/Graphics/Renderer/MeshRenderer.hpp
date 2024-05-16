@@ -53,7 +53,6 @@ public:
     void init(const RendererData& data);
     void onComponentAdded() override;
     void onDestroy() override;
-    GeometricSpace getGeometricSpace() const;
     void update();
 
 private:
