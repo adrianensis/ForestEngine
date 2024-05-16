@@ -155,7 +155,7 @@ void Editor::update()
 
 	for(i32 x = -1000; x < 1000; x+=50)
 	{
-		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, true, Vector4(0,0,1,0.3f));
+		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, GeometricSpace::WORLD, Vector4(0,0,1,0.3f));
 	}
     // PROFILER_END_BLOCK();
 
@@ -243,8 +243,8 @@ Ptr<GameObject> Editor::mousePick()
         if(hit)
         {
             Cube hitMarker = Cube(mousePosition, Vector3(0.01,0.01,0.01));
-            GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, false, Vector4(1,0,0,1));
-            GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(1,0,0,1));
+            GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
+            GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
 
             obj = *it;
         }

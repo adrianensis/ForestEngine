@@ -34,7 +34,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
 	mTransform->setLocalScale(Vector3(UIUtils::correctAspectRatio_X(mConfig.mSize), 1));
-	mTransform->mAffectedByProjection = (false);
+	mTransform->mGeometricSpace = GeometricSpace::SCREEN;
 
     RendererData rendererData;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();

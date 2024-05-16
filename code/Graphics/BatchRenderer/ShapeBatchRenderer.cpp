@@ -19,10 +19,8 @@ void ShapeBatchRenderer::terminate()
 	mShapesCounter = 0;
 }
 
-void ShapeBatchRenderer::init(bool isWorldSpace, u32 verticesPerShape)
+void ShapeBatchRenderer::init(u32 verticesPerShape)
 {
-	mIsWorldSpace = isWorldSpace;
-
 	mVerticesPerShape = verticesPerShape;
     mMaxVertices = mMaxShapes * mVerticesPerShape;
 

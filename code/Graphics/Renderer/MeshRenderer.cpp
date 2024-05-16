@@ -51,9 +51,9 @@ void MeshRenderer::onDestroy()
     GET_SYSTEM(RenderSharedContext).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
 }
 
-bool MeshRenderer::getIsWorldSpace() const
+GeometricSpace MeshRenderer::getGeometricSpace() const
 {
-	return mGameObject->mTransform->mAffectedByProjection;
+	return mGameObject->mTransform->mGeometricSpace;
 }
 
 void MeshRenderer::calculateRendererModelMatrix()

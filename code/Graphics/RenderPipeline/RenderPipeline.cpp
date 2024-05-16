@@ -73,7 +73,7 @@ void RenderPipeline::render(RenderPipelineData& renderData)
         renderPassShadowMap->renderPass();
     }
 
-    updateGlobalData(renderData, true);
+    updateGlobalData(renderData, GeometricSpace::WORLD);
 
     Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
     renderPassGeometry->renderPass();
@@ -83,7 +83,7 @@ void RenderPipeline::render(RenderPipelineData& renderData)
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
 
-    updateGlobalData(renderData, false);
+    updateGlobalData(renderData, GeometricSpace::SCREEN);
     
     Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
     renderPassUI->renderPass();
@@ -91,7 +91,7 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
 }
 
-void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace)
+void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, GeometricSpace geometricSpace)
 {
 	PROFILER_CPU()
 
@@ -100,8 +100,8 @@ void RenderPipeline::updateGlobalData(RenderPipelineData& renderData, bool isWor
 
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
-        isWorldSpace ? renderData.mCamera->mProjectionMatrix : ortho,
-        isWorldSpace ? renderData.mCamera->mViewMatrix : Matrix4::smIdentity,
+        geometricSpace == GeometricSpace::WORLD ? renderData.mCamera->mProjectionMatrix : ortho,
+        geometricSpace == GeometricSpace::WORLD ? renderData.mCamera->mViewMatrix : Matrix4::smIdentity,
         renderData.mCamera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);

@@ -53,7 +53,7 @@ public:
     void init(const RendererData& data);
     void onComponentAdded() override;
     void onDestroy() override;
-    bool getIsWorldSpace() const;
+    GeometricSpace getGeometricSpace() const;
     void update();
 
 private:

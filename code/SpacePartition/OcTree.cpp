@@ -257,7 +257,7 @@ void OcTree::OcTreeNode::drawDebug()
 {
     PROFILER_CPU()
 
-    GET_SYSTEM(DebugRenderer).drawCube(mCube,1,true,Vector4(1,1,1,0.5f));
+    GET_SYSTEM(DebugRenderer).drawCube(mCube,1,GeometricSpace::WORLD,Vector4(1,1,1,0.5f));
     // GET_SYSTEM(DebugRenderer).drawLine(Line(mCube.getLeftTopFront(), mCube.getLeftTopFront() + Vector3(0,10,0)),1,true,Vector4(0,1,0,1));
     // GET_SYSTEM(DebugRenderer).drawCube(Cube(Vector3(0,0,-100), Vector3(100,100,100)),1,true,Vector4(1,0,1,1));
     // GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-100), Vector3(0,0,-100) + Vector3(0,10,0)),1,true,Vector4(0,1,0,1));
@@ -269,7 +269,7 @@ void OcTree::OcTreeNode::drawDebug()
         // DEBUG DRAW
         if(mOcTreeElementsStatic.size() > 0 || mOcTreeElementsDynamic.size() > 0)
         {
-		    GET_SYSTEM(DebugRenderer).drawCube(mCube,1,true,Vector4(1,1,0,1));
+		    GET_SYSTEM(DebugRenderer).drawCube(mCube,1,GeometricSpace::WORLD,Vector4(1,1,0,1));
 
             // FOR_RANGE(i,0,mOcTreeElementsStatic.size())
             // {

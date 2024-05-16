@@ -25,7 +25,7 @@ public:
     void render(RenderPipelineData& renderData);
 
 private:
-    void updateGlobalData(RenderPipelineData& renderData, bool isWorldSpace);
+    void updateGlobalData(RenderPipelineData& renderData, GeometricSpace geometricSpace);
     void updateGlobalDataShadowMap(RenderPipelineData& renderData, const Matrix4& lightViewMatrix);
     void updateLights(RenderPipelineData& renderData);
 

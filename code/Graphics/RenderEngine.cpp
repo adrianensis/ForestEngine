@@ -106,7 +106,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 
         mRenderPipeline.addRenderer(renderer);
 
-        if(renderer->getIsWorldSpace())
+        if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         {
             //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
         }

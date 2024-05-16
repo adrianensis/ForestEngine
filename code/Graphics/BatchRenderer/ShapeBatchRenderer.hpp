@@ -9,7 +9,7 @@ class ShapeBatchRenderer
 public:
 	ShapeBatchRenderer() = default;
 
-    void init(bool isWorldSpace, u32 verticesPerShape);
+    void init(u32 verticesPerShape);
     void terminate();
     void render();
 
@@ -30,5 +30,4 @@ protected:
 	u32 mShapesCounter = 0;
 	u32 mVerticesPerShape = 0;
 	u32 mMaxVertices = 0;
-	bool mIsWorldSpace = true;
 };

@@ -58,7 +58,7 @@ private:
 	mutable Matrix4 mViewMatrix;
 
 public:
-	bool mAffectedByProjection = true;
+	GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     bool mIgnoreParentScale = true;
 
 public:

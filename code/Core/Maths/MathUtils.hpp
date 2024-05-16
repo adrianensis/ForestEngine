@@ -2,6 +2,11 @@
 
 #include "Core/Std.hpp"
 
+DECLARE_ENUM(GeometricSpace,
+    WORLD, "WORLD",
+    SCREEN, "SCREEN"
+);
+
 class MathUtils
 {
 public:
