@@ -59,8 +59,7 @@ public:
         class GPUGlobalData
         {
         public:
-            Matrix4 mProjectionMatrix;
-            Matrix4 mViewMatrix;
+            Matrix4 mProjectionViewMatrix;
             alignas(16) Vector3 mCameraPosition;
         };
 
@@ -68,8 +67,7 @@ public:
         {
             GPUBufferType::UNIFORM,
             {
-                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionMatrix"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "viewMatrix"},
+                {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionViewMatrix"},
                 {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"}
             },
             "GlobalData",

@@ -308,7 +308,7 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
         Variable baseColor = funcCalculatePBR.mParameters[0];
 
         auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
-        Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
+        Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
         auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
         auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
         auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    

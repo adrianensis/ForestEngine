@@ -20,7 +20,6 @@ protected:
     virtual void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;

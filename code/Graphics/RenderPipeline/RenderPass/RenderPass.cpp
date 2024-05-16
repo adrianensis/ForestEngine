@@ -98,10 +98,14 @@ void RenderPass::updateGlobalData()
 
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
+    Matrix4 projectionViewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho;
+    Matrix4 viewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : Matrix4::smIdentity;
+
+    projectionViewMatrix.mul(viewMatrix);
+
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
-        mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho,
-        mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : Matrix4::smIdentity,
+        projectionViewMatrix,
         camera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);

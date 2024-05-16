@@ -44,9 +44,11 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& 
     
     vertexShaderCalculatePositionOutputCustom(shaderBuilder);
 
-    Variable PVMatrix = shaderBuilder.getVariableFromCache("PV_Matrix");
+    auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
+    Variable projectionViewMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+
     shaderBuilder.getMain().
-    set(GPUBuiltIn::VertexOutput::mPosition, PVMatrix.mul(finalPositon));
+    set(GPUBuiltIn::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
 
     auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
     shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
@@ -137,19 +139,6 @@ void MaterialRuntimeDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder
         shaderBuilder.getMain().
         set(outMaterialInstanceId, materialInstanceId);
     }
-}
-
-void MaterialRuntimeDefault::vertexShaderCalculateProjectionViewMatrix(ShaderBuilder& shaderBuilder) const
-{
-    auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
-    Variable projectionMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    Variable viewMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
-    Variable PVMatrix;
-
-    shaderBuilder.getMain().
-    variable(PVMatrix, GPUBuiltIn::PrimitiveTypes::mMatrix4, "PV_Matrix", projectionMatrix.mul(viewMatrix));
-
-    shaderBuilder.setVariableInCache(PVMatrix);
 }
 
 void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
@@ -314,8 +303,6 @@ void MaterialRuntimeDefault::registerFragmentShaderData(ShaderBuilder& shaderBui
 void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-
-    vertexShaderCalculateProjectionViewMatrix(shaderBuilder);
 
     if(mMaterial->getMaterialData().mIsSkinned)
     {

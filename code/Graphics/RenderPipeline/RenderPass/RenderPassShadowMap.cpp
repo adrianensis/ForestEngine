@@ -20,17 +20,18 @@ void RenderPassShadowMap::updateGlobalData()
 {
 	PROFILER_CPU()
 
-    Matrix4 projectionMatrix;
-    projectionMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
-    // projectionMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
+    Matrix4 projectionViewMatrix;
+    projectionViewMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
+    // projectionViewMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
 
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     const Matrix4& lightViewMatrix = mPointLight->mGameObject->mTransform->getViewMatrix();
+    projectionViewMatrix.mul(lightViewMatrix);
+
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
-        projectionMatrix,
-        lightViewMatrix,
+        projectionViewMatrix,
         camera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
