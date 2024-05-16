@@ -56,7 +56,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 	Vector2 mousePosition = GET_SYSTEM(Input).getMousePosition();
 
-	if(mTransform->mGeometricSpace == GeometricSpace::WORLD)
+	// if(mTransform->mGeometricSpace == GeometricSpace::WORLD)
 	{
 		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input).getMousePosition());
 	}

@@ -106,10 +106,10 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 
         mRenderPipeline.addRenderer(renderer);
 
-        if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
-        {
-            //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
-        }
+        // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
+        // {
+        //     //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
+        // }
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {

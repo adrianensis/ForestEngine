@@ -17,7 +17,6 @@ void UIArea::initFromConfig(const UIElementConfig& config)
 
     mTransform->setLocalPosition(mConfig.mDisplayPosition);
     mTransform->setLocalScale(Vector3(mConfig.mDisplaySize, 1));
-    mTransform->mGeometricSpace = GeometricSpace::SCREEN;
     mTransform->mIgnoreParentScale = true;
 }
 

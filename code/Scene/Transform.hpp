@@ -58,7 +58,6 @@ private:
 	mutable Matrix4 mViewMatrix;
 
 public:
-	GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     bool mIgnoreParentScale = true;
 
 public:

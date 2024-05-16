@@ -51,11 +51,6 @@ void MeshRenderer::onDestroy()
     GET_SYSTEM(RenderSharedContext).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
 }
 
-GeometricSpace MeshRenderer::getGeometricSpace() const
-{
-	return mGameObject->mTransform->mGeometricSpace;
-}
-
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
