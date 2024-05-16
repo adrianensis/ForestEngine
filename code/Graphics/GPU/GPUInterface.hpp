@@ -248,6 +248,7 @@ public:
 
     // Clear
     void setClearColor(const Vector3& color);
+    void clearColor();
     void clearDepth();
     void clearStencil();
     void clear();

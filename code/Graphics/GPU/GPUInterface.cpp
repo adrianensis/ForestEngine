@@ -382,6 +382,11 @@ void GPUInterface::setClearColor(const Vector3& color)
     glClearColor(color.x, color.y, color.z ,1);
 }
 
+void GPUInterface::clearColor()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void GPUInterface::clearDepth()
 {
 	glClear(GL_DEPTH_BUFFER_BIT);
