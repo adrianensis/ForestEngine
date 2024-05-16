@@ -41,12 +41,24 @@ void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
     mBatchMap.at(batchData)->removeRenderer(renderer);
 }
 
+void RenderPass::preFramebufferEnabled()
+{
+
+}
+
+void RenderPass::postFramebufferEnabled()
+{
+
+}
+
 void RenderPass::preRender()
 {
 	PROFILER_CPU()
     if(mRenderPassData.mOutputFramebufferData.isValid())
-    { 
+    {
+        preFramebufferEnabled();
         mOutputGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
+        postFramebufferEnabled();
     }
 }
 
@@ -54,7 +66,7 @@ void RenderPass::postRender()
 {
 	PROFILER_CPU()
     if(mRenderPassData.mOutputFramebufferData.isValid())
-    { 
+    {
         mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
     }
 }

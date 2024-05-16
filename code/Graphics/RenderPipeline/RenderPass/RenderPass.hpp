@@ -22,6 +22,8 @@ public:
     void removeRenderer(Ptr<MeshRenderer> renderer);
     virtual void renderPass();
 protected:
+    virtual void preFramebufferEnabled();
+    virtual void postFramebufferEnabled();
     virtual void preRender();
     virtual void render();
     virtual void postRender();

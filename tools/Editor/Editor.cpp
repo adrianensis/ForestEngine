@@ -4,6 +4,7 @@
 #include "UI/Module.hpp"
 #include "Engine/Input/Input.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 
 void Editor::init()
 {
@@ -265,7 +266,11 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
     modelRendererData.mIsInstanced = true;
-    modelRendererData.mRenderPassIDs = {ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId()};
+    modelRendererData.mRenderPassIDs =
+    {
+        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+        ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
+    };
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
     return gameObject;
@@ -284,7 +289,12 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
     modelRendererData.mIsInstanced = true;
-    modelRendererData.mRenderPassIDs = {ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId()};
+    modelRendererData.mRenderPassIDs =
+    {
+        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+        ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
+    };
+
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
 
     return gameObject;

@@ -4,7 +4,8 @@
 
 class RenderPassShadowMap: public RenderPass
 {
-public:
+protected:
+    virtual void postFramebufferEnabled() override;
     virtual void render() override;
 };
 REGISTER_CLASS(RenderPassShadowMap);

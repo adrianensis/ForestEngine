@@ -69,7 +69,7 @@ void RenderPipeline::render(RenderPipelineData& renderData)
             SM pass needs light matrix
         */
         Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
-        // renderPassShadowMap->renderPass();
+        renderPassShadowMap->renderPass();
     }
 
     Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
