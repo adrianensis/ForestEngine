@@ -23,6 +23,7 @@ public:
 	GPUVertexBuffer() = default;
 
     void init(u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic);
+    void createBuffer();
     void resize(u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data)
@@ -36,9 +37,6 @@ public:
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
     void terminate();
-
-private:
-    u32 attribute(GPUPrimitiveDataType primitiveType);
 
 public:
     GPUVertexBufferData mData;

@@ -28,22 +28,22 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxVertices); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
-    mGPUVertexBuffersContainer.init();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt, false);
     GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
-    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataPosition, false);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataPosition, false);
     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
-    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataColor, false);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataColor, false);
+
+	mGPUVertexBuffersContainer.create();
 
     FOR_RANGE(i, 0, mMaxVertices)
     {
         mIndicesBuffer.push_back(i);
     }
-
+    mGPUVertexBuffersContainer.enable();
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt, false);
     mGPUVertexBuffersContainer.getIndicesBuffer().resize(mIndicesBuffer.size());
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
-
-	mGPUVertexBuffersContainer.disable();
+    mGPUVertexBuffersContainer.disable();
 
     MaterialData materialData;
     materialData.mReceiveLight = false;

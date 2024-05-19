@@ -35,4 +35,9 @@ void RenderPassShadowMap::updateGlobalData()
         camera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+
+    LightBuiltIn::ShadowMappingData shadowMappingData;
+    shadowMappingData.mLightProjectionViewMatrix = projectionViewMatrix;
+
+    GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }

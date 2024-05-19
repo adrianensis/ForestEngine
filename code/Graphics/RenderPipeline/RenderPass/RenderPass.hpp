@@ -2,6 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 
 class MeshRenderer;
@@ -29,10 +30,12 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
+    virtual void initShader();
 protected:
 	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
+    OwnerPtr<GPUProgram> mShader;
 };
 REGISTER_CLASS(RenderPass);

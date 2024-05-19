@@ -178,7 +178,7 @@ class GPUInterface : public System
 {
 public:
     // Vertex buffers layout
-    u32 createVertexBufferLayout();
+    u32 addVertexBufferLayout();
     void enableVertexBufferLayout(u32 vertexBufferLayout);
     void deleteVertexBufferLayout(u32 vertexBufferLayout);
 

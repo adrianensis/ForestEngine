@@ -15,6 +15,10 @@ void RenderSharedContext::init()
     mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, LightBuiltIn::mLightsBufferData, false);
     mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
 
+    u32 bindingPointShadowMappingData = requestSharedBufferBindingPoint(LightBuiltIn::mShadowMappingBufferData.mType);
+    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointShadowMappingData, LightBuiltIn::mShadowMappingBufferData, false);
+    mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
+
     mRenderInstancesSlotsManager.init(mMaxInstances);
 
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());

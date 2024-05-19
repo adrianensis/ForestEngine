@@ -9,11 +9,11 @@ class GPUVertexBuffersContainer
 public:
 	GPUVertexBuffersContainer() = default;
 
-    void init();
+    void create();
     void enable();
     void disable();
     void terminate();
-    void createVertexBuffer(const GPUVertexBufferData& data, bool isStatic);
+    void addVertexBuffer(const GPUVertexBufferData& data, bool isStatic);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     const GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data) const;
     bool containsVertexBuffer(const GPUVertexBufferData& data) const;

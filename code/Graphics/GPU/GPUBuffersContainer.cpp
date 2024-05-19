@@ -1,11 +1,18 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-void GPUVertexBuffersContainer::init()
+void GPUVertexBuffersContainer::create()
 {
 	PROFILER_CPU()
 
-    mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
+    mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).addVertexBufferLayout();
+
+    FOR_ARRAY(i, mVertexBuffers)
+    {
+        mVertexBuffers[i].createBuffer();
+    }
+
+    disable();
 }
 
 void GPUVertexBuffersContainer::enable()
@@ -18,7 +25,7 @@ void GPUVertexBuffersContainer::disable()
 	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 }
 
-void GPUVertexBuffersContainer::createVertexBuffer(const GPUVertexBufferData& data, bool isStatic)
+void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data, bool isStatic)
 {
     if(mVertexBuffers.size() > 0)
     {
@@ -63,7 +70,7 @@ void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType,
 void GPUVertexBuffersContainer::terminate()
 {   
     mIndicesBuffer.terminate();
-    FOR_MAP(it, mVertexBuffers)
+    FOR_LIST(it, mVertexBuffers)
     {
         it->terminate();
     }

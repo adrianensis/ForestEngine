@@ -3,6 +3,7 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
+#include "Graphics/Material/Shader/ShaderUtils.hpp"
 
 void RenderPass::init(const RenderPassData& renderPassData)
 {
@@ -109,4 +110,9 @@ void RenderPass::updateGlobalData()
         camera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+}
+
+void RenderPass::initShader()
+{
+    // mShader = ShaderUtils::createShader(mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, mBatchData.mMaterial.get());
 }

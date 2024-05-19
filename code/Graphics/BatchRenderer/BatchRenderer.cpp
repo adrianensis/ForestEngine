@@ -45,6 +45,7 @@ void BatchRenderer::bindSharedBuffers()
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
         mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
+        mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
     }
 
     FOR_LIST(it, mGPUSharedBuffersContainer.getSharedBuffers())
@@ -184,25 +185,27 @@ void BatchRenderer::initBuffers()
     PROFILER_CPU()
 
     bool isStatic = mBatchData.mIsStatic || mBatchData.mIsInstanced;
-    mGPUVertexBuffersContainer.init();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, isStatic);
 
     FOR_ARRAY(i, mBatchData.mMesh->mGPUVertexInputBuffers)
     {
         const GPUVariableData& gpuVariableData = mBatchData.mMesh->mGPUVertexInputBuffers[i];
         GPUVertexBufferData bufferData(gpuVariableData);
-        mGPUVertexBuffersContainer.createVertexBuffer(bufferData, isStatic);
+        mGPUVertexBuffersContainer.addVertexBuffer(bufferData, isStatic);
     }
 
     GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataInstanceIDs, isStatic);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, isStatic);
 
     GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataObjectIDs, isStatic);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, isStatic);
 
     GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.createVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
     
+    mGPUVertexBuffersContainer.create();
+    
+    mGPUVertexBuffersContainer.enable();
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, isStatic);
     mGPUVertexBuffersContainer.disable();
 
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)

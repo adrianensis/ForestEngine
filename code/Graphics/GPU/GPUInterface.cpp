@@ -29,7 +29,7 @@ void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimiti
     glVertexAttribDivisor(propertyArrayIndex, divisor);
 }
 
-u32 GPUInterface::createVertexBufferLayout()
+u32 GPUInterface::addVertexBufferLayout()
 {
 	u32 vertexBufferLayout = 0;
 	glGenVertexArrays(1, &vertexBufferLayout);

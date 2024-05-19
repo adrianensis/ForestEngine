@@ -86,6 +86,22 @@ public:
         SpotLightData mSpotLights[5];
         DirectionalLightData mDirectionalLight;
     };
+
+    inline static const GPUSharedBufferData mShadowMappingBufferData
+    {
+        GPUBufferType::UNIFORM,
+        {
+            {{GPUStorage::UNIFORM, GPUBuiltIn::PrimitiveTypes::mMatrix4, "lightProjectionViewMatrix"}}
+        },
+        "ShadowMapping",
+        "shadowMapping"
+    };
+
+    class ShadowMappingData
+    {
+    public:
+        Matrix4 mLightProjectionViewMatrix;
+    };
 };
 
 class Light: public Component
