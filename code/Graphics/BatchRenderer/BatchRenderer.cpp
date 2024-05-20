@@ -12,7 +12,7 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 
-void BatchRenderer::init(const BatchData& batchData)
+void BatchRenderer::init(const BatchData& batchData, Ptr<const MaterialRuntime> customMaterialRuntime)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);
@@ -23,11 +23,8 @@ void BatchRenderer::init(const BatchData& batchData)
         resizeMeshBuffers(1);
         setMeshBuffers(Ptr<const GPUMesh>::cast(mBatchData.mMesh));
 	}
-}
 
-void BatchRenderer::initShader(OwnerPtr<GPUProgram>& shader)
-{
-    mShader = std::move(shader);
+    mShader = ShaderUtils::createShaderCustomFragment(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, getGPUVertexBuffersContainer(), getGPUSharedBuffersContainer(), getBatchData().mMaterial.get(), customMaterialRuntime);
     bindSharedBuffers();
     mBatchData.mMaterial->bindToShader(mShader);
 }

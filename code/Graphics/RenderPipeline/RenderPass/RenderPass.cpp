@@ -31,8 +31,9 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 	if (!mBatchMap.contains(batchData))
 	{
 		mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
-        mBatchMap.at(batchData)->init(batchData);
-        initShader(mBatchMap.at(batchData));
+        Ptr<BatchRenderer> batch = mBatchMap.at(batchData);
+        Ptr<const MaterialRuntime> materialRuntime = getMaterialRuntime(batchData);
+        batch->init(batchData, materialRuntime);
 	}
 
 	mBatchMap.at(batchData)->addRenderer(renderer);
@@ -113,8 +114,7 @@ void RenderPass::updateGlobalData()
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-void RenderPass::initShader(Ptr<BatchRenderer> batch)
+Ptr<const MaterialRuntime> RenderPass::getMaterialRuntime(const BatchData& batchData) const
 {
-    OwnerPtr<GPUProgram> shader = ShaderUtils::createShader(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batch->getGPUVertexBuffersContainer(), batch->getGPUSharedBuffersContainer(), batch->getBatchData().mMaterial.get());
-    batch->initShader(shader);
+    return batchData.mMaterial->getMaterialRuntime();
 }

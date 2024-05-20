@@ -5,12 +5,12 @@
 #include "Graphics/BatchRenderer/BatchData.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
+#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
 
 class BatchRenderer: public ObjectBase
 {
 public:
-    void init(const BatchData& batchData);
-    void initShader(OwnerPtr<GPUProgram>& shader);
+    void init(const BatchData& batchData, Ptr<const MaterialRuntime> customMaterialRuntime);
     void terminate();
 
     void render();

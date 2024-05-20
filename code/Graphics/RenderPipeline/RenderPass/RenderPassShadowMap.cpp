@@ -49,9 +49,8 @@ void RenderPassShadowMap::updateGlobalData()
     GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
 
-void RenderPassShadowMap::initShader(Ptr<BatchRenderer> batch)
+Ptr<const MaterialRuntime> RenderPassShadowMap::getMaterialRuntime(const BatchData& batchData) const
 {
-    mMaterialRuntime->init(batch->getBatchData().mMaterial->getMaterialRuntime()->getMaterialRuntimeData());
-    OwnerPtr<GPUProgram> shader = ShaderUtils::createShaderCustomFragment(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batch->getGPUVertexBuffersContainer(), batch->getGPUSharedBuffersContainer(), batch->getBatchData().mMaterial.get(), Ptr<MaterialRuntime>::cast(mMaterialRuntime));
-    batch->initShader(shader);
+    mMaterialRuntime->init(batchData.mMaterial->getMaterialRuntime()->getMaterialRuntimeData());
+    return Ptr<const MaterialRuntime>::cast(mMaterialRuntime);
 }

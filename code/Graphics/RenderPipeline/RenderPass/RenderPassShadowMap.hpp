@@ -12,7 +12,7 @@ protected:
     virtual void postFramebufferEnabled() override;
     virtual void render() override;
     virtual void updateGlobalData() override;
-    virtual void initShader(Ptr<BatchRenderer> batch);
+    virtual Ptr<const MaterialRuntime> getMaterialRuntime(const BatchData& batchData) const;
 public:
     Ptr<PointLight> mPointLight;
 private:
