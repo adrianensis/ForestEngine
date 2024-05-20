@@ -4,7 +4,7 @@
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
-std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimeUI::generateMaterialPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateMaterialPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -17,14 +17,14 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimeUI::generateM
     return propertiesBlock;
 }
 
-void MaterialRuntimeUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
-    // MaterialRuntimeDefault::fragmentShaderCode(shaderBuilder);
+    // ShaderDefault::fragmentShaderCode(shaderBuilder);
 
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
-    Variable instanceColor = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
-    Variable propertiesBlock(getMaterialRuntimeData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+    Variable instanceColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
+    Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
     
     Variable baseColor;
     shaderBuilder.getMain().
@@ -33,7 +33,7 @@ void MaterialRuntimeUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
     
-    if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
@@ -45,7 +45,7 @@ void MaterialRuntimeUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
             line("discard").
         end();
 
-        if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsFont)
+        if(getShaderData().mMaterial->getMaterialData().mIsFont)
         {
             shaderBuilder.getMain().
             set(outColor.dot("a"), outColor.dot("r"));
@@ -58,15 +58,15 @@ void MaterialRuntimeUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     }
 }
 
-void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
+void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
 {
-    MaterialRuntimeDefault::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
+    ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
 
     auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
 
-    Variable propertiesBlock(getMaterialRuntimeData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
-    Variable textureRegionLeftTop = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
-    Variable textureRegionSize = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
+    Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+    Variable textureRegionLeftTop = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
+    Variable textureRegionSize = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
     shaderBuilder.getMain().
     set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2,
@@ -76,12 +76,12 @@ void MaterialRuntimeUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuild
     }));
 }
 
-void MaterialRuntimeUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
+void ShaderUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
 {    
     Variable finalPositon = shaderBuilder.getVariableFromCache("finalPositon");
 
-    Variable propertiesBlock(getMaterialRuntimeData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
-    Variable depth = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
+    Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+    Variable depth = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
     shaderBuilder.getMain().
     set(finalPositon.dot("z"), propertiesBlock.at(materialInstanceId).dot(depth));

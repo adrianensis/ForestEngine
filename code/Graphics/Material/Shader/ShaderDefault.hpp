@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
+#include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-class MaterialRuntimeDefault : public MaterialRuntime
+class ShaderDefault : public Shader
 {
 public:
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
@@ -24,7 +24,7 @@ protected:
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;
 
-    virtual void generateShaderBuilderData(MaterialRuntime::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    virtual void generateShaderBuilderData(Shader::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
     virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
 

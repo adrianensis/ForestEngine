@@ -1,10 +1,10 @@
-#include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/Shader/ShaderDefault.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Light/Light.hpp"
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
-void MaterialRuntimeDefault::vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const
 {
     Variable boneMatrix;
     shaderBuilder.getMain().
@@ -13,7 +13,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateBoneMatrix(ShaderBuilder& shad
     shaderBuilder.setVariableInCache(boneMatrix);
 }
 
-void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
 {
     auto& position = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mPosition);
 
@@ -21,7 +21,7 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& 
     shaderBuilder.getMain().
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4, {position, {"1.0f"}}));
     
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsSkinned)
+    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
         shaderBuilder.getMain().
@@ -54,12 +54,12 @@ void MaterialRuntimeDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& 
     shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
 }
 
-void MaterialRuntimeDefault::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
 {
 
 }
 
-void MaterialRuntimeDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const
 {
     auto& normal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mNormal);
 
@@ -67,7 +67,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& sh
     shaderBuilder.getMain().
     variable(finalNormal, GPUBuiltIn::PrimitiveTypes::mVector3, "finalNormal", call(GPUBuiltIn::PrimitiveTypes::mVector3, {normal}));
 
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsSkinned)
+    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
         Variable transformedNormal;
@@ -76,7 +76,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& sh
         set(finalNormal, transformedNormal.dot("xyz"));
     }
 
-    // if(getMaterialRuntimeData().mMaterial->getMaterialData().mUseModelMatrix)
+    // if(getShaderData().mMaterial->getMaterialData().mUseModelMatrix)
     // {
     //     /*
     //         - NOTE - 
@@ -98,7 +98,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& sh
     // }
 }
 
-void MaterialRuntimeDefault::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
 {
 
     auto& textureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoord);
@@ -107,7 +107,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateTextureCoordinateOutput(Shader
     set(outTextureCoord, textureCoord);
 }
 
-void MaterialRuntimeDefault::vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const
 {
     auto& color = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mColor);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor);
@@ -115,7 +115,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateVertexColorOutput(ShaderBuilde
     set(outColor, color);
 }
 
-void MaterialRuntimeDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const
 {
     auto& instanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mInstanceID);
     auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
@@ -141,7 +141,7 @@ void MaterialRuntimeDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder
     }
 }
 
-void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
@@ -159,7 +159,7 @@ void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) co
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
@@ -168,22 +168,22 @@ void MaterialRuntimeDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) co
     }
 }
 
-void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsFont)
+    if(getShaderData().mMaterial->getMaterialData().mIsFont)
     {
         ConstString samplerName = EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR);
         shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
     }
     else
     {
-        FOR_RANGE(i, 0, getMaterialRuntimeData().mMaterial->getMaterialData().mTextureBindings.size())
+        FOR_RANGE(i, 0, getShaderData().mMaterial->getMaterialData().mTextureBindings.size())
         {
-            if(!getMaterialRuntimeData().mMaterial->getMaterialData().mTextureBindings[i].mPath.empty())
+            if(!getShaderData().mMaterial->getMaterialData().mTextureBindings[i].mPath.empty())
             {
                 ConstString samplerName = EnumsManager::toString<TextureMap>(i);
 
-                switch (getMaterialRuntimeData().mMaterial->getMaterialData().mTextureBindings[i].mStage)
+                switch (getShaderData().mMaterial->getMaterialData().mTextureBindings[i].mStage)
                 {
                     case GPUPipelineStage::VERTEX:
                         shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
@@ -199,7 +199,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
         }
     }
 
-    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(getMaterialRuntimeData().mPropertiesBlockStructDefinition);
+    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
     FOR_LIST(it, gpuSharedBuffersContainer.getSharedBuffers())
     {
@@ -208,11 +208,11 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
 
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(getMaterialRuntimeData().mPropertiesBlockSharedBufferData);
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(getShaderData().mPropertiesBlockSharedBufferData);
 
     shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
     shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI180);
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsSkinned)
+    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
     {
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
@@ -223,7 +223,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
         shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     }
@@ -242,7 +242,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
     }
@@ -258,7 +258,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
     shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mReceiveLight)
+    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
     {
         shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
         shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
@@ -268,7 +268,7 @@ void MaterialRuntimeDefault::generateShaderBuilderData(MaterialRuntimeDefault::S
     }
 }
 
-void MaterialRuntimeDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     ShaderBuilderData shaderBuilderData;
     generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
@@ -281,13 +281,13 @@ void MaterialRuntimeDefault::registerVertexShaderData(ShaderBuilder& shaderBuild
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
 
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsSkinned)
+    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
     {
         registerFunctionCalculateBoneTransform(shaderBuilder);
     }
 }
 
-void MaterialRuntimeDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     ShaderBuilderData shaderBuilderData;
     generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
@@ -301,11 +301,11 @@ void MaterialRuntimeDefault::registerFragmentShaderData(ShaderBuilder& shaderBui
     FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
 }
 
-void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mIsSkinned)
+    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
     {
         vertexShaderCalculateBoneMatrix(shaderBuilder);
     }
@@ -317,7 +317,7 @@ void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, co
         vertexShaderCalculateNormalOutput(shaderBuilder);
     }
 
-    if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
     }
@@ -330,14 +330,14 @@ void MaterialRuntimeDefault::createVertexShader(ShaderBuilder& shaderBuilder, co
     vertexShaderCalculateInstanceIdOutput(shaderBuilder);
 }
 
-void MaterialRuntimeDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     
     fragmentShaderCode(shaderBuilder);
 }
 
-void MaterialRuntimeDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const
 {
     FunctionDefinition func(GPUBuiltIn::Functions::mCalculateBoneTransform);
     

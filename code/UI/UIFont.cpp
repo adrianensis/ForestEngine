@@ -41,7 +41,7 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32
     materialData.mFontData = mFontData;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
     materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
-    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeUI>(materialData);
+    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
 
     mFontData.freeGlyphsBuffers();
 }

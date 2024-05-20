@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/Shader/ShaderDefault.hpp"
 #include "Graphics/Material/Material.hpp"
 
 class MaterialPropertiesBlockUI
@@ -12,7 +12,7 @@ public:
     alignas(16) i32 mDepth = 0;
 };
 
-class MaterialRuntimeUI : public MaterialRuntimeDefault
+class ShaderUI : public ShaderDefault
 {
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;

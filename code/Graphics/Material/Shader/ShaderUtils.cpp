@@ -6,17 +6,17 @@
 
 OwnerPtr<GPUProgram> ShaderUtils::createShader(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material)
 {
-	return ShaderUtils::createShaderCustomFragment(label, gpuVertexBuffersContainer, gpuSharedBuffersContainer, material, material.getMaterialRuntime());
+	return ShaderUtils::createShaderCustomFragment(label, gpuVertexBuffersContainer, gpuSharedBuffersContainer, material, material.getShader());
 }
 
-OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const MaterialRuntime> customMaterialRuntime)
+OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const Shader> customShader)
 {
-	OwnerPtr<GPUProgram> shader = OwnerPtr<GPUProgram>::newObject();
+	OwnerPtr<GPUProgram> gpuProgram = OwnerPtr<GPUProgram>::newObject();
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    material.getMaterialRuntime()->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-    customMaterialRuntime->createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    material.getShader()->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    customShader->createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
     std::string stringShderVert = sbVert.getCode();
     FileUtils::writeFile(Paths::mOutputShaders + std::to_string(material.getID()) + "_" + label.get() + ".vs", [stringShderVert](std::ofstream& file)
@@ -28,6 +28,6 @@ OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(ConstString label, 
     {
         file << stringShderFrag;
     });
-    shader->initFromFileContents(stringShderVert, stringShderFrag);
-    return shader;
+    gpuProgram->initFromFileContents(stringShderVert, stringShderFrag);
+    return gpuProgram;
 }

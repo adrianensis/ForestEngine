@@ -12,10 +12,10 @@ public:
     PoolHandler<Texture> loadTexture(const TextureData& textureData);
     void unloadTexture(PoolHandler<Texture>& texture);
 
-    template<class T> T_EXTENDS(T, MaterialRuntime)
+    template<class T> T_EXTENDS(T, Shader)
     PoolHandler<Material> createMaterial(const MaterialData& materialData)
     {
-        // OwnerPtr<T> materialRuntime = OwnerPtr<T>::newObject();
+        // OwnerPtr<T> shader = OwnerPtr<T>::newObject();
         PoolHandler<Material> handler = mMaterials.allocate();
         handler->init<T>(materialData, handler.getIndex());
         postMaterialCreated(handler);

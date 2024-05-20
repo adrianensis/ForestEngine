@@ -3,7 +3,7 @@
 #include "Engine/Minimal.hpp"
 #include "Graphics/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/GPU/GPUFramebuffer.hpp"
-#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
+#include "Graphics/Material/Shader/Shader.hpp"
 
 class MeshRenderer;
 
@@ -30,7 +30,7 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
-    virtual Ptr<const MaterialRuntime> getMaterialRuntime(const BatchData& batchData) const;
+    virtual Ptr<const Shader> getShader(const BatchData& batchData) const;
 protected:
 	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;

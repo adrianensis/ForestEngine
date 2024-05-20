@@ -1,4 +1,4 @@
-#include "Graphics/Material/MaterialRuntime/MaterialRuntimePBR.hpp"
+#include "Graphics/Material/Shader/ShaderPBR.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Light/Light.hpp"
 using namespace ShaderBuilderNodes;
@@ -6,7 +6,7 @@ using namespace ShaderBuilderNodes::Expressions;
 
 // PBR METALLIC
 
-std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimePBR::generateMaterialPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> ShaderPBR::generateMaterialPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -18,15 +18,15 @@ std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntimePBR::generate
     return propertiesBlock;
 }
 
-void MaterialRuntimePBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
-    // MaterialRuntimeDefault::fragmentShaderCode(shaderBuilder);
+    // ShaderDefault::fragmentShaderCode(shaderBuilder);
 
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
-    Variable lightingModel = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
-    Variable propertiesBlock(getMaterialRuntimeData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
-    Variable instanceBaseColor = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
+    Variable lightingModel = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
+    Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+    Variable instanceBaseColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     
     Variable baseColor;
     shaderBuilder.getMain().
@@ -35,7 +35,7 @@ void MaterialRuntimePBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
@@ -43,7 +43,7 @@ void MaterialRuntimePBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
 
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mReceiveLight)
+    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
     {
         Variable PBRMetallicRoughness;
         shaderBuilder.getMain().
@@ -52,18 +52,18 @@ void MaterialRuntimePBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     }
 }
 
-void MaterialRuntimePBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
-    MaterialRuntimeDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     
-    if(getMaterialRuntimeData().mMaterial->getMaterialData().mReceiveLight)
+    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
     {
         registerFunctionsPBRHelpers(shaderBuilder);
         registerFunctionCalculatePBR(shaderBuilder);
     }
 }
 
-void MaterialRuntimePBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
 {
     {
         FunctionDefinition funcGetNormalFromMap(mGetNormalFromMap);
@@ -90,7 +90,7 @@ void MaterialRuntimePBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilde
         funcGetNormalFromMap.body().
         variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::NORMAL))
+        if(getShaderData().mMaterial->hasTexture(TextureMap::NORMAL))
         {
             auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::NORMAL)).mName);
             funcGetNormalFromMap.body().
@@ -202,7 +202,7 @@ void MaterialRuntimePBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilde
     }
 }
 
-void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
 {
     {
         FunctionDefinition funcCalculatePBRSingleLight(mCalculatePBRSingleLight);
@@ -326,10 +326,10 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
         Variable directionalLightDirection = {LightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[0]};
         Variable directionalLightDiffuse = {LightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[1]};
 
-        Variable propertiesBlock(getMaterialRuntimeData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
-        Variable materialBaseColor = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
-        Variable materialMetallic = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
-        Variable materialRoughness = {getMaterialRuntimeData().mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
+        Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+        Variable materialBaseColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
+        Variable materialMetallic = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
+        Variable materialRoughness = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
         auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
 
         Variable roughness;
@@ -337,7 +337,7 @@ void MaterialRuntimePBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuild
         funcCalculatePBR.body().
         variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness)).
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
-        if(getMaterialRuntimeData().mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
+        if(getShaderData().mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
         {
             auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS)).mName);
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);

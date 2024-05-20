@@ -18,7 +18,7 @@ void Material::internalInit(const MaterialData& materialData, u32 id)
     loadTextures();
 
     PoolHandler<Material> handler = GET_SYSTEM(MaterialManager).getMaterialHandler(mID);
-    mMaterialRuntime->init(handler);
+    mShader->init(handler);
 }
 
 void Material::terminate()
@@ -63,24 +63,24 @@ bool Material::hasTexture(TextureMap textureMap) const
 }
 
 
-void Material::bindToShader(Ptr<GPUProgram> shader) const
+void Material::bindToShader(Ptr<GPUProgram> gpuProgram) const
 {
-    shader->enable();
+    gpuProgram->enable();
 
     PoolHandler<Material> handler = GET_SYSTEM(MaterialManager).getMaterialHandler(mID);
-    shader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(handler));
+    gpuProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(handler));
 
     u32 textureUnit = 0;
     FOR_ARRAY(i, getMaterialData().mTextureBindings)
     {
         if(hasTexture((TextureMap)i))
         {
-            shader->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>((TextureMap)i)).mName, textureUnit);
+            gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>((TextureMap)i)).mName, textureUnit);
             textureUnit++;
         }
     }
     
-    shader->disable();
+    gpuProgram->disable();
 }
 
 void Material::loadTextures()

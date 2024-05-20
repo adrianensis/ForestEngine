@@ -6,7 +6,7 @@
 void RenderPassShadowMap::init(const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPassData);
-    mMaterialRuntime = OwnerPtr<MaterialRuntimeShadowMap>::newObject();
+    mShader = OwnerPtr<ShaderShadowMap>::newObject();
 }
 
 void RenderPassShadowMap::postFramebufferEnabled()
@@ -49,8 +49,8 @@ void RenderPassShadowMap::updateGlobalData()
     GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
 
-Ptr<const MaterialRuntime> RenderPassShadowMap::getMaterialRuntime(const BatchData& batchData) const
+Ptr<const Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const
 {
-    mMaterialRuntime->init(batchData.mMaterial->getMaterialRuntime()->getMaterialRuntimeData());
-    return Ptr<const MaterialRuntime>::cast(mMaterialRuntime);
+    mShader->init(batchData.mMaterial->getShader()->getShaderData());
+    return Ptr<const Shader>::cast(mShader);
 }

@@ -12,7 +12,7 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 
-void BatchRenderer::init(const BatchData& batchData, Ptr<const MaterialRuntime> customMaterialRuntime)
+void BatchRenderer::init(const BatchData& batchData, Ptr<const Shader> customShader)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);
@@ -24,9 +24,9 @@ void BatchRenderer::init(const BatchData& batchData, Ptr<const MaterialRuntime> 
         setMeshBuffers(Ptr<const GPUMesh>::cast(mBatchData.mMesh));
 	}
 
-    mShader = ShaderUtils::createShaderCustomFragment(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, getGPUVertexBuffersContainer(), getGPUSharedBuffersContainer(), getBatchData().mMaterial.get(), customMaterialRuntime);
+    mGPUProgram = ShaderUtils::createShaderCustomFragment(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, getGPUVertexBuffersContainer(), getGPUSharedBuffersContainer(), getBatchData().mMaterial.get(), customShader);
     bindSharedBuffers();
-    mBatchData.mMaterial->bindToShader(mShader);
+    mBatchData.mMaterial->bindToShader(mGPUProgram);
 }
 
 void BatchRenderer::terminate()
@@ -37,18 +37,18 @@ void BatchRenderer::terminate()
 
 void BatchRenderer::bindSharedBuffers()
 {
-    mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
-    mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
-        mShader->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
+        mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
+        mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
     }
 
     FOR_LIST(it, mGPUSharedBuffersContainer.getSharedBuffers())
     {
-        mShader->bindSharedBuffer(*it);
+        mGPUProgram->bindSharedBuffer(*it);
     }
 }
 
@@ -69,7 +69,7 @@ void BatchRenderer::render()
 
 void BatchRenderer::enable()
 {
-    mShader->enable();
+    mGPUProgram->enable();
     mGPUVertexBuffersContainer.enable();
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
@@ -92,7 +92,7 @@ void BatchRenderer::disable()
 
     mBatchData.mMaterial->disable();
     mGPUVertexBuffersContainer.disable();
-    mShader->disable();
+    mGPUProgram->disable();
 }
 
 void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)

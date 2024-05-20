@@ -7,7 +7,7 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/Shader/ShaderDefault.hpp"
 
 void ShapeBatchRenderer::terminate()
 {
@@ -47,7 +47,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
-    PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData);
+    PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
 
     mShaderLine = ShaderUtils::createShader("Shape", mGPUVertexBuffersContainer, {}, lineMaterial.get());
 

@@ -1,4 +1,4 @@
-#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
+#include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
@@ -11,9 +11,9 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void MaterialRuntime::init(PoolHandler<Material> material)
+void Shader::init(PoolHandler<Material> material)
 {
-    mMaterialRuntimeData.mMaterial = material;
+    mShaderData.mMaterial = material;
 
     GPUStructDefinition propertiesBlockStructDefinition =
     {
@@ -40,16 +40,16 @@ void MaterialRuntime::init(PoolHandler<Material> material)
         "propertiesBlock"
     };
 
-    mMaterialRuntimeData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
-    mMaterialRuntimeData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
+    mShaderData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
+    mShaderData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
 }
 
-void MaterialRuntime::init(const MaterialRuntimeData& materialRuntimeData)
+void Shader::init(const ShaderData& shaderData)
 {
-    mMaterialRuntimeData = materialRuntimeData;
+    mShaderData = shaderData;
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntime::generateMaterialPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {

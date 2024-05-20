@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Material/MaterialRuntime/MaterialRuntimeDefault.hpp"
+#include "Graphics/Material/Shader/ShaderDefault.hpp"
 
 // PBR METALLIC
 
@@ -12,7 +12,7 @@ public:
     alignas(16) f32 mRoughness = 0;
 };
 
-class MaterialRuntimePBR : public MaterialRuntimeDefault
+class ShaderPBR : public ShaderDefault
 {
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;

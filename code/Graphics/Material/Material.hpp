@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/Material/MaterialRuntime/MaterialRuntime.hpp"
+#include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
@@ -195,10 +195,10 @@ class Material: public ObjectBase
 public:
     Material() = default;
 
-    template<class T> T_EXTENDS(T, MaterialRuntime)
+    template<class T> T_EXTENDS(T, Shader)
     void init(const MaterialData& materialData, u32 id)
     {
-        mMaterialRuntime = OwnerPtr<MaterialRuntime>::moveCast(OwnerPtr<T>::newObject());
+        mShader = OwnerPtr<Shader>::moveCast(OwnerPtr<T>::newObject());
         internalInit(materialData, id);
     }
 
@@ -208,7 +208,7 @@ public:
     void disable() const;
     bool hasTexture(TextureMap textureMap) const;
 
-    void bindToShader(Ptr<GPUProgram> shader) const;
+    void bindToShader(Ptr<GPUProgram> gpuProgram) const;
 
 private:
     void internalInit(const MaterialData& materialData, u32 id);
@@ -222,11 +222,11 @@ protected:
 
     u32 mID = 0;
 
-    OwnerPtr<MaterialRuntime> mMaterialRuntime;
+    OwnerPtr<Shader> mShader;
 
 public:
     CRGET(MaterialData)
     GET(ID)
-    CGET(MaterialRuntime)
+    CGET(Shader)
 };
 REGISTER_CLASS(Material);
