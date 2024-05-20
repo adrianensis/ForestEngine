@@ -2,7 +2,12 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
-#include "Graphics/Material/MaterialRuntime/MaterialRuntimeShadowMap.hpp"
+    
+void RenderPassShadowMap::init(const RenderPassData& renderPassData)
+{
+    RenderPass::init(renderPassData);
+    mMaterialRuntime = OwnerPtr<MaterialRuntimeShadowMap>::newObject();
+}
 
 void RenderPassShadowMap::postFramebufferEnabled()
 {
@@ -46,8 +51,7 @@ void RenderPassShadowMap::updateGlobalData()
 
 void RenderPassShadowMap::initShader(Ptr<BatchRenderer> batch)
 {
-    OwnerPtr<MaterialRuntimeShadowMap> materialRuntime = OwnerPtr<MaterialRuntimeShadowMap>::newObject();
-    materialRuntime->initFromCopy(batch->getBatchData().mMaterial->getMaterialRuntime());
-    OwnerPtr<GPUProgram> shader = ShaderUtils::createShaderCustomFragment(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batch->getGPUVertexBuffersContainer(), batch->getGPUSharedBuffersContainer(), batch->getBatchData().mMaterial.get(), Ptr<MaterialRuntime>::cast(materialRuntime));
+    mMaterialRuntime->init(batch->getBatchData().mMaterial->getMaterialRuntime()->getMaterialRuntimeData());
+    OwnerPtr<GPUProgram> shader = ShaderUtils::createShaderCustomFragment(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batch->getGPUVertexBuffersContainer(), batch->getGPUSharedBuffersContainer(), batch->getBatchData().mMaterial.get(), Ptr<MaterialRuntime>::cast(mMaterialRuntime));
     batch->initShader(shader);
 }

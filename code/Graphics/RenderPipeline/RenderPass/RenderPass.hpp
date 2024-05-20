@@ -17,7 +17,7 @@ public:
 class RenderPass: public ObjectBase
 {
 public:
-    void init(const RenderPassData& renderPassData);
+    virtual void init(const RenderPassData& renderPassData);
     void terminate();
     void addRenderer(Ptr<MeshRenderer> renderer);
     void removeRenderer(Ptr<MeshRenderer> renderer);

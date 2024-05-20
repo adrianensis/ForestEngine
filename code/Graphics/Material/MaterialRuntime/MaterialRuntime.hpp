@@ -55,7 +55,7 @@ public:
     MaterialRuntime() = default;
     virtual ~MaterialRuntime() = default;
     void init(PoolHandler<Material> material);
-    void initFromCopy(Ptr<const MaterialRuntime> materialRuntime);
+    void init(const MaterialRuntimeData& materialRuntimeData);
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
         const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const

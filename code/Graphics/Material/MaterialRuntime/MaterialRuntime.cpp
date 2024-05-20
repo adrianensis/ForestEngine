@@ -44,9 +44,9 @@ void MaterialRuntime::init(PoolHandler<Material> material)
     mMaterialRuntimeData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
 }
 
-void MaterialRuntime::initFromCopy(Ptr<const MaterialRuntime> materialRuntime)
+void MaterialRuntime::init(const MaterialRuntimeData& materialRuntimeData)
 {
-    mMaterialRuntimeData = materialRuntime->mMaterialRuntimeData;
+    mMaterialRuntimeData = materialRuntimeData;
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntime::generateMaterialPropertiesBlock()
