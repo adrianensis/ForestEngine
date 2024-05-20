@@ -111,8 +111,3 @@ void RenderPass::updateGlobalData()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
-
-void RenderPass::initShader()
-{
-    // mShader = ShaderUtils::createShader(mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, mBatchData.mMaterial.get());
-}
