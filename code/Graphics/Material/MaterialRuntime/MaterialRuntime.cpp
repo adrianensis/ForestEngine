@@ -13,7 +13,7 @@
 
 void MaterialRuntime::init(PoolHandler<Material> material)
 {
-    mMaterial = material;
+    mMaterialRuntimeData.mMaterial = material;
 
     GPUStructDefinition propertiesBlockStructDefinition =
     {
@@ -40,8 +40,13 @@ void MaterialRuntime::init(PoolHandler<Material> material)
         "propertiesBlock"
     };
 
-    mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
-    mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
+    mMaterialRuntimeData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
+    mMaterialRuntimeData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
+}
+
+void MaterialRuntime::initFromCopy(Ptr<const MaterialRuntime> materialRuntime)
+{
+    mMaterialRuntimeData = materialRuntime->mMaterialRuntimeData;
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> MaterialRuntime::generateMaterialPropertiesBlock()

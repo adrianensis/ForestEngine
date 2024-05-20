@@ -10,6 +10,7 @@ class BatchRenderer: public ObjectBase
 {
 public:
     void init(const BatchData& batchData);
+    void initShader(OwnerPtr<GPUProgram>& shader);
     void terminate();
 
     void render();
@@ -51,5 +52,7 @@ private:
 
 public:
     CRGET(BatchData)
+    CRGET(GPUVertexBuffersContainer)
+    CRGET(GPUSharedBuffersContainer)
 };
 REGISTER_CLASS(BatchRenderer);

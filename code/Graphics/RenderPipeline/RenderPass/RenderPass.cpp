@@ -32,6 +32,7 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 	{
 		mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
         mBatchMap.at(batchData)->init(batchData);
+        initShader(mBatchMap.at(batchData));
 	}
 
 	mBatchMap.at(batchData)->addRenderer(renderer);
@@ -110,4 +111,10 @@ void RenderPass::updateGlobalData()
         camera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+}
+
+void RenderPass::initShader(Ptr<BatchRenderer> batch)
+{
+    OwnerPtr<GPUProgram> shader = ShaderUtils::createShader(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batch->getGPUVertexBuffersContainer(), batch->getGPUSharedBuffersContainer(), batch->getBatchData().mMaterial.get());
+    batch->initShader(shader);
 }

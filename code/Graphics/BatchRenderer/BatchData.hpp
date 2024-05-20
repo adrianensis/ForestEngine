@@ -26,9 +26,10 @@ public:
 
 	bool operator==(const BatchData& otherBatchData) const
 	{
-        return mMaterial.getIndex() == otherBatchData.mMaterial.getIndex() && mMesh == otherBatchData.mMesh and
+        bool result = mMaterial.getIndex() == otherBatchData.mMaterial.getIndex() && mMesh == otherBatchData.mMesh and
         mIsStatic == otherBatchData.mIsStatic && mIsInstanced == otherBatchData.mIsInstanced and
-        mStencilData == otherBatchData.mStencilData;
+        mStencilData.matches(otherBatchData.mStencilData);
+        return result;
 	}
 
 	class BatchDataFunctor
@@ -36,11 +37,14 @@ public:
 	public:
 		size_t operator()(const BatchData& key) const
 		{
-			return key.mMaterial.getIndex() ^ key.mMesh->getObjectId() ^
-			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsInstanced) ^
-            (u64)key.mStencilData.mUseStencil ^ 
-			(u64)key.mStencilData.mStencilValue ^ static_cast<u64>(key.mStencilData.mStencilFunction) ^
-            (u64)key.mStencilData.mParentId ^ (u64)key.mStencilData.mId;
+            u64 result = key.mMaterial.getIndex() ^ key.mMesh->getObjectId() ^
+			static_cast<u64>(key.mIsStatic) ^ static_cast<u64>(key.mIsInstanced);
+            if(key.mStencilData.mUseStencil)
+            {
+                result = result ^ key.mStencilData.hash();
+            }
+            
+            return result;
 		}
 	};
 };

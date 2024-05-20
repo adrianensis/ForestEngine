@@ -23,11 +23,12 @@ void BatchRenderer::init(const BatchData& batchData)
         resizeMeshBuffers(1);
         setMeshBuffers(Ptr<const GPUMesh>::cast(mBatchData.mMesh));
 	}
+}
 
-    mShader = ShaderUtils::createShader(mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, mBatchData.mMaterial.get());
-    
+void BatchRenderer::initShader(OwnerPtr<GPUProgram>& shader)
+{
+    mShader = std::move(shader);
     bindSharedBuffers();
-
     mBatchData.mMaterial->bindToShader(mShader);
 }
 

@@ -49,7 +49,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     materialData.mReceiveLight = false;
     PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<MaterialRuntimeDefault>(materialData);
 
-    mShaderLine = ShaderUtils::createShader(mGPUVertexBuffersContainer, {}, lineMaterial.get());
+    mShaderLine = ShaderUtils::createShader("Shape", mGPUVertexBuffersContainer, {}, lineMaterial.get());
 
     mShaderLine->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 }

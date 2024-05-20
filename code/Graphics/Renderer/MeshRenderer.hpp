@@ -21,15 +21,22 @@ public:
     u64 mParentId = 0;
     u64 mId = 0;
 
-    bool operator==(const StencilData& other) const
-	{
+    bool matches(const StencilData& other) const
+    {
         return
         mUseStencil == other.mUseStencil and
         mStencilValue == other.mStencilValue and
         mParentId == other.mParentId and
-        mId == other.mId && 
+        //mId == other.mId && 
         mStencilFunction == other.mStencilFunction;
-	}
+    }
+
+    u64 hash() const
+    {
+        return (u64)mUseStencil^
+        (u64)mStencilValue ^ static_cast<u64>(mStencilFunction) ^
+        (u64)mParentId /*^ (u64)mId*/;
+    }
 };
 
 class RendererData

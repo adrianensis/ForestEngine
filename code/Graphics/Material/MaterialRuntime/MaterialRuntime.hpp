@@ -5,6 +5,14 @@
 
 class Material;
 
+class MaterialRuntimeData
+{
+public:
+    PoolHandler<Material> mMaterial;
+    GPUStructDefinition mPropertiesBlockStructDefinition;
+    GPUSharedBufferData mPropertiesBlockSharedBufferData;
+};
+
 class MaterialRuntime
 {
 protected:
@@ -47,6 +55,7 @@ public:
     MaterialRuntime() = default;
     virtual ~MaterialRuntime() = default;
     void init(PoolHandler<Material> material);
+    void initFromCopy(Ptr<const MaterialRuntime> materialRuntime);
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
         const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -60,12 +69,8 @@ protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
 
 protected:
-    PoolHandler<Material> mMaterial;
-
-    GPUStructDefinition mPropertiesBlockStructDefinition;
-    GPUSharedBufferData mPropertiesBlockSharedBufferData;
+    MaterialRuntimeData mMaterialRuntimeData;
 
 public:
-    CRGET(PropertiesBlockSharedBufferData)
-    CRGET(PropertiesBlockStructDefinition)
+    CRGET(MaterialRuntimeData)
 };
