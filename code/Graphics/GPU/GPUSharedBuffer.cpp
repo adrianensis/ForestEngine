@@ -12,9 +12,11 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBuffe
 	mGPUSharedBufferData = gpuBufferData;
     mBindingPoint = bindingPoint;
     mIsStatic = isStatic;
+}
 
+void GPUSharedBuffer::createBuffer()
+{
     mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
-
     GET_SYSTEM(GPUInterface).bindSharedBufferToBindingPoint(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
 }
 

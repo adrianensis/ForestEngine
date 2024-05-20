@@ -8,22 +8,24 @@ void RenderSharedContext::init()
     mMaxSharedBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::STORAGE);
 
     u32 bindingPointGlobalData = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mGlobalData.mType);
-    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointGlobalData, GPUBuiltIn::SharedBuffers::mGlobalData, false);
-    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
+    mGPUSharedBuffersContainer.addSharedBuffer(bindingPointGlobalData, GPUBuiltIn::SharedBuffers::mGlobalData, false);
 
     u32 bindingPointLightsData = requestSharedBufferBindingPoint(LightBuiltIn::mLightsBufferData.mType);
-    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointLightsData, LightBuiltIn::mLightsBufferData, false);
-    mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
+    mGPUSharedBuffersContainer.addSharedBuffer(bindingPointLightsData, LightBuiltIn::mLightsBufferData, false);
 
     u32 bindingPointShadowMappingData = requestSharedBufferBindingPoint(LightBuiltIn::mShadowMappingBufferData.mType);
-    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointShadowMappingData, LightBuiltIn::mShadowMappingBufferData, false);
-    mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
+    mGPUSharedBuffersContainer.addSharedBuffer(bindingPointShadowMappingData, LightBuiltIn::mShadowMappingBufferData, false);
 
     mRenderInstancesSlotsManager.init(mMaxInstances);
 
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     u32 bindingPointModelMatrices = requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mModelMatrices.mType);
-    mGPUSharedBuffersContainer.createSharedBuffer(bindingPointModelMatrices, GPUBuiltIn::SharedBuffers::mModelMatrices, false);
+    mGPUSharedBuffersContainer.addSharedBuffer(bindingPointModelMatrices, GPUBuiltIn::SharedBuffers::mModelMatrices, false);
+
+    mGPUSharedBuffersContainer.create();
+    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
+    mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
+    mGPUSharedBuffersContainer.getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
     mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }
 
@@ -95,7 +97,8 @@ void RenderSharedContext::initMaterialInstancePropertiesSharedBuffer(const PoolH
 
     const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getMaterialRuntime()->getPropertiesBlockSharedBufferData();
     u32 bindingPointMaterialPropertiesBlock = requestSharedBufferBindingPoint(propertiesBlockSharedBufferData.mType);
-    mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.createSharedBuffer(bindingPointMaterialPropertiesBlock, propertiesBlockSharedBufferData, false);
+    mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.addSharedBuffer(bindingPointMaterialPropertiesBlock, propertiesBlockSharedBufferData, false);
+    mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.create();
     mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).resizeBytes(propertiesBlockSizeBytes * size);
 }
 

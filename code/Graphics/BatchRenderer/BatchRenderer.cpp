@@ -211,7 +211,8 @@ void BatchRenderer::initBuffers()
     if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
     {
         u32 bindingPointBoneMatrices = GET_SYSTEM(RenderSharedContext).requestSharedBufferBindingPoint(GPUBuiltIn::SharedBuffers::mBonesMatrices.mType);
-        mGPUSharedBuffersContainer.createSharedBuffer(bindingPointBoneMatrices, GPUBuiltIn::SharedBuffers::mBonesMatrices, isStatic);
+        mGPUSharedBuffersContainer.addSharedBuffer(bindingPointBoneMatrices, GPUBuiltIn::SharedBuffers::mBonesMatrices, isStatic);
+        mGPUSharedBuffersContainer.create();
         mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
     }
 }

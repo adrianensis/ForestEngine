@@ -78,7 +78,15 @@ void GPUVertexBuffersContainer::terminate()
     GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
 }
 
-void GPUSharedBuffersContainer::createSharedBuffer(u32 bindingPoint, const GPUSharedBufferData& data, bool isStatic)
+void GPUSharedBuffersContainer::create()
+{   
+    FOR_LIST(it, mSharedBuffers)
+    {
+        it->createBuffer();
+    }
+}
+
+void GPUSharedBuffersContainer::addSharedBuffer(u32 bindingPoint, const GPUSharedBufferData& data, bool isStatic)
 {
     GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
     gpuInstanceBuffer.init(bindingPoint, data, isStatic);

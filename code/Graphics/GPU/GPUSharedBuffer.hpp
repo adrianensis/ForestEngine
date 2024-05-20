@@ -25,6 +25,7 @@ public:
 	GPUSharedBuffer() = default;
 
     void init(u32 bindingPoint, const GPUSharedBufferData& gpuBufferData, bool isStatic);
+    void createBuffer();
     template <class T>
     void resize(u32 size)
     {
