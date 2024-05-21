@@ -1,5 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/BatchRenderer/ShapeBatchRenderer.hpp"
+#include "Graphics/Renderer/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/RenderSharedContext.hpp"
 #include "Graphics/Camera/Camera.hpp"

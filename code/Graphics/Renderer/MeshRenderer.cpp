@@ -8,7 +8,7 @@
 #include "Graphics/Mesh/MeshPrimitives.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Scene/Module.hpp"

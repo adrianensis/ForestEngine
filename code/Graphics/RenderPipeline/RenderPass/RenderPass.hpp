@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
