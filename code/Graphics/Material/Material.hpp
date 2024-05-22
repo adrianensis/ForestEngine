@@ -3,7 +3,6 @@
 #include "Engine/Minimal.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/Material/Texture.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
@@ -75,18 +74,12 @@ public:
     virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
-    bool hasTexture(ConstString bindingName) const;
-
-    void bindToShader(Ptr<GPUProgram> gpuProgram) const;
 
 private:
     void internalInit(const MaterialData& materialData, u32 id);
-protected:
-    virtual void loadTextures();
 
 protected:
     MaterialData mMaterialData;
-    std::unordered_map<ConstString, PoolHandler<Texture>> mTextures;
     u32 mID = 0;
     OwnerPtr<Shader> mShader;
 

@@ -2,6 +2,8 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 
 class Material;
 
@@ -17,6 +19,7 @@ public:
     PoolHandler<Material> mMaterial;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUSharedBufferData mPropertiesBlockSharedBufferData;
+    std::unordered_map<ConstString, PoolHandler<Texture>> mTextures;
 };
 
 class Shader
@@ -62,6 +65,14 @@ public:
     virtual ~Shader() = default;
     void init(PoolHandler<Material> material);
     void init(const ShaderData& shaderData);
+    void terminate();
+
+    void enable() const;
+    void disable() const;
+    bool hasTexture(ConstString bindingName) const;
+
+    void bindTextures(Ptr<GPUProgram> gpuProgram) const;
+
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
         const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -72,6 +83,7 @@ public:
         {};
 
 protected:
+    void loadTextures();
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
 
 protected:

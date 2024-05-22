@@ -26,7 +26,7 @@ void BatchRenderer::init(ConstString label, const BatchData& batchData, Ptr<cons
 
     mGPUProgram = ShaderUtils::createShaderCustomFragment(label, getGPUVertexBuffersContainer(), getGPUSharedBuffersContainer(), getBatchData().mMaterial.get(), customShader);
     bindSharedBuffers();
-    mBatchData.mMaterial->bindToShader(mGPUProgram);
+    mBatchData.mMaterial->getShader()->bindTextures(mGPUProgram);
 }
 
 void BatchRenderer::terminate()
@@ -37,6 +37,8 @@ void BatchRenderer::terminate()
 
 void BatchRenderer::bindSharedBuffers()
 {
+    mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
+
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
@@ -75,6 +77,7 @@ void BatchRenderer::enable()
     {
         updateBoneTransforms();
     }
+    mBatchData.mMaterial->getShader()->enable();
     mBatchData.mMaterial->enable();
 
     if(mBatchData.mStencilData.mUseStencil)
@@ -91,6 +94,7 @@ void BatchRenderer::disable()
     }
 
     mBatchData.mMaterial->disable();
+    mBatchData.mMaterial->getShader()->disable();
     mGPUVertexBuffersContainer.disable();
     mGPUProgram->disable();
 }

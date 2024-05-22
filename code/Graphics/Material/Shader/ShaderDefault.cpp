@@ -169,7 +169,7 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
+    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));
@@ -231,7 +231,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
+    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     }
@@ -251,7 +251,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
+    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
     {
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
     }
@@ -331,7 +331,7 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
         vertexShaderCalculateNormalOutput(shaderBuilder);
     }
 
-    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
+    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
     {
         vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
     }

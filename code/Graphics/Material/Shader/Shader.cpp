@@ -42,11 +42,21 @@ void Shader::init(PoolHandler<Material> material)
 
     mShaderData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
     mShaderData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
+
+    loadTextures();
 }
 
 void Shader::init(const ShaderData& shaderData)
 {
     mShaderData = shaderData;
+}
+
+void Shader::terminate()
+{
+    FOR_MAP(it, mShaderData.mTextures)
+    {
+        it->second.reset();
+    }
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialPropertiesBlock()
@@ -58,3 +68,63 @@ std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialProp
 
     return propertiesBlock;
 }
+
+void Shader::enable() const
+{
+	PROFILER_CPU()
+    u32 textureUnit = 0;
+    FOR_MAP(it, mShaderData.mTextures)
+    {
+        mShaderData.mTextures.at(it->first).get().enable(textureUnit);
+        textureUnit++;
+    }
+}
+
+void Shader::disable() const
+{
+	PROFILER_CPU()
+    FOR_MAP(it, mShaderData.mTextures)
+    {
+        mShaderData.mTextures.at(it->first).get().disable();
+    }
+}
+
+bool Shader::hasTexture(ConstString bindingName) const
+{
+    return mShaderData.mTextures.contains(bindingName) && mShaderData.mTextures.at(bindingName).isValid();
+}
+
+void Shader::bindTextures(Ptr<GPUProgram> gpuProgram) const
+{
+    gpuProgram->enable();
+
+    u32 textureUnit = 0;
+    FOR_MAP(it, mShaderData.mTextures)
+    {
+        gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->first).mName, textureUnit);
+        textureUnit++;
+    }
+    
+    gpuProgram->disable();
+}
+
+void Shader::loadTextures()
+{
+    FOR_MAP(it, mShaderData.mMaterial->getMaterialData().mTextureBindings)
+    {
+        CHECK_MSG(!it->second.mPath.empty(), "texture mPath cannot be empty!");
+        TextureData textureData;
+        textureData.mPath = it->second.mPath;
+        textureData.mStage = it->second.mStage;
+
+        if(mShaderData.mMaterial->getMaterialData().mIsFont)
+        {
+            CHECK_MSG(!mShaderData.mMaterial->getMaterialData().mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+            textureData.mIsFont = true;
+            textureData.mFontData = mShaderData.mMaterial->getMaterialData().mFontData;
+        }
+
+        mShaderData.mTextures.insert_or_assign(it->first, GET_SYSTEM(MaterialManager).loadTexture(textureData));
+    }
+}
+

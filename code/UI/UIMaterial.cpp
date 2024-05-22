@@ -33,7 +33,7 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
     
-    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
+    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));

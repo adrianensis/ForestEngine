@@ -35,7 +35,7 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getShaderData().mMaterial->hasTexture(TextureBindingNamesPBR::smBaseColor))
+    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smBaseColor));
@@ -123,7 +123,7 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
         funcGetNormalFromMap.body().
         variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(getShaderData().mMaterial->hasTexture(TextureBindingNamesPBR::smNormal))
+        if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smNormal))
         {
             auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smNormal).mName);
             funcGetNormalFromMap.body().
@@ -370,7 +370,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness)).
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
-        if(getShaderData().mMaterial->hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
+        if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
         {
             auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smMetallicRoughness).mName);
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);
