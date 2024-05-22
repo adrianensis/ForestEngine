@@ -15,7 +15,8 @@ OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(ConstString label, 
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    material.getShader()->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    // material.getShader()->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    customShader->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
     customShader->createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
     std::string stringShderVert = sbVert.getCode();

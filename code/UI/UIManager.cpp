@@ -14,6 +14,7 @@ void UIManager::init()
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
+    materialData.mCastShadows = false;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
     mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
 }

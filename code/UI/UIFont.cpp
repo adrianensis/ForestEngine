@@ -37,6 +37,7 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
+    materialData.mCastShadows = false;
     materialData.mIsFont = true;
     materialData.mFontData = mFontData;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();

@@ -38,7 +38,7 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
@@ -50,6 +50,16 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
         variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {call(GPUBuiltIn::PrimitiveTypes::mVector3, {outColor.dot("xyz")})})).
         set(outColor, PBRMetallicRoughness);
     }
+
+    if(getShaderData().mMaterial->getMaterialData().mCastShadows)
+    {
+        auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
+        Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+
+        auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
+        auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPositionLight);
+        // shaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
+    }
 }
 
 void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
@@ -60,6 +70,29 @@ void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const G
     {
         registerFunctionsPBRHelpers(shaderBuilder);
         registerFunctionCalculatePBR(shaderBuilder);
+    }
+}
+
+void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const
+{
+    {
+        // FunctionDefinition funcCalculateShadow(mCalculateShadow);
+        // Variable fragPosLightSpace = funcCalculateShadow.mParameters[0];
+
+        // Variable projCoords;
+        // Variable closestDepth;
+        // Variable currentDepth;
+        // Variable shadow;
+
+        // funcCalculateShadow.body().
+        // variable(projCoords, GPUBuiltIn::PrimitiveTypes::mVector3, "projCoords", fragPosLightSpace.dot("xyz").div(fragPosLightSpace.dot("w"))).
+        // set(projCoords, projCoords.mul("0.5"s).add("0.5"s)).
+        // variable(closestDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "closestDepth", call("texture", )).
+        // variable(currentDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "currentDepth", NdotV).
+        // variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", NdotV.mul(paren(Variable("1.0").sub(k)).add(k))).
+        // ret(nom.div(denom));
+
+        // shaderBuilder.get().function(funcGeometrySchlickGGX);
     }
 }
 
@@ -92,7 +125,7 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
 
         if(getShaderData().mMaterial->hasTexture(TextureMap::NORMAL))
         {
-            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::NORMAL)).mName);
+            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::NORMAL)).mName);
             funcGetNormalFromMap.body().
             set(normalFromTexture, call("texture", {samplerNormal, inTextureCoord}));
         }
@@ -339,7 +372,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
         if(getShaderData().mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
         {
-            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS)).mName);
+            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS)).mName);
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);
 
             Variable metallicRoughnessPack;

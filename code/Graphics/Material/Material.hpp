@@ -13,90 +13,6 @@ class GPUProgram;
 class Mesh;
 
 DECLARE_ENUM(TextureMap,
-    /** Dummy value.
-    *
-    *  No texture, but the value to be used as 'texture semantic'
-    *  (#aiMaterialProperty::mSemantic) for all material properties
-    *  *not* related to textures.
-    */
-    NONE = 0, "NONE",
-
-    /** LEGACY API MATERIALS
-     * Legacy refers to materials which
-     * Were originally implemented in the specifications around 2000.
-     * These must never be removed, as most engines support them.
-     */
-
-    /** The texture is combined with the result of the diffuse
-     *  lighting equation.
-     *  OR
-     *  PBR Specular/Glossiness
-     */
-    DIFFUSE, "DIFFUSE",
-
-    /** The texture is combined with the result of the specular
-     *  lighting equation.
-     *  OR
-     *  PBR Specular/Glossiness
-     */
-    SPECULAR_GLOSSINESS, "SPECULAR_GLOSSINESS",
-
-    /** The texture is combined with the result of the ambient
-     *  lighting equation.
-     */
-    AMBIENT, "AMBIENT",
-
-    /** The texture is added to the result of the lighting
-     *  calculation. It isn't influenced by incoming light.
-     */
-    EMISSIVE, "EMISSIVE",
-
-    /** The texture is a height map.
-     *
-     *  By convention, higher gray-scale values stand for
-     *  higher elevations from the base height.
-     */
-    HEIGHT, "HEIGHT",
-
-    /** The texture defines the glossiness of the material.
-     *
-     *  The glossiness is in fact the exponent of the specular
-     *  (phong) lighting equation. Usually there is a conversion
-     *  function defined to map the linear color values in the
-     *  texture to a suitable exponent. Have fun.
-    */
-    GLOSSINESS, "GLOSSINESS",
-
-    /** The texture defines per-pixel opacity.
-     *
-     *  Usually 'white' means opaque and 'black' means
-     *  'transparency'. Or quite the opposite. Have fun.
-    */
-    OPACITY, "OPACITY",
-
-    /** Displacement texture
-     *
-     *  The exact purpose and format is application-dependent.
-     *  Higher color values stand for higher vertex displacements.
-    */
-    DISPLACEMENT, "DISPLACEMENT",
-
-    /** Lightmap texture (aka Ambient Occlusion)
-     *
-     *  Both 'Lightmaps' and dedicated 'ambient occlusion maps' are
-     *  covered by this material property. The texture contains a
-     *  scaling value for the final color value of a pixel. Its
-     *  intensity is not affected by incoming light.
-    */
-    LIGHTMAP, "LIGHTMAP",
-
-    /** Reflection texture
-     *
-     * Contains the color of a perfect mirror reflection.
-     * Rarely used, almost never for real-time applications.
-    */
-    REFLECTION, "REFLECTION",
-
     /** PBR Materials
      * PBR definitions from maya and other modelling packages now use this standard.
      * This was originally introduced around 2012.
@@ -136,14 +52,6 @@ DECLARE_ENUM(TextureMap,
     TRANSMISSION, "TRANSMISSION"
 );
 
-/** Unknown texture
- *
- *  A texture reference that does not match any of the definitions
- *  above is considered to be 'unknown'. It is still imported,
- *  but is excluded from any further post-processing.
-*/
-// UNKNOWN
-
 class MaterialTextureBinding
 {
 public:
@@ -155,6 +63,7 @@ class MaterialData
 {
 public:
 	bool mReceiveLight = true;
+	bool mCastShadows = true;
     bool mIsSkinned = false;
     GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;

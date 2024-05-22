@@ -33,7 +33,7 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 		mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
         Ptr<BatchRenderer> batch = mBatchMap.at(batchData);
         Ptr<const Shader> shader = getShader(batchData);
-        batch->init(batchData, shader);
+        batch->init(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batchData, shader);
 	}
 
 	mBatchMap.at(batchData)->addRenderer(renderer);
@@ -59,24 +59,11 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::preRender()
 {
 	PROFILER_CPU()
-
-    updateGlobalData();
-
-    if(mRenderPassData.mOutputFramebufferData.isValid())
-    {
-        preFramebufferEnabled();
-        mOutputGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
-        postFramebufferEnabled();
-    }
 }
 
 void RenderPass::postRender()
 {
 	PROFILER_CPU()
-    if(mRenderPassData.mOutputFramebufferData.isValid())
-    {
-        mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
-    }
 }
 
 void RenderPass::render()
@@ -87,9 +74,24 @@ void RenderPass::render()
 void RenderPass::renderPass()
 {
 	PROFILER_CPU()
+
+    updateGlobalData();
+
+    if(mRenderPassData.mOutputFramebufferData.isValid())
+    {
+        preFramebufferEnabled();
+        mOutputGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
+        postFramebufferEnabled();
+    }
+
     preRender();
     render();
     postRender();
+
+    if(mRenderPassData.mOutputFramebufferData.isValid())
+    {
+        mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
+    }
 }
 
 void RenderPass::updateGlobalData()

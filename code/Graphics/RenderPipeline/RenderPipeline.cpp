@@ -63,14 +63,17 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 
     FOR_ARRAY(i, renderData.mPointLights)
     {
-        Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
         Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
+        Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
         renderPassShadowMap->mPointLight = pointLight;
         renderPassShadowMap->renderPass();
+        Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+        renderPassGeometry->mPointLight = pointLight;
+        renderPassGeometry->renderPass();
     }
-
-    Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
-    renderPassGeometry->renderPass();
+    // Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+    // renderPassGeometry->mPointLight = renderData.mPointLights[0];
+    // renderPassGeometry->renderPass();
 
 	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
     

@@ -21,10 +21,16 @@ protected:
 
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
 
+    void registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const;
     void registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const;
     void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;
 
 protected:
+    inline static const GPUFunctionDefinition mCalculateShadow { GPUBuiltIn::PrimitiveTypes::mFloat, "calculateShadow",
+        {
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "fragPosLightSpace"}
+        }};
+
     inline static const GPUFunctionDefinition mCalculatePBR { GPUBuiltIn::PrimitiveTypes::mVector4, "calculatePBR",
         {
             {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "baseColor"}

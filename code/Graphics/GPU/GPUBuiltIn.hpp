@@ -44,7 +44,7 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
-        static GPUVariableDefinitionData getSampler(const ConstString& name)
+        static GPUVariableDefinitionData getSamplerName(const ConstString& name)
         {
             GPUVariableDefinitionData numberedSampler = mSampler;
             numberedSampler.mName = ConstString(numberedSampler.mName.get() + "_" + name.get());
@@ -116,7 +116,8 @@ public:
         inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord"};
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, PrimitiveTypes::mVector3, "vNormal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "vColor"};
-        inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::OUT, PrimitiveTypes::mVector3, "vPosition"};
+        inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::OUT, PrimitiveTypes::mVector3, "vFragPosition"};
+        inline static const GPUVariableDefinitionData mFragPositionLight{GPUStorage::OUT, PrimitiveTypes::mVector4, "vFragPositionLightSpace"};
         inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vInstanceID"};
         inline static const GPUVariableDefinitionData mObjectID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vObjectId"};
         inline static const GPUVariableDefinitionData mMaterialInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vMaterialInstanceId"};
@@ -129,6 +130,7 @@ public:
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, VertexOutput::mColor};
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, VertexOutput::mNormal};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::IN, VertexOutput::mFragPosition};
+        inline static const GPUVariableDefinitionData mFragPositionLight{GPUStorage::IN, VertexOutput::mFragPositionLight};
         inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mInstanceID};
         inline static const GPUVariableDefinitionData mObjectID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mObjectID};
         inline static const GPUVariableDefinitionData mMaterialInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mMaterialInstanceID};

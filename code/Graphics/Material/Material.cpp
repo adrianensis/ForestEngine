@@ -62,7 +62,6 @@ bool Material::hasTexture(TextureMap textureMap) const
     return mTextures[(u32)textureMap].isValid();
 }
 
-
 void Material::bindToShader(Ptr<GPUProgram> gpuProgram) const
 {
     gpuProgram->enable();
@@ -75,7 +74,7 @@ void Material::bindToShader(Ptr<GPUProgram> gpuProgram) const
     {
         if(hasTexture((TextureMap)i))
         {
-            gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(EnumsManager::toString<TextureMap>((TextureMap)i)).mName, textureUnit);
+            gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>((TextureMap)i)).mName, textureUnit);
             textureUnit++;
         }
     }
