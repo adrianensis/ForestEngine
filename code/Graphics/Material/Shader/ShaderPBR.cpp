@@ -35,10 +35,10 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureBindingNamesPBR::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smBaseColor));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
@@ -123,9 +123,9 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
         funcGetNormalFromMap.body().
         variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(getShaderData().mMaterial->hasTexture(TextureMap::NORMAL))
+        if(getShaderData().mMaterial->hasTexture(TextureBindingNamesPBR::smNormal))
         {
-            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::NORMAL)).mName);
+            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smNormal).mName);
             funcGetNormalFromMap.body().
             set(normalFromTexture, call("texture", {samplerNormal, inTextureCoord}));
         }
@@ -370,9 +370,9 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness)).
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
-        if(getShaderData().mMaterial->hasTexture(TextureMap::METALLIC_ROUGHNESS))
+        if(getShaderData().mMaterial->hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
         {
-            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::METALLIC_ROUGHNESS)).mName);
+            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smMetallicRoughness).mName);
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);
 
             Variable metallicRoughnessPack;

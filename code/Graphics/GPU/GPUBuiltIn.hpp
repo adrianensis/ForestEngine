@@ -44,7 +44,7 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
-        static GPUVariableDefinitionData getSamplerName(const ConstString& name)
+        static GPUVariableDefinitionData getSampler(const ConstString& name)
         {
             GPUVariableDefinitionData numberedSampler = mSampler;
             numberedSampler.mName = ConstString(numberedSampler.mName.get() + "_" + name.get());

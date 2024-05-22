@@ -186,7 +186,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
     MaterialData materialData;
 	materialData.mReceiveLight = false;
-    materialData.mTextureBindings[(u32)TextureMap::BASE_COLOR] = MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT};
+    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT});
 	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData));
 
 	gameObject->createComponent<MeshRenderer>(rendererData);

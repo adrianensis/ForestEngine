@@ -4,6 +4,13 @@
 
 // PBR METALLIC
 
+class TextureBindingNamesPBR : public TextureBindingNames
+{
+public:
+    inline static const ConstString smNormal = "Normal";
+    inline static const ConstString smMetallicRoughness = "MetallicRoughness";
+};
+
 class MetallicRoughness
 {
 public:

@@ -12,46 +12,6 @@
 class GPUProgram;
 class Mesh;
 
-DECLARE_ENUM(TextureMap,
-    /** PBR Materials
-     * PBR definitions from maya and other modelling packages now use this standard.
-     * This was originally introduced around 2012.
-     * Support for this is in game engines like Godot, Unreal or Unity3D.
-     * Modelling packages which use this are very common now.
-     */
-
-    BASE_COLOR, "BASE_COLOR",
-    NORMAL, "NORMAL",
-    METALLIC_ROUGHNESS, "METALIC_ROUGHNESS",
-    AMBIENT_OCCLUSION, "AMBIENT_OCCLUSION",
-
-    /** PBR Material Modifiers
-    * Some modern renderers have further PBR modifiers that may be overlaid
-    * on top of the 'base' PBR materials for additional realism.
-    * These use multiple texture maps, so only the base type is directly defined
-    */
-
-    /** Sheen
-    * Generally used to simulate textiles that are covered in a layer of microfibers
-    * eg velvet
-    * https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_sheen
-    */
-    SHEEN, "SHEEN",
-
-    /** Clearcoat
-    * Simulates a layer of 'polish' or 'laquer' layered on top of a PBR substrate
-    * https://autodesk.github.io/standard-surface/#closures/coating
-    * https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_clearcoat
-    */
-    CLEARCOAT, "CLEARCOAT",
-
-    /** Transmission
-    * Simulates transmission through the surface
-    * May include further information such as wall thickness
-    */
-    TRANSMISSION, "TRANSMISSION"
-);
-
 class MaterialTextureBinding
 {
 public:
@@ -70,8 +30,8 @@ public:
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
-    std::array<MaterialTextureBinding, (u32)TextureMap::MAX> mTextureBindings;
-    std::unordered_map<std::string, TextureAnimation> mTextureAnimations;
+    std::unordered_map<ConstString, MaterialTextureBinding> mTextureBindings;
+    std::unordered_map<ConstString, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
 
@@ -115,7 +75,7 @@ public:
     virtual void onPoolFree() override { terminate(); };
     void enable() const;
     void disable() const;
-    bool hasTexture(TextureMap textureMap) const;
+    bool hasTexture(ConstString bindingName) const;
 
     void bindToShader(Ptr<GPUProgram> gpuProgram) const;
 
@@ -126,11 +86,8 @@ protected:
 
 protected:
     MaterialData mMaterialData;
-
-    std::array<PoolHandler<Texture>, (u32)TextureMap::MAX> mTextures;
-
+    std::unordered_map<ConstString, PoolHandler<Texture>> mTextures;
     u32 mID = 0;
-
     OwnerPtr<Shader> mShader;
 
 public:

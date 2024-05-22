@@ -39,6 +39,7 @@ void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32
     materialData.mReceiveLight = false;
     materialData.mCastShadows = false;
     materialData.mIsFont = true;
+    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, MaterialTextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
     materialData.mFontData = mFontData;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
     materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = Vector4(1,1,1,1);

@@ -23,9 +23,9 @@ void Material::internalInit(const MaterialData& materialData, u32 id)
 
 void Material::terminate()
 {
-    FOR_RANGE(i, 0, mTextures.size())
+    FOR_MAP(it, mTextures)
     {
-        mTextures[i].reset();
+        it->second.reset();
     }
 }
 
@@ -33,13 +33,10 @@ void Material::enable() const
 {
 	PROFILER_CPU()
     u32 textureUnit = 0;
-    FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
+    FOR_MAP(it, mTextures)
     {
-        if (hasTexture((TextureMap)i))
-        {
-            mTextures[i].get().enable(textureUnit);
-            textureUnit++;
-        }
+        mTextures.at(it->first).get().enable(textureUnit);
+        textureUnit++;
     }
 
     GET_SYSTEM(GPUInterface).setFaceMode(mMaterialData.mCullFaceType);
@@ -48,18 +45,16 @@ void Material::enable() const
 void Material::disable() const
 {
 	PROFILER_CPU()
-    FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
+    FOR_MAP(it, mTextures)
     {
-        if (hasTexture((TextureMap)i))
-        {
-            mTextures[i].get().disable();
-        }
+        mTextures.at(it->first).get().disable();
     }
 }
 
-bool Material::hasTexture(TextureMap textureMap) const
+bool Material::hasTexture(ConstString bindingName) const
 {
-    return mTextures[(u32)textureMap].isValid();
+    
+    return mTextures.contains(bindingName) && mTextures.at(bindingName).isValid();
 }
 
 void Material::bindToShader(Ptr<GPUProgram> gpuProgram) const
@@ -70,13 +65,10 @@ void Material::bindToShader(Ptr<GPUProgram> gpuProgram) const
     gpuProgram->bindSharedBuffer(GET_SYSTEM(RenderSharedContext).getMaterialPropertiesGPUSharedBuffer(handler));
 
     u32 textureUnit = 0;
-    FOR_ARRAY(i, getMaterialData().mTextureBindings)
+    FOR_MAP(it, mTextures)
     {
-        if(hasTexture((TextureMap)i))
-        {
-            gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>((TextureMap)i)).mName, textureUnit);
-            textureUnit++;
-        }
+        gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->first).mName, textureUnit);
+        textureUnit++;
     }
     
     gpuProgram->disable();
@@ -84,28 +76,21 @@ void Material::bindToShader(Ptr<GPUProgram> gpuProgram) const
 
 void Material::loadTextures()
 {
-    if(mMaterialData.mIsFont)
+    FOR_MAP(it, mMaterialData.mTextureBindings)
     {
-        CHECK_MSG(!mMaterialData.mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+        CHECK_MSG(!it->second.mPath.empty(), "texture mPath cannot be empty!");
         TextureData textureData;
-        textureData.mPath = mMaterialData.mFontData.mPath;
-        textureData.mStage = GPUPipelineStage::FRAGMENT;
-        textureData.mIsFont = true;
-        textureData.mFontData = mMaterialData.mFontData;
-        mTextures[(u32)TextureMap::BASE_COLOR] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
-    }
-    else
-    {
-        FOR_RANGE(i, 0, mMaterialData.mTextureBindings.size())
+        textureData.mPath = it->second.mPath;
+        textureData.mStage = it->second.mStage;
+
+        if(mMaterialData.mIsFont)
         {
-            if(!mMaterialData.mTextureBindings[i].mPath.empty())
-            {
-                TextureData textureData;
-                textureData.mPath = mMaterialData.mTextureBindings[i].mPath;
-                textureData.mStage = mMaterialData.mTextureBindings[i].mStage;
-                mTextures[i] = GET_SYSTEM(MaterialManager).loadTexture(textureData);
-            }
+            CHECK_MSG(!mMaterialData.mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+            textureData.mIsFont = true;
+            textureData.mFontData = mMaterialData.mFontData;
         }
+
+        mTextures.insert_or_assign(it->first, GET_SYSTEM(MaterialManager).loadTexture(textureData));
     }
 }
 

@@ -169,10 +169,10 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSamplerName(EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR)));
+        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
     }
@@ -182,29 +182,27 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
 {
     if(getShaderData().mMaterial->getMaterialData().mIsFont)
     {
-        ConstString samplerName = EnumsManager::toString<TextureMap>(TextureMap::BASE_COLOR);
-        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSamplerName(samplerName));
+        ConstString samplerName = TextureBindingNames::smBaseColor;
+        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
     }
     else
     {
-        FOR_RANGE(i, 0, getShaderData().mMaterial->getMaterialData().mTextureBindings.size())
+        FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
         {
-            if(!getShaderData().mMaterial->getMaterialData().mTextureBindings[i].mPath.empty())
+            CHECK_MSG(!it->second.mPath.empty(), "texture mPath cannot be empty!");
+
+            ConstString samplerName = it->first;
+            switch (it->second.mStage)
             {
-                ConstString samplerName = EnumsManager::toString<TextureMap>(i);
+                case GPUPipelineStage::VERTEX:
+                    shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                break;
+                case GPUPipelineStage::FRAGMENT:
+                    shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                break;
 
-                switch (getShaderData().mMaterial->getMaterialData().mTextureBindings[i].mStage)
-                {
-                    case GPUPipelineStage::VERTEX:
-                        shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSamplerName(samplerName));
-                    break;
-                    case GPUPipelineStage::FRAGMENT:
-                        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSamplerName(samplerName));
-                    break;
-
-                    default:
-                        CHECK_MSG(false, "Invalid Stage for texture binding!");
-                }
+                default:
+                    CHECK_MSG(false, "Invalid Stage for texture binding!");
             }
         }
     }
@@ -233,7 +231,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
     {
         shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoord);
     }
@@ -253,7 +251,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
     {
         shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoord);
     }
@@ -333,7 +331,7 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
         vertexShaderCalculateNormalOutput(shaderBuilder);
     }
 
-    if(getShaderData().mMaterial->hasTexture(TextureMap::BASE_COLOR))
+    if(getShaderData().mMaterial->hasTexture(TextureBindingNames::smBaseColor))
     {
         vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
     }

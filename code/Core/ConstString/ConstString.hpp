@@ -21,6 +21,9 @@ public:
         if (this != &other)
         {
             this->mHash = other.mHash;
+            #ifdef ENGINE_DEBUG
+            this->mString = other.mString;
+            #endif
         }
         return *this;
     }

@@ -5,6 +5,12 @@
 
 class Material;
 
+class TextureBindingNames
+{
+public:
+    inline static const ConstString smBaseColor = "BaseColor";
+};
+
 class ShaderData
 {
 public:
