@@ -50,21 +50,16 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
         variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {call(GPUBuiltIn::PrimitiveTypes::mVector3, {outColor.dot("xyz")})})).
         set(outColor, PBRMetallicRoughness);
     }
-
-    if(getShaderData().mMaterial->getMaterialData().mCastShadows)
-    {
-        auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
-        Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-
-        auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
-        auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPositionLight);
-        // shaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
-    }
 }
 
 void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
 {
     ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+
+    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows && getShaderData().mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
+    {
+        registerFunctionsShadowCalculation(shaderBuilder);
+    }
     
     if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
     {
@@ -76,23 +71,37 @@ void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const G
 void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const
 {
     {
-        // FunctionDefinition funcCalculateShadow(mCalculateShadow);
-        // Variable fragPosLightSpace = funcCalculateShadow.mParameters[0];
+        FunctionDefinition funcCalculateShadow(mCalculateShadow);
+        Variable fragPosLightSpace = funcCalculateShadow.mParameters[0];
+        Variable lightDirection = funcCalculateShadow.mParameters[1];
 
-        // Variable projCoords;
-        // Variable closestDepth;
-        // Variable currentDepth;
-        // Variable shadow;
+        Variable projCoords;
+        Variable bias;
+        Variable normal;
+        // Variable lightPos;
+        // Variable lightDir;
+        Variable closestDepth;
+        Variable currentDepth;
+        Variable shadow;
 
-        // funcCalculateShadow.body().
-        // variable(projCoords, GPUBuiltIn::PrimitiveTypes::mVector3, "projCoords", fragPosLightSpace.dot("xyz").div(fragPosLightSpace.dot("w"))).
-        // set(projCoords, projCoords.mul("0.5"s).add("0.5"s)).
-        // variable(closestDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "closestDepth", call("texture", )).
-        // variable(currentDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "currentDepth", NdotV).
-        // variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", NdotV.mul(paren(Variable("1.0").sub(k)).add(k))).
-        // ret(nom.div(denom));
+        auto& samplerShadowMap = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap).mName);
+        auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
+        auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
 
-        // shaderBuilder.get().function(funcGeometrySchlickGGX);
+        funcCalculateShadow.body().
+        variable(projCoords, GPUBuiltIn::PrimitiveTypes::mVector3, "projCoords", fragPosLightSpace.dot("xyz").div(fragPosLightSpace.dot("w"))).
+        set(projCoords, projCoords.mul("0.5"s).add("0.5"s)).
+        variable(closestDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "closestDepth", call("texture", {samplerShadowMap, projCoords.dot("xy")}).dot("z")).
+        variable(normal, GPUBuiltIn::PrimitiveTypes::mVector3, "normal", call("normalize", {inNormal})).
+        // variable(lightPos, GPUBuiltIn::PrimitiveTypes::mVector3, "lightPos", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0"s,"0"s,"-100"s})).
+        // variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lightPos.sub(fragPosition)})).
+        variable(bias, GPUBuiltIn::PrimitiveTypes::mFloat, "bias", Variable("0.00005").mul(call("tan", {call("acos", {call("dot", {normal, lightDirection})})}))).
+        // set(bias, call("clamp", {bias, "0.0"s, "0.01"s})).
+        variable(currentDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "currentDepth", projCoords.dot("z").sub(bias)).
+        variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", currentDepth.great(closestDepth).ternary("0.6"s, "0.0"s)).
+        ret(shadow);
+
+        shaderBuilder.get().function(funcCalculateShadow);
     }
 }
 
@@ -445,6 +454,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
             // this ambient lighting with environment lighting).
             vec3 ambient = vec3(0.03) * albedo * ao;
         */
+
         Variable ambient;
         funcCalculatePBR.body().
         variable(ambient, GPUBuiltIn::PrimitiveTypes::mVector3, "ambient", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0.03"s}).mul(albedo)/*.mul(ao)*/);
@@ -462,7 +472,20 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(PBRFinalColor, GPUBuiltIn::PrimitiveTypes::mVector3, "PBRFinalColor", ambient.add(Lo)).
         set(PBRFinalColor, PBRFinalColor.div(paren(PBRFinalColor.add(call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0"s}))))).
-        set(PBRFinalColor, call("pow", {PBRFinalColor, call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0/2.2"s})})).
+        set(PBRFinalColor, call("pow", {PBRFinalColor, call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0/2.2"s})}));
+
+        Variable sampler = GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap);
+        if(getShaderData().mMaterial->getMaterialData().mReceiveShadows && getShaderData().mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
+        {
+            auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPositionLight);
+            
+            Variable shadow;
+            funcCalculatePBR.body().
+            variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", call(mCalculateShadow, {fragPositionLight, directionalLight.dot(directionalLightDirection),})).
+            set(PBRFinalColor, PBRFinalColor.mul(paren(Variable("1.0").sub(shadow))));
+        }
+
+        funcCalculatePBR.body().
         ret(call(GPUBuiltIn::PrimitiveTypes::mVector4, {PBRFinalColor, {"1"}}));
 
         shaderBuilder.get().function(funcCalculatePBR);

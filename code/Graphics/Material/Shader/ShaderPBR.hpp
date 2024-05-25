@@ -9,6 +9,7 @@ class TextureBindingNamesPBR : public TextureBindingNames
 public:
     inline static const ConstString smNormal = "Normal";
     inline static const ConstString smMetallicRoughness = "MetallicRoughness";
+    inline static const ConstString smShadowMap = "ShadowMap";
 };
 
 class MetallicRoughness
@@ -35,7 +36,8 @@ protected:
 protected:
     inline static const GPUFunctionDefinition mCalculateShadow { GPUBuiltIn::PrimitiveTypes::mFloat, "calculateShadow",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "fragPosLightSpace"}
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "fragPosLightSpace"},
+            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDirection"}
         }};
 
     inline static const GPUFunctionDefinition mCalculatePBR { GPUBuiltIn::PrimitiveTypes::mVector4, "calculatePBR",

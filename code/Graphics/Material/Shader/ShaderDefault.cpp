@@ -53,7 +53,7 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
     shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
 
-    if(getShaderData().mMaterial->getMaterialData().mCastShadows)
+    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows)
     {
         auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
         Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
@@ -189,7 +189,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
     {
         FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
         {
-            CHECK_MSG(!it->second.mPath.empty(), "texture mPath cannot be empty!");
+            CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
 
             ConstString samplerName = it->first;
             switch (it->second.mStage)
@@ -203,6 +203,25 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
 
                 default:
                     CHECK_MSG(false, "Invalid Stage for texture binding!");
+            }
+        }
+
+        FOR_MAP(it, getShaderData().mMaterial->getShader()->getShaderData().mFramebufferBindings)
+        {
+            CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
+
+            ConstString samplerName = it->second.mSamplerName;
+            switch (it->second.mStage)
+            {
+                case GPUPipelineStage::VERTEX:
+                    shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                break;
+                case GPUPipelineStage::FRAGMENT:
+                    shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                break;
+
+                default:
+                    CHECK_MSG(false, "Invalid Stage for frambuffer texture binding!");
             }
         }
     }
@@ -276,7 +295,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
     }
 
-    if(getShaderData().mMaterial->getMaterialData().mCastShadows)
+    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows)
     {
         shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
     }
