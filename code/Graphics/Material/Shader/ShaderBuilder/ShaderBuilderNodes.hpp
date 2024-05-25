@@ -99,7 +99,12 @@ namespace ShaderBuilderNodes
         Variable sub(const Variable& other) const { return binOp(other, "-"); }
         Variable eq(const Variable& other) const { return binOp(other, "=="); }
         Variable notEq(const Variable& other) const { return binOp(other, "!="); }
+        Variable great(const Variable& other) const { return binOp(other, ">"); }
+        Variable greatEq(const Variable& other) const { return binOp(other, ">="); }
+        Variable less(const Variable& other) const { return binOp(other, "<"); }
+        Variable lessEq(const Variable& other) const { return binOp(other, "<="); }
         Variable neg() const { return Variable("-" + getNameOrValue()); }
+        Variable ternary(const Variable& other1, const Variable& other2) const { return Variable(getNameOrValue()+"?" + other1.binOp(other2, ":").getNameOrValue()); }
 
         GPUDataType mType;
         ConstString mName;
