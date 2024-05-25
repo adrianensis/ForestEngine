@@ -21,7 +21,7 @@ void BatchRenderer::init(ConstString label, const BatchData& batchData, Ptr<cons
     if(mBatchData.mIsInstanced)
 	{
         resizeMeshBuffers(1);
-        setMeshBuffers(Ptr<const GPUMesh>::cast(mBatchData.mMesh));
+        setMeshBuffers(mBatchData.mMesh);
 	}
 
     mGPUProgram = ShaderUtils::createShaderCustomFragment(label, getGPUVertexBuffersContainer(), getGPUSharedBuffersContainer(), getBatchData().mMaterial.get(), customShader);
@@ -149,7 +149,7 @@ void BatchRenderer::updateBuffers()
         {
             resizeMeshBuffers(mMaxMeshesThreshold);
         }
-    	resizeIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+    	resizeIndicesBuffer(mMeshBatcher.getInternalMesh());
 
         PROFILER_END_BLOCK();
     }
@@ -283,9 +283,9 @@ void BatchRenderer::drawCall()
         {
             if(!mBatchData.mIsInstanced)
             {
-                setMeshBuffers(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+                setMeshBuffers(mMeshBatcher.getInternalMesh());
             }
-            setIndicesBuffer(Ptr<const GPUMesh>::cast(mMeshBatcher.getInternalMesh()));
+            setIndicesBuffer(mMeshBatcher.getInternalMesh());
             setInstancedBuffers();
             mDataSubmittedToGPU = true;
         }

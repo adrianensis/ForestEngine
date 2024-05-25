@@ -18,7 +18,7 @@ void GameObject::init()
 	mTag = "";
 }
 
-Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
+Ptr<Component> GameObject::addComponentInternal(OwnerPtr<Component>&& component)
 {
     CHECK_MSG(!component->mGameObject.isValid(), "Component is already assigned to a GameObject!");
 
@@ -32,7 +32,7 @@ Ptr<Component> GameObject::addComponent(OwnerPtr<Component>&& component)
     return comp;
 }
 
-void GameObject::removeComponent(Ptr<Component> component)
+void GameObject::removeComponentInternal(Ptr<Component> component)
 {
     CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
     CHECK_MSG(component->mGameObject == getPtrToThis<GameObject>(), "Component is assigned to another GameObject!");

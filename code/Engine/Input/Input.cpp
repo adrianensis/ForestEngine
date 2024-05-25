@@ -8,7 +8,7 @@ void Input::init()
 	LOG_TRACE()
 
     CHECK_MSG(GET_SYSTEM_PTR(Window).isValid(), "Window system not found!");
-    mWindowInputAdapter = Ptr<IWindowInputAdapter>::cast(GET_SYSTEM_PTR(Window));
+    mWindowInputAdapter = GET_SYSTEM_PTR(Window);
 
 	smMouseCoordinates = Vector2();
 	smLastMouseButtonPressed = INVALID_INDEX;

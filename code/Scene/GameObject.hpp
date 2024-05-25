@@ -24,7 +24,7 @@ public:
 	template <class T> T_EXTENDS(T, Component)
 	Ptr<T> addComponent(OwnerPtr<T>&& component)
 	{
-		return Ptr<T>::cast(GameObject::addComponent(OwnerPtr<Component>::moveCast(component)));
+		return Ptr<T>::cast(GameObject::addComponentInternal(OwnerPtr<Component>::moveCast(component)));
 	}
 
     template <class T, typename ... Args> T_EXTENDS(T, Component)
@@ -38,7 +38,7 @@ public:
 	template <class T> T_EXTENDS(T, Component)
 	void removeComponent(Ptr<T> component)
 	{
-		GameObject::removeComponent(Ptr<Component>::cast(component));
+		GameObject::removeComponentInternal(component);
 	}
 
 	template <class T> T_EXTENDS(T, Component)
@@ -91,8 +91,8 @@ public:
     void destroy();
 
 private:
-    Ptr<Component> addComponent(OwnerPtr<Component>&& component);
-    void removeComponent(Ptr<Component> component);
+    Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
+    void removeComponentInternal(Ptr<Component> component);
 
 private:
 	inline static std::list<OwnerPtr<Component>> smEmptyList;

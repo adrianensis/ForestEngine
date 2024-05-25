@@ -15,7 +15,7 @@ void UIEditableText::setBackground(const UIElementConfig& config)
 {
     if(mBackground)
     {
-        mScene->removeGameObject(Ptr<GameObject>::cast(mBackground));
+        mScene->removeGameObject(mBackground);
     }
 
     UIBuilder uiBuilder;
@@ -27,7 +27,7 @@ void UIEditableText::setBackground(const UIElementConfig& config)
         setLayer(mConfig.mLayer).
         setIsAffectedByLayout(false).
         // setStencilData(StencilData{0x3, GL_NOTEQUAL, true}).
-        setParent(Ptr<GameObject>::cast(getPtrToThis<UIEditableText>())).
+        setParent(getPtrToThis<UIEditableText>()).
         setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).
         create<UIPanel>().
         getUIElement<UIPanel>();

@@ -60,7 +60,7 @@ public:
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 
-        registerUIElement(Ptr<UIElement>::cast(uiElement));
+        registerUIElement(uiElement);
 		return *this;
 	}
 

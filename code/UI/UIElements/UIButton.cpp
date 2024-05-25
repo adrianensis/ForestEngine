@@ -25,7 +25,7 @@ void UIButton::onDestroy()
 {
 	if (mText)
 	{
-		mScene->removeGameObject(Ptr<GameObject>::cast(mText));
+		mScene->removeGameObject(mText);
 		mText.invalidate();
 	}
 
@@ -53,7 +53,7 @@ void UIButton::setText(ConstString text)
 			setLayer(mConfig.mLayer + 1).
 			setIsStatic(false).
 			setIsAffectedByLayout(false).
-			setParent(Ptr<GameObject>::cast(getPtrToThis<UIButton>())).
+			setParent(getPtrToThis<UIButton>()).
 			create<UIText>().
 			getUIElement<UIText>();
 		}

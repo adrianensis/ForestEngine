@@ -45,11 +45,11 @@ void UIText::onDestroy()
 {
 	UIArea::onDestroy();
 
-    mScene->removeGameObject(Ptr<GameObject>::cast(mBackground));
+    mScene->removeGameObject(mBackground);
 
     FOR_LIST(it, mFontRenderers)
     {
-        mScene->removeGameObject(Ptr<GameObject>::cast(*it));
+        mScene->removeGameObject(*it);
     }
 }
 
@@ -59,7 +59,7 @@ void UIText::setText(ConstString text)
 	{
 		FOR_LIST(it, mFontRenderers)
         {
-            mScene->removeGameObject(Ptr<GameObject>::cast(*it));
+            mScene->removeGameObject(*it);
         }
         mFontRenderers.clear();
 

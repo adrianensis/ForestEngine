@@ -45,7 +45,7 @@ public:
                 Ptr<System> sub = (itSystem->second);
                 if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
                 {
-                    sub->addComponent(Ptr<SystemComponent>::cast(component));
+                    sub->addComponent(component);
                 }
             }
         }
@@ -62,7 +62,7 @@ public:
                 Ptr<System> sub = (itSystem->second);
                 if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
                 {
-                    sub->removeComponent(Ptr<SystemComponent>::cast(component));
+                    sub->removeComponent(component);
                 }
             }
         }
