@@ -20,12 +20,12 @@ OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(ConstString label, 
     customShader->createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
     std::string stringShderVert = sbVert.getCode();
-    FileUtils::writeFile(Paths::mOutputShaders + std::to_string(material.getID()) + "_" + label.get() + ".vs", [stringShderVert](std::ofstream& file)
+    FileUtils::writeFile(Paths::mOutputShaders.get() + std::to_string(material.getID()) + "_" + label.get() + ".vs", [stringShderVert](std::ofstream& file)
     {
         file << stringShderVert;
     });
     std::string stringShderFrag = sbFrag.getCode();
-    FileUtils::writeFile(Paths::mOutputShaders + std::to_string(material.getID()) + "_" + label.get() + ".fs", [stringShderFrag](std::ofstream& file)
+    FileUtils::writeFile(Paths::mOutputShaders.get() + std::to_string(material.getID()) + "_" + label.get() + ".fs", [stringShderFrag](std::ofstream& file)
     {
         file << stringShderFrag;
     });
