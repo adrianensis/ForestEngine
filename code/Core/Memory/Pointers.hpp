@@ -103,6 +103,8 @@ public:
     Ptr(const Ptr<T>& other) { assign(other); }
     ~Ptr() { invalidate(); }
     operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
+    template<class U> T_EXTENDS(T, U) 
+    operator Ptr<U>() const { return Ptr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
     operator SharedPtr<T>() const { return SharedPtr<T>(mInternalPointer, mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
@@ -386,6 +388,9 @@ public:
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
     //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
+    operator Ptr<T>() const { return Ptr<T>(dynamic_cast<T*>(this->mInternalPointer), this->mReferenceBlock); }
+    template<class U> T_EXTENDS(T, U) 
+    operator Ptr<U>() const { return Ptr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
     OwnerPtr<T>& operator=(OwnerPtr<T>&& other)
     {
         if (this != &other)
