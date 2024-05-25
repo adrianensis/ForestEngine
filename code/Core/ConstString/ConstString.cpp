@@ -14,7 +14,7 @@ ConstString::ConstString(const char* str)
     }
 
     #ifdef ENGINE_DEBUG
-    mString = std::string(str, std::strlen(str));
+    mString = &get();
     #endif
 }
 ConstString::ConstString(const std::string_view& str) : ConstString(str.data())

@@ -30,7 +30,7 @@ public:
 private:
     HashValue mHash = 0;
     #ifdef ENGINE_DEBUG
-    std::string mString;
+    const std::string* mString = nullptr;
     #endif
 };
 
