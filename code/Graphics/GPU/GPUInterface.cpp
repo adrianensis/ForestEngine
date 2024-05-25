@@ -306,11 +306,6 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
     if (attachmentType >= GPUFramebufferAttachmentType::COLOR0 && attachmentType <= GPUFramebufferAttachmentType::COLOR31)
     {
         setTextureFormat(GPUTextureFormat::RGBA, width, height, GPUTexturePixelFormat::RGBA, GPUPrimitiveDataType::FLOAT);
-
-        /*TODO: NEEDED?*/
-        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        /*TODO: NEEDED?*/
     } 
     else if (attachmentType == GPUFramebufferAttachmentType::DEPTH)
     {
@@ -324,6 +319,11 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
     {
         setTextureFormat(GPUTextureFormat::DEPTH_STENCIL, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GPUPrimitiveDataType::UNSIGNED_INT_24_8);
     }
+
+        /*TODO: NEEDED?*/
+        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        /*TODO: NEEDED?*/
 
     setFramebufferAttachment(mTextureId, attachmentType);
 

@@ -2,16 +2,16 @@
 
 void GPUFramebuffer::init(const GPUFramebufferData& framebufferData)
 {
-    mFrameBufferData = framebufferData;
+    mFramebufferData = framebufferData;
 
-    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mFrameBufferData.mWidth, mFrameBufferData.mHeight);
+    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mFramebufferData.mWidth, mFramebufferData.mHeight);
     GET_SYSTEM(GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ_AND_DRAW, mFramebufferId);
 
-    FOR_LIST(it, mFrameBufferData.mAttachments)
+    FOR_LIST(it, mFramebufferData.mAttachments)
     {
         const GPUFramebufferAttachmentType& attachmentType = *it;
-        u32 id = GET_SYSTEM(GPUInterface).createFramebufferAttachment(attachmentType, mFrameBufferData.mWidth, mFrameBufferData.mHeight);
-        mAttachmentIDs.push_back(id);
+        u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
+        mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
     }
 
     GET_SYSTEM(GPUInterface).checkFramebufferErrors();
@@ -20,7 +20,7 @@ void GPUFramebuffer::init(const GPUFramebufferData& framebufferData)
 
 Vector4 GPUFramebuffer::readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const
 {
-    CHECK_MSG(mFrameBufferData.mAttachments.contains(attachmentType), "Attachment not found!");
+    CHECK_MSG(mFramebufferData.mAttachments.contains(attachmentType), "Attachment not found!");
 
     GET_SYSTEM(GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ, mFramebufferId);
     GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(attachmentType);

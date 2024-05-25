@@ -24,6 +24,13 @@ private:
     bool mIsValid = false;
 };
 
+class GPUFramebufferAttachment
+{
+public:
+    GPUFramebufferAttachmentType mGPUFramebufferAttachmentType = GPUFramebufferAttachmentType::NONE;
+    u32 mAttachmentID = 0;
+};
+
 class GPUFramebuffer
 {
 public:
@@ -34,9 +41,11 @@ public:
 
 private:
     u32 mFramebufferId = 0;
-    std::vector<u32> mAttachmentIDs;
-    GPUFramebufferData mFrameBufferData;
+    std::unordered_map<GPUFramebufferAttachmentType, GPUFramebufferAttachment> mAttachments;
+    GPUFramebufferData mFramebufferData;
 
 public:
     GET(FramebufferId)
+    CRGET(FramebufferData)
+    CRGET(Attachments)
 };
