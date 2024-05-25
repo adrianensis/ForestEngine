@@ -32,9 +32,11 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 	{
 		mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
         Ptr<BatchRenderer> batch = mBatchMap.at(batchData);
-        Ptr<const Shader> shader = getShader(batchData);
+        Ptr<Shader> shader = getShader(batchData);
+        setupShader(shader);
+
         batch->init(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batchData, shader);
-	}
+    }
 
 	mBatchMap.at(batchData)->addRenderer(renderer);
 }
@@ -116,7 +118,16 @@ void RenderPass::updateGlobalData()
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Ptr<const Shader> RenderPass::getShader(const BatchData& batchData) const
+Ptr<Shader> RenderPass::getShader(const BatchData& batchData) const
 {
-    return batchData.mMaterial->getShader();
+    Ptr<Shader> shader = batchData.mMaterial->getShader();
+    return shader;
+}
+
+void RenderPass::setupShader(Ptr<Shader> shader) const
+{
+    FOR_ARRAY(i, mRenderPassData.mDependencies)
+    {
+        shader->addFramebufferBinding(mRenderPassData.mDependencies[i]);
+    }
 }

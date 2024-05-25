@@ -10,11 +10,13 @@ public:
     virtual void init(const RenderPassData& renderPassData);
 protected:
     virtual void postFramebufferEnabled() override;
+    virtual void preRender() override;
     virtual void render() override;
+    virtual void postRender() override;
     virtual void updateGlobalData() override;
-    virtual Ptr<const Shader> getShader(const BatchData& batchData) const;
+    virtual Ptr<Shader> getShader(const BatchData& batchData) const override;
 public:
-    Ptr<PointLight> mPointLight;
+    Ptr<DirectionalLight> mDirectionalLight;
 private:
     OwnerPtr<ShaderShadowMap> mShader;
 };

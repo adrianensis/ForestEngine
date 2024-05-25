@@ -2,7 +2,8 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
-    
+#include "Graphics/Window/Window.hpp"
+
 void RenderPassShadowMap::init(const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPassData);
@@ -12,6 +13,16 @@ void RenderPassShadowMap::init(const RenderPassData& renderPassData)
 void RenderPassShadowMap::postFramebufferEnabled()
 {
     GET_SYSTEM(GPUInterface).clearDepth();
+}
+
+void RenderPassShadowMap::preRender()
+{
+	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::FRONT);
+}
+
+void RenderPassShadowMap::postRender()
+{
+	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::BACK);
 }
 
 void RenderPassShadowMap::render()
@@ -28,12 +39,12 @@ void RenderPassShadowMap::updateGlobalData()
 	PROFILER_CPU()
 
     Matrix4 projectionViewMatrix;
-    projectionViewMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
-    // projectionViewMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
+    // projectionViewMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
+    projectionViewMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
 
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    const Matrix4& lightViewMatrix = mPointLight->mGameObject->mTransform->getViewMatrix();
+    const Matrix4& lightViewMatrix = mDirectionalLight->mGameObject->mTransform->getViewMatrix();
     projectionViewMatrix.mul(lightViewMatrix);
 
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
@@ -44,8 +55,8 @@ void RenderPassShadowMap::updateGlobalData()
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Ptr<const Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const
+Ptr<Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const
 {
     mShader->init(batchData.mMaterial->getShader()->getShaderData());
-    return Ptr<const Shader>::cast(mShader);
+    return mShader;
 }

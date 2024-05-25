@@ -35,20 +35,20 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    createPointLight(Vector3(0,300,0), 20);
+    createPointLight(Vector3(0,0,100), 20);
 
-    createDirectionalLight();
+    createDirectionalLight(Vector3(0,100,500), Vector3(0,0,1));
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,190), 1000.0f, 0);
+	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
-	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(20,150,0), 20.0f, 0);
+	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(150,50,0), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -162,7 +162,7 @@ void Editor::update()
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
     if(fpsCounter)
     {
-        fpsCounter->setText(std::to_string((u32)fps));
+        fpsCounter->setText(ConstString(std::to_string((u32)fps)));
     }
 
     mousePick();
@@ -186,7 +186,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
     MaterialData materialData;
 	materialData.mReceiveLight = false;
-    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, MaterialTextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT});
+    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT});
 	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData));
 
 	gameObject->createComponent<MeshRenderer>(rendererData);
@@ -212,11 +212,15 @@ Ptr<GameObject> Editor::createPointLight(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-Ptr<GameObject> Editor::createDirectionalLight()
+Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+    gameObject->mIsStatic = false;
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalRotation(Vector3::smForward * dir.angle(Vector3::smForward));
 
     DirectionalLightData directionalLightData;
+    directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
 	gameObject->createComponent<DirectionalLight>(directionalLightData);

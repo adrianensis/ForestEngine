@@ -12,16 +12,20 @@
 
 void RenderPipeline::init()
 {
-    RenderPassData renderPassGeometryData;
-    initRenderPass<RenderPassGeometry>(renderPassGeometryData);
-    RenderPassData renderPassShadowMap;
-    renderPassShadowMap.mOutputFramebufferData.set(
+    RenderPassData renderPassShadowMapData;
+    renderPassShadowMapData.mOutputFramebufferData.set(
         {
             GPUFramebufferAttachmentType::DEPTH
         },
-        1024, 1024
+        GET_SYSTEM(Window).getWindowSize().x, GET_SYSTEM(Window).getWindowSize().y
     );
-    initRenderPass<RenderPassShadowMap>(renderPassShadowMap);
+    initRenderPass<RenderPassShadowMap>(renderPassShadowMapData);
+
+    Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+    RenderPassData renderPassGeometryData;
+    renderPassGeometryData.mDependencies.push_back(FramebufferBinding{TextureBindingNamesPBR::smShadowMap,
+    renderPassShadowMap->getOutputGPUFramebuffer().getAttachments().at(GPUFramebufferAttachmentType::DEPTH).mAttachmentID, GPUPipelineStage::FRAGMENT});
+    initRenderPass<RenderPassGeometry>(renderPassGeometryData);
     RenderPassData renderPassUIData;
     renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
     initRenderPass<RenderPassUI>(renderPassUIData);
@@ -61,14 +65,14 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 
 	GET_SYSTEM(GPUInterface).clear();
 
-    FOR_ARRAY(i, renderData.mPointLights)
+    // FOR_ARRAY(i, renderData.mPointLights)
     {
-        Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
+        // Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
         Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
-        renderPassShadowMap->mPointLight = pointLight;
+        renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
         renderPassShadowMap->renderPass();
         Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
-        renderPassGeometry->mPointLight = pointLight;
+        renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
         renderPassGeometry->renderPass();
     }
     // Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();

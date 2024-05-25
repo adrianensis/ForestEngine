@@ -1,6 +1,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
+#include "Graphics/Window/Window.hpp"
 
 void RenderPassGeometry::preRender()
 {
@@ -28,12 +29,12 @@ void RenderPassGeometry::updateGlobalData()
     RenderPass::updateGlobalData();
 
     Matrix4 projectionViewMatrix;
-    projectionViewMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
-    // projectionViewMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
+    // projectionViewMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
+    projectionViewMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
 
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    const Matrix4& lightViewMatrix = mPointLight->mGameObject->mTransform->getViewMatrix();
+    const Matrix4& lightViewMatrix = mDirectionalLight->mGameObject->mTransform->getViewMatrix();
     projectionViewMatrix.mul(lightViewMatrix);
 
     LightBuiltIn::ShadowMappingData shadowMappingData;

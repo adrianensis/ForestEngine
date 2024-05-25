@@ -11,6 +11,6 @@ protected:
     virtual void render() override;
     virtual void postRender() override;
 public:
-    Ptr<PointLight> mPointLight;
+    Ptr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassGeometry);

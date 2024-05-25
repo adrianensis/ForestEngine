@@ -11,7 +11,7 @@ class RenderPassData
 {
 public:
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
-    std::unordered_set<ClassId> mDependencies;
+    std::vector<FramebufferBinding> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
 };
 
@@ -30,11 +30,15 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
-    virtual Ptr<const Shader> getShader(const BatchData& batchData) const;
+    virtual Ptr<Shader> getShader(const BatchData& batchData) const;
+    virtual void setupShader(Ptr<Shader> shader) const;
 protected:
 	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
+public:
+    CRGET(RenderPassData)
+    CRGET(OutputGPUFramebuffer)
 };
 REGISTER_CLASS(RenderPass);
