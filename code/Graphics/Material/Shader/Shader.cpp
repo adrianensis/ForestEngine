@@ -78,6 +78,11 @@ void Shader::enable() const
         mShaderData.mTextures.at(it->first).get().enable(textureUnit);
         textureUnit++;
     }
+    FOR_MAP(it, mShaderData.mFramebufferBindings)
+    {
+        GET_SYSTEM(GPUInterface).enableTexture(it->second.mTextureID, textureUnit, it->second.mStage);
+        textureUnit++;
+    }
 }
 
 void Shader::disable() const
@@ -87,11 +92,19 @@ void Shader::disable() const
     {
         mShaderData.mTextures.at(it->first).get().disable();
     }
+    FOR_MAP(it, mShaderData.mFramebufferBindings)
+    {
+        GET_SYSTEM(GPUInterface).disableTexture();
+    }
 }
 
 bool Shader::hasTexture(ConstString bindingName) const
 {
     return mShaderData.mTextures.contains(bindingName) && mShaderData.mTextures.at(bindingName).isValid();
+}
+bool Shader::hasFramebufferBinding(ConstString bindingName) const
+{
+    return mShaderData.mFramebufferBindings.contains(bindingName);
 }
 
 void Shader::bindTextures(Ptr<GPUProgram> gpuProgram) const
@@ -104,22 +117,32 @@ void Shader::bindTextures(Ptr<GPUProgram> gpuProgram) const
         gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->first).mName, textureUnit);
         textureUnit++;
     }
+    FOR_MAP(it, mShaderData.mFramebufferBindings)
+    {
+        gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
+        textureUnit++;
+    }
     
     gpuProgram->disable();
+}
+
+void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
+{
+    mShaderData.mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
 }
 
 void Shader::loadTextures()
 {
     FOR_MAP(it, mShaderData.mMaterial->getMaterialData().mTextureBindings)
     {
-        CHECK_MSG(!it->second.mPath.empty(), "texture mPath cannot be empty!");
+        CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
         TextureData textureData;
         textureData.mPath = it->second.mPath;
         textureData.mStage = it->second.mStage;
 
         if(mShaderData.mMaterial->getMaterialData().mIsFont)
         {
-            CHECK_MSG(!mShaderData.mMaterial->getMaterialData().mFontData.mPath.empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+            CHECK_MSG(!mShaderData.mMaterial->getMaterialData().mFontData.mPath.get().empty(), "mMaterialData.mFontData.mPath cannot be empty!");
             textureData.mIsFont = true;
             textureData.mFontData = mShaderData.mMaterial->getMaterialData().mFontData;
         }

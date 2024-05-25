@@ -7,6 +7,21 @@
 
 class Material;
 
+class FramebufferBinding
+{
+public:
+    ConstString mSamplerName;
+    u32 mTextureID = 0;
+    GPUPipelineStage mStage = GPUPipelineStage::NONE;
+};
+
+class TextureBinding
+{
+public:
+    ConstString mPath;
+    GPUPipelineStage mStage = GPUPipelineStage::NONE;
+};
+
 class TextureBindingNames
 {
 public:
@@ -20,6 +35,7 @@ public:
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUSharedBufferData mPropertiesBlockSharedBufferData;
     std::unordered_map<ConstString, PoolHandler<Texture>> mTextures;
+    std::unordered_map<ConstString, FramebufferBinding> mFramebufferBindings;
 };
 
 class Shader
@@ -70,8 +86,10 @@ public:
     void enable() const;
     void disable() const;
     bool hasTexture(ConstString bindingName) const;
+    bool hasFramebufferBinding(ConstString bindingName) const;
 
     void bindTextures(Ptr<GPUProgram> gpuProgram) const;
+    void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer,

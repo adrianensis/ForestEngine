@@ -11,17 +11,11 @@
 class GPUProgram;
 class Mesh;
 
-class MaterialTextureBinding
-{
-public:
-    std::string mPath;
-    GPUPipelineStage mStage = GPUPipelineStage::NONE;
-};
-
 class MaterialData
 {
 public:
 	bool mReceiveLight = true;
+	bool mReceiveShadows = true;
 	bool mCastShadows = true;
     bool mIsSkinned = false;
     GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
@@ -29,7 +23,7 @@ public:
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
-    std::unordered_map<ConstString, MaterialTextureBinding> mTextureBindings;
+    std::unordered_map<ConstString, TextureBinding> mTextureBindings;
     std::unordered_map<ConstString, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
@@ -86,6 +80,6 @@ protected:
 public:
     CRGET(MaterialData)
     GET(ID)
-    CGET(Shader)
+    GET(Shader)
 };
 REGISTER_CLASS(Material);
