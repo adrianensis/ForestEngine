@@ -263,7 +263,7 @@ void UIElement::onCharEventReceived(char character)
 	if (!hasFocus()) { return; }
 
     mInputString.push_back(character);
-    setText(mInputString);
+    setText(ConstString(mInputString));
     onChar(character);
 }
 
@@ -272,7 +272,7 @@ void UIElement::onBackspaceEventReceived()
 	if(mInputString.empty()) { return; }
 
     mInputString.pop_back();
-    setText(mInputString);
+    setText(ConstString(mInputString));
     onBackspace();
 }
 
@@ -314,7 +314,7 @@ void UIElement::requestFocus()
     GET_SYSTEM(UIManager).setFocusedElement(getPtrToThis<UIElement>());
 
     mInputString.clear();
-    setText(mInputString);
+    setText(ConstString(mInputString));
     onFocus();
 }
 

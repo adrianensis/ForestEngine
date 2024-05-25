@@ -10,9 +10,9 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 {
 	UIArea::initFromConfig(config);
 
-    CHECK_MSG(mConfig.mText.size() == 1, "UITextGlyph mConfig.mText must be 1 character only");
+    CHECK_MSG(mConfig.mText.get().size() == 1, "UITextGlyph mConfig.mText must be 1 character only");
 
-    mCharacter = mConfig.mText.at(0);
+    mCharacter = mConfig.mText.get().at(0);
 
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
@@ -53,7 +53,7 @@ void UIText::onDestroy()
     }
 }
 
-void UIText::setText(const std::string& text) 
+void UIText::setText(ConstString text) 
 {
 	if (mString != text)
 	{
@@ -63,13 +63,13 @@ void UIText::setText(const std::string& text)
         }
         mFontRenderers.clear();
 
-		if (!text.empty())
+		if (!text.get().empty())
 		{
             f32 maxAscender = 0;
             f32 maxDescender = 0;
-            FOR_ARRAY(i, text)
+            FOR_ARRAY(i, text.get())
             {
-                char character = text.at(i);
+                char character = text.get().at(i);
                 const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
 
                 maxAscender = std::max(glyphData.mMetrics.mHoriBearing.y, maxAscender);
@@ -81,9 +81,9 @@ void UIText::setText(const std::string& text)
             f32 baseLineScreenSpace = mConfig.mDisplaySize.y - maxDescenderVecScreenSpace.y;
             
             f32 offset = -mConfig.mDisplaySize.x/2.0f;
-			FOR_RANGE(i, 0, text.length())
+			FOR_RANGE(i, 0, text.get().length())
 			{
-                char character = text.at(i);
+                char character = text.get().at(i);
                 const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
                 Vector2 glyphSize = glyphData.mMetrics.mSize;
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
@@ -96,7 +96,7 @@ void UIText::setText(const std::string& text)
                 Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
                 setPosition(glyphPositionScreenSpace).
                 setSize(glyphSizeScreenSpace).
-                setText(std::string() + character).
+                setText(ConstString(std::string() + character)).
                 setLayer(mConfig.mLayer + 1).
                 setIsStatic(false).
                 setIsAffectedByLayout(false).

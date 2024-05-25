@@ -44,7 +44,7 @@ public:
     bool isMouseCursorInsideElement() const;
     Vector3 getLeftTopPosition() const;
 
-	virtual void setText(const std::string& text) { };
+	virtual void setText(ConstString text) { };
     virtual void setVisibility(bool visibility);
     bool isVisible();
     void setOnPressedCallback(UIElementCallback callback);

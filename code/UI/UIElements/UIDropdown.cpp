@@ -66,7 +66,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 
 			FOR_LIST(it, mEntries)
 			{
-				std::string& label = (*it).mLabel;
+				ConstString label = ConstString((*it).mLabel);
 				UIElementCallback onPressedCallback = (*it).mCallback;
 
 				uiBuilder.

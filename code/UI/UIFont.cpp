@@ -14,7 +14,7 @@ void UIFontsManager::terminate()
     mFontsLibrary.terminate();
 }
 
-Ptr<UIFont> UIFontsManager::loadFont(const std::string& fontFile, u32 fontSize)
+Ptr<UIFont> UIFontsManager::loadFont(ConstString fontFile, u32 fontSize)
 {
     if(!mFontsMap.contains(fontFile))
     {
@@ -26,20 +26,21 @@ Ptr<UIFont> UIFontsManager::loadFont(const std::string& fontFile, u32 fontSize)
     return mFontsMap.at(fontFile);
 }
 
-Ptr<UIFont> UIFontsManager::getFont(const std::string& fontFile) const
+Ptr<UIFont> UIFontsManager::getFont(ConstString fontFile) const
 {
     return mFontsMap.at(fontFile);
 }
 
-void UIFont::init(UIFontsManager& fontsManager, const std::string& fontFile, u32 fontSize)
+void UIFont::init(UIFontsManager& fontsManager, ConstString fontFile, u32 fontSize)
 {
     mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile, fontSize);
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
     materialData.mCastShadows = false;
+    materialData.mReceiveShadows = false;
     materialData.mIsFont = true;
-    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, MaterialTextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
+    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
     materialData.mFontData = mFontData;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
     materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = Vector4(1,1,1,1);

@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-ImageData ImageUtils::loadImage(const std::string& path)
+ImageData ImageUtils::loadImage(ConstString path)
 {
 	i32 width, height, original_number_channels;
 	stbi_set_flip_vertically_on_load(true);
@@ -15,7 +15,7 @@ ImageData ImageUtils::loadImage(const std::string& path)
 	// }
 
     ImageData imageData;
-	imageData.mData = stbi_load(path.c_str(), &width, &height, &original_number_channels, STBI_rgb_alpha);
+	imageData.mData = stbi_load(path.get().c_str(), &width, &height, &original_number_channels, STBI_rgb_alpha);
 	imageData.mWidth = width;
     imageData.mHeight = height;
     return imageData;

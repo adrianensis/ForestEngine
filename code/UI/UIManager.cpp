@@ -8,13 +8,14 @@
 void UIManager::init()
 {
 	UIStyleManager::getInstance().init();
-    mDefaultFont = Paths::mResources + "fonts/Arial.ttf";
+    mDefaultFont = ConstString(Paths::mResources.get() + "fonts/Arial.ttf");
     mFontsManager.init();
     mFontsManager.loadFont(mDefaultFont, 12);
 
     MaterialData materialData;
     materialData.mReceiveLight = false;
     materialData.mCastShadows = false;
+    materialData.mReceiveShadows = false;
     materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
     mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
 }

@@ -21,7 +21,7 @@ void FontGlyphData::freeBuffer()
     mData = nullptr;
 }
 
-void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile, u32 fontSize)
+void FontData::loadFont(FontsLibrary& fontsLibrary, ConstString fontFile, u32 fontSize)
 {
     mPath = fontFile;
 
@@ -30,7 +30,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, const std::string& fontFile,
     // Create a new font
     FT_Error _error;
     _error = FT_New_Face(fontsLibrary.getFreeTypeLibrary(),       // FreeType instance handle
-                         mPath.c_str(), // Font family to use
+                         mPath.get().c_str(), // Font family to use
                          0,         // index of font (in case there are more than one in the file)
                          &mFreeTypeFace);   // font face handle
 

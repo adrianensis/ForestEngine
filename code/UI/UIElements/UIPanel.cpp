@@ -30,9 +30,9 @@ void UIArea::calculateConfig()
         Vector2 textSize(0,0);
         f32 maxAscender = 0;
         f32 maxDescender = 0;
-        FOR_ARRAY(i, mConfig.mText)
+        FOR_ARRAY(i, mConfig.mText.get())
         {
-            char character = mConfig.mText.at(i);
+            char character = mConfig.mText.get().at(i);
             const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
 
             textSize.x += glyphData.mAdvance.x;

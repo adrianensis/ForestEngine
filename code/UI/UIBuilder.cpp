@@ -40,7 +40,7 @@ void UIBuilder::registerUIElement(Ptr<UIElement> uiElement)
 {
 	mCurrentUIElement = uiElement;
 
-	if (mConfig.mGroup.length() > 0)
+	if (mConfig.mGroup.get().length() > 0)
 	{
 		GET_SYSTEM(UIManager).getOrCreateGroup(mConfig.mGroup).addUIElement(mCurrentUIElement);
 	}

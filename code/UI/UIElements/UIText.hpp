@@ -19,7 +19,7 @@ class UIText: public UIArea
 public:
     void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
-    void setText(const std::string& text) override;
+    void setText(ConstString text) override;
     void setVisibility(bool visibility) override;
     
 protected:
@@ -27,7 +27,7 @@ protected:
     virtual void setBackground(const UIElementConfig& config) { };
 private:
 	i32 mLayer = 0;
-	std::string mString;
+	ConstString mString;
 	std::vector<Ptr<UITextGlyph>> mFontRenderers;
     bool mIsEditable = false;
 
