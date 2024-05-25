@@ -11,7 +11,7 @@
 
 void Model::init(const std::string& path)
 {
-    mPath = Paths::mResources + path;
+    mPath = Paths::mResources.get() + path;
 
     // https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#skins
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
@@ -81,7 +81,7 @@ void Model::loadGLTFMaterials()
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT});
+                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{ConstString(texturePath.string()), GPUPipelineStage::FRAGMENT});
                 }
                 else
                 {
@@ -91,7 +91,7 @@ void Model::loadGLTFMaterials()
                 if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT});
+                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{ConstString(texturePath.string()), GPUPipelineStage::FRAGMENT});
                 }
                 else
                 {
@@ -110,7 +110,7 @@ void Model::loadGLTFMaterials()
             //     if(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture)
             //     {
             //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture->image->uri);
-            //         materialData.mTextureBindings[(u32)TextureMap::DIFFUSE] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //         materialData.mTextureBindings[(u32)TextureMap::DIFFUSE] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
             //     }
             //     else
             //     {
@@ -120,7 +120,7 @@ void Model::loadGLTFMaterials()
             //     if(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture)
             //     {
             //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture->image->uri);
-            //         materialData.mTextureBindings[(u32)TextureMap::SPECULAR_GLOSSINESS] = MaterialTextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //         materialData.mTextureBindings[(u32)TextureMap::SPECULAR_GLOSSINESS] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
             //     }
             //     else
             //     {
