@@ -4,7 +4,7 @@
 #include "Engine/System/System.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
-#include "Graphics/RenderPipeline/RenderPipeline.hpp"
+#include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 
 class RenderEngine : public System
 {
@@ -27,7 +27,7 @@ private:
 private:
 	std::vector<Ptr<MeshRenderer>> mRenderers;
     RenderPipelineData mRenderPipelineData;
-    RenderPipeline mRenderPipeline;
+    RenderPipelinePBR mRenderPipeline;
 
 public:
 	OcTree octree;

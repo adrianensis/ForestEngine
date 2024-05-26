@@ -14,13 +14,13 @@ public:
 class RenderPipeline: public ObjectBase
 {
 public:
-    void init();
-    void terminate();
+    virtual void init();
+    virtual void terminate();
     void addRenderer(Ptr<MeshRenderer> renderer);
     void removeRenderer(Ptr<MeshRenderer> renderer);
-    void render(RenderPipelineData& renderData);
+    virtual void render(RenderPipelineData& renderData);
 
-private:
+protected:
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)
