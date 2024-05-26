@@ -2,7 +2,7 @@
 
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/Material/Shader/ShaderShadowMap.hpp"
+#include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
 
 class RenderPassShadowMap: public RenderPass
 {
@@ -18,6 +18,6 @@ protected:
 public:
     Ptr<DirectionalLight> mDirectionalLight;
 private:
-    OwnerPtr<ShaderShadowMap> mShader;
+    OwnerPtr<ShaderDepthBuffer> mShaderDepthBuffer;
 };
 REGISTER_CLASS(RenderPassShadowMap);

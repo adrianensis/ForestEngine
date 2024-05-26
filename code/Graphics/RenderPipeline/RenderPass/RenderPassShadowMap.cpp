@@ -7,7 +7,7 @@
 void RenderPassShadowMap::init(const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPassData);
-    mShader = OwnerPtr<ShaderShadowMap>::newObject();
+    mShaderDepthBuffer = OwnerPtr<ShaderDepthBuffer>::newObject();
 }
 
 void RenderPassShadowMap::postFramebufferEnabled()
@@ -57,6 +57,6 @@ void RenderPassShadowMap::updateGlobalData()
 
 Ptr<Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const
 {
-    mShader->init(batchData.mMaterial->getShader()->getShaderData());
-    return mShader;
+    mShaderDepthBuffer->init(batchData.mMaterial->getShader()->getShaderData());
+    return mShaderDepthBuffer;
 }
