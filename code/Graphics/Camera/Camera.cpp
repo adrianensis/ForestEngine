@@ -75,15 +75,15 @@ void Camera::setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
 
 void Camera::onResize()
 {
-    // if (mIsOrtho)
-	// {
-    //     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
-    //     setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, mNear, mFar);
-	// }
-	// else
-	// {
-	// 	setPerspective(mNear, mFar, GET_SYSTEM(Window).getAspectRatio(), mFov);
-	// }
+    if (mIsOrtho)
+	{
+        Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
+        setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, mNear, mFar);
+	}
+	else
+	{
+		setPerspective(mNear, mFar, GET_SYSTEM(Window).getAspectRatio(), mFov);
+	}
 
 	recalculateProjectionMatrix();
 }
