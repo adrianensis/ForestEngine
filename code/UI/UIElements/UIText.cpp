@@ -17,7 +17,6 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
     rendererData.mMaterial = GET_SYSTEM(UIManager).getFontMaterial();
-    rendererData.mIsInstanced = true;
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
@@ -98,7 +97,6 @@ void UIText::setText(HashedString text)
                 setSize(glyphSizeScreenSpace).
                 setText(HashedString(std::string() + character)).
                 setLayer(mConfig.mLayer + 1).
-                setIsStatic(false).
                 setIsAffectedByLayout(false).
                 setParent(Ptr<GameObject>::cast(getPtrToThis<UIText>())).
                 create<UITextGlyph>().

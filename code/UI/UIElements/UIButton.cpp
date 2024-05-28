@@ -51,7 +51,6 @@ void UIButton::setText(HashedString text)
 			setText(text).
 			// setTextSize(mConfig.mTextSize).
 			setLayer(mConfig.mLayer + 1).
-			setIsStatic(false).
 			setIsAffectedByLayout(false).
 			setParent(getPtrToThis<UIButton>()).
 			create<UIText>().

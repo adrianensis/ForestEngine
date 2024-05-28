@@ -181,7 +181,6 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
     RendererData rendererData;
-    rendererData.mIsInstanced = true;
 	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
 
     MaterialData materialData;
@@ -269,7 +268,6 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
-    modelRendererData.mIsInstanced = true;
     modelRendererData.mRenderPassIDs =
     {
         ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
@@ -292,7 +290,6 @@ Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
-    modelRendererData.mIsInstanced = true;
     modelRendererData.mRenderPassIDs =
     {
         ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
