@@ -43,7 +43,7 @@ class RendererData
 {
 public:
     StencilData mStencilData;
-    bool mIsInstanced = false;
+    bool mIsInstanced = true;
     Ptr<const Mesh> mMesh;
     PoolHandler<Material> mMaterial;
     std::unordered_set<ClassId> mRenderPassIDs;
