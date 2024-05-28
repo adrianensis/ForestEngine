@@ -4,12 +4,12 @@
 #include "Engine/Config/Paths.hpp"
 #include "Core/File/FileUtils.hpp"
 
-OwnerPtr<GPUProgram> ShaderUtils::createShader(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material)
+OwnerPtr<GPUProgram> ShaderUtils::createShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material)
 {
 	return ShaderUtils::createShaderCustomFragment(label, gpuVertexBuffersContainer, gpuSharedBuffersContainer, material, material.getShader());
 }
 
-OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const Shader> customShader)
+OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const Shader> customShader)
 {
 	OwnerPtr<GPUProgram> gpuProgram = OwnerPtr<GPUProgram>::newObject();
 

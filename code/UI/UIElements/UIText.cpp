@@ -53,7 +53,7 @@ void UIText::onDestroy()
     }
 }
 
-void UIText::setText(ConstString text) 
+void UIText::setText(HashedString text) 
 {
 	if (mString != text)
 	{
@@ -96,7 +96,7 @@ void UIText::setText(ConstString text)
                 Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
                 setPosition(glyphPositionScreenSpace).
                 setSize(glyphSizeScreenSpace).
-                setText(ConstString(std::string() + character)).
+                setText(HashedString(std::string() + character)).
                 setLayer(mConfig.mLayer + 1).
                 setIsStatic(false).
                 setIsAffectedByLayout(false).

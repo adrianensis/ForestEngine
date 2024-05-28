@@ -54,7 +54,7 @@ bool GPUVertexBuffersContainer::containsVertexBuffer(const GPUVertexBufferData& 
     return mVertexBuffersMap.contains(data.mGPUVariableData.mName);
 }
 
-u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<ConstString, u32>& indexMap, const ConstString& name)
+u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name)
 {
     CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUVertexBuffersContainer!");
     u32 index = indexMap.at(name);
@@ -110,7 +110,7 @@ bool GPUSharedBuffersContainer::containsSharedBuffer(const GPUSharedBufferData& 
     return mSharedBuffersMap.contains(data.mBufferName);
 }
 
-u32 GPUSharedBuffersContainer::findIndex(const std::unordered_map<ConstString, u32>& indexMap, const ConstString& name)
+u32 GPUSharedBuffersContainer::findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name)
 {
     CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUSharedBuffersContainer!");
     u32 index = indexMap.at(name);

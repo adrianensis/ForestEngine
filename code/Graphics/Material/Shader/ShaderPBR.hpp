@@ -7,9 +7,9 @@
 class TextureBindingNamesPBR : public TextureBindingNames
 {
 public:
-    inline static const ConstString smNormal = "Normal";
-    inline static const ConstString smMetallicRoughness = "MetallicRoughness";
-    inline static const ConstString smShadowMap = "ShadowMap";
+    inline static const HashedString smNormal = "Normal";
+    inline static const HashedString smMetallicRoughness = "MetallicRoughness";
+    inline static const HashedString smShadowMap = "ShadowMap";
 };
 
 class MetallicRoughness

@@ -126,7 +126,7 @@ namespace ShaderBuilderNodes
     {
         return set(a, Variable(value));
     }
-    BlockStatement& BlockStatement::ifBlock(const Variable& a, const ConstString& op , const Variable& b)
+    BlockStatement& BlockStatement::ifBlock(const Variable& a, const HashedString& op , const Variable& b)
     {
         BlockStatement* newStatement = new IfStatement(a, op, b);
         newStatement->mParent = this;
@@ -246,7 +246,7 @@ namespace ShaderBuilderNodes
         return mSharedBuffers.emplace_back(sharedBuffer);
     }
     
-    const Struct& Program::getStruct(const ConstString& structName) const
+    const Struct& Program::getStruct(const HashedString& structName) const
     {
         FOR_LIST(it, mStructs)
         {
@@ -259,7 +259,7 @@ namespace ShaderBuilderNodes
         return mNullStructDefinition;
     }
 
-    const Attribute& Program::getAttribute(const ConstString& attributeName) const
+    const Attribute& Program::getAttribute(const HashedString& attributeName) const
     {
         FOR_LIST(it, mAttributes)
         {
@@ -272,7 +272,7 @@ namespace ShaderBuilderNodes
         return mNullAttribute;
     }
 
-    const SharedBuffer& Program::getSharedBuffer(const ConstString& sharedBufferName) const
+    const SharedBuffer& Program::getSharedBuffer(const HashedString& sharedBufferName) const
     {
         FOR_LIST(it, mSharedBuffers)
         {
@@ -285,7 +285,7 @@ namespace ShaderBuilderNodes
         return mNullSharedBuffer;
     }
 
-    FunctionDefinition& Program::getFunctionDefinition(const ConstString& functionDefinitionName)
+    FunctionDefinition& Program::getFunctionDefinition(const HashedString& functionDefinitionName)
     {
         FOR_LIST(it, mFunctionDefinitions)
         {

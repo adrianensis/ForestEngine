@@ -11,12 +11,12 @@ class UIFontsManager: public ObjectBase
 public:
     void init();
     void terminate();
-    Ptr<UIFont> loadFont(ConstString fontFile, u32 fontSize);
-    Ptr<UIFont> getFont(ConstString fontFile) const;
+    Ptr<UIFont> loadFont(HashedString fontFile, u32 fontSize);
+    Ptr<UIFont> getFont(HashedString fontFile) const;
 
 private:
     FontsLibrary mFontsLibrary;
-    std::unordered_map<ConstString, OwnerPtr<UIFont>> mFontsMap;
+    std::unordered_map<HashedString, OwnerPtr<UIFont>> mFontsMap;
 public:
     RGET(FontsLibrary)
 };
@@ -26,7 +26,7 @@ class UIFont: public ObjectBase
 {
     
 public:
-    void init(UIFontsManager& fontsManager, ConstString fontFile, u32 fontSize);
+    void init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontSize);
 private:
     FontData mFontData;
     PoolHandler<Material> mFontMaterial;

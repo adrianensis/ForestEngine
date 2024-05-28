@@ -94,7 +94,7 @@ void UIList::toggle()
 
 		FOR_LIST(it, mEntries)
 		{
-			ConstString label = ConstString((*it).mLabel);
+			HashedString label = HashedString((*it).mLabel);
 			UIElementCallback onPressedCallback = (*it).mCallback;
 
 			uiBuilder.

@@ -273,10 +273,10 @@ public:
     void enableProgram(u32 programId);
     void disableProgram(u32 programId);
     u32 compileProgram(const std::string& vertexShaderString, const std::string& fragmentShaderString);
-    void bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const ConstString& bufferName, u32 bindingPoint);
+    void bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const HashedString& bufferName, u32 bindingPoint);
     
     template<class T>
-    void bindUniformValue(u32 programId, const ConstString& name, const T& value)
+    void bindUniformValue(u32 programId, const HashedString& name, const T& value)
     {
         u32 location = glGetUniformLocation(programId, name.get().c_str());
         if constexpr (std::is_floating_point_v<T>)

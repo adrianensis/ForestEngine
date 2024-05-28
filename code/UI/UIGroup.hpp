@@ -16,7 +16,7 @@ public:
     void setVisibility(bool visibility);
 
 public:
-	ConstString mName;
+	HashedString mName;
 	bool mVisible = false;
 	std::list<Ptr<UIElement>> mUIElements;
 	

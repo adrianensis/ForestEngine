@@ -10,7 +10,7 @@ class Material;
 class FramebufferBinding
 {
 public:
-    ConstString mSamplerName;
+    HashedString mSamplerName;
     u32 mTextureID = 0;
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
@@ -18,14 +18,14 @@ public:
 class TextureBinding
 {
 public:
-    ConstString mPath;
+    HashedString mPath;
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
 class TextureBindingNames
 {
 public:
-    inline static const ConstString smBaseColor = "BaseColor";
+    inline static const HashedString smBaseColor = "BaseColor";
 };
 
 class ShaderData
@@ -34,8 +34,8 @@ public:
     PoolHandler<Material> mMaterial;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUSharedBufferData mPropertiesBlockSharedBufferData;
-    std::unordered_map<ConstString, PoolHandler<Texture>> mTextures;
-    std::unordered_map<ConstString, FramebufferBinding> mFramebufferBindings;
+    std::unordered_map<HashedString, PoolHandler<Texture>> mTextures;
+    std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
 };
 
 class Shader
@@ -85,8 +85,8 @@ public:
 
     void enable() const;
     void disable() const;
-    bool hasTexture(ConstString bindingName) const;
-    bool hasFramebufferBinding(ConstString bindingName) const;
+    bool hasTexture(HashedString bindingName) const;
+    bool hasFramebufferBinding(HashedString bindingName) const;
 
     void bindTextures(Ptr<GPUProgram> gpuProgram) const;
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);

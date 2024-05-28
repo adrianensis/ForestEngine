@@ -3,7 +3,7 @@
 GPUVariableData GPUSharedBufferData::getScopedGPUVariableData(u32 i) const
 {
     GPUVariableData data = mGPUVariableDefinitionDataArray[i];
-    data.mName = ConstString(mInstanceName.get() + "." + data.mName.get());
+    data.mName = HashedString(mInstanceName.get() + "." + data.mName.get());
     return data;
 }
 

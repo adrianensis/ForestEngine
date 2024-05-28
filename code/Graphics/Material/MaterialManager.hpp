@@ -34,7 +34,7 @@ private:
 
 private:
     Pool<Texture> mTextures;
-    std::unordered_map<ConstString, PoolHandler<Texture>> mTexturesByPath;
+    std::unordered_map<HashedString, PoolHandler<Texture>> mTexturesByPath;
     Pool<Material> mMaterials;
 };
 REGISTER_CLASS(MaterialManager);

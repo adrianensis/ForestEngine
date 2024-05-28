@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/ConstString/ConstString.hpp"
+#include "Core/HashedString/HashedString.hpp"
 
-class Tag: public ConstString
+class Tag: public HashedString
 {
 };

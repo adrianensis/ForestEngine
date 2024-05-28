@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include "Core/Assert/Assert.hpp"
 #include "Core/Metadata/ClassManager.hpp"
-#include "Core/ConstString/ConstString.hpp"
+#include "Core/HashedString/HashedString.hpp"
 
 class MemoryTracking
 {
@@ -30,7 +30,7 @@ public:
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
-		ConstString className;
+		HashedString className;
 
 		if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
 		{
@@ -59,7 +59,7 @@ public:
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
-		ConstString className;
+		HashedString className;
 		if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.getId() > 0)
 		{
 			className = ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mName;
@@ -78,7 +78,7 @@ public:
 
 private:
 #ifdef ENGINE_DEBUG
-	inline static std::unordered_map<ConstString, AllocationInfo> smAllocationsMap;
-    inline static std::unordered_map<u64, ConstString> smPointersToDynamicClassName;
+	inline static std::unordered_map<HashedString, AllocationInfo> smAllocationsMap;
+    inline static std::unordered_map<u64, HashedString> smPointersToDynamicClassName;
 #endif
 };

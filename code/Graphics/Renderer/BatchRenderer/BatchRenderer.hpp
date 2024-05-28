@@ -10,7 +10,7 @@
 class BatchRenderer: public ObjectBase
 {
 public:
-    void init(ConstString label, const BatchData& batchData, Ptr<const Shader> customShader);
+    void init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader);
     void terminate();
 
     void render();

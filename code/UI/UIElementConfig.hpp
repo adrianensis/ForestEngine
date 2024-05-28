@@ -17,7 +17,7 @@ enum class UILayout
 class UIElementConfig
 {
 public:
-    void init(const Vector2& position, const Vector2& size, i32 layer, PoolHandler<Material> material, ConstString text = ConstString());
+    void init(const Vector2& position, const Vector2& size, i32 layer, PoolHandler<Material> material, HashedString text = HashedString());
 
 public:
 	const UIStyle* mStyle = nullptr;
@@ -30,12 +30,12 @@ public:
     bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
 	// Vector2 mTextSize;
-	ConstString mText;
+	HashedString mText;
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
 	PoolHandler<Material> mMaterial;
-	ConstString mGroup;
+	HashedString mGroup;
 	Ptr<GameObject> mParent;
 	f32 mSeparatorSize = 0.0f;
 };

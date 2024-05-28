@@ -98,11 +98,11 @@ void Shader::disable() const
     }
 }
 
-bool Shader::hasTexture(ConstString bindingName) const
+bool Shader::hasTexture(HashedString bindingName) const
 {
     return mShaderData.mTextures.contains(bindingName) && mShaderData.mTextures.at(bindingName).isValid();
 }
-bool Shader::hasFramebufferBinding(ConstString bindingName) const
+bool Shader::hasFramebufferBinding(HashedString bindingName) const
 {
     return mShaderData.mFramebufferBindings.contains(bindingName);
 }

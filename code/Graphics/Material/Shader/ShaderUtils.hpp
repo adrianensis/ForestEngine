@@ -13,6 +13,6 @@ class Shader;
 class ShaderUtils
 {
 public:
-    static OwnerPtr<GPUProgram> createShader(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material);
-    static OwnerPtr<GPUProgram> createShaderCustomFragment(ConstString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const Shader> customShader);
+    static OwnerPtr<GPUProgram> createShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material);
+    static OwnerPtr<GPUProgram> createShaderCustomFragment(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const Shader> customShader);
 };

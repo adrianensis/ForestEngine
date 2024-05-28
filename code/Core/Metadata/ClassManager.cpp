@@ -10,7 +10,7 @@ ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
     mClassDefinition = classDefinition;
 }
 
-MemberRegister::MemberRegister(const ConstString& ownerClassName, const MemberDefinition& memberDefinition)
+MemberRegister::MemberRegister(const HashedString& ownerClassName, const MemberDefinition& memberDefinition)
 {
     ClassManager::getClassMetadataInternal(ownerClassName).mMembersMap.insert_or_assign(memberDefinition.mName, MemberMetadata(memberDefinition));
 }
@@ -29,12 +29,12 @@ void ClassManager::insert(const ClassMetadata& classMetadata)
     }
 }
 
-ClassMetadata& ClassManager::getClassMetadataInternal(const ConstString& className)
+ClassMetadata& ClassManager::getClassMetadataInternal(const HashedString& className)
 {
     return smClassMapByName.at(className);
 }
 
-const ClassMetadata& ClassManager::getClassMetadataByName(const ConstString& className)
+const ClassMetadata& ClassManager::getClassMetadataByName(const HashedString& className)
 {
     return smClassMapByName.at(className);
 }

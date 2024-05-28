@@ -81,7 +81,7 @@ void Model::loadGLTFMaterials()
                 if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{ConstString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
                 }
                 else
                 {
@@ -91,7 +91,7 @@ void Model::loadGLTFMaterials()
                 if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
                 {
                     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{ConstString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
                 }
                 else
                 {

@@ -7,7 +7,7 @@
 class TextureData
 {
 public:
-    ConstString mPath;
+    HashedString mPath;
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
     bool mIsFont = false;
     FontData mFontData;

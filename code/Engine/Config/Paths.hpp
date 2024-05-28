@@ -5,8 +5,8 @@
 class Paths
 {
 public:
-	inline static ConstString mResources = "resources/";
-	inline static ConstString mOutput = "output/";
-	inline static ConstString mOutputLog = "output/log/";
-	inline static ConstString mOutputShaders = "output/shaders/";
+	inline static HashedString mResources = "resources/";
+	inline static HashedString mOutput = "output/";
+	inline static HashedString mOutputLog = "output/log/";
+	inline static HashedString mOutputShaders = "output/shaders/";
 };

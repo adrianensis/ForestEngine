@@ -1,22 +1,22 @@
 #include "Core/Metadata/EnumsManager.hpp"
 
-EnumRegister::EnumRegister(const ConstString& name, const std::vector<ConstString>& valueNames)
+EnumRegister::EnumRegister(const HashedString& name, const std::vector<HashedString>& valueNames)
 {
     EnumsManager::create(name, valueNames);
 }
 
-EnumDefinition::EnumDefinition(const ConstString& name, const std::vector<ConstString>& valueNames)
+EnumDefinition::EnumDefinition(const HashedString& name, const std::vector<HashedString>& valueNames)
 {
     mName = name;
     mValueNames = valueNames;
 }
 
-const EnumDefinition& EnumsManager::getEnumMetadata(const ConstString& name)
+const EnumDefinition& EnumsManager::getEnumMetadata(const HashedString& name)
 {
     return mEnumsMapByName.at(name);
 }
 
-const EnumDefinition& EnumsManager::create(const ConstString& name, const std::vector<ConstString>& valueNames)
+const EnumDefinition& EnumsManager::create(const HashedString& name, const std::vector<HashedString>& valueNames)
 {
     if(!mEnumsMapByName.contains(name))
     {

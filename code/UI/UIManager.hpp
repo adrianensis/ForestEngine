@@ -20,7 +20,7 @@ public:
     const FontGlyphData& getGlyphData(char character) const;
     PoolHandler<Material> getFontMaterial() const;
 
-	UIGroup& getOrCreateGroup(ConstString groupName)
+	UIGroup& getOrCreateGroup(HashedString groupName)
 	{
 		if (!mGroups.contains(groupName))
 		{
@@ -38,10 +38,10 @@ public:
     void setFocusedElement(Ptr<UIElement> focusedElement);
 
 private:
-	std::unordered_map<ConstString, OwnerPtr<UIGroup>> mGroups;
+	std::unordered_map<HashedString, OwnerPtr<UIGroup>> mGroups;
 	Ptr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
-    ConstString mDefaultFont;
+    HashedString mDefaultFont;
     PoolHandler<Material> mDefaultUIMaterial;
 
 public:

@@ -21,7 +21,7 @@ void FontGlyphData::freeBuffer()
     mData = nullptr;
 }
 
-void FontData::loadFont(FontsLibrary& fontsLibrary, ConstString fontFile, u32 fontSize)
+void FontData::loadFont(FontsLibrary& fontsLibrary, HashedString fontFile, u32 fontSize)
 {
     mPath = fontFile;
 

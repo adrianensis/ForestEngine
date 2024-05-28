@@ -4,19 +4,19 @@
 #include "Core/Assert/Assert.hpp"
 #include <unordered_map>
 
-class ConstString
+class HashedString
 {
 public:
-    ConstString() = default;
-    ConstString(const std::string_view& str);
-    ConstString(const char* str);
+    HashedString() = default;
+    HashedString(const std::string_view& str);
+    HashedString(const char* str);
     const std::string& get() const;
     bool isValid() const;
     HashValue getHash() const { return mHash; }
     const std::string& operator*() const { CHECK_MSG(this->isValid(), "Invalid string!"); return get(); }
     const std::string* operator->() const { return &(operator*()); }
-    bool operator==(const ConstString& other) const { return this->mHash == other.mHash; }
-    ConstString& operator=(const ConstString& other)
+    bool operator==(const HashedString& other) const { return this->mHash == other.mHash; }
+    HashedString& operator=(const HashedString& other)
     {
         if (this != &other)
         {
@@ -35,15 +35,15 @@ private:
 };
 
 template<>
-struct std::hash<ConstString> 
+struct std::hash<HashedString> 
 {
-    size_t operator()(const ConstString& str) const 
+    size_t operator()(const HashedString& str) const 
     {
         return str.getHash();
     }
 };
 
-class ConstStringsManager
+class HashedStringsManager
 {
 public:
     static bool containsString(HashValue hashValue)

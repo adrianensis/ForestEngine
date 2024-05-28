@@ -79,7 +79,7 @@ private:
     MaterialInstance mMaterialInstance;
 
 public:
-    ConstString mCurrentTextureAnimationKey;
+    HashedString mCurrentTextureAnimationKey;
 
 public:
     CGET(MeshInstance)

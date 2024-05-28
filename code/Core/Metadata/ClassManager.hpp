@@ -2,7 +2,7 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/Metadata/MetadataMacros.hpp"
-#include "Core/ConstString/ConstString.hpp"
+#include "Core/HashedString/HashedString.hpp"
 #include <unordered_map>
 #include "Core/Assert/Assert.hpp"
 
@@ -23,15 +23,15 @@ class ClassDefinition
 public:
     ClassId getId() const { return mName.getHash(); };
 public:
-    ConstString mName;
+    HashedString mName;
     u32 mTypeSize = 0;
 };
 
 class MemberDefinition
 {
 public:
-    ConstString mName;
-    ConstString mClassName;
+    HashedString mName;
+    HashedString mClassName;
     u32 mOffset = 0;
 };
 
@@ -42,7 +42,7 @@ public:
 class MemberRegister
 {
 public:
-    MemberRegister(const ConstString& ownerClassName, const MemberDefinition& memberDefinition);
+    MemberRegister(const HashedString& ownerClassName, const MemberDefinition& memberDefinition);
 };
 
 class MemberMetadata
@@ -68,7 +68,7 @@ public:
     ClassMetadata(const ClassDefinition& classDefinition);
 
     ClassDefinition mClassDefinition;
-    std::unordered_map<ConstString, MemberMetadata> mMembersMap;
+    std::unordered_map<HashedString, MemberMetadata> mMembersMap;
 };
 
 // --------------------------------------------------------
@@ -81,7 +81,7 @@ friend ClassRegister;
 friend MemberRegister;
 
 public:
-    static const ClassMetadata& getClassMetadataByName(const ConstString& className);
+    static const ClassMetadata& getClassMetadataByName(const HashedString& className);
     static const ClassMetadata& getClassMetadataById(const ClassId classId);
 
     inline static const ClassDefinition smNullClassDefinition = ClassDefinition();
@@ -122,10 +122,10 @@ public:
     }
 private:
     static void insert(const ClassMetadata& classMetadata);
-    static ClassMetadata& getClassMetadataInternal(const ConstString& className);
+    static ClassMetadata& getClassMetadataInternal(const HashedString& className);
     static void registerDynamicClass(u64 pointer, ClassId classId);
     static void unregisterDynamicClass(u64 pointer);
-    inline static std::unordered_map<ConstString, ClassMetadata> smClassMapByName;
+    inline static std::unordered_map<HashedString, ClassMetadata> smClassMapByName;
     inline static std::unordered_map<ClassId, ClassMetadata*> smClassMapById;
     inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
 };

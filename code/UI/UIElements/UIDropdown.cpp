@@ -66,7 +66,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 
 			FOR_LIST(it, mEntries)
 			{
-				ConstString label = ConstString((*it).mLabel);
+				HashedString label = HashedString((*it).mLabel);
 				UIElementCallback onPressedCallback = (*it).mCallback;
 
 				uiBuilder.

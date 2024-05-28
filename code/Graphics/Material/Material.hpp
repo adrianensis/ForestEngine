@@ -23,8 +23,8 @@ public:
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
-    std::unordered_map<ConstString, TextureBinding> mTextureBindings;
-    std::unordered_map<ConstString, TextureAnimation> mTextureAnimations;
+    std::unordered_map<HashedString, TextureBinding> mTextureBindings;
+    std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
 

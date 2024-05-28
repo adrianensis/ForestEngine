@@ -12,7 +12,7 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 
-void BatchRenderer::init(ConstString label, const BatchData& batchData, Ptr<const Shader> customShader)
+void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader)
 {
 	mBatchData = batchData;
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);

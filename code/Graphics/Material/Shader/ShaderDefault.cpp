@@ -182,7 +182,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
 {
     if(getShaderData().mMaterial->getMaterialData().mIsFont)
     {
-        ConstString samplerName = TextureBindingNames::smBaseColor;
+        HashedString samplerName = TextureBindingNames::smBaseColor;
         shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
     }
     else
@@ -191,7 +191,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         {
             CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
 
-            ConstString samplerName = it->first;
+            HashedString samplerName = it->first;
             switch (it->second.mStage)
             {
                 case GPUPipelineStage::VERTEX:
@@ -210,7 +210,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         {
             CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
 
-            ConstString samplerName = it->second.mSamplerName;
+            HashedString samplerName = it->second.mSamplerName;
             switch (it->second.mStage)
             {
                 case GPUPipelineStage::VERTEX:

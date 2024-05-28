@@ -14,7 +14,7 @@ void UIFontsManager::terminate()
     mFontsLibrary.terminate();
 }
 
-Ptr<UIFont> UIFontsManager::loadFont(ConstString fontFile, u32 fontSize)
+Ptr<UIFont> UIFontsManager::loadFont(HashedString fontFile, u32 fontSize)
 {
     if(!mFontsMap.contains(fontFile))
     {
@@ -26,12 +26,12 @@ Ptr<UIFont> UIFontsManager::loadFont(ConstString fontFile, u32 fontSize)
     return mFontsMap.at(fontFile);
 }
 
-Ptr<UIFont> UIFontsManager::getFont(ConstString fontFile) const
+Ptr<UIFont> UIFontsManager::getFont(HashedString fontFile) const
 {
     return mFontsMap.at(fontFile);
 }
 
-void UIFont::init(UIFontsManager& fontsManager, ConstString fontFile, u32 fontSize)
+void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontSize)
 {
     mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile, fontSize);
 

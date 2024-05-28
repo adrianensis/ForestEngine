@@ -483,7 +483,7 @@ u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const st
     return programId;
 }
 
-void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const ConstString& bufferName, u32 bindingPoint)
+void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const HashedString& bufferName, u32 bindingPoint)
 {
     switch (bufferType)
     {
