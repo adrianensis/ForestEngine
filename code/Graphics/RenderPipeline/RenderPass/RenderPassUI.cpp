@@ -1,5 +1,16 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
+void RenderPassUI::preRender()
+{
+    GET_SYSTEM(GPUInterface).enableFlag(GL_BLEND);
+    GET_SYSTEM(GPUInterface).setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void RenderPassUI::postRender()
+{
+    GET_SYSTEM(GPUInterface).disableFlag(GL_BLEND);
+}
+
 void RenderPassUI::renderStencilCascade(u64 id)
 {    
     FOR_MAP(it, mBatchMap)

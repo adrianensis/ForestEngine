@@ -5,7 +5,9 @@
 class RenderPassUI: public RenderPass
 {
 public:
+    virtual void preRender() override;
     virtual void render() override;
+    virtual void postRender() override;
 private:
     void renderStencilCascade(u64 id);
 private:
