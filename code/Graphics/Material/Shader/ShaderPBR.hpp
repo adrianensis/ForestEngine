@@ -29,6 +29,7 @@ protected:
 
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
 
+    void registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) const;
     void registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const;
     void registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const;
     void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;

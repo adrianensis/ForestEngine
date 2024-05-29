@@ -1,5 +1,8 @@
 # TODO
 
+- [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+- [ ] Shadow Mapping - Use Ortho matrix for directional (the sun) light
+- [ ] UI - Fix scale on resize
 - [ ] OpenGL - Cache uniform locations
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back
@@ -30,7 +33,3 @@
   - No inheritance/virtual functions allowed since jumping to vtable mem address generate cache misses
   - That should go for systems
   - QuadTree could live in a packed array, better cache performance
-
-## Bugs
-- -
-

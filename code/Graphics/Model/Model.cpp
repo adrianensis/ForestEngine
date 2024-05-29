@@ -74,33 +74,38 @@ void Model::loadGLTFMaterials()
             materialData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
             PoolHandler<Material> newMaterial;
 
-            if(cgltfMaterial.has_pbr_metallic_roughness)
+            CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR Meshes are supported")
+
+            materialData.mSharedMaterialPropertiesBlockBuffer.set<MetallicRoughness>();
+
+            if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
-                materialData.mSharedMaterialPropertiesBlockBuffer.set<MetallicRoughness>();
-
-                if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
-                {
-                    std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
-                }
-                else
-                {
-                    cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
-                }
-                if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
-                {
-                    std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                    materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
-                }
-                else
-                {
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-                    materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
-                }
-
-                newMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderPBR>(materialData);
+                std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
+                materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
             }
+            else
+            {
+                cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
+                materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+            }
+            if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
+            {
+                std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
+                materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+            }
+            else
+            {
+                materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+                materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
+            }
+
+            if(cgltfMaterial.normal_texture.texture)
+            {
+                std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
+                materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+            }
+
+            newMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderPBR>(materialData);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {

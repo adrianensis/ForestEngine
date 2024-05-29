@@ -37,7 +37,7 @@ void Editor::firstUpdate()
 
     createPointLight(Vector3(0,0,100), 20);
 
-    createDirectionalLight(Vector3(0,100,500), Vector3(0,0,1));
+    createDirectionalLight(Vector3(0,100,100), Vector3(0,0,1));
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
@@ -67,7 +67,7 @@ void Editor::update()
 
     Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
 	Transform* cameraTransform = &mCameraGameObject->mTransform.get();
-	f32 speed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
+	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
     //gameObject->mTransform->addTranslation(Vector3(0,0,-0.5));
 
@@ -99,11 +99,11 @@ void Editor::update()
 	}
     else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_HOME))
 	{
-		cameraTransform->addLocalRotation(Vector3(0,-speed/10,0));
+		cameraTransform->addLocalRotation(Vector3(0,-speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_END))
 	{
-		cameraTransform->addLocalRotation(Vector3(0,speed/10,0));
+		cameraTransform->addLocalRotation(Vector3(0,speed,0));
 	}
 
     Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();

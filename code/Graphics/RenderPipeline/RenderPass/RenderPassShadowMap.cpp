@@ -37,19 +37,12 @@ void RenderPassShadowMap::render()
 void RenderPassShadowMap::updateGlobalData()
 {
 	PROFILER_CPU()
-
-    Matrix4 projectionViewMatrix;
-    // projectionViewMatrix.ortho(-512, 512, -512, 512, 1.0, 1000);
-    projectionViewMatrix.perspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
-
+    const Matrix4 lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
-
-    const Matrix4& lightViewMatrix = mDirectionalLight->mGameObject->mTransform->getViewMatrix();
-    projectionViewMatrix.mul(lightViewMatrix);
 
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
-        projectionViewMatrix,
+        lightProjectionViewMatrix,
         camera->mGameObject->mTransform->getWorldPosition()
     };
 	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
