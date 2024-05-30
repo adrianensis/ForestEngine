@@ -13,7 +13,7 @@ Matrix4 Light::getLightProjectionViewMatrix() const
 
     Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
     Matrix4 lightProjectionViewMatrix;
-    lightProjectionViewMatrix.ortho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, 1.0, 1000);
+    lightProjectionViewMatrix.ortho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, 1.0, 10000);
 
     lightProjectionViewMatrix.mul(lightViewMatrix);
 

@@ -378,7 +378,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             if(node.has_rotation)
             {
                 Quaternion rotation(node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]);
-                rotation.toMatrix(&rotationMatrix);
+                rotation.toMatrix(rotationMatrix);
             }
 
             Matrix4 scaleMatrix;
@@ -512,7 +512,7 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
             Matrix4 translationMatrix;
             translationMatrix.translation(translation);
             Matrix4 rotationMatrix; 
-            rotation.toMatrix(&rotationMatrix);
+            rotation.toMatrix(rotationMatrix);
             rotationMatrix.transpose();
             // rotationMatrix.rotation(rotation.toEuler());
             Matrix4 scaleMatrix;

@@ -69,6 +69,7 @@ public:
     void perspective(f32 near, f32 far, f32 aspect, f32 fovy);
     void view(const Vector3& worldPosition, const Vector3& localRotation);
     void view(const Vector3& worldPosition, const Matrix4& localRotationMatrix);
+    void lookAt(const Vector3& worldPosition, const Vector3& targetPosition);
 
     static Matrix4 transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale);
 

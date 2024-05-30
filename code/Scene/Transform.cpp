@@ -60,25 +60,13 @@ Vector3 Transform::getWorldRotation() const
 
 void Transform::lookAt(const Vector3& targetPosition)
 {
-	/*mIsDirtyRotation = true;
-
-	Vector3 target(targetPosition);
-
-	Vector3 forward(target.sub(mLocalPosition).nor());
-
-	Vector3 yAxis(0, 1, 0);
-	Vector3 right(yAxis.cross(forward).nor());
-	Vector3 up(Vector3(forward).cross(right));
-
-	Matrix4 lookAtMatrix;
-	lookAtMatrix.init(Vector4(right.x, right.y, right.z, 0), Vector4(up.x, up.y, up.z, 0),
-			Vector4(forward.x, forward.y, forward.z, 0), Vector4(0, 0, 0, 1));
+    Vector3 mWorldPosition = getWorldPosition();
+    Matrix4 lookAt;
+    lookAt.lookAt(mWorldPosition, targetPosition);
 
 	Quaternion q;
-
-	q.fromMatrix(lookAtMatrix);
-
-	mLocalRotation = q.toEuler();*/
+	q.fromMatrix(lookAt);
+	setLocalRotation(q.toEuler());
 }
 
 const Matrix4& Transform::getLocalTranslationMatrix() const

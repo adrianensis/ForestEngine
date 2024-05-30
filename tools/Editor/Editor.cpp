@@ -37,7 +37,7 @@ void Editor::firstUpdate()
 
     createPointLight(Vector3(0,0,100), 20);
 
-    createDirectionalLight(Vector3(0,100,100), Vector3(0,0,1));
+    createDirectionalLight(Vector3(0,100,400), Vector3(0,0,1));
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
@@ -216,7 +216,7 @@ Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalRotation(Vector3::smForward * dir.angle(Vector3::smForward));
+	gameObject->mTransform->lookAt(v+dir);
 
     DirectionalLightData directionalLightData;
     directionalLightData.mDirection = dir;

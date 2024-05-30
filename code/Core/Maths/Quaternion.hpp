@@ -41,31 +41,12 @@ public:
     Quaternion& lerp(const Quaternion& target, f32 t);
     Quaternion& nlerp(const Quaternion& target, f32 t);
     Quaternion& slerp(const Quaternion& target, f32 t);
+	Vector3 toEuler() const;
     void fromEuler(f32 roll, f32 pitch, f32 yaw);
     void fromEuler(const Vector3& v);
 
-	Vector3 toEuler() const
-	{
-
-		Vector3 eulerVec;
-
-		f32 t0 = 2 * (w * v.x + v.y * v.z);
-        f32 t1 = 1 - 2 * (v.x * v.x + v.y * v.y);
-        eulerVec.x = std::atan2(t0, t1);
- 
-        f32 t2 = 2 * (w * v.y - v.z * v.x);
-		t2 = t2 > 1 ?  1 : t2;
-		t2 = t2 < -1 ? -1 : t2;
-        eulerVec.y = std::asin(t2);
-         
-        f32 t3 = 2 * (w * v.z + v.x * v.y);
-        f32 t4 = 1 - 2 * (v.y * v.y + v.z * v.z);
-        eulerVec.z = std::atan2(t3, t4);
- 
-        return eulerVec;
-	}
-
-    void toMatrix(Matrix4 *outMatrix) const;
+    void toMatrix(Matrix4& outMatrix) const;
+    void fromMatrix(const Matrix4& matrix);
 
     Quaternion operator=(const Quaternion& other)
     {

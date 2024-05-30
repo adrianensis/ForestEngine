@@ -251,7 +251,7 @@ void Matrix4::translation(const Vector3& vector)
 void Matrix4::rotation(const Vector3& vector)
 {
 	Quaternion q(vector);
-	q.toMatrix(this);
+	q.toMatrix(*this);
 }
 
 void Matrix4::scale(const Vector3& vector)
@@ -303,6 +303,28 @@ void Matrix4::view(const Vector3& worldPosition, const Matrix4& localRotationMat
 
 	this->mul(localRotationMatrix);
 	this->mul(viewTranslationMatrix);
+}
+
+void Matrix4::lookAt(const Vector3& worldPosition, const Vector3& targetPosition)
+{
+	Vector3 target(targetPosition);
+
+	Vector3 forward(target.sub(worldPosition).nor());
+
+	Vector3 yAxis = Vector3::smUp;
+	Vector3 right(yAxis.cross(forward).nor());
+	Vector3 up(Vector3(forward).cross(right));
+
+	this->init(
+        Vector4(right.x, right.y, right.z, 0),
+        Vector4(up.x, up.y, up.z, 0),
+		Vector4(forward.x, forward.y, forward.z, 0),
+        Vector4(0, 0, 0, 1)
+    );
+
+	// Quaternion q;
+	// q.fromMatrix(lookAtMatrix);
+	// mLocalRotation = q.toEuler();
 }
 
 Matrix4 Matrix4::transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale)

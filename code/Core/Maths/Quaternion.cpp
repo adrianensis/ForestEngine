@@ -234,6 +234,27 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 	return *this;
 }
 
+Vector3 Quaternion::toEuler() const
+{
+
+    Vector3 eulerVec;
+
+    f32 t0 = 2 * (w * v.x + v.y * v.z);
+    f32 t1 = 1 - 2 * (v.x * v.x + v.y * v.y);
+    eulerVec.x = MathUtils::deg(std::atan2(t0, t1));
+
+    f32 t2 = 2 * (w * v.y - v.z * v.x);
+    t2 = t2 > 1 ?  1 : t2;
+    t2 = t2 < -1 ? -1 : t2;
+    eulerVec.y = MathUtils::deg(std::asin(t2));
+        
+    f32 t3 = 2 * (w * v.z + v.x * v.y);
+    f32 t4 = 1 - 2 * (v.y * v.y + v.z * v.z);
+    eulerVec.z = MathUtils::deg(std::atan2(t3, t4));
+
+    return eulerVec;
+}
+
 void Quaternion::fromEuler(f32 roll, f32 pitch, f32 yaw)
 { // pitch attitude, yaw heading, or roll bank
 
@@ -260,7 +281,7 @@ void Quaternion::fromEuler(const Vector3& v)
 	fromEuler(v.x, v.y, v.z);
 }
 
-void Quaternion::toMatrix(Matrix4 *outMatrix) const
+void Quaternion::toMatrix(Matrix4& outMatrix) const
 {
 	Quaternion copy((*this));
 	copy.nor();
@@ -277,20 +298,54 @@ void Quaternion::toMatrix(Matrix4 *outMatrix) const
 	f32 wy2 = 2 * copy.w * copy.v.y;
 	f32 wz2 = 2 * copy.w * copy.v.z;
 
-	outMatrix->identity();
+	outMatrix.identity();
 
-	outMatrix->set(0, 0, 1 - (yy2 + zz2));
-	outMatrix->set(0, 1, xy2 + wz2);
-	outMatrix->set(0, 2, xz2 - wy2);
+	outMatrix.set(0, 0, 1 - (yy2 + zz2));
+	outMatrix.set(0, 1, xy2 + wz2);
+	outMatrix.set(0, 2, xz2 - wy2);
 
-	outMatrix->set(1, 0, xy2 - wz2);
-	outMatrix->set(1, 1, 1 - (xx2 + zz2));
-	outMatrix->set(1, 2, yz2 + wx2);
+	outMatrix.set(1, 0, xy2 - wz2);
+	outMatrix.set(1, 1, 1 - (xx2 + zz2));
+	outMatrix.set(1, 2, yz2 + wx2);
 
-	outMatrix->set(2, 0, xz2 + wy2);
-	outMatrix->set(2, 1, yz2 - wx2);
-	outMatrix->set(2, 2, 1 - (xx2 + yy2));
+	outMatrix.set(2, 0, xz2 + wy2);
+	outMatrix.set(2, 1, yz2 - wx2);
+	outMatrix.set(2, 2, 1 - (xx2 + yy2));
 }
+
+void Quaternion::fromMatrix(const Matrix4& matrix)
+{
+    f32 m00 = matrix.get(0,0);
+    f32 m02 = matrix.get(0,2);
+    f32 m10 = matrix.get(1,0);
+    f32 m11 = matrix.get(1,1);
+    f32 m12 = matrix.get(1,2);
+    f32 m20 = matrix.get(2,0);
+    f32 m22 = matrix.get(2,2);
+
+    f32 x, z, y;
+    // Assuming the angles are in radians.
+    if (m10 > 0.998) { // singularity at north pole
+        x = 0;
+        y = atan2(m02,m22);
+        z = MathUtils::PI_2;
+    }
+    else if (m10 < -0.998) { // singularity at south pole
+        x = 0;
+        y = atan2(m02,m22);
+        z = -MathUtils::PI_2;
+    }
+    else
+    {
+        x = atan2(-m12,m11);
+        y = atan2(-m20,m00);
+        z = asin(m10);
+    }
+
+    Vector3 euler(MathUtils::deg(x), MathUtils::deg(y), MathUtils::deg(z));
+    fromEuler(euler);
+}
+
 template<>
 JSON SerializationUtils::serializeTemplated(const Quaternion& value)
 {
