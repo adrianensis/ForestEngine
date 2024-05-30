@@ -1,11 +1,12 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUState.hpp"
 
 void GPUVertexBuffersContainer::create()
 {
 	PROFILER_CPU()
 
-    mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).addVertexBufferLayout();
+    mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
 
     FOR_ARRAY(i, mVertexBuffers)
     {
@@ -86,8 +87,9 @@ void GPUSharedBuffersContainer::create()
     }
 }
 
-void GPUSharedBuffersContainer::addSharedBuffer(u32 bindingPoint, const GPUSharedBufferData& data, bool isStatic)
+void GPUSharedBuffersContainer::addSharedBuffer(const GPUSharedBufferData& data, bool isStatic)
 {
+    u32 bindingPoint = GET_SYSTEM(GPUState).requestSharedBufferBindingPoint(data.mType);
     GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
     gpuInstanceBuffer.init(bindingPoint, data, isStatic);
 

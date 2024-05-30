@@ -20,8 +20,6 @@ public:
     void removeComponent(Ptr<SystemComponent> component) override;
 
 private:
-    void updateInstancesData();
-
     void swap();
     void render();
 private:

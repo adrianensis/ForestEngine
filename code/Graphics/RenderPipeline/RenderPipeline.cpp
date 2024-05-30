@@ -1,6 +1,7 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/GPU/GPUState.hpp"
+#include "Graphics/RenderState.hpp"
 #include "Scene/Module.hpp"
 
 void RenderPipeline::init()
@@ -52,5 +53,5 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
         lightsData.mDirectionalLight = renderData.mDirectionalLight->getLightData();
     }
 
-    GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
+    GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
 }

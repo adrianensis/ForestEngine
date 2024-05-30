@@ -1,7 +1,7 @@
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Graphics/Renderer/BatchRenderer/ShapeBatchRenderer.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/RenderState.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Window/Window.hpp"

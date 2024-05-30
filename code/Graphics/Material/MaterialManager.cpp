@@ -2,7 +2,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/RenderState.hpp"
 
 void MaterialManager::init()
 {
@@ -33,7 +33,7 @@ void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
 
 void MaterialManager::postMaterialCreated(const PoolHandler<Material>& handler)
 {
-    GET_SYSTEM(RenderSharedContext).initMaterialInstancePropertiesSharedBuffer(handler);
+    GET_SYSTEM(RenderState).initMaterialInstancePropertiesSharedBuffer(handler);
 }
 
 MaterialInstance MaterialManager::createMaterialInstance(const PoolHandler<Material>& handler)

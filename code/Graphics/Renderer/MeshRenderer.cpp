@@ -2,7 +2,8 @@
 
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/GPU/GPUState.hpp"
+#include "Graphics/RenderState.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
@@ -35,9 +36,9 @@ void MeshRenderer::init(const RendererData& data)
         bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
     }
 
-    mRenderInstanceSlot = GET_SYSTEM(RenderSharedContext).getRenderInstancesSlotsManager().requestSlot();
+    mRenderInstanceSlot = GET_SYSTEM(RenderState).requestRenderInstanceSlot();
     mMaterialInstance = GET_SYSTEM(MaterialManager).createMaterialInstance(mRendererData.mMaterial);
-    mMaterialInstanceSlot = GET_SYSTEM(RenderSharedContext).requestMaterialInstanceSlot(mRendererData.mMaterial);
+    mMaterialInstanceSlot = GET_SYSTEM(RenderState).requestMaterialInstanceSlot(mRendererData.mMaterial);
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -47,8 +48,8 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(RenderSharedContext).getRenderInstancesSlotsManager().freeSlot(mRenderInstanceSlot);
-    GET_SYSTEM(RenderSharedContext).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
+    GET_SYSTEM(RenderState).freeRenderInstanceSlot(mRenderInstanceSlot);
+    GET_SYSTEM(RenderState).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
 }
 
 void MeshRenderer::calculateRendererModelMatrix()

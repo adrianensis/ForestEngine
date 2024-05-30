@@ -6,7 +6,7 @@
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/RenderState.hpp"
 
 class BatchRenderer;
 

@@ -40,7 +40,7 @@ public:
 
     void terminate();
     void create();
-    void addSharedBuffer(u32 bindingPoint, const GPUSharedBufferData& data, bool isStatic);
+    void addSharedBuffer(const GPUSharedBufferData& data, bool isStatic);
     GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data);
     const GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data) const;
     bool containsSharedBuffer(const GPUSharedBufferData& data) const;

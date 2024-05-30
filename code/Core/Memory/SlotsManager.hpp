@@ -56,15 +56,28 @@ public:
             }
         }
 
-        CHECK_MSG(slot.isValid(), "Invalid slot!");
+        CHECK_MSG(checkSlot(slot), "Invalid slot!");
         return slot;
     }
 
     void freeSlot(Slot& slot)
     {
-        CHECK_MSG(slot.isValid(), "Invalid slot!");
+        CHECK_MSG(checkSlot(slot), "Invalid slot!");
         mAvailableSlots[slot.getSlot()] = true;
         slot.reset();
+    }
+
+    bool checkSlotBounds(const Slot& slot) const
+    {
+        bool bounds = slot.getSlot() < mAvailableSlots.size();
+        return bounds;
+    }
+
+    bool checkSlot(const Slot& slot) const
+    {
+        bool bounds = checkSlotBounds(slot);
+        bool isValid = slot.isValid();
+        return bounds && isValid;
     }
 
     u32 getSize() const { return mAvailableSlots.size(); }

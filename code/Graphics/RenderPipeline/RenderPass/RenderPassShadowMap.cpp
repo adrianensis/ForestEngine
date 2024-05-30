@@ -1,5 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
+#include "Graphics/GPU/GPUState.hpp"
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Window/Window.hpp"
@@ -45,7 +46,7 @@ void RenderPassShadowMap::updateGlobalData()
         lightProjectionViewMatrix,
         camera->mGameObject->mTransform->getWorldPosition()
     };
-	GET_SYSTEM(RenderSharedContext).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+	GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 Ptr<Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const

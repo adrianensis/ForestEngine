@@ -5,14 +5,17 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Material.hpp"
 
-class RenderSharedContext : public System
+class RenderState : public System
 {
 public:
     virtual void init() override;
     virtual void terminate() override;
     void update();
-    u32 requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType);
+    
     void setInstanceMatrix(const Slot& slot, const Matrix4& matrix);
+    Slot requestRenderInstanceSlot();
+    void freeRenderInstanceSlot(Slot& slot);
+    
     void setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance);
     void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
     const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
@@ -31,20 +34,12 @@ private:
 
 	std::unordered_map<u32, SharedContextMaterialInstancedData> mMaterialInstancesDataMap;
 
-    GPUSharedBuffersContainer mGPUSharedBuffersContainer;
 	std::vector<Matrix4> mMatrices;
+
     SlotsManager mRenderInstancesSlotsManager;
-
-    u32 mBindingPointsIndexUniform = 0;
-    u32 mBindingPointsIndexStorage = 0;
-    i32 mMaxSharedBufferBindingPointsUniform = 0;
-    i32 mMaxSharedBufferBindingPointsStorage = 0;
-
     u32 mMaxInstances = 5000;
 
 public:
-    RGET(GPUSharedBuffersContainer)
-    CRGET(GPUSharedBuffersContainer)
     RGET(RenderInstancesSlotsManager)
 };
-REGISTER_CLASS(RenderSharedContext)
+REGISTER_CLASS(RenderState)

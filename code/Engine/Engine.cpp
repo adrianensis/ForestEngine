@@ -24,7 +24,8 @@ void Engine::init()
     CREATE_SYSTEM(EngineConfig);
     CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(Window);
-    CREATE_SYSTEM(RenderSharedContext);
+    CREATE_SYSTEM(GPUState);
+    CREATE_SYSTEM(RenderState);
     CREATE_SYSTEM(Input);
     CREATE_SYSTEM(TimerManager);
     CREATE_SYSTEM(EventsManager);

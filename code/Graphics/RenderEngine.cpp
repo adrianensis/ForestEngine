@@ -6,7 +6,7 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/RenderSharedContext.hpp"
+#include "Graphics/RenderState.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
@@ -56,11 +56,11 @@ void RenderEngine::update()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         renderer->update();
         const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-        GET_SYSTEM(RenderSharedContext).setInstanceMatrix(renderer->getRenderInstanceSlot(), rendererModelMatrix);
-        GET_SYSTEM(RenderSharedContext).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+        GET_SYSTEM(RenderState).setInstanceMatrix(renderer->getRenderInstanceSlot(), rendererModelMatrix);
+        GET_SYSTEM(RenderState).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
     }
 
-    GET_SYSTEM(RenderSharedContext).update();
+    GET_SYSTEM(RenderState).update();
     
 	GET_SYSTEM(AnimationManager).update();
 
