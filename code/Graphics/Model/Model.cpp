@@ -2,8 +2,8 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
-#include "Graphics/Model/Animation/Animation.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "Engine/Config/Paths.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
@@ -44,7 +44,7 @@ void Model::init(const std::string& path)
             {
                 const cgltf_skin& skin = mCGLTFData->skins[0];
                 loadGLTFBones(skin);
-                loadGLTFAnimations();
+                loadGLTFSkeletalAnimations();
 
                 mGLTFMaterials.clear();
                 mChannels.clear();
@@ -430,7 +430,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     }
 }
 
-f32 Model::loadGLTFAnimationDuration(const cgltf_animation& gltfAnim)
+f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
 {
     f32 animDuration = 0.0f;
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
@@ -455,7 +455,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         }
         else
         {
-            LOG("Animation channel for a node not in the armature");
+            LOG("SkeletalAnimation channel for a node not in the armature");
             continue;
         }
 
@@ -478,7 +478,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     }
 }
 
-void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
+void Model::loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation)
 {
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
 
@@ -488,25 +488,25 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
         std::vector<Matrix4> originalFrameTransforms;
         originalFrameTransforms.resize(mBonesIndexCount);
 
-        f32 currentAnimationTime = frameIt*smAnimationFrameRateSeconds;
+        f32 currentSkeletalAnimationTime = frameIt*smSkeletalAnimationFrameRateSeconds;
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
         {
             Vector3 translation(0, 0, 0);
             if (mChannels[boneIt].translate)
             {
-                getTranslationAtTime(mChannels[boneIt].translate->sampler->input, mChannels[boneIt].translate->sampler->interpolation, mChannels[boneIt].translate->sampler->output, currentAnimationTime, translation);
+                getTranslationAtTime(mChannels[boneIt].translate->sampler->input, mChannels[boneIt].translate->sampler->interpolation, mChannels[boneIt].translate->sampler->output, currentSkeletalAnimationTime, translation);
             }
             
             Quaternion rotation(0, 0, 0, 1);
             if (mChannels[boneIt].rotate)
             {
-                getRotationAtTime(mChannels[boneIt].rotate->sampler->input, mChannels[boneIt].rotate->sampler->interpolation, mChannels[boneIt].rotate->sampler->output, currentAnimationTime, rotation);
+                getRotationAtTime(mChannels[boneIt].rotate->sampler->input, mChannels[boneIt].rotate->sampler->interpolation, mChannels[boneIt].rotate->sampler->output, currentSkeletalAnimationTime, rotation);
             }
 
             Vector3 scale(1, 1, 1);
             if (mChannels[boneIt].scale)
             {
-                getScaleAtTime(mChannels[boneIt].scale->sampler->input, mChannels[boneIt].scale->sampler->interpolation, mChannels[boneIt].scale->sampler->output, currentAnimationTime, scale);
+                getScaleAtTime(mChannels[boneIt].scale->sampler->input, mChannels[boneIt].scale->sampler->interpolation, mChannels[boneIt].scale->sampler->output, currentSkeletalAnimationTime, scale);
             }
 
             Matrix4 translationMatrix;
@@ -542,22 +542,22 @@ void Model::loadGLTFAnimationFrames(Ptr<Animation> animation)
     }
 }
 
-void Model::loadGLTFAnimations()
+void Model::loadGLTFSkeletalAnimations()
 {
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)
     {
         const cgltf_animation& gltfAnim = mCGLTFData->animations[animIt];
         f32 animDuration = 0.0f;
-        animDuration = loadGLTFAnimationDuration(gltfAnim);
+        animDuration = loadGLTFSkeletalAnimationDuration(gltfAnim);
 
         loadGLTFChannels(gltfAnim);
 
-        Ptr<Animation> animation = mAnimations.emplace_back(OwnerPtr<Animation>::newObject());;
+        Ptr<SkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<SkeletalAnimation>::newObject());;
         animation->init(animDuration, getPtrToThis<Model>());
 
-        loadGLTFAnimationFrames(animation);
+        loadGLTFSkeletalAnimationFrames(animation);
 
-        GET_SYSTEM(AnimationManager).createAnimationState(animation);
+        GET_SYSTEM(SkeletalAnimationManager).createSkeletalAnimationState(animation);
     }
 }
 

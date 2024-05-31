@@ -1,6 +1,6 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void Mesh::addBoneWeight(u32 vertexId, i32 id, f32 weight)
 {
@@ -39,7 +39,7 @@ Vector3 Mesh::calculateSkinnedVertex(u32 i) const
 {
     Vector3 vertexPosition = mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).get<Vector3>(i);
 
-    const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mModel);
+    const std::vector<Matrix4>& boneTransforms = GET_SYSTEM(SkeletalAnimationManager).getBoneTransforms(mModel);
 
     Vector4 skinnedVertexPosition = Vector4(0,0,0,0);
     for(u32 boneIt = 0 ; boneIt < (i32)GPUBuiltIn::MAX_BONE_INFLUENCE ; boneIt++)

@@ -11,7 +11,7 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 #include "Scene/Module.hpp"
 
 ClassId MeshRenderer::getSystemComponentId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }

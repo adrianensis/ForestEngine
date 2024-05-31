@@ -12,7 +12,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void RenderEngine::init()
 {
@@ -64,7 +64,7 @@ void RenderEngine::update()
     GET_SYSTEM(RenderState).update();
     GET_SYSTEM(MaterialManager).update();
     
-	GET_SYSTEM(AnimationManager).update();
+	GET_SYSTEM(SkeletalAnimationManager).update();
 
 	// octree.update();
 

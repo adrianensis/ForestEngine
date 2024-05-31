@@ -8,7 +8,7 @@
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
 void Shader::init(PoolHandler<Material> material)

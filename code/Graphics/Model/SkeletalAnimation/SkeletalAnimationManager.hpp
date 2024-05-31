@@ -2,17 +2,17 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
-#include "Graphics/Model/Animation/Animation.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 
 class Model;
 
-class AnimationManager: public System
+class SkeletalAnimationManager: public System
 {
 public:
     virtual void init() override;
     virtual void terminate() override;
     virtual void update() override;
-    void createAnimationState(Ptr<const Animation> animation);
+    void createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation);
     const std::vector<Matrix4>& getBoneTransforms(Ptr<const Model> model) const;
 
 private:
@@ -20,4 +20,4 @@ private:
 public:
     CRGET(SkeletonStates)
 };
-REGISTER_CLASS(AnimationManager);
+REGISTER_CLASS(SkeletalAnimationManager);

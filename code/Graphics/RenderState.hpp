@@ -4,7 +4,7 @@
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Model/Animation/Animation.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 
 class RenderState : public System
 {

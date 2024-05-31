@@ -12,7 +12,7 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
-#include "Graphics/Model/Animation/AnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader)
 {
@@ -40,9 +40,9 @@ void BatchRenderer::terminate()
 void BatchRenderer::bindSharedBuffers()
 {
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
-    if(GET_SYSTEM(AnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
+    if(GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
     {
-        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(AnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);
+        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);
         mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderState).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
     }
 

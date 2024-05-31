@@ -1,13 +1,13 @@
-#include "Graphics/Model/Animation/AnimationManager.hpp"
-#include "Graphics/Model/Animation/Animation.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/RenderState.hpp"
 
-void AnimationManager::init()
+void SkeletalAnimationManager::init()
 {
 }
 
-void AnimationManager::update()
+void SkeletalAnimationManager::update()
 {
 	PROFILER_CPU()
 
@@ -17,7 +17,7 @@ void AnimationManager::update()
 	}
 }
 
-void AnimationManager::createAnimationState(Ptr<const Animation> animation)
+void SkeletalAnimationManager::createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation)
 {
 	Ptr<const Model> model = animation->mModel;
 
@@ -29,16 +29,16 @@ void AnimationManager::createAnimationState(Ptr<const Animation> animation)
         GET_SYSTEM(RenderState).initSkeletonRenderState(mSkeletonStates[model]);
 	}
 
-	mSkeletonStates[model]->createAnimationState(animation);
+	mSkeletonStates[model]->createSkeletalAnimationState(animation);
 
 }
 
-void AnimationManager::terminate()
+void SkeletalAnimationManager::terminate()
 {
 	mSkeletonStates.clear();
 }
 
-const std::vector<Matrix4>& AnimationManager::getBoneTransforms(Ptr<const Model> model) const
+const std::vector<Matrix4>& SkeletalAnimationManager::getBoneTransforms(Ptr<const Model> model) const
 {
 	return mSkeletonStates.at(model)->getCurrentBoneTransforms();
 }

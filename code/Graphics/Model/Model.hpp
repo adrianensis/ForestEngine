@@ -2,10 +2,10 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
-#include "Graphics/Model/Animation/Animation.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "cgltf.h"
 
-class Animation;
+class SkeletalAnimation;
 class Material;
 struct cgltf_data;
 struct cgltf_accessor;
@@ -34,7 +34,7 @@ class Model: public ObjectBase
 {
 public:
     void init(const std::string& path);
-    bool isAnimated() const { return mBonesIndexCount > 0 && !mAnimations.empty(); }
+    bool isAnimated() const { return mBonesIndexCount > 0 && !mSkeletalAnimations.empty(); }
 
     class KeyframeData
     {
@@ -50,10 +50,10 @@ private:
     void loadGLTFMeshes();
     void loadGLTFPrimitive(const cgltf_primitive& primitive);
     void loadGLTFBones(const cgltf_skin& skin);
-    f32 loadGLTFAnimationDuration(const cgltf_animation& gltfAnim);
+    f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
-    void loadGLTFAnimationFrames(Ptr<Animation> animation);
-    void loadGLTFAnimations();
+    void loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation);
+    void loadGLTFSkeletalAnimations();
     Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms) const;
     static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
     static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
@@ -92,14 +92,14 @@ private:
     };
 
 public:
-    inline static const float smAnimationFPS = 60.0f;
-    inline static const float smAnimationFrameRateSeconds = 1.0f/smAnimationFPS;
+    inline static const float smSkeletalAnimationFPS = 60.0f;
+    inline static const float smSkeletalAnimationFrameRateSeconds = 1.0f/smSkeletalAnimationFPS;
 
 private:
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
     std::vector<OwnerPtr<Mesh>> mMeshes;
-    std::vector<OwnerPtr<Animation>> mAnimations;
+    std::vector<OwnerPtr<SkeletalAnimation>> mSkeletalAnimations;
     std::unordered_map<cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
     std::unordered_map<Ptr<const Mesh>, PoolHandler<Material>> mMeshMaterials;
     std::vector<BoneData> mBones;

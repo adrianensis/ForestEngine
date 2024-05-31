@@ -10,12 +10,12 @@ public:
     std::vector<Matrix4> mTransforms;
 };
 
-class Animation: public ObjectBase
+class SkeletalAnimation: public ObjectBase
 {
 public:
     void init(f32 animDurationInSeconds, Ptr<const Model> model);
 
-    f32 calculateCurrentAnimationTime(f32 accumulatedTime) const;
+    f32 calculateCurrentSkeletalAnimationTime(f32 accumulatedTime) const;
 
 public:
     Ptr<const Model> mModel;
@@ -24,39 +24,39 @@ public:
     u32 mDurationInTicks = 0;
     f32 mDurationInSeconds = 0;
 };
-REGISTER_CLASS(Animation);
+REGISTER_CLASS(SkeletalAnimation);
 
-class AnimationState: public ObjectBase
+class SkeletalAnimationState: public ObjectBase
 {
 public:
-    void init(Ptr<const Animation> animation);
+    void init(Ptr<const SkeletalAnimation> animation);
     void update();
 
 private:
-    Ptr<const Animation> mAnimation;
+    Ptr<const SkeletalAnimation> mSkeletalAnimation;
     f32 mAccumulatedTime = 0;
-    f32 mAnimationTime = 0;
+    f32 mSkeletalAnimationTime = 0;
 
 public:
-    CGET(Animation)
-    GET(AnimationTime)
+    CGET(SkeletalAnimation)
+    GET(SkeletalAnimationTime)
 };
-REGISTER_CLASS(AnimationState);
+REGISTER_CLASS(SkeletalAnimationState);
 
 class SkeletonState: public ObjectBase
 {
 public:
     void init(Ptr<const Model> model);
-    void createAnimationState(Ptr<const Animation> animation);
+    void createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation);
     void update();
 
 private:
     void getBoneTransforms(std::vector<Matrix4>& Transforms) const;
-    void getBoneTransformsFromCurrentAnimation(std::vector<Matrix4>& Transforms) const;
+    void getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const;
 private:
     Ptr<const Model> mModel;
-    std::unordered_map<ObjectId, OwnerPtr<AnimationState>> mAnimationStates;
-    Ptr<AnimationState> mCurrentAnimation;
+    std::unordered_map<ObjectId, OwnerPtr<SkeletalAnimationState>> mSkeletalAnimationStates;
+    Ptr<SkeletalAnimationState> mCurrentSkeletalAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;
 
 public:
