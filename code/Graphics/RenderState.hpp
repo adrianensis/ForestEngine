@@ -4,6 +4,7 @@
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Model/Animation/Animation.hpp"
 
 class RenderState : public System
 {
@@ -22,8 +23,11 @@ public:
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
     void freeMaterialInstanceSlot(const PoolHandler<Material>& material, Slot& slot);
 
+    void initSkeletonRenderState(Ptr<const SkeletonState> skeletonState);
+    const GPUSharedBuffer& getSkeletonRenderStateGPUSharedBuffer(Ptr<const SkeletonState> skeletonState) const;
+
 private:
-    class SharedContextMaterialInstancedData
+    class MaterialRenderState
     {
     public:
         ByteBuffer mMaterialPropertiesBlockArray;
@@ -32,7 +36,15 @@ private:
         SlotsManager mSlotsManager;
     };
 
-	std::unordered_map<u32, SharedContextMaterialInstancedData> mMaterialInstancesDataMap;
+	std::unordered_map<u32, MaterialRenderState> mMaterialRenderStates;
+
+    class SkeletonRenderState
+    {
+    public:
+        GPUSharedBuffersContainer mGPUSharedBuffersContainer;
+    };
+
+	std::unordered_map<Ptr<const SkeletonState>, SkeletonRenderState> mSkeletonRenderStates;
 
 	std::vector<Matrix4> mMatrices;
 

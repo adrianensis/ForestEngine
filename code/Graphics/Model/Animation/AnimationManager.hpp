@@ -17,5 +17,7 @@ public:
 
 private:
     std::unordered_map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
+public:
+    CRGET(SkeletonStates)
 };
 REGISTER_CLASS(AnimationManager);

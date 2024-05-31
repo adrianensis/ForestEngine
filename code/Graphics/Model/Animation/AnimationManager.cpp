@@ -1,6 +1,7 @@
 #include "Graphics/Model/Animation/AnimationManager.hpp"
 #include "Graphics/Model/Animation/Animation.hpp"
 #include "Graphics/Model/Model.hpp"
+#include "Graphics/RenderState.hpp"
 
 void AnimationManager::init()
 {
@@ -24,9 +25,12 @@ void AnimationManager::createAnimationState(Ptr<const Animation> animation)
 	{
 		mSkeletonStates.insert_or_assign(model, OwnerPtr<SkeletonState>::newObject());
 		mSkeletonStates.at(model)->init(animation->mModel);
+        
+        GET_SYSTEM(RenderState).initSkeletonRenderState(mSkeletonStates[model]);
 	}
 
 	mSkeletonStates[model]->createAnimationState(animation);
+
 }
 
 void AnimationManager::terminate()

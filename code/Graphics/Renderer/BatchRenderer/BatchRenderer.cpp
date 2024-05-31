@@ -39,6 +39,11 @@ void BatchRenderer::terminate()
 void BatchRenderer::bindSharedBuffers()
 {
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderState).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
+    if(GET_SYSTEM(AnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
+    {
+        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(AnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);
+        mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderState).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+    }
 
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
@@ -74,10 +79,6 @@ void BatchRenderer::enable()
 {
     mGPUProgram->enable();
     mGPUVertexBuffersContainer.enable();
-    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
-    {
-        updateBoneTransforms();
-    }
     mBatchData.mMaterial->getShader()->enable();
     mBatchData.mMaterial->enable();
 
@@ -171,16 +172,7 @@ bool BatchRenderer::shouldRegenerateBuffers() const
 }
 
 void BatchRenderer::updateBoneTransforms()
-{	
-	if(mBatchData.mMesh->mModel)
-	{
-		bool isAnimated = mBatchData.mMesh->mModel->isAnimated() && mBatchData.mMaterial->getMaterialData().mIsSkinned;
-        if(isAnimated)
-        {
-            const std::vector<Matrix4>& transforms = GET_SYSTEM(AnimationManager).getBoneTransforms(mBatchData.mMesh->mModel);
-            setBonesTransformsBuffer(transforms);
-        }
-	}
+{
 }
 
 void BatchRenderer::initBuffers()
@@ -210,13 +202,6 @@ void BatchRenderer::initBuffers()
     mGPUVertexBuffersContainer.enable();
     mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, isStatic);
     mGPUVertexBuffersContainer.disable();
-
-    if(mBatchData.mMaterial->getMaterialData().mIsSkinned)
-    {
-        mGPUSharedBuffersContainer.addSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices, isStatic);
-        mGPUSharedBuffersContainer.create();
-        mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
-    }
 }
 
 void BatchRenderer::resizeMeshBuffers(u32 maxInstances)
@@ -258,8 +243,6 @@ void BatchRenderer::setInstancedBuffers()
 
 void BatchRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
 {
-    PROFILER_CPU()
-    mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
 }
 
 void BatchRenderer::resizeIndicesBuffer(Ptr<const GPUMesh> mesh)

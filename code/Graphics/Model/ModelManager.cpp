@@ -8,16 +8,16 @@ void ModelManager::init()
 
 void ModelManager::terminate()
 {
-    mModelMap.clear();
+    mModels.clear();
 }
 
 Ptr<const Model> ModelManager::loadModel(const std::string& path)
 {
-    if (!mModelMap.contains(path))
+    if (!mModels.contains(path))
 	{
-		mModelMap.insert_or_assign(path, OwnerPtr<Model>::newObject());
-		mModelMap.at(path)->init(path);
+		mModels.insert_or_assign(path, OwnerPtr<Model>::newObject());
+		mModels.at(path)->init(path);
 	}
 
-	return mModelMap.at(path);
+	return mModels.at(path);
 }

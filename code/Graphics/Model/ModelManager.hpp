@@ -14,6 +14,8 @@ public:
     Ptr<const Model> loadModel(const std::string& path);
 
 private:
-    std::unordered_map<std::string, OwnerPtr<Model>> mModelMap;
+    std::unordered_map<std::string, OwnerPtr<Model>> mModels;
+public:
+    CRGET(Models)
 };
 REGISTER_CLASS(ModelManager);

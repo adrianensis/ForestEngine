@@ -28,7 +28,7 @@ void RenderState::update()
 	PROFILER_CPU()
 	GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
 
-    FOR_MAP(it, mMaterialInstancesDataMap)
+    FOR_MAP(it, mMaterialRenderStates)
     {
         PoolHandler<Material> material = it->second.mMaterial;
         const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
@@ -36,6 +36,12 @@ void RenderState::update()
         ByteBuffer& materialPropertiesBlockArray = it->second.mMaterialPropertiesBlockArray;
 	    it->second.mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).setDataArray(materialPropertiesBlockArray);
     }
+
+    FOR_MAP(it, mSkeletonRenderStates)
+	{
+        const std::vector<Matrix4>& transforms = it->first->getCurrentBoneTransforms();
+        it->second.mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
+	}
 }
 
 void RenderState::setInstanceMatrix(const Slot& slot, const Matrix4& matrix)
@@ -59,24 +65,24 @@ void RenderState::initMaterialInstancePropertiesSharedBuffer(const PoolHandler<M
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
-    CHECK_MSG(!mMaterialInstancesDataMap.contains(materialID), "Material already registered!");
+    CHECK_MSG(!mMaterialRenderStates.contains(materialID), "Material already registered!");
 
-    mMaterialInstancesDataMap.emplace(materialID, SharedContextMaterialInstancedData());
+    mMaterialRenderStates.emplace(materialID, MaterialRenderState());
 
     u32 size = material->getMaterialData().getMaxInstances();
     u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
-    mMaterialInstancesDataMap.at(materialID).mMaterial = material;
-    mMaterialInstancesDataMap.at(materialID).mSlotsManager.init(size);
-    mMaterialInstancesDataMap.at(materialID).mMaterialPropertiesBlockArray.resize(size * propertiesBlockSizeBytes);
+    mMaterialRenderStates.at(materialID).mMaterial = material;
+    mMaterialRenderStates.at(materialID).mSlotsManager.init(size);
+    mMaterialRenderStates.at(materialID).mMaterialPropertiesBlockArray.resize(size * propertiesBlockSizeBytes);
 
     // Reserve index 0 for default material instance
-    Slot defaultSlot = mMaterialInstancesDataMap.at(materialID).mSlotsManager.requestSlot();
-    mMaterialInstancesDataMap.at(materialID).mMaterialPropertiesBlockArray.setAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
+    Slot defaultSlot = mMaterialRenderStates.at(materialID).mSlotsManager.requestSlot();
+    mMaterialRenderStates.at(materialID).mMaterialPropertiesBlockArray.setAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
     const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
-    mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.addSharedBuffer(propertiesBlockSharedBufferData, false);
-    mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.create();
-    mMaterialInstancesDataMap.at(materialID).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).resizeBytes(propertiesBlockSizeBytes * size);
+    mMaterialRenderStates.at(materialID).mGPUSharedBuffersContainer.addSharedBuffer(propertiesBlockSharedBufferData, false);
+    mMaterialRenderStates.at(materialID).mGPUSharedBuffersContainer.create();
+    mMaterialRenderStates.at(materialID).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).resizeBytes(propertiesBlockSizeBytes * size);
 }
 
 void RenderState::setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance)
@@ -84,14 +90,14 @@ void RenderState::setMaterialInstanceProperties(const Slot& slot, const Material
     PoolHandler<Material> material = materialInstance.mMaterial;
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
-    CHECK_MSG(mMaterialInstancesDataMap.contains(materialID), "Invalid material!");
+    CHECK_MSG(mMaterialRenderStates.contains(materialID), "Invalid material!");
 
-    CHECK_MSG(mMaterialInstancesDataMap.at(materialID).mSlotsManager.checkSlot(slot), "Invalid slot!");
+    CHECK_MSG(mMaterialRenderStates.at(materialID).mSlotsManager.checkSlot(slot), "Invalid slot!");
 
     if(material->getMaterialData().allowInstances())
     {
         u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
-        mMaterialInstancesDataMap.at(materialID).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
+        mMaterialRenderStates.at(materialID).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
     }
 }
 
@@ -99,7 +105,7 @@ const GPUSharedBuffer& RenderState::getMaterialPropertiesGPUSharedBuffer(const P
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
-    return mMaterialInstancesDataMap.at(material->getID()).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData);
+    return mMaterialRenderStates.at(material->getID()).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData);
 }
 
 Slot RenderState::requestMaterialInstanceSlot(const PoolHandler<Material>& material)
@@ -109,7 +115,7 @@ Slot RenderState::requestMaterialInstanceSlot(const PoolHandler<Material>& mater
     Slot slot;
     if(material->getMaterialData().mAllowInstances)
     {
-        slot = mMaterialInstancesDataMap.at(material->getID()).mSlotsManager.requestSlot();
+        slot = mMaterialRenderStates.at(material->getID()).mSlotsManager.requestSlot();
     }
     else
     {
@@ -125,17 +131,35 @@ void RenderState::freeMaterialInstanceSlot(const PoolHandler<Material>& material
     CHECK_MSG(material.isValid(), "Invalid material!");
     if(material->getMaterialData().mAllowInstances)
     {
-        mMaterialInstancesDataMap.at(material->getID()).mSlotsManager.freeSlot(slot);
+        mMaterialRenderStates.at(material->getID()).mSlotsManager.freeSlot(slot);
     }
+}
+
+void RenderState::initSkeletonRenderState(Ptr<const SkeletonState> skeletonState)
+{
+    CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
+
+    SkeletonRenderState skeletonRenderState;
+    skeletonRenderState.mGPUSharedBuffersContainer.addSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices, false);
+    skeletonRenderState.mGPUSharedBuffersContainer.create();
+    skeletonRenderState.mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
+
+    mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
+}
+
+const GPUSharedBuffer& RenderState::getSkeletonRenderStateGPUSharedBuffer(Ptr<const SkeletonState> skeletonState) const
+{
+    CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
+    return mSkeletonRenderStates.at(skeletonState).mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices);
 }
 
 void RenderState::terminate()
 {
-    FOR_MAP(it, mMaterialInstancesDataMap)
+    FOR_MAP(it, mMaterialRenderStates)
     {
         it->second.mGPUSharedBuffersContainer.terminate();
     }
 
-    mMaterialInstancesDataMap.clear();
+    mMaterialRenderStates.clear();
     mRenderInstancesSlotsManager.reset();
 }

@@ -46,7 +46,7 @@ void Editor::firstUpdate()
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
-	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
 
 	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,70), 20.0f, 0);
     // mGameObjectsArray.push_back(obj);
