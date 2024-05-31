@@ -43,7 +43,7 @@ void BatchRenderer::bindSharedBuffers()
     if(GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
     {
         Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);
-        mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderState).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+        mGPUProgram->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
     }
 
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));

@@ -15,6 +15,12 @@ void SkeletalAnimationManager::update()
 	{
 		it->second->update();
 	}
+
+    FOR_MAP(it, mSkeletonRenderStates)
+	{
+        const std::vector<Matrix4>& transforms = it->first->getCurrentBoneTransforms();
+        it->second.mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
+	}
 }
 
 void SkeletalAnimationManager::createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation)
@@ -26,7 +32,7 @@ void SkeletalAnimationManager::createSkeletalAnimationState(Ptr<const SkeletalAn
 		mSkeletonStates.insert_or_assign(model, OwnerPtr<SkeletonState>::newObject());
 		mSkeletonStates.at(model)->init(animation->mModel);
         
-        GET_SYSTEM(RenderState).initSkeletonRenderState(mSkeletonStates[model]);
+        initSkeletonRenderState(mSkeletonStates[model]);
 	}
 
 	mSkeletonStates[model]->createSkeletalAnimationState(animation);
@@ -41,4 +47,22 @@ void SkeletalAnimationManager::terminate()
 const std::vector<Matrix4>& SkeletalAnimationManager::getBoneTransforms(Ptr<const Model> model) const
 {
 	return mSkeletonStates.at(model)->getCurrentBoneTransforms();
+}
+
+void SkeletalAnimationManager::initSkeletonRenderState(Ptr<const SkeletonState> skeletonState)
+{
+    CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
+
+    SkeletonRenderState skeletonRenderState;
+    skeletonRenderState.mGPUSharedBuffersContainer.addSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices, false);
+    skeletonRenderState.mGPUSharedBuffersContainer.create();
+    skeletonRenderState.mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
+
+    mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
+}
+
+const GPUSharedBuffer& SkeletalAnimationManager::getSkeletonRenderStateGPUSharedBuffer(Ptr<const SkeletonState> skeletonState) const
+{
+    CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
+    return mSkeletonRenderStates.at(skeletonState).mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices);
 }

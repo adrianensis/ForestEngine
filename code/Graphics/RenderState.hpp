@@ -16,21 +16,8 @@ public:
     void setInstanceMatrix(const Slot& slot, const Matrix4& matrix);
     Slot requestRenderInstanceSlot();
     void freeRenderInstanceSlot(Slot& slot);
-    
-
-    void initSkeletonRenderState(Ptr<const SkeletonState> skeletonState);
-    const GPUSharedBuffer& getSkeletonRenderStateGPUSharedBuffer(Ptr<const SkeletonState> skeletonState) const;
 
 private:
-
-    class SkeletonRenderState
-    {
-    public:
-        GPUSharedBuffersContainer mGPUSharedBuffersContainer;
-    };
-
-	std::unordered_map<Ptr<const SkeletonState>, SkeletonRenderState> mSkeletonRenderStates;
-
 	std::vector<Matrix4> mMatrices;
 
     SlotsManager mRenderInstancesSlotsManager;
