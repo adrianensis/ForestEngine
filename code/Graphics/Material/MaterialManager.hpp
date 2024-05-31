@@ -9,6 +9,7 @@ class MaterialManager: public System
 public:
     virtual void init() override;
     virtual void terminate() override;
+    virtual void update() override;
     PoolHandler<Texture> loadTexture(const TextureData& textureData);
     void unloadTexture(PoolHandler<Texture>& texture);
 
@@ -29,8 +30,26 @@ public:
     PoolHandler<Material> getMaterialHandler(u32 id) const;
     const Material& getMaterial(u32 id) const;
 
+    void setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance);
+    const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
+    Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
+    void freeMaterialInstanceSlot(const PoolHandler<Material>& material, Slot& slot);
+
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);
+
+    class MaterialRenderState
+    {
+    public:
+        ByteBuffer mMaterialPropertiesBlockArray;
+        GPUSharedBuffersContainer mGPUSharedBuffersContainer;
+        PoolHandler<Material> mMaterial;
+        SlotsManager mSlotsManager;
+    };
+
+	std::unordered_map<u32, MaterialRenderState> mMaterialRenderStates;
+
+    void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
 
 private:
     Pool<Texture> mTextures;

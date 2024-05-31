@@ -1,5 +1,6 @@
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
@@ -38,7 +39,7 @@ void BatchRenderer::terminate()
 
 void BatchRenderer::bindSharedBuffers()
 {
-    mGPUProgram->bindSharedBuffer(GET_SYSTEM(RenderState).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
+    mGPUProgram->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
     if(GET_SYSTEM(AnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
     {
         Ptr<const SkeletonState> skeletonState = GET_SYSTEM(AnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);

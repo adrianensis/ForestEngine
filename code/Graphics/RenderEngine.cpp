@@ -1,6 +1,7 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Light/Light.hpp"
@@ -57,10 +58,11 @@ void RenderEngine::update()
         renderer->update();
         const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
         GET_SYSTEM(RenderState).setInstanceMatrix(renderer->getRenderInstanceSlot(), rendererModelMatrix);
-        GET_SYSTEM(RenderState).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+        GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
     }
 
     GET_SYSTEM(RenderState).update();
+    GET_SYSTEM(MaterialManager).update();
     
 	GET_SYSTEM(AnimationManager).update();
 
