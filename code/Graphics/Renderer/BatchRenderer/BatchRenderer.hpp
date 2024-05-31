@@ -52,7 +52,5 @@ private:
 
 public:
     CRGET(BatchData)
-    CRGET(GPUVertexBuffersContainer)
-    CRGET(GPUSharedBuffersContainer)
 };
 REGISTER_CLASS(BatchRenderer);

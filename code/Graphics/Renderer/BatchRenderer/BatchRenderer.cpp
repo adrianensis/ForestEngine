@@ -25,7 +25,7 @@ void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<con
         setMeshBuffers(mBatchData.mMesh);
 	}
 
-    mGPUProgram = ShaderUtils::createShaderCustomFragment(label, getGPUVertexBuffersContainer(), getGPUSharedBuffersContainer(), getBatchData().mMaterial.get(), customShader);
+    mGPUProgram = ShaderUtils::createShaderCustomFragment(label, mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, getBatchData().mMaterial.get(), customShader);
     bindSharedBuffers();
     mBatchData.mMaterial->getShader()->bindTextures(mGPUProgram);
 }

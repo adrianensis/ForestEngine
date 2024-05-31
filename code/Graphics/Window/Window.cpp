@@ -25,9 +25,20 @@ void Window::init()
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     #endif
 
-	mWindowSize.set(1080, 720);
+    GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+ 
+    // glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    // glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    // glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    // glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+    
+	// mWindowSize.set(1080, 720);
+	mWindowSize.set(mode->width, mode->height);
 
-	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", NULL, NULL);
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
+	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", /*monitor*/NULL, NULL);
 
 	if (mGLTFWindow)
 	{
@@ -44,7 +55,7 @@ void Window::init()
         GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
         #endif
 
-		GET_SYSTEM(GPUInterface).setClearColor(Vector3(0,0.3,0.3));
+		GET_SYSTEM(GPUInterface).setClearColor(Vector3(1,1,1));
 		GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
 		GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
 
