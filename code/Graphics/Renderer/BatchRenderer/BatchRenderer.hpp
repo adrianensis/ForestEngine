@@ -46,7 +46,7 @@ private:
     GPUSharedBuffersContainer mGPUSharedBuffersContainer;
 
 	u32 mMaxMeshesThreshold = 0;
-	const u32 mMaxMeshesIncrement = 100;
+	static const u32 smMeshesIncrement = 100;
 	bool mRegenerateBuffersRequested = false;
 	bool mDataSubmittedToGPU = false;
 

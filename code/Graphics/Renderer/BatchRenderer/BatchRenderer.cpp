@@ -141,7 +141,7 @@ void BatchRenderer::updateBuffers()
 		}
 		else
 		{
-			mMaxMeshesThreshold += mMaxMeshesIncrement;
+			mMaxMeshesThreshold += smMeshesIncrement;
 		}
 
         mMeshBatcher.resize(mMaxMeshesThreshold);
