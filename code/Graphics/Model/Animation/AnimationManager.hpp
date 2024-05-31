@@ -11,7 +11,7 @@ class AnimationManager: public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    void update();
+    virtual void update() override;
     void createAnimationState(Ptr<const Animation> animation);
     const std::vector<Matrix4>& getBoneTransforms(Ptr<const Model> model) const;
 

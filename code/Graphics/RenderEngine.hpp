@@ -11,7 +11,7 @@ class RenderEngine : public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    void update();
+    virtual void update() override;
     void preSceneChanged();
     void postSceneChanged();
     void onResize(u32 width, u32 height);

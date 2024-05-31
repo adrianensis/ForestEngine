@@ -8,6 +8,7 @@ class System: public ObjectBase
 {
 public:
     virtual void init() { };
+    virtual void update() { };
     virtual void terminate() { };
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);

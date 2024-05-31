@@ -15,7 +15,7 @@ public:
 	
     virtual void init() override;
     virtual void terminate() override;
-    void update();
+    virtual void update() override;
     void loadCurrentScene();
     void setScene(u32 i);
 

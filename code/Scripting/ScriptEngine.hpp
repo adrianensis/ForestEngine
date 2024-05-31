@@ -10,7 +10,7 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     void addComponent(Ptr<SystemComponent> component) override;
-    void update();
+    virtual void update() override;
     void preSceneChanged();
     void postSceneChanged();
 
