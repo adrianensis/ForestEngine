@@ -60,11 +60,10 @@ public:
         return slot;
     }
 
-    void freeSlot(Slot& slot)
+    void freeSlot(const Slot& slot)
     {
         CHECK_MSG(checkSlot(slot), "Invalid slot!");
         mAvailableSlots[slot.getSlot()] = true;
-        slot.reset();
     }
 
     bool checkSlotBounds(const Slot& slot) const

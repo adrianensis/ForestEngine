@@ -1,7 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUState.hpp"
-#include "Graphics/RenderState.hpp"
 #include "Scene/Module.hpp"
 
 void RenderPipeline::init()

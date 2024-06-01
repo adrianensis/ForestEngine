@@ -3,7 +3,6 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUState.hpp"
-#include "Graphics/RenderState.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
@@ -36,7 +35,7 @@ void MeshRenderer::init(const RendererData& data)
         bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
     }
 
-    mRenderInstanceSlot = GET_SYSTEM(RenderState).requestRenderInstanceSlot();
+    
     mMaterialInstance = GET_SYSTEM(MaterialManager).createMaterialInstance(mRendererData.mMaterial);
     mMaterialInstanceSlot = GET_SYSTEM(MaterialManager).requestMaterialInstanceSlot(mRendererData.mMaterial);
 }
@@ -48,8 +47,9 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(RenderState).freeRenderInstanceSlot(mRenderInstanceSlot);
     GET_SYSTEM(MaterialManager).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
+    mMaterialInstanceSlot.reset();
+    mRenderInstanceSlot.reset();
 }
 
 void MeshRenderer::calculateRendererModelMatrix()

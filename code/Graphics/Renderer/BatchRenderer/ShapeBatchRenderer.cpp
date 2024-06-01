@@ -3,7 +3,6 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUState.hpp"
-#include "Graphics/RenderState.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"

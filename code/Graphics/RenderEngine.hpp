@@ -20,12 +20,17 @@ public:
     void removeComponent(Ptr<SystemComponent> component) override;
 
 private:
+    void initBuffers();
     void swap();
     void render();
 private:
 	std::vector<Ptr<MeshRenderer>> mRenderers;
     RenderPipelineData mRenderPipelineData;
     RenderPipelinePBR mRenderPipeline;
+
+    std::vector<Matrix4> mMatrices;
+    SlotsManager mRenderInstancesSlotsManager;
+    u32 mMaxInstances = 5000;
 
 public:
 	OcTree octree;

@@ -1,7 +1,6 @@
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/RenderState.hpp"
 
 void SkeletalAnimationManager::init()
 {

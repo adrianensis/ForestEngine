@@ -33,7 +33,7 @@ public:
     void setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance);
     const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
-    void freeMaterialInstanceSlot(const PoolHandler<Material>& material, Slot& slot);
+    void freeMaterialInstanceSlot(const PoolHandler<Material>& material, const Slot& slot);
 
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);

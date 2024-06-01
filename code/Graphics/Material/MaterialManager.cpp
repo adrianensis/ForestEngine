@@ -2,7 +2,6 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/RenderState.hpp"
 
 void MaterialManager::init()
 {
@@ -151,7 +150,7 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
     return slot;
 }
 
-void MaterialManager::freeMaterialInstanceSlot(const PoolHandler<Material>& material, Slot& slot)
+void MaterialManager::freeMaterialInstanceSlot(const PoolHandler<Material>& material, const Slot& slot)
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     if(material->getMaterialData().mAllowInstances)

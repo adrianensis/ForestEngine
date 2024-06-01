@@ -3,7 +3,6 @@
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUState.hpp"
-#include "Graphics/RenderState.hpp"
 #include "Graphics/RenderEngine.hpp"
 
 #include "Graphics/Mesh/Mesh.hpp"

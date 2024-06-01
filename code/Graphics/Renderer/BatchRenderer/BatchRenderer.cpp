@@ -6,7 +6,6 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUState.hpp"
-#include "Graphics/RenderState.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
