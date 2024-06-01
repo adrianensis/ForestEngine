@@ -268,14 +268,7 @@ public:
         }
         else if constexpr (std::is_integral_v<T>)
         {
-            if constexpr (std::is_unsigned_v<T>)
-            {
-                glTexParameteri(GL_TEXTURE_2D, param, value);
-            }
-            else
-            {
-                glTexParameteri(GL_TEXTURE_2D, param, value);
-            }
+            glTexParameteri(GL_TEXTURE_2D, param, value);
         }
         else if constexpr (std::is_same_v<T, Vector2>)
         {

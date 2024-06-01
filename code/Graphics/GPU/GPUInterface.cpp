@@ -172,14 +172,20 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
     if(createMipMap)
     {
         setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        // setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
     else
     {
         setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
+
+    setTextureParameter<u32>(GL_TEXTURE_LOD_BIAS, 0);
     
+    f32 maxAnisotropy = 0;
+    getValue<f32>(GL_MAX_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
+    setTextureParameter<f32>(GL_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
+
     setTextureFormatWithData(internalformat, width, height, format, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
     
     if(createMipMap)
