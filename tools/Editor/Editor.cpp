@@ -44,11 +44,12 @@ void Editor::firstUpdate()
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0);
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0);
+	importModel("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0, true);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0, true);
+	importModel("Vanguard-gltf/vanguard.gltf", Vector3(0,0,0), 20.0f, 0, true);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0, true);
 
-	auto obj = importModel2("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,70), 20.0f, 0);
+	auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,70), 20.0f, 0, true);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -256,12 +257,12 @@ Ptr<GameObject> Editor::mousePick()
     return obj;
 }
 
-Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
+Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, f32 rot, bool isStatic)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
     Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
-	gameObject->mIsStatic = true;
+	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
 	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
@@ -275,29 +276,6 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
     };
 
 	gameObject->createComponent<ModelRenderer>(modelRendererData);
-    return gameObject;
-}
-
-Ptr<GameObject> Editor::importModel2( const std::string& pFile, const Vector3& v, f32 size, f32 rot)
-{
-	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
-
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
-	gameObject->mIsStatic = false;
-	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
-	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
-
-    ModelRendererData modelRendererData;
-    modelRendererData.mModel = model;
-    modelRendererData.mRenderPassIDs =
-    {
-        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
-        ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
-    };
-
-	gameObject->createComponent<ModelRenderer>(modelRendererData);
-
     return gameObject;
 }
 
