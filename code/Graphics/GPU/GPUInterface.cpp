@@ -166,18 +166,18 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
 
     bindTexture(textureId);
 
-    setTextureParam(GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    setTextureParam(GL_TEXTURE_WRAP_T, GL_REPEAT);
+    setTextureParameter<u32>(GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    setTextureParameter<u32>(GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     if(createMipMap)
     {
-        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        // setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
     else
     {
-        setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
     
     setTextureFormatWithData(internalformat, width, height, format, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
@@ -203,10 +203,10 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
     setTextureFormatWithData(GPUTextureFormat::RED, width, height, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, data);
 
-    setTextureParam(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    setTextureParam(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    setTextureParam(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    setTextureParam(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    setTextureParameter<u32>(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    setTextureParameter<u32>(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     disableTexture();
 
@@ -216,11 +216,6 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
 void GPUInterface::subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format, const byte* data)
 {
     glTexSubImage2D(GL_TEXTURE_2D, 0, x, y , width, height, TO_U32(format), TO_U32(GPUPrimitiveDataType::UNSIGNED_BYTE), data);
-}
-
-void GPUInterface::setTextureParam(u32 param, u32 value)
-{
-    glTexParameteri(GL_TEXTURE_2D, param, value);
 }
 
 void GPUInterface::setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data)
@@ -269,12 +264,12 @@ u32 GPUInterface::getMaxTextureUnits(GPUPipelineStage stage)
     switch (stage)
     {
         case GPUPipelineStage::NONE: CHECK_MSG(false, "Invalid GPUPipelineStages!"); break;
-        case GPUPipelineStage::VERTEX: glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
-        case GPUPipelineStage::FRAGMENT: glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
-        case GPUPipelineStage::GEOMETRY: glGetIntegerv(GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
-        case GPUPipelineStage::TESS_CONTROL: glGetIntegerv(GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
-        case GPUPipelineStage::TESS_EVALUATION: glGetIntegerv(GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
-        case GPUPipelineStage::COMPUTE: glGetIntegerv(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits); break;
+        case GPUPipelineStage::VERTEX: getValue<i32>(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, maxTextureImageUnits); break;
+        case GPUPipelineStage::FRAGMENT: getValue<i32>(GL_MAX_TEXTURE_IMAGE_UNITS, maxTextureImageUnits); break;
+        case GPUPipelineStage::GEOMETRY: getValue<i32>(GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS, maxTextureImageUnits); break;
+        case GPUPipelineStage::TESS_CONTROL: getValue<i32>(GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS, maxTextureImageUnits); break;
+        case GPUPipelineStage::TESS_EVALUATION: getValue<i32>(GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS, maxTextureImageUnits); break;
+        case GPUPipelineStage::COMPUTE: getValue<i32>(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, maxTextureImageUnits); break;
     }
 
     return maxTextureImageUnits;
@@ -319,13 +314,12 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
         setTextureFormat(GPUTextureFormat::DEPTH_STENCIL, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GPUPrimitiveDataType::UNSIGNED_INT_24_8);
     }
 
-    setTextureParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    setTextureParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor); 
+    setTextureParameter<u32>(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    setTextureParameter<u32>(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    setTextureParameter<Vector4>(GL_TEXTURE_BORDER_COLOR, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
     setFramebufferAttachment(mTextureId, attachmentType);
 
@@ -510,7 +504,7 @@ void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferT
 void GPUInterface::setupGPUErrorHandling()
 {
     int flags;
-    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    getValue<i32>(GL_CONTEXT_FLAGS, flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
         // initialize debug output 

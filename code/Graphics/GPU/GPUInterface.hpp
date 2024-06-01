@@ -177,6 +177,32 @@ DECLARE_ENUM(GPUCullFaceType,
 class GPUInterface : public System
 {
 public:
+
+    template<class T>
+    void getValue(u32 param, T& value)
+    {
+        if constexpr (std::is_same_v<f32, T>)
+        {
+            glGetFloatv(param, &value);
+        }
+        else if constexpr (std::is_floating_point_v<T>)
+        {
+            glGetDoublev(param, &value);
+        }
+        else if constexpr (std::is_same_v<bool, T>)
+        {
+            glGetBooleanv(param, &value);
+        }
+        else if constexpr (std::is_integral_v<T>)
+        {
+            glGetIntegerv(param, &value);
+        }
+        else
+        {
+            LOG_ERROR("Uniform type not supported!");
+        }
+    }
+
     // Vertex buffers layout
     u32 createVertexBufferLayout();
     void enableVertexBufferLayout(u32 vertexBufferLayout);
@@ -226,13 +252,48 @@ public:
     void setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
     void setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type);
     void subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format,  const byte* data);
-    void setTextureParam(u32 param, u32 value);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage);
     void bindTexture(u32 textureId);
     void disableTexture();
     void setPixelStoreMode(u32 param, u32 value);
     u32 getMaxTextureUnits(GPUPipelineStage stage);
+
+    template<class T>
+    void setTextureParameter(u32 param, const T& value)
+    {
+        if constexpr (std::is_same_v<f32, T>)
+        {
+            glTexParameterf(GL_TEXTURE_2D, param, value);
+        }
+        else if constexpr (std::is_integral_v<T>)
+        {
+            if constexpr (std::is_unsigned_v<T>)
+            {
+                glTexParameteri(GL_TEXTURE_2D, param, value);
+            }
+            else
+            {
+                glTexParameteri(GL_TEXTURE_2D, param, value);
+            }
+        }
+        else if constexpr (std::is_same_v<T, Vector2>)
+        {
+            glTexParameterfv(GL_TEXTURE_2D, param, &value.x);
+        }
+        else if constexpr (std::is_same_v<T, Vector3>)
+        {
+            glTexParameterfv(GL_TEXTURE_2D, param, &value.x);
+        }
+        else if constexpr (std::is_same_v<T, Vector4>)
+        {
+            glTexParameterfv(GL_TEXTURE_2D, param, &value.x);
+        }
+        else
+        {
+            LOG_ERROR("Uniform type not supported!");
+        }
+    }
 
     // Framebuffer
     u32 createFramebuffer(u32 width, u32 height);
@@ -279,9 +340,13 @@ public:
     void bindUniformValue(u32 programId, const HashedString& name, const T& value)
     {
         u32 location = glGetUniformLocation(programId, name.get().c_str());
-        if constexpr (std::is_floating_point_v<T>)
+        if constexpr (std::is_same_v<f32, T>)
         {
             glUniform1f(location, value);
+        }
+        else if constexpr (std::is_floating_point_v<T>)
+        {
+            glUniform1d(location, value);
         }
         else if constexpr (std::is_integral_v<T>)
         {
