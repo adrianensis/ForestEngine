@@ -5,7 +5,6 @@ u32 GPUInterface::createBuffer()
 {
 	u32 bufferId = 0;
 	glGenBuffers(1, &bufferId);
-    bindBuffer(GPUBufferType::VERTEX, bufferId);
 	return bufferId;
 }
 

@@ -19,6 +19,7 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
 void GPUVertexBuffer::createBuffer()
 {
     mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
+    GET_SYSTEM(GPUInterface).bindBuffer(GPUBufferType::VERTEX, mBufferId);
     
     u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
     GET_SYSTEM(GPUInterface).attribute(
@@ -29,6 +30,8 @@ void GPUVertexBuffer::createBuffer()
         0/*mPreviousOffsetInBytes*/,
         mData.mInstanceDivisor
     );
+    
+    GET_SYSTEM(GPUInterface).bindBuffer(GPUBufferType::VERTEX, 0);
 }
 
 void GPUVertexBuffer::terminate()
