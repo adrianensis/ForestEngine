@@ -1,13 +1,13 @@
-#include "Graphics/GPU/GPUState.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 
-void GPUState::init()
+void GPUGlobalState::init()
 {
     mMaxSharedBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::UNIFORM);
     mMaxSharedBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::STORAGE);
 
 }
 
-u32 GPUState::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
+u32 GPUGlobalState::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
 {
     u32 bindingPoint = 0;
     switch (gpuSharedBufferType)
@@ -34,7 +34,7 @@ u32 GPUState::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
     return bindingPoint;
 }
 
-void GPUState::terminate()
+void GPUGlobalState::terminate()
 {
     mGPUSharedBuffersContainer.terminate();
 }

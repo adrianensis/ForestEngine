@@ -5,7 +5,7 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
-class GPUState: public System
+class GPUGlobalState: public System
 {
 public:
     virtual void init() override;
@@ -22,4 +22,4 @@ public:
     RGET(GPUSharedBuffersContainer)
     CRGET(GPUSharedBuffersContainer)
 };
-REGISTER_CLASS(GPUState)
+REGISTER_CLASS(GPUGlobalState)

@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUState.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 
 void GPUVertexBuffersContainer::create()
 {
@@ -89,7 +89,7 @@ void GPUSharedBuffersContainer::create()
 
 void GPUSharedBuffersContainer::addSharedBuffer(const GPUSharedBufferData& data, bool isStatic)
 {
-    u32 bindingPoint = GET_SYSTEM(GPUState).requestSharedBufferBindingPoint(data.mType);
+    u32 bindingPoint = GET_SYSTEM(GPUGlobalState).requestSharedBufferBindingPoint(data.mType);
     GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
     gpuInstanceBuffer.init(bindingPoint, data, isStatic);
 

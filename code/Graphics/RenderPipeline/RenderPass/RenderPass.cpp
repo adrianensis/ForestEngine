@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUState.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
@@ -116,7 +116,7 @@ void RenderPass::updateGlobalData()
         projectionViewMatrix,
         camera->mGameObject->mTransform->getWorldPosition()
     };
-	GET_SYSTEM(GPUState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+	GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 Ptr<Shader> RenderPass::getShader(const BatchData& batchData) const
