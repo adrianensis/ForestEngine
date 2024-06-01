@@ -22,18 +22,18 @@ public:
     virtual Vector2 getMousePosition() const override;
 
 private:
-    void onResize(GLFWwindow *window, int width, int height);
+    void onResize(GLFWwindow *window, i32 width, i32 height);
 
-    static void onResizeGLFW(GLFWwindow *window, int width, int height);
-    static void keyCallbackGLFW(GLFWwindow *window, int key, int scancode, int action, int mods);
-    static void mouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods);
-    static void scrollCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset);
-    static void charCallbackGLFW(GLFWwindow *window, unsigned int codepoint);
+    static void onResizeGLFW(GLFWwindow *window, i32 width, i32 height);
+    static void keyCallbackGLFW(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods);
+    static void mouseButtonCallbackGLFW(GLFWwindow *window, i32 button, i32 action, i32 mods);
+    static void scrollCallbackGLFW(GLFWwindow *window, f64 xoffset, f64 yoffset);
+    static void charCallbackGLFW(GLFWwindow *window, u32 codepoint);
 
-    virtual void keyCallback(int key, int scancode, int action, int mods) override;
-    virtual void mouseButtonCallback(int button, int action, int mods) override;
-    virtual void scrollCallback(double xoffset, double yoffset) override;
-    virtual void charCallback(unsigned int codepoint) override;
+    virtual void keyCallback(i32 key, i32 scancode, i32 action, i32 mods) override;
+    virtual void mouseButtonCallback(i32 button, i32 action, i32 mods) override;
+    virtual void scrollCallback(f64 xoffset, f64 yoffset) override;
+    virtual void charCallback(u32 codepoint) override;
 
 private:
 	GLFWwindow *mGLTFWindow = nullptr;

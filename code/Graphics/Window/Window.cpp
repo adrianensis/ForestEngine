@@ -98,38 +98,38 @@ void Window::setCursorVisibility(bool visible)
     glfwSetInputMode(mGLTFWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
-void Window::onResize(GLFWwindow *window, int width, int height)
+void Window::onResize(GLFWwindow *window, i32 width, i32 height)
 {
 	mWindowSize.set(width, height);
 	GET_SYSTEM(RenderEngine).onResize(width, height);
 }
 
-void Window::onResizeGLFW(GLFWwindow *window, int width, int height)
+void Window::onResizeGLFW(GLFWwindow *window, i32 width, i32 height)
 {
 	GET_SYSTEM(Window).onResize(window, width, height);
 }
 
-void Window::keyCallbackGLFW(GLFWwindow *window, int key, int scancode, int action, int mods)
+void Window::keyCallbackGLFW(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods)
 {
     GET_SYSTEM(Window).keyCallback(key, scancode, action, mods);
 }
 
-void Window::mouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods)
+void Window::mouseButtonCallbackGLFW(GLFWwindow *window, i32 button, i32 action, i32 mods)
 {
     GET_SYSTEM(Window).mouseButtonCallback(button, action, mods);
 }
 
-void Window::scrollCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset)
+void Window::scrollCallbackGLFW(GLFWwindow *window, f64 xoffset, f64 yoffset)
 {
     GET_SYSTEM(Window).scrollCallback(xoffset, yoffset);
 }
 
-void Window::charCallbackGLFW(GLFWwindow *window, unsigned int codepoint)
+void Window::charCallbackGLFW(GLFWwindow *window, u32 codepoint)
 {
     GET_SYSTEM(Window).charCallback(codepoint);
 }
 
-void Window::keyCallback(int key, int scancode, int action, int mods)
+void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 {
 	GET_SYSTEM(Input).smModifier = mods;
 
@@ -215,7 +215,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 	}
 }
 
-void Window::mouseButtonCallback(int button, int action, int mods)
+void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
 {
 	GET_SYSTEM(Input).smModifier = mods;
 
@@ -247,7 +247,7 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 	}
 }
 
-void Window::scrollCallback(double xoffset, double yoffset)
+void Window::scrollCallback(f64 xoffset, f64 yoffset)
 {
 	GET_SYSTEM(Input).smScroll = yoffset;
 
@@ -256,7 +256,7 @@ void Window::scrollCallback(double xoffset, double yoffset)
 	SEND_INPUT_EVENT(event);
 }
 
-void Window::charCallback(unsigned int codepoint)
+void Window::charCallback(u32 codepoint)
 {
 	InputEventChar event;
 	event.mChar = (char)codepoint;
