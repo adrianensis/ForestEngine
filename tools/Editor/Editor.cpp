@@ -37,7 +37,7 @@ void Editor::firstUpdate()
 
     createPointLight(Vector3(0,0,100), 20);
 
-    createDirectionalLight(Vector3(0,100,400), Vector3(0,0,1));
+    createDirectionalLight(Vector3(0,100,150), Vector3(0,0,1));
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
@@ -46,8 +46,7 @@ void Editor::firstUpdate()
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0, true);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	importModel("Vanguard-gltf/vanguard.gltf", Vector3(0,0,0), 20.0f, 0, true);
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,60,0), 20.0f, 0, true);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,150,-150), 100.0f, 0, true);
 
 	auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,70), 20.0f, 0, true);
     // mGameObjectsArray.push_back(obj);
@@ -156,7 +155,7 @@ void Editor::update()
 
 	for(i32 x = -1000; x < 1000; x+=50)
 	{
-		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, GeometricSpace::WORLD, Vector4(0,0,1,0.3f));
+		// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, GeometricSpace::WORLD, Vector4(0,0,1,0.3f));
 	}
     // PROFILER_END_BLOCK();
 

@@ -165,8 +165,8 @@ void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder)
         variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lightDirection})).
         // variable(lightPos, GPUBuiltIn::PrimitiveTypes::mVector3, "lightPos", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0"s,"0"s,"-100"s})).
         // variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lightPos.sub(fragPosition)})).
-        variable(bias, GPUBuiltIn::PrimitiveTypes::mFloat, "bias", Variable("0.01").mul(call("tan", {call("acos", {call("dot", {normal, lightDir})})}))).
-        set(bias, call("clamp", {bias, "0.005"s, "0.01"s})).
+        variable(bias, GPUBuiltIn::PrimitiveTypes::mFloat, "bias", call("max", {Variable("0.05").mul(Variable("1.0").sub(call("dot", {lightDir, normal}))), {"0.005"}})).
+        // set(bias, call("clamp", {bias, "0.005"s, "0.01"s})).
         // set(bias, "0.0005"s).
         variable(currentDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "currentDepth", projCoords.dot("z").sub(bias)).
         variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", currentDepth.great(closestDepth).ternary("0.5"s, "0.0"s)).
