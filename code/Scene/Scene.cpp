@@ -34,7 +34,7 @@ void Scene::init()
 	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));
 
     Ptr<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
-	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(Window).getAspectRatio(), 90);
+	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
 	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
 

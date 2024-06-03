@@ -187,6 +187,8 @@ private:
     mutable std::vector<std::unordered_set<PoolHandler<T>*>> mHandlers;
     std::unordered_set<u32> mFreeObjects;
     std::unordered_set<u32> mAllocatedObjects;
+public:
+    RGET(Objects)
 };
 
 template<class T>

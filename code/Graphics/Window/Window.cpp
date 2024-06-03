@@ -3,19 +3,21 @@
 
 Vector2 Window::getWindowSize()
 {
-	return mWindowSize;
+	return mWindowData.mWindowSize;
 }
 
 f32 Window::getAspectRatio()
 {
-	return mWindowSize.x / mWindowSize.y;
+	return mWindowData.mWindowSize.x / mWindowData.mWindowSize.y;
 }
 
-void Window::init()
+void Window::init(i32 id, const WindowData& windowData)
 {
 	LOG_TRACE()
 
-	glfwInit();
+    mID = id;
+    mWindowData = windowData;
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
@@ -34,13 +36,17 @@ void Window::init()
     // glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
     // glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     // glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-    
-	// mWindowSize.set(1080, 720);
-	mWindowSize.set(mode->width, mode->height);
 
+    if(mWindowData.mFullScreen)
+    {
+	    mWindowData.mWindowSize.set(mode->width, mode->height);
+    }
+    
     glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	mGLTFWindow = glfwCreateWindow(mWindowSize.x, mWindowSize.y, "Engine", /*monitor*/NULL, NULL);
+	mGLTFWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.get().c_str(), /*monitor*/NULL, NULL);
+
+    glfwSetWindowUserPointer(mGLTFWindow, reinterpret_cast<void *>(this));
 
 	if (mGLTFWindow)
 	{
@@ -74,7 +80,7 @@ void Window::init()
 	glfwSetMouseButtonCallback(mGLTFWindow, mouseButtonCallbackGLFW);
 	glfwSetScrollCallback(mGLTFWindow, scrollCallbackGLFW);
 	glfwSetCharCallback(mGLTFWindow, charCallbackGLFW);
-    glfwSetFramebufferSizeCallback(mGLTFWindow, onResizeGLFW);
+    glfwSetFramebufferSizeCallback(mGLTFWindow, &this->onResizeGLFW);
 }
 
 bool Window::isClosed()
@@ -103,33 +109,38 @@ void Window::setCursorVisibility(bool visible)
 
 void Window::onResize(GLFWwindow *window, i32 width, i32 height)
 {
-	mWindowSize.set(width, height);
+	mWindowData.mWindowSize.set(width, height);
 	GET_SYSTEM(RenderEngine).onResize(width, height);
 }
 
-void Window::onResizeGLFW(GLFWwindow *window, i32 width, i32 height)
+void Window::onResizeGLFW(GLFWwindow *windowGLFW, i32 width, i32 height)
 {
-	GET_SYSTEM(Window).onResize(window, width, height);
+	Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onResize(windowGLFW, width, height);
 }
 
-void Window::keyCallbackGLFW(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods)
+void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, i32 key, i32 scancode, i32 action, i32 mods)
 {
-    GET_SYSTEM(Window).keyCallback(key, scancode, action, mods);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->keyCallback(key, scancode, action, mods);
 }
 
-void Window::mouseButtonCallbackGLFW(GLFWwindow *window, i32 button, i32 action, i32 mods)
+void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, i32 button, i32 action, i32 mods)
 {
-    GET_SYSTEM(Window).mouseButtonCallback(button, action, mods);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->mouseButtonCallback(button, action, mods);
 }
 
-void Window::scrollCallbackGLFW(GLFWwindow *window, f64 xoffset, f64 yoffset)
+void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, f64 xoffset, f64 yoffset)
 {
-    GET_SYSTEM(Window).scrollCallback(xoffset, yoffset);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->scrollCallback(xoffset, yoffset);
 }
 
-void Window::charCallbackGLFW(GLFWwindow *window, u32 codepoint)
+void Window::charCallbackGLFW(GLFWwindow *windowGLFW, u32 codepoint)
 {
-    GET_SYSTEM(Window).charCallback(codepoint);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->charCallback(codepoint);
 }
 
 void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
@@ -272,8 +283,8 @@ Vector2 Window::getMousePosition() const
 
 	glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
 
-	f64 halfWindowSizeX = mWindowSize.x / 2.0;
-	f64 halfWindowSizeY = mWindowSize.y / 2.0;
+	f64 halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
+	f64 halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
 
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;

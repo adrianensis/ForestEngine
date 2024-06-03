@@ -3,7 +3,7 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
@@ -16,7 +16,7 @@ void RenderPipelinePBR::init()
         {
             GPUFramebufferAttachmentType::DEPTH
         },
-        GET_SYSTEM(Window).getWindowSize().x, GET_SYSTEM(Window).getWindowSize().y
+        GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize().x, GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize().y
     );
     initRenderPass<RenderPassShadowMap>(renderPassShadowMapData);
 

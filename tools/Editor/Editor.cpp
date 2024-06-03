@@ -32,7 +32,7 @@ void Editor::firstUpdate()
 	mCameraGameObject = mGameObject->mScene->getCameraGameObject();
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
     Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-    Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
+    Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
     createPointLight(Vector3(0,0,100), 20);

@@ -1,5 +1,5 @@
 #include "Engine/Input/Input.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Graphics/Window/WindowManager.hpp"
 #include "Core/Log/Log.hpp"
 #include "Engine/Profiler/Profiler.hpp"
 
@@ -7,8 +7,8 @@ void Input::init()
 {
 	LOG_TRACE()
 
-    CHECK_MSG(GET_SYSTEM_PTR(Window).isValid(), "Window system not found!");
-    mWindowInputAdapter = GET_SYSTEM_PTR(Window);
+    CHECK_MSG(GET_SYSTEM_PTR(WindowManager).isValid(), "Window system not found!");
+    mWindowInputAdapter = GET_SYSTEM_PTR(WindowManager)->getMainWindow();
 
 	smMouseCoordinates = Vector2();
 	smLastMouseButtonPressed = INVALID_INDEX;

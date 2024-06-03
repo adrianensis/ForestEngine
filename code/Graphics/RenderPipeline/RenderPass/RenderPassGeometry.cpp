@@ -2,7 +2,6 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/GameObject.hpp"
-#include "Graphics/Window/Window.hpp"
 
 void RenderPassGeometry::preRender()
 {

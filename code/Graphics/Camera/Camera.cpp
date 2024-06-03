@@ -1,7 +1,7 @@
 
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Graphics/Window/WindowManager.hpp"
 
 void Camera::init()
 {
@@ -77,12 +77,12 @@ void Camera::onResize()
 {
     if (mIsOrtho)
 	{
-        Vector2 windowSize = GET_SYSTEM(Window).getWindowSize();
+        Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
         setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, mNear, mFar);
 	}
 	else
 	{
-		setPerspective(mNear, mFar, GET_SYSTEM(Window).getAspectRatio(), mFov);
+		setPerspective(mNear, mFar, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), mFov);
 	}
 
 	recalculateProjectionMatrix();

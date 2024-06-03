@@ -1,5 +1,4 @@
 #include "Engine/Time/TimeUtils.hpp"
-#include "Graphics/Window/Window.hpp"
 
 void TimeMark::init()
 {
@@ -58,8 +57,8 @@ void TimeMarkGPU::init()
 	mStartTime = 0;
 	
 	// generate two queries
-	glGenQueries(1, &mQueryIDStart);
-	glGenQueries(1, &mQueryIDEnd);
+	// glGenQueries(1, &mQueryIDStart);
+	// glGenQueries(1, &mQueryIDEnd);
 
 }
 
@@ -67,25 +66,25 @@ void TimeMarkGPU::start()
 {
 	mIsStarted = true;
 
-	glQueryCounter(mQueryIDStart, GL_TIMESTAMP);
+	// glQueryCounter(mQueryIDStart, GL_TIMESTAMP);
 }
 
 void TimeMarkGPU::end()
 {
 	if (mIsStarted)
 	{
-		glQueryCounter(mQueryIDEnd, GL_TIMESTAMP);
+		// glQueryCounter(mQueryIDEnd, GL_TIMESTAMP);
 
 		i32 stopTimerAvailable = 0;
-		while (!stopTimerAvailable) {
-			glGetQueryObjectiv(mQueryIDEnd, 
-									GL_QUERY_RESULT_AVAILABLE, 
-									&stopTimerAvailable);
-		}
+		// while (!stopTimerAvailable) {
+			// glGetQueryObjectiv(mQueryIDEnd, 
+			// 						GL_QUERY_RESULT_AVAILABLE, 
+			// 						&stopTimerAvailable);
+		// }
 
 		// get query results
-		glGetQueryObjectui64v(mQueryIDStart, GL_QUERY_RESULT, &mStartTime);
-		glGetQueryObjectui64v(mQueryIDEnd, GL_QUERY_RESULT, &mLastTime);
+		// glGetQueryObjectui64v(mQueryIDStart, GL_QUERY_RESULT, &mStartTime);
+		// glGetQueryObjectui64v(mQueryIDEnd, GL_QUERY_RESULT, &mLastTime);
 
 		mIsStarted = false;
 		mDeltaTimeMillis = (mLastTime - mStartTime) / 1000000.0f;

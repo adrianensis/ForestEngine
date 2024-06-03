@@ -3,7 +3,6 @@
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
-#include "Graphics/Window/Window.hpp"
 
 void RenderPassShadowMap::init(const RenderPassData& renderPassData)
 {

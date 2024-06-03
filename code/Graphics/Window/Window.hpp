@@ -1,18 +1,25 @@
 #pragma once
 
-#include "Engine/System/System.hpp"
 #include "Engine/Input/Input.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-class Window : public System, public IWindowInputAdapter
+class WindowData
 {
 public:
+    Vector2 mWindowSize;
+    bool mFullScreen = false;
+    HashedString mTitle;
+};
+
+class Window: public IWindowInputAdapter
+{
+public:
+    void init(i32 id, const WindowData& windowData);
+    void terminate();
+
     Vector2 getWindowSize();
     f32 getAspectRatio();
-    virtual void init() override;
-    virtual void terminate() override;
     bool isClosed();
     void swap();
 
@@ -37,10 +44,11 @@ private:
 
 private:
 	GLFWwindow *mGLTFWindow = nullptr;
-	Vector2 mWindowSize;
+	WindowData mWindowData;
+    i32 mID = -1;
 
 public:
     CGET(GLTFWindow);
-    CRGET(WindowSize);
+    CRGET(WindowData);
 };
 REGISTER_CLASS(Window);

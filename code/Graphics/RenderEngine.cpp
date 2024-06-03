@@ -5,7 +5,7 @@
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/Window/Window.hpp"
+#include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
@@ -152,7 +152,7 @@ void RenderEngine::swap()
 {
 	PROFILER_CPU()
 
-	GET_SYSTEM(Window).swap();
+	GET_SYSTEM(WindowManager).getMainWindow()->swap();
 }
 
 void RenderEngine::render()

@@ -23,7 +23,11 @@ void Engine::init()
 
     CREATE_SYSTEM(EngineConfig);
     CREATE_SYSTEM(GPUInterface);
-    CREATE_SYSTEM(Window);
+    CREATE_SYSTEM(WindowManager);
+    WindowData windowData;
+    windowData.mTitle = "Engine";
+    windowData.mFullScreen = true;
+    GET_SYSTEM(WindowManager).createWindow(windowData, true);
     CREATE_SYSTEM(GPUGlobalState);
     CREATE_SYSTEM(Input);
     CREATE_SYSTEM(TimerManager);
@@ -63,7 +67,7 @@ void Engine::run()
 
 	f32 diff = 0;
 
-	while (!GET_SYSTEM(Window).isClosed())
+	while (!GET_SYSTEM(WindowManager).getMainWindow()->isClosed())
 	{
 		GET_SYSTEM(Time).startFrame();
 
@@ -75,7 +79,7 @@ void Engine::run()
 		}
 
 		GET_SYSTEM(Input).update();
-		GET_SYSTEM(Window).pollEvents();
+		GET_SYSTEM(WindowManager).getMainWindow()->pollEvents();
 
 		GET_SYSTEM(CommandLine).update();
 

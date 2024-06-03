@@ -44,7 +44,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(Window).getAspectRatio(), mConfig.mSize.y)));
+	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
     Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
@@ -77,14 +77,14 @@ void UIList::toggle()
 	if (mButtons.empty())
 	{
 		Vector3 scale = mTransform->getLocalScale();
-		scale.x = scale.x * GET_SYSTEM(Window).getAspectRatio();
+		scale.x = scale.x * GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio();
 
 		UIBuilder uiBuilder;
 
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
-			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(Window).getAspectRatio(), scale.y/2.0f)).
+			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), scale.y/2.0f)).
 			// setTextSize(mConfig.mTextSize).
 			setAdjustSizeToText(true).
 			setIsStatic(false).
@@ -128,7 +128,7 @@ void UIList::setEntriesVisibility(bool visible)
 			UIElementCallback onPressedCallback = it->mCallback;
 
 			Vector3 scale = mTransform->getLocalScale();
-			scale.x = scale.x * GET_SYSTEM(Window).getAspectRatio();
+			scale.x = scale.x * GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio();
 
 			GET_SYSTEM(UIManager).getBuilder()->saveData()->
 				setLocalPosition(Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
