@@ -9,6 +9,7 @@ class WindowData
 public:
     Vector2 mWindowSize;
     bool mFullScreen = false;
+    bool mMainWindow = false;
     HashedString mTitle;
 };
 

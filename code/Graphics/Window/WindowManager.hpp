@@ -10,7 +10,7 @@ public:
     virtual void terminate() override;
     virtual void update() override;
 
-    Ptr<Window> createWindow(const WindowData& windowData, bool setMain);
+    Ptr<Window> createWindow(const WindowData& windowData);
     Ptr<Window> getWindow(u32 index) const;
 private:
 	std::vector<OwnerPtr<Window>> mWindows;

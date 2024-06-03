@@ -23,12 +23,12 @@ void WindowManager::update()
     }
 }
 
-Ptr<Window> WindowManager::createWindow(const WindowData& windowData, bool setMain)
+Ptr<Window> WindowManager::createWindow(const WindowData& windowData)
 {
     Ptr<Window> window = mWindows.emplace_back(OwnerPtr<Window>::newObject());
     window->init(mWindows.size() - 1, windowData);
 
-    if(setMain)
+    if(windowData.mMainWindow)
     {
         mMainWindow = window;
     }

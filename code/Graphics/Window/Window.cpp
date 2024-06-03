@@ -48,33 +48,33 @@ void Window::init(i32 id, const WindowData& windowData)
 
     glfwSetWindowUserPointer(mGLTFWindow, reinterpret_cast<void *>(this));
 
-	if (mGLTFWindow)
-	{
-		glfwMakeContextCurrent(mGLTFWindow);
+    if (mGLTFWindow)
+    {
+        glfwMakeContextCurrent(mGLTFWindow);
 
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		{
-			LOG("Failed to initialize GLAD");
-		}
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            LOG("Failed to initialize GLAD");
+        }
         
-		glfwSwapInterval(0);
+        glfwSwapInterval(0);
 
         #ifdef ENGINE_ENABLE_GPU_DEBUG
         GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
         #endif
 
-		GET_SYSTEM(GPUInterface).enableFlag(GL_MULTISAMPLE);
-		GET_SYSTEM(GPUInterface).setClearColor(Vector3(1,1,1));
-		GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
-		GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
+        GET_SYSTEM(GPUInterface).enableFlag(GL_MULTISAMPLE);
+        GET_SYSTEM(GPUInterface).setClearColor(Vector3(1,1,1));
+        GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
+        GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
 
-		GET_SYSTEM(GPUInterface).clear();
-	}
-	else
-	{
-		LOG("Failed to create GLFW window");
-		glfwTerminate();
-	}
+        GET_SYSTEM(GPUInterface).clear();
+    }
+    else
+    {
+        LOG("Failed to create GLFW window");
+        glfwTerminate();
+    }
 
     glfwSetKeyCallback(mGLTFWindow, keyCallbackGLFW);
 	glfwSetMouseButtonCallback(mGLTFWindow, mouseButtonCallbackGLFW);
