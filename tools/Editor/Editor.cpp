@@ -35,6 +35,9 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
+    mAxisViewer = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<AxisViewer>();
+    mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
+
     createPointLight(Vector3(0,0,100), 20);
 
     createDirectionalLight(Vector3(0,100,150), Vector3(0,0,1));
@@ -69,24 +72,29 @@ void Editor::update()
 	Transform* cameraTransform = &mCameraGameObject->mTransform.get();
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
-    //gameObject->mTransform->addTranslation(Vector3(0,0,-0.5));
+	Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
+	cameraRotationMatrix.invert();
 
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
-        cameraTransform->addLocalTranslation(Vector3(-speed,0,0));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(-speed,0,0,1)));
+        // cameraTransform->addLocalTranslation(Vector3(-speed,0,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
-        cameraTransform->addLocalTranslation(Vector3(speed,0,0));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(speed,0,0,1)));
+        // cameraTransform->addLocalTranslation(Vector3(speed,0,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_UP))
 	{
-		cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,-speed,1)));
+        // cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
 		// cameraTransform->addLocalTranslation(Vector3(0,speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
-		cameraTransform->addLocalTranslation(Vector3(0,0,speed));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,speed,1)));
+        // cameraTransform->addLocalTranslation(Vector3(0,0,speed));
 		// cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_PAGE_UP))
@@ -120,18 +128,19 @@ void Editor::update()
         // LOG_VAR(position.z);
     }
 
-	// if(!mousePosition.eq(currentMousePosition))
-	// {
-	// 	Vector2 mouseVector = (currentMousePosition - mousePosition).nor() * speed;
-	// 	Vector3 direction;
+	if(!mLastMousePosition.eq(currentMousePosition))
+	{
+        f32 camSpeed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
+		Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
+		Vector3 direction;
 
-	// 	f32 yaw = mouseVector.x;
-	// 	f32 pitch = mouseVector.y;
+		f32 yaw = mouseVector.x;
+		f32 pitch = mouseVector.y;
 
-	// 	cameraTransform->addLocalRotation(Vector3(pitch, -yaw, 0));
-	// }
+		cameraTransform->addLocalRotation(Vector3(pitch, -yaw, 0));
+	}
 
-	// mousePosition = currentMousePosition;
+	mLastMousePosition = currentMousePosition;
 
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x
@@ -166,6 +175,8 @@ void Editor::update()
     }
 
     mousePick();
+
+    mAxisViewer->update();
 }
 
 void Editor::terminate()

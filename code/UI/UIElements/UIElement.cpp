@@ -380,16 +380,18 @@ StencilData UIElement::calculateStencilData() const
         if(mConfig.mParent)
         {
             Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent);
-            CHECK_MSG(parentUIElement, "Not a valid UIElement parent!");
-            StencilData parentStencilData = parentUIElement->calculateStencilData();
-            if(parentStencilData.mUseStencil)
+            if(parentUIElement)
             {
-                stencilData = parentStencilData;
-                // if direct parent is clipping shape, then increment mask
-                if(parentUIElement->mClipChildren)
+                StencilData parentStencilData = parentUIElement->calculateStencilData();
+                if(parentStencilData.mUseStencil)
                 {
-                    stencilData.mStencilValue++;
-                    stencilData.mParentId = parentStencilData.mId;
+                    stencilData = parentStencilData;
+                    // if direct parent is clipping shape, then increment mask
+                    if(parentUIElement->mClipChildren)
+                    {
+                        stencilData.mStencilValue++;
+                        stencilData.mParentId = parentStencilData.mId;
+                    }
                 }
             }
         }
@@ -399,19 +401,21 @@ StencilData UIElement::calculateStencilData() const
         if(mConfig.mParent)
         {
             Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent);
-            CHECK_MSG(parentUIElement, "Not a valid UIElement parent!");
-            StencilData parentStencilData = parentUIElement->calculateStencilData();
-            if(parentStencilData.mUseStencil)
+            if(parentUIElement)
             {
-                stencilData = parentStencilData;
-                // if direct parent is clipping shape, then increment mask
-                if(parentUIElement->mClipChildren)
+                StencilData parentStencilData = parentUIElement->calculateStencilData();
+                if(parentStencilData.mUseStencil)
                 {
-                    stencilData.mStencilValue++;
-                    stencilData.mParentId = parentStencilData.mId;
+                    stencilData = parentStencilData;
+                    // if direct parent is clipping shape, then increment mask
+                    if(parentUIElement->mClipChildren)
+                    {
+                        stencilData.mStencilValue++;
+                        stencilData.mParentId = parentStencilData.mId;
+                    }
+                
+                    stencilData.mStencilPassOp = GL_KEEP;
                 }
-             
-                stencilData.mStencilPassOp = GL_KEEP;
             }
         }
     }

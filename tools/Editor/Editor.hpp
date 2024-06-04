@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.hpp"
 #include "UI/Module.hpp"
+#include "AxisViewer.hpp"
 
 class Editor: public Script
 {
@@ -24,6 +25,7 @@ private:
     Ptr<UIText> fpsCounter;
 	Ptr<GameObject> mCameraGameObject;
 	Ptr<GameObject> mSelectedGameObject;
+	Ptr<AxisViewer> mAxisViewer;
 
     std::vector<Ptr<GameObject>> mGameObjectsArray;
 

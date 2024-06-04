@@ -39,6 +39,7 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
     materialData.mReceiveLight = false;
     materialData.mCastShadows = false;
     materialData.mReceiveShadows = false;
+    materialData.mMaxInstances = 500;
     materialData.mIsFont = true;
     materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
     materialData.mFontData = mFontData;

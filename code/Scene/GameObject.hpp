@@ -85,7 +85,8 @@ public:
 		mIsPendingToBeDestroyed = false;
 	};
 
-	virtual void onDestroy(){/*TODO: call script onDestroy here??*/};
+	virtual void onAddedToScene(){};
+	virtual void onDestroy(){};
 
     void setIsActive(bool isActive);
     void destroy();
