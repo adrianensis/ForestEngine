@@ -148,6 +148,12 @@ void Scene::removeGameObject(Ptr<GameObject> gameObject)
         {
             mGameObjects.erase(it);
         }
+
+        auto itNew = std::find(mNewGameObjects.begin(), mNewGameObjects.end(), gameObject);
+        if (itNew != mNewGameObjects.end())
+        {
+            mNewGameObjects.erase(itNew);
+        }
     }
 }
 
