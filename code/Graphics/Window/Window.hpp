@@ -13,7 +13,7 @@ public:
     HashedString mTitle;
 };
 
-class Window: public IWindowInputAdapter
+class Window: public ObjectBase, public IWindowInputAdapter
 {
 public:
     void init(i32 id, const WindowData& windowData);
