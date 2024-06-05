@@ -37,7 +37,7 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 
     if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smBaseColor))
     {
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smBaseColor));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
@@ -89,7 +89,7 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
         Variable B;
         Variable TBN;
 
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
         auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
         auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
         
@@ -405,7 +405,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
         {
             auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smMetallicRoughness).mName);
-            auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoord);
+            auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
 
             Variable metallicRoughnessPack;
             funcCalculatePBR.body().

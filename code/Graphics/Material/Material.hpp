@@ -27,6 +27,14 @@ public:
     std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedMaterialPropertiesBlockBuffer;
+    ClassDefinition mSharedMaterialPropertiesBlockClass;
+
+    template<class T>
+    void setSharedMaterialPropertiesBlock()
+    {
+        mSharedMaterialPropertiesBlockBuffer.set<T>();
+        mSharedMaterialPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
+    }
 
     u32 getSharedMaterialPropertiesBlockBufferSize() const
     {

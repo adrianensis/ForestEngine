@@ -99,7 +99,13 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, PrimitiveTypes::mVector3, "in_position"};
-        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, PrimitiveTypes::mVector2, "in_texcoord"};
+        inline static const std::vector<GPUVariableDefinitionData> mTextureCoords
+        {
+            {GPUStorage::IN, PrimitiveTypes::mVector2, "in_texcoord0"},
+            {GPUStorage::IN, PrimitiveTypes::mVector2, "in_texcoord1"},
+            {GPUStorage::IN, PrimitiveTypes::mVector2, "in_texcoord2"},
+            {GPUStorage::IN, PrimitiveTypes::mVector2, "in_texcoord3"}
+        };
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, PrimitiveTypes::mVector3, "in_normal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, PrimitiveTypes::mVector4, "in_color"};
         inline static const GPUVariableDefinitionData mBonesIDs{GPUStorage::IN, PrimitiveTypes::mVector4i, "in_BoneIDs"};
@@ -113,7 +119,13 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::OUT, PrimitiveTypes::mVector4, "gl_Position"};
-        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord"};
+        inline static const std::vector<GPUVariableDefinitionData> mTextureCoords
+        {
+            {GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord0"},
+            {GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord1"},
+            {GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord2"},
+            {GPUStorage::OUT, PrimitiveTypes::mVector2, "vTexcoord3"}
+        };
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::OUT, PrimitiveTypes::mVector3, "vNormal"};
         inline static const GPUVariableDefinitionData mColor{GPUStorage::OUT, PrimitiveTypes::mVector4, "vColor"};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::OUT, PrimitiveTypes::mVector3, "vFragPosition"};
@@ -126,7 +138,13 @@ public:
     class FragmentInput
     {
     public:
-        inline static const GPUVariableDefinitionData mTextureCoord{GPUStorage::IN, VertexOutput::mTextureCoord};
+        inline static const std::vector<GPUVariableDefinitionData> mTextureCoords
+        {
+            {GPUStorage::IN, VertexOutput::mTextureCoords.at(0)},
+            {GPUStorage::IN, VertexOutput::mTextureCoords.at(1)},
+            {GPUStorage::IN, VertexOutput::mTextureCoords.at(2)},
+            {GPUStorage::IN, VertexOutput::mTextureCoords.at(3)}
+        };
         inline static const GPUVariableDefinitionData mColor{GPUStorage::IN, VertexOutput::mColor};
         inline static const GPUVariableDefinitionData mNormal{GPUStorage::IN, VertexOutput::mNormal};
         inline static const GPUVariableDefinitionData mFragPosition{GPUStorage::IN, VertexOutput::mFragPosition};

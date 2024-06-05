@@ -38,16 +38,16 @@ public:
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);
 
-    class MaterialRenderState
+    class MaterialPropertyBlockRenderState
     {
     public:
         ByteBuffer mMaterialPropertiesBlockArray;
         GPUSharedBuffersContainer mGPUSharedBuffersContainer;
-        PoolHandler<Material> mMaterial;
         SlotsManager mSlotsManager;
     };
 
-	std::unordered_map<u32, MaterialRenderState> mMaterialRenderStates;
+	std::unordered_map<u32, ClassId> mMaterialToPropertyBlock;
+	std::unordered_map<ClassId, MaterialPropertyBlockRenderState> mMaterialPropertyBlockRenderStates;
 
     void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
 

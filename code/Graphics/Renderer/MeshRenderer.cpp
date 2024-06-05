@@ -29,10 +29,10 @@ void MeshRenderer::init(const RendererData& data)
 
     ByteBuffer& bufferRefPosition = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName);
     bufferRefPosition.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName));
-    if(mMeshInstance->mBuffers.contains(GPUBuiltIn::VertexInput::mTextureCoord.mName))
+    if(mMeshInstance->mBuffers.contains(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName))
     {
-        ByteBuffer& bufferRefTexCoord = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName);
-        bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName));
+        ByteBuffer& bufferRefTexCoord = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName);
+        bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName));
     }
 
     

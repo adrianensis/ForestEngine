@@ -17,7 +17,7 @@ void UIManager::init()
     materialData.mCastShadows = false;
     materialData.mMaxInstances = 500;
     materialData.mReceiveShadows = false;
-    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
+    materialData.setSharedMaterialPropertiesBlock<MaterialPropertiesBlockUI>();
     mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
 }
 

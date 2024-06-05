@@ -19,6 +19,7 @@ public:
     alignas(16) f32 mMetallic = 0;
     alignas(16) f32 mRoughness = 0;
 };
+REGISTER_CLASS(MetallicRoughness)
 
 class ShaderPBR : public ShaderDefault
 {

@@ -76,7 +76,7 @@ void Model::loadGLTFMaterials()
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR Meshes are supported")
 
-            materialData.mSharedMaterialPropertiesBlockBuffer.set<MetallicRoughness>();
+            materialData.setSharedMaterialPropertiesBlock<MetallicRoughness>();
 
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
@@ -181,7 +181,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_texcoord)
         {
-            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+            gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoords.at(attribute.index));
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_color)
         {
@@ -241,7 +241,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                 Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector2& texCoord = texCoordArray[vertexIt];
                 texCoord.y = 1.0f - texCoord.y;
-                mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(texCoord);
+                mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(attribute.index).mName).pushBack(texCoord);
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_color)

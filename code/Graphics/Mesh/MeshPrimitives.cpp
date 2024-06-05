@@ -16,7 +16,7 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 {
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoords.at(0));
     gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
 
 	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
@@ -27,10 +27,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).pushBack(Vector3(0.5f, 0.5f, 0.0f)); // top right
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName).pushBack(Vector3(-0.5f, 0.5f, 0.0f)); // top left
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f)); // bottom left
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f)); // bottom right
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f)); // top right
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f)); // top left
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f)); // bottom left
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f)); // bottom right
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f)); // top right
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f)); // top left
 
 	mesh->mIndices.pushBack(Face(0,1,2));
 	mesh->mIndices.pushBack(Face(2,3,0));
@@ -46,7 +46,7 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 {
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoord);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoords.at(0));
     gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
 
 	OwnerPtr<Mesh> mesh = OwnerPtr<Mesh>::newObject();
@@ -82,10 +82,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(frontNormal);
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(frontNormal);
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f));
 
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
@@ -102,10 +102,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(leftNormal);
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(leftNormal);
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f));
 
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
@@ -122,10 +122,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(backNormal);
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(backNormal);
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f));
 
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
@@ -142,10 +142,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(rightNormal);
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(rightNormal);
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f));
 
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
@@ -162,10 +162,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(topNormal);
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(topNormal);
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f));
 
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));
@@ -182,10 +182,10 @@ OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(bottomNormal);
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(bottomNormal);
 
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 0.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(1.0f, 1.0f));
-	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoord.mName).pushBack(Vector2(0.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 0.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f));
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f));
 
 	mesh->mIndices.pushBack(Face(0+elementOffset,1+elementOffset,2+elementOffset));
 	mesh->mIndices.pushBack(Face(2+elementOffset,3+elementOffset,0+elementOffset));

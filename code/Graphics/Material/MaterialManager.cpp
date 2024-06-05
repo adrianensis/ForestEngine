@@ -10,23 +10,26 @@ void MaterialManager::init()
 
 void MaterialManager::terminate()
 {
-    FOR_MAP(it, mMaterialRenderStates)
+    FOR_MAP(it, mMaterialPropertyBlockRenderStates)
     {
         it->second.mGPUSharedBuffersContainer.terminate();
     }
 
-    mMaterialRenderStates.clear();
+    mMaterialPropertyBlockRenderStates.clear();
 }
 
 void MaterialManager::update()
 {
-    FOR_MAP(it, mMaterialRenderStates)
+    FOR_MAP(it, mMaterialToPropertyBlock)
     {
-        PoolHandler<Material> material = it->second.mMaterial;
+        PoolHandler<Material> material = mMaterials.getHandler(it->first);
         const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
-
-        ByteBuffer& materialPropertiesBlockArray = it->second.mMaterialPropertiesBlockArray;
-	    it->second.mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).setDataArray(materialPropertiesBlockArray);
+        ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
+        if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
+        {
+            ByteBuffer& materialPropertiesBlockArray = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray;
+            mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).setDataArray(materialPropertiesBlockArray);
+        }
     }
 }
 
@@ -89,24 +92,38 @@ void MaterialManager::initMaterialInstancePropertiesSharedBuffer(const PoolHandl
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
-    CHECK_MSG(!mMaterialRenderStates.contains(materialID), "Material already registered!");
+    CHECK_MSG(!mMaterialToPropertyBlock.contains(materialID), "Material already registered!");
+    
+    ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
+    mMaterialToPropertyBlock.emplace(materialID, propertiesBlockClassId);
+    
+    if(!mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
+    {
+        if(material->getMaterialData().allowInstances())
+        {
+            mMaterialToPropertyBlock.emplace(materialID, propertiesBlockClassId);
 
-    mMaterialRenderStates.emplace(materialID, MaterialRenderState());
+            u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
+            if(propertiesBlockSizeBytes > 0)
+            {
+                mMaterialPropertyBlockRenderStates.emplace(propertiesBlockClassId, MaterialPropertyBlockRenderState());
 
-    u32 size = material->getMaterialData().getMaxInstances();
-    u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
-    mMaterialRenderStates.at(materialID).mMaterial = material;
-    mMaterialRenderStates.at(materialID).mSlotsManager.init(size);
-    mMaterialRenderStates.at(materialID).mMaterialPropertiesBlockArray.resize(size * propertiesBlockSizeBytes);
+                u32 size = 10000;
+                // u32 size = material->getMaterialData().getMaxInstances();
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.init(size);
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.resize(size * propertiesBlockSizeBytes);
 
-    // Reserve index 0 for default material instance
-    Slot defaultSlot = mMaterialRenderStates.at(materialID).mSlotsManager.requestSlot();
-    mMaterialRenderStates.at(materialID).mMaterialPropertiesBlockArray.setAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
+                // Reserve index 0 for default material instance
+                Slot defaultSlot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.setAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
-    const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
-    mMaterialRenderStates.at(materialID).mGPUSharedBuffersContainer.addSharedBuffer(propertiesBlockSharedBufferData, false);
-    mMaterialRenderStates.at(materialID).mGPUSharedBuffersContainer.create();
-    mMaterialRenderStates.at(materialID).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).resizeBytes(propertiesBlockSizeBytes * size);
+                const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.addSharedBuffer(propertiesBlockSharedBufferData, false);
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.create();
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).resizeBytes(propertiesBlockSizeBytes * size);
+            }
+        }
+    }
 }
 
 void MaterialManager::setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance)
@@ -114,14 +131,15 @@ void MaterialManager::setMaterialInstanceProperties(const Slot& slot, const Mate
     PoolHandler<Material> material = materialInstance.mMaterial;
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
-    CHECK_MSG(mMaterialRenderStates.contains(materialID), "Invalid material!");
-
-    CHECK_MSG(mMaterialRenderStates.at(materialID).mSlotsManager.checkSlot(slot), "Invalid slot!");
+    CHECK_MSG(mMaterialToPropertyBlock.contains(materialID), "Invalid material!");
+    ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
+    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
+    CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(slot), "Invalid slot!");
 
     if(material->getMaterialData().allowInstances())
     {
         u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
-        mMaterialRenderStates.at(materialID).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
+        mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
     }
 }
 
@@ -129,17 +147,21 @@ const GPUSharedBuffer& MaterialManager::getMaterialPropertiesGPUSharedBuffer(con
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
-    return mMaterialRenderStates.at(material->getID()).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData);
+    ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
+    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
+    return mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData);
 }
 
 Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& material)
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
-
+    ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
+    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
+    
     Slot slot;
     if(material->getMaterialData().mAllowInstances)
     {
-        slot = mMaterialRenderStates.at(material->getID()).mSlotsManager.requestSlot();
+        slot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
     }
     else
     {
@@ -153,8 +175,11 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
 void MaterialManager::freeMaterialInstanceSlot(const PoolHandler<Material>& material, const Slot& slot)
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
+    ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
+    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
+    
     if(material->getMaterialData().mAllowInstances)
     {
-        mMaterialRenderStates.at(material->getID()).mSlotsManager.freeSlot(slot);
+        mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.freeSlot(slot);
     }
 }

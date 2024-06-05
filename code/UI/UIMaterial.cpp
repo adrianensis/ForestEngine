@@ -35,7 +35,7 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     
     if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
     {
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));
         shaderBuilder.getMain().
         set(outColor, call("texture", {sampler, inTextureCoord}));
@@ -62,7 +62,7 @@ void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shade
 {
     ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
 
-    auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoord);
+    auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
 
     Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
     Variable textureRegionLeftTop = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};

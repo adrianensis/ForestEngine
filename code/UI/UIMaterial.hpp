@@ -11,6 +11,7 @@ public:
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
 };
+REGISTER_CLASS(MaterialPropertiesBlockUI)
 
 class ShaderUI : public ShaderDefault
 {

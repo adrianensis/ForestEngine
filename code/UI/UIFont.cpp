@@ -43,7 +43,7 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
     materialData.mIsFont = true;
     materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
     materialData.mFontData = mFontData;
-    materialData.mSharedMaterialPropertiesBlockBuffer.set<MaterialPropertiesBlockUI>();
+    materialData.setSharedMaterialPropertiesBlock<MaterialPropertiesBlockUI>();
     materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
     mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
 
