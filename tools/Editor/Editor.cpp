@@ -37,6 +37,7 @@ void Editor::firstUpdate()
 
     mAxisViewer = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<AxisViewer>();
     mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
+    mAxisViewer->createAxis();
 
     createPointLight(Vector3(0,0,100), 20);
 

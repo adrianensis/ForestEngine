@@ -24,7 +24,7 @@ REGISTER_CLASS(SingleAxisViewer)
 class AxisViewer: public GameObject
 {
 public:
-    virtual void onAddedToScene() override;
+    void createAxis();
     void update();
     virtual void onDestroy() override;
 

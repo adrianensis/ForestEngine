@@ -12,10 +12,7 @@ void SingleAxisViewer::setAxis(const Line& line, const Vector4& color, HashedStr
     mColor = color;
     mAxisName = axisName;
     mNegAxisName = HashedString("-" + mAxisName.get());
-}
 
-void SingleAxisViewer::update()
-{
     Ptr<GameObject> cameraGameObject = mScene->getCameraGameObject();
     Ptr<Camera> camera = cameraGameObject->getFirstComponent<Camera>();
 
@@ -30,9 +27,6 @@ void SingleAxisViewer::update()
                 ), 1)
         );
     GET_SYSTEM(DebugRenderer).drawLine(Line(startLine, endLine), 1, GeometricSpace::SCREEN, mColor);
-
-    GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mPositive);
-    GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mNegative);
 
     Vector3 startGlyph = Vector4(
         UIUtils::correctAspectRatio_X(
@@ -57,6 +51,7 @@ void SingleAxisViewer::update()
 
     mPositive = uiBuilder.
 	setText(mAxisName).
+    setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
 
@@ -73,8 +68,44 @@ void SingleAxisViewer::update()
 
     mNegative = uiBuilder.
 	setText(mNegAxisName).
+    setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
+}
+
+void SingleAxisViewer::update()
+{
+    Ptr<GameObject> cameraGameObject = mScene->getCameraGameObject();
+    Ptr<Camera> camera = cameraGameObject->getFirstComponent<Camera>();
+
+    Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
+            Vector4(UIUtils::correctAspectRatio_X(
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getStart(), 1))
+                ), 1)
+        );
+    Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
+            Vector4(UIUtils::correctAspectRatio_X(
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getEnd(), 1))
+                ), 1)
+        );
+    GET_SYSTEM(DebugRenderer).drawLine(Line(startLine, endLine), 1, GeometricSpace::SCREEN, mColor);
+
+    // GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mPositive);
+    // GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mNegative);
+
+    Vector3 startGlyph = Vector4(
+        UIUtils::correctAspectRatio_X(
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getStart(), 1))
+            )
+        , 1);
+    Vector3 endGlyph = Vector4(
+        UIUtils::correctAspectRatio_X(
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getEnd(), 1))
+            )
+        , 1);
+
+    mPositive->mTransform->setLocalPosition(startGlyph);
+    mNegative->mTransform->setLocalPosition(endGlyph);
 }
 
 void SingleAxisViewer::onDestroy()
@@ -84,7 +115,7 @@ void SingleAxisViewer::onDestroy()
     GameObject::onDestroy();
 }
 
-void AxisViewer::onAddedToScene()
+void AxisViewer::createAxis()
 {
     Vector3 axisHalfSize(0.1, 0.1, 0.1);
     Line axisX = Line(Vector3(1,0,0)*axisHalfSize, Vector3(-1,0,0)*axisHalfSize);
