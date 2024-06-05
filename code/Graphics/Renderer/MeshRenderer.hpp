@@ -44,6 +44,7 @@ public:
     StencilData mStencilData;
     bool mIsInstanced = true;
     Ptr<const Mesh> mMesh;
+    Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
     PoolHandler<Material> mMaterial;
     std::unordered_set<ClassId> mRenderPassIDs;
 };
@@ -73,7 +74,6 @@ private:
     Slot mRenderInstanceSlot;
     Slot mMaterialInstanceSlot;
     Matrix4 mRendererModelMatrix;
-    bool mRendererPositionOffsetDirty = true;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
     MaterialInstance mMaterialInstance;
 

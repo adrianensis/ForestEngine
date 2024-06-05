@@ -42,6 +42,7 @@ void MeshRenderer::init(const RendererData& data)
 
 void MeshRenderer::onComponentAdded() 
 {
+    mGameObject->mTransform->setBaseModelMatrix(mRendererData.mMeshInstanceMatrix);
     calculateRendererModelMatrix();
 }
 

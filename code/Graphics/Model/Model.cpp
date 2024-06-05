@@ -146,21 +146,66 @@ void Model::loadGLTFMaterials()
 
 void Model::loadGLTFMeshes()
 {
-    FOR_RANGE(meshIt, 0, mCGLTFData->meshes_count)
+    FOR_RANGE(nodeIt, 0, mCGLTFData->nodes_count)
     {
-        cgltf_mesh& cgltfMesh = mCGLTFData->meshes[meshIt];
-        FOR_RANGE(primitiveIt, 0, cgltfMesh.primitives_count)
+        cgltf_node& node = mCGLTFData->nodes[nodeIt];
+        if(node.mesh)
         {
-            loadGLTFPrimitive(cgltfMesh.primitives[primitiveIt]);
+            Matrix4 translationMatrix;
+            translationMatrix.identity();
+            if(node.has_translation)
+            {
+                translationMatrix.translation(Vector3(node.translation[0], node.translation[1], node.translation[2]));
+            }
+
+            Matrix4 rotationMatrix;
+            rotationMatrix.identity();
+            if(node.has_rotation)
+            {
+                Quaternion rotation(node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]);
+                rotation.toMatrix(rotationMatrix);
+            }
+
+            Matrix4 scaleMatrix;
+            scaleMatrix.identity();
+            if(node.has_scale)
+            {
+                scaleMatrix.scale(Vector3(node.scale[0], node.scale[1], node.scale[2]));
+            }
+
+            Matrix4 nodeMatrix = Matrix4::transform(translationMatrix, rotationMatrix, scaleMatrix);
+
+            cgltf_mesh& cgltfMesh = *node.mesh;
+            FOR_RANGE(primitiveIt, 0, cgltfMesh.primitives_count)
+            {
+                const cgltf_primitive& primitive = cgltfMesh.primitives[primitiveIt];
+                if(!mGLTFMeshes.contains(&primitive))
+                {
+                    loadGLTFPrimitive(primitive);
+                }
+
+                mMeshInstances.push_back(MeshInstanceData{mGLTFMeshes.at(&primitive), nodeMatrix});
+            }
         }
+
     }
+
+    // FOR_RANGE(meshIt, 0, mCGLTFData->meshes_count)
+    // {
+    //     cgltf_mesh& cgltfMesh = mCGLTFData->meshes[meshIt];
+    //     FOR_RANGE(primitiveIt, 0, cgltfMesh.primitives_count)
+    //     {
+    //         loadGLTFPrimitive(cgltfMesh.primitives[primitiveIt]);
+    //     }
+    // }
 }
 
 void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
     CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
 
-    Ptr<Mesh> mesh = mMeshes.emplace_back(OwnerPtr<Mesh>::newObject());
+    mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<Mesh>::newObject());
+    Ptr<Mesh> mesh = mGLTFMeshes.at(&primitive);
     mesh->mModel = (getPtrToThis<Model>());
 
     PoolHandler<Material> meshMaterial;
@@ -388,12 +433,8 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
                 scaleMatrix.scale(Vector3(node.scale[0], node.scale[1], node.scale[2]));
             }
 
-            Matrix4 bindMatrix = translationMatrix;
-            rotationMatrix.mul(scaleMatrix);
-            bindMatrix.mul(rotationMatrix);
-
-            boneData.mBindMatrix = bindMatrix;
-            originalBindMatrices[i] = bindMatrix;
+            boneData.mBindMatrix = Matrix4::transform(translationMatrix, rotationMatrix, scaleMatrix);
+            originalBindMatrices[i] = boneData.mBindMatrix;
 
             // Find parent bone index
             i32 parentIndex = INVALID_INDEX;

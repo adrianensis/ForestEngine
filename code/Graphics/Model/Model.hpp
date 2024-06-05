@@ -30,6 +30,13 @@ public:
 
 class Mesh;
 
+class MeshInstanceData
+{
+public:
+    Ptr<const Mesh> mMesh;
+    Matrix4 mMatrix;
+};
+
 class Model: public ObjectBase
 {
 public:
@@ -98,9 +105,10 @@ public:
 private:
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
-    std::vector<OwnerPtr<Mesh>> mMeshes;
     std::vector<OwnerPtr<SkeletalAnimation>> mSkeletalAnimations;
-    std::unordered_map<cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
+    std::vector<MeshInstanceData> mMeshInstances;
+    std::unordered_map<const cgltf_primitive*, OwnerPtr<Mesh>> mGLTFMeshes;
+    std::unordered_map<const cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
     std::unordered_map<Ptr<const Mesh>, PoolHandler<Material>> mMeshMaterials;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mInverseBindMatrices;
@@ -109,7 +117,7 @@ private:
     u32 mBonesIndexCount = 0;
 
 public:
-    CRGET(Meshes)
+    CRGET(MeshInstances)
     CRGET(MeshMaterials)
 };
 REGISTER_CLASS(Model);

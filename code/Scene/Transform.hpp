@@ -30,6 +30,7 @@ public:
     void setLocalPosition(const Vector3& vec);
 	void setLocalRotation(const Vector3& vec);
 	void setLocalScale(const Vector3& vec);
+	void setBaseModelMatrix(const Matrix4& matrix);
 
     const Matrix4& getViewMatrix() const;
 
@@ -50,6 +51,7 @@ private:
 	Vector3 mLocalRotation = Vector3::smZero;
 	Vector3 mLocalScale = Vector3::smOne;
 
+	Matrix4 mBaseModelMatrix = Matrix4::smIdentity;
 	mutable Matrix4 mModelMatrix;
 	mutable Matrix4 mModelMatrixNoScale;
 	mutable Matrix4 mTranslationMatrix;
@@ -66,5 +68,6 @@ public:
     CRGET(LocalScale)
     GET(ModelMatrixNoScale)
     GET_SET(IgnoreParentScale)
+    CRGET(BaseModelMatrix)
 };
 REGISTER_CLASS(Transform);

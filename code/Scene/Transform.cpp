@@ -109,7 +109,9 @@ const Matrix4& Transform::calculateModelMatrix() const
         Matrix4 rotationMatrix = getLocalRotationMatrix();
         Matrix4 scaleMatrix = getLocalScaleMatrix();
         mModelMatrix = Matrix4::transform(translationMatrix, rotationMatrix, scaleMatrix);
+        mModelMatrix.mul(mBaseModelMatrix);
         mModelMatrixNoScale = Matrix4::transform(translationMatrix, rotationMatrix, Matrix4::smIdentity);
+        mModelMatrixNoScale.mul(mBaseModelMatrix);
 
         if (mParent)
         {
@@ -175,6 +177,12 @@ void Transform::setLocalScale(const Vector3& vec)
 {
     mLocalScale = vec;
     mLocalScaleMatrixDirty = true;
+    notifyModelMatrixDirty();
+}
+
+void Transform::setBaseModelMatrix(const Matrix4& matrix)
+{
+    mBaseModelMatrix = matrix;
     notifyModelMatrixDirty();
 }
 
