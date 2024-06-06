@@ -251,10 +251,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
-    {
-        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-    }
+    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
     {
@@ -271,10 +268,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
-    {
-        shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
-    }
+    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
     shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
