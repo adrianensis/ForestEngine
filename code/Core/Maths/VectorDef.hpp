@@ -94,7 +94,12 @@ public:\
     f32 len() const { return sqrtf(this->sqrlen()); } \
     f32 max() const { return VECTOR_MAX(n); } \
     f32 min() const { return VECTOR_MIN(n); } \
-    ThisVectorClass& nor() { this->div(this->len()); return *this; } \
+    ThisVectorClass& nor() \
+    {\
+        f32 l = this->len();\
+        if(l > 0.0f) { this->div(l); } \
+        return *this;\
+    } \
     f32 dst(const ThisVectorClass& v) const { return sqrtf(this->sqrdst(v)); } \
     bool eq(const ThisVectorClass& v, f32 e) const { return VECTOR_EQ_E(n,v,e); } \
     bool eq(const ThisVectorClass& v) const { return VECTOR_EQ(n,v); } \
