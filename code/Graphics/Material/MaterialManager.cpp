@@ -133,13 +133,15 @@ void MaterialManager::setMaterialInstanceProperties(const Slot& slot, const Mate
     u32 materialID = material->getID();
     CHECK_MSG(mMaterialToPropertyBlock.contains(materialID), "Invalid material!");
     ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
-    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
-    CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(slot), "Invalid slot!");
 
-    if(material->getMaterialData().allowInstances())
+    if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {
-        u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
-        mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
+        CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(slot), "Invalid slot!");
+        if(material->getMaterialData().allowInstances())
+        {
+            u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
+            mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.setAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
+        }
     }
 }
 
@@ -156,17 +158,19 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
-    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
     
     Slot slot;
-    if(material->getMaterialData().mAllowInstances)
-    {
-        slot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
-    }
-    else
-    {
-        // point to default material instance
-        slot.set(0);
+    if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
+    {    
+        if(material->getMaterialData().mAllowInstances)
+        {
+            slot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
+        }
+        else
+        {
+            // point to default material instance
+            slot.set(0);
+        }
     }
 
     return slot;
@@ -176,10 +180,12 @@ void MaterialManager::freeMaterialInstanceSlot(const PoolHandler<Material>& mate
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
-    CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
-    
-    if(material->getMaterialData().mAllowInstances)
+
+    if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {
-        mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.freeSlot(slot);
-    }
+        if(material->getMaterialData().mAllowInstances)
+        {
+            mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.freeSlot(slot);
+        }
+    }    
 }
