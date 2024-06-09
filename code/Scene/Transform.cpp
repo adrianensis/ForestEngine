@@ -169,6 +169,12 @@ void Transform::setLocalPosition(const Vector3& vec)
 void Transform::setLocalRotation(const Vector3& vec)
 {
     mLocalRotation = vec;
+    mLocalRotation.x = std::fmod(mLocalRotation.x, 360.0f);
+    mLocalRotation.x = mLocalRotation.x < 0.0f ? 360.0f + mLocalRotation.x : mLocalRotation.x;
+    mLocalRotation.y = std::fmod(mLocalRotation.y, 360.0f);
+    mLocalRotation.y = mLocalRotation.y < 0.0f ? 360.0f + mLocalRotation.y : mLocalRotation.y;
+    mLocalRotation.z = std::fmod(mLocalRotation.z, 360.0f);
+    mLocalRotation.z = mLocalRotation.z < 0.0f ? 360.0f + mLocalRotation.z : mLocalRotation.z;
     mLocalRotationMatrixDirty = true;
     notifyModelMatrixDirty();
 }
