@@ -86,26 +86,34 @@ void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuild
         set(finalNormal, transformedNormal.dot("xyz"));
     }
 
-    // if(getShaderData().mMaterial->getMaterialData().mUseModelMatrix)
-    // {
-    //     /*
-    //         - NOTE - 
-    //         There are many sources online that tell you that you need the transpose of the inverse of the world matrix in order to
-    //         transform the normal vector. This is correct, however, we usually don't need to go that far. Our world matrices are
-    //         always orthogonal (their vectors are always orthogonal). Since the inverse of an orthogonal matrix is equal to its transpose,
-    //         the transpose of the inverse is actually the transpose of the transpose, so we end up with the original matrix.
-    //         As long as we avoid doing distortions (scaling one axis differently than the rest) we are fine with the approach I presented above. 
-        
-    //     */
-    //     shaderBuilder.getMain().
-    //     set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(instanceId)})})}).mul(finalNormal));
-    // }
-    // else
-    // {
-        auto& outNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal);
+    auto& outNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal);
+    auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
+    if(modelMatricesBuffer.isValid())
+    {
+        Variable modelMatrices;
+        modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
+        if(objectId.isValid())
+        {
+            /*
+                - NOTE - 
+                There are many sources online that tell you that you need the transpose of the inverse of the world matrix in order to
+                transform the normal vector. This is correct, however, we usually don't need to go that far. Our world matrices are
+                always orthogonal (their vectors are always orthogonal). Since the inverse of an orthogonal matrix is equal to its transpose,
+                the transpose of the inverse is actually the transpose of the transpose, so we end up with the original matrix.
+                As long as we avoid doing distortions (scaling one axis differently than the rest) we are fine with the approach I presented above. 
+            */
+            // shaderBuilder.getMain().
+            // set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(objectId)})})}).mul(finalNormal));
+            shaderBuilder.getMain().
+            set(outNormal, call(GPUBuiltIn::PrimitiveTypes::mMatrix3, {modelMatrices.at(objectId)}).mul(finalNormal));
+        }
+    }
+    else
+    {
         shaderBuilder.getMain().
         set(outNormal, finalNormal);
-    // }
+    }
 }
 
 void ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
