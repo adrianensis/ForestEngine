@@ -161,11 +161,11 @@ void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder)
         funcCalculateShadow.body().
         variable(projCoords, GPUBuiltIn::PrimitiveTypes::mVector3, "projCoords", fragPosLightSpace.dot("xyz").div(fragPosLightSpace.dot("w"))).
         set(projCoords, projCoords.mul("0.5"s).add("0.5"s)).
-        variable(closestDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "closestDepth", call("texture", {samplerShadowMap, projCoords.dot("xy")}).dot("z")).
+        variable(closestDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "closestDepth", call("texture", {samplerShadowMap, projCoords.dot("xy")}).dot("r")).
         variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lightDirection})).
         // variable(lightPos, GPUBuiltIn::PrimitiveTypes::mVector3, "lightPos", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0"s,"0"s,"-100"s})).
         // variable(lightDir, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDir", call("normalize", {lightPos.sub(fragPosition)})).
-        variable(bias, GPUBuiltIn::PrimitiveTypes::mFloat, "bias", call("max", {Variable("0.05").mul(Variable("1.0").sub(call("dot", {lightDir, normal}))), {"0.005"}})).
+        variable(bias, GPUBuiltIn::PrimitiveTypes::mFloat, "bias", call("max", {Variable("0.0025").mul(paren(Variable("1.0").sub(call("dot", {normal, lightDir})))), {"0.0005"}})).
         // set(bias, call("clamp", {bias, "0.005"s, "0.01"s})).
         // set(bias, "0.0005"s).
         variable(currentDepth, GPUBuiltIn::PrimitiveTypes::mFloat, "currentDepth", projCoords.dot("z").sub(bias)).
@@ -462,15 +462,15 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(Lo, GPUBuiltIn::PrimitiveTypes::mVector3, "Lo", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0"s}));
 
-        funcCalculatePBR.body().
-        forBlock("i", "<", Variable("5"), "++").
-            set(Lo, Lo.add(call(mCalculatePBRSingleLight, 
-                {
-                    albedo, metallic, roughness, V, N, F0,
-                    pointLights.at("i").dot(pointLightPos).sub(fragPosition),
-                    pointLights.at("i").dot(pointLightDiffuse)
-                }))).
-        end();
+        // funcCalculatePBR.body().
+        // forBlock("i", "<", Variable("5"), "++").
+        //     set(Lo, Lo.add(call(mCalculatePBRSingleLight, 
+        //         {
+        //             albedo, metallic, roughness, V, N, F0,
+        //             pointLights.at("i").dot(pointLightPos).sub(fragPosition),
+        //             pointLights.at("i").dot(pointLightDiffuse)
+        //         }))).
+        // end();
 
         funcCalculatePBR.body().
         set(Lo, Lo.add(call(mCalculatePBRSingleLight, 
