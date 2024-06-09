@@ -17,11 +17,8 @@ enum class UILayout
 class UIElementConfig
 {
 public:
-    void init(const Vector2& position, const Vector2& size, i32 layer, PoolHandler<Material> material, HashedString text = HashedString());
-
-public:
 	const UIStyle* mStyle = nullptr;
-	ClassId mUIElementClassId;
+	ClassId mUIElementClassId = 0;
 	Vector2 mPosition = Vector2::smZero;
 	Vector2 mSize = Vector2::smOne;
 	Vector2 mDisplayPosition = Vector2::smZero;
@@ -37,5 +34,5 @@ public:
 	PoolHandler<Material> mMaterial;
 	HashedString mGroup;
 	Ptr<GameObject> mParent;
-	f32 mSeparatorSize = 0.0f;
+	f32 mSeparatorSize = 0.01f;
 };

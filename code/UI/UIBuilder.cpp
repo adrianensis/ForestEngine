@@ -7,7 +7,8 @@ UIBuilder::UIBuilder()
 	mCurrentLayout = UILayout::HORIZONTAL;
 	mMakeRelativeToLastConfig = false;
 
-	mDefaultConfig.init(Vector2::smZero, Vector2::smOne, 0, GET_SYSTEM(UIManager).getDefaultUIMaterial());
+    mDefaultConfig.mMaterial = GET_SYSTEM(UIManager).getDefaultUIMaterial();
+    mDefaultConfig.mStyle = &UIStyleManager::getInstance().getDefaultStyle();
 	mConfig = mDefaultConfig;
 }
 

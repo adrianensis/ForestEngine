@@ -49,12 +49,12 @@ void Editor::firstUpdate()
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, 90, true);
-	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, 0, true);
+	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, 0, true);
+	importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, 90, true);
+	importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, 0, true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, 0, true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, 0, true);
+	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, 0, true);
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, 0, false);
     // mGameObjectsArray.push_back(obj);
 
