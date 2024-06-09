@@ -4,6 +4,7 @@
 #include "UI/Module.hpp"
 #include "UIAxisGizmo.hpp"
 #include "UITransform.hpp"
+#include "UISceneTree.hpp"
 
 class Editor: public Script
 {
@@ -25,6 +26,7 @@ private:
 private:
     Ptr<UIText> mFPSCounter;
     Ptr<UITransform> mUITransform;
+    Ptr<UISceneTree> mUISceneTree;
 	Ptr<GameObject> mCameraGameObject;
 	Ptr<GameObject> mSelectedGameObject;
 	Ptr<UIAxisGizmo> mAxisViewer;

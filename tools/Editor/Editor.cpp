@@ -69,6 +69,9 @@ void Editor::firstUpdate()
 
     createUI();
     mousePick();
+
+    // mUISceneTree = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UISceneTree>();
+    // mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
 }
 
 void Editor::update()
@@ -187,6 +190,7 @@ void Editor::update()
     mousePick();
 
     mAxisViewer->update();
+    mUISceneTree->update();
 }
 
 void Editor::terminate()
