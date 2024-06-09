@@ -64,7 +64,7 @@ void Window::init(i32 id, const WindowData& windowData)
         #endif
 
         GET_SYSTEM(GPUInterface).enableFlag(GL_MULTISAMPLE);
-        GET_SYSTEM(GPUInterface).setClearColor(Vector3(1.0/28.0, 1.0/28.0, 1.0/28.0));
+        GET_SYSTEM(GPUInterface).setClearColor(Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
         GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
         GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
 
