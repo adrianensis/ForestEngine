@@ -3,11 +3,17 @@
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
+#include "Graphics/Window/WindowManager.hpp"
 
 void RenderPassShadowMap::init(const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPassData);
     mShaderDepthBuffer = OwnerPtr<ShaderDepthBuffer>::newObject();
+}
+
+void RenderPassShadowMap::preFramebufferEnabled()
+{
+    GET_SYSTEM(GPUInterface).setViewport(0, 0, mRenderPassData.mOutputFramebufferData.mWidth, mRenderPassData.mOutputFramebufferData.mHeight);
 }
 
 void RenderPassShadowMap::postFramebufferEnabled()
@@ -23,6 +29,9 @@ void RenderPassShadowMap::preRender()
 void RenderPassShadowMap::postRender()
 {
 	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::BACK);
+
+    Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
+    GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }
 
 void RenderPassShadowMap::render()
@@ -37,7 +46,11 @@ void RenderPassShadowMap::render()
 void RenderPassShadowMap::updateGlobalData()
 {
 	PROFILER_CPU()
-    const Matrix4 lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
+    Matrix4 lightProjectionViewMatrix = Matrix4::smIdentity;
+    if(mDirectionalLight)
+    {
+        lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
+    }
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
@@ -45,7 +58,7 @@ void RenderPassShadowMap::updateGlobalData()
         lightProjectionViewMatrix,
         camera->mGameObject->mTransform->getWorldPosition()
     };
-	GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 Ptr<Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const

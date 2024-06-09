@@ -9,6 +9,7 @@ class RenderPassShadowMap: public RenderPass
 public:
     virtual void init(const RenderPassData& renderPassData);
 protected:
+    virtual void preFramebufferEnabled() override;
     virtual void postFramebufferEnabled() override;
     virtual void preRender() override;
     virtual void render() override;
