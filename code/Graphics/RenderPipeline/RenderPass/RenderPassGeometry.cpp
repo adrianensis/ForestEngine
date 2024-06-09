@@ -31,7 +31,11 @@ void RenderPassGeometry::updateGlobalData()
 
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    const Matrix4 lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
+    Matrix4 lightProjectionViewMatrix = Matrix4::smIdentity;
+    if(mDirectionalLight)
+    {
+        lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
+    }
     LightBuiltIn::ShadowMappingData shadowMappingData;
     shadowMappingData.mLightProjectionViewMatrix = lightProjectionViewMatrix;
 
