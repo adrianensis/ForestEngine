@@ -310,9 +310,26 @@ void Matrix4::lookAt(const Vector3& worldPosition, const Vector3& targetPosition
 	Vector3 target(targetPosition);
 
 	Vector3 forward(target.sub(worldPosition).nor());
-
+    // forward.mul(-1);
 	Vector3 yAxis = Vector3::smUp;
-	Vector3 right(yAxis.cross(forward).nor());
+
+	Vector3 right(Vector3(yAxis).cross(forward));
+    right.nor();
+    if(right.len() == 0.0f)
+    {
+        f32 dot = forward.dot(yAxis);
+        if(dot > 0)
+        {
+            // parallel
+            right = Vector3::smRight;
+        }
+        else
+        {
+            // antiparallel
+            right = -Vector3::smRight;
+        }
+    }
+
 	Vector3 up(Vector3(forward).cross(right));
 
 	this->init(
