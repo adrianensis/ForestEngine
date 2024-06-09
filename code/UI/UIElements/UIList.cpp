@@ -85,7 +85,7 @@ void UIList::toggle()
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
 			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), scale.y/2.0f)).
-			// setTextSize(mConfig.mTextSize).
+			setTextScale(mConfig.mTextScale).
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).

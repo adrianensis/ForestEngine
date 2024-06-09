@@ -41,7 +41,7 @@ void UIArea::calculateConfig()
         }
         textSize.y = maxAscender + maxDescender;
 
-		mConfig.mSize = textSize;
+		mConfig.mSize = textSize * mConfig.mTextScale;
 		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);
 	}
 

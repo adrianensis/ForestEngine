@@ -26,8 +26,9 @@ public:
 	bool mIsStatic = true;
     bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
-	// Vector2 mTextSize;
+	// Vector2 mTextScale;
 	HashedString mText;
+	f32 mTextScale = 1.0f;
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;

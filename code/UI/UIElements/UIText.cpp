@@ -84,7 +84,7 @@ void UIText::setText(HashedString text)
 			{
                 char character = text.get().at(i);
                 const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
-                Vector2 glyphSize = glyphData.mMetrics.mSize;
+                Vector2 glyphSize = glyphData.mMetrics.mSize * mConfig.mTextScale;
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
 
                 Vector2 bearing(glyphData.mMetrics.mHoriBearing.x, glyphData.mMetrics.mHoriBearing.y);
@@ -105,7 +105,7 @@ void UIText::setText(HashedString text)
 
                 mFontRenderers.push_back(gameObjectGlyph);
 
-                offset += UIUtils::toScreenSpace(Vector2(glyphData.mAdvance.x,0)).x;
+                offset += UIUtils::toScreenSpace(Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;
 			}
 		}
 

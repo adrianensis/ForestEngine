@@ -17,7 +17,8 @@ void UIVector::init()
 	setAdjustSizeToText(true).
 	setIsAffectedByLayout(true).
     setParent(getPtrToThis<GameObject>()).
-	setSize(Vector2(0.5/2.0, 0.05f/2.0));
+	setTextScale(0.5f).
+	setSize(Vector2(0.5, 0.05f));
 
     mX = uiBuilder.
 	setText(HashedString("000000.000")).

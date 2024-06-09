@@ -49,7 +49,7 @@ void UIButton::setText(HashedString text)
 			setPosition(Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
 			setSize(mConfig.mDisplaySize).
 			setText(text).
-			// setTextSize(mConfig.mTextSize).
+			setTextScale(mConfig.mTextScale).
 			setLayer(mConfig.mLayer + 1).
 			setIsAffectedByLayout(false).
 			setParent(getPtrToThis<UIButton>()).

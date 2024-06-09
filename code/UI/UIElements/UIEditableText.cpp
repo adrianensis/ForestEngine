@@ -21,7 +21,7 @@ void UIEditableText::setBackground(const UIElementConfig& config)
     UIBuilder uiBuilder;
 
     mBackground = uiBuilder.
-        // setPosition(mTransform->getWorldPosition() + Vector2(-config.mTextSize.x/GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), config.mTextSize.y/2.0f)).
+        // setPosition(mTransform->getWorldPosition() + Vector2(-config.mTextScale.x/GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), config.mTextScale.y/2.0f)).
         setPosition(Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
         setSize(mConfig.mDisplaySize).
         setLayer(mConfig.mLayer).
