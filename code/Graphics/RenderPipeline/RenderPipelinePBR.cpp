@@ -16,7 +16,7 @@ void RenderPipelinePBR::init()
         {
             GPUFramebufferAttachmentType::DEPTH
         },
-        GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize().x, GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize().y
+        2048, 2048
     );
     initRenderPass<RenderPassShadowMap>(renderPassShadowMapData);
 
@@ -53,13 +53,17 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
     // renderPassGeometry->mPointLight = renderData.mPointLights[0];
     // renderPassGeometry->renderPass();
 
+    GET_SYSTEM(GPUInterface).enableFlag(GL_BLEND);
 	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
-    
+    GET_SYSTEM(GPUInterface).disableFlag(GL_BLEND);
+
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
 
     Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
     renderPassUI->renderPass();
 
+    GET_SYSTEM(GPUInterface).enableFlag(GL_BLEND);
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
+    GET_SYSTEM(GPUInterface).disableFlag(GL_BLEND);
 }
