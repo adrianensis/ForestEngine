@@ -2,7 +2,8 @@
 
 #include "Scripting/Script.hpp"
 #include "UI/Module.hpp"
-#include "AxisViewer.hpp"
+#include "UIAxisGizmo.hpp"
+#include "UITransform.hpp"
 
 class Editor: public Script
 {
@@ -22,10 +23,11 @@ private:
 	void handleMouse();
     void createUI();
 private:
-    Ptr<UIText> fpsCounter;
+    Ptr<UIText> mFPSCounter;
+    Ptr<UITransform> mUITransform;
 	Ptr<GameObject> mCameraGameObject;
 	Ptr<GameObject> mSelectedGameObject;
-	Ptr<AxisViewer> mAxisViewer;
+	Ptr<UIAxisGizmo> mAxisViewer;
 
     std::vector<Ptr<GameObject>> mGameObjectsArray;
 

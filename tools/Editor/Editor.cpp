@@ -35,24 +35,30 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    mAxisViewer = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<AxisViewer>();
+    mAxisViewer = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UIAxisGizmo>();
     mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
     mAxisViewer->createAxis();
 
-    createPointLight(Vector3(0,0,100), 20);
+    // createPointLight(Vector3(0,50,0), 20);
 
-    createDirectionalLight(Vector3(0,100,150), Vector3(0,0,1));
+    createDirectionalLight(Vector3(0,0,0), Vector3::smRight);
+    // createSprite(Vector3(0,1000,0), 10);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0, true);
-	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,150,-150), 100.0f, 0, true);
+	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, 0, true);
+	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, 90, true);
+	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, 0, true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, 0, true);
+	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, 0, true);
+	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, 0, false);
+    // mGameObjectsArray.push_back(obj);
 
-	auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,70), 20.0f, 0, true);
+	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,0), 100.0f, 180, false);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -70,7 +76,7 @@ void Editor::update()
 	PROFILER_CPU()
 
     Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-	Transform* cameraTransform = &mCameraGameObject->mTransform.get();
+	Ptr<Transform> cameraTransform = mCameraGameObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
@@ -112,7 +118,8 @@ void Editor::update()
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_END))
 	{
-		cameraTransform->addLocalRotation(Vector3(0,speed,0));
+		// cameraTransform->addLocalRotation(Vector3(0,speed,0));
+        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smRight);
 	}
 
     Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
@@ -143,6 +150,8 @@ void Editor::update()
 
 	mLastMousePosition = currentMousePosition;
 
+    mUITransform->update(cameraTransform);
+
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x
 	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
@@ -163,16 +172,16 @@ void Editor::update()
     // // -z
 	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
 
-	for(i32 x = -1000; x < 1000; x+=50)
+	for(i32 x = -2000; x < 2000; x+=100)
 	{
-		// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-1000), Vector3(x,0,1000)), 1, GeometricSpace::WORLD, Vector4(0,0,1,0.3f));
+		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-2000), Vector3(x,0,2000)), 1, GeometricSpace::WORLD, Vector4(1,1,1,0.3f));
 	}
     // PROFILER_END_BLOCK();
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
-    if(fpsCounter)
+    if(mFPSCounter)
     {
-        fpsCounter->setText(HashedString(std::to_string((u32)fps)));
+        mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
     }
 
     mousePick();
@@ -202,8 +211,6 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
 	gameObject->createComponent<MeshRenderer>(rendererData);
 
-    mGameObjectsArray.push_back(gameObject);
-
 	return gameObject;
 }
 
@@ -231,7 +238,7 @@ Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& 
 	gameObject->mTransform->lookAt(v+dir);
 
     DirectionalLightData directionalLightData;
-    directionalLightData.mDirection = dir;
+    directionalLightData.mDirection = -dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
 	gameObject->createComponent<DirectionalLight>(directionalLightData);
@@ -241,28 +248,31 @@ Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& 
 
 Ptr<GameObject> Editor::mousePick()
 {
+
+    f32 speed = 100 * GET_SYSTEM(Time).getDeltaTimeSeconds();
     Ptr<GameObject> obj;
     FOR_LIST(it, mGameObjectsArray)
     {
-        const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-        Cube bboxScreenSpace(
-            camera->worldToScreen(bbox.getLeftTopFront()),
-            camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
-        );
+        (*it)->mTransform->addLocalRotation(Vector3(0,speed,0));
+        // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
+        // Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // Cube bboxScreenSpace(
+        //     camera->worldToScreen(bbox.getLeftTopFront()),
+        //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
+        // );
 
-        // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(0.3,0,1,1));
+        // // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(0.3,0,1,1));
 
-        Vector3 mousePosition = GET_SYSTEM(Input).getMousePosition();
-        bool hit = Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
-        if(hit)
-        {
-            Cube hitMarker = Cube(mousePosition, Vector3(0.01,0.01,0.01));
-            GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
-            GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
+        // Vector3 mousePosition = GET_SYSTEM(Input).getMousePosition();
+        // bool hit = Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
+        // if(hit)
+        // {
+        //     Cube hitMarker = Cube(mousePosition, Vector3(0.01,0.01,0.01));
+        //     GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
+        //     GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
 
-            obj = *it;
-        }
+        //     obj = *it;
+        // }
     }
 
     return obj;
@@ -333,7 +343,7 @@ void Editor::createUI()
 	});
 
 
-    fpsCounter = uiBuilder.
+    mFPSCounter = uiBuilder.
 	setText("100").
 	create<UIText>().
     getUIElement<UIText>();
@@ -399,4 +409,8 @@ void Editor::createUI()
 
 	// }).
     // toggle();
+
+    mUITransform = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UITransform>();
+    mUITransform->mTransform->setLocalPosition(Vector2(-0.7, -0.8));
+    // mUIVector->update();
 }

@@ -1,4 +1,4 @@
-#include "AxisViewer.hpp"
+#include "UIAxisGizmo.hpp"
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
@@ -6,7 +6,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 
-void SingleAxisViewer::setAxis(const Line& line, const Vector4& color, HashedString axisName)
+void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedString axisName)
 {
     mAxis = line;
     mColor = color;
@@ -73,7 +73,7 @@ void SingleAxisViewer::setAxis(const Line& line, const Vector4& color, HashedStr
 	getUIElement<UIText>();
 }
 
-void SingleAxisViewer::update()
+void UISingleAxisGizmo::update()
 {
     Ptr<GameObject> cameraGameObject = mScene->getCameraGameObject();
     Ptr<Camera> camera = cameraGameObject->getFirstComponent<Camera>();
@@ -108,23 +108,23 @@ void SingleAxisViewer::update()
     mNegative->mTransform->setLocalPosition(endGlyph);
 }
 
-void SingleAxisViewer::onDestroy()
+void UISingleAxisGizmo::onDestroy()
 {
     GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mPositive);
     GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mNegative);
     GameObject::onDestroy();
 }
 
-void AxisViewer::createAxis()
+void UIAxisGizmo::createAxis()
 {
     Vector3 axisHalfSize(0.1, 0.1, 0.1);
     Line axisX = Line(Vector3(1,0,0)*axisHalfSize, Vector3(-1,0,0)*axisHalfSize);
     Line axisY = Line(Vector3(0,1,0)*axisHalfSize, Vector3(0,-1,0)*axisHalfSize);
     Line axisZ = Line(Vector3(0,0,1)*axisHalfSize, Vector3(0,0,-1)*axisHalfSize);
 
-    mAxisX = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<SingleAxisViewer>();
-    mAxisY = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<SingleAxisViewer>();
-    mAxisZ = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<SingleAxisViewer>();
+    mAxisX = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UISingleAxisGizmo>();
+    mAxisY = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UISingleAxisGizmo>();
+    mAxisZ = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UISingleAxisGizmo>();
 
     mTransform->addChild(mAxisX->mTransform);
     mTransform->addChild(mAxisY->mTransform);
@@ -135,14 +135,14 @@ void AxisViewer::createAxis()
     mAxisZ->setAxis(axisZ, Vector4(0,0,1,1), "Z");
 }
 
-void AxisViewer::update()
+void UIAxisGizmo::update()
 {
     mAxisX->update();
     mAxisY->update();
     mAxisZ->update();
 }
 
-void AxisViewer::onDestroy()
+void UIAxisGizmo::onDestroy()
 {
     GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mAxisX);
     GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mAxisY);

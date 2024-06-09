@@ -2,7 +2,7 @@
 
 #include "UI/Module.hpp"
 
-class SingleAxisViewer: public GameObject
+class UISingleAxisGizmo: public GameObject
 {
 public:
     void setAxis(const Line& line, const Vector4& color, HashedString axisName);
@@ -19,9 +19,9 @@ private:
     Ptr<UIText> mNegative;
 };
 
-REGISTER_CLASS(SingleAxisViewer)
+REGISTER_CLASS(UISingleAxisGizmo)
 
-class AxisViewer: public GameObject
+class UIAxisGizmo: public GameObject
 {
 public:
     void createAxis();
@@ -29,8 +29,8 @@ public:
     virtual void onDestroy() override;
 
 private:
-    Ptr<SingleAxisViewer> mAxisX;
-    Ptr<SingleAxisViewer> mAxisY;
-    Ptr<SingleAxisViewer> mAxisZ;
+    Ptr<UISingleAxisGizmo> mAxisX;
+    Ptr<UISingleAxisGizmo> mAxisY;
+    Ptr<UISingleAxisGizmo> mAxisZ;
 };
-REGISTER_CLASS(AxisViewer)
+REGISTER_CLASS(UIAxisGizmo)
