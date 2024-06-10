@@ -76,7 +76,7 @@ void UIText::setText(HashedString text)
             }
 
             Vector2 maxDescenderVec(0, maxDescender);
-            Vector2 maxDescenderVecScreenSpace(UIUtils::toScreenSpace(maxDescenderVec));
+            Vector2 maxDescenderVecScreenSpace(UIUtils::toScreenSpace(maxDescenderVec * mConfig.mTextScale));
             f32 baseLineScreenSpace = mConfig.mDisplaySize.y - maxDescenderVecScreenSpace.y;
             
             f32 offset = -mConfig.mDisplaySize.x/2.0f;
@@ -88,7 +88,7 @@ void UIText::setText(HashedString text)
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
 
                 Vector2 bearing(glyphData.mMetrics.mHoriBearing.x, glyphData.mMetrics.mHoriBearing.y);
-                Vector2 bearingScreenSpace = UIUtils::toScreenSpace(bearing);
+                Vector2 bearingScreenSpace = UIUtils::toScreenSpace(bearing * mConfig.mTextScale);
                 Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, mConfig.mDisplaySize.y/2.0f - baseLineScreenSpace + bearingScreenSpace.y);
 
                 UIBuilder uiBuilder;
