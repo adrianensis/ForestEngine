@@ -72,10 +72,10 @@ void Engine::run()
 	{
 		GET_SYSTEM(Time).startFrame();
 
-		if (GET_SYSTEM(ScenesManager).getSceneHasChanged())
+		if (GET_SYSTEM(ScenesManager).pendingLoadRequests())
 		{
 			preSceneChanged();
-			GET_SYSTEM(ScenesManager).loadCurrentScene();
+			GET_SYSTEM(ScenesManager).loadPendingScenes();
 			postSceneChanged();
 		}
 

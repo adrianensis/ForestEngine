@@ -4,12 +4,6 @@
 #include "Graphics/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 
-
-ScenesManager::ScenesManager()
-{
-	mSceneHasChanged = true;
-}
-
 ScenesManager::~ScenesManager() 
 {
     terminate();
@@ -23,9 +17,17 @@ void ScenesManager::terminate()
     }
     mGameObjectController.invalidate();
 
-    FOR_LIST(it, mScenes)
+	if (mCameraGameObject)
+	{
+		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+		mCameraGameObject->removeComponent<Camera>(cameraComponent);
+		mCameraGameObject->destroy();
+        mCameraGameObject.invalidate();
+	}
+
+    FOR_MAP(it, mScenes)
     {
-        (*it)->terminate();
+        it->second->terminate();
     }
 
     mScenes.clear();
@@ -33,63 +35,69 @@ void ScenesManager::terminate()
 
 void ScenesManager::init()
 {
-	mCurrentSceneIndex = 0;
+    mScenes.emplace(smDefaultSceneName, OwnerPtr<Scene>::newObject());
+    mScenes.emplace(smDefaultUISceneName, OwnerPtr<Scene>::newObject());
 
-	u32 scenesCount = GET_SYSTEM(EngineConfig).getConfig().at("scenes").size();
+    mScenes.at(smDefaultSceneName)->init(smDefaultSceneName);
+    mScenes.at(smDefaultUISceneName)->init(smDefaultUISceneName);
 
-	if (scenesCount == 0)
-	{
-		scenesCount = 1; // min 1 scene
-	}
+    requestLoadScene(smDefaultSceneName);
+    requestLoadScene(smDefaultUISceneName);
 
-	FOR_RANGE(i, 0, scenesCount)
-	{
-		mScenes.emplace_back(OwnerPtr<Scene>::newObject());
-	}
+    mCameraGameObject = OwnerPtr<GameObject>::newObject();
+	mCameraGameObject->init();
 
-	mCurrentScene = *mScenes.begin();
+	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));
+
+    Ptr<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
+	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
+
+    GET_SYSTEM(CameraManager).setCamera(cameraComponent);
 }
 
 void ScenesManager::update()
 {
 	PROFILER_CPU()
-	mCurrentScene->update();
-}
+    
+    Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+    cameraComponent->update();
 
-void ScenesManager::loadCurrentScene()
-{
-	if (mSceneHasChanged)
-	{
-		mCurrentScene = mScenes[mCurrentSceneIndex];
-		internalLoadScene();
-		mSceneHasChanged = false;
-	}
-}
-
-void ScenesManager::setScene(u32 i)
-{
-	if (mCurrentSceneIndex != i)
-	{
-		mCurrentSceneIndex = i;
-		mSceneHasChanged = true;
-	}
-}
-
-void ScenesManager::internalLoadScene()
-{
-	mCurrentScene->init();
-
-	if (GET_SYSTEM(EngineConfig).getConfig().at("scenes").size() > 0)
-	{
-		std::string sceneName = GET_SYSTEM(EngineConfig).getConfig().at("scenes")[mCurrentSceneIndex].get<std::string>();
-
-		mCurrentScene->loadScene(sceneName);
-	}
-
-    if(mGameObjectController)
+    FOR_MAP(it, mLoadedScenes)
     {
-	    mGameObjectController->mScene = (mCurrentScene);
+        it->second->update();
     }
+}
 
-    GET_SYSTEM(CameraManager).setCamera(mCurrentScene->getCameraGameObject()->getFirstComponent<Camera>());
+void ScenesManager::loadPendingScenes()
+{
+    FOR_LIST(it, mLoadRequests)
+    {
+        HashedString sceneName = *it;
+        if(mScenes.contains(sceneName) && !mLoadedScenes.contains(sceneName))
+        {
+            internalLoadScene(sceneName);
+        }
+    }
+    mLoadRequests.clear();
+}
+
+bool ScenesManager::pendingLoadRequests() const
+{
+	return !mLoadRequests.empty();
+}
+
+void ScenesManager::requestLoadScene(HashedString sceneName)
+{
+	mLoadRequests.insert(sceneName);
+}
+
+Ptr<Scene> ScenesManager::getScene(HashedString sceneName) const
+{
+    return mScenes.at(sceneName);
+}
+
+void ScenesManager::internalLoadScene(HashedString sceneName)
+{
+	mLoadedScenes.insert_or_assign(sceneName, mScenes.at(sceneName));
+    mLoadedScenes.at(sceneName)->loadScene();
 }

@@ -2,6 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Scene/ScenesManager.hpp"
 
 class Material;
 class Scene;
@@ -24,6 +25,7 @@ public:
 	Vector2 mDisplayPosition = Vector2::smZero;
 	Vector2 mDisplaySize = Vector2::smOne;
 	bool mIsStatic = true;
+	HashedString mSceneName = ScenesManager::smDefaultUISceneName;
     bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
 	// Vector2 mTextScale;

@@ -29,13 +29,13 @@ void Editor::firstUpdate()
 {
     PROFILER_CPU();
 
-	mCameraGameObject = mGameObject->mScene->getCameraGameObject();
+	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
     Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    mAxisViewer = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UIAxisGizmo>();
+    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
     mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
     mAxisViewer->createAxis();
 
@@ -52,6 +52,7 @@ void Editor::firstUpdate()
 	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, 0, true);
 	importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, 90, true);
 	importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, 0, true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, 0, true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, 0, true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
 	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, 0, true);
@@ -70,8 +71,9 @@ void Editor::firstUpdate()
     createUI();
     mousePick();
 
-    // mUISceneTree = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UISceneTree>();
-    // mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
+    mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
+    mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
+    mUISceneTree->update();
 }
 
 void Editor::update()
@@ -200,7 +202,7 @@ void Editor::terminate()
 
 Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 {
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -220,7 +222,7 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 
 Ptr<GameObject> Editor::createPointLight(const Vector3& v, f32 size)
 {
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -236,7 +238,7 @@ Ptr<GameObject> Editor::createPointLight(const Vector3& v, f32 size)
 
 Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->lookAt(v+dir);
@@ -286,7 +288,7 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<GameObject>();
+    Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
@@ -414,7 +416,7 @@ void Editor::createUI()
 	// }).
     // toggle();
 
-    mUITransform = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<UITransform>();
+    mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UITransform>();
     mUITransform->mTransform->setLocalPosition(Vector2(-0.7, -0.8));
     // mUIVector->update();
 }

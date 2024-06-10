@@ -51,9 +51,9 @@ void UIVector::update(const Vector3& v)
 
 void UIVector::onDestroy()
 {
-    GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mX);
-    GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mY);
-    GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mZ);
-    GET_SYSTEM(ScenesManager).getCurrentScene()->removeGameObject(mW);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mX);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mY);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mZ);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mW);
     GameObject::onDestroy();
 }

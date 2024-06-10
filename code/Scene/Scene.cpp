@@ -20,33 +20,22 @@ void Scene::terminate()
     destroyGameObjects();
 }
 
-void Scene::init()
+void Scene::init(HashedString sceneName)
 {
 	LOG_TRACE()
 
+    mSceneName = sceneName;
 	mSize = 0;
 
 	mPath = "config/sceneTmp.json";
-
-	mCameraGameObject = OwnerPtr<GameObject>::newObject();
-	mCameraGameObject->init();
-
-	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));
-
-    Ptr<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
-	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
-
 	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
-
-	mLoadSceneConfig.init();
 }
 
-void Scene::saveScene(const std::string& path)
+void Scene::saveToFile(const std::string& path)
 {
 	mPath = path;
 
 	ConfigObject configMap;
-	configMap.init();
 
 	JSON json;
 	serialize(json);
@@ -56,7 +45,7 @@ void Scene::saveScene(const std::string& path)
 	configMap.writeToJsonFile(path);
 }
 
-void Scene::loadScene(const std::string& path)
+void Scene::loadToFile(const std::string& path)
 {
 	mPath = path;
 
@@ -119,6 +108,11 @@ IMPLEMENT_DESERIALIZATION(Scene)
 //			addGameObject(*it);
 //		}
 //	}
+}
+
+void Scene::loadScene()
+{
+
 }
 
 void Scene::unloadScene()
@@ -209,12 +203,4 @@ void Scene::destroyGameObjects()
 	}
 
     mGameObjects.clear();
-
-	if (mCameraGameObject)
-	{
-		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
-		mCameraGameObject->removeComponent<Camera>(cameraComponent);
-		mCameraGameObject->destroy();
-        mCameraGameObject.invalidate();
-	}
 }

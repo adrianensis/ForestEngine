@@ -14,11 +14,12 @@ public:
     Scene();
     ~Scene() override;
 
-    void init();
-    void terminate();
-    void saveScene(const std::string& path);
-    void loadScene(const std::string& path);
+    void init(HashedString sceneName);
+    void loadScene();
     void unloadScene();
+    void terminate();
+    void saveToFile(const std::string& path);
+    void loadToFile(const std::string& path);
     void addGameObject(OwnerPtr<GameObject>&& gameObject);
 
     template <class T> T_EXTENDS(T, GameObject)
@@ -39,9 +40,9 @@ private:
     void destroyGameObjects();
 
 private:
+    HashedString mSceneName;
 	std::list<OwnerPtr<GameObject>> mGameObjects;
 	std::list<OwnerPtr<GameObject>> mNewGameObjects;
-	OwnerPtr<GameObject> mCameraGameObject;
 
 	f32 mSize = 0.0f;
 	std::string mPath;
@@ -51,7 +52,6 @@ private:
 public:
 	CRGET(GameObjects)
 	CRGET(NewGameObjects)
-	GET(CameraGameObject)
 	GET(Size)
 	GET(Path)
 };

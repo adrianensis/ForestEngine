@@ -56,7 +56,7 @@ public:
         mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
-	    Ptr<T> uiElement = GET_SYSTEM(ScenesManager).getCurrentScene()->createGameObject<T>();
+	    Ptr<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createGameObject<T>();
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 
@@ -98,6 +98,7 @@ public:
 	UI_BUILDER_CONFIG_METHODS(Position)
 	UI_BUILDER_CONFIG_METHODS(Size)
 	UI_BUILDER_CONFIG_METHODS(IsStatic)
+	UI_BUILDER_CONFIG_METHODS(SceneName)
 	UI_BUILDER_CONFIG_METHODS(ToggleEnabled)
 	UI_BUILDER_CONFIG_METHODS(ReleaseOnSameGroupPressed)
 	UI_BUILDER_CONFIG_METHODS(Layer)

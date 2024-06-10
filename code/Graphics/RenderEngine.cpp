@@ -30,13 +30,6 @@ void RenderEngine::init()
 void RenderEngine::update()
 {
 	PROFILER_CPU()
-
-    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
-	if (camera)
-	{
-		camera->update();
-	}
-
     std::vector<Ptr<MeshRenderer>> newList;
     FOR_ARRAY(i, mRenderers)
     {

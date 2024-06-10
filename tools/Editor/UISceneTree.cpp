@@ -9,6 +9,14 @@
 void UISceneTree::init()
 {
     GameObject::init();
+}
+
+void UISceneTree::update()
+{
+    FOR_LIST(it, mTexts)
+    {
+        GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(it->second);
+    }
 
     UIBuilder uiBuilder;
 	uiBuilder.
@@ -21,7 +29,7 @@ void UISceneTree::init()
 	setTextScale(0.5f).
 	setSize(Vector2(0.5, 0.05f));
 
-    const std::list<OwnerPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getCurrentScene()->getNewGameObjects();
+    const std::list<OwnerPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
     std::list<Ptr<GameObject>> objectsInmutableList;
     FOR_LIST(it, objects)
     {
@@ -29,19 +37,17 @@ void UISceneTree::init()
     }
     FOR_LIST(it, objectsInmutableList)
     {
-        Ptr<UIText> uiText = uiBuilder.
-        setText(ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName).
+        HashedString className = ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName;
+        ObjectId id = (*it)->getObjectId();
+        HashedString inspectorName(className.get() + std::to_string(id));
+        Ptr<UIButton> uiText = uiBuilder.
+        setText(inspectorName).
         // setIsStatic(false).
-        create<UIText>().
-        getUIElement<UIText>();
+        create<UIButton>().
+        getUIElement<UIButton>();
 
-        mTexts.emplace((*it)->getObjectId(), uiText);
+        mTexts.emplace(id, uiText);
     }
-}
-
-void UISceneTree::update()
-{
-
 }
 
 void UISceneTree::onDestroy()
