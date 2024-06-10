@@ -218,6 +218,5 @@ private:
     }
 
 private:
-    std::vector<byte> mBuffer;
     u32 mElementSizeInBytes = 0;
 };
