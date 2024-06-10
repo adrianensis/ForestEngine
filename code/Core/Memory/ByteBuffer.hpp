@@ -37,17 +37,14 @@ public:
             mBuffer.insert(mBuffer.end(), elements.mBuffer.begin(), elements.mBuffer.end());
         }
     }
-    void setAt(const ByteBuffer& elements, u32 offset)
+    void copyBufferAt(const ByteBuffer& elements, u32 offset)
     {
         if(!elements.mBuffer.empty())
         {
             CHECK_MSG(offset < sizeInBytes(), "offset out of bounds");
             CHECK_MSG(elements.sizeInBytes() <= sizeInBytes(), "buffer is too large");
             CHECK_MSG((elements.sizeInBytes() + offset) <= sizeInBytes(), "no space enough");
-            FOR_RANGE(i, 0, elements.sizeInBytes())
-            {
-                mBuffer[i + offset] = elements.getBuffer()[i];
-            }
+            std::memcpy(&mBuffer[offset], elements.getBuffer().data(), elements.sizeInBytes());
         }
     }
     template<class T>
@@ -61,6 +58,13 @@ public:
     {
         checkIndex(index);
         return *reinterpret_cast<const T*>(&mBuffer.at(index * sizeof(T)));
+    }
+    template <class T, typename ... Args>
+    void set(u32 index, Args&&... args)
+    {
+        checkIndex(index);
+        T element(args...);
+        std::memcpy(&mBuffer[index*sizeof(T)], &element, sizeof(T));
     }
     void clear()
     {
@@ -93,6 +97,12 @@ public:
     virtual void resize(u32 size)
     {
         mBuffer.resize(size);
+    }
+
+    template<class T>
+    void remove(u32 index)
+    {
+        std::memset(&mBuffer[index*sizeof(T)], 0, sizeof(T));
     }
     // template<class T>
     // void fill(const T& element)
@@ -159,6 +169,12 @@ public:
         checkType<T>();
         return ByteBuffer::get<T>(index);
     }
+    template <class T, typename ... Args>
+    void set(u32 index, Args&&... args)
+    {
+        checkType<T>();
+        ByteBuffer::set<T>(index, args...);
+    }
     virtual u32 size() const override
     {
         return ByteBuffer::size() / mElementSizeInBytes;
@@ -174,6 +190,11 @@ public:
     virtual void resize(u32 size) override
     {
         ByteBuffer::resize(size * mElementSizeInBytes);
+    }
+    template<class T>
+    void remove(u32 index)
+    {
+        ByteBuffer::remove<T>(index);
     }
     template<class T>
     void fill(const T& element)

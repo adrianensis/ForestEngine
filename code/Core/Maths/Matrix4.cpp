@@ -39,7 +39,7 @@ void Matrix4::setRows(const f32 *row0, const f32 *row1, const f32 *row2, const f
 
 void Matrix4::setRows(f32 n)
 {
-	memset(mData, n, sizeof(mData));
+	std::memset(mData, n, sizeof(mData));
 }
 
 void Matrix4::setRows(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3)
