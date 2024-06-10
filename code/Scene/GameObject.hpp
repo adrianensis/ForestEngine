@@ -96,8 +96,6 @@ private:
     void removeComponentInternal(Ptr<Component> component);
 
 private:
-	inline static std::list<OwnerPtr<Component>> smEmptyList;
-
 	std::list<OwnerPtr<Component>> mComponents;
 	bool mIsActive = false;
 
