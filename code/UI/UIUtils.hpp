@@ -7,7 +7,8 @@ class UIUtils
 {
 public:
 
-    static Vector3 correctAspectRatio_X(const Vector3& vector);
+    static f32 correctAspectRatio(f32 x);
+    static Vector3 correctAspectRatioVectorX(const Vector3& vector);
     static Vector3 toScreenSpace(const Vector3& vector);
 };
 

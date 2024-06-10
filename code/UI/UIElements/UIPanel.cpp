@@ -42,7 +42,7 @@ void UIArea::calculateConfig()
         textSize.y = maxAscender + maxDescender;
 
 		mConfig.mSize = textSize * mConfig.mTextScale;
-		mConfig.mDisplaySize = UIUtils::toScreenSpace(textSize);
+		mConfig.mDisplaySize = UIUtils::toScreenSpace(mConfig.mSize);
 	}
 
     // translate to top left corner

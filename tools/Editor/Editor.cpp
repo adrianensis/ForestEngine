@@ -334,12 +334,13 @@ void Editor::createUI()
 	// setPosition(Vector2(0,0)).
 	setPosition(Vector2(-1,1)).
 	setAdjustSizeToText(true).
-	setSize(Vector2(0.5, 0.05f));
+	setSize(Vector2(0.5, 0.05f)).
+    setTextScale(0.5f);
 
-    uiBuilder.
-	setText("cApgfy").
-	create<UIText>().
-	getUIElement<UIText>();
+    // uiBuilder.
+	// setText("cApgfy").
+	// create<UIText>().
+	// getUIElement<UIText>();
 
     uiBuilder.
 	setText("Asdc hghjyYRTL").

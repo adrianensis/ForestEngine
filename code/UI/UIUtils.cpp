@@ -1,11 +1,16 @@
 #include "Graphics/Module.hpp"
 #include "UI/UIUtils.hpp"
 
-Vector3 UIUtils::correctAspectRatio_X(const Vector3& vector)
+f32 UIUtils::correctAspectRatio(f32 x)
+{
+    const f32 aspectRation = GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio();
+	const f32 corrected = x / aspectRation;;
+	return corrected;
+}
+Vector3 UIUtils::correctAspectRatioVectorX(const Vector3& vector)
 {
 	Vector3 correctedVector = vector;
-    f32 aspectRation = GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio();
-	correctedVector.x = correctedVector.x / aspectRation;
+	correctedVector.x = correctAspectRatio(vector.x);
 	return correctedVector;
 }
 

@@ -17,24 +17,24 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
     Ptr<Camera> camera = cameraGameObject->getFirstComponent<Camera>();
 
     Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
-            Vector4(UIUtils::correctAspectRatio_X(
+            Vector4(UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getStart(), 1))
                 ), 1)
         );
     Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
-            Vector4(UIUtils::correctAspectRatio_X(
+            Vector4(UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getEnd(), 1))
                 ), 1)
         );
     GET_SYSTEM(DebugRenderer).drawLine(Line(startLine, endLine), 1, GeometricSpace::SCREEN, mColor);
 
     Vector3 startGlyph = Vector4(
-        UIUtils::correctAspectRatio_X(
+        UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getStart(), 1))
             )
         , 1);
     Vector3 endGlyph = Vector4(
-        UIUtils::correctAspectRatio_X(
+        UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getEnd(), 1))
             )
         , 1);
@@ -47,7 +47,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setAdjustSizeToText(true).
 	setIsAffectedByLayout(false).
     setParent(getPtrToThis<GameObject>()).
-	setSize(Vector2(0.5/2.0, 0.05f/2.0));
+	setTextScale(0.5f);
 
     mPositive = uiBuilder.
 	setText(mAxisName).
@@ -64,7 +64,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setAdjustSizeToText(true).
 	setIsAffectedByLayout(false).
     setParent(getPtrToThis<GameObject>()).
-	setSize(Vector2(0.5/2.0, 0.05f/2.0));
+	setTextScale(0.5f);
 
     mNegative = uiBuilder.
 	setText(mNegAxisName).
@@ -79,12 +79,12 @@ void UISingleAxisGizmo::update()
     Ptr<Camera> camera = cameraGameObject->getFirstComponent<Camera>();
 
     Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
-            Vector4(UIUtils::correctAspectRatio_X(
+            Vector4(UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getStart(), 1))
                 ), 1)
         );
     Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
-            Vector4(UIUtils::correctAspectRatio_X(
+            Vector4(UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getEnd(), 1))
                 ), 1)
         );
@@ -94,12 +94,12 @@ void UISingleAxisGizmo::update()
     // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mNegative);
 
     Vector3 startGlyph = Vector4(
-        UIUtils::correctAspectRatio_X(
+        UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getStart(), 1))
             )
         , 1);
     Vector3 endGlyph = Vector4(
-        UIUtils::correctAspectRatio_X(
+        UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Vector4(mAxis.getEnd(), 1))
             )
         , 1);
@@ -117,7 +117,7 @@ void UISingleAxisGizmo::onDestroy()
 
 void UIAxisGizmo::createAxis()
 {
-    Vector3 axisHalfSize(0.1, 0.1, 0.1);
+    Vector3 axisHalfSize(0.065, 0.065, 0.065);
     Line axisX = Line(Vector3(1,0,0)*axisHalfSize, Vector3(-1,0,0)*axisHalfSize);
     Line axisY = Line(Vector3(0,1,0)*axisHalfSize, Vector3(0,-1,0)*axisHalfSize);
     Line axisZ = Line(Vector3(0,0,1)*axisHalfSize, Vector3(0,0,-1)*axisHalfSize);
