@@ -31,8 +31,6 @@ private:
 	Ptr<GameObject> mSelectedGameObject;
 	Ptr<UIAxisGizmo> mAxisViewer;
 
-    u32 a = 0;
-
     std::vector<Ptr<GameObject>> mGameObjectsArray;
 
     Vector2 mLastMousePosition;

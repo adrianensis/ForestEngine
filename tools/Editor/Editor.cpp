@@ -190,12 +190,8 @@ void Editor::update()
     // mousePick();
 
     mAxisViewer->update();
-    if(a % 5 == 0)
-    {
-        mUISceneTree->update();
-        mUITransform->update(cameraTransform);
-    }
-    a++;
+    mUISceneTree->update();
+    mUITransform->update(cameraTransform);
 
 }
 
