@@ -54,6 +54,7 @@ void UIText::onDestroy()
 
 void UIText::setText(HashedString text) 
 {
+    PROFILER_CPU()
 	if (mString != text)
 	{
 		FOR_LIST(it, mFontRenderers)

@@ -53,6 +53,7 @@ public:
 	template<class T> T_EXTENDS(T, UIElement)
 	UIBuilder& create()
 	{
+        PROFILER_CPU()
         mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();

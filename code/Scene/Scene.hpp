@@ -25,6 +25,7 @@ public:
     template <class T> T_EXTENDS(T, GameObject)
 	Ptr<T> createGameObject()
 	{
+        PROFILER_CPU()
 		OwnerPtr<T> gameObject = OwnerPtr<T>::newObject();
         gameObject->init();
 		Ptr<T> gameObjectPtr = gameObject;
