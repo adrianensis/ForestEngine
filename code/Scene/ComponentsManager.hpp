@@ -71,7 +71,7 @@ public:
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentsArrays.contains(id))
         {
-            mComponentsArrays.insert_or_assign(id, ComponentsArray(static_cast<u32>(sizeof(T)), 3000));
+            mComponentsArrays.emplace(id, 3000);
         }
 
         ComponentHandler componentHandler(id, mComponentsArrays.at(id).mSlotsManager.requestSlot(), this);
@@ -85,7 +85,7 @@ public:
             mComponentsArrays.at(id).mComponents[slot] = OwnerPtr<Component>::moveCast(OwnerPtr<T>::newObject());
         }
 
-        mPtrToHandler.insert_or_assign(mComponentsArrays.at(id).mComponents[slot], componentHandler);
+        mPtrToHandler.emplace(mComponentsArrays.at(id).mComponents[slot], componentHandler);
 
         return componentHandler;
     }
@@ -122,7 +122,7 @@ private:
     class ComponentsArray
     {
     public:
-        ComponentsArray(u32 elementSizeInBytes, u32 reservedComponents)
+        ComponentsArray(u32 reservedComponents)
         {
             mComponents.resize(reservedComponents);
             mSlotsManager.init(reservedComponents);
