@@ -32,25 +32,21 @@ void RenderEngine::update()
 	PROFILER_CPU()
     std::vector<Ptr<MeshRenderer>> newList;
     
-    LOG_VAR(mRenderers.size())
     PROFILER_BLOCK_CPU("remove renderers");
-    FOR_ARRAY(i, mRenderers)
+    FOR_LIST(it, mRenderersSet)
     {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
-        if(renderer.isValid())
+        Ptr<MeshRenderer> renderer = *it;
+        if(!renderer.isValid() || renderer->getIsDestroyed())
         {
-            newList.push_back(renderer);
+            mRenderersSet.erase(renderer);
         }
     }
     PROFILER_END_BLOCK()
 
-    mRenderers.clear();
-    mRenderers = newList;
-
     PROFILER_BLOCK_CPU("update renderers");
-    FOR_ARRAY(i, mRenderers)
+    FOR_LIST(it, mRenderersSet)
     {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
+        Ptr<MeshRenderer> renderer = *it;
         renderer->update();
 
         const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
@@ -109,9 +105,11 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
 
-        mRenderers.push_back(renderer);
+        // mRenderers.push_back(renderer);
 
         mRenderPipeline.addRenderer(renderer);
+
+        mRenderersSet.insert(renderer);
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {
@@ -141,6 +139,8 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
         mRenderPipeline.removeRenderer(renderer);
 
         mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
+
+        mRenderersSet.erase(renderer);
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {

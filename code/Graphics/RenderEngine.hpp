@@ -24,7 +24,7 @@ private:
     void swap();
     void render();
 private:
-	std::vector<Ptr<MeshRenderer>> mRenderers;
+	std::unordered_set<Ptr<MeshRenderer>> mRenderersSet;
     RenderPipelineData mRenderPipelineData;
     RenderPipelinePBR mRenderPipeline;
 

@@ -37,7 +37,7 @@ private:
     void drawCall();
 
 private:
-	std::vector<Ptr<MeshRenderer>> mRenderers;
+    std::unordered_set<Ptr<MeshRenderer>> mRenderersSet;
     OwnerPtr<GPUProgram> mGPUProgram;
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;
