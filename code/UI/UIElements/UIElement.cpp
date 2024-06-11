@@ -10,7 +10,7 @@ void UIElement::initFromConfig(const UIElementConfig& config)
 	mConfig = config;
     mIsStatic = mConfig.mIsStatic;
 
-    calculateConfig();
+    mConfig = calculateConfig(mConfig);
 }
 
 void UIElement::onDestroy()

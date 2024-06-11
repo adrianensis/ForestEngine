@@ -20,19 +20,20 @@ void UIArea::initFromConfig(const UIElementConfig& config)
     mTransform->mIgnoreParentScale = true;
 }
 
-void UIArea::calculateConfig()
+UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
 {
-    mConfig.mDisplayPosition = mConfig.mPosition;
-    mConfig.mDisplaySize = mConfig.mSize;
+    UIElementConfig newConfig = config;
+    newConfig.mDisplayPosition = config.mPosition;
+    newConfig.mDisplaySize = config.mSize;
 
-	if (mConfig.mAdjustSizeToText)
+	if (newConfig.mAdjustSizeToText)
 	{
         Vector2 textSize(0,0);
         f32 maxAscender = 0;
         f32 maxDescender = 0;
-        FOR_ARRAY(i, mConfig.mText.get())
+        FOR_ARRAY(i, newConfig.mText.get())
         {
-            char character = mConfig.mText.get().at(i);
+            char character = newConfig.mText.get().at(i);
             const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
 
             textSize.x += glyphData.mAdvance.x;
@@ -41,13 +42,15 @@ void UIArea::calculateConfig()
         }
         textSize.y = maxAscender + maxDescender;
 
-		mConfig.mSize = textSize * mConfig.mTextScale;
-		mConfig.mDisplaySize = UIUtils::toScreenSpace(mConfig.mSize);
+		newConfig.mSize = textSize * newConfig.mTextScale;
+		newConfig.mDisplaySize = UIUtils::toScreenSpace(newConfig.mSize);
 	}
 
     // translate to top left corner
-	mConfig.mDisplayPosition.x += mConfig.mDisplaySize.x / 2.0f;
-    mConfig.mDisplayPosition.y -= mConfig.mDisplaySize.y / 2.0f;
+	newConfig.mDisplayPosition.x += newConfig.mDisplaySize.x / 2.0f;
+    newConfig.mDisplayPosition.y -= newConfig.mDisplaySize.y / 2.0f;
+
+    return newConfig;
 }
 
 void UIPanel::initFromConfig(const UIElementConfig& config) 

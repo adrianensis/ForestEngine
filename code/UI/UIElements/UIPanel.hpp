@@ -7,9 +7,7 @@ class UIArea: public UIElement
     
 public:
     void initFromConfig(const UIElementConfig& config) override;
-
-private:
-    virtual void calculateConfig() override;
+    virtual UIElementConfig calculateConfig(const UIElementConfig& config) override;
 };
 REGISTER_CLASS(UIArea);
 

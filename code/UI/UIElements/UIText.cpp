@@ -57,11 +57,18 @@ void UIText::setText(HashedString text)
     PROFILER_CPU()
 	if (mString != text)
 	{
-		FOR_LIST(it, mFontRenderers)
+        const u32 textLen = text.get().length();
+        const u32 glyphRenderersLen = static_cast<u32>(mFontRenderers.size());
+        const u32 maxGlyphs = std::max(textLen, glyphRenderersLen);
+        if(textLen < glyphRenderersLen)
         {
-            mScene->removeGameObject(*it);
+            u32 diff = glyphRenderersLen - textLen;
+            FOR_RANGE(i, 0, diff)
+            {
+                mScene->removeGameObject(mFontRenderers.back());
+                mFontRenderers.pop_back();
+            }
         }
-        mFontRenderers.clear();
 
 		if (!text.get().empty())
 		{
@@ -81,7 +88,7 @@ void UIText::setText(HashedString text)
             f32 baseLineScreenSpace = mConfig.mDisplaySize.y - maxDescenderVecScreenSpace.y;
             
             f32 offset = -mConfig.mDisplaySize.x/2.0f;
-			FOR_RANGE(i, 0, text.get().length())
+			FOR_RANGE(i, 0, textLen)
 			{
                 char character = text.get().at(i);
                 const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
@@ -92,19 +99,36 @@ void UIText::setText(HashedString text)
                 Vector2 bearingScreenSpace = UIUtils::toScreenSpace(bearing * mConfig.mTextScale);
                 Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, mConfig.mDisplaySize.y/2.0f - baseLineScreenSpace + bearingScreenSpace.y);
 
-                UIBuilder uiBuilder;
-                Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
-                setPosition(glyphPositionScreenSpace).
-                setIsStatic(mConfig.mIsStatic).
-                setSize(glyphSizeScreenSpace).
-                setText(HashedString(std::string() + character)).
-                setLayer(mConfig.mLayer + 1).
-                setIsAffectedByLayout(false).
-                setParent(Ptr<GameObject>::cast(getPtrToThis<UIText>())).
-                create<UITextGlyph>().
-                getUIElement<UITextGlyph>();
+                if(i < mFontRenderers.size())
+                {
+                    Ptr<UITextGlyph> gameObjectGlyph = mFontRenderers[i];
+                    UIElementConfig glyphConfig = gameObjectGlyph->getConfig();
+                    glyphConfig.mPosition = glyphPositionScreenSpace;
+                    glyphConfig.mSize = glyphSizeScreenSpace;
+                    glyphConfig = gameObjectGlyph->calculateConfig(glyphConfig);
+                    gameObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
+                    gameObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
+                    Ptr<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
+                    Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
+                    renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
+                    renderer->getMaterialInstance().mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
+                }
+                else
+                {
+                    UIBuilder uiBuilder;
+                    Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
+                    setPosition(glyphPositionScreenSpace).
+                    setIsStatic(false).
+                    setSize(glyphSizeScreenSpace).
+                    setText(HashedString(std::string() + character)).
+                    setLayer(mConfig.mLayer + 1).
+                    setIsAffectedByLayout(false).
+                    setParent(Ptr<GameObject>::cast(getPtrToThis<UIText>())).
+                    create<UITextGlyph>().
+                    getUIElement<UITextGlyph>();
 
-                mFontRenderers.push_back(gameObjectGlyph);
+                    mFontRenderers.push_back(gameObjectGlyph);
+                }
 
                 offset += UIUtils::toScreenSpace(Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;
 			}

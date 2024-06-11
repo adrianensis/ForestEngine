@@ -37,6 +37,7 @@ class UIElement: public GameObject
 public:
     virtual void initFromConfig(const UIElementConfig& config);
     void postInit();
+    virtual UIElementConfig calculateConfig(const UIElementConfig& config) { return config; };
     virtual void onDestroy();
 
     bool hasFocus() const;
@@ -94,7 +95,6 @@ protected:
 	virtual void onFocusLost() { }
 
     StencilData calculateStencilData() const;
-    virtual void calculateConfig() {};
 
 protected:
 	UIElementConfig mConfig;
