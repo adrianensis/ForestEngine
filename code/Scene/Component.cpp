@@ -31,6 +31,12 @@ void Component::destroy()
     onDestroy();
 }
 
+void Component::onRecycle()
+{
+	mIsActive = true;
+	mIsDestroyed = false;
+}
+
 void Component::onDestroy()
 {
 

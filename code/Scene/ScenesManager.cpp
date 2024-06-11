@@ -20,7 +20,7 @@ void ScenesManager::terminate()
 	if (mCameraGameObject)
 	{
 		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
-		mCameraGameObject->removeComponent<Camera>(cameraComponent);
+		mCameraGameObject->removeComponent(cameraComponent);
 		mCameraGameObject->destroy();
         mCameraGameObject.invalidate();
 	}

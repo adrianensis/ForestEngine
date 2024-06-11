@@ -31,23 +31,25 @@ void RenderEngine::update()
 {
 	PROFILER_CPU()
     std::vector<Ptr<MeshRenderer>> newList;
+    
+    LOG_VAR(mRenderers.size())
+    PROFILER_BLOCK_CPU("remove renderers");
     FOR_ARRAY(i, mRenderers)
     {
-        PROFILER_BLOCK_CPU("remove renderers");
-
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             newList.push_back(renderer);
         }
     }
+    PROFILER_END_BLOCK()
 
     mRenderers.clear();
     mRenderers = newList;
 
+    PROFILER_BLOCK_CPU("update renderers");
     FOR_ARRAY(i, mRenderers)
     {
-        PROFILER_BLOCK_CPU("update renderers");
         Ptr<MeshRenderer> renderer = mRenderers[i];
         renderer->update();
 
@@ -55,8 +57,12 @@ void RenderEngine::update()
         CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
         mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
 
-        GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+        if(renderer->getMaterialInstanceSlot().isValid())
+        {
+            GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+        }
     }
+    PROFILER_END_BLOCK()
 
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
     GET_SYSTEM(MaterialManager).update();
@@ -102,7 +108,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
-        
+
         mRenderers.push_back(renderer);
 
         mRenderPipeline.addRenderer(renderer);

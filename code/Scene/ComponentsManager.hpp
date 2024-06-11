@@ -6,7 +6,6 @@
 
 class ComponentsManager;
 
-template <class T>
 class ComponentHandler
 {
 public:
@@ -28,13 +27,19 @@ public:
         reset();
     }
 
-    T& get() const;
-    bool isValid() const { return mComponentsManager && mClassId > 0 && mSlot.isValid(); }
-    T* operator->() const { return &get(); }
+    template<class T> T_EXTENDS(T, Component)
+    Ptr<T> get() const
+    {
+        return Ptr<T>::cast(getComponent());
+    }
 
-    bool operator==(const ComponentHandler<T>& other) const
+    Ptr<Component> operator->() const { return getComponent(); }
+
+    Ptr<Component> getComponent() const;
+    bool isValid() const { return mComponentsManager && mClassId > 0 && mSlot.isValid(); }
+    bool operator==(const ComponentHandler& other) const
 	{
-		return isValid() && other.isValid() &
+		return
          mComponentsManager == other.mComponentsManager &&
          mClassId == other.mClassId &&
          mSlot.getSlot() == other.mSlot.getSlot();
@@ -60,67 +65,73 @@ public:
     virtual void terminate() override;
 
     template<class T> T_EXTENDS(T, Component)
-    ComponentHandler<T> createComponent()
+    ComponentHandler requestComponent()
     {
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
-        if(!mComponentBuffers.contains(id))
+        if(!mComponentsArrays.contains(id))
         {
-            mComponentBuffers.emplace(id, sizeof(T), 3000);
+            mComponentsArrays.insert_or_assign(id, ComponentsArray(static_cast<u32>(sizeof(T)), 3000));
         }
 
-        ComponentHandler<T> componentHandler
-        {
-            id,
-            mComponentBuffers.at(id).mSlotsManager.requestSlot()
-        };
-
-        TypedByteBuffer& typedBuffer = mComponentBuffers.at(componentHandler.mClassId).mTypedBuffer;
+        ComponentHandler componentHandler(id, mComponentsArrays.at(id).mSlotsManager.requestSlot(), this);
         u32 slot = componentHandler.mSlot.getSlot();
-        typedBuffer.set<T>(slot);
+        if(mComponentsArrays.at(id).mComponents[slot].isValid())
+        {
+            mComponentsArrays.at(id).mComponents[slot]->onRecycle();
+        }
+        else
+        {
+            mComponentsArrays.at(id).mComponents[slot] = OwnerPtr<Component>::moveCast(OwnerPtr<T>::newObject());
+        }
+
+        mPtrToHandler.insert_or_assign(mComponentsArrays.at(id).mComponents[slot], componentHandler);
 
         return componentHandler;
     }
 
-    template<class T> T_EXTENDS(T, Component)
-    void removeComponent(ComponentHandler<T>& componentHandler)
+    void removeComponent(ComponentHandler& componentHandler)
     {
-        TypedByteBuffer& typedBuffer = mComponentBuffers.at(componentHandler.mClassId).mTypedBuffer;
         u32 slot = componentHandler.mSlot.getSlot();
-        typedBuffer.remove<T>(slot);
+        ClassId id = componentHandler.mClassId;
 
-        mComponentBuffers.at(componentHandler.mClassId).mSlotsManager.freeSlot(slot);
+        if(mComponentsArrays.contains(id))
+        {
+            mPtrToHandler.erase(mComponentsArrays.at(id).mComponents[slot]);
+            
+            // mComponentsArrays.at(componentHandler.mClassId).mComponents[slot].invalidate();
+            mComponentsArrays.at(id).mSlotsManager.freeSlot(componentHandler.mSlot);
+        }
+        componentHandler.reset();
     }
 
-    template<class T> T_EXTENDS(T, Component)
-    T& getComponent(ComponentHandler<T> componentHandler)
+    void removeComponent(Ptr<Component> component)
     {
-        TypedByteBuffer& typedBuffer = mComponentBuffers.at(componentHandler.mClassId).mTypedBuffer;
+        // NOTE: copy!
+        ComponentHandler componentHandler = mPtrToHandler.at(component);
+        removeComponent(componentHandler);
+    }
+
+    Ptr<Component> getComponent(ComponentHandler componentHandler) const
+    {
         u32 slot = componentHandler.mSlot.getSlot();
-        return typedBuffer.get<T>(slot);
+        return mComponentsArrays.at(componentHandler.mClassId).mComponents[slot];
     }
 
 private:
-    class ComponentBuffer
+    class ComponentsArray
     {
     public:
-        ComponentBuffer(u32 elementSizeInBytes, u32 reservedComponents)
+        ComponentsArray(u32 elementSizeInBytes, u32 reservedComponents)
         {
-            mTypedBuffer = TypedByteBuffer(elementSizeInBytes);
-            mTypedBuffer.reserve(reservedComponents);
+            mComponents.resize(reservedComponents);
             mSlotsManager.init(reservedComponents);
         }
-        TypedByteBuffer mTypedBuffer;
+        std::vector<OwnerPtr<Component>> mComponents;
         SlotsManager mSlotsManager;
     };
 
-    std::unordered_map<ClassId, ComponentBuffer> mComponentBuffers;
+    std::unordered_map<ClassId, ComponentsArray> mComponentsArrays;
+    std::unordered_map<Ptr<Component>, ComponentHandler> mPtrToHandler;
 };
 REGISTER_CLASS(ComponentsManager);
-
-template<class T>
-T& ComponentHandler<T>::get() const
-{
-    CHECK_MSG(isValid(), "Invalid handler!");
-    return mComponentsManager->getComponent(*this);
-}

@@ -2,7 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/Events/Event.hpp"
-#include "Scene/Component.hpp"
+#include "Scene/ComponentsManager.hpp"
 
 class Transform;
 class Scene;
@@ -20,7 +20,6 @@ public:
     GameObject();
 
     virtual void init();
-
 	template <class T> T_EXTENDS(T, Component)
 	Ptr<T> addComponent(OwnerPtr<T>&& component)
 	{
@@ -30,13 +29,15 @@ public:
     template <class T, typename ... Args> T_EXTENDS(T, Component)
 	Ptr<T> createComponent(Args&&... args)
 	{
-		OwnerPtr<T> component = OwnerPtr<T>::newObject();
+        // ComponentHandler componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
+        // componentHandler.get<T>()->init(args...);
+        // return Ptr<T>::cast(addComponentInternal(componentHandler));
+        OwnerPtr<T> component = OwnerPtr<T>::newObject();
         component->init(args...);
         return addComponent(std::move(component));
 	}
 
-	template <class T> T_EXTENDS(T, Component)
-	void removeComponent(Ptr<T> component)
+	void removeComponent(Ptr<Component> component)
 	{
 		GameObject::removeComponentInternal(component);
 	}
@@ -45,12 +46,14 @@ public:
 	std::list<Ptr<T>> getComponents() const
 	{
 		std::list<Ptr<T>> components;
+		// FOR_LIST(it, mComponentHandlers)
 		FOR_LIST(it, mComponents)
 		{
+            // Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
             Ptr<T> casted = Ptr<T>::cast((*it));
             if(casted)
             {
-			    components.push_back(Ptr<T>::cast(*it));
+			    components.push_back(casted);
             }
 		}
 
@@ -61,8 +64,10 @@ public:
 	Ptr<T> getFirstComponent() const
 	{   
         Ptr<T> component;
+        // FOR_LIST(it, mComponentHandlers)
         FOR_LIST(it, mComponents)
         {
+            // Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
             Ptr<T> casted = Ptr<T>::cast((*it));
             if(casted)
             {
@@ -93,10 +98,12 @@ public:
 
 private:
     Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
+    // Ptr<Component> addComponentInternal(ComponentHandler componentHandler);
     void removeComponentInternal(Ptr<Component> component);
 
 private:
-	std::list<OwnerPtr<Component>> mComponents;
+    std::list<OwnerPtr<Component>> mComponents;
+	std::list<ComponentHandler> mComponentHandlers;
 	bool mIsActive = false;
 
 	bool mIsPendingToBeDestroyed = false;

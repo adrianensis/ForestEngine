@@ -11,12 +11,25 @@ GameObject::GameObject()
 
 void GameObject::init()
 {
-	OwnerPtr<Transform> transform = OwnerPtr<Transform>::newObject();
-	addComponent<Transform>(std::move(transform));
-    mTransform = getFirstComponent<Transform>();
-
+    mTransform = createComponent<Transform>();
 	mTag = "";
 }
+
+// Ptr<Component> GameObject::addComponentInternal(ComponentHandler componentHandler)
+// {
+//     CHECK_MSG(!componentHandler->mGameObject.isValid(), "Component is already assigned to a GameObject!");
+
+// 	mComponentHandlers.emplace_back(componentHandler);
+//     Ptr<Component> comp = componentHandler.getComponent();
+
+//     CHECK_MSG(getPtrToThis<GameObject>().isValid(), "invalid GameObject!");
+// 	comp->mGameObject = getPtrToThis<GameObject>();
+// 	comp->onComponentAdded();
+
+// 	SystemsManager::getInstance().addComponentToSystem(comp);
+
+//     return comp;
+// }
 
 Ptr<Component> GameObject::addComponentInternal(OwnerPtr<Component>&& component)
 {
@@ -32,6 +45,23 @@ Ptr<Component> GameObject::addComponentInternal(OwnerPtr<Component>&& component)
     return comp;
 }
 
+// void GameObject::removeComponentInternal(Ptr<Component> component)
+// {
+//     CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
+//     CHECK_MSG(component->mGameObject == getPtrToThis<GameObject>(), "Component is assigned to another GameObject!");
+
+//     FOR_LIST(it, mComponentHandlers)
+// 	{
+//         if((*it).getComponent() == component)
+//         {
+//             SystemsManager::getInstance().removeComponentFromSystem(component);
+//             component->destroy();
+//             // mComponentHandlers.erase(it);
+//             GET_SYSTEM(ComponentsManager).removeComponent(*it);
+//             break;
+//         }
+//     }
+// }
 void GameObject::removeComponentInternal(Ptr<Component> component)
 {
     CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
@@ -45,11 +75,11 @@ void GameObject::removeComponentInternal(Ptr<Component> component)
         mComponents.erase(it);
     }
 }
-
 void GameObject::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
+	// FOR_LIST(it, mComponentHandlers)
 	FOR_LIST(it, mComponents)
 	{
 		(*it)->setIsActive(isActive);
@@ -66,7 +96,18 @@ void GameObject::destroy()
 
 	onDestroy();
 
-	FOR_LIST(it, mComponents)
+	// FOR_LIST(it, mComponentHandlers)
+	// {
+    //     if((*it).isValid())
+    //     {
+    //         SystemsManager::getInstance().removeComponentFromSystem(Ptr<Component>((*it).getComponent()));
+    //         (*it)->destroy();
+    //         GET_SYSTEM(ComponentsManager).removeComponent(*it);
+    //     }
+	// }
+
+	// mComponentHandlers.clear();
+    FOR_LIST(it, mComponents)
 	{
         if(*it)
         {

@@ -57,7 +57,7 @@ void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
     mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
-    IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
+    // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
 }
 
 void MeshRenderer::update()
@@ -74,19 +74,19 @@ void MeshRenderer::update()
 
 void MeshRenderer::updateTextureRegion()
 {
-	PROFILER_CPU()
+	// PROFILER_CPU()
 
-	const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
-    if (currentTextureAnimation && !currentTextureAnimation->mFrames.empty())
-    {
-        mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
-        const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
-        // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
-        // {
-        //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
-        //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
-        // }
-    }
+	// const TextureAnimation* currentTextureAnimation = getCurrentTextureAnimation();
+    // if (currentTextureAnimation && !currentTextureAnimation->mFrames.empty())
+    // {
+    //     mCurrentTextureAnimationUpdater.setTextureAnimation(*currentTextureAnimation);
+    //     const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
+    //     // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
+    //     // {
+    //     //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
+    //     //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+    //     // }
+    // }
 }
 
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const

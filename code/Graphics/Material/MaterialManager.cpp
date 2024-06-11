@@ -128,21 +128,29 @@ void MaterialManager::initMaterialInstancePropertiesSharedBuffer(const PoolHandl
 
 void MaterialManager::setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance)
 {
+    PROFILER_CPU()
+
     PoolHandler<Material> material = materialInstance.mMaterial;
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
     CHECK_MSG(mMaterialToPropertyBlock.contains(materialID), "Invalid material!");
     ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
 
-    if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
+    PROFILER_BLOCK_CPU("contains propertiesBlockClassId")
+    if(material->getMaterialData().allowInstances())
     {
-        CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(slot), "Invalid slot!");
-        if(material->getMaterialData().allowInstances())
+        PROFILER_BLOCK_CPU("allowInstances")
+        if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
+            CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(slot), "Invalid slot!");
             u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
+            PROFILER_BLOCK_CPU("Copy Buffer")
             mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.copyBufferAt(materialInstance.mMaterialPropertiesBlockBuffer.getByteBuffer(), slot.getSlot() * propertiesBlockSizeBytes);
+            PROFILER_END_BLOCK()
         }
+        PROFILER_END_BLOCK()
     }
+    PROFILER_END_BLOCK()
 }
 
 const GPUSharedBuffer& MaterialManager::getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const

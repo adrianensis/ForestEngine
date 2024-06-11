@@ -20,6 +20,7 @@ public:
     void setIsActive(bool isActive);
     void destroy();
     virtual void onDestroy();
+    virtual void onRecycle();
 
 private:
 	bool mIsActive = false;
