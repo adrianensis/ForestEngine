@@ -59,7 +59,7 @@ void Editor::firstUpdate()
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, 0, false);
     // mGameObjectsArray.push_back(obj);
 
-	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,0), 100.0f, 180, false);
+	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,0), 100.0f, 180, false);
     // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -69,7 +69,7 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
     createUI();
-    mousePick();
+    // mousePick();
 
     mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
     mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
@@ -189,7 +189,7 @@ void Editor::update()
         mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
     }
 
-    mousePick();
+    // mousePick();
 
     mAxisViewer->update();
     mUISceneTree->update();
@@ -328,7 +328,7 @@ void Editor::handleMouse()
 
 void Editor::createUI()
 {
-    	UIBuilder uiBuilder;
+    UIBuilder uiBuilder;
 
 	uiBuilder.
 	// setPosition(Vector2(0,0)).
@@ -337,10 +337,10 @@ void Editor::createUI()
 	setSize(Vector2(0.5, 0.05f)).
     setTextScale(0.5f);
 
-    // uiBuilder.
-	// setText("cApgfy").
-	// create<UIText>().
-	// getUIElement<UIText>();
+    uiBuilder.
+	setText("cApgfy").
+	create<UIText>().
+	getUIElement<UIText>();
 
     uiBuilder.
 	setText("Asdc hghjyYRTL").
@@ -351,7 +351,7 @@ void Editor::createUI()
 
 
     mFPSCounter = uiBuilder.
-	setText("100").
+	setText("000").
 	create<UIText>().
     getUIElement<UIText>();
 
