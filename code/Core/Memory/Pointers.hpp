@@ -140,7 +140,7 @@ private:
 
     void assign(const Ptr<T>& other)
     {
-        if(*this == other) { return; }
+        // if(*this == other) { return; }
         invalidate();
         if(other.isValid())
         {
@@ -350,7 +350,7 @@ private:
 
     void assign(const SharedPtr<T>& other)
     {
-        if(*this == other) { return; }
+        // if(*this == other) { return; }
 
         this->invalidate();
         if(other.isValid())
@@ -412,11 +412,7 @@ private:
 
     void assign(OwnerPtr<T>& other)
     {
-        if(*this == other)
-        {
-            return;
-        }
-
+        // if(*this == other) { return; }
         this->invalidate();
         if(other.isValid())
         {
