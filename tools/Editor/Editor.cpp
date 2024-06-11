@@ -155,8 +155,6 @@ void Editor::update()
 
 	mLastMousePosition = currentMousePosition;
 
-    mUITransform->update(cameraTransform);
-
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x
 	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
@@ -192,7 +190,13 @@ void Editor::update()
     // mousePick();
 
     mAxisViewer->update();
-    mUISceneTree->update();
+    if(a % 5 == 0)
+    {
+        mUISceneTree->update();
+        mUITransform->update(cameraTransform);
+    }
+    a++;
+
 }
 
 void Editor::terminate()
