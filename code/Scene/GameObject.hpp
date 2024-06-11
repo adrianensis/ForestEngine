@@ -29,16 +29,18 @@ public:
     template <class T, typename ... Args> T_EXTENDS(T, Component)
 	Ptr<T> createComponent(Args&&... args)
 	{
-        // ComponentHandler componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
-        // componentHandler.get<T>()->init(args...);
-        // return Ptr<T>::cast(addComponentInternal(componentHandler));
-        OwnerPtr<T> component = OwnerPtr<T>::newObject();
-        component->init(args...);
-        return addComponent(std::move(component));
+        PROFILER_CPU()
+        ComponentHandler componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
+        componentHandler.get<T>()->init(args...);
+        return Ptr<T>::cast(addComponentInternal(componentHandler));
+        // OwnerPtr<T> component = OwnerPtr<T>::newObject();
+        // component->init(args...);
+        // return addComponent(std::move(component));
 	}
 
 	void removeComponent(Ptr<Component> component)
 	{
+        PROFILER_CPU()
 		GameObject::removeComponentInternal(component);
 	}
 
@@ -46,11 +48,11 @@ public:
 	std::list<Ptr<T>> getComponents() const
 	{
 		std::list<Ptr<T>> components;
-		// FOR_LIST(it, mComponentHandlers)
-		FOR_LIST(it, mComponents)
+		FOR_LIST(it, mComponentHandlers)
+		// FOR_LIST(it, mComponents)
 		{
-            // Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
-            Ptr<T> casted = Ptr<T>::cast((*it));
+            Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
+            // Ptr<T> casted = Ptr<T>::cast((*it));
             if(casted)
             {
 			    components.push_back(casted);
@@ -64,11 +66,11 @@ public:
 	Ptr<T> getFirstComponent() const
 	{   
         Ptr<T> component;
-        // FOR_LIST(it, mComponentHandlers)
-        FOR_LIST(it, mComponents)
+        FOR_LIST(it, mComponentHandlers)
+        // FOR_LIST(it, mComponents)
         {
-            // Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
-            Ptr<T> casted = Ptr<T>::cast((*it));
+            Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
+            // Ptr<T> casted = Ptr<T>::cast((*it));
             if(casted)
             {
                 component = casted;
@@ -97,8 +99,8 @@ public:
     void destroy();
 
 private:
-    Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
-    // Ptr<Component> addComponentInternal(ComponentHandler componentHandler);
+    // Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
+    Ptr<Component> addComponentInternal(ComponentHandler componentHandler);
     void removeComponentInternal(Ptr<Component> component);
 
 private:
