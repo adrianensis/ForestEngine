@@ -3,7 +3,7 @@
 #include "Core/StdCore.hpp"
 #include "Core/Assert/Assert.hpp"
 #include <vector>
-#include <unordered_set>
+#include <set>
 
 class Slot
 {
@@ -72,9 +72,11 @@ public:
     }
 
     u32 getSize() const { return mSize; }
+    u32 getMaxIndex() const { return *mAvailableSlots.rbegin(); }
     void reset() { mAvailableSlots.clear(); }
 
 private:
-    std::unordered_set<u32> mAvailableSlots;
+    std::set<u32> mAvailableSlots;
     u32 mSize = 0;
+public:
 };
