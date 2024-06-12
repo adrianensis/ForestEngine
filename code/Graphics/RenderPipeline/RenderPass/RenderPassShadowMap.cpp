@@ -28,7 +28,7 @@ void RenderPassShadowMap::preRender()
 
 void RenderPassShadowMap::postRender()
 {
-	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::BACK);
+	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::NONE);
 
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);

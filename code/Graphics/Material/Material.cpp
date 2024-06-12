@@ -25,7 +25,7 @@ void Material::terminate()
 void Material::enable() const
 {
 	PROFILER_CPU()
-    GET_SYSTEM(GPUInterface).setFaceMode(mMaterialData.mCullFaceType);
+    // GET_SYSTEM(GPUInterface).setFaceMode(mMaterialData.mCullFaceType);
 }
 
 void Material::disable() const

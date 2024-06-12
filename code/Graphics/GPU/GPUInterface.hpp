@@ -169,7 +169,8 @@ enum class GPUPrimitiveDataType : u32
 DECLARE_ENUM(GPUCullFaceType,
     NONE = 0, "NONE",
     FRONT = GL_FRONT, "FRONT",
-    BACK = GL_BACK, "BACK"
+    BACK = GL_BACK, "BACK",
+    FRONT_AND_BACK = GL_FRONT_AND_BACK, "GL_FRONT_AND_BACK"
 );
 
 #define TO_U32(x) static_cast<u32>(x)

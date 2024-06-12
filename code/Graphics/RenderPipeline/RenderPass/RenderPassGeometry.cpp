@@ -13,6 +13,7 @@ void RenderPassGeometry::preRender()
 void RenderPassGeometry::postRender()
 {
     GET_SYSTEM(GPUInterface).disableFlag(GL_BLEND);
+    GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::NONE);
 }
 
 void RenderPassGeometry::render()
