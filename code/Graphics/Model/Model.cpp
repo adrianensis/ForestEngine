@@ -1,4 +1,5 @@
 #include "Graphics/Model/Model.hpp"
+#include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
@@ -70,7 +71,6 @@ void Model::loadGLTFMaterials()
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
-            materialData.mIsSkinned = isSkinned();
             materialData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
             PoolHandler<Material> newMaterial;
 
@@ -212,6 +212,10 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     if(primitive.material)
     {
         meshMaterial = mGLTFMaterials[primitive.material];
+    }
+    else
+    {
+        meshMaterial = GET_SYSTEM(ModelManager).getDefaultModelMaterial();
     }
 
     mMeshMaterials[mesh] = meshMaterial;

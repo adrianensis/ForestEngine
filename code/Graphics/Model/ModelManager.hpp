@@ -2,6 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
 
 class Model;
 
@@ -15,7 +16,9 @@ public:
 
 private:
     std::unordered_map<std::string, OwnerPtr<Model>> mModels;
+    PoolHandler<Material> mDefaultModelMaterial;
 public:
+    GET(DefaultModelMaterial)
     CRGET(Models)
 };
 REGISTER_CLASS(ModelManager);
