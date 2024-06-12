@@ -21,7 +21,8 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     shaderBuilder.getMain().
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4, {position, {"1.0f"}}));
     
-    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
+    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs);
+    if(bonesIDs.isValid())
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
         shaderBuilder.getMain().
@@ -77,7 +78,8 @@ void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuild
     shaderBuilder.getMain().
     variable(finalNormal, GPUBuiltIn::PrimitiveTypes::mVector3, "finalNormal", call(GPUBuiltIn::PrimitiveTypes::mVector3, {normal}));
 
-    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
+    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs);
+    if(bonesIDs.isValid())
     {
         Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
         Variable transformedNormal;
@@ -247,7 +249,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
 
     shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
     shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI180);
-    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
         shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
@@ -317,7 +319,7 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
     FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
     FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
 
-    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
         registerFunctionCalculateBoneTransform(shaderBuilder);
     }
@@ -341,7 +343,7 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
 {
     registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
 
-    if(getShaderData().mMaterial->getMaterialData().mIsSkinned)
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
         vertexShaderCalculateBoneMatrix(shaderBuilder);
     }

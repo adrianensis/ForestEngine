@@ -17,7 +17,6 @@ public:
 	bool mReceiveLight = true;
 	bool mReceiveShadows = true;
 	bool mCastShadows = true;
-    bool mIsSkinned = false;
     GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;

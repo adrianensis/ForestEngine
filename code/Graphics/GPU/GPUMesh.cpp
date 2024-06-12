@@ -35,3 +35,8 @@ void GPUMesh::setColor(const Vector4 &color)
     mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).resize(mVertexCount);
     mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).fill(color);
 }
+
+bool GPUMesh::hasVertexInputBuffer(const GPUVariableData& data) const
+{
+    return mBuffers.contains(data.mName);
+}
