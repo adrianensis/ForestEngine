@@ -59,8 +59,8 @@ void Editor::firstUpdate()
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, 0, false);
     // mGameObjectsArray.push_back(obj);
 
-	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,0,0), 100.0f, 180, false);
-    // mGameObjectsArray.push_back(obj);
+	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, 180, false);
+    mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -187,7 +187,7 @@ void Editor::update()
         mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
     }
 
-    // mousePick();
+    mousePick();
 
     mAxisViewer->update();
     mUISceneTree->update();
