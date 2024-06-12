@@ -116,19 +116,7 @@ void BatchRenderer::removeRenderer(Ptr<MeshRenderer> renderer)
 void BatchRenderer::updateBuffers()
 {
 	PROFILER_CPU()
-    
-    FOR_LIST(it, mRenderersSet)
-    {
-        Ptr<MeshRenderer> renderer = *it;
-        if(!renderer.isValid() || renderer->getIsDestroyed())
-        {
-            mRenderersSet.erase(renderer);
-        }
-    }
-
-    std::vector<Ptr<MeshRenderer>> mRenderers(mRenderersSet.begin(), mRenderersSet.end());
     u32 newSize = mRenderersSet.size();
-
     mMeshBatcher.clear();
     if (newSize > mMaxMeshesThreshold)
     {

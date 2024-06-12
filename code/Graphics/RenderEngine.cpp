@@ -30,19 +30,6 @@ void RenderEngine::init()
 void RenderEngine::update()
 {
 	PROFILER_CPU()
-    std::vector<Ptr<MeshRenderer>> newList;
-    
-    PROFILER_BLOCK_CPU("remove renderers");
-    FOR_LIST(it, mRenderersSet)
-    {
-        Ptr<MeshRenderer> renderer = *it;
-        if(!renderer.isValid() || renderer->getIsDestroyed())
-        {
-            mRenderersSet.erase(renderer);
-        }
-    }
-    PROFILER_END_BLOCK()
-
     PROFILER_BLOCK_CPU("update renderers");
     FOR_LIST(it, mRenderersSet)
     {
