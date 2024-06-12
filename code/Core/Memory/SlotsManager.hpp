@@ -3,6 +3,7 @@
 #include "Core/StdCore.hpp"
 #include "Core/Assert/Assert.hpp"
 #include <vector>
+#include <unordered_set>
 
 class Slot
 {
@@ -30,31 +31,22 @@ class SlotsManager
 public:
     void init(u32 initialAvailableSlots)
     {
-        mAvailableSlots.resize(initialAvailableSlots);
-        CHECK_MSG(getSize() > 0, "SlotManager is empty!");
-
-        u32 size = getSize();
-        FOR_RANGE(i, 0, size)
+        FOR_RANGE(i, 0, initialAvailableSlots)
         {
-            mAvailableSlots[i] = true;
+            mAvailableSlots.insert(i);
         }
+        mSize = initialAvailableSlots;
+        CHECK_MSG(mSize > 0, "SlotManager is empty!");
     }
 
     Slot requestSlot()
     {
-        CHECK_MSG(getSize() > 0, "SlotManager is empty!");
+        CHECK_MSG(mSize > 0, "SlotManager is empty!");
 
         Slot slot;
-        u32 size = getSize();
-        FOR_RANGE(i, 0, size)
-        {
-            if(mAvailableSlots[i])
-            {
-                mAvailableSlots[i] = false;
-                slot.set(i);
-                break;
-            }
-        }
+        u32 i = *mAvailableSlots.begin();
+        mAvailableSlots.erase(mAvailableSlots.begin());
+        slot.set(i);
 
         CHECK_MSG(checkSlot(slot), "Invalid slot!");
         return slot;
@@ -63,12 +55,12 @@ public:
     void freeSlot(const Slot& slot)
     {
         CHECK_MSG(checkSlot(slot), "Invalid slot!");
-        mAvailableSlots[slot.getSlot()] = true;
+        mAvailableSlots.insert(slot.getSlot());
     }
 
     bool checkSlotBounds(const Slot& slot) const
     {
-        bool bounds = slot.getSlot() < mAvailableSlots.size();
+        bool bounds = slot.getSlot() < mSize;
         return bounds;
     }
 
@@ -79,9 +71,10 @@ public:
         return bounds && isValid;
     }
 
-    u32 getSize() const { return mAvailableSlots.size(); }
+    u32 getSize() const { return mSize; }
     void reset() { mAvailableSlots.clear(); }
 
 private:
-    std::vector<u32> mAvailableSlots;
+    std::unordered_set<u32> mAvailableSlots;
+    u32 mSize = 0;
 };
