@@ -21,6 +21,9 @@ void RenderEngine::init()
 	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId());
 	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.getId());
 
+    mRenderInstancesSlotsManager.init(mMaxInstances);
+    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
+    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     initBuffers();
     mRenderPipeline.init();
 
@@ -31,18 +34,21 @@ void RenderEngine::update()
 {
 	PROFILER_CPU()
     PROFILER_BLOCK_CPU("update renderers");
-    FOR_LIST(it, mRenderersSet)
+    FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
     {
-        Ptr<MeshRenderer> renderer = *it;
-        renderer->update();
-
-        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
-        mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
-
-        if(renderer->getMaterialInstanceSlot().isValid())
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+        if(renderer.isValid())
         {
-            GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+            renderer->update();
+
+            const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
+            CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
+            mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
+
+            if(renderer->getMaterialInstanceSlot().isValid())
+            {
+                GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+            }
         }
     }
     PROFILER_END_BLOCK()
@@ -92,11 +98,9 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
 
-        // mRenderers.push_back(renderer);
+        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
 
         mRenderPipeline.addRenderer(renderer);
-
-        mRenderersSet.insert(renderer);
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {
@@ -125,9 +129,9 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderPipeline.removeRenderer(renderer);
 
-        mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
+        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
 
-        mRenderersSet.erase(renderer);
+        mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
@@ -156,9 +160,6 @@ void RenderEngine::initBuffers()
 
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mShadowMappingBufferData, false);
 
-    mRenderInstancesSlotsManager.init(mMaxInstances);
-
-    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices, false);
 
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().create();

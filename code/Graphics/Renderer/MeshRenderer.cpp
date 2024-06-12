@@ -51,6 +51,7 @@ void MeshRenderer::onDestroy()
     GET_SYSTEM(MaterialManager).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
     mMaterialInstanceSlot.reset();
     mRenderInstanceSlot.reset();
+    mBatchSlot.reset();
 }
 
 void MeshRenderer::calculateRendererModelMatrix()

@@ -16,6 +16,10 @@
 void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader)
 {
 	mBatchData = batchData;
+
+    mRendererSlotsManager.init(mMaxInstances);
+    mRenderers.resize(mRendererSlotsManager.getSize());
+
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);
     initBuffers();
 
@@ -63,7 +67,7 @@ void BatchRenderer::bindSharedBuffers()
 void BatchRenderer::render()
 {
 	PROFILER_CPU()
-	if (!mRenderersSet.empty())
+	if (!mRenderers.empty())
 	{
         enable();
 		if(shouldRegenerateBuffers())
@@ -103,20 +107,24 @@ void BatchRenderer::disable()
 
 void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
 {
-    mRenderersSet.insert(renderer);
+    renderer->setBatchSlot(mRendererSlotsManager.requestSlot());
+    mRenderers.at(renderer->getBatchSlot().getSlot()) = renderer;
 	mRegenerateBuffersRequested = true;
+    mRenderersCount++;
 }
 
 void BatchRenderer::removeRenderer(Ptr<MeshRenderer> renderer)
 {
 	mRegenerateBuffersRequested = true;
-    mRenderersSet.erase(renderer);
+    mRenderers.at(renderer->getBatchSlot().getSlot()).invalidate();
+    mRendererSlotsManager.freeSlot(renderer->getBatchSlot());
+    mRenderersCount--;
 }
 
 void BatchRenderer::updateBuffers()
 {
 	PROFILER_CPU()
-    u32 newSize = mRenderersSet.size();
+    u32 newSize = mRenderersCount;
     mMeshBatcher.clear();
     if (newSize > mMaxMeshesThreshold)
     {
@@ -141,9 +149,12 @@ void BatchRenderer::updateBuffers()
         PROFILER_END_BLOCK();
     }
 
-    FOR_LIST(it, mRenderersSet)
+    FOR_ARRAY(i, mRenderers)
     {
-        mMeshBatcher.addInstanceData((*it)->getMeshInstance(), (*it)->getRenderInstanceSlot().getSlot(), (*it)->getMaterialInstanceSlot().getSlot());
+        if(mRenderers[i].isValid())
+        {
+            mMeshBatcher.addInstanceData(mRenderers[i]->getMeshInstance(), mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstanceSlot().getSlot());
+        }
     }
 
     mDataSubmittedToGPU = false;
@@ -245,7 +256,7 @@ void BatchRenderer::setIndicesBuffer(Ptr<const GPUMesh> mesh)
 void BatchRenderer::drawCall()
 {	
     PROFILER_CPU()
-    if(!mRenderersSet.empty())
+    if(!mRenderers.empty())
     {
         if(!mDataSubmittedToGPU)
         {
@@ -258,6 +269,6 @@ void BatchRenderer::drawCall()
             mDataSubmittedToGPU = true;
         }
 
-        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderersSet.size(), mBatchData.mIsInstanced);
+        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderersCount, mBatchData.mIsInstanced);
     }
 }

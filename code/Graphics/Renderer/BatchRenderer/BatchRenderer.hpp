@@ -37,7 +37,11 @@ private:
     void drawCall();
 
 private:
-    std::unordered_set<Ptr<MeshRenderer>> mRenderersSet;
+    SlotsManager mRendererSlotsManager;
+	std::vector<Ptr<MeshRenderer>> mRenderers;
+    u32 mRenderersCount = 0;
+    const u32 mMaxInstances = 5000;
+
     OwnerPtr<GPUProgram> mGPUProgram;
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;

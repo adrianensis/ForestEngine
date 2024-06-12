@@ -71,6 +71,7 @@ private:
     RendererData mRendererData;
 	OwnerPtr<Mesh> mMeshInstance;
     Ptr<BatchRenderer> mBatchRenderer;
+    Slot mBatchSlot;
     Slot mRenderInstanceSlot;
     Slot mMaterialInstanceSlot;
     Matrix4 mRendererModelMatrix;
@@ -86,6 +87,7 @@ public:
     CRGET(RendererData)
     RGET(MaterialInstance)
     CRGET_SET(RenderInstanceSlot)
+    CRGET_SET(BatchSlot)
     RGET(MaterialInstanceSlot)
 };
 REGISTER_CLASS(MeshRenderer);

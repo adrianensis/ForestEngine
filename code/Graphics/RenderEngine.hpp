@@ -24,13 +24,13 @@ private:
     void swap();
     void render();
 private:
-	std::unordered_set<Ptr<MeshRenderer>> mRenderersSet;
     RenderPipelineData mRenderPipelineData;
     RenderPipelinePBR mRenderPipeline;
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
-    u32 mMaxInstances = 5000;
+	std::vector<Ptr<MeshRenderer>> mRenderers;
+    const u32 mMaxInstances = 5000;
 
 public:
 	OcTree octree;
