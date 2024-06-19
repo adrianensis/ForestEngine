@@ -29,15 +29,9 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 
 	if (!mBatches.contains(batchData))
 	{
-        // mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId())
-        // .at(batchData);
-
         mBatches.insert(batchData);
         mGPUPrograms.emplace(batchData, OwnerPtr<GPUProgram>());
-        // RenderPassBatchData& renderPassBatchData = mBatches.at(batchData);
-        // renderPassBatchData.mBatch = OwnerPtr<BatchRenderer>::newObject();
-        // renderPassBatchData.mBatch->init(batchData);
-
+      
         bool isStatic = batchData.mIsStatic || batchData.mIsInstanced;
         GPUVertexBuffersContainer gpuVertexBuffersContainer;
         batchData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, isStatic, batchData.mIsInstanced);
@@ -50,18 +44,19 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
             batchData.mMaterial.get(),
             shader
         ));
-
-        // renderPassBatchData.mBatch->bindShader(shader, renderPassBatchData.mGPUProgram);
     }
-
-    // RenderPassBatchData& renderPassBatchData = mBatches.at(batchData);
 }
 
 void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
 {
     BatchData batchData;
 	batchData.init(renderer);
-    // RenderPassBatchData& renderPassBatchData = mBatches.at(batchData);
+
+    Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+    if(batchRenderer->isEmpty())
+    {
+        mBatches.erase(batchData);
+    }
 }
 
 void RenderPass::preFramebufferEnabled()
@@ -100,9 +95,7 @@ void RenderPass::renderPass()
     FOR_MAP(it, mBatches)
 	{
         Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(*it);
-        // mGPUPrograms.at(*it)->enable();
         batchRenderer->bindShader(getShader(*it), mGPUPrograms.at(*it));
-        // mGPUPrograms.at(*it)->disable();
 	}
 
     preRender();

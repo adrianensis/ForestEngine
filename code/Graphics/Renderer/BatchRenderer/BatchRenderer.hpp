@@ -19,6 +19,8 @@ public:
     void addRenderer(Ptr<MeshRenderer> renderer);
     void removeRenderer(Ptr<MeshRenderer> renderer);
 
+    bool isEmpty() const { return mRenderersCount == 0; }
+
 private:
     void bindMaterial();
     void bindSharedBuffers(Ptr<GPUProgram> gpuProgram);
