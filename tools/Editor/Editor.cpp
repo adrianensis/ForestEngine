@@ -49,17 +49,17 @@ void Editor::firstUpdate()
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, 90, true);
-	importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, 0, true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, 0, true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, 0, true);
+	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
+	importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
+	importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
 	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, 0, true);
-	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, 0, false);
+	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
-	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, 180, false);
+	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
     mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -284,7 +284,7 @@ Ptr<GameObject> Editor::mousePick()
     return obj;
 }
 
-Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, f32 rot, bool isStatic)
+Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
@@ -292,7 +292,7 @@ Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v,
 	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
-	gameObject->mTransform->setLocalRotation(Vector3(0,rot,0));
+	gameObject->mTransform->setLocalRotation(rot);
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;

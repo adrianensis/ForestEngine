@@ -19,7 +19,7 @@ private:
 	Ptr<GameObject> createPointLight(const Vector3& v, f32 size);
 	Ptr<GameObject> createDirectionalLight(const Vector3& v, const Vector3& dir);
 	Ptr<GameObject> mousePick();
-    Ptr<GameObject> importModel(const std::string& pFile, const Vector3& v, f32 size, f32 rot, bool isStatic);
+    Ptr<GameObject> importModel(const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic);
 	void handlePressedKeys();
 	void handleMouse();
     void createUI();
