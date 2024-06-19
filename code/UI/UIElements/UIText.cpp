@@ -59,7 +59,6 @@ void UIText::setText(HashedString text)
 	{
         const u32 textLen = text.get().length();
         const u32 glyphRenderersLen = static_cast<u32>(mFontRenderers.size());
-        const u32 maxGlyphs = std::max(textLen, glyphRenderersLen);
         if(textLen < glyphRenderersLen)
         {
             u32 diff = glyphRenderersLen - textLen;
