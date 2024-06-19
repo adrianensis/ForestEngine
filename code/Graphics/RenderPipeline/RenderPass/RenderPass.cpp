@@ -45,7 +45,6 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
         renderPassBatchData.mGPUProgram = ShaderUtils::createShaderCustomFragment(
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             gpuVertexBuffersContainer,
-            {},
             batchData.mMaterial.get(),
             shader
         );

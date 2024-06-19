@@ -7,11 +7,9 @@ class ShaderDefault : public Shader
 {
 public:
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
-        const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder, 
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
-        const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const override;
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
 
 protected:
     virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
@@ -24,9 +22,9 @@ protected:
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;
 
-    virtual void generateShaderBuilderData(Shader::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
-    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const;
+    virtual void generateShaderBuilderData(Shader::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
+    virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
+    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
 
     void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
 };

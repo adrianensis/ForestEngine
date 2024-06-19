@@ -92,12 +92,10 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
-        const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
         {};
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer,
-        const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
         {};
 
 protected:

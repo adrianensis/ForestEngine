@@ -4,20 +4,19 @@
 #include "Engine/Config/Paths.hpp"
 #include "Core/File/FileUtils.hpp"
 
-OwnerPtr<GPUProgram> ShaderUtils::createShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material)
+OwnerPtr<GPUProgram> ShaderUtils::createShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material)
 {
-	return ShaderUtils::createShaderCustomFragment(label, gpuVertexBuffersContainer, gpuSharedBuffersContainer, material, material.getShader());
+	return ShaderUtils::createShaderCustomFragment(label, gpuVertexBuffersContainer, material, material.getShader());
 }
 
-OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer, const Material& material, Ptr<const Shader> customShader)
+OwnerPtr<GPUProgram> ShaderUtils::createShaderCustomFragment(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material, Ptr<const Shader> customShader)
 {
 	OwnerPtr<GPUProgram> gpuProgram = OwnerPtr<GPUProgram>::newObject();
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    // material.getShader()->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-    customShader->createVertexShader(sbVert, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
-    customShader->createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    customShader->createVertexShader(sbVert, gpuVertexBuffersContainer);
+    customShader->createFragmentShader(sbFrag, gpuVertexBuffersContainer);
 
     std::string stringShderVert = sbVert.getCode();
     FileUtils::writeFile(Paths::mOutputShaders.get() + std::to_string(material.getID()) + "_" + label.get() + ".vs", [stringShderVert](std::ofstream& file)

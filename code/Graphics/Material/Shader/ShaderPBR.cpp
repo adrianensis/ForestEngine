@@ -52,9 +52,9 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     }
 }
 
-void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUSharedBuffersContainer& gpuSharedBuffersContainer) const
+void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuSharedBuffersContainer);
+    ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer);
 
     registerFunctionsGetNormalFromMap(shaderBuilder);
     
