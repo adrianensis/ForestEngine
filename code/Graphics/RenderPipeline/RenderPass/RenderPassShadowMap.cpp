@@ -4,10 +4,11 @@
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Window/WindowManager.hpp"
+#include "Graphics/RenderPipeline/RenderPipeline.hpp"
 
-void RenderPassShadowMap::init(const RenderPassData& renderPassData)
+void RenderPassShadowMap::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
-    RenderPass::init(renderPassData);
+    RenderPass::init(renderPipeline, renderPassData);
     mShaderDepthBuffer = OwnerPtr<ShaderDepthBuffer>::newObject();
 }
 
@@ -37,11 +38,12 @@ void RenderPassShadowMap::postRender()
 void RenderPassShadowMap::render()
 {
 	PROFILER_CPU()
-    FOR_MAP(it, mBatchMap)
+    FOR_MAP(it, mBatches)
 	{
-        it->second.mGPUProgram->enable();
-        it->second.mBatch->render();
-        it->second.mGPUProgram->disable();
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(*it);
+        mGPUPrograms.at(*it)->enable();
+        batchRenderer->render();
+        mGPUPrograms.at(*it)->disable();
 	}
 }
 

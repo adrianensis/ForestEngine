@@ -1,4 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
+#include "Graphics/RenderPipeline/RenderPipeline.hpp"
 
 void RenderPassUI::preRender()
 {
@@ -13,9 +14,9 @@ void RenderPassUI::postRender()
 
 void RenderPassUI::renderStencilCascade(u64 id)
 {    
-    FOR_MAP(it, mBatchMap)
+    FOR_LIST(it, mBatches)
 	{
-        const BatchData& batchData = it->first;
+        const BatchData& batchData = *it;
 		if(id == batchData.mStencilData.mId)
 		{
             if(batchData.mStencilData.mParentId > 0)
@@ -25,10 +26,11 @@ void RenderPassUI::renderStencilCascade(u64 id)
 
             if(!mStencilsRendered.contains(batchData.mStencilData.mId))
             {
+                Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
                 mStencilsRendered.insert(batchData.mStencilData.mId);
-                it->second.mGPUProgram->enable();
-                it->second.mBatch->render();
-                it->second.mGPUProgram->disable();
+                mGPUPrograms.at(batchData)->enable();
+                batchRenderer->render();
+                mGPUPrograms.at(batchData)->disable();
             }
 
             break;
@@ -42,27 +44,29 @@ void RenderPassUI::render()
 
     mStencilsRendered.clear();
 
-    std::vector<RenderPassBatchDataWeak> noStencilBatches;
-    std::vector<RenderPassBatchDataWeak> stencilBatches;
-    FOR_MAP(it, mBatchMap)
+    std::vector<BatchData> noStencilBatches;
+    std::vector<BatchData> stencilBatches;
+    FOR_LIST(it, mBatches)
 	{
-        if(it->second.mBatch->getBatchData().mStencilData.mUseStencil)
+        const BatchData& batchData = *it;
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+        if(batchData.mStencilData.mUseStencil)
         {
-            if(it->second.mBatch->getBatchData().mStencilData.mParentId > 0)
+            if(batchData.mStencilData.mParentId > 0)
             {
-                stencilBatches.push_back(it->second);
+                stencilBatches.push_back(batchData);
             }
         }
         else
         {
-            noStencilBatches.push_back(it->second);
+            noStencilBatches.push_back(batchData);
         }
     }
 
-    auto compareStencilBatch = [](RenderPassBatchDataWeak b1, RenderPassBatchDataWeak b2)
+    auto compareStencilBatch = [](BatchData b1, BatchData b2)
     {
-        u64 o1 = b1.mBatch->getBatchData().mStencilData.mParentId;
-        u64 o2 = b2.mBatch->getBatchData().mStencilData.mParentId;
+        u64 o1 = b1.mStencilData.mParentId;
+        u64 o2 = b2.mStencilData.mParentId;
         return (o1 < o2);
     };
   
@@ -71,7 +75,7 @@ void RenderPassUI::render()
     u64 currentId = 0;
     FOR_LIST(it, stencilBatches)
 	{
-        const BatchData& batchData = (*it).mBatch->getBatchData();
+        const BatchData& batchData = *it;
         if(currentId != batchData.mStencilData.mParentId)
         {
             GET_SYSTEM(GPUInterface).clearStencil();
@@ -86,8 +90,10 @@ void RenderPassUI::render()
 
     FOR_LIST(it, noStencilBatches)
 	{
-        (*it).mGPUProgram->enable();
-        (*it).mBatch->render();
-        (*it).mGPUProgram->disable();
+        const BatchData& batchData = *it;
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+        mGPUPrograms.at(batchData)->enable();
+        batchRenderer->render();
+        mGPUPrograms.at(batchData)->disable();
     }
 }

@@ -25,7 +25,7 @@ private:
     void render();
 private:
     RenderPipelineData mRenderPipelineData;
-    RenderPipelinePBR mRenderPipeline;
+    OwnerPtr<RenderPipelinePBR> mRenderPipeline;
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;

@@ -6,6 +6,7 @@
 #include "Graphics/Material/Shader/Shader.hpp"
 
 class MeshRenderer;
+class RenderPipeline;
 
 class RenderPassData
 {
@@ -18,7 +19,7 @@ public:
 class RenderPass: public ObjectBase
 {
 public:
-    virtual void init(const RenderPassData& renderPassData);
+    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     void terminate();
     void addRenderer(Ptr<MeshRenderer> renderer);
     void removeRenderer(Ptr<MeshRenderer> renderer);
@@ -33,28 +34,11 @@ protected:
     virtual Ptr<Shader> getShader(const BatchData& batchData) const;
     virtual void setupShader(Ptr<Shader> shader) const;
 protected:
-    class RenderPassBatchData
-    {
-    public:
-        OwnerPtr<BatchRenderer> mBatch;
-        OwnerPtr<GPUProgram> mGPUProgram;
-    };
-    class RenderPassBatchDataWeak
-    {
-    public:
-        RenderPassBatchDataWeak(const RenderPassBatchData& renderPassBatchData)
-        {
-            mBatch = renderPassBatchData.mBatch;
-            mGPUProgram = renderPassBatchData.mGPUProgram;
-        }
-        Ptr<BatchRenderer> mBatch;
-        Ptr<GPUProgram> mGPUProgram;
-    };
-
-	using BatchMap = std::unordered_map<BatchData, RenderPassBatchData, BatchData::BatchDataFunctor>;
-	BatchMap mBatchMap;
+	std::unordered_set<BatchData, BatchData::BatchDataFunctor> mBatches;
+	std::unordered_map<BatchData, OwnerPtr<GPUProgram>, BatchData::BatchDataFunctor> mGPUPrograms;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
+    Ptr<RenderPipeline> mRenderPipeline;
 public:
     CRGET(RenderPassData)
     CRGET(OutputGPUFramebuffer)

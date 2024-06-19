@@ -25,7 +25,8 @@ void RenderEngine::init()
     mRenderers.resize(mRenderInstancesSlotsManager.getSize());
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     initBuffers();
-    mRenderPipeline.init();
+    mRenderPipeline = OwnerPtr<RenderPipelinePBR>::newObject();
+    mRenderPipeline->init();
 
 	// octree.init(5000);
 }
@@ -85,7 +86,7 @@ void RenderEngine::terminate()
 {
 	LOG_TRACE()
     
-    mRenderPipeline.terminate();
+    mRenderPipeline->terminate();
     mRenderInstancesSlotsManager.reset();
 }
 
@@ -100,7 +101,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
 
         mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
 
-        mRenderPipeline.addRenderer(renderer);
+        mRenderPipeline->addRenderer(renderer);
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {
@@ -127,7 +128,7 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-        mRenderPipeline.removeRenderer(renderer);
+        mRenderPipeline->removeRenderer(renderer);
 
         mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
 
@@ -149,7 +150,7 @@ void RenderEngine::render()
 {
 	PROFILER_CPU()
 
-    mRenderPipeline.render(mRenderPipelineData);
+    mRenderPipeline->render(mRenderPipelineData);
 }
 
 void RenderEngine::initBuffers()

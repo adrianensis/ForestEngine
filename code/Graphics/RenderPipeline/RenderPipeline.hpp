@@ -3,6 +3,7 @@
 #include "Engine/Minimal.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
+#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 
 class RenderPipelineData
 {
@@ -33,7 +34,7 @@ protected:
         );
 
         Ptr<T> renderPass = getRenderPass<T>();
-        renderPass->init(renderPassData);
+        renderPass->init(getPtrToThis<RenderPipeline>(), renderPassData);
     }
 
     template<class T> T_EXTENDS(T, RenderPass)
@@ -42,7 +43,13 @@ protected:
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         return Ptr<T>::cast(mRenderPassMap.at(renderPassClassId));
     }
+public:
+    using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
+    
+    std::unordered_map<ClassId, BatchMap> mBatchMap;
+public:
+    CRGET(BatchMap)
 };
 REGISTER_CLASS(RenderPipeline);

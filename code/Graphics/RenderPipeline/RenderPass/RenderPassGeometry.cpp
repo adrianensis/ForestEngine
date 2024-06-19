@@ -2,6 +2,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/GameObject.hpp"
+#include "Graphics/RenderPipeline/RenderPipeline.hpp"
 
 void RenderPassGeometry::preRender()
 {
@@ -19,11 +20,12 @@ void RenderPassGeometry::postRender()
 void RenderPassGeometry::render()
 {
 	PROFILER_CPU()
-    FOR_MAP(it, mBatchMap)
+    FOR_LIST(it, mBatches)
 	{
-        it->second.mGPUProgram->enable();
-        it->second.mBatch->render();
-        it->second.mGPUProgram->disable();
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(*it);
+        mGPUPrograms.at(*it)->enable();
+        batchRenderer->render();
+        mGPUPrograms.at(*it)->disable();
 	}
 }
 
