@@ -14,7 +14,6 @@ public:
 	bool mIsStatic = true;
 	bool mIsInstanced = false;
     StencilData mStencilData;
-    std::unordered_set<ClassId> mRenderPassIDs;
 
 	void init(Ptr<MeshRenderer> renderer)
     {
@@ -23,14 +22,13 @@ public:
         mIsStatic = renderer->isStatic();
         mIsInstanced = renderer->getRendererData().mIsInstanced;
         mStencilData = renderer->getRendererData().mStencilData;
-        mRenderPassIDs = renderer->getRendererData().mRenderPassIDs;
     }
 
 	bool operator==(const BatchData& otherBatchData) const
 	{
         bool result = mMaterial.getIndex() == otherBatchData.mMaterial.getIndex() && mMesh == otherBatchData.mMesh and
         mIsStatic == otherBatchData.mIsStatic && mIsInstanced == otherBatchData.mIsInstanced and
-        mStencilData.matches(otherBatchData.mStencilData) and mRenderPassIDs == otherBatchData.mRenderPassIDs;
+        mStencilData.matches(otherBatchData.mStencilData);
         return result;
 	}
 
@@ -44,11 +42,6 @@ public:
             if(key.mStencilData.mUseStencil)
             {
                 result = result ^ key.mStencilData.hash();
-            }
-
-            FOR_LIST(it, key.mRenderPassIDs)
-            {
-                result = result ^ (*it);
             }
             
             return result;

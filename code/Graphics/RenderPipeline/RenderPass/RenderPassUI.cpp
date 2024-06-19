@@ -26,7 +26,7 @@ void RenderPassUI::renderStencilCascade(u64 id)
 
             if(!mStencilsRendered.contains(batchData.mStencilData.mId))
             {
-                Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+                Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
                 mStencilsRendered.insert(batchData.mStencilData.mId);
                 mGPUPrograms.at(batchData)->enable();
                 batchRenderer->render();
@@ -49,7 +49,7 @@ void RenderPassUI::render()
     FOR_LIST(it, mBatches)
 	{
         const BatchData& batchData = *it;
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
         if(batchData.mStencilData.mUseStencil)
         {
             if(batchData.mStencilData.mParentId > 0)
@@ -91,7 +91,7 @@ void RenderPassUI::render()
     FOR_LIST(it, noStencilBatches)
 	{
         const BatchData& batchData = *it;
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
         mGPUPrograms.at(batchData)->enable();
         batchRenderer->render();
         mGPUPrograms.at(batchData)->disable();

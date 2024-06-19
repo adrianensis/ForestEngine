@@ -1,18 +1,12 @@
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
-#include "Graphics/Model/Model.hpp"
-#include "Graphics/Light/Light.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Material/Shader/ShaderUtils.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void BatchRenderer::init(const BatchData& batchData)
 {
@@ -36,34 +30,9 @@ void BatchRenderer::init(const BatchData& batchData)
     // }
 }
 
-void BatchRenderer::bindShader(Ptr<const Shader> customShader, Ptr<GPUProgram> gpuProgram)
-{
-    bindSharedBuffers(gpuProgram);
-    customShader->bindTextures(gpuProgram);
-}
-
 void BatchRenderer::terminate()
 {
     mGPUVertexBuffersContainer.terminate();
-}
-
-void BatchRenderer::bindSharedBuffers(Ptr<GPUProgram> gpuProgram)
-{
-    gpuProgram->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
-    if(GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
-    {
-        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);
-        gpuProgram->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
-    }
-
-    gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
-    gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
-
-    if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
-    {
-        gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
-        gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
-    }
 }
 
 void BatchRenderer::render()

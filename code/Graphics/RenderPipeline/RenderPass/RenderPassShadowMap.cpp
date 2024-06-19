@@ -40,10 +40,11 @@ void RenderPassShadowMap::render()
 	PROFILER_CPU()
     FOR_MAP(it, mBatches)
 	{
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(*it);
-        mGPUPrograms.at(*it)->enable();
+        const BatchData& batchData = *it;
+        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
+        mGPUPrograms.at(batchData)->enable();
         batchRenderer->render();
-        mGPUPrograms.at(*it)->disable();
+        mGPUPrograms.at(batchData)->disable();
 	}
 }
 

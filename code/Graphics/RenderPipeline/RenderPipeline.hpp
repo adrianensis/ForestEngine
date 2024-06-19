@@ -48,7 +48,7 @@ public:
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
-    std::unordered_map<ClassId, BatchMap> mBatchMap;
+    BatchMap mBatchMap;
 public:
     CRGET(BatchMap)
 };

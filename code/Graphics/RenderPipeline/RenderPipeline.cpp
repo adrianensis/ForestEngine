@@ -22,20 +22,15 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
         CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
         mRenderPassMap.at(*it)->addRenderer(renderer);
 
-        if(!mBatchMap.contains(*it))
-        {
-            mBatchMap.insert_or_assign(*it, BatchMap());
-        }
-        
         BatchData batchData;
 	    batchData.init(renderer);
-        if(!mBatchMap.at(*it).contains(batchData))
+        if(!mBatchMap.contains(batchData))
         {
-            mBatchMap.at(*it).insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
-            mBatchMap.at(*it).at(batchData)->init(batchData);
+            mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
+            mBatchMap.at(batchData)->init(batchData);
         }
 
-        mBatchMap.at(*it).at(batchData)->addRenderer(renderer);
+        mBatchMap.at(batchData)->addRenderer(renderer);
     }
 }
 
@@ -48,9 +43,8 @@ void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
 
         BatchData batchData;
 	    batchData.init(renderer);
-        // if(!mBatchMap.contains(*it))
-        // if(!mBatchMap.at(*it).contains(batchData))
-        mBatchMap.at(*it).at(batchData)->removeRenderer(renderer);
+        // if(!mBatchMap.contains(batchData))
+        mBatchMap.at(batchData)->removeRenderer(renderer);
     }
 }
 

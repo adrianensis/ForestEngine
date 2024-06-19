@@ -12,7 +12,6 @@ class BatchRenderer: public ObjectBase
 {
 public:
     void init(const BatchData& batchData);
-    void bindShader(Ptr<const Shader> customShader, Ptr<GPUProgram> gpuProgram);
     void terminate();
 
     void render();
@@ -22,8 +21,6 @@ public:
     bool isEmpty() const { return mRenderersCount == 0; }
 
 private:
-    void bindMaterial();
-    void bindSharedBuffers(Ptr<GPUProgram> gpuProgram);
     void enable();
     void disable();
     void updateBuffers();

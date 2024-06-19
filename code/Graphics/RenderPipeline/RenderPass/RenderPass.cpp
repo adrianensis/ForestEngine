@@ -6,6 +6,8 @@
 #include "Scene/GameObject.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
@@ -44,6 +46,8 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
             batchData.mMaterial.get(),
             shader
         ));
+
+        bindShader(batchData);
     }
 }
 
@@ -52,7 +56,7 @@ void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
     BatchData batchData;
 	batchData.init(renderer);
 
-    Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(batchData);
+    Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
     if(batchRenderer->isEmpty())
     {
         mBatches.erase(batchData);
@@ -65,6 +69,28 @@ void RenderPass::preFramebufferEnabled()
 
 void RenderPass::postFramebufferEnabled()
 {
+}
+
+void RenderPass::bindShader(const BatchData& batchData)
+{
+    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(batchData.mMaterial));
+    if(GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(batchData.mMesh->mModel))
+    {
+        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(batchData.mMesh->mModel);
+        mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+    }
+
+    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+
+    if(batchData.mMaterial->getMaterialData().mReceiveLight)
+    {
+        mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
+        mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
+    }
+
+    Ptr<Shader> shader = getShader(batchData);
+    shader->bindTextures(mGPUPrograms.at(batchData));
 }
 
 void RenderPass::preRender()
@@ -91,12 +117,6 @@ void RenderPass::renderPass()
         mOutputGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
         postFramebufferEnabled();
     }
-
-    FOR_MAP(it, mBatches)
-	{
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(ClassManager::getDynamicClassMetadata(this).mClassDefinition.getId()).at(*it);
-        batchRenderer->bindShader(getShader(*it), mGPUPrograms.at(*it));
-	}
 
     preRender();
     render();
