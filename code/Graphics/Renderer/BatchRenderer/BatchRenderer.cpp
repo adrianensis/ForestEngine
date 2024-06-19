@@ -15,6 +15,7 @@
 
 void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader)
 {
+    mLabel = label;
 	mBatchData = batchData;
 
     mRendererSlotsManager.init(mMaxInstances);
@@ -29,9 +30,17 @@ void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<con
         setMeshBuffers(mBatchData.mMesh);
 	}
 
-    mGPUProgram = ShaderUtils::createShaderCustomFragment(label, mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, getBatchData().mMaterial.get(), customShader);
+    if(customShader)
+    {
+        setShader(customShader);
+    }
+}
+
+void BatchRenderer::setShader(Ptr<const Shader> customShader)
+{
+    mGPUProgram = ShaderUtils::createShaderCustomFragment(mLabel, mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, getBatchData().mMaterial.get(), customShader);
     bindSharedBuffers();
-    mBatchData.mMaterial->getShader()->bindTextures(mGPUProgram);
+    customShader->bindTextures(mGPUProgram);
 }
 
 void BatchRenderer::terminate()

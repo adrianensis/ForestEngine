@@ -11,6 +11,7 @@ class BatchRenderer: public ObjectBase
 {
 public:
     void init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader);
+    void setShader(Ptr<const Shader> customShader);
     void terminate();
 
     void render();
@@ -53,6 +54,8 @@ private:
 	static const u32 smMeshesIncrement = 100;
 	bool mRegenerateBuffersRequested = false;
 	bool mDataSubmittedToGPU = false;
+
+    HashedString mLabel;
 
 public:
     CRGET(BatchData)
