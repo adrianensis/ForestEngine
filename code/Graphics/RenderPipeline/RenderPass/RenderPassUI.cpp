@@ -26,11 +26,8 @@ void RenderPassUI::renderStencilCascade(u64 id)
 
             if(!mStencilsRendered.contains(batchData.mStencilData.mId))
             {
-                Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
                 mStencilsRendered.insert(batchData.mStencilData.mId);
-                mGPUPrograms.at(batchData)->enable();
-                batchRenderer->render();
-                mGPUPrograms.at(batchData)->disable();
+                renderBatch(batchData);
             }
 
             break;
@@ -90,10 +87,6 @@ void RenderPassUI::render()
 
     FOR_LIST(it, noStencilBatches)
 	{
-        const BatchData& batchData = *it;
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
-        mGPUPrograms.at(batchData)->enable();
-        batchRenderer->render();
-        mGPUPrograms.at(batchData)->disable();
+        renderBatch(*it);
     }
 }

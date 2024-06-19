@@ -22,11 +22,7 @@ void RenderPassGeometry::render()
 	PROFILER_CPU()
     FOR_LIST(it, mBatches)
 	{
-        const BatchData& batchData = *it;
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
-        mGPUPrograms.at(batchData)->enable();
-        batchRenderer->render();
-        mGPUPrograms.at(batchData)->disable();
+        renderBatch(*it);
 	}
 }
 

@@ -29,6 +29,7 @@ protected:
     virtual void postFramebufferEnabled();
     virtual void bindShader(const BatchData& batchData);
     virtual void preRender();
+    virtual void renderBatch(const BatchData& batchData);
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();

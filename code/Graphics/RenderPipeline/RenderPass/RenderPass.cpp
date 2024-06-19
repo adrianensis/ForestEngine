@@ -105,6 +105,14 @@ void RenderPass::render()
 {
 }
 
+void RenderPass::renderBatch(const BatchData& batchData)
+{
+    Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
+    mGPUPrograms.at(batchData)->enable();
+    batchRenderer->render();
+    mGPUPrograms.at(batchData)->disable();
+}
+
 void RenderPass::renderPass()
 {
 	PROFILER_CPU()
