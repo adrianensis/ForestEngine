@@ -3,15 +3,16 @@
 #include "Engine/Minimal.hpp"
 #include "Graphics/Mesh/MeshBatcher.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchData.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
+
+class GPUProgram;
 
 class BatchRenderer: public ObjectBase
 {
 public:
-    void init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader);
-    void setShader(Ptr<const Shader> customShader);
+    void init(const BatchData& batchData);
+    void bindShader(Ptr<const Shader> customShader, Ptr<GPUProgram> gpuProgram);
     void terminate();
 
     void render();
@@ -20,7 +21,7 @@ public:
 
 private:
     void bindMaterial();
-    void bindSharedBuffers();
+    void bindSharedBuffers(Ptr<GPUProgram> gpuProgram);
     void enable();
     void disable();
     void updateBuffers();
@@ -43,21 +44,18 @@ private:
     u32 mRenderersCount = 0;
     const u32 mMaxInstances = 5000;
 
-    OwnerPtr<GPUProgram> mGPUProgram;
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
-    GPUSharedBuffersContainer mGPUSharedBuffersContainer;
 
 	u32 mMaxMeshesThreshold = 0;
 	static const u32 smMeshesIncrement = 100;
 	bool mRegenerateBuffersRequested = false;
 	bool mDataSubmittedToGPU = false;
 
-    HashedString mLabel;
-
 public:
     CRGET(BatchData)
+    CRGET(GPUVertexBuffersContainer)
 };
 REGISTER_CLASS(BatchRenderer);

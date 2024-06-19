@@ -2,6 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
+#include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 
 class GPUMesh: public ObjectBase
@@ -11,6 +12,7 @@ public:
     void setColor(const Vector4& color);
     void clear();
     bool hasVertexInputBuffer(const GPUVariableData& data) const;
+    void populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVertexBuffersContainer, bool isStatic, bool isInstanced) const;
 
 public:
 

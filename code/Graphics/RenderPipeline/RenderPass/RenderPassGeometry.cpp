@@ -21,7 +21,9 @@ void RenderPassGeometry::render()
 	PROFILER_CPU()
     FOR_MAP(it, mBatchMap)
 	{
-        it->second->render();
+        it->second.mGPUProgram->enable();
+        it->second.mBatch->render();
+        it->second.mGPUProgram->disable();
 	}
 }
 

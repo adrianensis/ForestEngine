@@ -33,7 +33,25 @@ protected:
     virtual Ptr<Shader> getShader(const BatchData& batchData) const;
     virtual void setupShader(Ptr<Shader> shader) const;
 protected:
-	using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
+    class RenderPassBatchData
+    {
+    public:
+        OwnerPtr<BatchRenderer> mBatch;
+        OwnerPtr<GPUProgram> mGPUProgram;
+    };
+    class RenderPassBatchDataWeak
+    {
+    public:
+        RenderPassBatchDataWeak(const RenderPassBatchData& renderPassBatchData)
+        {
+            mBatch = renderPassBatchData.mBatch;
+            mGPUProgram = renderPassBatchData.mGPUProgram;
+        }
+        Ptr<BatchRenderer> mBatch;
+        Ptr<GPUProgram> mGPUProgram;
+    };
+
+	using BatchMap = std::unordered_map<BatchData, RenderPassBatchData, BatchData::BatchDataFunctor>;
 	BatchMap mBatchMap;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;

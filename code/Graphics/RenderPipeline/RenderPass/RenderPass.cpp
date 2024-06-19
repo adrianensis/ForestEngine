@@ -20,7 +20,7 @@ void RenderPass::terminate()
 {
     FOR_MAP(it, mBatchMap)
 	{
-        it->second->terminate();
+        it->second.mBatch->terminate();
 	}
 }
 
@@ -31,47 +31,58 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 
 	if (!mBatchMap.contains(batchData))
 	{
-		mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
-        Ptr<BatchRenderer> batch = mBatchMap.at(batchData);
+        mBatchMap.emplace(batchData, RenderPassBatchData{});
+        RenderPassBatchData& renderPassBatchData = mBatchMap.at(batchData);
+        renderPassBatchData.mBatch = OwnerPtr<BatchRenderer>::newObject();
+        renderPassBatchData.mBatch->init(batchData);
+
+        bool isStatic = batchData.mIsStatic || batchData.mIsInstanced;
+        GPUVertexBuffersContainer gpuVertexBuffersContainer;
+        batchData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, isStatic, batchData.mIsInstanced);
+
         Ptr<Shader> shader = getShader(batchData);
         setupShader(shader);
+        renderPassBatchData.mGPUProgram = ShaderUtils::createShaderCustomFragment(
+            ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+            gpuVertexBuffersContainer,
+            {},
+            batchData.mMaterial.get(),
+            shader
+        );
 
-        batch->init(ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName, batchData, shader);
+        renderPassBatchData.mBatch->bindShader(shader, renderPassBatchData.mGPUProgram);
     }
 
-	mBatchMap.at(batchData)->addRenderer(renderer);
+    RenderPassBatchData& renderPassBatchData = mBatchMap.at(batchData);
+	renderPassBatchData.mBatch->addRenderer(renderer);
 }
 
 void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
 {
     BatchData batchData;
 	batchData.init(renderer);
-    mBatchMap.at(batchData)->removeRenderer(renderer);
+    RenderPassBatchData& renderPassBatchData = mBatchMap.at(batchData);
+    renderPassBatchData.mBatch->removeRenderer(renderer);
 }
 
 void RenderPass::preFramebufferEnabled()
 {
-
 }
 
 void RenderPass::postFramebufferEnabled()
 {
-
 }
 
 void RenderPass::preRender()
 {
-	PROFILER_CPU()
 }
 
 void RenderPass::postRender()
 {
-	PROFILER_CPU()
 }
 
 void RenderPass::render()
 {
-
 }
 
 void RenderPass::renderPass()

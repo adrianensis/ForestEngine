@@ -5,6 +5,7 @@
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Light/Light.hpp"
@@ -13,9 +14,8 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
-void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<const Shader> customShader)
+void BatchRenderer::init(const BatchData& batchData)
 {
-    mLabel = label;
 	mBatchData = batchData;
 
     mRendererSlotsManager.init(mMaxInstances);
@@ -30,46 +30,39 @@ void BatchRenderer::init(HashedString label, const BatchData& batchData, Ptr<con
         setMeshBuffers(mBatchData.mMesh);
 	}
 
-    if(customShader)
-    {
-        setShader(customShader);
-    }
+    // if(customShader)
+    // {
+    //     setShader(customShader);
+    // }
 }
 
-void BatchRenderer::setShader(Ptr<const Shader> customShader)
+void BatchRenderer::bindShader(Ptr<const Shader> customShader, Ptr<GPUProgram> gpuProgram)
 {
-    mGPUProgram = ShaderUtils::createShaderCustomFragment(mLabel, mGPUVertexBuffersContainer, mGPUSharedBuffersContainer, getBatchData().mMaterial.get(), customShader);
-    bindSharedBuffers();
-    customShader->bindTextures(mGPUProgram);
+    bindSharedBuffers(gpuProgram);
+    customShader->bindTextures(gpuProgram);
 }
 
 void BatchRenderer::terminate()
 {
     mGPUVertexBuffersContainer.terminate();
-    mGPUSharedBuffersContainer.terminate();
 }
 
-void BatchRenderer::bindSharedBuffers()
+void BatchRenderer::bindSharedBuffers(Ptr<GPUProgram> gpuProgram)
 {
-    mGPUProgram->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
+    gpuProgram->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(mBatchData.mMaterial));
     if(GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(mBatchData.mMesh->mModel))
     {
         Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(mBatchData.mMesh->mModel);
-        mGPUProgram->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+        gpuProgram->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
     }
 
-    mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
-    mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     if(mBatchData.mMaterial->getMaterialData().mReceiveLight)
     {
-        mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
-        mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
-    }
-
-    FOR_LIST(it, mGPUSharedBuffersContainer.getSharedBuffers())
-    {
-        mGPUProgram->bindSharedBuffer(*it);
+        gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
+        gpuProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
     }
 }
 
@@ -90,7 +83,7 @@ void BatchRenderer::render()
 
 void BatchRenderer::enable()
 {
-    mGPUProgram->enable();
+    // mGPUProgram->enable();
     mGPUVertexBuffersContainer.enable();
     mBatchData.mMaterial->getShader()->enable();
     mBatchData.mMaterial->enable();
@@ -111,7 +104,7 @@ void BatchRenderer::disable()
     mBatchData.mMaterial->disable();
     mBatchData.mMaterial->getShader()->disable();
     mGPUVertexBuffersContainer.disable();
-    mGPUProgram->disable();
+    // mGPUProgram->disable();
 }
 
 void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
@@ -185,23 +178,7 @@ void BatchRenderer::initBuffers()
     PROFILER_CPU()
 
     bool isStatic = mBatchData.mIsStatic || mBatchData.mIsInstanced;
-
-    FOR_ARRAY(i, mBatchData.mMesh->mGPUVertexInputBuffers)
-    {
-        const GPUVariableData& gpuVariableData = mBatchData.mMesh->mGPUVertexInputBuffers[i];
-        GPUVertexBufferData bufferData(gpuVariableData);
-        mGPUVertexBuffersContainer.addVertexBuffer(bufferData, isStatic);
-    }
-
-    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, isStatic);
-
-    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, isStatic);
-
-    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, mBatchData.mIsInstanced ? 1 : 0);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
-    
+    mBatchData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, isStatic, mBatchData.mIsInstanced);
     mGPUVertexBuffersContainer.create();
     
     mGPUVertexBuffersContainer.enable();

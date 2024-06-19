@@ -26,7 +26,9 @@ void RenderPassUI::renderStencilCascade(u64 id)
             if(!mStencilsRendered.contains(batchData.mStencilData.mId))
             {
                 mStencilsRendered.insert(batchData.mStencilData.mId);
-                it->second->render();
+                it->second.mGPUProgram->enable();
+                it->second.mBatch->render();
+                it->second.mGPUProgram->disable();
             }
 
             break;
@@ -40,13 +42,13 @@ void RenderPassUI::render()
 
     mStencilsRendered.clear();
 
-    std::vector<Ptr<BatchRenderer>> noStencilBatches;
-    std::vector<Ptr<BatchRenderer>> stencilBatches;
+    std::vector<RenderPassBatchDataWeak> noStencilBatches;
+    std::vector<RenderPassBatchDataWeak> stencilBatches;
     FOR_MAP(it, mBatchMap)
 	{
-        if(it->second->getBatchData().mStencilData.mUseStencil)
+        if(it->second.mBatch->getBatchData().mStencilData.mUseStencil)
         {
-            if(it->second->getBatchData().mStencilData.mParentId > 0)
+            if(it->second.mBatch->getBatchData().mStencilData.mParentId > 0)
             {
                 stencilBatches.push_back(it->second);
             }
@@ -57,10 +59,10 @@ void RenderPassUI::render()
         }
     }
 
-    auto compareStencilBatch = [](Ptr<BatchRenderer> b1, Ptr<BatchRenderer> b2)
+    auto compareStencilBatch = [](RenderPassBatchDataWeak b1, RenderPassBatchDataWeak b2)
     {
-        u64 o1 = b1->getBatchData().mStencilData.mParentId;
-        u64 o2 = b2->getBatchData().mStencilData.mParentId;
+        u64 o1 = b1.mBatch->getBatchData().mStencilData.mParentId;
+        u64 o2 = b2.mBatch->getBatchData().mStencilData.mParentId;
         return (o1 < o2);
     };
   
@@ -69,7 +71,7 @@ void RenderPassUI::render()
     u64 currentId = 0;
     FOR_LIST(it, stencilBatches)
 	{
-        const BatchData& batchData = (*it)->getBatchData();
+        const BatchData& batchData = (*it).mBatch->getBatchData();
         if(currentId != batchData.mStencilData.mParentId)
         {
             GET_SYSTEM(GPUInterface).clearStencil();
@@ -84,6 +86,8 @@ void RenderPassUI::render()
 
     FOR_LIST(it, noStencilBatches)
 	{
-        (*it)->render();
+        (*it).mGPUProgram->enable();
+        (*it).mBatch->render();
+        (*it).mGPUProgram->disable();
     }
 }
