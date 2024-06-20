@@ -179,7 +179,7 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
+    if(hasTexture(TextureBindingNames::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));
@@ -216,7 +216,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
             }
         }
 
-        FOR_MAP(it, getShaderData().mMaterial->getShader()->getShaderData().mFramebufferBindings)
+        FOR_MAP(it, getShaderData().mFramebufferBindings)
         {
             CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
 
@@ -350,7 +350,7 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
         vertexShaderCalculateNormalOutput(shaderBuilder);
     }
 
-    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNames::smBaseColor))
+    if(hasTexture(TextureBindingNames::smBaseColor))
     {
         vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
     }

@@ -35,7 +35,7 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smBaseColor))
+    if(hasTexture(TextureBindingNamesPBR::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
         auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smBaseColor));
@@ -97,7 +97,7 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
         funcGetNormalFromMap.body().
         variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smNormal))
+        if(hasTexture(TextureBindingNamesPBR::smNormal))
         {
             auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smNormal).mName);
             funcGetNormalFromMap.body().
@@ -144,7 +144,7 @@ void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder)
         funcCalculateShadow.body().
         variable(normal, GPUBuiltIn::PrimitiveTypes::mVector3, "normal", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smNormal))
+        if(hasTexture(TextureBindingNamesPBR::smNormal))
         {
             funcCalculateShadow.body().
             set(normal, call(mGetNormalFromMap, {}));
@@ -402,7 +402,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness)).
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
-        if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
+        if(hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
         {
             auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smMetallicRoughness).mName);
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
@@ -433,7 +433,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(N, GPUBuiltIn::PrimitiveTypes::mVector3, "N", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(getShaderData().mMaterial->getShader()->hasTexture(TextureBindingNamesPBR::smNormal))
+        if(hasTexture(TextureBindingNamesPBR::smNormal))
         {
             funcCalculatePBR.body().
             set(N, call(mGetNormalFromMap, {}));
