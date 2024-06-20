@@ -41,7 +41,7 @@ private:
     SlotsManager mRendererSlotsManager;
 	std::vector<Ptr<MeshRenderer>> mRenderers;
     u32 mRenderersCount = 0;
-    const u32 mMaxInstances = 5000;
+    inline static const u32 mInitialInstances = 2000;
 
 	MeshBatcher mMeshBatcher;
     BatchData mBatchData;

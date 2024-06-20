@@ -12,7 +12,7 @@ void BatchRenderer::init(const BatchData& batchData)
 {
 	mBatchData = batchData;
 
-    mRendererSlotsManager.init(mMaxInstances);
+    mRendererSlotsManager.init(mInitialInstances);
     mRenderers.resize(mRendererSlotsManager.getSize());
 
 	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);
@@ -74,6 +74,12 @@ void BatchRenderer::disable()
 
 void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
 {
+    if(mRendererSlotsManager.isEmpty())
+    {
+        mRendererSlotsManager.increaseSize(mInitialInstances);
+        mRenderers.resize(mRendererSlotsManager.getSize());
+    }
+
     renderer->setBatchSlot(mRendererSlotsManager.requestSlot());
     mRenderers.at(renderer->getBatchSlot().getSlot()) = renderer;
 	mRegenerateBuffersRequested = true;
