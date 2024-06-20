@@ -7,7 +7,7 @@
 
 void RenderPipeline::init()
 {
-    mRenderInstancesSlotsManager.init(mMaxInstances);
+    mRenderInstancesSlotsManager.init(mInitialInstances);
     mRenderers.resize(mRenderInstancesSlotsManager.getSize());
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     initBuffers();
@@ -58,6 +58,14 @@ void RenderPipeline::terminate()
 
 void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
 {
+    if(mRenderInstancesSlotsManager.isEmpty())
+    {
+        mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
+        mRenderers.resize(mRenderInstancesSlotsManager.getSize());
+        mMatrices.resize(mRenderInstancesSlotsManager.getSize());
+        GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+    }
+
     renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
     mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
     if(renderer->isStatic())
