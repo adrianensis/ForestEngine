@@ -15,6 +15,8 @@ void UIVector::init()
 	setPosition(Vector2(0,0)).
 	// setPosition(startGlyph).
 	setAdjustSizeToText(true).
+	setIsStatic(mIsStatic).
+	setIsStaticText(false).
 	setIsAffectedByLayout(true).
     setParent(getPtrToThis<GameObject>()).
 	setTextScale(0.5f).

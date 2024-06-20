@@ -119,7 +119,7 @@ void UIText::setText(HashedString text)
                     UIBuilder uiBuilder;
                     Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
-                    setIsStatic(false).
+                    setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).
                     setText(HashedString(std::string() + character)).
                     setLayer(mConfig.mLayer + 1).

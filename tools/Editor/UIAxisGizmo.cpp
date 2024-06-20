@@ -45,13 +45,13 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setPosition(startGlyph).
     setLayer(startGlyph.z).
 	setAdjustSizeToText(true).
+    setIsStaticText(false).
 	setIsAffectedByLayout(false).
     setParent(getPtrToThis<GameObject>()).
 	setTextScale(0.5f);
 
     mPositive = uiBuilder.
 	setText(mAxisName).
-    setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
 
@@ -62,13 +62,13 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setPosition(endGlyph).
     setLayer(endGlyph.z).
 	setAdjustSizeToText(true).
+    setIsStaticText(false).
 	setIsAffectedByLayout(false).
     setParent(getPtrToThis<GameObject>()).
 	setTextScale(0.5f);
 
     mNegative = uiBuilder.
 	setText(mNegAxisName).
-    setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
 }

@@ -55,9 +55,18 @@ void Editor::firstUpdate()
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
+
+    FOR_RANGE(i, -10, 10)
+    {
+        FOR_RANGE(j, -10, 10)
+        {
+            importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,i,j), 100.0f, Vector3(90,0,0), true);
+        }
+    }
+
 
 	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
     mGameObjectsArray.push_back(obj);
@@ -190,7 +199,7 @@ void Editor::update()
     mousePick();
 
     mAxisViewer->update();
-    mUISceneTree->update();
+    // mUISceneTree->update();
     mUITransform->update(cameraTransform);
 
 }
@@ -419,5 +428,6 @@ void Editor::createUI()
 
     mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UITransform>();
     mUITransform->mTransform->setLocalPosition(Vector2(-0.7, -0.8));
+    mUITransform->mIsStatic = true;
     // mUIVector->update();
 }

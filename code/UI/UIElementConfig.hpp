@@ -25,6 +25,7 @@ public:
 	Vector2 mDisplayPosition = Vector2::smZero;
 	Vector2 mDisplaySize = Vector2::smOne;
 	bool mIsStatic = true;
+	bool mIsStaticText = true;
 	HashedString mSceneName = ScenesManager::smDefaultUISceneName;
     bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
