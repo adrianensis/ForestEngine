@@ -1,7 +1,6 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Light/Light.hpp"
@@ -11,8 +10,6 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
 
 void RenderEngine::init()
 {
@@ -21,10 +18,6 @@ void RenderEngine::init()
 	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId());
 	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.getId());
 
-    mRenderInstancesSlotsManager.init(mMaxInstances);
-    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-    initBuffers();
     mRenderPipeline = OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();
 
@@ -33,52 +26,10 @@ void RenderEngine::init()
 
 void RenderEngine::update()
 {
-	PROFILER_CPU()
-    PROFILER_BLOCK_CPU("update renderers");
-    FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
-    {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
-        if(renderer.isValid())
-        {
-            renderer->update();
-
-            if(!renderer->isStatic())
-            {
-                setRendererMatrix(renderer);
-            }
-
-            if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
-            {
-                GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
-                renderer->getMaterialInstance().mDirty = false;
-            }
-        }
-    }
-    PROFILER_END_BLOCK()
-
-    PROFILER_BLOCK_CPU("update mModelMatrices buffer");
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
-    PROFILER_END_BLOCK()
-
-    GET_SYSTEM(MaterialManager).update();
-	GET_SYSTEM(SkeletalAnimationManager).update();
-
-	// octree.update();
-
-	render();
-	swap();
-}
-
-void RenderEngine::setRendererMatrix(Ptr<MeshRenderer> renderer)
-{
     PROFILER_CPU()
-    if(renderer->getUpdateMatrix())
-    {
-        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
-        mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
-        renderer->setUpdateMatrix(false);
-    }
+    mRenderPipeline->update();
+    mRenderPipeline->render(mRenderPipelineData);
+	swap();
 }
 
 void RenderEngine::preSceneChanged()
@@ -104,7 +55,6 @@ void RenderEngine::terminate()
 	LOG_TRACE()
     
     mRenderPipeline->terminate();
-    mRenderInstancesSlotsManager.reset();
 }
 
 void RenderEngine::addComponent(Ptr<SystemComponent> component)
@@ -114,16 +64,7 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
-        renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
-
-        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
-
         mRenderPipeline->addRenderer(renderer);
-
-        if(renderer->isStatic())
-        {
-            setRendererMatrix(renderer);
-        }
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {
@@ -151,10 +92,6 @@ void RenderEngine::removeComponent(Ptr<SystemComponent> component)
     {
         Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
         mRenderPipeline->removeRenderer(renderer);
-
-        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
-
-        mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
@@ -166,28 +103,4 @@ void RenderEngine::swap()
 	PROFILER_CPU()
 
 	GET_SYSTEM(WindowManager).getMainWindow()->swap();
-}
-
-void RenderEngine::render()
-{
-	PROFILER_CPU()
-
-    mRenderPipeline->render(mRenderPipelineData);
-}
-
-void RenderEngine::initBuffers()
-{
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData, false);
-
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mLightsBufferData, false);
-
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mShadowMappingBufferData, false);
-
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices, false);
-
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().create();
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }

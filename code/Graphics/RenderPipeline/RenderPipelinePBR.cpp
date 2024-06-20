@@ -11,6 +11,8 @@
 
 void RenderPipelinePBR::init()
 {
+    RenderPipeline::init();
+
     RenderPassData renderPassShadowMapData;
     renderPassShadowMapData.mOutputFramebufferData.set(
         {

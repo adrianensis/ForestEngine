@@ -4,6 +4,7 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/MeshRenderer.hpp"
 
 class RenderPipelineData
 {
@@ -16,6 +17,7 @@ class RenderPipeline: public ObjectBase
 {
 public:
     virtual void init();
+    virtual void update();
     virtual void terminate();
     void addRenderer(Ptr<MeshRenderer> renderer);
     void removeRenderer(Ptr<MeshRenderer> renderer);
@@ -43,12 +45,21 @@ protected:
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         return Ptr<T>::cast(mRenderPassMap.at(renderPassClassId));
     }
+
+    void initBuffers();
+    void setRendererMatrix(Ptr<MeshRenderer> renderer);
+
 public:
     using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
     BatchMap mBatchMap;
+
+    std::vector<Matrix4> mMatrices;
+    SlotsManager mRenderInstancesSlotsManager;
+	std::vector<Ptr<MeshRenderer>> mRenderers;
+    const u32 mMaxInstances = 5000;
 public:
     CRGET(BatchMap)
 };

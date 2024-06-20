@@ -2,9 +2,48 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/Module.hpp"
+#include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void RenderPipeline::init()
 {
+    mRenderInstancesSlotsManager.init(mMaxInstances);
+    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
+    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
+    initBuffers();
+}
+
+void RenderPipeline::update()
+{
+	PROFILER_CPU()
+    PROFILER_BLOCK_CPU("update renderers");
+    FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
+    {
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+        if(renderer.isValid())
+        {
+            renderer->update();
+
+            if(!renderer->isStatic())
+            {
+                setRendererMatrix(renderer);
+            }
+
+            if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
+            {
+                GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+                renderer->getMaterialInstance().mDirty = false;
+            }
+        }
+    }
+    PROFILER_END_BLOCK()
+
+    PROFILER_BLOCK_CPU("update mModelMatrices buffer");
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
+    PROFILER_END_BLOCK()
+
+    GET_SYSTEM(MaterialManager).update();
+	GET_SYSTEM(SkeletalAnimationManager).update();
 }
 
 void RenderPipeline::terminate()
@@ -13,10 +52,19 @@ void RenderPipeline::terminate()
 	{
         it->second->terminate();
 	}
+
+    mRenderInstancesSlotsManager.reset();
 }
 
 void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
 {
+    renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
+    mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
+    if(renderer->isStatic())
+    {
+        setRendererMatrix(renderer);
+    }
+
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
         CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
@@ -36,6 +84,9 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
 
 void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
 {
+    mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
+    mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
+
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
         CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
@@ -68,4 +119,31 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
     }
 
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
+}
+
+void RenderPipeline::initBuffers()
+{
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData, false);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mLightsBufferData, false);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mShadowMappingBufferData, false);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices, false);
+
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().create();
+
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+}
+
+void RenderPipeline::setRendererMatrix(Ptr<MeshRenderer> renderer)
+{
+    PROFILER_CPU()
+    if(renderer->getUpdateMatrix())
+    {
+        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
+        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
+        mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
+        renderer->setUpdateMatrix(false);
+    }
 }
