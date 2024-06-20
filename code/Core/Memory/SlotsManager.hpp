@@ -31,17 +31,29 @@ class SlotsManager
 public:
     void init(u32 initialAvailableSlots)
     {
-        FOR_RANGE(i, 0, initialAvailableSlots)
+        resize(initialAvailableSlots);
+    }
+
+    void resize(u32 slotsCount)
+    {
+        u32 currentSize = mSize;
+        mSize = slotsCount;
+        CHECK_MSG(mSize > 0, "SlotManager is empty!");
+        FOR_RANGE(i, currentSize, mSize)
         {
             mAvailableSlots.insert(i);
         }
-        mSize = initialAvailableSlots;
-        CHECK_MSG(mSize > 0, "SlotManager is empty!");
+    }
+
+    void increaseSize(u32 extra)
+    {
+        resize(mSize + extra);
     }
 
     Slot requestSlot()
     {
         CHECK_MSG(mSize > 0, "SlotManager is empty!");
+        CHECK_MSG(!isEmpty(), "SlotManager is empty!");
 
         Slot slot;
         u32 i = *mAvailableSlots.begin();
@@ -74,6 +86,7 @@ public:
     u32 getSize() const { return mSize; }
     u32 getMaxIndex() const { return *mAvailableSlots.rbegin(); }
     void reset() { mAvailableSlots.clear(); }
+    bool isEmpty() const { return mAvailableSlots.empty(); }
 
 private:
     std::set<u32> mAvailableSlots;
