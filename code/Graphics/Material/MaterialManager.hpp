@@ -55,5 +55,6 @@ private:
     Pool<Texture> mTextures;
     std::unordered_map<HashedString, PoolHandler<Texture>> mTexturesByPath;
     Pool<Material> mMaterials;
+    inline static const u32 mInitialInstances = 2000;
 };
 REGISTER_CLASS(MaterialManager);
