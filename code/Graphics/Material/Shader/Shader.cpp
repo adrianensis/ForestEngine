@@ -86,13 +86,16 @@ void Shader::enable() const
 void Shader::disable() const
 {
 	PROFILER_CPU()
+    u32 textureUnit = 0;
     FOR_MAP(it, mShaderData.mTextures)
     {
-        mShaderData.mTextures.at(it->first).get().disable();
+        mShaderData.mTextures.at(it->first).get().disable(textureUnit);
+        textureUnit++;
     }
     FOR_MAP(it, mShaderData.mFramebufferBindings)
     {
-        GET_SYSTEM(GPUInterface).disableTexture();
+        GET_SYSTEM(GPUInterface).disableTexture(textureUnit, it->second.mStage);
+        textureUnit++;
     }
 }
 

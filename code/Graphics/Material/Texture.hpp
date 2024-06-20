@@ -21,7 +21,7 @@ public:
     virtual void onPoolFree() override { terminate(); };
     void enable(u32 textureUnit) const;
     void bind() const;
-    void disable() const;
+    void disable(u32 textureUnit) const;
 
 private:
 	u32 mGPUTextureId = 0;

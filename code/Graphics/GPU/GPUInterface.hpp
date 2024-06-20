@@ -256,7 +256,8 @@ public:
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage);
     void bindTexture(u32 textureId);
-    void disableTexture();
+    void unbindTexture();
+    void disableTexture(u32 textureUnit, GPUPipelineStage stage);
     void setPixelStoreMode(u32 param, u32 value);
     u32 getMaxTextureUnits(GPUPipelineStage stage);
 

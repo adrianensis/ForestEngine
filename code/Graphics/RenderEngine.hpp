@@ -23,6 +23,8 @@ private:
     void initBuffers();
     void swap();
     void render();
+
+    void setRendererMatrix(Ptr<MeshRenderer> renderer);
 private:
     RenderPipelineData mRenderPipelineData;
     OwnerPtr<RenderPipelinePBR> mRenderPipeline;

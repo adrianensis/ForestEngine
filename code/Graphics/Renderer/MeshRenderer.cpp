@@ -60,6 +60,7 @@ void MeshRenderer::calculateRendererModelMatrix()
     mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
     mRendererModelMatrix.mul(mRendererData.mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
+    setUpdateMatrix(true);
 }
 
 void MeshRenderer::update()

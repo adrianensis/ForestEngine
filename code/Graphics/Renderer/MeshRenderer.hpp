@@ -77,6 +77,7 @@ private:
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
     MaterialInstance mMaterialInstance;
+    bool mUpdateMatrix = false;
 
 public:
     HashedString mCurrentTextureAnimationKey;
@@ -89,5 +90,6 @@ public:
     CRGET_SET(RenderInstanceSlot)
     CRGET_SET(BatchSlot)
     RGET(MaterialInstanceSlot)
+    GET_SET(UpdateMatrix)
 };
 REGISTER_CLASS(MeshRenderer);

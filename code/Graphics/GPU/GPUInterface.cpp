@@ -193,7 +193,7 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    disableTexture();
+    unbindTexture();
 
     return textureId;
 }
@@ -214,7 +214,7 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
     setTextureParameter<u32>(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     setTextureParameter<u32>(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    disableTexture();
+    unbindTexture();
 
     return textureId;
 }
@@ -253,10 +253,19 @@ void GPUInterface::bindTexture(u32 textureId)
 	glBindTexture(GL_TEXTURE_2D, textureId);
 }
 
-void GPUInterface::disableTexture()
+void GPUInterface::unbindTexture()
 {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void GPUInterface::disableTexture(u32 textureUnit, GPUPipelineStage stage)
+{
+    u32 maxTextureUntis = getMaxTextureUnits(stage);
+    CHECK_MSG(textureUnit < maxTextureUntis, "Max Texture Unit reached!");
+
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    bindTexture(0);
 }
 
 void GPUInterface::setPixelStoreMode(u32 param, u32 value)

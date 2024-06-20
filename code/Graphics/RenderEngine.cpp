@@ -42,9 +42,10 @@ void RenderEngine::update()
         {
             renderer->update();
 
-            const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-            CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
-            mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
+            if(!renderer->isStatic())
+            {
+                setRendererMatrix(renderer);
+            }
 
             if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
             {
@@ -55,7 +56,10 @@ void RenderEngine::update()
     }
     PROFILER_END_BLOCK()
 
+    PROFILER_BLOCK_CPU("update mModelMatrices buffer");
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
+    PROFILER_END_BLOCK()
+
     GET_SYSTEM(MaterialManager).update();
 	GET_SYSTEM(SkeletalAnimationManager).update();
 
@@ -63,6 +67,18 @@ void RenderEngine::update()
 
 	render();
 	swap();
+}
+
+void RenderEngine::setRendererMatrix(Ptr<MeshRenderer> renderer)
+{
+    PROFILER_CPU()
+    if(renderer->getUpdateMatrix())
+    {
+        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
+        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
+        mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
+        renderer->setUpdateMatrix(false);
+    }
 }
 
 void RenderEngine::preSceneChanged()
@@ -103,6 +119,11 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
         mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
 
         mRenderPipeline->addRenderer(renderer);
+
+        if(renderer->isStatic())
+        {
+            setRendererMatrix(renderer);
+        }
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {

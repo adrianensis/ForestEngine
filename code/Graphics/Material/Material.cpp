@@ -21,14 +21,3 @@ void Material::internalInit(const MaterialData& materialData, u32 id)
 void Material::terminate()
 {
 }
-
-void Material::enable() const
-{
-	PROFILER_CPU()
-    // GET_SYSTEM(GPUInterface).setFaceMode(mMaterialData.mCullFaceType);
-}
-
-void Material::disable() const
-{
-	PROFILER_CPU()
-}

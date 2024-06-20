@@ -74,8 +74,6 @@ public:
 
     void terminate();
     virtual void onPoolFree() override { terminate(); };
-    void enable() const;
-    void disable() const;
 
 private:
     void internalInit(const MaterialData& materialData, u32 id);

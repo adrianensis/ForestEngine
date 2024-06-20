@@ -11,9 +11,9 @@ void Texture::bind() const
     GET_SYSTEM(GPUInterface).bindTexture(mGPUTextureId);
 }
 
-void Texture::disable() const
+void Texture::disable(u32 textureUnit) const
 {
-    GET_SYSTEM(GPUInterface).disableTexture();
+    GET_SYSTEM(GPUInterface).disableTexture(textureUnit, mTextureData.mStage);
 }
 
 void Texture::init(const TextureData& textureData, u32 id)
@@ -40,7 +40,7 @@ void Texture::init(const TextureData& textureData, u32 id)
             // Increase texture offset
             texPos += mTextureData.mFontData.mGlyphs[c].mBitmapSize.x /*+ 2*/;
         }
-        GET_SYSTEM(GPUInterface).disableTexture();
+        GET_SYSTEM(GPUInterface).unbindTexture();
     }
     else
     {

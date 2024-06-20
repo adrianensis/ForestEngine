@@ -54,8 +54,6 @@ void BatchRenderer::enable()
 {
     // mGPUProgram->enable();
     mGPUVertexBuffersContainer.enable();
-    mBatchData.mMaterial->getShader()->enable();
-    mBatchData.mMaterial->enable();
 
     if(mBatchData.mStencilData.mUseStencil)
     {
@@ -70,8 +68,6 @@ void BatchRenderer::disable()
         GET_SYSTEM(GPUInterface).disableStencil();
     }
 
-    mBatchData.mMaterial->disable();
-    mBatchData.mMaterial->getShader()->disable();
     mGPUVertexBuffersContainer.disable();
     // mGPUProgram->disable();
 }

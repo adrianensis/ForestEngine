@@ -108,8 +108,11 @@ void RenderPass::render()
 void RenderPass::renderBatch(const BatchData& batchData)
 {
     Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
+    Ptr<Shader> shader = getShader(batchData);
     mGPUPrograms.at(batchData)->enable();
+    shader->enable();
     batchRenderer->render();
+    shader->disable();
     mGPUPrograms.at(batchData)->disable();
 }
 
