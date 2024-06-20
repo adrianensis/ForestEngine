@@ -71,7 +71,13 @@ public:
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentsArrays.contains(id))
         {
-            mComponentsArrays.emplace(id, 3000);
+            mComponentsArrays.emplace(id, smInitialComponents);
+        }
+
+        if(mComponentsArrays.at(id).mSlotsManager.isEmpty())
+        {
+            mComponentsArrays.at(id).mSlotsManager.increaseSize(smInitialComponents);
+            mComponentsArrays.at(id).mComponents.resize(mComponentsArrays.at(id).mSlotsManager.getSize());
         }
 
         ComponentHandler componentHandler(id, mComponentsArrays.at(id).mSlotsManager.requestSlot(), this);
@@ -133,5 +139,7 @@ private:
 
     std::unordered_map<ClassId, ComponentsArray> mComponentsArrays;
     std::unordered_map<Ptr<Component>, ComponentHandler> mPtrToHandler;
+
+    inline static const u32 smInitialComponents = 3000;
 };
 REGISTER_CLASS(ComponentsManager);
