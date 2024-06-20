@@ -55,7 +55,7 @@ void Editor::firstUpdate()
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, 0, true);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 

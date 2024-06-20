@@ -57,6 +57,7 @@ class MaterialInstance
 public:
     PoolHandler<Material> mMaterial;
     GenericObjectBuffer mMaterialPropertiesBlockBuffer;
+    bool mDirty = false;
 };
 
 class Material: public ObjectBase

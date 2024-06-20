@@ -46,9 +46,10 @@ void RenderEngine::update()
             CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
             mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
 
-            if(renderer->getMaterialInstanceSlot().isValid())
+            if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
             {
                 GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+                renderer->getMaterialInstance().mDirty = false;
             }
         }
     }

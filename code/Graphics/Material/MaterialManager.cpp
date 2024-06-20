@@ -20,6 +20,7 @@ void MaterialManager::terminate()
 
 void MaterialManager::update()
 {
+    PROFILER_CPU();
     FOR_MAP(it, mMaterialToPropertyBlock)
     {
         PoolHandler<Material> material = mMaterials.getHandler(it->first);
