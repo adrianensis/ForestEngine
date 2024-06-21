@@ -53,6 +53,9 @@ private:
 	Vector3 mLocalPosition = Vector3::smZero;
 	Vector3 mLocalRotation = Vector3::smZero;
 	Vector3 mLocalScale = Vector3::smOne;
+	mutable Vector3 mWorldPosition = Vector3::smZero;
+	mutable Vector3 mWorldRotation = Vector3::smZero;
+	mutable Vector3 mWorldScale = Vector3::smOne;
 
 	Matrix4 mBaseModelMatrix = Matrix4::smIdentity;
 	mutable Matrix4 mModelMatrix;

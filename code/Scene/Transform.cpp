@@ -24,53 +24,53 @@ void Transform::onDestroy()
 
 Vector3 Transform::getWorldPosition() const
 {
-    Vector3 worldPosition = mLocalPosition;
     if(mWorldTranslationMatrixDirty)
     {
+        mWorldPosition = mLocalPosition;
         if (mParent)
         {
             const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            worldPosition = parentModelMatrix.mulVector(Vector4(worldPosition, 1.0f));
+            mWorldPosition = parentModelMatrix.mulVector(Vector4(mWorldPosition, 1.0f));
         }
 
         mWorldTranslationMatrixDirty = false;
     }
 
-	return worldPosition;
+	return mWorldPosition;
 }
 
 Vector3 Transform::getWorldScale() const
 {
-    Vector3 worldScale = mLocalScale;
-    if(mWorldRotationMatrixDirty)
-    {
-        if (mParent)
-        {
-            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            worldScale = parentModelMatrix.mulVector(Vector4(worldScale, 1.0f));
-        }
-
-        mWorldRotationMatrixDirty = false;
-    }
-
-	return worldScale;
-}
-
-Vector3 Transform::getWorldRotation() const
-{
-    Vector3 worldRotation = mLocalRotation;
     if(mWorldScaleMatrixDirty)
     {
+        mWorldScale = mLocalScale;
         if (mParent)
         {
             const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            worldRotation = parentModelMatrix.mulVector(Vector4(worldRotation, 1.0f));
+            mWorldScale = parentModelMatrix.mulVector(Vector4(mWorldScale, 1.0f));
         }
 
         mWorldScaleMatrixDirty = false;
     }
 
-	return worldRotation;
+	return mWorldScale;
+}
+
+Vector3 Transform::getWorldRotation() const
+{
+    if(mWorldRotationMatrixDirty)
+    {
+        mWorldRotation = mLocalRotation;
+        if (mParent)
+        {
+            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            mWorldRotation = parentModelMatrix.mulVector(Vector4(mWorldRotation, 1.0f));
+        }
+
+        mWorldRotationMatrixDirty = false;
+    }
+
+	return mWorldRotation;
 }
 
 void Transform::lookAt(const Vector3& targetPosition)
