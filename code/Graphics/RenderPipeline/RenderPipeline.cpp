@@ -4,6 +4,8 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
+#include <algorithm>
+#include <execution>
 
 void RenderPipeline::init()
 {
@@ -22,20 +24,23 @@ void RenderPipeline::update()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            renderer->update();
-
-            if(!renderer->isStatic())
-            {
-                setRendererMatrix(renderer);
-            }
-
-            if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
-            {
-                GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
-                renderer->getMaterialInstance().mDirty = false;
-            }
+            processRenderer(renderer);
         }
     }
+
+    // Ptr<MaterialManager> materialManager = GET_SYSTEM_PTR(MaterialManager);
+    // std::for_each(
+    // std::execution::par,
+    // mRenderers.begin(),
+    // mRenderers.end(),
+    // [materialManager, this](Ptr<MeshRenderer> renderer)
+    // {
+    //     if(renderer.isValid())
+    //     {
+    //         processRenderer(renderer);
+    //     }
+    // });
+
     PROFILER_END_BLOCK()
 
     PROFILER_BLOCK_CPU("update mModelMatrices buffer");
@@ -44,6 +49,22 @@ void RenderPipeline::update()
 
     GET_SYSTEM(MaterialManager).update();
 	GET_SYSTEM(SkeletalAnimationManager).update();
+}
+
+void RenderPipeline::processRenderer(Ptr<MeshRenderer> renderer)
+{
+	PROFILER_CPU()
+    renderer->update();
+    if(!renderer->isStatic())
+    {
+        setRendererMatrix(renderer);
+    }
+
+    if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
+    {
+        GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
+        renderer->getMaterialInstance().mDirty = false;
+    }
 }
 
 void RenderPipeline::terminate()

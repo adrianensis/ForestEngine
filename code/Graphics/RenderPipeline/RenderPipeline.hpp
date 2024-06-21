@@ -48,6 +48,7 @@ protected:
 
     void initBuffers();
     void setRendererMatrix(Ptr<MeshRenderer> renderer);
+    void processRenderer(Ptr<MeshRenderer> renderer);
 
 public:
     using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
