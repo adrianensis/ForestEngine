@@ -132,6 +132,9 @@ include_directories("${DEPENDENCIES_DIR}/freetype-2.10.1/include")
 # cgltf
 include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")
 
+# TBB
+find_package(TBB REQUIRED)
+
 # ----------------------------------------------------------------------------
 # PROJECT PACKAGES
 # ----------------------------------------------------------------------------
@@ -177,6 +180,8 @@ target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
 target_link_libraries(${PROJECTNAME} freetype)
+# Link against the dependency of Intel TBB (for parallel C++17 algorithms)
+target_link_libraries(${PROJECTNAME} TBB::tbb)
 if(ENABLE_PROFILER)
     target_link_libraries(${PROJECTNAME} easy_profiler)
 endif(ENABLE_PROFILER)
