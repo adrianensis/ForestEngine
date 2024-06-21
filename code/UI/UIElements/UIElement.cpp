@@ -40,6 +40,8 @@ bool UIElement::hasFocus() const
 
 bool UIElement::isMouseCursorInsideElement() const
 {
+	PROFILER_CPU()
+
     bool parentCheck = true;
     if(mConfig.mParent)
     {
@@ -70,6 +72,7 @@ bool UIElement::isMouseCursorInsideElement() const
 
 Vector3 UIElement::getLeftTopPosition() const
 {
+    PROFILER_CPU()
     Vector3 position = mTransform->getWorldPosition();
     position.x = position.x - (mConfig.mDisplaySize.x / 2.0f);
     position.y = position.y + (mConfig.mDisplaySize.y / 2.0f);
@@ -115,11 +118,13 @@ void UIElement::subscribeToKeyEvents()
 {
 	SUBSCRIBE_TO_EVENT(InputEventKeyPressed, nullptr, this, [this](const Event *event)
 	{
+    	PROFILER_CPU()
 		if (!isVisible()) { return; }
 	});
 
 	SUBSCRIBE_TO_EVENT(InputEventKeyReleased, nullptr, this, [this](const Event *event)
 	{
+    	PROFILER_CPU()
 		if (!isVisible()) { return; }
 	});
 }
@@ -128,12 +133,14 @@ void UIElement::subscribeToCharEvents()
 {
 	SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onCharEventReceived(((const InputEventChar *)event)->mChar);
 	});
 
 	SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onBackspaceEventReceived();
 	});
@@ -143,6 +150,7 @@ void UIElement::subscribeToMouseEvents()
 {
 	SUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         const InputEventMouseButtonPressed *e = (const InputEventMouseButtonPressed *)event;
 
@@ -154,6 +162,7 @@ void UIElement::subscribeToMouseEvents()
 
 	SUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         const InputEventMouseButtonReleased *e = (const InputEventMouseButtonReleased *)event;
         if (e->mButton == GLFW_MOUSE_BUTTON_LEFT)
@@ -164,6 +173,7 @@ void UIElement::subscribeToMouseEvents()
 
 	SUBSCRIBE_TO_EVENT(InputEventMouseMoved, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onMouseMovedEventReceived();
 	});
@@ -173,6 +183,7 @@ void UIElement::subscribeToScrollEvents()
 {
 	SUBSCRIBE_TO_EVENT(InputEventScroll, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         const InputEventScroll *e = (const InputEventScroll *)event;
         onScrollEventReceived(e->mScroll);
@@ -183,6 +194,7 @@ void UIElement::subscribeToEnterEvent()
 {
 	SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onEnterEventReceived();
 	});
@@ -192,6 +204,7 @@ void UIElement::subscribeToEscEvent()
 {
 	SUBSCRIBE_TO_EVENT(InputEventKeyEsc, nullptr, this, [this](const Event *event)
 	{
+	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onEscEventReceived();
 	});
@@ -237,6 +250,7 @@ void UIElement::onReleasedEventReceived()
 
 void UIElement::onMouseMovedEventReceived()
 {
+    PROFILER_CPU()
 	if(mState != UIElementState::RELEASED) { return; }
 
     setColorHover();
