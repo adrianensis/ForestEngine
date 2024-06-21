@@ -24,23 +24,33 @@ void Transform::onDestroy()
 
 Vector3 Transform::getWorldPosition() const
 {
-	Vector3 worldPosition = mLocalPosition;
-	if (mParent)
-	{
-        const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-        worldPosition = parentModelMatrix.mulVector(Vector4(worldPosition, 1.0f));
-	}
+    Vector3 worldPosition = mLocalPosition;
+    if(mWorldTranslationMatrixDirty)
+    {
+        if (mParent)
+        {
+            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            worldPosition = parentModelMatrix.mulVector(Vector4(worldPosition, 1.0f));
+        }
+
+        mWorldTranslationMatrixDirty = false;
+    }
 
 	return worldPosition;
 }
 
 Vector3 Transform::getWorldScale() const
 {
-	Vector3 worldScale = mLocalScale;
-    if (mParent)
+    Vector3 worldScale = mLocalScale;
+    if(mWorldRotationMatrixDirty)
     {
-        const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-        worldScale = parentModelMatrix.mulVector(Vector4(worldScale, 1.0f));
+        if (mParent)
+        {
+            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            worldScale = parentModelMatrix.mulVector(Vector4(worldScale, 1.0f));
+        }
+
+        mWorldRotationMatrixDirty = false;
     }
 
 	return worldScale;
@@ -48,12 +58,17 @@ Vector3 Transform::getWorldScale() const
 
 Vector3 Transform::getWorldRotation() const
 {
-	Vector3 worldRotation = mLocalRotation;
-	if (mParent)
-	{
-        const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-        worldRotation = parentModelMatrix.mulVector(Vector4(worldRotation, 1.0f));
-	}
+    Vector3 worldRotation = mLocalRotation;
+    if(mWorldScaleMatrixDirty)
+    {
+        if (mParent)
+        {
+            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            worldRotation = parentModelMatrix.mulVector(Vector4(worldRotation, 1.0f));
+        }
+
+        mWorldScaleMatrixDirty = false;
+    }
 
 	return worldRotation;
 }
@@ -138,6 +153,9 @@ void Transform::notifyModelMatrixDirty()
 {
     mViewMatrixDirty = true;
     mModelMatrixDirty = true;
+    mWorldTranslationMatrixDirty = true;
+    mWorldRotationMatrixDirty = true;
+    mWorldScaleMatrixDirty = true;
     FOR_MAP(it, mChildren)
     {
         it->second->notifyModelMatrixDirty();

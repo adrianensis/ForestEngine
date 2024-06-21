@@ -45,6 +45,9 @@ private:
     mutable bool mLocalTranslationMatrixDirty = true;
     mutable bool mLocalRotationMatrixDirty = true;
     mutable bool mLocalScaleMatrixDirty = true;
+    mutable bool mWorldTranslationMatrixDirty = true;
+    mutable bool mWorldRotationMatrixDirty = true;
+    mutable bool mWorldScaleMatrixDirty = true;
     mutable bool mViewMatrixDirty = true;
 
 	Vector3 mLocalPosition = Vector3::smZero;
