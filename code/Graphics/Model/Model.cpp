@@ -398,8 +398,8 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     {
         if(skin.inverse_bind_matrices)
         {
-            f32 inverseMatrixData[Matrix4::smMatrixSize];
-            cgltf_accessor_read_float(skin.inverse_bind_matrices, i, inverseMatrixData, Matrix4::smMatrixSize);
+            std::array<f32, Matrix4::smMatrixSize> inverseMatrixData;
+            cgltf_accessor_read_float(skin.inverse_bind_matrices, i, inverseMatrixData.data(), Matrix4::smMatrixSize);
             Matrix4 inverse;
             inverse.init(inverseMatrixData);
             mInverseBindMatrices[i]  = inverse;
