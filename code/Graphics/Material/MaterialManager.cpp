@@ -5,7 +5,7 @@
 
 void MaterialInstance::setDirty()
 {
-	LOG_TRACE()
+    PROFILER_CPU();
     GET_SYSTEM(MaterialManager).setMaterialInstanceDirty(mID);
 }
 
