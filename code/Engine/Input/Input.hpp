@@ -7,6 +7,7 @@
 class IWindowInputAdapter
 {
 public:
+    virtual ~IWindowInputAdapter() = default;
     virtual void keyCallback(int key, int scancode, int action, int mods) = 0;
     virtual void mouseButtonCallback(int button, int action, int mods) = 0;
     virtual void scrollCallback(double xoffset, double yoffset) = 0;
