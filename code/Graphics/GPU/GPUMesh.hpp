@@ -12,7 +12,7 @@ public:
     void setColor(const Vector4& color);
     void clear();
     bool hasVertexInputBuffer(const GPUVariableData& data) const;
-    void populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVertexBuffersContainer, bool isStatic, bool isInstanced) const;
+    void populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVertexBuffersContainer, bool isStatic) const;
 
 public:
 

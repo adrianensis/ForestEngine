@@ -34,9 +34,8 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
         mBatches.insert(batchData);
         mGPUPrograms.emplace(batchData, OwnerPtr<GPUProgram>());
       
-        bool isStatic = batchData.mIsStatic || batchData.mIsInstanced;
         GPUVertexBuffersContainer gpuVertexBuffersContainer;
-        batchData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, isStatic, batchData.mIsInstanced);
+        batchData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, batchData.mIsStatic);
 
         Ptr<Shader> shader = getShader(batchData);
         setupShader(shader);

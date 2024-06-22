@@ -16,14 +16,11 @@ void BatchRenderer::init(const BatchData& batchData)
     mRendererSlotsManager.init(mInitialInstances);
     mRenderers.resize(mRendererSlotsManager.getSize());
 
-	mMeshBatcher.init(mBatchData.mMesh, mBatchData.mIsInstanced);
+	mMeshBatcher.init(mBatchData.mMesh);
     initBuffers();
 
-    if(mBatchData.mIsInstanced)
-	{
-        resizeMeshBuffers(1);
-        setMeshBuffers(mBatchData.mMesh);
-	}
+    resizeMeshBuffers(1);
+    setMeshBuffers(mBatchData.mMesh);
 
     // if(customShader)
     // {
@@ -114,10 +111,6 @@ void BatchRenderer::updateBuffers()
 
         mMeshBatcher.resize(mMaxMeshesThreshold);
         resizeInstancedBuffers(mMaxMeshesThreshold);
-        if(!mBatchData.mIsInstanced)
-        {
-            resizeMeshBuffers(mMaxMeshesThreshold);
-        }
     	resizeIndicesBuffer(mMeshBatcher.getInternalMesh());
 
         PROFILER_END_BLOCK();
@@ -149,12 +142,11 @@ void BatchRenderer::initBuffers()
 {
     PROFILER_CPU()
 
-    bool isStatic = mBatchData.mIsStatic || mBatchData.mIsInstanced;
-    mBatchData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, isStatic, mBatchData.mIsInstanced);
+    mBatchData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, mBatchData.mIsStatic);
     mGPUVertexBuffersContainer.create();
     
     mGPUVertexBuffersContainer.enable();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, isStatic);
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, mBatchData.mIsStatic);
     mGPUVertexBuffersContainer.disable();
 }
 
@@ -171,10 +163,9 @@ void BatchRenderer::resizeMeshBuffers(u32 maxInstances)
 void BatchRenderer::resizeInstancedBuffers(u32 maxInstances)
 {
     PROFILER_CPU()
-    u32 bufferSizeMultiplier = mBatchData.mIsInstanced ? 1 : mBatchData.mMesh->mVertexCount;
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances * bufferSizeMultiplier);
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances * bufferSizeMultiplier);
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).resize(maxInstances * bufferSizeMultiplier);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).resize(maxInstances);
 }
 
 void BatchRenderer::setMeshBuffers(Ptr<const GPUMesh> mesh)
@@ -218,15 +209,11 @@ void BatchRenderer::drawCall()
     {
         if(!mDataSubmittedToGPU)
         {
-            if(!mBatchData.mIsInstanced)
-            {
-                setMeshBuffers(mMeshBatcher.getInternalMesh());
-            }
             setIndicesBuffer(mMeshBatcher.getInternalMesh());
             setInstancedBuffers();
             mDataSubmittedToGPU = true;
         }
 
-        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderersCount, mBatchData.mIsInstanced);
+        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mBatchData.mMesh->mIndices.size() * 3, mRenderersCount, true);
     }
 }

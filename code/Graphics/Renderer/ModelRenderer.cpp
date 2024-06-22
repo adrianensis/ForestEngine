@@ -19,7 +19,6 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mMesh = (*it).mMesh;
 		rendererData.mMeshInstanceMatrix = (*it).mMatrix;
 		rendererData.mMaterial = mModelRendererData.mModel->getMeshMaterials().at((*it).mMesh);
-		rendererData.mIsInstanced = mModelRendererData.mIsInstanced;
 		rendererData.mStencilData = mModelRendererData.mStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 

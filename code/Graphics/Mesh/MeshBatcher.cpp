@@ -1,17 +1,13 @@
 #include "Graphics/Mesh/MeshBatcher.hpp"
 
-void MeshBatcher::init(Ptr<const Mesh> mesh, bool isInstanced)
+void MeshBatcher::init(Ptr<const Mesh> mesh)
 {
 	PROFILER_CPU()
     mMesh = mesh;
-    mIsInstanced = isInstanced;
     mInternalMesh = OwnerPtr<Mesh>::newObject();
 
-    if(mIsInstanced)
-    {
-        allocateInstances(1);
-        appendMeshData(mMesh);
-    }
+    allocateInstances(1);
+    appendMeshData(mMesh);
 }
 
 void MeshBatcher::appendMeshData(Ptr<const Mesh> mesh)
@@ -29,7 +25,7 @@ void MeshBatcher::resize(u32 size)
 {
 	PROFILER_CPU()
 
-    u32 totalSize = size * (mIsInstanced ? 1 : mMesh->mVertexCount);
+    u32 totalSize = size;
 	mObjectIDs.clear();
 	mObjectIDs.reserve(totalSize);
 	mMaterialInstanceIDs.clear();
@@ -37,11 +33,6 @@ void MeshBatcher::resize(u32 size)
 	mInstanceIDs.clear();
     mInstanceIDs.reserve(totalSize);
 	generateInstanceIDsData(size);
-
-    if (!mIsInstanced)
-    {
-        allocateInstances(size);
-    }
 }
 
 void MeshBatcher::allocateInstances(u32 maxInstances)
@@ -55,30 +46,13 @@ void MeshBatcher::addInstanceData(Ptr<const Mesh> meshInstance, u32 objectId, u3
 {
 	PROFILER_CPU()
 
-    if(mIsInstanced)
-    {
-        mObjectIDs.push_back(objectId);
-        mMaterialInstanceIDs.push_back(materialInstanceId);
-    }
-    else
-	{
-        FOR_RANGE(i, 0, mMesh->mVertexCount)
-        {
-            mObjectIDs.push_back(objectId);
-            mMaterialInstanceIDs.push_back(materialInstanceId);
-        }
-        
-        appendMeshData(meshInstance);
-    }
+    mObjectIDs.push_back(objectId);
+    mMaterialInstanceIDs.push_back(materialInstanceId);
 }
 
 void MeshBatcher::clear()
 {
 	PROFILER_CPU()
-	if( ! mIsInstanced)
-	{
-		mInternalMesh->clear();
-	}
     mObjectIDs.clear();
     mMaterialInstanceIDs.clear();
 }
@@ -105,17 +79,7 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 	PROFILER_CPU()
     FOR_RANGE(meshId, 0, meshesCount)
     {
-        if(mIsInstanced)
-        {
-            mInstanceIDs.push_back(meshId);
-        }
-        else
-        {
-            FOR_RANGE(i, 0, mMesh->mVertexCount)
-            {
-                mInstanceIDs.push_back(meshId);
-            }
-        }
+        mInstanceIDs.push_back(meshId);
     }
 }
 

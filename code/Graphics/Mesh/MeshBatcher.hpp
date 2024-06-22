@@ -7,7 +7,7 @@ class MeshBatcher
 public:
 	MeshBatcher() = default;
 
-    void init(Ptr<const Mesh> mesh, bool isInstanced);
+    void init(Ptr<const Mesh> mesh);
     void resize(u32 size);
     void addInstanceData(Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId);
     void clear();
@@ -20,7 +20,6 @@ private:
 
 private:
     Ptr<const Mesh> mMesh;
-    bool mIsInstanced = false;
 	OwnerPtr<Mesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;

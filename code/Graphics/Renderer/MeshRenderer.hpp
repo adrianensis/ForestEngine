@@ -43,7 +43,6 @@ class RendererData
 {
 public:
     StencilData mStencilData;
-    bool mIsInstanced = true;
     Ptr<const Mesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
     PoolHandler<Material> mMaterial;

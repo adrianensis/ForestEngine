@@ -41,7 +41,7 @@ bool GPUMesh::hasVertexInputBuffer(const GPUVariableData& data) const
     return mBuffers.contains(data.mName);
 }
 
-void GPUMesh::populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVertexBuffersContainer, bool isStatic, bool isInstanced) const
+void GPUMesh::populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVertexBuffersContainer, bool isStatic) const
 {
     FOR_ARRAY(i, mGPUVertexInputBuffers)
     {
@@ -50,12 +50,12 @@ void GPUMesh::populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVe
         gpuVertexBuffersContainer.addVertexBuffer(bufferData, isStatic);
     }
 
-    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, isInstanced ? 1 : 0);
+    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, isStatic);
 
-    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, isInstanced ? 1 : 0);
+    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, isStatic);
 
-    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, isInstanced ? 1 : 0);
+    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
 }
