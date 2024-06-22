@@ -92,12 +92,12 @@ void Engine::run()
 
 		f32 dtMillis = GET_SYSTEM(Time).getElapsedTimeMillis();
 		
-		if (inverseFPSMillis >= dtMillis)
-		{
-			diff = inverseFPSMillis - dtMillis;
-			auto diff_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double, std::milli>(diff));
-			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
-		}
+		// if (inverseFPSMillis >= dtMillis)
+		// {
+		// 	diff = inverseFPSMillis - dtMillis;
+		// 	auto diff_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double, std::milli>(diff));
+		// 	std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
+		// }
 		
 		GET_SYSTEM(Time).endFrame();
 	}

@@ -4,6 +4,17 @@
 #include "Engine/System/System.hpp"
 #include "Graphics/Material/Material.hpp"
 
+class MaterialInstance: public ObjectBase
+{
+public:
+    Slot mSlot;
+    u32 mID = 0;
+    PoolHandler<Material> mMaterial;
+    GenericObjectBuffer mMaterialPropertiesBlockBuffer;
+    void setDirty();
+};
+REGISTER_CLASS(MaterialInstance);
+
 class MaterialManager: public System
 {
 public:
@@ -24,16 +35,17 @@ public:
         return handler;
     }
 
-    MaterialInstance createMaterialInstance(const PoolHandler<Material>& handler);
+    PoolHandler<MaterialInstance> createMaterialInstance(const PoolHandler<Material>& handler);
+    void freeMaterialInstance(PoolHandler<MaterialInstance> materialInstance);
     void removeMaterial(PoolHandler<Material>& material);
     const Material& getMaterial(const PoolHandler<Material>& handler) const;
     PoolHandler<Material> getMaterialHandler(u32 id) const;
     const Material& getMaterial(u32 id) const;
 
-    void setMaterialInstanceProperties(const Slot& slot, const MaterialInstance& materialInstance);
+    void setMaterialInstanceProperties(const PoolHandler<MaterialInstance> materialInstance);
+    void setMaterialInstanceDirty(u32 id);
     const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
-    void freeMaterialInstanceSlot(const PoolHandler<Material>& material, const Slot& slot);
 
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);
@@ -51,10 +63,11 @@ private:
 
     void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
 
-private:
     Pool<Texture> mTextures;
     std::unordered_map<HashedString, PoolHandler<Texture>> mTexturesByPath;
     Pool<Material> mMaterials;
+    Pool<MaterialInstance> mMaterialInstances;
+    std::unordered_set<u32> mDirtyMaterialInstances;
     inline static const u32 mInitialInstances = 2000;
 };
 REGISTER_CLASS(MaterialManager);

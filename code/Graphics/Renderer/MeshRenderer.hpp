@@ -8,6 +8,7 @@
 #include "Graphics/Mesh/Mesh.hpp"
 
 class BatchRenderer;
+class MaterialInstance;
 
 class StencilData
 {
@@ -73,10 +74,9 @@ private:
     Ptr<BatchRenderer> mBatchRenderer;
     Slot mBatchSlot;
     Slot mRenderInstanceSlot;
-    Slot mMaterialInstanceSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    MaterialInstance mMaterialInstance;
+    PoolHandler<MaterialInstance> mMaterialInstance;
     bool mUpdateMatrix = false;
 
 public:
@@ -89,7 +89,6 @@ public:
     RGET(MaterialInstance)
     CRGET_SET(RenderInstanceSlot)
     CRGET_SET(BatchSlot)
-    RGET(MaterialInstanceSlot)
     GET_SET(UpdateMatrix)
 };
 REGISTER_CLASS(MeshRenderer);

@@ -38,7 +38,7 @@ void MeshRenderer::init(const RendererData& data)
     }
     
     mMaterialInstance = GET_SYSTEM(MaterialManager).createMaterialInstance(mRendererData.mMaterial);
-    mMaterialInstanceSlot = GET_SYSTEM(MaterialManager).requestMaterialInstanceSlot(mRendererData.mMaterial);
+    mMaterialInstance->setDirty();
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -48,8 +48,7 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(MaterialManager).freeMaterialInstanceSlot(getRendererData().mMaterial, mMaterialInstanceSlot);
-    mMaterialInstanceSlot.reset();
+    GET_SYSTEM(MaterialManager).freeMaterialInstance(mMaterialInstance);
     mRenderInstanceSlot.reset();
     mBatchSlot.reset();
 }

@@ -11,6 +11,7 @@ void RenderPipeline::init()
 {
     mRenderInstancesSlotsManager.init(mInitialInstances);
     mRenderers.resize(mRenderInstancesSlotsManager.getSize());
+    mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     initBuffers();
 }
@@ -24,7 +25,8 @@ void RenderPipeline::update()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            processRenderer(renderer);
+            renderer->update();
+            setRendererMatrix(renderer);
         }
     }
 
@@ -54,16 +56,10 @@ void RenderPipeline::update()
 void RenderPipeline::processRenderer(Ptr<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
-    renderer->update();
     if(!renderer->isStatic())
     {
+        renderer->update();
         setRendererMatrix(renderer);
-    }
-
-    if(renderer->getMaterialInstanceSlot().isValid() && renderer->getMaterialInstance().mDirty)
-    {
-        GET_SYSTEM(MaterialManager).setMaterialInstanceProperties(renderer->getMaterialInstanceSlot(), renderer->getMaterialInstance());
-        renderer->getMaterialInstance().mDirty = false;
     }
 }
 
@@ -82,16 +78,21 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
     if(mRenderInstancesSlotsManager.isEmpty())
     {
         mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
+        mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
         mRenderers.resize(mRenderInstancesSlotsManager.getSize());
         mMatrices.resize(mRenderInstancesSlotsManager.getSize());
         GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
     }
 
     renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
-    mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
     if(renderer->isStatic())
     {
         setRendererMatrix(renderer);
+        mRenderersStatic.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
+    }
+    else
+    {
+        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
     }
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
@@ -113,7 +114,15 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
 
 void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
 {
-    mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
+    if(renderer->isStatic())
+    {
+        mRenderersStatic.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
+    }
+    else
+    {
+        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
+    }
+
     mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)

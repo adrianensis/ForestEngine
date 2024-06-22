@@ -60,6 +60,7 @@ private:
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
 	std::vector<Ptr<MeshRenderer>> mRenderers;
+	std::vector<Ptr<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 2000;
 public:
     CRGET(BatchMap)

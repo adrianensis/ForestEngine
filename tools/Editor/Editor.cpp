@@ -55,7 +55,7 @@ void Editor::firstUpdate()
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
@@ -80,9 +80,9 @@ void Editor::firstUpdate()
     createUI();
     // mousePick();
 
-    mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
-    mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
-    mUISceneTree->update();
+    // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
+    // mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
+    // mUISceneTree->update();
 }
 
 void Editor::update()
@@ -191,6 +191,7 @@ void Editor::update()
     // PROFILER_END_BLOCK();
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+    LOG_VAR(fps)
     if(mFPSCounter)
     {
         mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
@@ -324,6 +325,11 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input).isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
+        Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
+        Vector3 position = camera->screenToWorld(currentMousePosition, 0);
+        auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 100.0f, Vector3(0,180,180), true);
+        mGameObjectsArray.push_back(obj);
         if(!mSelectedGameObject)
         {
             mSelectedGameObject = mousePick();
