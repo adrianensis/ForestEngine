@@ -21,11 +21,6 @@ void BatchRenderer::init(const BatchData& batchData)
 
     resizeMeshBuffers(1);
     setMeshBuffers(mBatchData.mMesh);
-
-    // if(customShader)
-    // {
-    //     setShader(customShader);
-    // }
 }
 
 void BatchRenderer::terminate()
