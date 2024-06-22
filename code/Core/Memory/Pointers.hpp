@@ -2,6 +2,7 @@
 
 #include "Core/Memory/Memory.hpp"
 #include "Core/Assert/Assert.hpp"
+#include <atomic>
 
 template<class T>
 class RefCountedPtrBase;
@@ -76,22 +77,23 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class Ptr;
+friend class EnablePtrFromThis;
 
 public:
-    template <class OtherClass>
-    static Ptr<T> cast(const Ptr<OtherClass>& other)
+    template <class U>
+    static Ptr<T> cast(const Ptr<U>& other)
     {
         return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    template <class OtherClass>
-    static Ptr<T> cast(const SharedPtr<OtherClass>& other)
+    template <class U>
+    static Ptr<T> cast(const SharedPtr<U>& other)
     {
         return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    template <class OtherClass>
-    static Ptr<T> cast(const OwnerPtr<OtherClass>& other)
+    template <class U>
+    static Ptr<T> cast(const OwnerPtr<U>& other)
     {
         return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
@@ -105,9 +107,12 @@ public:
     operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
     template<class U> T_EXTENDS(T, U) 
     operator Ptr<U>() const { return Ptr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
-    operator SharedPtr<T>() const { return SharedPtr<T>(mInternalPointer, mReferenceBlock); }
+    operator SharedPtr<T>() const { return SharedPtr<T>(*this); }
+    template<class U> T_EXTENDS(T, U) 
+    operator SharedPtr<U>() const { return SharedPtr<U>(*this); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
+    SharedPtr<T> lock() const { return SharedPtr<T>(*this); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     void invalidate()
     {
@@ -233,7 +238,7 @@ protected:
     Ptr<const OtherClass> getPtrToThis() const { return Ptr<const OtherClass>::cast(mPtrToThis); }
 private:
     template <class OtherClass>
-    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>::cast(ptr); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
+    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>(dynamic_cast<IPointedObject*>(const_cast<REMOVE_CONST(OtherClass)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
     Ptr<IPointedObject> mPtrToThis;
 };
 
@@ -291,7 +296,7 @@ protected:
             increment();
             if constexpr (IS_BASE_OF(EnablePtrFromThis, T))
             {
-                EnablePtrFromThis* enablePtrFromThis = dynamic_cast<EnablePtrFromThis*>(reference);
+                EnablePtrFromThis* enablePtrFromThis = dynamic_cast<EnablePtrFromThis*>(const_cast<REMOVE_CONST(T)*>(reference));
                 if(enablePtrFromThis)
                 {
                     enablePtrFromThis->set(Ptr<T>(*this));
@@ -326,6 +331,7 @@ public:
 
     explicit SharedPtr(T* reference) { this->init(reference, Memory::newObject<ReferenceBlock>()); }
     SharedPtr() = default;
+    SharedPtr(const Ptr<T>& other) { assign(other); }
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
     SharedPtr(SharedPtr<T>&& other) { assign(other); }
     operator SharedPtr<const T>() const { return SharedPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
@@ -350,8 +356,14 @@ private:
 
     void assign(const SharedPtr<T>& other)
     {
-        // if(*this == other) { return; }
-
+        this->invalidate();
+        if(other.isValid())
+        {
+            this->set(other.mInternalPointer, other.mReferenceBlock);
+        }
+    }
+    void assign(const Ptr<T>& other)
+    {
         this->invalidate();
         if(other.isValid())
         {
@@ -412,7 +424,6 @@ private:
 
     void assign(OwnerPtr<T>& other)
     {
-        // if(*this == other) { return; }
         this->invalidate();
         if(other.isValid())
         {
