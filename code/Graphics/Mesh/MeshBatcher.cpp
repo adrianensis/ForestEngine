@@ -25,13 +25,9 @@ void MeshBatcher::resize(u32 size)
 {
 	PROFILER_CPU()
 
-    u32 totalSize = size;
-	mObjectIDs.clear();
-	mObjectIDs.reserve(totalSize);
-	mMaterialInstanceIDs.clear();
-	mMaterialInstanceIDs.reserve(totalSize);
-	mInstanceIDs.clear();
-    mInstanceIDs.reserve(totalSize);
+	mObjectIDs.resize(size);
+	mMaterialInstanceIDs.resize(size);
+    mInstanceIDs.resize(size);
 	generateInstanceIDsData(size);
 }
 
@@ -42,19 +38,12 @@ void MeshBatcher::allocateInstances(u32 maxInstances)
     generateIndicesData(maxInstances);
 }
 
-void MeshBatcher::addInstanceData(Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId)
+void MeshBatcher::addInstanceData(u32 index, Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId)
 {
 	PROFILER_CPU()
 
-    mObjectIDs.push_back(objectId);
-    mMaterialInstanceIDs.push_back(materialInstanceId);
-}
-
-void MeshBatcher::clear()
-{
-	PROFILER_CPU()
-    mObjectIDs.clear();
-    mMaterialInstanceIDs.clear();
+    mObjectIDs[index] = (objectId);
+    mMaterialInstanceIDs[index] = (materialInstanceId);
 }
 
 void MeshBatcher::generateIndicesData(u32 meshesCount)
@@ -79,7 +68,7 @@ void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
 	PROFILER_CPU()
     FOR_RANGE(meshId, 0, meshesCount)
     {
-        mInstanceIDs.push_back(meshId);
+        mInstanceIDs[meshId] = (meshId);
     }
 }
 

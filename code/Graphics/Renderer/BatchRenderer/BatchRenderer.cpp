@@ -96,7 +96,6 @@ void BatchRenderer::updateBuffers()
 {
 	PROFILER_CPU()
     u32 newSize = mRenderersCount;
-    mMeshBatcher.clear();
     if (newSize > mMaxMeshesThreshold)
     {
         PROFILER_BLOCK_CPU("new size");
@@ -116,11 +115,13 @@ void BatchRenderer::updateBuffers()
         PROFILER_END_BLOCK();
     }
 
+    u32 rendererIndex = 0;
     FOR_ARRAY(i, mRenderers)
     {
         if(mRenderers[i].isValid())
         {
-            mMeshBatcher.addInstanceData(mRenderers[i]->getMeshInstance(), mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstance()->mSlot.getSlot());
+            mMeshBatcher.addInstanceData(rendererIndex, mRenderers[i]->getMeshInstance(), mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstance()->mSlot.getSlot());
+            rendererIndex++;
         }
     }
 

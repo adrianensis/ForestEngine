@@ -9,9 +9,7 @@ public:
 
     void init(Ptr<const Mesh> mesh);
     void resize(u32 size);
-    void addInstanceData(Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId);
-    void clear();
-
+    void addInstanceData(u32 index, Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId);
 private:
     void appendMeshData(Ptr<const Mesh> mesh);
     void allocateInstances(u32 maxInstances);
