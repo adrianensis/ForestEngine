@@ -29,6 +29,7 @@ void Component::destroy()
     mIsDestroyed = true;
     mIsActive = false;
     onDestroy();
+    mGameObject.invalidate();
 }
 
 void Component::onRecycle()
