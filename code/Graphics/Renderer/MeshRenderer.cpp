@@ -18,25 +18,6 @@ ClassId MeshRenderer::getSystemComponentId() const { return ClassManager::getCla
 void MeshRenderer::init(const RendererData& data) 
 {
     mRendererData = data;
-
-    mMeshInstance = OwnerPtr<Mesh>::newObject();
-    mMeshInstance->init(mRendererData.mMesh->mVertexCount, mRendererData.mMesh->mIndicesCount, mRendererData.mMesh->mGPUVertexInputBuffers);
-    if(data.mMesh->hasVertexInputBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
-    {
-        mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesIDs.mName));
-    }
-    if(data.mMesh->hasVertexInputBuffer(GPUBuiltIn::VertexInput::mBonesWeights))
-    {
-        mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName));
-    }
-    ByteBuffer& bufferRefPosition = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName);
-    bufferRefPosition.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mPosition.mName));
-    if(mMeshInstance->mBuffers.contains(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName))
-    {
-        ByteBuffer& bufferRefTexCoord = mMeshInstance->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName);
-        bufferRefTexCoord.append(mRendererData.mMesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName));
-    }
-    
     mMaterialInstance = GET_SYSTEM(MaterialManager).createMaterialInstance(mRendererData.mMaterial);
     mMaterialInstance->setDirty();
 }

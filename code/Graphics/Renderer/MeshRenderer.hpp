@@ -69,7 +69,6 @@ private:
 
 private:
     RendererData mRendererData;
-	OwnerPtr<Mesh> mMeshInstance;
     Ptr<BatchRenderer> mBatchRenderer;
     Slot mBatchSlot;
     Slot mRenderInstanceSlot;
@@ -82,7 +81,6 @@ public:
     HashedString mCurrentTextureAnimationKey;
 
 public:
-    CGET(MeshInstance)
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
     RGET(MaterialInstance)

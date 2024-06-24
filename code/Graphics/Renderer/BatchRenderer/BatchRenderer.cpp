@@ -115,7 +115,7 @@ void BatchRenderer::updateBuffers()
     {
         if(mRenderers[i].isValid())
         {
-            mMeshBatcher.addInstanceData(rendererIndex, mRenderers[i]->getMeshInstance(), mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstance()->mSlot.getSlot());
+            mMeshBatcher.addInstanceData(rendererIndex, mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }

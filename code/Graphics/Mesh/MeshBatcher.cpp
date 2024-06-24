@@ -38,7 +38,7 @@ void MeshBatcher::allocateInstances(u32 maxInstances)
     generateIndicesData(maxInstances);
 }
 
-void MeshBatcher::addInstanceData(u32 index, Ptr<const Mesh> meshInstance, u32 objectId, u32 materialInstanceId)
+void MeshBatcher::addInstanceData(u32 index, u32 objectId, u32 materialInstanceId)
 {
 	PROFILER_CPU()
 
