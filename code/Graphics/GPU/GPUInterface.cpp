@@ -376,14 +376,14 @@ Vector4 GPUInterface::readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat f
 
 void GPUInterface::drawElements(GPUDrawPrimitive drawPrimitive, u32 indicesCount, u32 instancesCount, bool instanced)
 {
-	if(instanced)
-	{
-		glDrawElementsInstanced(TO_U32(drawPrimitive), indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0, instancesCount);
-	}
-	else
-	{
-		glDrawElements(TO_U32(drawPrimitive), instancesCount * indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0);
-	}
+    if(instanced)
+    {
+        glDrawElementsInstanced(TO_U32(drawPrimitive), indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0, instancesCount);
+    }
+    else
+    {
+        glDrawElements(TO_U32(drawPrimitive), instancesCount * indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0);
+    }
 
 	glBindVertexArray(0);
 }

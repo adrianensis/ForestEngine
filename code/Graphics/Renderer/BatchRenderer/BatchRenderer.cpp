@@ -113,9 +113,10 @@ void BatchRenderer::updateBuffers()
     u32 rendererIndex = 0;
     FOR_ARRAY(i, mRenderers)
     {
-        if(mRenderers[i].isValid())
+        Ptr<MeshRenderer> renderer = mRenderers[i];
+        if(renderer.isValid())
         {
-            mMeshBatcher.addInstanceData(rendererIndex, mRenderers[i]->getRenderInstanceSlot().getSlot(), mRenderers[i]->getMaterialInstance()->mSlot.getSlot());
+            mMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderInstanceSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }
@@ -207,6 +208,7 @@ void BatchRenderer::drawCall()
         {
             setIndicesBuffer(mMeshBatcher.getInternalMesh());
             setInstancedBuffers();
+
             mDataSubmittedToGPU = true;
         }
 

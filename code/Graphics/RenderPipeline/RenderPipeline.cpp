@@ -9,10 +9,6 @@
 
 void RenderPipeline::init()
 {
-    mRenderInstancesSlotsManager.init(mInitialInstances);
-    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-    mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
-    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
     initBuffers();
 }
 
@@ -99,17 +95,17 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
     {
         CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
         mRenderPassMap.at(*it)->addRenderer(renderer);
-
-        BatchData batchData;
-	    batchData.init(renderer);
-        if(!mBatchMap.contains(batchData))
-        {
-            mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
-            mBatchMap.at(batchData)->init(batchData);
-        }
-
-        mBatchMap.at(batchData)->addRenderer(renderer);
     }
+
+    BatchData batchData;
+    batchData.init(renderer);
+    if(!mBatchMap.contains(batchData))
+    {
+        mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
+        mBatchMap.at(batchData)->init(batchData);
+    }
+
+    mBatchMap.at(batchData)->addRenderer(renderer);
 }
 
 void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
@@ -161,6 +157,15 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
 
 void RenderPipeline::initBuffers()
 {
+    // CPU BUFFERS
+
+    mRenderInstancesSlotsManager.init(mInitialInstances);
+    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
+    mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
+    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
+
+    // GPU BUFFERS
+
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData, false);
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mLightsBufferData, false);
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mShadowMappingBufferData, false);
