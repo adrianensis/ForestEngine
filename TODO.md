@@ -12,9 +12,12 @@
 - [ ] OpenGL - Renderbuffers for readonly framebuffers
 - [ ] OpenGL - glMultiDrawElementsIndirect - struct DrawElementsIndirectCommand
 - [ ] Animation Blending
-- [ ] OpenGL - Compress textures? Why/When?
+- [ ] OpenGL - glMapBuffer persistent -> this allows multithreading buffer update
 - [ ] OpenGL - Bindless Textures
+- [ ] OpenGL - Texture Arrays
+- [ ] OpenGL - Sparse Textures
 - [ ] OpenGL - DSA - Direct State Access
+- [ ] OpenGL - Compress textures? Why/When?
 - [ ] A display list stores a group of OpenGL commands so that they can be used repeatedly just by calling the display list
 - Use Octree to calculate visibility? (frustum culling with octree?). Don't put model matrix in UBO if occluded.
 - Threads - split render and logic in different threads
