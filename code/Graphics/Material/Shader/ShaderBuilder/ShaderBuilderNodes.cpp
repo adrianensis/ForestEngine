@@ -59,7 +59,7 @@ namespace ShaderBuilderNodes
             layoutStr = "layout (std140) uniform";
             break;
         case GPUBufferType::STORAGE:
-            layoutStr = "layout (std430) buffer";
+            layoutStr = "layout (std430) readonly buffer";
             break;
         default:
             CHECK_MSG(false, "Ilegal GPUBufferType!");
