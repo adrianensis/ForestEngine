@@ -52,10 +52,7 @@ void Window::init(i32 id, const WindowData& windowData)
     {
         glfwMakeContextCurrent(mGLTFWindow);
 
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            LOG("Failed to initialize GLAD");
-        }
+        GET_SYSTEM(GPUInterface).loadAPI();
         
         glfwSwapInterval(0);
 

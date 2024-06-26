@@ -1,6 +1,17 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include <stddef.h>
 
+bool GPUInterface::loadAPI()
+{
+    bool result = false;
+    if (!gladLoadGL())
+    {
+        LOG("Failed to initialize GLAD");
+        result = true;
+    }
+    return result;
+}
+
 u32 GPUInterface::createBuffer()
 {
 	u32 bufferId = 0;

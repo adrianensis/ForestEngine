@@ -179,6 +179,8 @@ class GPUInterface : public System
 {
 public:
 
+    bool loadAPI();
+
     template<class T>
     void getValue(u32 param, T& value)
     {
