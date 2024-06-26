@@ -173,7 +173,7 @@ void GPUInterface::disableStencil()
 u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data, bool createMipMap)
 {
     u32 textureId = 0;
-    glGenTextures(1, &textureId);
+    glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
     bindTexture(textureId);
 
@@ -212,7 +212,7 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
 u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* data)
 {
     u32 textureId = 0;
-    glGenTextures(1, &textureId);
+    glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
     bindTexture(textureId);
 
@@ -255,8 +255,7 @@ void GPUInterface::enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStag
     u32 maxTextureUntis = getMaxTextureUnits(stage);
     CHECK_MSG(textureUnit < maxTextureUntis, "Max Texture Unit reached!");
 
-    glActiveTexture(GL_TEXTURE0 + textureUnit);
-	bindTexture(textureId);
+    glBindTextureUnit(textureUnit, textureId);
 }
 
 void GPUInterface::bindTexture(u32 textureId)
@@ -266,17 +265,14 @@ void GPUInterface::bindTexture(u32 textureId)
 
 void GPUInterface::unbindTexture()
 {
-    glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTextureUnit(0, 0);
 }
 
 void GPUInterface::disableTexture(u32 textureUnit, GPUPipelineStage stage)
 {
     u32 maxTextureUntis = getMaxTextureUnits(stage);
     CHECK_MSG(textureUnit < maxTextureUntis, "Max Texture Unit reached!");
-
-    glActiveTexture(GL_TEXTURE0 + textureUnit);
-    bindTexture(0);
+    glBindTextureUnit(textureUnit, 0);
 }
 
 void GPUInterface::setPixelStoreMode(u32 param, u32 value)
@@ -318,7 +314,7 @@ u32 GPUInterface::createFramebuffer(u32 width, u32 height)
 u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attachmentType, u32 width, u32 height)
 {
     u32 mTextureId = 0;
-    glGenTextures(1, &mTextureId);
+    glCreateTextures(GL_TEXTURE_2D, 1, &mTextureId);
     bindTexture(mTextureId);
 
     CHECK_MSG(attachmentType > GPUFramebufferAttachmentType::NONE, "NONE is not valid attachment!");
