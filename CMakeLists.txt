@@ -94,6 +94,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_T
 
 # third party libraries
 set(DEPENDENCIES_DIR "dependencies")
+include_directories("${DEPENDENCIES_DIR}")
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -106,9 +107,11 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory("${DEPENDENCIES_DIR}/glfw-3.3.4")
 include_directories("${DEPENDENCIES_DIR}/glfw-3.3.4/include")
 
-# glad
-set(GLAD_SOURCE "${DEPENDENCIES_DIR}/glad/src/glad.c")
-include_directories("${DEPENDENCIES_DIR}/glad/include")
+# glew
+add_compile_definitions(GLEW_STATIC)
+add_subdirectory("${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake")
+include_directories("${DEPENDENCIES_DIR}/glew-2.2.0/include")
+# set(GLEW_LINK_LIBRARY "${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake/build/Debug/lib/libGLEWd.a")
 
 # Easy Profiler
 if(ENABLE_PROFILER)
@@ -167,7 +170,7 @@ endforeach()
 # ----------------------------------------------------------------------------
 
 # single library
-add_library(${PROJECTNAME} STATIC ${OBJECTS} ${GLAD_SOURCE})
+add_library(${PROJECTNAME} STATIC ${OBJECTS})
 
 # ----------------------------------------------------------------------------
 # LINK EXTERNAL LIBRARIES
@@ -176,6 +179,7 @@ add_library(${PROJECTNAME} STATIC ${OBJECTS} ${GLAD_SOURCE})
 # link libraries with forest library
 target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
+target_link_libraries(${PROJECTNAME} glew_s)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)

@@ -3,11 +3,11 @@
 
 bool GPUInterface::loadAPI()
 {
-    bool result = false;
-    if (!gladLoadGL())
-    {
-        LOG("Failed to initialize GLAD");
-        result = true;
+    bool result = true;
+    glewExperimental=true; // Needed in core profile
+    if (glewInit() != GLEW_OK) {
+        CHECK_MSG(false, "GLEW failed.");
+        result = false;
     }
     return result;
 }
@@ -323,7 +323,7 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
 
     CHECK_MSG(attachmentType > GPUFramebufferAttachmentType::NONE, "NONE is not valid attachment!");
 
-    if (attachmentType >= GPUFramebufferAttachmentType::COLOR0 && attachmentType <= GPUFramebufferAttachmentType::COLOR31)
+    if (attachmentType >= GPUFramebufferAttachmentType::COLOR0 && attachmentType <= GPUFramebufferAttachmentType::COLOR15)
     {
         setTextureFormat(GPUTextureFormat::RGBA, width, height, GPUTexturePixelFormat::RGBA, GPUPrimitiveDataType::FLOAT);
     } 
@@ -374,7 +374,7 @@ void GPUInterface::setFramebufferAttachmentToRead(GPUFramebufferAttachmentType a
 {
     CHECK_MSG(attachmentType == GPUFramebufferAttachmentType::NONE ||
         (attachmentType >= GPUFramebufferAttachmentType::COLOR0 &&
-        attachmentType <= GPUFramebufferAttachmentType::COLOR31), "Only COLOR or NONE attachment is suitable for reading!");
+        attachmentType <= GPUFramebufferAttachmentType::COLOR15), "Only COLOR or NONE attachment is suitable for reading!");
     glReadBuffer(TO_U32(attachmentType));
 }
 

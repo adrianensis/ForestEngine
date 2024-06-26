@@ -21,6 +21,8 @@ profilerDir = "easy_profiler-2.1.0"
 profilerDepencencyDir = os.path.join(dependenciesDir, profilerDir)
 freetypeDir = "freetype-2.10.1"
 freetypeDepencencyDir = os.path.join(dependenciesDir, freetypeDir)
+glewDir = "glew-2.2.0/build/cmake"
+glewDepencencyDir = os.path.join(dependenciesDir, glewDir)
 
 buildType="Debug"
 
@@ -136,14 +138,12 @@ def build_cmake(projectDir, buildCommandArgs):
 ########## PRE BUILD ###########
 ##########################################
 
-# easy_profiler GUI
-if enableProfiler:
-    buildCommandArgs = [
-        "-DCMAKE_BUILD_TYPE=" + buildType
-    ]
+# glew
+buildCommandArgs = [
+    "-DCMAKE_BUILD_TYPE=" + buildType
+]
 
-    build_cmake(profilerDepencencyDir, buildCommandArgs)
-
+build_cmake(glewDepencencyDir, buildCommandArgs)
 
 # freetype
 buildCommandArgs = [
@@ -151,6 +151,14 @@ buildCommandArgs = [
 ]
 
 build_cmake(freetypeDepencencyDir, buildCommandArgs)
+
+# easy_profiler GUI
+if enableProfiler:
+    buildCommandArgs = [
+        "-DCMAKE_BUILD_TYPE=" + buildType
+    ]
+
+    build_cmake(profilerDepencencyDir, buildCommandArgs)
 
 ##########################################
 ########## BUILD ###########

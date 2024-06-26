@@ -102,8 +102,8 @@ extract(os.path.join(zipArchivesDir, "glfw-3.3.4.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
-# glad
-extract(os.path.join(zipArchivesDir, "glad.zip"), destiny + "/glad")
+# glew https://github.com/nigels-com/glew/releases/tag/glew-2.2.0
+extract(os.path.join(zipArchivesDir, "glew-2.2.0.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
