@@ -6,11 +6,6 @@ void Texture::enable(u32 textureUnit) const
     GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId, textureUnit, mTextureData.mStage);
 }
 
-void Texture::bind() const
-{
-    GET_SYSTEM(GPUInterface).bindTexture(mGPUTextureId);
-}
-
 void Texture::disable(u32 textureUnit) const
 {
     GET_SYSTEM(GPUInterface).disableTexture(textureUnit, mTextureData.mStage);
@@ -28,19 +23,16 @@ void Texture::init(const TextureData& textureData, u32 id)
 
         mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture1ByteChannel(mWidth, mHeight, nullptr);
 
-        GET_SYSTEM(GPUInterface).bindTexture(mGPUTextureId);
-
         u32 texPos = 0;
         FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())
         {
             // GET_SYSTEM(GPUInterface).subTexture(texPos, 0, 1, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, nullptr);
-            GET_SYSTEM(GPUInterface).subTexture(texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GPUTextureFormat::RED, mTextureData.mFontData.mGlyphs[c].mData);
+            GET_SYSTEM(GPUInterface).setSubTexture(mGPUTextureId, texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, mTextureData.mFontData.mGlyphs[c].mData);
             // GET_SYSTEM(GPUInterface).subTexture(texPos, 0, 1, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, nullptr);
 
             // Increase texture offset
             texPos += mTextureData.mFontData.mGlyphs[c].mBitmapSize.x /*+ 2*/;
         }
-        GET_SYSTEM(GPUInterface).unbindTexture();
     }
     else
     {
@@ -48,7 +40,8 @@ void Texture::init(const TextureData& textureData, u32 id)
         imageData = ImageUtils::loadImage(textureData.mPath);
         mWidth = imageData.mWidth;
         mHeight = imageData.mHeight;
-        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture(GPUTextureFormat::RGBA, mWidth, mHeight, GPUTexturePixelFormat::RGBA, imageData.mData, true);
+        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture(GPUTextureFormat::RGBA8, mWidth, mHeight, true);
+        GET_SYSTEM(GPUInterface).setTextureData(mGPUTextureId, mWidth, mHeight, GPUTexturePixelFormat::RGBA, GPUPrimitiveDataType::UNSIGNED_BYTE, imageData.mData);
         CHECK_MSG(imageData.mData, "Error loading image " + mTextureData.mPath.get());
         ImageUtils::freeImage(imageData);
     }

@@ -54,15 +54,13 @@ enum class GPUFramebufferOperationType: u32
 // aka internal format in OpenGL
 enum class GPUTextureFormat: u32
 {
-    // Unsized
-    RED = GL_RED,
-    RG = GL_RG,
-    RGB = GL_RGB,
-    RGBA = GL_RGBA,
-    DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
-    STENCIL_INDEX = GL_STENCIL_INDEX,
-    DEPTH_STENCIL = GL_DEPTH_STENCIL,
     // Sized
+    DEPTH_COMPONENT32F = GL_DEPTH_COMPONENT32F,
+    DEPTH_COMPONENT24 = GL_DEPTH_COMPONENT24,
+    DEPTH_COMPONENT16 = GL_DEPTH_COMPONENT16,
+    DEPTH32F_STENCIL8 = GL_DEPTH32F_STENCIL8,
+    DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8,
+    STENCIL_INDEX8 = GL_STENCIL_INDEX8,
     R8 = GL_R8,
     R8_SNORM = GL_R8_SNORM,
     R16 = GL_R16,
@@ -118,9 +116,9 @@ enum class GPUTexturePixelFormat: u32
     RED = GL_RED,
     RGB = GL_RGB,
     RGBA = GL_RGBA,
-    STENCIL_INDEX = GL_STENCIL_INDEX,
     DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
-    DEPTH_STENCIL = GL_DEPTH_STENCIL
+    DEPTH_STENCIL = GL_DEPTH_STENCIL,
+    STENCIL_INDEX = GL_STENCIL_INDEX
 };
 
 enum class GPUPipelineStage: u32
@@ -234,41 +232,39 @@ public:
     void disableStencil();
 
     // Texture
-    u32 createTexture(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, const byte* data, bool createMipMap);
+    u32 createTexture(GPUTextureFormat internalformat, u32 width, u32 height, bool createMipMap);
     u32 createTexture1ByteChannel(u32 width, u32 height, const byte* data);
-    void setTextureFormatWithData(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
-    void setTextureFormat(GPUTextureFormat internalformat, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type);
-    void subTexture(u32 x, u32 y, u32 width, u32 height, GPUTextureFormat format,  const byte* data);
+    void setTextureStorage(u32 textureId, GPUTextureFormat internalformat, u32 width, u32 height);
+    void setTextureData(u32 textureId, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
+    void setSubTexture(u32 textureId, u32 x, u32 y, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage);
-    void bindTexture(u32 textureId);
-    void unbindTexture();
     void disableTexture(u32 textureUnit, GPUPipelineStage stage);
     void setPixelStoreMode(u32 param, u32 value);
     u32 getMaxTextureUnits(GPUPipelineStage stage);
 
     template<class T>
-    void setTextureParameter(u32 param, const T& value)
+    void setTextureParameter(u32 textureId, u32 param, const T& value)
     {
         if constexpr (std::is_same_v<f32, T>)
         {
-            glTexParameterf(GL_TEXTURE_2D, param, value);
+            glTextureParameterf(textureId, param, value);
         }
         else if constexpr (std::is_integral_v<T>)
         {
-            glTexParameteri(GL_TEXTURE_2D, param, value);
+            glTextureParameteri(textureId, param, value);
         }
         else if constexpr (std::is_same_v<T, Vector2>)
         {
-            glTexParameterfv(GL_TEXTURE_2D, param, &value.x);
+            glTextureParameterfv(textureId, param, &value.x);
         }
         else if constexpr (std::is_same_v<T, Vector3>)
         {
-            glTexParameterfv(GL_TEXTURE_2D, param, &value.x);
+            glTextureParameterfv(textureId, param, &value.x);
         }
         else if constexpr (std::is_same_v<T, Vector4>)
         {
-            glTexParameterfv(GL_TEXTURE_2D, param, &value.x);
+            glTextureParameterfv(textureId, param, &value.x);
         }
         else
         {

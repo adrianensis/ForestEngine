@@ -93,8 +93,10 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
-        CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
-        mRenderPassMap.at(*it)->addRenderer(renderer);
+        if(mRenderPassMap.contains(*it))
+        {
+            mRenderPassMap.at(*it)->addRenderer(renderer);
+        }
     }
 
     BatchData batchData;
@@ -123,14 +125,15 @@ void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
-        CHECK_MSG(mRenderPassMap.contains(*it), "RenderPass not found!");
-        mRenderPassMap.at(*it)->removeRenderer(renderer);
-
-        BatchData batchData;
-	    batchData.init(renderer);
-        // if(!mBatchMap.contains(batchData))
-        mBatchMap.at(batchData)->removeRenderer(renderer);
+        if(mRenderPassMap.contains(*it))
+        {
+            mRenderPassMap.at(*it)->removeRenderer(renderer);
+        }
     }
+
+    BatchData batchData;
+    batchData.init(renderer);
+    mBatchMap.at(batchData)->removeRenderer(renderer);
 }
 
 void RenderPipeline::render(RenderPipelineData& renderData)
