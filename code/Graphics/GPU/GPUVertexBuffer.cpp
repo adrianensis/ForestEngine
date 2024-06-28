@@ -26,7 +26,7 @@ void GPUVertexBuffer::createBuffer()
         mAttributeLocation,
         sizeInPrimitiveTypes,
         mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType,
-        mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes,
+        0/*mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes*/,
         0/*mPreviousOffsetInBytes*/,
         mData.mInstanceDivisor
     );
