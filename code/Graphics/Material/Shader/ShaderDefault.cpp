@@ -182,9 +182,11 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(hasTexture(TextureBindingNames::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));
+        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
         shaderBuilder.getMain().
-        set(outColor, call("texture", {sampler, inTextureCoord}));
+        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord}));
     }
 }
 
@@ -192,8 +194,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
 {
     if(getShaderData().mMaterial->getMaterialData().mIsFont)
     {
-        HashedString samplerName = TextureBindingNames::smBaseColor;
-        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
     }
     else
     {
@@ -205,10 +206,10 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
             switch (it->second.mStage)
             {
                 case GPUPipelineStage::VERTEX:
-                    shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                    shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
                 break;
                 case GPUPipelineStage::FRAGMENT:
-                    shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                    shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
                 break;
 
                 default:
@@ -239,6 +240,7 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
     shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mTextures);
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
     shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(getShaderData().mPropertiesBlockSharedBufferData);
 
@@ -338,6 +340,8 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
 {
     registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer);
 
+    shaderBuilder.get().extension("GL_ARB_bindless_texture");
+
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
         vertexShaderCalculateBoneMatrix(shaderBuilder);
@@ -367,6 +371,8 @@ void ShaderDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPU
 {
     registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer);
     
+    shaderBuilder.get().extension("GL_ARB_bindless_texture");
+
     fragmentShaderCode(shaderBuilder);
 }
 

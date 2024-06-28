@@ -50,12 +50,13 @@ void Editor::firstUpdate()
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
-	importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
-	importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
+	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
+	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
@@ -325,11 +326,11 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input).isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
-        Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-        Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
-        Vector3 position = camera->screenToWorld(currentMousePosition, 0);
-        auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 100.0f, Vector3(0,180,180), true);
-        mGameObjectsArray.push_back(obj);
+        // Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
+        // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
+        // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 100.0f, Vector3(0,180,180), true);
+        // mGameObjectsArray.push_back(obj);
         if(!mSelectedGameObject)
         {
             mSelectedGameObject = mousePick();

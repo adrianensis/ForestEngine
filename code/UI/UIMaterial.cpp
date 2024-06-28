@@ -36,9 +36,11 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(hasTexture(TextureBindingNames::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNames::smBaseColor));
+        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
         shaderBuilder.getMain().
-        set(outColor, call("texture", {sampler, inTextureCoord}));
+        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord}));
 
         shaderBuilder.getMain().
         ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).

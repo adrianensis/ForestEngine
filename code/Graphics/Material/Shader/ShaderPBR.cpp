@@ -38,9 +38,11 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(hasTexture(TextureBindingNamesPBR::smBaseColor))
     {
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-        auto& sampler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smBaseColor));
+        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
+        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
         shaderBuilder.getMain().
-        set(outColor, call("texture", {sampler, inTextureCoord}));
+        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord}));
     }
 
     if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
@@ -99,9 +101,11 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
 
         if(hasTexture(TextureBindingNamesPBR::smNormal))
         {
-            auto& samplerNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smNormal).mName);
+            auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
+            auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+            Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
             funcGetNormalFromMap.body().
-            set(normalFromTexture, call("texture", {samplerNormal, inTextureCoord}));
+            set(normalFromTexture, call("texture", {textures.at(textureHandler), inTextureCoord}));
         }
 
         funcGetNormalFromMap.body().
@@ -404,12 +408,14 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
         if(hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
         {
-            auto& samplerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smMetallicRoughness).mName);
+            auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
+            auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+            Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
             auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
 
             Variable metallicRoughnessPack;
             funcCalculatePBR.body().
-            variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {samplerMetallicRoughness, inTextureCoord})).
+            variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {textures.at(textureHandler), inTextureCoord})).
             set(roughness, metallicRoughnessPack.dot("g")).
             set(metallic, metallicRoughnessPack.dot("b"));
         }

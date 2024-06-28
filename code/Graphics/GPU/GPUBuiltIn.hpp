@@ -46,9 +46,16 @@ public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
         static GPUVariableDefinitionData getSampler(const HashedString& name)
         {
-            GPUVariableDefinitionData numberedSampler = mSampler;
-            numberedSampler.mName = HashedString(numberedSampler.mName.get() + "_" + name.get());
-            return numberedSampler;
+            GPUVariableDefinitionData namedSampler = mSampler;
+            namedSampler.mName = HashedString(namedSampler.mName.get() + "_" + name.get());
+            return namedSampler;
+        }
+        inline static const GPUVariableDefinitionData mTextureHandler{GPUStorage::UNIFORM, PrimitiveTypes::mUnsignedInt, "textureHandler"};
+        static GPUVariableDefinitionData getTextureHandler(const HashedString& name)
+        {
+            GPUVariableDefinitionData namedTextureHandler = mTextureHandler;
+            namedTextureHandler.mName = HashedString(namedTextureHandler.mName.get() + "_" + name.get());
+            return namedTextureHandler;
         }
     };
 
@@ -72,6 +79,16 @@ public:
             },
             "GlobalData",
             "globalData"
+        };
+
+        inline static const GPUSharedBufferData mTextures
+        {
+            GPUBufferType::STORAGE,
+            {
+                {{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "textures"}, "", " "},
+            },
+            "Textures",
+            "textures"
         };
         
         inline static const GPUSharedBufferData mModelMatrices
