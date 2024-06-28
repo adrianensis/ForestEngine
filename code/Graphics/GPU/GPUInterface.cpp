@@ -152,25 +152,25 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
     u32 textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
-    setTextureParameter<u32>(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    setTextureParameter<u32>(textureId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     if(createMipMap)
     {
-        setTextureParameter<u32>(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        setTextureParameter<u32>(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
     else
     {
-        setTextureParameter<u32>(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        setTextureParameter<u32>(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
-    setTextureParameter<u32>(textureId, GL_TEXTURE_LOD_BIAS, 0);
+    setTextureParameter(textureId, GL_TEXTURE_LOD_BIAS, 0);
     
     f32 maxAnisotropy = 0;
     getValue<f32>(GL_MAX_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
-    setTextureParameter<f32>(textureId, GL_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
+    setTextureParameter(textureId, GL_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
 
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 4);
 
@@ -193,10 +193,10 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
     setTextureStorage(textureId, GPUTextureFormat::R8, width, height);
 
-    setTextureParameter<u32>(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    setTextureParameter<u32>(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    setTextureParameter<u32>(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    setTextureParameter<u32>(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     return textureId;
 }
@@ -317,12 +317,12 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
         // setTextureData(textureId, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GPUPrimitiveDataType::UNSIGNED_BYTE, 0);
     }
 
-    setTextureParameter<u32>(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    setTextureParameter<u32>(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    setTextureParameter<u32>(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    setTextureParameter<u32>(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    setTextureParameter<Vector4>(textureId, GL_TEXTURE_BORDER_COLOR, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    setTextureParameter(textureId, GL_TEXTURE_BORDER_COLOR, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
     setFramebufferAttachment(textureId, attachmentType);
 
