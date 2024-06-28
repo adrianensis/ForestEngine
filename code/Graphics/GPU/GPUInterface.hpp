@@ -157,6 +157,8 @@ DECLARE_ENUM(GPUCullFaceType,
 
 #define TO_U32(x) static_cast<u32>(x)
 
+using TextureHandle = u64;
+
 class GPUInterface : public System
 {
 public:
@@ -242,6 +244,9 @@ public:
     void disableTexture(u32 textureUnit, GPUPipelineStage stage);
     void setPixelStoreMode(u32 param, u32 value);
     u32 getMaxTextureUnits(GPUPipelineStage stage);
+
+    TextureHandle getTextureHandle(u32 texture​Id);
+    void makeTextureResident(TextureHandle handle​, bool makeResident);
 
     template<class T>
     void setTextureParameter(u32 textureId, u32 param, const T& value)

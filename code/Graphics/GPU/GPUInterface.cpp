@@ -258,6 +258,23 @@ u32 GPUInterface::getMaxTextureUnits(GPUPipelineStage stage)
     return maxTextureImageUnits;
 }
 
+TextureHandle GPUInterface::getTextureHandle(u32 texture​Id)
+{
+    return glGetTextureHandleARB(texture​Id);
+}
+
+void GPUInterface::makeTextureResident(TextureHandle handle​, bool makeResident)
+{
+    if(makeResident)
+    {
+        glMakeTextureHandleResidentARB(handle​);
+    }
+    else
+    {
+        glMakeTextureHandleNonResidentARB(handle​);
+    }
+}
+
 u32 GPUInterface::createFramebuffer(u32 width, u32 height)
 {
     u32 FBO = 0;
