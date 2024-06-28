@@ -2,6 +2,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 
 void MaterialInstance::setDirty()
 {
@@ -12,6 +13,7 @@ void MaterialInstance::setDirty()
 void MaterialManager::init()
 {
 	LOG_TRACE()
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures, false);
 }
 
 void MaterialManager::terminate()
@@ -46,6 +48,8 @@ void MaterialManager::update()
             mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(propertiesBlockSharedBufferData).setDataArray(materialPropertiesBlockArray);
         }
     }
+
+    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
 }
 
 PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData)
@@ -54,8 +58,14 @@ PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData
 	{
         PoolHandler<Texture> handler = mTextures.allocate();
         mTexturesByPath.insert_or_assign(textureData.mPath, handler);
-        Texture& texure = mTextures.get(handler);
-        texure.init(textureData, handler.getIndex());
+        Texture& texture = mTextures.get(handler);
+        texture.init(textureData, handler.getIndex());
+
+        u32 size = mTextures.getSize();
+        mTextureHandles.resize(size);
+        GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).resize<TextureHandle>(size);
+
+        mTextureHandles[texture.getID()] = texture.getGPUTextureHandle();
 	}
 
 	return mTexturesByPath.at(textureData.mPath);

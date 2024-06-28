@@ -24,6 +24,7 @@ public:
 
 private:
 	u32 mGPUTextureId = 0;
+    TextureHandle mGPUTextureHandle = 0;
 	u32 mWidth = 0;
 	u32 mHeight = 0;
 	u32 mID = 0;
@@ -31,5 +32,6 @@ private:
 
 public:
     GET(ID)
+    GET(GPUTextureHandle)
 };
 REGISTER_CLASS(Texture);

@@ -64,6 +64,7 @@ private:
     void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
 
     Pool<Texture> mTextures;
+    std::vector<TextureHandle> mTextureHandles;
     std::unordered_map<HashedString, PoolHandler<Texture>> mTexturesByPath;
     Pool<Material> mMaterials;
     Pool<MaterialInstance> mMaterialInstances;

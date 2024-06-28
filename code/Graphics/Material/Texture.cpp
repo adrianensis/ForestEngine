@@ -45,6 +45,11 @@ void Texture::init(const TextureData& textureData, u32 id)
         CHECK_MSG(imageData.mData, "Error loading image " + mTextureData.mPath.get());
         ImageUtils::freeImage(imageData);
     }
+
+    // Retrieve the texture handle after we finish creating the texture
+    mGPUTextureHandle = GET_SYSTEM(GPUInterface).getTextureHandle(mGPUTextureId);
+    CHECK_MSG(mGPUTextureHandle > 0, "TextureHandle error!");
+    GET_SYSTEM(GPUInterface).makeTextureResident(mGPUTextureHandle, true);
 }
 
 void Texture::terminate() 
@@ -53,5 +58,6 @@ void Texture::terminate()
     {
         GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
         mGPUTextureId = 0;
+        mGPUTextureHandle = 0;
     }
 }
