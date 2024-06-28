@@ -191,12 +191,11 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
 
     // disable byte-alignment restriction
     setPixelStoreMode(GL_UNPACK_ALIGNMENT, 1);
-    setTextureStorage(textureId, GPUTextureFormat::R8, width, height);
-
     setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    setTextureStorage(textureId, GPUTextureFormat::R8, width, height);
 
     return textureId;
 }
@@ -289,10 +288,17 @@ u32 GPUInterface::createFramebuffer(u32 width, u32 height)
     return FBO;
 }
 
-u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attachmentType, u32 width, u32 height)
+u32 GPUInterface::createFramebufferAttachment(u32 fbo, GPUFramebufferAttachmentType attachmentType, u32 width, u32 height)
 {
     u32 textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
+
+    setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    setTextureParameter(textureId, GL_TEXTURE_BORDER_COLOR, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
     CHECK_MSG(attachmentType > GPUFramebufferAttachmentType::NONE, "NONE is not valid attachment!");
 
@@ -317,14 +323,7 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
         // setTextureData(textureId, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GPUPrimitiveDataType::UNSIGNED_BYTE, 0);
     }
 
-    setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    setTextureParameter(textureId, GL_TEXTURE_BORDER_COLOR, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
-    setFramebufferAttachment(textureId, attachmentType);
+    setFramebufferAttachment(fbo, textureId, attachmentType);
 
     // Verify that the FBO is correct
     checkFramebufferErrors();
@@ -332,9 +331,9 @@ u32 GPUInterface::createFramebufferAttachment(GPUFramebufferAttachmentType attac
     return textureId;
 }
 
-void GPUInterface::setFramebufferAttachment(u32 textureId, GPUFramebufferAttachmentType attachmentType)
+void GPUInterface::setFramebufferAttachment(u32 fbo, u32 textureId, GPUFramebufferAttachmentType attachmentType)
 {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, TO_U32(attachmentType), GL_TEXTURE_2D, textureId, 0);
+    glNamedFramebufferTexture(fbo, TO_U32(attachmentType), textureId, 0);
 }
 
 void GPUInterface::enableFramebuffer(GPUFramebufferOperationType op, u32 FBO)

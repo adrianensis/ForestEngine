@@ -279,8 +279,8 @@ public:
 
     // Framebuffer
     u32 createFramebuffer(u32 width, u32 height);
-    u32 createFramebufferAttachment(GPUFramebufferAttachmentType attachmentType, u32 width, u32 height);
-    void setFramebufferAttachment(u32 textureId, GPUFramebufferAttachmentType attachmentType);
+    u32 createFramebufferAttachment(u32 fbo, GPUFramebufferAttachmentType attachmentType, u32 width, u32 height);
+    void setFramebufferAttachment(u32 fbo, u32 textureId, GPUFramebufferAttachmentType attachmentType);
     void enableFramebuffer(GPUFramebufferOperationType op, u32 FBO);
     void disableFramebuffer(GPUFramebufferOperationType op);
     void setFramebufferAttachmentToRead(GPUFramebufferAttachmentType attachmentType);
