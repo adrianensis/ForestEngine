@@ -21,8 +21,7 @@ void RenderPipeline::update()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            renderer->update();
-            setRendererMatrix(renderer);
+            processRenderer(renderer);
         }
     }
 
