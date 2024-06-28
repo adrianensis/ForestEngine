@@ -144,6 +144,11 @@ public:
         return mObjects.at(handler.getIndex());
     }
 
+    u32 getSize() const
+    {
+        return mObjects.size();
+    }
+
     PoolHandler<T> getHandler(u32 index) const
     {
         PoolHandler<T> handler;
