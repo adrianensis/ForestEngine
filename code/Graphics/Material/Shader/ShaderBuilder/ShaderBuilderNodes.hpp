@@ -331,6 +331,11 @@ namespace ShaderBuilderNodes
             return mFunctionDefinitions.emplace_back(args...);
         }
 
+        void extension(HashedString ext)
+        {
+            mExtensions.push_back(ext);
+        }
+
         const Struct& getStruct(const HashedString& structName) const;
         const Struct& getStruct(const Struct& structType) const;
         const Attribute& getAttribute(const HashedString& attributeName) const;
@@ -351,6 +356,7 @@ namespace ShaderBuilderNodes
         std::vector<Attribute> mAttributes;
         std::vector<SharedBuffer> mSharedBuffers;
         std::vector<FunctionDefinition> mFunctionDefinitions;
+        std::vector<HashedString> mExtensions;
         FunctionDefinition mMainFunctionDefinition = GPUFunctionDefinition{};
         u16 mVersion = 430;
     private:

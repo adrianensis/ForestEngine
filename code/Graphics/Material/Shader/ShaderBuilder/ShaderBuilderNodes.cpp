@@ -324,6 +324,11 @@ namespace ShaderBuilderNodes
 
         code.push_back("#version " + std::to_string(mVersion));
 
+        FOR_LIST(it, mExtensions)
+        {
+            code.push_back("#extension " + it->get() + " : require");
+        }
+
         FOR_LIST(it, mStructs)
         {
             auto statementCode = it->toLines(indent);
