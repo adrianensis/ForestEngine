@@ -11,7 +11,6 @@
 ## Interesting / Nice To Have / Optimizations
 - [ ] Animation Blending
 - [ ] OpenGL - glMapBuffer persistent -> this allows multithreading buffer update
-- [ ] OpenGL - Bindless Textures
 - [ ] OpenGL - Texture Arrays
 - [ ] OpenGL - Sparse Textures
 - [ ] OpenGL - DSA - Direct State Access
