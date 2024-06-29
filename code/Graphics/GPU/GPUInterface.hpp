@@ -148,6 +148,68 @@ enum class GPUPrimitiveDataType : u32
     BOOL = GL_BOOL
 };
 
+enum class GPUStencilFunction : u32
+{
+    NEVER = GL_NEVER,
+    ALWAYS = GL_ALWAYS,
+    LESS = GL_LESS,
+    LEQUAL = GL_LEQUAL,
+    GREATER = GL_GREATER,
+    GEQUAL = GL_GEQUAL,
+    EQUAL = GL_EQUAL,
+    NOTEQUAL = GL_NOTEQUAL
+};
+
+enum class GPUStencilOp : u32
+{
+    KEEP = GL_KEEP,
+    INVERT = GL_INVERT,
+    ZERO = GL_ZERO,
+    REPLACE = GL_REPLACE,
+    INCR = GL_INCR,
+    INCR_WRAP = GL_INCR_WRAP,
+    DECR = GL_DECR,
+    DECR_WRAP = GL_DECR_WRAP
+};
+
+enum class GPUBlendFactor : u32
+{
+    ZERO = GL_ZERO,
+    ONE = GL_ONE,
+    SRC_COLOR = GL_SRC_COLOR,
+    ONE_MINUS_SRC_COLOR = GL_ONE_MINUS_SRC_COLOR,
+    DST_COLOR = GL_DST_COLOR,
+    ONE_MINUS_DST_COLOR = GL_ONE_MINUS_DST_COLOR,
+    SRC_ALPHA = GL_SRC_ALPHA,
+    ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
+    DST_ALPHA = GL_DST_ALPHA,
+    ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA,
+    CONSTANT_COLOR = GL_CONSTANT_COLOR,
+    ONE_MINUS_CONSTANT_COLOR = GL_ONE_MINUS_CONSTANT_COLOR,
+    CONSTANT_ALPHA = GL_CONSTANT_ALPHA, 
+    ONE_MINUS_CONSTANT_ALPH = GL_ONE_MINUS_CONSTANT_ALPHA
+};
+
+enum class GPUDepthFunc : u32
+{
+    NEVER = GL_NEVER,
+    LESS = GL_LESS,
+    EQUAL = GL_EQUAL,
+    LEQUAL = GL_LEQUAL,
+    GREATER = GL_GREATER,
+    NOTEQUAL = GL_NOTEQUAL,
+    GEQUAL = GL_GEQUAL,
+    ALWAYS = GL_ALWAYS
+};
+
+enum class GPUFlags : u32
+{
+    MULTISAMPLE = GL_MULTISAMPLE,
+    DEPTH_TEST = GL_DEPTH_TEST,
+    BLEND = GL_BLEND,
+    CULL_FACE = GL_CULL_FACE
+};
+
 DECLARE_ENUM(GPUCullFaceType,
     NONE = 0, "NONE",
     FRONT = GL_FRONT, "FRONT",
@@ -230,7 +292,7 @@ public:
     void bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint);
 
     // Stencil
-    void enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp);
+    void enableStencil(u32 stencilValue, GPUStencilFunction stencilFunction, GPUStencilOp stencilPassOp);
     void disableStencil();
 
     // Texture
@@ -300,14 +362,14 @@ public:
     void setViewport(u32 x, u32 y, u32 width, u32 height);
 
     // Flags
-    void enableFlag(u32 flag);
-    void disableFlag(u32 flag);
+    void enableFlag(GPUFlags flag);
+    void disableFlag(GPUFlags flag);
 
     // Blend
-    void setBlendFunc(u32 sfactor, u32 dfactor);
+    void setBlendFunc(GPUBlendFactor sfactor, GPUBlendFactor dfactor);
 
     // Depth
-    void setDepthFunc(u32 depthFunc);
+    void setDepthFunc(GPUDepthFunc depthFunc);
 
     // Face mode
     void setFaceMode(GPUCullFaceType cullFaceType);

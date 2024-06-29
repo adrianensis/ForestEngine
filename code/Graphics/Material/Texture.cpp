@@ -26,10 +26,7 @@ void Texture::init(const TextureData& textureData, u32 id)
         u32 texPos = 0;
         FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())
         {
-            // GET_SYSTEM(GPUInterface).subTexture(texPos, 0, 1, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, nullptr);
             GET_SYSTEM(GPUInterface).setSubTexture(mGPUTextureId, texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, mTextureData.mFontData.mGlyphs[c].mData);
-            // GET_SYSTEM(GPUInterface).subTexture(texPos, 0, 1, mTextureData.mFontGlyphs[c].mBitmapSize.y, GL_RED, nullptr);
-
             // Increase texture offset
             texPos += mTextureData.mFontData.mGlyphs[c].mBitmapSize.x /*+ 2*/;
         }

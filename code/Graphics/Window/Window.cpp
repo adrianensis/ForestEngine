@@ -60,10 +60,10 @@ void Window::init(i32 id, const WindowData& windowData)
         GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
         #endif
 
-        GET_SYSTEM(GPUInterface).enableFlag(GL_MULTISAMPLE);
+        GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
         GET_SYSTEM(GPUInterface).setClearColor(Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
-        GET_SYSTEM(GPUInterface).enableFlag(GL_DEPTH_TEST); // Enable depth testing
-        GET_SYSTEM(GPUInterface).setDepthFunc(GL_LEQUAL);
+        GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST); // Enable depth testing
+        GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
 
         GET_SYSTEM(GPUInterface).clear();
     }

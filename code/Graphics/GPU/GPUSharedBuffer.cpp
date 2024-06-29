@@ -18,10 +18,12 @@ void GPUSharedBuffer::createBuffer()
 {
     mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
     GET_SYSTEM(GPUInterface).bindSharedBufferToBindingPoint(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
+    // mGPUPointer = glMapNamedBuffer(mBufferId, GL_READ_WRITE);
 }
 
 void GPUSharedBuffer::terminate()
 {
+    // glUnmapNamedBuffer(mBufferId);
     GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
 }
 

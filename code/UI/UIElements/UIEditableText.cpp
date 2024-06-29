@@ -26,7 +26,6 @@ void UIEditableText::setBackground(const UIElementConfig& config)
         setSize(mConfig.mDisplaySize).
         setLayer(mConfig.mLayer).
         setIsAffectedByLayout(false).
-        // setStencilData(StencilData{0x3, GL_NOTEQUAL, true}).
         setParent(getPtrToThis<UIEditableText>()).
         setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).
         create<UIPanel>().

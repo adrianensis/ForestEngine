@@ -62,6 +62,7 @@ private:
     GPUSharedBufferData mGPUSharedBufferData;
 	u32 mBufferId = 0;
     bool mIsStatic = false;
+    void* mGPUPointer = nullptr;
 
 public:
     GET(BindingPoint)

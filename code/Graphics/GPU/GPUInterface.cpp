@@ -135,11 +135,11 @@ void GPUInterface::enableVertexBufferLayout(u32 vertexBufferLayout)
 	glBindVertexArray(vertexBufferLayout);
 }
 
-void GPUInterface::enableStencil(u32 stencilValue, u32 stencilFunction, u32 stencilPassOp)
+void GPUInterface::enableStencil(u32 stencilValue, GPUStencilFunction stencilFunction, GPUStencilOp stencilPassOp)
 {
     glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_KEEP, GL_KEEP, stencilPassOp);
-    glStencilFunc(stencilFunction, stencilValue, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, TO_U32(stencilPassOp));
+    glStencilFunc(TO_U32(stencilFunction), stencilValue, 0xFF);
 }
 
 void GPUInterface::disableStencil()
@@ -405,24 +405,24 @@ void GPUInterface::setViewport(u32 x, u32 y, u32 width, u32 height)
     glViewport(x, y, width, height);
 }
 
-void GPUInterface::enableFlag(u32 flag)
+void GPUInterface::enableFlag(GPUFlags flag)
 {
-    glEnable(flag);
+    glEnable(TO_U32(flag));
 }
 
-void GPUInterface::disableFlag(u32 flag)
+void GPUInterface::disableFlag(GPUFlags flag)
 {
-    glDisable(flag);
+    glDisable(TO_U32(flag));
 }
 
-void GPUInterface::setBlendFunc(u32 sfactor, u32 dfactor)
+void GPUInterface::setBlendFunc(GPUBlendFactor sfactor, GPUBlendFactor dfactor)
 {
-    glBlendFunc(sfactor, dfactor);
+    glBlendFunc(TO_U32(sfactor), TO_U32(dfactor));
 }
 
-void GPUInterface::setDepthFunc(u32 depthFunc)
+void GPUInterface::setDepthFunc(GPUDepthFunc depthFunc)
 {
-    glDepthFunc(depthFunc);
+    glDepthFunc(TO_U32(depthFunc));
 }
 
 void GPUInterface::setFaceMode(GPUCullFaceType cullFaceType)
@@ -430,13 +430,13 @@ void GPUInterface::setFaceMode(GPUCullFaceType cullFaceType)
     bool enable = cullFaceType != GPUCullFaceType::NONE;
     if(enable)
     {
-        enableFlag(GL_CULL_FACE);	 // BACK by default
-        glCullFace(static_cast<u32>(cullFaceType));
+        enableFlag(GPUFlags::CULL_FACE);	 // BACK by default
+        glCullFace(TO_U32(cullFaceType));
         // glFrontFace(GL_CCW); // GL_CCW by default
     }
     else
     {
-        disableFlag(GL_CULL_FACE);
+        disableFlag(GPUFlags::CULL_FACE);
     }
 }
 

@@ -391,8 +391,8 @@ StencilData UIElement::calculateStencilData() const
     {
         stencilData.mUseStencil = true;
         stencilData.mStencilValue = 0;
-        stencilData.mStencilFunction = GL_EQUAL;
-        stencilData.mStencilPassOp = GL_INCR;
+        stencilData.mStencilFunction = GPUStencilFunction::EQUAL;
+        stencilData.mStencilPassOp = GPUStencilOp::INCR;
 
         if(mConfig.mParent)
         {
@@ -431,7 +431,7 @@ StencilData UIElement::calculateStencilData() const
                         stencilData.mParentId = parentStencilData.mId;
                     }
                 
-                    stencilData.mStencilPassOp = GL_KEEP;
+                    stencilData.mStencilPassOp = GPUStencilOp::KEEP;
                 }
             }
         }

@@ -16,8 +16,8 @@ public:
     bool mUseStencil = false;
     // aka ref
     u32 mStencilValue = 0;
-    u32 mStencilFunction = GL_NOTEQUAL;
-    u32 mStencilPassOp = GL_KEEP;
+    GPUStencilFunction mStencilFunction = GPUStencilFunction::NOTEQUAL;
+    GPUStencilOp mStencilPassOp = GPUStencilOp::KEEP;
     u64 mParentId = 0;
     u64 mId = 0;
 
