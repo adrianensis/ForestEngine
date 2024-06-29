@@ -4,7 +4,7 @@ void GPUIndicesBuffer::init(const GPUDataType& gpuDataType, bool isStatic)
 {
     mIsStatic = isStatic;
     mGPUDataType = gpuDataType;
-    mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
+    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(GPUBufferType::INDEX);
 }
 
 void GPUIndicesBuffer::resize(u32 size)

@@ -263,7 +263,7 @@ public:
     void attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimitiveDataType primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor);
 
     // Buffer
-    u32 createBuffer();
+    u32 createBuffer(GPUBufferType bufferType);
     void bindBuffer(GPUBufferType bufferType, u32 bufferId);
     void resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic);
 

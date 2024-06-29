@@ -12,10 +12,11 @@ bool GPUInterface::loadAPI()
     return result;
 }
 
-u32 GPUInterface::createBuffer()
+u32 GPUInterface::createBuffer(GPUBufferType bufferType)
 {
 	u32 bufferId = 0;
-	glGenBuffers(1, &bufferId);
+	glCreateBuffers(1, &bufferId);
+    bindBuffer(bufferType, bufferId);
 	return bufferId;
 }
 
@@ -99,15 +100,15 @@ void GPUInterface::bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 
 
 void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic)
 {
-	bindBuffer(bufferType, bufferId);
+	// bindBuffer(bufferType, bufferId);
     u32 usageHint = bufferType == GPUBufferType::STORAGE ? (isStatic ? GL_STATIC_COPY : GL_DYNAMIC_COPY) : (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-	glBufferData(TO_U32(bufferType), typeSizeInBytes * size, nullptr, usageHint);
+	glNamedBufferData(bufferId, typeSizeInBytes * size, nullptr, usageHint);
 }
 
 void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
 {
-	bindBuffer(bufferType, bufferId);
-	glBufferSubData(TO_U32(bufferType), 0, typeSize * size, data);
+	// bindBuffer(bufferType, bufferId);
+	glNamedBufferSubData(bufferId, 0, typeSize * size, data);
 }
 
 void GPUInterface::deleteVertexBufferLayout(u32 vertexBufferLayout)

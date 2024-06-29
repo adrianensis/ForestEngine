@@ -16,7 +16,7 @@ void GPUSharedBuffer::init(u32 bindingPoint, const GPUSharedBufferData& gpuBuffe
 
 void GPUSharedBuffer::createBuffer()
 {
-    mBufferId = GET_SYSTEM(GPUInterface).createBuffer();
+    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(mGPUSharedBufferData.mType);
     GET_SYSTEM(GPUInterface).bindSharedBufferToBindingPoint(mGPUSharedBufferData.mType, mBufferId, mBindingPoint);
     // mGPUPointer = glMapNamedBuffer(mBufferId, GL_READ_WRITE);
 }
