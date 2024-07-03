@@ -15,6 +15,7 @@ class PointLight: public Light
 {
 public:
     void init(const PointLightData& data);
+    PointLightData calculateLightData() const;
 
 private:
     PointLightData mLightData;
@@ -28,6 +29,7 @@ class DirectionalLight: public Light
 {
 public:
     void init(const DirectionalLightData& data);
+    DirectionalLightData calculateLightData() const;
 
 private:
     DirectionalLightData mLightData;

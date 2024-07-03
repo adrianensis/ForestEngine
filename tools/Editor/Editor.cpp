@@ -41,7 +41,7 @@ void Editor::firstUpdate()
 
     // createPointLight(Vector3(0,50,0), 20);
 
-    createDirectionalLight(Vector3(0,0,0), Vector3::smRight);
+    mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward);
     // createSprite(Vector3(0,1000,0), 10);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
@@ -52,21 +52,25 @@ void Editor::firstUpdate()
 	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,0,0), 500.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 200.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,-5,0), 1000.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
-	importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
+	// importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
 	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
-    FOR_RANGE(i, -10, 10)
-    {
-        FOR_RANGE(j, -10, 10)
-        {
-            importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,i,j), 100.0f, Vector3(90,0,0), true);
-        }
-    }
+    // FOR_RANGE(i, -10, 10)
+    // {
+    //     FOR_RANGE(j, -10, 10)
+    //     {
+    //         importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,i,j), 100.0f, Vector3(90,0,0), true);
+    //     }
+    // }
 
 
 	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
@@ -100,22 +104,26 @@ void Editor::update()
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(-speed,0,0,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Vector3(0,-speed,0));
         // cameraTransform->addLocalTranslation(Vector3(-speed,0,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(speed,0,0,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Vector3(0,speed,0));
         // cameraTransform->addLocalTranslation(Vector3(speed,0,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_UP))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,-speed,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Vector4(0,0,-speed,1));
         // cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
 		// cameraTransform->addLocalTranslation(Vector3(0,speed,0));
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,speed,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Vector4(0,0,speed,1));
         // cameraTransform->addLocalTranslation(Vector3(0,0,speed));
 		// cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
 	}
@@ -134,7 +142,7 @@ void Editor::update()
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_END))
 	{
 		// cameraTransform->addLocalRotation(Vector3(0,speed,0));
-        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smRight);
+        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smForward);
 	}
 
     Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
@@ -161,9 +169,12 @@ void Editor::update()
 		f32 pitch = mouseVector.y;
 
 		cameraTransform->addLocalRotation(Vector3(pitch, -yaw, 0));
+		// mDirectionalLight->mTransform->addLocalRotation(Vector3(0, -yaw, 0));
 	}
 
 	mLastMousePosition = currentMousePosition;
+
+    mDirectionalLight->mTransform->addLocalRotation(Vector3(0,0.1f,0));
 
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x
@@ -252,10 +263,10 @@ Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->lookAt(v+dir);
+	// gameObject->mTransform->setLocalRotation(dir*180);
 
     DirectionalLightData directionalLightData;
-    directionalLightData.mDirection = -dir;
+    directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
 	gameObject->createComponent<DirectionalLight>(directionalLightData);
@@ -270,7 +281,7 @@ Ptr<GameObject> Editor::mousePick()
     Ptr<GameObject> obj;
     FOR_LIST(it, mGameObjectsArray)
     {
-        (*it)->mTransform->addLocalRotation(Vector3(0,speed,0));
+        (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
         // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
         // Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Cube bboxScreenSpace(

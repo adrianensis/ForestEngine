@@ -9,7 +9,11 @@ Matrix4 Light::getLightProjectionViewMatrix() const
 {
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    const Matrix4& lightViewMatrix = mGameObject->mTransform->getViewMatrix();
+    Matrix4 lightViewMatrix;
+    lightViewMatrix.translation(-mGameObject->mTransform->getWorldPosition());
+    Matrix4 rotationMatrix;
+    rotationMatrix.rotation(-mGameObject->mTransform->getLocalRotation());
+    lightViewMatrix.mul(rotationMatrix);
 
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     Matrix4 lightProjectionViewMatrix;
@@ -25,7 +29,27 @@ void PointLight::init(const PointLightData& data)
     mLightData = data;
 }
 
+PointLightData PointLight::calculateLightData() const
+{
+    // const Matrix4& modelMatrix = mGameObject->mTransform->calculateModelMatrix();
+    PointLightData data = mLightData;
+    // data.mPosition = modelMatrix.mulVector(Vector4(data.mPosition, 1));
+
+    return data;
+}
+
 void DirectionalLight::init(const DirectionalLightData& data)
 {
     mLightData = data;
+}
+
+DirectionalLightData DirectionalLight::calculateLightData() const
+{
+    DirectionalLightData data = mLightData;
+    const Matrix4& rotationMatrix = mGameObject->mTransform->getLocalRotationMatrix();
+    data.mDirection = rotationMatrix.mulVector(Vector4(-Vector3::smForward, 1));
+    // data.mDirection += mGameObject->mTransform->getWorldPosition();
+    data.mDirection.mul(-1);
+    data.mDirection.nor();
+    return data;
 }

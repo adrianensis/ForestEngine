@@ -319,7 +319,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(distance, GPUBuiltIn::PrimitiveTypes::mFloat, "distance", call("length", {lightDirection})).
         variable(attenuation, GPUBuiltIn::PrimitiveTypes::mFloat, "attenuation", Variable("1.0").div(paren(distance.mul(distance)))).
         variable(radiance, GPUBuiltIn::PrimitiveTypes::mVector3, "radiance", lightColor.mul(attenuation)).
-
+        
         /*
             // Cook-Torrance BRDF
             float NDF = DistributionGGX(N, H, roughness);   
@@ -332,7 +332,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         */
         variable(NDF, GPUBuiltIn::PrimitiveTypes::mFloat, "NDF", call(mDistributionGGX, {N, H, roughness})).
         variable(G, GPUBuiltIn::PrimitiveTypes::mFloat, "G", call(mGeometrySmith, {N, V, L, roughness})).
-        variable(F, GPUBuiltIn::PrimitiveTypes::mVector3, "F", call(mFresnelSchlick, {call("clamp",{call("dot", {N, H}), "0.0"s, "1.0"s}), F0})).
+        variable(F, GPUBuiltIn::PrimitiveTypes::mVector3, "F", call(mFresnelSchlick, {call("max",{call("dot", {V, H}), "0.0"s}), F0})).
         variable(numerator, GPUBuiltIn::PrimitiveTypes::mVector3, "numerator", NDF.mul(G).mul(F)).
         variable(denominator, GPUBuiltIn::PrimitiveTypes::mFloat, "denominator",
             Variable("4.0").
@@ -468,6 +468,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(Lo, GPUBuiltIn::PrimitiveTypes::mVector3, "Lo", call(GPUBuiltIn::PrimitiveTypes::mVector3, {"0"s}));
 
+
         // funcCalculatePBR.body().
         // forBlock("i", "<", Variable("5"), "++").
         //     set(Lo, Lo.add(call(mCalculatePBRSingleLight, 
@@ -478,12 +479,18 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         //         }))).
         // end();
 
+        Variable lightDirection;
+        Variable lightDiffuse;
+        funcCalculatePBR.body().
+        variable(lightDirection, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDirection", directionalLight.dot(directionalLightDirection)).
+        variable(lightDiffuse, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDiffuse", directionalLight.dot(directionalLightDiffuse));
+        
         funcCalculatePBR.body().
         set(Lo, Lo.add(call(mCalculatePBRSingleLight, 
         {
             albedo, metallic, roughness, V, N, F0,
-            directionalLight.dot(directionalLightDirection),
-            directionalLight.dot(directionalLightDiffuse)
+            lightDirection,
+            lightDiffuse
         })));
 
         /*
@@ -518,7 +525,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
             
             Variable shadow;
             funcCalculatePBR.body().
-            variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", call(mCalculateShadow, {fragPositionLight, directionalLight.dot(directionalLightDirection),})).
+            variable(shadow, GPUBuiltIn::PrimitiveTypes::mFloat, "shadow", call(mCalculateShadow, {fragPositionLight, lightDirection})).
             set(PBRFinalColor, PBRFinalColor.mul(paren(Variable("1.0").sub(shadow))));
         }
 

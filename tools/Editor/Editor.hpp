@@ -28,6 +28,7 @@ private:
     Ptr<UITransform> mUITransform;
     Ptr<UISceneTree> mUISceneTree;
 	Ptr<GameObject> mCameraGameObject;
+	Ptr<GameObject> mDirectionalLight;
 	Ptr<GameObject> mSelectedGameObject;
 	Ptr<UIAxisGizmo> mAxisViewer;
 

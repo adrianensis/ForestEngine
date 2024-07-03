@@ -106,9 +106,9 @@ void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuild
                 As long as we avoid doing distortions (scaling one axis differently than the rest) we are fine with the approach I presented above. 
             */
             // shaderBuilder.getMain().
-            // set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(objectId)})})}).mul(finalNormal));
             shaderBuilder.getMain().
-            set(outNormal, call(GPUBuiltIn::PrimitiveTypes::mMatrix3, {modelMatrices.at(objectId)}).mul(finalNormal));
+            set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(objectId)})})}).mul(finalNormal));
+            // set(outNormal, call(GPUBuiltIn::PrimitiveTypes::mMatrix3, {modelMatrices.at(objectId)}).mul(finalNormal));
         }
     }
     else

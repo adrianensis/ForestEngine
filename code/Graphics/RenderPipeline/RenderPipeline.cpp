@@ -146,12 +146,12 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
     LightBuiltIn::LightsData lightsData;
     FOR_ARRAY(i, renderData.mPointLights)
     {
-        lightsData.mPointLights[i] = renderData.mPointLights[i]->getLightData();
+        lightsData.mPointLights[i] = renderData.mPointLights[i]->calculateLightData();
     }
 
     if(renderData.mDirectionalLight)
     {
-        lightsData.mDirectionalLight = renderData.mDirectionalLight->getLightData();
+        lightsData.mDirectionalLight = renderData.mDirectionalLight->calculateLightData();
     }
 
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
