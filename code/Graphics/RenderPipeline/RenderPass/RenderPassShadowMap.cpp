@@ -24,13 +24,18 @@ void RenderPassShadowMap::postFramebufferEnabled()
 
 void RenderPassShadowMap::preRender()
 {
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
 	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::FRONT);
 }
 
 void RenderPassShadowMap::postRender()
 {
 	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::NONE);
-
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
+    
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }

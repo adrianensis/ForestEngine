@@ -3,6 +3,9 @@
 
 void RenderPassUI::preRender()
 {
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
     GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
     GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
 }
@@ -10,6 +13,8 @@ void RenderPassUI::preRender()
 void RenderPassUI::postRender()
 {
     GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
 void RenderPassUI::renderStencilCascade(u64 id)
