@@ -115,6 +115,18 @@ public:
     class VertexInput
     {
     public:
+        class BoneVertexIDsData
+        {
+        public:
+            i32 mBonesIDs[GPUBuiltIn::MAX_BONE_INFLUENCE] = {-1, -1, -1, -1};
+        };
+
+        class BoneVertexWeightsData
+        {
+        public:
+            f32 mBonesWeights[GPUBuiltIn::MAX_BONE_INFLUENCE] = {0.0f, 0.0f, 0.0f, 0.0f};
+        };
+
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, PrimitiveTypes::mVector3, "in_position"};
         inline static const std::vector<GPUVariableDefinitionData> mTextureCoords
         {

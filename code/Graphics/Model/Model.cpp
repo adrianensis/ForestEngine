@@ -320,7 +320,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                     GLTFBoneVertexIDsData<i8>* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData<i8>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                     GLTFBoneVertexIDsData<i8>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
 
-                    BoneVertexIDsData boneVertexIDsData;
+                    GPUBuiltIn::VertexInput::BoneVertexIDsData boneVertexIDsData;
                     FOR_RANGE(i, 0, GPUBuiltIn::MAX_BONE_INFLUENCE)
                     {
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU8.mBonesIDs[i];
@@ -336,7 +336,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
                     GLTFBoneVertexIDsData<i16>* boneVertexIDsDataU16Array = reinterpret_cast<GLTFBoneVertexIDsData<i16>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                     GLTFBoneVertexIDsData<i16>& boneVertexIDsDataU16 = boneVertexIDsDataU16Array[vertexIt];
 
-                    BoneVertexIDsData boneVertexIDsData;
+                    GPUBuiltIn::VertexInput::BoneVertexIDsData boneVertexIDsData;
                     FOR_RANGE(i, 0, GPUBuiltIn::MAX_BONE_INFLUENCE)
                     {
                         boneVertexIDsData.mBonesIDs[i] = boneVertexIDsDataU16.mBonesIDs[i];
@@ -356,8 +356,8 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 FOR_RANGE(vertexIt, 0, attribute.data->count)
                 {
-                    BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<BoneVertexWeightsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
-                    BoneVertexWeightsData& boneVertexWeightsData = boneVertexWeightsDataArray[vertexIt];
+                    GPUBuiltIn::VertexInput::BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<GPUBuiltIn::VertexInput::BoneVertexWeightsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GPUBuiltIn::VertexInput::BoneVertexWeightsData& boneVertexWeightsData = boneVertexWeightsDataArray[vertexIt];
                     mesh->mBuffers.at(GPUBuiltIn::VertexInput::mBonesWeights.mName).pushBack(boneVertexWeightsData);
                 }
             }
