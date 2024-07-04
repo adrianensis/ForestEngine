@@ -44,7 +44,8 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraGameObject = OwnerPtr<GameObject>::newObject();
+    GameObjectHandler cameraGameObjectHandler = GET_SYSTEM(GameObjectsManager).requestGameObject<GameObject>();
+    mCameraGameObject = cameraGameObjectHandler.getGameObject();
 	mCameraGameObject->init();
 
 	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));

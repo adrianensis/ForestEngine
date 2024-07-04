@@ -56,9 +56,9 @@ void RenderEngine::terminate()
     mRenderPipeline->terminate();
 }
 
-void RenderEngine::addComponent(Ptr<SystemComponent> component)
+void RenderEngine::addSystemComponent(Ptr<SystemComponent> component)
 {
-	System::addComponent(component);
+	System::addSystemComponent(component);
 
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
@@ -83,9 +83,9 @@ void RenderEngine::addComponent(Ptr<SystemComponent> component)
     }
 }
 
-void RenderEngine::removeComponent(Ptr<SystemComponent> component)
+void RenderEngine::removeSystemComponent(Ptr<SystemComponent> component)
 {
-	System::removeComponent(component);
+	System::removeSystemComponent(component);
 
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {

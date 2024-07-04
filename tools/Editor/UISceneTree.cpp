@@ -29,7 +29,7 @@ void UISceneTree::update()
 	setTextScale(0.5f).
 	setSize(Vector2(0.5, 0.05f));
 
-    const std::list<OwnerPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
+    const std::list<Ptr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
     std::list<Ptr<GameObject>> objectsInmutableList;
     FOR_LIST(it, objects)
     {

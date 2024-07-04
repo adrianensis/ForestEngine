@@ -9,7 +9,7 @@ class ScriptEngine: public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    void addComponent(Ptr<SystemComponent> component) override;
+    void addSystemComponent(Ptr<SystemComponent> component) override;
     virtual void update() override;
     void preSceneChanged();
     void postSceneChanged();

@@ -29,7 +29,7 @@ private:
 	std::unordered_set<HashedString> mLoadRequests;
 
     OwnerPtr<GameObject> mGameObjectController;
-	OwnerPtr<GameObject> mCameraGameObject;
+	Ptr<GameObject> mCameraGameObject;
 
 public:
     inline static const HashedString smDefaultSceneName = HashedString("Default");

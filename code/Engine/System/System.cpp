@@ -11,13 +11,13 @@ bool System::isComponentClassAccepted(ClassId classId)
     return mAcceptedSystemComponentClasses.contains(classId);
 }
 
-void System::addComponent(Ptr<SystemComponent> component)
+void System::addSystemComponent(Ptr<SystemComponent> component)
 {
     CHECK_SYSTEM_COMPONENT(component);
     component->mAlreadyAddedToSystem = true;
 }
 
-void System::removeComponent(Ptr<SystemComponent> component)
+void System::removeSystemComponent(Ptr<SystemComponent> component)
 {
     CHECK_SYSTEM_COMPONENT(component);
     component->mAlreadyAddedToSystem = false;

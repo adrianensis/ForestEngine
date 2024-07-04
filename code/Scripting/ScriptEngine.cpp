@@ -9,9 +9,9 @@ void ScriptEngine::init()
 	registerComponentClass(ClassManager::getClassMetadata<Script>().mClassDefinition.getId());
 }
 
-void ScriptEngine::addComponent(Ptr<SystemComponent> component)
+void ScriptEngine::addSystemComponent(Ptr<SystemComponent> component)
 {
-	System::addComponent(component);
+	System::addSystemComponent(component);
 
     Ptr<Script> script = Ptr<Script>::cast(component);
     CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");

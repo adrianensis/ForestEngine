@@ -41,7 +41,7 @@ void Editor::firstUpdate()
 
     // createPointLight(Vector3(0,50,0), 20);
 
-    mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward);
+    mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward + Vector3(0,-1,0));
     // createSprite(Vector3(0,1000,0), 10);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
@@ -53,15 +53,15 @@ void Editor::firstUpdate()
 	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,-5,0), 1000.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
 	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	// importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
-	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
+	// auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
     // FOR_RANGE(i, -10, 10)
@@ -73,8 +73,8 @@ void Editor::firstUpdate()
     // }
 
 
-	obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
-    mGameObjectsArray.push_back(obj);
+	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
+    // mGameObjectsArray.push_back(obj);
 	// importModel2("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, 0);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -137,12 +137,13 @@ void Editor::update()
 	}
     else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_HOME))
 	{
-		cameraTransform->addLocalRotation(Vector3(0,-speed,0));
+		// cameraTransform->addLocalRotation(Vector3(0,-speed,0));
+        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smForward);
 	}
 	else if (GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_END))
 	{
 		// cameraTransform->addLocalRotation(Vector3(0,speed,0));
-        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smForward);
+        cameraTransform->lookAt(cameraTransform->getWorldPosition() + -Vector3::smForward);
 	}
 
     Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
@@ -174,7 +175,7 @@ void Editor::update()
 
 	mLastMousePosition = currentMousePosition;
 
-    mDirectionalLight->mTransform->addLocalRotation(Vector3(0,0.1f,0));
+    //mDirectionalLight->mTransform->addLocalRotation(Vector3(0,0.1f,0));
 
     // PROFILER_BLOCK_CPU("Draw Editor Lines");
     // // -x to x
@@ -263,7 +264,7 @@ Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& 
 	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
-	// gameObject->mTransform->setLocalRotation(dir*180);
+	gameObject->mTransform->lookAt(v + dir);
 
     DirectionalLightData directionalLightData;
     directionalLightData.mDirection = dir;

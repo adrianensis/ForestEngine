@@ -124,6 +124,11 @@ public:
         return mComponentsArrays.at(componentHandler.mClassId).mComponents[slot];
     }
 
+    Ptr<Component> getComponentFromSlot(ClassId classId, const Slot& slot) const
+    {
+        return mComponentsArrays.at(classId).mComponents[slot.getSlot()];
+    }
+
 private:
     class ComponentsArray
     {

@@ -12,8 +12,8 @@ public:
     virtual void terminate() { };
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);
-    virtual void addComponent(Ptr<SystemComponent> component);
-    virtual void removeComponent(Ptr<SystemComponent> component);
+    virtual void addSystemComponent(Ptr<SystemComponent> component);
+    virtual void removeSystemComponent(Ptr<SystemComponent> component);
 
 private:
     std::unordered_set<ClassId> mAcceptedSystemComponentClasses;
@@ -46,7 +46,7 @@ public:
                 Ptr<System> sub = (itSystem->second);
                 if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
                 {
-                    sub->addComponent(component);
+                    sub->addSystemComponent(component);
                 }
             }
         }
@@ -63,7 +63,7 @@ public:
                 Ptr<System> sub = (itSystem->second);
                 if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
                 {
-                    sub->removeComponent(component);
+                    sub->removeSystemComponent(component);
                 }
             }
         }

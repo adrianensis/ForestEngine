@@ -120,13 +120,13 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(OwnerPtr<GameObject>&& gameObject)
+void Scene::addGameObject(Ptr<GameObject> gameObject)
 {
     if(gameObject)
     {
         gameObject->mScene = getPtrToThis<Scene>();
         gameObject->onAddedToScene();
-        mNewGameObjects.emplace_back(std::move(gameObject));
+        mNewGameObjects.emplace_back(gameObject);
     }
 }
 
@@ -148,6 +148,8 @@ void Scene::removeGameObject(Ptr<GameObject> gameObject)
         {
             mNewGameObjects.erase(itNew);
         }
+
+        GET_SYSTEM(GameObjectsManager).removeGameObject(gameObject);
     }
 }
 

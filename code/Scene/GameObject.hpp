@@ -94,7 +94,8 @@ public:
 
 	virtual void onAddedToScene(){};
 	virtual void onDestroy(){};
-
+    virtual void onRecycle(){};
+    
     void setIsActive(bool isActive);
     void destroy();
 

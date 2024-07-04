@@ -16,8 +16,8 @@ public:
     void postSceneChanged();
     void onResize(u32 width, u32 height);
     
-    void addComponent(Ptr<SystemComponent> component) override;
-    void removeComponent(Ptr<SystemComponent> component) override;
+    void addSystemComponent(Ptr<SystemComponent> component) override;
+    void removeSystemComponent(Ptr<SystemComponent> component) override;
 
 private:
     void swap();
