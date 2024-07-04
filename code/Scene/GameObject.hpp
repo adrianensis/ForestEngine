@@ -94,7 +94,12 @@ public:
 
 	virtual void onAddedToScene(){};
 	virtual void onDestroy(){};
-    virtual void onRecycle(){};
+    virtual void onRecycle()
+    {
+        mIsActive = false;
+        mIsPendingToBeDestroyed = false;
+        mIsDestroyed = false;
+    };
     
     void setIsActive(bool isActive);
     void destroy();
@@ -105,7 +110,6 @@ private:
     void removeComponentInternal(Ptr<Component> component);
 
 private:
-    std::list<OwnerPtr<Component>> mComponents;
 	std::list<ComponentHandler> mComponentHandlers;
 	bool mIsActive = false;
 
