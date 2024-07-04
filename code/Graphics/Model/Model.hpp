@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "cgltf.h"
 
@@ -28,12 +28,12 @@ public:
 	Matrix4 mBindMatrix;
 };
 
-class Mesh;
+class GPUMesh;
 
 class MeshInstanceData
 {
 public:
-    Ptr<const Mesh> mMesh;
+    Ptr<const GPUMesh> mMesh;
     Matrix4 mMatrix;
 };
 
@@ -107,9 +107,9 @@ private:
 	std::filesystem::path mPath;
     std::vector<OwnerPtr<SkeletalAnimation>> mSkeletalAnimations;
     std::vector<MeshInstanceData> mMeshInstances;
-    std::unordered_map<const cgltf_primitive*, OwnerPtr<Mesh>> mGLTFMeshes;
+    std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
     std::unordered_map<const cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
-    std::unordered_map<Ptr<const Mesh>, PoolHandler<Material>> mMeshMaterials;
+    std::unordered_map<Ptr<const GPUMesh>, PoolHandler<Material>> mMeshMaterials;
     std::vector<BoneData> mBones;
     std::vector<Matrix4> mInverseBindMatrices;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;

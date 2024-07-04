@@ -5,7 +5,6 @@
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Graphics/RenderEngine.hpp"
 
-#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Mesh/MeshPrimitives.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Model/Model.hpp"

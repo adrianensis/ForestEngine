@@ -1,16 +1,16 @@
 #include "Graphics/Mesh/MeshBatcher.hpp"
 
-void MeshBatcher::init(Ptr<const Mesh> mesh)
+void MeshBatcher::init(Ptr<const GPUMesh> mesh)
 {
 	PROFILER_CPU()
     mMesh = mesh;
-    mInternalMesh = OwnerPtr<Mesh>::newObject();
+    mInternalMesh = OwnerPtr<GPUMesh>::newObject();
 
     allocateInstances(1);
     appendMeshData(mMesh);
 }
 
-void MeshBatcher::appendMeshData(Ptr<const Mesh> mesh)
+void MeshBatcher::appendMeshData(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
 

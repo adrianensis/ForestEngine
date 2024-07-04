@@ -1,6 +1,6 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
@@ -202,10 +202,10 @@ void Model::loadGLTFMeshes()
 
 void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
-    CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "Mesh has to be made out of triangles!")
+    CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "GPUMesh has to be made out of triangles!")
 
-    mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<Mesh>::newObject());
-    Ptr<Mesh> mesh = mGLTFMeshes.at(&primitive);
+    mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<GPUMesh>::newObject());
+    Ptr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
     GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
 
     PoolHandler<Material> meshMaterial;

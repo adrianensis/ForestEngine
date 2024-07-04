@@ -9,7 +9,6 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
 class GPUProgram;
-class Mesh;
 
 class MaterialData
 {

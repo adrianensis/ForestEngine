@@ -16,18 +16,18 @@ void ModelManager::terminate()
 {
     mModels.clear();
 }
-void ModelManager::setMeshToModel(Ptr<const Mesh> mesh, Ptr<Model> model)
+void ModelManager::setMeshToModel(Ptr<const GPUMesh> mesh, Ptr<Model> model)
 {
     mMeshToModels.insert_or_assign(mesh, model);
 }
 
-Ptr<Model> ModelManager::getModelFromMesh(Ptr<const Mesh> mesh) const
+Ptr<Model> ModelManager::getModelFromMesh(Ptr<const GPUMesh> mesh) const
 {
     if(!mMeshToModels.contains(mesh))
     {
         return Ptr<Model>();
     }
-    
+
     return mMeshToModels.at(mesh);
 }
 

@@ -2,7 +2,6 @@
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"

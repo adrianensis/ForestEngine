@@ -1,7 +1,7 @@
 #include "Graphics/Renderer/ModelRenderer.hpp"
 
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Scene/Module.hpp"
 

@@ -3,6 +3,7 @@
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 
 class Model;
 
@@ -13,12 +14,12 @@ public:
     virtual void terminate() override;
 
     Ptr<const Model> loadModel(const std::string& path);
-    void setMeshToModel(Ptr<const Mesh> mesh, Ptr<Model> model);
-    Ptr<Model> getModelFromMesh(Ptr<const Mesh> mesh) const;
+    void setMeshToModel(Ptr<const GPUMesh> mesh, Ptr<Model> model);
+    Ptr<Model> getModelFromMesh(Ptr<const GPUMesh> mesh) const;
 
 private:
     std::unordered_map<std::string, OwnerPtr<Model>> mModels;
-    std::unordered_map<Ptr<const Mesh>, Ptr<Model>> mMeshToModels;
+    std::unordered_map<Ptr<const GPUMesh>, Ptr<Model>> mMeshToModels;
     PoolHandler<Material> mDefaultModelMaterial;
 public:
     GET(DefaultModelMaterial)

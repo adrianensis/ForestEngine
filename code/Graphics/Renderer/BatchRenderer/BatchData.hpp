@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
 class BatchData
@@ -10,7 +10,7 @@ public:
 	BatchData() = default;
 	
 	PoolHandler<Material> mMaterial;
-	Ptr<const Mesh> mMesh;
+	Ptr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
     StencilData mStencilData;
 

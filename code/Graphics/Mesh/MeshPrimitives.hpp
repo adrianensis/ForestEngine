@@ -2,7 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 
 class MeshPrimitives: public System
 {
@@ -11,30 +11,30 @@ public:
     virtual void terminate() override;
 
 	template <class T>
-	Ptr<const Mesh> getPrimitive()
+	Ptr<const GPUMesh> getPrimitive()
 	{
 		if(!mPrimitivesMap.contains(ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
 		{
 			mPrimitivesMap.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.getId(), createPrimitive<T>());
 		}
 		
-		return Ptr<Mesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
+		return Ptr<GPUMesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
 	}
 
 private:
 	template <class T>
-	OwnerPtr<Mesh> createPrimitive() const
+	OwnerPtr<GPUMesh> createPrimitive() const
 	{
-		CHECK_MSG(false, "Mesh Primitive not implemented");
-		return OwnerPtr<Mesh>();
+		CHECK_MSG(false, "GPUMesh Primitive not implemented");
+		return OwnerPtr<GPUMesh>();
 	}
 
 private:
-	std::unordered_map<ClassId, OwnerPtr<Mesh>> mPrimitivesMap;
+	std::unordered_map<ClassId, OwnerPtr<GPUMesh>> mPrimitivesMap;
 };
 REGISTER_CLASS(MeshPrimitives);
 
 template <>
-OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Rectangle>() const;
+OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Rectangle>() const;
 template <>
-OwnerPtr<Mesh> MeshPrimitives::createPrimitive<Cube>() const;
+OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Cube>() const;

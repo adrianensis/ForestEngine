@@ -5,7 +5,7 @@
 
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Mesh/Mesh.hpp"
+#include "Graphics/GPU/GPUMesh.hpp"
 
 class BatchRenderer;
 class MaterialInstance;
@@ -43,7 +43,7 @@ class RendererData
 {
 public:
     StencilData mStencilData;
-    Ptr<const Mesh> mMesh;
+    Ptr<const GPUMesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
     PoolHandler<Material> mMaterial;
     std::unordered_set<ClassId> mRenderPassIDs;
