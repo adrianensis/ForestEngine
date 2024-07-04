@@ -308,7 +308,7 @@ void Matrix4::lookAt(const Vector3& worldPosition, const Vector3& targetPosition
         }
     }
 
-	Vector3 up(Vector3(forward).cross(right));
+	Vector3 up(Vector3(right).cross(forward));
 
 	this->init(
         Vector4(right.x, right.y, right.z, 0),

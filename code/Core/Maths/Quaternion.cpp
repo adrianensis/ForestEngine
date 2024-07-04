@@ -236,23 +236,36 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 
 Vector3 Quaternion::toEuler() const
 {
+    // if the input quaternion is normalized, this is exactly one. Otherwise, this acts as a correction factor for the quaternion's not-normalizedness
+    f32 unit = (v.x * v.x) + (v.y * v.y) + (v.z * v.z) + (w * w);
 
-    Vector3 eulerVec;
+    // this will have a magnitude of 0.5 or greater if and only if this is a singularity case
+    f32 test = v.x * w - v.y * v.z;
 
-    f32 t0 = 2 * (w * v.x + v.y * v.z);
-    f32 t1 = 1 - 2 * (v.x * v.x + v.y * v.y);
-    eulerVec.x = MathUtils::deg(std::atan2(t0, t1));
+    f32 x, z, y;
+    if (test > 0.4995f * unit) // singularity at north pole
+    {
+        x = MathUtils::PI/2.0f;
+        y = 2.0f * std::atan2(v.y, v.x);
+        z = 0;
+    }
+    else if (test < -0.4995f * unit) // singularity at south pole
+    {
+        x = -MathUtils::PI/2.0f;
+        y = -2.0f * std::atan2(v.y, v.x);
+        z = 0;
+    }
+    else // no singularity - this is the majority of cases
+    {
+        x = std::asin(2.0f * (w * v.x - v.y * v.z));
+        y = std::atan2(2.0f * w * v.y + 2.0f * v.z * v.x, 1 - 2.0f * (v.x * v.x + v.y * v.y)); // I don't even fucking know, man. Fuck you quaternions.
+        z = std::atan2(2.0f * w * v.z + 2.0f * v.x * v.y, 1 - 2.0f * (v.z * v.z + v.x * v.x));
+    }
 
-    f32 t2 = 2 * (w * v.y - v.z * v.x);
-    t2 = t2 > 1 ?  1 : t2;
-    t2 = t2 < -1 ? -1 : t2;
-    eulerVec.y = MathUtils::deg(std::asin(t2));
-        
-    f32 t3 = 2 * (w * v.z + v.x * v.y);
-    f32 t4 = 1 - 2 * (v.y * v.y + v.z * v.z);
-    eulerVec.z = MathUtils::deg(std::atan2(t3, t4));
+    // all the math so far has been done in radians. Before returning, we convert to degrees...
+    Vector3 euler(MathUtils::deg(x), MathUtils::deg(y), MathUtils::deg(z));
 
-    return eulerVec;
+    return euler;
 }
 
 void Quaternion::fromEuler(f32 roll, f32 pitch, f32 yaw)
