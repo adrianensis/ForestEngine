@@ -10,12 +10,9 @@ Matrix4 Light::getLightProjectionViewMatrix() const
     Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 lightViewMatrix;
-    lightViewMatrix.translation(-mGameObject->mTransform->getWorldPosition());
-    Matrix4 rotationMatrix;
-    rotationMatrix.rotation(-mGameObject->mTransform->getLocalRotation());
-    lightViewMatrix.mul(rotationMatrix);
+    lightViewMatrix = mGameObject->mTransform->getViewMatrix();
+    lightViewMatrix.invert();
 
-    Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     Matrix4 lightProjectionViewMatrix;
     lightProjectionViewMatrix.ortho(-2048, 2048, -2048, 2048, 1.0, 10000);
 

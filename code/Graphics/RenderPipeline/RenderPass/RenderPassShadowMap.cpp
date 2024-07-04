@@ -12,18 +12,11 @@ void RenderPassShadowMap::init(Ptr<RenderPipeline> renderPipeline, const RenderP
     mShaderDepthBuffer = OwnerPtr<ShaderDepthBuffer>::newObject();
 }
 
-void RenderPassShadowMap::preFramebufferEnabled()
-{
-    GET_SYSTEM(GPUInterface).setViewport(0, 0, mRenderPassData.mOutputFramebufferData.mWidth, mRenderPassData.mOutputFramebufferData.mHeight);
-}
-
-void RenderPassShadowMap::postFramebufferEnabled()
-{
-    GET_SYSTEM(GPUInterface).clearDepth();
-}
-
 void RenderPassShadowMap::preRender()
 {
+    GET_SYSTEM(GPUInterface).clearDepth();
+    GET_SYSTEM(GPUInterface).setViewport(0, 0, mRenderPassData.mOutputFramebufferData.mWidth, mRenderPassData.mOutputFramebufferData.mHeight);
+
     GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
     GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
     GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
