@@ -7,6 +7,7 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
@@ -73,9 +74,11 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const BatchData& batchData)
 {
     mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(batchData.mMaterial));
-    if(GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(batchData.mMesh->mModel))
+    
+    Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(batchData.mMesh);
+    if(model && GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(model))
     {
-        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(batchData.mMesh->mModel);
+        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(model);
         mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
     }
 

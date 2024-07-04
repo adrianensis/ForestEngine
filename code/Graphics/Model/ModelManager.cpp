@@ -16,6 +16,20 @@ void ModelManager::terminate()
 {
     mModels.clear();
 }
+void ModelManager::setMeshToModel(Ptr<const Mesh> mesh, Ptr<Model> model)
+{
+    mMeshToModels.insert_or_assign(mesh, model);
+}
+
+Ptr<Model> ModelManager::getModelFromMesh(Ptr<const Mesh> mesh) const
+{
+    if(!mMeshToModels.contains(mesh))
+    {
+        return Ptr<Model>();
+    }
+    
+    return mMeshToModels.at(mesh);
+}
 
 Ptr<const Model> ModelManager::loadModel(const std::string& path)
 {

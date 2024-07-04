@@ -13,12 +13,16 @@ public:
     virtual void terminate() override;
 
     Ptr<const Model> loadModel(const std::string& path);
+    void setMeshToModel(Ptr<const Mesh> mesh, Ptr<Model> model);
+    Ptr<Model> getModelFromMesh(Ptr<const Mesh> mesh) const;
 
 private:
     std::unordered_map<std::string, OwnerPtr<Model>> mModels;
+    std::unordered_map<Ptr<const Mesh>, Ptr<Model>> mMeshToModels;
     PoolHandler<Material> mDefaultModelMaterial;
 public:
     GET(DefaultModelMaterial)
     CRGET(Models)
+    CRGET(MeshToModels)
 };
 REGISTER_CLASS(ModelManager);

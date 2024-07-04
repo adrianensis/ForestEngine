@@ -7,7 +7,5 @@ class Material;
 
 class Mesh: public GPUMesh
 {
-public:
-    Ptr<const Model> mModel;
 };
 REGISTER_CLASS(Mesh);

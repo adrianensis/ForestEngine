@@ -206,7 +206,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<Mesh>::newObject());
     Ptr<Mesh> mesh = mGLTFMeshes.at(&primitive);
-    mesh->mModel = (getPtrToThis<Model>());
+    GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
 
     PoolHandler<Material> meshMaterial;
     if(primitive.material)
