@@ -55,9 +55,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
     // renderPassGeometry->mPointLight = renderData.mPointLights[0];
     // renderPassGeometry->renderPass();
 
-    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
 	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
-    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
 
     GET_SYSTEM(GPUInterface).clearDepth();
     GET_SYSTEM(GPUInterface).clearStencil();
@@ -65,7 +63,5 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
     Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
     renderPassUI->renderPass();
 
-    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
 	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
-    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
 }

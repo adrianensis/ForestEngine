@@ -56,6 +56,12 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 
 void ShapeBatchRenderer::render()
 {
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
+    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
+    GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
+
     PROFILER_CPU()
 	if (mShapesCounter > 0)
 	{
@@ -73,6 +79,10 @@ void ShapeBatchRenderer::render()
 		mColorBuffer.clear();
 		mShapesCounter = 0;
 	}
+
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
 void ShapeBatchRenderer::addPosition(const Vector3& position)
