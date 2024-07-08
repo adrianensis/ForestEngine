@@ -16,7 +16,7 @@ void BatchRenderer::init(const BatchData& batchData)
     mRendererSlotsManager.init(mInitialInstances);
     mRenderers.resize(mRendererSlotsManager.getSize());
 
-	mMeshBatcher.init(mBatchData.mMesh);
+	mGPUMeshBatcher.init(mBatchData.mMesh);
     initBuffers();
 
     resizeMeshBuffers(1);
@@ -103,9 +103,9 @@ void BatchRenderer::updateBuffers()
 			mMaxMeshesThreshold += smMeshesIncrement;
 		}
 
-        mMeshBatcher.resize(mMaxMeshesThreshold);
+        mGPUMeshBatcher.resize(mMaxMeshesThreshold);
         resizeInstancedBuffers(mMaxMeshesThreshold);
-    	resizeIndicesBuffer(mMeshBatcher.getInternalMesh());
+    	resizeIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
 
         PROFILER_END_BLOCK();
     }
@@ -116,7 +116,7 @@ void BatchRenderer::updateBuffers()
         Ptr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            mMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderInstanceSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
+            mGPUMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderInstanceSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }
@@ -178,9 +178,9 @@ void BatchRenderer::setMeshBuffers(Ptr<const GPUMesh> mesh)
 void BatchRenderer::setInstancedBuffers()
 {
     PROFILER_CPU()
-	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mMeshBatcher.getInstanceIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mMeshBatcher.getObjectIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).setDataArray(mMeshBatcher.getMaterialInstanceIDs());
+	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).setDataArray(mGPUMeshBatcher.getMaterialInstanceIDs());
 }
 
 void BatchRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
@@ -206,7 +206,7 @@ void BatchRenderer::drawCall()
     {
         if(!mDataSubmittedToGPU)
         {
-            setIndicesBuffer(mMeshBatcher.getInternalMesh());
+            setIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
             setInstancedBuffers();
 
             mDataSubmittedToGPU = true;

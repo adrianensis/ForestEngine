@@ -1,6 +1,6 @@
-#include "Graphics/Mesh/MeshBatcher.hpp"
+#include "Graphics/GPU/Mesh/GPUMeshBatcher.hpp"
 
-void MeshBatcher::init(Ptr<const GPUMesh> mesh)
+void GPUMeshBatcher::init(Ptr<const GPUMesh> mesh)
 {
 	PROFILER_CPU()
     mMesh = mesh;
@@ -10,7 +10,7 @@ void MeshBatcher::init(Ptr<const GPUMesh> mesh)
     appendMeshData(mMesh);
 }
 
-void MeshBatcher::appendMeshData(Ptr<const GPUMesh> mesh)
+void GPUMeshBatcher::appendMeshData(Ptr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
 
@@ -21,7 +21,7 @@ void MeshBatcher::appendMeshData(Ptr<const GPUMesh> mesh)
     }
 }
 
-void MeshBatcher::resize(u32 size)
+void GPUMeshBatcher::resize(u32 size)
 {
 	PROFILER_CPU()
 
@@ -31,14 +31,14 @@ void MeshBatcher::resize(u32 size)
 	generateInstanceIDsData(size);
 }
 
-void MeshBatcher::allocateInstances(u32 maxInstances)
+void GPUMeshBatcher::allocateInstances(u32 maxInstances)
 {
 	PROFILER_CPU()
     mInternalMesh->init(mMesh->mVertexCount * maxInstances, mMesh->mIndicesCount * maxInstances, mMesh->mGPUVertexInputBuffers);
     generateIndicesData(maxInstances);
 }
 
-void MeshBatcher::addInstanceData(u32 index, u32 objectId, u32 materialInstanceId)
+void GPUMeshBatcher::addInstanceData(u32 index, u32 objectId, u32 materialInstanceId)
 {
 	PROFILER_CPU()
 
@@ -46,7 +46,7 @@ void MeshBatcher::addInstanceData(u32 index, u32 objectId, u32 materialInstanceI
     mMaterialInstanceIDs[index] = (materialInstanceId);
 }
 
-void MeshBatcher::generateIndicesData(u32 meshesCount)
+void GPUMeshBatcher::generateIndicesData(u32 meshesCount)
 {
 	PROFILER_CPU()
 	FOR_RANGE(i, 0, meshesCount)
@@ -63,7 +63,7 @@ void MeshBatcher::generateIndicesData(u32 meshesCount)
 	}
 }
 
-void MeshBatcher::generateInstanceIDsData(u32 meshesCount)
+void GPUMeshBatcher::generateInstanceIDsData(u32 meshesCount)
 {
 	PROFILER_CPU()
     FOR_RANGE(meshId, 0, meshesCount)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/Mesh/MeshBatcher.hpp"
+#include "Graphics/GPU/Mesh/GPUMeshBatcher.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchData.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
@@ -43,7 +43,7 @@ private:
     u32 mRenderersCount = 0;
     inline static const u32 mInitialInstances = 2000;
 
-	MeshBatcher mMeshBatcher;
+	GPUMeshBatcher mGPUMeshBatcher;
     BatchData mBatchData;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;

@@ -2,10 +2,10 @@
 
 #include "Graphics/GPU/GPUMesh.hpp"
 
-class MeshBatcher
+class GPUMeshBatcher
 {
 public:
-	MeshBatcher() = default;
+	GPUMeshBatcher() = default;
 
     void init(Ptr<const GPUMesh> mesh);
     void resize(u32 size);
