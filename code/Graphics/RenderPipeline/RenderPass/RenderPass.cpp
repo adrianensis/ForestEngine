@@ -1,6 +1,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/Model/Model.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
@@ -76,10 +77,13 @@ void RenderPass::bindShader(const BatchData& batchData)
     mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(batchData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(batchData.mMesh);
-    if(model && GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().contains(model))
+    if(model)
     {
-        Ptr<const SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).getSkeletonStates().at(model);
-        mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+        Ptr<SkeletonState> skeletonState = model->getSkeletonState();
+        if(skeletonState)
+        {
+            mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+        }
     }
 
     mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));

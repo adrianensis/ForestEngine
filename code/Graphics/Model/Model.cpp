@@ -589,6 +589,8 @@ void Model::loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation)
 
 void Model::loadGLTFSkeletalAnimations()
 {
+    Ptr<SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).createSkeletonState();
+    
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)
     {
         const cgltf_animation& gltfAnim = mCGLTFData->animations[animIt];
@@ -597,13 +599,15 @@ void Model::loadGLTFSkeletalAnimations()
 
         loadGLTFChannels(gltfAnim);
 
-        Ptr<SkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<SkeletalAnimation>::newObject());;
-        animation->init(animDuration, getPtrToThis<Model>());
+        Ptr<SkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<SkeletalAnimation>::newObject());
+        animation->init(animDuration);
 
         loadGLTFSkeletalAnimationFrames(animation);
 
-        GET_SYSTEM(SkeletalAnimationManager).createSkeletalAnimationState(animation);
+        GET_SYSTEM(SkeletalAnimationManager).createSkeletalAnimationState(skeletonState, animation);
     }
+
+    mSkeletonState = skeletonState;
 }
 
 Matrix4 Model::calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms) const

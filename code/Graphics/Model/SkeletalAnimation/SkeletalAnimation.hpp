@@ -2,8 +2,6 @@
 
 #include "Engine/Minimal.hpp"
 
-class Model;
-
 class Frame
 {
 public:
@@ -13,12 +11,11 @@ public:
 class SkeletalAnimation: public ObjectBase
 {
 public:
-    void init(f32 animDurationInSeconds, Ptr<const Model> model);
+    void init(f32 animDurationInSeconds);
 
     f32 calculateCurrentSkeletalAnimationTime(f32 accumulatedTime) const;
 
 public:
-    Ptr<const Model> mModel;
     std::vector<Frame> mFrames;
     f32 mTicksPerSecond = 0;
     u32 mDurationInTicks = 0;
@@ -46,7 +43,7 @@ REGISTER_CLASS(SkeletalAnimationState);
 class SkeletonState: public ObjectBase
 {
 public:
-    void init(Ptr<const Model> model);
+    void init();
     void createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation);
     void update();
 
@@ -54,7 +51,6 @@ private:
     void getBoneTransforms(std::vector<Matrix4>& Transforms) const;
     void getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const;
 private:
-    Ptr<const Model> mModel;
     std::unordered_map<ObjectId, OwnerPtr<SkeletalAnimationState>> mSkeletalAnimationStates;
     Ptr<SkeletalAnimationState> mCurrentSkeletalAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;

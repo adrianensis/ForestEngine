@@ -12,7 +12,7 @@ void SkeletalAnimationManager::update()
 
 	FOR_MAP(it, mSkeletonStates)
 	{
-		it->second->update();
+		(*it)->update();
 	}
 
     FOR_MAP(it, mSkeletonRenderStates)
@@ -22,30 +22,22 @@ void SkeletalAnimationManager::update()
 	}
 }
 
-void SkeletalAnimationManager::createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation)
+Ptr<SkeletonState> SkeletalAnimationManager::createSkeletonState()
 {
-	Ptr<const Model> model = animation->mModel;
+	Ptr<SkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<SkeletonState>::newObject()).first;
+    skeletonState->init();
+    initSkeletonRenderState(skeletonState);
+    return skeletonState;
+}
 
-	if(!mSkeletonStates.contains(model))
-	{
-		mSkeletonStates.insert_or_assign(model, OwnerPtr<SkeletonState>::newObject());
-		mSkeletonStates.at(model)->init(animation->mModel);
-        
-        initSkeletonRenderState(mSkeletonStates[model]);
-	}
-
-	mSkeletonStates[model]->createSkeletalAnimationState(animation);
-
+void SkeletalAnimationManager::createSkeletalAnimationState(Ptr<SkeletonState> skeletonState, Ptr<const SkeletalAnimation> animation)
+{
+	skeletonState->createSkeletalAnimationState(animation);
 }
 
 void SkeletalAnimationManager::terminate()
 {
 	mSkeletonStates.clear();
-}
-
-const std::vector<Matrix4>& SkeletalAnimationManager::getBoneTransforms(Ptr<const Model> model) const
-{
-	return mSkeletonStates.at(model)->getCurrentBoneTransforms();
 }
 
 void SkeletalAnimationManager::initSkeletonRenderState(Ptr<const SkeletonState> skeletonState)

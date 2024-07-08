@@ -13,15 +13,15 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     virtual void update() override;
-    void createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation);
-    const std::vector<Matrix4>& getBoneTransforms(Ptr<const Model> model) const;
+    Ptr<SkeletonState> createSkeletonState();
+    void createSkeletalAnimationState(Ptr<SkeletonState> skeletonState, Ptr<const SkeletalAnimation> animation);
 
     const GPUSharedBuffer& getSkeletonRenderStateGPUSharedBuffer(Ptr<const SkeletonState> skeletonState) const;
 private:
     void initSkeletonRenderState(Ptr<const SkeletonState> skeletonState);
 
 private:
-    std::unordered_map<Ptr<const Model>, OwnerPtr<SkeletonState>> mSkeletonStates;
+    std::unordered_set<OwnerPtr<SkeletonState>> mSkeletonStates;
 
     class SkeletonRenderState
     {

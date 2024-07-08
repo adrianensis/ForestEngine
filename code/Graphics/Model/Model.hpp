@@ -115,9 +115,11 @@ private:
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
+    Ptr<SkeletonState> mSkeletonState;
 
 public:
     CRGET(MeshInstances)
     CRGET(MeshMaterials)
+    GET(SkeletonState)
 };
 REGISTER_CLASS(Model);

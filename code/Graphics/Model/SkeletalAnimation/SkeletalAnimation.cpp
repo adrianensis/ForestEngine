@@ -1,10 +1,8 @@
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void SkeletalAnimation::init(f32 animDurationInSeconds, Ptr<const Model> model)
+void SkeletalAnimation::init(f32 animDurationInSeconds)
 {
-    mModel = model;
-
     mDurationInSeconds = animDurationInSeconds;
     mTicksPerSecond = Model::smSkeletalAnimationFPS;
     mDurationInTicks = (int)(animDurationInSeconds/Model::smSkeletalAnimationFrameRateSeconds);
@@ -37,9 +35,8 @@ void SkeletalAnimationState::update()
     }
 }
 
-void SkeletonState::init(Ptr<const Model> model)
+void SkeletonState::init()
 {
-    mModel = model;
 }
 
 void SkeletonState::update()
