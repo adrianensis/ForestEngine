@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUMesh.hpp"
+#include "Graphics/GPU/Mesh/GPUMesh.hpp"
 
 class GPUMeshBatcher
 {

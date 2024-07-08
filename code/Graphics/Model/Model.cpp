@@ -1,6 +1,6 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/GPU/GPUMesh.hpp"
+#include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"

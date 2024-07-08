@@ -2,7 +2,7 @@
 
 #include "Engine/Minimal.hpp"
 #include "Engine/System/System.hpp"
-#include "Graphics/GPU/GPUMesh.hpp"
+#include "Graphics/GPU/Mesh/GPUMesh.hpp"
 
 class MeshPrimitives: public System
 {

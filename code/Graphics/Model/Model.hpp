@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Minimal.hpp"
-#include "Graphics/GPU/GPUMesh.hpp"
+#include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
 #include "cgltf.h"
 
