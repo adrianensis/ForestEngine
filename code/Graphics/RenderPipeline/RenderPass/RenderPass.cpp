@@ -9,7 +9,7 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
@@ -79,10 +79,10 @@ void RenderPass::bindShader(const BatchData& batchData)
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(batchData.mMesh);
     if(model)
     {
-        Ptr<SkeletonState> skeletonState = model->getSkeletonState();
+        Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(SkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+            mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
         }
     }
 

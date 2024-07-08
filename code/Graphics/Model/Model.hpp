@@ -2,10 +2,10 @@
 
 #include "Engine/Minimal.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "cgltf.h"
 
-class SkeletalAnimation;
+class GPUSkeletalAnimation;
 class Material;
 struct cgltf_data;
 struct cgltf_accessor;
@@ -59,7 +59,7 @@ private:
     void loadGLTFBones(const cgltf_skin& skin);
     f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
-    void loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation);
+    void loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation);
     void loadGLTFSkeletalAnimations();
     Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms) const;
     static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
@@ -98,14 +98,10 @@ private:
         cgltf_animation_channel *scale = nullptr;
     };
 
-public:
-    inline static const float smSkeletalAnimationFPS = 60.0f;
-    inline static const float smSkeletalAnimationFrameRateSeconds = 1.0f/smSkeletalAnimationFPS;
-
 private:
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
-    std::vector<OwnerPtr<SkeletalAnimation>> mSkeletalAnimations;
+    std::vector<OwnerPtr<GPUSkeletalAnimation>> mSkeletalAnimations;
     std::vector<MeshInstanceData> mMeshInstances;
     std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
     std::unordered_map<const cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
@@ -115,7 +111,7 @@ private:
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
-    Ptr<SkeletonState> mSkeletonState;
+    Ptr<GPUSkeletonState> mSkeletonState;
 
 public:
     CRGET(MeshInstances)

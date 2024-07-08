@@ -6,7 +6,6 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
 #include "Graphics/Model/Model.hpp"
 
 void Shader::init(PoolHandler<Material> material)

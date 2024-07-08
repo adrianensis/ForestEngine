@@ -1,27 +1,26 @@
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
-#include "Graphics/Model/Model.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 
-void SkeletalAnimation::init(f32 animDurationInSeconds)
+void GPUSkeletalAnimation::init(f32 animDurationInSeconds)
 {
     mDurationInSeconds = animDurationInSeconds;
-    mTicksPerSecond = Model::smSkeletalAnimationFPS;
-    mDurationInTicks = (int)(animDurationInSeconds/Model::smSkeletalAnimationFrameRateSeconds);
+    mTicksPerSecond = smSkeletalAnimationFPS;
+    mDurationInTicks = (int)(animDurationInSeconds/smSkeletalAnimationFrameRateSeconds);
     mFrames.resize(mDurationInTicks);
 }
 
-f32 SkeletalAnimation::calculateCurrentSkeletalAnimationTime(f32 accumulatedTime) const
+f32 GPUSkeletalAnimation::calculateCurrentSkeletalAnimationTime(f32 accumulatedTime) const
 {
     f32 timeInTicks = accumulatedTime * mTicksPerSecond;
     f32 animationTime = fmod(timeInTicks, mDurationInTicks);
     return animationTime;
 }
 
-void SkeletalAnimationState::init(Ptr<const SkeletalAnimation> animation)
+void GPUSkeletalAnimationState::init(Ptr<const GPUSkeletalAnimation> animation)
 {
     mSkeletalAnimation = animation;
 }
 
-void SkeletalAnimationState::update()
+void GPUSkeletalAnimationState::update()
 {
     mSkeletalAnimationTime = mSkeletalAnimation->calculateCurrentSkeletalAnimationTime(mAccumulatedTime);
 
@@ -35,11 +34,11 @@ void SkeletalAnimationState::update()
     }
 }
 
-void SkeletonState::init()
+void GPUSkeletonState::init()
 {
 }
 
-void SkeletonState::update()
+void GPUSkeletonState::update()
 {
 	PROFILER_CPU()
 
@@ -51,13 +50,13 @@ void SkeletonState::update()
     }
 }
 
-void SkeletonState::createSkeletalAnimationState(Ptr<const SkeletalAnimation> animation)
+void GPUSkeletonState::createSkeletalAnimationState(Ptr<const GPUSkeletalAnimation> animation)
 {
     ObjectId animationId = animation->getObjectId();
 
 	if(!mSkeletalAnimationStates.contains(animationId))
 	{
-		mSkeletalAnimationStates.insert_or_assign(animationId, OwnerPtr<SkeletalAnimationState>::newObject());
+		mSkeletalAnimationStates.insert_or_assign(animationId, OwnerPtr<GPUSkeletalAnimationState>::newObject());
 		mSkeletalAnimationStates.at(animationId)->init(animation);
 	}
 
@@ -70,12 +69,12 @@ void SkeletonState::createSkeletalAnimationState(Ptr<const SkeletalAnimation> an
     }
 }
 
-void SkeletonState::getBoneTransforms(std::vector<Matrix4>& Transforms) const
+void GPUSkeletonState::getBoneTransforms(std::vector<Matrix4>& Transforms) const
 {
     getBoneTransformsFromCurrentSkeletalAnimation(Transforms);
 }
 
-void SkeletonState::getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const
+void GPUSkeletonState::getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const
 {
 	PROFILER_CPU()
 

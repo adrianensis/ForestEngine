@@ -1,12 +1,12 @@
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
-#include "Graphics/Model/Model.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
+#include "Graphics/GPU/GPUBuiltIn.hpp"
 
-void SkeletalAnimationManager::init()
+void GPUSkeletalAnimationManager::init()
 {
 }
 
-void SkeletalAnimationManager::update()
+void GPUSkeletalAnimationManager::update()
 {
 	PROFILER_CPU()
 
@@ -22,25 +22,25 @@ void SkeletalAnimationManager::update()
 	}
 }
 
-Ptr<SkeletonState> SkeletalAnimationManager::createSkeletonState()
+Ptr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState()
 {
-	Ptr<SkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<SkeletonState>::newObject()).first;
+	Ptr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<GPUSkeletonState>::newObject()).first;
     skeletonState->init();
     initSkeletonRenderState(skeletonState);
     return skeletonState;
 }
 
-void SkeletalAnimationManager::createSkeletalAnimationState(Ptr<SkeletonState> skeletonState, Ptr<const SkeletalAnimation> animation)
+void GPUSkeletalAnimationManager::createSkeletalAnimationState(Ptr<GPUSkeletonState> skeletonState, Ptr<const GPUSkeletalAnimation> animation)
 {
 	skeletonState->createSkeletalAnimationState(animation);
 }
 
-void SkeletalAnimationManager::terminate()
+void GPUSkeletalAnimationManager::terminate()
 {
 	mSkeletonStates.clear();
 }
 
-void SkeletalAnimationManager::initSkeletonRenderState(Ptr<const SkeletonState> skeletonState)
+void GPUSkeletalAnimationManager::initSkeletonRenderState(Ptr<const GPUSkeletonState> skeletonState)
 {
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
@@ -52,7 +52,7 @@ void SkeletalAnimationManager::initSkeletonRenderState(Ptr<const SkeletonState> 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }
 
-const GPUSharedBuffer& SkeletalAnimationManager::getSkeletonRenderStateGPUSharedBuffer(Ptr<const SkeletonState> skeletonState) const
+const GPUSharedBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUSharedBuffer(Ptr<const GPUSkeletonState> skeletonState) const
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
     return mSkeletonRenderStates.at(skeletonState).mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices);

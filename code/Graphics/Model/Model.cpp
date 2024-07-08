@@ -3,8 +3,8 @@
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimation.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Engine/Config/Paths.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
@@ -500,7 +500,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
         }
         else
         {
-            LOG("SkeletalAnimation channel for a node not in the armature");
+            LOG("GPUSkeletalAnimation channel for a node not in the armature");
             continue;
         }
 
@@ -523,7 +523,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     }
 }
 
-void Model::loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation)
+void Model::loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation)
 {
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
 
@@ -533,7 +533,7 @@ void Model::loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation)
         std::vector<Matrix4> originalFrameTransforms;
         originalFrameTransforms.resize(mBonesIndexCount);
 
-        f32 currentSkeletalAnimationTime = frameIt*smSkeletalAnimationFrameRateSeconds;
+        f32 currentSkeletalAnimationTime = frameIt * GPUSkeletalAnimation::smSkeletalAnimationFrameRateSeconds;
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
         {
             Vector3 translation(0, 0, 0);
@@ -589,7 +589,7 @@ void Model::loadGLTFSkeletalAnimationFrames(Ptr<SkeletalAnimation> animation)
 
 void Model::loadGLTFSkeletalAnimations()
 {
-    Ptr<SkeletonState> skeletonState = GET_SYSTEM(SkeletalAnimationManager).createSkeletonState();
+    Ptr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletonState();
     
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)
     {
@@ -599,12 +599,12 @@ void Model::loadGLTFSkeletalAnimations()
 
         loadGLTFChannels(gltfAnim);
 
-        Ptr<SkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<SkeletalAnimation>::newObject());
+        Ptr<GPUSkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<GPUSkeletalAnimation>::newObject());
         animation->init(animDuration);
 
         loadGLTFSkeletalAnimationFrames(animation);
 
-        GET_SYSTEM(SkeletalAnimationManager).createSkeletalAnimationState(skeletonState, animation);
+        GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletalAnimationState(skeletonState, animation);
     }
 
     mSkeletonState = skeletonState;

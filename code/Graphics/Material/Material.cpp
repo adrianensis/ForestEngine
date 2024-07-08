@@ -1,14 +1,6 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
-#include "Graphics/Material/Texture.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
-#include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Window/Window.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
-#include "Graphics/Model/Model.hpp"
-
 void Material::internalInit(const MaterialData& materialData, u32 id)
 {
     mMaterialData = materialData;

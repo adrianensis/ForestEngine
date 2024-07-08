@@ -38,7 +38,7 @@ void Engine::init()
     CREATE_SYSTEM(MeshPrimitives);
     CREATE_SYSTEM(MaterialManager);
     CREATE_SYSTEM(CameraManager);
-    CREATE_SYSTEM(SkeletalAnimationManager);
+    CREATE_SYSTEM(GPUSkeletalAnimationManager);
     CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
     CREATE_SYSTEM(DebugRenderer);

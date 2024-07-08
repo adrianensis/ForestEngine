@@ -3,7 +3,7 @@
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Model/SkeletalAnimation/SkeletalAnimationManager.hpp"
+#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include <algorithm>
 #include <execution>
 
@@ -45,7 +45,7 @@ void RenderPipeline::update()
     PROFILER_END_BLOCK()
 
     GET_SYSTEM(MaterialManager).update();
-	GET_SYSTEM(SkeletalAnimationManager).update();
+	GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
 void RenderPipeline::processRenderer(Ptr<MeshRenderer> renderer)
