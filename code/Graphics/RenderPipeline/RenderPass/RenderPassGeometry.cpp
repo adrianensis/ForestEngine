@@ -48,3 +48,10 @@ void RenderPassGeometry::updateGlobalData()
 
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
+
+void RenderPassGeometry::bindShader(const BatchData& batchData)
+{
+    RenderPass::bindShader(batchData);
+    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
+    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
+}

@@ -72,18 +72,13 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 void ShaderPBR::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
     ShaderDefault::generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer);
-    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
-    {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
-        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
-    }
+    
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
+    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
+    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
+    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
 
-    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows)
-    {
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
-    }
+    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
 void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const

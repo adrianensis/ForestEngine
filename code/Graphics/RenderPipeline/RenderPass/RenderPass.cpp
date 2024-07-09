@@ -89,12 +89,6 @@ void RenderPass::bindShader(const BatchData& batchData)
     mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
     mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
-    if(batchData.mMaterial->getMaterialData().mReceiveLight)
-    {
-        mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
-        mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
-    }
-
     Ptr<Shader> shader = getShader(batchData);
     shader->bindTextures(mGPUPrograms.at(batchData));
 }
