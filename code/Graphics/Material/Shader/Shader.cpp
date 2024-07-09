@@ -70,11 +70,6 @@ void Shader::enable() const
 {
 	PROFILER_CPU()
     u32 textureUnit = 0;
-    // FOR_MAP(it, mShaderData.mTextures)
-    // {
-    //     mShaderData.mTextures.at(it->first).get().enable(textureUnit);
-    //     textureUnit++;
-    // }
     FOR_MAP(it, mShaderData.mFramebufferBindings)
     {
         GET_SYSTEM(GPUInterface).enableTexture(it->second.mTextureID, textureUnit, it->second.mStage);
@@ -86,11 +81,6 @@ void Shader::disable() const
 {
 	PROFILER_CPU()
     u32 textureUnit = 0;
-    // FOR_MAP(it, mShaderData.mTextures)
-    // {
-    //     mShaderData.mTextures.at(it->first).get().disable(textureUnit);
-    //     textureUnit++;
-    // }
     FOR_MAP(it, mShaderData.mFramebufferBindings)
     {
         GET_SYSTEM(GPUInterface).disableTexture(textureUnit, it->second.mStage);
@@ -112,11 +102,6 @@ void Shader::bindTextures(Ptr<GPUProgram> gpuProgram) const
     gpuProgram->enable();
 
     u32 textureUnit = 0;
-    // FOR_MAP(it, mShaderData.mTextures)
-    // {
-    //     gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->first).mName, textureUnit);
-    //     textureUnit++;
-    // }
     FOR_MAP(it, mShaderData.mFramebufferBindings)
     {
         gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);

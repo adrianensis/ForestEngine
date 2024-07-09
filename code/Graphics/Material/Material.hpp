@@ -8,8 +8,6 @@
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
-class GPUProgram;
-
 class MaterialData
 {
 public:
