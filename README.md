@@ -1,5 +1,7 @@
 # README
+
 ---
+
 ## Forest Engine
 
 <!-- <img src="./forest.png" width=50%> -->
@@ -17,16 +19,19 @@ The state I leave the engine is: stable but not usable, there are still known bu
 ### Linux
 
 * First, **download and install dependencies**: `./scripts/dependencies.sh`
-* Build project: `python ./scripts/build.py -[ruixlch]`
+* Build project: `python3 ./scripts/build.py -[ruixlch]`
   * -h Show help.
   * -r Compile Release, **Debug by default**.
   * -u Compile Unit Tests suite. (NEEDED BY `test.sh`)
   * -i Compile Integration Tests suite. (NEEDED BY `test.sh`)
   * -x Compile Tools.
   * -l Enable Logs.
+  * -p Enable Profiler.
   * -c Clean the project.
 * Run unitary tests (optional): `./scripts/test.sh`
 * Generate documentation (optional): `./scripts/doc.sh`
+
+Example: build debug `tool_Editor` with this command `python3 scripts/build.py -lp --tool=Editor --gpuDbg`
 
 ### Windows
 
@@ -72,7 +77,6 @@ Here in my blog you can find all the devlogs of my Game Engine, from 2D initial 
 - Shaders
 - Support for Texture Atlases
 - Animation using Spritesheet
-- Chunks
 - Simple UI
 - Scene management
 - Perspective / orthographic camera
@@ -80,5 +84,23 @@ Here in my blog you can find all the devlogs of my Game Engine, from 2D initial 
 - Math module
 - Simple scripting
 - Loading 3D models with GLTF
+- Skeletal Meshes
+- Skeletal Animation
+- GPU Skinning
+- PBR Shading
+- Directional Light
+- Shadow Mapping
+-
 
 ---
+
+## Showcase
+
+
+|  |  |   |
+| ------ | ------ |
+|  ![](gifs/2024-06-3016-13-34-ezgif.com-video-to-gif-converter.gif)    |   ![](gifs/2024-06-0922-20-52-ezgif.com-video-to-gif-converter.gif)   |
+|  ![](gifs/Screencast2024-02-02005825-ezgif.com-video-to-gif-converter.gif)    |   ![](gifs/2024-06-0901-47-42-ezgif.com-video-to-gif-converter.gif)   |
+|  ![](gifs/Screencast-122-ezgif.com-video-to-gif-converter.gif)    |   ![](gifs/Screencast-100.gif)   |
+|  ![](gifs/117.gif)    |   ![](gifs/brainFix.gif)   |
+|  ![](gifs/33.gif)    |   ![](gifs/60.gif)   |
