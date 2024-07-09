@@ -22,17 +22,12 @@ void GPUSkeletalAnimationManager::update()
 	}
 }
 
-Ptr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState()
+Ptr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData)
 {
 	Ptr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<GPUSkeletonState>::newObject()).first;
-    skeletonState->init();
+    skeletonState->init(gpuSkeletonStateData);
     initSkeletonRenderState(skeletonState);
     return skeletonState;
-}
-
-void GPUSkeletalAnimationManager::createSkeletalAnimationState(Ptr<GPUSkeletonState> skeletonState, Ptr<const GPUSkeletalAnimation> animation)
-{
-	skeletonState->createSkeletalAnimationState(animation);
 }
 
 void GPUSkeletalAnimationManager::terminate()

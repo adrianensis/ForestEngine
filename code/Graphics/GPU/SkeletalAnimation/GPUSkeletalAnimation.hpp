@@ -44,10 +44,28 @@ public:
 };
 REGISTER_CLASS(GPUSkeletalAnimationState);
 
+class GPUBoneData
+{
+public:
+
+    i32 mId = INVALID_INDEX;
+    i32 mParentId = INVALID_INDEX;
+    std::string mName;
+    // offset matrix transforms vertex from model space to bone space
+	Matrix4 mBindMatrix;
+};
+
+class GPUSkeletonStateData
+{
+public:
+    std::vector<GPUBoneData> mBones;
+    std::vector<Matrix4> mInverseBindMatrices;
+};
+
 class GPUSkeletonState: public ObjectBase
 {
 public:
-    void init();
+    void init(const GPUSkeletonStateData& gpuSkeletonStateData);
     void createSkeletalAnimationState(Ptr<const GPUSkeletalAnimation> animation);
     void update();
 
@@ -55,11 +73,13 @@ private:
     void getBoneTransforms(std::vector<Matrix4>& Transforms) const;
     void getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const;
 private:
+    GPUSkeletonStateData mGPUSkeletonStateData;
     std::unordered_map<ObjectId, OwnerPtr<GPUSkeletalAnimationState>> mSkeletalAnimationStates;
     Ptr<GPUSkeletalAnimationState> mCurrentSkeletalAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;
 
 public:
     CRGET(CurrentBoneTransforms)
+    CRGET(GPUSkeletonStateData)
 };
 REGISTER_CLASS(GPUSkeletonState);

@@ -49,7 +49,6 @@ void Model::init(const std::string& path)
 
                 mGLTFMaterials.clear();
                 mChannels.clear();
-                mInverseBindMatrices.clear();
                 mNodeToBoneId.clear();
             }
         }
@@ -387,9 +386,12 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 void Model::loadGLTFBones(const cgltf_skin& skin)
 {
     mBonesIndexCount = (u32)skin.joints_count;
-    mBones.reserve(mBonesIndexCount);
+
+    GPUSkeletonStateData gpuSkeletonStateData;
+
+    gpuSkeletonStateData.mBones.reserve(mBonesIndexCount);
     mChannels.resize(mBonesIndexCount);
-    mInverseBindMatrices.resize(mBonesIndexCount);
+    gpuSkeletonStateData.mInverseBindMatrices.resize(mBonesIndexCount);
 
     std::vector<Matrix4> originalBindMatrices;
     originalBindMatrices.resize(mBonesIndexCount);
@@ -402,7 +404,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             cgltf_accessor_read_float(skin.inverse_bind_matrices, i, inverseMatrixData.data(), Matrix4::smMatrixSize);
             Matrix4 inverse;
             inverse.init(inverseMatrixData);
-            mInverseBindMatrices[i]  = inverse;
+            gpuSkeletonStateData.mInverseBindMatrices[i]  = inverse;
         }
         else
         {
@@ -412,7 +414,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
         const cgltf_node& node = *skin.joints[i];
         if (! mNodeToBoneId.contains(&node)) 
         {
-            BoneData boneData;
+            GPUBoneData boneData;
             boneData.mId = i;
 
             Matrix4 translationMatrix;
@@ -465,14 +467,16 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             boneData.mParentId = parentIndex;
             boneData.mName = boneName;
 
-            mBones.push_back(boneData);
+            gpuSkeletonStateData.mBones.push_back(boneData);
         }
     }
 
     FOR_RANGE(i, 0, mBonesIndexCount)
     {
-        mBones[i].mBindMatrix = calculateHierarchicalBoneTransform(i, originalBindMatrices);
+        gpuSkeletonStateData.mBones[i].mBindMatrix = calculateHierarchicalBoneTransform(i, originalBindMatrices, gpuSkeletonStateData.mBones);
     }
+
+    mSkeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletonState(gpuSkeletonStateData);
 }
 
 f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
@@ -573,12 +577,12 @@ void Model::loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation)
 
         FOR_RANGE(i, 0, mBonesIndexCount)
         {
-            animation->mFrames[frameIt].mTransforms[i] = calculateHierarchicalBoneTransform(i, originalFrameTransforms);
+            animation->mFrames[frameIt].mTransforms[i] = calculateHierarchicalBoneTransform(i, originalFrameTransforms, mSkeletonState->getGPUSkeletonStateData().mBones);
         }
 
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
         {
-            Matrix4 inverseBindMatrix = mInverseBindMatrices[boneIt];
+            Matrix4 inverseBindMatrix = mSkeletonState->getGPUSkeletonStateData().mInverseBindMatrices[boneIt];
             Matrix4 boneFrameMatrix = animation->mFrames[frameIt].mTransforms[boneIt];
             boneFrameMatrix.mul(inverseBindMatrix);
 
@@ -589,8 +593,6 @@ void Model::loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation)
 
 void Model::loadGLTFSkeletalAnimations()
 {
-    Ptr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletonState();
-    
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)
     {
         const cgltf_animation& gltfAnim = mCGLTFData->animations[animIt];
@@ -604,18 +606,16 @@ void Model::loadGLTFSkeletalAnimations()
 
         loadGLTFSkeletalAnimationFrames(animation);
 
-        GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletalAnimationState(skeletonState, animation);
+        mSkeletonState->createSkeletalAnimationState(animation);
     }
-
-    mSkeletonState = skeletonState;
 }
 
-Matrix4 Model::calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms) const
+Matrix4 Model::calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones)
 {
     Matrix4 boneBindTransform = originalFrameTransforms[boneId];
-    if (mBones[boneId].mParentId >= 0)
+    if (bones[boneId].mParentId >= 0)
     {
-        Matrix4 parentBoneBindTransform = calculateHierarchicalBoneTransform(mBones[boneId].mParentId, originalFrameTransforms);
+        Matrix4 parentBoneBindTransform = calculateHierarchicalBoneTransform(bones[boneId].mParentId, originalFrameTransforms, bones);
         parentBoneBindTransform.mul(boneBindTransform);
         boneBindTransform = parentBoneBindTransform;
     }

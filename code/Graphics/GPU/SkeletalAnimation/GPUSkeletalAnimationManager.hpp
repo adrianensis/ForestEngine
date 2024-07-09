@@ -11,8 +11,7 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     virtual void update() override;
-    Ptr<GPUSkeletonState> createSkeletonState();
-    void createSkeletalAnimationState(Ptr<GPUSkeletonState> skeletonState, Ptr<const GPUSkeletalAnimation> animation);
+    Ptr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
 
     const GPUSharedBuffer& getSkeletonRenderStateGPUSharedBuffer(Ptr<const GPUSkeletonState> skeletonState) const;
 private:

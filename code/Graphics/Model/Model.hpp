@@ -17,16 +17,6 @@ struct cgltf_animation;
 struct cgltf_animation_channel;
 class Frame;
 
-class BoneData
-{
-public:
-
-    i32 mId = INVALID_INDEX;
-    i32 mParentId = INVALID_INDEX;
-    std::string mName;
-    // offset matrix transforms vertex from model space to bone space
-	Matrix4 mBindMatrix;
-};
 
 class GPUMesh;
 
@@ -61,7 +51,7 @@ private:
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
     void loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation);
     void loadGLTFSkeletalAnimations();
-    Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms) const;
+    static Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
     static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
     static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
     static void getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
@@ -106,8 +96,6 @@ private:
     std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
     std::unordered_map<const cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
     std::unordered_map<Ptr<const GPUMesh>, PoolHandler<Material>> mMeshMaterials;
-    std::vector<BoneData> mBones;
-    std::vector<Matrix4> mInverseBindMatrices;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;

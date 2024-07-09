@@ -34,8 +34,9 @@ void GPUSkeletalAnimationState::update()
     }
 }
 
-void GPUSkeletonState::init()
+void GPUSkeletonState::init(const GPUSkeletonStateData& gpuSkeletonStateData)
 {
+    mGPUSkeletonStateData = gpuSkeletonStateData;
 }
 
 void GPUSkeletonState::update()
