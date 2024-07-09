@@ -13,10 +13,7 @@ void UIManager::init()
     mFontsManager.loadFont(mDefaultFont, 12);
 
     MaterialData materialData;
-    materialData.mReceiveLight = false;
-    materialData.mCastShadows = false;
     materialData.mMaxInstances = 500;
-    materialData.mReceiveShadows = false;
     materialData.setSharedMaterialPropertiesBlock<MaterialPropertiesBlockUI>();
     mDefaultUIMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
 }

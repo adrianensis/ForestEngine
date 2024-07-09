@@ -11,9 +11,6 @@
 class MaterialData
 {
 public:
-	bool mReceiveLight = true;
-	bool mReceiveShadows = true;
-	bool mCastShadows = true;
     GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;

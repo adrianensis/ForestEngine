@@ -22,15 +22,12 @@ void ShaderPBR::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder
 {
     ShaderDefault::vertexShaderCalculatePositionOutput(shaderBuilder);
 
-    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows)
-    {
-        auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
-        Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
+    Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
 
-        auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
-        auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPositionLight);
-        shaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
-    }
+    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
+    auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPositionLight);
+    shaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
 }
 
 void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
@@ -60,13 +57,10 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
         set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord}));
     }
 
-    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
-    {
-        Variable PBRMetallicRoughness;
-        shaderBuilder.getMain().
-        variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {call(GPUBuiltIn::PrimitiveTypes::mVector3, {outColor.dot("xyz")})})).
-        set(outColor, PBRMetallicRoughness);
-    }
+    Variable PBRMetallicRoughness;
+    shaderBuilder.getMain().
+    variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {call(GPUBuiltIn::PrimitiveTypes::mVector3, {outColor.dot("xyz")})})).
+    set(outColor, PBRMetallicRoughness);
 }
 
 void ShaderPBR::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
@@ -87,16 +81,13 @@ void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const G
 
     registerFunctionsGetNormalFromMap(shaderBuilder);
     
-    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows && getShaderData().mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
+    if(getShaderData().mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
     {
         registerFunctionsShadowCalculation(shaderBuilder);
     }
     
-    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
-    {
-        registerFunctionsPBRHelpers(shaderBuilder);
-        registerFunctionCalculatePBR(shaderBuilder);
-    }
+    registerFunctionsPBRHelpers(shaderBuilder);
+    registerFunctionCalculatePBR(shaderBuilder);
 }
 
 void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) const
@@ -546,7 +537,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         set(PBRFinalColor, call("pow", {PBRFinalColor, call(GPUBuiltIn::PrimitiveTypes::mVector3, {"1.0/2.2"s})}));
 
         Variable sampler = GPUBuiltIn::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap);
-        if(getShaderData().mMaterial->getMaterialData().mReceiveShadows && getShaderData().mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
+        if(getShaderData().mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
         {
             auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPositionLight);
             

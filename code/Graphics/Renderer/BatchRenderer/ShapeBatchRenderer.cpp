@@ -46,7 +46,6 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mGPUVertexBuffersContainer.disable();
 
     MaterialData materialData;
-    materialData.mReceiveLight = false;
     PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
 
     mShaderLine = ShaderUtils::createShader("Shape", mGPUVertexBuffersContainer, lineMaterial.get());
