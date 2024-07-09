@@ -18,6 +18,21 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderPBR::generateMaterialP
     return propertiesBlock;
 }
 
+void ShaderPBR::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
+{
+    ShaderDefault::vertexShaderCalculatePositionOutput(shaderBuilder);
+
+    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows)
+    {
+        auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
+        Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+
+        auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
+        auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPositionLight);
+        shaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUBuiltIn::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
+    }
+}
+
 void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     // ShaderDefault::fragmentShaderCode(shaderBuilder);
@@ -51,6 +66,23 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
         shaderBuilder.getMain().
         variable(PBRMetallicRoughness, GPUBuiltIn::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {call(GPUBuiltIn::PrimitiveTypes::mVector3, {outColor.dot("xyz")})})).
         set(outColor, PBRMetallicRoughness);
+    }
+}
+
+void ShaderPBR::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+{
+    ShaderDefault::generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer);
+    if(getShaderData().mMaterial->getMaterialData().mReceiveLight)
+    {
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
+        shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
+    }
+
+    if(getShaderData().mMaterial->getMaterialData().mReceiveShadows)
+    {
+        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
     }
 }
 
