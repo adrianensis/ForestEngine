@@ -192,48 +192,41 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 
 void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    if(getShaderData().mMaterial->getMaterialData().mIsFont)
+    FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
     {
-        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    }
-    else
-    {
-        FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
+        CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
+
+        HashedString samplerName = it->first;
+        switch (it->second.mStage)
         {
-            CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
+            case GPUPipelineStage::VERTEX:
+                shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
+            break;
+            case GPUPipelineStage::FRAGMENT:
+                shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
+            break;
 
-            HashedString samplerName = it->first;
-            switch (it->second.mStage)
-            {
-                case GPUPipelineStage::VERTEX:
-                    shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
-                break;
-                case GPUPipelineStage::FRAGMENT:
-                    shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
-                break;
-
-                default:
-                    CHECK_MSG(false, "Invalid Stage for texture binding!");
-            }
+            default:
+                CHECK_MSG(false, "Invalid Stage for texture binding!");
         }
+    }
 
-        FOR_MAP(it, getShaderData().mFramebufferBindings)
+    FOR_MAP(it, getShaderData().mFramebufferBindings)
+    {
+        CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
+
+        HashedString samplerName = it->second.mSamplerName;
+        switch (it->second.mStage)
         {
-            CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
+            case GPUPipelineStage::VERTEX:
+                shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+            break;
+            case GPUPipelineStage::FRAGMENT:
+                shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+            break;
 
-            HashedString samplerName = it->second.mSamplerName;
-            switch (it->second.mStage)
-            {
-                case GPUPipelineStage::VERTEX:
-                    shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
-                break;
-                case GPUPipelineStage::FRAGMENT:
-                    shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
-                break;
-
-                default:
-                    CHECK_MSG(false, "Invalid Stage for frambuffer texture binding!");
-            }
+            default:
+                CHECK_MSG(false, "Invalid Stage for frambuffer texture binding!");
         }
     }
 
