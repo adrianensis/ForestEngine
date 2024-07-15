@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Minimal.hpp"
-#include "Engine/System/System.hpp"
+#include "Core/Minimal.hpp"
+#include "Core/System/System.hpp"
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"

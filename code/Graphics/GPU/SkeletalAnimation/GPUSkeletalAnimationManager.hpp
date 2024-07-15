@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Minimal.hpp"
-#include "Engine/System/System.hpp"
+#include "Core/Minimal.hpp"
+#include "Core/System/System.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Input/Input.hpp"
+#include "Core/Input/Input.hpp"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 

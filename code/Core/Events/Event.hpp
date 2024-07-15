@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Object/ObjectBase.hpp"
-#include "Engine/Time/TimerManager.hpp"
+#include "Core/Object/ObjectBase.hpp"
+#include "Core/Time/TimerManager.hpp"
 
 class Event: public ObjectBase
 {

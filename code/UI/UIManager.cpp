@@ -3,7 +3,7 @@
 #include "UI/UIStyle.hpp"
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
-#include "Engine/Config/Paths.hpp"
+#include "Core/Config/Paths.hpp"
 
 void UIManager::init()
 {

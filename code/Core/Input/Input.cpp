@@ -1,7 +1,7 @@
-#include "Engine/Input/Input.hpp"
+#include "Core/Input/Input.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Core/Log/Log.hpp"
-#include "Engine/Profiler/Profiler.hpp"
+#include "Core/Profiler/Profiler.hpp"
 
 void Input::init()
 {

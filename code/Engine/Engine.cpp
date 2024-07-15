@@ -1,9 +1,9 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Engine/Command/CommandLine.hpp"
-#include "Engine/Time/TimerManager.hpp"
-#include "Engine/Input/Input.hpp"
-#include "Engine/Events/EventsManager.hpp"
+#include "Core/Command/CommandLine.hpp"
+#include "Core/Time/TimerManager.hpp"
+#include "Core/Input/Input.hpp"
+#include "Core/Events/EventsManager.hpp"
 #include "Graphics/Module.hpp"
 #include "Scripting/Module.hpp"
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Minimal.hpp"
-#include "Engine/Events/Event.hpp"
+#include "Core/Minimal.hpp"
+#include "Core/Events/Event.hpp"
 #include "Scene/ComponentsManager.hpp"
 
 class Transform;

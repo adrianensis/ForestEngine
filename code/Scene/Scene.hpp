@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Minimal.hpp"
-#include "Engine/Config/ConfigObject.hpp"
+#include "Core/Minimal.hpp"
+#include "Core/Config/ConfigObject.hpp"
 #include "Scene/GameObjectsManager.hpp"
 
 class Scene: public ObjectBase

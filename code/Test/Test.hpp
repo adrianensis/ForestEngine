@@ -6,7 +6,7 @@
 #include <cmath>
 #include <math.h> /* isnan */
 
-#include "Engine/Minimal.hpp"
+#include "Core/Minimal.hpp"
 
 #define test(theClass)                                                             \
     float __test__totaltime = 0;                                                   \

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/System/System.hpp"
-#include "Engine/Time/TimeUtils.hpp"
+#include "Core/System/System.hpp"
+#include "Core/Time/TimeUtils.hpp"
 
 enum class TimerDurationType
 {
