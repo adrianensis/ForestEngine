@@ -5,7 +5,6 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/GameObject.hpp"
-#include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/ModelManager.hpp"
@@ -41,7 +40,7 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 
         Ptr<Shader> shader = getShader(batchData);
         setupShader(shader);
-        mGPUPrograms.insert_or_assign(batchData, ShaderUtils::compileShader(
+        mGPUPrograms.insert_or_assign(batchData, GET_SYSTEM(ShaderManager).compileShader(
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             gpuVertexBuffersContainer,
             batchData.mMaterial.get(),

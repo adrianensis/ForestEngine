@@ -2,7 +2,6 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/GameObject.hpp"
-#include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"

@@ -5,7 +5,6 @@
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderDefault.hpp"
 #include "Graphics/Material/Shader/ShaderManager.hpp"
@@ -49,7 +48,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     MaterialData materialData;
     PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
     mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
-    mGPUProgram = ShaderUtils::compileShader("Shape", mGPUVertexBuffersContainer, lineMaterial.get(), mShader);
+    mGPUProgram = GET_SYSTEM(ShaderManager).compileShader("Shape", mGPUVertexBuffersContainer, lineMaterial.get(), mShader);
 
     mGPUProgram->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
 }

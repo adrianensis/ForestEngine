@@ -40,7 +40,6 @@ public:
 class ShaderData
 {
 public:
-    PoolHandler<Material> mMaterial;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUSharedBufferData mPropertiesBlockSharedBufferData;
     std::unordered_set<HashedString> mTextures;

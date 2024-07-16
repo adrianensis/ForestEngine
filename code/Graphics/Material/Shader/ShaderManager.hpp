@@ -3,6 +3,11 @@
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
+#include "Graphics/GPU/GPUProgram.hpp"
+
+class GPUVertexBuffersContainer;
+class GPUSharedBuffersContainer;
+class Material;
 
 class ShaderManager: public System
 {
@@ -34,6 +39,8 @@ public:
 
         return Ptr<T>();
     }
+
+    OwnerPtr<GPUProgram> compileShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material, Ptr<const Shader> customShader);
 
 private:
     std::unordered_map<ClassId, OwnerPtr<Shader>> mShaders;
