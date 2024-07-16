@@ -1,5 +1,12 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
+#include "UI/UIMaterial.hpp"
+#include "Graphics/Material/Shader/ShaderManager.hpp"
+
+void RenderPassUI::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
+{
+    RenderPass::init(renderPipeline, renderPassData);
+}
 
 void RenderPassUI::preRender()
 {

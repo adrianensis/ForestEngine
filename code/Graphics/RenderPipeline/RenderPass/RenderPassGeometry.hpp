@@ -5,6 +5,8 @@
 
 class RenderPassGeometry: public RenderPass
 {
+public:
+    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
 protected:
     virtual void updateGlobalData() override;
     virtual void bindShader(const BatchData& batchData) override;

@@ -7,7 +7,6 @@ void Material::internalInit(const MaterialData& materialData, u32 id)
 	mID = id;
 
     PoolHandler<Material> handler = GET_SYSTEM(MaterialManager).getMaterialHandler(mID);
-    mShader->init(handler);
 }
 
 void Material::terminate()

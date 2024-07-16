@@ -107,6 +107,16 @@ const GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(const GPUShare
     return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
 }
 
+GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(HashedString bufferName)
+{
+    return mSharedBuffers.at(findIndex(mSharedBuffersMap, bufferName));
+}
+
+const GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(HashedString bufferName) const
+{
+    return mSharedBuffers.at(findIndex(mSharedBuffersMap, bufferName));
+}
+
 bool GPUSharedBuffersContainer::containsSharedBuffer(const GPUSharedBufferData& data) const
 {
     return mSharedBuffersMap.contains(data.mBufferName);

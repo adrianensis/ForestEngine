@@ -22,3 +22,12 @@ protected:
     virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const override;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const override;
 };
+REGISTER_CLASS(ShaderUI)
+
+
+class ShaderUIFont : public ShaderUI
+{
+protected:
+    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
+};
+REGISTER_CLASS(ShaderUIFont)

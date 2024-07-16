@@ -22,6 +22,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
+#include "Graphics/Material/Shader/ShaderManager.hpp"
 
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"

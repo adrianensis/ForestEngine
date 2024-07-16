@@ -13,6 +13,5 @@ class Shader;
 class ShaderUtils
 {
 public:
-    static OwnerPtr<GPUProgram> createShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material);
-    static OwnerPtr<GPUProgram> createShaderCustomFragment(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material, Ptr<const Shader> customShader);
+    static OwnerPtr<GPUProgram> compileShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material, Ptr<const Shader> customShader);
 };

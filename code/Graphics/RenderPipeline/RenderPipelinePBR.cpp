@@ -8,6 +8,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
+#include "Graphics/Material/Shader/ShaderPBR.hpp"
 
 void RenderPipelinePBR::init()
 {

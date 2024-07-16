@@ -7,6 +7,7 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Material/Shader/ShaderManager.hpp"
 
 class MaterialData
 {
@@ -52,7 +53,7 @@ public:
     template<class T> T_EXTENDS(T, Shader)
     void init(const MaterialData& materialData, u32 id)
     {
-        mShader = OwnerPtr<Shader>::moveCast(OwnerPtr<T>::newObject());
+        mShader = GET_SYSTEM(ShaderManager).createShader<T>();
         internalInit(materialData, id);
     }
 
@@ -65,7 +66,7 @@ private:
 protected:
     MaterialData mMaterialData;
     u32 mID = 0;
-    OwnerPtr<Shader> mShader;
+    Ptr<Shader> mShader;
 
 public:
     CRGET(MaterialData)

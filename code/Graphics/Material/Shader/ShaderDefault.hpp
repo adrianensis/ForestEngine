@@ -29,3 +29,4 @@ protected:
 
     void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
 };
+REGISTER_CLASS(ShaderDefault)

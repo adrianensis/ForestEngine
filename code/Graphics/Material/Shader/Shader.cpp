@@ -8,13 +8,11 @@
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/Model/Model.hpp"
 
-void Shader::init(PoolHandler<Material> material)
+void Shader::init()
 {
-    mShaderData.mMaterial = material;
-
     GPUStructDefinition propertiesBlockStructDefinition =
     {
-        "propertiesBlockStruct",
+        ShaderPropertiesBlockNames::smPropertiesBlockStructName,
         {
             generateMaterialPropertiesBlock()
         }
@@ -31,10 +29,10 @@ void Shader::init(PoolHandler<Material> material)
     {
         GPUBufferType::STORAGE,
         {
-            {{GPUStorage::UNIFORM, propertiesBlockStructDataType, "propertiesBlockArray"}, "", " "}
+            {{GPUStorage::UNIFORM, propertiesBlockStructDataType, ShaderPropertiesBlockNames::smPropertiesBlockArrayName}, "", " "}
         },
-        "PropertiesBlock",
-        "propertiesBlock"
+        ShaderPropertiesBlockNames::smPropertiesBlockBufferName,
+        ShaderPropertiesBlockNames::smPropertiesBlockInstanceName
     };
 
     mShaderData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;

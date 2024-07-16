@@ -2,7 +2,6 @@
 
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
 
 class RenderPassShadowMap: public RenderPass
 {
@@ -13,10 +12,10 @@ protected:
     virtual void render() override;
     virtual void postRender() override;
     virtual void updateGlobalData() override;
-    virtual Ptr<Shader> getShader(const BatchData& batchData) const override;
+    virtual Ptr<Shader> getShader(const BatchData& batchData) const;
 public:
     Ptr<DirectionalLight> mDirectionalLight;
 private:
-    OwnerPtr<ShaderDepthBuffer> mShaderDepthBuffer;
+    Ptr<Shader> mShaderShadowMap;
 };
 REGISTER_CLASS(RenderPassShadowMap);

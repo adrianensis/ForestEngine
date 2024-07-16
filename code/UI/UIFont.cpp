@@ -42,7 +42,7 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
     materialData.mFontData = mFontData;
     materialData.setSharedMaterialPropertiesBlock<MaterialPropertiesBlockUI>();
     materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
-    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUI>(materialData);
+    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUIFont>(materialData);
 
     mFontData.freeGlyphsBuffers();
 }

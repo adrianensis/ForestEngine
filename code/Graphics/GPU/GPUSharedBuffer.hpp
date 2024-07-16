@@ -7,7 +7,7 @@ class GPUSharedBufferData
 {
 public:
 	GPUSharedBufferData() = default;
-	GPUSharedBufferData(GPUBufferType gpuSharedBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, const std::string& blockName, const std::string& instanceName):
+	GPUSharedBufferData(GPUBufferType gpuSharedBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, HashedString blockName, HashedString instanceName):
         mType(gpuSharedBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBufferName(blockName), mInstanceName(instanceName) {}
 
     GPUVariableData getScopedGPUVariableData(u32 i) const;

@@ -5,6 +5,7 @@
 class RenderPassUI: public RenderPass
 {
 public:
+    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     virtual void preRender() override;
     virtual void render() override;
     virtual void postRender() override;

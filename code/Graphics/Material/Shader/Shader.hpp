@@ -28,6 +28,15 @@ public:
     inline static const HashedString smBaseColor = "BaseColor";
 };
 
+class ShaderPropertiesBlockNames
+{
+public:
+    inline static const HashedString smPropertiesBlockStructName = "propertiesBlockStruct";
+    inline static const HashedString smPropertiesBlockBufferName = "PropertiesBlock";
+    inline static const HashedString smPropertiesBlockInstanceName = "propertiesBlock";
+    inline static const HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
+};
+
 class ShaderData
 {
 public:
@@ -79,7 +88,7 @@ protected:
 public:
     Shader() = default;
     virtual ~Shader() = default;
-    void init(PoolHandler<Material> material);
+    void init();
     void init(const ShaderData& shaderData);
     void terminate();
 
@@ -107,3 +116,4 @@ protected:
 public:
     CRGET(ShaderData)
 };
+REGISTER_CLASS(Shader)

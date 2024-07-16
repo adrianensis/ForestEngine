@@ -38,34 +38,13 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
     Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
 
-    if(getShaderData().mMaterial->getMaterialData().mIsFont)
-    {
-        shaderBuilder.getMain().
-        ifBlock(textureHandler.notEq("0"s)).
-            set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
-            // ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-            //     line("discard").
-            // end().
-        end();
-
-        shaderBuilder.getMain().
-        set(outColor.dot("a"), outColor.dot("r"));
-        
-        shaderBuilder.getMain().
-        set(outColor.dot("r"), baseColor.dot("r")).
-        set(outColor.dot("g"), baseColor.dot("g")).
-        set(outColor.dot("b"), baseColor.dot("b"));
-    }
-    else
-    {
-        shaderBuilder.getMain().
-        ifBlock(textureHandler.notEq("0"s)).
-            set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
-            ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-                line("discard").
-            end().
-        end();
-    }
+    shaderBuilder.getMain().
+    ifBlock(textureHandler.notEq("0"s)).
+        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
+        ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+            line("discard").
+        end().
+    end();
 }
 
 void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
@@ -98,4 +77,26 @@ void ShaderUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBu
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
     shaderBuilder.getMain().
     set(finalPositon.dot("z"), propertiesBlock.at(materialInstanceId).dot(depth));
+}
+
+void ShaderUIFont::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+{
+    ShaderUI::fragmentShaderCode(shaderBuilder);
+
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
+    Variable instanceColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
+    Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+    
+    Variable baseColor;
+    shaderBuilder.getMain().
+    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColorFont", propertiesBlock.at(materialInstanceId).dot(instanceColor));
+    
+    shaderBuilder.getMain().
+    set(outColor.dot("a"), outColor.dot("r"));
+    
+    shaderBuilder.getMain().
+    set(outColor.dot("r"), baseColor.dot("r")).
+    set(outColor.dot("g"), baseColor.dot("g")).
+    set(outColor.dot("b"), baseColor.dot("b"));
 }

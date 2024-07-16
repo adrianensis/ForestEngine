@@ -84,3 +84,4 @@ protected:
             {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "F0"}
         }};
 };
+REGISTER_CLASS(ShaderPBR)

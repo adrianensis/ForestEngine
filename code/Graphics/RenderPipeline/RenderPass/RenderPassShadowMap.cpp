@@ -5,11 +5,13 @@
 #include "Graphics/Material/Shader/ShaderUtils.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
+#include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
+#include "Graphics/Material/Shader/ShaderManager.hpp"
 
 void RenderPassShadowMap::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPipeline, renderPassData);
-    mShaderDepthBuffer = OwnerPtr<ShaderDepthBuffer>::newObject();
+    mShaderShadowMap = GET_SYSTEM(ShaderManager).createShader<ShaderDepthBuffer>();
 }
 
 void RenderPassShadowMap::preRender()
@@ -62,6 +64,5 @@ void RenderPassShadowMap::updateGlobalData()
 
 Ptr<Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const
 {
-    mShaderDepthBuffer->init(batchData.mMaterial->getShader()->getShaderData());
-    return mShaderDepthBuffer;
+    return mShaderShadowMap;
 }

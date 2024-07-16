@@ -44,6 +44,8 @@ public:
     void addSharedBuffer(const GPUSharedBufferData& data, bool isStatic);
     GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data);
     const GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data) const;
+    GPUSharedBuffer& getSharedBuffer(HashedString bufferName);
+    const GPUSharedBuffer& getSharedBuffer(HashedString bufferName) const;
     bool containsSharedBuffer(const GPUSharedBufferData& data) const;
 
 private:

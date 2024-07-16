@@ -41,7 +41,7 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
 
         Ptr<Shader> shader = getShader(batchData);
         setupShader(shader);
-        mGPUPrograms.insert_or_assign(batchData, ShaderUtils::createShaderCustomFragment(
+        mGPUPrograms.insert_or_assign(batchData, ShaderUtils::compileShader(
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             gpuVertexBuffersContainer,
             batchData.mMaterial.get(),
@@ -163,8 +163,7 @@ void RenderPass::updateGlobalData()
 
 Ptr<Shader> RenderPass::getShader(const BatchData& batchData) const
 {
-    Ptr<Shader> shader = batchData.mMaterial->getShader();
-    return shader;
+    return batchData.mMaterial->getShader();
 }
 
 void RenderPass::setupShader(Ptr<Shader> shader) const
