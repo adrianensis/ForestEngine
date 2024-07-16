@@ -47,8 +47,11 @@ public:
     const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
 
+    const std::unordered_map<HashedString, PoolHandler<Texture>>& getMaterialTextureBindings(const PoolHandler<Material>& handler) const;
+
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);
+    void loadMaterialTextures(const PoolHandler<Material>& handler);
 
     class MaterialPropertyBlockRenderState
     {
@@ -66,6 +69,7 @@ private:
     Pool<Texture> mTextures;
     std::vector<TextureHandle> mTextureHandles;
     std::unordered_map<HashedString, PoolHandler<Texture>> mTexturesByPath;
+	std::unordered_map<u32, std::unordered_map<HashedString, PoolHandler<Texture>>> mTextureBindingsByMaterial;
     Pool<Material> mMaterials;
     Pool<MaterialInstance> mMaterialInstances;
     std::unordered_set<u32> mDirtyMaterialInstances;

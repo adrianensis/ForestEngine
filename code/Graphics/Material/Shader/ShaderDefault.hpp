@@ -12,6 +12,7 @@ public:
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
 
 protected:
+    virtual void registerTextures() override;
     virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const;

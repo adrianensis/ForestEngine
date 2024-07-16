@@ -62,10 +62,12 @@ PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData
         texture.init(textureData, handler.getIndex());
 
         u32 size = mTextures.getSize();
-        mTextureHandles.resize(size);
-        GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).resize<TextureHandle>(size);
+        // NOTE: We reserve position 0 to represent NULL
+        u32 paddedSize = size + 1;
+        mTextureHandles.resize(paddedSize);
+        GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).resize<TextureHandle>(paddedSize);
 
-        mTextureHandles[texture.getID()] = texture.getGPUTextureHandle();
+        mTextureHandles[texture.getID() + 1] = texture.getGPUTextureHandle();
 	}
 
 	return mTexturesByPath.at(textureData.mPath);
@@ -78,7 +80,39 @@ void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
 
 void MaterialManager::postMaterialCreated(const PoolHandler<Material>& handler)
 {
+    loadMaterialTextures(handler);
     initMaterialInstancePropertiesSharedBuffer(handler);
+}
+
+void MaterialManager::loadMaterialTextures(const PoolHandler<Material>& handler)
+{
+    u32 id = handler->getID();
+    if(!mTextureBindingsByMaterial.contains(id))
+    {
+        mTextureBindingsByMaterial.emplace(id, std::unordered_map<HashedString, PoolHandler<Texture>>());
+
+        FOR_MAP(it, handler->getMaterialData().mTextureBindings)
+        {
+            CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
+            TextureData textureData;
+            textureData.mPath = it->second.mPath;
+            textureData.mStage = it->second.mStage;
+
+            if(handler->getMaterialData().mIsFont)
+            {
+                CHECK_MSG(!handler->getMaterialData().mFontData.mPath.get().empty(), "mMaterialData.mFontData.mPath cannot be empty!");
+                textureData.mIsFont = true;
+                textureData.mFontData = handler->getMaterialData().mFontData;
+            }
+
+            mTextureBindingsByMaterial.at(id).insert_or_assign(it->first, GET_SYSTEM(MaterialManager).loadTexture(textureData));
+        }
+    }
+}
+
+const std::unordered_map<HashedString, PoolHandler<Texture>>& MaterialManager::getMaterialTextureBindings(const PoolHandler<Material>& handler) const
+{
+    return mTextureBindingsByMaterial.at(handler->getID());
 }
 
 PoolHandler<MaterialInstance> MaterialManager::createMaterialInstance(const PoolHandler<Material>& handler)

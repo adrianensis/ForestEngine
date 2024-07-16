@@ -18,6 +18,14 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderPBR::generateMaterialP
     return propertiesBlock;
 }
 
+void ShaderPBR::registerTextures()
+{
+    ShaderDefault::registerTextures();
+    mShaderData.mTextures.insert(TextureBindingNamesPBR::smMetallicRoughness);
+    mShaderData.mTextures.insert(TextureBindingNamesPBR::smNormal);
+    mShaderData.mTextures.insert(TextureBindingNamesPBR::smShadowMap);
+}
+
 void ShaderPBR::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
 {
     ShaderDefault::vertexShaderCalculatePositionOutput(shaderBuilder);
@@ -47,15 +55,14 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    if(hasTexture(TextureBindingNamesPBR::smBaseColor))
-    {
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
-        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-        shaderBuilder.getMain().
-        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord}));
-    }
+    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
+    auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
+    auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+    Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    shaderBuilder.getMain().
+    ifBlock(textureHandler.notEq("0"s)).
+        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
+    end();
 
     Variable PBRMetallicRoughness;
     shaderBuilder.getMain().
@@ -117,14 +124,13 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
         funcGetNormalFromMap.body().
         variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(hasTexture(TextureBindingNamesPBR::smNormal))
-        {
-            auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
-            auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-            Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-            funcGetNormalFromMap.body().
-            set(normalFromTexture, call("texture", {textures.at(textureHandler), inTextureCoord}));
-        }
+        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
+        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        funcGetNormalFromMap.body().
+        ifBlock(textureHandler.notEq("0"s)).
+            set(normalFromTexture, call("texture", {textures.at(textureHandler), inTextureCoord})).
+        end();
 
         funcGetNormalFromMap.body().
         variable(tangentNormal, GPUBuiltIn::PrimitiveTypes::mVector3, "tangentNormal",
@@ -166,16 +172,14 @@ void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder)
         funcCalculateShadow.body().
         variable(normal, GPUBuiltIn::PrimitiveTypes::mVector3, "normal", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(hasTexture(TextureBindingNamesPBR::smNormal))
-        {
+            auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal));
             funcCalculateShadow.body().
-            set(normal, call(mGetNormalFromMap, {}));
-        }
-        else if(inNormal.isValid())
-        {
-            funcCalculateShadow.body().
-            set(normal, inNormal);
-        }
+            ifBlock(textureHandler.notEq("0"s)).
+                set(normal, call(mGetNormalFromMap, {})).
+            end().
+            elseBlock().
+                set(normal, inNormal).
+            end();
 
         funcCalculateShadow.body().
         set(normal, call("normalize", {normal}));
@@ -424,19 +428,19 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(roughness, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(materialInstanceId).dot(materialRoughness)).
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
-        if(hasTexture(TextureBindingNamesPBR::smMetallicRoughness))
-        {
-            auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
-            auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-            Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-            auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
 
-            Variable metallicRoughnessPack;
-            funcCalculatePBR.body().
-            variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {textures.at(textureHandler), inTextureCoord})).
+        auto& textureHandlerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
+        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
+
+        Variable metallicRoughnessPack;
+        funcCalculatePBR.body().
+        ifBlock(textureHandlerMetallicRoughness.notEq("0"s)).
+            variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {textures.at(textureHandlerMetallicRoughness), inTextureCoord})).
             set(roughness, metallicRoughnessPack.dot("g")).
-            set(metallic, metallicRoughnessPack.dot("b"));
-        }
+            set(metallic, metallicRoughnessPack.dot("b")).
+        end();
 
         // base color gamma correct
         Variable albedo;
@@ -457,16 +461,14 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(N, GPUBuiltIn::PrimitiveTypes::mVector3, "N", call(GPUBuiltIn::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-        if(hasTexture(TextureBindingNamesPBR::smNormal))
-        {
-            funcCalculatePBR.body().
-            set(N, call(mGetNormalFromMap, {}));
-        }
-        else if(inNormal.isValid())
-        {
-            funcCalculatePBR.body().
-            set(N, inNormal);
-        }
+        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
+        funcCalculatePBR.body().
+        ifBlock(textureHandler.notEq("0"s)).
+            set(N, call(mGetNormalFromMap, {})).
+        end().
+        elseBlock().
+            set(N, inNormal).
+        end();
 
         funcCalculatePBR.body().
         set(N, call("normalize", {N}));

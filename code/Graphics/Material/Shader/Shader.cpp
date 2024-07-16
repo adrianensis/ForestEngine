@@ -40,7 +40,7 @@ void Shader::init(PoolHandler<Material> material)
     mShaderData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
     mShaderData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
 
-    loadTextures();
+    registerTextures();
 }
 
 void Shader::init(const ShaderData& shaderData)
@@ -50,10 +50,6 @@ void Shader::init(const ShaderData& shaderData)
 
 void Shader::terminate()
 {
-    FOR_MAP(it, mShaderData.mTextures)
-    {
-        it->second.reset();
-    }
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialPropertiesBlock()
@@ -88,16 +84,12 @@ void Shader::disable() const
     }
 }
 
-bool Shader::hasTexture(HashedString bindingName) const
-{
-    return mShaderData.mTextures.contains(bindingName) && mShaderData.mTextures.at(bindingName).isValid();
-}
 bool Shader::hasFramebufferBinding(HashedString bindingName) const
 {
     return mShaderData.mFramebufferBindings.contains(bindingName);
 }
 
-void Shader::bindTextures(Ptr<GPUProgram> gpuProgram) const
+void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<Texture>>& textures) const
 {
     gpuProgram->enable();
 
@@ -108,9 +100,17 @@ void Shader::bindTextures(Ptr<GPUProgram> gpuProgram) const
         textureUnit++;
     }
 
+    // Init all samplers to disable
     FOR_MAP(it, mShaderData.mTextures)
     {
-        gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID());
+        // NOTE: We reserve position 0 to represent NULL
+        gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(*it).mName, 0);
+    }
+
+    FOR_MAP(it, textures)
+    {
+        // NOTE: We reserve position 0 to represent NULL
+        gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
     }
 
     gpuProgram->disable();
@@ -120,24 +120,3 @@ void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
 {
     mShaderData.mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
 }
-
-void Shader::loadTextures()
-{
-    FOR_MAP(it, mShaderData.mMaterial->getMaterialData().mTextureBindings)
-    {
-        CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
-        TextureData textureData;
-        textureData.mPath = it->second.mPath;
-        textureData.mStage = it->second.mStage;
-
-        if(mShaderData.mMaterial->getMaterialData().mIsFont)
-        {
-            CHECK_MSG(!mShaderData.mMaterial->getMaterialData().mFontData.mPath.get().empty(), "mMaterialData.mFontData.mPath cannot be empty!");
-            textureData.mIsFont = true;
-            textureData.mFontData = mShaderData.mMaterial->getMaterialData().mFontData;
-        }
-
-        mShaderData.mTextures.insert_or_assign(it->first, GET_SYSTEM(MaterialManager).loadTexture(textureData));
-    }
-}
-

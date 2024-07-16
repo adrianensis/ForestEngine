@@ -90,7 +90,7 @@ void RenderPass::bindShader(const BatchData& batchData)
     mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
     Ptr<Shader> shader = getShader(batchData);
-    shader->bindTextures(mGPUPrograms.at(batchData));
+    shader->bindTextures(mGPUPrograms.at(batchData), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(batchData.mMaterial));
 }
 
 void RenderPass::preRender()
