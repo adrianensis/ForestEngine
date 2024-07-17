@@ -153,7 +153,9 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
     u32 textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
-    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    setPixelStoreMode(GL_UNPACK_ALIGNMENT, 4);
+
+    setTextureParameter(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);
     setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     if(createMipMap)
@@ -167,20 +169,19 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
         setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
-    setTextureParameter(textureId, GL_TEXTURE_LOD_BIAS, 0);
+    u32 maxLevels = 6;
+
+    setTextureParameter(textureId, GL_TEXTURE_BASE_LEVEL, 0);
+    setTextureParameter(textureId, GL_TEXTURE_MAX_LEVEL, maxLevels);
+    // setTextureParameter(textureId, GL_TEXTURE_LOD_BIAS, 1.5f);
     
     f32 maxAnisotropy = 0;
     getValue<f32>(GL_MAX_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
     setTextureParameter(textureId, GL_TEXTURE_MAX_ANISOTROPY, maxAnisotropy);
 
-    setPixelStoreMode(GL_UNPACK_ALIGNMENT, 4);
-
-    if(createMipMap)
-    {
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-
-    setTextureStorage(textureId, internalformat, width, height);
+    u32 levels = 1 + std::floor(std::log2(std::max(width, height)));
+    levels = std::min(maxLevels, levels);
+    setTextureStorage(textureId, levels, internalformat, width, height);
 
     return textureId;
 }
@@ -196,19 +197,23 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
     setTextureParameter(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     setTextureParameter(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     setTextureParameter(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    setTextureStorage(textureId, GPUTextureFormat::R8, width, height);
+    setTextureStorage(textureId, 1, GPUTextureFormat::R8, width, height);
 
     return textureId;
 }
 
-void GPUInterface::setTextureData(u32 textureId, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data)
+void GPUInterface::setTextureData(u32 textureId, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, bool createMipMap, const byte* data)
 {
     setSubTexture(textureId, 0, 0, width, height, format, type, data);
+    if(createMipMap)
+    {
+        glGenerateTextureMipmap(textureId);
+    }
 }
 
-void GPUInterface::setTextureStorage(u32 textureId, GPUTextureFormat internalformat, u32 width, u32 height)
+void GPUInterface::setTextureStorage(u32 textureId, u32 levels, GPUTextureFormat internalformat, u32 width, u32 height)
 {
-    glTextureStorage2D(textureId, 1, TO_U32(internalformat), width, height);
+    glTextureStorage2D(textureId, levels, TO_U32(internalformat), width, height);
 }
 
 void GPUInterface::setSubTexture(u32 textureId, u32 x, u32 y, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data)
@@ -305,22 +310,22 @@ u32 GPUInterface::createFramebufferAttachment(u32 fbo, GPUFramebufferAttachmentT
 
     if (attachmentType >= GPUFramebufferAttachmentType::COLOR0 && attachmentType <= GPUFramebufferAttachmentType::COLOR15)
     {
-        setTextureStorage(textureId, GPUTextureFormat::RGBA8, width, height);
+        setTextureStorage(textureId, 1, GPUTextureFormat::RGBA8, width, height);
         // setTextureData(textureId, width, height, GPUTexturePixelFormat::RGBA, GPUPrimitiveDataType::UNSIGNED_BYTE, 0);
     } 
     else if (attachmentType == GPUFramebufferAttachmentType::DEPTH)
     {
-        setTextureStorage(textureId, GPUTextureFormat::DEPTH_COMPONENT32F, width, height);
+        setTextureStorage(textureId, 1, GPUTextureFormat::DEPTH_COMPONENT32F, width, height);
         // setTextureData(textureId, width, height, GPUTexturePixelFormat::DEPTH_COMPONENT, GPUPrimitiveDataType::UNSIGNED_BYTE, 0);
     } 
     else if (attachmentType == GPUFramebufferAttachmentType::STENCIL)
     {
-        setTextureStorage(textureId, GPUTextureFormat::STENCIL_INDEX8, width, height);
+        setTextureStorage(textureId, 1, GPUTextureFormat::STENCIL_INDEX8, width, height);
         // setTextureData(textureId, width, height, GPUTexturePixelFormat::STENCIL_INDEX, GPUPrimitiveDataType::UNSIGNED_BYTE, 0);
     }
     else if (attachmentType == GPUFramebufferAttachmentType::DEPTH_STENCIL)
     {
-        setTextureStorage(textureId, GPUTextureFormat::DEPTH24_STENCIL8, width, height);
+        setTextureStorage(textureId, 1, GPUTextureFormat::DEPTH24_STENCIL8, width, height);
         // setTextureData(textureId, width, height, GPUTexturePixelFormat::DEPTH_STENCIL, GPUPrimitiveDataType::UNSIGNED_BYTE, 0);
     }
 

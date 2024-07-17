@@ -5,7 +5,7 @@
 class DirectionalLightData
 {
 public:
-    alignas(16) Vector3 mDirection = Vector3::smOne;
+    alignas(16) Vector3 mDirection = Vector3::smZero;
     alignas(16) Vector3 mDiffuse = Vector3::smZero;
 };
 
@@ -20,7 +20,7 @@ class SpotLightData
 {
 public:
     alignas(16) Vector3 mPosition = Vector3::smZero;
-    alignas(16) Vector3 mDirection = Vector3::smOne;
+    alignas(16) Vector3 mDirection = Vector3::smZero;
     alignas(16) Vector3 mDiffuse = Vector3::smZero;
     alignas(16) f32 mInnerCutOff = 0;
     f32 mOuterCutOff = 0;

@@ -298,8 +298,8 @@ public:
     // Texture
     u32 createTexture(GPUTextureFormat internalformat, u32 width, u32 height, bool createMipMap);
     u32 createTexture1ByteChannel(u32 width, u32 height, const byte* data);
-    void setTextureStorage(u32 textureId, GPUTextureFormat internalformat, u32 width, u32 height);
-    void setTextureData(u32 textureId, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
+    void setTextureStorage(u32 textureId, u32 levels, GPUTextureFormat internalformat, u32 width, u32 height);
+    void setTextureData(u32 textureId, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, bool createMipMap, const byte* data);
     void setSubTexture(u32 textureId, u32 x, u32 y, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data);
     void deleteTexture(u32 textureId);
     void enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage);
