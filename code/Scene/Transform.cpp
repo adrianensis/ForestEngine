@@ -18,7 +18,7 @@ void Transform::onDestroy()
 {
     if(mParent)
     {
-        mParent->removeChild(getPtrToThis<Transform>());
+        mParent->removeChild(ComponentHandler::getComponentHandler<Transform>(*this));
     }
 }
 
@@ -223,15 +223,15 @@ const Matrix4& Transform::getViewMatrix() const
     return mViewMatrix;
 }
 
-void Transform::addChild(Ptr<Transform> child)
+void Transform::addChild(TypedComponentHandler<Transform> child)
 {
-    child->mParent = getPtrToThis<Transform>();
+    child->mParent = ComponentHandler::getComponentHandler<Transform>(*this);
     mChildren.insert_or_assign(child->getObjectId(), child);
 }
 
-void Transform::removeChild(Ptr<Transform> child)
+void Transform::removeChild(TypedComponentHandler<Transform> child)
 {
-    child->mParent.invalidate();
+    child->mParent.reset();
     mChildren.erase(child->getObjectId());
 }
 

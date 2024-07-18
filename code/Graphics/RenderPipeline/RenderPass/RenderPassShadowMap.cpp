@@ -51,7 +51,7 @@ void RenderPassShadowMap::updateGlobalData()
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
     }
-    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {

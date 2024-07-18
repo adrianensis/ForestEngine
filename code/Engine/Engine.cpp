@@ -9,6 +9,7 @@
 
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
+#include "Core/Time/TimeUtils.hpp"
 
 #include <thread>
 

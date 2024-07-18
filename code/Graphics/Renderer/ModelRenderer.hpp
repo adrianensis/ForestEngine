@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Component.hpp"
+#include "Core/ECS/Component.hpp"
 
 #include "Graphics/Renderer/MeshRenderer.hpp"
 

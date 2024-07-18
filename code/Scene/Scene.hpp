@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Config/ConfigObject.hpp"
-#include "Scene/GameObjectsManager.hpp"
+#include "Core/ECS/GameObjectsManager.hpp"
 
 class Scene: public ObjectBase
 {

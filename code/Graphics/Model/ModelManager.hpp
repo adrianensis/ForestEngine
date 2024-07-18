@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Core/ECS/System.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 

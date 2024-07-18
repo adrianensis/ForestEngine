@@ -14,7 +14,7 @@ protected:
     virtual void updateGlobalData() override;
     virtual Ptr<Shader> getShader(const BatchData& batchData) const;
 public:
-    Ptr<DirectionalLight> mDirectionalLight;
+    TypedComponentHandler<DirectionalLight> mDirectionalLight;
 private:
     Ptr<Shader> mShaderShadowMap;
 };

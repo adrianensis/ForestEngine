@@ -65,7 +65,7 @@ void BatchRenderer::disable()
     // mGPUProgram->disable();
 }
 
-void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
+void BatchRenderer::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
     if(mRendererSlotsManager.isEmpty())
     {
@@ -79,10 +79,10 @@ void BatchRenderer::addRenderer(Ptr<MeshRenderer> renderer)
     mRenderersCount++;
 }
 
-void BatchRenderer::removeRenderer(Ptr<MeshRenderer> renderer)
+void BatchRenderer::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
 	mRegenerateBuffersRequested = true;
-    mRenderers.at(renderer->getBatchSlot().getSlot()).invalidate();
+    mRenderers.at(renderer->getBatchSlot().getSlot()).reset();
     mRendererSlotsManager.freeSlot(renderer->getBatchSlot());
     mRenderersCount--;
 }
@@ -113,7 +113,7 @@ void BatchRenderer::updateBuffers()
     u32 rendererIndex = 0;
     FOR_ARRAY(i, mRenderers)
     {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
+        TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             mGPUMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderInstanceSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());

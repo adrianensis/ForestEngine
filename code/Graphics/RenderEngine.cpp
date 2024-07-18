@@ -45,7 +45,7 @@ void RenderEngine::onResize(u32 width, u32 height)
 {
 	LOG_TRACE()
 	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
-    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }
 
@@ -56,13 +56,13 @@ void RenderEngine::terminate()
     mRenderPipeline->terminate();
 }
 
-void RenderEngine::addSystemComponent(Ptr<SystemComponent> component)
+void RenderEngine::addSystemComponent(const ComponentHandler& component)
 {
 	System::addSystemComponent(component);
 
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
+        TypedComponentHandler<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
@@ -72,24 +72,24 @@ void RenderEngine::addSystemComponent(Ptr<SystemComponent> component)
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
-        if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.getId() == ClassManager::getClassMetadata<PointLight>().mClassDefinition.getId())
+        if(component.getComponent().isDerivedClass<PointLight>())
         {
-            mRenderPipelineData.mPointLights.push_back(Ptr<PointLight>::cast(component));
+            mRenderPipelineData.mPointLights.push_back(TypedComponentHandler<PointLight>(component));
         }
-        else if(ClassManager::getDynamicClassMetadata(component.getInternalPointer()).mClassDefinition.getId() == ClassManager::getClassMetadata<DirectionalLight>().mClassDefinition.getId())
+        else if(component.getComponent().isDerivedClass<DirectionalLight>())
         {
-            mRenderPipelineData.mDirectionalLight = Ptr<DirectionalLight>::cast(component);
+            mRenderPipelineData.mDirectionalLight = TypedComponentHandler<DirectionalLight>(component);
         }
     }
 }
 
-void RenderEngine::removeSystemComponent(Ptr<SystemComponent> component)
+void RenderEngine::removeSystemComponent(const ComponentHandler& component)
 {
 	System::removeSystemComponent(component);
 
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        Ptr<MeshRenderer> renderer = Ptr<MeshRenderer>::cast(component);
+        TypedComponentHandler<MeshRenderer> renderer = component;
         mRenderPipeline->removeRenderer(renderer);
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())

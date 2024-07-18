@@ -18,7 +18,7 @@ void RenderPipeline::update()
     PROFILER_BLOCK_CPU("update renderers");
     FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
     {
-        Ptr<MeshRenderer> renderer = mRenderers[i];
+        TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             processRenderer(renderer);
@@ -30,7 +30,7 @@ void RenderPipeline::update()
     // std::execution::par,
     // mRenderers.begin(),
     // mRenderers.end(),
-    // [materialManager, this](Ptr<MeshRenderer> renderer)
+    // [materialManager, this](TypedComponentHandler<MeshRenderer> renderer)
     // {
     //     if(renderer.isValid())
     //     {
@@ -48,7 +48,7 @@ void RenderPipeline::update()
 	GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
-void RenderPipeline::processRenderer(Ptr<MeshRenderer> renderer)
+void RenderPipeline::processRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
     if(!renderer->isStatic())
@@ -68,7 +68,7 @@ void RenderPipeline::terminate()
     mRenderInstancesSlotsManager.reset();
 }
 
-void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
+void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
     if(mRenderInstancesSlotsManager.isEmpty())
     {
@@ -109,15 +109,15 @@ void RenderPipeline::addRenderer(Ptr<MeshRenderer> renderer)
     mBatchMap.at(batchData)->addRenderer(renderer);
 }
 
-void RenderPipeline::removeRenderer(Ptr<MeshRenderer> renderer)
+void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
     if(renderer->isStatic())
     {
-        mRenderersStatic.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
+        mRenderersStatic.at(renderer->getRenderInstanceSlot().getSlot()).reset();
     }
     else
     {
-        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).invalidate();
+        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).reset();
     }
 
     mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
@@ -181,7 +181,7 @@ void RenderPipeline::initBuffers()
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }
 
-void RenderPipeline::setRendererMatrix(Ptr<MeshRenderer> renderer)
+void RenderPipeline::setRendererMatrix(TypedComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     if(renderer->getUpdateMatrix())

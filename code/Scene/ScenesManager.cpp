@@ -19,7 +19,7 @@ void ScenesManager::terminate()
 
 	if (mCameraGameObject)
 	{
-		Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+		TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
 		mCameraGameObject->removeComponent(cameraComponent);
 		mCameraGameObject->destroy();
         mCameraGameObject.invalidate();
@@ -50,7 +50,7 @@ void ScenesManager::init()
 
 	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));
 
-    Ptr<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
+    TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
 	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
     GET_SYSTEM(CameraManager).setCamera(cameraComponent);
@@ -60,7 +60,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    Ptr<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+    TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

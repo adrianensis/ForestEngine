@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/System/System.hpp"
+#include "Core/ECS/System.hpp"
 #include "Graphics/GPU/GPUSharedBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"

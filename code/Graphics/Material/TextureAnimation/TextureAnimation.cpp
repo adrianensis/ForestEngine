@@ -1,4 +1,5 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
+#include "Core/Time/TimeUtils.hpp"
 
 TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
 {

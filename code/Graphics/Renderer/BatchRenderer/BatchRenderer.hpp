@@ -15,8 +15,8 @@ public:
     void terminate();
 
     void render();
-    void addRenderer(Ptr<MeshRenderer> renderer);
-    void removeRenderer(Ptr<MeshRenderer> renderer);
+    void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
 
     bool isEmpty() const { return mRenderersCount == 0; }
 
@@ -39,7 +39,7 @@ private:
 
 private:
     SlotsManager mRendererSlotsManager;
-	std::vector<Ptr<MeshRenderer>> mRenderers;
+	std::vector<TypedComponentHandler<MeshRenderer>> mRenderers;
     u32 mRenderersCount = 0;
     inline static const u32 mInitialInstances = 2000;
 

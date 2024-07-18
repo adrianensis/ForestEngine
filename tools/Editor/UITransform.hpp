@@ -7,7 +7,7 @@ class UITransform: public GameObject
 {
 public:
     virtual void init() override;
-    void update(Ptr<const Transform> transform);
+    void update(TypedComponentHandler<const Transform> transform);
     virtual void onDestroy() override;
 
 private:

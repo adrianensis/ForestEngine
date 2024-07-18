@@ -9,11 +9,11 @@ void ScriptEngine::init()
 	registerComponentClass(ClassManager::getClassMetadata<Script>().mClassDefinition.getId());
 }
 
-void ScriptEngine::addSystemComponent(Ptr<SystemComponent> component)
+void ScriptEngine::addSystemComponent(const ComponentHandler& component)
 {
 	System::addSystemComponent(component);
 
-    Ptr<Script> script = Ptr<Script>::cast(component);
+    TypedComponentHandler<Script> script = component;
     CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");
     mScripts.push_back(script);
 }
@@ -22,12 +22,12 @@ void ScriptEngine::update()
 {
 	PROFILER_CPU()
 
-    std::vector<Ptr<Script>> newList;
+    std::vector<TypedComponentHandler<Script>> newList;
     FOR_ARRAY(i, mScripts)
     {
         PROFILER_BLOCK_CPU("remove scripts");
 
-        Ptr<Script> script = mScripts[i];
+        TypedComponentHandler<Script> script = mScripts[i];
         if(script.isValid())
         {
             newList.push_back(script);
@@ -39,7 +39,7 @@ void ScriptEngine::update()
 
     FOR_ARRAY(i, mScripts)
 	{
-        Ptr<Script> script = mScripts[i];
+        TypedComponentHandler<Script> script = mScripts[i];
         if (script->isActive())
         {
             if (!script->getFirstUpdateDone())

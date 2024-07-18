@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Component.hpp"
+#include "Core/ECS/Component.hpp"
 
 #include "Scene/Transform.hpp"
 #include "Graphics/Camera/Frustum.hpp"

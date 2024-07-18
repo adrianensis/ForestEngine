@@ -2,6 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Memory/Singleton.hpp"
+#include "Core/Object/ObjectBase.hpp"
 
 class UIStyle
 {

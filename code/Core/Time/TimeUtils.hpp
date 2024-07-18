@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Std.hpp"
-#include "Core/System/System.hpp"
+#include "Core/ECS/System.hpp"
 #include <chrono>
 
 class TimeMark

@@ -4,6 +4,7 @@
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
+#include "Core/ECS/ComponentsManager.hpp"
 
 class MeshRenderer;
 class RenderPipeline;
@@ -21,8 +22,8 @@ class RenderPass: public ObjectBase
 public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     void terminate();
-    void addRenderer(Ptr<MeshRenderer> renderer);
-    void removeRenderer(Ptr<MeshRenderer> renderer);
+    void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
     virtual void renderPass();
 protected:
     virtual void preFramebufferEnabled();

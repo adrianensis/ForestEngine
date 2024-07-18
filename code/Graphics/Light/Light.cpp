@@ -7,7 +7,7 @@ ClassId Light::getSystemComponentId() const { return ClassManager::getClassMetad
 
 Matrix4 Light::getLightProjectionViewMatrix() const
 {
-    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 lightViewMatrix;
     lightViewMatrix = mGameObject->mTransform->getViewMatrix();

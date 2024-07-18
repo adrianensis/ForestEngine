@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Core/ECS/System.hpp"
 #include "glew-2.2.0/include/GL/glew.h"
 
 class Camera;

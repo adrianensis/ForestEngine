@@ -1,4 +1,4 @@
-#include "Scene/GameObjectsManager.hpp"
+#include "Core/ECS/GameObjectsManager.hpp"
 #include "Scene/GameObject.hpp"
 
 void GameObjectsManager::init() 

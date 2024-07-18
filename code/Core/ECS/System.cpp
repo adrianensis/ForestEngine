@@ -1,5 +1,4 @@
-#include "Core/System/System.hpp"
-
+#include "Core/ECS/System.hpp"
 
 void System::registerComponentClass(ClassId classId)
 {
@@ -11,16 +10,16 @@ bool System::isComponentClassAccepted(ClassId classId)
     return mAcceptedSystemComponentClasses.contains(classId);
 }
 
-void System::addSystemComponent(Ptr<SystemComponent> component)
+void System::addSystemComponent(const ComponentHandler& component)
 {
     CHECK_SYSTEM_COMPONENT(component);
-    component->mAlreadyAddedToSystem = true;
+    component.getComponent().mAlreadyAddedToSystem = true;
 }
 
-void System::removeSystemComponent(Ptr<SystemComponent> component)
+void System::removeSystemComponent(const ComponentHandler& component)
 {
     CHECK_SYSTEM_COMPONENT(component);
-    component->mAlreadyAddedToSystem = false;
+    component.getComponent().mAlreadyAddedToSystem = false;
 }
 
 void SystemsManager::terminate()

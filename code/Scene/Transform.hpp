@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Component.hpp"
+#include "Core/ECS/ComponentHandler.hpp"
 
 class Transform: public Component
 {
@@ -18,8 +18,8 @@ public:
 
     const Matrix4& calculateModelMatrix() const;
 
-    void addChild(Ptr<Transform> child);
-    void removeChild(Ptr<Transform> child);
+    void addChild(TypedComponentHandler<Transform> child);
+    void removeChild(TypedComponentHandler<Transform> child);
 
     Vector3 getWorldPosition() const;
     Vector3 getWorldScale() const;
@@ -38,8 +38,8 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<ObjectId, Ptr<Transform>> mChildren;
-    Ptr<Transform> mParent;
+    std::unordered_map<ObjectId, TypedComponentHandler<Transform>> mChildren;
+    TypedComponentHandler<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
     mutable bool mLocalTranslationMatrixDirty = true;

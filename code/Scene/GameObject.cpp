@@ -1,5 +1,5 @@
 #include "Scene/GameObject.hpp"
-#include "Scene/Component.hpp"
+#include "Core/ECS/Component.hpp"
 #include "Scene/Transform.hpp"
 #include "Core/Events/EventsManager.hpp"
 
@@ -15,20 +15,19 @@ void GameObject::init()
 	mTag = "";
 }
 
-Ptr<Component> GameObject::addComponentInternal(ComponentHandler componentHandler)
+void GameObject::addComponentInternal(ComponentHandler componentHandler)
 {
-    CHECK_MSG(!componentHandler->mGameObject.isValid(), "Component is already assigned to a GameObject!");
+    CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
+    CHECK_MSG(!componentHandler.getComponent().mGameObject.isValid(), "Component is already assigned to a GameObject!");
 
 	mComponentHandlers.emplace_back(componentHandler);
-    Ptr<Component> comp = componentHandler.getComponent();
+    Component& comp = componentHandler.getComponent();
 
     CHECK_MSG(getPtrToThis<GameObject>().isValid(), "invalid GameObject!");
-	comp->mGameObject = getPtrToThis<GameObject>();
-	comp->onComponentAdded();
+	comp.mGameObject = getPtrToThis<GameObject>();
+	comp.onComponentAdded();
 
-	SystemsManager::getInstance().addComponentToSystem(comp);
-
-    return comp;
+	SystemsManager::getInstance().addComponentToSystem(componentHandler);
 }
 
 // Ptr<Component> GameObject::addComponentInternal(OwnerPtr<Component>&& component)
@@ -45,17 +44,18 @@ Ptr<Component> GameObject::addComponentInternal(ComponentHandler componentHandle
 //     return comp;
 // }
 
-void GameObject::removeComponentInternal(Ptr<Component> component)
+void GameObject::removeComponentInternal(ComponentHandler componentHandler)
 {
-    CHECK_MSG(component->mGameObject.isValid(), "Component is not assigned to a GameObject!");
-    CHECK_MSG(component->mGameObject == getPtrToThis<GameObject>(), "Component is assigned to another GameObject!");
+    CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
+    CHECK_MSG(componentHandler.getComponent().mGameObject.isValid(), "Component is not assigned to a GameObject!");
+    CHECK_MSG(componentHandler.getComponent().mGameObject == getPtrToThis<GameObject>(), "Component is assigned to another GameObject!");
 
     FOR_LIST(it, mComponentHandlers)
 	{
-        if((*it).getComponent() == component)
+        if((*it) == componentHandler)
         {
-            SystemsManager::getInstance().removeComponentFromSystem(component);
-            component->destroy();
+            SystemsManager::getInstance().removeComponentFromSystem(componentHandler);
+            componentHandler->destroy();
             // mComponentHandlers.erase(it);
             GET_SYSTEM(ComponentsManager).removeComponent(*it);
             break;
@@ -82,7 +82,7 @@ void GameObject::setIsActive(bool isActive)
 	FOR_LIST(it, mComponentHandlers)
 	// FOR_LIST(it, mComponents)
 	{
-		(*it)->setIsActive(isActive);
+		(*it).getComponent().setIsActive(isActive);
 	}
 }
 
@@ -100,8 +100,8 @@ void GameObject::destroy()
 	{
         if((*it).isValid())
         {
-            SystemsManager::getInstance().removeComponentFromSystem(Ptr<Component>((*it).getComponent()));
-            (*it)->destroy();
+            SystemsManager::getInstance().removeComponentFromSystem(*it);
+            (*it).getComponent().destroy();
             GET_SYSTEM(ComponentsManager).removeComponent(*it);
         }
 	}

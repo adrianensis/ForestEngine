@@ -5,12 +5,13 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Core/ECS/ComponentHandler.hpp"
 
 class RenderPipelineData
 {
 public:
-    std::vector<Ptr<PointLight>> mPointLights;
-    Ptr<DirectionalLight> mDirectionalLight;
+    std::vector<TypedComponentHandler<PointLight>> mPointLights;
+    TypedComponentHandler<DirectionalLight> mDirectionalLight;
 };
 
 class RenderPipeline: public ObjectBase
@@ -19,8 +20,8 @@ public:
     virtual void init();
     virtual void update();
     virtual void terminate();
-    void addRenderer(Ptr<MeshRenderer> renderer);
-    void removeRenderer(Ptr<MeshRenderer> renderer);
+    void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
     virtual void render(RenderPipelineData& renderData);
 
 protected:
@@ -47,8 +48,8 @@ protected:
     }
 
     void initBuffers();
-    void setRendererMatrix(Ptr<MeshRenderer> renderer);
-    void processRenderer(Ptr<MeshRenderer> renderer);
+    void setRendererMatrix(TypedComponentHandler<MeshRenderer> renderer);
+    void processRenderer(TypedComponentHandler<MeshRenderer> renderer);
 
 public:
     using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
@@ -59,8 +60,8 @@ private:
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
-	std::vector<Ptr<MeshRenderer>> mRenderers;
-	std::vector<Ptr<MeshRenderer>> mRenderersStatic;
+	std::vector<TypedComponentHandler<MeshRenderer>> mRenderers;
+	std::vector<TypedComponentHandler<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 2000;
 public:
     CRGET(BatchMap)

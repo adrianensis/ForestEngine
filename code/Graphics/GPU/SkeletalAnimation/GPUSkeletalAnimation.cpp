@@ -1,4 +1,5 @@
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
+#include "Core/Time/TimeUtils.hpp"
 
 void GPUSkeletalAnimation::init(f32 animDurationInSeconds)
 {

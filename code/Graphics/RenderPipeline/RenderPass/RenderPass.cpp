@@ -25,7 +25,7 @@ void RenderPass::terminate()
 {
 }
 
-void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
+void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
 	BatchData batchData;
 	batchData.init(renderer);
@@ -51,7 +51,7 @@ void RenderPass::addRenderer(Ptr<MeshRenderer> renderer)
     }
 }
 
-void RenderPass::removeRenderer(Ptr<MeshRenderer> renderer)
+void RenderPass::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
     BatchData batchData;
 	batchData.init(renderer);
@@ -145,7 +145,7 @@ void RenderPass::updateGlobalData()
     Matrix4 ortho;
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
 
-    Ptr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 projectionViewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho;
     Matrix4 viewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : Matrix4::smIdentity;

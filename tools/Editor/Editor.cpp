@@ -5,6 +5,7 @@
 #include "Core/Input/Input.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
+#include "Core/Time/TimeUtils.hpp"
 
 void Editor::init()
 {
@@ -31,7 +32,7 @@ void Editor::firstUpdate()
 
 	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
-    Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+    TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -94,8 +95,8 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-	Ptr<Transform> cameraTransform = mCameraGameObject->mTransform;
+    TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+	TypedComponentHandler<Transform> cameraTransform = mCameraGameObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
@@ -283,7 +284,7 @@ Ptr<GameObject> Editor::mousePick()
     {
         (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
         // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -337,7 +338,7 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input).isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
-        // Ptr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 100.0f, Vector3(0,180,180), true);

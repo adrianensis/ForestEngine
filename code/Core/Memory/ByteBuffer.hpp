@@ -125,6 +125,7 @@ protected:
     std::vector<byte> mBuffer;
 
 public:
+    RGET(Buffer)
     CRGET(Buffer)
 };
 

@@ -22,7 +22,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-    Ptr<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
+    TypedComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
@@ -108,7 +108,7 @@ void UIText::setText(HashedString text)
                     glyphConfig = gameObjectGlyph->calculateConfig(glyphConfig);
                     gameObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     gameObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
-                    Ptr<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
+                    TypedComponentHandler<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Core/ECS/System.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
@@ -16,8 +16,8 @@ public:
     void postSceneChanged();
     void onResize(u32 width, u32 height);
     
-    void addSystemComponent(Ptr<SystemComponent> component) override;
-    void removeSystemComponent(Ptr<SystemComponent> component) override;
+    void addSystemComponent(const ComponentHandler& component) override;
+    void removeSystemComponent(const ComponentHandler& component) override;
 
 private:
     void swap();

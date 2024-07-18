@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Events/Event.hpp"
-#include "Scene/ComponentsManager.hpp"
+#include "Core/ECS/ComponentsManager.hpp"
 
 class Transform;
 class Scene;
@@ -20,65 +20,59 @@ public:
     GameObject();
 
     virtual void init();
-	template <class T> T_EXTENDS(T, Component)
-	Ptr<T> addComponent(OwnerPtr<T>&& component)
-	{
-		return Ptr<T>::cast(GameObject::addComponentInternal(OwnerPtr<Component>::moveCast(component)));
-	}
 
     template <class T, typename ... Args> T_EXTENDS(T, Component)
-	Ptr<T> createComponent(Args&&... args)
+	TypedComponentHandler<T> createComponent(Args&&... args)
 	{
         PROFILER_CPU()
-        ComponentHandler componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
-        componentHandler.get<T>()->init(args...);
-        return Ptr<T>::cast(addComponentInternal(componentHandler));
-        // OwnerPtr<T> component = OwnerPtr<T>::newObject();
-        // component->init(args...);
-        // return addComponent(std::move(component));
+        TypedComponentHandler<T> componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
+        componentHandler->init(args...);
+        addComponentInternal(componentHandler);
+        return componentHandler;
 	}
 
-	void removeComponent(Ptr<Component> component)
+	void removeComponent(ComponentHandler componentHandler)
 	{
         PROFILER_CPU()
-		GameObject::removeComponentInternal(component);
+		GameObject::removeComponentInternal(componentHandler);
 	}
 
-	template <class T> T_EXTENDS(T, Component)
-	std::list<Ptr<T>> getComponents() const
-	{
-		std::list<Ptr<T>> components;
-		FOR_LIST(it, mComponentHandlers)
-		// FOR_LIST(it, mComponents)
-		{
-            Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
-            // Ptr<T> casted = Ptr<T>::cast((*it));
-            if(casted)
-            {
-			    components.push_back(casted);
-            }
-		}
+	// template <class T> T_EXTENDS(T, Component)
+	// std::list<Ptr<T>> getComponents() const
+	// {
+	// 	std::list<Ptr<T>> components;
+	// 	FOR_LIST(it, mComponentHandlers)
+	// 	// FOR_LIST(it, mComponents)
+	// 	{
+    //         Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
+    //         // Ptr<T> casted = Ptr<T>::cast((*it));
+    //         if(casted)
+    //         {
+	// 		    components.push_back(casted);
+    //         }
+	// 	}
 
-		return components;
-	}
+	// 	return components;
+	// }
 
 	template <class T> T_EXTENDS(T, Component)
-	Ptr<T> getFirstComponent() const
+	TypedComponentHandler<T> getFirstComponent() const
 	{   
-        Ptr<T> component;
+        TypedComponentHandler<T> componentToReturn;
         FOR_LIST(it, mComponentHandlers)
-        // FOR_LIST(it, mComponents)
         {
-            Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
-            // Ptr<T> casted = Ptr<T>::cast((*it));
-            if(casted)
+            ComponentHandler componentHandler = (*it);
+            if(componentHandler.isValid())
             {
-                component = casted;
-                break;
+                if(componentHandler.getComponent().template isDerivedClass<T>())
+                {
+                    componentToReturn = componentHandler;
+                    break;
+                }
             }
         }
 
-        return component;
+        return componentToReturn;
 	}
 
 	bool isActive() const
@@ -106,8 +100,8 @@ public:
 
 private:
     // Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
-    Ptr<Component> addComponentInternal(ComponentHandler componentHandler);
-    void removeComponentInternal(Ptr<Component> component);
+    void addComponentInternal(ComponentHandler componentHandler);
+    void removeComponentInternal(ComponentHandler componentHandler);
 
 private:
 	std::list<ComponentHandler> mComponentHandlers;
@@ -118,7 +112,7 @@ private:
 
 public:
 	Ptr<Scene> mScene;
-	Ptr<Transform> mTransform;
+	TypedComponentHandler<Transform> mTransform;
 	bool mIsStatic = false;
 	std::string mTag;
 	bool mShouldPersist = false;

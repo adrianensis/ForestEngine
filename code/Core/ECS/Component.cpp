@@ -1,4 +1,4 @@
-#include "Scene/Component.hpp"
+#include "Core/ECS/Component.hpp"
 #include "Scene/GameObject.hpp"
 
 
@@ -32,8 +32,9 @@ void Component::destroy()
     mGameObject.invalidate();
 }
 
-void Component::onRecycle()
+void Component::onRecycle(Slot newSlot)
 {
+    mSlot = newSlot;
 	mIsActive = true;
 	mIsDestroyed = false;
 }

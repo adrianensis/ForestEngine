@@ -2,7 +2,8 @@
 
 #include "Core/Std.hpp"
 #include "Core/Memory/Singleton.hpp"
-#include "Core/System/SystemComponent.hpp"
+#include "Core/ECS/ComponentHandler.hpp"
+#include "Core/Object/ObjectBase.hpp"
 
 class System: public ObjectBase
 {
@@ -12,8 +13,8 @@ public:
     virtual void terminate() { };
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId);
-    virtual void addSystemComponent(Ptr<SystemComponent> component);
-    virtual void removeSystemComponent(Ptr<SystemComponent> component);
+    virtual void addSystemComponent(const ComponentHandler& component);
+    virtual void removeSystemComponent(const ComponentHandler& component);
 
 private:
     std::unordered_set<ClassId> mAcceptedSystemComponentClasses;
@@ -30,13 +31,12 @@ REGISTER_CLASS(System);
     SystemsManager::getInstance().createSystem<__VA_ARGS__>().get();
 
 #define CHECK_SYSTEM_COMPONENT(c) \
-    CHECK_MSG(isComponentClassAccepted(c->getSystemComponentId()), "Component class is not valid for this system: " + std::to_string(component->getSystemComponentId()));
+    CHECK_MSG(isComponentClassAccepted(c->getSystemComponentId()), "Component class is not valid for this system: " + std::to_string(c->getSystemComponentId()));
 
 class SystemsManager: public Singleton<SystemsManager>
 {
 public:
-    template<typename T> T_EXTENDS(T, SystemComponent)
-    void addComponentToSystem(Ptr<T> component)
+    void addComponentToSystem(const ComponentHandler& component)
     {
         if (component && !component->mAlreadyAddedToSystem)
         {
@@ -52,8 +52,7 @@ public:
         }
     }
 
-    template<typename T> T_EXTENDS(T, SystemComponent)
-    void removeComponentFromSystem(Ptr<T> component)
+    void removeComponentFromSystem(const ComponentHandler& component)
     {
         if (component && component->mAlreadyAddedToSystem)
         {
