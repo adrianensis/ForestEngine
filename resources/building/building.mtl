@@ -1,0 +1,65 @@
+# Blender MTL File: 'None'
+# Material Count: 6
+
+newmtl 0020
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Public\Documents\Unity Projects\grand racing GT\Assets\texture\76c21994e5cded3325b9e50a7d841545.jpg
+
+newmtl 0021
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Public\Documents\Unity Projects\grand racing GT\Assets\texteurs\Asphalt_high_resolution_texture.jpg
+
+newmtl 0022
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Public\Documents\Unity Projects\grand racing GT\Assets\texture\old_window_texture_png_by_dbszabo1-d4jntzh.png
+
+newmtl 0023
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Public\Documents\Unity Projects\grand racing GT\Assets\texture\Doors-10.jpg
+
+newmtl 0024
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Public\Documents\Unity Projects\grand racing GT\Assets\texture\Asphalt-Top-Texture-1024x768.jpg
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
