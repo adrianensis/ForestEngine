@@ -15,6 +15,7 @@ public:
     template<class T> T_EXTENDS(T, Component)
     TypedComponentHandler<T> requestComponent()
     {
+        PROFILER_CPU()
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentsArrays.contains(id))
@@ -32,6 +33,7 @@ public:
         TypedComponentHandler<T> componentHandler(id, mComponentsArrays.at(id)->mSlotsManager.requestSlot(), this);
         if(componentHandler.isValid())
         {
+            mComponentsArrays.at(id)->emplace();
             Component& comp = mComponentsArrays.at(id)->at(componentHandler.mSlot.getSlot());
             Memory::registerPointer<T>(static_cast<T*>(&comp));
             comp.onRecycle(componentHandler.mSlot);
@@ -46,8 +48,8 @@ public:
 
     void removeComponent(ComponentHandler& componentHandler)
     {
+        PROFILER_CPU()
         ClassId id = componentHandler.mClassId;
-
         if(mComponentsArrays.contains(id))
         {
             mComponentsArrays.at(id)->mSlotsManager.freeSlot(componentHandler.mSlot);
@@ -89,6 +91,7 @@ private:
             mSlotsManager.init(reservedComponents);
         }
         virtual Component& at(u32 index) = 0;
+        virtual void emplace() = 0;
         SlotsManager mSlotsManager;
     };
     template <class T> T_EXTENDS(T, Component)
@@ -97,12 +100,17 @@ private:
     public:
         ComponentsArray(u32 reservedComponents) : ComponentsArrayBase(reservedComponents)
         {
-            mComponents.resize(reservedComponents);
+            PROFILER_CPU()
+            mComponents.reserve(reservedComponents);
             mSlotsManager.init(reservedComponents);
         }
         virtual Component& at(u32 index) override
         {
             return mComponents.at(index);
+        }
+        virtual void emplace() override
+        {
+            mComponents.emplace_back();
         }
         std::vector<T> mComponents;
     };

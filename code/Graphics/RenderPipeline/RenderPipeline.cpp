@@ -4,11 +4,11 @@
 #include "Scene/Module.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include <algorithm>
-#include <execution>
 
 void RenderPipeline::init()
 {
+    LOG_TRACE()
+    PROFILER_CPU()
     initBuffers();
 }
 
@@ -16,27 +16,26 @@ void RenderPipeline::update()
 {
 	PROFILER_CPU()
     PROFILER_BLOCK_CPU("update renderers");
-    FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
-    {
-        TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
-        if(renderer.isValid())
-        {
-            processRenderer(renderer);
-        }
-    }
-
-    // Ptr<MaterialManager> materialManager = GET_SYSTEM_PTR(MaterialManager);
-    // std::for_each(
-    // std::execution::par,
-    // mRenderers.begin(),
-    // mRenderers.end(),
-    // [materialManager, this](TypedComponentHandler<MeshRenderer> renderer)
+    // FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
     // {
+    //     TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
     //     if(renderer.isValid())
     //     {
     //         processRenderer(renderer);
     //     }
-    // });
+    // }
+
+    std::for_each(
+    std::execution::par,
+    mRenderers.begin(),
+    mRenderers.end(),
+    [this](TypedComponentHandler<MeshRenderer> renderer)
+    {
+        if(renderer.isValid())
+        {
+            processRenderer(renderer);
+        }
+    });
 
     PROFILER_END_BLOCK()
 
@@ -102,6 +101,7 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
     batchData.init(renderer);
     if(!mBatchMap.contains(batchData))
     {
+        LOG_TRACE_MSG("New Batch")
         mBatchMap.insert_or_assign(batchData, OwnerPtr<BatchRenderer>::newObject());
         mBatchMap.at(batchData)->init(batchData);
     }

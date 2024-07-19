@@ -6,6 +6,7 @@
 
 void GameObject::init()
 {
+    PROFILER_CPU()
     Entity::init();
     mTransform = createComponent<Transform>();
 }

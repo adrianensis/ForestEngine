@@ -45,7 +45,7 @@ public:
     }
 };
 
-class Material: public ObjectBase
+class Material: public ObjectBase, public IPoolable
 {
 public:
     Material() = default;
@@ -53,6 +53,8 @@ public:
     template<class T> T_EXTENDS(T, Shader)
     void init(const MaterialData& materialData, u32 id)
     {
+        LOG_TRACE()
+        PROFILER_CPU()
         mShader = GET_SYSTEM(ShaderManager).createShader<T>();
         internalInit(materialData, id);
     }

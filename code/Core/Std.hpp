@@ -12,6 +12,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <algorithm>
+#include <execution>
+
 #include "Core/StdCore.hpp"
 #include "Core/Memory/Memory.hpp"
 #include "Core/Memory/Pointers.hpp"

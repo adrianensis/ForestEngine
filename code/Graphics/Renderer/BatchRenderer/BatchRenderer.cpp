@@ -11,6 +11,8 @@
 
 void BatchRenderer::init(const BatchData& batchData)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
 	mBatchData = batchData;
 
     mRendererSlotsManager.init(mInitialInstances);

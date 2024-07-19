@@ -68,6 +68,7 @@ private:
 
 #ifdef ENGINE_ENABLE_LOGS
 #define LOG_TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__);
+#define LOG_TRACE_MSG(x) Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, x);
 #define LOG(x) Log::log(Log::Prefixes::smLog, x, true);
 #define LOG_APPEND(x) Log::log(Log::Prefixes::smLog, x, false);
 #define LOG_TAG(Tag, x) Log::log(Tag, x, true);
@@ -79,6 +80,7 @@ private:
 #define LOG_BACKSPACE() Log::backspace();
 #else
 #define LOG_TRACE()
+#define LOG_TRACE_MSG(x)
 #define LOG(x)
 #define LOG_APPEND(x)
 #define LOG_TAG(Tag, x)

@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 
-class ObjectBase: public ISerializable, public IPoolable, public EnablePtrFromThis
+class ObjectBase: public ISerializable, public EnablePtrFromThis
 {
 public:
 	ObjectBase()

@@ -14,6 +14,9 @@ void RenderPipelinePBR::init()
 {
     RenderPipeline::init();
 
+    LOG_TRACE()
+    PROFILER_CPU()
+
     RenderPassData renderPassShadowMapData;
     renderPassShadowMapData.mOutputFramebufferData.set(
         {

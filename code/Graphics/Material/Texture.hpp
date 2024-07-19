@@ -13,7 +13,7 @@ public:
     FontData mFontData;
 };
 
-class Texture: public ObjectBase
+class Texture: public ObjectBase, public IPoolable
 {
 public:
     void init(const TextureData& textureData, u32 id);

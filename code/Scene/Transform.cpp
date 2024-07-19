@@ -3,6 +3,7 @@
 
 void Transform::init() 
 {
+    PROFILER_CPU()
 	mTranslationMatrix.identity();
 	mRotationMatrix.identity();
 	mScaleMatrix.identity();
@@ -151,6 +152,7 @@ const Matrix4& Transform::calculateModelMatrix() const
 
 void Transform::notifyModelMatrixDirty()
 {
+    PROFILER_CPU()
     mViewMatrixDirty = true;
     mModelMatrixDirty = true;
     mWorldTranslationMatrixDirty = true;

@@ -16,6 +16,7 @@ void Entity::init()
 
 void Entity::addComponentInternal(ComponentHandler componentHandler)
 {
+    PROFILER_CPU()
     CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
     CHECK_MSG(!componentHandler.getComponent().getOwnerEntity().isValid(), "Component is already assigned to a Entity!");
 
@@ -31,6 +32,7 @@ void Entity::addComponentInternal(ComponentHandler componentHandler)
 
 void Entity::removeComponent(ComponentHandler componentHandler)
 {
+    PROFILER_CPU()
     CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
     CHECK_MSG(componentHandler.getComponent().getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
     CHECK_MSG(componentHandler.getComponent().getOwnerEntity() == EntityHandler::getEntityHandler(*this), "Component is assigned to another Entity!");

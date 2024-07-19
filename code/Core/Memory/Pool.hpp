@@ -128,8 +128,11 @@ public:
 
     void unregisterHandler(PoolHandler<T>& handler)
     {
-        CHECK_MSG(handler.isValid(), "Invalid handler!");
-        mHandlers[handler.getIndex()].erase(&handler);
+        if(!mHandlers.empty())
+        {
+            CHECK_MSG(handler.isValid(), "Invalid handler!");
+            mHandlers[handler.getIndex()].erase(&handler);
+        }
     }
 
     T& get(const PoolHandler<T>& handler)

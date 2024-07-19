@@ -5,6 +5,7 @@
 #include "Core/Assert/Assert.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/HashedString/HashedString.hpp"
+#include "Core/Profiler/Profiler.hpp"
 
 class MemoryTracking
 {
@@ -27,6 +28,7 @@ public:
 	template <class T>
 	static void registerNewObject(const T* pointer)
 	{
+        PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
@@ -56,6 +58,7 @@ public:
 	template <class T>
 	static void unregisterDeletedObject(const T* pointer)
 	{
+        PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG

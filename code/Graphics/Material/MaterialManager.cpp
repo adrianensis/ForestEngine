@@ -55,6 +55,8 @@ PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData
 {
 	if (!mTexturesByPath.contains(textureData.mPath))
 	{
+        LOG_TRACE()
+        PROFILER_CPU()
         PoolHandler<Texture> handler = mTextures.allocate();
         mTexturesByPath.insert_or_assign(textureData.mPath, handler);
         Texture& texture = mTextures.get(handler);
@@ -88,6 +90,8 @@ void MaterialManager::loadMaterialTextures(const PoolHandler<Material>& handler)
     u32 id = handler->getID();
     if(!mTextureBindingsByMaterial.contains(id))
     {
+        LOG_TRACE()
+        PROFILER_CPU()
         mTextureBindingsByMaterial.emplace(id, std::unordered_map<HashedString, PoolHandler<Texture>>());
 
         FOR_MAP(it, handler->getMaterialData().mTextureBindings)
@@ -116,6 +120,8 @@ const std::unordered_map<HashedString, PoolHandler<Texture>>& MaterialManager::g
 
 PoolHandler<MaterialInstance> MaterialManager::createMaterialInstance(const PoolHandler<Material>& handler)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
     PoolHandler<MaterialInstance> instance = mMaterialInstances.allocate();
     instance->mMaterial = handler;
     instance->mID = instance.getIndex();
@@ -126,6 +132,8 @@ PoolHandler<MaterialInstance> MaterialManager::createMaterialInstance(const Pool
 }
 void MaterialManager::freeMaterialInstance(PoolHandler<MaterialInstance> materialInstance)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
     CHECK_MSG(materialInstance->mMaterial.isValid(), "Invalid material!");
     ClassId propertiesBlockClassId = materialInstance->mMaterial->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
 
@@ -179,6 +187,8 @@ void MaterialManager::initMaterialInstancePropertiesSharedBuffer(const PoolHandl
             u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
             if(propertiesBlockSizeBytes > 0)
             {
+                LOG_TRACE()
+                PROFILER_CPU()
                 mMaterialPropertyBlockRenderStates.emplace(propertiesBlockClassId, MaterialPropertyBlockRenderState());
 
                 // u32 size = material->getMaterialData().getMaxInstances();
@@ -214,6 +224,8 @@ void MaterialManager::setMaterialInstanceProperties(PoolHandler<MaterialInstance
         PROFILER_BLOCK_CPU("allowInstances")
         if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
+            LOG_TRACE()
+            PROFILER_CPU()
             CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(materialInstance->mSlot), "Invalid slot!");
             u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
             PROFILER_BLOCK_CPU("Copy Buffer")
@@ -257,6 +269,9 @@ const GPUSharedBuffer& MaterialManager::getMaterialPropertiesGPUSharedBuffer(con
 
 Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& material)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     CHECK_MSG(material.isValid(), "Invalid material!");
     ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
     

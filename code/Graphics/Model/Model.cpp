@@ -12,6 +12,8 @@
 
 void Model::init(const std::string& path)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
     mPath = Paths::mResources.get() + path;
 
     // https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#skins
@@ -64,12 +66,16 @@ bool Model::isSkinned() const
 
 void Model::loadGLTFMaterials()
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     if(mCGLTFData->materials_count > 0)
     {
         FOR_RANGE(materialIt, 0, mCGLTFData->materials_count)
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
             MaterialData materialData;
+            materialData.mAllowInstances = false;
             materialData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
             PoolHandler<Material> newMaterial;
 
@@ -145,6 +151,9 @@ void Model::loadGLTFMaterials()
 
 void Model::loadGLTFMeshes()
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     FOR_RANGE(nodeIt, 0, mCGLTFData->nodes_count)
     {
         cgltf_node& node = mCGLTFData->nodes[nodeIt];
@@ -201,6 +210,9 @@ void Model::loadGLTFMeshes()
 
 void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "GPUMesh has to be made out of triangles!")
 
     mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<GPUMesh>::newObject());
@@ -385,6 +397,9 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
 void Model::loadGLTFBones(const cgltf_skin& skin)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     mBonesIndexCount = (u32)skin.joints_count;
 
     GPUSkeletonStateData gpuSkeletonStateData;
@@ -481,6 +496,9 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
 
 f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     f32 animDuration = 0.0f;
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
     {
@@ -493,6 +511,9 @@ f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
 
 void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
     {
         cgltf_animation_channel& channel = gltfAnim.channels[channelIt];
@@ -529,6 +550,9 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
 
 void Model::loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation)
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
 
     FOR_RANGE(frameIt, 0, animation->mDurationInTicks)
@@ -593,6 +617,9 @@ void Model::loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation)
 
 void Model::loadGLTFSkeletalAnimations()
 {
+    LOG_TRACE()
+    PROFILER_CPU()
+
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)
     {
         const cgltf_animation& gltfAnim = mCGLTFData->animations[animIt];
