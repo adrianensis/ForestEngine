@@ -16,26 +16,26 @@ void RenderPipeline::update()
 {
 	PROFILER_CPU()
     PROFILER_BLOCK_CPU("update renderers");
-    // FOR_RANGE(i, 0, mRenderInstancesSlotsManager.getMaxIndex())
-    // {
-    //     TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
-    //     if(renderer.isValid())
-    //     {
-    //         processRenderer(renderer);
-    //     }
-    // }
-
-    std::for_each(
-    std::execution::par,
-    mRenderers.begin(),
-    mRenderers.end(),
-    [this](TypedComponentHandler<MeshRenderer> renderer)
+    FOR_RANGE(i, 0, mMaxSlot)
     {
+        TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             processRenderer(renderer);
         }
-    });
+    }
+
+    // std::for_each(
+    // std::execution::par,
+    // mRenderers.begin(),
+    // mRenderers.end(),
+    // [this](TypedComponentHandler<MeshRenderer> renderer)
+    // {
+    //     if(renderer.isValid())
+    //     {
+    //         processRenderer(renderer);
+    //     }
+    // });
 
     PROFILER_END_BLOCK()
 
@@ -86,6 +86,7 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
     }
     else
     {
+        mMaxSlot = std::max(mMaxSlot, renderer->getRenderInstanceSlot().getSlot());
         mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
     }
 

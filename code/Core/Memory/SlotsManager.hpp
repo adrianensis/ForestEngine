@@ -2,8 +2,9 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/Assert/Assert.hpp"
+#include "Core/Profiler/Profiler.hpp"
 #include <vector>
-#include <set>
+#include <unordered_set>
 
 class Slot
 {
@@ -31,11 +32,13 @@ class SlotsManager
 public:
     void init(u32 initialAvailableSlots)
     {
+        PROFILER_CPU()
         resize(initialAvailableSlots);
     }
 
     void resize(u32 slotsCount)
     {
+        PROFILER_CPU()
         u32 currentSize = mSize;
         mSize = slotsCount;
         CHECK_MSG(mSize > 0, "SlotManager is empty!");
@@ -47,11 +50,13 @@ public:
 
     void increaseSize(u32 extra)
     {
+        PROFILER_CPU()
         resize(mSize + extra);
     }
 
     Slot requestSlot()
     {
+        PROFILER_CPU()
         CHECK_MSG(mSize > 0, "SlotManager is empty!");
         CHECK_MSG(!isEmpty(), "SlotManager is empty!");
 
@@ -66,6 +71,7 @@ public:
 
     void freeSlot(const Slot& slot)
     {
+        PROFILER_CPU()
         CHECK_MSG(checkSlot(slot), "Invalid slot!");
         mAvailableSlots.insert(slot.getSlot());
     }
@@ -84,12 +90,11 @@ public:
     }
 
     u32 getSize() const { return mSize; }
-    u32 getMaxIndex() const { return *mAvailableSlots.rbegin(); }
     void reset() { mAvailableSlots.clear(); }
     bool isEmpty() const { return mAvailableSlots.empty(); }
 
 private:
-    std::set<u32> mAvailableSlots;
+    std::unordered_set<u32> mAvailableSlots;
     u32 mSize = 0;
 public:
 };
