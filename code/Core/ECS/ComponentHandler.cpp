@@ -3,7 +3,7 @@
 
 Component& ComponentHandler::getInternal() const
 {
-    CHECK_MSG(isValid(), "Invalid handler!");
+    CHECK_MSG(ComponentHandler::isValid(), "Invalid handler!");
     return mComponentsManager->getComponentFromSlot(mClassId, mSlot);
 }
 

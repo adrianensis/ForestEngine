@@ -20,20 +20,24 @@ public:
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentsArrays.contains(id))
         {
-            mComponentsArrays.emplace(id, OwnerPtr<ComponentsArrayBase>::moveCast(OwnerPtr<ComponentsArray<T>>::newObject(smInitialComponents)));
+            mComponentsArrays.emplace(id, OwnerPtr<ComponentsArrayBase>::moveCast(OwnerPtr<ComponentsArray<T>>::newObject(smMaxComponents)));
         }
 
-        if(mComponentsArrays.at(id)->mSlotsManager.isEmpty())
+        if(mComponentsArrays.at(id)->size() == smMaxComponents)
         {
             CHECK_MSG(false, "No space available for Components!");
             // mComponentsArrays.at(id).mSlotsManager.increaseSize(smInitialComponents);
             // mComponentsArrays.at(id).mComponents.resize(mComponentsArrays.at(id).mSlotsManager.getSize());
         }
 
-        TypedComponentHandler<T> componentHandler(id, mComponentsArrays.at(id)->mSlotsManager.requestSlot(), this);
+        ComponentHandler componentHandler(id, mComponentsArrays.at(id)->mSlotsManager.requestSlot(), this);
         if(componentHandler.isValid())
         {
-            // mComponentsArrays.at(id)->emplace();
+            if(componentHandler.mSlot.getSlot() == mComponentsArrays.at(id)->size())
+            {
+                mComponentsArrays.at(id)->emplaceBack();
+            }
+
             Component& comp = mComponentsArrays.at(id)->at(componentHandler.mSlot.getSlot());
             T* compT = static_cast<T*>(&comp);
             *compT = T();
@@ -93,7 +97,8 @@ private:
             mSlotsManager.init(reservedComponents);
         }
         virtual Component& at(u32 index) = 0;
-        virtual void emplace() = 0;
+        virtual u32 size() const = 0;
+        virtual void emplaceBack() = 0;
         SlotsManager mSlotsManager;
     };
     template <class T> T_EXTENDS(T, Component)
@@ -104,7 +109,7 @@ private:
         {
             PROFILER_CPU()
             PROFILER_BLOCK_CPU("Components Array")
-            mComponents.resize(reservedComponents);
+            mComponents.reserve(reservedComponents);
             PROFILER_END_BLOCK()
             mSlotsManager.init(reservedComponents);
         }
@@ -112,7 +117,11 @@ private:
         {
             return mComponents.at(index);
         }
-        virtual void emplace() override
+        virtual u32 size() const override
+        {
+            return mComponents.size();
+        }
+        virtual void emplaceBack() override
         {
             mComponents.emplace_back();
         }
@@ -121,6 +130,6 @@ private:
 
     std::unordered_map<ClassId, OwnerPtr<ComponentsArrayBase>> mComponentsArrays;
 
-    inline static const u32 smInitialComponents = 500000;
+    inline static const u32 smMaxComponents = 100000;
 };
 REGISTER_CLASS(ComponentsManager);

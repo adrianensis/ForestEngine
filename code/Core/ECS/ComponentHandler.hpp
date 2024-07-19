@@ -57,7 +57,7 @@ public:
 
     Component* operator->() const { return &getComponent(); }
 
-    bool isValid() const { return mComponentsManager && mClassId > 0 && mSlot.isValid(); }
+    virtual bool isValid() const { return mComponentsManager && mClassId > 0 && mSlot.isValid(); }
     operator bool() const { return this->isValid(); }
     bool operator==(const ComponentHandler& other) const
 	{
@@ -113,6 +113,14 @@ public:
     }
     
     T* operator->() const { return &get(); }
+    virtual bool isValid() const override
+    {
+        if(!mComponentsManager) {return false;}
+
+        Component* pointer = &getInternal();
+        T* castedPointer = dynamic_cast<T*>(pointer);
+        return mClassId > 0 && mSlot.isValid() && castedPointer;
+    }
     operator TypedComponentHandler<const T>() const { return TypedComponentHandler<const T>(mClassId, mSlot, mComponentsManager); }
     template<class U> T_EXTENDS(T, U)
     operator TypedComponentHandler<U>() const { return TypedComponentHandler<U>(*this); }

@@ -17,19 +17,24 @@ public:
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mEntitiesArrays.contains(id))
         {
-            mEntitiesArrays.emplace(id, OwnerPtr<EntitiesArrayBase>::moveCast(OwnerPtr<EntitiesArray<T>>::newObject(smInitialEntities)));
+            mEntitiesArrays.emplace(id, OwnerPtr<EntitiesArrayBase>::moveCast(OwnerPtr<EntitiesArray<T>>::newObject(smMaxEntities)));
         }
 
-        if(mEntitiesArrays.at(id)->mSlotsManager.isEmpty())
+        if(mEntitiesArrays.at(id)->size() == smMaxEntities)
         {
             CHECK_MSG(false, "No space available for Entities!");
             // mEntitiesArrays.at(id).mSlotsManager.increaseSize(smInitialEntities);
             // mEntitiesArrays.at(id).mEntities.resize(mEntitiesArrays.at(id).mSlotsManager.getSize());
         }
 
-        TypedEntityHandler<T> entityHandler(id, mEntitiesArrays.at(id)->mSlotsManager.requestSlot(), this);
+        EntityHandler entityHandler(id, mEntitiesArrays.at(id)->mSlotsManager.requestSlot(), this);
         if(entityHandler.isValid())
         {
+            if(entityHandler.mSlot.getSlot() == mEntitiesArrays.at(id)->size())
+            {
+                mEntitiesArrays.at(id)->emplaceBack();
+            }
+
             Entity& entity = mEntitiesArrays.at(id)->at(entityHandler.mSlot.getSlot());
             T* entityT = static_cast<T*>(&entity);
             *entityT = T();
@@ -83,6 +88,8 @@ private:
             mSlotsManager.init(reservedGameObjects);
         }
         virtual Entity& at(u32 index) = 0;
+        virtual u32 size() const = 0;
+        virtual void emplaceBack() = 0;
         SlotsManager mSlotsManager;
     };
     template <class T> T_EXTENDS(T, Entity)
@@ -91,18 +98,26 @@ private:
     public:
         EntitiesArray(u32 reservedGameObjects) : EntitiesArrayBase(reservedGameObjects)
         {
-            mGameObjects.resize(reservedGameObjects);
+            mEntities.reserve(reservedGameObjects);
             mSlotsManager.init(reservedGameObjects);
         }
         virtual Entity& at(u32 index) override
         {
-            return mGameObjects.at(index);
+            return mEntities.at(index);
         }
-        std::vector<T> mGameObjects;
+        virtual u32 size() const override
+        {
+            return mEntities.size();
+        }
+        virtual void emplaceBack() override
+        {
+            mEntities.emplace_back();
+        }
+        std::vector<T> mEntities;
     };
 
     std::unordered_map<ClassId, OwnerPtr<EntitiesArrayBase>> mEntitiesArrays;
 
-    inline static const u32 smInitialEntities = 1000000;
+    inline static const u32 smMaxEntities = 100000;
 };
 REGISTER_CLASS(EntityManager);
