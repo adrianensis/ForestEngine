@@ -29,13 +29,13 @@ void UIElement::onDestroy()
 
 	if (hasFocus())
 	{
-		GET_SYSTEM(UIManager).setFocusedElement(Ptr<UIElement>());
+		GET_SYSTEM(UIManager).setFocusedElement(TypedEntityHandler<UIElement>());
 	}
 }
 
 bool UIElement::hasFocus() const
 {
-	return getPtrToThis<UIElement>() == GET_SYSTEM(UIManager).getFocusedElement();
+	return EntityHandler::getEntityHandler(*this) == GET_SYSTEM(UIManager).getFocusedElement();
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -45,7 +45,7 @@ bool UIElement::isMouseCursorInsideElement() const
     bool parentCheck = true;
     if(mConfig.mParent)
     {
-        if(Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent))
+        if(TypedEntityHandler<UIElement> parentUIElement = mConfig.mParent)
         {
             parentCheck = parentUIElement->isMouseCursorInsideElement();
         }
@@ -310,7 +310,7 @@ void UIElement::releaseFocus()
 {
     if (!hasFocus()) { return; }
 
-    GET_SYSTEM(UIManager).setFocusedElement(Ptr<UIElement>());
+    GET_SYSTEM(UIManager).setFocusedElement(TypedEntityHandler<UIElement>());
     mOnFocusLostFunctor.execute();
     onFocusLost();
 }
@@ -319,13 +319,13 @@ void UIElement::requestFocus()
 {
     if (hasFocus()) { return; }
 
-    Ptr<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
+    TypedEntityHandler<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
     if (lastFocusedElement)
     {
         lastFocusedElement->releaseFocus();
     }
 
-    GET_SYSTEM(UIManager).setFocusedElement(getPtrToThis<UIElement>());
+    GET_SYSTEM(UIManager).setFocusedElement(EntityHandler::getEntityHandler(*this));
 
     mInputString.clear();
     setText(HashedString(mInputString));
@@ -343,7 +343,7 @@ void UIElement::scroll(f32 scrollValue)
 // 	const UIGroup& group = GET_SYSTEM(UIManager).getOrCreateGroup(mConfig.mGroup);
 // 	FOR_LIST(it, group.getUIElements())
 // 	{
-// 		Ptr<UIElement> other = *it;
+// 		TypedEntityHandler<UIElement> other = *it;
 // 		if(other != getPtrToThis<UIElement>())
 // 		{
 // 			if(other->getConfig().mToggleEnabled and
@@ -396,7 +396,7 @@ StencilData UIElement::calculateStencilData() const
 
         if(mConfig.mParent)
         {
-            Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent);
+            TypedEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
                 StencilData parentStencilData = parentUIElement->calculateStencilData();
@@ -417,7 +417,7 @@ StencilData UIElement::calculateStencilData() const
     {
         if(mConfig.mParent)
         {
-            Ptr<UIElement> parentUIElement = Ptr<UIElement>::cast(mConfig.mParent);
+            TypedEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
                 StencilData parentStencilData = parentUIElement->calculateStencilData();

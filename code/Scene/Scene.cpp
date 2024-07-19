@@ -81,7 +81,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerPtr<GameObject> gameObject)
+//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerEntityHandler gameObject)
 //	{
 //		return gameObject->mShouldPersist;
 //	})
@@ -120,7 +120,7 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(Ptr<GameObject> gameObject)
+void Scene::addGameObject(TypedEntityHandler<GameObject> gameObject)
 {
     if(gameObject)
     {
@@ -130,7 +130,7 @@ void Scene::addGameObject(Ptr<GameObject> gameObject)
     }
 }
 
-void Scene::removeGameObject(Ptr<GameObject> gameObject)
+void Scene::removeGameObject(TypedEntityHandler<GameObject> gameObject)
 {
 	if (gameObject && !gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
 	{
@@ -149,7 +149,7 @@ void Scene::removeGameObject(Ptr<GameObject> gameObject)
             mNewGameObjects.erase(itNew);
         }
 
-        GET_SYSTEM(GameObjectsManager).removeGameObject(gameObject);
+        GET_SYSTEM(EntityManager).removeGameObject(gameObject);
     }
 }
 
@@ -199,7 +199,7 @@ void Scene::destroyGameObjects()
             if (!(*it)->getIsDestroyed())
             {
                 (*it)->destroy();
-                (*it).invalidate();
+                (*it).reset();
             }
         }
 	}

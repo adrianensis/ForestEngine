@@ -99,8 +99,7 @@ public:
         return smNullClassMetadata;
     }
 
-    template<class T>
-    static const ClassMetadata& getDynamicClassMetadata(const T* pointer)
+    static const ClassMetadata& getDynamicClassMetadata(const void* pointer)
     {
         if(smPointersToDynamicClass.contains(reinterpret_cast<u64>(pointer)))
         {
@@ -115,8 +114,7 @@ public:
     {
         registerDynamicClass(reinterpret_cast<u64>(pointer), ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId());
     }
-    template<class T>
-    static void unregisterDynamicClass(const T* pointer)
+    static void unregisterDynamicClass(const void* pointer)
     {
         unregisterDynamicClass(reinterpret_cast<u64>(pointer));
     }

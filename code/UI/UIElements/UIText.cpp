@@ -101,7 +101,7 @@ void UIText::setText(HashedString text)
 
                 if(i < mFontRenderers.size())
                 {
-                    Ptr<UITextGlyph> gameObjectGlyph = mFontRenderers[i];
+                    TypedEntityHandler<UITextGlyph> gameObjectGlyph = mFontRenderers[i];
                     UIElementConfig glyphConfig = gameObjectGlyph->getConfig();
                     glyphConfig.mPosition = glyphPositionScreenSpace;
                     glyphConfig.mSize = glyphSizeScreenSpace;
@@ -117,14 +117,14 @@ void UIText::setText(HashedString text)
                 else
                 {
                     UIBuilder uiBuilder;
-                    Ptr<UITextGlyph> gameObjectGlyph = uiBuilder.
+                    TypedEntityHandler<UITextGlyph> gameObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).
                     setText(HashedString(std::string() + character)).
                     setLayer(mConfig.mLayer + 1).
                     setIsAffectedByLayout(false).
-                    setParent(Ptr<GameObject>::cast(getPtrToThis<UIText>())).
+                    setParent(EntityHandler::getEntityHandler(*this)).
                     create<UITextGlyph>().
                     getUIElement<UITextGlyph>();
 

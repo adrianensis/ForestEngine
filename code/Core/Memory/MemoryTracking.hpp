@@ -25,7 +25,7 @@ public:
     static void terminate();
 	
 	template <class T>
-	static void registerNewObject(T* pointer)
+	static void registerNewObject(const T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
@@ -54,15 +54,15 @@ public:
 	}
 
 	template <class T>
-	static void unregisterDeletedObject(T* pointer)
+	static void unregisterDeletedObject(const T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_DEBUG
 		HashedString className;
-		if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.getId() > 0)
+		if (ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
 		{
-			className = ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.mName;
+			className = ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.mName;
 		}
 		else
 		{

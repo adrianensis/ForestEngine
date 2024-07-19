@@ -146,7 +146,7 @@ void Camera::resetZoom()
 void Camera::calculateViewMatrix()
 {
 	PROFILER_CPU()
-	mViewMatrix = mGameObject->mTransform->getViewMatrix();
+	mViewMatrix = getOwnerEntity()->getFirstComponent<Transform>()->getViewMatrix();
 }
 
 void Camera::calculateProjectionViewMatrix()

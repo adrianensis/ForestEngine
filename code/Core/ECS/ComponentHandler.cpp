@@ -1,13 +1,5 @@
+#include "Core/ECS/ComponentHandler.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
-#include "Scene/GameObject.hpp"
-
-void ComponentsManager::init() 
-{
-}
-
-void ComponentsManager::terminate() 
-{
-}
 
 Component& ComponentHandler::getInternal() const
 {
@@ -15,7 +7,7 @@ Component& ComponentHandler::getInternal() const
     return mComponentsManager->getComponentFromSlot(mClassId, mSlot);
 }
 
-ComponentHandler ComponentHandler::getComponentHandler(ClassId id, Component& component)
+ComponentHandler ComponentHandler::getComponentHandler(ClassId id, const Component& component)
 {
     return GET_SYSTEM(ComponentsManager).getComponentHanlder(id, component);
 }

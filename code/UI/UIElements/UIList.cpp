@@ -90,7 +90,7 @@ void UIList::toggle()
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
-            setParent(getPtrToThis<UIList>());
+            setParent(EntityHandler::getEntityHandler(*this));
 
 		FOR_LIST(it, mEntries)
 		{
@@ -102,7 +102,7 @@ void UIList::toggle()
 			create<UIButton>();
 
 
-			Ptr<UIButton> button = uiBuilder.getUIElement<UIButton>();
+			TypedEntityHandler<UIButton> button = uiBuilder.getUIElement<UIButton>();
 			button->setOnPressedCallback(onPressedCallback);
 
 			mButtons.push_back(button);

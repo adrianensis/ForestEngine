@@ -1,11 +1,11 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
-#include "Scene/GameObject.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
 #include "Graphics/Material/Shader/ShaderManager.hpp"
+#include "Core/ECS/EntityHandler.hpp"
 
 void RenderPassShadowMap::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
@@ -56,7 +56,7 @@ void RenderPassShadowMap::updateGlobalData()
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
         lightProjectionViewMatrix,
-        camera->mGameObject->mTransform->getWorldPosition()
+        camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }

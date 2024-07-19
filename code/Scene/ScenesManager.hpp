@@ -28,8 +28,8 @@ private:
 	std::unordered_map<HashedString, Ptr<Scene>> mLoadedScenes;
 	std::unordered_set<HashedString> mLoadRequests;
 
-    OwnerPtr<GameObject> mGameObjectController;
-	Ptr<GameObject> mCameraGameObject;
+    EntityHandler mGameObjectController;
+	TypedEntityHandler<GameObject> mCameraGameObject;
 
 public:
     inline static const HashedString smDefaultSceneName = HashedString("Default");
@@ -37,7 +37,7 @@ public:
 
 public:
 	GET(GameObjectController)
-	SETMOVE(GameObjectController)
+	SET(GameObjectController)
 	GET(CameraGameObject)
 };
 REGISTER_CLASS(ScenesManager);

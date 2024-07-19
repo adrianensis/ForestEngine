@@ -4,11 +4,11 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Scene/GameObject.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "Core/ECS/EntityHandler.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
@@ -155,7 +155,7 @@ void RenderPass::updateGlobalData()
     GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
     {
         projectionViewMatrix,
-        camera->mGameObject->mTransform->getWorldPosition()
+        camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
 	GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }

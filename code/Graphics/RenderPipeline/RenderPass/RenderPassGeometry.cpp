@@ -1,7 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
-#include "Scene/GameObject.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
 #include "Graphics/Material/Shader/ShaderManager.hpp"

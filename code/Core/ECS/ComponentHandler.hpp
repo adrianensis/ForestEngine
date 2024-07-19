@@ -14,7 +14,6 @@ public:
         mClassId = id;
         mSlot = slot;
         mComponentsManager = componentsManager;
-        // CHECK_MSG(isValid(), "Invalid handler!");
     }
 
     ComponentHandler(ClassId id, Slot slot, const ComponentsManager* componentsManager): ComponentHandler(id, slot, const_cast<ComponentsManager*>(componentsManager))
@@ -78,10 +77,10 @@ public:
     template<class T> T_EXTENDS(T, Component)
     static ComponentHandler getComponentHandler(T& component)
     {
-        ClassId id = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        ClassId id = ClassManager::getDynamicClassMetadata(&component).mClassDefinition.getId();
         return getComponentHandler(id, component);
     }
-    static ComponentHandler getComponentHandler(ClassId id, Component& component);
+    static ComponentHandler getComponentHandler(ClassId id, const Component& component);
 
 protected:
     Component& getInternal() const;

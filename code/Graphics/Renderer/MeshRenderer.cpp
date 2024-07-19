@@ -35,7 +35,7 @@ void MeshRenderer::onDestroy()
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    mRendererModelMatrix = mGameObject->mTransform->calculateModelMatrix();
+    mRendererModelMatrix = getOwnerEntity()->getFirstComponent<Transform>()->calculateModelMatrix();
     mRendererModelMatrix.mul(mRendererData.mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     setUpdateMatrix(true);
@@ -47,7 +47,7 @@ void MeshRenderer::update()
 
     if(!isStatic())
     {
-        if(mGameObject->mTransform->getModelMatrixDirty())
+        if(getOwnerEntity()->getFirstComponent<Transform>()->getModelMatrixDirty())
         {
             calculateRendererModelMatrix();
         }

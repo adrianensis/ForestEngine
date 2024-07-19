@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/Object/ObjectBase.hpp"
 
-class GameObject;
+class EntityHandler;
 
 class Component: public ObjectBase
 {
@@ -12,6 +12,7 @@ class Component: public ObjectBase
 	
 public:
     Component();
+    virtual ~Component();
 
 	virtual void onComponentAdded() { }
 
@@ -26,6 +27,10 @@ public:
     // MeshRenderer for RenderEngine, Script for RenderEngine, ...
     // This will automatically work in derived classes, no need to override this method in derived classes
     virtual ClassId getSystemComponentId() const { return 0; }
+
+    const EntityHandler& getOwnerEntity() const;
+    void setOwnerEntity(const EntityHandler& ownerEntity);
+
 public:
     bool mAlreadyAddedToSystem = false;
 
@@ -33,9 +38,9 @@ private:
 	bool mIsActive = false;
 	bool mIsDestroyed = false;
 	Slot mSlot;
+	EntityHandler* mOwnerEntity = nullptr;
 
 public:
-	Ptr<GameObject> mGameObject;
 	GET(IsDestroyed)
 	GET(Slot)
 };

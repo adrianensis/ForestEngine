@@ -42,7 +42,7 @@ void Editor::firstUpdate()
 
     // createPointLight(Vector3(0,50,0), 20);
 
-    mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward + Vector3(0,-1,0));
+    mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward + -Vector3::smUp);
     // createSprite(Vector3(0,1000,0), 10);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
@@ -50,35 +50,47 @@ void Editor::firstUpdate()
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
+	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,-5,0), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	// importModel("Building_1/building1.gltf", Vector3(50,0,0), 10.0f, Vector3(0,0,0), true);
+	// importModel("Building_1/building1.gltf", Vector3(-50,0,50), 10.0f, Vector3(0,0,0), true);
+	// importModel("building/building.gltf", Vector3(0,0,0), 10.0f, Vector3(0,0,0), true);
+	// importModel("building/building.gltf", Vector3(-50,0,0), 10.0f, Vector3(0,0,0), true);
+	// importModel("s5avfuixwjy8-calisma/Calisma2.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	// importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
-	auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
+	// auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
-    // FOR_RANGE(i, -10, 10)
-    // {
-    //     FOR_RANGE(j, -10, 10)
-    //     {
-    //         importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,i,j), 100.0f, Vector3(90,0,0), true);
-    //     }
-    // }
+    FOR_RANGE(i, -30, 30)
+    {
+        FOR_RANGE(j, -30, 30)
+        {
+            if(j % 2 == 0)
+            {
+                importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true);
+            }
+            else
+            {
+        	    importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true);
+            }
+        }
+    }
 
 
 	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
     // mGameObjectsArray.push_back(obj);
-	importModel("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, Vector3(0,0,0), true);
+	// importModel("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, Vector3(0,0,0), true);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
-	importModel("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, Vector3(0,0,0), true);
+	// importModel("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, Vector3(0,0,0), true);
 	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
@@ -224,9 +236,9 @@ void Editor::terminate()
 
 }
 
-Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
+EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 {
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -243,9 +255,9 @@ Ptr<GameObject> Editor::createSprite(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-Ptr<GameObject> Editor::createPointLight(const Vector3& v, f32 size)
+EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
 {
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -259,9 +271,9 @@ Ptr<GameObject> Editor::createPointLight(const Vector3& v, f32 size)
 	return gameObject;
 }
 
-Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
+EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
-	Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->lookAt(v + dir);
@@ -275,11 +287,11 @@ Ptr<GameObject> Editor::createDirectionalLight(const Vector3& v, const Vector3& 
 	return gameObject;
 }
 
-Ptr<GameObject> Editor::mousePick()
+EntityHandler Editor::mousePick()
 {
 
     f32 speed = 100 * GET_SYSTEM(Time).getDeltaTimeSeconds();
-    Ptr<GameObject> obj;
+    EntityHandler obj;
     FOR_LIST(it, mGameObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
@@ -307,11 +319,11 @@ Ptr<GameObject> Editor::mousePick()
     return obj;
 }
 
-Ptr<GameObject> Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
+EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    Ptr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+    TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
@@ -338,11 +350,11 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input).isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
-        // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-        // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
-        // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
-        // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 100.0f, Vector3(0,180,180), true);
-        // mGameObjectsArray.push_back(obj);
+        TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
+        Vector3 position = camera->screenToWorld(currentMousePosition, 0);
+        auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);
+        mGameObjectsArray.push_back(obj);
         if(!mSelectedGameObject)
         {
             mSelectedGameObject = mousePick();
@@ -350,7 +362,7 @@ void Editor::handleMouse()
 	}
     else
     {
-        mSelectedGameObject.invalidate();
+        mSelectedGameObject.reset();
     }
 }
 

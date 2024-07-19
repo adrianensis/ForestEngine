@@ -4,6 +4,7 @@
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Scene/Module.hpp"
+#include "Core/ECS/ComponentsManager.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
 {
@@ -22,7 +23,8 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mStencilData = mModelRendererData.mStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
-        mGameObject->createComponent<MeshRenderer>(rendererData);
+        TypedEntityHandler<GameObject> gameObjectParent = getOwnerEntity();
+        gameObjectParent->createComponent<MeshRenderer>(rendererData);
 	}
 }
 

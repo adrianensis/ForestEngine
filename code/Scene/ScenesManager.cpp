@@ -15,14 +15,14 @@ void ScenesManager::terminate()
     {
 	    mGameObjectController->destroy();
     }
-    mGameObjectController.invalidate();
+    mGameObjectController.reset();
 
 	if (mCameraGameObject)
 	{
 		TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
 		mCameraGameObject->removeComponent(cameraComponent);
 		mCameraGameObject->destroy();
-        mCameraGameObject.invalidate();
+        mCameraGameObject.reset();
 	}
 
     FOR_MAP(it, mScenes)
@@ -44,8 +44,7 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    GameObjectHandler cameraGameObjectHandler = GET_SYSTEM(GameObjectsManager).requestGameObject<GameObject>();
-    mCameraGameObject = cameraGameObjectHandler.getGameObject();
+    mCameraGameObject = GET_SYSTEM(EntityManager).requestEntity<GameObject>();
 	mCameraGameObject->init();
 
 	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));

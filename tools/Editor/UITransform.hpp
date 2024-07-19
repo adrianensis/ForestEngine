@@ -11,8 +11,8 @@ public:
     virtual void onDestroy() override;
 
 private:
-    Ptr<UIVector> mPosition;
-    Ptr<UIVector> mRotation;
-    Ptr<UIVector> mScale;
+    TypedEntityHandler<UIVector> mPosition;
+    TypedEntityHandler<UIVector> mRotation;
+    TypedEntityHandler<UIVector> mScale;
 };
 REGISTER_CLASS(UITransform)

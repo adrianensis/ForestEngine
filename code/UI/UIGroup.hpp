@@ -2,6 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Object/ObjectBase.hpp"
+#include "Core/ECS/EntityHandler.hpp"
 
 class UIElement;
 
@@ -9,16 +10,16 @@ class UIGroup: public ObjectBase
 {
 public:
     void init();
-    void addUIElement(Ptr<UIElement> uiElement);
-    void removeUIElement(Ptr<UIElement> uiElement);
-    void destroyUIElement(Ptr<UIElement> uiElement);
+    void addUIElement(TypedEntityHandler<UIElement> uiElement);
+    void removeUIElement(TypedEntityHandler<UIElement> uiElement);
+    void destroyUIElement(TypedEntityHandler<UIElement> uiElement);
     void destroyAllUIElements();
     void setVisibility(bool visibility);
 
 public:
 	HashedString mName;
 	bool mVisible = false;
-	std::list<Ptr<UIElement>> mUIElements;
+	std::list<TypedEntityHandler<UIElement>> mUIElements;
 	
 	CRGET(Name)
 	GET(Visible)

@@ -8,7 +8,7 @@ void UIGroup::init()
 	mName = "";
 }
 
-void UIGroup::addUIElement(Ptr<UIElement> uiElement)
+void UIGroup::addUIElement(TypedEntityHandler<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -16,7 +16,7 @@ void UIGroup::addUIElement(Ptr<UIElement> uiElement)
 	}
 }
 
-void UIGroup::removeUIElement(Ptr<UIElement> uiElement)
+void UIGroup::removeUIElement(TypedEntityHandler<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -24,7 +24,7 @@ void UIGroup::removeUIElement(Ptr<UIElement> uiElement)
 	}
 }
 
-void UIGroup::destroyUIElement(Ptr<UIElement> uiElement)
+void UIGroup::destroyUIElement(TypedEntityHandler<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -37,7 +37,7 @@ void UIGroup::destroyAllUIElements()
 {
 	FOR_LIST(it, mUIElements)
 	{
-		Ptr<UIElement> element = *it;
+		TypedEntityHandler<UIElement> element = *it;
 		element->mScene->removeGameObject(element);
 	}
 

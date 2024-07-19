@@ -1,26 +1,32 @@
 #include "Core/ECS/Component.hpp"
-#include "Scene/GameObject.hpp"
-
+#include "Core/ECS/EntityHandler.hpp"
+#include "Core/ECS/EntityManager.hpp"
 
 Component::Component()
 {
 	mIsActive = true;
 	mIsDestroyed = false;
+    mOwnerEntity = Memory::newObject<EntityHandler>();
+}
+
+Component::~Component()
+{
+    Memory::deleteObject<EntityHandler>(mOwnerEntity);
 }
 
 bool Component::isStatic() const
 {
-	return mGameObject->mIsStatic;
+	return getOwnerEntity()->mIsStatic;
 }
 
 bool Component::isActive() const
 {
-	return (mIsDestroyed || !mGameObject) ? false : mIsActive;
+	return (mIsDestroyed || !getOwnerEntity()) ? false : mIsActive;
 }
 
 void Component::setIsActive(bool isActive)
 {
-	mIsActive = (mIsDestroyed || !mGameObject) ? false : isActive;
+	mIsActive = (mIsDestroyed || !getOwnerEntity()) ? false : isActive;
 }
 
 void Component::destroy()
@@ -29,7 +35,11 @@ void Component::destroy()
     mIsDestroyed = true;
     mIsActive = false;
     onDestroy();
-    mGameObject.invalidate();
+    
+    if(mOwnerEntity)
+    {
+        mOwnerEntity->reset();
+    }
 }
 
 void Component::onRecycle(Slot newSlot)
@@ -42,6 +52,16 @@ void Component::onRecycle(Slot newSlot)
 void Component::onDestroy()
 {
 
+}
+
+const EntityHandler& Component::getOwnerEntity() const
+{
+    return *mOwnerEntity;
+}
+
+void Component::setOwnerEntity(const EntityHandler& ownerEntity)
+{
+    *mOwnerEntity = ownerEntity;
 }
 
 IMPLEMENT_SERIALIZATION(Component)

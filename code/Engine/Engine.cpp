@@ -34,7 +34,7 @@ void Engine::init()
     CREATE_SYSTEM(Input);
     CREATE_SYSTEM(TimerManager);
     CREATE_SYSTEM(EventsManager);
-    CREATE_SYSTEM(GameObjectsManager);
+    CREATE_SYSTEM(EntityManager);
     CREATE_SYSTEM(ComponentsManager);
     CREATE_SYSTEM(MeshPrimitives);
     CREATE_SYSTEM(MaterialManager);
@@ -113,4 +113,6 @@ void Engine::terminate()
 	SystemsManager::getInstance().terminate();
 	Profiler::terminate();
 	Memory::terminate();
+
+    LOG("Terminated OK!")
 }

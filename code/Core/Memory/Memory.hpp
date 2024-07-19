@@ -17,23 +17,36 @@ public:
 	{
 		T *object = new T(args...);
 		CHECK_MSG(object != nullptr, "pointer is nullptr");
+        registerPointer(object);
+		return object;
+	}
+
+    template <class T>
+    static void registerPointer(const T* object)
+	{
+		CHECK_MSG(object != nullptr, "pointer is nullptr");
         if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
 		{
             ClassManager::registerDynamicClass<T>(object);
 		}
         MemoryTracking::registerNewObject(object);
-		return object;
 	}
 
 	template <class T>
 	static void deleteObject(T* pointer)
 	{
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
-        if (ClassManager::getDynamicClassMetadata<T>(pointer).mClassDefinition.getId() > 0)
+        unregisterPointer(pointer);
+        delete pointer;
+	}
+
+    static void unregisterPointer(const void* pointer)
+	{
+		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
+        if (ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
 		{
-		    ClassManager::unregisterDynamicClass<T>(pointer);
+		    ClassManager::unregisterDynamicClass(pointer);
         }
         MemoryTracking::unregisterDeletedObject(pointer);
-        delete pointer;
 	}
 };

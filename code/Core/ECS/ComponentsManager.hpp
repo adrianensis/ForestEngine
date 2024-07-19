@@ -2,10 +2,9 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
-#include "Core/ECS/Component.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
 
-class ComponentsManager;
+class Component;
 
 class ComponentsManager: public System
 {
@@ -34,14 +33,13 @@ public:
         if(componentHandler.isValid())
         {
             Component& comp = mComponentsArrays.at(id)->at(componentHandler.mSlot.getSlot());
+            Memory::registerPointer<T>(static_cast<T*>(&comp));
             comp.onRecycle(componentHandler.mSlot);
         }
         else
         {
             CHECK_MSG(false, "Invalid Component!");
         }
-
-        // mPtrToHandler.emplace(mComponentsArrays.at(id).mComponents[slot], componentHandler);
 
         return componentHandler;
     }
@@ -52,20 +50,11 @@ public:
 
         if(mComponentsArrays.contains(id))
         {
-            // mPtrToHandler.erase(mComponentsArrays.at(id).mComponents[slot]);
-            
-            // mComponentsArrays.at(componentHandler.mClassId).mComponents[slot].invalidate();
             mComponentsArrays.at(id)->mSlotsManager.freeSlot(componentHandler.mSlot);
         }
+        Memory::unregisterPointer(&componentHandler.getComponent());
         componentHandler.reset();
     }
-
-    // void removeComponent(Ptr<Component> component)
-    // {
-    //     // NOTE: copy!
-    //     ComponentHandler componentHandler = mPtrToHandler.at(component);
-    //     removeComponent(componentHandler);
-    // }
 
     template<class T> T_EXTENDS(T, Component)
     T& getComponent(ComponentHandler componentHandler) const
@@ -84,7 +73,7 @@ public:
         return mComponentsArrays.at(classId)->at(slot.getSlot());
     }
 
-    ComponentHandler getComponentHanlder(ClassId id, Component& component)
+    ComponentHandler getComponentHanlder(ClassId id, const Component& component)
     {
         ComponentHandler componentHandler(id, component.getSlot(), this);
         return componentHandler;
@@ -119,8 +108,7 @@ private:
     };
 
     std::unordered_map<ClassId, OwnerPtr<ComponentsArrayBase>> mComponentsArrays;
-    // std::unordered_map<Ptr<Component>, ComponentHandler> mPtrToHandler;
 
-    inline static const u32 smInitialComponents = 50000;
+    inline static const u32 smInitialComponents = 500000;
 };
 REGISTER_CLASS(ComponentsManager);

@@ -40,7 +40,7 @@ PoolHandler<Material> UIManager::getFontMaterial() const
     return f->getFontMaterial();
 }
 
-void UIManager::setFocusedElement(Ptr<UIElement> focusedElement)
+void UIManager::setFocusedElement(TypedEntityHandler<UIElement> focusedElement)
 {
 	mFocusedElement = focusedElement;
 }

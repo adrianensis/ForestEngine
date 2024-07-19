@@ -10,9 +10,9 @@ public:
     virtual void onDestroy() override;
 
 private:
-    Ptr<UIText> mX;
-    Ptr<UIText> mY;
-    Ptr<UIText> mZ;
-    Ptr<UIText> mW;
+    TypedEntityHandler<UIText> mX;
+    TypedEntityHandler<UIText> mY;
+    TypedEntityHandler<UIText> mZ;
+    TypedEntityHandler<UIText> mW;
 };
 REGISTER_CLASS(UIVector)

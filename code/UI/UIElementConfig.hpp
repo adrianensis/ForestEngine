@@ -37,6 +37,6 @@ public:
 	bool mIsAffectedByLayout = true;
 	PoolHandler<Material> mMaterial;
 	HashedString mGroup;
-	Ptr<GameObject> mParent;
+	TypedEntityHandler<GameObject> mParent;
 	f32 mSeparatorSize = 0.01f;
 };

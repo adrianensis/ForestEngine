@@ -1,5 +1,5 @@
 #include "Scene/Transform.hpp"
-#include "Scene/GameObject.hpp"
+#include "Core/ECS/EntityHandler.hpp"
 
 void Transform::init() 
 {
@@ -214,8 +214,8 @@ const Matrix4& Transform::getViewMatrix() const
 {
     if(mViewMatrixDirty)
     {
-        Vector3 worldPosition = mGameObject->mTransform->getWorldPosition();
-        const Matrix4& rotationMatrix = mGameObject->mTransform->getLocalRotationMatrix();
+        Vector3 worldPosition = getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition();
+        const Matrix4& rotationMatrix = getOwnerEntity()->getFirstComponent<Transform>()->getLocalRotationMatrix();
         mViewMatrix.view(worldPosition, rotationMatrix);
         mViewMatrixDirty = false;
     }
