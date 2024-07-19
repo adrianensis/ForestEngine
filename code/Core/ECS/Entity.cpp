@@ -3,31 +3,30 @@
 #include "Core/ECS/ComponentsManager.hpp"
 #include "Core/ECS/EntityManager.hpp"
 
-Entity::Entity()
-{
-	mIsActive = true;
-	mShouldPersist = false;
-}
-
 void Entity::init()
 {
-	mTag = "";
+	
 }
 
 void Entity::addComponentInternal(ComponentHandler componentHandler)
 {
     PROFILER_CPU()
     CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
-    CHECK_MSG(!componentHandler.getComponent().getOwnerEntity().isValid(), "Component is already assigned to a Entity!");
 
 	mComponentHandlers.emplace_back(componentHandler);
     Component& comp = componentHandler.getComponent();
 
-	comp.setOwnerEntity(EntityHandler::getEntityHandler(*this));
     CHECK_MSG(comp.getOwnerEntity().isValid(), "invalid Entity!");
 	comp.onComponentAdded();
 
 	SystemsManager::getInstance().addComponentToSystem(componentHandler);
+}
+
+void Entity::setComponentOwner(ComponentHandler componentHandler)
+{
+    PROFILER_CPU()
+    CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
+    componentHandler->setOwnerEntity(EntityHandler::getEntityHandler(*this));
 }
 
 void Entity::removeComponent(ComponentHandler componentHandler)
@@ -79,24 +78,11 @@ void Entity::destroy()
 	}
 
 	mComponentHandlers.clear();
-    // FOR_LIST(it, mComponents)
-	// {
-    //     if(*it)
-    //     {
-    //         SystemsManager::getInstance().removeComponentFromSystem(Ptr<Component>(*it));
-    //         (*it)->destroy();
-    //     }
-	// }
-
-	// mComponents.clear();
 }
 
 void Entity::onRecycle(Slot newSlot)
 {
     mSlot = newSlot;
-    mIsActive = false;
-    mIsPendingToBeDestroyed = false;
-    mIsDestroyed = false;
 };
 
 IMPLEMENT_SERIALIZATION(Entity)
@@ -105,7 +91,7 @@ IMPLEMENT_SERIALIZATION(Entity)
 	SERIALIZE("is_static", mIsStatic)
 	SERIALIZE("should_persist", mShouldPersist)
 
-	SERIALIZE("tag", mTag)
+	// SERIALIZE("tag", mTag)
 }
 
 IMPLEMENT_DESERIALIZATION(Entity)
@@ -113,5 +99,5 @@ IMPLEMENT_DESERIALIZATION(Entity)
 	DESERIALIZE("is_static", mIsStatic)
 	DESERIALIZE("should_persist", mShouldPersist)
 
-	DESERIALIZE("tag", mTag)
+	// DESERIALIZE("tag", mTag)
 }

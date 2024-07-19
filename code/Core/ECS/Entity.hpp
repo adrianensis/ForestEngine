@@ -11,7 +11,7 @@ class Entity: public ObjectBase
 	DECLARE_SERIALIZATION()
 	
 public:
-    Entity();
+    Entity() = default;
 
     virtual void init();
 
@@ -20,6 +20,7 @@ public:
 	{
         PROFILER_CPU()
         TypedComponentHandler<T> componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
+        setComponentOwner(componentHandler);
         componentHandler->init(args...);
         addComponentInternal(componentHandler);
         return componentHandler;
@@ -84,12 +85,13 @@ public:
 
 private:
     // Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
+    void setComponentOwner(ComponentHandler componentHandler);
     void addComponentInternal(ComponentHandler componentHandler);
     void removeComponentInternal(ComponentHandler componentHandler);
 
 private:
 	std::list<ComponentHandler> mComponentHandlers;
-	bool mIsActive = false;
+	bool mIsActive = true;
 
 	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
@@ -97,7 +99,7 @@ private:
 
 public:
 	bool mIsStatic = false;
-	std::string mTag;
+	HashedString mTag;
 	bool mShouldPersist = false;
     
 	GET(IsPendingToBeDestroyed)

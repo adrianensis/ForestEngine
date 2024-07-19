@@ -33,10 +33,12 @@ public:
         TypedComponentHandler<T> componentHandler(id, mComponentsArrays.at(id)->mSlotsManager.requestSlot(), this);
         if(componentHandler.isValid())
         {
-            mComponentsArrays.at(id)->emplace();
+            // mComponentsArrays.at(id)->emplace();
             Component& comp = mComponentsArrays.at(id)->at(componentHandler.mSlot.getSlot());
-            Memory::registerPointer<T>(static_cast<T*>(&comp));
-            comp.onRecycle(componentHandler.mSlot);
+            T* compT = static_cast<T*>(&comp);
+            *compT = T();
+            Memory::registerPointer<T>(compT);
+            compT->onRecycle(componentHandler.mSlot);
         }
         else
         {
@@ -101,7 +103,9 @@ private:
         ComponentsArray(u32 reservedComponents) : ComponentsArrayBase(reservedComponents)
         {
             PROFILER_CPU()
-            mComponents.reserve(reservedComponents);
+            PROFILER_BLOCK_CPU("Components Array")
+            mComponents.resize(reservedComponents);
+            PROFILER_END_BLOCK()
             mSlotsManager.init(reservedComponents);
         }
         virtual Component& at(u32 index) override

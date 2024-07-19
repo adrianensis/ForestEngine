@@ -35,7 +35,7 @@ public:
     bool mAlreadyAddedToSystem = false;
 
 private:
-	bool mIsActive = false;
+	bool mIsActive = true;
 	bool mIsDestroyed = false;
 	Slot mSlot;
 	EntityHandler* mOwnerEntity = nullptr;

@@ -149,7 +149,7 @@ void Scene::removeGameObject(TypedEntityHandler<GameObject> gameObject)
             mNewGameObjects.erase(itNew);
         }
 
-        GET_SYSTEM(EntityManager).removeGameObject(gameObject);
+        GET_SYSTEM(EntityManager).removeEntity(gameObject);
     }
 }
 

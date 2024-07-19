@@ -4,14 +4,15 @@
 
 Component::Component()
 {
-	mIsActive = true;
-	mIsDestroyed = false;
-    mOwnerEntity = Memory::newObject<EntityHandler>();
+    //mOwnerEntity = Memory::newObject<EntityHandler>();
 }
 
 Component::~Component()
 {
-    Memory::deleteObject<EntityHandler>(mOwnerEntity);
+    if(mOwnerEntity)
+    {
+        Memory::deleteObject<EntityHandler>(mOwnerEntity);
+    }
 }
 
 bool Component::isStatic() const
@@ -45,13 +46,10 @@ void Component::destroy()
 void Component::onRecycle(Slot newSlot)
 {
     mSlot = newSlot;
-	mIsActive = true;
-	mIsDestroyed = false;
 }
 
 void Component::onDestroy()
 {
-
 }
 
 const EntityHandler& Component::getOwnerEntity() const
@@ -61,6 +59,11 @@ const EntityHandler& Component::getOwnerEntity() const
 
 void Component::setOwnerEntity(const EntityHandler& ownerEntity)
 {
+    if(!mOwnerEntity)
+    {
+        mOwnerEntity = Memory::newObject<EntityHandler>();
+    }
+
     *mOwnerEntity = ownerEntity;
 }
 

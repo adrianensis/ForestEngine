@@ -31,8 +31,10 @@ public:
         if(entityHandler.isValid())
         {
             Entity& entity = mEntitiesArrays.at(id)->at(entityHandler.mSlot.getSlot());
-            Memory::registerPointer<T>(static_cast<T*>(&entity));
-            entity.onRecycle(entityHandler.mSlot);
+            T* entityT = static_cast<T*>(&entity);
+            *entityT = T();
+            Memory::registerPointer<T>(entityT);
+            entityT->onRecycle(entityHandler.mSlot);
         }
         else
         {
@@ -42,7 +44,7 @@ public:
         return entityHandler;
     }
 
-    void removeGameObject(EntityHandler& entityHandler)
+    void removeEntity(EntityHandler& entityHandler)
     {
         ClassId id = entityHandler.mClassId;
 
