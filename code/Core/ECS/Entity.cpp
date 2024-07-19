@@ -29,21 +29,7 @@ void Entity::addComponentInternal(ComponentHandler componentHandler)
 	SystemsManager::getInstance().addComponentToSystem(componentHandler);
 }
 
-// Ptr<Component> Entity::addComponentInternal(OwnerPtr<Component>&& component)
-// {
-//     CHECK_MSG(!component->mOwnerEntity.isValid(), "Component is already assigned to a Entity!");
-
-// 	Ptr<Component> comp = mComponents.emplace_back(std::move(component));
-
-// 	comp->mOwnerEntity = getPtrToThis<Entity>();
-// 	comp->onComponentAdded();
-
-// 	SystemsManager::getInstance().addComponentToSystem(comp);
-
-//     return comp;
-// }
-
-void Entity::removeComponentInternal(ComponentHandler componentHandler)
+void Entity::removeComponent(ComponentHandler componentHandler)
 {
     CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
     CHECK_MSG(componentHandler.getComponent().getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
@@ -61,19 +47,7 @@ void Entity::removeComponentInternal(ComponentHandler componentHandler)
         }
     }
 }
-// void Entity::removeComponentInternal(Ptr<Component> component)
-// {
-//     CHECK_MSG(component->mOwnerEntity.isValid(), "Component is not assigned to a Entity!");
-//     CHECK_MSG(component->mOwnerEntity == getPtrToThis<Entity>(), "Component is assigned to another Entity!");
 
-//     auto it = std::find(mComponents.begin(), mComponents.end(), component);
-//     if (it != mComponents.end())
-//     {
-//         SystemsManager::getInstance().removeComponentFromSystem(component);
-// 	    component->destroy();
-//         mComponents.erase(it);
-//     }
-// }
 void Entity::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;

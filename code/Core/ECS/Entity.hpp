@@ -25,11 +25,7 @@ public:
         return componentHandler;
 	}
 
-	void removeComponent(ComponentHandler componentHandler)
-	{
-        PROFILER_CPU()
-		Entity::removeComponentInternal(componentHandler);
-	}
+	void removeComponent(ComponentHandler componentHandler);
 
 	// template <class T> T_EXTENDS(T, Component)
 	// std::list<Ptr<T>> getComponents() const
