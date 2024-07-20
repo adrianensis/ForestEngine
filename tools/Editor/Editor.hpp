@@ -30,6 +30,7 @@ private:
 	TypedEntityHandler<GameObject> mCameraGameObject;
 	TypedEntityHandler<GameObject> mDirectionalLight;
 	TypedEntityHandler<GameObject> mSelectedGameObject;
+	std::list<TypedEntityHandler<GameObject>> mBuildings;
 	TypedEntityHandler<UIAxisGizmo> mAxisViewer;
 
     std::vector<TypedEntityHandler<GameObject>> mGameObjectsArray;

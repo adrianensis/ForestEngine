@@ -77,11 +77,11 @@ void Editor::firstUpdate()
         {
             if(j % 2 == 0)
             {
-                importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true);
+                mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
             }
             else
             {
-        	    importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true);
+        	    mBuildings.push_back(importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
             }
         }
     }
@@ -349,8 +349,10 @@ void Editor::handlePressedKeys()
 
 void Editor::handleMouse()
 {
-	if(GET_SYSTEM(Input).isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+	if(GET_SYSTEM(Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
 	{
+        // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mBuildings.front());
+        // mBuildings.pop_front();
         // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
@@ -364,6 +366,12 @@ void Editor::handleMouse()
     else
     {
         mSelectedGameObject.reset();
+    }
+    
+    if(GET_SYSTEM(Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        // mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(0,100,0), 10.0f, Vector3(0,0,0), false));
+        
     }
 }
 
