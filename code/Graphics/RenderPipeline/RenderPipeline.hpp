@@ -61,7 +61,7 @@ private:
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
 	std::vector<TypedComponentHandler<MeshRenderer>> mRenderers;
-    u32 mMaxSlot = 0;
+    std::set<u32> mUsedSlots;
 	std::vector<TypedComponentHandler<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 2000;
 public:

@@ -77,6 +77,7 @@ void BatchRenderer::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 
     renderer->setBatchSlot(mRendererSlotsManager.requestSlot());
     mRenderers.at(renderer->getBatchSlot().getSlot()) = renderer;
+    mUsedSlots.insert(renderer->getBatchSlot().getSlot());
 	mRegenerateBuffersRequested = true;
     mRenderersCount++;
 }
@@ -85,6 +86,7 @@ void BatchRenderer::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
 	mRegenerateBuffersRequested = true;
     mRenderers.at(renderer->getBatchSlot().getSlot()).reset();
+    mUsedSlots.erase(renderer->getBatchSlot().getSlot());
     mRendererSlotsManager.freeSlot(renderer->getBatchSlot());
     mRenderersCount--;
 }
@@ -113,7 +115,7 @@ void BatchRenderer::updateBuffers()
     }
 
     u32 rendererIndex = 0;
-    FOR_ARRAY(i, mRenderers)
+    FOR_RANGE(i, *mUsedSlots.begin(), *mUsedSlots.rbegin())
     {
         TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())

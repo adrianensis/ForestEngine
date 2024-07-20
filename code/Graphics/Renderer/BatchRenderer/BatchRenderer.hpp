@@ -41,7 +41,8 @@ private:
     SlotsManager mRendererSlotsManager;
 	std::vector<TypedComponentHandler<MeshRenderer>> mRenderers;
     u32 mRenderersCount = 0;
-    inline static const u32 mInitialInstances = 2000;
+    std::set<u32> mUsedSlots;
+    inline static const u32 mInitialInstances = 100;
 
 	GPUMeshBatcher mGPUMeshBatcher;
     BatchData mBatchData;

@@ -16,7 +16,7 @@ void RenderPipeline::update()
 {
 	PROFILER_CPU()
     PROFILER_BLOCK_CPU("update renderers");
-    FOR_RANGE(i, 0, mMaxSlot)
+    FOR_RANGE(i, *mUsedSlots.begin(), *mUsedSlots.rbegin())
     {
         TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
@@ -86,9 +86,10 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
     }
     else
     {
-        mMaxSlot = std::max(mMaxSlot, renderer->getRenderSlot().getSlot());
+        mUsedSlots.insert(renderer->getRenderSlot().getSlot());
         mRenderers.at(renderer->getRenderSlot().getSlot()) = renderer;
     }
+    
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
@@ -118,6 +119,7 @@ void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer
     }
     else
     {
+        mUsedSlots.erase(renderer->getRenderSlot().getSlot());
         mRenderers.at(renderer->getRenderSlot().getSlot()).reset();
     }
 
