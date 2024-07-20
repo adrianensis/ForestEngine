@@ -90,7 +90,6 @@ public:
     }
 
     u32 getSize() const { return mSize; }
-    u32 getMaxIndex() const { return *mAvailableSlots.rbegin(); }
     void reset() { mAvailableSlots.clear(); }
     bool isEmpty() const { return mAvailableSlots.empty(); }
 

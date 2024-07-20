@@ -71,7 +71,7 @@ private:
     RendererData mRendererData;
     Ptr<BatchRenderer> mBatchRenderer;
     Slot mBatchSlot;
-    Slot mRenderInstanceSlot;
+    Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
     PoolHandler<MaterialInstance> mMaterialInstance;
@@ -84,7 +84,7 @@ public:
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
     RGET(MaterialInstance)
-    CRGET_SET(RenderInstanceSlot)
+    CRGET_SET(RenderSlot)
     CRGET_SET(BatchSlot)
     GET_SET(UpdateMatrix)
 };

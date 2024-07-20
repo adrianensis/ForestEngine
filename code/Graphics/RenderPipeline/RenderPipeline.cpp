@@ -78,16 +78,16 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
     }
 
-    renderer->setRenderInstanceSlot(mRenderInstancesSlotsManager.requestSlot());
+    renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
     if(renderer->isStatic())
     {
         setRendererMatrix(renderer);
-        mRenderersStatic.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
+        mRenderersStatic.at(renderer->getRenderSlot().getSlot()) = renderer;
     }
     else
     {
-        mMaxSlot = std::max(mMaxSlot, renderer->getRenderInstanceSlot().getSlot());
-        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()) = renderer;
+        mMaxSlot = std::max(mMaxSlot, renderer->getRenderSlot().getSlot());
+        mRenderers.at(renderer->getRenderSlot().getSlot()) = renderer;
     }
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
@@ -114,14 +114,14 @@ void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer
 {
     if(renderer->isStatic())
     {
-        mRenderersStatic.at(renderer->getRenderInstanceSlot().getSlot()).reset();
+        mRenderersStatic.at(renderer->getRenderSlot().getSlot()).reset();
     }
     else
     {
-        mRenderers.at(renderer->getRenderInstanceSlot().getSlot()).reset();
+        mRenderers.at(renderer->getRenderSlot().getSlot()).reset();
     }
 
-    mRenderInstancesSlotsManager.freeSlot(renderer->getRenderInstanceSlot());
+    mRenderInstancesSlotsManager.freeSlot(renderer->getRenderSlot());
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
@@ -188,8 +188,8 @@ void RenderPipeline::setRendererMatrix(TypedComponentHandler<MeshRenderer> rende
     if(renderer->getUpdateMatrix())
     {
         const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderInstanceSlot()), "Invalid slot!");
-        mMatrices.at(renderer->getRenderInstanceSlot().getSlot()) = rendererModelMatrix;
+        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderSlot()), "Invalid slot!");
+        mMatrices.at(renderer->getRenderSlot().getSlot()) = rendererModelMatrix;
         renderer->setUpdateMatrix(false);
     }
 }

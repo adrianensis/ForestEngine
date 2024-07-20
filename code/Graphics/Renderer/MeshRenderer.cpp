@@ -28,7 +28,7 @@ void MeshRenderer::onComponentAdded()
 void MeshRenderer::onDestroy() 
 {
     GET_SYSTEM(MaterialManager).freeMaterialInstance(mMaterialInstance);
-    mRenderInstanceSlot.reset();
+    mRenderSlot.reset();
     mBatchSlot.reset();
 }
 

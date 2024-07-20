@@ -118,7 +118,7 @@ void BatchRenderer::updateBuffers()
         TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            mGPUMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderInstanceSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
+            mGPUMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }
