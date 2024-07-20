@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
@@ -28,17 +28,17 @@ public:
 protected:
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();
-    virtual void bindShader(const BatchData& batchData);
+    virtual void bindShader(const InstancedMeshData& instancedMeshData);
     virtual void preRender();
-    virtual void renderBatch(const BatchData& batchData);
+    virtual void renderBatch(const InstancedMeshData& instancedMeshData);
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
-    virtual Ptr<Shader> getShader(const BatchData& batchData) const;
+    virtual Ptr<Shader> getShader(const InstancedMeshData& instancedMeshData) const;
     virtual void setupShader(Ptr<Shader> shader) const;
 protected:
-	std::unordered_set<BatchData, BatchData::BatchDataFunctor> mBatches;
-	std::unordered_map<BatchData, OwnerPtr<GPUProgram>, BatchData::BatchDataFunctor> mGPUPrograms;
+	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
+	std::unordered_map<InstancedMeshData, OwnerPtr<GPUProgram>, InstancedMeshData::InstancedMeshDataFunctor> mGPUPrograms;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
     Ptr<RenderPipeline> mRenderPipeline;

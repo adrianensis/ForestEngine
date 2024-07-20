@@ -26,20 +26,20 @@ void RenderPassUI::postRender()
 
 void RenderPassUI::renderStencilCascade(u64 id)
 {    
-    FOR_LIST(it, mBatches)
+    FOR_LIST(it, mInstancedMeshRenderers)
 	{
-        const BatchData& batchData = *it;
-		if(id == batchData.mStencilData.mId)
+        const InstancedMeshData& instancedMeshData = *it;
+		if(id == instancedMeshData.mStencilData.mId)
 		{
-            if(batchData.mStencilData.mParentId > 0)
+            if(instancedMeshData.mStencilData.mParentId > 0)
             {
-                renderStencilCascade(batchData.mStencilData.mParentId);
+                renderStencilCascade(instancedMeshData.mStencilData.mParentId);
             }
 
-            if(!mStencilsRendered.contains(batchData.mStencilData.mId))
+            if(!mStencilsRendered.contains(instancedMeshData.mStencilData.mId))
             {
-                mStencilsRendered.insert(batchData.mStencilData.mId);
-                renderBatch(batchData);
+                mStencilsRendered.insert(instancedMeshData.mStencilData.mId);
+                renderBatch(instancedMeshData);
             }
 
             break;
@@ -53,51 +53,51 @@ void RenderPassUI::render()
 
     mStencilsRendered.clear();
 
-    std::vector<BatchData> noStencilBatches;
-    std::vector<BatchData> stencilBatches;
-    FOR_LIST(it, mBatches)
+    std::vector<InstancedMeshData> noStencilInstancedMeshRenderers;
+    std::vector<InstancedMeshData> stencilInstancedMeshRenderers;
+    FOR_LIST(it, mInstancedMeshRenderers)
 	{
-        const BatchData& batchData = *it;
-        Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
-        if(batchData.mStencilData.mUseStencil)
+        const InstancedMeshData& instancedMeshData = *it;
+        Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getBatchMap().at(instancedMeshData);
+        if(instancedMeshData.mStencilData.mUseStencil)
         {
-            if(batchData.mStencilData.mParentId > 0)
+            if(instancedMeshData.mStencilData.mParentId > 0)
             {
-                stencilBatches.push_back(batchData);
+                stencilInstancedMeshRenderers.push_back(instancedMeshData);
             }
         }
         else
         {
-            noStencilBatches.push_back(batchData);
+            noStencilInstancedMeshRenderers.push_back(instancedMeshData);
         }
     }
 
-    auto compareStencilBatch = [](BatchData b1, BatchData b2)
+    auto compareStencilBatch = [](InstancedMeshData b1, InstancedMeshData b2)
     {
         u64 o1 = b1.mStencilData.mParentId;
         u64 o2 = b2.mStencilData.mParentId;
         return (o1 < o2);
     };
   
-    std::sort(stencilBatches.begin(), stencilBatches.end(), compareStencilBatch);
+    std::sort(stencilInstancedMeshRenderers.begin(), stencilInstancedMeshRenderers.end(), compareStencilBatch);
 
     u64 currentId = 0;
-    FOR_LIST(it, stencilBatches)
+    FOR_LIST(it, stencilInstancedMeshRenderers)
 	{
-        const BatchData& batchData = *it;
-        if(currentId != batchData.mStencilData.mParentId)
+        const InstancedMeshData& instancedMeshData = *it;
+        if(currentId != instancedMeshData.mStencilData.mParentId)
         {
             GET_SYSTEM(GPUInterface).clearStencil();
         }
 
-        currentId = batchData.mStencilData.mParentId;
+        currentId = instancedMeshData.mStencilData.mParentId;
 
-        renderStencilCascade(batchData.mStencilData.mId);
+        renderStencilCascade(instancedMeshData.mStencilData.mId);
 	}
 
     GET_SYSTEM(GPUInterface).clearStencil();
 
-    FOR_LIST(it, noStencilBatches)
+    FOR_LIST(it, noStencilInstancedMeshRenderers)
 	{
         renderBatch(*it);
     }

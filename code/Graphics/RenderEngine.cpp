@@ -1,5 +1,5 @@
 #include "Graphics/RenderEngine.hpp"
-#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Texture.hpp"
 #include "Graphics/Light/Light.hpp"

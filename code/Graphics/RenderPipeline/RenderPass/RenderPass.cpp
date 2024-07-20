@@ -27,39 +27,39 @@ void RenderPass::terminate()
 
 void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
-	BatchData batchData;
-	batchData.init(renderer);
+	InstancedMeshData instancedMeshData;
+	instancedMeshData.init(renderer);
 
-	if (!mBatches.contains(batchData))
+	if (!mInstancedMeshRenderers.contains(instancedMeshData))
 	{
-        mBatches.insert(batchData);
-        mGPUPrograms.emplace(batchData, OwnerPtr<GPUProgram>());
+        mInstancedMeshRenderers.insert(instancedMeshData);
+        mGPUPrograms.emplace(instancedMeshData, OwnerPtr<GPUProgram>());
       
         GPUVertexBuffersContainer gpuVertexBuffersContainer;
-        batchData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, batchData.mIsStatic);
+        instancedMeshData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, instancedMeshData.mIsStatic);
 
-        Ptr<Shader> shader = getShader(batchData);
+        Ptr<Shader> shader = getShader(instancedMeshData);
         setupShader(shader);
-        mGPUPrograms.insert_or_assign(batchData, GET_SYSTEM(ShaderManager).compileShader(
+        mGPUPrograms.insert_or_assign(instancedMeshData, GET_SYSTEM(ShaderManager).compileShader(
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             gpuVertexBuffersContainer,
-            batchData.mMaterial.get(),
+            instancedMeshData.mMaterial.get(),
             shader
         ));
 
-        bindShader(batchData);
+        bindShader(instancedMeshData);
     }
 }
 
 void RenderPass::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
-    BatchData batchData;
-	batchData.init(renderer);
+    InstancedMeshData instancedMeshData;
+	instancedMeshData.init(renderer);
 
-    Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
-    if(batchRenderer->isEmpty())
+    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getBatchMap().at(instancedMeshData);
+    if(instancedMeshRenderer->isEmpty())
     {
-        mBatches.erase(batchData);
+        mInstancedMeshRenderers.erase(instancedMeshData);
     }
 }
 
@@ -71,25 +71,25 @@ void RenderPass::postFramebufferEnabled()
 {
 }
 
-void RenderPass::bindShader(const BatchData& batchData)
+void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
-    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(batchData.mMaterial));
+    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(instancedMeshData.mMaterial));
     
-    Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(batchData.mMesh);
+    Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
     {
         Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
+            mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUSharedBuffer(skeletonState));
         }
     }
 
-    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
-    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
+    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices));
 
-    Ptr<Shader> shader = getShader(batchData);
-    shader->bindTextures(mGPUPrograms.at(batchData), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(batchData.mMaterial));
+    Ptr<Shader> shader = getShader(instancedMeshData);
+    shader->bindTextures(mGPUPrograms.at(instancedMeshData), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 }
 
 void RenderPass::preRender()
@@ -104,15 +104,15 @@ void RenderPass::render()
 {
 }
 
-void RenderPass::renderBatch(const BatchData& batchData)
+void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
-    Ptr<BatchRenderer> batchRenderer = mRenderPipeline->getBatchMap().at(batchData);
-    Ptr<Shader> shader = getShader(batchData);
-    mGPUPrograms.at(batchData)->enable();
+    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getBatchMap().at(instancedMeshData);
+    Ptr<Shader> shader = getShader(instancedMeshData);
+    mGPUPrograms.at(instancedMeshData)->enable();
     shader->enable();
-    batchRenderer->render();
+    instancedMeshRenderer->render();
     shader->disable();
-    mGPUPrograms.at(batchData)->disable();
+    mGPUPrograms.at(instancedMeshData)->disable();
 }
 
 void RenderPass::renderPass()
@@ -160,9 +160,9 @@ void RenderPass::updateGlobalData()
 	GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Ptr<Shader> RenderPass::getShader(const BatchData& batchData) const
+Ptr<Shader> RenderPass::getShader(const InstancedMeshData& instancedMeshData) const
 {
-    return batchData.mMaterial->getShader();
+    return instancedMeshData.mMaterial->getShader();
 }
 
 void RenderPass::setupShader(Ptr<Shader> shader) const

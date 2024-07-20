@@ -2,16 +2,16 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/Mesh/GPUMeshBatcher.hpp"
-#include "Graphics/Renderer/BatchRenderer/BatchData.hpp"
+#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshData.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
 class GPUProgram;
 
-class BatchRenderer: public ObjectBase
+class InstancedMeshRenderer: public ObjectBase
 {
 public:
-    void init(const BatchData& batchData);
+    void init(const InstancedMeshData& instancedMeshData);
     void terminate();
 
     void render();
@@ -45,7 +45,7 @@ private:
     inline static const u32 mInitialInstances = 100;
 
 	GPUMeshBatcher mGPUMeshBatcher;
-    BatchData mBatchData;
+    InstancedMeshData mInstancedMeshData;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 
@@ -55,7 +55,7 @@ private:
 	bool mDataSubmittedToGPU = false;
 
 public:
-    CRGET(BatchData)
+    CRGET(InstancedMeshData)
     CRGET(GPUVertexBuffersContainer)
 };
-REGISTER_CLASS(BatchRenderer);
+REGISTER_CLASS(InstancedMeshRenderer);

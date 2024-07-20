@@ -8,7 +8,7 @@
 #include "Graphics/GPU/Mesh/MeshPrimitives.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Scene/Module.hpp"
 
 ClassId MeshRenderer::getSystemComponentId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
@@ -29,7 +29,7 @@ void MeshRenderer::onDestroy()
 {
     GET_SYSTEM(MaterialManager).freeMaterialInstance(mMaterialInstance);
     mRenderSlot.reset();
-    mBatchSlot.reset();
+    mInstanceSlot.reset();
 }
 
 void MeshRenderer::calculateRendererModelMatrix()

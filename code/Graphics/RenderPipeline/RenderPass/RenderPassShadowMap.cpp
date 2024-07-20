@@ -37,7 +37,7 @@ void RenderPassShadowMap::postRender()
 void RenderPassShadowMap::render()
 {
 	PROFILER_CPU()
-    FOR_MAP(it, mBatches)
+    FOR_MAP(it, mInstancedMeshRenderers)
 	{
         renderBatch(*it);
 	}
@@ -61,7 +61,7 @@ void RenderPassShadowMap::updateGlobalData()
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Ptr<Shader> RenderPassShadowMap::getShader(const BatchData& batchData) const
+Ptr<Shader> RenderPassShadowMap::getShader(const InstancedMeshData& instancedMeshData) const
 {
     return mShaderShadowMap;
 }

@@ -7,7 +7,7 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 
-class BatchRenderer;
+class InstancedMeshRenderer;
 class MaterialInstance;
 
 class StencilData
@@ -69,8 +69,7 @@ private:
 
 private:
     RendererData mRendererData;
-    Ptr<BatchRenderer> mBatchRenderer;
-    Slot mBatchSlot;
+    Slot mInstanceSlot;
     Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
@@ -85,7 +84,7 @@ public:
     CRGET(RendererData)
     RGET(MaterialInstance)
     CRGET_SET(RenderSlot)
-    CRGET_SET(BatchSlot)
+    CRGET_SET(InstanceSlot)
     GET_SET(UpdateMatrix)
 };
 REGISTER_CLASS(MeshRenderer);

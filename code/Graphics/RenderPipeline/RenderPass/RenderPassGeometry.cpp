@@ -31,7 +31,7 @@ void RenderPassGeometry::postRender()
 void RenderPassGeometry::render()
 {
 	PROFILER_CPU()
-    FOR_LIST(it, mBatches)
+    FOR_LIST(it, mInstancedMeshRenderers)
 	{
         renderBatch(*it);
 	}
@@ -55,9 +55,9 @@ void RenderPassGeometry::updateGlobalData()
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
 
-void RenderPassGeometry::bindShader(const BatchData& batchData)
+void RenderPassGeometry::bindShader(const InstancedMeshData& instancedMeshData)
 {
-    RenderPass::bindShader(batchData);
-    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
-    mGPUPrograms.at(batchData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
+    RenderPass::bindShader(instancedMeshData);
+    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
+    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
 }

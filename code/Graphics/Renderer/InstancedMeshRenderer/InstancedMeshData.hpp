@@ -4,10 +4,10 @@
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
-class BatchData
+class InstancedMeshData
 {
 public:
-	BatchData() = default;
+	InstancedMeshData() = default;
 	
 	PoolHandler<Material> mMaterial;
 	Ptr<const GPUMesh> mMesh;
@@ -22,18 +22,18 @@ public:
         mStencilData = renderer->getRendererData().mStencilData;
     }
 
-	bool operator==(const BatchData& otherBatchData) const
+	bool operator==(const InstancedMeshData& otherInstancedMeshData) const
 	{
-        bool result = mMaterial.getIndex() == otherBatchData.mMaterial.getIndex() && mMesh == otherBatchData.mMesh and
-        mIsStatic == otherBatchData.mIsStatic and
-        mStencilData.matches(otherBatchData.mStencilData);
+        bool result = mMaterial.getIndex() == otherInstancedMeshData.mMaterial.getIndex() && mMesh == otherInstancedMeshData.mMesh and
+        mIsStatic == otherInstancedMeshData.mIsStatic and
+        mStencilData.matches(otherInstancedMeshData.mStencilData);
         return result;
 	}
 
-	class BatchDataFunctor
+	class InstancedMeshDataFunctor
 	{
 	public:
-		size_t operator()(const BatchData& key) const
+		size_t operator()(const InstancedMeshData& key) const
 		{
             u64 result = key.mMaterial.getIndex() ^ key.mMesh->getObjectId() ^
 			static_cast<u64>(key.mIsStatic);

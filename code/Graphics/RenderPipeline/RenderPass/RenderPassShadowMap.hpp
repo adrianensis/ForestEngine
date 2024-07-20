@@ -12,7 +12,7 @@ protected:
     virtual void render() override;
     virtual void postRender() override;
     virtual void updateGlobalData() override;
-    virtual Ptr<Shader> getShader(const BatchData& batchData) const;
+    virtual Ptr<Shader> getShader(const InstancedMeshData& instancedMeshData) const;
 public:
     TypedComponentHandler<DirectionalLight> mDirectionalLight;
 private:

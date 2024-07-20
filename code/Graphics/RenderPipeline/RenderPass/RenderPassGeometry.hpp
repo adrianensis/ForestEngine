@@ -9,7 +9,7 @@ public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
 protected:
     virtual void updateGlobalData() override;
-    virtual void bindShader(const BatchData& batchData) override;
+    virtual void bindShader(const InstancedMeshData& instancedMeshData) override;
     virtual void preRender() override;
     virtual void render() override;
     virtual void postRender() override;

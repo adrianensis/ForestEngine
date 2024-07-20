@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
-#include "Graphics/Renderer/BatchRenderer/BatchRenderer.hpp"
+#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
 
@@ -52,7 +52,7 @@ protected:
     void processRenderer(TypedComponentHandler<MeshRenderer> renderer);
 
 public:
-    using BatchMap = std::unordered_map<BatchData, OwnerPtr<BatchRenderer>, BatchData::BatchDataFunctor>;
+    using BatchMap = std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor>;
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     

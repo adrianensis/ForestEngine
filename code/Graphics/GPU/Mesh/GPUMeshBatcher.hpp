@@ -9,7 +9,7 @@ public:
 
     void init(Ptr<const GPUMesh> mesh);
     void resize(u32 size);
-    void setInstanceData(u32 index, u32 objectId, u32 materialInstanceId);
+    void setInstanceData(u32 instanceId, u32 objectId, u32 materialInstanceId);
 private:
     void appendMeshData(Ptr<const GPUMesh> mesh);
     void allocateInstances(u32 maxInstances);
