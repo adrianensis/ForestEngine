@@ -70,9 +70,10 @@ void Editor::firstUpdate()
 	// auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
-    FOR_RANGE(i, -30, 30)
+    i32 size = 25;            
+    FOR_RANGE(i, -size, size)
     {
-        FOR_RANGE(j, -30, 30)
+        FOR_RANGE(j, -size, size)
         {
             if(j % 2 == 0)
             {
@@ -350,11 +351,11 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input).isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
-        TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-        Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
-        Vector3 position = camera->screenToWorld(currentMousePosition, 0);
-        auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);
-        mGameObjectsArray.push_back(obj);
+        // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
+        // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
+        // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);
+        // mGameObjectsArray.push_back(obj);
         if(!mSelectedGameObject)
         {
             mSelectedGameObject = mousePick();
