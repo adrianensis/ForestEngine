@@ -115,12 +115,12 @@ void BatchRenderer::updateBuffers()
     }
 
     u32 rendererIndex = 0;
-    FOR_RANGE(i, *mUsedSlots.begin(), *mUsedSlots.rbegin())
+    FOR_RANGE(i, 0, (*mUsedSlots.rbegin())+1)
     {
         TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            mGPUMeshBatcher.addInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
+            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }

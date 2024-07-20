@@ -16,7 +16,7 @@ void RenderPipeline::update()
 {
 	PROFILER_CPU()
     PROFILER_BLOCK_CPU("update renderers");
-    FOR_RANGE(i, *mUsedSlots.begin(), *mUsedSlots.rbegin())
+    FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
     {
         TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())

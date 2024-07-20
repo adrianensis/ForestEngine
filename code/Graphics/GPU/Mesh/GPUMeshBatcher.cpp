@@ -38,7 +38,7 @@ void GPUMeshBatcher::allocateInstances(u32 maxInstances)
     generateIndicesData(maxInstances);
 }
 
-void GPUMeshBatcher::addInstanceData(u32 index, u32 objectId, u32 materialInstanceId)
+void GPUMeshBatcher::setInstanceData(u32 index, u32 objectId, u32 materialInstanceId)
 {
 	PROFILER_CPU()
 
