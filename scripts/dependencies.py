@@ -75,8 +75,8 @@ if installSystemDepencencies:
             os.system("sudo apt-get -y install libtbb-dev") # needed by GDD in order to use c++ parallel for_each
             os.system("sudo apt-get -y install xorg-dev") # glfw3 dependency
             os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
-            os.system("sudo apt-get -y install qtbase5-dev") # easy_profiler dependency
             os.system("sudo apt-get -y install ccache") # compilation cache
+            os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
             os.system("sudo apt-get -y install doxygen graphviz")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
@@ -112,8 +112,8 @@ extract(os.path.join(zipArchivesDir, "json-3.9.1.zip"), destiny)
 
 # ------------------------------------------------------------------------
 
-# Easy Profiler https://github.com/yse/easy_profiler
-extract(os.path.join(zipArchivesDir, "easy_profiler-2.1.0.zip"), destiny)
+# Tracy https://github.com/wolfpld/tracy
+extract(os.path.join(zipArchivesDir, "tracy-0.11.0.zip"), destiny)
 
 # ------------------------------------------------------------------------
 

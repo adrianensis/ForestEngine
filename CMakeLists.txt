@@ -49,7 +49,7 @@ if(ENABLE_GPU_DEBUG)
 endif(ENABLE_GPU_DEBUG)
 
 if(ENABLE_PROFILER)
-    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D BUILD_WITH_EASY_PROFILER")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D TRACY_ENABLE")
 endif(ENABLE_PROFILER)
 
 if(UNIX)
@@ -111,14 +111,16 @@ include_directories("${DEPENDENCIES_DIR}/glfw-3.3.4/include")
 add_compile_definitions(GLEW_STATIC)
 add_subdirectory("${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake")
 include_directories("${DEPENDENCIES_DIR}/glew-2.2.0/include")
-# set(GLEW_LINK_LIBRARY "${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake/build/Debug/lib/libGLEWd.a")
 
-# Easy Profiler
 if(ENABLE_PROFILER)
-    set(EASY_PROFILER_NO_GUI ON CACHE BOOL "")
-    set(EASY_PROFILER_NO_SAMPLES ON CACHE BOOL "")
-    include_directories("${DEPENDENCIES_DIR}/easy_profiler-2.1.0/easy_profiler_core/include")
-    add_subdirectory("${DEPENDENCIES_DIR}/easy_profiler-2.1.0")
+    # Tracy
+    set(TRACY_ENABLE ON CACHE BOOL "" FORCE)
+    set(LEGACY ON CACHE BOOL "" FORCE)
+    set(DOWNLOAD_GLFW OFF CACHE BOOL "" FORCE)
+    set(DOWNLOAD_CAPSTONE OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
+    include_directories("${DEPENDENCIES_DIR}/tracy-0.11.0/public")
+    add_subdirectory("${DEPENDENCIES_DIR}/tracy-0.11.0")
 endif(ENABLE_PROFILER)
 
 # JSON
@@ -187,7 +189,7 @@ target_link_libraries(${PROJECTNAME} freetype)
 # Link against the dependency of Intel TBB (for parallel C++17 algorithms)
 target_link_libraries(${PROJECTNAME} TBB::tbb)
 if(ENABLE_PROFILER)
-    target_link_libraries(${PROJECTNAME} easy_profiler)
+    target_link_libraries(${PROJECTNAME} Tracy::TracyClient)
 endif(ENABLE_PROFILER)
 
 # ----------------------------------------------------------------------------

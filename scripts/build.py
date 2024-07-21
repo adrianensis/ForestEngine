@@ -17,8 +17,8 @@ buildDir="build"
 dependenciesDir="dependencies"
 binariesDir="binaries"
 
-profilerDir = "easy_profiler-2.1.0"
-profilerDepencencyDir = os.path.join(dependenciesDir, profilerDir)
+tracyProfiler = "tracy-0.11.0/profiler"
+tracyProfilerDepencencyDir = os.path.join(dependenciesDir, tracyProfiler)
 freetypeDir = "freetype-2.10.1"
 freetypeDepencencyDir = os.path.join(dependenciesDir, freetypeDir)
 glewDir = "glew-2.2.0/build/cmake"
@@ -152,13 +152,17 @@ buildCommandArgs = [
 
 build_cmake(freetypeDepencencyDir, buildCommandArgs)
 
-# easy_profiler GUI
+# profiler GUI
 if enableProfiler:
     buildCommandArgs = [
-        "-DCMAKE_BUILD_TYPE=" + buildType
+        "-DCMAKE_BUILD_TYPE=" + buildType,
+        "-DLEGACY=ON",
+        "-DDOWNLOAD_CAPSTONE=OFF",
+        "-DDOWNLOAD_GLFW=OFF",
+        "-DGLFW_BUILD_X11=ON"
     ]
 
-    build_cmake(profilerDepencencyDir, buildCommandArgs)
+    build_cmake(tracyProfilerDepencencyDir, buildCommandArgs)
 
 ##########################################
 ########## BUILD ###########
@@ -184,16 +188,16 @@ build_cmake(cwd, buildCommandArgs)
 ########## POST BUILD ###########
 ##########################################
 
-# easy_profiler: create bin link
+# profiler: create gui executable link
 if enableProfiler:
-    easy_profiler_bin_path_source = os.path.join(cwd, os.path.join(os.path.join(profilerDepencencyDir, buildTargetDir), "bin"), "profiler_gui")
-    bin_gui_path_destiny = os.path.join(cwd, os.path.join(binariesDir, os.path.join(buildType, "profiler_gui")))
+    tracy_profiler_bin_path_source = os.path.join(cwd, os.path.join(tracyProfilerDepencencyDir, buildTargetDir), "tracy-profiler")
+    bin_gui_path_destiny = os.path.join(cwd, os.path.join(binariesDir, os.path.join(buildType, "tracy-profiler")))
     try:
         os.remove(bin_gui_path_destiny)
     except:
        pass   
 
-    os.symlink(easy_profiler_bin_path_source, bin_gui_path_destiny)
+    os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
 
 compileCommandsJson = "compile_commands.json"
 shutil.copy(os.path.join(buildTargetDir, compileCommandsJson), compileCommandsJson)

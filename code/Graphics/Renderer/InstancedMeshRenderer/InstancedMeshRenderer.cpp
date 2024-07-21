@@ -97,7 +97,7 @@ void InstancedMeshRenderer::updateBuffers()
     u32 newSize = mRenderersCount;
     if (newSize > mMaxMeshesThreshold)
     {
-        PROFILER_BLOCK_CPU("new size");
+        PROFILER_BLOCK_CPU(newSize);
 		if(mMaxMeshesThreshold == 0)
 		{
 			mMaxMeshesThreshold = newSize;

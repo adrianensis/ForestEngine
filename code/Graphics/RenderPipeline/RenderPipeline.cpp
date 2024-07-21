@@ -15,7 +15,7 @@ void RenderPipeline::init()
 void RenderPipeline::update()
 {
 	PROFILER_CPU()
-    PROFILER_BLOCK_CPU("update renderers");
+    PROFILER_BLOCK_CPU(updateRenderers);
     FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
     {
         TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
@@ -39,7 +39,7 @@ void RenderPipeline::update()
 
     PROFILER_END_BLOCK()
 
-    PROFILER_BLOCK_CPU("update mModelMatrices buffer");
+    PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
     PROFILER_END_BLOCK()
 

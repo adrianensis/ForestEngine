@@ -74,6 +74,7 @@ void Engine::run()
 
 	while (!GET_SYSTEM(WindowManager).getMainWindow()->isClosed())
 	{
+        FrameMarkStart("frame");
 		GET_SYSTEM(Time).startFrame();
 
 		if (GET_SYSTEM(ScenesManager).pendingLoadRequests())
@@ -103,6 +104,7 @@ void Engine::run()
 		}
 		
 		GET_SYSTEM(Time).endFrame();
+        FrameMarkEnd("frame");
 	}
 }
 

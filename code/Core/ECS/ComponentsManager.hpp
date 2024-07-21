@@ -108,9 +108,7 @@ private:
         ComponentsArray(u32 reservedComponents) : ComponentsArrayBase(reservedComponents)
         {
             PROFILER_CPU()
-            PROFILER_BLOCK_CPU("Components Array")
             mComponents.reserve(reservedComponents);
-            PROFILER_END_BLOCK()
             mSlotsManager.init(reservedComponents);
         }
         virtual Component& at(u32 index) override
