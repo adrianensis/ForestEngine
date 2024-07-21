@@ -56,7 +56,7 @@ void RenderPass::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
     InstancedMeshData instancedMeshData;
 	instancedMeshData.init(renderer);
 
-    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getBatchMap().at(instancedMeshData);
+    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
     if(instancedMeshRenderer->isEmpty())
     {
         mInstancedMeshRenderers.erase(instancedMeshData);
@@ -106,7 +106,7 @@ void RenderPass::render()
 
 void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
-    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getBatchMap().at(instancedMeshData);
+    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
     Ptr<Shader> shader = getShader(instancedMeshData);
     mGPUPrograms.at(instancedMeshData)->enable();
     shader->enable();

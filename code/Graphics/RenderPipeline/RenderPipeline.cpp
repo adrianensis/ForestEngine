@@ -101,14 +101,14 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 
     InstancedMeshData instancedMeshData;
     instancedMeshData.init(renderer);
-    if(!mBatchMap.contains(instancedMeshData))
+    if(!mInstancedMeshesMap.contains(instancedMeshData))
     {
         LOG_TRACE_MSG("New Batch")
-        mBatchMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
-        mBatchMap.at(instancedMeshData)->init(instancedMeshData);
+        mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
+        mInstancedMeshesMap.at(instancedMeshData)->init(instancedMeshData);
     }
 
-    mBatchMap.at(instancedMeshData)->addRenderer(renderer);
+    mInstancedMeshesMap.at(instancedMeshData)->addRenderer(renderer);
 }
 
 void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
@@ -135,7 +135,7 @@ void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer
 
     InstancedMeshData instancedMeshData;
     instancedMeshData.init(renderer);
-    mBatchMap.at(instancedMeshData)->removeRenderer(renderer);
+    mInstancedMeshesMap.at(instancedMeshData)->removeRenderer(renderer);
 }
 
 void RenderPipeline::render(RenderPipelineData& renderData)

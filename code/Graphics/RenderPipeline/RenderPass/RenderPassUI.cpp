@@ -58,7 +58,7 @@ void RenderPassUI::render()
     FOR_LIST(it, mInstancedMeshRenderers)
 	{
         const InstancedMeshData& instancedMeshData = *it;
-        Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getBatchMap().at(instancedMeshData);
+        Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
         if(instancedMeshData.mStencilData.mUseStencil)
         {
             if(instancedMeshData.mStencilData.mParentId > 0)

@@ -52,11 +52,11 @@ protected:
     void processRenderer(TypedComponentHandler<MeshRenderer> renderer);
 
 public:
-    using BatchMap = std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor>;
+    using InstancedMeshesMap = std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor>;
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
-    BatchMap mBatchMap;
+    InstancedMeshesMap mInstancedMeshesMap;
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
@@ -65,6 +65,6 @@ private:
 	std::vector<TypedComponentHandler<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 2000;
 public:
-    CRGET(BatchMap)
+    CRGET(InstancedMeshesMap)
 };
 REGISTER_CLASS(RenderPipeline);
