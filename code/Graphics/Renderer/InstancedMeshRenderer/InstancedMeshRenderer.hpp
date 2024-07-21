@@ -19,13 +19,12 @@ public:
     void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
 
     bool isEmpty() const { return mRenderersCount == 0; }
-
-private:
     void enable();
     void disable();
-    void updateBuffers();
+    void update();
+
+private:
     bool shouldRegenerateBuffers() const;
-    void updateBoneTransforms();
 
     void initBuffers();
     void resizeMeshBuffers(u32 maxInstances);

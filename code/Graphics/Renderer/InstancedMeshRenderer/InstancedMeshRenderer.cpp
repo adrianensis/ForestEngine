@@ -33,16 +33,10 @@ void InstancedMeshRenderer::terminate()
 void InstancedMeshRenderer::render()
 {
 	PROFILER_CPU()
-	if (!mRenderers.empty())
-	{
-        enable();
-		if(shouldRegenerateBuffers())
-		{
-			updateBuffers();
-		}
-        drawCall();
-        disable();
-	}
+	if (mRenderers.empty()) { return; }
+    enable();
+    drawCall();
+    disable();
 }
 
 void InstancedMeshRenderer::enable()
@@ -91,8 +85,10 @@ void InstancedMeshRenderer::removeRenderer(TypedComponentHandler<MeshRenderer> r
     mRenderersCount--;
 }
 
-void InstancedMeshRenderer::updateBuffers()
+void InstancedMeshRenderer::update()
 {
+    if (mRenderers.empty()) { return; }
+    if (!shouldRegenerateBuffers()) { return; }
 	PROFILER_CPU()
     u32 newSize = mRenderersCount;
     if (newSize > mMaxMeshesThreshold)
@@ -133,10 +129,6 @@ bool InstancedMeshRenderer::shouldRegenerateBuffers() const
 {
     // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
 	return mRegenerateBuffersRequested || !mInstancedMeshData.mIsStatic;
-}
-
-void InstancedMeshRenderer::updateBoneTransforms()
-{
 }
 
 void InstancedMeshRenderer::initBuffers()

@@ -37,6 +37,13 @@ void RenderPipeline::update()
     //     }
     // });
 
+    FOR_MAP(it, mInstancedMeshesMap)
+    {
+        it->second->enable();
+        it->second->update();
+        it->second->disable();
+    }
+
     PROFILER_END_BLOCK()
 
     PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
