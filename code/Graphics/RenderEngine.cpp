@@ -102,4 +102,5 @@ void RenderEngine::swap()
 	PROFILER_CPU()
 
 	GET_SYSTEM(WindowManager).getMainWindow()->swap();
+    PROFILER_GPU_COLLECT();
 }

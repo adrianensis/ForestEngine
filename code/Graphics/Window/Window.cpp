@@ -1,5 +1,6 @@
 #include "Graphics/Window/Window.hpp"
 #include "Graphics/RenderEngine.hpp"
+#include "Core/Profiler/Profiler.hpp"
 
 Vector2 Window::getWindowSize()
 {
@@ -53,6 +54,7 @@ void Window::init(i32 id, const WindowData& windowData)
         glfwMakeContextCurrent(mGLTFWindow);
 
         GET_SYSTEM(GPUInterface).loadAPI();
+        PROFILER_GPU_CONTEXT();
         
         glfwSwapInterval(0);
 

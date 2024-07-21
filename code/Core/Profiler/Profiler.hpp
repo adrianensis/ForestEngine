@@ -2,18 +2,6 @@
 
 #include "Core/StdCore.hpp"
 
-// #ifdef BUILD_WITH_EASY_PROFILER
-// #include "easy/profiler.h"
-// #define PROFILER_BLOCK_CPU(str, ...) EASY_BLOCK(str, __VA_ARGS__);
-// #define PROFILER_CPU() PROFILER_BLOCK_CPU(__PRETTY_FUNCTION__);
-// #define PROFILER_END_BLOCK() EASY_END_BLOCK;
-// #else
-// #define PROFILER_BLOCK_CPU(str, ...) 
-// #define PROFILER_CPU()
-// #define PROFILER_GPU()
-// #define PROFILER_END_BLOCK()
-// #endif
-
 /*
     #include "Tracy.hpp"
 #define LUXE_PROFILE ZoneScoped
@@ -36,19 +24,23 @@ TracyGpuContext;
 SDL_GL_SwapWindow(window);
 TracyGpuCollect;
 */
+#ifdef TRACY_ENABLE
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyC.h"
 #include "glew-2.2.0/include/GL/glew.h"
 #include "tracy/TracyOpenGL.hpp"
-#ifdef TRACY_ENABLE
 #define PROFILER_BLOCK_CPU(varName) ZoneNamedN(__tracy_profiler##varName, #varName, true);
 #define PROFILER_CPU() ZoneScopedN(__PRETTY_FUNCTION__);
 #define PROFILER_END_BLOCK()
+#define PROFILER_GPU_CONTEXT() TracyGpuContext;
+#define PROFILER_GPU_COLLECT() TracyGpuCollect;
 #else
 #define PROFILER_BLOCK_CPU(varName)
 #define PROFILER_CPU()
 #define PROFILER_GPU()
 #define PROFILER_END_BLOCK()
+#define PROFILER_GPU_CONTEXT()
+#define PROFILER_GPU_COLLECT()
 #endif
 
 class Profiler
