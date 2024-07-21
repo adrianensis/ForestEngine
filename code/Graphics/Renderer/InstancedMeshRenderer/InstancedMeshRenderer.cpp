@@ -121,8 +121,10 @@ void InstancedMeshRenderer::update()
         }
     }
 
-    mDataSubmittedToGPU = false;
     mRegenerateBuffersRequested = false;
+
+    setIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
+    setInstancedBuffers();
 }
 
 bool InstancedMeshRenderer::shouldRegenerateBuffers() const
@@ -200,14 +202,6 @@ void InstancedMeshRenderer::drawCall()
     PROFILER_CPU()
     if(!mRenderers.empty())
     {
-        if(!mDataSubmittedToGPU)
-        {
-            setIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
-            setInstancedBuffers();
-
-            mDataSubmittedToGPU = true;
-        }
-
         GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mInstancedMeshData.mMesh->mIndices.size() * 3, mRenderersCount, true);
     }
 }

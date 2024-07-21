@@ -51,7 +51,6 @@ private:
 	u32 mMaxMeshesThreshold = 0;
 	static const u32 smMeshesIncrement = 100;
 	bool mRegenerateBuffersRequested = false;
-	bool mDataSubmittedToGPU = false;
 
 public:
     CRGET(InstancedMeshData)
