@@ -67,5 +67,4 @@ private:
 public:
     GET(BindingPoint)
     CRGET(GPUSharedBufferData)
-    GET(BufferId)
 };
