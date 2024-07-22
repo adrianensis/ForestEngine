@@ -120,7 +120,7 @@ void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 type
     PROFILER_CPU()
     PROFILER_GPU()
 	// bindBuffer(bufferType, bufferId);
-    u32 usageHint = bufferType == GPUBufferType::STORAGE ? (isStatic ? GL_STATIC_COPY : GL_DYNAMIC_COPY) : (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+    u32 usageHint = (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	glNamedBufferData(bufferId, typeSizeInBytes * size, nullptr, usageHint);
 }
 
