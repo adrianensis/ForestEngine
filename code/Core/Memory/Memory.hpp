@@ -18,6 +18,7 @@ public:
 	{
         PROFILER_CPU()
 		T *object = new T(args...);
+        PROFILER_ALLOC(object, sizeof(T))
 		CHECK_MSG(object != nullptr, "pointer is nullptr");
         registerPointer(object);
 		return object;
@@ -41,6 +42,7 @@ public:
         PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
         unregisterPointer(pointer);
+        PROFILER_FREE(pointer)
         delete pointer;
 	}
 
