@@ -8,12 +8,22 @@
 
 class MeshRenderer;
 class RenderPipeline;
+class RenderPass;
+
+class RenderPassDependency
+{
+public:
+    HashedString mSamplerName;
+    GPUFramebufferAttachmentType mAttachmentType;
+    Ptr<RenderPass> mRenderPass;
+    GPUPipelineStage mStage = GPUPipelineStage::NONE;
+};
 
 class RenderPassData
 {
 public:
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
-    std::vector<FramebufferBinding> mDependencies;
+    std::vector<RenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
 };
 

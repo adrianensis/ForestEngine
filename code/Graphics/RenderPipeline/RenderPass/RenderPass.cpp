@@ -39,7 +39,6 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         instancedMeshData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, instancedMeshData.mIsStatic);
 
         Ptr<Shader> shader = getShader(instancedMeshData);
-        setupShader(shader);
         mGPUPrograms.insert_or_assign(instancedMeshData, GET_SYSTEM(ShaderManager).compileShader(
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             gpuVertexBuffersContainer,
@@ -47,7 +46,6 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             shader
         ));
 
-        bindShader(instancedMeshData);
     }
 }
 
@@ -108,6 +106,10 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
     Ptr<Shader> shader = getShader(instancedMeshData);
+
+    setupShader(shader);
+    bindShader(instancedMeshData);
+
     mGPUPrograms.at(instancedMeshData)->enable();
     shader->enable();
     instancedMeshRenderer->render();
@@ -169,6 +171,12 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
 {
     FOR_ARRAY(i, mRenderPassData.mDependencies)
     {
-        shader->addFramebufferBinding(mRenderPassData.mDependencies[i]);
+        FramebufferBinding framebufferBinding
+        {
+            mRenderPassData.mDependencies[i].mSamplerName,
+            mRenderPassData.mDependencies[i].mRenderPass->getOutputGPUFramebuffer().getAttachments().at(mRenderPassData.mDependencies[i].mAttachmentType).mAttachmentID,
+            mRenderPassData.mDependencies[i].mStage
+        };
+        shader->addFramebufferBinding(framebufferBinding);
     }
 }

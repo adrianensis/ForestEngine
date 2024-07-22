@@ -28,8 +28,8 @@ void RenderPipelinePBR::init()
 
     Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
     RenderPassData renderPassGeometryData;
-    renderPassGeometryData.mDependencies.push_back(FramebufferBinding{TextureBindingNamesPBR::smShadowMap,
-    renderPassShadowMap->getOutputGPUFramebuffer().getAttachments().at(GPUFramebufferAttachmentType::DEPTH).mAttachmentID, GPUPipelineStage::FRAGMENT});
+    renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
+    GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
     RenderPassData renderPassUIData;
     renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
