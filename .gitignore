@@ -10,3 +10,4 @@ cmake-build-*
 .idea
 .cache
 compile_commands.json
+scripts/lib/__pycache__

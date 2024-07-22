@@ -5,35 +5,17 @@ import shutil
 import platform
 import distro
 
-from zipfile import ZipFile
+import lib.cmake_build as cmake_build
+from lib.build_global_data import BuildGlobalData
+import lib.extract_files as extract_files
+import lib.log as log
 
-import tarfile
+cwd = os.getcwd()
+print(cwd)
 
-if not platform.python_version().startswith('3'):
-    print("Please use python3 to run this script")
-    exit()
-
-def extract(file_path, destinty_path):
-    print("Extracting " + file_path)
-    if file_path.endswith("zip"):
-        with ZipFile(file_path) as zipObj:
-            zipObj.extractall(destinty_path)
-
-    if file_path.endswith("tar.xz"):
-        with tarfile.open(name=file_path, mode='r:xz') as tarObj:
-            tarObj.extractall(destinty_path)
-
-    if file_path.endswith("tar.gz"):
-        with tarfile.open(name=file_path, mode='r:gz') as tarObj:
-            tarObj.extractall(destinty_path)
-
-cwd = os.path.dirname(os.path.realpath(__file__))
-cwd = cwd + "/.."
-os.chdir(cwd)
-#print(cwd)
-
-destiny="dependencies"
-zipArchivesDir="scripts/dependencies-zip"
+##########################################
+########## DATA ###########
+##########################################
 
 installSystemDepencencies=False
 
@@ -44,7 +26,7 @@ if(len(sys.argv) > 1):
 try:
   opts, args = getopt.getopt(argv, "s")
 except:
-  print("Error parsing options!")
+  log.log(log.LogLabels.error, "Error parsing options!")
   exit(1)
 
 for opt, arg in opts:
@@ -53,17 +35,23 @@ for opt, arg in opts:
     if opt in ['-s']:
       installSystemDepencencies = True
 
-if os.path.isdir(destiny):
-    shutil.rmtree(destiny)
+# if os.path.isdir(BuildGlobalData.dependenciesDir):
+#     shutil.rmtree(BuildGlobalData.dependenciesDir)
 
-os.mkdir(destiny)
+# os.mkdir(BuildGlobalData.dependenciesDir)
+
+##########################################
+########## INSTALL SYSTEM DEPENDENCIES ###########
+##########################################
 
 if installSystemDepencencies:
+    log.log(log.LogLabels.build, "-----------------------------------")
+    log.log(log.LogLabels.build, "INSTALLING SYSTEM DEPENDENCIES")
     system_name = platform.system()
     system_info = str(platform.uname())
 
-    print(system_name)
-    print(system_info)
+    log.log(log.LogLabels.build, "System Name: " + system_name)
+    log.log(log.LogLabels.build, "System Info: " + system_info)
 
     if system_name == "Linux" or system_name == "Linux2":
         # linux
@@ -95,39 +83,114 @@ if installSystemDepencencies:
     #     # Windows...
     #     pass
 
+    log.log(log.LogLabels.build, "-----------------------------------")
+
+##########################################
+########## EXTRACT ###########
+##########################################
+
+log.log(log.LogLabels.build, "-----------------------------------")
+log.log(log.LogLabels.build, "EXTRACTING FILES")
 # ------------------------------------------------------------------------
 
 # GLFW
-extract(os.path.join(zipArchivesDir, "glfw-3.3.4.zip"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "glfw-3.3.4.zip"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
 
 # glew https://github.com/nigels-com/glew/releases/tag/glew-2.2.0
-extract(os.path.join(zipArchivesDir, "glew-2.2.0.zip"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "glew-2.2.0.zip"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
 
 # JSON https://github.com/nlohmann/json
-extract(os.path.join(zipArchivesDir, "json-3.9.1.zip"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "json-3.9.1.zip"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
 
 # Tracy https://github.com/wolfpld/tracy
-extract(os.path.join(zipArchivesDir, "tracy-0.11.0.zip"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "tracy-0.11.0.zip"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
 
 # stb https://github.com/nothings/stb
-extract(os.path.join(zipArchivesDir, "stb.zip"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "stb.zip"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
 
 # cgltf https://github.com/jkuhlmann/cgltf
-extract(os.path.join(zipArchivesDir, "cgltf-1.13.zip"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "cgltf-1.13.zip"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
 
 # freetype https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz
-extract(os.path.join(zipArchivesDir, "freetype-2.10.1.tar.gz"), destiny)
+extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "freetype-2.10.1.tar.gz"), BuildGlobalData.dependenciesDir)
 
 # ------------------------------------------------------------------------
+log.log(log.LogLabels.build, "-----------------------------------")
+
+##########################################
+########## BUILD ###########
+##########################################
+
+log.log(log.LogLabels.build, "-----------------------------------")
+log.log(log.LogLabels.build, "BUILDING DEPENDENCIES")
+
+buildType=BuildGlobalData.buildRelease
+buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
+
+tracyProfiler = "tracy-0.11.0/profiler"
+tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
+freetypeDir = "freetype-2.10.1"
+freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)
+glewDir = "glew-2.2.0/build/cmake"
+glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
+
+cmake_generated_data = cmake_build.generate_cmake_data()
+
+# glew
+buildCommandArgs = [
+    "-DCMAKE_BUILD_TYPE=" + buildType
+]
+
+cmake_build.build_cmake(glewDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+
+# freetype
+buildCommandArgs = [
+    "-DCMAKE_BUILD_TYPE=" + buildType
+]
+
+cmake_build.build_cmake(freetypeDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+
+# profiler GUI
+buildCommandArgs = [
+    "-DCMAKE_BUILD_TYPE=" + buildType,
+    "-DLEGACY=ON",
+    "-DDOWNLOAD_CAPSTONE=OFF",
+    "-DDOWNLOAD_GLFW=OFF",
+    "-DGLFW_BUILD_X11=ON"
+]
+
+cmake_build.build_cmake(tracyProfilerDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+
+log.log(log.LogLabels.build, "-----------------------------------")
+
+##########################################
+########## POST BUILD ###########
+##########################################
+
+if not os.path.isdir(os.path.join(BuildGlobalData.dependenciesDir, BuildGlobalData.binariesDir)):
+    os.mkdir(os.path.join(BuildGlobalData.dependenciesDir, BuildGlobalData.binariesDir))
+bin_dependencies_path_destiny = os.path.join(cwd, os.path.join(os.path.join(BuildGlobalData.dependenciesDir, BuildGlobalData.binariesDir), buildType))
+if not os.path.isdir(bin_dependencies_path_destiny):
+    os.mkdir(bin_dependencies_path_destiny)
+
+log.log(log.LogLabels.build, "-----------------------------------")
+log.log(log.LogLabels.build, "INSTALLING DEPENDENCIES BINARIES")
+# profiler: create gui executable link
+bin_gui_path_destiny = os.path.join(bin_dependencies_path_destiny, "tracy-profiler")
+tracy_profiler_bin_path_source = os.path.join(cwd, os.path.join(tracyProfilerDepencencyDir, buildTargetDir), "tracy-profiler")
+os.remove(bin_gui_path_destiny)
+os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
+log.log(log.LogLabels.build, "tracy profiler gui: " + bin_gui_path_destiny)
+log.log(log.LogLabels.build, "-----------------------------------")
