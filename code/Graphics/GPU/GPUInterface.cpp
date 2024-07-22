@@ -3,6 +3,7 @@
 
 bool GPUInterface::loadAPI()
 {
+    PROFILER_CPU()
     bool result = true;
     glewExperimental=true; // Needed in core profile
     if (glewInit() != GLEW_OK) {
@@ -14,6 +15,8 @@ bool GPUInterface::loadAPI()
 
 u32 GPUInterface::createBuffer(GPUBufferType bufferType)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	u32 bufferId = 0;
 	glCreateBuffers(1, &bufferId);
     bindBuffer(bufferType, bufferId);
@@ -22,11 +25,15 @@ u32 GPUInterface::createBuffer(GPUBufferType bufferType)
 
 void GPUInterface::bindBuffer(GPUBufferType bufferType, u32 bufferId)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glBindBuffer(TO_U32(bufferType), bufferId);
 }
 
 void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimitiveDataType primitiveType, u32 strideSize, u32 pointerOffset, u32 divisor)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	enableAttribute(propertyArrayIndex);
 	if(primitiveType == GPUPrimitiveDataType::INT || primitiveType == GPUPrimitiveDataType::UNSIGNED_INT)
 	{
@@ -42,6 +49,8 @@ void GPUInterface::attribute(u32 propertyArrayIndex, u32 elementSize, GPUPrimiti
 
 u32 GPUInterface::createVertexBufferLayout()
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	u32 vertexBufferLayout = 0;
 	glGenVertexArrays(1, &vertexBufferLayout);
 	enableVertexBufferLayout(vertexBufferLayout);
@@ -50,12 +59,16 @@ u32 GPUInterface::createVertexBufferLayout()
 
 u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     i32 maxElements = (getMaxBytesInSharedBuffer(bufferType)/elementSizeInBytes);
     return maxElements;
 }
 
 u32 GPUInterface::getMaxBytesInSharedBuffer(GPUBufferType bufferType)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     i32 maxBytes = 0;
     switch (bufferType)
     {
@@ -75,6 +88,8 @@ u32 GPUInterface::getMaxBytesInSharedBuffer(GPUBufferType bufferType)
 
 u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     i32 maxBindingPoints = 0;
     switch (bufferType)
     {
@@ -94,12 +109,16 @@ u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
 
 void GPUInterface::bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     // define the range of the buffer that links to a uniform binding point
     glBindBufferBase(TO_U32(bufferType), bindingPoint, bufferId);
 }
 
 void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 typeSizeInBytes, u32 size, bool isStatic)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	// bindBuffer(bufferType, bufferId);
     u32 usageHint = bufferType == GPUBufferType::STORAGE ? (isStatic ? GL_STATIC_COPY : GL_DYNAMIC_COPY) : (isStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 	glNamedBufferData(bufferId, typeSizeInBytes * size, nullptr, usageHint);
@@ -107,37 +126,51 @@ void GPUInterface::resizeBuffer(GPUBufferType bufferType, u32 bufferId, u32 type
 
 void GPUInterface::setBufferDataRaw(GPUBufferType bufferType, u32 bufferId, u32 typeSize, u32 size, const void* data)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	// bindBuffer(bufferType, bufferId);
 	glNamedBufferSubData(bufferId, 0, typeSize * size, data);
 }
 
 void GPUInterface::deleteVertexBufferLayout(u32 vertexBufferLayout)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glDeleteVertexArrays(1, &vertexBufferLayout);
 }
 
 void GPUInterface::deleteBuffer(u32 bufferId)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glDeleteBuffers(1, &bufferId);
 }
 
 void GPUInterface::enableAttribute(u32 attributeIndex)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glEnableVertexAttribArray(attributeIndex);
 }
 
 void GPUInterface::disableAttribute(u32 attributeIndex)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glDisableVertexAttribArray(attributeIndex);
 }
 
 void GPUInterface::enableVertexBufferLayout(u32 vertexBufferLayout)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glBindVertexArray(vertexBufferLayout);
 }
 
 void GPUInterface::enableStencil(u32 stencilValue, GPUStencilFunction stencilFunction, GPUStencilOp stencilPassOp)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, TO_U32(stencilPassOp));
     glStencilFunc(TO_U32(stencilFunction), stencilValue, 0xFF);
@@ -145,11 +178,15 @@ void GPUInterface::enableStencil(u32 stencilValue, GPUStencilFunction stencilFun
 
 void GPUInterface::disableStencil()
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glDisable(GL_STENCIL_TEST);
 }
 
 u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 height, bool createMipMap)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     u32 textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
@@ -188,6 +225,8 @@ u32 GPUInterface::createTexture(GPUTextureFormat internalformat, u32 width, u32 
 
 u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* data)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     u32 textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
@@ -204,6 +243,8 @@ u32 GPUInterface::createTexture1ByteChannel(u32 width, u32 height, const byte* d
 
 void GPUInterface::setTextureData(u32 textureId, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, bool createMipMap, const byte* data)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     setSubTexture(textureId, 0, 0, width, height, format, type, data);
     if(createMipMap)
     {
@@ -213,21 +254,29 @@ void GPUInterface::setTextureData(u32 textureId, u32 width, u32 height, GPUTextu
 
 void GPUInterface::setTextureStorage(u32 textureId, u32 levels, GPUTextureFormat internalformat, u32 width, u32 height)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glTextureStorage2D(textureId, levels, TO_U32(internalformat), width, height);
 }
 
 void GPUInterface::setSubTexture(u32 textureId, u32 x, u32 y, u32 width, u32 height, GPUTexturePixelFormat format, GPUPrimitiveDataType type, const byte* data)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glTextureSubImage2D(textureId, 0, x, y , width, height, TO_U32(format), TO_U32(type), data);
 }
 
 void GPUInterface::deleteTexture(u32 textureId)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glDeleteTextures(1, &textureId);
 }
 
 void GPUInterface::enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStage stage)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     u32 maxTextureUntis = getMaxTextureUnits(stage);
     CHECK_MSG(textureUnit < maxTextureUntis, "Max Texture Unit reached!");
 
@@ -236,6 +285,8 @@ void GPUInterface::enableTexture(u32 textureId, u32 textureUnit, GPUPipelineStag
 
 void GPUInterface::disableTexture(u32 textureUnit, GPUPipelineStage stage)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     u32 maxTextureUntis = getMaxTextureUnits(stage);
     CHECK_MSG(textureUnit < maxTextureUntis, "Max Texture Unit reached!");
     glBindTextureUnit(textureUnit, 0);
@@ -243,11 +294,15 @@ void GPUInterface::disableTexture(u32 textureUnit, GPUPipelineStage stage)
 
 void GPUInterface::setPixelStoreMode(u32 param, u32 value)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glPixelStorei(param, value);
 }
 
 u32 GPUInterface::getMaxTextureUnits(GPUPipelineStage stage)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     i32 maxTextureImageUnits = 0;
     switch (stage)
     {
@@ -265,11 +320,15 @@ u32 GPUInterface::getMaxTextureUnits(GPUPipelineStage stage)
 
 TextureHandle GPUInterface::getTextureHandle(u32 texture​Id)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     return glGetTextureHandleARB(texture​Id);
 }
 
 void GPUInterface::makeTextureResident(TextureHandle handle​, bool makeResident)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     if(makeResident)
     {
         glMakeTextureHandleResidentARB(handle​);
@@ -282,6 +341,8 @@ void GPUInterface::makeTextureResident(TextureHandle handle​, bool makeResiden
 
 u32 GPUInterface::createFramebuffer(u32 width, u32 height)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     u32 FBO = 0;
     // Create the FBO
     glGenFramebuffers(1, &FBO);
@@ -296,6 +357,8 @@ u32 GPUInterface::createFramebuffer(u32 width, u32 height)
 
 u32 GPUInterface::createFramebufferAttachment(u32 fbo, GPUFramebufferAttachmentType attachmentType, u32 width, u32 height)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     u32 textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
 
@@ -339,21 +402,29 @@ u32 GPUInterface::createFramebufferAttachment(u32 fbo, GPUFramebufferAttachmentT
 
 void GPUInterface::setFramebufferAttachment(u32 fbo, u32 textureId, GPUFramebufferAttachmentType attachmentType)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glNamedFramebufferTexture(fbo, TO_U32(attachmentType), textureId, 0);
 }
 
 void GPUInterface::enableFramebuffer(GPUFramebufferOperationType op, u32 FBO)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glBindFramebuffer(TO_U32(op), FBO);
 }
 
 void GPUInterface::disableFramebuffer(GPUFramebufferOperationType op)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glBindFramebuffer(TO_U32(op), 0);
 }
 
 void GPUInterface::setFramebufferAttachmentToRead(GPUFramebufferAttachmentType attachmentType)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     CHECK_MSG(attachmentType == GPUFramebufferAttachmentType::NONE ||
         (attachmentType >= GPUFramebufferAttachmentType::COLOR0 &&
         attachmentType <= GPUFramebufferAttachmentType::COLOR15), "Only COLOR or NONE attachment is suitable for reading!");
@@ -362,6 +433,8 @@ void GPUInterface::setFramebufferAttachmentToRead(GPUFramebufferAttachmentType a
 
 Vector4 GPUInterface::readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat format)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     Vector4 pixelColor;
     glReadPixels(x, y, 1, 1, TO_U32(format), TO_U32(GPUPrimitiveDataType::FLOAT), &pixelColor);
     return pixelColor;
@@ -369,6 +442,8 @@ Vector4 GPUInterface::readFramebufferPixel(u32 x, u32 y, GPUTexturePixelFormat f
 
 void GPUInterface::drawElements(GPUDrawPrimitive drawPrimitive, u32 indicesCount, u32 instancesCount, bool instanced)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     if(instanced)
     {
         glDrawElementsInstanced(TO_U32(drawPrimitive), indicesCount, TO_U32(GPUPrimitiveDataType::UNSIGNED_INT), 0, instancesCount);
@@ -383,56 +458,78 @@ void GPUInterface::drawElements(GPUDrawPrimitive drawPrimitive, u32 indicesCount
 
 void GPUInterface::setClearColor(const Vector3& color)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glClearColor(color.x, color.y, color.z ,1);
 }
 
 void GPUInterface::clearColor()
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void GPUInterface::clearDepth()
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void GPUInterface::clearStencil()
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glClear(GL_STENCIL_BUFFER_BIT);
 }
 
 void GPUInterface::clear()
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void GPUInterface::setViewport(u32 x, u32 y, u32 width, u32 height)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glViewport(x, y, width, height);
 }
 
 void GPUInterface::enableFlag(GPUFlags flag)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glEnable(TO_U32(flag));
 }
 
 void GPUInterface::disableFlag(GPUFlags flag)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glDisable(TO_U32(flag));
 }
 
 void GPUInterface::setBlendFunc(GPUBlendFactor sfactor, GPUBlendFactor dfactor)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glBlendFunc(TO_U32(sfactor), TO_U32(dfactor));
 }
 
 void GPUInterface::setDepthFunc(GPUDepthFunc depthFunc)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glDepthFunc(TO_U32(depthFunc));
 }
 
 void GPUInterface::setFaceMode(GPUCullFaceType cullFaceType)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     bool enable = cullFaceType != GPUCullFaceType::NONE;
     if(enable)
     {
@@ -448,16 +545,22 @@ void GPUInterface::setFaceMode(GPUCullFaceType cullFaceType)
 
 void GPUInterface::enableProgram(u32 programId)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glUseProgram(programId);
 }
 
 void GPUInterface::disableProgram(u32 programId)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     glUseProgram(0);
 }
 
 u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const std::string& fragmentShaderString)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
 
 	const char* vertexCString = vertexShaderString.c_str();
 	const char* fragmentCString = fragmentShaderString.c_str();
@@ -489,6 +592,8 @@ u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const st
 
 void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const HashedString& bufferName, u32 bindingPoint)
 {
+    PROFILER_CPU()
+    PROFILER_GPU()
     switch (bufferType)
     {
         case GPUBufferType::UNIFORM:

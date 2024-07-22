@@ -46,6 +46,8 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             shader
         ));
 
+        setupShader(shader);
+        bindShader(instancedMeshData);
     }
 }
 
@@ -71,6 +73,7 @@ void RenderPass::postFramebufferEnabled()
 
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
+    PROFILER_CPU()
     mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUSharedBuffer(instancedMeshData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
@@ -104,11 +107,10 @@ void RenderPass::render()
 
 void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
+    PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
     Ptr<Shader> shader = getShader(instancedMeshData);
 
-    setupShader(shader);
-    bindShader(instancedMeshData);
 
     mGPUPrograms.at(instancedMeshData)->enable();
     shader->enable();
@@ -169,6 +171,7 @@ Ptr<Shader> RenderPass::getShader(const InstancedMeshData& instancedMeshData) co
 
 void RenderPass::setupShader(Ptr<Shader> shader) const
 {
+    PROFILER_CPU()
     FOR_ARRAY(i, mRenderPassData.mDependencies)
     {
         FramebufferBinding framebufferBinding

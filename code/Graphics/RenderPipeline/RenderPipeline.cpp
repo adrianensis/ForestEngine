@@ -76,6 +76,7 @@ void RenderPipeline::terminate()
 
 void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
+    PROFILER_CPU()
     if(mRenderInstancesSlotsManager.isEmpty())
     {
         mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
@@ -120,6 +121,7 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 
 void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
+    PROFILER_CPU()
     if(renderer->isStatic())
     {
         mRenderersStatic.at(renderer->getRenderSlot().getSlot()).reset();
