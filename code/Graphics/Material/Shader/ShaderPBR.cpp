@@ -59,10 +59,13 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
     auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
     Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-    shaderBuilder.getMain().
-    ifBlock(textureHandler.notEq("0"s)).
-        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
-    end();
+    if(inTextureCoord.isValid())
+    {
+        shaderBuilder.getMain().
+        ifBlock(textureHandler.notEq("0"s)).
+            set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
+        end();
+    }
 
     Variable PBRMetallicRoughness;
     shaderBuilder.getMain().
@@ -120,30 +123,38 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
         auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
         auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
         
-        Variable normalFromTexture;
-        funcGetNormalFromMap.body().
-        variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
+        if(inTextureCoord.isValid())
+        {
+            Variable normalFromTexture;
+            funcGetNormalFromMap.body().
+            variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
-        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
-        funcGetNormalFromMap.body().
-        ifBlock(textureHandler.notEq("0"s)).
-            set(normalFromTexture, call("texture", {textures.at(textureHandler), inTextureCoord})).
-        end();
+            auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
+            auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
+            Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+            funcGetNormalFromMap.body().
+            ifBlock(textureHandler.notEq("0"s)).
+                set(normalFromTexture, call("texture", {textures.at(textureHandler), inTextureCoord})).
+            end();
 
-        funcGetNormalFromMap.body().
-        variable(tangentNormal, GPUBuiltIn::PrimitiveTypes::mVector3, "tangentNormal",
-            normalFromTexture.dot("xyz").mul("2"s).sub("1"s)).
-        variable(Q1, GPUBuiltIn::PrimitiveTypes::mVector3, "Q1", call("dFdx", {fragPosition})).
-        variable(Q2, GPUBuiltIn::PrimitiveTypes::mVector3, "Q2", call("dFdy", {fragPosition})).
-        variable(st1, GPUBuiltIn::PrimitiveTypes::mVector2, "st1", call("dFdx", {inTextureCoord})).
-        variable(st2, GPUBuiltIn::PrimitiveTypes::mVector2, "st2", call("dFdy", {inTextureCoord})).
-        variable(N, GPUBuiltIn::PrimitiveTypes::mVector3, "N", call("normalize", {inNormal})).
-        variable(T, GPUBuiltIn::PrimitiveTypes::mVector3, "T", call("normalize", {Q1.mul(st2.dot("t")).sub(Q2.mul(st1.dot("t")))})).
-        variable(B, GPUBuiltIn::PrimitiveTypes::mVector3, "B", call("normalize", {call("cross", {N, T})}).mul("-1"s)).
-        variable(TBN, GPUBuiltIn::PrimitiveTypes::mMatrix3, "TBN", call("mat3", {T, B, N})).
-        ret(call("normalize", {TBN.mul(tangentNormal)}));
+            funcGetNormalFromMap.body().
+            variable(tangentNormal, GPUBuiltIn::PrimitiveTypes::mVector3, "tangentNormal",
+                normalFromTexture.dot("xyz").mul("2"s).sub("1"s)).
+            variable(Q1, GPUBuiltIn::PrimitiveTypes::mVector3, "Q1", call("dFdx", {fragPosition})).
+            variable(Q2, GPUBuiltIn::PrimitiveTypes::mVector3, "Q2", call("dFdy", {fragPosition})).
+            variable(st1, GPUBuiltIn::PrimitiveTypes::mVector2, "st1", call("dFdx", {inTextureCoord})).
+            variable(st2, GPUBuiltIn::PrimitiveTypes::mVector2, "st2", call("dFdy", {inTextureCoord})).
+            variable(N, GPUBuiltIn::PrimitiveTypes::mVector3, "N", call("normalize", {inNormal})).
+            variable(T, GPUBuiltIn::PrimitiveTypes::mVector3, "T", call("normalize", {Q1.mul(st2.dot("t")).sub(Q2.mul(st1.dot("t")))})).
+            variable(B, GPUBuiltIn::PrimitiveTypes::mVector3, "B", call("normalize", {call("cross", {N, T})}).mul("-1"s)).
+            variable(TBN, GPUBuiltIn::PrimitiveTypes::mMatrix3, "TBN", call("mat3", {T, B, N})).
+            ret(call("normalize", {TBN.mul(tangentNormal)}));
+        }
+        else
+        {
+            funcGetNormalFromMap.body().
+            ret(call("normalize", {inNormal}));
+        }
 
         shaderBuilder.get().function(funcGetNormalFromMap);
     }
@@ -434,13 +445,16 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
 
-        Variable metallicRoughnessPack;
-        funcCalculatePBR.body().
-        ifBlock(textureHandlerMetallicRoughness.notEq("0"s)).
-            variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {textures.at(textureHandlerMetallicRoughness), inTextureCoord})).
-            set(roughness, metallicRoughnessPack.dot("g")).
-            set(metallic, metallicRoughnessPack.dot("b")).
-        end();
+        if(inTextureCoord.isValid())
+        {
+            Variable metallicRoughnessPack;
+            funcCalculatePBR.body().
+            ifBlock(textureHandlerMetallicRoughness.notEq("0"s)).
+                variable(metallicRoughnessPack, GPUBuiltIn::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {textures.at(textureHandlerMetallicRoughness), inTextureCoord})).
+                set(roughness, metallicRoughnessPack.dot("g")).
+                set(metallic, metallicRoughnessPack.dot("b")).
+            end();
+        }
 
         // base color gamma correct
         Variable albedo;
