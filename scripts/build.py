@@ -83,6 +83,8 @@ buildCommandArgs = [
     "-DENABLE_PROFILER=" + str(enableProfiler),
     "-DENABLE_ADDRESS_SANITIZER=" + str(enableAddressSanitizer),
     "-DENABLE_GPU_DEBUG=" + str(enableGPUDebug),
+    "-DCMAKE_CXX_FLAGS_DEBUG=" + "-flto=auto",
+    "-DCMAKE_CXX_FLAGS_RELEASE=" + "-flto=auto",
     # "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold",
     # "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold",
 ]
