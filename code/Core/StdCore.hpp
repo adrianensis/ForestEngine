@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint> // std::uintptr_t
 #include <cstring>
 #include <string>
 #include <string_view>
