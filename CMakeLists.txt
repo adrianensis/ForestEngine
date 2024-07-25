@@ -53,7 +53,7 @@ if(ENABLE_PROFILER)
 endif(ENABLE_PROFILER)
 
 if(UNIX)
-    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -mavx -Wall -Werror=return-type -Wcast-align -Wcast-qual -Wpointer-arith -Wfloat-equal -flto=auto")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -mavx -Wall -Werror=return-type -Wcast-align -Wcast-qual -Wpointer-arith -Wfloat-equal") # -flto=auto
   
     if(ENABLE_ADDRESS_SANITIZER)
         set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -fsanitize=address -static-libasan")

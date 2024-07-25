@@ -169,8 +169,7 @@ buildCommandArgs = [
     "-DDOWNLOAD_CAPSTONE=OFF",
     "-DDOWNLOAD_GLFW=OFF",
     "-DGLFW_BUILD_X11=ON",
-    "-DCMAKE_CXX_FLAGS_DEBUG=" + "-flto=auto",
-    "-DCMAKE_CXX_FLAGS_RELEASE=" + "-flto=auto"
+    # "-DCMAKE_CXX_FLAGS_RELEASE=" + "-flto=auto"
 ]
 
 cmake_build.build_cmake(tracyProfilerDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
