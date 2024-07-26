@@ -20,9 +20,9 @@ print(cwd)
 ########## FUNCTIONS ###########
 ##########################################
 
-def download_dependency(url, filename):
+def download_dependency(url, filename, extraDependencyFolder=""):
     download_file.download_file(url, BuildGlobalData.dependenciesDownloadDir, filename)
-    extract_files.extract_files(os.path.join(BuildGlobalData.dependenciesDownloadDir, filename), BuildGlobalData.dependenciesDir)
+    extract_files.extract_files(os.path.join(BuildGlobalData.dependenciesDownloadDir, filename), os.path.join(BuildGlobalData.dependenciesDir, extraDependencyFolder))
 
 ##########################################
 ########## DATA ###########
