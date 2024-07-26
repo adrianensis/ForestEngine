@@ -4,6 +4,6 @@ class BuildGlobalData:
     binariesDir="binaries"
     outputDir="output"
     dependenciesDir="dependencies"
-    zipArchivesDir="scripts/dependencies-zip"
+    dependenciesDownloadDir="dependencies/downloads"
     buildDebug="Debug"
     buildRelease="Release"

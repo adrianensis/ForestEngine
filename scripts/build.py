@@ -87,7 +87,7 @@ buildCommandArgs = [
     # "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold",
 ]
 
-cmake_build.build_cmake(cwd, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
 
 ##########################################
 ########## POST BUILD ###########

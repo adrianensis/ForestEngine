@@ -3,7 +3,7 @@ doc/
 generated-code/
 compiledLibs/
 binaries/
-dependencies/
+dependencies
 output/
 log.txt
 cmake-build-*

@@ -2,7 +2,7 @@
 
 #include "Core/StdCore.hpp"
 
-#ifdef TRACY_ENABLE
+#ifdef ENGINE_ENABLE_PROFILER
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyC.h"
 #include "glew-2.2.0/include/GL/glew.h"

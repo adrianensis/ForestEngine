@@ -1,17 +1,28 @@
+from genericpath import isdir
 import sys
 import os  
 import getopt
 import shutil
 import platform
 import distro
+import time
 
 import lib.cmake_build as cmake_build
 from lib.build_global_data import BuildGlobalData
 import lib.extract_files as extract_files
+import lib.download_file as download_file
 import lib.log as log
 
 cwd = os.getcwd()
 print(cwd)
+
+##########################################
+########## FUNCTIONS ###########
+##########################################
+
+def download_dependency(url, filename):
+    download_file.download_file(url, BuildGlobalData.dependenciesDownloadDir, filename)
+    extract_files.extract_files(os.path.join(BuildGlobalData.dependenciesDownloadDir, filename), BuildGlobalData.dependenciesDir)
 
 ##########################################
 ########## DATA ###########
@@ -35,10 +46,10 @@ for opt, arg in opts:
     if opt in ['-s']:
       installSystemDepencencies = True
 
-# if os.path.isdir(BuildGlobalData.dependenciesDir):
-#     shutil.rmtree(BuildGlobalData.dependenciesDir)
-
-# os.mkdir(BuildGlobalData.dependenciesDir)
+if not os.path.isdir(BuildGlobalData.dependenciesDir):
+    os.mkdir(BuildGlobalData.dependenciesDir)
+if not os.path.isdir(BuildGlobalData.dependenciesDownloadDir):
+    os.mkdir(BuildGlobalData.dependenciesDownloadDir)
 
 ##########################################
 ########## INSTALL SYSTEM DEPENDENCIES ###########
@@ -86,47 +97,18 @@ if installSystemDepencencies:
     log.log(log.LogLabels.build, "-----------------------------------")
 
 ##########################################
-########## EXTRACT ###########
+########## DOWNLOAD ###########
 ##########################################
 
 log.log(log.LogLabels.build, "-----------------------------------")
 log.log(log.LogLabels.build, "EXTRACTING FILES")
-# ------------------------------------------------------------------------
-
-# GLFW
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "glfw-3.3.4.zip"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
-
-# glew https://github.com/nigels-com/glew/releases/tag/glew-2.2.0
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "glew-2.2.0.zip"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
-
-# JSON https://github.com/nlohmann/json
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "json-3.9.1.zip"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
-
-# Tracy https://github.com/wolfpld/tracy
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "tracy-0.11.0.zip"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
-
-# stb https://github.com/nothings/stb
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "stb.zip"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
-
-# cgltf https://github.com/jkuhlmann/cgltf
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "cgltf-1.13.zip"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
-
-# freetype https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz
-extract_files.extract(os.path.join(BuildGlobalData.zipArchivesDir, "freetype-2.10.1.tar.gz"), BuildGlobalData.dependenciesDir)
-
-# ------------------------------------------------------------------------
+download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
+download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
+download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip")
+download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.0.zip", "tracy-0.11.0.zip")
+download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip")
+download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip")
+download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz", "freetype-2.13.2.tar.xz")
 log.log(log.LogLabels.build, "-----------------------------------")
 
 ##########################################
@@ -141,26 +123,19 @@ buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
 tracyProfiler = "tracy-0.11.0/profiler"
 tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
-freetypeDir = "freetype-2.10.1"
+freetypeDir = "freetype-2.13.2"
 freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)
-glewDir = "glew-2.2.0/build/cmake"
+glewDir = "glew-2.2.0"
 glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
 
 cmake_generated_data = cmake_build.generate_cmake_data()
-
-# glew
-buildCommandArgs = [
-    "-DCMAKE_BUILD_TYPE=" + buildType
-]
-
-cmake_build.build_cmake(glewDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
 
 # freetype
 buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType
 ]
 
-cmake_build.build_cmake(freetypeDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
 
 # profiler GUI
 buildCommandArgs = [
@@ -172,7 +147,7 @@ buildCommandArgs = [
     # "-DCMAKE_CXX_FLAGS_RELEASE=" + "-flto=auto"
 ]
 
-cmake_build.build_cmake(tracyProfilerDepencencyDir, BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
 
 log.log(log.LogLabels.build, "-----------------------------------")
 
@@ -191,7 +166,8 @@ log.log(log.LogLabels.build, "INSTALLING DEPENDENCIES BINARIES")
 # profiler: create gui executable link
 bin_gui_path_destiny = os.path.join(bin_dependencies_path_destiny, "tracy-profiler")
 tracy_profiler_bin_path_source = os.path.join(cwd, os.path.join(tracyProfilerDepencencyDir, buildTargetDir), "tracy-profiler")
-os.remove(bin_gui_path_destiny)
+if os.path.isfile(bin_gui_path_destiny):
+    os.remove(bin_gui_path_destiny)
 os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
 log.log(log.LogLabels.build, "tracy profiler gui: " + bin_gui_path_destiny)
 log.log(log.LogLabels.build, "-----------------------------------")

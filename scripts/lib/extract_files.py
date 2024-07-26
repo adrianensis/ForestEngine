@@ -11,7 +11,7 @@ if not platform.python_version().startswith('3'):
 ########## FUNCTIONS ###########
 ##########################################
 
-def extract(file_path, destinty_path):
+def extract_files(file_path, destinty_path):
     log.log(log.LogLabels.info, "Extracting: " + file_path)
     if file_path.endswith("zip"):
         with ZipFile(file_path) as zipObj:

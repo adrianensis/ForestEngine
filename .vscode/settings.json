@@ -80,10 +80,13 @@
         "hash_set": "cpp",
         "span": "cpp",
         "codecvt": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "ftobjs.h": "c"
     },
 
     "C_Cpp.intelliSenseEngine": "default",
     "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "enabled",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoImportCompletions": true,
 }

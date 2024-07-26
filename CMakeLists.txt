@@ -8,6 +8,13 @@ project(${PROJECTNAME} LANGUAGES CXX C)
 # FUNCTIONS
 # ----------------------------------------------------------------------------
 
+function(check_exist path)
+    if(NOT EXISTS ${path})
+        message(FATAL_ERROR "${path} doesn't exist!")
+    endif()
+endfunction()
+
+
 function(build_program path prefix program_name)
 
     set(PROGRAM_PATH "${path}/${program_name}")
@@ -51,7 +58,7 @@ if(ENABLE_GPU_DEBUG)
 endif(ENABLE_GPU_DEBUG)
 
 if(ENABLE_PROFILER)
-    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D TRACY_ENABLE")
+    set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -D TRACY_ENABLE -D ENGINE_ENABLE_PROFILER")
 endif(ENABLE_PROFILER)
 
 if(UNIX)
@@ -106,12 +113,15 @@ include_directories(${OPENGL_INCLUDE_DIR})
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory("${DEPENDENCIES_DIR}/glfw-3.3.4")
-include_directories("${DEPENDENCIES_DIR}/glfw-3.3.4/include")
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glfw-3.4")
+add_subdirectory("${DEPENDENCIES_DIR}/glfw-3.4")
+include_directories("${DEPENDENCIES_DIR}/glfw-3.4/include")
 
 # glew
-add_compile_definitions(GLEW_STATIC)
+set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glew-2.2.0")
 add_subdirectory("${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake")
+
 include_directories("${DEPENDENCIES_DIR}/glew-2.2.0/include")
 
 if(ENABLE_PROFILER)
@@ -121,23 +131,28 @@ if(ENABLE_PROFILER)
     set(DOWNLOAD_GLFW OFF CACHE BOOL "" FORCE)
     set(DOWNLOAD_CAPSTONE OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
+    check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/tracy-0.11.0")
     include_directories("${DEPENDENCIES_DIR}/tracy-0.11.0/public")
     add_subdirectory("${DEPENDENCIES_DIR}/tracy-0.11.0")
 endif(ENABLE_PROFILER)
 
 # JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
-include_directories("${DEPENDENCIES_DIR}/json-3.9.1/single_include/nlohmann")
-add_subdirectory("${DEPENDENCIES_DIR}/json-3.9.1")
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/json-3.11.3")
+include_directories("${DEPENDENCIES_DIR}/json-3.11.3/single_include/nlohmann")
+add_subdirectory("${DEPENDENCIES_DIR}/json-3.11.3")
 
 # stb
-include_directories("${DEPENDENCIES_DIR}/stb")
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/stb-master")
+include_directories("${DEPENDENCIES_DIR}/stb-master")
 
 # freetype
-include_directories("${DEPENDENCIES_DIR}/freetype-2.10.1/include")
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/freetype-2.13.2")
+include_directories("${DEPENDENCIES_DIR}/freetype-2.13.2/include")
 
 # cgltf
-include_directories("${DEPENDENCIES_DIR}/cgltf-1.13")
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/cgltf-1.14")
+include_directories("${DEPENDENCIES_DIR}/cgltf-1.14")
 
 # TBB
 find_package(TBB REQUIRED)
@@ -183,7 +198,7 @@ add_library(${PROJECTNAME} STATIC ${OBJECTS})
 # link libraries with forest library
 target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
-target_link_libraries(${PROJECTNAME} glew_s)
+target_link_libraries(${PROJECTNAME} glew)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
