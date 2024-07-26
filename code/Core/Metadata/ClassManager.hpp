@@ -4,7 +4,6 @@
 #include "Core/Metadata/MetadataMacros.hpp"
 #include "Core/HashedString/HashedString.hpp"
 #include <unordered_map>
-#include "Core/Assert/Assert.hpp"
 
 #define REGISTER_CLASS(...) \
 inline static const ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
