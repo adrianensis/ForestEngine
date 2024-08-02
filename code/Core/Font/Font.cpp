@@ -146,7 +146,7 @@ origin(0,0) .              * X        X*                    .               v
 
         mGlyphs[c].mData = new byte[mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows];
 
-        memcpy(mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.buffer, mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows);
+        std::memcpy(mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.buffer, mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows);
 
         ImageUtils::flipImageVertically({mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows}, 1);
 
