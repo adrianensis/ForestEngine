@@ -34,9 +34,11 @@ public:
     u64 hash() const
     {
         u32 shift = 0;
-        return ((u64)mUseStencil << shift++) ^
-        ((u64)mStencilValue << shift++) ^ (static_cast<u64>(mStencilFunction) << shift++) ^
-        ((u64)mParentId << shift++) /*^ (u64)mId*/;
+        u64 result = (u64)mUseStencil << (shift++);
+        result = result ^ (u64)mStencilValue << (shift++);
+        result = result ^ static_cast<u64>(mStencilFunction) << (shift++);
+        result = result ^ (u64)mParentId << (shift++); /*^ (u64)mId*/;
+        return result;
     }
 };
 

@@ -36,11 +36,12 @@ public:
 		size_t operator()(const InstancedMeshData& key) const
 		{
             u32 shift = 0;
-            u64 result = (key.mMaterial.getIndex() << shift++) ^ (key.mMesh->getObjectId() << shift++) ^
-			(static_cast<u64>(key.mIsStatic) << shift++);
+            u64 result = key.mMaterial.getIndex() << (shift++);
+            result = result ^ key.mMesh->getObjectId() << (shift++);
+			result = result ^ static_cast<u64>(key.mIsStatic) << (shift++);
             if(key.mStencilData.mUseStencil)
             {
-                result = result ^ (key.mStencilData.hash() << shift++);
+                result = result ^ (key.mStencilData.hash() << (shift++));
             }
             
             return result;
