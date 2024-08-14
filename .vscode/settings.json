@@ -81,7 +81,9 @@
         "span": "cpp",
         "codecvt": "cpp",
         "typeindex": "cpp",
-        "ftobjs.h": "c"
+        "ftobjs.h": "c",
+        "charconv": "cpp",
+        "expected": "cpp"
     },
 
     "C_Cpp.intelliSenseEngine": "default",
