@@ -109,6 +109,14 @@ include_directories("${DEPENDENCIES_DIR}")
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
+# Vulkan
+set(VULKAN_DIR "${DEPENDENCIES_DIR}/vulkan/1.3.290.0/x86_64")
+check_exist("${VULKAN_DIR}")
+# add_subdirectory("${DEPENDENCIES_DIR}/vulkan/1.3.290.0")
+
+include_directories("${VULKAN_DIR}/include")
+set(VULKAN_LIBRARIES "${VULKAN_DIR}/lib")
+
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -195,9 +203,18 @@ add_library(${PROJECTNAME} STATIC ${OBJECTS})
 # LINK EXTERNAL LIBRARIES
 # ----------------------------------------------------------------------------
 
+# target_include_directories(${PROJECT_NAME} PUBLIC
+#     ${Vulkan_INCLUDE_DIRS}
+# )
+
+target_link_directories(${PROJECT_NAME} PUBLIC
+    ${Vulkan_LIBRARIES}
+)
+
 # link libraries with forest library
 target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
+target_link_libraries(${PROJECTNAME} vulkan)
 target_link_libraries(${PROJECTNAME} glew)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
