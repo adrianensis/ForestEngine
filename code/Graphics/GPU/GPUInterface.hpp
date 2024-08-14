@@ -3,6 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
 #include "glew-2.2.0/include/GL/glew.h"
+#include "vulkan/vulkan.hpp"
 
 class Camera;
 
