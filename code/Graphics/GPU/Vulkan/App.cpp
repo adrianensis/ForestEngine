@@ -29,7 +29,6 @@ namespace GPUAPI {
 
     App::App(Config config)
             : config(std::move(config)),
-              fileSystem(new FileSystem),
               vertexShader(new GPUShader(vulkanDevice)),
               fragmentShader(new GPUShader(vulkanDevice)),
               vulkanIndexBuffer(new GPUIndexBuffer(vulkanPhysicalDevice, vulkanDevice, vulkanCommandPool)),
@@ -40,7 +39,6 @@ namespace GPUAPI {
         delete fragmentShader;
         delete vertexShader;
         delete window;
-        delete fileSystem;
     }
 
     void App::run() {
@@ -63,14 +61,14 @@ namespace GPUAPI {
         VD_LOG_INFO("Initializing...");
 
 
-        if (!vertexShader->initialize(fileSystem->readBytes("shaders/simple_shader.vert.spv"))) {
-            VD_LOG_ERROR("Could not initialize vertex shader");
-            return false;
-        }
-        if (!fragmentShader->initialize(fileSystem->readBytes("shaders/simple_shader.frag.spv"))) {
-            VD_LOG_ERROR("Could not initialize fragment shader");
-            return false;
-        }
+        // if (!vertexShader->initialize(fileSystem->readBytes("shaders/simple_shader.vert.spv"))) {
+        //     VD_LOG_ERROR("Could not initialize vertex shader");
+        //     return false;
+        // }
+        // if (!fragmentShader->initialize(fileSystem->readBytes("shaders/simple_shader.frag.spv"))) {
+        //     VD_LOG_ERROR("Could not initialize fragment shader");
+        //     return false;
+        // }
  
         if (!vulkanIndexBuffer->initialize(indices)) {
             VD_LOG_ERROR("Could not initialize Vulkan index buffer");

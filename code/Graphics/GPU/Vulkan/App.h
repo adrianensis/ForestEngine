@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Log.h"
-#include "FileSystem.h"
 // #include "Window.h"
 #include "Vulkan.h"
 #include "GPUPhysicalDevice.h"
@@ -41,7 +40,6 @@ namespace GPUAPI {
 
     private:
         Config config;
-        FileSystem* fileSystem;
         Window* window;
         GPUShader* vertexShader;
         GPUShader* fragmentShader;
