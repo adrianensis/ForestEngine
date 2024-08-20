@@ -16,5 +16,9 @@ void AssertUtils::checkMsg(bool condition, const std::string& conditionString, c
 
 void AssertUtils::sendAssertSignal()
 {
-    std::raise(SIGTRAP);
+    #if defined(SIGTRAP)
+        std::raise(SIGTRAP);
+    #else
+        std::raise(SIGABRT);
+    #endif
 }

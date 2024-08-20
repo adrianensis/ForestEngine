@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 
+#include "Core/Environment/Environment.hpp"
 #include "Core/StdMacros.hpp"
 
 using namespace std::literals;
