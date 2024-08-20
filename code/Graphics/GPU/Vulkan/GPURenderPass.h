@@ -1,9 +1,9 @@
 #pragma once
 
-#include "GPUShader.h"
-#include "GPUSwapChain.h"
-#include "GPUDevice.h"
-#include "GPUCommandBuffer.h"
+#include "Graphics/GPU/Vulkan/GPUShader.h"
+#include "Graphics/GPU/GPUSwapChain.h"
+#include "Graphics/GPU/GPUDevice.h"
+#include "Graphics/GPU/GPUCommandBuffer.h"
 
 #include <vulkan/vulkan.h>
 

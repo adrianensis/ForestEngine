@@ -3,6 +3,8 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUSwapChain.h"
+#include "Graphics/GPU/Vulkan/GPURenderPass.h"
 
 class GPUFramebufferData
 {
@@ -39,10 +41,22 @@ public:
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 
+    GPUFramebuffer(GPUDevice* vulkanDevice, GPUSwapChain* vulkanSwapChain, GPURenderPass* vulkanRenderPass);
+    const VkFramebuffer getFramebuffer() const;
+    bool initialize(VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
+    void terminate();
+
 private:
     u32 mFramebufferId = 0;
     std::unordered_map<GPUFramebufferAttachmentType, GPUFramebufferAttachment> mAttachments;
     GPUFramebufferData mFramebufferData;
+
+    static const VkAllocationCallbacks* ALLOCATOR;
+
+    GPUDevice* vulkanDevice;
+    GPUSwapChain* vulkanSwapChain;
+    GPURenderPass* vulkanRenderPass;
+    VkFramebuffer framebuffer = VK_NULL_HANDLE;
 
 public:
     GET(FramebufferId)

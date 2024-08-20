@@ -11,7 +11,6 @@
 #include "Graphics/GPU/GPUSwapChain.h"
 #include "Graphics/GPU/GPUCommandPool.h"
 #include "Graphics/GPU/GPUCommandBuffer.h"
-#include "Graphics/GPU/Vulkan/GPUFramebuffer.h"
 #include "Graphics/GPU/GPUImage.h"
 
 class GPUGlobalState: public System

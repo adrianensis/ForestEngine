@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GPUDevice.h"
+#include "Graphics/GPU/GPUDevice.h"
 
 #include <vulkan/vulkan.h>
 
