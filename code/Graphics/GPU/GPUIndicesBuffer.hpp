@@ -13,11 +13,11 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
+//	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
     }
     void setDataArray(const ByteBuffer& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
+//	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
     }
     void terminate();
 

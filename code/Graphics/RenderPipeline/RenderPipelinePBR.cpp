@@ -43,7 +43,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
     updateLights(renderData);
 
-	GET_SYSTEM(GPUInterface).clear();
+//	GET_SYSTEM(GPUInterface).clear();
 
     // FOR_ARRAY(i, renderData.mPointLights)
     {
@@ -61,8 +61,8 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
 	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
 
-    GET_SYSTEM(GPUInterface).clearDepth();
-    GET_SYSTEM(GPUInterface).clearStencil();
+//    GET_SYSTEM(GPUInterface).clearDepth();
+//    GET_SYSTEM(GPUInterface).clearStencil();
 
     Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
     renderPassUI->renderPass();

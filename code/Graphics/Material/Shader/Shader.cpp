@@ -71,7 +71,7 @@ void Shader::enable() const
     u32 textureUnit = 0;
     FOR_MAP(it, mShaderData.mFramebufferBindings)
     {
-        GET_SYSTEM(GPUInterface).enableTexture(it->second.mTextureID, textureUnit, it->second.mStage);
+//        GET_SYSTEM(GPUInterface).enableTexture(it->second.mTextureID, textureUnit, it->second.mStage);
         textureUnit++;
     }
 }
@@ -82,7 +82,7 @@ void Shader::disable() const
     u32 textureUnit = 0;
     FOR_MAP(it, mShaderData.mFramebufferBindings)
     {
-        GET_SYSTEM(GPUInterface).disableTexture(textureUnit, it->second.mStage);
+//        GET_SYSTEM(GPUInterface).disableTexture(textureUnit, it->second.mStage);
         textureUnit++;
     }
 }

@@ -36,13 +36,13 @@ public:
     void resizeBytes(u32 bytes)
     {
         checkMaxSize(bytes);
-        GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, 1, bytes, mIsStatic);
+//        GET_SYSTEM(GPUInterface).resizeBuffer(mGPUSharedBufferData.mType, mBufferId, 1, bytes, mIsStatic);
     }
     template <class T>
     void setData(const T& data)
     {
         checkMaxSize(sizeof(T));
-        // GET_SYSTEM(GPUInterface).setBufferData(mGPUSharedBufferData.mType, mBufferId, data);
+//        // GET_SYSTEM(GPUInterface).setBufferData(mGPUSharedBufferData.mType, mBufferId, data);
         const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
         uniformBuffer.setData((void*) data);
     }
@@ -50,13 +50,13 @@ public:
     void setDataArray(const std::vector<T>& data)
     {
         checkMaxSize(sizeof(T) * data.size());
-        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+//        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
         const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
         uniformBuffer.setData((void*) data.data());
     }
     void setDataArray(const ByteBuffer& data)
     {
-	    // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+//	    // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
         const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
         uniformBuffer.setData((void*) data.getBuffer().data());
     }

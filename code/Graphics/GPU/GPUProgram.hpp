@@ -23,7 +23,7 @@ public:
     template<class T>
     void bindUniformValue(const HashedString& name, const T& value)
     {
-        GET_SYSTEM(GPUInterface).bindUniformValue<T>(mProgramId, name, value);
+//        GET_SYSTEM(GPUInterface).bindUniformValue<T>(mProgramId, name, value);
     }
     void bindSharedBuffer(const GPUSharedBuffer& sharedBuffer);
     void createDescriptors();

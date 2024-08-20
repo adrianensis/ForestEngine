@@ -34,7 +34,7 @@ public:
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
-	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
+//	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     void setDataArray(const ByteBuffer& data)
     {
@@ -42,7 +42,7 @@ public:
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
-	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
+//	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;

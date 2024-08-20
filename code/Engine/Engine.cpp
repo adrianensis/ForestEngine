@@ -23,7 +23,7 @@ void Engine::init()
 	Profiler::init();
 
     CREATE_SYSTEM(EngineConfig);
-    CREATE_SYSTEM(GPUInterface);
+    // CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(WindowManager);
     WindowData windowData;
     windowData.mTitle = "Engine";

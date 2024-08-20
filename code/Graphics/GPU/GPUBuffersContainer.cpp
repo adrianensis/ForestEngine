@@ -6,7 +6,7 @@ void GPUVertexBuffersContainer::create()
 {
 	PROFILER_CPU()
 
-    mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
+//    mVertexBufferLayoutId = GET_SYSTEM(GPUInterface).createVertexBufferLayout();
 
     FOR_ARRAY(i, mVertexBuffers)
     {
@@ -18,12 +18,12 @@ void GPUVertexBuffersContainer::create()
 
 void GPUVertexBuffersContainer::enable()
 {
-	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
+//	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
 }
 
 void GPUVertexBuffersContainer::disable()
 {
-	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
+//	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
 }
 
 void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data, bool isStatic)
@@ -76,7 +76,7 @@ void GPUVertexBuffersContainer::terminate()
         it->terminate();
     }
 
-    GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
+//    GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
 }
 
 void GPUSharedBuffersContainer::create()

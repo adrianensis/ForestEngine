@@ -43,7 +43,7 @@ void RenderEngine::postSceneChanged()
 void RenderEngine::onResize(u32 width, u32 height)
 {
 	LOG_TRACE()
-	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
+//	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
     TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }

@@ -55,11 +55,11 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 
 void ShapeBatchRenderer::render()
 {
-    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
-    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
-    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
-    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
-    GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
+//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+//    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
+//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
+//    GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
 
     PROFILER_CPU()
 	if (mShapesCounter > 0)
@@ -71,7 +71,7 @@ void ShapeBatchRenderer::render()
         mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mColor).resize(mColorBuffer.size());
         mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).setDataArray(mPositionBuffer);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mColor).setDataArray(mColorBuffer);
-		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
+//		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersContainer.disable();
 
         mShader->getGPUProgram()->disable();
@@ -81,9 +81,9 @@ void ShapeBatchRenderer::render()
 		mShapesCounter = 0;
 	}
 
-    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
-    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
-    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
+//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
+//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
 void ShapeBatchRenderer::addPosition(const Vector3& position)

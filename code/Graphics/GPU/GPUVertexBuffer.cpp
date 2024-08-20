@@ -10,7 +10,7 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
     // sizeInPrimitiveTypes: size of the object divided in primitive types
     // ex: Vector3 -> 3 floats
     u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
-    // GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, primitiveType, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
+//    // GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, primitiveType, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
     // accumulative offset in bytes
     u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;
@@ -21,10 +21,10 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
 
 void GPUVertexBuffer::createBuffer()
 {
-    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(GPUBufferType::VERTEX);
+//    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(GPUBufferType::VERTEX);
     
     u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
-    GET_SYSTEM(GPUInterface).attribute(
+//    GET_SYSTEM(GPUInterface).attribute(
         mAttributeLocation,
         sizeInPrimitiveTypes,
         mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType,
@@ -36,14 +36,14 @@ void GPUVertexBuffer::createBuffer()
 
 void GPUVertexBuffer::terminate()
 {
-    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
+//    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
     vulkanVertexBuffer->terminate();
     delete vulkanVertexBuffer;
 }
 
 void GPUVertexBuffer::resize(u32 size)
 {
-	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mBufferId, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
+//	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mBufferId, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
 }
 
 u32 GPUVertexBuffer::getAttributeLocation() const

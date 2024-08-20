@@ -44,7 +44,7 @@ void InstancedMeshRenderer::enable()
 
     if(mInstancedMeshData.mStencilData.mUseStencil)
     {
-        GET_SYSTEM(GPUInterface).enableStencil(mInstancedMeshData.mStencilData.mStencilValue, mInstancedMeshData.mStencilData.mStencilFunction, mInstancedMeshData.mStencilData.mStencilPassOp);
+//        GET_SYSTEM(GPUInterface).enableStencil(mInstancedMeshData.mStencilData.mStencilValue, mInstancedMeshData.mStencilData.mStencilFunction, mInstancedMeshData.mStencilData.mStencilPassOp);
     }
 }
 
@@ -52,7 +52,7 @@ void InstancedMeshRenderer::disable()
 {
     if(mInstancedMeshData.mStencilData.mUseStencil)
     {
-        GET_SYSTEM(GPUInterface).disableStencil();
+//        GET_SYSTEM(GPUInterface).disableStencil();
     }
 
     mGPUVertexBuffersContainer.disable();
@@ -199,6 +199,6 @@ void InstancedMeshRenderer::drawCall()
     PROFILER_CPU()
     if(!mRenderers.empty())
     {
-        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mInstancedMeshData.mMesh->mIndices.size() * 3, mRenderersCount, true);
+//        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mInstancedMeshData.mMesh->mIndices.size() * 3, mRenderersCount, true);
     }
 }

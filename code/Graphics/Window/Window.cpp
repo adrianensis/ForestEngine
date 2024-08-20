@@ -67,16 +67,16 @@ void Window::init(i32 id, const WindowData& windowData)
     {
         glfwMakeContextCurrent(mGLTFWindow);
 
-        GET_SYSTEM(GPUInterface).loadAPI();
+//        GET_SYSTEM(GPUInterface).loadAPI();
         PROFILER_GPU_CONTEXT();
         
         glfwSwapInterval(0);
 
         #ifdef ENGINE_ENABLE_GPU_DEBUG
-        GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
+//        GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
         #endif
 
-        GET_SYSTEM(GPUInterface).setClearColor(Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
+//        GET_SYSTEM(GPUInterface).setClearColor(Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
     }
     else
     {
