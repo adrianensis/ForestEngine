@@ -2,6 +2,8 @@
 
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
+#include "Graphics/GPU/Vulkan/GPUUniformBuffer.h"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 
 class GPUSharedBufferData
 {
@@ -40,17 +42,23 @@ public:
     void setData(const T& data)
     {
         checkMaxSize(sizeof(T));
-        GET_SYSTEM(GPUInterface).setBufferData(mGPUSharedBufferData.mType, mBufferId, data);
+        // GET_SYSTEM(GPUInterface).setBufferData(mGPUSharedBufferData.mType, mBufferId, data);
+        const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
+        uniformBuffer.setData((void*) data);
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
         checkMaxSize(sizeof(T) * data.size());
-        GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+        const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
+        uniformBuffer.setData((void*) data.data());
     }
     void setDataArray(const ByteBuffer& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+	    // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUSharedBufferData.mType, mBufferId, data);
+        const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
+        uniformBuffer.setData((void*) data.getBuffer().data());
     }
     void terminate();
 
@@ -63,6 +71,9 @@ private:
 	u32 mBufferId = 0;
     bool mIsStatic = false;
     void* mGPUPointer = nullptr;
+
+public:
+    std::vector<GPUAPI::GPUUniformBuffer> uniformBuffers;
 
 public:
     GET(BindingPoint)

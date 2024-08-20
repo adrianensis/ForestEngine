@@ -25,6 +25,8 @@ public:
     virtual void render(RenderPipelineData& renderData);
 
 protected:
+    void frameAcquisition();
+
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)
@@ -64,6 +66,7 @@ private:
     std::set<u32> mUsedSlots;
 	std::vector<TypedComponentHandler<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 2000;
+
 public:
     CRGET(InstancedMeshesMap)
 };

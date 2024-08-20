@@ -2,6 +2,7 @@
 
 #include "Core/Input/Input.hpp"
 #define GLFW_INCLUDE_NONE
+#include "Graphics/GPU/GPUInterface.hpp"
 #include "GLFW/glfw3.h"
 
 class WindowData
@@ -18,6 +19,9 @@ class Window: public ObjectBase, public IWindowInputAdapter
 public:
     void init(i32 id, const WindowData& windowData);
     void terminate();
+
+    GLFWwindow* getGlfwWindow() const;
+    Vector2 getSizeInPixels() const;
 
     Vector2 getWindowSize();
     f32 getAspectRatio();

@@ -40,8 +40,6 @@ public:
         return Ptr<T>();
     }
 
-    OwnerPtr<GPUProgram> compileShader(HashedString label, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const Material& material, Ptr<const Shader> customShader);
-
 private:
     std::unordered_map<ClassId, OwnerPtr<Shader>> mShaders;
 public:

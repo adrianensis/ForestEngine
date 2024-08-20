@@ -1,7 +1,6 @@
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 
 void MaterialInstance::setDirty()
@@ -51,16 +50,16 @@ void MaterialManager::update()
     GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
 }
 
-PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData)
+PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTextureData)
 {
-	if (!mTexturesByPath.contains(textureData.mPath))
+	if (!mTexturesByPath.contains(gpuTextureData.mPath))
 	{
         LOG_TRACE()
         PROFILER_CPU()
-        PoolHandler<Texture> handler = mTextures.allocate();
-        mTexturesByPath.insert_or_assign(textureData.mPath, handler);
-        Texture& texture = mTextures.get(handler);
-        texture.init(textureData, handler.getIndex());
+        PoolHandler<GPUTexture> handler = mTextures.allocate();
+        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, handler);
+        GPUTexture& texture = mTextures.get(handler);
+        texture.init(gpuTextureData, handler.getIndex());
 
         u32 size = mTextures.getSize();
         // NOTE: We reserve position 0 to represent NULL
@@ -71,10 +70,10 @@ PoolHandler<Texture> MaterialManager::loadTexture(const TextureData& textureData
         mTextureHandles[texture.getID() + 1] = texture.getGPUTextureHandle();
 	}
 
-	return mTexturesByPath.at(textureData.mPath);
+	return mTexturesByPath.at(gpuTextureData.mPath);
 }
 
-void MaterialManager::unloadTexture(PoolHandler<Texture>& texture)
+void MaterialManager::unloadTexture(PoolHandler<GPUTexture>& texture)
 {
     mTextures.free(texture);
 }
@@ -92,28 +91,28 @@ void MaterialManager::loadMaterialTextures(const PoolHandler<Material>& handler)
     {
         LOG_TRACE()
         PROFILER_CPU()
-        mTextureBindingsByMaterial.emplace(id, std::unordered_map<HashedString, PoolHandler<Texture>>());
+        mTextureBindingsByMaterial.emplace(id, std::unordered_map<HashedString, PoolHandler<GPUTexture>>());
 
         FOR_MAP(it, handler->getMaterialData().mTextureBindings)
         {
             CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
-            TextureData textureData;
-            textureData.mPath = it->second.mPath;
-            textureData.mStage = it->second.mStage;
+            GPUTextureData gpuTextureData;
+            gpuTextureData.mPath = it->second.mPath;
+            gpuTextureData.mStage = it->second.mStage;
 
             if(handler->getMaterialData().mIsFont)
             {
                 CHECK_MSG(!handler->getMaterialData().mFontData.mPath.get().empty(), "mMaterialData.mFontData.mPath cannot be empty!");
-                textureData.mIsFont = true;
-                textureData.mFontData = handler->getMaterialData().mFontData;
+                gpuTextureData.mIsFont = true;
+                gpuTextureData.mFontData = handler->getMaterialData().mFontData;
             }
 
-            mTextureBindingsByMaterial.at(id).insert_or_assign(it->first, GET_SYSTEM(MaterialManager).loadTexture(textureData));
+            mTextureBindingsByMaterial.at(id).insert_or_assign(it->first, GET_SYSTEM(MaterialManager).loadTexture(gpuTextureData));
         }
     }
 }
 
-const std::unordered_map<HashedString, PoolHandler<Texture>>& MaterialManager::getMaterialTextureBindings(const PoolHandler<Material>& handler) const
+const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& MaterialManager::getMaterialTextureBindings(const PoolHandler<Material>& handler) const
 {
     return mTextureBindingsByMaterial.at(handler->getID());
 }

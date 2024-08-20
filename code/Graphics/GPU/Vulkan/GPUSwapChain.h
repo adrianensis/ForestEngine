@@ -3,7 +3,7 @@
 #include "GPUDevice.h"
 #include "GPUPhysicalDevice.h"
 #include "Vulkan.h"
-#include "Window.h"
+#include "Graphics/Window/Window.hpp"
 
 #include <vulkan/vulkan.h>
 #include <vector>

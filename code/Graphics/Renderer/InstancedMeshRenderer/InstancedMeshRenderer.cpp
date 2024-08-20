@@ -5,7 +5,6 @@
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Scene/Module.hpp"
 
@@ -41,7 +40,6 @@ void InstancedMeshRenderer::render()
 
 void InstancedMeshRenderer::enable()
 {
-    // mGPUProgram->enable();
     mGPUVertexBuffersContainer.enable();
 
     if(mInstancedMeshData.mStencilData.mUseStencil)
@@ -58,7 +56,6 @@ void InstancedMeshRenderer::disable()
     }
 
     mGPUVertexBuffersContainer.disable();
-    // mGPUProgram->disable();
 }
 
 void InstancedMeshRenderer::addRenderer(TypedComponentHandler<MeshRenderer> renderer)

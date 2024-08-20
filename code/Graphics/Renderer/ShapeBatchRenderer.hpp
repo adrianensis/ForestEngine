@@ -21,7 +21,6 @@ private:
     void addColor(const Vector4& color);
 private: 
 	Ptr<Shader> mShader;
-	OwnerPtr<GPUProgram> mGPUProgram;
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;

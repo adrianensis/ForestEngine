@@ -189,11 +189,11 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     }
 }
 
-void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void ShaderDefault::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
     FOR_MAP(it, mShaderData.mTextures)
     {
-        shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(*it));
+        gpuProgramData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(*it));
     }
     
     // FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
@@ -205,12 +205,12 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
     //     {
     //         // case GPUPipelineStage::VERTEX:
     //         // {
-    //         //     shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
+    //         //     gpuProgramData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
     //         // }
     //         // break;
     //         case GPUPipelineStage::FRAGMENT:
     //         {
-    //             shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
+    //             gpuProgramData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(samplerName));
     //         }
     //         break;
 
@@ -227,10 +227,10 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         switch (it->second.mStage)
         {
             // case GPUPipelineStage::VERTEX:
-            //     shaderBuilderData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+            //     gpuProgramData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
             // break;
             case GPUPipelineStage::FRAGMENT:
-                shaderBuilderData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+                gpuProgramData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
             break;
 
             default:
@@ -238,79 +238,79 @@ void ShaderDefault::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& 
         }
     }
 
-    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
+    gpuProgramData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mTextures);
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(getShaderData().mPropertiesBlockSharedBufferData);
+    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
+    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mTextures);
+    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
+    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(getShaderData().mPropertiesBlockSharedBufferData);
 
-    shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
-    shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI180);
+    gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
+    gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI180);
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
-        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
-        shaderBuilderData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
-        shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
+        gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
+        gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
+        gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
     }
 
     FOR_LIST(it, gpuVertexBuffersContainer.getVertexBuffers())
     {
-        shaderBuilderData.mVertexVariables.mVertexInputs.push_back(*it);
+        gpuProgramData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
     {
-        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
+        gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
     }
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
     {
-        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
+        gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
     }
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
     {
-        shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+        gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
     }
 
-    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
-    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPositionLight);
-    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
-    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
-    shaderBuilderData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
+    gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPositionLight);
+    gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
+    gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
+    gpuProgramData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
     {
-        shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
+        gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
     }
 
-    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
+    gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
     {
-        shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+        gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
     }
-    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
-    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPositionLight);
-    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
-    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
-    shaderBuilderData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
-    shaderBuilderData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
+    gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
+    gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPositionLight);
+    gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
+    gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
+    gpuProgramData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
+    gpuProgramData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
 void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData;
-    generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer);
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mVertexVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
-    FOR_LIST(it, shaderBuilderData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
+    GPUProgramData gpuProgramData;
+    generateGPUProgramData(gpuProgramData, gpuVertexBuffersContainer);
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mVertexVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
+    FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
@@ -320,16 +320,16 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
 
 void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    ShaderBuilderData shaderBuilderData;
-    generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer);
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
-    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderBuilderData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
+    GPUProgramData gpuProgramData;
+    generateGPUProgramData(gpuProgramData, gpuVertexBuffersContainer);
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
+    FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
 }
 
 void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const

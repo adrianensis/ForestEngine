@@ -6,8 +6,6 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
-class GPUProgram;
-
 class InstancedMeshRenderer: public ObjectBase
 {
 public:

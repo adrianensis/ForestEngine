@@ -29,6 +29,7 @@ private:
     u32 mAttributeIndex = 0;
     std::vector<GPUVertexBuffer> mVertexBuffers;
     std::unordered_map<HashedString, u32> mVertexBuffersMap;
+
 public:
     CRGET(VertexBuffers)
     RGET(IndicesBuffer)

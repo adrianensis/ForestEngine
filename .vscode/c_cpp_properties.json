@@ -6,7 +6,6 @@
                 "${workspaceFolder}",
                 "${workspaceFolder}/dependencies/**",
                 "${workspaceFolder}/code",
-                "${workspaceFolder}/Vulkan",
                 "${workspaceFolder}/test",
                 "${workspaceFolder}/tools",
                 "${workspaceFolder}/tools/**"

@@ -2,6 +2,19 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
+GLFWwindow* Window::getGlfwWindow() const 
+{
+    return mGLTFWindow;
+}
+
+Vector2 Window::getSizeInPixels() const
+{
+    i32 width = 0;
+    i32 height = 0;
+    glfwGetFramebufferSize(mGLTFWindow, &width, &height);
+    return Vector2(width, height);
+}
+
 Vector2 Window::getWindowSize()
 {
 	return mWindowData.mWindowSize;
@@ -19,16 +32,17 @@ void Window::init(i32 id, const WindowData& windowData)
     mID = id;
     mWindowData = windowData;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE); // https://stackoverflow.com/questions/50412575/is-there-a-way-to-remove-60-fps-cap-in-glfw
+	// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	// glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE); // https://stackoverflow.com/questions/50412575/is-there-a-way-to-remove-60-fps-cap-in-glfw
 
-    glfwWindowHint(GLFW_SAMPLES, 8);
+    // glfwWindowHint(GLFW_SAMPLES, 8);
 
-    #ifdef ENGINE_ENABLE_GPU_DEBUG
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-    #endif
+    // #ifdef ENGINE_ENABLE_GPU_DEBUG
+    // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    // #endif
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
     GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);

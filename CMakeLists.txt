@@ -126,11 +126,11 @@ add_subdirectory("${DEPENDENCIES_DIR}/glfw-3.4")
 include_directories("${DEPENDENCIES_DIR}/glfw-3.4/include")
 
 # glew
-set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
-check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glew-2.2.0")
-add_subdirectory("${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake")
+# set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
+# check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glew-2.2.0")
+# add_subdirectory("${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake")
 
-include_directories("${DEPENDENCIES_DIR}/glew-2.2.0/include")
+# include_directories("${DEPENDENCIES_DIR}/glew-2.2.0/include")
 
 if(ENABLE_PROFILER)
     # Tracy
@@ -215,7 +215,7 @@ target_link_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${PROJECTNAME} vulkan)
-target_link_libraries(${PROJECTNAME} glew)
+# target_link_libraries(${PROJECTNAME} glew)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)

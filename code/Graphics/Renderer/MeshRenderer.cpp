@@ -1,9 +1,8 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
-#include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/GPU/Mesh/MeshPrimitives.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"

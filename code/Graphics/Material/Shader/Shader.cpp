@@ -2,14 +2,19 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
-#include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 #include "Graphics/Model/Model.hpp"
+#include "Core/Config/Paths.hpp"
+#include "Core/File/FileUtils.hpp"
 
 void Shader::init()
 {
+    mGPUProgram = OwnerPtr<GPUProgram>::newObject();
+
     GPUStructDefinition propertiesBlockStructDefinition =
     {
         ShaderPropertiesBlockNames::smPropertiesBlockStructName,
@@ -87,7 +92,7 @@ bool Shader::hasFramebufferBinding(HashedString bindingName) const
     return mShaderData.mFramebufferBindings.contains(bindingName);
 }
 
-void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<Texture>>& textures) const
+void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
 {
     gpuProgram->enable();
 
@@ -117,4 +122,28 @@ void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<H
 void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
 {
     mShaderData.mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
+}
+
+void Shader::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+{
+}
+
+void Shader::compileShader(HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer)
+{
+    ShaderBuilder sbVert;
+    ShaderBuilder sbFrag;
+    createVertexShader(sbVert, gpuVertexBuffersContainer);
+    createFragmentShader(sbFrag, gpuVertexBuffersContainer);
+
+    std::string stringShderVert = sbVert.getCode();
+    FileUtils::writeFile(Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".vs", [stringShderVert](std::ofstream& file)
+    {
+        file << stringShderVert;
+    });
+    std::string stringShderFrag = sbFrag.getCode();
+    FileUtils::writeFile(Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".fs", [stringShderFrag](std::ofstream& file)
+    {
+        file << stringShderFrag;
+    });
+    mGPUProgram->initFromFileContents(stringShderVert, stringShderFrag);
 }

@@ -10,6 +10,7 @@ public:
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder, 
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
+    virtual void generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
 
 protected:
     virtual void registerTextures() override;
@@ -23,7 +24,6 @@ protected:
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;
 
-    virtual void generateShaderBuilderData(Shader::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
     virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
     virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
 

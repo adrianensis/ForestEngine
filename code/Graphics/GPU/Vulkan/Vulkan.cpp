@@ -2,7 +2,6 @@
 #include "Log.h"
 #include "Environment.h"
 
-#include <GLFW/glfw3.h>
 #include <utility>
 #include <cstring>
 

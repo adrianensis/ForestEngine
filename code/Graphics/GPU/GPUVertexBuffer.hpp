@@ -3,6 +3,8 @@
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 
+#include "Graphics/GPU/Vulkan/GPUVertexBuffer.h"
+
 class GPUVertexBufferData
 {
 public:
@@ -28,11 +30,19 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
+        if (!vulkanVertexBuffer->initialize(data))
+        {
+            CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
+        }
+	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     void setDataArray(const ByteBuffer& data)
     {
-	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
+        if (!vulkanVertexBuffer->initialize(data.getBuffer()))
+        {
+            CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
+        }
+	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
@@ -46,6 +56,9 @@ private:
     u32 mAttributeOffset = 0;
     u32 mPreviousOffsetInBytes = 0;
     bool mIsStatic = false;
+
+    GPUAPI::GPUVertexBuffer* vulkanVertexBuffer;
+
 public:
     GET(BufferId)
 };

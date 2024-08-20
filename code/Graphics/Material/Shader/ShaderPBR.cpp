@@ -73,16 +73,16 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     set(outColor, PBRMetallicRoughness);
 }
 
-void ShaderPBR::generateShaderBuilderData(ShaderDefault::ShaderBuilderData& shaderBuilderData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void ShaderPBR::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    ShaderDefault::generateShaderBuilderData(shaderBuilderData, gpuVertexBuffersContainer);
+    ShaderDefault::generateGPUProgramData(gpuProgramData, gpuVertexBuffersContainer);
     
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
-    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
-    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
-    shaderBuilderData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
+    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
+    gpuProgramData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
+    gpuProgramData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
+    gpuProgramData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
 
-    shaderBuilderData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
+    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
 void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const

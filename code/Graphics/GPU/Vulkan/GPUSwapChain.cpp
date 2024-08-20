@@ -95,10 +95,10 @@ namespace GPUAPI {
             return surfaceCapabilities.currentExtent;
         }
         VD_LOG_DEBUG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
-        Size windowSizeInPixels = window->getSizeInPixels();
+        Vector2 windowSizeInPixels = window->getSizeInPixels();
         VkExtent2D extent = {
-                (uint32_t) windowSizeInPixels.Width,
-                (uint32_t) windowSizeInPixels.Height
+                (uint32_t) windowSizeInPixels.x,
+                (uint32_t) windowSizeInPixels.y
         };
         extent.width = std::clamp(extent.width, surfaceCapabilities.minImageExtent.width, surfaceCapabilities.maxImageExtent.width);
         extent.height = std::clamp(extent.height, surfaceCapabilities.minImageExtent.height, surfaceCapabilities.maxImageExtent.height);

@@ -103,7 +103,7 @@ if installSystemDepencencies:
 log.log(log.LogLabels.build, "-----------------------------------")
 log.log(log.LogLabels.build, "EXTRACTING FILES")
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
-download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
+# download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
 download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip")
 download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.0.zip", "tracy-0.11.0.zip")
 download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip")
@@ -126,8 +126,8 @@ tracyProfiler = "tracy-0.11.0/profiler"
 tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
 freetypeDir = "freetype-2.13.2"
 freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)
-glewDir = "glew-2.2.0"
-glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
+# glewDir = "glew-2.2.0"
+# glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
 
 cmake_generated_data = cmake_build.generate_cmake_data()
 

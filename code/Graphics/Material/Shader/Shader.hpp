@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Material/Texture.hpp"
+#include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 
 class Material;
@@ -46,44 +46,43 @@ public:
     std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
 };
 
+class GPUProgramDataCommon
+{
+public:
+    std::vector<GPUStructDefinition> mStructDefinitions;
+    std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUSharedBufferData> mSharedBuffers;
+    std::vector<GPUVariableDefinitionData> mConsts;
+};
+
+class GPUProgramDataVertex
+{
+public:
+    std::vector<GPUVertexBuffer> mVertexInputs;
+    std::vector<GPUVariableDefinitionData> mVertexOutputs;
+    std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUVariableDefinitionData> mConsts;
+};
+
+class GPUProgramDataFragment
+{
+public:
+    std::vector<GPUVariableDefinitionData> mFragmentInputs;
+    std::vector<GPUVariableDefinitionData> mFragmentOutputs;
+    std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUVariableDefinitionData> mConsts;
+};
+
+class GPUProgramData
+{
+public:
+    GPUProgramDataCommon mCommonVariables;
+    GPUProgramDataVertex mVertexVariables;
+    GPUProgramDataFragment mFragmentVariables;
+};
+
 class Shader
 {
-protected:
-    class ShaderBuilderDataCommon
-    {
-    public:
-        std::vector<GPUStructDefinition> mStructDefinitions;
-        std::vector<GPUVariableDefinitionData> mUniforms;
-        std::vector<GPUSharedBufferData> mSharedBuffers;
-        std::vector<GPUVariableDefinitionData> mConsts;
-    };
-
-    class ShaderBuilderDataVertex
-    {
-    public:
-        std::vector<GPUVertexBuffer> mVertexInputs;
-        std::vector<GPUVariableDefinitionData> mVertexOutputs;
-        std::vector<GPUVariableDefinitionData> mUniforms;
-        std::vector<GPUVariableDefinitionData> mConsts;
-    };
-
-    class ShaderBuilderDataFragment
-    {
-    public:
-        std::vector<GPUVariableDefinitionData> mFragmentInputs;
-        std::vector<GPUVariableDefinitionData> mFragmentOutputs;
-        std::vector<GPUVariableDefinitionData> mUniforms;
-        std::vector<GPUVariableDefinitionData> mConsts;
-    };
-
-    class ShaderBuilderData
-    {
-    public:
-        ShaderBuilderDataCommon mCommonVariables;
-        ShaderBuilderDataVertex mVertexVariables;
-        ShaderBuilderDataFragment mFragmentVariables;
-    };
-
 public:
     Shader() = default;
     virtual ~Shader() = default;
@@ -95,7 +94,7 @@ public:
     void disable() const;
     bool hasFramebufferBinding(HashedString bindingName) const;
 
-    void bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<Texture>>& textures) const;
+    void bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const;
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
@@ -105,14 +104,18 @@ public:
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
         {};
 
+    virtual void generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
+    void compileShader(HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer);
+
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void registerTextures() {};
 
 protected:
     ShaderData mShaderData;
-
+    OwnerPtr<GPUProgram> mGPUProgram;
 public:
     CRGET(ShaderData)
+    GET(GPUProgram)
 };
 REGISTER_CLASS(Shader)

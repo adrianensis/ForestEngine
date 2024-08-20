@@ -1,4 +1,5 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 
 void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
 {
@@ -14,6 +15,8 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
     u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;
     mAttributeOffset += 1;
+
+    vulkanVertexBuffer = new GPUAPI::GPUVertexBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice, GET_SYSTEM(GPUGlobalState).vulkanCommandPool);
 }
 
 void GPUVertexBuffer::createBuffer()
@@ -34,6 +37,8 @@ void GPUVertexBuffer::createBuffer()
 void GPUVertexBuffer::terminate()
 {
     GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
+    vulkanVertexBuffer->terminate();
+    delete vulkanVertexBuffer;
 }
 
 void GPUVertexBuffer::resize(u32 size)
