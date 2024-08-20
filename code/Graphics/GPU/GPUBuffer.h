@@ -6,7 +6,8 @@
 
 #include <vulkan/vulkan.h>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUBuffer {
     public:
@@ -40,4 +41,4 @@ namespace GPUAPI {
 
         static void copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice);
     };
-}
+// }

@@ -30,7 +30,7 @@ void Shader::init()
         GPUPrimitiveDataType::STRUCT
     };
 
-    GPUSharedBufferData propertiesBlockSharedBufferData =
+    GPUUniformBufferData propertiesBlockUniformBufferData =
     {
         GPUBufferType::STORAGE,
         {
@@ -41,7 +41,7 @@ void Shader::init()
     };
 
     mShaderData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
-    mShaderData.mPropertiesBlockSharedBufferData = propertiesBlockSharedBufferData;
+    mShaderData.mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
 
     registerTextures();
 }

@@ -1,8 +1,9 @@
 #include "GPUGraphicsPipeline.h"
-#include "Log.h"
+
 #include "Vertex.h"
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUGraphicsPipeline::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -139,10 +140,10 @@ namespace GPUAPI {
         pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
         if (vkCreatePipelineLayout(vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &pipelineLayout) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan graphics pipeline layout");
+            CHECK_MSG(false,"Could not create Vulkan graphics pipeline layout");
             return false;
         }
-        VD_LOG_INFO("Created Vulkan graphics pipeline layout");
+        LOG("Created Vulkan graphics pipeline layout");
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -166,22 +167,22 @@ namespace GPUAPI {
         VkPipelineCache pipelineCache = VK_NULL_HANDLE;
 
         if (vkCreateGraphicsPipelines(vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &pipeline) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan graphics pipeline");
+            CHECK_MSG(false,"Could not create Vulkan graphics pipeline");
             return false;
         }
-        VD_LOG_INFO("Created Vulkan graphics pipeline");
+        LOG("Created Vulkan graphics pipeline");
 
         return true;
     }
 
     void GPUGraphicsPipeline::terminate() {
         vkDestroyPipeline(vulkanDevice->getDevice(), pipeline, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan graphics pipeline");
+        LOG("Destroyed Vulkan graphics pipeline");
         vkDestroyPipelineLayout(vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan graphics pipeline layout");
+        LOG("Destroyed Vulkan graphics pipeline layout");
     }
 
     void GPUGraphicsPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
         vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
     }
-}
+// }

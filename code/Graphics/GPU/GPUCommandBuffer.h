@@ -2,7 +2,8 @@
 
 #include <vulkan/vulkan.h>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUCommandBuffer {
     private:
@@ -23,4 +24,4 @@ namespace GPUAPI {
         void reset() const;
     };
 
-}
+// }

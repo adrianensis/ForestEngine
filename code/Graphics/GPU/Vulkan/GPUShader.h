@@ -6,7 +6,8 @@
 
 #include <vector>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUShader {
     private:
@@ -26,6 +27,6 @@ namespace GPUAPI {
         void terminate();
     };
 
-}
+// }
 
 

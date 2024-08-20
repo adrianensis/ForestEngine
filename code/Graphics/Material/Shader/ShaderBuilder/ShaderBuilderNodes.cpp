@@ -48,12 +48,12 @@ namespace ShaderBuilderNodes
         return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
     
-    std::vector<std::string> SharedBuffer::toLines(u16 indent) const
+    std::vector<std::string> UniformBuffer::toLines(u16 indent) const
     {
         std::vector<std::string> code;
 
         std::string layoutStr;
-        switch (mGPUSharedBufferData.mType)
+        switch (mGPUUniformBufferData.mType)
         {
         case GPUBufferType::UNIFORM:
             layoutStr = "layout (std140) uniform";
@@ -66,9 +66,9 @@ namespace ShaderBuilderNodes
             break;
         }
 
-        code.push_back(getIndent(indent) + layoutStr + " " + mGPUSharedBufferData.mBufferName.get() + " {");
+        code.push_back(getIndent(indent) + layoutStr + " " + mGPUUniformBufferData.mBufferName.get() + " {");
 
-        const auto& variableDefinitionDataArray = mGPUSharedBufferData.mGPUVariableDefinitionDataArray;
+        const auto& variableDefinitionDataArray = mGPUUniformBufferData.mGPUVariableDefinitionDataArray;
         FOR_LIST(it, variableDefinitionDataArray)
         {
             const GPUVariableDefinitionData& variableDefinitionData = *it;
@@ -77,7 +77,7 @@ namespace ShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        code.push_back(getIndent(indent) + "} " + mGPUSharedBufferData.mInstanceName.get() + ";");
+        code.push_back(getIndent(indent) + "} " + mGPUUniformBufferData.mInstanceName.get() + ";");
 
         return code;
     }
@@ -241,9 +241,9 @@ namespace ShaderBuilderNodes
         return mAttributes.emplace_back(attribute);
     }
 
-    SharedBuffer& Program::sharedBuffer(const SharedBuffer& sharedBuffer)
+    UniformBuffer& Program::uniformBuffer(const UniformBuffer& uniformBuffer)
     {
-        return mSharedBuffers.emplace_back(sharedBuffer);
+        return mUniformBuffers.emplace_back(uniformBuffer);
     }
     
     const Struct& Program::getStruct(const HashedString& structName) const
@@ -272,17 +272,17 @@ namespace ShaderBuilderNodes
         return mNullAttribute;
     }
 
-    const SharedBuffer& Program::getSharedBuffer(const HashedString& sharedBufferName) const
+    const UniformBuffer& Program::getUniformBuffer(const HashedString& uniformBufferName) const
     {
-        FOR_LIST(it, mSharedBuffers)
+        FOR_LIST(it, mUniformBuffers)
         {
-            if(it->mGPUSharedBufferData.mInstanceName == sharedBufferName)
+            if(it->mGPUUniformBufferData.mInstanceName == uniformBufferName)
             {
                 return *it;
             }
         }
 
-        return mNullSharedBuffer;
+        return mNullUniformBuffer;
     }
 
     FunctionDefinition& Program::getFunctionDefinition(const HashedString& functionDefinitionName)
@@ -308,9 +308,9 @@ namespace ShaderBuilderNodes
         return getAttribute(attribute.mName);
     }
 
-    const SharedBuffer& Program::getSharedBuffer(const SharedBuffer& sharedBuffer) const
+    const UniformBuffer& Program::getUniformBuffer(const UniformBuffer& uniformBuffer) const
     {
-        return getSharedBuffer(sharedBuffer.mGPUSharedBufferData.mInstanceName);
+        return getUniformBuffer(uniformBuffer.mGPUUniformBufferData.mInstanceName);
     }
 
     FunctionDefinition& Program::getFunctionDefinition(const GPUFunctionDefinition& functionDefinition)
@@ -341,7 +341,7 @@ namespace ShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        FOR_LIST(it, mSharedBuffers)
+        FOR_LIST(it, mUniformBuffers)
         {
             auto statementCode = it->toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
@@ -363,7 +363,7 @@ namespace ShaderBuilderNodes
     {
         FOR_LIST(it, mStructs) { it->terminate(); }
         FOR_LIST(it, mAttributes) { it->terminate(); }
-        FOR_LIST(it, mSharedBuffers) { it->terminate(); }
+        FOR_LIST(it, mUniformBuffers) { it->terminate(); }
         FOR_LIST(it, mFunctionDefinitions) { it->terminate(); }
         mMainFunctionDefinition.terminate();
     }

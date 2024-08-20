@@ -41,7 +41,7 @@ class ShaderData
 {
 public:
     GPUStructDefinition mPropertiesBlockStructDefinition;
-    GPUSharedBufferData mPropertiesBlockSharedBufferData;
+    GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<HashedString> mTextures;
     std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
 };
@@ -51,7 +51,7 @@ class GPUProgramDataCommon
 public:
     std::vector<GPUStructDefinition> mStructDefinitions;
     std::vector<GPUVariableDefinitionData> mUniforms;
-    std::vector<GPUSharedBufferData> mSharedBuffers;
+    std::vector<GPUUniformBufferData> mUniformBuffers;
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 

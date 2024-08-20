@@ -7,7 +7,8 @@
 
 #include <vulkan/vulkan.h>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUGraphicsPipeline {
     private:
@@ -35,6 +36,6 @@ namespace GPUAPI {
         void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
     };
 
-}
+// }
 
 

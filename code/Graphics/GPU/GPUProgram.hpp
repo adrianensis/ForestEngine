@@ -2,11 +2,11 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUSharedBuffer.hpp"
-#include "Graphics/GPU/Vulkan/Vulkan.h"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/Vulkan.h"
 
 class GPUVertexBuffersContainer;
-class GPUSharedBuffer;
+class GPUUniformBuffer;
 
 class GPUProgram: public ObjectBase
 {    
@@ -25,7 +25,7 @@ public:
     {
 //        GET_SYSTEM(GPUInterface).bindUniformValue<T>(mProgramId, name, value);
     }
-    void bindSharedBuffer(const GPUSharedBuffer& sharedBuffer);
+    void bindUniformBuffer(const GPUUniformBuffer& uniformBuffer);
     void createDescriptors();
 
 private:
@@ -33,6 +33,6 @@ private:
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
-    std::vector<GPUSharedBuffer> mSharedBuffers;
+    std::vector<GPUUniformBuffer> mUniformBuffers;
 };
 REGISTER_CLASS(GPUProgram);

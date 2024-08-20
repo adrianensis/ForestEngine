@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Log.h"
+
 // #include "Window.h"
 #include "Vulkan.h"
 #include "GPUPhysicalDevice.h"
@@ -21,7 +21,8 @@
 
 #include <vector>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     struct CameraUniform {
         alignas(16) Matrix4 model;
@@ -68,5 +69,4 @@ namespace GPUAPI {
 
         void update();
     };
-
-}
+// }

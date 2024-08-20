@@ -6,7 +6,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 
 class GPUVertexBuffersContainer;
-class GPUSharedBuffersContainer;
+class GPUUniformBuffersContainer;
 class Material;
 
 class ShaderManager: public System

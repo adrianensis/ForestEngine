@@ -1,11 +1,12 @@
 #include "GPUPhysicalDevice.h"
-#include "Log.h"
+
 
 #include <map>
 #include <vector>
 #include <cstring>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     GPUPhysicalDevice::GPUPhysicalDevice(Vulkan* vulkan) : vulkan(vulkan) {
     }
@@ -41,15 +42,15 @@ namespace GPUAPI {
     bool GPUPhysicalDevice::initialize() {
         std::vector<GPUPhysicalDevice::DeviceInfo> availableDevices = findAvailableDevices();
         if (availableDevices.empty()) {
-            VD_LOG_ERROR("Could not get any available devices");
+            CHECK_MSG(false,"Could not get any available devices");
             return false;
         }
         this->deviceInfo = findMostSuitableDevice(availableDevices);
         if (this->deviceInfo.mPhysicalDevice == nullptr) {
-            VD_LOG_ERROR("Could not get any suitable device");
+            CHECK_MSG(false,"Could not get any suitable device");
             return false;
         }
-        VD_LOG_INFO("Initialized Vulkan physical device");
+        LOG("Initialized Vulkan physical device");
         return true;
     }
 
@@ -78,7 +79,7 @@ namespace GPUAPI {
                 return memoryTypeIndex;
             }
         }
-        VD_LOG_WARN("Could not find memory type [{}]", memoryTypeBits);
+        //VD_LOG_WARN("Could not find memory type [{}]", memoryTypeBits);
         return -1;
     }
 
@@ -92,7 +93,7 @@ namespace GPUAPI {
                 return format;
             }
         }
-        VD_LOG_WARN("Could not find supported format");
+        //VD_LOG_WARN("Could not find supported format");
         return VK_FORMAT_UNDEFINED;
     }
 
@@ -131,9 +132,9 @@ namespace GPUAPI {
 
             devices.push_back(device);
         }
-        VD_LOG_DEBUG("Available physical devices [{0}]", deviceCount);
+        //VD_LOG_DEBUG("Available physical devices [{0}]", deviceCount);
         for (const DeviceInfo& device : devices) {
-            VD_LOG_DEBUG("{0} --> {1}", device.mProperties.deviceName, getDeviceTypeAsString(device.mProperties.deviceType));
+            //VD_LOG_DEBUG("{0} --> {1}", device.mProperties.deviceName, getDeviceTypeAsString(device.mProperties.deviceType));
         }
         return devices;
     }
@@ -147,9 +148,9 @@ namespace GPUAPI {
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(device, layerName, &extensionCount, extensions.data());
 
-        VD_LOG_DEBUG("Available device extensions [{0}]", extensions.size());
+        //VD_LOG_DEBUG("Available device extensions [{0}]", extensions.size());
         for (const VkExtensionProperties& extensionProperties : extensions) {
-            VD_LOG_DEBUG(extensionProperties.extensionName);
+            //VD_LOG_DEBUG(extensionProperties.extensionName);
             for (const char* optionalExtension : getOptionalExtensions()) {
                 if (std::strcmp(extensionProperties.extensionName, optionalExtension) == 0) {
                     getRequiredExtensions().push_back(optionalExtension);
@@ -258,37 +259,37 @@ namespace GPUAPI {
 
     GPUPhysicalDevice::DeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUPhysicalDevice::DeviceInfo>& availableDevices) const {
         std::multimap<uint32_t, GPUPhysicalDevice::DeviceInfo> devicesByRating;
-        VD_LOG_DEBUG("Device suitability ratings");
+        //VD_LOG_DEBUG("Device suitability ratings");
         for (const GPUPhysicalDevice::DeviceInfo& device : availableDevices) {
             uint32_t suitabilityRating = getSuitabilityRating(device);
-            VD_LOG_DEBUG("{0} --> {1}", device.mProperties.deviceName, suitabilityRating);
+            //VD_LOG_DEBUG("{0} --> {1}", device.mProperties.deviceName, suitabilityRating);
             devicesByRating.insert(std::make_pair(suitabilityRating, device));
         }
         uint32_t highestRating = devicesByRating.rbegin()->first;
         if (highestRating == 0) {
             return {};
         }
-        VD_LOG_DEBUG("Most suitable device");
+        //VD_LOG_DEBUG("Most suitable device");
         const DeviceInfo& device = devicesByRating.rbegin()->second;
-        VD_LOG_DEBUG("{0}", device.mProperties.deviceName);
+        //VD_LOG_DEBUG("{0}", device.mProperties.deviceName);
         return device;
     }
 
     uint32_t GPUPhysicalDevice::getSuitabilityRating(const GPUPhysicalDevice::DeviceInfo& deviceInfo) const {
         if (!hasRequiredFeatures(deviceInfo.mFeatures)) {
-            VD_LOG_DEBUG("{0} does not have required device features", deviceInfo.mProperties.deviceName);
+            //VD_LOG_DEBUG("{0} does not have required device features", deviceInfo.mProperties.deviceName);
             return 0;
         }
         if (!hasRequiredExtensions(deviceInfo.mExtensions)) {
-            VD_LOG_DEBUG("{0} does not have required device extensions", deviceInfo.mProperties.deviceName);
+            //VD_LOG_DEBUG("{0} does not have required device extensions", deviceInfo.mProperties.deviceName);
             return 0;
         }
         if (!hasRequiredSwapChainSupport(deviceInfo.mSwapChainInfo)) {
-            VD_LOG_DEBUG("{0} does not have required swap chain info", deviceInfo.mProperties.deviceName);
+            //VD_LOG_DEBUG("{0} does not have required swap chain info", deviceInfo.mProperties.deviceName);
             return 0;
         }
         if (!hasRequiredQueueFamilyIndices(deviceInfo.mQueueFamilyIndices)) {
-            VD_LOG_DEBUG("{0} does not have required queue family indices", deviceInfo.mProperties.deviceName);
+            //VD_LOG_DEBUG("{0} does not have required queue family indices", deviceInfo.mProperties.deviceName);
             return 0;
         }
         uint32_t rating = 0;
@@ -315,7 +316,7 @@ namespace GPUAPI {
                 }
             }
             if (!requiredExtensionFound) {
-                VD_LOG_WARN("Could not find required extension [{0}]", requiredExtensionFound);
+                //VD_LOG_WARN("Could not find required extension [{0}]", requiredExtensionFound);
                 return false;
             }
         }
@@ -330,4 +331,4 @@ namespace GPUAPI {
         return queueFamilyIndices.GraphicsFamily.has_value() && queueFamilyIndices.PresentationFamily.has_value();
     }
 
-}
+// }

@@ -47,7 +47,7 @@ void RenderPipeline::update()
     PROFILER_END_BLOCK()
 
     PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).setDataArray(mMatrices);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
     PROFILER_END_BLOCK()
 
     GET_SYSTEM(MaterialManager).update();
@@ -83,7 +83,7 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
         mRenderers.resize(mRenderInstancesSlotsManager.getSize());
         mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-        GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+        GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
     }
 
     renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
@@ -207,7 +207,7 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
         lightsData.mDirectionalLight = renderData.mDirectionalLight->calculateLightData();
     }
 
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
 }
 
 void RenderPipeline::initBuffers()
@@ -221,17 +221,17 @@ void RenderPipeline::initBuffers()
 
     // GPU BUFFERS
 
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData, false);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mLightsBufferData, false);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(LightBuiltIn::mShadowMappingBufferData, false);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices, false);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData, false);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mLightsBufferData, false);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mShadowMappingBufferData, false);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices, false);
 
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().create();
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().create();
 
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).resize<GPUBuiltIn::SharedBuffers::GPUGlobalData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).resize<GPUBuiltIn::UniformBuffers::GPUGlobalData>(1);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }
 
 void RenderPipeline::setRendererMatrix(TypedComponentHandler<MeshRenderer> renderer)

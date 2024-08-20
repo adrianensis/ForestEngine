@@ -1,5 +1,5 @@
 #include "App.h"
-#include "Log.h"
+
 
 #include <vulkan/vulkan.h>
 
@@ -23,7 +23,8 @@
 #include <chrono>
 #include <unordered_map>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -43,10 +44,10 @@ namespace GPUAPI {
 
     void App::run() {
         if (!initialize()) {
-            VD_LOG_CRITICAL("Could not initialize app");
+            //VD_LOG_CRITICAL("Could not initialize app");
             return;
         }
-        VD_LOG_INFO("Running...");
+        LOG("Running...");
         // while (!window->shouldClose()) {
         //     window->pollEvents();
         //     update();
@@ -58,20 +59,20 @@ namespace GPUAPI {
 
     bool App::initialize() {
         // Log::initialize(config.Name, config.LogLevel);
-        VD_LOG_INFO("Initializing...");
+        LOG("Initializing...");
 
 
         // if (!vertexShader->initialize(fileSystem->readBytes("shaders/simple_shader.vert.spv"))) {
-        //     VD_LOG_ERROR("Could not initialize vertex shader");
+        //     CHECK_MSG(false,"Could not initialize vertex shader");
         //     return false;
         // }
         // if (!fragmentShader->initialize(fileSystem->readBytes("shaders/simple_shader.frag.spv"))) {
-        //     VD_LOG_ERROR("Could not initialize fragment shader");
+        //     CHECK_MSG(false,"Could not initialize fragment shader");
         //     return false;
         // }
  
         if (!vulkanIndexBuffer->initialize(indices)) {
-            VD_LOG_ERROR("Could not initialize Vulkan index buffer");
+            CHECK_MSG(false,"Could not initialize Vulkan index buffer");
             return false;
         }
 
@@ -79,7 +80,7 @@ namespace GPUAPI {
     }
 
     void App::terminate() {
-        VD_LOG_INFO("Terminating...");
+        LOG("Terminating...");
         VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
 
         vkDestroyDescriptorPool(vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
@@ -124,7 +125,7 @@ namespace GPUAPI {
         // }
         // // VK_SUBOPTIMAL_KHR: The swap chain can still be used to successfully present to the surface, but the surface properties are no longer matched exactly.
         // if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR) {
-        //     VD_LOG_CRITICAL("Could not acquire swap chain image");
+        //     //VD_LOG_CRITICAL("Could not acquire swap chain image");
         //     throw std::runtime_error("Could not acquire swap chain image");
         // }
 
@@ -170,7 +171,7 @@ namespace GPUAPI {
         vulkanRenderPass->end(vulkanCommandBuffer);
 
         if (!vulkanCommandBuffer.end()) {
-            VD_LOG_CRITICAL("Could not end frame");
+            //VD_LOG_CRITICAL("Could not end frame");
             throw std::runtime_error("Could not end frame");
         }
 
@@ -201,7 +202,7 @@ namespace GPUAPI {
         // Submit recorded graphics commands
         constexpr uint32_t submitCount = 1;
         if (vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
-            VD_LOG_CRITICAL("Could not submit to graphics queue");
+            //VD_LOG_CRITICAL("Could not submit to graphics queue");
             throw std::runtime_error("Could not submit to graphics queue");
         }
 
@@ -228,7 +229,7 @@ namespace GPUAPI {
             windowResized = false;
             // recreateRenderingObjects();
         } else if (presentResult != VK_SUCCESS) {
-            VD_LOG_CRITICAL("Could not present image to swap chain");
+            //VD_LOG_CRITICAL("Could not present image to swap chain");
             throw std::runtime_error("Could not present image to swap chain");
         }
 
@@ -278,4 +279,4 @@ namespace GPUAPI {
         // uniformBuffer.setData((void*) &cameraUniform);
     }
 
-}
+// }

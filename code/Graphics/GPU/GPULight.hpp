@@ -64,7 +64,7 @@ public:
     inline static const GPUDataType mSpotLightStructDataType{mSpotLightStructDefinition.mName, mSpotLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
     inline static const GPUDataType mDirectionalLightStructDataType{mDirectionalLightStructDefinition.mName, mDirectionalLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
 
-    inline static const GPUSharedBufferData mLightsBufferData
+    inline static const GPUUniformBufferData mLightsBufferData
     {
         GPUBufferType::UNIFORM,
         {
@@ -85,7 +85,7 @@ public:
         DirectionalLightData mDirectionalLight;
     };
 
-    inline static const GPUSharedBufferData mShadowMappingBufferData
+    inline static const GPUUniformBufferData mShadowMappingBufferData
     {
         GPUBufferType::UNIFORM,
         {

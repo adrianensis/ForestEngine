@@ -1,14 +1,14 @@
 #pragma once
 
-#include "GPUDevice.h"
-#include "GPUPhysicalDevice.h"
-#include "Vulkan.h"
+#include "Graphics/GPU/GPUDevice.h"
+#include "Graphics/GPU/GPUPhysicalDevice.h"
 #include "Graphics/Window/Window.hpp"
 
 #include <vulkan/vulkan.h>
 #include <vector>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUSwapChain {
     private:
@@ -58,7 +58,6 @@ namespace GPUAPI {
 
         std::string getPresentationModeAsString(VkPresentModeKHR presentMode) const;
     };
-
-}
+// }
 
 

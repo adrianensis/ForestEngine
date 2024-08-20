@@ -1,7 +1,8 @@
 #include "GPUFramebuffer.h"
-#include "Log.h"
 
-namespace GPUAPI {
+
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUFramebuffer::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -30,7 +31,7 @@ namespace GPUAPI {
         framebufferInfo.layers = 1;
 
         if (vkCreateFramebuffer(vulkanDevice->getDevice(), &framebufferInfo, ALLOCATOR, &framebuffer) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan framebuffer");
+            CHECK_MSG(false,"Could not create Vulkan framebuffer");
             return false;
         }
         return true;
@@ -40,4 +41,4 @@ namespace GPUAPI {
         vkDestroyFramebuffer(vulkanDevice->getDevice(), framebuffer, ALLOCATOR);
     }
 
-}
+// }

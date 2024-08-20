@@ -13,7 +13,7 @@ public:
     virtual void update() override;
     Ptr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
 
-    const GPUSharedBuffer& getSkeletonRenderStateGPUSharedBuffer(Ptr<const GPUSkeletonState> skeletonState) const;
+    const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(Ptr<const GPUSkeletonState> skeletonState) const;
 private:
     void initSkeletonRenderState(Ptr<const GPUSkeletonState> skeletonState);
 
@@ -23,7 +23,7 @@ private:
     class SkeletonRenderState
     {
     public:
-        GPUSharedBuffersContainer mGPUSharedBuffersContainer;
+        GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     };
 
 	std::unordered_map<Ptr<const GPUSkeletonState>, SkeletonRenderState> mSkeletonRenderStates;

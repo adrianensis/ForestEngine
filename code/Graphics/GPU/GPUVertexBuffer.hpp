@@ -3,7 +3,10 @@
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 
-#include "Graphics/GPU/Vulkan/GPUVertexBuffer.h"
+#include "Graphics/GPU/GPUPhysicalDevice.h"
+#include "Graphics/GPU/GPUDevice.h"
+#include "Graphics/GPU/GPUCommandPool.h"
+#include "Graphics/GPU/GPUBuffer.h"
 
 class GPUVertexBufferData
 {
@@ -30,7 +33,7 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        if (!vulkanVertexBuffer->initialize(data))
+        // if (!vulkanVertexBuffer->initialize(data))
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
@@ -38,7 +41,7 @@ public:
     }
     void setDataArray(const ByteBuffer& data)
     {
-        if (!vulkanVertexBuffer->initialize(data.getBuffer()))
+        // if (!vulkanVertexBuffer->initialize(data.getBuffer()))
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
@@ -47,6 +50,10 @@ public:
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
     void terminate();
+
+    GPUVertexBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool);
+    const GPUBuffer& getGPUBuffer() const;
+    // bool initialize(const std::vector<Vertex>& vertices);
 
 public:
     GPUVertexBufferData mData;
@@ -57,7 +64,10 @@ private:
     u32 mPreviousOffsetInBytes = 0;
     bool mIsStatic = false;
 
-    GPUAPI::GPUVertexBuffer* vulkanVertexBuffer;
+    GPUPhysicalDevice* vulkanPhysicalDevice;
+    GPUDevice* vulkanDevice;
+    GPUCommandPool* vulkanCommandPool;
+    GPUBuffer buffer;
 
 public:
     GET(BufferId)

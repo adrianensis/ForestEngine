@@ -1,7 +1,7 @@
 #include "GPUCommandBuffer.h"
-#include "Log.h"
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUCommandBuffer::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -18,7 +18,7 @@ namespace GPUAPI {
         beginInfo.flags = usageFlags;
 
         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not begin Vulkan command buffer");
+            CHECK_MSG(false,"Could not begin Vulkan command buffer");
             return false;
         }
         return true;
@@ -26,7 +26,7 @@ namespace GPUAPI {
 
     bool GPUCommandBuffer::end() const {
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not end Vulkan command buffer");
+            CHECK_MSG(false,"Could not end Vulkan command buffer");
             return false;
         }
         return true;
@@ -37,4 +37,4 @@ namespace GPUAPI {
         vkResetCommandBuffer(commandBuffer, flags);
     }
 
-}
+// }

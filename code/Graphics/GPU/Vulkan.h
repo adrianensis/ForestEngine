@@ -6,7 +6,8 @@
 #include <string>
 #include <vector>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class Vulkan {
     public:
@@ -73,4 +74,4 @@ namespace GPUAPI {
 
         VkDebugUtilsMessengerCreateInfoEXT getDebugMessengerCreateInfo() const;
     };
-}
+// }

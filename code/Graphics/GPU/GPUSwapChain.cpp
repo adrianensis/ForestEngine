@@ -1,8 +1,9 @@
 #include "GPUSwapChain.h"
-#include "Log.h"
+
 #include <limits>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUSwapChain::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -36,22 +37,22 @@ namespace GPUAPI {
         uint32_t imageCount = getImageCount(swapChainInfo.SurfaceCapabilities);
 
         if (!createSwapChain(swapChainInfo.SurfaceCapabilities, imageCount)) {
-            VD_LOG_ERROR("Could not create Vulkan swap chain");
+            CHECK_MSG(false,"Could not create Vulkan swap chain");
             return false;
         }
-        VD_LOG_INFO("Created Vulkan swap chain");
+        LOG("Created Vulkan swap chain");
 
         if (!findSwapChainImages(imageCount)) {
-            VD_LOG_ERROR("Could not find any Vulkan swap chain images");
+            CHECK_MSG(false,"Could not find any Vulkan swap chain images");
             return false;
         }
-        VD_LOG_INFO("Initialized [{}] Vulkan swap chain images", images.size());
+        LOG("Initialized [{}] Vulkan swap chain images", images.size());
 
         if (!createSwapChainImageViews()) {
-            VD_LOG_ERROR("Could not create Vulkan swap chain image views");
+            CHECK_MSG(false,"Could not create Vulkan swap chain image views");
             return false;
         }
-        VD_LOG_INFO("Created [{}] Vulkan swap chain image views", imageViews.size());
+        LOG("Created [{}] Vulkan swap chain image views", imageViews.size());
 
         return true;
     }
@@ -61,9 +62,9 @@ namespace GPUAPI {
             vkDestroyImageView(vulkanDevice->getDevice(), imageView, ALLOCATOR);
         }
         imageViews.clear();
-        VD_LOG_INFO("Destroyed Vulkan swap chain image views");
+        LOG("Destroyed Vulkan swap chain image views");
         vkDestroySwapchainKHR(vulkanDevice->getDevice(), swapChain, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan swap chain");
+        LOG("Destroyed Vulkan swap chain");
     }
 
     VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const {
@@ -72,7 +73,7 @@ namespace GPUAPI {
                 return availableFormat;
             }
         }
-        VD_LOG_WARN("Could not find target format so defaulting to first available");
+        //VD_LOG_WARN("Could not find target format so defaulting to first available");
         return availableFormats[0];
     }
 
@@ -84,17 +85,17 @@ namespace GPUAPI {
             }
         }
         VkPresentModeKHR defaultPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-        VD_LOG_WARN("Could not find [{0}] present mode so defaulting to [{1}]", getPresentationModeAsString(targetPresentMode), getPresentationModeAsString(defaultPresentMode));
+        //VD_LOG_WARN("Could not find [{0}] present mode so defaulting to [{1}]", getPresentationModeAsString(targetPresentMode), getPresentationModeAsString(defaultPresentMode));
         return defaultPresentMode;
     }
 
     VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const {
         bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<uint32_t>::max();
         if (!extentSizeCanDifferFromWindowResolution) {
-            VD_LOG_DEBUG("Extent should match window resolution so using the surface capabilities extent");
+            //VD_LOG_DEBUG("Extent should match window resolution so using the surface capabilities extent");
             return surfaceCapabilities.currentExtent;
         }
-        VD_LOG_DEBUG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
+        //VD_LOG_DEBUG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
         Vector2 windowSizeInPixels = window->getSizeInPixels();
         VkExtent2D extent = {
                 (uint32_t) windowSizeInPixels.x,
@@ -202,4 +203,4 @@ namespace GPUAPI {
         }
     }
 
-}
+// }

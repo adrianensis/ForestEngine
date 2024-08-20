@@ -5,7 +5,8 @@
 
 #include <vulkan/vulkan.h>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUFramebuffer {
     private:
@@ -27,4 +28,4 @@ namespace GPUAPI {
         void terminate();
     };
 
-}
+// }

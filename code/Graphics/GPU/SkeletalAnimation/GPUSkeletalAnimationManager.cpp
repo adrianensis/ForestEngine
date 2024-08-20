@@ -18,7 +18,7 @@ void GPUSkeletalAnimationManager::update()
     FOR_MAP(it, mSkeletonRenderStates)
 	{
         const std::vector<Matrix4>& transforms = it->first->getCurrentBoneTransforms();
-        it->second.mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).setDataArray(transforms);
+        it->second.mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices).setDataArray(transforms);
 	}
 }
 
@@ -40,15 +40,15 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(Ptr<const GPUSkeletonS
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
-    skeletonRenderState.mGPUSharedBuffersContainer.addSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices, false);
-    skeletonRenderState.mGPUSharedBuffersContainer.create();
-    skeletonRenderState.mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
+    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices, false);
+    skeletonRenderState.mGPUUniformBuffersContainer.create();
+    skeletonRenderState.mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }
 
-const GPUSharedBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUSharedBuffer(Ptr<const GPUSkeletonState> skeletonState) const
+const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(Ptr<const GPUSkeletonState> skeletonState) const
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
-    return mSkeletonRenderStates.at(skeletonState).mGPUSharedBuffersContainer.getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices);
+    return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices);
 }

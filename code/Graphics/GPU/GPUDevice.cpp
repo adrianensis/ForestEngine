@@ -1,9 +1,10 @@
 #include "GPUDevice.h"
-#include "Log.h"
+
 
 #include <set>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUDevice::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -26,26 +27,26 @@ namespace GPUAPI {
         const QueueFamilyIndices& queueFamilyIndices = vulkanPhysicalDevice->getQueueFamilyIndices();
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos = getDeviceQueueCreateInfos(queueFamilyIndices);
         if (queueCreateInfos.empty()) {
-            VD_LOG_ERROR("Could not get any device queue create infos");
+            CHECK_MSG(false,"Could not get any device queue create infos");
             return false;
         }
         if (!createDevice(queueCreateInfos)) {
-            VD_LOG_ERROR("Could not create Vulkan device");
+            CHECK_MSG(false,"Could not create Vulkan device");
             return false;
         }
-        VD_LOG_INFO("Created Vulkan device");
+        LOG("Created Vulkan device");
 
         if (!findDeviceQueues(queueFamilyIndices)) {
-            VD_LOG_ERROR("Could not find any Vulkan device queues");
+            CHECK_MSG(false,"Could not find any Vulkan device queues");
             return false;
         }
-        VD_LOG_INFO("Found Vulkan queues");
+        LOG("Found Vulkan queues");
         return true;
     }
 
     void GPUDevice::terminate() const {
         vkDestroyDevice(device, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan device");
+        LOG("Destroyed Vulkan device");
     }
 
     void GPUDevice::waitUntilIdle() const {
@@ -90,12 +91,12 @@ namespace GPUAPI {
     bool GPUDevice::findDeviceQueues(const QueueFamilyIndices& queueFamilyIndices) {
         graphicsQueue = findDeviceQueue(queueFamilyIndices.GraphicsFamily.value());
         if (graphicsQueue == VK_NULL_HANDLE) {
-            VD_LOG_ERROR("Could not get Vulkan graphics queue");
+            CHECK_MSG(false,"Could not get Vulkan graphics queue");
             return false;
         }
         presentQueue = findDeviceQueue(queueFamilyIndices.PresentationFamily.value());
         if (presentQueue == VK_NULL_HANDLE) {
-            VD_LOG_ERROR("Could not get Vulkan present queue");
+            CHECK_MSG(false,"Could not get Vulkan present queue");
             return false;
         }
         return true;
@@ -108,4 +109,4 @@ namespace GPUAPI {
         return queue;
     }
 
-}
+// }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
-#include "Graphics/GPU/GPUSharedBuffer.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 class GPUBuiltIn
 {
@@ -59,7 +59,7 @@ public:
         }
     };
 
-    class SharedBuffers
+    class UniformBuffers
     {
     public:
 
@@ -70,7 +70,7 @@ public:
             alignas(16) Vector3 mCameraPosition;
         };
 
-        inline static const GPUSharedBufferData mGlobalData
+        inline static const GPUUniformBufferData mGlobalData
         {
             GPUBufferType::UNIFORM,
             {
@@ -81,7 +81,7 @@ public:
             "globalData"
         };
 
-        inline static const GPUSharedBufferData mTextures
+        inline static const GPUUniformBufferData mTextures
         {
             GPUBufferType::STORAGE,
             {
@@ -91,7 +91,7 @@ public:
             "textures"
         };
         
-        inline static const GPUSharedBufferData mModelMatrices
+        inline static const GPUUniformBufferData mModelMatrices
         {
             GPUBufferType::STORAGE,
             {
@@ -101,7 +101,7 @@ public:
             "modelMatrices"
         };
 
-        inline static const GPUSharedBufferData mBonesMatrices
+        inline static const GPUUniformBufferData mBonesMatrices
         {
             GPUBufferType::UNIFORM,
             {

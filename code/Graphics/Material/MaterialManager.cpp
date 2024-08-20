@@ -12,14 +12,14 @@ void MaterialInstance::setDirty()
 void MaterialManager::init()
 {
 	LOG_TRACE()
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().addSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures, false);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures, false);
 }
 
 void MaterialManager::terminate()
 {
     FOR_MAP(it, mMaterialPropertyBlockRenderStates)
     {
-        it->second.mGPUSharedBuffersContainer.terminate();
+        it->second.mGPUUniformBuffersContainer.terminate();
     }
 
     mMaterialPropertyBlockRenderStates.clear();
@@ -43,11 +43,11 @@ void MaterialManager::update()
         if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
             ByteBuffer& materialPropertiesBlockArray = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray;
-            mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).setDataArray(materialPropertiesBlockArray);
+            mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).setDataArray(materialPropertiesBlockArray);
         }
     }
 
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
 }
 
 PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTextureData)
@@ -65,7 +65,7 @@ PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTe
         // NOTE: We reserve position 0 to represent NULL
         u32 paddedSize = size + 1;
         mTextureHandles.resize(paddedSize);
-        GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures).resize<TextureHandle>(paddedSize);
+        GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
 
         mTextureHandles[texture.getID() + 1] = texture.getGPUTextureHandle();
 	}
@@ -81,7 +81,7 @@ void MaterialManager::unloadTexture(PoolHandler<GPUTexture>& texture)
 void MaterialManager::postMaterialCreated(const PoolHandler<Material>& handler)
 {
     loadMaterialTextures(handler);
-    initMaterialInstancePropertiesSharedBuffer(handler);
+    initMaterialInstancePropertiesUniformBuffer(handler);
 }
 
 void MaterialManager::loadMaterialTextures(const PoolHandler<Material>& handler)
@@ -168,7 +168,7 @@ const Material& MaterialManager::getMaterial(u32 id) const
     return getMaterialHandler(id).get();
 }
 
-void MaterialManager::initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material)
+void MaterialManager::initMaterialInstancePropertiesUniformBuffer(const PoolHandler<Material>& material)
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     u32 materialID = material->getID();
@@ -198,10 +198,10 @@ void MaterialManager::initMaterialInstancePropertiesSharedBuffer(const PoolHandl
                 Slot defaultSlot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.copyBufferAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
-                const GPUSharedBufferData& propertiesBlockSharedBufferData = material->getShader()->getShaderData().mPropertiesBlockSharedBufferData;
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.addSharedBuffer(propertiesBlockSharedBufferData, false);
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.create();
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mInitialInstances);
+                const GPUUniformBufferData& propertiesBlockUniformBufferData = material->getShader()->getShaderData().mPropertiesBlockUniformBufferData;
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.addUniformBuffer(propertiesBlockUniformBufferData, false);
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.create();
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mInitialInstances);
             }
         }
     }
@@ -256,12 +256,12 @@ void MaterialManager::setMaterialInstanceDirty(u32 id)
     }
 }
 
-const GPUSharedBuffer& MaterialManager::getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const
+const GPUUniformBuffer& MaterialManager::getMaterialPropertiesGPUUniformBuffer(const PoolHandler<Material>& material) const
 {
     CHECK_MSG(material.isValid(), "Invalid material!");
     ClassId propertiesBlockClassId = material->getMaterialData().mSharedMaterialPropertiesBlockClass.getId();
     CHECK_MSG(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId), "Material Property Block not found!");
-    return mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName);
+    return mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
 
 Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& material)
@@ -282,7 +282,7 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
                 u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.increaseSize(mInitialInstances);
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.resize(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize() * propertiesBlockSizeBytes);
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUSharedBuffersContainer.getSharedBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize());
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize());
             }
 
             slot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();

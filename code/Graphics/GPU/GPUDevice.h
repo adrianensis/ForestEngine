@@ -1,10 +1,11 @@
 #pragma once
 
-#include "GPUPhysicalDevice.h"
+#include "Graphics/GPU/GPUPhysicalDevice.h"
 
 #include <vulkan/vulkan.h>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUDevice {
     private:
@@ -42,4 +43,4 @@ namespace GPUAPI {
         VkQueue findDeviceQueue(uint32_t queueFamilyIndex) const;
     };
 
-}
+// }

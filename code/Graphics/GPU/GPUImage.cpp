@@ -1,7 +1,8 @@
 #include "GPUImage.h"
-#include "Log.h"
 
-namespace GPUAPI {
+
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     GPUImage::GPUImage(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice)
             : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {}
@@ -29,7 +30,7 @@ namespace GPUAPI {
         imageInfo.samples = config.SampleCount;
 
         if (vkCreateImage(vulkanDevice->getDevice(), &imageInfo, allocationCallbacks, &vkImage) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan image from texture");
+            CHECK_MSG(false,"Could not create Vulkan image from texture");
             return false;
         }
 
@@ -44,14 +45,14 @@ namespace GPUAPI {
         memoryAllocateInfo.memoryTypeIndex = memoryTypeIndex;
 
         if (vkAllocateMemory(vulkanDevice->getDevice(), &memoryAllocateInfo, allocationCallbacks, &vkDeviceMemory) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not allocate Vulkan image memory");
+            CHECK_MSG(false,"Could not allocate Vulkan image memory");
             return false;
         }
 
         constexpr uint32_t memoryOffset = 0;
         vkBindImageMemory(vulkanDevice->getDevice(), vkImage, vkDeviceMemory, memoryOffset);
 
-        VD_LOG_INFO("Initialized image");
+        LOG("Initialized image");
         return true;
     }
 
@@ -59,7 +60,7 @@ namespace GPUAPI {
         VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
         vkDestroyImage(vulkanDevice->getDevice(), vkImage, allocationCallbacks);
         vkFreeMemory(vulkanDevice->getDevice(), vkDeviceMemory, allocationCallbacks);
-        VD_LOG_INFO("Terminated image");
+        LOG("Terminated image");
     }
 
-}
+// }

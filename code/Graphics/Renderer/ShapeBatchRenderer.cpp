@@ -50,7 +50,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
     mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
 
-    mShader->getGPUProgram()->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData));
+    mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
 }
 
 void ShapeBatchRenderer::render()

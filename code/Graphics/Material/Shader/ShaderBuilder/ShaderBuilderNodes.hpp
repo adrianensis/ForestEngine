@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUSharedBuffer.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 namespace ShaderBuilderNodes
 {
@@ -155,15 +155,15 @@ namespace ShaderBuilderNodes
         i32 mLocation = INVALID_INDEX;
     };
 
-    class SharedBuffer : public Statement
+    class UniformBuffer : public Statement
     {
     public:
-        SharedBuffer(const GPUSharedBufferData& gpuBlockData) : mGPUSharedBufferData(gpuBlockData) {};
+        UniformBuffer(const GPUUniformBufferData& gpuBlockData) : mGPUUniformBufferData(gpuBlockData) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
-        bool isValid() const { return mGPUSharedBufferData.mInstanceName.isValid(); }
+        bool isValid() const { return mGPUUniformBufferData.mInstanceName.isValid(); }
 
-        GPUSharedBufferData mGPUSharedBufferData;
+        GPUUniformBufferData mGPUUniformBufferData;
     }; 
 
     // EXPRESSIONS
@@ -314,14 +314,14 @@ namespace ShaderBuilderNodes
         {
             mStructs.reserve(50);
             mAttributes.reserve(100);
-            mSharedBuffers.reserve(50);
+            mUniformBuffers.reserve(50);
             mFunctionDefinitions.reserve(50);
         }
         ~Program() { terminate(); }
         
         Struct& structType(const Struct& structType);
         Attribute& attribute(const Attribute& attribute);
-        SharedBuffer& sharedBuffer(const SharedBuffer& sharedBuffer);
+        UniformBuffer& uniformBuffer(const UniformBuffer& uniformBuffer);
         FunctionDefinition& mainFunction(auto&& ...args)
         {
             return mMainFunctionDefinition = FunctionDefinition(args...);
@@ -340,8 +340,8 @@ namespace ShaderBuilderNodes
         const Struct& getStruct(const Struct& structType) const;
         const Attribute& getAttribute(const HashedString& attributeName) const;
         const Attribute& getAttribute(const Attribute& attribute) const;
-        const SharedBuffer& getSharedBuffer(const HashedString& sharedBufferName) const;
-        const SharedBuffer& getSharedBuffer(const SharedBuffer& sharedBuffer) const;
+        const UniformBuffer& getUniformBuffer(const HashedString& uniformBufferName) const;
+        const UniformBuffer& getUniformBuffer(const UniformBuffer& uniformBuffer) const;
         FunctionDefinition& getFunctionDefinition(const HashedString& functionDefinitionName);
         FunctionDefinition& getFunctionDefinition(const GPUFunctionDefinition& functionDefinition);
         FunctionDefinition& getMainFunctionDefinition()
@@ -354,14 +354,14 @@ namespace ShaderBuilderNodes
 
         std::vector<Struct> mStructs;
         std::vector<Attribute> mAttributes;
-        std::vector<SharedBuffer> mSharedBuffers;
+        std::vector<UniformBuffer> mUniformBuffers;
         std::vector<FunctionDefinition> mFunctionDefinitions;
         std::vector<HashedString> mExtensions;
         FunctionDefinition mMainFunctionDefinition = GPUFunctionDefinition{};
         u16 mVersion = 430;
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
-        inline static SharedBuffer mNullSharedBuffer {GPUSharedBufferData{}};
+        inline static UniformBuffer mNullUniformBuffer {GPUUniformBufferData{}};
         inline static Struct mNullStructDefinition {GPUStructDefinition{}};
         inline static FunctionDefinition mNullFunctionDefinition {GPUFunctionDefinition{}};
     };

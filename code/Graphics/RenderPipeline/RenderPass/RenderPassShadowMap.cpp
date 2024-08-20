@@ -53,12 +53,12 @@ void RenderPassShadowMap::updateGlobalData()
     }
     TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    GPUBuiltIn::SharedBuffers::GPUGlobalData gpuGlobalData =
+    GPUBuiltIn::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
         lightProjectionViewMatrix,
         camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData).setData(gpuGlobalData);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 Ptr<Shader> RenderPassShadowMap::getShader(const InstancedMeshData& instancedMeshData) const

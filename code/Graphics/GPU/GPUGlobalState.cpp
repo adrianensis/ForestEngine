@@ -3,22 +3,22 @@
 
 void GPUGlobalState::init()
 {
-//    mMaxSharedBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::UNIFORM);
-//    mMaxSharedBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForSharedBuffer(GPUBufferType::STORAGE);
+//    mMaxUniformBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::UNIFORM);
+//    mMaxUniformBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::STORAGE);
 
     Config config{};
     config.Name = "GPUAPI";
-    config.LogLevel = GPUAPI::Log::Level::Debug;
+    config.LogLevel = Log::Level::Debug;
     // config.mWindow.Title = config.Name;
     // config.mWindow.Width = 800;
     // config.mWindow.Height = 600;
     config.mVulkan.Name = config.Name;
 
-    vulkan = new GPUAPI::Vulkan(config.mVulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
-    vulkanPhysicalDevice = new GPUAPI::GPUPhysicalDevice(vulkan);
-    vulkanDevice = new GPUAPI::GPUDevice(vulkan, vulkanPhysicalDevice);
-    vulkanSwapChain = new GPUAPI::GPUSwapChain(vulkanDevice, vulkanPhysicalDevice, vulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
-    vulkanCommandPool = new GPUAPI::GPUCommandPool(vulkanPhysicalDevice, vulkanDevice);
+    vulkan = new Vulkan(config.mVulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
+    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
+    vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkanPhysicalDevice, vulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
+    vulkanCommandPool = new GPUCommandPool(vulkanPhysicalDevice, vulkanDevice);
     
     if (!vulkan->initialize())
     {
@@ -47,23 +47,23 @@ void GPUGlobalState::init()
     }
 }
 
-u32 GPUGlobalState::requestSharedBufferBindingPoint(GPUBufferType gpuSharedBufferType)
+u32 GPUGlobalState::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
 {
     u32 bindingPoint = 0;
-    switch (gpuSharedBufferType)
+    switch (gpuUniformBufferType)
     {
     case GPUBufferType::UNIFORM:
         {
             bindingPoint = mBindingPointsIndexUniform;
             mBindingPointsIndexUniform++;
-            CHECK_MSG((i32)mBindingPointsIndexUniform <= mMaxSharedBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
+            CHECK_MSG((i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
         }
         break;
     case GPUBufferType::STORAGE:
         {
             bindingPoint = mBindingPointsIndexStorage;
             mBindingPointsIndexStorage++;
-            CHECK_MSG((i32)mBindingPointsIndexStorage <= mMaxSharedBufferBindingPointsStorage, "Max Storage Binding Points reached!");
+            CHECK_MSG((i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
         }
         break;
     default:
@@ -151,7 +151,7 @@ bool GPUGlobalState::initializeSyncObjects() {
             CHECK_MSG(false, "Could not create 'in flight' fence for frame [{}]");
         }
     }
-    VD_LOG_INFO("Created Vulkan sync objects (semaphores & fences)");
+    LOG("Created Vulkan sync objects (semaphores & fences)");
     return true;
 }
 
@@ -205,7 +205,7 @@ bool GPUGlobalState::transitionImageLayout(VkImage image, VkFormat format, VkIma
         sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
         destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     } else {
-        VD_LOG_ERROR("Could not transition image layout: Unsupported transition");
+        CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
         return false;
     }
 
@@ -246,7 +246,7 @@ VkImageView GPUGlobalState::createImageView(VkImage image, VkFormat format, VkIm
 
     VkImageView imageView;
     if (vkCreateImageView(vulkanDevice->getDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
-        VD_LOG_ERROR("Could not create Vulkan image view");
+        CHECK_MSG(false,"Could not create Vulkan image view");
         return nullptr;
     }
     return imageView;
@@ -254,7 +254,7 @@ VkImageView GPUGlobalState::createImageView(VkImage image, VkFormat format, VkIm
 
 void GPUGlobalState::terminate()
 {
-    mGPUSharedBuffersContainer.terminate();
+    mGPUUniformBuffersContainer.terminate();
 
     // terminateSyncObjects
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
@@ -263,7 +263,7 @@ void GPUGlobalState::terminate()
         vkDestroySemaphore(vulkanDevice->getDevice(), imageAvailableSemaphores[i], allocationCallbacks);
         vkDestroyFence(vulkanDevice->getDevice(), inFlightFences[i], allocationCallbacks);
     }
-    VD_LOG_INFO("Destroyed Vulkan sync objects (semaphores & fences)");
+    LOG("Destroyed Vulkan sync objects (semaphores & fences)");
 
     vulkanSwapChain->terminate();
     delete vulkanSwapChain;

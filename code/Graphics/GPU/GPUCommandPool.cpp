@@ -1,7 +1,8 @@
 #include "GPUCommandPool.h"
-#include "Log.h"
 
-namespace GPUAPI {
+
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUCommandPool::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -19,17 +20,17 @@ namespace GPUAPI {
         commandPoolInfo.queueFamilyIndex = vulkanPhysicalDevice->getQueueFamilyIndices().GraphicsFamily.value();
 
         if (vkCreateCommandPool(vulkanDevice->getDevice(), &commandPoolInfo, ALLOCATOR, &vkCommandPool) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan command pool");
+            CHECK_MSG(false,"Could not create Vulkan command pool");
             return false;
         }
 
-        VD_LOG_INFO("Created Vulkan command pool");
+        LOG("Created Vulkan command pool");
         return true;
     }
 
     void GPUCommandPool::terminate() {
         vkDestroyCommandPool(vulkanDevice->getDevice(), vkCommandPool, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan command pool");
+        LOG("Destroyed Vulkan command pool");
     }
 
     std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(uint32_t count) const {
@@ -43,7 +44,7 @@ namespace GPUAPI {
         allocateInfo.commandPool = vkCommandPool;
 
         if (vkAllocateCommandBuffers(vulkanDevice->getDevice(), &allocateInfo, vkCommandBuffers.data()) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not allocate [{}] Vulkan command buffers", vkCommandBuffers.size());
+            CHECK_MSG(false,"Could not allocate [{}] Vulkan command buffers", vkCommandBuffers.size());
             return {};
         }
 
@@ -52,7 +53,7 @@ namespace GPUAPI {
             GPUCommandBuffer vulkanCommandBuffer(vkCommandBuffer);
             vulkanCommandBuffers.push_back(vulkanCommandBuffer);
         }
-        VD_LOG_INFO("Allocated [{}] command buffers", vulkanCommandBuffers.size());
+        LOG("Allocated [{}] command buffers", vulkanCommandBuffers.size());
         return vulkanCommandBuffers;
     }
 
@@ -61,4 +62,4 @@ namespace GPUAPI {
         vkFreeCommandBuffers(vulkanDevice->getDevice(), vkCommandPool, 1, &vkCommandBuffer);
     }
 
-}
+// }

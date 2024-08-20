@@ -79,59 +79,59 @@ void GPUVertexBuffersContainer::terminate()
 //    GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
 }
 
-void GPUSharedBuffersContainer::create()
+void GPUUniformBuffersContainer::create()
 {   
-    FOR_LIST(it, mSharedBuffers)
+    FOR_LIST(it, mUniformBuffers)
     {
         it->createBuffer();
     }
 }
 
-void GPUSharedBuffersContainer::addSharedBuffer(const GPUSharedBufferData& data, bool isStatic)
+void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& data, bool isStatic)
 {
-    u32 bindingPoint = GET_SYSTEM(GPUGlobalState).requestSharedBufferBindingPoint(data.mType);
-    GPUSharedBuffer& gpuInstanceBuffer = mSharedBuffers.emplace_back();
+    u32 bindingPoint = GET_SYSTEM(GPUGlobalState).requestUniformBufferBindingPoint(data.mType);
+    GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
     gpuInstanceBuffer.init(bindingPoint, data, isStatic);
 
-    u32 index = mSharedBuffers.size() - 1;
-    mSharedBuffersMap.insert_or_assign(data.mBufferName, index);
+    u32 index = mUniformBuffers.size() - 1;
+    mUniformBuffersMap.insert_or_assign(data.mBufferName, index);
 }
 
-GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(const GPUSharedBufferData& data)
+GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(const GPUUniformBufferData& data)
 {
-    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
+    return mUniformBuffers.at(findIndex(mUniformBuffersMap, data.mBufferName));
 }
 
-const GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(const GPUSharedBufferData& data) const
+const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(const GPUUniformBufferData& data) const
 {
-    return mSharedBuffers.at(findIndex(mSharedBuffersMap, data.mBufferName));
+    return mUniformBuffers.at(findIndex(mUniformBuffersMap, data.mBufferName));
 }
 
-GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(HashedString bufferName)
+GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(HashedString bufferName)
 {
-    return mSharedBuffers.at(findIndex(mSharedBuffersMap, bufferName));
+    return mUniformBuffers.at(findIndex(mUniformBuffersMap, bufferName));
 }
 
-const GPUSharedBuffer& GPUSharedBuffersContainer::getSharedBuffer(HashedString bufferName) const
+const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(HashedString bufferName) const
 {
-    return mSharedBuffers.at(findIndex(mSharedBuffersMap, bufferName));
+    return mUniformBuffers.at(findIndex(mUniformBuffersMap, bufferName));
 }
 
-bool GPUSharedBuffersContainer::containsSharedBuffer(const GPUSharedBufferData& data) const
+bool GPUUniformBuffersContainer::containsUniformBuffer(const GPUUniformBufferData& data) const
 {
-    return mSharedBuffersMap.contains(data.mBufferName);
+    return mUniformBuffersMap.contains(data.mBufferName);
 }
 
-u32 GPUSharedBuffersContainer::findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name)
+u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name)
 {
-    CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUSharedBuffersContainer!");
+    CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUUniformBuffersContainer!");
     u32 index = indexMap.at(name);
     return index;
 }
 
-void GPUSharedBuffersContainer::terminate()
+void GPUUniformBuffersContainer::terminate()
 {
-    FOR_MAP(it, mSharedBuffers)
+    FOR_MAP(it, mUniformBuffers)
     {
         it->terminate();
     }

@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUIndicesBuffer.hpp"
-#include "Graphics/GPU/GPUSharedBuffer.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 class GPUVertexBuffersContainer
 {
@@ -35,26 +35,26 @@ public:
     RGET(IndicesBuffer)
 };
 
-class GPUSharedBuffersContainer
+class GPUUniformBuffersContainer
 {
 public:
-	GPUSharedBuffersContainer() = default;
+	GPUUniformBuffersContainer() = default;
 
     void terminate();
     void create();
-    void addSharedBuffer(const GPUSharedBufferData& data, bool isStatic);
-    GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data);
-    const GPUSharedBuffer& getSharedBuffer(const GPUSharedBufferData& data) const;
-    GPUSharedBuffer& getSharedBuffer(HashedString bufferName);
-    const GPUSharedBuffer& getSharedBuffer(HashedString bufferName) const;
-    bool containsSharedBuffer(const GPUSharedBufferData& data) const;
+    void addUniformBuffer(const GPUUniformBufferData& data, bool isStatic);
+    GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data);
+    const GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data) const;
+    GPUUniformBuffer& getUniformBuffer(HashedString bufferName);
+    const GPUUniformBuffer& getUniformBuffer(HashedString bufferName) const;
+    bool containsUniformBuffer(const GPUUniformBufferData& data) const;
 
 private:
     static u32 findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name);
 
 private:
-    std::vector<GPUSharedBuffer> mSharedBuffers;
-    std::unordered_map<HashedString, u32> mSharedBuffersMap;
+    std::vector<GPUUniformBuffer> mUniformBuffers;
+    std::unordered_map<HashedString, u32> mUniformBuffersMap;
 public:
-    CRGET(SharedBuffers)
+    CRGET(UniformBuffers)
 };

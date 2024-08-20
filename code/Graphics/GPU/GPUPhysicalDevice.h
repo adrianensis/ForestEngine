@@ -6,7 +6,8 @@
 #include <optional>
 #include <vector>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     struct QueueFamilyIndices {
         std::optional<uint32_t> GraphicsFamily;
@@ -19,9 +20,10 @@ namespace GPUAPI {
         std::vector<VkPresentModeKHR> PresentModes;
     };
 
-}
+// }
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUPhysicalDevice {
     private:
@@ -94,5 +96,5 @@ namespace GPUAPI {
         bool hasRequiredQueueFamilyIndices(const QueueFamilyIndices& queueFamilyIndices) const;
     };
 
-}
+// }
 

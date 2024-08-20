@@ -30,8 +30,8 @@ void ShaderPBR::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder
 {
     ShaderDefault::vertexShaderCalculatePositionOutput(shaderBuilder);
 
-    auto& shadowMappingBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
-    Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& shadowMappingBuffer = shaderBuilder.get().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
+    Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
     auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPositionLight);
@@ -45,7 +45,7 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     Variable lightingModel = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
-    Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+    Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     
     Variable baseColor;
@@ -57,8 +57,8 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 
     auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
     auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
-    auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-    Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+    Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
     if(inTextureCoord.isValid())
     {
         shaderBuilder.getMain().
@@ -77,12 +77,12 @@ void ShaderPBR::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPU
 {
     ShaderDefault::generateGPUProgramData(gpuProgramData, gpuVertexBuffersContainer);
     
-    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mLightsBufferData);
+    gpuProgramData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mLightsBufferData);
     gpuProgramData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
     gpuProgramData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
     gpuProgramData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
 
-    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
+    gpuProgramData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
 void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
@@ -130,8 +130,8 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
             variable(normalFromTexture, GPUBuiltIn::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUBuiltIn::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
             auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
-            auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-            Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+            auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+            Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
             funcGetNormalFromMap.body().
             ifBlock(textureHandler.notEq("0"s)).
                 set(normalFromTexture, call("texture", {textures.at(textureHandler), inTextureCoord})).
@@ -409,26 +409,26 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         FunctionDefinition funcCalculatePBR(mCalculatePBR);
         Variable baseColor = funcCalculatePBR.mParameters[0];
 
-        auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
-        Variable cameraPosition(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
+        auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData.mInstanceName);    
+        Variable cameraPosition(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
         auto& inNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mNormal);
         auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mFragPosition);
-        auto& ligthsDataBuffer = shaderBuilder.get().getSharedBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    
-        Variable pointLights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        auto& ligthsDataBuffer = shaderBuilder.get().getUniformBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    
+        Variable pointLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         Variable pointLightPos = {LightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[0]};
         Variable pointLightDiffuse = {LightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[1]};
 
-        Variable spotLights(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(1));
+        Variable spotLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
         Variable spotLightPos = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[0]};
         Variable spotLightDiffuse = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[1]};
         Variable spotLightInnerCutOff = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[2]};
         Variable spotLightOuterCutOff = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[3]};
 
-        Variable directionalLight(ligthsDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(2));
+        Variable directionalLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(2));
         Variable directionalLightDirection = {LightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[0]};
         Variable directionalLightDiffuse = {LightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[1]};
 
-        Variable propertiesBlock(getShaderData().mPropertiesBlockSharedBufferData.getScopedGPUVariableData(0));
+        Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
         Variable materialBaseColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
         Variable materialMetallic = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
         Variable materialRoughness = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
@@ -441,8 +441,8 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(metallic, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(materialInstanceId).dot(materialMetallic));
 
         auto& textureHandlerMetallicRoughness = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
-        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
 
         if(inTextureCoord.isValid())

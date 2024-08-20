@@ -4,7 +4,8 @@
 
 #include <vulkan/vulkan.h>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUImage {
     public:
@@ -36,4 +37,4 @@ namespace GPUAPI {
         void terminate();
     };
 
-}
+// }

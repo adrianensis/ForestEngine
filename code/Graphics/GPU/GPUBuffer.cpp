@@ -1,11 +1,11 @@
 #include "GPUBuffer.h"
-#include "Log.h"
-#include "Assert.h"
+
 #include <cstring>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
-    GPUAPI::GPUBuffer::GPUBuffer(GPUAPI::GPUPhysicalDevice* vulkanPhysicalDevice, GPUAPI::GPUDevice* vulkanDevice)
+    GPUBuffer::GPUBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice)
             : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {}
 
     const GPUBuffer::Config& GPUBuffer::getConfig() const {
@@ -32,7 +32,7 @@ namespace GPUAPI {
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
         if (vkCreateBuffer(vulkanDevice->getDevice(), &bufferInfo, allocator, &vkBuffer) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan buffer");
+            CHECK_MSG(false,"Could not create Vulkan buffer");
             return false;
         }
 
@@ -45,24 +45,24 @@ namespace GPUAPI {
         memoryAllocateInfo.memoryTypeIndex = vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, config.MemoryProperties);
 
         if (vkAllocateMemory(vulkanDevice->getDevice(), &memoryAllocateInfo, allocator, &vkDeviceMemory) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not allocate Vulkan vertex vkBuffer memory");
+            CHECK_MSG(false,"Could not allocate Vulkan vertex vkBuffer memory");
             return false;
         }
 
         constexpr VkDeviceSize memoryOffset = 0;
         vkBindBufferMemory(vulkanDevice->getDevice(), vkBuffer, vkDeviceMemory, memoryOffset);
 
-        VD_LOG_INFO("Initialized Vulkan buffer");
+        LOG("Initialized Vulkan buffer");
         return true;
     }
 
     void GPUBuffer::terminate() {
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
         vkDestroyBuffer(vulkanDevice->getDevice(), vkBuffer, allocator);
-        VD_LOG_INFO("Destroyed Vulkan buffer");
+        LOG("Destroyed Vulkan buffer");
         vkFreeMemory(vulkanDevice->getDevice(), vkDeviceMemory, allocator);
-        VD_LOG_INFO("Freed Vulkan buffer memory");
-        VD_LOG_INFO("Terminated Vulkan buffer");
+        LOG("Freed Vulkan buffer memory");
+        LOG("Terminated Vulkan buffer");
     }
 
     void GPUBuffer::setData(void* data) const {
@@ -75,11 +75,11 @@ namespace GPUAPI {
     }
 
     void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice) {
-        VD_ASSERT(sourceBuffer.config.Size == destinationBuffer.config.Size);
+        CHECK_MSG(sourceBuffer.config.Size == destinationBuffer.config.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
 
         constexpr uint32_t commandBufferCount = 1;
         const std::vector<GPUCommandBuffer>& commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
-        VD_ASSERT(commandBuffers.size() == commandBufferCount)
+        CHECK_MSG(commandBuffers.size() == commandBufferCount, "commandBuffers.size() == commandBufferCount")
 
         const GPUCommandBuffer& commandBuffer = commandBuffers[0];
         commandBuffer.begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
@@ -106,4 +106,4 @@ namespace GPUAPI {
         commandPool.free(commandBuffer);
     }
 
-}
+// }

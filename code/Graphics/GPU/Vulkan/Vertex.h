@@ -8,7 +8,8 @@
 #include <vulkan/vulkan.h>
 #include <array>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     struct Vertex {
         Vector3 position;
@@ -48,7 +49,7 @@ namespace GPUAPI {
             return position == other.position && color == other.color && texCoord == other.texCoord;
         }
     };
-}
+// }
 
 /*
  * A hash function for Vertex is implemented by specifying a template specialization for std::hash<T>.
@@ -59,8 +60,8 @@ namespace GPUAPI {
  */
 namespace std {
     template<>
-    struct hash<GPUAPI::Vertex> {
-        // size_t operator()(GPUAPI::Vertex const& vertex) const {
+    struct hash<Vertex> {
+        // size_t operator()(Vertex const& vertex) const {
         //     return ((hash<Vector3>()(vertex.position) ^ (hash<Vector3>()(vertex.color) << 1)) >> 1) ^ (hash<Vector2>()(vertex.texCoord) << 1);
         // }
     };

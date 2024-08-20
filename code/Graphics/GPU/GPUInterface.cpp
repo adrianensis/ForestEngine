@@ -57,15 +57,15 @@ u32 GPUInterface::createVertexBufferLayout()
 	return vertexBufferLayout;
 }
 
-u32 GPUInterface::getMaxElementsInSharedBuffer(GPUBufferType bufferType, u32 elementSizeInBytes)
+u32 GPUInterface::getMaxElementsInUniformBuffer(GPUBufferType bufferType, u32 elementSizeInBytes)
 {
     PROFILER_CPU()
     PROFILER_GPU()
-    i32 maxElements = (getMaxBytesInSharedBuffer(bufferType)/elementSizeInBytes);
+    i32 maxElements = (getMaxBytesInUniformBuffer(bufferType)/elementSizeInBytes);
     return maxElements;
 }
 
-u32 GPUInterface::getMaxBytesInSharedBuffer(GPUBufferType bufferType)
+u32 GPUInterface::getMaxBytesInUniformBuffer(GPUBufferType bufferType)
 {
     PROFILER_CPU()
     PROFILER_GPU()
@@ -86,7 +86,7 @@ u32 GPUInterface::getMaxBytesInSharedBuffer(GPUBufferType bufferType)
     return maxBytes;
 }
 
-u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
+u32 GPUInterface::getMaxBindingPointsForUniformBuffer(GPUBufferType bufferType)
 {
     PROFILER_CPU()
     PROFILER_GPU()
@@ -107,7 +107,7 @@ u32 GPUInterface::getMaxBindingPointsForSharedBuffer(GPUBufferType bufferType)
     return maxBindingPoints;
 }
 
-void GPUInterface::bindSharedBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
+void GPUInterface::bindUniformBufferToBindingPoint(GPUBufferType bufferType, u32 bufferId, u32 bindingPoint)
 {
     PROFILER_CPU()
     PROFILER_GPU()
@@ -590,7 +590,7 @@ u32 GPUInterface::compileProgram(const std::string& vertexShaderString, const st
     return 0;
 }
 
-void GPUInterface::bindSharedBufferToShader(u32 programId, GPUBufferType bufferType, const HashedString& bufferName, u32 bindingPoint)
+void GPUInterface::bindUniformBufferToShader(u32 programId, GPUBufferType bufferType, const HashedString& bufferName, u32 bindingPoint)
 {
     PROFILER_CPU()
     PROFILER_GPU()

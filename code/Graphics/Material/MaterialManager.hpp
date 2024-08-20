@@ -44,7 +44,7 @@ public:
 
     void setMaterialInstanceProperties(const PoolHandler<MaterialInstance> materialInstance);
     void setMaterialInstanceDirty(u32 id);
-    const GPUSharedBuffer& getMaterialPropertiesGPUSharedBuffer(const PoolHandler<Material>& material) const;
+    const GPUUniformBuffer& getMaterialPropertiesGPUUniformBuffer(const PoolHandler<Material>& material) const;
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
 
     const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& getMaterialTextureBindings(const PoolHandler<Material>& handler) const;
@@ -57,14 +57,14 @@ private:
     {
     public:
         ByteBuffer mMaterialPropertiesBlockArray;
-        GPUSharedBuffersContainer mGPUSharedBuffersContainer;
+        GPUUniformBuffersContainer mGPUUniformBuffersContainer;
         SlotsManager mSlotsManager;
     };
 
 	std::unordered_map<u32, ClassId> mMaterialToPropertyBlock;
 	std::unordered_map<ClassId, MaterialPropertyBlockRenderState> mMaterialPropertyBlockRenderStates;
 
-    void initMaterialInstancePropertiesSharedBuffer(const PoolHandler<Material>& material);
+    void initMaterialInstancePropertiesUniformBuffer(const PoolHandler<Material>& material);
 
     Pool<GPUTexture> mTextures;
     std::vector<TextureHandle> mTextureHandles;

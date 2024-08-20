@@ -1,8 +1,9 @@
 #include "GPURenderPass.h"
 #include "GPUFramebuffer.h"
-#include "Log.h"
 
-namespace GPUAPI {
+
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPURenderPass::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -82,16 +83,16 @@ namespace GPUAPI {
         renderPassInfo.pDependencies = &dependency;
 
         if (vkCreateRenderPass(vulkanDevice->getDevice(), &renderPassInfo, ALLOCATOR, &renderPass) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan render pass");
+            CHECK_MSG(false,"Could not create Vulkan render pass");
             return false;
         }
-        VD_LOG_INFO("Created Vulkan render pass");
+        LOG("Created Vulkan render pass");
         return true;
     }
 
     void GPURenderPass::terminate() {
         vkDestroyRenderPass(vulkanDevice->getDevice(), renderPass, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan render pass");
+        LOG("Destroyed Vulkan render pass");
     }
 
     void GPURenderPass::begin(const GPUCommandBuffer& vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const {
@@ -138,4 +139,4 @@ namespace GPUAPI {
         return vulkanPhysicalDevice->findSupportedFormat(candidates, tiling, features);
     }
 
-}
+// }

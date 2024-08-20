@@ -34,11 +34,11 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
         set(finalPositon, boneMatrix.mul(finalPositon));
     }
 
-    auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
+    auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);
     if(modelMatricesBuffer.isValid())
     {
         Variable modelMatrices;
-        modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
         if(objectId.isValid())
         {
@@ -50,8 +50,8 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     
     vertexShaderCalculatePositionOutputCustom(shaderBuilder);
 
-    auto& globalDataBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mGlobalData.mInstanceName);    
-    Variable projectionViewMatrix(globalDataBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData.mInstanceName);    
+    Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     shaderBuilder.getMain().
     set(GPUBuiltIn::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
@@ -84,11 +84,11 @@ void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuild
     }
 
     auto& outNormal = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mNormal);
-    auto& modelMatricesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mModelMatrices.mInstanceName);
+    auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);
     if(modelMatricesBuffer.isValid())
     {
         Variable modelMatrices;
-        modelMatrices = Variable(modelMatricesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
         if(objectId.isValid())
         {
@@ -180,8 +180,8 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     if(inTextureCoord.isValid())
     {
         auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-        auto& texturesBuffer = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mTextures.mInstanceName);    
-        Variable textures(texturesBuffer.mGPUSharedBufferData.getScopedGPUVariableData(0));
+        auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+        Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         shaderBuilder.getMain().
         ifBlock(textureHandler.notEq("0"s)).
             set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
@@ -240,10 +240,10 @@ void ShaderDefault::generateGPUProgramData(GPUProgramData& gpuProgramData, const
 
     gpuProgramData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
-    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mGlobalData);
-    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mTextures);
-    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mModelMatrices);
-    gpuProgramData.mCommonVariables.mSharedBuffers.push_back(getShaderData().mPropertiesBlockSharedBufferData);
+    gpuProgramData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalData);
+    gpuProgramData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mTextures);
+    gpuProgramData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
+    gpuProgramData.mCommonVariables.mUniformBuffers.push_back(getShaderData().mPropertiesBlockUniformBufferData);
 
     gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
     gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI180);
@@ -251,7 +251,7 @@ void ShaderDefault::generateGPUProgramData(GPUProgramData& gpuProgramData, const
     {
         gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
         gpuProgramData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
-        gpuProgramData.mCommonVariables.mSharedBuffers.push_back(GPUBuiltIn::SharedBuffers::mBonesMatrices);
+        gpuProgramData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mBonesMatrices);
     }
 
     FOR_LIST(it, gpuVertexBuffersContainer.getVertexBuffers())
@@ -309,7 +309,7 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
     FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
     FOR_LIST(it, gpuProgramData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, gpuProgramData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(*it); }
     FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
@@ -327,7 +327,7 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
     FOR_LIST(it, gpuProgramData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, gpuProgramData.mCommonVariables.mSharedBuffers) { shaderBuilder.get().sharedBuffer(*it); }
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(*it); }
     FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
 }
@@ -377,8 +377,8 @@ void ShaderDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shader
     auto& bonesWeights = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesWeights);
     auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBones);
     auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUBuiltIn::Consts::mMaxBoneInfluence);
-    auto& bonesMatricesblock = shaderBuilder.get().getSharedBuffer(GPUBuiltIn::SharedBuffers::mBonesMatrices.mInstanceName);    
-    Variable bonesTransform(bonesMatricesblock.mGPUSharedBufferData.getScopedGPUVariableData(0));
+    auto& bonesMatricesblock = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices.mInstanceName);    
+    Variable bonesTransform(bonesMatricesblock.mGPUUniformBufferData.getScopedGPUVariableData(0));
     Variable currentBoneTransform;
     Variable currentBoneTransformMulWeight;
     Variable finalBoneTransform;

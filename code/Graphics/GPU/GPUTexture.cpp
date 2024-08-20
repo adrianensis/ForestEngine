@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/GPU/GPUGlobalState.hpp"
-#include "Graphics/GPU/Vulkan/GPUBuffer.h"
+#include "Graphics/GPU/GPUBuffer.h"
 #include "Core/Image/ImageUtils.hpp"
 
 void GPUTexture::enable(u32 textureUnit) const
@@ -50,7 +50,7 @@ void GPUTexture::init(const GPUTextureData& gpuTextureData, u32 id)
     CHECK_MSG(mGPUTextureHandle > 0, "TextureHandle error!");
 //    GET_SYSTEM(GPUInterface).makeTextureResident(mGPUTextureHandle, true);
 
-    vulkanTextureImage = new GPUAPI::GPUImage(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
+    vulkanTextureImage = new GPUImage(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
 
     if (!initializeTextureImage())
     {
@@ -103,7 +103,7 @@ bool GPUTexture::initializeTextureSampler() {
 
         VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
         if (vkCreateSampler(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &textureSampler) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create image sampler");
+            CHECK_MSG(false,"Could not create image sampler");
             return false;
         }
         return true;
@@ -112,7 +112,7 @@ bool GPUTexture::initializeTextureSampler() {
     bool GPUTexture::initializeTextureImageView() {
         textureImageView = GET_SYSTEM(GPUGlobalState).createImageView(vulkanTextureImage->getVkImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
         if (!textureImageView) {
-            VD_LOG_ERROR("Could not create Vulkan texture image view");
+            CHECK_MSG(false,"Could not create Vulkan texture image view");
             return false;
         }
         return true;
@@ -129,7 +129,7 @@ bool GPUTexture::initializeTextureImage() {
         // int desiredChannels = STBI_rgb_alpha;
         // stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &width, &height, &channels, desiredChannels);
         // if (!pixels) {
-        //     VD_LOG_ERROR("Could not load texture image");
+        //     CHECK_MSG(false,"Could not load texture image");
         //     return false;
         // }
 
@@ -147,15 +147,15 @@ bool GPUTexture::initializeTextureImage() {
          */
 
         VkDeviceSize imageSize = 0;//width * height * desiredChannels;
-        GPUAPI::GPUBuffer stagingBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
+        GPUBuffer stagingBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
 
-        GPUAPI::GPUBuffer::Config stagingBufferConfig{};
+        GPUBuffer::Config stagingBufferConfig{};
         stagingBufferConfig.Size = imageSize;
         stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
         if (!stagingBuffer.initialize(stagingBufferConfig)) {
-            VD_LOG_ERROR("Could not initialize texture image stagingBuffer");
+            CHECK_MSG(false,"Could not initialize texture image stagingBuffer");
             return false;
         }
 
@@ -166,7 +166,7 @@ bool GPUTexture::initializeTextureImage() {
          * Copy image texels from staging buffer to image
          */
 
-        GPUAPI::GPUImage::Config textureImageConfig{};
+        GPUImage::Config textureImageConfig{};
         // textureImageConfig.Width = width;
         // textureImageConfig.Height = height;
         textureImageConfig.Usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
@@ -178,24 +178,24 @@ bool GPUTexture::initializeTextureImage() {
         textureImageConfig.SampleCount = VK_SAMPLE_COUNT_1_BIT;
 
         if (!vulkanTextureImage->initialize(textureImageConfig)) {
-            VD_LOG_ERROR("Could not initialize texture image");
+            CHECK_MSG(false,"Could not initialize texture image");
             return false;
         }
 
         VkImage textureImage = vulkanTextureImage->getVkImage();
         if (!GET_SYSTEM(GPUGlobalState).transitionImageLayout(textureImage, textureImageConfig.Format, textureImageConfig.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageConfig.MipLevels)) {
-            VD_LOG_ERROR("Could not transition image layout from undefined to transfer destination");
+            CHECK_MSG(false,"Could not transition image layout from undefined to transfer destination");
             return false;
         }
         // copyBufferToImage(stagingBuffer.getVkBuffer(), textureImage, (uint32_t) width, (uint32_t) height);
         stagingBuffer.terminate();
 
         // if (!generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, width, height, mipLevels)) {
-        //     VD_LOG_ERROR("Could not generate mipmaps for texture image");
+        //     CHECK_MSG(false,"Could not generate mipmaps for texture image");
         //     return false;
         // }
 
-        VD_LOG_INFO("Initialized texture image");
+        LOG("Initialized texture image");
         return true;
     }
 
@@ -205,7 +205,7 @@ bool GPUTexture::initializeTextureImage() {
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice->getPhysicalDevice(), imageFormat, &formatProperties);
         if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
-            VD_LOG_ERROR("Image format does not support linear blitting");
+            CHECK_MSG(false,"Image format does not support linear blitting");
             return false;
         }
 

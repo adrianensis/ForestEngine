@@ -4,7 +4,7 @@
 #include "Core/Font/Font.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 
-#include "Graphics/GPU/Vulkan/GPUImage.h"
+#include "Graphics/GPU/GPUImage.h"
 
 class GPUTextureData
 {
@@ -42,7 +42,7 @@ private:
 	u32 mID = 0;
 	GPUTextureData mTextureData;
 
-    GPUAPI::GPUImage* vulkanTextureImage;
+    GPUImage* vulkanTextureImage;
     VkImageView textureImageView = VK_NULL_HANDLE;
     VkSampler textureSampler = VK_NULL_HANDLE;
 

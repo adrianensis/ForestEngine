@@ -52,12 +52,12 @@ void RenderPassGeometry::updateGlobalData()
     LightBuiltIn::ShadowMappingData shadowMappingData;
     shadowMappingData.mLightProjectionViewMatrix = lightProjectionViewMatrix;
 
-    GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
+    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
 
 void RenderPassGeometry::bindShader(const InstancedMeshData& instancedMeshData)
 {
     RenderPass::bindShader(instancedMeshData);
-    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mLightsBufferData));
-    mGPUPrograms.at(instancedMeshData)->bindSharedBuffer(GET_SYSTEM(GPUGlobalState).getGPUSharedBuffersContainer().getSharedBuffer(LightBuiltIn::mShadowMappingBufferData));
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
 }

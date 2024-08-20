@@ -1,7 +1,8 @@
 #include "GPUShader.h"
-#include "Log.h"
 
-namespace GPUAPI {
+
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     const VkAllocationCallbacks* GPUShader::ALLOCATOR = VK_NULL_HANDLE;
 
@@ -19,18 +20,18 @@ namespace GPUAPI {
         createInfo.pCode = (const uint32_t*) bytes.data();
 
         if (vkCreateShaderModule(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &shaderModule) != VK_SUCCESS) {
-            VD_LOG_ERROR("Could not create Vulkan shader module");
+            CHECK_MSG(false,"Could not create Vulkan shader module");
             return false;
         }
 
-        VD_LOG_INFO("Created Vulkan shader module");
+        LOG("Created Vulkan shader module");
         return true;
     }
 
     void GPUShader::terminate() {
         vkDestroyShaderModule(vulkanDevice->getDevice(), shaderModule, ALLOCATOR);
-        VD_LOG_INFO("Destroyed Vulkan shader module");
+        LOG("Destroyed Vulkan shader module");
     }
 
 
-}
+// }

@@ -7,7 +7,8 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
-namespace GPUAPI {
+#include "Core/Minimal.hpp"
+//namespace GPUAPI {
 
     class GPUCommandPool {
     private:
@@ -31,5 +32,4 @@ namespace GPUAPI {
 
         void free(const GPUCommandBuffer& commandBuffer) const;
     };
-
-}
+// }

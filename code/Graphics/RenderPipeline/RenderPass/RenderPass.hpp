@@ -6,10 +6,10 @@
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
-#include "Graphics/GPU/Vulkan/GPUFramebuffer.h"
-#include "Graphics/GPU/Vulkan/GPURenderPass.h"
-#include "Graphics/GPU/Vulkan/GPUGraphicsPipeline.h"
-#include "Graphics/GPU/Vulkan/GPUImage.h"
+#include "Graphics/GPU/GPUFramebuffer.h"
+#include "Graphics/GPU/GPURenderPass.h"
+#include "Graphics/GPU/GPUGraphicsPipeline.h"
+#include "Graphics/GPU/GPUImage.h"
 
 class MeshRenderer;
 class RenderPipeline;
@@ -64,12 +64,12 @@ protected:
     GPUFramebuffer mOutputGPUFramebuffer;
     Ptr<RenderPipeline> mRenderPipeline;
 
-    GPUAPI::GPURenderPass* vulkanRenderPass;
-    GPUAPI::GPUGraphicsPipeline* vulkanGraphicsPipeline;
-    std::vector<GPUAPI::GPUFramebuffer> framebuffers;
-    GPUAPI::GPUImage* vulkanDepthImage;
+    GPURenderPass* vulkanRenderPass;
+    GPUGraphicsPipeline* vulkanGraphicsPipeline;
+    std::vector<GPUFramebuffer> framebuffers;
+    GPUImage* vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;
-    GPUAPI::GPUImage* vulkanColorImage;
+    GPUImage* vulkanColorImage;
     VkImageView colorImageView = VK_NULL_HANDLE;
 public:
     CRGET(RenderPassData)

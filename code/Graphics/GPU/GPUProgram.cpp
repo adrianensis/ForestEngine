@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/GPUSharedBuffer.hpp"
+#include "Graphics/GPU/GPUUniformBuffer.hpp"
 
 GPUProgram::GPUProgram()
 {
@@ -16,14 +16,14 @@ void GPUProgram::disable() const
 //	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUProgram::bindSharedBuffer(const GPUSharedBuffer& sharedBuffer)
+void GPUProgram::bindUniformBuffer(const GPUUniformBuffer& uniformBuffer)
 {
-//    GET_SYSTEM(GPUInterface).bindSharedBufferToShader(mProgramId,
-    sharedBuffer.getGPUSharedBufferData().mType,
-    sharedBuffer.getGPUSharedBufferData().mBufferName,
-    sharedBuffer.getBindingPoint());
+//    GET_SYSTEM(GPUInterface).bindUniformBufferToShader(mProgramId,
+    uniformBuffer.getGPUUniformBufferData().mType,
+    uniformBuffer.getGPUUniformBufferData().mBufferName,
+    uniformBuffer.getBindingPoint());
 
-    mSharedBuffers.push_back(sharedBuffer);
+    mUniformBuffers.push_back(uniformBuffer);
 }
 
 void GPUProgram::initFromFileContents(const std::string& vertex, const std::string& fragment)
@@ -59,16 +59,16 @@ void GPUProgram::createDescriptors()
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
     u32 bindingIndex = 0;
-    FOR_ARRAY(i, mSharedBuffers)
+    FOR_ARRAY(i, mUniformBuffers)
     {
-        const GPUSharedBuffer& sharedBuffer = mSharedBuffers[i];
+        const GPUUniformBuffer& uniformBuffer = mUniformBuffers[i];
         
         VkDescriptorSetLayoutBinding layoutBinding{};
         layoutBinding.binding = bindingIndex;
         bindingIndex++;
         layoutBinding.descriptorCount = 1;
         layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-        switch (sharedBuffer.getGPUSharedBufferData().mType)
+        switch (uniformBuffer.getGPUUniformBufferData().mType)
         {
         case GPUBufferType::UNIFORM:
             layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -145,7 +145,7 @@ void GPUProgram::createDescriptors()
 
     for (size_t i = 0; i < GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT; i++)
     {
-        // const GPUAPI::GPUUniformBuffer& uniformBuffer = uniformBuffers[i];
+        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[i];
 
         VkDescriptorBufferInfo bufferInfo{};
         // bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer();
