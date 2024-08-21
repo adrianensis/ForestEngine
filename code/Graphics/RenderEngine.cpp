@@ -25,8 +25,8 @@ void RenderEngine::init()
 void RenderEngine::update()
 {
     PROFILER_CPU()
-    mRenderPipeline->update();
-    mRenderPipeline->render(mRenderPipelineData);
+    // mRenderPipeline->update();
+    // mRenderPipeline->render(mRenderPipelineData);
 	swap();
 }
 

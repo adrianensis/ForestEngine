@@ -101,7 +101,7 @@ void Window::swap()
 	// https://www.khronos.org/opengl/wiki/Common_Mistakes
 	// section: glFinish and glFlush
 	//glFlush();
-	glfwSwapBuffers(mGLTFWindow);
+	// glfwSwapBuffers(mGLTFWindow);
 }
 
 void Window::terminate()
