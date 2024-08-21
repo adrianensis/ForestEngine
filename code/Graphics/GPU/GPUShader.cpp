@@ -1,4 +1,4 @@
-#include "GPUShader.h"
+#include "Graphics/GPU/GPUShader.h"
 
 
 #include "Core/Minimal.hpp"

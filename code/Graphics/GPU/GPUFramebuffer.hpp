@@ -4,7 +4,7 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUSwapChain.h"
-#include "Graphics/GPU/Vulkan/GPURenderPass.h"
+#include "Graphics/GPU/GPURenderPass.h"
 
 class GPUFramebufferData
 {

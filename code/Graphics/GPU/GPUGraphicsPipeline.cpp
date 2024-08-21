@@ -1,6 +1,6 @@
-#include "GPUGraphicsPipeline.h"
+#include "Graphics/GPU/GPUGraphicsPipeline.h"
 
-#include "Vertex.h"
+#include "Graphics/GPU/Vertex.h"
 
 #include "Core/Minimal.hpp"
 //namespace GPUAPI {
