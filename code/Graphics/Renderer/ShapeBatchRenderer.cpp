@@ -2,7 +2,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
@@ -50,7 +50,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
     mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
 
-    mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
 }
 
 void ShapeBatchRenderer::render()

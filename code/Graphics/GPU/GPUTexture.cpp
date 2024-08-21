@@ -1,5 +1,5 @@
 #include "Graphics/GPU/GPUTexture.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/GPU/GPUBuffer.h"
 #include "Core/Image/ImageUtils.hpp"
 
@@ -50,7 +50,7 @@ void GPUTexture::init(const GPUTextureData& gpuTextureData, u32 id)
     CHECK_MSG(mGPUTextureHandle > 0, "TextureHandle error!");
 //    GET_SYSTEM(GPUInterface).makeTextureResident(mGPUTextureHandle, true);
 
-    vulkanTextureImage = new GPUImage(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
+    vulkanTextureImage = new GPUImage(GET_SYSTEM(GPUInstance).vulkanPhysicalDevice, GET_SYSTEM(GPUInstance).vulkanDevice);
 
     if (!initializeTextureImage())
     {
@@ -76,8 +76,8 @@ void GPUTexture::terminate()
     }
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroySampler(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), textureSampler, allocationCallbacks);
-    vkDestroyImageView(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), textureImageView, allocationCallbacks);
+    vkDestroySampler(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), textureSampler, allocationCallbacks);
+    vkDestroyImageView(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), textureImageView, allocationCallbacks);
     vulkanTextureImage->terminate();
 
 }
@@ -91,7 +91,7 @@ bool GPUTexture::initializeTextureSampler() {
         samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.anisotropyEnable = VK_TRUE;
-        samplerInfo.maxAnisotropy = GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice->getProperties().limits.maxSamplerAnisotropy;
+        samplerInfo.maxAnisotropy = GET_SYSTEM(GPUInstance).vulkanPhysicalDevice->getProperties().limits.maxSamplerAnisotropy;
         samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
         samplerInfo.unnormalizedCoordinates = VK_FALSE;
         samplerInfo.compareEnable = VK_FALSE;
@@ -102,7 +102,7 @@ bool GPUTexture::initializeTextureSampler() {
         samplerInfo.maxLod = (float) mipLevels;
 
         VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-        if (vkCreateSampler(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &textureSampler) != VK_SUCCESS) {
+        if (vkCreateSampler(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &textureSampler) != VK_SUCCESS) {
             CHECK_MSG(false,"Could not create image sampler");
             return false;
         }
@@ -110,7 +110,7 @@ bool GPUTexture::initializeTextureSampler() {
     }
 
     bool GPUTexture::initializeTextureImageView() {
-        textureImageView = GET_SYSTEM(GPUGlobalState).createImageView(vulkanTextureImage->getVkImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+        textureImageView = GET_SYSTEM(GPUInstance).createImageView(vulkanTextureImage->getVkImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
         if (!textureImageView) {
             CHECK_MSG(false,"Could not create Vulkan texture image view");
             return false;
@@ -147,7 +147,7 @@ bool GPUTexture::initializeTextureImage() {
          */
 
         VkDeviceSize imageSize = 0;//width * height * desiredChannels;
-        GPUBuffer stagingBuffer;//(/*GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice*/);
+        GPUBuffer stagingBuffer;//(/*GET_SYSTEM(GPUInstance).vulkanPhysicalDevice, GET_SYSTEM(GPUInstance).vulkanDevice*/);
 
         GPUBuffer::Config stagingBufferConfig{};
         stagingBufferConfig.Size = imageSize;
@@ -183,7 +183,7 @@ bool GPUTexture::initializeTextureImage() {
         }
 
         VkImage textureImage = vulkanTextureImage->getVkImage();
-        if (!GET_SYSTEM(GPUGlobalState).transitionImageLayout(textureImage, textureImageConfig.Format, textureImageConfig.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageConfig.MipLevels)) {
+        if (!GET_SYSTEM(GPUInstance).transitionImageLayout(textureImage, textureImageConfig.Format, textureImageConfig.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageConfig.MipLevels)) {
             CHECK_MSG(false,"Could not transition image layout from undefined to transfer destination");
             return false;
         }
@@ -203,13 +203,13 @@ bool GPUTexture::initializeTextureImage() {
 
         // Check if image format supports linear blitting
         VkFormatProperties formatProperties;
-        vkGetPhysicalDeviceFormatProperties(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice->getPhysicalDevice(), imageFormat, &formatProperties);
+        vkGetPhysicalDeviceFormatProperties(GET_SYSTEM(GPUInstance).vulkanPhysicalDevice->getPhysicalDevice(), imageFormat, &formatProperties);
         if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
             CHECK_MSG(false,"Image format does not support linear blitting");
             return false;
         }
 
-        VkCommandBuffer commandBuffer = GET_SYSTEM(GPUGlobalState).beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = GET_SYSTEM(GPUInstance).beginSingleTimeCommands();
 
         VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -331,11 +331,11 @@ bool GPUTexture::initializeTextureImage() {
                 &barrier
         );
 
-        GET_SYSTEM(GPUGlobalState).endSingleTimeCommands(commandBuffer);
+        GET_SYSTEM(GPUInstance).endSingleTimeCommands(commandBuffer);
         return true;
     }
 void GPUTexture::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) const {
-        VkCommandBuffer commandBuffer = GET_SYSTEM(GPUGlobalState).beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = GET_SYSTEM(GPUInstance).beginSingleTimeCommands();
 
         VkBufferImageCopy bufferImageCopy{};
         bufferImageCopy.bufferOffset = 0;
@@ -363,5 +363,5 @@ void GPUTexture::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t widt
                 &bufferImageCopy
         );
 
-        GET_SYSTEM(GPUGlobalState).endSingleTimeCommands(commandBuffer);
+        GET_SYSTEM(GPUInstance).endSingleTimeCommands(commandBuffer);
     }

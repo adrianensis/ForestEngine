@@ -1,7 +1,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 
 GPUProgram::GPUProgram()
 {
@@ -50,8 +50,8 @@ void GPUProgram::initFromFilePaths(const std::string& vertex, const std::string&
 void GPUProgram::terminate()
 {
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyDescriptorPool(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
-    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), descriptorSetLayout, allocationCallbacks);
+    vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
+    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), descriptorSetLayout, allocationCallbacks);
 }
 
 void GPUProgram::createDescriptors()
@@ -95,7 +95,7 @@ void GPUProgram::createDescriptors()
     layoutInfo.pBindings = bindings.data();
 
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    if (vkCreateDescriptorSetLayout(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &descriptorSetLayout) != VK_SUCCESS)
+    if (vkCreateDescriptorSetLayout(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &descriptorSetLayout) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not create uniform buffer descrptor set layout");
     }
@@ -103,15 +103,15 @@ void GPUProgram::createDescriptors()
     // POOL
     std::array<VkDescriptorPoolSize, 2> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[0].descriptorCount = GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT;
+    poolSizes[0].descriptorCount = GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT;
     // poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    // poolSizes[1].descriptorCount = GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT;
+    // poolSizes[1].descriptorCount = GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = (uint32_t) poolSizes.size();
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT;
+    poolInfo.maxSets = GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT;
 
     /*
         * Inadequate descriptor pools are a good example of a problem that the validation layers will not catch:
@@ -123,27 +123,27 @@ void GPUProgram::createDescriptors()
         *
         * This can be particularly frustrating if the allocation succeeds on some machines, but fails on others.
         */
-    if (vkCreateDescriptorPool(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &descriptorPool) != VK_SUCCESS)
+    if (vkCreateDescriptorPool(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &descriptorPool) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not initialize descriptor pool");
     }
 
     // SETS
-    std::vector<VkDescriptorSetLayout> layouts(GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
+    std::vector<VkDescriptorSetLayout> layouts(GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     allocInfo.descriptorPool = descriptorPool;
-    allocInfo.descriptorSetCount = GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT;
+    allocInfo.descriptorSetCount = GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT;
     allocInfo.pSetLayouts = layouts.data();
 
-    descriptorSets.resize(GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT);
-    if (vkAllocateDescriptorSets(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+    descriptorSets.resize(GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT);
+    if (vkAllocateDescriptorSets(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not allocate [{}] descriptor sets" /*allocInfo.descriptorSetCount*/);
     }
 
-    for (size_t i = 0; i < GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT; i++)
+    for (size_t i = 0; i < GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT; i++)
     {
         // const GPUUniformBuffer& uniformBuffer = uniformBuffers[i];
 
@@ -178,6 +178,6 @@ void GPUProgram::createDescriptors()
         auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
         constexpr uint32_t descriptorCopyCount = 0;
         constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
-        vkUpdateDescriptorSets(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
+        vkUpdateDescriptorSets(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
     }
 }

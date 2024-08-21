@@ -1,6 +1,6 @@
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 
 void GPUVertexBuffersContainer::create()
 {
@@ -89,7 +89,7 @@ void GPUUniformBuffersContainer::create()
 
 void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& data, bool isStatic)
 {
-    u32 bindingPoint = GET_SYSTEM(GPUGlobalState).requestUniformBufferBindingPoint(data.mType);
+    u32 bindingPoint = GET_SYSTEM(GPUInstance).requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
     gpuInstanceBuffer.init(bindingPoint, data, isStatic);
 

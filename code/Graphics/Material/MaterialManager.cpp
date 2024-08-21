@@ -1,7 +1,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/GPU/GPUTexture.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 
 void MaterialInstance::setDirty()
 {
@@ -12,7 +12,7 @@ void MaterialInstance::setDirty()
 void MaterialManager::init()
 {
 	LOG_TRACE()
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures, false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures, false);
 }
 
 void MaterialManager::terminate()
@@ -47,7 +47,7 @@ void MaterialManager::update()
         }
     }
 
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
 }
 
 PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTextureData)
@@ -65,7 +65,7 @@ PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTe
         // NOTE: We reserve position 0 to represent NULL
         u32 paddedSize = size + 1;
         mTextureHandles.resize(paddedSize);
-        GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
+        GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
 
         mTextureHandles[texture.getID() + 1] = texture.getGPUTextureHandle();
 	}

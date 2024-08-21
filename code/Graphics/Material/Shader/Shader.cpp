@@ -6,7 +6,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Core/Config/Paths.hpp"
 #include "Core/File/FileUtils.hpp"

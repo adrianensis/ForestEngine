@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
@@ -47,7 +47,7 @@ void RenderPipeline::update()
     PROFILER_END_BLOCK()
 
     PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
     PROFILER_END_BLOCK()
 
     GET_SYSTEM(MaterialManager).update();
@@ -83,7 +83,7 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
         mRenderers.resize(mRenderInstancesSlotsManager.getSize());
         mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-        GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+        GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
     }
 
     renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
@@ -161,17 +161,17 @@ void RenderPipeline::frameAcquisition()
     constexpr uint32_t fenceCount = 1;
     constexpr VkBool32 waitForAllFences = VK_TRUE;
     constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
-    VkFence inFlightFence = GET_SYSTEM(GPUGlobalState).inFlightFences[GET_SYSTEM(GPUGlobalState).currentFrame];
-    vkWaitForFences(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
+    VkFence inFlightFence = GET_SYSTEM(GPUInstance).inFlightFences[GET_SYSTEM(GPUInstance).currentFrame];
+    vkWaitForFences(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
 
     // Acquire an image from the swap chain
     uint32_t swapChainImageIndex;
     VkFence acquireNextImageFence = VK_NULL_HANDLE;
     constexpr uint64_t acquireNextImageTimeout = UINT64_MAX;
-    VkSemaphore imageAvailableSemaphore = GET_SYSTEM(GPUGlobalState).imageAvailableSemaphores[GET_SYSTEM(GPUGlobalState).currentFrame];
+    VkSemaphore imageAvailableSemaphore = GET_SYSTEM(GPUInstance).imageAvailableSemaphores[GET_SYSTEM(GPUInstance).currentFrame];
     VkResult acquireNextImageResult = vkAcquireNextImageKHR(
-            GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(),
-            GET_SYSTEM(GPUGlobalState).vulkanSwapChain->getSwapChain(),
+            GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(),
+            GET_SYSTEM(GPUInstance).vulkanSwapChain->getSwapChain(),
             acquireNextImageTimeout,
             imageAvailableSemaphore,
             acquireNextImageFence,
@@ -189,7 +189,7 @@ void RenderPipeline::frameAcquisition()
     }
 
     // After waiting, we need to manually reset the fence to the unsignaled state
-    vkResetFences(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), fenceCount, &inFlightFence);
+    vkResetFences(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), fenceCount, &inFlightFence);
 }
 
 void RenderPipeline::updateLights(RenderPipelineData& renderData)
@@ -207,7 +207,7 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
         lightsData.mDirectionalLight = renderData.mDirectionalLight->calculateLightData();
     }
 
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).setData(lightsData);
 }
 
 void RenderPipeline::initBuffers()
@@ -221,17 +221,17 @@ void RenderPipeline::initBuffers()
 
     // GPU BUFFERS
 
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData, false);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mLightsBufferData, false);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mShadowMappingBufferData, false);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices, false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData, false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mLightsBufferData, false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mShadowMappingBufferData, false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices, false);
 
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().create();
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().create();
 
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).resize<GPUBuiltIn::UniformBuffers::GPUGlobalData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).resize<GPUBuiltIn::UniformBuffers::GPUGlobalData>(1);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }
 
 void RenderPipeline::setRendererMatrix(TypedComponentHandler<MeshRenderer> renderer)

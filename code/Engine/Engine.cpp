@@ -30,7 +30,7 @@ void Engine::init()
     windowData.mFullScreen = true;
     windowData.mMainWindow = true;
     GET_SYSTEM(WindowManager).createWindow(windowData);
-    CREATE_SYSTEM(GPUGlobalState);
+    CREATE_SYSTEM(GPUInstance);
     CREATE_SYSTEM(Input);
     CREATE_SYSTEM(TimerManager);
     CREATE_SYSTEM(EventsManager);

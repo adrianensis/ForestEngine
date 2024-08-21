@@ -1,7 +1,7 @@
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 
-void GPUGlobalState::init()
+void GPUInstance::init()
 {
 //    mMaxUniformBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::UNIFORM);
 //    mMaxUniformBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::STORAGE);
@@ -47,7 +47,7 @@ void GPUGlobalState::init()
     }
 }
 
-u32 GPUGlobalState::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
+u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
 {
     u32 bindingPoint = 0;
     switch (gpuUniformBufferType)
@@ -89,7 +89,7 @@ u32 GPUGlobalState::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBuf
     *
     * It's best to do this after the texture mapping works to check if the texture resources are still set up correctly.
     */
-VkCommandBuffer GPUGlobalState::beginSingleTimeCommands() const {
+VkCommandBuffer GPUInstance::beginSingleTimeCommands() const {
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -107,7 +107,7 @@ VkCommandBuffer GPUGlobalState::beginSingleTimeCommands() const {
     return commandBuffer;
 }
 
-void GPUGlobalState::endSingleTimeCommands(VkCommandBuffer commandBuffer) const {
+void GPUInstance::endSingleTimeCommands(VkCommandBuffer commandBuffer) const {
     vkEndCommandBuffer(commandBuffer);
 
     VkSubmitInfo submitInfo{};
@@ -124,7 +124,7 @@ void GPUGlobalState::endSingleTimeCommands(VkCommandBuffer commandBuffer) const 
 }
 
 
-bool GPUGlobalState::initializeSyncObjects() {
+bool GPUInstance::initializeSyncObjects() {
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
     renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
     inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -155,12 +155,12 @@ bool GPUGlobalState::initializeSyncObjects() {
     return true;
 }
 
-bool GPUGlobalState::hasStencilComponent(VkFormat format) const
+bool GPUInstance::hasStencilComponent(VkFormat format) const
 {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-bool GPUGlobalState::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels) const {
+bool GPUInstance::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels) const {
     VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
     VkImageMemoryBarrier imageMemoryBarrier{};
@@ -232,7 +232,7 @@ bool GPUGlobalState::transitionImageLayout(VkImage image, VkFormat format, VkIma
     return true;
 }
 
-VkImageView GPUGlobalState::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {
+VkImageView GPUInstance::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -252,7 +252,7 @@ VkImageView GPUGlobalState::createImageView(VkImage image, VkFormat format, VkIm
     return imageView;
 }
 
-void GPUGlobalState::terminate()
+void GPUInstance::terminate()
 {
     mGPUUniformBuffersContainer.terminate();
 

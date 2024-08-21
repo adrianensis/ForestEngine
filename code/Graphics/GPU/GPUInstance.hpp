@@ -13,7 +13,7 @@
 #include "Graphics/GPU/GPUCommandBuffer.h"
 #include "Graphics/GPU/GPUImage.h"
 
-class GPUGlobalState: public System
+class GPUInstance: public System
 {
 public:
     virtual void init() override;
@@ -61,4 +61,4 @@ public:
     RGET(GPUUniformBuffersContainer)
     CRGET(GPUUniformBuffersContainer)
 };
-REGISTER_CLASS(GPUGlobalState)
+REGISTER_CLASS(GPUInstance)

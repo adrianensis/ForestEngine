@@ -1,5 +1,5 @@
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 
 GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(u32 i) const
 {
@@ -21,8 +21,8 @@ void GPUUniformBuffer::createBuffer()
 //    GET_SYSTEM(GPUInterface).bindUniformBufferToBindingPoint(mGPUUniformBufferData.mType, mBufferId, mBindingPoint);
     // mGPUPointer = glMapNamedBuffer(mBufferId, GL_READ_WRITE);
 
-    // for (size_t i = 0; i < GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT; i++) {
-    //     GPUUniformBuffer uniformBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
+    // for (size_t i = 0; i < GET_SYSTEM(GPUInstance).MAX_FRAMES_IN_FLIGHT; i++) {
+    //     GPUUniformBuffer uniformBuffer(GET_SYSTEM(GPUInstance).vulkanPhysicalDevice, GET_SYSTEM(GPUInstance).vulkanDevice);
     //     if (!uniformBuffer.initialize(sizeof(f32) * 200)) {
     //         CHECK_MSG(false, "Could not initialize uniform buffer for frame [{}]");
     //     }

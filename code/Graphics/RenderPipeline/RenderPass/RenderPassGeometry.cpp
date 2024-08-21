@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
 #include "Graphics/Material/Shader/ShaderManager.hpp"
@@ -52,13 +52,13 @@ void RenderPassGeometry::updateGlobalData()
     LightBuiltIn::ShadowMappingData shadowMappingData;
     shadowMappingData.mLightProjectionViewMatrix = lightProjectionViewMatrix;
 
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
 
 void RenderPassGeometry::bindShader(const InstancedMeshData& instancedMeshData)
 {
     RenderPass::bindShader(instancedMeshData);
     Ptr<Shader> shader = getShader(instancedMeshData);
-    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
-    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
+    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
+    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
 }

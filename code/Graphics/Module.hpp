@@ -2,7 +2,7 @@
 
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/RenderEngine.hpp"
 
 #include "Graphics/GPU/Mesh/MeshPrimitives.hpp"

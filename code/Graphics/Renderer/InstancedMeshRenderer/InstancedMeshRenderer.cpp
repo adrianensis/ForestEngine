@@ -5,7 +5,7 @@
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 
 void InstancedMeshRenderer::init(const InstancedMeshData& instancedMeshData)

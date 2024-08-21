@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
@@ -58,7 +58,7 @@ void RenderPassShadowMap::updateGlobalData()
         lightProjectionViewMatrix,
         camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
-    GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 Ptr<Shader> RenderPassShadowMap::getShader(const InstancedMeshData& instancedMeshData) const
