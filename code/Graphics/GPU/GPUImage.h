@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GPUDevice.h"
+#include "Graphics/GPU/GPUContext.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -22,17 +23,14 @@
         };
 
     private:
-        GPUPhysicalDevice* vulkanPhysicalDevice;
-        GPUDevice* vulkanDevice;
+        Ptr<GPUContext> mGPUContext;
         VkImage vkImage = VK_NULL_HANDLE;
         VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
 
     public:
-        GPUImage(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice);
-
         VkImage getVkImage() const;
 
-        bool initialize(const Config& config);
+        bool init(Ptr<GPUContext> gpuContext, const Config& config);
 
         void terminate();
     };

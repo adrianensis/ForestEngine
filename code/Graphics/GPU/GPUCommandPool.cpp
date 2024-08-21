@@ -6,7 +6,7 @@
 
     const VkAllocationCallbacks* GPUCommandPool::ALLOCATOR = VK_NULL_HANDLE;
 
-    GPUCommandPool::GPUCommandPool(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice) : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {
+    GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice) : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {
     }
 
     const VkCommandPool GPUCommandPool::getVkCommandPool() const {
@@ -50,7 +50,8 @@
 
         std::vector<GPUCommandBuffer> vulkanCommandBuffers;
         for (VkCommandBuffer vkCommandBuffer : vkCommandBuffers) {
-            GPUCommandBuffer vulkanCommandBuffer(vkCommandBuffer);
+            GPUCommandBuffer vulkanCommandBuffer;
+            vulkanCommandBuffer.init(vkCommandBuffer);
             vulkanCommandBuffers.push_back(vulkanCommandBuffer);
         }
         LOG("Allocated [{}] command buffers");

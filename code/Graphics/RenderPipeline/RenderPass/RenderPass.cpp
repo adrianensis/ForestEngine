@@ -20,8 +20,8 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
         mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
     }
 
-    vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).vulkanSwapChain, GET_SYSTEM(GPUInstance).vulkanDevice, GET_SYSTEM(GPUInstance).vulkanPhysicalDevice);
-    vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).vulkanSwapChain, GET_SYSTEM(GPUInstance).vulkanDevice, GET_SYSTEM(GPUInstance).vulkanPhysicalDevice);
+    vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
+    vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
 
     if (!vulkanRenderPass->initialize())
     {
@@ -52,9 +52,9 @@ void RenderPass::terminate()
     vulkanRenderPass->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyImageView(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
+    vkDestroyImageView(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
     vulkanColorImage->terminate();
-    vkDestroyImageView(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
+    vkDestroyImageView(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
     vulkanDepthImage->terminate();
     for (GPUFramebuffer framebuffer : framebuffers) {
         framebuffer.terminate();
@@ -133,7 +133,7 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 
     shader->bindTextures(shader->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 
-    shader->getGPUProgram()->createDescriptors();
+    // shader->getGPUProgram()->createDescriptors();
 }
 
 void RenderPass::preRender()
@@ -219,29 +219,30 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
     {
         FramebufferBinding framebufferBinding
         {
-            mRenderPassData.mDependencies[i].mSamplerName,
-            mRenderPassData.mDependencies[i].mRenderPass->getOutputGPUFramebuffer().getAttachments().at(mRenderPassData.mDependencies[i].mAttachmentType).mAttachmentID,
-            mRenderPassData.mDependencies[i].mStage
+            // mRenderPassData.mDependencies[i].mSamplerName,
+            // mRenderPassData.mDependencies[i].mRenderPass->getOutputGPUFramebuffer().getAttachments().at(mRenderPassData.mDependencies[i].mAttachmentType).mAttachmentID,
+            // mRenderPassData.mDependencies[i].mStage
         };
-        shader->addFramebufferBinding(framebufferBinding);
+        // shader->addFramebufferBinding(framebufferBinding);
     }
 }
 
 bool RenderPass::initializeColorResources()
 {
-    VkFormat colorFormat = GET_SYSTEM(GPUInstance).vulkanSwapChain->getSurfaceFormat().format;
+    VkFormat colorFormat = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
     GPUImage::Config colorImageConfig{};
-    colorImageConfig.Width = GET_SYSTEM(GPUInstance).vulkanSwapChain->getExtent().width;
-    colorImageConfig.Height = GET_SYSTEM(GPUInstance).vulkanSwapChain->getExtent().height;
+    colorImageConfig.Width = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().width;
+    colorImageConfig.Height = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().height;
     colorImageConfig.MipLevels = 1;
-    colorImageConfig.SampleCount = GET_SYSTEM(GPUInstance).vulkanPhysicalDevice->getSampleCount();
+    colorImageConfig.SampleCount = GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice->getSampleCount();
     colorImageConfig.Format = colorFormat;
     colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
     colorImageConfig.Usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    if (!vulkanColorImage->initialize(colorImageConfig)) {
+    vulkanColorImage = new GPUImage();
+    if (!vulkanColorImage->init(GET_SYSTEM(GPUInstance).mGPUContext, colorImageConfig)) {
         CHECK_MSG(false,"Could not initialize color image");
         return false;
     }
@@ -254,16 +255,17 @@ bool RenderPass::initializeDepthResources()
     VkFormat depthFormat = findDepthFormat();
 
     GPUImage::Config depthImageConfig{};
-    depthImageConfig.Width = GET_SYSTEM(GPUInstance).vulkanSwapChain->getExtent().width;
-    depthImageConfig.Height = GET_SYSTEM(GPUInstance).vulkanSwapChain->getExtent().height;
+    depthImageConfig.Width = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().width;
+    depthImageConfig.Height = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().height;
     depthImageConfig.Format = depthFormat;
     depthImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
     depthImageConfig.Usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     depthImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     depthImageConfig.MipLevels = 1;
-    depthImageConfig.SampleCount = GET_SYSTEM(GPUInstance).vulkanPhysicalDevice->getSampleCount();
+    depthImageConfig.SampleCount = GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice->getSampleCount();
 
-    if (!vulkanDepthImage->initialize(depthImageConfig)) {
+    vulkanDepthImage = new GPUImage();
+    if (!vulkanDepthImage->init(GET_SYSTEM(GPUInstance).mGPUContext, depthImageConfig)) {
         CHECK_MSG(false,"Could not initialize depth image");
         return false;
     }
@@ -281,14 +283,14 @@ VkFormat RenderPass::findDepthFormat()
     };
     VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
     VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    return GET_SYSTEM(GPUInstance).vulkanPhysicalDevice->findSupportedFormat(candidates, tiling, features);
+    return GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice->findSupportedFormat(candidates, tiling, features);
 }
 
 bool RenderPass::initializeFramebuffers()
 {
-    for (VkImageView swapChainImageView : GET_SYSTEM(GPUInstance).vulkanSwapChain->getImageViews()) {
-        GPUFramebuffer framebuffer;//(GET_SYSTEM(GPUInstance).vulkanDevice, GET_SYSTEM(GPUInstance).vulkanSwapChain, vulkanRenderPass);
-        if (!framebuffer.initialize(colorImageView, depthImageView, swapChainImageView)) {
+    for (VkImageView swapChainImageView : GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImageViews()) {
+        GPUFramebuffer framebuffer;//(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, vulkanRenderPass);
+        if (!framebuffer.initialize(GET_SYSTEM(GPUInstance).mGPUContext, vulkanRenderPass, colorImageView, depthImageView, swapChainImageView)) {
             CHECK_MSG(false,"Could not initialize framebuffers");
             return false;
         }

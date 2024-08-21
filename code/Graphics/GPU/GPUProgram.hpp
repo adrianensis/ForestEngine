@@ -3,6 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/GPUContext.hpp"
 #include "Graphics/GPU/Vulkan.h"
 
 class GPUVertexBuffersContainer;
@@ -15,8 +16,8 @@ public:
     GPUProgram();
 	~GPUProgram() override = default;
 
-    void initFromFilePaths(const std::string& vertex, const std::string& fragment);
-    void initFromFileContents(const std::string& vertex, const std::string& fragment);
+    void initFromFilePaths(Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
+    void initFromFileContents(Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
     void terminate();
     void enable() const;
     void disable() const;
@@ -34,5 +35,6 @@ private:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
     std::vector<GPUUniformBuffer> mUniformBuffers;
+    Ptr<GPUContext> mGPUContext;
 };
 REGISTER_CLASS(GPUProgram);

@@ -5,8 +5,9 @@
 #ifdef ENGINE_ENABLE_PROFILER
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyC.h"
+#include "vulkan/vulkan.h"
+#include "tracy/TracyVulkan.hpp"
 // #include "glew-2.2.0/include/GL/glew.h"
-// #include "tracy/TracyOpenGL.hpp"
 #define PROFILER_BLOCK_CPU(varName) ZoneNamedN(__tracy_profiler##varName, #varName, true);
 #define PROFILER_CPU() ZoneScopedN(__PRETTY_FUNCTION__);
 #define PROFILER_GPU() 

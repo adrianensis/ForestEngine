@@ -161,17 +161,17 @@ void RenderPipeline::frameAcquisition()
     constexpr uint32_t fenceCount = 1;
     constexpr VkBool32 waitForAllFences = VK_TRUE;
     constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
-    VkFence inFlightFence = GET_SYSTEM(GPUInstance).inFlightFences[GET_SYSTEM(GPUInstance).currentFrame];
-    vkWaitForFences(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
+    VkFence inFlightFence = GET_SYSTEM(GPUInstance).mGPUContext->inFlightFences[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    vkWaitForFences(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
 
     // Acquire an image from the swap chain
     uint32_t swapChainImageIndex;
     VkFence acquireNextImageFence = VK_NULL_HANDLE;
     constexpr uint64_t acquireNextImageTimeout = UINT64_MAX;
-    VkSemaphore imageAvailableSemaphore = GET_SYSTEM(GPUInstance).imageAvailableSemaphores[GET_SYSTEM(GPUInstance).currentFrame];
+    VkSemaphore imageAvailableSemaphore = GET_SYSTEM(GPUInstance).mGPUContext->imageAvailableSemaphores[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
     VkResult acquireNextImageResult = vkAcquireNextImageKHR(
-            GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(),
-            GET_SYSTEM(GPUInstance).vulkanSwapChain->getSwapChain(),
+            GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(),
+            GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getSwapChain(),
             acquireNextImageTimeout,
             imageAvailableSemaphore,
             acquireNextImageFence,
@@ -189,7 +189,7 @@ void RenderPipeline::frameAcquisition()
     }
 
     // After waiting, we need to manually reset the fence to the unsignaled state
-    vkResetFences(GET_SYSTEM(GPUInstance).vulkanDevice->getDevice(), fenceCount, &inFlightFence);
+    vkResetFences(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence);
 }
 
 void RenderPipeline::updateLights(RenderPipelineData& renderData)

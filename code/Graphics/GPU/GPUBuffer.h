@@ -3,6 +3,7 @@
 #include "GPUPhysicalDevice.h"
 #include "GPUDevice.h"
 #include "GPUCommandPool.h"
+#include "Graphics/GPU/GPUContext.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -18,22 +19,19 @@
         };
 
     private:
-        GPUPhysicalDevice* vulkanPhysicalDevice;
-        GPUDevice* vulkanDevice;
+        Ptr<GPUContext> mGPUContext;
         Config config;
         VkBuffer vkBuffer = VK_NULL_HANDLE;
         VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
 
     public:
-        GPUBuffer(/*GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice*/);
-
         const Config& getConfig() const;
 
         const VkBuffer getVkBuffer() const;
 
         const VkDeviceMemory getVkDeviceMemory() const;
 
-        bool initialize(const Config& config);
+        bool init(Ptr<GPUContext> gpuContext, const Config& config);
 
         void terminate();
 

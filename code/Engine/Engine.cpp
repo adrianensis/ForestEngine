@@ -26,8 +26,9 @@ void Engine::init()
     // CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(WindowManager);
     WindowData windowData;
-    windowData.mTitle = "Engine";
-    windowData.mFullScreen = true;
+    windowData.mTitle = "Vulkan Engine";
+    windowData.mFullScreen = false;
+    windowData.mWindowSize.set(800, 600);
     windowData.mMainWindow = true;
     GET_SYSTEM(WindowManager).createWindow(windowData);
     CREATE_SYSTEM(GPUInstance);

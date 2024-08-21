@@ -145,5 +145,5 @@ void Shader::compileShader(HashedString label, HashedString id, const GPUVertexB
     {
         file << stringShderFrag;
     });
-    mGPUProgram->initFromFileContents(stringShderVert, stringShderFrag);
+    mGPUProgram->initFromFileContents(GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
 }

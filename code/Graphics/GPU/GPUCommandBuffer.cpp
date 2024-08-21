@@ -5,11 +5,13 @@
 
     const VkAllocationCallbacks* GPUCommandBuffer::ALLOCATOR = VK_NULL_HANDLE;
 
-    GPUCommandBuffer::GPUCommandBuffer(VkCommandBuffer commandBuffer) : commandBuffer(commandBuffer) {
+    void GPUCommandBuffer::init(VkCommandBuffer commandBuffer)
+    {
+        mCommandBuffer = commandBuffer;
     }
 
     const VkCommandBuffer GPUCommandBuffer::getVkCommandBuffer() const {
-        return commandBuffer;
+        return mCommandBuffer;
     }
 
     bool GPUCommandBuffer::begin(VkCommandBufferUsageFlags usageFlags) const {
@@ -17,7 +19,7 @@
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags = usageFlags;
 
-        if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+        if (vkBeginCommandBuffer(mCommandBuffer, &beginInfo) != VK_SUCCESS) {
             CHECK_MSG(false,"Could not begin Vulkan command buffer");
             return false;
         }
@@ -25,7 +27,7 @@
     }
 
     bool GPUCommandBuffer::end() const {
-        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+        if (vkEndCommandBuffer(mCommandBuffer) != VK_SUCCESS) {
             CHECK_MSG(false,"Could not end Vulkan command buffer");
             return false;
         }
@@ -34,7 +36,7 @@
 
     void GPUCommandBuffer::reset() const {
         VkCommandBufferResetFlags flags = 0;
-        vkResetCommandBuffer(commandBuffer, flags);
+        vkResetCommandBuffer(mCommandBuffer, flags);
     }
 
 // }

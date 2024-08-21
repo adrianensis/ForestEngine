@@ -24,9 +24,7 @@ public:
 class GPUUniformBuffer
 {
 public:
-	GPUUniformBuffer() = default;
-
-    void init(u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic);
+    void init(Ptr<GPUContext> gpuContext, u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic);
     void createBuffer();
     template <class T>
     void resize(u32 size)
@@ -62,7 +60,6 @@ public:
     }
     void terminate();
 
-    GPUUniformBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice);
     const GPUBuffer& getBuffer() const;
     bool initialize(uint32_t bufferSize);
     void setData(void* data) const;
@@ -77,6 +74,7 @@ private:
     bool mIsStatic = false;
     void* mGPUPointer = nullptr;
 
+    Ptr<GPUContext> mGPUContext;
     GPUBuffer buffer;
 
 public:

@@ -1,14 +1,9 @@
-#include "GPUBuffer.h"
+#include "Graphics/GPU/GPUBuffer.h"
 
 #include <cstring>
 
 #include "Core/Minimal.hpp"
 //namespace GPUAPI {
-
-    GPUBuffer::GPUBuffer(/*GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice*/)
-            // : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice)
-            {}
-
     const GPUBuffer::Config& GPUBuffer::getConfig() const {
         return config;
     }
@@ -21,7 +16,9 @@
         return vkDeviceMemory;
     }
 
-    bool GPUBuffer::initialize(const Config& config) {
+    bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const Config& config)
+    {
+        mGPUContext = gpuContext;
         this->config = config;
 
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
@@ -32,26 +29,26 @@
         bufferInfo.usage = config.Usage;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-        if (vkCreateBuffer(vulkanDevice->getDevice(), &bufferInfo, allocator, &vkBuffer) != VK_SUCCESS) {
+        if (vkCreateBuffer(mGPUContext->vulkanDevice->getDevice(), &bufferInfo, allocator, &vkBuffer) != VK_SUCCESS) {
             CHECK_MSG(false,"Could not create Vulkan buffer");
             return false;
         }
 
         VkMemoryRequirements memoryRequirements;
-        vkGetBufferMemoryRequirements(vulkanDevice->getDevice(), vkBuffer, &memoryRequirements);
+        vkGetBufferMemoryRequirements(mGPUContext->vulkanDevice->getDevice(), vkBuffer, &memoryRequirements);
 
         VkMemoryAllocateInfo memoryAllocateInfo{};
         memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         memoryAllocateInfo.allocationSize = memoryRequirements.size;
-        memoryAllocateInfo.memoryTypeIndex = vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, config.MemoryProperties);
+        memoryAllocateInfo.memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, config.MemoryProperties);
 
-        if (vkAllocateMemory(vulkanDevice->getDevice(), &memoryAllocateInfo, allocator, &vkDeviceMemory) != VK_SUCCESS) {
-            CHECK_MSG(false,"Could not allocate Vulkan vertex vkBuffer memory");
-            return false;
-        }
+        // if (vkAllocateMemory(mGPUContext->vulkanDevice->getDevice(), &memoryAllocateInfo, allocator, &vkDeviceMemory) != VK_SUCCESS) {
+        //     CHECK_MSG(false,"Could not allocate Vulkan vkBuffer memory");
+        //     return false;
+        // }
 
-        constexpr VkDeviceSize memoryOffset = 0;
-        vkBindBufferMemory(vulkanDevice->getDevice(), vkBuffer, vkDeviceMemory, memoryOffset);
+        // constexpr VkDeviceSize memoryOffset = 0;
+        // vkBindBufferMemory(mGPUContext->vulkanDevice->getDevice(), vkBuffer, vkDeviceMemory, memoryOffset);
 
         LOG("Initialized Vulkan buffer");
         return true;
@@ -59,9 +56,9 @@
 
     void GPUBuffer::terminate() {
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
-        vkDestroyBuffer(vulkanDevice->getDevice(), vkBuffer, allocator);
+        vkDestroyBuffer(mGPUContext->vulkanDevice->getDevice(), vkBuffer, allocator);
         LOG("Destroyed Vulkan buffer");
-        vkFreeMemory(vulkanDevice->getDevice(), vkDeviceMemory, allocator);
+        vkFreeMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, allocator);
         LOG("Freed Vulkan buffer memory");
         LOG("Terminated Vulkan buffer");
     }
@@ -70,9 +67,9 @@
         void* memory;
         constexpr VkDeviceSize memoryOffset = 0;
         constexpr VkMemoryMapFlags memoryMapFlags = 0;
-        vkMapMemory(vulkanDevice->getDevice(), vkDeviceMemory, memoryOffset, config.Size, memoryMapFlags, &memory);
+        vkMapMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, memoryOffset, config.Size, memoryMapFlags, &memory);
         std::memcpy(memory, data, config.Size);
-        vkUnmapMemory(vulkanDevice->getDevice(), vkDeviceMemory);
+        vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory);
     }
 
     void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice) {

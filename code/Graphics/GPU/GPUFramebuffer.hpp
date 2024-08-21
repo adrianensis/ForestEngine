@@ -41,9 +41,8 @@ public:
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 
-    GPUFramebuffer(/*GPUDevice* vulkanDevice, GPUSwapChain* vulkanSwapChain, GPURenderPass* vulkanRenderPass*/);
     const VkFramebuffer getFramebuffer() const;
-    bool initialize(VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
+    bool initialize(Ptr<GPUContext> gpuContext, GPURenderPass* vulkanRenderPasssss, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
     void terminate();
 
 private:
@@ -53,10 +52,9 @@ private:
 
     static const VkAllocationCallbacks* ALLOCATOR;
 
-    GPUDevice* vulkanDevice;
-    GPUSwapChain* vulkanSwapChain;
     GPURenderPass* vulkanRenderPass;
     VkFramebuffer framebuffer = VK_NULL_HANDLE;
+    Ptr<GPUContext> mGPUContext;
 
 public:
     GET(FramebufferId)

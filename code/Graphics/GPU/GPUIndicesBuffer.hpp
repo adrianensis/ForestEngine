@@ -7,9 +7,7 @@
 class GPUIndicesBuffer
 {
 public:
-	GPUIndicesBuffer() = default;
-
-    void init(const GPUDataType& gpuDataType, bool isStatic);
+    void init(Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, bool isStatic);
     void resize(u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data)
@@ -22,7 +20,6 @@ public:
     }
     void terminate();
 
-    GPUIndicesBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool);
     const GPUBuffer& getGPUBuffer() const;
     bool initialize(const std::vector<uint32_t>& indices);
 
@@ -31,9 +28,8 @@ private:
     GPUDataType mGPUDataType;
     bool mIsStatic = false;
 
-    GPUPhysicalDevice* vulkanPhysicalDevice;
-    GPUDevice* vulkanDevice;
-    GPUCommandPool* vulkanCommandPool;
+    
+    Ptr<GPUContext> mGPUContext;
     GPUBuffer buffer;
 
 public:

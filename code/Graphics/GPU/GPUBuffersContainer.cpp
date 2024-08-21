@@ -34,7 +34,7 @@ void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data,
     }
 
     GPUVertexBuffer& gpuVertexBuffer = mVertexBuffers.emplace_back();
-    gpuVertexBuffer.init(mAttributeIndex, data, isStatic);
+    // gpuVertexBuffer.init(mAttributeIndex, data, isStatic);
 
     u32 index = mVertexBuffers.size() - 1;
     mVertexBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);
@@ -64,8 +64,8 @@ u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<HashedString, 
 
 void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic)
 {
-    mIndicesBuffer.terminate();
-    mIndicesBuffer.init(gpuDataType, isStatic);
+    // mIndicesBuffer.terminate();
+    // mIndicesBuffer.init(gpuDataType, isStatic);
 }
 
 void GPUVertexBuffersContainer::terminate()
@@ -91,7 +91,7 @@ void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& da
 {
     u32 bindingPoint = GET_SYSTEM(GPUInstance).requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
-    gpuInstanceBuffer.init(bindingPoint, data, isStatic);
+    // gpuInstanceBuffer.init(bindingPoint, data, isStatic);
 
     u32 index = mUniformBuffers.size() - 1;
     mUniformBuffersMap.insert_or_assign(data.mBufferName, index);

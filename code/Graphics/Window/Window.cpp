@@ -57,7 +57,7 @@ void Window::init(i32 id, const WindowData& windowData)
 	    mWindowData.mWindowSize.set(mode->width, mode->height);
     }
     
-    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+    // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
 	mGLTFWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.get().c_str(), /*monitor*/NULL, NULL);
 

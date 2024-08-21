@@ -1,5 +1,9 @@
 #include "Graphics/GPU/GPUInstance.hpp"
-#include "Graphics/Window/WindowManager.hpp"
+#include "Graphics/GPU/GPUPhysicalDevice.h"
+#include "Graphics/GPU/GPUDevice.h"
+#include "Graphics/GPU/GPUSwapChain.h"
+#include "Graphics/GPU/GPUCommandPool.h"
+#include "Graphics/GPU/GPUCommandBuffer.h"
 
 void GPUInstance::init()
 {
@@ -14,37 +18,8 @@ void GPUInstance::init()
     // config.mWindow.Height = 600;
     config.mVulkan.Name = config.Name;
 
-    vulkan = new Vulkan(config.mVulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
-    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
-    vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkanPhysicalDevice, vulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
-    vulkanCommandPool = new GPUCommandPool(vulkanPhysicalDevice, vulkanDevice);
-    
-    if (!vulkan->initialize())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan");
-    }
-    if (!vulkanPhysicalDevice->initialize())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan physical device");
-    }
-    if (!vulkanDevice->initialize())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan device");
-    }
-    if (!vulkanSwapChain->initialize())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan swap chain");
-    }
-    if (!vulkanCommandPool->initialize()) 
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan command pool");
-    }
-    vulkanCommandBuffers = vulkanCommandPool->allocateCommandBuffers(MAX_FRAMES_IN_FLIGHT);
-    if (vulkanCommandBuffers.empty())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan command buffers");
-    }
+    mGPUContext = OwnerPtr<GPUContext>::newObject();
+    mGPUContext->init();
 }
 
 u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
@@ -56,14 +31,14 @@ u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBuffer
         {
             bindingPoint = mBindingPointsIndexUniform;
             mBindingPointsIndexUniform++;
-            CHECK_MSG((i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
+            // CHECK_MSG((i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
         }
         break;
     case GPUBufferType::STORAGE:
         {
             bindingPoint = mBindingPointsIndexStorage;
             mBindingPointsIndexStorage++;
-            CHECK_MSG((i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
+            // CHECK_MSG((i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
         }
         break;
     default:
@@ -93,11 +68,11 @@ VkCommandBuffer GPUInstance::beginSingleTimeCommands() const {
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandPool = vulkanCommandPool->getVkCommandPool();
+    allocInfo.commandPool = mGPUContext->vulkanCommandPool->getVkCommandPool();
     allocInfo.commandBufferCount = 1;
 
     VkCommandBuffer commandBuffer;
-    vkAllocateCommandBuffers(vulkanDevice->getDevice(), &allocInfo, &commandBuffer);
+    vkAllocateCommandBuffers(mGPUContext->vulkanDevice->getDevice(), &allocInfo, &commandBuffer);
 
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -117,17 +92,17 @@ void GPUInstance::endSingleTimeCommands(VkCommandBuffer commandBuffer) const {
 
     VkFence fence = VK_NULL_HANDLE;
     constexpr uint32_t submitCount = 1;
-    vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
-    vkQueueWaitIdle(vulkanDevice->getGraphicsQueue());
+    vkQueueSubmit(mGPUContext->vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
+    vkQueueWaitIdle(mGPUContext->vulkanDevice->getGraphicsQueue());
 
-    vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPool->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
+    vkFreeCommandBuffers(mGPUContext->vulkanDevice->getDevice(), mGPUContext->vulkanCommandPool->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
 }
 
 
 bool GPUInstance::initializeSyncObjects() {
-    imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-    renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-    inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+    mGPUContext->imageAvailableSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
+    mGPUContext->renderFinishedSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
+    mGPUContext->inFlightFences.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
 
     VkSemaphoreCreateInfo semaphoreInfo{};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -137,16 +112,16 @@ bool GPUInstance::initializeSyncObjects() {
     fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-        if (vkCreateSemaphore(vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &imageAvailableSemaphores[i]) != VK_SUCCESS)
+    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
+        if (vkCreateSemaphore(mGPUContext->vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &mGPUContext->imageAvailableSemaphores[i]) != VK_SUCCESS)
         {
             CHECK_MSG(false, "Could not create 'image available' semaphore for frame [{}]");
         }
-        if (vkCreateSemaphore(vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &renderFinishedSemaphores[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(mGPUContext->vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &mGPUContext->renderFinishedSemaphores[i]) != VK_SUCCESS)
         {
             CHECK_MSG(false, "Could not create 'render finished' semaphore for frame [{}]");
         }
-        if (vkCreateFence(vulkanDevice->getDevice(), &fenceInfo, allocationCallbacks, &inFlightFences[i]) != VK_SUCCESS)
+        if (vkCreateFence(mGPUContext->vulkanDevice->getDevice(), &fenceInfo, allocationCallbacks, &mGPUContext->inFlightFences[i]) != VK_SUCCESS)
         {
             CHECK_MSG(false, "Could not create 'in flight' fence for frame [{}]");
         }
@@ -245,7 +220,7 @@ VkImageView GPUInstance::createImageView(VkImage image, VkFormat format, VkImage
     viewInfo.subresourceRange.layerCount = 1;
 
     VkImageView imageView;
-    if (vkCreateImageView(vulkanDevice->getDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
+    if (vkCreateImageView(mGPUContext->vulkanDevice->getDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan image view");
         return nullptr;
     }
@@ -258,17 +233,17 @@ void GPUInstance::terminate()
 
     // terminateSyncObjects
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-        vkDestroySemaphore(vulkanDevice->getDevice(), renderFinishedSemaphores[i], allocationCallbacks);
-        vkDestroySemaphore(vulkanDevice->getDevice(), imageAvailableSemaphores[i], allocationCallbacks);
-        vkDestroyFence(vulkanDevice->getDevice(), inFlightFences[i], allocationCallbacks);
+    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
+        vkDestroySemaphore(mGPUContext->vulkanDevice->getDevice(), mGPUContext->renderFinishedSemaphores[i], allocationCallbacks);
+        vkDestroySemaphore(mGPUContext->vulkanDevice->getDevice(), mGPUContext->imageAvailableSemaphores[i], allocationCallbacks);
+        vkDestroyFence(mGPUContext->vulkanDevice->getDevice(), mGPUContext->inFlightFences[i], allocationCallbacks);
     }
     LOG("Destroyed Vulkan sync objects (semaphores & fences)");
 
-    vulkanSwapChain->terminate();
-    delete vulkanSwapChain;
-    delete vulkanDevice;
-    delete vulkanPhysicalDevice;
-    delete vulkanCommandPool;
-    delete vulkan;
+    mGPUContext->vulkanSwapChain->terminate();
+    delete mGPUContext->vulkanSwapChain;
+    delete mGPUContext->vulkanDevice;
+    delete mGPUContext->vulkanPhysicalDevice;
+    delete mGPUContext->vulkanCommandPool;
+    delete mGPUContext->vulkan;
 }

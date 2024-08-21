@@ -10,12 +10,12 @@
         static const VkAllocationCallbacks* ALLOCATOR;
 
     private:
-        VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
+        VkCommandBuffer mCommandBuffer = VK_NULL_HANDLE;
 
     public:
-        explicit GPUCommandBuffer(VkCommandBuffer commandBuffer);
-
         const VkCommandBuffer getVkCommandBuffer() const;
+
+        void init(VkCommandBuffer commandBuffer);
 
         bool begin(VkCommandBufferUsageFlags usageFlags = 0) const;
 

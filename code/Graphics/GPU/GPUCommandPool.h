@@ -3,6 +3,7 @@
 #include "GPUPhysicalDevice.h"
 #include "GPUDevice.h"
 #include "GPUCommandBuffer.h"
+#include "GPUContext.hpp"
 
 #include <vulkan/vulkan.h>
 #include <vector>
@@ -20,7 +21,7 @@
         VkCommandPool vkCommandPool = VK_NULL_HANDLE;
 
     public:
-        GPUCommandPool(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice);
+        GPUCommandPool(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice);
 
         const VkCommandPool getVkCommandPool() const;
 

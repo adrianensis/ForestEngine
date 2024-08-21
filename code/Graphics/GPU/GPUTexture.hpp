@@ -18,7 +18,7 @@ public:
 class GPUTexture: public ObjectBase, public IPoolable
 {
 public:
-    void init(const GPUTextureData& gpuTextureData, u32 id);
+    void init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
     void terminate();
     virtual void onPoolFree() override { terminate(); };
     void enable(u32 textureUnit) const;
@@ -41,7 +41,7 @@ private:
 	u32 mHeight = 0;
 	u32 mID = 0;
 	GPUTextureData mTextureData;
-
+    Ptr<GPUContext> mGPUContext;
     GPUImage* vulkanTextureImage;
     VkImageView textureImageView = VK_NULL_HANDLE;
     VkSampler textureSampler = VK_NULL_HANDLE;

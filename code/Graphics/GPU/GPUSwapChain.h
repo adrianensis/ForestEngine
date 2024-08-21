@@ -8,56 +8,54 @@
 #include <vector>
 
 #include "Core/Minimal.hpp"
-//namespace GPUAPI {
 
-    class GPUSwapChain {
-    private:
-        static const VkAllocationCallbacks* ALLOCATOR;
+class GPUSwapChain {
+private:
+    static const VkAllocationCallbacks* ALLOCATOR;
 
-    private:
-        GPUDevice* vulkanDevice;
-        GPUPhysicalDevice* vulkanPhysicalDevice;
-        Vulkan* vulkan;
-        Window* window;
-        VkSurfaceFormatKHR surfaceFormat{};
-        VkPresentModeKHR presentMode{};
-        VkExtent2D extent{};
-        VkSwapchainKHR swapChain = VK_NULL_HANDLE;
-        std::vector<VkImage> images;
-        std::vector<VkImageView> imageViews;
+private:
+    GPUDevice* vulkanDevice;
+    GPUPhysicalDevice* vulkanPhysicalDevice;
+    Vulkan* vulkan;
+    Window* window;
+    VkSurfaceFormatKHR surfaceFormat{};
+    VkPresentModeKHR presentMode{};
+    VkExtent2D extent{};
+    VkSwapchainKHR swapChain = VK_NULL_HANDLE;
+    std::vector<VkImage> images;
+    std::vector<VkImageView> imageViews;
 
-    public:
-        GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, Window* window);
+public:
+    GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, Window* window);
 
-        const VkSwapchainKHR getSwapChain() const;
+    const VkSwapchainKHR getSwapChain() const;
 
-        const VkSurfaceFormatKHR& getSurfaceFormat() const;
+    const VkSurfaceFormatKHR& getSurfaceFormat() const;
 
-        const VkExtent2D& getExtent() const;
+    const VkExtent2D& getExtent() const;
 
-        const std::vector<VkImageView>& getImageViews() const;
+    const std::vector<VkImageView>& getImageViews() const;
 
-        bool initialize();
+    bool initialize();
 
-        void terminate();
+    void terminate();
 
-    private:
-        VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
+private:
+    VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
 
-        VkPresentModeKHR choosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const;
+    VkPresentModeKHR choosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const;
 
-        VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
+    VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
 
-        uint32_t getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
+    uint32_t getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
 
-        bool createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, uint32_t imageCount);
+    bool createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, uint32_t imageCount);
 
-        bool findSwapChainImages(uint32_t imageCount);
+    bool findSwapChainImages(uint32_t imageCount);
 
-        bool createSwapChainImageViews();
+    bool createSwapChainImageViews();
 
-        std::string getPresentationModeAsString(VkPresentModeKHR presentMode) const;
-    };
-// }
+    std::string getPresentationModeAsString(VkPresentModeKHR presentMode) const;
+};
 
 

@@ -1,8 +1,9 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 
-void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
+void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
 {
+    mGPUContext = gpuContext;
 	mData = data;
     mAttributeLocation = attributeLocation;
     mIsStatic = isStatic;
@@ -15,6 +16,15 @@ void GPUVertexBuffer::init(u32 attributeLocation, const GPUVertexBufferData& dat
     u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;
     mAttributeOffset += 1;
+
+    GPUBuffer::Config bufferConfig{};
+    // bufferConfig.Size = bufferSize;
+    bufferConfig.Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+    if (!buffer.init(mGPUContext, bufferConfig)) {
+        CHECK_MSG(false,"Could not initialize vertex buffer");
+    }
 }
 
 void GPUVertexBuffer::createBuffer()
@@ -52,9 +62,6 @@ u32 GPUVertexBuffer::getAttributeLocationWithOffset() const
 {
     return getAttributeLocation() + mAttributeOffset;
 }
-
-GPUVertexBuffer::GPUVertexBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool)
-        : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice), vulkanCommandPool(vulkanCommandPool), buffer(/*vulkanPhysicalDevice, vulkanDevice*/) {}
 
 const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
     return buffer;

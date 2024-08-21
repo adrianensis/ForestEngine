@@ -59,7 +59,7 @@ PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTe
         PoolHandler<GPUTexture> handler = mTextures.allocate();
         mTexturesByPath.insert_or_assign(gpuTextureData.mPath, handler);
         GPUTexture& texture = mTextures.get(handler);
-        texture.init(gpuTextureData, handler.getIndex());
+        texture.init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, handler.getIndex());
 
         u32 size = mTextures.getSize();
         // NOTE: We reserve position 0 to represent NULL
