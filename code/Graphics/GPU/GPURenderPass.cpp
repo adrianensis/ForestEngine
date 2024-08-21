@@ -1,5 +1,5 @@
 #include "Graphics/GPU/GPURenderPass.h"
-#include "Graphics/GPU/GPUFramebuffer.h"
+#include "Graphics/GPU/GPUFramebuffer.hpp"
 
 
 #include "Core/Minimal.hpp"

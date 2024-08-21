@@ -25,7 +25,7 @@
         VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
 
     public:
-        GPUBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice);
+        GPUBuffer(/*GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice*/);
 
         const Config& getConfig() const;
 

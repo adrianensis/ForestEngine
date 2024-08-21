@@ -41,7 +41,7 @@ public:
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 
-    GPUFramebuffer(GPUDevice* vulkanDevice, GPUSwapChain* vulkanSwapChain, GPURenderPass* vulkanRenderPass);
+    GPUFramebuffer(/*GPUDevice* vulkanDevice, GPUSwapChain* vulkanSwapChain, GPURenderPass* vulkanRenderPass*/);
     const VkFramebuffer getFramebuffer() const;
     bool initialize(VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
     void terminate();

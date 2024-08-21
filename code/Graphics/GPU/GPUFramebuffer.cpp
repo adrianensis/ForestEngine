@@ -8,7 +8,7 @@ void GPUFramebuffer::init(const GPUFramebufferData& framebufferData)
     {
         const GPUFramebufferAttachmentType& attachmentType = *it;
 //        u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
-        mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
+        // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
     }
 
 //    GET_SYSTEM(GPUInterface).checkFramebufferErrors();
@@ -23,7 +23,8 @@ Vector4 GPUFramebuffer::readPixel(u32 x, u32 y, GPUFramebufferAttachmentType att
 //    Vector4 pixelColor = GET_SYSTEM(GPUInterface).readFramebufferPixel(x, y, GPUTexturePixelFormat::RGBA);
 //    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(GPUFramebufferAttachmentType::NONE);
 //    // GET_SYSTEM(GPUInterface).disableFramebuffer(GPUFramebufferOperationType::READ);
-    return pixelColor;
+    // return pixelColor;
+    return Vector4();
 }
 
 void GPUFramebuffer::enable(GPUFramebufferOperationType op)
@@ -38,8 +39,9 @@ void GPUFramebuffer::disable(GPUFramebufferOperationType op)
 
 const VkAllocationCallbacks* GPUFramebuffer::ALLOCATOR = VK_NULL_HANDLE;
 
-GPUFramebuffer::GPUFramebuffer(GPUDevice* vulkanDevice, GPUSwapChain* vulkanSwapChain, GPURenderPass* vulkanRenderPass)
-        : vulkanDevice(vulkanDevice), vulkanSwapChain(vulkanSwapChain), vulkanRenderPass(vulkanRenderPass) {
+GPUFramebuffer::GPUFramebuffer(/*GPUDevice* vulkanDevice, GPUSwapChain* vulkanSwapChain, GPURenderPass* vulkanRenderPass*/)
+        //: vulkanDevice(vulkanDevice), vulkanSwapChain(vulkanSwapChain), vulkanRenderPass(vulkanRenderPass) 
+{
 }
 
 const VkFramebuffer GPUFramebuffer::getFramebuffer() const {

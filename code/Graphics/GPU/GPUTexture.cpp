@@ -147,7 +147,7 @@ bool GPUTexture::initializeTextureImage() {
          */
 
         VkDeviceSize imageSize = 0;//width * height * desiredChannels;
-        GPUBuffer stagingBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
+        GPUBuffer stagingBuffer;//(/*GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice*/);
 
         GPUBuffer::Config stagingBufferConfig{};
         stagingBufferConfig.Size = imageSize;

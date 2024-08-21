@@ -23,13 +23,13 @@ void GPUVertexBuffer::createBuffer()
     
     u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
 //    GET_SYSTEM(GPUInterface).attribute(
-        mAttributeLocation,
-        sizeInPrimitiveTypes,
-        mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType,
-        0/*mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes*/,
-        0/*mPreviousOffsetInBytes*/,
-        mData.mInstanceDivisor
-    );
+    //     mAttributeLocation,
+    //     sizeInPrimitiveTypes,
+    //     mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType,
+    //     0/*mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes*/,
+    //     0/*mPreviousOffsetInBytes*/,
+    //     mData.mInstanceDivisor
+    // );
 }
 
 void GPUVertexBuffer::terminate()
@@ -54,7 +54,7 @@ u32 GPUVertexBuffer::getAttributeLocationWithOffset() const
 }
 
 GPUVertexBuffer::GPUVertexBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool)
-        : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice), vulkanCommandPool(vulkanCommandPool), buffer(vulkanPhysicalDevice, vulkanDevice) {}
+        : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice), vulkanCommandPool(vulkanCommandPool), buffer(/*vulkanPhysicalDevice, vulkanDevice*/) {}
 
 const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
     return buffer;

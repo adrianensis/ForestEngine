@@ -12,13 +12,13 @@ void GPUIndicesBuffer::resize(u32 size)
 //    GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mBufferId, mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
 }
 
-void GPUIndicesBuffer::terminate()
-{
-//    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
-}
+// void GPUIndicesBuffer::terminate()
+// {
+// //    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
+// }
 
 GPUIndicesBuffer::GPUIndicesBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool)
-        : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice), vulkanCommandPool(vulkanCommandPool), buffer(vulkanPhysicalDevice, vulkanDevice) {}
+        : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice), vulkanCommandPool(vulkanCommandPool), buffer(/*vulkanPhysicalDevice, vulkanDevice*/) {}
 
 const GPUBuffer& GPUIndicesBuffer::getGPUBuffer() const {
     return buffer;
@@ -32,7 +32,7 @@ bool GPUIndicesBuffer::initialize(const std::vector<uint32_t>& indices) {
     stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
     stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-    GPUBuffer stagingBuffer(vulkanPhysicalDevice, vulkanDevice);
+    GPUBuffer stagingBuffer;//(vulkanPhysicalDevice, vulkanDevice);
     if (!stagingBuffer.initialize(stagingBufferConfig)) {
         CHECK_MSG(false,"Could not initialize staging buffer for index buffer");
         return false;

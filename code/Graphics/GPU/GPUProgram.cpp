@@ -1,6 +1,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/GPUGlobalState.hpp"
 
 GPUProgram::GPUProgram()
 {
@@ -19,9 +20,9 @@ void GPUProgram::disable() const
 void GPUProgram::bindUniformBuffer(const GPUUniformBuffer& uniformBuffer)
 {
 //    GET_SYSTEM(GPUInterface).bindUniformBufferToShader(mProgramId,
-    uniformBuffer.getGPUUniformBufferData().mType,
-    uniformBuffer.getGPUUniformBufferData().mBufferName,
-    uniformBuffer.getBindingPoint());
+    // uniformBuffer.getGPUUniformBufferData().mType,
+    // uniformBuffer.getGPUUniformBufferData().mBufferName,
+    // uniformBuffer.getBindingPoint());
 
     mUniformBuffers.push_back(uniformBuffer);
 }
@@ -122,7 +123,6 @@ void GPUProgram::createDescriptors()
         *
         * This can be particularly frustrating if the allocation succeeds on some machines, but fails on others.
         */
-    constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     if (vkCreateDescriptorPool(GET_SYSTEM(GPUGlobalState).vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &descriptorPool) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not initialize descriptor pool");

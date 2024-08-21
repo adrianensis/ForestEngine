@@ -46,13 +46,13 @@
             CHECK_MSG(false,"Could not find any Vulkan swap chain images");
             return false;
         }
-        LOG("Initialized [{}] Vulkan swap chain images", images.size());
+        LOG("Initialized [{}] Vulkan swap chain images");
 
         if (!createSwapChainImageViews()) {
             CHECK_MSG(false,"Could not create Vulkan swap chain image views");
             return false;
         }
-        LOG("Created [{}] Vulkan swap chain image views", imageViews.size());
+        LOG("Created [{}] Vulkan swap chain image views");
 
         return true;
     }

@@ -2,7 +2,7 @@
 
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
-#include "Graphics/GPU/GPUBuffer.hpp"
+#include "Graphics/GPU/GPUBuffer.h"
 
 class GPUIndicesBuffer
 {
@@ -22,7 +22,7 @@ public:
     }
     void terminate();
 
-    GPUIndexBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool);
+    GPUIndicesBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice, GPUCommandPool* vulkanCommandPool);
     const GPUBuffer& getGPUBuffer() const;
     bool initialize(const std::vector<uint32_t>& indices);
 

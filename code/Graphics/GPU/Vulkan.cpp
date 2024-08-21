@@ -1,7 +1,5 @@
 #include "Vulkan.h"
 
-#include "Environment.h"
-
 #include <utility>
 #include <cstring>
 
@@ -102,7 +100,7 @@
         createInfo.pApplicationInfo = &appInfo;
         createInfo.enabledExtensionCount = extensions.size();
         createInfo.ppEnabledExtensionNames = extensions.data();
-        if (Environment::isMacOS()) {
+        if (Environment::mPlatform == Environment::Platform::MACOS) {
             createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
         }
         if (config.ValidationLayersEnabled) {
@@ -128,7 +126,7 @@
         const char* functionName = "vkCreateDebugUtilsMessengerEXT";
         auto function = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(vulkanInstance, functionName);
         if (function == nullptr) {
-            CHECK_MSG(false,"Could not look up address of extension function [{0}]", functionName);
+            CHECK_MSG(false,"Could not look up address of extension function [{0}]");
             return false;
         }
         return function(vulkanInstance, &createInfo, ALLOCATOR, &debugMessenger) == VK_SUCCESS;
@@ -177,7 +175,7 @@
         const char** glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-        if (Environment::isMacOS()) {
+        if (Environment::mPlatform == Environment::Platform::MACOS) {
             extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
         }
         if (config.ValidationLayersEnabled) {

@@ -6,7 +6,7 @@
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
-#include "Graphics/GPU/GPUFramebuffer.h"
+#include "Graphics/GPU/GPUFramebuffer.hpp"
 #include "Graphics/GPU/GPURenderPass.h"
 #include "Graphics/GPU/GPUGraphicsPipeline.h"
 #include "Graphics/GPU/GPUImage.h"

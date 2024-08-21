@@ -5,8 +5,9 @@
 #include "Core/Minimal.hpp"
 //namespace GPUAPI {
 
-    GPUBuffer::GPUBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice)
-            : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {}
+    GPUBuffer::GPUBuffer(/*GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice*/)
+            // : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice)
+            {}
 
     const GPUBuffer::Config& GPUBuffer::getConfig() const {
         return config;

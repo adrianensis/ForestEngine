@@ -44,7 +44,7 @@
         allocateInfo.commandPool = vkCommandPool;
 
         if (vkAllocateCommandBuffers(vulkanDevice->getDevice(), &allocateInfo, vkCommandBuffers.data()) != VK_SUCCESS) {
-            CHECK_MSG(false,"Could not allocate [{}] Vulkan command buffers", vkCommandBuffers.size());
+            CHECK_MSG(false,"Could not allocate [{}] Vulkan command buffers");
             return {};
         }
 
@@ -53,7 +53,7 @@
             GPUCommandBuffer vulkanCommandBuffer(vkCommandBuffer);
             vulkanCommandBuffers.push_back(vulkanCommandBuffer);
         }
-        LOG("Allocated [{}] command buffers", vulkanCommandBuffers.size());
+        LOG("Allocated [{}] command buffers");
         return vulkanCommandBuffers;
     }
 

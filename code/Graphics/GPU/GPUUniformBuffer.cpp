@@ -21,34 +21,34 @@ void GPUUniformBuffer::createBuffer()
 //    GET_SYSTEM(GPUInterface).bindUniformBufferToBindingPoint(mGPUUniformBufferData.mType, mBufferId, mBindingPoint);
     // mGPUPointer = glMapNamedBuffer(mBufferId, GL_READ_WRITE);
 
-    for (size_t i = 0; i < GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT; i++) {
-        GPUUniformBuffer uniformBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
-        if (!uniformBuffer.initialize(sizeof(f32) * 200)) {
-            CHECK_MSG(false, "Could not initialize uniform buffer for frame [{}]");
-        }
-        uniformBuffers.push_back(uniformBuffer);
-    }
-    LOG("Initialized [{}] Vulkan uniform buffers", uniformBuffers.size());
+    // for (size_t i = 0; i < GET_SYSTEM(GPUGlobalState).MAX_FRAMES_IN_FLIGHT; i++) {
+    //     GPUUniformBuffer uniformBuffer(GET_SYSTEM(GPUGlobalState).vulkanPhysicalDevice, GET_SYSTEM(GPUGlobalState).vulkanDevice);
+    //     if (!uniformBuffer.initialize(sizeof(f32) * 200)) {
+    //         CHECK_MSG(false, "Could not initialize uniform buffer for frame [{}]");
+    //     }
+    //     uniformBuffers.push_back(uniformBuffer);
+    // }
+    // LOG("Initialized [{}] Vulkan uniform buffers");
 }
 
-void GPUUniformBuffer::terminate()
-{
-    // glUnmapNamedBuffer(mBufferId);
-//    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
+// void GPUUniformBuffer::terminate()
+// {
+//     // glUnmapNamedBuffer(mBufferId);
+// //    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
 
-    for (GPUUniformBuffer& uniformBuffer : uniformBuffers)
-    {
-        uniformBuffer.terminate();
-    }
-}
+//     for (GPUUniformBuffer& uniformBuffer : uniformBuffers)
+//     {
+//         uniformBuffer.terminate();
+//     }
+// }
 
 void GPUUniformBuffer::checkMaxSize(u32 bytes) const
 {
 //    u32 maxBytes = GET_SYSTEM(GPUInterface).getMaxBytesInUniformBuffer(mGPUUniformBufferData.mType);
-    CHECK_MSG(bytes <= maxBytes, "Max bytes reached in Shared Buffer!");
+    // CHECK_MSG(bytes <= maxBytes, "Max bytes reached in Shared Buffer!");
 }
 
-GPUUniformBuffer::GPUUniformBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice) : buffer(vulkanPhysicalDevice, vulkanDevice) {}
+GPUUniformBuffer::GPUUniformBuffer(GPUPhysicalDevice* vulkanPhysicalDevice, GPUDevice* vulkanDevice) : buffer(/*vulkanPhysicalDevice, vulkanDevice*/) {}
 
 const GPUBuffer& GPUUniformBuffer::getBuffer() const {
     return buffer;

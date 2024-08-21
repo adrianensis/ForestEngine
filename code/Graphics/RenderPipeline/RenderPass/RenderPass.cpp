@@ -131,7 +131,6 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
     shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
     shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUGlobalState).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
-    Ptr<Shader> shader = getShader(instancedMeshData);
     shader->bindTextures(shader->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 
     shader->getGPUProgram()->createDescriptors();
@@ -288,13 +287,13 @@ VkFormat RenderPass::findDepthFormat()
 bool RenderPass::initializeFramebuffers()
 {
     for (VkImageView swapChainImageView : GET_SYSTEM(GPUGlobalState).vulkanSwapChain->getImageViews()) {
-        GPUFramebuffer framebuffer(GET_SYSTEM(GPUGlobalState).vulkanDevice, GET_SYSTEM(GPUGlobalState).vulkanSwapChain, vulkanRenderPass);
+        GPUFramebuffer framebuffer;//(GET_SYSTEM(GPUGlobalState).vulkanDevice, GET_SYSTEM(GPUGlobalState).vulkanSwapChain, vulkanRenderPass);
         if (!framebuffer.initialize(colorImageView, depthImageView, swapChainImageView)) {
             CHECK_MSG(false,"Could not initialize framebuffers");
             return false;
         }
         framebuffers.push_back(framebuffer);
     }
-    LOG("Created [{}] Vulkan framebuffers", framebuffers.size());
+    LOG("Created [{}] Vulkan framebuffers");
     return true;
 }

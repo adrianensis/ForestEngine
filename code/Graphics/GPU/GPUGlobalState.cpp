@@ -8,7 +8,7 @@ void GPUGlobalState::init()
 
     Config config{};
     config.Name = "GPUAPI";
-    config.LogLevel = Log::Level::Debug;
+    // config.LogLevel = Log::Level::Debug;
     // config.mWindow.Title = config.Name;
     // config.mWindow.Width = 800;
     // config.mWindow.Height = 600;

@@ -40,7 +40,7 @@ private:
 
     struct Config {
         std::string Name;
-        Log::Level LogLevel;
+        // Log::Level LogLevel;
         // Window::Config mWindow;
         Vulkan::Config mVulkan;
     };

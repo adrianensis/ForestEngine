@@ -3,7 +3,7 @@
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuffer.h"
-#include "Graphics/GPU/GPUGlobalState.hpp"
+// #include "Graphics/GPU/GPUGlobalState.hpp"
 
 class GPUUniformBufferData
 {
@@ -43,22 +43,22 @@ public:
     {
         checkMaxSize(sizeof(T));
 //        // GET_SYSTEM(GPUInterface).setBufferData(mGPUUniformBufferData.mType, mBufferId, data);
-        const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
-        uniformBuffer.setData((void*) data);
+        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
+        // uniformBuffer.setData((void*) data);
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
         checkMaxSize(sizeof(T) * data.size());
 //        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUUniformBufferData.mType, mBufferId, data);
-        const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
-        uniformBuffer.setData((void*) data.data());
+        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
+        // uniformBuffer.setData((void*) data.data());
     }
     void setDataArray(const ByteBuffer& data)
     {
 //	    // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUUniformBufferData.mType, mBufferId, data);
-        const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
-        uniformBuffer.setData((void*) data.getBuffer().data());
+        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUGlobalState).currentFrame];
+        // uniformBuffer.setData((void*) data.getBuffer().data());
     }
     void terminate();
 
@@ -78,8 +78,6 @@ private:
     void* mGPUPointer = nullptr;
 
     GPUBuffer buffer;
-public:
-    std::vector<GPUUniformBuffer> uniformBuffers;
 
 public:
     GET(BindingPoint)
