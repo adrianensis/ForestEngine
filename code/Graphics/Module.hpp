@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Graphics/Window/WindowManager.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/RenderEngine.hpp"
 

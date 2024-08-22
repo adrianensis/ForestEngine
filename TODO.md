@@ -11,6 +11,7 @@
 - [ ] Decouple Window.hpp from IWindowInputAdapter
 - [ ] Decouple Window.cpp from RenderEngine
 - [ ] Decouple Vulkan::findRequiredExtensions from GLFW
+- [ ] Decouple GPUContext from WindowManager
 
 ## Interesting / Nice To Have / Optimizations
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
 #include "Graphics/GPU/GPUContext.hpp"
 #include "Graphics/GPU/Vulkan.h"

@@ -2,7 +2,6 @@
 
 #include "Core/Input/Input.hpp"
 #define GLFW_INCLUDE_NONE
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "GLFW/glfw3.h"
 
 class GPUWindowData

@@ -1,5 +1,4 @@
 #include "UI/UIFont.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "UI/UIMaterial.hpp"
 

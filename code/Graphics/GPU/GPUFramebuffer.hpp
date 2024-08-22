@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUSwapChain.h"
 #include "Graphics/GPU/GPURenderPass.h"

@@ -1,5 +1,4 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"

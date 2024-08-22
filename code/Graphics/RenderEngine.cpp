@@ -4,7 +4,6 @@
 #include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Window/WindowManager.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"

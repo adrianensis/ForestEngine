@@ -1,5 +1,4 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Material/MaterialManager.hpp"

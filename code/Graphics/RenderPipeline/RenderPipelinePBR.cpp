@@ -1,6 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Graphics/Renderer/ShapeBatchRenderer.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Window/WindowManager.hpp"

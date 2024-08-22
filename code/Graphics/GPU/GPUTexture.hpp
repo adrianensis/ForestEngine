@@ -2,7 +2,6 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Font/Font.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 
 #include "Graphics/GPU/GPUImage.h"
 

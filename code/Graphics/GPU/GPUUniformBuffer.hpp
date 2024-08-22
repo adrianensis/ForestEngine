@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Graphics/GPU/GPUVariable.hpp"
-#include "Graphics/GPU/GPUInterface.hpp"
 #include "Graphics/GPU/GPUBuffer.h"
 // #include "Graphics/GPU/GPUInstance.hpp"
 

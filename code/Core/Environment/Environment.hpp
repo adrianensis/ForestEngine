@@ -36,6 +36,7 @@ public:
         WINDOWS,
         MACOS,
         LINUX,
+        ANDROID,
     };
 
     enum class Compiler
@@ -60,6 +61,8 @@ public:
         Platform::MACOS;
 #elif defined(ENGINE_PLATFORM_LINUX)
         Platform::LINUX;
+#elif defined(ENGINE_PLATFORM_ANDROID)
+        Platform::ANDROID;
 #else
         Platform::NONE;
 #endif

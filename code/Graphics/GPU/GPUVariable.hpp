@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Graphics/GPU/GPUInterface.hpp"
 
 /*
     - none: (default) local read/write memory,
