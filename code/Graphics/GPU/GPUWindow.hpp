@@ -5,7 +5,7 @@
 #include "Graphics/GPU/GPUInterface.hpp"
 #include "GLFW/glfw3.h"
 
-class WindowData
+class GPUWindowData
 {
 public:
     Vector2 mWindowSize;
@@ -14,10 +14,10 @@ public:
     HashedString mTitle;
 };
 
-class Window: public ObjectBase, public IWindowInputAdapter
+class GPUWindow: public ObjectBase, public IWindowInputAdapter
 {
 public:
-    void init(i32 id, const WindowData& windowData);
+    void init(i32 id, const GPUWindowData& gpuWindowData);
     void terminate();
 
     GLFWwindow* getGlfwWindow() const;
@@ -34,13 +34,13 @@ public:
     virtual Vector2 getMousePosition() const override;
 
 private:
-    void onResize(GLFWwindow *window, i32 width, i32 height);
+    void onResize(GLFWwindow *gpuWindow, i32 width, i32 height);
 
-    static void onResizeGLFW(GLFWwindow *window, i32 width, i32 height);
-    static void keyCallbackGLFW(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods);
-    static void mouseButtonCallbackGLFW(GLFWwindow *window, i32 button, i32 action, i32 mods);
-    static void scrollCallbackGLFW(GLFWwindow *window, f64 xoffset, f64 yoffset);
-    static void charCallbackGLFW(GLFWwindow *window, u32 codepoint);
+    static void onResizeGLFW(GLFWwindow *gpuWindow, i32 width, i32 height);
+    static void keyCallbackGLFW(GLFWwindow *gpuWindow, i32 key, i32 scancode, i32 action, i32 mods);
+    static void mouseButtonCallbackGLFW(GLFWwindow *gpuWindow, i32 button, i32 action, i32 mods);
+    static void scrollCallbackGLFW(GLFWwindow *gpuWindow, f64 xoffset, f64 yoffset);
+    static void charCallbackGLFW(GLFWwindow *gpuWindow, u32 codepoint);
 
     virtual void keyCallback(i32 key, i32 scancode, i32 action, i32 mods) override;
     virtual void mouseButtonCallback(i32 button, i32 action, i32 mods) override;
@@ -49,11 +49,11 @@ private:
 
 private:
 	GLFWwindow *mGLTFWindow = nullptr;
-	WindowData mWindowData;
+	GPUWindowData mGPUWindowData;
     i32 mID = -1;
 
 public:
     CGET(GLTFWindow);
-    CRGET(WindowData);
+    CRGET(GPUWindowData);
 };
-REGISTER_CLASS(Window);
+REGISTER_CLASS(GPUWindow);

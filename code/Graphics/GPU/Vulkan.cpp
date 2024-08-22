@@ -20,7 +20,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
 
 const VkAllocationCallbacks* Vulkan::ALLOCATOR = VK_NULL_HANDLE;
 
-Vulkan::Vulkan(Config config, Window* window) : config(std::move(config)), window(window) {
+Vulkan::Vulkan(Config config, GPUWindow* gpuWindow) : config(std::move(config)), gpuWindow(gpuWindow) {
 }
 
 VkInstance Vulkan::getGPUInstance() const {
@@ -60,7 +60,7 @@ bool Vulkan::initialize() {
         LOG("Created Vulkan debug messenger");
     }
     if (!createSurface()) {
-        CHECK_MSG(false,"Could not create Vulka window surface");
+        CHECK_MSG(false,"Could not create Vulka gpuWindow surface");
         return false;
     }
     LOG("Initialized Vulkan");
@@ -139,12 +139,12 @@ void Vulkan::destroyDebugMessenger() {
 }
 
 bool Vulkan::createSurface() const {
-    return glfwCreateWindowSurface(vulkanInstance, window->getGlfwWindow(), ALLOCATOR, (VkSurfaceKHR*) &surface) == VK_SUCCESS;
+    return glfwCreateWindowSurface(vulkanInstance, gpuWindow->getGlfwWindow(), ALLOCATOR, (VkSurfaceKHR*) &surface) == VK_SUCCESS;
 }
 
 void Vulkan::destroySurface() const {
     vkDestroySurfaceKHR(vulkanInstance, surface, ALLOCATOR);
-    LOG("Destroyed Vulkan window surface");
+    LOG("Destroyed Vulkan gpuWindow surface");
 }
 
 std::vector<const char*> Vulkan::findExtensions() const {

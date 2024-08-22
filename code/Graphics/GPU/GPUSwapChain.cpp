@@ -7,8 +7,8 @@
 
     const VkAllocationCallbacks* GPUSwapChain::ALLOCATOR = VK_NULL_HANDLE;
 
-    GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, Window* window)
-            : vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice), vulkan(vulkan), window(window) {
+    GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, GPUWindow* gpuWindow)
+            : vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice), vulkan(vulkan), gpuWindow(gpuWindow) {
     }
 
     const VkSwapchainKHR GPUSwapChain::getSwapChain() const {
@@ -92,11 +92,11 @@
     VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const {
         bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<uint32_t>::max();
         if (!extentSizeCanDifferFromWindowResolution) {
-            //VD_LOG_DEBUG("Extent should match window resolution so using the surface capabilities extent");
+            //VD_LOG_DEBUG("Extent should match gpuWindow resolution so using the surface capabilities extent");
             return surfaceCapabilities.currentExtent;
         }
-        //VD_LOG_DEBUG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
-        Vector2 windowSizeInPixels = window->getSizeInPixels();
+        //VD_LOG_DEBUG("Extent can differ from gpuWindow resolution so picking the resolution that best matches the gpuWindow within the minImageExtent and maxImageExtent bounds");
+        Vector2 windowSizeInPixels = gpuWindow->getSizeInPixels();
         VkExtent2D extent = {
                 (uint32_t) windowSizeInPixels.x,
                 (uint32_t) windowSizeInPixels.y

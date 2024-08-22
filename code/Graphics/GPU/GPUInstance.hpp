@@ -33,7 +33,7 @@ private:
     struct Config {
         std::string Name;
         // Log::Level LogLevel;
-        // Window::Config mWindow;
+        // GPUWindow::Config mWindow;
         Vulkan::Config mVulkan;
     };
 

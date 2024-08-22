@@ -2,7 +2,7 @@
 
 #include "Graphics/GPU/GPUDevice.h"
 #include "Graphics/GPU/GPUPhysicalDevice.h"
-#include "Graphics/Window/Window.hpp"
+#include "Graphics/GPU/GPUWindow.hpp"
 
 #include <vulkan/vulkan.h>
 #include <vector>
@@ -17,7 +17,7 @@ private:
     GPUDevice* vulkanDevice;
     GPUPhysicalDevice* vulkanPhysicalDevice;
     Vulkan* vulkan;
-    Window* window;
+    GPUWindow* gpuWindow;
     VkSurfaceFormatKHR surfaceFormat{};
     VkPresentModeKHR presentMode{};
     VkExtent2D extent{};
@@ -26,7 +26,7 @@ private:
     std::vector<VkImageView> imageViews;
 
 public:
-    GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, Window* window);
+    GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, GPUWindow* gpuWindow);
 
     const VkSwapchainKHR getSwapChain() const;
 

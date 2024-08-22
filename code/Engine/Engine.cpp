@@ -25,12 +25,12 @@ void Engine::init()
     CREATE_SYSTEM(EngineConfig);
     // CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(WindowManager);
-    WindowData windowData;
-    windowData.mTitle = "Vulkan Engine";
-    windowData.mFullScreen = false;
-    windowData.mWindowSize.set(800, 600);
-    windowData.mMainWindow = true;
-    GET_SYSTEM(WindowManager).createWindow(windowData);
+    GPUWindowData gpuWindowData;
+    gpuWindowData.mTitle = "Vulkan Engine";
+    gpuWindowData.mFullScreen = false;
+    gpuWindowData.mWindowSize.set(800, 600);
+    gpuWindowData.mMainWindow = true;
+    GET_SYSTEM(WindowManager).createWindow(gpuWindowData);
     CREATE_SYSTEM(GPUInstance);
     CREATE_SYSTEM(Input);
     CREATE_SYSTEM(TimerManager);

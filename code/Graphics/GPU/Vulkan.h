@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Window/Window.hpp"
+#include "Graphics/GPU/GPUWindow.hpp"
 
 #include <vulkan/vulkan.h>
 #include <string>
@@ -23,14 +23,14 @@ private:
 
 private:
     Config config;
-    Window* window;
+    GPUWindow* gpuWindow;
     std::vector<const char*> validationLayers{};
     VkInstance vulkanInstance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
     VkSurfaceKHR surface = VK_NULL_HANDLE;
 
 public:
-    Vulkan(Config config, Window* window);
+    Vulkan(Config config, GPUWindow* gpuWindow);
 
     VkInstance getGPUInstance() const;
 

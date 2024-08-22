@@ -23,21 +23,21 @@ void WindowManager::update()
     }
 }
 
-Ptr<Window> WindowManager::createWindow(const WindowData& windowData)
+Ptr<GPUWindow> WindowManager::createWindow(const GPUWindowData& gpuWindowData)
 {
-    Ptr<Window> window = mWindows.emplace_back(OwnerPtr<Window>::newObject());
-    window->init(mWindows.size() - 1, windowData);
+    Ptr<GPUWindow> gpuWindow = mWindows.emplace_back(OwnerPtr<GPUWindow>::newObject());
+    gpuWindow->init(mWindows.size() - 1, gpuWindowData);
 
-    if(windowData.mMainWindow)
+    if(gpuWindowData.mMainWindow)
     {
-        mMainWindow = window;
+        mMainWindow = gpuWindow;
     }
 
-    return window;
+    return gpuWindow;
 }
 
-Ptr<Window> WindowManager::getWindow(u32 index) const
+Ptr<GPUWindow> WindowManager::getWindow(u32 index) const
 {
-    Ptr<Window> window = mWindows.at(index);
-    return window;
+    Ptr<GPUWindow> gpuWindow = mWindows.at(index);
+    return gpuWindow;
 }
