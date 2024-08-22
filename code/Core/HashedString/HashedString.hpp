@@ -21,7 +21,7 @@ public:
         if (this != &other)
         {
             this->mHash = other.mHash;
-            #ifdef ENGINE_DEBUG
+            #ifdef ENGINE_BUILD_DEBUG
             this->mString = other.mString;
             #endif
         }
@@ -29,7 +29,7 @@ public:
     }
 private:
     HashValue mHash = 0;
-    #ifdef ENGINE_DEBUG
+    #ifdef ENGINE_BUILD_DEBUG
     const std::string* mString = nullptr;
     #endif
 };

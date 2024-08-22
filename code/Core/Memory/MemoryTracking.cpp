@@ -7,7 +7,7 @@ void MemoryTracking::init()
 
 void MemoryTracking::terminate()
 {
-#ifdef ENGINE_DEBUG
+#ifdef ENGINE_BUILD_DEBUG
 	LOG("-------- MEM SUMMARY --------")
 	FOR_MAP(it, MemoryTracking::smAllocationsMap)
 	{

@@ -13,7 +13,7 @@ HashedString::HashedString(const char* str)
         HashedStringsManager::registerString(str);
     }
 
-    #ifdef ENGINE_DEBUG
+    #ifdef ENGINE_BUILD_DEBUG
     mString = &get();
     #endif
 }

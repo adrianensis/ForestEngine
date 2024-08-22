@@ -10,7 +10,7 @@
 class MemoryTracking
 {
 private:
-#ifdef ENGINE_DEBUG
+#ifdef ENGINE_BUILD_DEBUG
 	class AllocationInfo
     {
     public:
@@ -31,7 +31,7 @@ public:
         PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
-#ifdef ENGINE_DEBUG
+#ifdef ENGINE_BUILD_DEBUG
 		HashedString className;
 
 		if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
@@ -61,7 +61,7 @@ public:
         PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
-#ifdef ENGINE_DEBUG
+#ifdef ENGINE_BUILD_DEBUG
 		HashedString className;
 		if (ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
 		{
@@ -80,7 +80,7 @@ public:
 	}
 
 private:
-#ifdef ENGINE_DEBUG
+#ifdef ENGINE_BUILD_DEBUG
 	inline static std::unordered_map<HashedString, AllocationInfo> smAllocationsMap;
     inline static std::unordered_map<u64, HashedString> smPointersToDynamicClassName;
 #endif
