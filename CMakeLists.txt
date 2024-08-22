@@ -68,13 +68,13 @@ if(UNIX)
         set(PROJECT_COMMON_CXX_FLAGS "${PROJECT_COMMON_CXX_FLAGS} -fsanitize=address -static-libasan")
     endif(ENABLE_ADDRESS_SANITIZER)
 
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_DEBUG -ftree-vectorize")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${PROJECT_COMMON_CXX_FLAGS} -O3")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_BUILD_DEBUG -ftree-vectorize")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${PROJECT_COMMON_CXX_FLAGS} -O3 -D ENGINE_BUILD_RELEASE")
 endif(UNIX)
 
 if(WIN32)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_DEBUG /m /TP")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${PROJECT_COMMON_CXX_FLAGS} -D ENGINE_BUILD_DEBUG /m /TP")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -D ENGINE_BUILD_RELEASE")
 endif(WIN32)
 
 # find_program(CCACHE_PROGRAM ccache)
@@ -110,12 +110,7 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 # Vulkan
-set(VULKAN_DIR "${DEPENDENCIES_DIR}/vulkan/1.3.290.0/x86_64")
-check_exist("${VULKAN_DIR}")
-# add_subdirectory("${DEPENDENCIES_DIR}/vulkan/1.3.290.0")
-
-include_directories("${VULKAN_DIR}/include")
-set(VULKAN_LIBRARIES "${VULKAN_DIR}/lib")
+find_package(Vulkan REQUIRED)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
@@ -207,14 +202,14 @@ add_library(${PROJECTNAME} STATIC ${OBJECTS})
 #     ${Vulkan_INCLUDE_DIRS}
 # )
 
-target_link_directories(${PROJECT_NAME} PUBLIC
-    ${Vulkan_LIBRARIES}
-)
+# target_link_directories(${PROJECT_NAME} PUBLIC
+#     ${Vulkan_LIBRARIES}
+# )
 
 # link libraries with forest library
 target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
-target_link_libraries(${PROJECTNAME} vulkan)
+target_link_libraries(${PROJECTNAME} Vulkan::Vulkan)
 # target_link_libraries(${PROJECTNAME} glew)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)

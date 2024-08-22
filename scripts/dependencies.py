@@ -68,7 +68,12 @@ if installSystemDepencencies:
         # linux
         distro_id = distro.id()
         if distro_id == "ubuntu":
+            #vulkan repository
+            os.system("wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc")
+            os.system("sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list http://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list")
+            #update
             os.system("sudo apt-get -y update")
+            #install packages
             os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang")
             os.system("sudo apt-get -y install mesa-common-dev")
             os.system("sudo apt-get -y install libtbb-dev") # needed by GDD in order to use c++ parallel for_each
@@ -77,6 +82,7 @@ if installSystemDepencencies:
             os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
             os.system("sudo apt-get -y install doxygen graphviz")
+            os.system("sudo apt install vulkan-sdk")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
             # os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
@@ -109,7 +115,7 @@ download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.0.
 download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip")
 download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip")
 download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz", "freetype-2.13.2.tar.xz")
-download_dependency("https://sdk.lunarg.com/sdk/download/1.3.290.0/linux/vulkansdk-linux-x86_64-1.3.290.0.tar.xz", "vulkansdk-linux-x86_64-1.3.290.0.tar.xz", "vulkan")
+# download_dependency("https://sdk.lunarg.com/sdk/download/1.3.290.0/linux/vulkansdk-linux-x86_64-1.3.290.0.tar.xz", "vulkansdk-linux-x86_64-1.3.290.0.tar.xz", "vulkan")
 log.log(log.LogLabels.build, "-----------------------------------")
 
 ##########################################
