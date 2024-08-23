@@ -36,9 +36,9 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
-    mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
-    mAxisViewer->createAxis();
+    // mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
+    // mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
+    // mAxisViewer->createAxis();
 
     // createPointLight(Vector3(0,50,0), 20);
 
@@ -53,7 +53,7 @@ void Editor::firstUpdate()
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(300,-5,0), 1000.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
@@ -70,21 +70,21 @@ void Editor::firstUpdate()
 	// auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
-    i32 size = 25;            
-    FOR_RANGE(i, -size, size)
-    {
-        FOR_RANGE(j, -size, size)
-        {
-            if(j % 2 == 0)
-            {
-                mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
-            }
-            else
-            {
-        	    mBuildings.push_back(importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
-            }
-        }
-    }
+    // i32 size = 25;            
+    // FOR_RANGE(i, -size, size)
+    // {
+    //     FOR_RANGE(j, -size, size)
+    //     {
+    //         if(j % 2 == 0)
+    //         {
+    //             mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
+    //         }
+    //         else
+    //         {
+    //     	    mBuildings.push_back(importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
+    //         }
+    //     }
+    // }
 
 
 	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
@@ -96,7 +96,7 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    createUI();
+    // createUI();
     // mousePick();
 
     // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
@@ -226,9 +226,9 @@ void Editor::update()
 
     mousePick();
 
-    mAxisViewer->update();
+    // mAxisViewer->update();
     // mUISceneTree->update();
-    mUITransform->update(cameraTransform);
+    // mUITransform->update(cameraTransform);
 
 }
 

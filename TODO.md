@@ -12,6 +12,9 @@
 - [ ] Decouple Window.cpp from RenderEngine
 - [ ] Decouple Vulkan::findRequiredExtensions from GLFW
 - [ ] Decouple GPUContext from WindowManager
+- [ ] Decouple GPUProgram from ObjectBase
+- [ ] Decouple GPUTexure from ObjectBase
+- [ ] Decouple GPUMesh from ObjectBase
 
 ## Interesting / Nice To Have / Optimizations
 

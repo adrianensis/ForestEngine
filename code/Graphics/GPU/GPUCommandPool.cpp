@@ -24,13 +24,13 @@
             return false;
         }
 
-        LOG("Created Vulkan command pool");
+        VULKAN_LOG("Created Vulkan command pool");
         return true;
     }
 
     void GPUCommandPool::terminate() {
         vkDestroyCommandPool(vulkanDevice->getDevice(), vkCommandPool, ALLOCATOR);
-        LOG("Destroyed Vulkan command pool");
+        VULKAN_LOG("Destroyed Vulkan command pool");
     }
 
     std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(uint32_t count) const {
@@ -54,7 +54,7 @@
             vulkanCommandBuffer.init(vkCommandBuffer);
             vulkanCommandBuffers.push_back(vulkanCommandBuffer);
         }
-        LOG("Allocated [{}] command buffers");
+        VULKAN_LOG("Allocated [{}] command buffers");
         return vulkanCommandBuffers;
     }
 

@@ -40,19 +40,19 @@
             CHECK_MSG(false,"Could not create Vulkan swap chain");
             return false;
         }
-        LOG("Created Vulkan swap chain");
+        VULKAN_LOG("Created Vulkan swap chain");
 
         if (!findSwapChainImages(imageCount)) {
             CHECK_MSG(false,"Could not find any Vulkan swap chain images");
             return false;
         }
-        LOG("Initialized [{}] Vulkan swap chain images");
+        VULKAN_LOG("Initialized [{}] Vulkan swap chain images");
 
         if (!createSwapChainImageViews()) {
             CHECK_MSG(false,"Could not create Vulkan swap chain image views");
             return false;
         }
-        LOG("Created [{}] Vulkan swap chain image views");
+        VULKAN_LOG("Created [{}] Vulkan swap chain image views");
 
         return true;
     }
@@ -62,9 +62,9 @@
             vkDestroyImageView(vulkanDevice->getDevice(), imageView, ALLOCATOR);
         }
         imageViews.clear();
-        LOG("Destroyed Vulkan swap chain image views");
+        VULKAN_LOG("Destroyed Vulkan swap chain image views");
         vkDestroySwapchainKHR(vulkanDevice->getDevice(), swapChain, ALLOCATOR);
-        LOG("Destroyed Vulkan swap chain");
+        VULKAN_LOG("Destroyed Vulkan swap chain");
     }
 
     VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const {
@@ -73,7 +73,7 @@
                 return availableFormat;
             }
         }
-        //VD_LOG_WARN("Could not find target format so defaulting to first available");
+        VULKAN_LOG_WARNING("Could not find target format so defaulting to first available");
         return availableFormats[0];
     }
 
@@ -85,17 +85,17 @@
             }
         }
         VkPresentModeKHR defaultPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-        //VD_LOG_WARN("Could not find [{0}] present mode so defaulting to [{1}]", getPresentationModeAsString(targetPresentMode), getPresentationModeAsString(defaultPresentMode));
+        VULKAN_LOG_WARNING("Could not find "s + getPresentationModeAsString(targetPresentMode) + " present mode so defaulting to "s + getPresentationModeAsString(defaultPresentMode));
         return defaultPresentMode;
     }
 
     VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const {
         bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<uint32_t>::max();
         if (!extentSizeCanDifferFromWindowResolution) {
-            //VD_LOG_DEBUG("Extent should match gpuWindow resolution so using the surface capabilities extent");
+            VULKAN_LOG("Extent should match gpuWindow resolution so using the surface capabilities extent");
             return surfaceCapabilities.currentExtent;
         }
-        //VD_LOG_DEBUG("Extent can differ from gpuWindow resolution so picking the resolution that best matches the gpuWindow within the minImageExtent and maxImageExtent bounds");
+        VULKAN_LOG("Extent can differ from gpuWindow resolution so picking the resolution that best matches the gpuWindow within the minImageExtent and maxImageExtent bounds");
         Vector2 windowSizeInPixels = gpuWindow->getSizeInPixels();
         VkExtent2D extent = {
                 (uint32_t) windowSizeInPixels.x,

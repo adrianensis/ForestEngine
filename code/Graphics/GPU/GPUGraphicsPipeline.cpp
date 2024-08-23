@@ -143,7 +143,7 @@
             CHECK_MSG(false,"Could not create Vulkan graphics pipeline layout");
             return false;
         }
-        LOG("Created Vulkan graphics pipeline layout");
+        VULKAN_LOG("Created Vulkan graphics pipeline layout");
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -170,16 +170,16 @@
             CHECK_MSG(false,"Could not create Vulkan graphics pipeline");
             return false;
         }
-        LOG("Created Vulkan graphics pipeline");
+        VULKAN_LOG("Created Vulkan graphics pipeline");
 
         return true;
     }
 
     void GPUGraphicsPipeline::terminate() {
         vkDestroyPipeline(vulkanDevice->getDevice(), pipeline, ALLOCATOR);
-        LOG("Destroyed Vulkan graphics pipeline");
+        VULKAN_LOG("Destroyed Vulkan graphics pipeline");
         vkDestroyPipelineLayout(vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
-        LOG("Destroyed Vulkan graphics pipeline layout");
+        VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
     }
 
     void GPUGraphicsPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {

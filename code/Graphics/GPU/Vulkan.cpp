@@ -214,7 +214,7 @@ bool Vulkan::hasExtensions(const std::vector<const char*>& extensions, const std
             }
         }
         if (!extensionFound) {
-            //VD_LOG_WARN("Could not find extension [{0}]", extension);
+            VULKAN_LOG_WARNING("Could not find extension "s + extension);
             return false;
         }
     }

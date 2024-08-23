@@ -16,23 +16,23 @@ void RenderPipelinePBR::init()
     LOG_TRACE()
     PROFILER_CPU()
 
-    RenderPassData renderPassShadowMapData;
-    renderPassShadowMapData.mOutputFramebufferData.set(
-        {
-            GPUFramebufferAttachmentType::DEPTH
-        },
-        2048, 2048
-    );
-    initRenderPass<RenderPassShadowMap>(renderPassShadowMapData);
+    // RenderPassData renderPassShadowMapData;
+    // renderPassShadowMapData.mOutputFramebufferData.set(
+    //     {
+    //         GPUFramebufferAttachmentType::DEPTH
+    //     },
+    //     2048, 2048
+    // );
+    // initRenderPass<RenderPassShadowMap>(renderPassShadowMapData);
 
-    Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+    // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
     RenderPassData renderPassGeometryData;
-    renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
-    GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
+    // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
+    // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
-    RenderPassData renderPassUIData;
-    renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
-    initRenderPass<RenderPassUI>(renderPassUIData);
+    // RenderPassData renderPassUIData;
+    // renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
+    // initRenderPass<RenderPassUI>(renderPassUIData);
 }
 
 
@@ -40,16 +40,16 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()
 
-    updateLights(renderData);
+    // updateLights(renderData);
 
 //	GET_SYSTEM(GPUInterface).clear();
 
     // FOR_ARRAY(i, renderData.mPointLights)
     {
         // Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
-        Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
-        renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
-        renderPassShadowMap->renderPass();
+        // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+        // renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
+        // renderPassShadowMap->renderPass();
         Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
         renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
         renderPassGeometry->renderPass();
@@ -58,13 +58,13 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
     // renderPassGeometry->mPointLight = renderData.mPointLights[0];
     // renderPassGeometry->renderPass();
 
-	GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
+	// GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
 
 //    GET_SYSTEM(GPUInterface).clearDepth();
 //    GET_SYSTEM(GPUInterface).clearStencil();
 
-    Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
-    renderPassUI->renderPass();
+    // Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+    // renderPassUI->renderPass();
 
-	GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
+	// GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
 }

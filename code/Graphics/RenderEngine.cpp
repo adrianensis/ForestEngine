@@ -2,6 +2,7 @@
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/GPU/GPUTexture.hpp"
+#include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
@@ -25,7 +26,9 @@ void RenderEngine::update()
 {
     PROFILER_CPU()
     // mRenderPipeline->update();
-    // mRenderPipeline->render(mRenderPipelineData);
+    mRenderPipeline->render(mRenderPipelineData);
+
+    GET_SYSTEM(GPUInstance).mGPUContext->currentFrame = (GET_SYSTEM(GPUInstance).mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
 	swap();
 }
 

@@ -4,6 +4,7 @@
 #include "Core/Font/Font.hpp"
 
 #include "Graphics/GPU/GPUImage.h"
+#include "Core/Object/ObjectBase.hpp"
 
 class GPUTextureData
 {

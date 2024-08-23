@@ -70,7 +70,7 @@
         //     CHECK_MSG(false,"Could not initialize fragment shader");
         //     return false;
         // }
- 
+
         if (!vulkanIndexBuffer->initialize(indices)) {
             CHECK_MSG(false,"Could not initialize Vulkan index buffer");
             return false;
@@ -132,108 +132,108 @@
         // // After waiting, we need to manually reset the fence to the unsignaled state
         // vkResetFences(vulkanDevice->getDevice(), fenceCount, &inFlightFence);
 
-        /*
-         * Command recording
-         */
+        // /*
+        //  * Command recording
+        //  */
 
-        const GPUCommandBuffer& vulkanCommandBuffer = vulkanCommandBuffers[currentFrame];
-        vulkanCommandBuffer.reset();
-        vulkanCommandBuffer.begin();
+        // const GPUCommandBuffer& vulkanCommandBuffer = vulkanCommandBuffers[currentFrame];
+        // vulkanCommandBuffer.reset();
+        // vulkanCommandBuffer.begin();
 
-        vulkanRenderPass->begin(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
-        vulkanGraphicsPipeline->bind(vulkanCommandBuffer);
+        // vulkanRenderPass->begin(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
+        // vulkanGraphicsPipeline->bind(vulkanCommandBuffer);
 
-        VkBuffer vertexBuffers[] = {vulkanVertexBuffer->getGPUBuffer().getVkBuffer()};
-        VkDeviceSize vertexBufferOffsets[] = {0};
-        constexpr uint32_t firstBinding = 0;
-        constexpr uint32_t bindingCount = 1;
-        vkCmdBindVertexBuffers(vulkanCommandBuffer.getVkCommandBuffer(), firstBinding, bindingCount, vertexBuffers, vertexBufferOffsets);
+        // VkBuffer vertexBuffers[] = {vulkanVertexBuffer->getGPUBuffer().getVkBuffer()};
+        // VkDeviceSize vertexBufferOffsets[] = {0};
+        // constexpr uint32_t firstBinding = 0;
+        // constexpr uint32_t bindingCount = 1;
+        // vkCmdBindVertexBuffers(vulkanCommandBuffer.getVkCommandBuffer(), firstBinding, bindingCount, vertexBuffers, vertexBufferOffsets);
 
-        constexpr VkDeviceSize indexBufferOffset = 0;
-        constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
-        vkCmdBindIndexBuffer(vulkanCommandBuffer.getVkCommandBuffer(), vulkanIndexBuffer->getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
+        // constexpr VkDeviceSize indexBufferOffset = 0;
+        // constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
+        // vkCmdBindIndexBuffer(vulkanCommandBuffer.getVkCommandBuffer(), vulkanIndexBuffer->getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
 
-        VkDescriptorSet descriptorSet = descriptorSets[currentFrame];
-        VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        VkPipelineLayout pipelineLayout = vulkanGraphicsPipeline->getPipelineLayout();
-        constexpr uint32_t firstSet = 0;
-        constexpr uint32_t descriptorSetCount = 1;
-        constexpr uint32_t dynamicOffsetCount = 0;
-        constexpr uint32_t* dynamicOffsets = nullptr;
-        vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
+        // VkDescriptorSet descriptorSet = descriptorSets[currentFrame];
+        // VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        // VkPipelineLayout pipelineLayout = vulkanGraphicsPipeline->getPipelineLayout();
+        // constexpr uint32_t firstSet = 0;
+        // constexpr uint32_t descriptorSetCount = 1;
+        // constexpr uint32_t dynamicOffsetCount = 0;
+        // constexpr uint32_t* dynamicOffsets = nullptr;
+        // vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
 
-        constexpr uint32_t instanceCount = 1;
-        constexpr uint32_t firstVertex = 0;
-        constexpr int32_t vertexOffset = 0;
-        constexpr uint32_t firstInstance = 0;
-        vkCmdDrawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), (uint32_t) indices.size(), instanceCount, firstVertex, vertexOffset, firstInstance);
+        // constexpr uint32_t instanceCount = 1;
+        // constexpr uint32_t firstVertex = 0;
+        // constexpr int32_t vertexOffset = 0;
+        // constexpr uint32_t firstInstance = 0;
+        // vkCmdDrawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), (uint32_t) indices.size(), instanceCount, firstVertex, vertexOffset, firstInstance);
 
-        vulkanRenderPass->end(vulkanCommandBuffer);
+        // vulkanRenderPass->end(vulkanCommandBuffer);
 
-        if (!vulkanCommandBuffer.end()) {
-            //VD_LOG_CRITICAL("Could not end frame");
-            throw std::runtime_error("Could not end frame");
-        }
+        // if (!vulkanCommandBuffer.end()) {
+        //     //VD_LOG_CRITICAL("Could not end frame");
+        //     throw std::runtime_error("Could not end frame");
+        // }
 
-        /*
-         * Command submission
-         */
+        // /*
+        //  * Command submission
+        //  */
 
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        // VkSubmitInfo submitInfo{};
+        // submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-        VkCommandBuffer vkCommandBuffer = vulkanCommandBuffer.getVkCommandBuffer();
-        submitInfo.pCommandBuffers = &vkCommandBuffer;
-        submitInfo.commandBufferCount = 1;
+        // VkCommandBuffer vkCommandBuffer = vulkanCommandBuffer.getVkCommandBuffer();
+        // submitInfo.pCommandBuffers = &vkCommandBuffer;
+        // submitInfo.commandBufferCount = 1;
 
-        // Wait with writing colors to the image until it's available
-        VkSemaphore waitSemaphores[] = {imageAvailableSemaphore};
-        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        submitInfo.pWaitSemaphores = waitSemaphores;
-        submitInfo.pWaitDstStageMask = waitStages;
-        submitInfo.waitSemaphoreCount = 1;
+        // // Wait with writing colors to the image until it's available
+        // VkSemaphore waitSemaphores[] = {imageAvailableSemaphore};
+        // VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        // submitInfo.pWaitSemaphores = waitSemaphores;
+        // submitInfo.pWaitDstStageMask = waitStages;
+        // submitInfo.waitSemaphoreCount = 1;
 
-        // Which semaphores to signal once the command buffer(s) have finished execution
-        VkSemaphore renderFinishedSemaphore = renderFinishedSemaphores[currentFrame];
-        VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
-        submitInfo.pSignalSemaphores = signalSemaphores;
-        submitInfo.signalSemaphoreCount = 1;
+        // // Which semaphores to signal once the command buffer(s) have finished execution
+        // VkSemaphore renderFinishedSemaphore = renderFinishedSemaphores[currentFrame];
+        // VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
+        // submitInfo.pSignalSemaphores = signalSemaphores;
+        // submitInfo.signalSemaphoreCount = 1;
 
-        // Submit recorded graphics commands
-        constexpr uint32_t submitCount = 1;
-        if (vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
-            //VD_LOG_CRITICAL("Could not submit to graphics queue");
-            throw std::runtime_error("Could not submit to graphics queue");
-        }
+        // // Submit recorded graphics commands
+        // constexpr uint32_t submitCount = 1;
+        // if (vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
+        //     //VD_LOG_CRITICAL("Could not submit to graphics queue");
+        //     throw std::runtime_error("Could not submit to graphics queue");
+        // }
 
-        /*
-         * Frame presentation
-         */
+        // /*
+        //  * Frame presentation
+        //  */
 
-        VkPresentInfoKHR presentInfo{};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        // VkPresentInfoKHR presentInfo{};
+        // presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-        // Which semaphores to wait on before presentation can happen
-        presentInfo.pWaitSemaphores = signalSemaphores;
-        presentInfo.waitSemaphoreCount = 1;
+        // // Which semaphores to wait on before presentation can happen
+        // presentInfo.pWaitSemaphores = signalSemaphores;
+        // presentInfo.waitSemaphoreCount = 1;
 
-        // Which swap chain to present image to
-        VkSwapchainKHR swapChains[] = {vulkanSwapChain->getSwapChain()};
-        presentInfo.pSwapchains = swapChains;
-        presentInfo.pImageIndices = &swapChainImageIndex;
-        presentInfo.swapchainCount = 1;
+        // // Which swap chain to present image to
+        // VkSwapchainKHR swapChains[] = {vulkanSwapChain->getSwapChain()};
+        // presentInfo.pSwapchains = swapChains;
+        // presentInfo.pImageIndices = &swapChainImageIndex;
+        // presentInfo.swapchainCount = 1;
 
-        // Present image to swap chain
-        VkResult presentResult = vkQueuePresentKHR(vulkanDevice->getPresentQueue(), &presentInfo);
-        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR || windowResized) {
-            windowResized = false;
-            // recreateRenderingObjects();
-        } else if (presentResult != VK_SUCCESS) {
-            //VD_LOG_CRITICAL("Could not present image to swap chain");
-            throw std::runtime_error("Could not present image to swap chain");
-        }
+        // // Present image to swap chain
+        // VkResult presentResult = vkQueuePresentKHR(vulkanDevice->getPresentQueue(), &presentInfo);
+        // if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR || windowResized) {
+        //     windowResized = false;
+        //     // recreateRenderingObjects();
+        // } else if (presentResult != VK_SUCCESS) {
+        //     //VD_LOG_CRITICAL("Could not present image to swap chain");
+        //     throw std::runtime_error("Could not present image to swap chain");
+        // }
 
-        currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+        // currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
     void App::update() {

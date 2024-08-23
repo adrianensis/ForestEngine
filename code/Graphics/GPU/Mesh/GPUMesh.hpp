@@ -4,6 +4,7 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Core/Object/ObjectBase.hpp"
 
 class GPUMesh: public ObjectBase
 {

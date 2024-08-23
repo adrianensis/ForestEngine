@@ -79,7 +79,7 @@
                 return memoryTypeIndex;
             }
         }
-        //VD_LOG_WARN("Could not find memory type [{}]", memoryTypeBits);
+        CHECK_MSG(false, "Could not find memory type");
         return -1;
     }
 
@@ -93,7 +93,7 @@
                 return format;
             }
         }
-        //VD_LOG_WARN("Could not find supported format");
+        CHECK_MSG(false, "Could not find supported format");
         return VK_FORMAT_UNDEFINED;
     }
 
@@ -132,9 +132,9 @@
 
             devices.push_back(device);
         }
-        //VD_LOG_DEBUG("Available physical devices [{0}]", deviceCount);
+        VULKAN_LOG("Available physical devices: " + std::to_string(deviceCount));
         for (const DeviceInfo& device : devices) {
-            //VD_LOG_DEBUG("{0} --> {1}", device.mProperties.deviceName, getDeviceTypeAsString(device.mProperties.deviceType));
+            VULKAN_LOG(device.mProperties.deviceName + " : "s + getDeviceTypeAsString(device.mProperties.deviceType));
         }
         return devices;
     }
@@ -148,9 +148,9 @@
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(device, layerName, &extensionCount, extensions.data());
 
-        //VD_LOG_DEBUG("Available device extensions [{0}]", extensions.size());
+        VULKAN_LOG("Available device extensions: " + std::to_string(extensions.size()));
         for (const VkExtensionProperties& extensionProperties : extensions) {
-            //VD_LOG_DEBUG(extensionProperties.extensionName);
+            VULKAN_LOG(extensionProperties.extensionName);
             for (const char* optionalExtension : getOptionalExtensions()) {
                 if (std::strcmp(extensionProperties.extensionName, optionalExtension) == 0) {
                     getRequiredExtensions().push_back(optionalExtension);
@@ -259,47 +259,48 @@
 
     GPUPhysicalDevice::DeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUPhysicalDevice::DeviceInfo>& availableDevices) const {
         std::multimap<uint32_t, GPUPhysicalDevice::DeviceInfo> devicesByRating;
-        //VD_LOG_DEBUG("Device suitability ratings");
+        VULKAN_LOG("Device suitability ratings");
         for (const GPUPhysicalDevice::DeviceInfo& device : availableDevices) {
             uint32_t suitabilityRating = getSuitabilityRating(device);
-            //VD_LOG_DEBUG("{0} --> {1}", device.mProperties.deviceName, suitabilityRating);
+            VULKAN_LOG(device.mProperties.deviceName + " : "s + std::to_string(suitabilityRating));
             devicesByRating.insert(std::make_pair(suitabilityRating, device));
         }
         uint32_t highestRating = devicesByRating.rbegin()->first;
         if (highestRating == 0) {
             return {};
         }
-        //VD_LOG_DEBUG("Most suitable device");
+        VULKAN_LOG("Most suitable device");
         const DeviceInfo& device = devicesByRating.rbegin()->second;
-        //VD_LOG_DEBUG("{0}", device.mProperties.deviceName);
+        VULKAN_LOG(device.mProperties.deviceName);
         return device;
     }
 
     uint32_t GPUPhysicalDevice::getSuitabilityRating(const GPUPhysicalDevice::DeviceInfo& deviceInfo) const {
         if (!hasRequiredFeatures(deviceInfo.mFeatures)) {
-            //VD_LOG_DEBUG("{0} does not have required device features", deviceInfo.mProperties.deviceName);
+            VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required device features"s);
             return 0;
         }
         if (!hasRequiredExtensions(deviceInfo.mExtensions)) {
-            //VD_LOG_DEBUG("{0} does not have required device extensions", deviceInfo.mProperties.deviceName);
+            VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required device extensions"s);
             return 0;
         }
         if (!hasRequiredSwapChainSupport(deviceInfo.mSwapChainInfo)) {
-            //VD_LOG_DEBUG("{0} does not have required swap chain info", deviceInfo.mProperties.deviceName);
+            VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required swap chain info"s);
             return 0;
         }
         if (!hasRequiredQueueFamilyIndices(deviceInfo.mQueueFamilyIndices)) {
-            //VD_LOG_DEBUG("{0} does not have required queue family indices", deviceInfo.mProperties.deviceName);
+            VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required queue family indices"s);
             return 0;
         }
-        uint32_t rating = 0;
-        rating += (uint32_t) deviceInfo.mProperties.limits.maxImageDimension2D;
-        rating += (uint32_t) deviceInfo.mProperties.limits.framebufferColorSampleCounts;
-        rating += (uint32_t) deviceInfo.mProperties.limits.framebufferDepthSampleCounts;
+        uint32_t score = 0;
+        // Discrete GPUs have a significant performance advantage
         if (deviceInfo.mProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
-            rating += 1000;
+            score += 1000;
         }
-        return rating;
+        score += (uint32_t) deviceInfo.mProperties.limits.maxImageDimension2D;
+        score += (uint32_t) deviceInfo.mProperties.limits.framebufferColorSampleCounts;
+        score += (uint32_t) deviceInfo.mProperties.limits.framebufferDepthSampleCounts;
+        return score;
     }
 
     bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures& availableDeviceFeatures) const {
@@ -316,7 +317,7 @@
                 }
             }
             if (!requiredExtensionFound) {
-                //VD_LOG_WARN("Could not find required extension [{0}]", requiredExtensionFound);
+                CHECK_MSG(false, "Could not find required extension [{0}]");
                 return false;
             }
         }

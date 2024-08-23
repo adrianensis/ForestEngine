@@ -58,6 +58,11 @@ private:
     VkFormat findDepthFormat();
     bool initializeFramebuffers();
 
+    void frameAcquisition();
+    void commandRecording();
+    void commandSubmission();
+    void framePresentation();
+
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
     RenderPassData mRenderPassData;
@@ -66,6 +71,7 @@ protected:
 
     GPURenderPass* vulkanRenderPass;
     GPUGraphicsPipeline* vulkanGraphicsPipeline;
+    uint32_t swapChainImageIndex;
     std::vector<GPUFramebuffer> framebuffers;
     GPUImage* vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;

@@ -150,47 +150,6 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 {
 }
 
-void RenderPipeline::frameAcquisition()
-{
-    /*
-    * Frame acquisition
-    */
-
-    // Wait until the previous frame has finished
-    constexpr uint32_t fenceCount = 1;
-    constexpr VkBool32 waitForAllFences = VK_TRUE;
-    constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
-    VkFence inFlightFence = GET_SYSTEM(GPUInstance).mGPUContext->inFlightFences[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    vkWaitForFences(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
-
-    // Acquire an image from the swap chain
-    uint32_t swapChainImageIndex;
-    VkFence acquireNextImageFence = VK_NULL_HANDLE;
-    constexpr uint64_t acquireNextImageTimeout = UINT64_MAX;
-    VkSemaphore imageAvailableSemaphore = GET_SYSTEM(GPUInstance).mGPUContext->imageAvailableSemaphores[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    VkResult acquireNextImageResult = vkAcquireNextImageKHR(
-            GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(),
-            GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getSwapChain(),
-            acquireNextImageTimeout,
-            imageAvailableSemaphore,
-            acquireNextImageFence,
-            &swapChainImageIndex
-    );
-    // VK_ERROR_OUT_OF_DATE_KHR: The swap chain has become incompatible with the surface and can no longer be used for rendering. Usually happens after a gpuWindow resize.
-    if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
-        //recreateRenderingObjects();
-        CHECK_MSG(false, "TODO: implement gpuWindow resize");
-        return;
-    }
-    // VK_SUBOPTIMAL_KHR: The swap chain can still be used to successfully present to the surface, but the surface properties are no longer matched exactly.
-    if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR) {
-        CHECK_MSG(false, "Could not acquire swap chain image");
-    }
-
-    // After waiting, we need to manually reset the fence to the unsignaled state
-    vkResetFences(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence);
-}
-
 void RenderPipeline::updateLights(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()

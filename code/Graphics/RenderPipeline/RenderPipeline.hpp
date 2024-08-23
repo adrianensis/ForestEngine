@@ -25,8 +25,6 @@ public:
     virtual void render(RenderPipelineData& renderData);
 
 protected:
-    void frameAcquisition();
-
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)
