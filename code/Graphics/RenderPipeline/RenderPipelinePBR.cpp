@@ -8,11 +8,10 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
+#include "Graphics/Material/Shader/ShaderManager.hpp"
 
-void RenderPipelinePBR::init()
+void RenderPipelinePBR::compile()
 {
-    RenderPipeline::init();
-
     LOG_TRACE()
     PROFILER_CPU()
 
@@ -27,6 +26,7 @@ void RenderPipelinePBR::init()
 
     // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
     RenderPassData renderPassGeometryData;
+    renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);

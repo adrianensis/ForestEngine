@@ -5,6 +5,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
@@ -21,29 +22,6 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
 
     vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
     vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
-
-    if (!vulkanRenderPass->initialize())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan render pass");
-    }
-
-    // if (!vulkanGraphicsPipeline->initialize(*vertexShader, *fragmentShader, descriptorSetLayout))
-    // {
-    //     CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
-    // }
-
-    if (!initializeColorResources())
-    {
-        CHECK_MSG(false, "Could not initialize color resources");
-    }
-    if (!initializeDepthResources())
-    {
-        CHECK_MSG(false, "Could not initialize depth resources");
-    }
-    if (!initializeFramebuffers())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan framebuffers");
-    }
 }
 
 void RenderPass::terminate()
@@ -80,14 +58,13 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         GPUVertexBuffersContainer gpuVertexBuffersContainer;
         instancedMeshData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, instancedMeshData.mIsStatic);
 
-        Ptr<Shader> shader = getShader(instancedMeshData);
-        shader->compileShader(
+        mRenderPassData.mShader->compileShader(
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(instancedMeshData.mMaterial->getID())),
             gpuVertexBuffersContainer
         );
 
-        setupShader(shader);
+        setupShader(mRenderPassData.mShader);
         bindShader(instancedMeshData);
     }
 }
@@ -115,8 +92,7 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
-    Ptr<Shader> shader = getShader(instancedMeshData);
-    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
@@ -124,14 +100,14 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
         Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
         }
     }
 
-    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    shader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
-    shader->bindTextures(shader->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
+    mRenderPassData.mShader->bindTextures(mRenderPassData.mShader->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 
     // shader->getGPUProgram()->createDescriptors();
 }
@@ -152,14 +128,12 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    Ptr<Shader> shader = getShader(instancedMeshData);
 
-
-    shader->getGPUProgram()->enable();
-    shader->enable();
+    mRenderPassData.mShader->getGPUProgram()->enable();
+    mRenderPassData.mShader->enable();
     instancedMeshRenderer->render();
-    shader->disable();
-    shader->getGPUProgram()->disable();
+    mRenderPassData.mShader->disable();
+    mRenderPassData.mShader->getGPUProgram()->disable();
 }
 
 void RenderPass::renderPass()
@@ -212,11 +186,6 @@ void RenderPass::updateGlobalData()
 	GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Ptr<Shader> RenderPass::getShader(const InstancedMeshData& instancedMeshData) const
-{
-    return instancedMeshData.mMaterial->getShader();
-}
-
 void RenderPass::setupShader(Ptr<Shader> shader) const
 {
     PROFILER_CPU()
@@ -229,6 +198,34 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
             // mRenderPassData.mDependencies[i].mStage
         };
         // shader->addFramebufferBinding(framebufferBinding);
+    }
+}
+
+void RenderPass::compile()
+{
+    // mRenderPassData.mShader->createDescriptors();
+
+    if (!vulkanRenderPass->initialize())
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan render pass");
+    }
+
+    // if (!vulkanGraphicsPipeline->initialize(*(mRenderPassData.mShader->vertexShader), *(mRenderPassData.mShader->fragmentShader), mRenderPassData.mShader->descriptorSetLayout))
+    // {
+    //     CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
+    // }
+
+    if (!initializeColorResources())
+    {
+        CHECK_MSG(false, "Could not initialize color resources");
+    }
+    if (!initializeDepthResources())
+    {
+        CHECK_MSG(false, "Could not initialize depth resources");
+    }
+    if (!initializeFramebuffers())
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan framebuffers");
     }
 }
 

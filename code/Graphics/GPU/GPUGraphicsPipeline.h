@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUShader.h"
+#include "Graphics/GPU/GPUProgramModule.h"
 #include "Graphics/GPU/GPURenderPass.h"
 #include "Graphics/GPU/GPUSwapChain.h"
 #include "Graphics/GPU/GPUDevice.h"
@@ -24,15 +24,10 @@
 
     public:
         GPUGraphicsPipeline(GPURenderPass* vulkanRenderPass, GPUSwapChain* vulkanSwapChain, GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice);
-
         const VkPipelineLayout getPipelineLayout() const;
-
         const VkPipeline getPipeline() const;
-
-        bool initialize(const GPUShader& vertexShader, const GPUShader& fragmentShader, VkDescriptorSetLayout descriptorSetLayout);
-
+        bool initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout);
         void terminate();
-
         void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
     };
 

@@ -19,7 +19,7 @@
         return pipelineLayout;
     }
 
-    bool GPUGraphicsPipeline::initialize(const GPUShader& vertexShader, const GPUShader& fragmentShader, VkDescriptorSetLayout descriptorSetLayout) {
+    bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout) {
 
         VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
         vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

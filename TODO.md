@@ -15,6 +15,7 @@
 - [ ] Decouple GPUProgram from ObjectBase
 - [ ] Decouple GPUTexure from ObjectBase
 - [ ] Decouple GPUMesh from ObjectBase
+- [ ] The VK_EXT_graphics_pipeline_library extensions allows separate compilation of different parts of the graphics pipeline. With this it’s now possible to split up the monolithic pipeline creation into different steps and re-use common parts shared across different pipelines. [Optimize Graphics Pipeline](https://docs.vulkan.org/samples/latest/samples/extensions/graphics_pipeline_library/README.html)
 
 ## Interesting / Nice To Have / Optimizations
 

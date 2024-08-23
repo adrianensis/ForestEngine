@@ -42,8 +42,6 @@
     private:
         Config config;
         Window* window;
-        GPUShader* vertexShader;
-        GPUShader* fragmentShader;
         GPUIndexBuffer* vulkanIndexBuffer;
         bool windowResized = false;
 

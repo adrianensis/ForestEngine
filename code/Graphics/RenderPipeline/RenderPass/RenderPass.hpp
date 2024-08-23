@@ -30,6 +30,7 @@ public:
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     std::vector<RenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
+    Ptr<Shader> mShader;
 };
 
 class RenderPass: public ObjectBase
@@ -40,6 +41,7 @@ public:
     void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
     void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
     virtual void renderPass();
+    void compile();
 protected:
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();
@@ -49,7 +51,6 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
-    virtual Ptr<Shader> getShader(const InstancedMeshData& instancedMeshData) const;
     virtual void setupShader(Ptr<Shader> shader) const;
 
 private:

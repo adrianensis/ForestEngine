@@ -7,12 +7,6 @@
 #include "Graphics/Material/Shader/ShaderManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
-void RenderPassShadowMap::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
-{
-    RenderPass::init(renderPipeline, renderPassData);
-    mShaderShadowMap = GET_SYSTEM(ShaderManager).createShader<ShaderDepthBuffer>();
-}
-
 void RenderPassShadowMap::preRender()
 {
 //    GET_SYSTEM(GPUInterface).clearDepth();
@@ -59,9 +53,4 @@ void RenderPassShadowMap::updateGlobalData()
         camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
-}
-
-Ptr<Shader> RenderPassShadowMap::getShader(const InstancedMeshData& instancedMeshData) const
-{
-    return mShaderShadowMap;
 }

@@ -27,14 +27,10 @@ public:
 //        GET_SYSTEM(GPUInterface).bindUniformValue<T>(mProgramId, name, value);
     }
     void bindUniformBuffer(const GPUUniformBuffer& uniformBuffer);
-    void createDescriptors();
 
 private:
 	u32 mProgramId = 0;
-    VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
-    VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
-    std::vector<VkDescriptorSet> descriptorSets;
-    std::vector<GPUUniformBuffer> mUniformBuffers;
+
     Ptr<GPUContext> mGPUContext;
 };
 REGISTER_CLASS(GPUProgram);

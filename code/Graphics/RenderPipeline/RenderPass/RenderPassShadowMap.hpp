@@ -5,17 +5,12 @@
 
 class RenderPassShadowMap: public RenderPass
 {
-public:
-    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
 protected:
     virtual void preRender() override;
     virtual void render() override;
     virtual void postRender() override;
     virtual void updateGlobalData() override;
-    virtual Ptr<Shader> getShader(const InstancedMeshData& instancedMeshData) const;
 public:
     TypedComponentHandler<DirectionalLight> mDirectionalLight;
-private:
-    Ptr<Shader> mShaderShadowMap;
 };
 REGISTER_CLASS(RenderPassShadowMap);

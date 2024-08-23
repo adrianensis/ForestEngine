@@ -1,19 +1,19 @@
-#include "Graphics/GPU/GPUShader.h"
+#include "Graphics/GPU/GPUProgramModule.h"
 
 
 #include "Core/Minimal.hpp"
 //namespace GPUAPI {
 
-    const VkAllocationCallbacks* GPUShader::ALLOCATOR = VK_NULL_HANDLE;
+    const VkAllocationCallbacks* GPUProgramModule::ALLOCATOR = VK_NULL_HANDLE;
 
-    GPUShader::GPUShader(GPUDevice* vulkanDevice) : vulkanDevice(vulkanDevice) {
+    GPUProgramModule::GPUProgramModule(GPUDevice* vulkanDevice) : vulkanDevice(vulkanDevice) {
     }
 
-    const VkShaderModule GPUShader::getShaderModule() const {
+    const VkShaderModule GPUProgramModule::getShaderModule() const {
         return shaderModule;
     }
 
-    bool GPUShader::initialize(const std::vector<char>& bytes) {
+    bool GPUProgramModule::initialize(const std::vector<char>& bytes) {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = bytes.size();
@@ -28,7 +28,7 @@
         return true;
     }
 
-    void GPUShader::terminate() {
+    void GPUProgramModule::terminate() {
         vkDestroyShaderModule(vulkanDevice->getDevice(), shaderModule, ALLOCATOR);
         LOG("Destroyed Vulkan shader module");
     }

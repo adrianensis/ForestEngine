@@ -23,6 +23,7 @@ public:
     void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
     void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
     virtual void render(RenderPipelineData& renderData);
+    virtual void compile();
 
 protected:
     void updateLights(RenderPipelineData& renderData);
@@ -38,6 +39,7 @@ protected:
 
         Ptr<T> renderPass = getRenderPass<T>();
         renderPass->init(getPtrToThis<RenderPipeline>(), renderPassData);
+        renderPass->compile();
     }
 
     template<class T> T_EXTENDS(T, RenderPass)

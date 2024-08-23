@@ -24,7 +24,7 @@ private:
 private:
     RenderPipelineData mRenderPipelineData;
     OwnerPtr<RenderPipelinePBR> mRenderPipeline;
-
+    bool mCompileRequest = true;
 public:
 	OcTree octree;
 };

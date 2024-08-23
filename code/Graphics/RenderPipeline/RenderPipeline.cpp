@@ -150,6 +150,10 @@ void RenderPipeline::render(RenderPipelineData& renderData)
 {
 }
 
+void RenderPipeline::compile()
+{
+}
+
 void RenderPipeline::updateLights(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()

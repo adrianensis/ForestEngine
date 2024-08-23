@@ -25,6 +25,12 @@ void RenderEngine::init()
 void RenderEngine::update()
 {
     PROFILER_CPU()
+    if(mCompileRequest)
+    {
+        mRenderPipeline->compile();
+        mCompileRequest = false;
+    }
+
     // mRenderPipeline->update();
     mRenderPipeline->render(mRenderPipelineData);
 
@@ -35,6 +41,7 @@ void RenderEngine::update()
 void RenderEngine::preSceneChanged()
 {
 	LOG_TRACE()
+    mCompileRequest = true;
 }
 
 void RenderEngine::postSceneChanged()

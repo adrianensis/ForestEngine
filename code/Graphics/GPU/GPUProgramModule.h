@@ -9,7 +9,7 @@
 #include "Core/Minimal.hpp"
 //namespace GPUAPI {
 
-    class GPUShader {
+    class GPUProgramModule {
     private:
         static const VkAllocationCallbacks* ALLOCATOR;
 
@@ -18,7 +18,7 @@
         VkShaderModule shaderModule = VK_NULL_HANDLE;
 
     public:
-        explicit GPUShader(GPUDevice* vulkanDevice);
+        explicit GPUProgramModule(GPUDevice* vulkanDevice);
 
         const VkShaderModule getShaderModule() const;
 
