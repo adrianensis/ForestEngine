@@ -55,9 +55,13 @@ void Shader::init(const ShaderData& shaderData)
 
 void Shader::terminate()
 {
+    vulkanGraphicsPipeline->terminate();
+
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
     vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorSetLayout, allocationCallbacks);
+    
+    delete vulkanGraphicsPipeline;
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialPropertiesBlock()
@@ -133,7 +137,7 @@ void Shader::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVer
 {
 }
 
-void Shader::compileShader(HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer)
+void Shader::compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer)
 {
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
@@ -161,6 +165,16 @@ void Shader::compileShader(HashedString label, HashedString id, const GPUVertexB
     });
 
     mGPUProgram->initFromFileContents(GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
+
+    if(!vulkanGraphicsPipeline)
+    {
+        vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
+    }
+
+    // if (!vulkanGraphicsPipeline->initialize(*(mRenderPassData.mShader->vertexShader), *(mRenderPassData.mShader->fragmentShader), mRenderPassData.mShader->descriptorSetLayout))
+    // {
+    //     CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
+    // }
 }
 
 void Shader::createDescriptors()
@@ -287,6 +301,6 @@ void Shader::createDescriptors()
         auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
         constexpr uint32_t descriptorCopyCount = 0;
         constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
-        vkUpdateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
+        // vkUpdateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
     }
 }

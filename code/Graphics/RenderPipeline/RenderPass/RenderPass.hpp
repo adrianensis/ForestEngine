@@ -8,7 +8,6 @@
 
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 #include "Graphics/GPU/GPURenderPass.h"
-#include "Graphics/GPU/GPUGraphicsPipeline.h"
 #include "Graphics/GPU/GPUImage.h"
 
 class MeshRenderer;
@@ -71,7 +70,6 @@ protected:
     Ptr<RenderPipeline> mRenderPipeline;
 
     GPURenderPass* vulkanRenderPass;
-    GPUGraphicsPipeline* vulkanGraphicsPipeline;
     uint32_t swapChainImageIndex;
     std::vector<GPUFramebuffer> framebuffers;
     GPUImage* vulkanDepthImage;

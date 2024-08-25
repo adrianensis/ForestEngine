@@ -21,12 +21,10 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
     }
 
     vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
-    vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
 }
 
 void RenderPass::terminate()
 {
-    vulkanGraphicsPipeline->terminate();
     vulkanRenderPass->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
@@ -40,7 +38,6 @@ void RenderPass::terminate()
     framebuffers.clear();
     LOG("Destroyed Vulkan framebuffers");
 
-    delete vulkanGraphicsPipeline;
     delete vulkanRenderPass;
     delete vulkanColorImage;
     delete vulkanDepthImage;
@@ -58,7 +55,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         GPUVertexBuffersContainer gpuVertexBuffersContainer;
         instancedMeshData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, instancedMeshData.mIsStatic);
 
-        mRenderPassData.mShader->compileShader(
+        mRenderPassData.mShader->compileShader(vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(instancedMeshData.mMaterial->getID())),
             gpuVertexBuffersContainer
@@ -209,11 +206,6 @@ void RenderPass::compile()
     {
         CHECK_MSG(false, "Could not initialize Vulkan render pass");
     }
-
-    // if (!vulkanGraphicsPipeline->initialize(*(mRenderPassData.mShader->vertexShader), *(mRenderPassData.mShader->fragmentShader), mRenderPassData.mShader->descriptorSetLayout))
-    // {
-    //     CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
-    // }
 
     if (!initializeColorResources())
     {
