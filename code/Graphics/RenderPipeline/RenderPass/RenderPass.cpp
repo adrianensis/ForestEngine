@@ -21,6 +21,12 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
     }
 
     vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
+
+    HashedString className = ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName;
+    mGPUProgram = mRenderPassData.mShader->compileShader(vulkanRenderPass,
+        ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+        className
+    );
 }
 
 void RenderPass::terminate()
@@ -52,10 +58,10 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 	{
         mInstancedMeshRenderers.insert(instancedMeshData);
 
-        mGPUPrograms.emplace(instancedMeshData, instancedMeshData.mMaterial->getShader()->compileShader(vulkanRenderPass,
-            ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-            HashedString(std::to_string(instancedMeshData.mMaterial->getID()))
-        ));
+        // mGPUPrograms.emplace(instancedMeshData, instancedMeshData.mMaterial->getShader()->compileShader(vulkanRenderPass,
+        //     ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+        //     HashedString(std::to_string(instancedMeshData.mMaterial->getID()))
+        // ));
 
         // setupShader(mGPUPrograms.at(instancedMeshData));
         bindShader(instancedMeshData);
@@ -85,7 +91,7 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
-    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    mGPUProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
@@ -93,12 +99,12 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
         Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            mGPUProgram->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
         }
     }
 
-    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    mGPUProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    mGPUProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
     // mGPUPrograms.at(instancedMeshData)->bindTextures(mGPUPrograms.at(instancedMeshData)->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 
@@ -122,11 +128,9 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
 
-    mGPUPrograms.at(instancedMeshData)->enable();
-    mGPUPrograms.at(instancedMeshData)->enable();
+    mGPUProgram->enable();
     instancedMeshRenderer->render();
-    mGPUPrograms.at(instancedMeshData)->disable();
-    mGPUPrograms.at(instancedMeshData)->disable();
+    mGPUProgram->disable();
 }
 
 void RenderPass::renderPass()

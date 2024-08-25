@@ -29,6 +29,7 @@ public:
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     std::vector<RenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
+    Ptr<Shader> mShader;
 };
 
 class RenderPass: public ObjectBase
@@ -64,7 +65,8 @@ private:
 
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
-	std::unordered_map<InstancedMeshData, Ptr<GPUProgram>, InstancedMeshData::InstancedMeshDataFunctor> mGPUPrograms;
+	// std::unordered_map<InstancedMeshData, Ptr<GPUProgram>, InstancedMeshData::InstancedMeshDataFunctor> mGPUPrograms;
+    Ptr<GPUProgram> mGPUProgram;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
     Ptr<RenderPipeline> mRenderPipeline;
