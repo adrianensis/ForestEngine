@@ -29,7 +29,6 @@ public:
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     std::vector<RenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
-    Ptr<Shader> mShader;
 };
 
 class RenderPass: public ObjectBase
