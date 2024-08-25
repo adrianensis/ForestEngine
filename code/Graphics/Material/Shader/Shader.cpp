@@ -43,6 +43,36 @@ void Shader::init()
     mShaderData.mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
 
     registerTextures();
+    registerBuffers();
+}
+
+void Shader::registerBuffers()
+{
+    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, 1);
+    mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, false);
+
+    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, 1);
+    mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, false);
+
+    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, 1);
+    mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, false);
+
+    std::vector<GPUVariableData> gpuVertexInputBuffers;
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
+    FOR_RANGE(i, 0, GPUBuiltIn::VertexInput::mTextureCoords.size())
+    {
+        gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoords.at(i));
+    }
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesIDs);
+    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
+    FOR_ARRAY(i, gpuVertexInputBuffers)
+    {
+        const GPUVariableData& gpuVariableData = gpuVertexInputBuffers[i];
+        GPUVertexBufferData bufferData(gpuVariableData);
+        mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferData, false);
+    }
 }
 
 void Shader::init(const ShaderData& shaderData)
@@ -128,14 +158,14 @@ void Shader::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVer
 {
 }
 
-OwnerPtr<GPUProgram> Shader::compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer)
+OwnerPtr<GPUProgram> Shader::compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id)
 {
     OwnerPtr<GPUProgram> gpuProgram = OwnerPtr<GPUProgram>::newObject();
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, gpuVertexBuffersContainer);
-    createFragmentShader(sbFrag, gpuVertexBuffersContainer);
+    createVertexShader(sbVert, mShaderData.mGPUVertexBuffersContainer);
+    createFragmentShader(sbFrag, mShaderData.mGPUVertexBuffersContainer);
 
     // if (!vertexShader->initialize(sbVert.getCode()/*fileSystem->readBytes("shaders/simple_shader.vert.spv")*/)) {
     //     CHECK_MSG(false, "Could not initialize vertex shader");

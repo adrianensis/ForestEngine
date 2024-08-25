@@ -51,14 +51,10 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 	if (!mInstancedMeshRenderers.contains(instancedMeshData))
 	{
         mInstancedMeshRenderers.insert(instancedMeshData);
-      
-        GPUVertexBuffersContainer gpuVertexBuffersContainer;
-        instancedMeshData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, instancedMeshData.mIsStatic);
 
         mGPUPrograms.emplace(instancedMeshData, instancedMeshData.mMaterial->getShader()->compileShader(vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-            HashedString(std::to_string(instancedMeshData.mMaterial->getID())),
-            gpuVertexBuffersContainer
+            HashedString(std::to_string(instancedMeshData.mMaterial->getID()))
         ));
 
         // setupShader(mGPUPrograms.at(instancedMeshData));

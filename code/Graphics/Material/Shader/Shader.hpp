@@ -45,6 +45,7 @@ public:
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<HashedString> mTextures;
     std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
+    GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 };
 
 class GPUProgramDataCommon
@@ -108,13 +109,13 @@ public:
         {};
 
     virtual void generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUProgram> compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer);
+    OwnerPtr<GPUProgram> compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id);
 
 
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void registerTextures() {};
-
+    virtual void registerBuffers();
 
 protected:
     ShaderData mShaderData;
