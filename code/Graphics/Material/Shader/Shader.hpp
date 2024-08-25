@@ -5,7 +5,6 @@
 #include "Graphics/GPU/GPUTexture.hpp"
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/GPU/GPUProgramModule.h"
-#include "Graphics/GPU/GPUGraphicsPipeline.h"
 
 class Material;
 
@@ -109,8 +108,8 @@ public:
         {};
 
     virtual void generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    void compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer);
-    void createDescriptors();
+    OwnerPtr<GPUProgram> compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id, const GPUVertexBuffersContainer& gpuVertexBuffersContainer);
+
 
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
@@ -119,16 +118,8 @@ protected:
 
 protected:
     ShaderData mShaderData;
-    OwnerPtr<GPUProgram> mGPUProgram;
-    GPUGraphicsPipeline* vulkanGraphicsPipeline;
-    VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
-    std::vector<VkDescriptorSet> descriptorSets;
-    std::vector<GPUUniformBuffer> mUniformBuffers;
 public:
-    VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
-    GPUProgramModule* vertexShader;
-    GPUProgramModule* fragmentShader;
+
     CRGET(ShaderData)
-    GET(GPUProgram)
 };
 REGISTER_CLASS(Shader)

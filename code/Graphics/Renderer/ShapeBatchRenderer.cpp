@@ -49,7 +49,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
     // mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
 
-    mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    // mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
 }
 
 void ShapeBatchRenderer::render()
@@ -63,7 +63,7 @@ void ShapeBatchRenderer::render()
     PROFILER_CPU()
 	if (mShapesCounter > 0)
 	{
-		mShader->getGPUProgram()->enable();
+		// mShader->getGPUProgram()->enable();
 
 		mGPUVertexBuffersContainer.enable();
         mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).resize(mPositionBuffer.size());
@@ -73,7 +73,7 @@ void ShapeBatchRenderer::render()
 //		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersContainer.disable();
 
-        mShader->getGPUProgram()->disable();
+        // mShader->getGPUProgram()->disable();
 
 		mPositionBuffer.clear();
 		mColorBuffer.clear();

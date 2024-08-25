@@ -55,13 +55,13 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         GPUVertexBuffersContainer gpuVertexBuffersContainer;
         instancedMeshData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, instancedMeshData.mIsStatic);
 
-        mRenderPassData.mShader->compileShader(vulkanRenderPass,
+        mGPUPrograms.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(instancedMeshData.mMaterial->getID())),
             gpuVertexBuffersContainer
-        );
+        ));
 
-        setupShader(mRenderPassData.mShader);
+        // setupShader(mGPUPrograms.at(instancedMeshData));
         bindShader(instancedMeshData);
     }
 }
@@ -89,7 +89,7 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
-    mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
@@ -97,16 +97,16 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
         Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
         }
     }
 
-    mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    mRenderPassData.mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
-    mRenderPassData.mShader->bindTextures(mRenderPassData.mShader->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
+    // mGPUPrograms.at(instancedMeshData)->bindTextures(mGPUPrograms.at(instancedMeshData)->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 
-    // shader->getGPUProgram()->createDescriptors();
+    // shader->createDescriptors();
 }
 
 void RenderPass::preRender()
@@ -126,11 +126,11 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
 
-    mRenderPassData.mShader->getGPUProgram()->enable();
-    mRenderPassData.mShader->enable();
+    mGPUPrograms.at(instancedMeshData)->enable();
+    mGPUPrograms.at(instancedMeshData)->enable();
     instancedMeshRenderer->render();
-    mRenderPassData.mShader->disable();
-    mRenderPassData.mShader->getGPUProgram()->disable();
+    mGPUPrograms.at(instancedMeshData)->disable();
+    mGPUPrograms.at(instancedMeshData)->disable();
 }
 
 void RenderPass::renderPass()
@@ -200,7 +200,7 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
 
 void RenderPass::compile()
 {
-    // mRenderPassData.mShader->createDescriptors();
+    // mGPUPrograms.at(instancedMeshData)->createDescriptors();
 
     if (!vulkanRenderPass->initialize())
     {
