@@ -96,29 +96,29 @@ bool Shader::hasFramebufferBinding(HashedString bindingName) const
 
 void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
 {
-    gpuProgram->enable();
+    // gpuProgram->enable();
 
-    u32 textureUnit = 0;
-    FOR_MAP(it, mShaderData.mFramebufferBindings)
-    {
-        gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
-        textureUnit++;
-    }
+    // u32 textureUnit = 0;
+    // FOR_MAP(it, mShaderData.mFramebufferBindings)
+    // {
+    //     gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
+    //     textureUnit++;
+    // }
 
-    // Init all samplers to disable
-    FOR_MAP(it, mShaderData.mTextures)
-    {
-        // NOTE: We reserve position 0 to represent NULL
-        gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(*it).mName, 0);
-    }
+    // // Init all samplers to disable
+    // FOR_MAP(it, mShaderData.mTextures)
+    // {
+    //     // NOTE: We reserve position 0 to represent NULL
+    //     gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(*it).mName, 0);
+    // }
 
-    FOR_MAP(it, textures)
-    {
-        // NOTE: We reserve position 0 to represent NULL
-        gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
-    }
+    // FOR_MAP(it, textures)
+    // {
+    //     // NOTE: We reserve position 0 to represent NULL
+    //     gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
+    // }
 
-    gpuProgram->disable();
+    // gpuProgram->disable();
 }
 
 void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
@@ -171,7 +171,7 @@ OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompil
     //     // return false;
     // }
 
-    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
+    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, shaderCompileData.mUniformBuffers, GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
 
     return gpuProgram;
 }

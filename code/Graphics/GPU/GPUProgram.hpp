@@ -18,16 +18,10 @@ public:
     GPUProgram();
 	~GPUProgram() override = default;
 
-    void initFromFileContents(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
+    void initFromFileContents(GPURenderPass* vulkanRenderPass, std::vector<GPUUniformBuffer> uniformBuffers, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
     void terminate();
     void enable() const;
     void disable() const;
-    template<class T>
-    void bindUniformValue(const HashedString& name, const T& value)
-    {
-//        GET_SYSTEM(GPUInterface).bindUniformValue<T>(mProgramId, name, value);
-    }
-    void bindUniformBuffer(const GPUUniformBuffer& uniformBuffer);
     void createDescriptors();
 private:
 	u32 mProgramId = 0;

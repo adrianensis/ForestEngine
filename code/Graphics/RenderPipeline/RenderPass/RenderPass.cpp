@@ -52,13 +52,30 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 	{
         mInstancedMeshRenderers.insert(instancedMeshData);
 
+        std::vector<GPUUniformBuffer> uniformBuffers;
+        uniformBuffers.push_back(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    
+        Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
+        if(model)
+        {
+            Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
+            if(skeletonState)
+            {
+                uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            }
+        }
+
+        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+
         ShaderCompileData shaderCompileData
         {
             instancedMeshData.mMaterial,
             instancedMeshData.mMesh,
             vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-            HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID()))
+            HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID())),
+            uniformBuffers
         };
 
         mGPUPrograms.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(shaderCompileData));
@@ -92,24 +109,22 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData);
-    gpuProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    // gpuProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
-    Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
-    if(model)
-    {
-        Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
-        if(skeletonState)
-        {
-            gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
-        }
-    }
+    // Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
+    // if(model)
+    // {
+    //     Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
+    //     if(skeletonState)
+    //     {
+    //         gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+    //     }
+    // }
 
-    gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    // gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    // gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
     // mGPUPrograms.at(instancedMeshData)->bindTextures(mGPUPrograms.at(instancedMeshData)->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
-
-    // shader->createDescriptors();
 }
 
 void RenderPass::preRender()
@@ -202,8 +217,6 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
 
 void RenderPass::compile()
 {
-    // mGPUPrograms.at(instancedMeshData)->createDescriptors();
-
     if (!vulkanRenderPass->initialize())
     {
         CHECK_MSG(false, "Could not initialize Vulkan render pass");

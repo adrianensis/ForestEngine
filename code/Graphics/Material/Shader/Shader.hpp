@@ -47,6 +47,7 @@ public:
     GPURenderPass* vulkanRenderPass;
     HashedString label;
     HashedString id;
+    std::vector<GPUUniformBuffer> mUniformBuffers;
 };
 
 class ShaderData

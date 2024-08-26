@@ -19,25 +19,18 @@ void GPUProgram::disable() const
 //	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUProgram::bindUniformBuffer(const GPUUniformBuffer& uniformBuffer)
-{
-//    GET_SYSTEM(GPUInterface).bindUniformBufferToShader(mProgramId,
-    // uniformBuffer.getGPUUniformBufferData().mType,
-    // uniformBuffer.getGPUUniformBufferData().mBufferName,
-    // uniformBuffer.getBindingPoint());
-
-    // mUniformBuffers.push_back(uniformBuffer);
-}
-
-void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment)
+void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, std::vector<GPUUniformBuffer> uniformBuffers, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment)
 {
 //    mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
     mGPUContext = gpuContext;
+    mUniformBuffers = uniformBuffers;
 
     if(!vulkanGraphicsPipeline)
     {
         vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
     }
+
+    createDescriptors();
 
     // if (!vulkanGraphicsPipeline->initialize(*(mRenderPassData.mShader->vertexShader), *(mRenderPassData.mShader->fragmentShader), mRenderPassData.mShader->descriptorSetLayout))
     // {
@@ -77,6 +70,7 @@ void GPUProgram::createDescriptors()
             layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             break;
         case GPUBufferType::STORAGE:
+            layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
             break;
         }
 
@@ -103,11 +97,11 @@ void GPUProgram::createDescriptors()
     }
 
     // POOL
-    std::array<VkDescriptorPoolSize, 2> poolSizes{};
+    std::array<VkDescriptorPoolSize, 1> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[0].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
-    poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[1].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
+    poolSizes[0].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
+    // poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    // poolSizes[1].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -147,39 +141,42 @@ void GPUProgram::createDescriptors()
 
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
-        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[i];
+        FOR_ARRAY(j, mUniformBuffers)
+        {
+            const GPUUniformBuffer& uniformBuffer = mUniformBuffers[j];
 
-        VkDescriptorBufferInfo bufferInfo{};
-        // bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer();
-        bufferInfo.offset = 0;
-        // bufferInfo.range = sizeof(CameraUniform);
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // TODO: make double buffered!!
+            bufferInfo.offset = 0;
+            // bufferInfo.range = sizeof(CameraUniform);
 
-        VkDescriptorImageInfo imageInfo{};
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        // imageInfo.imageView = textureImageView;
-        // imageInfo.sampler = textureSampler;
+            VkDescriptorImageInfo imageInfo{};
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            // imageInfo.imageView = textureImageView;
+            // imageInfo.sampler = textureSampler;
 
-        std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+            std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = descriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
+            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[0].dstSet = descriptorSets[i];
+            descriptorWrites[0].dstBinding = 0;
+            descriptorWrites[0].dstArrayElement = 0;
+            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrites[0].descriptorCount = 1;
+            descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-        descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].dstSet = descriptorSets[i];
-        descriptorWrites[1].dstBinding = 1;
-        descriptorWrites[1].dstArrayElement = 0;
-        descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrites[1].descriptorCount = 1;
-        descriptorWrites[1].pImageInfo = &imageInfo;
+            // descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            // descriptorWrites[1].dstSet = descriptorSets[i];
+            // descriptorWrites[1].dstBinding = 1;
+            // descriptorWrites[1].dstArrayElement = 0;
+            // descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            // descriptorWrites[1].descriptorCount = 1;
+            // descriptorWrites[1].pImageInfo = &imageInfo;
 
-        auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
-        constexpr uint32_t descriptorCopyCount = 0;
-        constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
-        // vkUpdateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
+            auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
+            constexpr uint32_t descriptorCopyCount = 0;
+            constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
+            vkUpdateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
+        }
     }
 }
