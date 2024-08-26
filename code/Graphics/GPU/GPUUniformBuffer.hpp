@@ -49,7 +49,7 @@ public:
         checkMaxSize(sizeof(T) * data.size());
 //        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUUniformBufferData.mType, mBufferId, data);
         // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUInstance).currentFrame];
-        // uniformBuffer.setData((void*) data.data());
+        buffer.setData((void*) data.data());
     }
     void setDataArray(const ByteBuffer& data)
     {
