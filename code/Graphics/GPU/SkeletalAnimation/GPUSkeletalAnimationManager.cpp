@@ -40,9 +40,8 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(Ptr<const GPUSkeletonS
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
-    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices, false);
+    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices, sizeof(Matrix4)*GPUBuiltIn::MAX_BONES, false);
     skeletonRenderState.mGPUUniformBuffersContainer.create();
-    skeletonRenderState.mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices).resize<Matrix4>(GPUBuiltIn::MAX_BONES);
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }

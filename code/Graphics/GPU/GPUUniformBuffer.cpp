@@ -8,12 +8,15 @@ GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(u32 i) const
     return data;
 }
 
-void GPUUniformBuffer::init(Ptr<GPUContext> gpuContext, u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic)
+void GPUUniformBuffer::init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mGPUUniformBufferData = gpuBufferData;
     mBindingPoint = bindingPoint;
     mIsStatic = isStatic;
+    mSize = size;
+
+    initialize();
 }
 
 void GPUUniformBuffer::createBuffer()
@@ -53,9 +56,9 @@ const GPUBuffer& GPUUniformBuffer::getBuffer() const {
     return buffer;
 }
 
-bool GPUUniformBuffer::initialize(uint32_t bufferSize) {
+bool GPUUniformBuffer::initialize() {
     GPUBuffer::Config bufferConfig{};
-    bufferConfig.Size = bufferSize;
+    bufferConfig.Size = mSize;
     bufferConfig.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
     bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 

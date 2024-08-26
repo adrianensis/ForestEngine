@@ -42,7 +42,7 @@ public:
 
     void terminate();
     void create();
-    void addUniformBuffer(const GPUUniformBufferData& data, bool isStatic);
+    void addUniformBuffer(const GPUUniformBufferData& data, u32 size, bool isStatic);
     GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data);
     const GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data) const;
     GPUUniformBuffer& getUniformBuffer(HashedString bufferName);

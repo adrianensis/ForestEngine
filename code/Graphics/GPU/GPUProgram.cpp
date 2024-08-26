@@ -148,7 +148,7 @@ void GPUProgram::createDescriptors()
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // TODO: make double buffered!!
             bufferInfo.offset = 0;
-            // bufferInfo.range = sizeof(CameraUniform);
+            bufferInfo.range = uniformBuffer.getSize();
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

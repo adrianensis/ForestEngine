@@ -12,7 +12,8 @@ void MaterialInstance::setDirty()
 void MaterialManager::init()
 {
 	LOG_TRACE()
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures, false);
+    mTextureHandles.resize(300);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures, sizeof(TextureHandle) * mTextureHandles.size(), false);
 }
 
 void MaterialManager::terminate()
@@ -61,11 +62,11 @@ PoolHandler<GPUTexture> MaterialManager::loadTexture(const GPUTextureData& gpuTe
         GPUTexture& texture = mTextures.get(handler);
         texture.init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, handler.getIndex());
 
-        u32 size = mTextures.getSize();
+        // u32 size = mTextures.getSize();
         // NOTE: We reserve position 0 to represent NULL
-        u32 paddedSize = size + 1;
-        mTextureHandles.resize(paddedSize);
-        GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
+        // u32 paddedSize = size + 1;
+        // mTextureHandles.resize(paddedSize);
+        // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
 
         mTextureHandles[texture.getID() + 1] = texture.getGPUTextureHandle();
 	}
@@ -199,9 +200,8 @@ void MaterialManager::initMaterialInstancePropertiesUniformBuffer(const PoolHand
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.copyBufferAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
                 const GPUUniformBufferData& propertiesBlockUniformBufferData = material->getShader()->getShaderData().mPropertiesBlockUniformBufferData;
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.addUniformBuffer(propertiesBlockUniformBufferData, false);
+                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.addUniformBuffer(propertiesBlockUniformBufferData, propertiesBlockSizeBytes * mInitialInstances, false);
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.create();
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mInitialInstances);
             }
         }
     }
@@ -279,10 +279,12 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
         {
             if(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.isEmpty())
             {
+                CHECK_MSG(false, "mMaterialPropertyBlockRenderStates propertiesBlockClassId mSlotsManager.isEmpty!");
+
                 u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.increaseSize(mInitialInstances);
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.resize(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize() * propertiesBlockSizeBytes);
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize());
+                // mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize());
             }
 
             slot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();

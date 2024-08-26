@@ -87,11 +87,11 @@ void GPUUniformBuffersContainer::create()
     }
 }
 
-void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& data, bool isStatic)
+void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& data, u32 size, bool isStatic)
 {
     u32 bindingPoint = GET_SYSTEM(GPUInstance).requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
-    // gpuInstanceBuffer.init(bindingPoint, data, isStatic);
+    gpuInstanceBuffer.init(GET_SYSTEM(GPUInstance).mGPUContext, size, bindingPoint, data, isStatic);
 
     u32 index = mUniformBuffers.size() - 1;
     mUniformBuffersMap.insert_or_assign(data.mBufferName, index);
