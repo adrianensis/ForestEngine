@@ -6,6 +6,7 @@
 #include "Graphics/GPU/GPUProgram.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Core/Config/Paths.hpp"
@@ -44,36 +45,6 @@ void Shader::init()
     mShaderData.mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
 
     registerTextures();
-    registerBuffers();
-}
-
-void Shader::registerBuffers()
-{
-    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, 1);
-    mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, false);
-
-    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, 1);
-    mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, false);
-
-    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, 1);
-    mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, false);
-
-    std::vector<GPUVariableData> gpuVertexInputBuffers;
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mPosition);
-    FOR_RANGE(i, 0, GPUBuiltIn::VertexInput::mTextureCoords.size())
-    {
-        gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mTextureCoords.at(i));
-    }
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mColor);
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mNormal);
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesIDs);
-    gpuVertexInputBuffers.push_back(GPUBuiltIn::VertexInput::mBonesWeights);
-    FOR_ARRAY(i, gpuVertexInputBuffers)
-    {
-        const GPUVariableData& gpuVariableData = gpuVertexInputBuffers[i];
-        GPUVertexBufferData bufferData(gpuVariableData);
-        mShaderData.mGPUVertexBuffersContainer.addVertexBuffer(bufferData, false);
-    }
 }
 
 void Shader::init(const ShaderData& shaderData)
@@ -155,21 +126,25 @@ void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
     mShaderData.mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
 }
 
-void Shader::generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void Shader::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
 }
 
-OwnerPtr<GPUProgram> Shader::compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id)
+OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompileData)
 {
+    mShaderData.mShaderCompileData = shaderCompileData;
     OwnerPtr<GPUProgram> gpuProgram = OwnerPtr<GPUProgram>::newObject();
+
+    GPUVertexBuffersContainer gpuVertexBuffersContainer;
+    shaderCompileData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, false); 
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, mShaderData.mGPUVertexBuffersContainer);
-    createFragmentShader(sbFrag, mShaderData.mGPUVertexBuffersContainer);
+    createVertexShader(sbVert, gpuVertexBuffersContainer);
+    createFragmentShader(sbFrag, gpuVertexBuffersContainer);
 
     std::string stringShderVert = sbVert.getCode();
-    std::string shaderPathVert = Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".vert";
+    std::string shaderPathVert = Paths::mOutputShaders.get() + shaderCompileData.id.get() + "_" + shaderCompileData.label.get() + ".vert";
     FileUtils::writeFile(shaderPathVert, [stringShderVert](std::ofstream& file)
     {
         file << stringShderVert;
@@ -183,7 +158,7 @@ OwnerPtr<GPUProgram> Shader::compileShader(GPURenderPass* vulkanRenderPass, Hash
     // }
 
     std::string stringShderFrag = sbFrag.getCode();
-    std::string shaderPathFrag = Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".frag";
+    std::string shaderPathFrag = Paths::mOutputShaders.get() + shaderCompileData.id.get() + "_" + shaderCompileData.label.get() + ".frag";
     FileUtils::writeFile(shaderPathFrag, [stringShderFrag](std::ofstream& file)
     {
         file << stringShderFrag;
@@ -196,7 +171,7 @@ OwnerPtr<GPUProgram> Shader::compileShader(GPURenderPass* vulkanRenderPass, Hash
     //     // return false;
     // }
 
-    gpuProgram->initFromFileContents(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
+    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
 
     return gpuProgram;
 }

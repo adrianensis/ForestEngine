@@ -52,10 +52,16 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 	{
         mInstancedMeshRenderers.insert(instancedMeshData);
 
-        mGPUPrograms.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(vulkanRenderPass,
+        ShaderCompileData shaderCompileData
+        {
+            instancedMeshData.mMaterial,
+            instancedMeshData.mMesh,
+            vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID()))
-        ));
+        };
+
+        mGPUPrograms.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(shaderCompileData));
 
         // setupShader(mGPUPrograms.at(instancedMeshData));
         // bindShader(instancedMeshData);

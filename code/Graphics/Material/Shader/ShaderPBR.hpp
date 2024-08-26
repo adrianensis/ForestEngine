@@ -24,7 +24,7 @@ REGISTER_CLASS(MetallicRoughness)
 class ShaderPBR : public ShaderDefault
 {
 public:
-    virtual void generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
+    virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
     virtual void registerTextures() override;

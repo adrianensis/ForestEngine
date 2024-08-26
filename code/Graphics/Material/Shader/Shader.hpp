@@ -7,6 +7,7 @@
 #include "Graphics/GPU/GPUProgramModule.h"
 
 class Material;
+class GPUMesh;
 
 class FramebufferBinding
 {
@@ -38,6 +39,16 @@ public:
     inline static const HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
 };
 
+class ShaderCompileData
+{
+public:
+    PoolHandler<Material> mMaterial;
+    Ptr<const GPUMesh> mMesh;
+    GPURenderPass* vulkanRenderPass;
+    HashedString label;
+    HashedString id;
+};
+
 class ShaderData
 {
 public:
@@ -45,10 +56,10 @@ public:
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<HashedString> mTextures;
     std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
-    GPUVertexBuffersContainer mGPUVertexBuffersContainer;
+    ShaderCompileData mShaderCompileData;
 };
 
-class GPUProgramDataCommon
+class ShaderGenerationDataCommon
 {
 public:
     std::vector<GPUStructDefinition> mStructDefinitions;
@@ -57,7 +68,7 @@ public:
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
-class GPUProgramDataVertex
+class ShaderGenerationDataVertex
 {
 public:
     std::vector<GPUVertexBuffer> mVertexInputs;
@@ -66,7 +77,7 @@ public:
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
-class GPUProgramDataFragment
+class ShaderGenerationDataFragment
 {
 public:
     std::vector<GPUVariableDefinitionData> mFragmentInputs;
@@ -75,12 +86,12 @@ public:
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
-class GPUProgramData
+class ShaderGenerationData
 {
 public:
-    GPUProgramDataCommon mCommonVariables;
-    GPUProgramDataVertex mVertexVariables;
-    GPUProgramDataFragment mFragmentVariables;
+    ShaderGenerationDataCommon mCommonVariables;
+    ShaderGenerationDataVertex mVertexVariables;
+    ShaderGenerationDataFragment mFragmentVariables;
 };
 
 class GPURenderPass;
@@ -108,14 +119,13 @@ public:
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
         {};
 
-    virtual void generateGPUProgramData(GPUProgramData& gpuProgramData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUProgram> compileShader(GPURenderPass* vulkanRenderPass, HashedString label, HashedString id);
+    virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
+    OwnerPtr<GPUProgram> compileShader(const ShaderCompileData& shaderCompileData);
 
 
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void registerTextures() {};
-    virtual void registerBuffers();
 
 protected:
     ShaderData mShaderData;
