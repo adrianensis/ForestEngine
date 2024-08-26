@@ -97,9 +97,11 @@ void GPUProgram::createDescriptors()
     }
 
     // POOL
-    std::array<VkDescriptorPoolSize, 1> poolSizes{};
-    poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    std::array<VkDescriptorPoolSize, 2> poolSizes{};
+    poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     poolSizes[0].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
+    poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSizes[1].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
     // poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     // poolSizes[1].descriptorCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
 
@@ -107,7 +109,7 @@ void GPUProgram::createDescriptors()
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = (uint32_t) poolSizes.size();
     poolInfo.pPoolSizes = poolSizes.data();
-    poolInfo.maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT;
+    poolInfo.maxSets = 64;//GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
 
     /*
         * Inadequate descriptor pools are a good example of a problem that the validation layers will not catch:
@@ -159,9 +161,17 @@ void GPUProgram::createDescriptors()
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = descriptorSets[i];
-            descriptorWrites[0].dstBinding = 0;
+            descriptorWrites[0].dstBinding = j;
             descriptorWrites[0].dstArrayElement = 0;
-            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            switch (uniformBuffer.getGPUUniformBufferData().mType)
+            {
+            case GPUBufferType::UNIFORM:
+                descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                break;
+            case GPUBufferType::STORAGE:
+                descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                break;
+            }
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 

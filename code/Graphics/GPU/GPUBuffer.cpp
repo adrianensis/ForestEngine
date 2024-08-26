@@ -42,13 +42,13 @@
         memoryAllocateInfo.allocationSize = memoryRequirements.size;
         memoryAllocateInfo.memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, config.MemoryProperties);
 
-        // if (vkAllocateMemory(mGPUContext->vulkanDevice->getDevice(), &memoryAllocateInfo, allocator, &vkDeviceMemory) != VK_SUCCESS) {
-        //     CHECK_MSG(false,"Could not allocate Vulkan vkBuffer memory");
-        //     return false;
-        // }
+        if (vkAllocateMemory(mGPUContext->vulkanDevice->getDevice(), &memoryAllocateInfo, allocator, &vkDeviceMemory) != VK_SUCCESS) {
+            CHECK_MSG(false,"Could not allocate Vulkan vkBuffer memory");
+            return false;
+        }
 
-        // constexpr VkDeviceSize memoryOffset = 0;
-        // vkBindBufferMemory(mGPUContext->vulkanDevice->getDevice(), vkBuffer, vkDeviceMemory, memoryOffset);
+        constexpr VkDeviceSize memoryOffset = 0;
+        vkBindBufferMemory(mGPUContext->vulkanDevice->getDevice(), vkBuffer, vkDeviceMemory, memoryOffset);
 
         LOG("Initialized Vulkan buffer");
         return true;

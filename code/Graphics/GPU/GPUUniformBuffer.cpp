@@ -59,7 +59,15 @@ const GPUBuffer& GPUUniformBuffer::getBuffer() const {
 bool GPUUniformBuffer::initialize() {
     GPUBuffer::Config bufferConfig{};
     bufferConfig.Size = mSize;
-    bufferConfig.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    switch (mGPUUniformBufferData.mType)
+    {
+    case GPUBufferType::UNIFORM:
+        bufferConfig.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+        break;
+    case GPUBufferType::STORAGE:
+        bufferConfig.Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        break;
+    }
     bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
     if (!buffer.init(mGPUContext, bufferConfig)) {
