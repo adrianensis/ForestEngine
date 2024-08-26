@@ -34,7 +34,7 @@ void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data,
     }
 
     GPUVertexBuffer& gpuVertexBuffer = mVertexBuffers.emplace_back();
-    // gpuVertexBuffer.init(mAttributeIndex, data, isStatic);
+    gpuVertexBuffer.init(GET_SYSTEM(GPUInstance).mGPUContext, mAttributeIndex, data, isStatic);
 
     u32 index = mVertexBuffers.size() - 1;
     mVertexBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);

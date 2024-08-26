@@ -10,6 +10,7 @@
 #include "Graphics/Model/Model.hpp"
 #include "Core/Config/Paths.hpp"
 #include "Core/File/FileUtils.hpp"
+#include <cstdlib>
 
 void Shader::init()
 {
@@ -167,25 +168,33 @@ OwnerPtr<GPUProgram> Shader::compileShader(GPURenderPass* vulkanRenderPass, Hash
     createVertexShader(sbVert, mShaderData.mGPUVertexBuffersContainer);
     createFragmentShader(sbFrag, mShaderData.mGPUVertexBuffersContainer);
 
+    std::string stringShderVert = sbVert.getCode();
+    std::string shaderPathVert = Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".vert";
+    FileUtils::writeFile(shaderPathVert, [stringShderVert](std::ofstream& file)
+    {
+        file << stringShderVert;
+    });
+
+    system(std::string("glslc "s + shaderPathVert + " -o "s + shaderPathVert + ".spv").c_str());
+
     // if (!vertexShader->initialize(sbVert.getCode()/*fileSystem->readBytes("shaders/simple_shader.vert.spv")*/)) {
     //     CHECK_MSG(false, "Could not initialize vertex shader");
     //     // return false;
     // }
+
+    std::string stringShderFrag = sbFrag.getCode();
+    std::string shaderPathFrag = Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".frag";
+    FileUtils::writeFile(shaderPathFrag, [stringShderFrag](std::ofstream& file)
+    {
+        file << stringShderFrag;
+    });
+
+    system(std::string("glslc "s + shaderPathFrag + " -o "s + shaderPathFrag + ".spv").c_str());
+
     // if (!fragmentShader->initialize(sbFrag.getCode()/*fileSystem->readBytes("shaders/simple_shader.frag.spv")*/)) {
     //     CHECK_MSG(false, "Could not initialize fragment shader");
     //     // return false;
     // }
-
-    std::string stringShderVert = sbVert.getCode();
-    FileUtils::writeFile(Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".vs", [stringShderVert](std::ofstream& file)
-    {
-        file << stringShderVert;
-    });
-    std::string stringShderFrag = sbFrag.getCode();
-    FileUtils::writeFile(Paths::mOutputShaders.get() + id.get() + "_" + label.get() + ".fs", [stringShderFrag](std::ofstream& file)
-    {
-        file << stringShderFrag;
-    });
 
     gpuProgram->initFromFileContents(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
 

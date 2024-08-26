@@ -309,8 +309,10 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
     FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
     FOR_LIST(it, gpuProgramData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(*it); }
-    FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(*it); }
+    u32 uniformBufferIndex = 0;
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, uniformBufferIndex)); uniformBufferIndex++; }
+    u32 vertexOutputIndex = 0;
+    FOR_LIST(it, gpuProgramData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++; }
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
@@ -327,16 +329,19 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
     FOR_LIST(it, gpuProgramData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, gpuProgramData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(*it); }
-    FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(*it); }
+    u32 uniformBufferIndex = 0;
+    FOR_LIST(it, gpuProgramData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, uniformBufferIndex)); uniformBufferIndex++; }
+    u32 fragmentInputIndex = 0;
+    FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(Attribute(*it, fragmentInputIndex)); fragmentInputIndex++; }
+    u32 fragmentOutputIndex = 0;
+    FOR_LIST(it, gpuProgramData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(Attribute(*it, fragmentOutputIndex)); fragmentOutputIndex++; }
 }
 
 void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
     registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer);
 
-    shaderBuilder.get().extension("GL_ARB_bindless_texture");
+    // shaderBuilder.get().extension("GL_ARB_bindless_texture");
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
     {
@@ -364,7 +369,7 @@ void ShaderDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPU
 {
     registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer);
     
-    shaderBuilder.get().extension("GL_ARB_bindless_texture");
+    // shaderBuilder.get().extension("GL_ARB_bindless_texture");
 
     fragmentShaderCode(shaderBuilder);
 }

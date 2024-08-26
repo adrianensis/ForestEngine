@@ -21,12 +21,6 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
     }
 
     vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
-
-    HashedString className = ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName;
-    mGPUProgram = mRenderPassData.mShader->compileShader(vulkanRenderPass,
-        ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-        className
-    );
 }
 
 void RenderPass::terminate()
@@ -51,20 +45,21 @@ void RenderPass::terminate()
 
 void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
-	InstancedMeshData instancedMeshData;
-	instancedMeshData.init(renderer);
+	// InstancedMeshData instancedMeshData;
+	// instancedMeshData.init(renderer);
 
-	if (!mInstancedMeshRenderers.contains(instancedMeshData))
+	if (!mGPUPrograms.contains(renderer->getMaterialInstance()->mMaterial->getID()))
+	// if (!mInstancedMeshRenderers.contains(instancedMeshData))
 	{
-        mInstancedMeshRenderers.insert(instancedMeshData);
+        // mInstancedMeshRenderers.insert(instancedMeshData);
 
-        // mGPUPrograms.emplace(instancedMeshData, instancedMeshData.mMaterial->getShader()->compileShader(vulkanRenderPass,
-        //     ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-        //     HashedString(std::to_string(instancedMeshData.mMaterial->getID()))
-        // ));
+        mGPUPrograms.emplace(renderer->getMaterialInstance()->mMaterial->getID(), renderer->getMaterialInstance()->mMaterial->getShader()->compileShader(vulkanRenderPass,
+            ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+            HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID()))
+        ));
 
         // setupShader(mGPUPrograms.at(instancedMeshData));
-        bindShader(instancedMeshData);
+        // bindShader(instancedMeshData);
     }
 }
 
@@ -73,11 +68,11 @@ void RenderPass::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
     InstancedMeshData instancedMeshData;
 	instancedMeshData.init(renderer);
 
-    Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    if(instancedMeshRenderer->isEmpty())
-    {
-        mInstancedMeshRenderers.erase(instancedMeshData);
-    }
+    // Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
+    // if(instancedMeshRenderer->isEmpty())
+    // {
+    //     mInstancedMeshRenderers.erase(instancedMeshData);
+    // }
 }
 
 void RenderPass::preFramebufferEnabled()
@@ -91,7 +86,8 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
-    mGPUProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData.mMaterial->getID());
+    gpuProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
@@ -99,12 +95,12 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
         Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            mGPUProgram->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
         }
     }
 
-    mGPUProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    mGPUProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
     // mGPUPrograms.at(instancedMeshData)->bindTextures(mGPUPrograms.at(instancedMeshData)->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 
@@ -127,10 +123,11 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
+    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData.mMaterial->getID());
 
-    mGPUProgram->enable();
+    gpuProgram->enable();
     instancedMeshRenderer->render();
-    mGPUProgram->disable();
+    gpuProgram->disable();
 }
 
 void RenderPass::renderPass()

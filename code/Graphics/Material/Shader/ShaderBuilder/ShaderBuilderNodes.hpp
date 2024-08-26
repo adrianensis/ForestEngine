@@ -158,12 +158,14 @@ namespace ShaderBuilderNodes
     class UniformBuffer : public Statement
     {
     public:
-        UniformBuffer(const GPUUniformBufferData& gpuBlockData) : mGPUUniformBufferData(gpuBlockData) {};
+        UniformBuffer() {};
+        UniformBuffer(const GPUUniformBufferData& gpuBlockData, u32 binding) : mGPUUniformBufferData(gpuBlockData), mBinding(binding) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
         bool isValid() const { return mGPUUniformBufferData.mInstanceName.isValid(); }
 
         GPUUniformBufferData mGPUUniformBufferData;
+        i32 mBinding = INVALID_INDEX;
     }; 
 
     // EXPRESSIONS
@@ -358,10 +360,10 @@ namespace ShaderBuilderNodes
         std::vector<FunctionDefinition> mFunctionDefinitions;
         std::vector<HashedString> mExtensions;
         FunctionDefinition mMainFunctionDefinition = GPUFunctionDefinition{};
-        u16 mVersion = 430;
+        u16 mVersion = 460;
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
-        inline static UniformBuffer mNullUniformBuffer {GPUUniformBufferData{}};
+        inline static UniformBuffer mNullUniformBuffer {};
         inline static Struct mNullStructDefinition {GPUStructDefinition{}};
         inline static FunctionDefinition mNullFunctionDefinition {GPUFunctionDefinition{}};
     };

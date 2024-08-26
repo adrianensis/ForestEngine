@@ -52,14 +52,17 @@ namespace ShaderBuilderNodes
     {
         std::vector<std::string> code;
 
+        std::string bindingStr = mBinding < 0 ? "" : ", binding=" + std::to_string(mBinding);
+
         std::string layoutStr;
         switch (mGPUUniformBufferData.mType)
         {
         case GPUBufferType::UNIFORM:
-            layoutStr = "layout (std140) uniform";
+            layoutStr = "layout (std140"+ bindingStr +") uniform";
             break;
         case GPUBufferType::STORAGE:
-            layoutStr = "layout (std430) readonly buffer";
+            // layoutStr = "layout (std430"+ bindingStr +") readonly buffer";
+            layoutStr = "layout (std430"+ bindingStr +") buffer";
             break;
         default:
             CHECK_MSG(false, "Ilegal GPUBufferType!");

@@ -65,8 +65,7 @@ private:
 
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
-	// std::unordered_map<InstancedMeshData, Ptr<GPUProgram>, InstancedMeshData::InstancedMeshDataFunctor> mGPUPrograms;
-    Ptr<GPUProgram> mGPUProgram;
+	std::unordered_map<u32, Ptr<GPUProgram>> mGPUPrograms;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
     Ptr<RenderPipeline> mRenderPipeline;

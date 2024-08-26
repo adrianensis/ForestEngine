@@ -18,6 +18,7 @@ void RenderEngine::init()
 
     mRenderPipeline = OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();
+    mRenderPipeline->compile();
 
 	// octree.init(5000);
 }
@@ -25,12 +26,6 @@ void RenderEngine::init()
 void RenderEngine::update()
 {
     PROFILER_CPU()
-    if(mCompileRequest)
-    {
-        mRenderPipeline->compile();
-        mCompileRequest = false;
-    }
-
     // mRenderPipeline->update();
     mRenderPipeline->render(mRenderPipelineData);
 
