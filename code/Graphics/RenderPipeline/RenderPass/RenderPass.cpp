@@ -45,15 +45,14 @@ void RenderPass::terminate()
 
 void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
 {
-	// InstancedMeshData instancedMeshData;
-	// instancedMeshData.init(renderer);
+	InstancedMeshData instancedMeshData;
+	instancedMeshData.init(renderer);
 
-	if (!mGPUPrograms.contains(renderer->getMaterialInstance()->mMaterial->getID()))
-	// if (!mInstancedMeshRenderers.contains(instancedMeshData))
+	if (!mInstancedMeshRenderers.contains(instancedMeshData))
 	{
-        // mInstancedMeshRenderers.insert(instancedMeshData);
+        mInstancedMeshRenderers.insert(instancedMeshData);
 
-        mGPUPrograms.emplace(renderer->getMaterialInstance()->mMaterial->getID(), renderer->getMaterialInstance()->mMaterial->getShader()->compileShader(vulkanRenderPass,
+        mGPUPrograms.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID()))
         ));
@@ -86,7 +85,7 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
-    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData.mMaterial->getID());
+    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData);
     gpuProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
     Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
@@ -123,7 +122,7 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData.mMaterial->getID());
+    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData);
 
     gpuProgram->enable();
     instancedMeshRenderer->render();

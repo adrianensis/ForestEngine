@@ -58,7 +58,7 @@ void RenderPassGeometry::updateGlobalData()
 void RenderPassGeometry::bindShader(const InstancedMeshData& instancedMeshData)
 {
     RenderPass::bindShader(instancedMeshData);
-    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData.mMaterial->getID());
-    gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
-    gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
+    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData);
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
+    mGPUPrograms.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
 }
