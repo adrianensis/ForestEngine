@@ -171,7 +171,7 @@ OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompil
     //     // return false;
     // }
 
-    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, shaderCompileData.mUniformBuffers, GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
+    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, shaderCompileData.mUniformBuffers, gpuVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
 
     return gpuProgram;
 }

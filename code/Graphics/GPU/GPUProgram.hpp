@@ -2,13 +2,12 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUContext.hpp"
 #include "Graphics/GPU/Vulkan.h"
 #include "Core/Object/ObjectBase.hpp"
 #include "Graphics/GPU/GPUGraphicsPipeline.h"
 
-class GPUVertexBuffersContainer;
-class GPUUniformBuffer;
 class GPURenderPass;
 
 class GPUProgram: public ObjectBase
@@ -18,7 +17,7 @@ public:
     GPUProgram();
 	~GPUProgram() override = default;
 
-    void initFromFileContents(GPURenderPass* vulkanRenderPass, std::vector<GPUUniformBuffer> uniformBuffers, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
+    void initFromFileContents(GPURenderPass* vulkanRenderPass, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
     void terminate();
     void enable() const;
     void disable() const;

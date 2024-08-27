@@ -19,7 +19,7 @@
         return pipelineLayout;
     }
 
-    bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout) {
+    bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
 
         VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
         vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -38,15 +38,16 @@
                 fragmentShaderStageInfo
         };
 
-        VkVertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
-        std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::getAttributeDescriptions();
+        // VkVertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
+        // std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::getAttributeDescriptions();
+        mGPUVertexInputData = gpuVertexInputData;
 
         VkPipelineVertexInputStateCreateInfo vertexInputState{};
         vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputState.pVertexBindingDescriptions = &bindingDescription;
-        vertexInputState.vertexBindingDescriptionCount = 1;
-        vertexInputState.pVertexAttributeDescriptions = attributeDescriptions.data();
-        vertexInputState.vertexAttributeDescriptionCount = attributeDescriptions.size();
+        vertexInputState.pVertexBindingDescriptions = mGPUVertexInputData.mVertexInputBindingDescriptions.data();
+        vertexInputState.vertexBindingDescriptionCount = mGPUVertexInputData.mVertexInputBindingDescriptions.size();
+        vertexInputState.pVertexAttributeDescriptions = mGPUVertexInputData.mVertexInputAttributeDescriptions.data();
+        vertexInputState.vertexAttributeDescriptionCount = mGPUVertexInputData.mVertexInputAttributeDescriptions.size();
 
         VkPipelineInputAssemblyStateCreateInfo inputAssemblyState{};
         inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

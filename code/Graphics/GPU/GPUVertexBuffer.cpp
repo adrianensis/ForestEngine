@@ -18,7 +18,7 @@ void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, co
     mAttributeOffset += 1;
 
     GPUBuffer::Config bufferConfig{};
-    bufferConfig.Size = 1000; //bufferSize;
+    bufferConfig.Size = sizeof(f32) * 1000; //bufferSize;
     bufferConfig.Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
