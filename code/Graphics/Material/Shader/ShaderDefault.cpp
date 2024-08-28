@@ -183,9 +183,9 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
         auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
         Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         shaderBuilder.getMain().
-        ifBlock(textureHandler.notEq("0"s)).
-            set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
-        end();
+        // ifBlock(textureHandler.notEq("0"s)).
+            set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
+        // end();
     }
 }
 
@@ -219,24 +219,24 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     //     }
     // }
 
-    FOR_MAP(it, getShaderData().mFramebufferBindings)
-    {
-        CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
+    // FOR_MAP(it, getShaderData().mFramebufferBindings)
+    // {
+    //     CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
 
-        HashedString samplerName = it->second.mSamplerName;
-        switch (it->second.mStage)
-        {
-            // case GPUPipelineStage::VERTEX:
-            //     shaderGenerationData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
-            // break;
-            case GPUPipelineStage::FRAGMENT:
-                shaderGenerationData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
-            break;
+    //     HashedString samplerName = it->second.mSamplerName;
+    //     switch (it->second.mStage)
+    //     {
+    //         // case GPUPipelineStage::VERTEX:
+    //         //     shaderGenerationData.mVertexVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+    //         // break;
+    //         case GPUPipelineStage::FRAGMENT:
+    //             shaderGenerationData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getSampler(samplerName));
+    //         break;
 
-            default:
-                CHECK_MSG(false, "Invalid Stage for frambuffer texture binding!");
-        }
-    }
+    //         default:
+    //             CHECK_MSG(false, "Invalid Stage for frambuffer texture binding!");
+    //     }
+    // }
 
     shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
@@ -307,8 +307,9 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderGenerationData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    u32 binding = 0;
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding)); binding++; }
+    FOR_LIST(it, shaderGenerationData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding)); binding++; }
     u32 uniformBufferIndex = 0;
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, uniformBufferIndex)); uniformBufferIndex++; }
     u32 vertexOutputIndex = 0;
@@ -327,8 +328,9 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(*it); }
+    u32 binding = 0;
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding)); binding++; }
+    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding)); binding++; }
     u32 uniformBufferIndex = 0;
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, uniformBufferIndex)); uniformBufferIndex++; }
     u32 fragmentInputIndex = 0;

@@ -27,8 +27,6 @@ DECLARE_ENUM(GPUStorage,
     NONE, "none",
     IN, "in",
     OUT, "out",
-    VARYING, "varying",
-    ATTRIBUTE, "attribute",
     CONST, "const",
     UNIFORM, "uniform",
 );

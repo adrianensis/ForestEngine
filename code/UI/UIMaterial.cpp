@@ -39,12 +39,12 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     shaderBuilder.getMain().
-    ifBlock(textureHandler.notEq("0"s)).
-        set(outColor, call("texture", {textures.at(textureHandler), inTextureCoord})).
+    // ifBlock(textureHandler.notEq("0"s)).
+        set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
         ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
             line("discard").
-        end().
-    end();
+        end();
+    // end();
 }
 
 void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const

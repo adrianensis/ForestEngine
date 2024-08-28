@@ -146,13 +146,13 @@ namespace ShaderBuilderNodes
     {
     public:
         Attribute(const GPUVariableDefinitionData& gpuVariableData) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage) {};
-        Attribute(const GPUVariableDefinitionData& gpuVariableData, u32 location) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocation(location) {};
+        Attribute(const GPUVariableDefinitionData& gpuVariableData, u32 locationOrBinding) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding) {};
 
         std::vector<std::string> toLines(u16 indent) const override;
 
         GPUInterpolation mGPUInterpolation = GPUInterpolation::NONE;
         GPUStorage mGPUStorage = GPUStorage::NONE;
-        i32 mLocation = INVALID_INDEX;
+        i32 mLocationOrBinding = INVALID_INDEX;
     };
 
     class UniformBuffer : public Statement
