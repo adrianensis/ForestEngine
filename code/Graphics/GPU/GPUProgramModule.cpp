@@ -13,11 +13,11 @@
         return shaderModule;
     }
 
-    bool GPUProgramModule::initialize(const std::vector<char>& bytes) {
+    bool GPUProgramModule::initialize(const std::vector<byte>& moduleContent) {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.codeSize = bytes.size();
-        createInfo.pCode = (const uint32_t*) bytes.data();
+        createInfo.codeSize = moduleContent.size();
+        createInfo.pCode = (const uint32_t*) moduleContent.data();
 
         if (vkCreateShaderModule(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &shaderModule) != VK_SUCCESS) {
             CHECK_MSG(false,"Could not create Vulkan shader module");

@@ -22,7 +22,7 @@
 
         const VkShaderModule getShaderModule() const;
 
-        bool initialize(const std::vector<char>& bytes);
+        bool initialize(const std::vector<byte>& moduleContent);
 
         void terminate();
     };

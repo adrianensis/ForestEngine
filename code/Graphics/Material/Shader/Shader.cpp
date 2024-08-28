@@ -143,35 +143,31 @@ OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompil
     createVertexShader(sbVert, gpuVertexBuffersContainer);
     createFragmentShader(sbFrag, gpuVertexBuffersContainer);
 
-    std::string stringShderVert = sbVert.getCode();
+    std::string stringShaderVert = sbVert.getCode();
     std::string shaderPathVert = Paths::mOutputShaders.get() + shaderCompileData.id.get() + "_" + shaderCompileData.label.get() + ".vert";
-    FileUtils::writeFile(shaderPathVert, [stringShderVert](std::ofstream& file)
+    FileUtils::writeFile(shaderPathVert, [stringShaderVert](std::ofstream& file)
     {
-        file << stringShderVert;
+        file << stringShaderVert;
     });
 
     system(std::string("glslc "s + shaderPathVert + " -o "s + shaderPathVert + ".spv").c_str());
+    
+    std::vector<byte> stringShaderVertSpvBinary;
+    FileUtils::readFileBinaryData(shaderPathVert + ".spv", stringShaderVertSpvBinary);
 
-    // if (!vertexShader->initialize(sbVert.getCode()/*fileSystem->readBytes("shaders/simple_shader.vert.spv")*/)) {
-    //     CHECK_MSG(false, "Could not initialize vertex shader");
-    //     // return false;
-    // }
-
-    std::string stringShderFrag = sbFrag.getCode();
+    std::string stringShaderFrag = sbFrag.getCode();
     std::string shaderPathFrag = Paths::mOutputShaders.get() + shaderCompileData.id.get() + "_" + shaderCompileData.label.get() + ".frag";
-    FileUtils::writeFile(shaderPathFrag, [stringShderFrag](std::ofstream& file)
+    FileUtils::writeFile(shaderPathFrag, [stringShaderFrag](std::ofstream& file)
     {
-        file << stringShderFrag;
+        file << stringShaderFrag;
     });
 
     system(std::string("glslc "s + shaderPathFrag + " -o "s + shaderPathFrag + ".spv").c_str());
+    
+    std::vector<byte> stringShaderFragSpvBinary;
+    FileUtils::readFileBinaryData(shaderPathFrag + ".spv", stringShaderFragSpvBinary);
 
-    // if (!fragmentShader->initialize(sbFrag.getCode()/*fileSystem->readBytes("shaders/simple_shader.frag.spv")*/)) {
-    //     CHECK_MSG(false, "Could not initialize fragment shader");
-    //     // return false;
-    // }
-
-    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, shaderCompileData.mUniformBuffers, gpuVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShderVert, stringShderFrag);
+    gpuProgram->initFromFileContents(shaderCompileData.vulkanRenderPass, shaderCompileData.mUniformBuffers, gpuVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShaderVertSpvBinary, stringShaderFragSpvBinary);
 
     return gpuProgram;
 }

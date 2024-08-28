@@ -85,7 +85,7 @@ public:
         {
             GPUBufferType::STORAGE,
             {
-                {{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "textures"}, "", " "},
+                {{GPUStorage::UNIFORM, /*PrimitiveTypes::mSampler2D*/PrimitiveTypes::mUnsignedInt, "textures"}, "", " "},
             },
             "Textures",
             "textures"

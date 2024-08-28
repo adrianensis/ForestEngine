@@ -17,6 +17,25 @@ void FileUtils::readFile(const std::string& path, std::function<void(std::ifstre
 	file.close();
 }
 
+void FileUtils::readFileBinaryData(const std::string& path, std::vector<byte>& output)
+{
+	std::ifstream file;
+    // std::ios::ate -> seek to the end of stream immediately after open 
+	file.open(path, std::ios::ate | std::ios_base::binary);
+
+    CHECK_MSG(file.good() && !file.fail(), "Couldn't open " + path);
+
+    // read the file size
+    u32 length = file.tellg();
+    // go back to beginning
+    file.seekg(0, std::ios_base::beg);
+
+    // Make a buffer of the exact size of the file and read the data into it.
+    output.resize(length);
+    file.read(reinterpret_cast<char*>(output.data()), length);
+	file.close();
+}
+
 void FileUtils::writeFile(const std::string& path, std::function<void(std::ofstream& file)> callback)
 {
     const std::filesystem::path fsPath{path};

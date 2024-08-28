@@ -19,11 +19,20 @@ void GPUProgram::disable() const
 //	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment)
+void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment)
 {
 //    mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
     mGPUContext = gpuContext;
     mUniformBuffers = uniformBuffers;
+
+    if (!vertexShader->initialize(vertex)) {
+        CHECK_MSG(false, "Could not initialize vertex shader");
+        // return false;
+    }
+    if (!fragmentShader->initialize(fragment)) {
+        CHECK_MSG(false, "Could not initialize fragment shader");
+        // return false;
+    }
 
     if(!vulkanGraphicsPipeline)
     {
@@ -99,10 +108,10 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const std
         // gpuVertexInputData.mVertexInputAttributeDescriptions[i].offset = offsetof(Vertex, position);
     }
 
-    // if (!vulkanGraphicsPipeline->initialize(*(mRenderPassData.mShader->vertexShader), *(mRenderPassData.mShader->fragmentShader), mRenderPassData.mShader->descriptorSetLayout))
-    // {
-    //     CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
-    // }
+    if (!vulkanGraphicsPipeline->initialize(*vertexShader, *fragmentShader, descriptorSetLayout, gpuVertexInputData))
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
+    }
 }
 
 void GPUProgram::terminate()

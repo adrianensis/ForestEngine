@@ -17,7 +17,7 @@ public:
     GPUProgram();
 	~GPUProgram() override = default;
 
-    void initFromFileContents(GPURenderPass* vulkanRenderPass, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::string& vertex, const std::string& fragment);
+    void initFromFileContents(GPURenderPass* vulkanRenderPass, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment);
     void terminate();
     void enable() const;
     void disable() const;
