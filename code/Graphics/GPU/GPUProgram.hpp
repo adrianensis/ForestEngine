@@ -10,6 +10,14 @@
 
 class GPURenderPass;
 
+class GPUProgramDescriptorsData
+{
+public:
+    VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
+    std::vector<VkDescriptorSet> descriptorSets;
+    VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
+};
+
 class GPUProgram: public ObjectBase
 {    
 public:
@@ -17,22 +25,19 @@ public:
     GPUProgram();
 	~GPUProgram() override = default;
 
-    void initFromFileContents(GPURenderPass* vulkanRenderPass, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment);
+    void initFromFileContents(GPURenderPass* vulkanRenderPass, const GPUProgramDescriptorsData& gpuProgramDescriptorsData, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment);
     void terminate();
     void enable() const;
     void disable() const;
-    void createDescriptors();
 private:
 	u32 mProgramId = 0;
 
     Ptr<GPUContext> mGPUContext;
 
     GPUGraphicsPipeline* vulkanGraphicsPipeline;
-    VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
-    std::vector<VkDescriptorSet> descriptorSets;
-    VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
+
     GPUProgramModule* vertexShader;
     GPUProgramModule* fragmentShader;
-    std::vector<GPUUniformBuffer> mUniformBuffers;
+    GPUProgramDescriptorsData mGPUProgramDescriptorsData;
 };
 REGISTER_CLASS(GPUProgram);

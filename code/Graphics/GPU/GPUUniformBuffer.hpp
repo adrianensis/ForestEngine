@@ -78,6 +78,7 @@ private:
     u32 mSize = 0;
 
 public:
+	u32 mSet = 0;
     GET(BindingPoint)
     GET(Size)
     CRGET(GPUUniformBufferData)

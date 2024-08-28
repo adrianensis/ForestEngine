@@ -127,9 +127,11 @@ public:
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void registerTextures() {};
+    GPUProgramDescriptorsData createDescriptors(ShaderCompileData& shaderCompileData);
 
 protected:
     ShaderData mShaderData;
+
 public:
 
     CRGET(ShaderData)
