@@ -2,31 +2,17 @@
 
 #include "Graphics/GPU/GPUDevice.h"
 
-#include <vulkan/vulkan.h>
+class GPUProgramModule {
+private:
+    inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
-#include <vector>
+private:
+    GPUDevice* vulkanDevice;
+    VkShaderModule shaderModule = VK_NULL_HANDLE;
 
-#include "Core/Minimal.hpp"
-//namespace GPUAPI {
-
-    class GPUProgramModule {
-    private:
-        static const VkAllocationCallbacks* ALLOCATOR;
-
-    private:
-        GPUDevice* vulkanDevice;
-        VkShaderModule shaderModule = VK_NULL_HANDLE;
-
-    public:
-        explicit GPUProgramModule(GPUDevice* vulkanDevice);
-
-        const VkShaderModule getShaderModule() const;
-
-        bool initialize(const std::vector<byte>& moduleContent);
-
-        void terminate();
-    };
-
-// }
-
-
+public:
+    explicit GPUProgramModule(GPUDevice* vulkanDevice);
+    const VkShaderModule getShaderModule() const;
+    bool initialize(const std::vector<byte>& moduleContent);
+    void terminate();
+};

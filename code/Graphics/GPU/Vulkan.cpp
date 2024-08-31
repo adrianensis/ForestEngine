@@ -30,8 +30,6 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
     return VK_FALSE;
 }
 
-const VkAllocationCallbacks* Vulkan::ALLOCATOR = VK_NULL_HANDLE;
-
 Vulkan::Vulkan(Config config, GPUWindow* gpuWindow) : config(std::move(config)), gpuWindow(gpuWindow) {
 }
 

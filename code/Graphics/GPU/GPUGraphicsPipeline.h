@@ -19,7 +19,7 @@ public:
 
     class GPUGraphicsPipeline {
     private:
-        static const VkAllocationCallbacks* ALLOCATOR;
+        inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
     private:
         GPURenderPass* vulkanRenderPass;

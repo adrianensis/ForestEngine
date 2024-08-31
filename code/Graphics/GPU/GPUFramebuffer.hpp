@@ -49,7 +49,7 @@ private:
     std::unordered_map<GPUFramebufferAttachmentType, GPUFramebufferAttachment> mAttachments;
     GPUFramebufferData mFramebufferData;
 
-    static const VkAllocationCallbacks* ALLOCATOR;
+    inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
     GPURenderPass* vulkanRenderPass;
     VkFramebuffer framebuffer = VK_NULL_HANDLE;

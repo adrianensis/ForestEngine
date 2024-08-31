@@ -37,8 +37,6 @@ void GPUFramebuffer::disable(GPUFramebufferOperationType op)
 //    GET_SYSTEM(GPUInterface).disableFramebuffer(op);
 }
 
-const VkAllocationCallbacks* GPUFramebuffer::ALLOCATOR = VK_NULL_HANDLE;
-
 const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
     return framebuffer;
 }
