@@ -114,10 +114,10 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUProgramDescriptorsData& gpuProgramDescriptorsData) const
         {};
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUProgramDescriptorsData& gpuProgramDescriptorsData) const
         {};
 
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;

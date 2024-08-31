@@ -42,14 +42,15 @@ namespace ShaderBuilderNodes
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
-        std::string locationStr = mLocationOrBinding < 0 ? "" : "layout (location=" + std::to_string(mLocationOrBinding) + ") ";
+        std::string locationStr = mLocationOrBinding < 0 ? "" : "location=" + std::to_string(mLocationOrBinding);
         if(mGPUStorage == GPUStorage::UNIFORM)
         {
-            locationStr = mLocationOrBinding < 0 ? "" : "layout (binding=" + std::to_string(mLocationOrBinding) + ") ";
+            locationStr = mLocationOrBinding < 0 ? "" : "binding=" + std::to_string(mLocationOrBinding);
         }
+        std::string setStr = mSet < 0 ? "" : "set=" + std::to_string(mSet);
         std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : EnumsManager::toString(mGPUInterpolation).get() + " ";
         std::string storageStr = EnumsManager::toString(mGPUStorage).get() + " ";
-        return {getIndent(indent) + locationStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + "layout(" + setStr + "," + locationStr + ")" + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
     
     std::vector<std::string> UniformBuffer::toLines(u16 indent) const

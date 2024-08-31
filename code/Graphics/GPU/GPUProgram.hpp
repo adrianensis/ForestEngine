@@ -16,6 +16,7 @@ public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
+    std::unordered_map<HashedString, u32> mUniformBufferToSet;
 };
 
 class GPUProgram: public ObjectBase

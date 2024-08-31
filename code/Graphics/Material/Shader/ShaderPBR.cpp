@@ -85,9 +85,9 @@ void ShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerat
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
-void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUProgramDescriptorsData& gpuProgramDescriptorsData) const
 {
-    ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer);
+    ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuProgramDescriptorsData);
 
     registerFunctionsGetNormalFromMap(shaderBuilder);
     

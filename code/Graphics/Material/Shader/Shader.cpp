@@ -143,8 +143,8 @@ OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompil
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, gpuVertexBuffersContainer);
-    createFragmentShader(sbFrag, gpuVertexBuffersContainer);
+    createVertexShader(sbVert, gpuVertexBuffersContainer, gpuProgramDescriptorsData);
+    createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuProgramDescriptorsData);
 
     std::string stringShaderVert = sbVert.getCode();
     std::string shaderPathVert = Paths::mOutputShaders.get() + mShaderData.mShaderCompileData.id.get() + "_" + mShaderData.mShaderCompileData.label.get() + ".vert";
@@ -302,6 +302,8 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 
+            gpuProgramDescriptorsData.mUniformBufferToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
+
             // descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             // descriptorWrites[1].dstSet = descriptorSets[i];
             // descriptorWrites[1].dstBinding = 1;
@@ -316,4 +318,6 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
             vkUpdateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
     }
+
+    return gpuProgramDescriptorsData;
 }

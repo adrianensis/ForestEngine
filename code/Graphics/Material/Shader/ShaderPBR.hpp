@@ -31,7 +31,7 @@ protected:
     virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
 
-    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
+    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUProgramDescriptorsData& gpuProgramDescriptorsData) const override;
 
     void registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) const;
     void registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const;
