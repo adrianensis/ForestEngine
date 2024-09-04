@@ -2,9 +2,7 @@
 
 #include "Graphics/GPU/GPUProgramModule.h"
 #include "Graphics/GPU/GPURenderPass.h"
-#include "Graphics/GPU/GPUSwapChain.h"
-#include "Graphics/GPU/GPUDevice.h"
-
+#include "Graphics/GPU/GPUContext.hpp"
 #include <vulkan/vulkan.h>
 
 #include "Core/Minimal.hpp"
@@ -22,16 +20,14 @@ public:
         inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
     private:
+        Ptr<GPUContext> mGPUContext;
         GPURenderPass* vulkanRenderPass;
-        GPUSwapChain* vulkanSwapChain;
-        GPUDevice* vulkanDevice;
-        GPUPhysicalDevice* vulkanPhysicalDevice;
         VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
         VkPipeline pipeline = VK_NULL_HANDLE;
         GPUVertexInputData mGPUVertexInputData;
 
     public:
-        GPUGraphicsPipeline(GPURenderPass* vulkanRenderPass, GPUSwapChain* vulkanSwapChain, GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice);
+        GPUGraphicsPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext);
         const VkPipelineLayout getPipelineLayout() const;
         const VkPipeline getPipeline() const;
         bool initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData);

@@ -13,7 +13,7 @@ void GPUContext::init()
     vulkan = new Vulkan(vulkanConfig, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
     vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
     vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkanPhysicalDevice, vulkan, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkanPhysicalDevice, vulkan->getSurface(), GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
     vulkanCommandPool = new GPUCommandPool(vulkanDevice, vulkanPhysicalDevice);
 
     if (!vulkan->initialize())

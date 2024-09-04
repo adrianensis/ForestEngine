@@ -2,8 +2,8 @@
 #include <limits>
 
 
-GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, GPUWindow* gpuWindow)
-        : vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice), vulkan(vulkan), gpuWindow(gpuWindow) {
+GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels)
+        : vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {
 }
 
 const VkSwapchainKHR GPUSwapChain::getSwapChain() const {
@@ -91,7 +91,6 @@ VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCap
         return surfaceCapabilities.currentExtent;
     }
     VULKAN_LOG("Extent can differ from gpuWindow resolution so picking the resolution that best matches the gpuWindow within the minImageExtent and maxImageExtent bounds");
-    Vector2 windowSizeInPixels = gpuWindow->getSizeInPixels();
     VkExtent2D extent = {
             (uint32_t) windowSizeInPixels.x,
             (uint32_t) windowSizeInPixels.y
@@ -114,7 +113,7 @@ uint32_t GPUSwapChain::getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapa
 bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, uint32_t imageCount) {
     VkSwapchainCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = vulkan->getSurface();
+    createInfo.surface = vkSurface;
     createInfo.minImageCount = imageCount;
     createInfo.imageFormat = surfaceFormat.format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;

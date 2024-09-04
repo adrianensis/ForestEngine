@@ -6,7 +6,7 @@
 
     ;
 
-    GPUProgramModule::GPUProgramModule(GPUDevice* vulkanDevice) : vulkanDevice(vulkanDevice) {
+    GPUProgramModule::GPUProgramModule(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {
     }
 
     const VkShaderModule GPUProgramModule::getShaderModule() const {
@@ -19,7 +19,7 @@
         createInfo.codeSize = moduleContent.size();
         createInfo.pCode = (const uint32_t*) moduleContent.data();
 
-        if (vkCreateShaderModule(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &shaderModule) != VK_SUCCESS) {
+        if (vkCreateShaderModule(mGPUContext->vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &shaderModule) != VK_SUCCESS) {
             CHECK_MSG(false,"Could not create Vulkan shader module");
             return false;
         }
@@ -29,7 +29,7 @@
     }
 
     void GPUProgramModule::terminate() {
-        vkDestroyShaderModule(vulkanDevice->getDevice(), shaderModule, ALLOCATOR);
+        vkDestroyShaderModule(mGPUContext->vulkanDevice->getDevice(), shaderModule, ALLOCATOR);
         LOG("Destroyed Vulkan shader module");
     }
 

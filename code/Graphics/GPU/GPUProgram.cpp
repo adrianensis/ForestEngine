@@ -5,8 +5,8 @@
 
 GPUProgram::GPUProgram()
 {
-    vertexShader = new GPUProgramModule(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice);
-    fragmentShader = new GPUProgramModule(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice);
+    vertexShader = new GPUProgramModule(GET_SYSTEM(GPUInstance).mGPUContext);
+    fragmentShader = new GPUProgramModule(GET_SYSTEM(GPUInstance).mGPUContext);
 };
 
 void GPUProgram::enable() const
@@ -37,7 +37,7 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPU
 
     if(!vulkanGraphicsPipeline)
     {
-        vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
+        vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
     }
 
     // createDescriptors();

@@ -2,8 +2,8 @@
 
 #include "Graphics/GPU/Vertex.h"
 
-GPUGraphicsPipeline::GPUGraphicsPipeline(GPURenderPass* vulkanRenderPass, GPUSwapChain* vulkanSwapChain, GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice)
-    : vulkanRenderPass(vulkanRenderPass), vulkanSwapChain(vulkanSwapChain), vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice) {
+GPUGraphicsPipeline::GPUGraphicsPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
+    : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
 
 const VkPipeline GPUGraphicsPipeline::getPipeline() const {
@@ -52,14 +52,14 @@ bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const
     VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
-    viewport.width = (float) vulkanSwapChain->getExtent().width;
-    viewport.height = (float) vulkanSwapChain->getExtent().height;
+    viewport.width = (float) mGPUContext->vulkanSwapChain->getExtent().width;
+    viewport.height = (float) mGPUContext->vulkanSwapChain->getExtent().height;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
     VkRect2D scissor{};
     scissor.offset = {0, 0};
-    scissor.extent = vulkanSwapChain->getExtent();
+    scissor.extent = mGPUContext->vulkanSwapChain->getExtent();
 
     VkPipelineViewportStateCreateInfo viewportState{};
     viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -83,7 +83,7 @@ bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const
 
     VkPipelineMultisampleStateCreateInfo multisampleState{};
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleState.rasterizationSamples = vulkanPhysicalDevice->getSampleCount();
+    multisampleState.rasterizationSamples = mGPUContext->vulkanPhysicalDevice->getSampleCount();
     multisampleState.pSampleMask = nullptr;
     multisampleState.alphaToCoverageEnable = VK_FALSE;
     multisampleState.alphaToOneEnable = VK_FALSE;
@@ -135,7 +135,7 @@ bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
-    if (vkCreatePipelineLayout(vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &pipelineLayout) != VK_SUCCESS) {
+    if (vkCreatePipelineLayout(mGPUContext->vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &pipelineLayout) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline layout");
         return false;
     }
@@ -162,7 +162,7 @@ bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const
     constexpr int createInfoCount = 1;
     VkPipelineCache pipelineCache = VK_NULL_HANDLE;
 
-    if (vkCreateGraphicsPipelines(vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &pipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(mGPUContext->vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &pipeline) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline");
         return false;
     }
@@ -172,9 +172,9 @@ bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const
 }
 
 void GPUGraphicsPipeline::terminate() {
-    vkDestroyPipeline(vulkanDevice->getDevice(), pipeline, ALLOCATOR);
+    vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), pipeline, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline");
-    vkDestroyPipelineLayout(vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
+    vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
 }
 
