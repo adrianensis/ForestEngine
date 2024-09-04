@@ -354,7 +354,7 @@ void RenderPass::commandRecording()
 
     vulkanRenderPass->begin(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
 
-    // vulkanGraphicsPipeline->bind(vulkanCommandBuffer);
+    // gpuProgramPipeline->bind(vulkanCommandBuffer);
 
     // // VkBuffer vertexBuffers[] = {vulkanVertexBuffer->getGPUBuffer().getVkBuffer()};
     // // VkDeviceSize vertexBufferOffsets[] = {0};
@@ -368,7 +368,7 @@ void RenderPass::commandRecording()
 
     // // VkDescriptorSet descriptorSet = descriptorSets[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
     // // VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    // // VkPipelineLayout pipelineLayout = vulkanGraphicsPipeline->getPipelineLayout();
+    // // VkPipelineLayout pipelineLayout = gpuProgramPipeline->getPipelineLayout();
     // // constexpr uint32_t firstSet = 0;
     // // constexpr uint32_t descriptorSetCount = 1;
     // // constexpr uint32_t dynamicOffsetCount = 0;

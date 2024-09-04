@@ -5,7 +5,7 @@
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUContext.hpp"
 #include "Core/Object/ObjectBase.hpp"
-#include "Graphics/GPU/GPUGraphicsPipeline.h"
+#include "Graphics/GPU/GPUProgramPipeline.h"
 
 class GPURenderPass;
 
@@ -34,7 +34,7 @@ private:
 
     Ptr<GPUContext> mGPUContext;
 
-    GPUGraphicsPipeline* vulkanGraphicsPipeline;
+    GPUProgramPipeline* gpuProgramPipeline;
 
     GPUProgramModule* vertexShader;
     GPUProgramModule* fragmentShader;

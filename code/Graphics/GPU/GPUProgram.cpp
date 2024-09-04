@@ -35,9 +35,9 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPU
         // return false;
     }
 
-    if(!vulkanGraphicsPipeline)
+    if(!gpuProgramPipeline)
     {
-        vulkanGraphicsPipeline = new GPUGraphicsPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
+        gpuProgramPipeline = new GPUProgramPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
     }
 
     // createDescriptors();
@@ -109,7 +109,7 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPU
         // gpuVertexInputData.mVertexInputAttributeDescriptions[i].offset = offsetof(Vertex, position);
     }
 
-    if (!vulkanGraphicsPipeline->initialize(*vertexShader, *fragmentShader, mGPUProgramDescriptorsData.descriptorSetLayout, gpuVertexInputData))
+    if (!gpuProgramPipeline->initialize(*vertexShader, *fragmentShader, mGPUProgramDescriptorsData.descriptorSetLayout, gpuVertexInputData))
     {
         CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
     }
@@ -117,12 +117,12 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPU
 
 void GPUProgram::terminate()
 {
-    vulkanGraphicsPipeline->terminate();
+    gpuProgramPipeline->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUProgramDescriptorsData.descriptorPool, allocationCallbacks);
     vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUProgramDescriptorsData.descriptorSetLayout, allocationCallbacks);
     
-    delete vulkanGraphicsPipeline;
+    delete gpuProgramPipeline;
 }
 

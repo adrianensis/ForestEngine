@@ -1,20 +1,20 @@
-#include "Graphics/GPU/GPUGraphicsPipeline.h"
+#include "Graphics/GPU/GPUProgramPipeline.h"
 
 #include "Graphics/GPU/Vertex.h"
 
-GPUGraphicsPipeline::GPUGraphicsPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
+GPUProgramPipeline::GPUProgramPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
     : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
 
-const VkPipeline GPUGraphicsPipeline::getPipeline() const {
+const VkPipeline GPUProgramPipeline::getPipeline() const {
     return pipeline;
 }
 
-const VkPipelineLayout GPUGraphicsPipeline::getPipelineLayout() const {
+const VkPipelineLayout GPUProgramPipeline::getPipelineLayout() const {
     return pipelineLayout;
 }
 
-bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
+bool GPUProgramPipeline::initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
 
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
     vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -171,13 +171,13 @@ bool GPUGraphicsPipeline::initialize(const GPUProgramModule& vertexShader, const
     return true;
 }
 
-void GPUGraphicsPipeline::terminate() {
+void GPUProgramPipeline::terminate() {
     vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), pipeline, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline");
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
 }
 
-void GPUGraphicsPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
+void GPUProgramPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
     vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 }
