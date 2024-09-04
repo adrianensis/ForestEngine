@@ -1,9 +1,4 @@
-#include "Graphics/GPU/GPUInstance.hpp"
-#include "Graphics/GPU/GPUPhysicalDevice.h"
-#include "Graphics/GPU/GPUDevice.h"
-#include "Graphics/GPU/GPUSwapChain.h"
-#include "Graphics/GPU/GPUCommandPool.h"
-#include "Graphics/GPU/GPUCommandBuffer.h"
+#include "Graphics/GPU/GPUContext.hpp"
 
 #include "Graphics/Window/WindowManager.hpp"
 
@@ -13,8 +8,8 @@ void GPUContext::init()
     vulkan = new Vulkan(vulkanConfig, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
     vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
     vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkanPhysicalDevice, vulkan->getSurface(), GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
-    vulkanCommandPool = new GPUCommandPool(vulkanDevice, vulkanPhysicalDevice);
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkan->getSurface(), GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
+    vulkanCommandPool = new GPUCommandPool(vulkanDevice);
 
     if (!vulkan->initialize())
     {

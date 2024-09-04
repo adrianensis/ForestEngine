@@ -1,7 +1,7 @@
 #include "GPUCommandPool.h"
 #include "Graphics/GPU/GPUCommandBuffer.h"
 
-GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice) : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {
+GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice) : vulkanDevice(vulkanDevice) {
 }
 
 const VkCommandPool GPUCommandPool::getVkCommandPool() const {
@@ -12,7 +12,7 @@ bool GPUCommandPool::initialize() {
     VkCommandPoolCreateInfo commandPoolInfo{};
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    commandPoolInfo.queueFamilyIndex = vulkanPhysicalDevice->getQueueFamilyIndices().GraphicsFamily.value();
+    commandPoolInfo.queueFamilyIndex = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices().GraphicsFamily.value();
 
     if (vkCreateCommandPool(vulkanDevice->getDevice(), &commandPoolInfo, ALLOCATOR, &vkCommandPool) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan command pool");

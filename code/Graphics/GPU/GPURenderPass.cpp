@@ -2,8 +2,8 @@
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 
 
-GPURenderPass::GPURenderPass(GPUSwapChain* vulkanSwapChain, GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice)
-        : vulkanSwapChain(vulkanSwapChain), vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice) {}
+GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
+        : mGPUContext(gpuContext){}
 
 const VkRenderPass GPURenderPass::getRenderPass() const {
     return renderPass;
@@ -11,8 +11,8 @@ const VkRenderPass GPURenderPass::getRenderPass() const {
 
 bool GPURenderPass::initialize() {
     VkAttachmentDescription colorAttachment{};
-    colorAttachment.format = vulkanSwapChain->getSurfaceFormat().format;
-    colorAttachment.samples = vulkanPhysicalDevice->getSampleCount();
+    colorAttachment.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
+    colorAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
     colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -22,7 +22,7 @@ bool GPURenderPass::initialize() {
 
     VkAttachmentDescription depthAttachment{};
     depthAttachment.format = findDepthFormat();
-    depthAttachment.samples = vulkanPhysicalDevice->getSampleCount();
+    depthAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -31,7 +31,7 @@ bool GPURenderPass::initialize() {
     depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     VkAttachmentDescription colorAttachmentResolve{};
-    colorAttachmentResolve.format = vulkanSwapChain->getSurfaceFormat().format;
+    colorAttachmentResolve.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
     colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
     colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -77,7 +77,7 @@ bool GPURenderPass::initialize() {
     renderPassInfo.dependencyCount = 1;
     renderPassInfo.pDependencies = &dependency;
 
-    if (vkCreateRenderPass(vulkanDevice->getDevice(), &renderPassInfo, ALLOCATOR, &renderPass) != VK_SUCCESS) {
+    if (vkCreateRenderPass(mGPUContext->vulkanDevice->getDevice(), &renderPassInfo, ALLOCATOR, &renderPass) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan render pass");
         return false;
     }
@@ -86,7 +86,7 @@ bool GPURenderPass::initialize() {
 }
 
 void GPURenderPass::terminate() {
-    vkDestroyRenderPass(vulkanDevice->getDevice(), renderPass, ALLOCATOR);
+    vkDestroyRenderPass(mGPUContext->vulkanDevice->getDevice(), renderPass, ALLOCATOR);
     LOG("Destroyed Vulkan render pass");
 }
 
@@ -96,7 +96,7 @@ void GPURenderPass::begin(const GPUCommandBuffer* vulkanCommandBuffer, const GPU
     renderPassInfo.renderPass = renderPass;
     renderPassInfo.framebuffer = vulkanFramebuffer.getFramebuffer();
     renderPassInfo.renderArea.offset = {0, 0};
-    renderPassInfo.renderArea.extent = vulkanSwapChain->getExtent();
+    renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();
 
     VkClearColorValue clearColorValue = {
             {0.0f, 0.0f, 0.0f, 1.0f}
@@ -131,5 +131,5 @@ VkFormat GPURenderPass::findDepthFormat() {
     };
     VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
     VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    return vulkanPhysicalDevice->findSupportedFormat(candidates, tiling, features);
+    return mGPUContext->vulkanDevice->getPhysicalDevice()->findSupportedFormat(candidates, tiling, features);
 }

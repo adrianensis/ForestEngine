@@ -16,6 +16,7 @@ private:
 public:
     GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice);
     const VkDevice getDevice() const;
+    GPUPhysicalDevice* getPhysicalDevice() const { return vulkanPhysicalDevice; }
     const VkQueue getGraphicsQueue() const;
     const VkQueue getPresentQueue() const;
     bool initialize();

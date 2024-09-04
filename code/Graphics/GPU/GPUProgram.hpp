@@ -4,7 +4,6 @@
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
 #include "Graphics/GPU/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/GPUContext.hpp"
-#include "Graphics/GPU/Vulkan.h"
 #include "Core/Object/ObjectBase.hpp"
 #include "Graphics/GPU/GPUGraphicsPipeline.h"
 

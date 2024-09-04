@@ -1,12 +1,10 @@
 #pragma once
 #include "Graphics/GPU/Vulkan.h"
-
-class Vulkan;
-class GPUPhysicalDevice;
-class GPUDevice;
-class GPUSwapChain;
-class GPUCommandPool;
-class GPUCommandBuffer;
+#include "Graphics/GPU/GPUPhysicalDevice.h"
+#include "Graphics/GPU/GPUDevice.h"
+#include "Graphics/GPU/GPUSwapChain.h"
+#include "Graphics/GPU/GPUCommandPool.h"
+#include "Graphics/GPU/GPUCommandBuffer.h"
 
 class GPUContext
 {

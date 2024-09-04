@@ -2,7 +2,6 @@
 
 #include "Graphics/GPU/GPUPhysicalDevice.h"
 #include "Graphics/GPU/GPUDevice.h"
-#include "Graphics/GPU/GPUContext.hpp"
 
 class GPUCommandBuffer;
 
@@ -11,12 +10,11 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 private:
-    GPUPhysicalDevice* vulkanPhysicalDevice;
     GPUDevice* vulkanDevice;
     VkCommandPool vkCommandPool = VK_NULL_HANDLE;
 
 public:
-    GPUCommandPool(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice);
+    GPUCommandPool(GPUDevice* vulkanDevice);
     const VkCommandPool getVkCommandPool() const;
     bool initialize();
     void terminate();

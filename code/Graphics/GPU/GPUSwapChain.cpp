@@ -2,8 +2,8 @@
 #include <limits>
 
 
-GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels)
-        : vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {
+GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels)
+        : vulkanDevice(vulkanDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {
 }
 
 const VkSwapchainKHR GPUSwapChain::getSwapChain() const {
@@ -23,7 +23,7 @@ const std::vector<VkImageView>& GPUSwapChain::getImageViews() const {
 }
 
 bool GPUSwapChain::initialize() {
-    const SwapChainInfo& swapChainInfo = vulkanPhysicalDevice->getSwapChainInfo();
+    const SwapChainInfo& swapChainInfo = vulkanDevice->getPhysicalDevice()->getSwapChainInfo();
 
     surfaceFormat = chooseSurfaceFormat(swapChainInfo.SurfaceFormats);
     presentMode = choosePresentMode(swapChainInfo.PresentModes);
@@ -121,7 +121,7 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    const QueueFamilyIndices& queueFamilyIndices = vulkanPhysicalDevice->getQueueFamilyIndices();
+    const QueueFamilyIndices& queueFamilyIndices = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices();
     if (queueFamilyIndices.GraphicsFamily != queueFamilyIndices.PresentationFamily) {
         uint32_t queueFamilyIndexValues[] = {
                 queueFamilyIndices.GraphicsFamily.value(),

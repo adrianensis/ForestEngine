@@ -20,7 +20,7 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
         mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
     }
 
-    vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain, GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice, GET_SYSTEM(GPUInstance).mGPUContext->vulkanPhysicalDevice);
+    vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext);
 }
 
 void RenderPass::terminate()

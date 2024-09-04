@@ -14,7 +14,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels);
+    GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels);
     const VkSwapchainKHR getSwapChain() const;
     const VkSurfaceFormatKHR& getSurfaceFormat() const;
     const VkExtent2D& getExtent() const;
@@ -34,7 +34,6 @@ private:
 
 private:
     GPUDevice* vulkanDevice;
-    GPUPhysicalDevice* vulkanPhysicalDevice;
     Vector2 windowSizeInPixels;
     VkSurfaceKHR vkSurface;
     VkSurfaceFormatKHR surfaceFormat{};

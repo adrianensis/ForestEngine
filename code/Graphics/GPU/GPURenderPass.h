@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/GPUProgramModule.h"
-#include "Graphics/GPU/GPUSwapChain.h"
-#include "Graphics/GPU/GPUDevice.h"
+#include "Graphics/GPU/GPUContext.hpp"
 #include "Graphics/GPU/GPUCommandBuffer.h"
 
 class GPUFramebuffer;
@@ -12,7 +11,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    GPURenderPass(GPUSwapChain* vulkanSwapChain, GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice);
+    GPURenderPass(Ptr<GPUContext> gpuContext);
     const VkRenderPass getRenderPass() const;
     bool initialize();
     void terminate();
@@ -22,9 +21,7 @@ private:
     VkFormat findDepthFormat();
 
 private:
-    GPUSwapChain* vulkanSwapChain;
-    GPUDevice* vulkanDevice;
-    GPUPhysicalDevice* vulkanPhysicalDevice;
+    Ptr<GPUContext> mGPUContext;
     VkRenderPass renderPass = VK_NULL_HANDLE;
 };
 
