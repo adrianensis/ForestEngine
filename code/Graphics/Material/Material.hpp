@@ -3,9 +3,9 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/GPU/GPUUniformBuffer.hpp"
-#include "Graphics/GPU/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Buffer/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderManager.hpp"
 

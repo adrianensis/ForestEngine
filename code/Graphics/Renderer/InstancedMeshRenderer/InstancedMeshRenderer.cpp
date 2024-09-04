@@ -3,7 +3,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 

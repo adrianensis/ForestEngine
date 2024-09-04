@@ -17,8 +17,8 @@
 
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/GPU/GPUTexture.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/Image/GPUTexture.hpp"
+#include "Graphics/GPU/Shader/GPUShader.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/Shader/ShaderManager.hpp"
 

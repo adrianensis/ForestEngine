@@ -2,10 +2,10 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 
-#include "Graphics/GPU/GPUTexture.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/Image/GPUTexture.hpp"
+#include "Graphics/GPU/Shader/GPUShader.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"

@@ -1,5 +1,4 @@
 #include "Graphics/GPU/GPUWindow.hpp"
-#include "Graphics/RenderEngine.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
 GLFWwindow* GPUWindow::getGlfwWindow() const 
@@ -118,7 +117,7 @@ void GPUWindow::setCursorVisibility(bool visible)
 void GPUWindow::onResize(GLFWwindow *gpuWindow, i32 width, i32 height)
 {
 	mGPUWindowData.mWindowSize.set(width, height);
-	GET_SYSTEM(RenderEngine).onResize(width, height);
+	// GET_SYSTEM(RenderEngine).onResize(width, height);
 }
 
 void GPUWindow::onResizeGLFW(GLFWwindow *windowGLFW, i32 width, i32 height)

@@ -1,9 +1,9 @@
 #include "Graphics/GPU/GPUInstance.hpp"
-#include "Graphics/GPU/GPUPhysicalDevice.h"
-#include "Graphics/GPU/GPUDevice.h"
-#include "Graphics/GPU/GPUSwapChain.h"
-#include "Graphics/GPU/GPUCommandPool.h"
-#include "Graphics/GPU/GPUCommandBuffer.h"
+#include "Graphics/GPU/Core/GPUPhysicalDevice.h"
+#include "Graphics/GPU/Core/GPUDevice.h"
+#include "Graphics/GPU/Core/GPUSwapChain.h"
+#include "Graphics/GPU/Core/GPUCommandPool.h"
+#include "Graphics/GPU/Core/GPUCommandBuffer.h"
 
 void GPUInstance::init()
 {

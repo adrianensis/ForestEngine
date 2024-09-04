@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/Vulkan.h"
+#include "Graphics/GPU/Core/Vulkan.h"
 
 /*
     - none: (default) local read/write memory,

@@ -6,7 +6,7 @@
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Core/Config/Paths.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"
 

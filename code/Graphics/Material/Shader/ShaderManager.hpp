@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/Shader/GPUShader.hpp"
 
 class GPUVertexBuffersContainer;
 class GPUUniformBuffersContainer;

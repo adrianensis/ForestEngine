@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/Material/Shader/Shader.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 
 class ShaderDefault : public Shader
 {

@@ -1,6 +1,6 @@
 #include "Graphics/Renderer/ShapeBatchRenderer.hpp"
-#include "Graphics/GPU/GPUShader.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Shader/GPUShader.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"

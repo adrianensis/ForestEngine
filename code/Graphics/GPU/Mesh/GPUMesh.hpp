@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/GPUVertexBuffer.hpp"
-#include "Graphics/GPU/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Buffer/GPUVertexBuffer.hpp"
+#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 #include "Core/Object/ObjectBase.hpp"
 
 class GPUMesh: public ObjectBase

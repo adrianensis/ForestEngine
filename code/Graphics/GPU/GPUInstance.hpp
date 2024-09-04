@@ -1,12 +1,8 @@
 #pragma once
 
 #include "Core/ECS/System.hpp"
-#include "Graphics/GPU/GPUUniformBuffer.hpp"
-#include "Graphics/GPU/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
-
-#include "Graphics/GPU/GPUContext.hpp"
-#include "Graphics/GPU/GPUImage.h"
+#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
+#include "Graphics/GPU/Core/GPUContext.hpp"
 
 class GPUInstance: public System
 {

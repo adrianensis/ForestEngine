@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 
 class DirectionalLightData
 {

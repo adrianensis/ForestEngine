@@ -2,7 +2,7 @@
 
 #include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
-#include "Graphics/GPU/GPUTexture.hpp"
+#include "Graphics/GPU/Image/GPUTexture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/GPU/Mesh/MeshPrimitives.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"

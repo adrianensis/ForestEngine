@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUUniformBuffer.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Buffer/GPUUniformBuffer.hpp"
 
 namespace ShaderBuilderNodes
 {

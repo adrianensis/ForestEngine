@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
-#include "Graphics/GPU/GPUBuffersContainer.hpp"
+#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
 
 class GPUSkeletalAnimationManager: public System
 {

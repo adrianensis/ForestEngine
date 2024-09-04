@@ -1,6 +1,6 @@
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
-#include "Graphics/GPU/GPUBuiltIn.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 
 void GPUSkeletalAnimationManager::init()
 {
