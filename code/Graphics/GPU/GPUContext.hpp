@@ -1,12 +1,12 @@
 #pragma once
 #include "Graphics/GPU/Vulkan.h"
-#include "Graphics/GPU/GPUCommandBuffer.h"
 
 class Vulkan;
 class GPUPhysicalDevice;
 class GPUDevice;
 class GPUSwapChain;
 class GPUCommandPool;
+class GPUCommandBuffer;
 
 class GPUContext
 {
@@ -20,7 +20,7 @@ public:
     GPUDevice* vulkanDevice;
     GPUSwapChain* vulkanSwapChain;
     GPUCommandPool* vulkanCommandPool;
-    std::vector<GPUCommandBuffer> vulkanCommandBuffers;
+    std::vector<GPUCommandBuffer*> vulkanCommandBuffers;
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;

@@ -348,9 +348,9 @@ void RenderPass::frameAcquisition()
 
 void RenderPass::commandRecording()
 {
-    const GPUCommandBuffer& vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    vulkanCommandBuffer.reset();
-    vulkanCommandBuffer.begin();
+    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    vulkanCommandBuffer->reset();
+    vulkanCommandBuffer->begin();
 
     vulkanRenderPass->begin(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
 
@@ -383,7 +383,7 @@ void RenderPass::commandRecording()
 
     vulkanRenderPass->end(vulkanCommandBuffer);
 
-    if (!vulkanCommandBuffer.end()) {
+    if (!vulkanCommandBuffer->end()) {
         CHECK_MSG(false, "Could not end frame");
     }
 }
@@ -393,8 +393,8 @@ void RenderPass::commandSubmission()
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-    const GPUCommandBuffer& vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    VkCommandBuffer vkCommandBuffer = vulkanCommandBuffer.getVkCommandBuffer();
+    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    VkCommandBuffer vkCommandBuffer = vulkanCommandBuffer->getVkCommandBuffer();
     submitInfo.pCommandBuffers = &vkCommandBuffer;
     submitInfo.commandBufferCount = 1;
 

@@ -2,8 +2,9 @@
 
 #include "Graphics/GPU/GPUPhysicalDevice.h"
 #include "Graphics/GPU/GPUDevice.h"
-#include "Graphics/GPU/GPUCommandBuffer.h"
 #include "Graphics/GPU/GPUContext.hpp"
+
+class GPUCommandBuffer;
 
 class GPUCommandPool {
 private:
@@ -19,6 +20,6 @@ public:
     const VkCommandPool getVkCommandPool() const;
     bool initialize();
     void terminate();
-    std::vector<GPUCommandBuffer> allocateCommandBuffers(uint32_t count) const;
-    void free(const GPUCommandBuffer& commandBuffer) const;
+    std::vector<GPUCommandBuffer*> allocateCommandBuffers(uint32_t count) const;
+    void free(const GPUCommandBuffer* commandBuffer) const;
 };

@@ -2,8 +2,6 @@
 
 #include <vulkan/vulkan.h>
 #include "vulkan/vulkan.hpp"
-#include <string>
-#include <vector>
 
 #include "Core/Minimal.hpp"
 

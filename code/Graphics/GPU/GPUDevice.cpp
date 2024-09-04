@@ -1,6 +1,5 @@
 #include "GPUDevice.h"
 
-const VkAllocationCallbacks* GPUDevice::ALLOCATOR = VK_NULL_HANDLE;
 
 GPUDevice::GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice) : vulkan(vulkan), vulkanPhysicalDevice(vulkanPhysicalDevice) {
 }

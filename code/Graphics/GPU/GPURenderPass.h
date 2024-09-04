@@ -16,8 +16,8 @@ public:
     const VkRenderPass getRenderPass() const;
     bool initialize();
     void terminate();
-    void begin(const GPUCommandBuffer& vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const;
-    void end(const GPUCommandBuffer& vulkanCommandBuffer) const;
+    void begin(const GPUCommandBuffer* vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const;
+    void end(const GPUCommandBuffer* vulkanCommandBuffer) const;
 private:
     VkFormat findDepthFormat();
 

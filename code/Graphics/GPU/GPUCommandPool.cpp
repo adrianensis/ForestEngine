@@ -1,4 +1,5 @@
 #include "GPUCommandPool.h"
+#include "Graphics/GPU/GPUCommandBuffer.h"
 
 GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice) : vulkanPhysicalDevice(vulkanPhysicalDevice), vulkanDevice(vulkanDevice) {
 }
@@ -27,7 +28,7 @@ void GPUCommandPool::terminate() {
     VULKAN_LOG("Destroyed Vulkan command pool");
 }
 
-std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(uint32_t count) const {
+std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(uint32_t count) const {
     std::vector<VkCommandBuffer> vkCommandBuffers;
     vkCommandBuffers.resize(count);
 
@@ -42,17 +43,17 @@ std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(uint32_t co
         return {};
     }
 
-    std::vector<GPUCommandBuffer> vulkanCommandBuffers;
+    std::vector<GPUCommandBuffer*> vulkanCommandBuffers;
     for (VkCommandBuffer vkCommandBuffer : vkCommandBuffers) {
-        GPUCommandBuffer vulkanCommandBuffer;
-        vulkanCommandBuffer.init(vkCommandBuffer);
+        GPUCommandBuffer* vulkanCommandBuffer = new GPUCommandBuffer();
+        vulkanCommandBuffer->init(vkCommandBuffer);
         vulkanCommandBuffers.push_back(vulkanCommandBuffer);
     }
     VULKAN_LOG("Allocated [{}] command buffers");
     return vulkanCommandBuffers;
 }
 
-void GPUCommandPool::free(const GPUCommandBuffer& commandBuffer) const {
-    VkCommandBuffer vkCommandBuffer = commandBuffer.getVkCommandBuffer();
+void GPUCommandPool::free(const GPUCommandBuffer* commandBuffer) const {
+    VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
     vkFreeCommandBuffers(vulkanDevice->getDevice(), vkCommandPool, 1, &vkCommandBuffer);
 }

@@ -1,7 +1,6 @@
 #include "Graphics/GPU/GPURenderPass.h"
 #include "Graphics/GPU/GPUFramebuffer.hpp"
 
-const VkAllocationCallbacks* GPURenderPass::ALLOCATOR = VK_NULL_HANDLE;
 
 GPURenderPass::GPURenderPass(GPUSwapChain* vulkanSwapChain, GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice)
         : vulkanSwapChain(vulkanSwapChain), vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice) {}
@@ -91,7 +90,7 @@ void GPURenderPass::terminate() {
     LOG("Destroyed Vulkan render pass");
 }
 
-void GPURenderPass::begin(const GPUCommandBuffer& vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const {
+void GPURenderPass::begin(const GPUCommandBuffer* vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const {
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = renderPass;
@@ -117,11 +116,11 @@ void GPURenderPass::begin(const GPUCommandBuffer& vulkanCommandBuffer, const GPU
     renderPassInfo.clearValueCount = (uint32_t) clearValues.size();
     renderPassInfo.pClearValues = clearValues.data();
 
-    vkCmdBeginRenderPass(vulkanCommandBuffer.getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdBeginRenderPass(vulkanCommandBuffer->getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void GPURenderPass::end(const GPUCommandBuffer& vulkanCommandBuffer) const {
-    vkCmdEndRenderPass(vulkanCommandBuffer.getVkCommandBuffer());
+void GPURenderPass::end(const GPUCommandBuffer* vulkanCommandBuffer) const {
+    vkCmdEndRenderPass(vulkanCommandBuffer->getVkCommandBuffer());
 }
 
 VkFormat GPURenderPass::findDepthFormat() {

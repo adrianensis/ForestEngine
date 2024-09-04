@@ -1,7 +1,6 @@
 #include "GPUSwapChain.h"
 #include <limits>
 
-const VkAllocationCallbacks* GPUSwapChain::ALLOCATOR = VK_NULL_HANDLE;
 
 GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, GPUPhysicalDevice* vulkanPhysicalDevice, Vulkan* vulkan, GPUWindow* gpuWindow)
         : vulkanDevice(vulkanDevice), vulkanPhysicalDevice(vulkanPhysicalDevice), vulkan(vulkan), gpuWindow(gpuWindow) {

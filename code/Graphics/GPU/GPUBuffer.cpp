@@ -1,4 +1,5 @@
 #include "Graphics/GPU/GPUBuffer.h"
+#include "Graphics/GPU/GPUCommandBuffer.h"
 
 const GPUBuffer::Config& GPUBuffer::getConfig() const {
     return config;
@@ -72,20 +73,20 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
     CHECK_MSG(sourceBuffer.config.Size == destinationBuffer.config.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
 
     constexpr uint32_t commandBufferCount = 1;
-    const std::vector<GPUCommandBuffer>& commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
+    const std::vector<GPUCommandBuffer*> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
     CHECK_MSG(commandBuffers.size() == commandBufferCount, "commandBuffers.size() == commandBufferCount")
 
-    const GPUCommandBuffer& commandBuffer = commandBuffers[0];
-    commandBuffer.begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+    const GPUCommandBuffer* commandBuffer = commandBuffers[0];
+    commandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
-    VkCommandBuffer vkCommandBuffer = commandBuffer.getVkCommandBuffer();
+    VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
 
     VkBufferCopy copyRegion{};
     copyRegion.size = sourceBuffer.config.Size;
     constexpr uint32_t regionCount = 1;
     vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.vkBuffer, destinationBuffer.vkBuffer, regionCount, &copyRegion);
 
-    commandBuffer.end();
+    commandBuffer->end();
 
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

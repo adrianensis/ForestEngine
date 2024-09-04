@@ -4,7 +4,7 @@
 #include "Core/Minimal.hpp"
 //namespace GPUAPI {
 
-    const VkAllocationCallbacks* GPUProgramModule::ALLOCATOR = VK_NULL_HANDLE;
+    ;
 
     GPUProgramModule::GPUProgramModule(GPUDevice* vulkanDevice) : vulkanDevice(vulkanDevice) {
     }
