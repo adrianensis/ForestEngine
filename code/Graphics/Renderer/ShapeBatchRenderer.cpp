@@ -1,5 +1,5 @@
 #include "Graphics/Renderer/ShapeBatchRenderer.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
@@ -49,7 +49,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
     // mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
 
-    // mShader->getGPUProgram()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
 }
 
 void ShapeBatchRenderer::render()
@@ -63,7 +63,7 @@ void ShapeBatchRenderer::render()
     PROFILER_CPU()
 	if (mShapesCounter > 0)
 	{
-		// mShader->getGPUProgram()->enable();
+		// mShader->getGPUShader()->enable();
 
 		mGPUVertexBuffersContainer.enable();
         mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).resize(mPositionBuffer.size());
@@ -73,7 +73,7 @@ void ShapeBatchRenderer::render()
 //		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersContainer.disable();
 
-        // mShader->getGPUProgram()->disable();
+        // mShader->getGPUShader()->disable();
 
 		mPositionBuffer.clear();
 		mColorBuffer.clear();

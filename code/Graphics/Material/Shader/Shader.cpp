@@ -3,7 +3,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 
 #include "Graphics/GPU/GPUTexture.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/GPU/GPUBuiltIn.hpp"
 #include "Graphics/GPU/Mesh/GPUMesh.hpp"
@@ -94,14 +94,14 @@ bool Shader::hasFramebufferBinding(HashedString bindingName) const
     return mShaderData.mFramebufferBindings.contains(bindingName);
 }
 
-void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
+void Shader::bindTextures(Ptr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
 {
-    // gpuProgram->enable();
+    // gpuShader->enable();
 
     // u32 textureUnit = 0;
     // FOR_MAP(it, mShaderData.mFramebufferBindings)
     // {
-    //     gpuProgram->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
+    //     gpuShader->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
     //     textureUnit++;
     // }
 
@@ -109,16 +109,16 @@ void Shader::bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<H
     // FOR_MAP(it, mShaderData.mTextures)
     // {
     //     // NOTE: We reserve position 0 to represent NULL
-    //     gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(*it).mName, 0);
+    //     gpuShader->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(*it).mName, 0);
     // }
 
     // FOR_MAP(it, textures)
     // {
     //     // NOTE: We reserve position 0 to represent NULL
-    //     gpuProgram->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
+    //     gpuShader->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
     // }
 
-    // gpuProgram->disable();
+    // gpuShader->disable();
 }
 
 void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
@@ -130,21 +130,21 @@ void Shader::generateShaderGenerationData(ShaderGenerationData& shaderGeneration
 {
 }
 
-OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompileData)
+OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompileData)
 {
     mShaderData.mShaderCompileData = shaderCompileData;
 
-    GPUProgramDescriptorsData gpuProgramDescriptorsData = createDescriptors(mShaderData.mShaderCompileData);
+    GPUShaderDescriptorsData gpuShaderDescriptorsData = createDescriptors(mShaderData.mShaderCompileData);
 
-    OwnerPtr<GPUProgram> gpuProgram = OwnerPtr<GPUProgram>::newObject();
+    OwnerPtr<GPUShader> gpuShader = OwnerPtr<GPUShader>::newObject();
 
     GPUVertexBuffersContainer gpuVertexBuffersContainer;
     mShaderData.mShaderCompileData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, false); 
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, gpuVertexBuffersContainer, gpuProgramDescriptorsData);
-    createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuProgramDescriptorsData);
+    createVertexShader(sbVert, gpuVertexBuffersContainer, gpuShaderDescriptorsData);
+    createFragmentShader(sbFrag, gpuVertexBuffersContainer, gpuShaderDescriptorsData);
 
     std::string stringShaderVert = sbVert.getCode();
     std::string shaderPathVert = Paths::mOutputShaders.get() + mShaderData.mShaderCompileData.id.get() + "_" + mShaderData.mShaderCompileData.label.get() + ".vert";
@@ -170,14 +170,14 @@ OwnerPtr<GPUProgram> Shader::compileShader(const ShaderCompileData& shaderCompil
     std::vector<byte> stringShaderFragSpvBinary;
     FileUtils::readFileBinaryData(shaderPathFrag + ".spv", stringShaderFragSpvBinary);
 
-    gpuProgram->initFromFileContents(mShaderData.mShaderCompileData.vulkanRenderPass, gpuProgramDescriptorsData, mShaderData.mShaderCompileData.mUniformBuffers, gpuVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShaderVertSpvBinary, stringShaderFragSpvBinary);
+    gpuShader->initFromFileContents(mShaderData.mShaderCompileData.vulkanRenderPass, gpuShaderDescriptorsData, mShaderData.mShaderCompileData.mUniformBuffers, gpuVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShaderVertSpvBinary, stringShaderFragSpvBinary);
 
-    return gpuProgram;
+    return gpuShader;
 }
 
-GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCompileData)
+GPUShaderDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCompileData)
 {
-    GPUProgramDescriptorsData gpuProgramDescriptorsData;
+    GPUShaderDescriptorsData gpuShaderDescriptorsData;
     // LAYOUT
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
@@ -218,7 +218,7 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
     layoutInfo.pBindings = bindings.data();
 
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    if (vkCreateDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &gpuProgramDescriptorsData.descriptorSetLayout) != VK_SUCCESS)
+    if (vkCreateDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &gpuShaderDescriptorsData.descriptorSetLayout) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not create uniform buffer descrptor set layout");
     }
@@ -248,22 +248,22 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
         *
         * This can be particularly frustrating if the allocation succeeds on some machines, but fails on others.
         */
-    if (vkCreateDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &gpuProgramDescriptorsData.descriptorPool) != VK_SUCCESS)
+    if (vkCreateDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &gpuShaderDescriptorsData.descriptorPool) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not initialize descriptor pool");
     }
 
     // SETS
-    std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, gpuProgramDescriptorsData.descriptorSetLayout);
+    std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, gpuShaderDescriptorsData.descriptorSetLayout);
 
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    allocInfo.descriptorPool = gpuProgramDescriptorsData.descriptorPool;
+    allocInfo.descriptorPool = gpuShaderDescriptorsData.descriptorPool;
     allocInfo.descriptorSetCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
     allocInfo.pSetLayouts = layouts.data();
 
-    gpuProgramDescriptorsData.descriptorSets.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
-    if (vkAllocateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), &allocInfo, gpuProgramDescriptorsData.descriptorSets.data()) != VK_SUCCESS)
+    gpuShaderDescriptorsData.descriptorSets.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
+    if (vkAllocateDescriptorSets(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), &allocInfo, gpuShaderDescriptorsData.descriptorSets.data()) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not allocate [{}] descriptor sets" /*allocInfo.descriptorSetCount*/);
     }
@@ -287,7 +287,7 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
             std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = gpuProgramDescriptorsData.descriptorSets[i];
+            descriptorWrites[0].dstSet = gpuShaderDescriptorsData.descriptorSets[i];
             descriptorWrites[0].dstBinding = j;
             descriptorWrites[0].dstArrayElement = 0;
             switch (uniformBuffer.getGPUUniformBufferData().mType)
@@ -302,7 +302,7 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-            gpuProgramDescriptorsData.mUniformBufferToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
+            gpuShaderDescriptorsData.mUniformBufferToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
 
             // descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             // descriptorWrites[1].dstSet = descriptorSets[i];
@@ -319,5 +319,5 @@ GPUProgramDescriptorsData Shader::createDescriptors(ShaderCompileData& shaderCom
         }
     }
 
-    return gpuProgramDescriptorsData;
+    return gpuShaderDescriptorsData;
 }

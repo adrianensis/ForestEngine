@@ -78,9 +78,9 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             uniformBuffers
         };
 
-        mGPUPrograms.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(shaderCompileData));
+        mGPUShaders.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(shaderCompileData));
 
-        // setupShader(mGPUPrograms.at(instancedMeshData));
+        // setupShader(mGPUShaders.at(instancedMeshData));
         // bindShader(instancedMeshData);
     }
 }
@@ -108,8 +108,8 @@ void RenderPass::postFramebufferEnabled()
 void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
-    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData);
-    // gpuProgram->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    Ptr<GPUShader> gpuShader = mGPUShaders.at(instancedMeshData);
+    // gpuShader->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
     // Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     // if(model)
@@ -117,14 +117,14 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
     //     Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
     //     if(skeletonState)
     //     {
-    //         gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+    //         gpuShader->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
     //     }
     // }
 
-    // gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    // gpuProgram->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
-    // mGPUPrograms.at(instancedMeshData)->bindTextures(mGPUPrograms.at(instancedMeshData)->getGPUProgram(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
+    // mGPUShaders.at(instancedMeshData)->bindTextures(mGPUShaders.at(instancedMeshData)->getGPUShader(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 }
 
 void RenderPass::preRender()
@@ -143,11 +143,11 @@ void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    Ptr<GPUProgram> gpuProgram = mGPUPrograms.at(instancedMeshData);
+    Ptr<GPUShader> gpuShader = mGPUShaders.at(instancedMeshData);
 
-    gpuProgram->enable();
+    gpuShader->enable();
     instancedMeshRenderer->render();
-    gpuProgram->disable();
+    gpuShader->disable();
 }
 
 void RenderPass::renderPass()
@@ -354,7 +354,7 @@ void RenderPass::commandRecording()
 
     vulkanRenderPass->begin(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
 
-    // gpuProgramPipeline->bind(vulkanCommandBuffer);
+    // gpuShaderPipeline->bind(vulkanCommandBuffer);
 
     // // VkBuffer vertexBuffers[] = {vulkanVertexBuffer->getGPUBuffer().getVkBuffer()};
     // // VkDeviceSize vertexBufferOffsets[] = {0};
@@ -368,7 +368,7 @@ void RenderPass::commandRecording()
 
     // // VkDescriptorSet descriptorSet = descriptorSets[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
     // // VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    // // VkPipelineLayout pipelineLayout = gpuProgramPipeline->getPipelineLayout();
+    // // VkPipelineLayout pipelineLayout = gpuShaderPipeline->getPipelineLayout();
     // // constexpr uint32_t firstSet = 0;
     // // constexpr uint32_t descriptorSetCount = 1;
     // // constexpr uint32_t dynamicOffsetCount = 0;

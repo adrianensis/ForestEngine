@@ -1,4 +1,4 @@
-#include "Graphics/GPU/GPUProgramModule.h"
+#include "Graphics/GPU/GPUShaderModule.h"
 
 
 #include "Core/Minimal.hpp"
@@ -6,14 +6,14 @@
 
     ;
 
-    GPUProgramModule::GPUProgramModule(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {
+    GPUShaderModule::GPUShaderModule(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {
     }
 
-    const VkShaderModule GPUProgramModule::getShaderModule() const {
+    const VkShaderModule GPUShaderModule::getShaderModule() const {
         return shaderModule;
     }
 
-    bool GPUProgramModule::initialize(const std::vector<byte>& moduleContent) {
+    bool GPUShaderModule::initialize(const std::vector<byte>& moduleContent) {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = moduleContent.size();
@@ -28,7 +28,7 @@
         return true;
     }
 
-    void GPUProgramModule::terminate() {
+    void GPUShaderModule::terminate() {
         vkDestroyShaderModule(mGPUContext->vulkanDevice->getDevice(), shaderModule, ALLOCATOR);
         LOG("Destroyed Vulkan shader module");
     }

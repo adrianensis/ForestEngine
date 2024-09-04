@@ -1,30 +1,30 @@
-#include "Graphics/GPU/GPUProgram.hpp"
+#include "Graphics/GPU/GPUShader.hpp"
 #include "Graphics/GPU/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/GPUUniformBuffer.hpp"
 #include "Graphics/GPU/GPUInstance.hpp"
 
-GPUProgram::GPUProgram()
+GPUShader::GPUShader()
 {
-    vertexShader = new GPUProgramModule(GET_SYSTEM(GPUInstance).mGPUContext);
-    fragmentShader = new GPUProgramModule(GET_SYSTEM(GPUInstance).mGPUContext);
+    vertexShader = new GPUShaderModule(GET_SYSTEM(GPUInstance).mGPUContext);
+    fragmentShader = new GPUShaderModule(GET_SYSTEM(GPUInstance).mGPUContext);
 };
 
-void GPUProgram::enable() const
+void GPUShader::enable() const
 {
 //	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);
 }
 
-void GPUProgram::disable() const
+void GPUShader::disable() const
 {
 //	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPUProgramDescriptorsData& gpuProgramDescriptorsData, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment)
+void GPUShader::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorsData& gpuShaderDescriptorsData, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment)
 {
 //    mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
     mGPUContext = gpuContext;
     // mUniformBuffers = uniformBuffers;
-    mGPUProgramDescriptorsData = gpuProgramDescriptorsData;
+    mGPUShaderDescriptorsData = gpuShaderDescriptorsData;
 
     if (!vertexShader->initialize(vertex)) {
         CHECK_MSG(false, "Could not initialize vertex shader");
@@ -35,9 +35,9 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPU
         // return false;
     }
 
-    if(!gpuProgramPipeline)
+    if(!gpuShaderPipeline)
     {
-        gpuProgramPipeline = new GPUProgramPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
+        gpuShaderPipeline = new GPUShaderPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
     }
 
     // createDescriptors();
@@ -109,20 +109,20 @@ void GPUProgram::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPU
         // gpuVertexInputData.mVertexInputAttributeDescriptions[i].offset = offsetof(Vertex, position);
     }
 
-    if (!gpuProgramPipeline->initialize(*vertexShader, *fragmentShader, mGPUProgramDescriptorsData.descriptorSetLayout, gpuVertexInputData))
+    if (!gpuShaderPipeline->initialize(*vertexShader, *fragmentShader, mGPUShaderDescriptorsData.descriptorSetLayout, gpuVertexInputData))
     {
         CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
     }
 }
 
-void GPUProgram::terminate()
+void GPUShader::terminate()
 {
-    gpuProgramPipeline->terminate();
+    gpuShaderPipeline->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUProgramDescriptorsData.descriptorPool, allocationCallbacks);
-    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUProgramDescriptorsData.descriptorSetLayout, allocationCallbacks);
+    vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorsData.descriptorPool, allocationCallbacks);
+    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorsData.descriptorSetLayout, allocationCallbacks);
     
-    delete gpuProgramPipeline;
+    delete gpuShaderPipeline;
 }
 

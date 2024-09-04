@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GPU/GPUProgramModule.h"
+#include "Graphics/GPU/GPUShaderModule.h"
 #include "Graphics/GPU/GPURenderPass.h"
 #include "Graphics/GPU/GPUContext.hpp"
 
@@ -11,16 +11,16 @@ public:
     std::vector<VkVertexInputAttributeDescription> mVertexInputAttributeDescriptions;
 };
 
-class GPUProgramPipeline
+class GPUShaderPipeline
 {
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    GPUProgramPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext);
+    GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext);
     const VkPipelineLayout getPipelineLayout() const;
     const VkPipeline getPipeline() const;
-    bool initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData);
+    bool initialize(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData);
     void terminate();
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
 

@@ -3,8 +3,8 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/GPU/GPUTexture.hpp"
-#include "Graphics/GPU/GPUProgram.hpp"
-#include "Graphics/GPU/GPUProgramModule.h"
+#include "Graphics/GPU/GPUShader.hpp"
+#include "Graphics/GPU/GPUShaderModule.h"
 
 class Material;
 class GPUMesh;
@@ -110,24 +110,24 @@ public:
     void disable() const;
     bool hasFramebufferBinding(HashedString bindingName) const;
 
-    void bindTextures(Ptr<GPUProgram> gpuProgram, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const;
+    void bindTextures(Ptr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const;
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUProgramDescriptorsData& gpuProgramDescriptorsData) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUShaderDescriptorsData& gpuShaderDescriptorsData) const
         {};
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUProgramDescriptorsData& gpuProgramDescriptorsData) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUShaderDescriptorsData& gpuShaderDescriptorsData) const
         {};
 
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUProgram> compileShader(const ShaderCompileData& shaderCompileData);
+    OwnerPtr<GPUShader> compileShader(const ShaderCompileData& shaderCompileData);
 
 
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void registerTextures() {};
-    GPUProgramDescriptorsData createDescriptors(ShaderCompileData& shaderCompileData);
+    GPUShaderDescriptorsData createDescriptors(ShaderCompileData& shaderCompileData);
 
 protected:
     ShaderData mShaderData;

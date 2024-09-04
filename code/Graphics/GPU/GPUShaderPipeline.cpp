@@ -1,20 +1,20 @@
-#include "Graphics/GPU/GPUProgramPipeline.h"
+#include "Graphics/GPU/GPUShaderPipeline.h"
 
 #include "Graphics/GPU/Vertex.h"
 
-GPUProgramPipeline::GPUProgramPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
+GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
     : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
 
-const VkPipeline GPUProgramPipeline::getPipeline() const {
+const VkPipeline GPUShaderPipeline::getPipeline() const {
     return pipeline;
 }
 
-const VkPipelineLayout GPUProgramPipeline::getPipelineLayout() const {
+const VkPipelineLayout GPUShaderPipeline::getPipelineLayout() const {
     return pipelineLayout;
 }
 
-bool GPUProgramPipeline::initialize(const GPUProgramModule& vertexShader, const GPUProgramModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
+bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
 
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
     vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -171,13 +171,13 @@ bool GPUProgramPipeline::initialize(const GPUProgramModule& vertexShader, const 
     return true;
 }
 
-void GPUProgramPipeline::terminate() {
+void GPUShaderPipeline::terminate() {
     vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), pipeline, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline");
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
 }
 
-void GPUProgramPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
+void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
     vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 }
