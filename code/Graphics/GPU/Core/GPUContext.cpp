@@ -6,27 +6,26 @@ void GPUContext::init()
 {
     Vulkan::Config vulkanConfig;
     vulkan = new Vulkan(vulkanConfig, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
-    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
-    vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkan->getSurface(), GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
-    vulkanCommandPool = new GPUCommandPool(vulkanDevice);
-
     if (!vulkan->initialize())
     {
         CHECK_MSG(false, "Could not initialize Vulkan");
     }
+    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
     if (!vulkanPhysicalDevice->initialize())
     {
         CHECK_MSG(false, "Could not initialize Vulkan physical device");
     }
+    vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
     if (!vulkanDevice->initialize())
     {
         CHECK_MSG(false, "Could not initialize Vulkan device");
     }
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkan->getSurface(), GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
     if (!vulkanSwapChain->initialize())
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
+    vulkanCommandPool = new GPUCommandPool(vulkanDevice);
     if (!vulkanCommandPool->initialize()) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool");

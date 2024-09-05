@@ -2,6 +2,7 @@
 
 void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext)
 {
+    mGPUContext = gpuContext;
     mGPUDescriptorData = gpuShaderDescriptorSetsData;
     // LAYOUT
 
