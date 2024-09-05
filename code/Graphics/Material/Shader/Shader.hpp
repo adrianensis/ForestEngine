@@ -114,10 +114,10 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUShaderDescriptorsData& gpuShaderDescriptorsData) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const
         {};
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUShaderDescriptorsData& gpuShaderDescriptorsData) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const
         {};
 
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
@@ -127,10 +127,10 @@ public:
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
     virtual void registerTextures() {};
-    GPUShaderDescriptorsData createDescriptors(ShaderCompileData& shaderCompileData);
 
 protected:
     ShaderData mShaderData;
+    GPUShaderDescriptorSets* mGPUDescriptor;
 
 public:
 

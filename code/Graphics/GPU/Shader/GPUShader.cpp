@@ -19,12 +19,12 @@ void GPUShader::disable() const
 //	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUShader::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorsData& gpuShaderDescriptorsData, const std::vector<GPUUniformBuffer>& uniformBuffers, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment)
+void GPUShader::initFromFileContents(GPURenderPass* vulkanRenderPass, GPUShaderDescriptorSets* gpuShaderDescriptorSets, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment)
 {
 //    mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
     mGPUContext = gpuContext;
     // mUniformBuffers = uniformBuffers;
-    mGPUShaderDescriptorsData = gpuShaderDescriptorsData;
+    mGPUDescriptor = gpuShaderDescriptorSets;
 
     if (!vertexShader->initialize(vertex)) {
         CHECK_MSG(false, "Could not initialize vertex shader");
@@ -109,7 +109,7 @@ void GPUShader::initFromFileContents(GPURenderPass* vulkanRenderPass, const GPUS
         // gpuVertexInputData.mVertexInputAttributeDescriptions[i].offset = offsetof(Vertex, position);
     }
 
-    if (!gpuShaderPipeline->initialize(*vertexShader, *fragmentShader, mGPUShaderDescriptorsData.descriptorSetLayout, gpuVertexInputData))
+    if (!gpuShaderPipeline->initialize(*vertexShader, *fragmentShader, mGPUDescriptor->descriptorSetLayout, gpuVertexInputData))
     {
         CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
     }
@@ -120,8 +120,8 @@ void GPUShader::terminate()
     gpuShaderPipeline->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorsData.descriptorPool, allocationCallbacks);
-    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorsData.descriptorSetLayout, allocationCallbacks);
+    vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUDescriptor->descriptorPool, allocationCallbacks);
+    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUDescriptor->descriptorSetLayout, allocationCallbacks);
     
     delete gpuShaderPipeline;
 }
