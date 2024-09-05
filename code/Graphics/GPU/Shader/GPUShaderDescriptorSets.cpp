@@ -45,7 +45,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     if (vkCreateDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &descriptorSetLayout) != VK_SUCCESS)
     {
-        CHECK_MSG(false, "Could not create uniform buffer descrptor set layout");
+        CHECK_MSG(false, "Could not create descrptor set layout");
     }
 
     // POOL
@@ -75,7 +75,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
         */
     if (vkCreateDescriptorPool(mGPUContext->vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &descriptorPool) != VK_SUCCESS)
     {
-        CHECK_MSG(false, "Could not initialize descriptor pool");
+        CHECK_MSG(false, "Could not create descriptor pool");
     }
 
     // SETS
