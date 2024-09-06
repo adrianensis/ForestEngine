@@ -135,7 +135,11 @@ OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompile
 {
     mShaderData.mShaderCompileData = shaderCompileData;
 
-    GPUShaderDescriptorSetsData gpuShaderDescriptorSetsData {mShaderData.mShaderCompileData.mUniformBuffers};
+    GPUShaderDescriptorSetsData gpuShaderDescriptorSetsData
+    {
+        mShaderData.mShaderCompileData.mUniformBuffers
+    };
+    // GET_SYSTEM(MaterialManager).getMaterialTextureBindings
     mGPUDescriptor->init(gpuShaderDescriptorSetsData, GET_SYSTEM(GPUInstance).mGPUContext);
 
     OwnerPtr<GPUShader> gpuShader = OwnerPtr<GPUShader>::newObject();

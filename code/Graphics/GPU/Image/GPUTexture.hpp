@@ -40,9 +40,11 @@ private:
 	GPUTextureData mTextureData;
     Ptr<GPUContext> mGPUContext;
     GPUImage* vulkanTextureImage;
+    uint32_t mipLevels = 0;
+
+public:
     VkImageView textureImageView = VK_NULL_HANDLE;
     VkSampler textureSampler = VK_NULL_HANDLE;
-    uint32_t mipLevels = 0;
 
 public:
     GET(ID)

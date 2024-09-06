@@ -205,12 +205,12 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
     PROFILER_CPU()
     FOR_ARRAY(i, mRenderPassData.mDependencies)
     {
-        FramebufferBinding framebufferBinding
-        {
+        // FramebufferBinding framebufferBinding
+        // {
             // mRenderPassData.mDependencies[i].mSamplerName,
             // mRenderPassData.mDependencies[i].mRenderPass->getOutputGPUFramebuffer().getAttachments().at(mRenderPassData.mDependencies[i].mAttachmentType).mAttachmentID,
             // mRenderPassData.mDependencies[i].mStage
-        };
+        // };
         // shader->addFramebufferBinding(framebufferBinding);
     }
 }
