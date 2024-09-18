@@ -193,7 +193,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
 {
     FOR_MAP(it, mShaderData.mTextures)
     {
-        shaderGenerationData.mFragmentVariables.mUniforms.push_back(GPUBuiltIn::Uniforms::getTextureHandler(*it));
+        shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUBuiltIn::Uniforms::getTextureHandler(*it));
     }
     
     // FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
@@ -331,6 +331,7 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
     u32 binding = 0;
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mUniformBufferToSet.at((*it).mName))); binding++; }
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mUniformBufferToSet.at((*it).mName))); binding++; }
+    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { shaderBuilder.get().attribute(Attribute(*it,binding, 0)); binding++; }
     u32 uniformBufferIndex = 0;
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, uniformBufferIndex)); uniformBufferIndex++; }
     u32 fragmentInputIndex = 0;
