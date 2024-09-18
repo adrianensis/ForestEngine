@@ -70,7 +70,7 @@ void GPUBuffer::setData(void* data) const {
 }
 
 void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice) {
-    CHECK_MSG(sourceBuffer.config.Size == destinationBuffer.config.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
+    CHECK_MSG(sourceBuffer.config.Size <= destinationBuffer.config.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
 
     constexpr uint32_t commandBufferCount = 1;
     const std::vector<GPUCommandBuffer*> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);

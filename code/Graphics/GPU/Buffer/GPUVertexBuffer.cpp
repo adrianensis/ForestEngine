@@ -18,8 +18,8 @@ void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, co
     mAttributeOffset += 1;
 
     GPUBuffer::Config bufferConfig{};
-    bufferConfig.Size = sizeof(f32) * 1000; //bufferSize;
-    bufferConfig.Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferConfig.Size = sizeof(f32) * 10000; //bufferSize;
+    bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
     if (!buffer.init(mGPUContext, bufferConfig)) {
@@ -67,37 +67,39 @@ const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
     return buffer;
 }
 
-// bool GPUVertexBuffer::initialize(const std::vector<Vertex>& vertices) {
-//     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+bool GPUVertexBuffer::setData(void* data, u32 size)
+{
+    VkDeviceSize bufferSize = size;
+    // VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-//     GPUBuffer::Config stagingBufferConfig{};
-//     stagingBufferConfig.Size = bufferSize;
-//     stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-//     stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    GPUBuffer::Config stagingBufferConfig{};
+    stagingBufferConfig.Size = bufferSize;
+    stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-//     GPUBuffer stagingBuffer(vulkanPhysicalDevice, vulkanDevice);
-//     if (!stagingBuffer.initialize(stagingBufferConfig)) {
-//         CHECK_MSG(false,"Could not initialize staging buffer for vertex buffer");
-//         return false;
-//     }
+    GPUBuffer stagingBuffer;
+    if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {
+        CHECK_MSG(false,"Could not initialize staging buffer for vertex buffer");
+        return false;
+    }
 
-//     GPUBuffer::Config bufferConfig{};
-//     bufferConfig.Size = bufferSize;
-//     bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-//     bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    // GPUBuffer::Config bufferConfig{};
+    // bufferConfig.Size = bufferSize;
+    // bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    // bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-//     if (!buffer.initialize(bufferConfig)) {
-//         CHECK_MSG(false,"Could not initialize vertex buffer");
-//         return false;
-//     }
+    // if (!buffer.init(mGPUContext, bufferConfig)) {
+    //     CHECK_MSG(false,"Could not initialize vertex buffer");
+    //     return false;
+    // }
 
-//     stagingBuffer.setData((void*) vertices.data());
-//     GPUBuffer::copy(stagingBuffer, buffer, *vulkanCommandPool, *vulkanDevice);
-//     LOG("Copied vertices to vertex buffer");
+    stagingBuffer.setData(data);
+    GPUBuffer::copy(stagingBuffer, buffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);
+    LOG("Copied vertices to vertex buffer");
 
-//     stagingBuffer.terminate();
-//     LOG("Terminated staging buffer for vertex buffer");
+    stagingBuffer.terminate();
+    LOG("Terminated staging buffer for vertex buffer");
 
-//     LOG("Initialized Vulkan vertex buffer");
-//     return true;
-// }
+    LOG("Initialized Vulkan vertex buffer");
+    return true;
+}

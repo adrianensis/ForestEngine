@@ -144,13 +144,10 @@ OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompile
 
     OwnerPtr<GPUShader> gpuShader = OwnerPtr<GPUShader>::newObject();
 
-    GPUVertexBuffersContainer gpuVertexBuffersContainer;
-    mShaderData.mShaderCompileData.mMesh->populateGPUVertexBuffersContainer(gpuVertexBuffersContainer, false); 
-
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, gpuVertexBuffersContainer, mGPUDescriptor);
-    createFragmentShader(sbFrag, gpuVertexBuffersContainer, mGPUDescriptor);
+    createVertexShader(sbVert, mShaderData.mShaderCompileData.mInputVertexBuffersContainer, mGPUDescriptor);
+    createFragmentShader(sbFrag, mShaderData.mShaderCompileData.mInputVertexBuffersContainer, mGPUDescriptor);
 
     std::string stringShaderVert = sbVert.getCode();
     std::string shaderPathVert = Paths::mOutputShaders.get() + mShaderData.mShaderCompileData.id.get() + "_" + mShaderData.mShaderCompileData.label.get() + ".vert";
@@ -176,7 +173,7 @@ OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompile
     std::vector<byte> stringShaderFragSpvBinary;
     FileUtils::readFileBinaryData(shaderPathFrag + ".spv", stringShaderFragSpvBinary);
 
-    gpuShader->initFromFileContents(mShaderData.mShaderCompileData.vulkanRenderPass, mGPUDescriptor, gpuVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShaderVertSpvBinary, stringShaderFragSpvBinary);
+    gpuShader->initFromFileContents(mShaderData.mShaderCompileData.vulkanRenderPass, mGPUDescriptor, mShaderData.mShaderCompileData.mInputVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext, stringShaderVertSpvBinary, stringShaderFragSpvBinary);
 
     return gpuShader;
 }

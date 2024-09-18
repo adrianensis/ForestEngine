@@ -48,6 +48,7 @@ public:
     HashedString label;
     HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
+    GPUVertexBuffersContainer mInputVertexBuffersContainer;
 };
 
 class ShaderData

@@ -68,6 +68,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
         // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
+        Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
         ShaderCompileData shaderCompileData
         {
             instancedMeshData.mMaterial,
@@ -75,7 +76,8 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID())),
-            uniformBuffers
+            uniformBuffers,
+            instancedMeshRenderer->getGPUVertexBuffersContainer()
         };
 
         mGPUShaders.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(shaderCompileData));

@@ -85,6 +85,17 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
     }
 
+    InstancedMeshData instancedMeshData;
+    instancedMeshData.init(renderer);
+    if(!mInstancedMeshesMap.contains(instancedMeshData))
+    {
+        LOG_TRACE_MSG("New Batch")
+        mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
+        mInstancedMeshesMap.at(instancedMeshData)->init(instancedMeshData);
+    }
+
+    mInstancedMeshesMap.at(instancedMeshData)->addRenderer(renderer);
+
     renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
     if(renderer->isStatic())
     {
@@ -97,7 +108,6 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         mRenderers.at(renderer->getRenderSlot().getSlot()) = renderer;
     }
     
-
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
         if(mRenderPassMap.contains(*it))
@@ -105,17 +115,6 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             mRenderPassMap.at(*it)->addRenderer(renderer);
         }
     }
-
-    InstancedMeshData instancedMeshData;
-    instancedMeshData.init(renderer);
-    if(!mInstancedMeshesMap.contains(instancedMeshData))
-    {
-        LOG_TRACE_MSG("New Batch")
-        mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
-        mInstancedMeshesMap.at(instancedMeshData)->init(instancedMeshData);
-    }
-
-    mInstancedMeshesMap.at(instancedMeshData)->addRenderer(renderer);
 }
 
 void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)

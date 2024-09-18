@@ -38,18 +38,17 @@ public:
     }
     void setDataArray(const ByteBuffer& data)
     {
-        // if (!vulkanVertexBuffer->initialize(data.getBuffer()))
+        if (!setData((void*)data.getBuffer().data(), data.getBuffer().size()))
         {
-            // CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
+            CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
-//	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     u32 getAttributeLocation() const;
     u32 getAttributeLocationWithOffset() const;
     void terminate();
 
     const GPUBuffer& getGPUBuffer() const;
-    // bool initialize(const std::vector<Vertex>& vertices);
+    bool setData(void* data, u32 size);
 
 public:
     GPUVertexBufferData mData;
@@ -60,7 +59,6 @@ private:
     u32 mPreviousOffsetInBytes = 0;
     bool mIsStatic = false;
 
-    
     Ptr<GPUContext> mGPUContext;
     GPUBuffer buffer;
 
