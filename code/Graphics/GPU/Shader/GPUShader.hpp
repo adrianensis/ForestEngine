@@ -26,10 +26,10 @@ private:
 
     Ptr<GPUContext> mGPUContext;
 
-    GPUShaderPipeline* gpuShaderPipeline;
+    GPUShaderPipeline* gpuShaderPipeline = nullptr;
 
-    GPUShaderModule* vertexShader;
-    GPUShaderModule* fragmentShader;
+    GPUShaderModule* vertexShader = nullptr;
+    GPUShaderModule* fragmentShader = nullptr;
     GPUShaderDescriptorSets* mGPUDescriptor;
 };
 REGISTER_CLASS(GPUShader);
