@@ -75,6 +75,7 @@ public:
     std::vector<GPUVertexBuffer> mVertexInputs;
     std::vector<GPUVariableDefinitionData> mVertexOutputs;
     std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUVariableDefinitionData> mSamplers;
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
@@ -84,6 +85,7 @@ public:
     std::vector<GPUVariableDefinitionData> mFragmentInputs;
     std::vector<GPUVariableDefinitionData> mFragmentOutputs;
     std::vector<GPUVariableDefinitionData> mUniforms;
+    std::vector<GPUVariableDefinitionData> mSamplers;
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
