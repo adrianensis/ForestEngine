@@ -9,7 +9,7 @@ void ModelManager::init()
     materialData.setSharedMaterialPropertiesBlock<MetallicRoughness>();
     // pink
     materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
-    mDefaultModelMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderPBR>(materialData);
+    mDefaultModelMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
 }
 
 void ModelManager::terminate()

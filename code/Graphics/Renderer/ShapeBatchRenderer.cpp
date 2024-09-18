@@ -38,11 +38,11 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     {
         mIndicesBuffer.push_back(i);
     }
-    mGPUVertexBuffersContainer.enable();
+    // mGPUVertexBuffersContainer.enable();
     mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt, false);
     mGPUVertexBuffersContainer.getIndicesBuffer().resize(mIndicesBuffer.size());
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
-    mGPUVertexBuffersContainer.disable();
+    // mGPUVertexBuffersContainer.disable();
 
     MaterialData materialData;
     PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);

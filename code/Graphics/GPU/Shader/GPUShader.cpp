@@ -12,6 +12,8 @@ GPUShader::GPUShader()
 void GPUShader::enable() const
 {
 //	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);
+    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    gpuShaderPipeline->bind(*vulkanCommandBuffer);
 }
 
 void GPUShader::disable() const
@@ -83,16 +85,16 @@ void GPUShader::initFromFileContents(GPURenderPass* vulkanRenderPass, GPUShaderD
             switch (gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType())
             {
             case 1:
-                format = VK_FORMAT_R32_SINT;
+                format = VK_FORMAT_R32_UINT;
                 break;
             case 2:
-                format = VK_FORMAT_R32G32_SINT;
+                format = VK_FORMAT_R32G32_UINT;
                 break;
             case 3:
-                format = VK_FORMAT_R32G32B32_SINT;
+                format = VK_FORMAT_R32G32B32_UINT;
                 break;
             case 4:
-                format = VK_FORMAT_R32G32B32A32_SINT;
+                format = VK_FORMAT_R32G32B32A32_UINT;
                 break;
             default:
                 CHECK_MSG(false, "ERROR")

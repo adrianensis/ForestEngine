@@ -53,7 +53,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         mInstancedMeshRenderers.insert(instancedMeshData);
 
         std::vector<GPUUniformBuffer> uniformBuffers;
-        uniformBuffers.push_back(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+        // uniformBuffers.push_back(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
         Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
         if(model)
@@ -61,12 +61,12 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             Ptr<GPUSkeletonState> skeletonState = model->getSkeletonState();
             if(skeletonState)
             {
-                uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+                // uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
             }
         }
 
-        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+        // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+        // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
         ShaderCompileData shaderCompileData
         {
@@ -354,7 +354,9 @@ void RenderPass::commandRecording()
 
     vulkanRenderPass->begin(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
 
-    // gpuShaderPipeline->bind(vulkanCommandBuffer);
+    render();
+
+    // // gpuShaderPipeline->bind(vulkanCommandBuffer);
 
     // // VkBuffer vertexBuffers[] = {vulkanVertexBuffer->getGPUBuffer().getVkBuffer()};
     // // VkDeviceSize vertexBufferOffsets[] = {0};
@@ -362,24 +364,24 @@ void RenderPass::commandRecording()
     // // constexpr uint32_t bindingCount = 1;
     // // vkCmdBindVertexBuffers(vulkanCommandBuffer.getVkCommandBuffer(), firstBinding, bindingCount, vertexBuffers, vertexBufferOffsets);
 
-    // // constexpr VkDeviceSize indexBufferOffset = 0;
-    // // constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
-    // // vkCmdBindIndexBuffer(vulkanCommandBuffer.getVkCommandBuffer(), vulkanIndexBuffer->getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
+    // constexpr VkDeviceSize indexBufferOffset = 0;
+    // constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
+    // vkCmdBindIndexBuffer(vulkanCommandBuffer.getVkCommandBuffer(), vulkanIndexBuffer->getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
 
-    // // VkDescriptorSet descriptorSet = descriptorSets[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    // // VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    // // VkPipelineLayout pipelineLayout = gpuShaderPipeline->getPipelineLayout();
-    // // constexpr uint32_t firstSet = 0;
-    // // constexpr uint32_t descriptorSetCount = 1;
-    // // constexpr uint32_t dynamicOffsetCount = 0;
-    // // constexpr uint32_t* dynamicOffsets = nullptr;
-    // // vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
+    // VkDescriptorSet descriptorSet = descriptorSets[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    // VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    // VkPipelineLayout pipelineLayout = gpuShaderPipeline->getPipelineLayout();
+    // constexpr uint32_t firstSet = 0;
+    // constexpr uint32_t descriptorSetCount = 1;
+    // constexpr uint32_t dynamicOffsetCount = 0;
+    // constexpr uint32_t* dynamicOffsets = nullptr;
+    // vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
 
-    // // constexpr uint32_t instanceCount = 1;
-    // // constexpr uint32_t firstVertex = 0;
-    // // constexpr int32_t vertexOffset = 0;
-    // // constexpr uint32_t firstInstance = 0;
-    // // vkCmdDrawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), (uint32_t) indices.size(), instanceCount, firstVertex, vertexOffset, firstInstance);
+    // constexpr uint32_t instanceCount = 1;
+    // constexpr uint32_t firstVertex = 0;
+    // constexpr int32_t vertexOffset = 0;
+    // constexpr uint32_t firstInstance = 0;
+    // vkCmdDrawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), (uint32_t) indices.size(), instanceCount, firstVertex, vertexOffset, firstInstance);
 
     vulkanRenderPass->end(vulkanCommandBuffer);
 

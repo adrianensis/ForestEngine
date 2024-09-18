@@ -19,6 +19,15 @@ void GPUVertexBuffersContainer::create()
 void GPUVertexBuffersContainer::enable()
 {
 //	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
+    FOR_ARRAY(i, mVertexBuffers)
+    {
+        VkBuffer vertexBuffers[] = {mVertexBuffers[i].getGPUBuffer().getVkBuffer()};
+        VkDeviceSize vertexBufferOffsets[] = {0};
+        constexpr uint32_t firstBinding = 0;
+        constexpr uint32_t bindingCount = 1;
+        const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+        vkCmdBindVertexBuffers(vulkanCommandBuffer->getVkCommandBuffer(), firstBinding, bindingCount, vertexBuffers, vertexBufferOffsets);
+    }
 }
 
 void GPUVertexBuffersContainer::disable()

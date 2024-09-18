@@ -110,7 +110,7 @@ void Model::loadGLTFMaterials()
                 materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
             }
 
-            newMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderPBR>(materialData);
+            newMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {

@@ -26,38 +26,39 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     shaderBuilder.getMain().
     variable(finalPositon, GPUBuiltIn::PrimitiveTypes::mVector4, "finalPositon", call(GPUBuiltIn::PrimitiveTypes::mVector4, {position, {"1.0f"}}));
     
-    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs);
-    if(bonesIDs.isValid())
-    {
-        Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
-        shaderBuilder.getMain().
-        set(finalPositon, boneMatrix.mul(finalPositon));
-    }
+    // auto& bonesIDs = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mBonesIDs);
+    // if(bonesIDs.isValid())
+    // {
+    //     Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
+    //     shaderBuilder.getMain().
+    //     set(finalPositon, boneMatrix.mul(finalPositon));
+    // }
 
-    auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);
-    if(modelMatricesBuffer.isValid())
-    {
-        Variable modelMatrices;
-        modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
-        if(objectId.isValid())
-        {
-            shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
-        }
-    }
+    // auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);
+    // if(modelMatricesBuffer.isValid())
+    // {
+    //     Variable modelMatrices;
+    //     modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    //     auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
+    //     if(objectId.isValid())
+    //     {
+    //         shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
+    //     }
+    // }
 
-    shaderBuilder.setVariableInCache(finalPositon);
+    // shaderBuilder.setVariableInCache(finalPositon);
     
-    vertexShaderCalculatePositionOutputCustom(shaderBuilder);
+    // vertexShaderCalculatePositionOutputCustom(shaderBuilder);
 
-    auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData.mInstanceName);    
-    Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    // auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData.mInstanceName);    
+    // Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     shaderBuilder.getMain().
-    set(GPUBuiltIn::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
+    set(GPUBuiltIn::VertexOutput::mPosition, finalPositon);
+    // set(GPUBuiltIn::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
 
-    auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
-    shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
+    // auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
+    // shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
 }
 
 void ShaderDefault::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
@@ -176,17 +177,17 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoords.at(0));
-    if(inTextureCoord.isValid())
-    {
-        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-        auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
-        Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        shaderBuilder.getMain().
-        // ifBlock(textureHandler.notEq("0"s)).
-            set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
-        // end();
-    }
+    // auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoords.at(0));
+    // if(inTextureCoord.isValid())
+    // {
+    //     auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+    //     auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+    //     Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    //     shaderBuilder.getMain().
+    //     // ifBlock(textureHandler.notEq("0"s)).
+    //         set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
+    //     // end();
+    // }
 }
 
 void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
@@ -238,64 +239,64 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     //     }
     // }
 
-    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
+    // shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalData);
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mTextures);
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(getShaderData().mPropertiesBlockUniformBufferData);
+    // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalData);
+    // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mTextures);
+    // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
+    // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(getShaderData().mPropertiesBlockUniformBufferData);
 
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI180);
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
-    {
-        shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
-        shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
-        shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mBonesMatrices);
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
+    // {
+    //     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBones);
+    //     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mMaxBoneInfluence);
+    //     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mBonesMatrices);
+    // }
 
     FOR_LIST(it, gpuVertexBuffersContainer.getVertexBuffers())
     {
         shaderGenerationData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
-    {
-        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
+    // {
+    //     shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
+    // }
     
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
-    {
-        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
+    // {
+    //     shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mColor);
+    // }
     
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
-    {
-        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
+    // {
+    //     shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mNormal);
+    // }
 
-    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
-    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPositionLight);
-    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
-    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
-    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPosition);
+    // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPositionLight);
+    // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
+    // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
+    // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
-    {
-        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
+    // {
+    //     shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
+    // }
 
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
+    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
-    {
-        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
-    }
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPositionLight);
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
+    // {
+    //     shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mNormal);
+    // }
+    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPosition);
+    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPositionLight);
+    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
+    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
+    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
@@ -315,10 +316,10 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
     u32 vertexOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++; }
 
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
-    {
-        registerFunctionCalculateBoneTransform(shaderBuilder);
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mBonesIDs))
+    // {
+    //     registerFunctionCalculateBoneTransform(shaderBuilder);
+    // }
 }
 
 void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const
@@ -353,19 +354,19 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
 
     vertexShaderCalculatePositionOutput(shaderBuilder);
 
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
-    {
-        vertexShaderCalculateNormalOutput(shaderBuilder);
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mNormal))
+    // {
+    //     vertexShaderCalculateNormalOutput(shaderBuilder);
+    // }
 
-    vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
+    // vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
 
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
-    {
-        vertexShaderCalculateVertexColorOutput(shaderBuilder);
-    }
+    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
+    // {
+    //     vertexShaderCalculateVertexColorOutput(shaderBuilder);
+    // }
 
-    vertexShaderCalculateInstanceIdOutput(shaderBuilder);
+    // vertexShaderCalculateInstanceIdOutput(shaderBuilder);
 }
 
 void ShaderDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const

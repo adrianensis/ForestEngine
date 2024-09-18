@@ -136,9 +136,9 @@ void InstancedMeshRenderer::initBuffers()
     mInstancedMeshData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, mInstancedMeshData.mIsStatic);
     mGPUVertexBuffersContainer.create();
     
-    mGPUVertexBuffersContainer.enable();
+    // mGPUVertexBuffersContainer.enable();
     mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, mInstancedMeshData.mIsStatic);
-    mGPUVertexBuffersContainer.disable();
+    // mGPUVertexBuffersContainer.disable();
 }
 
 void InstancedMeshRenderer::resizeMeshBuffers(u32 maxInstances)
