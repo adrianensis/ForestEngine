@@ -37,7 +37,7 @@ void GPUShader::initFromFileContents(GPURenderPass* vulkanRenderPass, GPUShaderD
 
     if(!gpuShaderPipeline)
     {
-        gpuShaderPipeline = new GPUShaderPipeline(vulkanRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
+        gpuShaderPipeline = new GPUShaderPipeline(vulkanRenderPass, mGPUContext);
     }
 
     // createDescriptors();
@@ -120,8 +120,8 @@ void GPUShader::terminate()
     gpuShaderPipeline->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyDescriptorPool(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUDescriptor->descriptorPool, allocationCallbacks);
-    vkDestroyDescriptorSetLayout(GET_SYSTEM(GPUInstance).mGPUContext->vulkanDevice->getDevice(), mGPUDescriptor->descriptorSetLayout, allocationCallbacks);
+    vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), mGPUDescriptor->descriptorPool, allocationCallbacks);
+    vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), mGPUDescriptor->descriptorSetLayout, allocationCallbacks);
     
     delete gpuShaderPipeline;
 }
