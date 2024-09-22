@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
-#include "Graphics/GPU/Core/GPUSwapChain.h"
-#include "Graphics/GPU/Core/GPURenderPass.h"
+#include "Graphics/GPU/Core/GPUContext.hpp"
+
+class GPURenderPass;
 
 class GPUFramebufferData
 {

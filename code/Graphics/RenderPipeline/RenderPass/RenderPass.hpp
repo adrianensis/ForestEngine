@@ -2,13 +2,12 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
-#include "Graphics/GPU/Core/GPUFramebuffer.hpp"
+#include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
-#include "Graphics/GPU/Core/GPUFramebuffer.hpp"
-#include "Graphics/GPU/Core/GPURenderPass.h"
-#include "Graphics/GPU/Image/GPUImage.h"
+#include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
+#include "Graphics/GPU/RenderPass/GPURenderPass.h"
 
 class MeshRenderer;
 class RenderPipeline;
@@ -52,17 +51,6 @@ protected:
     virtual void updateGlobalData();
     virtual void setupShader(Ptr<Shader> shader) const;
 
-private:
-    bool initializeColorResources();
-    bool initializeDepthResources();
-    VkFormat findDepthFormat();
-    bool initializeFramebuffers();
-
-    void frameAcquisition();
-    void commandRecording();
-    void commandSubmission();
-    void framePresentation();
-
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
 	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShader>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaders;
@@ -71,12 +59,7 @@ protected:
     Ptr<RenderPipeline> mRenderPipeline;
 
     GPURenderPass* vulkanRenderPass;
-    uint32_t swapChainImageIndex;
-    std::vector<GPUFramebuffer> framebuffers;
-    GPUImage* vulkanDepthImage;
-    VkImageView depthImageView = VK_NULL_HANDLE;
-    GPUImage* vulkanColorImage;
-    VkImageView colorImageView = VK_NULL_HANDLE;
+
 public:
     CRGET(RenderPassData)
     CRGET(OutputGPUFramebuffer)

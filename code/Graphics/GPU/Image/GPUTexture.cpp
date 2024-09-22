@@ -112,7 +112,7 @@ bool GPUTexture::initializeTextureSampler() {
     }
 
     bool GPUTexture::initializeTextureImageView() {
-        textureImageView = GET_SYSTEM(GPUInstance).createImageView(vulkanTextureImage->getVkImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+        textureImageView = GPUUtils::createImageView(mGPUContext, vulkanTextureImage->getVkImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
         if (!textureImageView) {
             CHECK_MSG(false,"Could not create Vulkan texture image view");
             return false;
@@ -212,7 +212,7 @@ bool GPUTexture::initializeTextureImage()
             return false;
         }
 
-        VkCommandBuffer commandBuffer = GET_SYSTEM(GPUInstance).beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(mGPUContext);
 
         VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -334,11 +334,11 @@ bool GPUTexture::initializeTextureImage()
                 &barrier
         );
 
-        GET_SYSTEM(GPUInstance).endSingleTimeCommands(commandBuffer);
+        GPUUtils::endSingleTimeCommands(mGPUContext, commandBuffer);
         return true;
     }
 void GPUTexture::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) const {
-        VkCommandBuffer commandBuffer = GET_SYSTEM(GPUInstance).beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(mGPUContext);
 
         VkBufferImageCopy bufferImageCopy{};
         bufferImageCopy.bufferOffset = 0;
@@ -366,5 +366,5 @@ void GPUTexture::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t widt
                 &bufferImageCopy
         );
 
-        GET_SYSTEM(GPUInstance).endSingleTimeCommands(commandBuffer);
+        GPUUtils::endSingleTimeCommands(mGPUContext,commandBuffer);
     }

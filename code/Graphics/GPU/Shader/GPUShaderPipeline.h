@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/GPU/Shader/GPUShaderModule.h"
-#include "Graphics/GPU/Core/GPURenderPass.h"
+#include "Graphics/GPU/RenderPass/GPURenderPass.h"
 #include "Graphics/GPU/Core/GPUContext.hpp"
 
 class GPUVertexInputData

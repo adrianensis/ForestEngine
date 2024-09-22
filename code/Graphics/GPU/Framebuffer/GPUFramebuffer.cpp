@@ -1,4 +1,5 @@
-#include "Graphics/GPU/Core/GPUFramebuffer.hpp"
+#include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
+#include "Graphics/GPU/RenderPass/GPURenderPass.h"
 
 void GPUFramebuffer::init(const GPUFramebufferData& framebufferData)
 {
