@@ -88,12 +88,12 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     }
 
     // SETS
-    std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
+    std::vector<VkDescriptorSetLayout> layouts(/*GPUContext::MAX_FRAMES_IN_FLIGHT*/1, descriptorSetLayout);
 
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     allocInfo.descriptorPool = descriptorPool;
-    allocInfo.descriptorSetCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
+    allocInfo.descriptorSetCount = 1;//GPUContext::MAX_FRAMES_IN_FLIGHT;
     allocInfo.pSetLayouts = layouts.data();
 
     // descriptorSets.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
