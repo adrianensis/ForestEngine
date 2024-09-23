@@ -15,12 +15,15 @@ public:
     }
     void setDataArray(const ByteBuffer& data)
     {
-//	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
+        if (!setData((void*)data.getBuffer().data(), data.getBuffer().size()))
+        {
+            CHECK_MSG(false, "Could not initialize Vulkan indices buffer");
+        }
     }
     void terminate();
 
     const GPUBuffer& getGPUBuffer() const;
-    bool initialize(const std::vector<uint32_t>& indices);
+    bool setData(void* data, u32 size);
 
 private:
 	u32 mBufferId = 0;

@@ -280,35 +280,6 @@ void GPURenderPass::commandRecordingBegin()
     vulkanCommandBuffer->begin();
 
     beginCmd(vulkanCommandBuffer, framebuffers.at(swapChainImageIndex));
-
-    // render();
-
-    // // gpuShaderPipeline->bind(vulkanCommandBuffer);
-
-    // // VkBuffer vertexBuffers[] = {vulkanVertexBuffer->getGPUBuffer().getVkBuffer()};
-    // // VkDeviceSize vertexBufferOffsets[] = {0};
-    // // constexpr uint32_t firstBinding = 0;
-    // // constexpr uint32_t bindingCount = 1;
-    // // vkCmdBindVertexBuffers(vulkanCommandBuffer.getVkCommandBuffer(), firstBinding, bindingCount, vertexBuffers, vertexBufferOffsets);
-
-    // constexpr VkDeviceSize indexBufferOffset = 0;
-    // constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
-    // vkCmdBindIndexBuffer(vulkanCommandBuffer.getVkCommandBuffer(), vulkanIndexBuffer->getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
-
-    // VkDescriptorSet descriptorSet = descriptorSets[mGPUContext->currentFrame];
-    // VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    // VkPipelineLayout pipelineLayout = gpuShaderPipeline->getPipelineLayout();
-    // constexpr uint32_t firstSet = 0;
-    // constexpr uint32_t descriptorSetCount = 1;
-    // constexpr uint32_t dynamicOffsetCount = 0;
-    // constexpr uint32_t* dynamicOffsets = nullptr;
-    // vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
-
-    // constexpr uint32_t instanceCount = 1;
-    // constexpr uint32_t firstVertex = 0;
-    // constexpr int32_t vertexOffset = 0;
-    // constexpr uint32_t firstInstance = 0;
-    // vkCmdDrawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), (uint32_t) indices.size(), instanceCount, firstVertex, vertexOffset, firstInstance);
 }
 
 void GPURenderPass::commandRecordingEnd()

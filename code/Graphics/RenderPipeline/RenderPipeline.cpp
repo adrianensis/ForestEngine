@@ -15,12 +15,15 @@ void RenderPipeline::update()
 {
 	PROFILER_CPU()
     PROFILER_BLOCK_CPU(updateRenderers);
-    FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
+    if(!mUsedSlots.empty())
     {
-        TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
-        if(renderer.isValid())
+        FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
         {
-            processRenderer(renderer);
+            TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
+            if(renderer.isValid())
+            {
+                processRenderer(renderer);
+            }
         }
     }
 
@@ -38,19 +41,19 @@ void RenderPipeline::update()
 
     FOR_MAP(it, mInstancedMeshesMap)
     {
-        it->second->enable();
+        // it->second->enable();
         it->second->update();
-        it->second->disable();
+        // it->second->disable();
     }
 
     PROFILER_END_BLOCK()
 
     PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
+    // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
     PROFILER_END_BLOCK()
 
-    GET_SYSTEM(MaterialManager).update();
-	GET_SYSTEM(GPUSkeletalAnimationManager).update();
+    // GET_SYSTEM(MaterialManager).update();
+	// GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
 void RenderPipeline::processRenderer(TypedComponentHandler<MeshRenderer> renderer)

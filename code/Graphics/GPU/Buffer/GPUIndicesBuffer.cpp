@@ -6,6 +6,14 @@ void GPUIndicesBuffer::init(Ptr<GPUContext> gpuContext, const GPUDataType& gpuDa
     mIsStatic = isStatic;
     mGPUDataType = gpuDataType;
 //    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(GPUBufferType::INDEX);
+    GPUBuffer::Config bufferConfig{};
+    bufferConfig.Size = sizeof(f32) * 10000; //bufferSize;;
+    bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+    if (!buffer.init(mGPUContext, bufferConfig)) {
+        CHECK_MSG(false,"Could not initialize staging buffer for index buffer");
+    }
 }
 
 void GPUIndicesBuffer::resize(u32 size)
@@ -22,8 +30,8 @@ const GPUBuffer& GPUIndicesBuffer::getGPUBuffer() const {
     return buffer;
 }
 
-bool GPUIndicesBuffer::initialize(const std::vector<uint32_t>& indices) {
-    VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+bool GPUIndicesBuffer::setData(void* data, u32 size) {
+    VkDeviceSize bufferSize = size;
 
     GPUBuffer::Config stagingBufferConfig{};
     stagingBufferConfig.Size = bufferSize;
@@ -36,17 +44,17 @@ bool GPUIndicesBuffer::initialize(const std::vector<uint32_t>& indices) {
         return false;
     }
 
-    GPUBuffer::Config bufferConfig{};
-    bufferConfig.Size = bufferSize;
-    bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-    bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    // GPUBuffer::Config bufferConfig{};
+    // bufferConfig.Size = bufferSize;
+    // bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    // bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    if (!buffer.init(mGPUContext, bufferConfig)) {
-        CHECK_MSG(false,"Could not initialize index buffer");
-        return false;
-    }
+    // if (!buffer.init(mGPUContext, bufferConfig)) {
+    //     CHECK_MSG(false,"Could not initialize index buffer");
+    //     return false;
+    // }
 
-    stagingBuffer.setData((void*) indices.data());
+    stagingBuffer.setData(data);
     GPUBuffer::copy(stagingBuffer, buffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);
     LOG("Copied indices to index buffer");
 

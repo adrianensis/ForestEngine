@@ -27,4 +27,5 @@ private:
     Config config;
     VkBuffer vkBuffer = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+    bool mInit = false;
 };

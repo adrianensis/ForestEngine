@@ -14,6 +14,17 @@ void GPUShader::enable() const
 //	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);
     const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
     gpuShaderPipeline->bind(*vulkanCommandBuffer);
+
+    // VkDescriptorSet descriptorSet = descriptorSets[mGPUContext->currentFrame];
+    VkDescriptorSet descriptorSet = mGPUDescriptor->descriptorSets[0];
+    VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    VkPipelineLayout pipelineLayout = gpuShaderPipeline->getPipelineLayout();
+    constexpr uint32_t firstSet = 0;
+    constexpr uint32_t descriptorSetCount = 1;
+    constexpr uint32_t dynamicOffsetCount = 0;
+    constexpr uint32_t* dynamicOffsets = nullptr;
+    vkCmdBindDescriptorSets(vulkanCommandBuffer->getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
+
 }
 
 void GPUShader::disable() const

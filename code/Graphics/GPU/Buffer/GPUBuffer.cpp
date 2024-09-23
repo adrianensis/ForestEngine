@@ -47,17 +47,22 @@ bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const Config& config)
     constexpr VkDeviceSize memoryOffset = 0;
     vkBindBufferMemory(mGPUContext->vulkanDevice->getDevice(), vkBuffer, vkDeviceMemory, memoryOffset);
 
+    mInit = true;
     LOG("Initialized Vulkan buffer");
     return true;
 }
 
 void GPUBuffer::terminate() {
-    VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
-    vkDestroyBuffer(mGPUContext->vulkanDevice->getDevice(), vkBuffer, allocator);
-    LOG("Destroyed Vulkan buffer");
-    vkFreeMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, allocator);
-    LOG("Freed Vulkan buffer memory");
-    LOG("Terminated Vulkan buffer");
+    if(mInit)
+    {
+        VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
+        vkDestroyBuffer(mGPUContext->vulkanDevice->getDevice(), vkBuffer, allocator);
+        LOG("Destroyed Vulkan buffer");
+        vkFreeMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, allocator);
+        LOG("Freed Vulkan buffer memory");
+        LOG("Terminated Vulkan buffer");
+        mInit = false;
+    }
 }
 
 void GPUBuffer::setData(void* data) const {

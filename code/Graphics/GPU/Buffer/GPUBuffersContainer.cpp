@@ -19,14 +19,19 @@ void GPUVertexBuffersContainer::create()
 void GPUVertexBuffersContainer::enable()
 {
 //	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
+    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    
     FOR_ARRAY(i, mVertexBuffers)
     {
         VkBuffer vertexBuffers[] = {mVertexBuffers[i].getGPUBuffer().getVkBuffer()};
         VkDeviceSize vertexBufferOffsets[] = {0};
         constexpr uint32_t bindingCount = 1;
-        const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
         vkCmdBindVertexBuffers(vulkanCommandBuffer->getVkCommandBuffer(), i, bindingCount, vertexBuffers, vertexBufferOffsets);
     }
+
+    constexpr VkDeviceSize indexBufferOffset = 0;
+    constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
+    vkCmdBindIndexBuffer(vulkanCommandBuffer->getVkCommandBuffer(), mIndicesBuffer.getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
 }
 
 void GPUVertexBuffersContainer::disable()
@@ -72,8 +77,8 @@ u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<HashedString, 
 
 void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic)
 {
-    // mIndicesBuffer.terminate();
-    // mIndicesBuffer.init(gpuDataType, isStatic);
+    mIndicesBuffer.terminate();
+    mIndicesBuffer.init(GET_SYSTEM(GPUInstance).mGPUContext, gpuDataType, isStatic);
 }
 
 void GPUVertexBuffersContainer::terminate()

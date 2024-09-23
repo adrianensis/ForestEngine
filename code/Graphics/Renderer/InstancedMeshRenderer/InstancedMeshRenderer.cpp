@@ -199,5 +199,11 @@ void InstancedMeshRenderer::drawCall()
     if(!mRenderers.empty())
     {
 //        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mInstancedMeshData.mMesh->mIndices.size() * 3, mRenderersCount, true);
+        constexpr uint32_t instanceCount = 1;
+        constexpr uint32_t firstVertex = 0;
+        constexpr int32_t vertexOffset = 0;
+        constexpr uint32_t firstInstance = 0;
+        const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+        vkCmdDrawIndexed(vulkanCommandBuffer->getVkCommandBuffer(), mInstancedMeshData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
     }
 }
