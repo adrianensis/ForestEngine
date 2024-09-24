@@ -152,7 +152,7 @@ bool GPUTexture::initializeTextureImage()
         VkDeviceSize imageSize = 0;//width * height * desiredChannels;
         GPUBuffer stagingBuffer;//(/*mGPUContext->vulkanPhysicalDevice, mGPUContext->vulkanDevice*/);
 
-        GPUBuffer::Config stagingBufferConfig{};
+        GPUBufferData stagingBufferConfig{};
         stagingBufferConfig.Size = imageSize;
         stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -169,24 +169,24 @@ bool GPUTexture::initializeTextureImage()
          * Copy image texels from staging buffer to image
          */
 
-        GPUImage::Config textureImageConfig{};
-        // textureImageConfig.Width = width;
-        // textureImageConfig.Height = height;
-        textureImageConfig.Usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-        textureImageConfig.Format = VK_FORMAT_R8G8B8A8_SRGB;
-        textureImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
-        textureImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        textureImageConfig.Layout = VK_IMAGE_LAYOUT_UNDEFINED;
-        textureImageConfig.MipLevels = mipLevels;
-        textureImageConfig.SampleCount = VK_SAMPLE_COUNT_1_BIT;
+        GPUImageData textureImageData{};
+        // textureImageData.Width = width;
+        // textureImageData.Height = height;
+        textureImageData.Usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+        textureImageData.Format = VK_FORMAT_R8G8B8A8_SRGB;
+        textureImageData.Tiling = VK_IMAGE_TILING_OPTIMAL;
+        textureImageData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+        textureImageData.Layout = VK_IMAGE_LAYOUT_UNDEFINED;
+        textureImageData.MipLevels = mipLevels;
+        textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
 
-        // if (!vulkanTextureImage->init(mGPUContext, textureImageConfig)) {
+        // if (!vulkanTextureImage->init(mGPUContext, textureImageData)) {
         //     CHECK_MSG(false,"Could not initialize texture image");
         //     return false;
         // }
 
         // VkImage textureImage = vulkanTextureImage->getVkImage();
-        // if (!GET_SYSTEM(GPUInstance).transitionImageLayout(textureImage, textureImageConfig.Format, textureImageConfig.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageConfig.MipLevels)) {
+        // if (!GET_SYSTEM(GPUInstance).transitionImageLayout(textureImage, textureImageData.Format, textureImageData.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageData.MipLevels)) {
         //     CHECK_MSG(false,"Could not transition image layout from undefined to transfer destination");
         //     return false;
         // }

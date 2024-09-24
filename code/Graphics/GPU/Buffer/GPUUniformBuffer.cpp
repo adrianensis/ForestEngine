@@ -52,25 +52,21 @@ void GPUUniformBuffer::checkMaxSize(u32 bytes) const
     // CHECK_MSG(bytes <= maxBytes, "Max bytes reached in Shared Buffer!");
 }
 
-const GPUBuffer& GPUUniformBuffer::getBuffer() const {
-    return buffer;
-}
-
 bool GPUUniformBuffer::initialize() {
-    GPUBuffer::Config bufferConfig{};
-    bufferConfig.Size = mSize;
+    GPUBufferData gpuBufferData{};
+    gpuBufferData.Size = mSize;
     switch (mGPUUniformBufferData.mType)
     {
     case GPUBufferType::UNIFORM:
-        bufferConfig.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+        gpuBufferData.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         break;
     case GPUBufferType::STORAGE:
-        bufferConfig.Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        gpuBufferData.Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
         break;
     }
-    bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-    if (!buffer.init(mGPUContext, bufferConfig)) {
+    if (!mBuffer.init(mGPUContext, gpuBufferData)) {
         CHECK_MSG(false,"Could not initialize uniform buffer");
         return false;
     }
@@ -80,9 +76,9 @@ bool GPUUniformBuffer::initialize() {
 }
 
 void GPUUniformBuffer::terminate() {
-    buffer.terminate();
+    mBuffer.terminate();
 }
 
-void GPUUniformBuffer::setData(void* data) const {
-    buffer.setData(data);
+void GPUUniformBuffer::setData(const void* data) const {
+    mBuffer.setData(data);
 }

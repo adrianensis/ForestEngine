@@ -20,13 +20,6 @@ private:
     i32 mMaxUniformBufferBindingPointsUniform = 0;
     i32 mMaxUniformBufferBindingPointsStorage = 0;
 
-    struct Config {
-        std::string Name;
-        // Log::Level LogLevel;
-        // GPUWindow::Config mWindow;
-        Vulkan::Config mVulkan;
-    };
-
 public:
     OwnerPtr<GPUContext> mGPUContext;
 

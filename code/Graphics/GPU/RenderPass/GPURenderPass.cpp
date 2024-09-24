@@ -103,7 +103,7 @@ bool GPURenderPass::initializeColorResources()
 {
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
-    GPUImage::Config colorImageConfig{};
+    GPUImageData colorImageConfig{};
     colorImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
     colorImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
     colorImageConfig.MipLevels = 1;
@@ -126,7 +126,7 @@ bool GPURenderPass::initializeDepthResources()
 {
     VkFormat depthFormat = findDepthFormat();
 
-    GPUImage::Config depthImageConfig{};
+    GPUImageData depthImageConfig{};
     depthImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
     depthImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
     depthImageConfig.Format = depthFormat;

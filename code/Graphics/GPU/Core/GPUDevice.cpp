@@ -1,35 +1,27 @@
 #include "GPUDevice.h"
 
 
-GPUDevice::GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice) : vulkan(vulkan), vulkanPhysicalDevice(vulkanPhysicalDevice) {
-}
+GPUDevice::GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice) :
+    mVulkan(vulkan), mPhysicalDevice(vulkanPhysicalDevice) {}
 
-const VkDevice GPUDevice::getDevice() const {
-    return device;
-}
-
-const VkQueue GPUDevice::getGraphicsQueue() const {
-    return graphicsQueue;
-}
-
-const VkQueue GPUDevice::getPresentQueue() const {
-    return presentQueue;
-}
-
-bool GPUDevice::initialize() {
-    const QueueFamilyIndices& queueFamilyIndices = vulkanPhysicalDevice->getQueueFamilyIndices();
+bool GPUDevice::init()
+{
+    const QueueFamilyIndices& queueFamilyIndices = mPhysicalDevice->getQueueFamilyIndices();
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos = getDeviceQueueCreateInfos(queueFamilyIndices);
-    if (queueCreateInfos.empty()) {
+    if (queueCreateInfos.empty())
+    {
         CHECK_MSG(false,"Could not get any device queue create infos");
         return false;
     }
-    if (!createDevice(queueCreateInfos)) {
+    if (!createDevice(queueCreateInfos))
+    {
         CHECK_MSG(false,"Could not create Vulkan device");
         return false;
     }
     LOG("Created Vulkan device");
 
-    if (!findDeviceQueues(queueFamilyIndices)) {
+    if (!findDeviceQueues(queueFamilyIndices))
+    {
         CHECK_MSG(false,"Could not find any Vulkan device queues");
         return false;
     }
@@ -37,23 +29,28 @@ bool GPUDevice::initialize() {
     return true;
 }
 
-void GPUDevice::terminate() const {
-    vkDestroyDevice(device, ALLOCATOR);
+void GPUDevice::terminate() const
+{
+    vkDestroyDevice(mDevice, ALLOCATOR);
     LOG("Destroyed Vulkan device");
 }
 
-void GPUDevice::waitUntilIdle() const {
-    vkDeviceWaitIdle(device);
+void GPUDevice::waitUntilIdle() const
+{
+    vkDeviceWaitIdle(mDevice);
 }
 
-std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const QueueFamilyIndices& queueFamilyIndices) const {
+std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const QueueFamilyIndices& queueFamilyIndices) const
+{
     constexpr float queuePriority = 1.0f;
-    std::set<uint32_t> queueFamilies = {
+    std::set<uint32_t> queueFamilies =
+    {
             queueFamilyIndices.GraphicsFamily.value(),
             queueFamilyIndices.PresentationFamily.value()
     };
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-    for (uint32_t queueFamily : queueFamilies) {
+    for (uint32_t queueFamily : queueFamilies)
+    {
         VkDeviceQueueCreateInfo queueCreateInfo{};
         queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueCreateInfo.queueFamilyIndex = queueFamily;
@@ -64,40 +61,48 @@ std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const 
     return queueCreateInfos;
 }
 
-bool GPUDevice::createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQueueCreateInfos) {
+bool GPUDevice::createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQueueCreateInfos)
+{
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.pEnabledFeatures = &vulkanPhysicalDevice->getFeatures();
-    createInfo.enabledExtensionCount = vulkanPhysicalDevice->getExtensions().size();
-    createInfo.ppEnabledExtensionNames = vulkanPhysicalDevice->getExtensions().data();
+    createInfo.pEnabledFeatures = &mPhysicalDevice->getFeatures();
+    createInfo.enabledExtensionCount = mPhysicalDevice->getExtensions().size();
+    createInfo.ppEnabledExtensionNames = mPhysicalDevice->getExtensions().data();
     createInfo.queueCreateInfoCount = deviceQueueCreateInfos.size();
     createInfo.pQueueCreateInfos = deviceQueueCreateInfos.data();
-    if (vulkan->isValidationLayersEnabled()) {
-        createInfo.enabledLayerCount = vulkan->getValidationLayers().size();
-        createInfo.ppEnabledLayerNames = vulkan->getValidationLayers().data();
-    } else {
+    if (mVulkan->isValidationLayersEnabled())
+    {
+        createInfo.enabledLayerCount = mVulkan->getValidationLayers().size();
+        createInfo.ppEnabledLayerNames = mVulkan->getValidationLayers().data();
+    }
+    else
+    {
         createInfo.enabledLayerCount = 0;
     }
-    return vkCreateDevice(vulkanPhysicalDevice->getPhysicalDevice(), &createInfo, ALLOCATOR, &device) == VK_SUCCESS;
+    return vkCreateDevice(mPhysicalDevice->getPhysicalDevice(), &createInfo, ALLOCATOR, &mDevice) == VK_SUCCESS;
 }
 
-bool GPUDevice::findDeviceQueues(const QueueFamilyIndices& queueFamilyIndices) {
-    graphicsQueue = findDeviceQueue(queueFamilyIndices.GraphicsFamily.value());
-    if (graphicsQueue == VK_NULL_HANDLE) {
+bool GPUDevice::findDeviceQueues(const QueueFamilyIndices& queueFamilyIndices)
+{
+    mGraphicsQueue = findDeviceQueue(queueFamilyIndices.GraphicsFamily.value());
+    if (mGraphicsQueue == VK_NULL_HANDLE)
+    {
         CHECK_MSG(false,"Could not get Vulkan graphics queue");
         return false;
     }
-    presentQueue = findDeviceQueue(queueFamilyIndices.PresentationFamily.value());
-    if (presentQueue == VK_NULL_HANDLE) {
+    mPresentQueue = findDeviceQueue(queueFamilyIndices.PresentationFamily.value());
+    if (mPresentQueue == VK_NULL_HANDLE)
+    {
         CHECK_MSG(false,"Could not get Vulkan present queue");
         return false;
     }
     return true;
 }
 
-VkQueue GPUDevice::findDeviceQueue(uint32_t queueFamilyIndex) const {
+VkQueue GPUDevice::findDeviceQueue(uint32_t queueFamilyIndex) const
+{
     constexpr int queueIndex = 0;
     VkQueue queue;
-    vkGetDeviceQueue(device, queueFamilyIndex, queueIndex, &queue);
+    vkGetDeviceQueue(mDevice, queueFamilyIndex, queueIndex, &queue);
     return queue;
 }

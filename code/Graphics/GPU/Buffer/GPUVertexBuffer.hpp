@@ -38,7 +38,7 @@ public:
     }
     void setDataArray(const ByteBuffer& data)
     {
-        if (!setData((void*)data.getBuffer().data(), data.getBuffer().size()))
+        if (!setData((const void*)data.getBuffer().data(), data.getBuffer().size()))
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
@@ -48,7 +48,7 @@ public:
     void terminate();
 
     const GPUBuffer& getGPUBuffer() const;
-    bool setData(void* data, u32 size);
+    bool setData(const void* data, u32 size);
 
 public:
     GPUVertexBufferData mData;

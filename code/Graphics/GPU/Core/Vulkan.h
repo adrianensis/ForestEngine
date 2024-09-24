@@ -229,29 +229,25 @@ using TextureHandle = u64;
 
 class GPUWindow;
 
-class Vulkan {
+class VulkanConfig
+{
 public:
-    struct Config {
-        std::string Name;
-        uint32_t MajorVersion = 1;
-        uint32_t MinorVersion = 0;
-        uint32_t PatchVersion = 0;
-        bool ValidationLayersEnabled = true;
-    };
+    std::string Name;
+    uint32_t MajorVersion = 1;
+    uint32_t MinorVersion = 0;
+    uint32_t PatchVersion = 0;
+    bool ValidationLayersEnabled = true;
+};
 
+class Vulkan
+{
 public:
-    Vulkan(Config config, GPUWindow* gpuWindow);
-
+    Vulkan(const VulkanConfig& config, GPUWindow* gpuWindow);
     VkInstance getGPUInstance() const;
-
     VkSurfaceKHR getSurface() const;
-
     const std::vector<const char*>& getValidationLayers() const;
-
     bool isValidationLayersEnabled() const;
-
-    bool initialize();
-
+    bool init();
     void terminate();
 
 private:
@@ -274,7 +270,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 private:
-    Config config;
+    VulkanConfig config;
     GPUWindow* gpuWindow;
     std::vector<const char*> validationLayers{};
     VkInstance vulkanInstance = VK_NULL_HANDLE;

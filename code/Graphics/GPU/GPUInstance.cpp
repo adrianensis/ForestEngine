@@ -10,14 +10,6 @@ void GPUInstance::init()
 //    mMaxUniformBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::UNIFORM);
 //    mMaxUniformBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::STORAGE);
 
-    Config config{};
-    config.Name = "GPUAPI";
-    // config.LogLevel = Log::Level::Debug;
-    // config.mWindow.Title = config.Name;
-    // config.mWindow.Width = 800;
-    // config.mWindow.Height = 600;
-    config.mVulkan.Name = config.Name;
-
     mGPUContext = OwnerPtr<GPUContext>::newObject();
     mGPUContext->init();
 

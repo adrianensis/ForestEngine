@@ -17,12 +17,12 @@ void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, co
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;
     mAttributeOffset += 1;
 
-    GPUBuffer::Config bufferConfig{};
-    bufferConfig.Size = sizeof(f32) * 10000; //bufferSize;
-    bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    GPUBufferData gpuBufferData{};
+    gpuBufferData.Size = sizeof(f32) * 10000; //bufferSize;
+    gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    if (!buffer.init(mGPUContext, bufferConfig)) {
+    if (!buffer.init(mGPUContext, gpuBufferData)) {
         CHECK_MSG(false,"Could not initialize vertex buffer");
     }
 }
@@ -67,12 +67,12 @@ const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
     return buffer;
 }
 
-bool GPUVertexBuffer::setData(void* data, u32 size)
+bool GPUVertexBuffer::setData(const void* data, u32 size)
 {
     VkDeviceSize bufferSize = size;
     // VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-    GPUBuffer::Config stagingBufferConfig{};
+    GPUBufferData stagingBufferConfig{};
     stagingBufferConfig.Size = bufferSize;
     stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
     stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -83,12 +83,12 @@ bool GPUVertexBuffer::setData(void* data, u32 size)
         return false;
     }
 
-    // GPUBuffer::Config bufferConfig{};
-    // bufferConfig.Size = bufferSize;
-    // bufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    // bufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    // GPUBufferData gpuBufferData{};
+    // gpuBufferData.Size = bufferSize;
+    // gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    // gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    // if (!buffer.init(mGPUContext, bufferConfig)) {
+    // if (!buffer.init(mGPUContext, gpuBufferData)) {
     //     CHECK_MSG(false,"Could not initialize vertex buffer");
     //     return false;
     // }

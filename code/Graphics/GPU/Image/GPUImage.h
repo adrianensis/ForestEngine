@@ -5,27 +5,30 @@
 
 #include <vulkan/vulkan.h>
 
-class GPUImage {
+class GPUImageData
+{
 public:
-    struct Config {
-        uint32_t Width;
-        uint32_t Height;
-        uint32_t MipLevels;
-        VkFormat Format;
-        VkImageTiling Tiling;
-        VkImageUsageFlags Usage;
-        VkMemoryPropertyFlags MemoryProperties;
-        VkImageLayout Layout;
-        VkSampleCountFlagBits SampleCount;
-    };
+    uint32_t Width;
+    uint32_t Height;
+    uint32_t MipLevels;
+    VkFormat Format;
+    VkImageTiling Tiling;
+    VkImageUsageFlags Usage;
+    VkMemoryPropertyFlags MemoryProperties;
+    VkImageLayout Layout;
+    VkSampleCountFlagBits SampleCount;
+};
 
+class GPUImage
+{
 public:
-    VkImage getVkImage() const;
-    bool init(Ptr<GPUContext> gpuContext, const Config& config);
+    bool init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
     void terminate();
 
 private:
     Ptr<GPUContext> mGPUContext;
-    VkImage vkImage = VK_NULL_HANDLE;
+    VkImage mVkImage = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+public:
+    CRGET(VkImage)
 };

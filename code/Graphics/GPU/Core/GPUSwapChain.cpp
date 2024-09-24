@@ -3,47 +3,34 @@
 
 
 GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels)
-        : vulkanDevice(vulkanDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {
-}
+        : vulkanDevice(vulkanDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {}
 
-const VkSwapchainKHR GPUSwapChain::getSwapChain() const {
-    return swapChain;
-}
-
-const VkSurfaceFormatKHR& GPUSwapChain::getSurfaceFormat() const {
-    return surfaceFormat;
-}
-
-const VkExtent2D& GPUSwapChain::getExtent() const {
-    return extent;
-}
-
-const std::vector<VkImageView>& GPUSwapChain::getImageViews() const {
-    return imageViews;
-}
-
-bool GPUSwapChain::initialize() {
+bool GPUSwapChain::init()
+{
     const SwapChainInfo& swapChainInfo = vulkanDevice->getPhysicalDevice()->getSwapChainInfo();
 
-    surfaceFormat = chooseSurfaceFormat(swapChainInfo.SurfaceFormats);
+    mSurfaceFormat = chooseSurfaceFormat(swapChainInfo.SurfaceFormats);
     presentMode = choosePresentMode(swapChainInfo.PresentModes);
-    extent = chooseExtent(swapChainInfo.SurfaceCapabilities);
+    mExtent = chooseExtent(swapChainInfo.SurfaceCapabilities);
 
     uint32_t imageCount = getImageCount(swapChainInfo.SurfaceCapabilities);
 
-    if (!createSwapChain(swapChainInfo.SurfaceCapabilities, imageCount)) {
+    if (!createSwapChain(swapChainInfo.SurfaceCapabilities, imageCount))
+    {
         CHECK_MSG(false,"Could not create Vulkan swap chain");
         return false;
     }
     VULKAN_LOG("Created Vulkan swap chain");
 
-    if (!findSwapChainImages(imageCount)) {
+    if (!findSwapChainImages(imageCount))
+    {
         CHECK_MSG(false,"Could not find any Vulkan swap chain images");
         return false;
     }
     VULKAN_LOG("Initialized [{}] Vulkan swap chain images");
 
-    if (!createSwapChainImageViews()) {
+    if (!createSwapChainImageViews())
+    {
         CHECK_MSG(false,"Could not create Vulkan swap chain image views");
         return false;
     }
@@ -52,19 +39,24 @@ bool GPUSwapChain::initialize() {
     return true;
 }
 
-void GPUSwapChain::terminate() {
-    for (VkImageView imageView : imageViews) {
+void GPUSwapChain::terminate()
+{
+    for (VkImageView imageView : mImageViews)
+    {
         vkDestroyImageView(vulkanDevice->getDevice(), imageView, ALLOCATOR);
     }
-    imageViews.clear();
+    mImageViews.clear();
     VULKAN_LOG("Destroyed Vulkan swap chain image views");
-    vkDestroySwapchainKHR(vulkanDevice->getDevice(), swapChain, ALLOCATOR);
+    vkDestroySwapchainKHR(vulkanDevice->getDevice(), mSwapChain, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan swap chain");
 }
 
-VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const {
-    for (const auto& availableFormat: availableFormats) {
-        if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const
+{
+    for (const auto& availableFormat: availableFormats)
+    {
+        if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+        {
             return availableFormat;
         }
     }
@@ -72,10 +64,13 @@ VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurface
     return availableFormats[0];
 }
 
-VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const {
+VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const
+{
     VkPresentModeKHR targetPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
-    for (const auto& availablePresentMode: availablePresentModes) {
-        if (availablePresentMode == targetPresentMode) {
+    for (const auto& availablePresentMode: availablePresentModes)
+    {
+        if (availablePresentMode == targetPresentMode)
+        {
             return availablePresentMode;
         }
     }
@@ -84,14 +79,17 @@ VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentMode
     return defaultPresentMode;
 }
 
-VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const {
+VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const
+{
     bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<uint32_t>::max();
-    if (!extentSizeCanDifferFromWindowResolution) {
+    if (!extentSizeCanDifferFromWindowResolution)
+    {
         VULKAN_LOG("Extent should match gpuWindow resolution so using the surface capabilities extent");
         return surfaceCapabilities.currentExtent;
     }
     VULKAN_LOG("Extent can differ from gpuWindow resolution so picking the resolution that best matches the gpuWindow within the minImageExtent and maxImageExtent bounds");
-    VkExtent2D extent = {
+    VkExtent2D extent =
+    {
             (uint32_t) windowSizeInPixels.x,
             (uint32_t) windowSizeInPixels.y
     };
@@ -100,29 +98,33 @@ VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCap
     return extent;
 }
 
-uint32_t GPUSwapChain::getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const {
+uint32_t GPUSwapChain::getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const
+{
     uint32_t minImageCount = surfaceCapabilities.minImageCount;
     uint32_t maxImageCount = surfaceCapabilities.maxImageCount;
     uint32_t imageCount = minImageCount + 1;
-    if (maxImageCount > 0 && imageCount > maxImageCount) {
+    if (maxImageCount > 0 && imageCount > maxImageCount)
+    {
         imageCount = maxImageCount;
     }
     return imageCount;
 }
 
-bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, uint32_t imageCount) {
+bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, uint32_t imageCount)
+{
     VkSwapchainCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     createInfo.surface = vkSurface;
     createInfo.minImageCount = imageCount;
-    createInfo.imageFormat = surfaceFormat.format;
-    createInfo.imageColorSpace = surfaceFormat.colorSpace;
-    createInfo.imageExtent = extent;
+    createInfo.imageFormat = mSurfaceFormat.format;
+    createInfo.imageColorSpace = mSurfaceFormat.colorSpace;
+    createInfo.imageExtent = mExtent;
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
     const QueueFamilyIndices& queueFamilyIndices = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices();
-    if (queueFamilyIndices.GraphicsFamily != queueFamilyIndices.PresentationFamily) {
+    if (queueFamilyIndices.GraphicsFamily != queueFamilyIndices.PresentationFamily)
+    {
         uint32_t queueFamilyIndexValues[] = {
                 queueFamilyIndices.GraphicsFamily.value(),
                 queueFamilyIndices.PresentationFamily.value()
@@ -130,7 +132,9 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
         createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
         createInfo.pQueueFamilyIndices = queueFamilyIndexValues;
         createInfo.queueFamilyIndexCount = 2;
-    } else {
+    } 
+    else
+    {
         createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.pQueueFamilyIndices = nullptr;
         createInfo.queueFamilyIndexCount = 0;
@@ -142,24 +146,27 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    return vkCreateSwapchainKHR(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &swapChain) == VK_SUCCESS;
+    return vkCreateSwapchainKHR(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mSwapChain) == VK_SUCCESS;
 }
 
-bool GPUSwapChain::findSwapChainImages(uint32_t imageCount) {
-    vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), swapChain, &imageCount, nullptr);
+bool GPUSwapChain::findSwapChainImages(uint32_t imageCount)
+{
+    vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), mSwapChain, &imageCount, nullptr);
     images.resize(imageCount);
-    vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), swapChain, &imageCount, images.data());
+    vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), mSwapChain, &imageCount, images.data());
     return !images.empty();
 }
 
-bool GPUSwapChain::createSwapChainImageViews() {
-    imageViews.resize(images.size());
-    for (size_t i = 0; i < images.size(); i++) {
+bool GPUSwapChain::createSwapChainImageViews()
+{
+    mImageViews.resize(images.size());
+    for (size_t i = 0; i < images.size(); i++)
+    {
         VkImageViewCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         createInfo.image = images[i];
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        createInfo.format = surfaceFormat.format;
+        createInfo.format = mSurfaceFormat.format;
         createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
         createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
         createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -169,15 +176,18 @@ bool GPUSwapChain::createSwapChainImageViews() {
         createInfo.subresourceRange.levelCount = 1;
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
-        if (vkCreateImageView(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &imageViews[i]) != VK_SUCCESS) {
+        if (vkCreateImageView(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mImageViews[i]) != VK_SUCCESS)
+        {
             return false;
         }
     }
-    return !imageViews.empty();
+    return !mImageViews.empty();
 }
 
-std::string GPUSwapChain::getPresentationModeAsString(VkPresentModeKHR presentMode) const {
-    switch (presentMode) {
+std::string GPUSwapChain::getPresentationModeAsString(VkPresentModeKHR presentMode) const
+{
+    switch (presentMode)
+    {
         case VK_PRESENT_MODE_IMMEDIATE_KHR:
             return "VK_PRESENT_MODE_IMMEDIATE_KHR";
         case VK_PRESENT_MODE_MAILBOX_KHR:

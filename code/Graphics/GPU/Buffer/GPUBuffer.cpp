@@ -1,10 +1,6 @@
 #include "Graphics/GPU/Buffer/GPUBuffer.h"
 #include "Graphics/GPU/Core/GPUCommandBuffer.h"
 
-const GPUBuffer::Config& GPUBuffer::getConfig() const {
-    return config;
-}
-
 const VkBuffer GPUBuffer::getVkBuffer() const {
     return vkBuffer;
 }
@@ -13,17 +9,17 @@ const VkDeviceMemory GPUBuffer::getVkDeviceMemory() const {
     return vkDeviceMemory;
 }
 
-bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const Config& config)
+bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
 {
     mGPUContext = gpuContext;
-    this->config = config;
+    mGPUBufferData = gpuBufferData;
 
     VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
 
     VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.size = config.Size;
-    bufferInfo.usage = config.Usage;
+    bufferInfo.size = mGPUBufferData.Size;
+    bufferInfo.usage = mGPUBufferData.Usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
     if (vkCreateBuffer(mGPUContext->vulkanDevice->getDevice(), &bufferInfo, allocator, &vkBuffer) != VK_SUCCESS) {
@@ -37,7 +33,7 @@ bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const Config& config)
     VkMemoryAllocateInfo memoryAllocateInfo{};
     memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     memoryAllocateInfo.allocationSize = memoryRequirements.size;
-    memoryAllocateInfo.memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, config.MemoryProperties);
+    memoryAllocateInfo.memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, mGPUBufferData.MemoryProperties);
 
     if (vkAllocateMemory(mGPUContext->vulkanDevice->getDevice(), &memoryAllocateInfo, allocator, &vkDeviceMemory) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not allocate Vulkan vkBuffer memory");
@@ -65,17 +61,17 @@ void GPUBuffer::terminate() {
     }
 }
 
-void GPUBuffer::setData(void* data) const {
+void GPUBuffer::setData(const void* data) const {
     void* memory;
     constexpr VkDeviceSize memoryOffset = 0;
     constexpr VkMemoryMapFlags memoryMapFlags = 0;
-    vkMapMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, memoryOffset, config.Size, memoryMapFlags, &memory);
-    std::memcpy(memory, data, config.Size);
+    vkMapMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, memoryOffset, mGPUBufferData.Size, memoryMapFlags, &memory);
+    std::memcpy(memory, data, mGPUBufferData.Size);
     vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory);
 }
 
 void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice) {
-    CHECK_MSG(sourceBuffer.config.Size <= destinationBuffer.config.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
+    CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
 
     constexpr uint32_t commandBufferCount = 1;
     const std::vector<GPUCommandBuffer*> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
@@ -87,7 +83,7 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
     VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
 
     VkBufferCopy copyRegion{};
-    copyRegion.size = sourceBuffer.config.Size;
+    copyRegion.size = sourceBuffer.mGPUBufferData.Size;
     constexpr uint32_t regionCount = 1;
     vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.vkBuffer, destinationBuffer.vkBuffer, regionCount, &copyRegion);
 
@@ -103,5 +99,5 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
     vkQueueSubmit(vulkanDevice.getGraphicsQueue(), submitCount, &submitInfo, fence);
     vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());
 
-    commandPool.free(commandBuffer);
+    commandPool.freeCommandBuffer(commandBuffer);
 }

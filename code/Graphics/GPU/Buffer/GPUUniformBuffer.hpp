@@ -49,7 +49,7 @@ public:
         checkMaxSize(sizeof(T) * data.size());
 //        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUUniformBufferData.mType, mBufferId, data);
         // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUInstance).currentFrame];
-        buffer.setData((void*) data.data());
+        mBuffer.setData((const void*) data.data());
     }
     void setDataArray(const ByteBuffer& data)
     {
@@ -59,8 +59,7 @@ public:
     }
     void terminate();
 
-    const GPUBuffer& getBuffer() const;
-    void setData(void* data) const;
+    void setData(const void* data) const;
 
 private:
     bool initialize();
@@ -74,11 +73,12 @@ private:
     void* mGPUPointer = nullptr;
 
     Ptr<GPUContext> mGPUContext;
-    GPUBuffer buffer;
+    GPUBuffer mBuffer;
     u32 mSize = 0;
 
 public:
     GET(BindingPoint)
     GET(Size)
     CRGET(GPUUniformBufferData)
+    CRGET(Buffer)
 };

@@ -30,7 +30,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
     return VK_FALSE;
 }
 
-Vulkan::Vulkan(Config config, GPUWindow* gpuWindow) : config(std::move(config)), gpuWindow(gpuWindow) {
+Vulkan::Vulkan(const VulkanConfig& config, GPUWindow* gpuWindow) : config(config), gpuWindow(gpuWindow) {
 }
 
 VkInstance Vulkan::getGPUInstance() const {
@@ -49,7 +49,7 @@ bool Vulkan::isValidationLayersEnabled() const {
     return config.ValidationLayersEnabled;
 }
 
-bool Vulkan::initialize()
+bool Vulkan::init()
 {
 #ifdef ENGINE_PLATFORM_LINUX
     setenv("VK_DRIVER_FILES", "/usr/share/vulkan/icd.d/nvidia_icd.json", true);

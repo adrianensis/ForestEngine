@@ -5,20 +5,24 @@
 #include <vulkan/vulkan.h>
 #include <optional>
 
-struct QueueFamilyIndices {
+struct QueueFamilyIndices
+{
     std::optional<uint32_t> GraphicsFamily;
     std::optional<uint32_t> PresentationFamily;
 };
 
-struct SwapChainInfo {
+struct SwapChainInfo
+{
     VkSurfaceCapabilitiesKHR SurfaceCapabilities{};
     std::vector<VkSurfaceFormatKHR> SurfaceFormats;
     std::vector<VkPresentModeKHR> PresentModes;
 };
 
-class GPUPhysicalDevice {
+class GPUPhysicalDevice
+{
 private:
-    struct DeviceInfo {
+    struct DeviceInfo
+    {
         VkPhysicalDevice mPhysicalDevice = nullptr;
         VkPhysicalDeviceProperties mProperties{};
         VkPhysicalDeviceFeatures mFeatures{};
@@ -41,7 +45,7 @@ public:
     const SwapChainInfo& getSwapChainInfo() const;
     VkSampleCountFlagBits getSampleCount() const;
     const std::vector<const char*>& getExtensions() const;
-    bool initialize();
+    bool init();
     void updateSwapChainInfo();
     uint32_t findMemoryType(uint32_t memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const;
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;

@@ -9,17 +9,14 @@
 
 #include "Core/Minimal.hpp"
 
-class GPUSwapChain {
+class GPUSwapChain 
+{
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
     GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels);
-    const VkSwapchainKHR getSwapChain() const;
-    const VkSurfaceFormatKHR& getSurfaceFormat() const;
-    const VkExtent2D& getExtent() const;
-    const std::vector<VkImageView>& getImageViews() const;
-    bool initialize();
+    bool init();
     void terminate();
 
 private:
@@ -36,12 +33,17 @@ private:
     GPUDevice* vulkanDevice;
     Vector2 windowSizeInPixels;
     VkSurfaceKHR vkSurface;
-    VkSurfaceFormatKHR surfaceFormat{};
+    VkSurfaceFormatKHR mSurfaceFormat{};
     VkPresentModeKHR presentMode{};
-    VkExtent2D extent{};
-    VkSwapchainKHR swapChain = VK_NULL_HANDLE;
+    VkExtent2D mExtent{};
+    VkSwapchainKHR mSwapChain = VK_NULL_HANDLE;
     std::vector<VkImage> images;
-    std::vector<VkImageView> imageViews;
+    std::vector<VkImageView> mImageViews;
+public:
+    CRGET(SwapChain);
+    CRGET(SurfaceFormat);
+    CRGET(Extent);
+    CRGET(ImageViews);
 };
 
 
