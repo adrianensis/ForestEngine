@@ -15,11 +15,11 @@ const VkPhysicalDeviceFeatures& GPUPhysicalDevice::getFeatures() const {
     return deviceInfo.mFeatures;
 }
 
-const QueueFamilyIndices& GPUPhysicalDevice::getQueueFamilyIndices() const {
+const GPUQueueFamilyIndices& GPUPhysicalDevice::getQueueFamilyIndices() const {
     return deviceInfo.mQueueFamilyIndices;
 }
 
-const SwapChainInfo& GPUPhysicalDevice::getSwapChainInfo() const {
+const GPUSwapChainInfo& GPUPhysicalDevice::getSwapChainInfo() const {
     return deviceInfo.mSwapChainInfo;
 }
 
@@ -33,7 +33,7 @@ VkSampleCountFlagBits GPUPhysicalDevice::getSampleCount() const {
 
 bool GPUPhysicalDevice::init()
 {
-    std::vector<GPUPhysicalDevice::DeviceInfo> availableDevices = findAvailableDevices();
+    std::vector<GPUDeviceInfo> availableDevices = findAvailableDevices();
     if (availableDevices.empty())
     {
         CHECK_MSG(false,"Could not get any available devices");
@@ -101,7 +101,7 @@ VkFormat GPUPhysicalDevice::findSupportedFormat(const std::vector<VkFormat>& can
     return VK_FORMAT_UNDEFINED;
 }
 
-std::vector<GPUPhysicalDevice::DeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
+std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
 {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(vulkan->getGPUInstance(), &deviceCount, nullptr);
@@ -109,7 +109,7 @@ std::vector<GPUPhysicalDevice::DeviceInfo> GPUPhysicalDevice::findAvailableDevic
     std::vector<VkPhysicalDevice> vkPhysicalDevices(deviceCount);
     vkEnumeratePhysicalDevices(vulkan->getGPUInstance(), &deviceCount, vkPhysicalDevices.data());
 
-    std::vector<DeviceInfo> devices;
+    std::vector<GPUDeviceInfo> devices;
     for (VkPhysicalDevice vkPhysicalDevice : vkPhysicalDevices)
     {
 
@@ -127,7 +127,7 @@ std::vector<GPUPhysicalDevice::DeviceInfo> GPUPhysicalDevice::findAvailableDevic
             */
         //vkPhysicalDeviceFeatures.sampleRateShading = VK_TRUE; // enable sample shading feature for the device
 
-        DeviceInfo device{};
+        GPUDeviceInfo device{};
         device.mPhysicalDevice = vkPhysicalDevice;
         device.mProperties = vkPhysicalDeviceProperties;
         device.mFeatures = vkPhysicalDeviceFeatures;
@@ -139,7 +139,7 @@ std::vector<GPUPhysicalDevice::DeviceInfo> GPUPhysicalDevice::findAvailableDevic
         devices.push_back(device);
     }
     VULKAN_LOG("Available physical devices: " + std::to_string(deviceCount));
-    for (const DeviceInfo& device : devices) {
+    for (const GPUDeviceInfo& device : devices) {
         VULKAN_LOG(device.mProperties.deviceName + " : "s + getDeviceTypeAsString(device.mProperties.deviceType));
     }
     return devices;
@@ -188,7 +188,7 @@ const std::vector<const char*>& GPUPhysicalDevice::getOptionalExtensions() const
     return extensions;
 }
 
-QueueFamilyIndices GPUPhysicalDevice::findQueueFamilyIndices(VkPhysicalDevice device) const
+GPUQueueFamilyIndices GPUPhysicalDevice::findQueueFamilyIndices(VkPhysicalDevice device) const
 {
     uint32_t queueFamilyCount = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
@@ -196,7 +196,7 @@ QueueFamilyIndices GPUPhysicalDevice::findQueueFamilyIndices(VkPhysicalDevice de
     std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
     vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
-    QueueFamilyIndices indices;
+    GPUQueueFamilyIndices indices;
     for (int i = 0; i < queueFamilies.size(); i++)
     {
         const VkQueueFamilyProperties& queueFamily = queueFamilies[i];
@@ -218,9 +218,9 @@ QueueFamilyIndices GPUPhysicalDevice::findQueueFamilyIndices(VkPhysicalDevice de
     return indices;
 }
 
-SwapChainInfo GPUPhysicalDevice::findSwapChainInfo(VkPhysicalDevice device) const
+GPUSwapChainInfo GPUPhysicalDevice::findSwapChainInfo(VkPhysicalDevice device) const
 {
-    SwapChainInfo swapChainInfo;
+    GPUSwapChainInfo swapChainInfo;
 
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, vulkan->getSurface(), &swapChainInfo.SurfaceCapabilities);
 
@@ -267,11 +267,11 @@ std::string GPUPhysicalDevice::getDeviceTypeAsString(VkPhysicalDeviceType device
     }
 }
 
-GPUPhysicalDevice::DeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUPhysicalDevice::DeviceInfo>& availableDevices) const
+GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDeviceInfo>& availableDevices) const
 {
-    std::multimap<uint32_t, GPUPhysicalDevice::DeviceInfo> devicesByRating;
+    std::multimap<uint32_t, GPUDeviceInfo> devicesByRating;
     VULKAN_LOG("Device suitability ratings");
-    for (const GPUPhysicalDevice::DeviceInfo& device : availableDevices)
+    for (const GPUDeviceInfo& device : availableDevices)
     {
         uint32_t suitabilityRating = getSuitabilityRating(device);
         VULKAN_LOG(device.mProperties.deviceName + " : "s + std::to_string(suitabilityRating));
@@ -283,12 +283,12 @@ GPUPhysicalDevice::DeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const st
         return {};
     }
     VULKAN_LOG("Most suitable device");
-    const DeviceInfo& device = devicesByRating.rbegin()->second;
+    const GPUDeviceInfo& device = devicesByRating.rbegin()->second;
     VULKAN_LOG(device.mProperties.deviceName);
     return device;
 }
 
-uint32_t GPUPhysicalDevice::getSuitabilityRating(const GPUPhysicalDevice::DeviceInfo& deviceInfo) const
+uint32_t GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const
 {
     if (!hasRequiredFeatures(deviceInfo.mFeatures))
     {
@@ -349,12 +349,12 @@ bool GPUPhysicalDevice::hasRequiredExtensions(const std::vector<VkExtensionPrope
     return true;
 }
 
-bool GPUPhysicalDevice::hasRequiredSwapChainSupport(const SwapChainInfo& swapChainInfo) const
+bool GPUPhysicalDevice::hasRequiredSwapChainSupport(const GPUSwapChainInfo& swapChainInfo) const
 {
     return !swapChainInfo.SurfaceFormats.empty() && !swapChainInfo.PresentModes.empty();
 }
 
-bool GPUPhysicalDevice::hasRequiredQueueFamilyIndices(const QueueFamilyIndices& queueFamilyIndices) const
+bool GPUPhysicalDevice::hasRequiredQueueFamilyIndices(const GPUQueueFamilyIndices& queueFamilyIndices) const
 {
     return queueFamilyIndices.GraphicsFamily.has_value() && queueFamilyIndices.PresentationFamily.has_value();
 }

@@ -6,7 +6,7 @@ GPUDevice::GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice) :
 
 bool GPUDevice::init()
 {
-    const QueueFamilyIndices& queueFamilyIndices = mPhysicalDevice->getQueueFamilyIndices();
+    const GPUQueueFamilyIndices& queueFamilyIndices = mPhysicalDevice->getQueueFamilyIndices();
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos = getDeviceQueueCreateInfos(queueFamilyIndices);
     if (queueCreateInfos.empty())
     {
@@ -40,7 +40,7 @@ void GPUDevice::waitUntilIdle() const
     vkDeviceWaitIdle(mDevice);
 }
 
-std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const QueueFamilyIndices& queueFamilyIndices) const
+std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const GPUQueueFamilyIndices& queueFamilyIndices) const
 {
     constexpr float queuePriority = 1.0f;
     std::set<uint32_t> queueFamilies =
@@ -82,7 +82,7 @@ bool GPUDevice::createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQ
     return vkCreateDevice(mPhysicalDevice->getPhysicalDevice(), &createInfo, ALLOCATOR, &mDevice) == VK_SUCCESS;
 }
 
-bool GPUDevice::findDeviceQueues(const QueueFamilyIndices& queueFamilyIndices)
+bool GPUDevice::findDeviceQueues(const GPUQueueFamilyIndices& queueFamilyIndices)
 {
     mGraphicsQueue = findDeviceQueue(queueFamilyIndices.GraphicsFamily.value());
     if (mGraphicsQueue == VK_NULL_HANDLE)

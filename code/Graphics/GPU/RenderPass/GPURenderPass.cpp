@@ -5,10 +5,6 @@
 GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
         : mGPUContext(gpuContext){}
 
-const VkRenderPass GPURenderPass::getRenderPass() const {
-    return renderPass;
-}
-
 bool GPURenderPass::initialize() {
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
@@ -77,7 +73,7 @@ bool GPURenderPass::initialize() {
     renderPassInfo.dependencyCount = 1;
     renderPassInfo.pDependencies = &dependency;
 
-    if (vkCreateRenderPass(mGPUContext->vulkanDevice->getDevice(), &renderPassInfo, ALLOCATOR, &renderPass) != VK_SUCCESS) {
+    if (vkCreateRenderPass(mGPUContext->vulkanDevice->getDevice(), &renderPassInfo, ALLOCATOR, &mRenderPass) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan render pass");
         return false;
     }
@@ -188,7 +184,7 @@ void GPURenderPass::terminate() {
     delete vulkanColorImage;
     delete vulkanDepthImage;
 
-    vkDestroyRenderPass(mGPUContext->vulkanDevice->getDevice(), renderPass, ALLOCATOR);
+    vkDestroyRenderPass(mGPUContext->vulkanDevice->getDevice(), mRenderPass, ALLOCATOR);
     LOG("Destroyed Vulkan render pass");
 }
 void GPURenderPass::begin()
@@ -207,7 +203,7 @@ void GPURenderPass::end()
 void GPURenderPass::beginCmd(const GPUCommandBuffer* vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const {
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    renderPassInfo.renderPass = renderPass;
+    renderPassInfo.renderPass = mRenderPass;
     renderPassInfo.framebuffer = vulkanFramebuffer.getFramebuffer();
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();

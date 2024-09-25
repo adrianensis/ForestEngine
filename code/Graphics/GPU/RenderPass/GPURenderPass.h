@@ -12,7 +12,6 @@ private:
 
 public:
     GPURenderPass(Ptr<GPUContext> gpuContext);
-    const VkRenderPass getRenderPass() const;
     bool initialize();
     void terminate();
     void begin();
@@ -32,13 +31,15 @@ private:
     void framePresentation();
 private:
     Ptr<GPUContext> mGPUContext;
-    VkRenderPass renderPass = VK_NULL_HANDLE;
+    VkRenderPass mRenderPass = VK_NULL_HANDLE;
     uint32_t swapChainImageIndex;
     std::vector<GPUFramebuffer> framebuffers;
     GPUImage* vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;
     GPUImage* vulkanColorImage;
     VkImageView colorImageView = VK_NULL_HANDLE;
+public:
+    CRGET(RenderPass)
 };
 
 

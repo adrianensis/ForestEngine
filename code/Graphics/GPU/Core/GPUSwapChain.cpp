@@ -7,7 +7,7 @@ GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vect
 
 bool GPUSwapChain::init()
 {
-    const SwapChainInfo& swapChainInfo = vulkanDevice->getPhysicalDevice()->getSwapChainInfo();
+    const GPUSwapChainInfo& swapChainInfo = vulkanDevice->getPhysicalDevice()->getSwapChainInfo();
 
     mSurfaceFormat = chooseSurfaceFormat(swapChainInfo.SurfaceFormats);
     presentMode = choosePresentMode(swapChainInfo.PresentModes);
@@ -122,7 +122,7 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    const QueueFamilyIndices& queueFamilyIndices = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices();
+    const GPUQueueFamilyIndices& queueFamilyIndices = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices();
     if (queueFamilyIndices.GraphicsFamily != queueFamilyIndices.PresentationFamily)
     {
         uint32_t queueFamilyIndexValues[] = {

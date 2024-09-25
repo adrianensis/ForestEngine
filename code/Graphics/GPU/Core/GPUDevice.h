@@ -21,9 +21,9 @@ public:
     void waitUntilIdle() const;
 
 private:
-    std::vector<VkDeviceQueueCreateInfo> getDeviceQueueCreateInfos(const QueueFamilyIndices& queueFamilyIndices) const;
+    std::vector<VkDeviceQueueCreateInfo> getDeviceQueueCreateInfos(const GPUQueueFamilyIndices& queueFamilyIndices) const;
     bool createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQueueCreateInfos);
-    bool findDeviceQueues(const QueueFamilyIndices& queueFamilyIndices);
+    bool findDeviceQueues(const GPUQueueFamilyIndices& queueFamilyIndices);
     VkQueue findDeviceQueue(uint32_t queueFamilyIndex) const;
 
 public:

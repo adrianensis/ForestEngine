@@ -23,11 +23,8 @@ public:
     void disable() const;
 private:
 	u32 mProgramId = 0;
-
     Ptr<GPUContext> mGPUContext;
-
     GPUShaderPipeline* gpuShaderPipeline = nullptr;
-
     GPUShaderModule* vertexShader = nullptr;
     GPUShaderModule* fragmentShader = nullptr;
     GPUShaderDescriptorSets* mGPUDescriptor;

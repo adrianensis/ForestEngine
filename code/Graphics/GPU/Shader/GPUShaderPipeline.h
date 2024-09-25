@@ -18,8 +18,6 @@ private:
 
 public:
     GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext);
-    const VkPipelineLayout getPipelineLayout() const;
-    const VkPipeline getPipeline() const;
     bool initialize(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData);
     void terminate();
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
@@ -27,7 +25,10 @@ public:
 private:
     Ptr<GPUContext> mGPUContext;
     GPURenderPass* vulkanRenderPass;
-    VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
-    VkPipeline pipeline = VK_NULL_HANDLE;
+    VkPipelineLayout mPipelineLayout = VK_NULL_HANDLE;
+    VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUVertexInputData mGPUVertexInputData;
+public:
+    CRGET(PipelineLayout)
+    CRGET(Pipeline)
 };

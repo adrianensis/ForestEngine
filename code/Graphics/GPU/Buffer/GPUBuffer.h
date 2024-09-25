@@ -16,10 +16,7 @@ public:
 class GPUBuffer
 {
 public:
-    const VkBuffer getVkBuffer() const;
-    const VkDeviceMemory getVkDeviceMemory() const;
     bool init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
-
     void terminate();
     void setData(const void* data) const;
     static void copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice);
@@ -27,9 +24,11 @@ public:
 private:
     Ptr<GPUContext> mGPUContext;
     GPUBufferData mGPUBufferData;
-    VkBuffer vkBuffer = VK_NULL_HANDLE;
-    VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+    VkBuffer mVkBuffer = VK_NULL_HANDLE;
+    VkDeviceMemory mVkDeviceMemory = VK_NULL_HANDLE;
     bool mInit = false;
 public:
     CRGET(GPUBufferData)
+    CRGET(VkBuffer)
+    CRGET(VkDeviceMemory)
 };

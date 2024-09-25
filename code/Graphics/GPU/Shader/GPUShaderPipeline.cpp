@@ -6,14 +6,6 @@ GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUCon
     : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
 
-const VkPipeline GPUShaderPipeline::getPipeline() const {
-    return pipeline;
-}
-
-const VkPipelineLayout GPUShaderPipeline::getPipelineLayout() const {
-    return pipelineLayout;
-}
-
 bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
 
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
@@ -135,7 +127,7 @@ bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GP
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
-    if (vkCreatePipelineLayout(mGPUContext->vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &pipelineLayout) != VK_SUCCESS) {
+    if (vkCreatePipelineLayout(mGPUContext->vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &mPipelineLayout) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline layout");
         return false;
     }
@@ -153,7 +145,7 @@ bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GP
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &colorBlendState;
     pipelineInfo.pDynamicState = nullptr;
-    pipelineInfo.layout = pipelineLayout;
+    pipelineInfo.layout = mPipelineLayout;
     pipelineInfo.renderPass = vulkanRenderPass->getRenderPass();
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
@@ -162,7 +154,7 @@ bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GP
     constexpr int createInfoCount = 1;
     VkPipelineCache pipelineCache = VK_NULL_HANDLE;
 
-    if (vkCreateGraphicsPipelines(mGPUContext->vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &pipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(mGPUContext->vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &mPipeline) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline");
         return false;
     }
@@ -172,12 +164,12 @@ bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GP
 }
 
 void GPUShaderPipeline::terminate() {
-    vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), pipeline, ALLOCATOR);
+    vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), mPipeline, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline");
-    vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), pipelineLayout, ALLOCATOR);
+    vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
 }
 
 void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
-    vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+    vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline);
 }

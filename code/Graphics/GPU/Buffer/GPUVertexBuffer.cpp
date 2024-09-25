@@ -28,18 +28,8 @@ void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, co
 }
 
 void GPUVertexBuffer::createBuffer()
-{
-//    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(GPUBufferType::VERTEX);
-    
+{    
     u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
-//    GET_SYSTEM(GPUInterface).attribute(
-    //     mAttributeLocation,
-    //     sizeInPrimitiveTypes,
-    //     mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType,
-    //     0/*mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes*/,
-    //     0/*mPreviousOffsetInBytes*/,
-    //     mData.mInstanceDivisor
-    // );
 }
 
 void GPUVertexBuffer::terminate()

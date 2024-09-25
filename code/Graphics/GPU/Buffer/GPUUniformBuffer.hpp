@@ -2,7 +2,6 @@
 
 #include "Graphics/GPU/GPUVariable.hpp"
 #include "Graphics/GPU/Buffer/GPUBuffer.h"
-// #include "Graphics/GPU/GPUInstance.hpp"
 
 class GPUUniformBufferData
 {
@@ -25,16 +24,6 @@ class GPUUniformBuffer
 public:
     void init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic);
     void createBuffer();
-//     template <class T>
-//     void resize(u32 size)
-//     {
-//         resizeBytes(size * sizeof(T));
-//     }
-//     void resizeBytes(u32 bytes)
-//     {
-//         checkMaxSize(bytes);
-// //        GET_SYSTEM(GPUInterface).resizeBuffer(mGPUUniformBufferData.mType, mBufferId, 1, bytes, mIsStatic);
-//     }
     template <class T>
     void setData(const T& data)
     {

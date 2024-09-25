@@ -21,11 +21,6 @@ void GPUIndicesBuffer::resize(u32 size)
 //    GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mBufferId, mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
 }
 
-// void GPUIndicesBuffer::terminate()
-// {
-// //    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
-// }
-
 const GPUBuffer& GPUIndicesBuffer::getGPUBuffer() const {
     return buffer;
 }
