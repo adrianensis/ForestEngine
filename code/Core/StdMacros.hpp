@@ -45,22 +45,6 @@
 #define FOR_LIST_COND(it, list, condition) for (auto it = (list).begin(); (it != (list).end()) && (condition); ++it)
 
 // --------------------------------------------------------
-// STD CONTAINERS
-// --------------------------------------------------------
-
-#define MAP_DELETE_CONTENT(map)           \
-	FOR_MAP(_internal_it, map)            \
-	{                                     \
-		if (_internal_it->second)         \
-			Memory::deleteObject(_internal_it->second); \
-	}                                     \
-	(map).clear();
-
-#define DELETE_CONTENT(container)                       \
-FOR_LIST(_internal_it, container) { Memory::deleteObject(*_internal_it); } \
-	(container).clear();
-
-// --------------------------------------------------------
 // FOR EACH
 // --------------------------------------------------------
 
