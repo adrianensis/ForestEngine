@@ -31,6 +31,7 @@ public:
 //        // GET_SYSTEM(GPUInterface).setBufferData(mGPUUniformBufferData.mType, mBufferId, data);
         // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUInstance).currentFrame];
         // uniformBuffer.setData((void*) data);
+        mBuffer.setData((const void*) &data);
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)

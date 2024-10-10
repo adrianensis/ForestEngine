@@ -50,12 +50,11 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     
     // vertexShaderCalculatePositionOutputCustom(shaderBuilder);
 
-    // auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData.mInstanceName);    
-    // Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData.mInstanceName);    
+    Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     shaderBuilder.getMain().
-    set(GPUBuiltIn::VertexOutput::mPosition, finalPositon);
-    // set(GPUBuiltIn::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
+    set(GPUBuiltIn::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
 
     // auto& fragPosition = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mFragPosition);
     // shaderBuilder.getMain().set(fragPosition, call(GPUBuiltIn::PrimitiveTypes::mVector3, {finalPositon}));
@@ -241,7 +240,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
 
     // shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
 
-    // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalData);
+    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalData);
     // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mTextures);
     // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
     // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(getShaderData().mPropertiesBlockUniformBufferData);

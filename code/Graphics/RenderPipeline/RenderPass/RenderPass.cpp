@@ -51,7 +51,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             }
         }
 
-        // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
         // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
         Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
@@ -142,7 +142,7 @@ void RenderPass::renderPass()
 {
 	PROFILER_CPU()
 
-    // updateGlobalData();
+    updateGlobalData();
 
     // if(mRenderPassData.mOutputFramebufferData.isValid())
     // {
