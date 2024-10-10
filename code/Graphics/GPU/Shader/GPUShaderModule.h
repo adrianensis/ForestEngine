@@ -7,7 +7,6 @@ class GPUShaderModule {
 
 public:
     explicit GPUShaderModule(Ptr<GPUContext> gpuContext);
-    const VkShaderModule getShaderModule() const;
     bool initialize(const std::vector<byte>& moduleContent);
     void terminate();
 private:
