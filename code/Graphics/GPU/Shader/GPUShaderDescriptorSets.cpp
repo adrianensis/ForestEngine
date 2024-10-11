@@ -88,23 +88,22 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     }
 
     // SETS
-    std::vector<VkDescriptorSetLayout> layouts(/*GPUContext::MAX_FRAMES_IN_FLIGHT*/1, descriptorSetLayout);
+    std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     allocInfo.descriptorPool = descriptorPool;
-    allocInfo.descriptorSetCount = 1;//GPUContext::MAX_FRAMES_IN_FLIGHT;
+    allocInfo.descriptorSetCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
     allocInfo.pSetLayouts = layouts.data();
 
-    // descriptorSets.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
-    descriptorSets.resize(1);
+    descriptorSets.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
     if (vkAllocateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not allocate [{}] descriptor sets" /*allocInfo.descriptorSetCount*/);
     }
 
-    // for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
-    // {
+    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
+    {
         FOR_ARRAY(j, mGPUDescriptorData.mUniformBuffers)
         {
             const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[j];
@@ -117,8 +116,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
             std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = descriptorSets[0];
-            // descriptorWrites[0].dstSet = descriptorSets[i];
+            descriptorWrites[0].dstSet = descriptorSets[i];
             descriptorWrites[0].dstBinding = j;
             descriptorWrites[0].dstArrayElement = 0;
             switch (uniformBuffer.getGPUUniformBufferData().mType)
@@ -169,7 +167,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
         //     constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
         //     vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         // }
-    // }
+    }
 }
 
 void GPUShaderDescriptorSets::terminate()

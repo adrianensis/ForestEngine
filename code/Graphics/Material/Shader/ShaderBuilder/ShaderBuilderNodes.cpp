@@ -48,10 +48,10 @@ namespace ShaderBuilderNodes
         {
             locationStr = mLocationOrBinding < 0 ? "" : "binding=" + std::to_string(mLocationOrBinding);
         }
-        std::string setStr = mSet < 0 ? "" : "set=" + std::to_string(mSet);
+        // std::string setStr = mSet < 0 ? "" : "set=" + std::to_string(mSet);
         if(mGPUStorage == GPUStorage::UNIFORM || mGPUStorage == GPUStorage::IN || mGPUStorage == GPUStorage::OUT)
         {
-            layoutStr = "layout(" + (setStr.empty() ? setStr : setStr + ",") + locationStr + ")";
+            layoutStr = "layout(" + /* (setStr.empty() ? setStr : setStr + ",") + */ locationStr + ")";
         }
         std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : EnumsManager::toString(mGPUInterpolation).get() + " ";
         std::string storageStr = EnumsManager::toString(mGPUStorage).get() + " ";
