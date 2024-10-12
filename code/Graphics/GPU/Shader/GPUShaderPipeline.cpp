@@ -43,9 +43,9 @@ bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GP
 
     VkViewport viewport{};
     viewport.x = 0.0f;
-    viewport.y = 0.0f;
+    viewport.y = (float) mGPUContext->vulkanSwapChain->getExtent().height;
     viewport.width = (float) mGPUContext->vulkanSwapChain->getExtent().width;
-    viewport.height = (float) mGPUContext->vulkanSwapChain->getExtent().height;
+    viewport.height = -(float) mGPUContext->vulkanSwapChain->getExtent().height;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
