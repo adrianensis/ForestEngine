@@ -209,7 +209,7 @@ void GPURenderPass::beginCmd(const GPUCommandBuffer* vulkanCommandBuffer, const 
     renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();
 
     VkClearColorValue clearColorValue = {
-            {0.0f, 0.0f, 0.0f, 1.0f}
+            {0.1f, 0.2f, 0.1f, 1.0f}
     };
 
     // The range of depths in the depth buffer is 0.0 to 1.0 in Vulkan, where 1.0 lies at the far view plane and 0.0 at the near view plane.

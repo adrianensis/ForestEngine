@@ -47,7 +47,8 @@ void ScenesManager::init()
     mCameraGameObject = GET_SYSTEM(EntityManager).requestEntity<GameObject>();
 	mCameraGameObject->init();
 
-	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10.0f));
+	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
+	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
     TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
 	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
