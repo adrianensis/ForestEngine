@@ -67,7 +67,7 @@ public:
         {
         public:
             Matrix4 mProjectionViewMatrix;
-            alignas(16) Vector3 mCameraPosition;
+            Vector3 mCameraPosition;
         };
 
         inline static const GPUUniformBufferData mGlobalData
