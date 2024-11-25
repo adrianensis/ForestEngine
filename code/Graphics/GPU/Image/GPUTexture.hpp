@@ -5,6 +5,7 @@
 
 #include "Graphics/GPU/Image/GPUImage.h"
 #include "Core/Object/ObjectBase.hpp"
+#include "Core/Image/ImageUtils.hpp"
 
 class GPUTextureData
 {
@@ -28,19 +29,16 @@ private:
     bool initializeTextureImage();
     bool initializeTextureImageView();
     bool initializeTextureSampler();
-    bool generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels) const;
-    void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) const;
 
 private:
 	u32 mGPUTextureId = 0;
     TextureHandle mGPUTextureHandle = 0;
-	u32 mWidth = 0;
-	u32 mHeight = 0;
+    ImageData mImageData;
 	u32 mID = 0;
 	GPUTextureData mTextureData;
     Ptr<GPUContext> mGPUContext;
     GPUImage* vulkanTextureImage;
-    uint32_t mipLevels = 0;
+    u32 mMipMapLevel = 0;
 
 public:
     VkImageView textureImageView = VK_NULL_HANDLE;

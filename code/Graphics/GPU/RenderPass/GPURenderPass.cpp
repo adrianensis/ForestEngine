@@ -1,6 +1,7 @@
 #include "Graphics/GPU/RenderPass/GPURenderPass.h"
 #include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "Graphics/GPU/GPUUtils.hpp"
+#include "Graphics/GPU/Image/GPUImageUtils.hpp"
 
 GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
         : mGPUContext(gpuContext){}
@@ -114,7 +115,7 @@ bool GPURenderPass::initializeColorResources()
         CHECK_MSG(false,"Could not initialize color image");
         return false;
     }
-    colorImageView = GPUUtils::createImageView(mGPUContext, vulkanColorImage->getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
+    colorImageView = GPUImageUtils::createImageView(mGPUContext, vulkanColorImage->getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
     return true;
 }
 
@@ -137,8 +138,8 @@ bool GPURenderPass::initializeDepthResources()
         CHECK_MSG(false,"Could not initialize depth image");
         return false;
     }
-    depthImageView = GPUUtils::createImageView(mGPUContext, vulkanDepthImage->getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
-    GPUUtils::transitionImageLayout(mGPUContext, vulkanDepthImage->getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
+    depthImageView = GPUImageUtils::createImageView(mGPUContext, vulkanDepthImage->getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
+    GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage->getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
     return true;
 }
 

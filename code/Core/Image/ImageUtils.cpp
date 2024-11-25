@@ -23,7 +23,10 @@ ImageData ImageUtils::loadImage(HashedString path)
 
 void ImageUtils::freeImage(const ImageData& imageData)
 {
-    stbi_image_free(imageData.mData);
+    if(imageData.mData)
+    {
+        stbi_image_free(imageData.mData);
+    }
 }
 
 void ImageUtils::flipImageVertically(const ImageData& imageData, u32 bytes_per_pixel)

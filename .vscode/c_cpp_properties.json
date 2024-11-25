@@ -14,7 +14,8 @@
             "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
             "cppStandard": "c++23",
-            "intelliSenseMode": "${default}"
+            "intelliSenseMode": "${default}",
+            "compileCommands": "${workspaceFolder}/compile_commands.json"
         }
     ],
     "version": 4
