@@ -127,7 +127,7 @@ void RenderPass::render()
 {
 }
 
-void RenderPass::renderBatch(const InstancedMeshData& instancedMeshData)
+void RenderPass::renderInstancedMesh(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);

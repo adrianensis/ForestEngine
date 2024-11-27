@@ -39,7 +39,7 @@ void RenderPassUI::renderStencilCascade(u64 id)
             if(!mStencilsRendered.contains(instancedMeshData.mStencilData.mId))
             {
                 mStencilsRendered.insert(instancedMeshData.mStencilData.mId);
-                renderBatch(instancedMeshData);
+                renderInstancedMesh(instancedMeshData);
             }
 
             break;
@@ -99,6 +99,6 @@ void RenderPassUI::render()
 
     FOR_LIST(it, noStencilInstancedMeshRenderers)
 	{
-        renderBatch(*it);
+        renderInstancedMesh(*it);
     }
 }

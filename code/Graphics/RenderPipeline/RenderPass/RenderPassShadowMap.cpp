@@ -33,7 +33,7 @@ void RenderPassShadowMap::render()
 	PROFILER_CPU()
     FOR_MAP(it, mInstancedMeshRenderers)
 	{
-        renderBatch(*it);
+        renderInstancedMesh(*it);
 	}
 }
 

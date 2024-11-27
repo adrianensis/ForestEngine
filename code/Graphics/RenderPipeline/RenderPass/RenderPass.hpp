@@ -45,7 +45,7 @@ protected:
     virtual void postFramebufferEnabled();
     virtual void bindShader(const InstancedMeshData& instancedMeshData);
     virtual void preRender();
-    virtual void renderBatch(const InstancedMeshData& instancedMeshData);
+    virtual void renderInstancedMesh(const InstancedMeshData& instancedMeshData);
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();

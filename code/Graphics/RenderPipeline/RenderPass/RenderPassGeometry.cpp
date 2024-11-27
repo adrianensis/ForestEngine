@@ -33,7 +33,7 @@ void RenderPassGeometry::render()
 	PROFILER_CPU()
     FOR_LIST(it, mInstancedMeshRenderers)
 	{
-        renderBatch(*it);
+        renderInstancedMesh(*it);
 	}
 }
 
