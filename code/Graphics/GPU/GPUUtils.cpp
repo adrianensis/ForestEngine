@@ -1,5 +1,4 @@
 #include "Graphics/GPU/GPUUtils.hpp"
-#include "Core/Image/ImageUtils.hpp"
 
 /*
     * TODO

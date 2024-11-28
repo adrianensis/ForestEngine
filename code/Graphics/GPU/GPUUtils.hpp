@@ -2,7 +2,6 @@
 
 #include "Graphics/GPU/Core/GPUContext.hpp"
 
-class ImageData;
 class GPUUtils
 {
 public:
