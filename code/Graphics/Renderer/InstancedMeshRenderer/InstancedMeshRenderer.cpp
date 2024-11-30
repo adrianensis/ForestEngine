@@ -125,7 +125,7 @@ void InstancedMeshRenderer::update()
 
 bool InstancedMeshRenderer::shouldRegenerateBuffers() const
 {
-    // TODO: possible optimization for dynamic objects: only regenerate buffers when transform changes.
+    // PERF: possible optimization for dynamic objects: only regenerate buffers when transform changes.
 	return mRegenerateBuffersRequested || !mInstancedMeshData.mIsStatic;
 }
 

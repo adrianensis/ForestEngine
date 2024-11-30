@@ -261,7 +261,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_tangent)
         {
-            // TODO: implement
+            // NEXT: implement
         }
         else
         {
@@ -379,7 +379,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_tangent)
         {
-            // TODO: implement
+            // NEXT: implement
         }
         else
         {

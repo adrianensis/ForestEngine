@@ -52,7 +52,7 @@ void CommandLine::init()
     {
         if(mIsOpen)
         {
-            // TODO: GLFW_KEY_UP && DOWN creates a dependency with Graphics/Window module 
+            // NEXT: GLFW_KEY_UP && DOWN creates a dependency with Graphics/Window module 
 
             // const InputEventKeyArrow *e = (const InputEventKeyArrow*) event;
 
@@ -184,7 +184,7 @@ void CommandLine::execute(const std::string& commandLine)
 
 std::string CommandLine::autocomplete(const std::string& commandLine)
 {
-    return std::string(); // TODO : implement command autocomplete
+    return std::string(); // NEXT : implement command autocomplete
 }
 
 void CommandLine::registerCommand(const std::string& commandName, CommandCallback callback)

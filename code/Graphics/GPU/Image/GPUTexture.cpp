@@ -22,7 +22,8 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
     if(gpuTextureData.mIsFont)
     {
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO: Remove this. Work in progress case.
+        // FONTS CASE
+        // NEXT: Remove this. Work in progress case.
         return;
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

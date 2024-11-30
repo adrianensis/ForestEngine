@@ -33,7 +33,6 @@ public:
     class Consts
     {
     public:
-        // TODO: unsigned int?
         inline static const GPUVariableDefinitionData mPI{{GPUStorage::CONST, PrimitiveTypes::mFloat, "PI"}, "3.14159265358979323846264338327950288"};
         inline static const GPUVariableDefinitionData mPI180{{GPUStorage::CONST, PrimitiveTypes::mFloat, "PI180"}, "PI/180.0"};
         inline static const GPUVariableDefinitionData mMaxBones{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONES"}, std::to_string(MAX_BONES)};

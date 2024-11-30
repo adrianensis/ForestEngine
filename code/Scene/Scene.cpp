@@ -49,7 +49,7 @@ void Scene::loadToFile(const std::string& path)
 {
 	mPath = path;
 
-	mLoadSceneConfig.readFromJsonFile(mPath); // TODO: do async / in other thread.
+	mLoadSceneConfig.readFromJsonFile(mPath); // PERF: do async / in other thread.
 
     mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
 	if (mLoadSceneConfig.contains("size"))

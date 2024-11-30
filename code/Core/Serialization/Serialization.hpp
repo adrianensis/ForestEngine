@@ -3,7 +3,7 @@
 #include "Core/StdCore.hpp"
 #include "Core/Serialization/Json.hpp"
 
-// TODO : use ordered_json only for debug and release? but json for ship version?
+// PERF : use ordered_json only for debug and release? but json for ship version?
 // ordered_json will keep the data order, json will sort the data alphabetically
 
 class ISerializable

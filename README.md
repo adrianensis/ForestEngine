@@ -53,6 +53,19 @@ Example: build debug `tool_Editor` with this command `python3 scripts/build.py -
 
 ---
 
+### Tags
+
+- TODO: to do
+- NEXT: to do next iteration / backlog / future
+- OPT: optional
+- PERF: performance
+- BUG: bug
+- HACK: hack
+- WARN: warning
+- INFO: info
+
+---
+
 ### Unitary Tests
 
 Run unitary tests with `./scripts/test.sh`. Result are stored in **binaries/output**.

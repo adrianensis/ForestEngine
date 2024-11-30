@@ -109,7 +109,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
             const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[j];
 
             VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // TODO: make double buffered!!
+            bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // PERF: make double buffered!!
             bufferInfo.offset = 0;
             bufferInfo.range = uniformBuffer.getSize();
 

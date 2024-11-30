@@ -92,4 +92,6 @@
     "C_Cpp.errorSquiggles": "enabled",
     "python.analysis.typeCheckingMode": "off",
     "python.analysis.autoImportCompletions": true,
+    "todo-tree.tree.scanMode": "workspace only",
+    "todo-tree.tree.showBadges": true,
 }

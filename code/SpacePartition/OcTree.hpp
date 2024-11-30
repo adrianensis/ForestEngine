@@ -71,7 +71,7 @@ private:
     Cube mOcTreeBoundingBox;
     bool mIsStatic = false;
 
-    // TODO: CONTINUE HERE
+    // NEXT: CONTINUE HERE
     // track current octancts to avoid re-insertions
     // u8 mOctantHash ?
     // octanct Ptr?

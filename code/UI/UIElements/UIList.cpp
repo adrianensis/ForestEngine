@@ -74,7 +74,7 @@ UIList& UIList::addOption(const std::string& label, UIElementCallback onPressedC
 
 void UIList::toggle()
 {
-	// TODO : Temporary
+	// NEXT : Temporary
 	if (mButtons.empty())
 	{
 		Vector3 scale = mTransform->getLocalScale();
@@ -116,7 +116,7 @@ void UIList::toggle()
 		//(*it)->setVisibility(!(*it)->isVisible());
 	}
 
-	// TODO : If I want to create-remove buttons, I have to implement TIMER NEXT FRAME!
+	// NEXT : If I want to create-remove buttons, I have to implement TIMER NEXT FRAME!
 	//setEntriesVisibility(mButtons->isEmpty());
 }
 
