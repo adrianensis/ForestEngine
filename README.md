@@ -59,6 +59,7 @@ Example: build debug `tool_Editor` with this command `python3 scripts/build.py -
 - NEXT: to do next iteration / backlog / future
 - OPT: optional
 - PERF: performance
+- REF: refactor
 - BUG: bug
 - HACK: hack
 - WARN: warning
