@@ -28,11 +28,10 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        // if (!vulkanVertexBuffer->initialize(data))
+        if (!setData((const void*)data.data(), data.size()))
         {
-            // CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
+            CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
-//	    // GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::VERTEX, mBufferId, data);
     }
     void setDataArray(const ByteBuffer& data)
     {
