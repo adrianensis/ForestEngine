@@ -81,7 +81,7 @@ void Model::loadGLTFMaterials()
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR Meshes are supported")
 
-            materialData.setSharedMaterialPropertiesBlock<MetallicRoughness>();
+            materialData.setSharedMaterialPropertiesBlock<PropertiesBlockShaderPBR>();
 
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
@@ -91,7 +91,7 @@ void Model::loadGLTFMaterials()
             else
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
             }
             if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
             {
@@ -100,8 +100,8 @@ void Model::loadGLTFMaterials()
             }
             else
             {
-                materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-                materialData.mSharedMaterialPropertiesBlockBuffer.get<MetallicRoughness>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
+                materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+                materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
             }
 
             if(cgltfMaterial.normal_texture.texture)

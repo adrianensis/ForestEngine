@@ -128,17 +128,17 @@ OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompile
 {
     mShaderData.mShaderCompileData = shaderCompileData;
 
-    std::vector<GPUShaderSamplerBinding> gpuShaderSamplerBindings;
+    std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
     const std::unordered_map<HashedString, PoolHandler<GPUTexture>> &materialTextures = GET_SYSTEM(MaterialManager).getMaterialTextureBindings(mShaderData.mShaderCompileData.mMaterial);
     FOR_MAP(it, materialTextures)
     {
-        gpuShaderSamplerBindings.emplace_back(GPUShaderSamplerBinding{it->second});
+        gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
     }
     
     GPUShaderDescriptorSetsData gpuShaderDescriptorSetsData
     {
         mShaderData.mShaderCompileData.mUniformBuffers,
-        gpuShaderSamplerBindings
+        gpuShaderTextureBindings
     };
 
     OwnerPtr<GPUShader> gpuShader = OwnerPtr<GPUShader>::newObject();

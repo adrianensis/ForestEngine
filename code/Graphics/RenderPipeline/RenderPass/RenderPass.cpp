@@ -39,7 +39,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         mInstancedMeshRenderers.insert(instancedMeshData);
 
         std::vector<GPUUniformBuffer> uniformBuffers;
-        // uniformBuffers.push_back(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+        uniformBuffers.push_back(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
     
         Ptr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
         if(model)

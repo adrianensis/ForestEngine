@@ -12,14 +12,14 @@ public:
     inline static const HashedString smShadowMap = "ShadowMap";
 };
 
-class MetallicRoughness
+class PropertiesBlockShaderPBR
 {
 public:
     Vector4 mBaseColor = Vector4(0,0,0,1);
     alignas(16) f32 mMetallic = 0;
     alignas(16) f32 mRoughness = 0;
 };
-REGISTER_CLASS(MetallicRoughness)
+REGISTER_CLASS(PropertiesBlockShaderPBR)
 
 class ShaderPBR : public ShaderDefault
 {

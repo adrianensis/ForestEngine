@@ -8,9 +8,10 @@
 
 class GPURenderPass;
 
-class GPUShaderSamplerBinding
+class GPUShaderTextureBinding
 {
 public:
+    HashedString mName;
     PoolHandler<GPUTexture> mGPUTexture;
 };
 
@@ -18,7 +19,14 @@ class GPUShaderDescriptorSetsData
 {
 public:
     std::vector<GPUUniformBuffer> mUniformBuffers;
-    std::vector<GPUShaderSamplerBinding> mSamplerBindings;
+    std::vector<GPUShaderTextureBinding> mTextureBindings;
+};
+
+class GPUShaderDescriptorSetsBindings
+{
+public:
+    std::unordered_map<HashedString, u32> mBindings;
+    std::unordered_map<HashedString, u32> mSets;
 };
 
 class GPUShaderDescriptorSets: public ObjectBase
@@ -32,8 +40,7 @@ public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
-    std::unordered_map<HashedString, u32> mUniformBufferToSet;
-    std::unordered_map<HashedString, u32> mSamplersToSet;
+    GPUShaderDescriptorSetsBindings mGPUShaderDescriptorSetsBindings;
     GPUShaderDescriptorSetsData mGPUDescriptorData;
 };
 REGISTER_CLASS(GPUShaderDescriptorSets);

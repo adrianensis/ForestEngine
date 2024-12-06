@@ -1,4 +1,5 @@
 #include "Graphics/GPU/Shader/GPUShaderDescriptorSets.hpp"
+#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 
 void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext)
 {
@@ -33,9 +34,9 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
     samplersBindingIndexOffset = bindingIndex;
 
-    FOR_ARRAY(i, mGPUDescriptorData.mSamplerBindings)
+    FOR_ARRAY(i, mGPUDescriptorData.mTextureBindings)
     {
-        // const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[i];
+        // const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[i];
 
         VkDescriptorSetLayoutBinding layoutBinding{};
         layoutBinding.binding = bindingIndex;
@@ -67,7 +68,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[1].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mUniformBuffers.size();
     poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[2].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mSamplerBindings.size();
+    poolSizes[2].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mTextureBindings.size();
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -134,7 +135,8 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-            mUniformBufferToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
+            mGPUShaderDescriptorSetsBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrites[0].dstBinding);
+            mGPUShaderDescriptorSetsBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
 
             auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
             constexpr uint32_t descriptorCopyCount = 0;
@@ -142,15 +144,14 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
             vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
 
-        FOR_ARRAY(j, mGPUDescriptorData.mSamplerBindings)
+        FOR_ARRAY(j, mGPUDescriptorData.mTextureBindings)
         {
-            const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[0];
-            // const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[i];
+            const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[j];
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = samplerBinding.mGPUTexture->textureImageView;
-            imageInfo.sampler = samplerBinding.mGPUTexture->textureSampler;
+            imageInfo.imageView = textureBinding.mGPUTexture->textureImageView;
+            imageInfo.sampler = textureBinding.mGPUTexture->textureSampler;
 
             std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 
@@ -162,7 +163,8 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pImageInfo = &imageInfo;
 
-            // mSamplersToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
+            mGPUShaderDescriptorSetsBindings.mBindings.emplace(textureBinding.mName, descriptorWrites[0].dstBinding);
+            mGPUShaderDescriptorSetsBindings.mSets.emplace(textureBinding.mName,i);
 
             auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
             constexpr uint32_t descriptorCopyCount = 0;

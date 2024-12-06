@@ -24,12 +24,6 @@ public:
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
-class TextureBindingNames
-{
-public:
-    inline static const HashedString smBaseColor = "BaseColor";
-};
-
 class ShaderPropertiesBlockNames
 {
 public:

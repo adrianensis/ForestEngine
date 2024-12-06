@@ -3,6 +3,19 @@
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/GPU/Core/GPUBuiltIn.hpp"
 
+class TextureBindingNames
+{
+public:
+    inline static const HashedString smBaseColor = "BaseColor";
+};
+
+class PropertiesBlockShaderDefault
+{
+public:
+    Vector4 mBaseColor = Vector4(0,0,0,1);
+};
+REGISTER_CLASS(PropertiesBlockShaderDefault)
+
 class ShaderDefault : public Shader
 {
 public:
@@ -14,6 +27,7 @@ public:
 
 protected:
     virtual void registerTextures() override;
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
     virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const;
