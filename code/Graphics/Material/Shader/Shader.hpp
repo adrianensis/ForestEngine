@@ -133,7 +133,6 @@ protected:
 
 protected:
     ShaderData mShaderData;
-    GPUShaderDescriptorSets* mGPUDescriptor;
 
 public:
 

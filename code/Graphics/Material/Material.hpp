@@ -6,8 +6,6 @@
 #include "Graphics/GPU/Buffer/GPUUniformBuffer.hpp"
 #include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/Core/GPUBuiltIn.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Material/Shader/ShaderManager.hpp"
 
 class MaterialData
 {
@@ -45,34 +43,23 @@ public:
     }
 };
 
+// REF: Merge Material and Shader classes? rename as ShaderMaterial? or just Shader?
 class Material: public ObjectBase, public IPoolable
 {
 public:
     Material() = default;
 
-    template<class T> T_EXTENDS(T, Shader)
-    void init(const MaterialData& materialData, u32 id)
-    {
-        LOG_TRACE()
-        PROFILER_CPU()
-        mShader = GET_SYSTEM(ShaderManager).createShader<T>();
-        internalInit(materialData, id);
-    }
+    void init(const MaterialData& materialData, u32 id);
 
     void terminate();
     virtual void onPoolFree() override { terminate(); };
 
-private:
-    void internalInit(const MaterialData& materialData, u32 id);
-
 protected:
     MaterialData mMaterialData;
     u32 mID = 0;
-    Ptr<Shader> mShader;
 
 public:
     CRGET(MaterialData)
     GET(ID)
-    GET(Shader)
 };
 REGISTER_CLASS(Material);

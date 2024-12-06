@@ -182,8 +182,6 @@ void MaterialManager::initMaterialInstancePropertiesUniformBuffer(const PoolHand
     {
         if(material->getMaterialData().allowInstances())
         {
-            mMaterialToPropertyBlock.emplace(materialID, propertiesBlockClassId);
-
             u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
             if(propertiesBlockSizeBytes > 0)
             {
@@ -199,7 +197,7 @@ void MaterialManager::initMaterialInstancePropertiesUniformBuffer(const PoolHand
                 Slot defaultSlot = mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.copyBufferAt(material->getMaterialData().mSharedMaterialPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
-                const GPUUniformBufferData& propertiesBlockUniformBufferData = material->getShader()->getShaderData().mPropertiesBlockUniformBufferData;
+                const GPUUniformBufferData& propertiesBlockUniformBufferData = mMaterialToShader.at(materialID)->getShaderData().mPropertiesBlockUniformBufferData;
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.addUniformBuffer(propertiesBlockUniformBufferData, propertiesBlockSizeBytes * mInitialInstances, false);
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.create();
             }
@@ -297,4 +295,9 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
     }
 
     return slot;
+}
+
+Ptr<Shader> MaterialManager::getMaterialShader(const PoolHandler<Material>& handler) const
+{
+    return mMaterialToShader.at(handler->getID());
 }

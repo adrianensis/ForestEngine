@@ -49,7 +49,7 @@ void RenderPipeline::update()
     PROFILER_END_BLOCK()
 
     PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
-    // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
     PROFILER_END_BLOCK()
 
     // GET_SYSTEM(MaterialManager).update();
@@ -188,7 +188,7 @@ void RenderPipeline::initBuffers()
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData, sizeof(GPUBuiltIn::UniformBuffers::GPUGlobalData), false);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mLightsBufferData, sizeof(LightBuiltIn::LightsData), false);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mShadowMappingBufferData, sizeof(LightBuiltIn::ShadowMappingData), false);
-    // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices, sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize(), false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices, sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize(), false);
 
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().create();
 

@@ -3,7 +3,6 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
-#include "Graphics/Material/Shader/Shader.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
 #include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
@@ -28,7 +27,6 @@ public:
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     std::vector<RenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
-    Ptr<Shader> mShader;
 };
 
 class RenderPass: public ObjectBase

@@ -3,6 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
 #include "Graphics/Material/Material.hpp"
+#include "Graphics/Material/Shader/Shader.hpp"
 
 class MaterialInstance: public ObjectBase
 {
@@ -27,9 +28,10 @@ public:
     template<class T> T_EXTENDS(T, Shader)
     PoolHandler<Material> createMaterial(const MaterialData& materialData)
     {
-        // OwnerPtr<T> shader = OwnerPtr<T>::newObject();
         PoolHandler<Material> handler = mMaterials.allocate();
-        handler->init<T>(materialData, handler.getIndex());
+        handler->init(materialData, handler.getIndex());
+        mMaterialToShader.emplace(handler->getID(), OwnerPtr<Shader>::moveCast(OwnerPtr<T>::newObject()));
+        mMaterialToShader.at(handler->getID())->init();
         postMaterialCreated(handler);
 
         return handler;
@@ -44,14 +46,18 @@ public:
 
     void setMaterialInstanceProperties(const PoolHandler<MaterialInstance> materialInstance);
     void setMaterialInstanceDirty(u32 id);
+
     const GPUUniformBuffer& getMaterialPropertiesGPUUniformBuffer(const PoolHandler<Material>& material) const;
     Slot requestMaterialInstanceSlot(const PoolHandler<Material>& material);
 
     const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& getMaterialTextureBindings(const PoolHandler<Material>& handler) const;
+    
+    Ptr<Shader> getMaterialShader(const PoolHandler<Material>& handler) const;
 
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);
     void loadMaterialTextures(const PoolHandler<Material>& handler);
+    void initMaterialInstancePropertiesUniformBuffer(const PoolHandler<Material>& material);
 
     class MaterialPropertyBlockRenderState
     {
@@ -63,8 +69,8 @@ private:
 
 	std::unordered_map<u32, ClassId> mMaterialToPropertyBlock;
 	std::unordered_map<ClassId, MaterialPropertyBlockRenderState> mMaterialPropertyBlockRenderStates;
-
-    void initMaterialInstancePropertiesUniformBuffer(const PoolHandler<Material>& material);
+	
+    std::unordered_map<u32, OwnerPtr<Shader>> mMaterialToShader;
 
     Pool<GPUTexture> mTextures;
     std::vector<TextureHandle> mTextureHandles;

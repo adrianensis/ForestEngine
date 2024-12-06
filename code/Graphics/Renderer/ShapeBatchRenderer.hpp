@@ -20,7 +20,7 @@ private:
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
 private: 
-	Ptr<Shader> mShader;
+	OwnerPtr<Shader> mShader;
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;

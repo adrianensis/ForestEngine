@@ -6,7 +6,6 @@
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderDefault.hpp"
-#include "Graphics/Material/Shader/ShaderManager.hpp"
 
 void ShapeBatchRenderer::terminate()
 {
@@ -46,7 +45,8 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 
     MaterialData materialData;
     PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
-    mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
+    mShader = OwnerPtr<Shader>::moveCast(OwnerPtr<ShaderDefault>::newObject());
+    mShader->init();
     // mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
 
     // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));

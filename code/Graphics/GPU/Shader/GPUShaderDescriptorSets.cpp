@@ -8,6 +8,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
     u32 bindingIndex = 0;
+    u32 samplersBindingIndexOffset = 0;
     FOR_ARRAY(i, mGPUDescriptorData.mUniformBuffers)
     {
         const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[i];
@@ -29,6 +30,8 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
         bindings.push_back(layoutBinding);
     }
+
+    samplersBindingIndexOffset = bindingIndex;
 
     FOR_ARRAY(i, mGPUDescriptorData.mSamplerBindings)
     {
@@ -139,34 +142,33 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
             vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
 
-        // FOR_ARRAY(j, mGPUDescriptorData.mSamplerBindings)
-        // {
-        //     const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[0];
-        //     // const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[i];
+        FOR_ARRAY(j, mGPUDescriptorData.mSamplerBindings)
+        {
+            const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[0];
+            // const GPUShaderSamplerBinding& samplerBinding = mGPUDescriptorData.mSamplerBindings[i];
 
-        //     VkDescriptorImageInfo imageInfo{};
-        //     imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        //     imageInfo.imageView = samplerBinding.mGPUTexture->textureImageView;
-        //     imageInfo.sampler = samplerBinding.mGPUTexture->textureSampler;
+            VkDescriptorImageInfo imageInfo{};
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            imageInfo.imageView = samplerBinding.mGPUTexture->textureImageView;
+            imageInfo.sampler = samplerBinding.mGPUTexture->textureSampler;
 
-        //     std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
+            std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 
-        //     descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        //     descriptorWrites[0].dstSet = descriptorSets[0];
-        //     // descriptorWrites[0].dstSet = descriptorSets[i];
-        //     descriptorWrites[0].dstBinding = j;
-        //     descriptorWrites[0].dstArrayElement = 0;
-        //     descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        //     descriptorWrites[0].descriptorCount = 1;
-        //     descriptorWrites[0].pImageInfo = &imageInfo;
+            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[0].dstSet = descriptorSets[i];
+            descriptorWrites[0].dstBinding = j + samplersBindingIndexOffset;
+            descriptorWrites[0].dstArrayElement = 0;
+            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrites[0].descriptorCount = 1;
+            descriptorWrites[0].pImageInfo = &imageInfo;
 
-        //     // mSamplersToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
+            // mSamplersToSet.insert_or_assign(uniformBuffer.getGPUUniformBufferData().mBufferName, 0/*i*/);
 
-        //     auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
-        //     constexpr uint32_t descriptorCopyCount = 0;
-        //     constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
-        //     vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
-        // }
+            auto descriptorWriteCount = (uint32_t) descriptorWrites.size();
+            constexpr uint32_t descriptorCopyCount = 0;
+            constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
+            vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
+        }
     }
 }
 

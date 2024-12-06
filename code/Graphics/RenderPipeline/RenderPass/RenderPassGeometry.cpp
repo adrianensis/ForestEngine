@@ -3,7 +3,6 @@
 #include "Graphics/GPU/GPUInstance.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
-#include "Graphics/Material/Shader/ShaderManager.hpp"
 
 void RenderPassGeometry::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {

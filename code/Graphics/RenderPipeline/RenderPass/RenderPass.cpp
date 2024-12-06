@@ -52,7 +52,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
         }
 
         uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-        // uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
 
         Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
         ShaderCompileData shaderCompileData
@@ -66,7 +66,7 @@ void RenderPass::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
             instancedMeshRenderer->getGPUVertexBuffersContainer()
         };
 
-        mGPUShaders.emplace(instancedMeshData, mRenderPassData.mShader->compileShader(shaderCompileData));
+        mGPUShaders.emplace(instancedMeshData, GET_SYSTEM(MaterialManager).getMaterialShader(instancedMeshData.mMaterial)->compileShader(shaderCompileData));
 
         // setupShader(mGPUShaders.at(instancedMeshData));
         // bindShader(instancedMeshData);

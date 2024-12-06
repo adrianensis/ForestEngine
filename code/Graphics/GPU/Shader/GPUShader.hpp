@@ -17,7 +17,8 @@ public:
     GPUShader();
 	~GPUShader() override = default;
 
-    void initFromFileContents(GPURenderPass* vulkanRenderPass, GPUShaderDescriptorSets* gpuShaderDescriptorSets, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext, const std::vector<byte>& vertex, const std::vector<byte>& fragment);
+    void init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext);
+    void compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment);
     void terminate();
     void enable() const;
     void disable() const;
@@ -27,6 +28,9 @@ private:
     GPUShaderPipeline* gpuShaderPipeline = nullptr;
     GPUShaderModule* vertexShader = nullptr;
     GPUShaderModule* fragmentShader = nullptr;
-    GPUShaderDescriptorSets* mGPUDescriptor;
+    GPUShaderDescriptorSets* mGPUShaderDescriptorSets;
+    GPUVertexInputData mGPUVertexInputData;
+public:
+    GET(GPUShaderDescriptorSets)
 };
 REGISTER_CLASS(GPUShader);

@@ -34,17 +34,17 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     //     set(finalPositon, boneMatrix.mul(finalPositon));
     // }
 
-    // auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);
-    // if(modelMatricesBuffer.isValid())
-    // {
-    //     Variable modelMatrices;
-    //     modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-    //     auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
-    //     if(objectId.isValid())
-    //     {
-    //         shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
-    //     }
-    // }
+    auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices.mInstanceName);
+    if(modelMatricesBuffer.isValid())
+    {
+        Variable modelMatrices;
+        modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+        auto& objectId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mObjectID);
+        if(objectId.isValid())
+        {
+            shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
+        }
+    }
 
     // shaderBuilder.setVariableInCache(finalPositon);
     
@@ -176,17 +176,17 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
 
-    // auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoords.at(0));
-    // if(inTextureCoord.isValid())
-    // {
-    //     auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    //     auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
-    //     Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-    //     shaderBuilder.getMain().
-    //     // ifBlock(textureHandler.notEq("0"s)).
-    //         set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
-    //     // end();
-    // }
+    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
+    if(inTextureCoord.isValid())
+    {
+        auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+        // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+        // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+        shaderBuilder.getMain().
+        // ifBlock(textureHandler.notEq("0"s)).
+            set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
+        // end();
+    }
 }
 
 void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
@@ -242,7 +242,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
 
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mGlobalData);
     // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mTextures);
-    // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
+    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUBuiltIn::UniformBuffers::mModelMatrices);
     // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(getShaderData().mPropertiesBlockUniformBufferData);
 
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUBuiltIn::Consts::mPI);
@@ -259,10 +259,10 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
         shaderGenerationData.mVertexVariables.mVertexInputs.push_back(*it);
     }
 
-    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
-    // {
-    //     shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-    // }
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
+    {
+        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
+    }
     
     // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
     // {
@@ -280,10 +280,10 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
-    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
-    // {
-    //     shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
-    // }
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
+    {
+        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mTextureCoords.at(0));
+    }
 
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mColor);
 
@@ -331,9 +331,8 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
     u32 binding = 0;
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mUniformBufferToSet.at((*it).mName))); binding++; }
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mUniformBufferToSet.at((*it).mName))); binding++; }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, binding)); binding++; }
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { shaderBuilder.get().attribute(Attribute(*it,binding, 0)); binding++; }
-    u32 uniformBufferIndex = 0;
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, uniformBufferIndex)); uniformBufferIndex++; }
     u32 fragmentInputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(Attribute(*it, fragmentInputIndex)); fragmentInputIndex++; }
     u32 fragmentOutputIndex = 0;
@@ -358,7 +357,7 @@ void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVe
     //     vertexShaderCalculateNormalOutput(shaderBuilder);
     // }
 
-    // vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
+    vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
 
     // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mColor))
     // {

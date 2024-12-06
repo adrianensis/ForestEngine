@@ -4,7 +4,6 @@
 #include "Graphics/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
-#include "Graphics/Material/Shader/ShaderManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
 void RenderPassShadowMap::preRender()
