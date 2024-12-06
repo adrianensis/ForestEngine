@@ -7,7 +7,7 @@ void GPUIndicesBuffer::init(Ptr<GPUContext> gpuContext, const GPUDataType& gpuDa
     mGPUDataType = gpuDataType;
 //    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(GPUBufferType::INDEX);
     GPUBufferData gpuBufferData{};
-    gpuBufferData.Size = sizeof(f32) * 10000; //bufferSize;;
+    gpuBufferData.Size = sizeof(f32) * 10000 * 10; //bufferSize;;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
