@@ -46,11 +46,6 @@ void Shader::init()
     registerTextures();
 }
 
-void Shader::init(const ShaderData& shaderData)
-{
-    mShaderData = shaderData;
-}
-
 void Shader::terminate()
 {
 

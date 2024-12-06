@@ -106,7 +106,6 @@ public:
     Shader() = default;
     virtual ~Shader() = default;
     void init();
-    void init(const ShaderData& shaderData);
     void terminate();
 
     void enable() const;
