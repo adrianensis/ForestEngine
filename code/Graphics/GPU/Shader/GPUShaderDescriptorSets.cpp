@@ -8,15 +8,13 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     // LAYOUT
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
-    u32 bindingIndex = 0;
-    u32 samplersBindingIndexOffset = 0;
+    u32 samplersBindingIndexOffset = mGPUDescriptorData.mUniformBuffers.size();
     FOR_ARRAY(i, mGPUDescriptorData.mUniformBuffers)
     {
         const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[i];
 
         VkDescriptorSetLayoutBinding layoutBinding{};
-        layoutBinding.binding = bindingIndex;
-        bindingIndex++;
+        layoutBinding.binding = i;
         layoutBinding.descriptorCount = 1;
         layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
         switch (uniformBuffer.getGPUUniformBufferData().mType)
@@ -32,15 +30,12 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
         bindings.push_back(layoutBinding);
     }
 
-    samplersBindingIndexOffset = bindingIndex;
-
     FOR_ARRAY(i, mGPUDescriptorData.mTextureBindings)
     {
         // const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[i];
 
         VkDescriptorSetLayoutBinding layoutBinding{};
-        layoutBinding.binding = bindingIndex;
-        bindingIndex++;
+        layoutBinding.binding = i + samplersBindingIndexOffset;
         layoutBinding.descriptorCount = 1;
         layoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
@@ -52,7 +47,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
+    layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size()); // TODO: find and replace uint32_t by u32
     layoutInfo.pBindings = bindings.data();
 
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
@@ -62,6 +57,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     }
 
     // POOL
+    // TODO: select a correct poolSizes[0].descriptorCount number
     std::array<VkDescriptorPoolSize, 3> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     poolSizes[0].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mUniformBuffers.size();
@@ -74,6 +70,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = (uint32_t) poolSizes.size();
     poolInfo.pPoolSizes = poolSizes.data();
+    // TODO: select a correct poolInfo.maxSets number
     poolInfo.maxSets = 64;//GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
 
     /*
