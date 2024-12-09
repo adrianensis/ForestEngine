@@ -170,10 +170,10 @@ void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderB
 
 void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
-    auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mColor);
+    auto& inColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mColor);
     auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
     
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
     Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
 
@@ -292,7 +292,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mFragPositionLight);
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mInstanceID);
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mObjectID);
-    // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
+    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUBuiltIn::VertexInput::mTextureCoords.at(0)))
     {
@@ -309,7 +309,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mFragPositionLight);
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mInstanceID);
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mObjectID);
-    // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
+    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUBuiltIn::FragmentInput::mMaterialInstanceID);
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUBuiltIn::FragmentOutput::mColor);
 }
 
