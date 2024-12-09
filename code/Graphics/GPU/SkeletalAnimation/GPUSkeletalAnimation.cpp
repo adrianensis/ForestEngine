@@ -1,8 +1,9 @@
 #include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Core/Time/TimeUtils.hpp"
 
-void GPUSkeletalAnimation::init(f32 animDurationInSeconds)
+void GPUSkeletalAnimation::init(u32 id, f32 animDurationInSeconds)
 {
+    mID = id;
     mDurationInSeconds = animDurationInSeconds;
     mTicksPerSecond = smSkeletalAnimationFPS;
     mDurationInTicks = (int)(animDurationInSeconds/smSkeletalAnimationFrameRateSeconds);
@@ -54,7 +55,7 @@ void GPUSkeletonState::update()
 
 void GPUSkeletonState::createSkeletalAnimationState(Ptr<const GPUSkeletalAnimation> animation)
 {
-    ObjectId animationId = animation->getObjectId();
+    ObjectId animationId = animation->mID;
 
 	if(!mSkeletalAnimationStates.contains(animationId))
 	{

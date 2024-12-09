@@ -629,7 +629,7 @@ void Model::loadGLTFSkeletalAnimations()
         loadGLTFChannels(gltfAnim);
 
         Ptr<GPUSkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<GPUSkeletalAnimation>::newObject());
-        animation->init(animDuration);
+        animation->init(animIt, animDuration);
 
         loadGLTFSkeletalAnimationFrames(animation);
 

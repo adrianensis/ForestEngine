@@ -9,10 +9,10 @@ public:
     std::vector<Matrix4> mTransforms;
 };
 
-class GPUSkeletalAnimation: public ObjectBase
+class GPUSkeletalAnimation
 {
 public:
-    void init(f32 animDurationInSeconds);
+    void init(u32 id, f32 animDurationInSeconds);
 
     f32 calculateCurrentSkeletalAnimationTime(f32 accumulatedTime) const;
 
@@ -25,10 +25,11 @@ public:
     f32 mTicksPerSecond = 0;
     u32 mDurationInTicks = 0;
     f32 mDurationInSeconds = 0;
+    u32 mID = 0;
 };
 REGISTER_CLASS(GPUSkeletalAnimation);
 
-class GPUSkeletalAnimationState: public ObjectBase
+class GPUSkeletalAnimationState
 {
 public:
     void init(Ptr<const GPUSkeletalAnimation> animation);
@@ -63,7 +64,7 @@ public:
     std::vector<Matrix4> mInverseBindMatrices;
 };
 
-class GPUSkeletonState: public ObjectBase
+class GPUSkeletonState
 {
 public:
     void init(const GPUSkeletonStateData& gpuSkeletonStateData);
