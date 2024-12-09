@@ -52,7 +52,7 @@ void RenderPipeline::update()
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
     PROFILER_END_BLOCK()
 
-    // GET_SYSTEM(MaterialManager).update();
+    GET_SYSTEM(MaterialManager).update();
 	// GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
