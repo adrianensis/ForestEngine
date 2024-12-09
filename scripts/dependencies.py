@@ -70,19 +70,19 @@ if installSystemDepencencies:
         if distro_id == "ubuntu":
             #vulkan repository
             os.system("wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc")
-            os.system("sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list http://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list")
+            os.system("sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-noble.list http://packages.lunarg.com/vulkan/lunarg-vulkan-noble.list")
             #update
             os.system("sudo apt-get -y update")
             #install packages
             os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang")
             os.system("sudo apt-get -y install mesa-common-dev")
             os.system("sudo apt-get -y install libtbb-dev") # needed by GDD in order to use c++ parallel for_each
-            os.system("sudo apt-get -y install xorg-dev") # glfw3 dependency
+            os.system("sudo apt-get -y install xorg-dev libxkbcommon-dev") # glfw3 dependency
             os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
             os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
+            os.system("sudo apt install -y vulkan-sdk")
             os.system("sudo apt-get -y install doxygen graphviz")
-            os.system("sudo apt install vulkan-sdk")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
             # os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
