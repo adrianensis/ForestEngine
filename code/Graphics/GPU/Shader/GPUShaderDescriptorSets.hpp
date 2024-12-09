@@ -29,7 +29,7 @@ public:
     std::unordered_map<HashedString, u32> mSets;
 };
 
-class GPUShaderDescriptorSets: public ObjectBase
+class GPUShaderDescriptorSets
 {    
 public:
     void init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);

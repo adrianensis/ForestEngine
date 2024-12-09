@@ -4,7 +4,6 @@
 #include "Core/Font/Font.hpp"
 
 #include "Graphics/GPU/Image/GPUImage.h"
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/Image/ImageUtils.hpp"
 
 class GPUTextureData
@@ -16,7 +15,7 @@ public:
     FontData mFontData;
 };
 
-class GPUTexture: public ObjectBase, public IPoolable
+class GPUTexture: public IPoolable
 {
 public:
     void init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
