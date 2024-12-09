@@ -239,7 +239,7 @@ protected:
 private:
     template <class OtherClass>
     void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>(dynamic_cast<IPointedObject*>(const_cast<REMOVE_CONST(OtherClass)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
-    Ptr<IPointedObject> mPtrToThis;
+    Ptr<IPointedObject> mPtrToThis {};
 };
 
 // REF COUNTED PTR BASE
