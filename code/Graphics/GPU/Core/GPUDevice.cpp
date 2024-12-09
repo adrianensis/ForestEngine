@@ -42,7 +42,6 @@ void GPUDevice::waitUntilIdle() const
 
 std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const GPUQueueFamilyIndices& queueFamilyIndices) const
 {
-    constexpr float queuePriority = 1.0f;
     std::set<uint32_t> queueFamilies =
     {
             queueFamilyIndices.GraphicsFamily.value(),
@@ -54,7 +53,7 @@ std::vector<VkDeviceQueueCreateInfo> GPUDevice::getDeviceQueueCreateInfos(const 
         VkDeviceQueueCreateInfo queueCreateInfo{};
         queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueCreateInfo.queueFamilyIndex = queueFamily;
-        queueCreateInfo.pQueuePriorities = &queuePriority;
+        queueCreateInfo.pQueuePriorities = &mQueuesPriority;
         queueCreateInfo.queueCount = 1;
         queueCreateInfos.push_back(queueCreateInfo);
     }

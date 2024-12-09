@@ -13,6 +13,7 @@ private:
     VkDevice mDevice = VK_NULL_HANDLE;
     VkQueue mGraphicsQueue = VK_NULL_HANDLE;
     VkQueue mPresentQueue = VK_NULL_HANDLE;
+    inline static const f32 mQueuesPriority = 1.0;
 
 public:
     GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice);
