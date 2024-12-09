@@ -13,7 +13,6 @@ public:
     u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
 
 private:
-private:
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     u32 mBindingPointsIndexUniform = 0;
     u32 mBindingPointsIndexStorage = 0;

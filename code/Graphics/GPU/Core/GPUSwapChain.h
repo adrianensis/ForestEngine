@@ -2,7 +2,6 @@
 
 #include "Graphics/GPU/Core/GPUDevice.h"
 #include "Graphics/GPU/Core/GPUPhysicalDevice.h"
-#include "Graphics/GPU/GPUWindow.hpp"
 
 #include <vulkan/vulkan.h>
 #include <vector>

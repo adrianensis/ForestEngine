@@ -84,10 +84,10 @@ VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCap
     bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<uint32_t>::max();
     if (!extentSizeCanDifferFromWindowResolution)
     {
-        VULKAN_LOG("Extent should match gpuWindow resolution so using the surface capabilities extent");
+        VULKAN_LOG("Extent should match window resolution so using the surface capabilities extent");
         return surfaceCapabilities.currentExtent;
     }
-    VULKAN_LOG("Extent can differ from gpuWindow resolution so picking the resolution that best matches the gpuWindow within the minImageExtent and maxImageExtent bounds");
+    VULKAN_LOG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
     VkExtent2D extent =
     {
             (uint32_t) windowSizeInPixels.x,

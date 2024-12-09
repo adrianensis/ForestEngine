@@ -32,14 +32,21 @@ public:
     VkSampleCountFlagBits mSampleCount = VK_SAMPLE_COUNT_1_BIT;
 };
 
+class GPUPhysicalDeviceData
+{
+public:
+    VkSurfaceKHR surface = VK_NULL_HANDLE;
+};
+
 class GPUPhysicalDevice
 {
 private:
     Vulkan* vulkan;
     GPUDeviceInfo deviceInfo{};
+    GPUPhysicalDeviceData mGPUPhysicalDeviceData;
 
 public:
-    explicit GPUPhysicalDevice(Vulkan* vulkan);
+    explicit GPUPhysicalDevice(Vulkan* vulkan, GPUPhysicalDeviceData gpuPhysicalDeviceData);
     VkPhysicalDevice getPhysicalDevice() const;
     const VkPhysicalDeviceProperties& getProperties() const;
     const VkPhysicalDeviceFeatures& getFeatures() const;

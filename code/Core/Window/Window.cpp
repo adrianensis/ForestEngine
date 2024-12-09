@@ -1,12 +1,12 @@
-#include "Graphics/GPU/GPUWindow.hpp"
+#include "Core/Window/Window.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
-GLFWwindow* GPUWindow::getGlfwWindow() const 
+GLFWwindow* Window::getGlfwWindow() const 
 {
     return mGLTFWindow;
 }
 
-Vector2 GPUWindow::getSizeInPixels() const
+Vector2 Window::getSizeInPixels() const
 {
     i32 width = 0;
     i32 height = 0;
@@ -14,22 +14,30 @@ Vector2 GPUWindow::getSizeInPixels() const
     return Vector2(width, height);
 }
 
-Vector2 GPUWindow::getWindowSize()
+std::vector<const char*> Window::getRequiredExtensions() const
 {
-	return mGPUWindowData.mWindowSize;
+	uint32_t glfwExtensionCount = 0;
+    const char** glfwExtensions;
+    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+    return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
 }
 
-f32 GPUWindow::getAspectRatio()
+Vector2 Window::getWindowSize()
 {
-	return mGPUWindowData.mWindowSize.x / mGPUWindowData.mWindowSize.y;
+	return mWindowData.mWindowSize;
 }
 
-void GPUWindow::init(i32 id, const GPUWindowData& gpuWindowData)
+f32 Window::getAspectRatio()
+{
+	return mWindowData.mWindowSize.x / mWindowData.mWindowSize.y;
+}
+
+void Window::init(i32 id, const WindowData& windowData)
 {
 	LOG_TRACE()
 
     mID = id;
-    mGPUWindowData = gpuWindowData;
+    mWindowData = windowData;
 
 	// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -51,14 +59,14 @@ void GPUWindow::init(i32 id, const GPUWindowData& gpuWindowData)
     // glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     // glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-    if(mGPUWindowData.mFullScreen)
+    if(mWindowData.mFullScreen)
     {
-	    mGPUWindowData.mWindowSize.set(mode->width, mode->height);
+	    mWindowData.mWindowSize.set(mode->width, mode->height);
     }
     
     // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	mGLTFWindow = glfwCreateWindow(mGPUWindowData.mWindowSize.x, mGPUWindowData.mWindowSize.y, mGPUWindowData.mTitle.get().c_str(), /*monitor*/NULL, NULL);
+	mGLTFWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.get().c_str(), /*monitor*/NULL, NULL);
 
     glfwSetWindowUserPointer(mGLTFWindow, reinterpret_cast<void *>(this));
 
@@ -79,7 +87,7 @@ void GPUWindow::init(i32 id, const GPUWindowData& gpuWindowData)
     }
     else
     {
-        LOG("Failed to create GLFW gpuWindow");
+        LOG("Failed to create GLFW window");
         glfwTerminate();
     }
 
@@ -90,12 +98,12 @@ void GPUWindow::init(i32 id, const GPUWindowData& gpuWindowData)
     glfwSetFramebufferSizeCallback(mGLTFWindow, &this->onResizeGLFW);
 }
 
-bool GPUWindow::isClosed()
+bool Window::isClosed()
 {
 	return glfwWindowShouldClose(mGLTFWindow);
 }
 
-void GPUWindow::swap()
+void Window::swap()
 {
 	// https://www.khronos.org/opengl/wiki/Common_Mistakes
 	// section: glFinish and glFlush
@@ -103,54 +111,54 @@ void GPUWindow::swap()
 	// glfwSwapBuffers(mGLTFWindow);
 }
 
-void GPUWindow::terminate()
+void Window::terminate()
 {
 	glfwDestroyWindow(mGLTFWindow);
 	glfwTerminate();
 }
 
-void GPUWindow::setCursorVisibility(bool visible)
+void Window::setCursorVisibility(bool visible)
 {
     glfwSetInputMode(mGLTFWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
-void GPUWindow::onResize(GLFWwindow *gpuWindow, i32 width, i32 height)
+void Window::onResize(GLFWwindow *window, i32 width, i32 height)
 {
-	mGPUWindowData.mWindowSize.set(width, height);
+	mWindowData.mWindowSize.set(width, height);
 	// GET_SYSTEM(RenderEngine).onResize(width, height);
 }
 
-void GPUWindow::onResizeGLFW(GLFWwindow *windowGLFW, i32 width, i32 height)
+void Window::onResizeGLFW(GLFWwindow *windowGLFW, i32 width, i32 height)
 {
-	GPUWindow* gpuWindow = reinterpret_cast<GPUWindow*>(glfwGetWindowUserPointer(windowGLFW));
-    gpuWindow->onResize(windowGLFW, width, height);
+	Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onResize(windowGLFW, width, height);
 }
 
-void GPUWindow::keyCallbackGLFW(GLFWwindow *windowGLFW, i32 key, i32 scancode, i32 action, i32 mods)
+void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, i32 key, i32 scancode, i32 action, i32 mods)
 {
-    GPUWindow* gpuWindow = reinterpret_cast<GPUWindow*>(glfwGetWindowUserPointer(windowGLFW));
-    gpuWindow->keyCallback(key, scancode, action, mods);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->keyCallback(key, scancode, action, mods);
 }
 
-void GPUWindow::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, i32 button, i32 action, i32 mods)
+void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, i32 button, i32 action, i32 mods)
 {
-    GPUWindow* gpuWindow = reinterpret_cast<GPUWindow*>(glfwGetWindowUserPointer(windowGLFW));
-    gpuWindow->mouseButtonCallback(button, action, mods);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->mouseButtonCallback(button, action, mods);
 }
 
-void GPUWindow::scrollCallbackGLFW(GLFWwindow *windowGLFW, f64 xoffset, f64 yoffset)
+void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, f64 xoffset, f64 yoffset)
 {
-    GPUWindow* gpuWindow = reinterpret_cast<GPUWindow*>(glfwGetWindowUserPointer(windowGLFW));
-    gpuWindow->scrollCallback(xoffset, yoffset);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->scrollCallback(xoffset, yoffset);
 }
 
-void GPUWindow::charCallbackGLFW(GLFWwindow *windowGLFW, u32 codepoint)
+void Window::charCallbackGLFW(GLFWwindow *windowGLFW, u32 codepoint)
 {
-    GPUWindow* gpuWindow = reinterpret_cast<GPUWindow*>(glfwGetWindowUserPointer(windowGLFW));
-    gpuWindow->charCallback(codepoint);
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->charCallback(codepoint);
 }
 
-void GPUWindow::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
+void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 {
 	GET_SYSTEM(Input).smModifier = mods;
 
@@ -236,7 +244,7 @@ void GPUWindow::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 	}
 }
 
-void GPUWindow::mouseButtonCallback(i32 button, i32 action, i32 mods)
+void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
 {
 	GET_SYSTEM(Input).smModifier = mods;
 
@@ -268,7 +276,7 @@ void GPUWindow::mouseButtonCallback(i32 button, i32 action, i32 mods)
 	}
 }
 
-void GPUWindow::scrollCallback(f64 xoffset, f64 yoffset)
+void Window::scrollCallback(f64 xoffset, f64 yoffset)
 {
 	GET_SYSTEM(Input).smScroll = yoffset;
 
@@ -277,21 +285,21 @@ void GPUWindow::scrollCallback(f64 xoffset, f64 yoffset)
 	SEND_INPUT_EVENT(event);
 }
 
-void GPUWindow::charCallback(u32 codepoint)
+void Window::charCallback(u32 codepoint)
 {
 	InputEventChar event;
 	event.mChar = (char)codepoint;
 	SEND_INPUT_EVENT(event);
 }
 
-Vector2 GPUWindow::getMousePosition() const
+Vector2 Window::getMousePosition() const
 {
 	f64 mouseCoordX, mouseCoordY;
 
 	glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
 
-	f64 halfWindowSizeX = mGPUWindowData.mWindowSize.x / 2.0;
-	f64 halfWindowSizeY = mGPUWindowData.mWindowSize.y / 2.0;
+	f64 halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
+	f64 halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
 
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;
@@ -301,7 +309,7 @@ Vector2 GPUWindow::getMousePosition() const
     return newMouseCoordinates;
 }
 
-void GPUWindow::pollEvents() const
+void Window::pollEvents() const
 {
     glfwPollEvents();
 }

@@ -43,6 +43,6 @@ private:
     Ptr<IWindowInputAdapter> mWindowInputAdapter;
 
 public:
-    GET(WindowInputAdapter);
+    GET_SET(WindowInputAdapter);
 };
 REGISTER_CLASS(Input);

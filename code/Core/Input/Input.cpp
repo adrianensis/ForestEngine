@@ -1,14 +1,10 @@
 #include "Core/Input/Input.hpp"
-#include "Graphics/Window/WindowManager.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
 void Input::init()
 {
 	LOG_TRACE()
-
-    CHECK_MSG(GET_SYSTEM_PTR(WindowManager).isValid(), "Window system not found!");
-    mWindowInputAdapter = GET_SYSTEM_PTR(WindowManager)->getMainWindow();
 
 	smMouseCoordinates = Vector2();
 	smLastMouseButtonPressed = INVALID_INDEX;
@@ -26,6 +22,8 @@ void Input::update()
 	smKeyJustPressed = false;
 	smButtonJustPressed = false;
 	smScroll = 0;
+
+	CHECK_MSG(mWindowInputAdapter, "mWindowInputAdapter is NULL!")
 
 	Vector2 newMouseCoordinates = mWindowInputAdapter->getMousePosition();
 

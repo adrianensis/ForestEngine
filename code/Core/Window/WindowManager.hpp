@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/ECS/System.hpp"
-#include "Graphics/GPU/GPUWindow.hpp"
+#include "Core/Window/Window.hpp"
 
 class WindowManager : public System
 {
@@ -10,11 +10,11 @@ public:
     virtual void terminate() override;
     virtual void update() override;
 
-    Ptr<GPUWindow> createWindow(const GPUWindowData& gpuWindowData);
-    Ptr<GPUWindow> getWindow(u32 index) const;
+    Ptr<Window> createWindow(const WindowData& windowData);
+    Ptr<Window> getWindow(u32 index) const;
 private:
-	std::vector<OwnerPtr<GPUWindow>> mWindows;
-    Ptr<GPUWindow> mMainWindow;
+	std::vector<OwnerPtr<Window>> mWindows;
+    Ptr<Window> mMainWindow;
 public:
     GET(MainWindow)
 };

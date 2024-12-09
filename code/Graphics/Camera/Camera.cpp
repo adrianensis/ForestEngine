@@ -1,7 +1,7 @@
 
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Window/WindowManager.hpp"
+#include "Core/Window/WindowManager.hpp"
 
 void Camera::init()
 {

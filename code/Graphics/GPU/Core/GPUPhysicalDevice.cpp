@@ -1,6 +1,6 @@
 #include "GPUPhysicalDevice.h"
 
-GPUPhysicalDevice::GPUPhysicalDevice(Vulkan* vulkan) : vulkan(vulkan) {
+GPUPhysicalDevice::GPUPhysicalDevice(Vulkan* vulkan, GPUPhysicalDeviceData gpuPhysicalDeviceData) : vulkan(vulkan), mGPUPhysicalDeviceData(gpuPhysicalDeviceData) {
 }
 
 VkPhysicalDevice GPUPhysicalDevice::getPhysicalDevice() const {
@@ -51,7 +51,8 @@ bool GPUPhysicalDevice::init()
 
 void GPUPhysicalDevice::updateSwapChainInfo()
 {
-    deviceInfo.mSwapChainInfo = findSwapChainInfo(deviceInfo.mPhysicalDevice);
+    CHECK_MSG(false,"Weird, this is not used (??¿?)");
+    // deviceInfo.mSwapChainInfo = findSwapChainInfo(deviceInfo.mPhysicalDevice);
 }
 
 uint32_t GPUPhysicalDevice::findMemoryType(uint32_t memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const
@@ -205,7 +206,7 @@ GPUQueueFamilyIndices GPUPhysicalDevice::findQueueFamilyIndices(VkPhysicalDevice
             indices.GraphicsFamily = i;
         }
         VkBool32 presentationSupport = false;
-        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, vulkan->getSurface(), &presentationSupport);
+        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, mGPUPhysicalDeviceData.surface, &presentationSupport);
         if (presentationSupport)
         {
             indices.PresentationFamily = i;
@@ -222,17 +223,17 @@ GPUSwapChainInfo GPUPhysicalDevice::findSwapChainInfo(VkPhysicalDevice device) c
 {
     GPUSwapChainInfo swapChainInfo;
 
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, vulkan->getSurface(), &swapChainInfo.SurfaceCapabilities);
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mGPUPhysicalDeviceData.surface, &swapChainInfo.SurfaceCapabilities);
 
     uint32_t formatCount = 0;
-    vkGetPhysicalDeviceSurfaceFormatsKHR(device, vulkan->getSurface(), &formatCount, nullptr);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(device, mGPUPhysicalDeviceData.surface, &formatCount, nullptr);
     swapChainInfo.SurfaceFormats.resize(formatCount);
-    vkGetPhysicalDeviceSurfaceFormatsKHR(device, vulkan->getSurface(), &formatCount, swapChainInfo.SurfaceFormats.data());
+    vkGetPhysicalDeviceSurfaceFormatsKHR(device, mGPUPhysicalDeviceData.surface, &formatCount, swapChainInfo.SurfaceFormats.data());
 
     uint32_t presentationModeCount = 0;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(device, vulkan->getSurface(), &presentationModeCount, nullptr);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(device, mGPUPhysicalDeviceData.surface, &presentationModeCount, nullptr);
     swapChainInfo.PresentModes.resize(presentationModeCount);
-    vkGetPhysicalDeviceSurfacePresentModesKHR(device, vulkan->getSurface(), &presentationModeCount, swapChainInfo.PresentModes.data());
+    vkGetPhysicalDeviceSurfacePresentModesKHR(device, mGPUPhysicalDeviceData.surface, &presentationModeCount, swapChainInfo.PresentModes.data());
 
     return swapChainInfo;
 }

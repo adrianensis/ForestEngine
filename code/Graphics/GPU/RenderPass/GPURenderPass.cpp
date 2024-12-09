@@ -255,10 +255,10 @@ void GPURenderPass::frameAcquisition()
             acquireNextImageFence,
             &swapChainImageIndex
     );
-    // VK_ERROR_OUT_OF_DATE_KHR: The swap chain has become incompatible with the surface and can no longer be used for rendering. Usually happens after a gpuWindow resize.
+    // VK_ERROR_OUT_OF_DATE_KHR: The swap chain has become incompatible with the surface and can no longer be used for rendering. Usually happens after a window resize.
     if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
         //recreateRenderingObjects();
-        CHECK_MSG(false, "TODO: implement gpuWindow resize");
+        CHECK_MSG(false, "TODO: implement window resize");
         return;
     }
     // VK_SUBOPTIMAL_KHR: The swap chain can still be used to successfully present to the surface, but the surface properties are no longer matched exactly.

@@ -1,16 +1,34 @@
 #include "Graphics/GPU/Core/GPUContext.hpp"
+#include "Core/Window/WindowSurface.hpp"
 
-#include "Graphics/Window/WindowManager.hpp"
+#include "Core/Window/WindowManager.hpp"
 
 void GPUContext::init()
 {
     VulkanConfig vulkanConfig;
-    vulkan = new Vulkan(vulkanConfig, GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer());
+    vulkanConfig.mRequiredExtensions = GET_SYSTEM(WindowManager).getMainWindow()->getRequiredExtensions();
+    if (Environment::mPlatform == Environment::Platform::MACOS) {
+        vulkanConfig.mRequiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+    }
+    if (vulkanConfig.ValidationLayersEnabled) {
+        vulkanConfig.mRequiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
+
+    vulkan = new Vulkan(vulkanConfig);
     if (!vulkan->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan");
     }
-    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan);
+    if (!createSurface()) {
+        CHECK_MSG(false,"Could not create Vulka window surface");
+    }
+
+    GPUPhysicalDeviceData gpuPhysicalDeviceData
+    {
+        surface
+    };
+
+    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan, gpuPhysicalDeviceData);
     if (!vulkanPhysicalDevice->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan physical device");
@@ -20,7 +38,7 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan device");
     }
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, vulkan->getSurface(), GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface, GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
     if (!vulkanSwapChain->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
@@ -35,4 +53,37 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan command buffers");
     }
+}
+
+void GPUContext::terminate()
+{
+    destroySurface();
+
+    // terminateSyncObjects
+    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
+        vkDestroySemaphore(vulkanDevice->getDevice(), renderFinishedSemaphores[i], allocationCallbacks);
+        vkDestroySemaphore(vulkanDevice->getDevice(), imageAvailableSemaphores[i], allocationCallbacks);
+        vkDestroyFence(vulkanDevice->getDevice(), inFlightFences[i], allocationCallbacks);
+    }
+    LOG("Destroyed Vulkan sync objects (semaphores & fences)");
+
+    vulkanSwapChain->terminate();
+    delete vulkanSwapChain;
+    delete vulkanDevice;
+    delete vulkanPhysicalDevice;
+    delete vulkanCommandPool;
+    delete vulkan;
+}
+
+bool GPUContext::createSurface()
+{
+    surface = WindowSurface::createSurface(vulkan->getGPUInstance(), GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer(), ALLOCATOR);
+    return true;
+}
+
+void GPUContext::destroySurface() const
+{
+    vkDestroySurfaceKHR(vulkan->getGPUInstance(), surface, ALLOCATOR);
+    VULKAN_LOG("Destroyed Vulkan window surface");
 }

@@ -5,7 +5,6 @@
 #include <cstdlib>
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/GPUWindow.hpp"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 {  
@@ -30,15 +29,11 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
     return VK_FALSE;
 }
 
-Vulkan::Vulkan(const VulkanConfig& config, GPUWindow* gpuWindow) : config(config), gpuWindow(gpuWindow) {
+Vulkan::Vulkan(const VulkanConfig& config) : config(config) {
 }
 
 VkInstance Vulkan::getGPUInstance() const {
     return vulkanInstance;
-}
-
-VkSurfaceKHR Vulkan::getSurface() const {
-    return surface;
 }
 
 const std::vector<const char*>& Vulkan::getValidationLayers() const {
@@ -74,16 +69,11 @@ bool Vulkan::init()
         }
         VULKAN_LOG("Created Vulkan debug messenger");
     }
-    if (!createSurface()) {
-        CHECK_MSG(false,"Could not create Vulka gpuWindow surface");
-        return false;
-    }
     VULKAN_LOG("Initialized Vulkan");
     return true;
 }
 
 void Vulkan::terminate() {
-    destroySurface();
     if (config.ValidationLayersEnabled) {
         destroyDebugMessenger();
     }
@@ -153,17 +143,8 @@ void Vulkan::destroyDebugMessenger() {
     VULKAN_LOG("Destroyed Vulkan debug messenger");
 }
 
-bool Vulkan::createSurface() const {
-    return glfwCreateWindowSurface(vulkanInstance, gpuWindow->getGlfwWindow(), ALLOCATOR, (VkSurfaceKHR*) &surface) == VK_SUCCESS;
-}
-
-void Vulkan::destroySurface() const {
-    vkDestroySurfaceKHR(vulkanInstance, surface, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan gpuWindow surface");
-}
-
 std::vector<const char*> Vulkan::findExtensions() const {
-    std::vector<const char*> requiredExtensions = findRequiredExtensions();
+    std::vector<const char*> requiredExtensions = config.mRequiredExtensions;
     VULKAN_LOG("Required extensions " + std::to_string(requiredExtensions.size()));
     for (const char* extension: requiredExtensions) {
         VULKAN_LOG(extension);
@@ -178,20 +159,6 @@ std::vector<const char*> Vulkan::findExtensions() const {
         return {};
     }
     return requiredExtensions;
-}
-
-std::vector<const char*> Vulkan::findRequiredExtensions() const {
-    uint32_t glfwExtensionCount = 0;
-    const char** glfwExtensions;
-    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-    std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-    if (Environment::mPlatform == Environment::Platform::MACOS) {
-        extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-    }
-    if (config.ValidationLayersEnabled) {
-        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-    }
-    return extensions;
 }
 
 std::vector<VkExtensionProperties> Vulkan::findAvailableExtensions() const {

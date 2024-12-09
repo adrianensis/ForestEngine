@@ -2,7 +2,7 @@
 #include "Graphics/Renderer/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Window/WindowManager.hpp"
+#include "Core/Window/WindowManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
