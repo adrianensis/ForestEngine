@@ -23,8 +23,8 @@ public:
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
 
 private:
-    Ptr<GPUContext> mGPUContext;
     GPURenderPass* vulkanRenderPass;
+    Ptr<GPUContext> mGPUContext;
     VkPipelineLayout mPipelineLayout = VK_NULL_HANDLE;
     VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUVertexInputData mGPUVertexInputData;
