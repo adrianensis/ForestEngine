@@ -29,7 +29,7 @@ public:
     GPUFramebufferData mOutputFramebufferData;
 };
 
-class RenderPass: public ObjectBase
+class RenderPass
 {
 public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);

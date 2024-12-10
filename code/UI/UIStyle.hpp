@@ -2,7 +2,6 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Memory/Singleton.hpp"
-#include "Core/Object/ObjectBase.hpp"
 
 class UIStyle
 {
@@ -32,7 +31,7 @@ public:
 };
 REGISTER_CLASS(UIStyleDefault)
 
-class UIStyleManager: public ObjectBase, public Singleton<UIStyleManager>
+class UIStyleManager: public Singleton<UIStyleManager>
 {
 	
 	

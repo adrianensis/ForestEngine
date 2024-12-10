@@ -6,7 +6,7 @@
 #include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
-class InstancedMeshRenderer: public ObjectBase
+class InstancedMeshRenderer
 {
 public:
     void init(const InstancedMeshData& instancedMeshData);

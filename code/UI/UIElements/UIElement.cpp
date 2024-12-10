@@ -437,7 +437,7 @@ StencilData UIElement::calculateStencilData() const
         }
     }
 
-    stencilData.mId = this->getObjectId();
+    stencilData.mId = this->getEntityId();
 
     return stencilData;
 }

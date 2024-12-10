@@ -3,6 +3,14 @@
 #include "Core/ECS/ComponentsManager.hpp"
 #include "Core/ECS/EntityManager.hpp"
 
+Entity::Entity()
+{
+    if (mEntityId == 0)
+    {
+        mEntityId = smEntityIdCounter++;
+    }
+}
+
 void Entity::init()
 {
 	

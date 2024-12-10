@@ -5,7 +5,7 @@
 
 class UIFont;
 
-class UIFontsManager: public ObjectBase
+class UIFontsManager
 {
     
 public:
@@ -22,7 +22,7 @@ public:
 };
 REGISTER_CLASS(UIFontsManager);
 
-class UIFont: public ObjectBase
+class UIFont
 {
     
 public:

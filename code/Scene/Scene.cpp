@@ -4,17 +4,6 @@
 #include "Graphics/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 
-
-Scene::Scene()
-{
-
-}
-
-Scene::~Scene() 
-{
-	
-}
-
 void Scene::terminate()
 {
     destroyGameObjects();

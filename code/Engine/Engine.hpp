@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/Memory/Singleton.hpp"
 
-class Engine: public ObjectBase, public Singleton<Engine>
+class Engine: public Singleton<Engine>
 {
-	
 
 public:
     void init();

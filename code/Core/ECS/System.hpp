@@ -3,11 +3,11 @@
 #include "Core/Std.hpp"
 #include "Core/Memory/Singleton.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
-#include "Core/Object/ObjectBase.hpp"
 
-class System: public ObjectBase
+class System: public IEventObject
 {
 public:
+    virtual ~System() = default;
     virtual void init() { };
     virtual void update() { };
     virtual void terminate() { };

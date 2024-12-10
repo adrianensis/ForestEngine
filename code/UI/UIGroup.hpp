@@ -1,12 +1,11 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
 class UIElement;
 
-class UIGroup: public ObjectBase
+class UIGroup
 {
 public:
     void init();

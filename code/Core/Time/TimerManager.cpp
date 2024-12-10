@@ -1,14 +1,6 @@
 #include "Core/Time/TimerManager.hpp"
+#include "Core/Time/TimeUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
-#include "Core/Log/Log.hpp"
-
-
-void Timer::init(f32 duration, TimerDurationType durationType, std::function<void()> callback)
-{
-	mDurationType = durationType;
-	mDuration = duration;
-	mFunctor.mCallback = callback;
-}
 
 void TimerManager::endTimer(Timer * timer)
 {

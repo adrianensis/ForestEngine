@@ -5,17 +5,15 @@
 #include "Graphics/GPU/Buffer/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/Core/GPUContext.hpp"
 #include "Graphics/GPU/Shader/GPUShaderDescriptorSets.hpp"
-#include "Core/Object/ObjectBase.hpp"
 #include "Graphics/GPU/Shader/GPUShaderPipeline.h"
 
 class GPURenderPass;
 
-class GPUShader: public ObjectBase
+class GPUShader
 {    
 public:
 
     GPUShader();
-	~GPUShader() override = default;
 
     void init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext);
     void compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment);

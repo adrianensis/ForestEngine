@@ -44,7 +44,7 @@ public:
 };
 
 // REF: Merge Material and Shader classes? rename as ShaderMaterial? or just Shader?
-class Material: public ObjectBase, public IPoolable
+class Material: public IPoolable
 {
 public:
     Material() = default;

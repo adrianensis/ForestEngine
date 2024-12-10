@@ -5,7 +5,7 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
-class MaterialInstance: public ObjectBase
+class MaterialInstance
 {
 public:
     Slot mSlot;

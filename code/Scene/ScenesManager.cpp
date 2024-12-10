@@ -4,11 +4,6 @@
 #include "Graphics/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 
-ScenesManager::~ScenesManager() 
-{
-    terminate();
-}
-
 void ScenesManager::terminate() 
 {
     if(mGameObjectController)

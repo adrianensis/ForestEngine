@@ -14,7 +14,7 @@ public:
     TypedComponentHandler<DirectionalLight> mDirectionalLight;
 };
 
-class RenderPipeline: public ObjectBase
+class RenderPipeline: public EnablePtrToThis
 {
 public:
     virtual void init();

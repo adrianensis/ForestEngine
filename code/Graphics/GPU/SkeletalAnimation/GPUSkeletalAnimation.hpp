@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Object/ObjectBase.hpp"
 
 class Frame
 {

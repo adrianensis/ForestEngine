@@ -4,7 +4,10 @@
 
 Component::Component()
 {
-    //mOwnerEntity = Memory::newObject<EntityHandler>();
+    if (mComponentId == 0)
+    {
+        mComponentId = smComponentIdCounter++;
+    }
 }
 
 Component::~Component()

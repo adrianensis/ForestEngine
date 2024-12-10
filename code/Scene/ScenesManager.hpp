@@ -9,9 +9,7 @@ class Camera;
 
 class ScenesManager: public System
 {
-public:
-    ~ScenesManager() override;
-	
+public:	
     virtual void init() override;
     virtual void terminate() override;
     virtual void update() override;

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Object/ObjectBase.hpp"
+#include "Core/Events/Event.hpp"
 
 class EntityHandler;
 
-class Component: public ObjectBase
+class Component: public ISerializable, public IEventObject
 {
     
 	DECLARE_SERIALIZATION()
@@ -39,6 +39,13 @@ private:
 	bool mIsDestroyed = false;
 	Slot mSlot;
 	EntityHandler* mOwnerEntity = nullptr;
+
+	u64 mComponentId = 0;
+    // Important: starts by 1, 0 is reserved for null
+	inline static u64 smComponentIdCounter = 1;
+
+public:
+    GET(ComponentId)
 
 public:
 	GET(IsDestroyed)

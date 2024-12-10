@@ -1,14 +1,17 @@
 #pragma once
 
-#include "Core/Object/ObjectBase.hpp"
-#include "Core/Time/TimerManager.hpp"
+#include "Core/Time/Timer.hpp"
 
-class Event: public ObjectBase
+class IEventObject
+{
+};
+
+class Event
 {
 public:
 	f32 mDelayAmount = 0.0f;
 	TimerDurationType mDelayType;
-	ObjectBase* mInstigator = nullptr;
+	IEventObject* mInstigator = nullptr;
 	
 };
 REGISTER_CLASS(Event);
@@ -21,7 +24,7 @@ class EventFunctor: public Functor<EventCallback>
 public:
 	E* mEvent = nullptr;
 	ClassId mEventClassId;
-	ObjectBase* mEventReceiver = nullptr;
+	IEventObject* mEventReceiver = nullptr;
 
 	void execute() override
 	{

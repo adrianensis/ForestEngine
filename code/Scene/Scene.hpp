@@ -5,15 +5,11 @@
 #include "Core/ECS/EntityManager.hpp"
 #include "Scene/GameObject.hpp"
 
-class Scene: public ObjectBase
+class Scene: public ISerializable, public EnablePtrToThis
 {
-    
     DECLARE_SERIALIZATION()
 
 public:
-    Scene();
-    ~Scene() override;
-
     void init(HashedString sceneName);
     void loadScene();
     void unloadScene();

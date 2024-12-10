@@ -1,17 +1,17 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Object/ObjectBase.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
+#include "Core/Events/Event.hpp"
 
-class Entity: public ObjectBase
+class Entity: public ISerializable, public IEventObject
 {
     
 	DECLARE_SERIALIZATION()
 	
 public:
-    Entity() = default;
+    Entity();
 
     virtual void init();
 
@@ -55,7 +55,7 @@ public:
             ComponentHandler componentHandler = (*it);
             if(componentHandler.isValid())
             {
-                if(componentHandler.getComponent().template isDerivedClass<T>())
+                if(dynamic_cast<const T *>(&componentHandler.getComponent()) != nullptr)
                 {
                     componentToReturn = componentHandler;
                     break;
@@ -97,6 +97,10 @@ private:
 	bool mIsDestroyed = false;
     Slot mSlot;
 
+	u64 mEntityId = 0;
+    // Important: starts by 1, 0 is reserved for null
+	inline static u64 smEntityIdCounter = 1;
+
 public:
 	bool mIsStatic = false;
 	HashedString mTag;
@@ -105,5 +109,6 @@ public:
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 	GET(Slot)
+	GET(EntityId)
 };
 REGISTER_CLASS(Entity);

@@ -27,7 +27,7 @@ public:
     Matrix4 mMatrix;
 };
 
-class Model: public ObjectBase
+class Model: public EnablePtrToThis
 {
 public:
     void init(const std::string& path);

@@ -18,40 +18,40 @@ public:
     virtual void terminate() override;
 
 	template <class E> T_EXTENDS(E, Event)
-	void subscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver, EventCallback eventCallback)
+	void subscribe(IEventObject * eventOwner, IEventObject * eventReceiver, EventCallback eventCallback)
 	{
         subscribe(ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver, eventCallback);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
-	void unsubscribe(ObjectBase * eventOwner, ObjectBase * eventReceiver)
+	void unsubscribe(IEventObject * eventOwner, IEventObject * eventReceiver)
 	{
         unsubscribe(ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
-    void send(ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event)
+    void send(IEventObject *eventOwner, IEventObject *eventInstigator, Event *event)
     {
         ClassId eventClassId = ClassManager::getClassMetadata<E>().mClassDefinition.getId();
         send(eventClassId, eventOwner, eventInstigator, event);
     }
 
 private:
-	using ReceiversFunctorMap = std::unordered_map<ObjectBase *, EventFunctor<Event>>;
+	using ReceiversFunctorMap = std::unordered_map<IEventObject *, EventFunctor<Event>>;
 	using EventReceiversMap = std::unordered_map<ClassId, ReceiversFunctorMap>;
-	using OwnersMap = std::unordered_map<ObjectBase *, EventReceiversMap>;
+	using OwnersMap = std::unordered_map<IEventObject *, EventReceiversMap>;
 
 	OwnersMap mOwnersMap;
 
     void removeMapContent();
-    bool ownerExists(ObjectBase *eventOwner) const;
-    bool ownerHasEventType(ObjectBase *eventOwner, ClassId eventClassId) const;
-    bool eventTypeHasReceiver(ObjectBase *eventOwner, ClassId eventClassId, ObjectBase *eventReceiver) const;
-    void insertEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback);
-    void removeEventCallback(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver);
-    EventsManager::ReceiversFunctorMap& getReceiversFunctorMap(ObjectBase *eventOwner, ClassId eventClassId);
-    void subscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver, EventCallback eventCallback);
-    void unsubscribe(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventReceiver);
-    void send(ClassId eventClassId, ObjectBase *eventOwner, ObjectBase *eventInstigator, Event *event);
+    bool ownerExists(IEventObject *eventOwner) const;
+    bool ownerHasEventType(IEventObject *eventOwner, ClassId eventClassId) const;
+    bool eventTypeHasReceiver(IEventObject *eventOwner, ClassId eventClassId, IEventObject *eventReceiver) const;
+    void insertEventCallback(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver, EventCallback eventCallback);
+    void removeEventCallback(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver);
+    EventsManager::ReceiversFunctorMap& getReceiversFunctorMap(IEventObject *eventOwner, ClassId eventClassId);
+    void subscribe(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver, EventCallback eventCallback);
+    void unsubscribe(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver);
+    void send(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventInstigator, Event *event);
 };
 REGISTER_CLASS(EventsManager);

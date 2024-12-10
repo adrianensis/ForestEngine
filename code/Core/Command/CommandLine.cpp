@@ -12,80 +12,80 @@ void CommandLine::init()
     mBuffer = "";
     mIsOpen = false;
 
-    SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            const InputEventChar *e = (const InputEventChar*) event;
-            char c = e->mChar;
-            mBuffer.push_back(c);
-            writeLine(mBuffer, false);
-        }
-    });
+    // SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
+    // {
+    //     if(mIsOpen)
+    //     {
+    //         const InputEventChar *e = (const InputEventChar*) event;
+    //         char c = e->mChar;
+    //         mBuffer.push_back(c);
+    //         writeLine(mBuffer, false);
+    //     }
+    // });
 
-    SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            LOG_BRLINE();
-            execute(mBuffer);
-            mBuffer.clear();
-            writeLine("", false);
-        }
-    });
+    // SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
+    // {
+    //     if(mIsOpen)
+    //     {
+    //         LOG_BRLINE();
+    //         execute(mBuffer);
+    //         mBuffer.clear();
+    //         writeLine("", false);
+    //     }
+    // });
 
-    SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            if(!mBuffer.empty())
-            {
-                LOG_BACKSPACE()
-                mBuffer.pop_back();
-            }
+    // SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
+    // {
+    //     if(mIsOpen)
+    //     {
+    //         if(!mBuffer.empty())
+    //         {
+    //             LOG_BACKSPACE()
+    //             mBuffer.pop_back();
+    //         }
             
-            writeLine(mBuffer, false);
-        }
-    });
+    //         writeLine(mBuffer, false);
+    //     }
+    // });
 
-    SUBSCRIBE_TO_EVENT(InputEventKeyArrow, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            // NEXT: GLFW_KEY_UP && DOWN creates a dependency with Graphics/Window module 
+    // SUBSCRIBE_TO_EVENT(InputEventKeyArrow, nullptr, this, [this](const Event *event)
+    // {
+    //     if(mIsOpen)
+    //     {
+    //         // NEXT: GLFW_KEY_UP && DOWN creates a dependency with Graphics/Window module 
 
-            // const InputEventKeyArrow *e = (const InputEventKeyArrow*) event;
+    //         // const InputEventKeyArrow *e = (const InputEventKeyArrow*) event;
 
-            // switch (e->mArrowButton)
-            // {
-            //     case GLFW_KEY_UP:
-            //     {
-            //         if(!mHistory.empty() && mHistoryIterator != mHistory.begin())
-            //         {
-            //             --mHistoryIterator;
-            //             mBuffer = *mHistoryIterator;
-            //         }
-            //         break;
-            //     }
-            //     case GLFW_KEY_DOWN:
-            //     {
-            //         if(!mHistory.empty() && mHistoryIterator != mHistory.end())
-            //         {
-            //             ++mHistoryIterator;
-            //             if(mHistoryIterator == mHistory.end())
-            //             {
-            //                 mBuffer.clear();
-            //             }
-            //             else
-            //             {
-            //                 mBuffer = *mHistoryIterator;
-            //             }
-            //         }
-            //         break;
-            //     }
-            // }
-        }
-    });
+    //         // switch (e->mArrowButton)
+    //         // {
+    //         //     case GLFW_KEY_UP:
+    //         //     {
+    //         //         if(!mHistory.empty() && mHistoryIterator != mHistory.begin())
+    //         //         {
+    //         //             --mHistoryIterator;
+    //         //             mBuffer = *mHistoryIterator;
+    //         //         }
+    //         //         break;
+    //         //     }
+    //         //     case GLFW_KEY_DOWN:
+    //         //     {
+    //         //         if(!mHistory.empty() && mHistoryIterator != mHistory.end())
+    //         //         {
+    //         //             ++mHistoryIterator;
+    //         //             if(mHistoryIterator == mHistory.end())
+    //         //             {
+    //         //                 mBuffer.clear();
+    //         //             }
+    //         //             else
+    //         //             {
+    //         //                 mBuffer = *mHistoryIterator;
+    //         //             }
+    //         //         }
+    //         //         break;
+    //         //     }
+    //         // }
+    //     }
+    // });
 
     DefaultCommands::registerDefaultCommands();
 }

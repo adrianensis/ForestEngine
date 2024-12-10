@@ -4,7 +4,6 @@
 #include "Graphics/GPU/Buffer/GPUUniformBuffer.hpp"
 #include "Graphics/GPU/Core/GPUContext.hpp"
 #include "Graphics/GPU/Image/GPUTexture.hpp"
-#include "Core/Object/ObjectBase.hpp"
 
 class GPURenderPass;
 
