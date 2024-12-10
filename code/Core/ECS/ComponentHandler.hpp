@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
 #include "Core/ECS/Component.hpp"
 
 class ComponentsManager;

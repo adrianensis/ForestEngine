@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Minimal.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
 
 class Transform: public Component

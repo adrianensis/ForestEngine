@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 #include "Core/Events/Event.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
+#include "Core/Std.hpp"
 
 enum class TimerDurationType
 {

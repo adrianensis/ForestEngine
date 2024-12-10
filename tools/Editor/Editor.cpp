@@ -53,14 +53,14 @@ void Editor::firstUpdate()
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Vector3(50,0,0), 10.0f, Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Vector3(-50,0,50), 10.0f, Vector3(0,0,0), true);
 	// importModel("building/building.gltf", Vector3(0,0,0), 10.0f, Vector3(0,0,0), true);

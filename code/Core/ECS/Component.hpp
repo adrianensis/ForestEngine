@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
 #include "Core/Events/Event.hpp"
 
 class EntityHandler;

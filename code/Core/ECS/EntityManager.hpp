@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
