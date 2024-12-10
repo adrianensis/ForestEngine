@@ -1,7 +1,5 @@
 #include "Graphics/GPU/Shader/GPUShaderPipeline.h"
 
-#include "Graphics/GPU/Vertex.h"
-
 GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
     : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
