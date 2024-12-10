@@ -55,7 +55,7 @@ void GPUSkeletonState::update()
 
 void GPUSkeletonState::createSkeletalAnimationState(Ptr<const GPUSkeletalAnimation> animation)
 {
-    ObjectId animationId = animation->mID;
+    u32 animationId = animation->mID;
 
 	if(!mSkeletalAnimationStates.contains(animationId))
 	{

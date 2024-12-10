@@ -76,7 +76,7 @@ private:
     void getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const;
 private:
     GPUSkeletonStateData mGPUSkeletonStateData;
-    std::unordered_map<ObjectId, OwnerPtr<GPUSkeletalAnimationState>> mSkeletalAnimationStates;
+    std::unordered_map<u32, OwnerPtr<GPUSkeletalAnimationState>> mSkeletalAnimationStates;
     Ptr<GPUSkeletalAnimationState> mCurrentSkeletalAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;
 
