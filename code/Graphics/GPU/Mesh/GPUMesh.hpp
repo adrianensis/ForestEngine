@@ -4,9 +4,8 @@
 #include "Graphics/GPU/Buffer/GPUVertexBuffer.hpp"
 #include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
 #include "Graphics/GPU/Core/GPUBuiltIn.hpp"
-#include "Core/Object/ObjectBase.hpp"
 
-class GPUMesh: public ObjectBase
+class GPUMesh
 {
 public:
     void init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers);
@@ -26,5 +25,11 @@ public:
 
     Vector3 mMin;
     Vector3 mMax;
+
+	u32 mMeshID = 0;
+
+protected:
+    // Important: starts by 1, 0 is reserved for null
+	inline static u32 smMeshIdCounter = 1;
 };
 REGISTER_CLASS(GPUMesh);

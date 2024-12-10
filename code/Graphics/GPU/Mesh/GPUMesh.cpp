@@ -2,6 +2,11 @@
 
 void GPUMesh::init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers)
 {
+    if (mMeshID == 0)
+    {
+        mMeshID = smMeshIdCounter++;
+    }
+
 	mVertexCount = vertexCount;
 	mIndicesCount = indicesCount;
 

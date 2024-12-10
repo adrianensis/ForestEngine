@@ -37,7 +37,7 @@ public:
 		{
             u32 shift = 0;
             u64 result = key.mMaterial.getIndex() << (shift++);
-            result = result ^ key.mMesh->getObjectId() << (shift++);
+            result = result ^ key.mMesh->mMeshID << (shift++);
 			result = result ^ static_cast<u64>(key.mIsStatic) << (shift++);
             if(key.mStencilData.mUseStencil)
             {
