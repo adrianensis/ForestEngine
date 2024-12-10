@@ -231,6 +231,8 @@ class EnablePtrToThis: public IPointedObject
 template<class U>
 friend class RefCountedPtrBase;
 
+public:
+    virtual ~EnablePtrToThis() override = default;
 protected:
     template<class OtherClass>
     Ptr<OtherClass> getPtrToThis() { return Ptr<OtherClass>::cast(mPtrToThis); }
