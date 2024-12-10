@@ -6,7 +6,7 @@
 class ImageData
 {
 public:
-    byte* mData;
+    byte* mData = nullptr;
     u32 mWidth = 0;
 	u32 mHeight = 0;
 };

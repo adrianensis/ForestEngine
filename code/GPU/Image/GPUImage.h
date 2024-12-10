@@ -8,15 +8,18 @@
 class GPUImageData
 {
 public:
-    uint32_t Width;
-    uint32_t Height;
-    uint32_t MipLevels;
+    u32 Width;
+    u32 Height;
+    u32 MipLevels;
     VkFormat Format;
     VkImageTiling Tiling;
     VkImageUsageFlags Usage;
     VkMemoryPropertyFlags MemoryProperties;
     VkImageLayout Layout;
     VkSampleCountFlagBits SampleCount;
+    i32 mOffsetX = 0;
+    i32 mOffsetY = 0;
+    u32 mChannels = 0;
 };
 
 class GPUImage

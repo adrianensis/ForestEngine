@@ -95,7 +95,7 @@ VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage i
     return imageView;
 }
 
-void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY)
 {
     VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
 
@@ -113,6 +113,7 @@ void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffe
 
     constexpr uint32_t depth = 1;
     bufferImageCopy.imageExtent = {width, height, depth };
+    bufferImageCopy.imageOffset = {offsetX, offsetY, 0 };
 
     constexpr uint32_t regionCount = 1;
     constexpr VkImageLayout imageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;

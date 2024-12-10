@@ -25,9 +25,9 @@ public:
     void disable(u32 textureUnit) const;
 
 private:
-    bool initializeTextureImage();
-    bool initializeTextureImageView();
-    bool initializeTextureSampler();
+    bool initializeTextureImage(const GPUImageData& textureImageData);
+    bool initializeTextureImageView(VkFormat format, VkImageAspectFlagBits imageAspectFlagBits);
+    bool initializeTextureSampler(const VkSamplerCreateInfo& samplerInfo);
 
 private:
 	u32 mGPUTextureId = 0;
@@ -36,12 +36,13 @@ private:
 	u32 mID = 0;
 	GPUTextureData mTextureData;
     Ptr<GPUContext> mGPUContext;
-    GPUImage* vulkanTextureImage;
-    u32 mMipMapLevel = 0;
+    GPUImage* mVulkanTextureImage;
+    u32 mMipMapLevels = 1;
+    u32 mChannels = 0;
 
 public:
-    VkImageView textureImageView = VK_NULL_HANDLE;
-    VkSampler textureSampler = VK_NULL_HANDLE;
+    VkImageView mTextureImageView = VK_NULL_HANDLE;
+    VkSampler mTextureSampler = VK_NULL_HANDLE;
 
 public:
     GET(ID)

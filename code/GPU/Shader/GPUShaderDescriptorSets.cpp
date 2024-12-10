@@ -147,8 +147,8 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = textureBinding.mGPUTexture->textureImageView;
-            imageInfo.sampler = textureBinding.mGPUTexture->textureSampler;
+            imageInfo.imageView = textureBinding.mGPUTexture->mTextureImageView;
+            imageInfo.sampler = textureBinding.mGPUTexture->mTextureSampler;
 
             std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 
