@@ -77,7 +77,7 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class Ptr;
-friend class EnablePtrFromThis;
+friend class EnablePtrToThis;
 
 public:
     template <class U>
@@ -226,7 +226,7 @@ public:
     virtual ~IPointedObject() = default;
 };
 
-class EnablePtrFromThis: public IPointedObject
+class EnablePtrToThis: public IPointedObject
 {
 template<class U>
 friend class RefCountedPtrBase;
@@ -294,9 +294,9 @@ protected:
             mInternalPointer = reference;
             mReferenceBlock = referenceBlock;
             increment();
-            if constexpr (IS_BASE_OF(EnablePtrFromThis, T))
+            if constexpr (IS_BASE_OF(EnablePtrToThis, T))
             {
-                EnablePtrFromThis* enablePtrFromThis = dynamic_cast<EnablePtrFromThis*>(const_cast<REMOVE_CONST(T)*>(reference));
+                EnablePtrToThis* enablePtrFromThis = dynamic_cast<EnablePtrToThis*>(const_cast<REMOVE_CONST(T)*>(reference));
                 if(enablePtrFromThis)
                 {
                     enablePtrFromThis->set(Ptr<T>(*this));
