@@ -13,10 +13,10 @@ void UISceneTree::init()
 
 void UISceneTree::update()
 {
-    FOR_LIST(it, mTexts)
-    {
-        GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(it->second);
-    }
+    // FOR_LIST(it, mTexts)
+    // {
+    //     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(it->second);
+    // }
 
     UIBuilder uiBuilder;
 	uiBuilder.
@@ -38,15 +38,14 @@ void UISceneTree::update()
     FOR_LIST(it, objectsInmutableList)
     {
         HashedString className = ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName;
-        ObjectId id = (*it)->getObjectId();
-        HashedString inspectorName(className.get() + std::to_string(id));
+        HashedString inspectorName(className.get() /*+ std::to_string(id)*/);
         TypedEntityHandler<UIButton> uiText = uiBuilder.
         setText(inspectorName).
         // setIsStatic(false).
         create<UIButton>().
         getUIElement<UIButton>();
 
-        mTexts.emplace(id, uiText);
+        // mTexts.emplace(id, uiText);
     }
 }
 
