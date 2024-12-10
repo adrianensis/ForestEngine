@@ -225,13 +225,13 @@ const Matrix4& Transform::getViewMatrix() const
     return mViewMatrix;
 }
 
-void Transform::addChild(TypedComponentHandler<Transform> child)
+void Transform::addChild(TComponentHandler<Transform> child)
 {
     child->mParent = ComponentHandler::getComponentHandler<Transform>(*this);
     mChildren.insert_or_assign(child->getComponentId(), child);
 }
 
-void Transform::removeChild(TypedComponentHandler<Transform> child)
+void Transform::removeChild(TComponentHandler<Transform> child)
 {
     child->mParent.reset();
     mChildren.erase(child->getComponentId());

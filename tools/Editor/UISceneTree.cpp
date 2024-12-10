@@ -29,8 +29,8 @@ void UISceneTree::update()
 	setTextScale(0.5f).
 	setSize(Vector2(0.5, 0.05f));
 
-    const std::list<TypedEntityHandler<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
-    std::list<TypedEntityHandler<GameObject>> objectsInmutableList;
+    const std::list<TEntityHandler<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
+    std::list<TEntityHandler<GameObject>> objectsInmutableList;
     FOR_LIST(it, objects)
     {
         objectsInmutableList.push_back(*it);
@@ -39,7 +39,7 @@ void UISceneTree::update()
     {
         HashedString className = ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName;
         HashedString inspectorName(className.get() /*+ std::to_string(id)*/);
-        TypedEntityHandler<UIButton> uiText = uiBuilder.
+        TEntityHandler<UIButton> uiText = uiBuilder.
         setText(inspectorName).
         // setIsStatic(false).
         create<UIButton>().

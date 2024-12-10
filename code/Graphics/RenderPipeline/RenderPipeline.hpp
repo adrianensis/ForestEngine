@@ -10,8 +10,8 @@
 class RenderPipelineData
 {
 public:
-    std::vector<TypedComponentHandler<PointLight>> mPointLights;
-    TypedComponentHandler<DirectionalLight> mDirectionalLight;
+    std::vector<TComponentHandler<PointLight>> mPointLights;
+    TComponentHandler<DirectionalLight> mDirectionalLight;
 };
 
 class RenderPipeline: public EnablePtrToThis
@@ -20,8 +20,8 @@ public:
     virtual void init();
     virtual void update();
     virtual void terminate();
-    void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
-    void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void addRenderer(TComponentHandler<MeshRenderer> renderer);
+    void removeRenderer(TComponentHandler<MeshRenderer> renderer);
     virtual void render(RenderPipelineData& renderData);
     virtual void compile();
 
@@ -50,8 +50,8 @@ protected:
     }
 
     void initBuffers();
-    void setRendererMatrix(TypedComponentHandler<MeshRenderer> renderer);
-    void processRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void setRendererMatrix(TComponentHandler<MeshRenderer> renderer);
+    void processRenderer(TComponentHandler<MeshRenderer> renderer);
 
 public:
     using InstancedMeshesMap = std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor>;
@@ -62,9 +62,9 @@ private:
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
-	std::vector<TypedComponentHandler<MeshRenderer>> mRenderers;
+	std::vector<TComponentHandler<MeshRenderer>> mRenderers;
     std::set<u32> mUsedSlots;
-	std::vector<TypedComponentHandler<MeshRenderer>> mRenderersStatic;
+	std::vector<TComponentHandler<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 2000;
 
 public:

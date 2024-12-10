@@ -14,7 +14,7 @@ void ScenesManager::terminate()
 
 	if (mCameraGameObject)
 	{
-		TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+		TComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
 		mCameraGameObject->removeComponent(cameraComponent);
 		mCameraGameObject->destroy();
         mCameraGameObject.reset();
@@ -45,7 +45,7 @@ void ScenesManager::init()
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
 	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
-    TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
+    TComponentHandler<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
 	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
     GET_SYSTEM(CameraManager).setCamera(cameraComponent);
@@ -55,7 +55,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    TypedComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+    TComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

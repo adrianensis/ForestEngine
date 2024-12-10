@@ -23,7 +23,7 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mStencilData = mModelRendererData.mStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
-        TypedEntityHandler<GameObject> gameObjectParent = getOwnerEntity();
+        TEntityHandler<GameObject> gameObjectParent = getOwnerEntity();
         gameObjectParent->createComponent<MeshRenderer>(rendererData);
 	}
 }

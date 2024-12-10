@@ -13,7 +13,7 @@ int main()
 {
     Engine::getInstance().init();
 
-    TypedEntityHandler<GameObject> controller = GET_SYSTEM(EntityManager).requestEntity<GameObject>();
+    TEntityHandler<GameObject> controller = GET_SYSTEM(EntityManager).requestEntity<GameObject>();
     controller->init();
 
     // NOTE: this script won't be added to the ScriptEngine in the usual way,

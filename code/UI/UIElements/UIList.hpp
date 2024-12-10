@@ -31,7 +31,7 @@ private:
 	void setEntriesVisibility(bool visible);
 
 private:
-	std::list<TypedEntityHandler<UIButton>> mButtons;
+	std::list<TEntityHandler<UIButton>> mButtons;
 	std::list<UIListEntry> mEntries;
 
 };

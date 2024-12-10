@@ -18,7 +18,7 @@ public:
     void setVisibility(bool visibility) override;
 
 private:
-	TypedEntityHandler<UIText> mText;
+	TEntityHandler<UIText> mText;
 
 public:
 	GET(Text)

@@ -46,7 +46,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
-    TypedComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
+    TComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
     renderer->getMaterialInstance()->setDirty();
@@ -102,7 +102,7 @@ void UIList::toggle()
 			create<UIButton>();
 
 
-			TypedEntityHandler<UIButton> button = uiBuilder.getUIElement<UIButton>();
+			TEntityHandler<UIButton> button = uiBuilder.getUIElement<UIButton>();
 			button->setOnPressedCallback(onPressedCallback);
 
 			mButtons.push_back(button);

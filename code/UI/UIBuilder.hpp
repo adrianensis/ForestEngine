@@ -57,7 +57,7 @@ public:
         mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
-	    TypedEntityHandler<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createGameObject<T>();
+	    TEntityHandler<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createGameObject<T>();
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 
@@ -65,19 +65,19 @@ public:
 		return *this;
 	}
 
-    TypedEntityHandler<UIElement> getUIElement() const
+    TEntityHandler<UIElement> getUIElement() const
 	{
 		return mCurrentUIElement;
 	}
 
 	template<class T> T_EXTENDS(T, UIElement)
-    TypedEntityHandler<T> getUIElement() const
+    TEntityHandler<T> getUIElement() const
 	{
 		return getUIElement();
 	}
 
 private:
-    void registerUIElement(TypedEntityHandler<UIElement> uiElement);
+    void registerUIElement(TEntityHandler<UIElement> uiElement);
     UILayout getOppositeLayout(UILayout layout);
     Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
@@ -91,7 +91,7 @@ private:
 	bool mMakeRelativeToLastConfig = false; // used for layouts
 	UIElementConfig mLayoutFirstUIElementConfig;
 	bool mNewRowOrColumn = false;
-	TypedEntityHandler<UIElement> mCurrentUIElement;
+	TEntityHandler<UIElement> mCurrentUIElement;
 
 public:
 

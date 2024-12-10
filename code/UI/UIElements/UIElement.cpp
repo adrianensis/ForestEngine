@@ -29,7 +29,7 @@ void UIElement::onDestroy()
 
 	if (hasFocus())
 	{
-		GET_SYSTEM(UIManager).setFocusedElement(TypedEntityHandler<UIElement>());
+		GET_SYSTEM(UIManager).setFocusedElement(TEntityHandler<UIElement>());
 	}
 }
 
@@ -45,7 +45,7 @@ bool UIElement::isMouseCursorInsideElement() const
     bool parentCheck = true;
     if(mConfig.mParent)
     {
-        if(TypedEntityHandler<UIElement> parentUIElement = mConfig.mParent)
+        if(TEntityHandler<UIElement> parentUIElement = mConfig.mParent)
         {
             parentCheck = parentUIElement->isMouseCursorInsideElement();
         }
@@ -310,7 +310,7 @@ void UIElement::releaseFocus()
 {
     if (!hasFocus()) { return; }
 
-    GET_SYSTEM(UIManager).setFocusedElement(TypedEntityHandler<UIElement>());
+    GET_SYSTEM(UIManager).setFocusedElement(TEntityHandler<UIElement>());
     mOnFocusLostFunctor.execute();
     onFocusLost();
 }
@@ -319,7 +319,7 @@ void UIElement::requestFocus()
 {
     if (hasFocus()) { return; }
 
-    TypedEntityHandler<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
+    TEntityHandler<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
     if (lastFocusedElement)
     {
         lastFocusedElement->releaseFocus();
@@ -343,7 +343,7 @@ void UIElement::scroll(f32 scrollValue)
 // 	const UIGroup& group = GET_SYSTEM(UIManager).getOrCreateGroup(mConfig.mGroup);
 // 	FOR_LIST(it, group.getUIElements())
 // 	{
-// 		TypedEntityHandler<UIElement> other = *it;
+// 		TEntityHandler<UIElement> other = *it;
 // 		if(other != getPtrToThis<UIElement>())
 // 		{
 // 			if(other->getConfig().mToggleEnabled and
@@ -396,7 +396,7 @@ StencilData UIElement::calculateStencilData() const
 
         if(mConfig.mParent)
         {
-            TypedEntityHandler<UIElement> parentUIElement = mConfig.mParent;
+            TEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
                 StencilData parentStencilData = parentUIElement->calculateStencilData();
@@ -417,7 +417,7 @@ StencilData UIElement::calculateStencilData() const
     {
         if(mConfig.mParent)
         {
-            TypedEntityHandler<UIElement> parentUIElement = mConfig.mParent;
+            TEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
                 StencilData parentStencilData = parentUIElement->calculateStencilData();

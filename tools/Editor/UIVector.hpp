@@ -10,9 +10,9 @@ public:
     virtual void onDestroy() override;
 
 private:
-    TypedEntityHandler<UIText> mX;
-    TypedEntityHandler<UIText> mY;
-    TypedEntityHandler<UIText> mZ;
-    TypedEntityHandler<UIText> mW;
+    TEntityHandler<UIText> mX;
+    TEntityHandler<UIText> mY;
+    TEntityHandler<UIText> mZ;
+    TEntityHandler<UIText> mW;
 };
 REGISTER_CLASS(UIVector)

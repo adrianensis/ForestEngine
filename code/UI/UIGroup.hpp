@@ -9,16 +9,16 @@ class UIGroup
 {
 public:
     void init();
-    void addUIElement(TypedEntityHandler<UIElement> uiElement);
-    void removeUIElement(TypedEntityHandler<UIElement> uiElement);
-    void destroyUIElement(TypedEntityHandler<UIElement> uiElement);
+    void addUIElement(TEntityHandler<UIElement> uiElement);
+    void removeUIElement(TEntityHandler<UIElement> uiElement);
+    void destroyUIElement(TEntityHandler<UIElement> uiElement);
     void destroyAllUIElements();
     void setVisibility(bool visibility);
 
 public:
 	HashedString mName;
 	bool mVisible = false;
-	std::list<TypedEntityHandler<UIElement>> mUIElements;
+	std::list<TEntityHandler<UIElement>> mUIElements;
 	
 	CRGET(Name)
 	GET(Visible)

@@ -14,7 +14,7 @@ public:
 	bool mIsStatic = true;
     StencilData mStencilData;
 
-	void init(TypedComponentHandler<MeshRenderer> renderer)
+	void init(TComponentHandler<MeshRenderer> renderer)
     {
         mMaterial = renderer->getRendererData().mMaterial;
         mMesh = renderer->getRendererData().mMesh;

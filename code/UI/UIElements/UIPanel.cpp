@@ -65,7 +65,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
 
-    TypedComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
+    TComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
 	renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
     renderer->getMaterialInstance()->setDirty();

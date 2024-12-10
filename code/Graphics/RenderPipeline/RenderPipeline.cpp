@@ -19,7 +19,7 @@ void RenderPipeline::update()
     {
         FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
         {
-            TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
+            TComponentHandler<MeshRenderer> renderer = mRenderers[i];
             if(renderer.isValid())
             {
                 processRenderer(renderer);
@@ -31,7 +31,7 @@ void RenderPipeline::update()
     // std::execution::par,
     // mRenderers.begin(),
     // mRenderers.end(),
-    // [this](TypedComponentHandler<MeshRenderer> renderer)
+    // [this](TComponentHandler<MeshRenderer> renderer)
     // {
     //     if(renderer.isValid())
     //     {
@@ -56,7 +56,7 @@ void RenderPipeline::update()
 	// GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
-void RenderPipeline::processRenderer(TypedComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::processRenderer(TComponentHandler<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
     if(!renderer->isStatic())
@@ -76,7 +76,7 @@ void RenderPipeline::terminate()
     mRenderInstancesSlotsManager.reset();
 }
 
-void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     if(mRenderInstancesSlotsManager.isEmpty())
@@ -120,7 +120,7 @@ void RenderPipeline::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
     }
 }
 
-void RenderPipeline::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::removeRenderer(TComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     if(renderer->isStatic())
@@ -198,7 +198,7 @@ void RenderPipeline::initBuffers()
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }
 
-void RenderPipeline::setRendererMatrix(TypedComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::setRendererMatrix(TComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     if(renderer->getUpdateMatrix())

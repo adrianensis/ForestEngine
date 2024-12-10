@@ -47,7 +47,7 @@ void RenderEngine::onResize(u32 width, u32 height)
 {
 	LOG_TRACE()
 //	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
-    TypedComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }
 
@@ -64,7 +64,7 @@ void RenderEngine::addSystemComponent(const ComponentHandler& component)
 
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        TypedComponentHandler<MeshRenderer> renderer = component;
+        TComponentHandler<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
@@ -76,11 +76,11 @@ void RenderEngine::addSystemComponent(const ComponentHandler& component)
     {
         // if(component.getComponent(). <PointLight>())
         // {
-        //     mRenderPipelineData.mPointLights.push_back(TypedComponentHandler<PointLight>(component));
+        //     mRenderPipelineData.mPointLights.push_back(TComponentHandler<PointLight>(component));
         // }
         // else if(component.getComponent(). <DirectionalLight>())
         // {
-        //     mRenderPipelineData.mDirectionalLight = TypedComponentHandler<DirectionalLight>(component);
+        //     mRenderPipelineData.mDirectionalLight = TComponentHandler<DirectionalLight>(component);
         // }
     }
 }
@@ -91,7 +91,7 @@ void RenderEngine::removeSystemComponent(const ComponentHandler& component)
 
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        TypedComponentHandler<MeshRenderer> renderer = component;
+        TComponentHandler<MeshRenderer> renderer = component;
         mRenderPipeline->removeRenderer(renderer);
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())

@@ -16,6 +16,6 @@ public:
 
 public:
 	Ptr<Scene> mScene;
-	TypedComponentHandler<Transform> mTransform;
+	TComponentHandler<Transform> mTransform;
 };
 REGISTER_CLASS(GameObject);

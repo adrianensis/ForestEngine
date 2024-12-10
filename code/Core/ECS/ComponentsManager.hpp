@@ -12,7 +12,7 @@ public:
     virtual void terminate() override;
 
     template<class T> T_EXTENDS(T, Component)
-    TypedComponentHandler<T> requestComponent()
+    TComponentHandler<T> requestComponent()
     {
         PROFILER_CPU()
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();

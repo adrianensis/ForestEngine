@@ -19,7 +19,7 @@ private:
     void retrieveControllerFromScene();
 
 private:
-	std::vector<TypedComponentHandler<Script>> mScripts;
-	TypedComponentHandler<Script> mController;
+	std::vector<TComponentHandler<Script>> mScripts;
+	TComponentHandler<Script> mController;
 };
 REGISTER_CLASS(ScriptEngine);

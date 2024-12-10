@@ -129,11 +129,11 @@ public:
     CRGET(Buffer)
 };
 
-class TypedByteBuffer : public ByteBuffer
+class TByteBuffer : public ByteBuffer
 {
 public:
-    TypedByteBuffer() = default;
-    TypedByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
+    TByteBuffer() = default;
+    TByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
 
     template<class T>
     void pushBack(const T& element)
@@ -153,7 +153,7 @@ public:
         checkType<T>();
         ByteBuffer::append<T>(elements);
     }
-    void append(const TypedByteBuffer& elements)
+    void append(const TByteBuffer& elements)
     {
         CHECK_MSG(mElementSizeInBytes == elements.mElementSizeInBytes, "Different element size!");
         ByteBuffer::append(elements);

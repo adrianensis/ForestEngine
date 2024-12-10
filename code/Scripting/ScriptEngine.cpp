@@ -13,7 +13,7 @@ void ScriptEngine::addSystemComponent(const ComponentHandler& component)
 {
 	System::addSystemComponent(component);
 
-    TypedComponentHandler<Script> script = component;
+    TComponentHandler<Script> script = component;
     CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");
     mScripts.push_back(script);
 }
@@ -22,12 +22,12 @@ void ScriptEngine::update()
 {
 	PROFILER_CPU()
 
-    std::vector<TypedComponentHandler<Script>> newList;
+    std::vector<TComponentHandler<Script>> newList;
     FOR_ARRAY(i, mScripts)
     {
         PROFILER_BLOCK_CPU(removeScripts);
 
-        TypedComponentHandler<Script> script = mScripts[i];
+        TComponentHandler<Script> script = mScripts[i];
         if(script.isValid())
         {
             newList.push_back(script);
@@ -39,7 +39,7 @@ void ScriptEngine::update()
 
     FOR_ARRAY(i, mScripts)
 	{
-        TypedComponentHandler<Script> script = mScripts[i];
+        TComponentHandler<Script> script = mScripts[i];
         if (script->isActive())
         {
             if (!script->getFirstUpdateDone())

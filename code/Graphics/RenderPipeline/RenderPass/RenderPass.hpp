@@ -34,8 +34,8 @@ class RenderPass
 public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     void terminate();
-    void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
-    void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void addRenderer(TComponentHandler<MeshRenderer> renderer);
+    void removeRenderer(TComponentHandler<MeshRenderer> renderer);
     virtual void renderPass();
     void compile();
 protected:

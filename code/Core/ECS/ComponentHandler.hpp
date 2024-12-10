@@ -91,19 +91,19 @@ public:
 };
 
 template<class T>// T_EXTENDS(T, Component)
-class TypedComponentHandler : public ComponentHandler
+class TComponentHandler : public ComponentHandler
 {
 public:
-    TypedComponentHandler() = default;
-    TypedComponentHandler(ClassId id, Slot slot, ComponentsManager* componentsManager): ComponentHandler(id, slot, componentsManager)
+    TComponentHandler() = default;
+    TComponentHandler(ClassId id, Slot slot, ComponentsManager* componentsManager): ComponentHandler(id, slot, componentsManager)
     {
     }
 
-    TypedComponentHandler(ClassId id, Slot slot, const ComponentsManager* componentsManager): TypedComponentHandler(id, slot, const_cast<ComponentsManager*>(componentsManager))
+    TComponentHandler(ClassId id, Slot slot, const ComponentsManager* componentsManager): TComponentHandler(id, slot, const_cast<ComponentsManager*>(componentsManager))
     {
     }
 
-    TypedComponentHandler(const ComponentHandler& other): TypedComponentHandler(other.mClassId, other.mSlot, other.mComponentsManager)
+    TComponentHandler(const ComponentHandler& other): TComponentHandler(other.mClassId, other.mSlot, other.mComponentsManager)
     {
     }
     T& get() const
@@ -120,7 +120,7 @@ public:
         T* castedPointer = dynamic_cast<T*>(pointer);
         return mClassId > 0 && mSlot.isValid() && castedPointer;
     }
-    operator TypedComponentHandler<const T>() const { return TypedComponentHandler<const T>(mClassId, mSlot, mComponentsManager); }
+    operator TComponentHandler<const T>() const { return TComponentHandler<const T>(mClassId, mSlot, mComponentsManager); }
     template<class U> T_EXTENDS(T, U)
-    operator TypedComponentHandler<U>() const { return TypedComponentHandler<U>(*this); }
+    operator TComponentHandler<U>() const { return TComponentHandler<U>(*this); }
 };

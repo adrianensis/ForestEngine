@@ -95,19 +95,19 @@ public:
 };
 
 template<class T>// T_EXTENDS(T, Entity)
-class TypedEntityHandler : public EntityHandler
+class TEntityHandler : public EntityHandler
 {
 public:
-    TypedEntityHandler() = default;
-    TypedEntityHandler(ClassId id, Slot slot, EntityManager* entityManager): EntityHandler(id, slot, entityManager)
+    TEntityHandler() = default;
+    TEntityHandler(ClassId id, Slot slot, EntityManager* entityManager): EntityHandler(id, slot, entityManager)
     {
     }
 
-    TypedEntityHandler(ClassId id, Slot slot, const EntityManager* entityManager): TypedEntityHandler(id, slot, const_cast<EntityManager*>(entityManager))
+    TEntityHandler(ClassId id, Slot slot, const EntityManager* entityManager): TEntityHandler(id, slot, const_cast<EntityManager*>(entityManager))
     {
     }
 
-    TypedEntityHandler(const EntityHandler& other): TypedEntityHandler(other.mClassId, other.mSlot, other.mEntityManager)
+    TEntityHandler(const EntityHandler& other): TEntityHandler(other.mClassId, other.mSlot, other.mEntityManager)
     {
     }
 
@@ -125,7 +125,7 @@ public:
         T* castedPointer = dynamic_cast<T*>(pointer);
         return mClassId > 0 && mSlot.isValid() && castedPointer;
     }
-    operator TypedEntityHandler<const T>() const { return TypedEntityHandler<const T>(mClassId, mSlot, mEntityManager); }
+    operator TEntityHandler<const T>() const { return TEntityHandler<const T>(mClassId, mSlot, mEntityManager); }
     template<class U> T_EXTENDS(T, U)
-    operator TypedEntityHandler<U>() const { return TypedEntityHandler<U>(mClassId, mSlot, mEntityManager); }
+    operator TEntityHandler<U>() const { return TEntityHandler<U>(mClassId, mSlot, mEntityManager); }
 };

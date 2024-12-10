@@ -57,7 +57,7 @@ void InstancedMeshRenderer::disable()
     mGPUVertexBuffersContainer.disable();
 }
 
-void InstancedMeshRenderer::addRenderer(TypedComponentHandler<MeshRenderer> renderer)
+void InstancedMeshRenderer::addRenderer(TComponentHandler<MeshRenderer> renderer)
 {
     if(mRendererSlotsManager.isEmpty())
     {
@@ -72,7 +72,7 @@ void InstancedMeshRenderer::addRenderer(TypedComponentHandler<MeshRenderer> rend
     mRenderersCount++;
 }
 
-void InstancedMeshRenderer::removeRenderer(TypedComponentHandler<MeshRenderer> renderer)
+void InstancedMeshRenderer::removeRenderer(TComponentHandler<MeshRenderer> renderer)
 {
 	mRegenerateBuffersRequested = true;
     mRenderers.at(renderer->getInstanceSlot().getSlot()).reset();
@@ -109,7 +109,7 @@ void InstancedMeshRenderer::update()
     u32 rendererIndex = 0;
     FOR_RANGE(i, 0, (*mUsedSlots.rbegin())+1)
     {
-        TypedComponentHandler<MeshRenderer> renderer = mRenderers[i];
+        TComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getMaterialInstance()->mSlot.getSlot());

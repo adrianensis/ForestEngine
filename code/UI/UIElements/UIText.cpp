@@ -22,7 +22,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-    TypedComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
+    TComponentHandler<MeshRenderer> renderer = createComponent<MeshRenderer>(rendererData);
     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
@@ -101,14 +101,14 @@ void UIText::setText(HashedString text)
 
                 if(i < mFontRenderers.size())
                 {
-                    TypedEntityHandler<UITextGlyph> gameObjectGlyph = mFontRenderers[i];
+                    TEntityHandler<UITextGlyph> gameObjectGlyph = mFontRenderers[i];
                     UIElementConfig glyphConfig = gameObjectGlyph->getConfig();
                     glyphConfig.mPosition = glyphPositionScreenSpace;
                     glyphConfig.mSize = glyphSizeScreenSpace;
                     glyphConfig = gameObjectGlyph->calculateConfig(glyphConfig);
                     gameObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     gameObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
-                    TypedComponentHandler<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
+                    TComponentHandler<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
@@ -117,7 +117,7 @@ void UIText::setText(HashedString text)
                 else
                 {
                     UIBuilder uiBuilder;
-                    TypedEntityHandler<UITextGlyph> gameObjectGlyph = uiBuilder.
+                    TEntityHandler<UITextGlyph> gameObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).

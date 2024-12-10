@@ -10,7 +10,7 @@ public:
     virtual void terminate() override;
 
     template<class T> T_EXTENDS(T, Entity)
-    TypedEntityHandler<T> requestEntity()
+    TEntityHandler<T> requestEntity()
     {
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();

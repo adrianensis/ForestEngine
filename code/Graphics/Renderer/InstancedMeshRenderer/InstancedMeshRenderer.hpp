@@ -13,8 +13,8 @@ public:
     void terminate();
 
     void render();
-    void addRenderer(TypedComponentHandler<MeshRenderer> renderer);
-    void removeRenderer(TypedComponentHandler<MeshRenderer> renderer);
+    void addRenderer(TComponentHandler<MeshRenderer> renderer);
+    void removeRenderer(TComponentHandler<MeshRenderer> renderer);
 
     bool isEmpty() const { return mRenderersCount == 0; }
     void enable();
@@ -36,7 +36,7 @@ private:
 
 private:
     SlotsManager mRendererSlotsManager;
-	std::vector<TypedComponentHandler<MeshRenderer>> mRenderers;
+	std::vector<TComponentHandler<MeshRenderer>> mRenderers;
     u32 mRenderersCount = 0;
     std::set<u32> mUsedSlots;
     inline static const u32 mInitialInstances = 100;

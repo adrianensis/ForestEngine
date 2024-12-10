@@ -16,10 +16,10 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addGameObject(TypedEntityHandler<GameObject> gameObject);
+    void addGameObject(TEntityHandler<GameObject> gameObject);
 
     template <class T> T_EXTENDS(T, GameObject)
-	TypedEntityHandler<T> createGameObject()
+	TEntityHandler<T> createGameObject()
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
@@ -28,7 +28,7 @@ public:
         addGameObject(entityHandler);
         return entityHandler;
 	}
-    void removeGameObject(TypedEntityHandler<GameObject> gameObject);
+    void removeGameObject(TEntityHandler<GameObject> gameObject);
     void update();
     void flushNewGameObjects();
     bool thereAreNewGameObjects() const;
@@ -38,8 +38,8 @@ private:
 
 private:
     HashedString mSceneName;
-	std::list<TypedEntityHandler<GameObject>> mGameObjects;
-	std::list<TypedEntityHandler<GameObject>> mNewGameObjects;
+	std::list<TEntityHandler<GameObject>> mGameObjects;
+	std::list<TEntityHandler<GameObject>> mNewGameObjects;
 
 	f32 mSize = 0.0f;
 	std::string mPath;

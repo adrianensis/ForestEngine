@@ -24,16 +24,16 @@ private:
 	void handleMouse();
     void createUI();
 private:
-    TypedEntityHandler<UIText> mFPSCounter;
-    TypedEntityHandler<UITransform> mUITransform;
-    TypedEntityHandler<UISceneTree> mUISceneTree;
-	TypedEntityHandler<GameObject> mCameraGameObject;
-	TypedEntityHandler<GameObject> mDirectionalLight;
-	TypedEntityHandler<GameObject> mSelectedGameObject;
-	std::list<TypedEntityHandler<GameObject>> mBuildings;
-	TypedEntityHandler<UIAxisGizmo> mAxisViewer;
+    TEntityHandler<UIText> mFPSCounter;
+    TEntityHandler<UITransform> mUITransform;
+    TEntityHandler<UISceneTree> mUISceneTree;
+	TEntityHandler<GameObject> mCameraGameObject;
+	TEntityHandler<GameObject> mDirectionalLight;
+	TEntityHandler<GameObject> mSelectedGameObject;
+	std::list<TEntityHandler<GameObject>> mBuildings;
+	TEntityHandler<UIAxisGizmo> mAxisViewer;
 
-    std::vector<TypedEntityHandler<GameObject>> mGameObjectsArray;
+    std::vector<TEntityHandler<GameObject>> mGameObjectsArray;
 
     Vector2 mLastMousePosition;
 };

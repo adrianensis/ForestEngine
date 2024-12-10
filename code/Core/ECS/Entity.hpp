@@ -15,10 +15,10 @@ public:
     virtual void init();
 
     template <class T, typename ... Args> T_EXTENDS(T, Component)
-	TypedComponentHandler<T> createComponent(Args&&... args)
+	TComponentHandler<T> createComponent(Args&&... args)
 	{
         PROFILER_CPU()
-        TypedComponentHandler<T> componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
+        TComponentHandler<T> componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
         setComponentOwner(componentHandler);
         componentHandler->init(args...);
         addComponentInternal(componentHandler);
@@ -46,9 +46,9 @@ public:
 	// }
 
 	template <class T> T_EXTENDS(T, Component)
-	TypedComponentHandler<T> getFirstComponent() const
+	TComponentHandler<T> getFirstComponent() const
 	{   
-        TypedComponentHandler<T> componentToReturn;
+        TComponentHandler<T> componentToReturn;
         FOR_LIST(it, mComponentHandlers)
         {
             ComponentHandler componentHandler = (*it);

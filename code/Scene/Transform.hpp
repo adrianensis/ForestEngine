@@ -19,8 +19,8 @@ public:
 
     const Matrix4& calculateModelMatrix() const;
 
-    void addChild(TypedComponentHandler<Transform> child);
-    void removeChild(TypedComponentHandler<Transform> child);
+    void addChild(TComponentHandler<Transform> child);
+    void removeChild(TComponentHandler<Transform> child);
 
     Vector3 getWorldPosition() const;
     Vector3 getWorldScale() const;
@@ -39,8 +39,8 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<ObjectId, TypedComponentHandler<Transform>> mChildren;
-    TypedComponentHandler<Transform> mParent;
+    std::unordered_map<ObjectId, TComponentHandler<Transform>> mChildren;
+    TComponentHandler<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
     mutable bool mLocalTranslationMatrixDirty = true;

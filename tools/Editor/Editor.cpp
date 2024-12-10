@@ -32,7 +32,7 @@ void Editor::firstUpdate()
 
 	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
-    TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+    TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -108,8 +108,8 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-	TypedComponentHandler<Transform> cameraTransform = mCameraGameObject->mTransform;
+    TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+	TComponentHandler<Transform> cameraTransform = mCameraGameObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
@@ -239,7 +239,7 @@ void Editor::terminate()
 
 EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 {
-	TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -258,7 +258,7 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 
 EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
 {
-	TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -274,7 +274,7 @@ EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
 
 EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
-	TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->lookAt(v + dir);
@@ -297,7 +297,7 @@ EntityHandler Editor::mousePick()
     {
         (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
         // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -324,7 +324,7 @@ EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f
 {
 	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    TypedEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+    TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
@@ -353,7 +353,7 @@ void Editor::handleMouse()
 	{
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mBuildings.front());
         // mBuildings.pop_front();
-        // TypedComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);

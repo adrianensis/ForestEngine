@@ -109,7 +109,7 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(TypedEntityHandler<GameObject> gameObject)
+void Scene::addGameObject(TEntityHandler<GameObject> gameObject)
 {
     if(gameObject)
     {
@@ -119,7 +119,7 @@ void Scene::addGameObject(TypedEntityHandler<GameObject> gameObject)
     }
 }
 
-void Scene::removeGameObject(TypedEntityHandler<GameObject> gameObject)
+void Scene::removeGameObject(TEntityHandler<GameObject> gameObject)
 {
 	if (gameObject && !gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
 	{

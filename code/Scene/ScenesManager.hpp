@@ -27,7 +27,7 @@ private:
 	std::unordered_set<HashedString> mLoadRequests;
 
     EntityHandler mGameObjectController;
-	TypedEntityHandler<GameObject> mCameraGameObject;
+	TEntityHandler<GameObject> mCameraGameObject;
 
 public:
     inline static const HashedString smDefaultSceneName = HashedString("Default");
