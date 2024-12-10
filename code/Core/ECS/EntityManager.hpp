@@ -61,13 +61,13 @@ public:
         entityHandler.reset();
     }
 
-    Entity& getGameObject(EntityHandler entityHandler) const
+    Entity& getEntity(EntityHandler entityHandler) const
     {
         u32 slot = entityHandler.mSlot.getSlot();
         return mEntitiesArrays.at(entityHandler.mClassId)->at(slot);
     }
 
-    Entity& getGameObjectFromSlot(ClassId classId, const Slot& slot) const
+    Entity& getEntityFromSlot(ClassId classId, const Slot& slot) const
     {
         return mEntitiesArrays.at(classId)->at(slot.getSlot());
     }
@@ -83,9 +83,9 @@ private:
     {
     public:
         virtual ~EntitiesArrayBase() = default;
-        EntitiesArrayBase(u32 reservedGameObjects)
+        EntitiesArrayBase(u32 reservedEntities)
         {
-            mSlotsManager.init(reservedGameObjects);
+            mSlotsManager.init(reservedEntities);
         }
         virtual Entity& at(u32 index) = 0;
         virtual u32 size() const = 0;
@@ -96,10 +96,10 @@ private:
     class EntitiesArray : public EntitiesArrayBase
     {
     public:
-        EntitiesArray(u32 reservedGameObjects) : EntitiesArrayBase(reservedGameObjects)
+        EntitiesArray(u32 reservedEntities) : EntitiesArrayBase(reservedEntities)
         {
-            mEntities.reserve(reservedGameObjects);
-            mSlotsManager.init(reservedGameObjects);
+            mEntities.reserve(reservedEntities);
+            mSlotsManager.init(reservedEntities);
         }
         virtual Entity& at(u32 index) override
         {

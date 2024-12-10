@@ -4,7 +4,7 @@
 Entity& EntityHandler::getInternal() const
 {
     CHECK_MSG(EntityHandler::isValid(), "Invalid handler!");
-    return mEntityManager->getGameObjectFromSlot(mClassId, mSlot);
+    return mEntityManager->getEntityFromSlot(mClassId, mSlot);
 }
 
 EntityHandler EntityHandler::getEntityHandler(ClassId id, const Entity& entity)
