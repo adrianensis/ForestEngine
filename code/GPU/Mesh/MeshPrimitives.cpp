@@ -32,6 +32,11 @@ OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Rectangle>() const
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(1.0f, 1.0f)); // top right
 	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mTextureCoords.at(0).mName).pushBack(Vector2(0.0f, 1.0f)); // top left
 
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(Vector3(0,0,0)); // top
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(Vector3(0,0,0)); // right
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(Vector3(0,0,0)); // bottom
+	mesh->mBuffers.at(GPUBuiltIn::VertexInput::mNormal.mName).pushBack(Vector3(0,0,0)); // left
+
 	mesh->mIndices.pushBack(Face(0,1,2));
 	mesh->mIndices.pushBack(Face(2,3,0));
 
