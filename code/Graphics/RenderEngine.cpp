@@ -74,14 +74,14 @@ void RenderEngine::addSystemComponent(const ComponentHandler& component)
     }
     else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
-        if(component.getComponent().isDerivedClass<PointLight>())
-        {
-            mRenderPipelineData.mPointLights.push_back(TypedComponentHandler<PointLight>(component));
-        }
-        else if(component.getComponent().isDerivedClass<DirectionalLight>())
-        {
-            mRenderPipelineData.mDirectionalLight = TypedComponentHandler<DirectionalLight>(component);
-        }
+        // if(component.getComponent(). <PointLight>())
+        // {
+        //     mRenderPipelineData.mPointLights.push_back(TypedComponentHandler<PointLight>(component));
+        // }
+        // else if(component.getComponent(). <DirectionalLight>())
+        // {
+        //     mRenderPipelineData.mDirectionalLight = TypedComponentHandler<DirectionalLight>(component);
+        // }
     }
 }
 
