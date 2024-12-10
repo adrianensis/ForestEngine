@@ -1,5 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
-#include "Graphics/GPU/GPUInstance.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
@@ -7,7 +7,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)

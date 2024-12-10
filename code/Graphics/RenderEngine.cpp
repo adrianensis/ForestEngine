@@ -1,7 +1,7 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/GPU/GPUInstance.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Core/Window/WindowManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"

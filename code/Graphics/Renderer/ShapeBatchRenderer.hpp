@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/Shader/GPUShader.hpp"
-#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
+#include "GPU/Shader/GPUShader.hpp"
+#include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
 class ShapeBatchRenderer

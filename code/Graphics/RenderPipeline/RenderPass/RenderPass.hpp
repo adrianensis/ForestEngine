@@ -2,11 +2,11 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
-#include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
+#include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
-#include "Graphics/GPU/Framebuffer/GPUFramebuffer.hpp"
-#include "Graphics/GPU/RenderPass/GPURenderPass.h"
+#include "GPU/Framebuffer/GPUFramebuffer.hpp"
+#include "GPU/RenderPass/GPURenderPass.h"
 
 class MeshRenderer;
 class RenderPipeline;

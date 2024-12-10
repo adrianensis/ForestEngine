@@ -5,7 +5,7 @@
 
 #include "Scene/Transform.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/GPU/Mesh/GPUMesh.hpp"
+#include "GPU/Mesh/GPUMesh.hpp"
 
 class InstancedMeshRenderer;
 class MaterialInstance;

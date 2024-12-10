@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/ECS/System.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/GPU/Mesh/GPUMesh.hpp"
+#include "GPU/Mesh/GPUMesh.hpp"
 
 class Model;
 

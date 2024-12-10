@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
+#include "GPU/Mesh/GPUMesh.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "cgltf.h"
 
 class GPUSkeletalAnimation;

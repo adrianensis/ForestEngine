@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Graphics/GPU/GPUInstance.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
 

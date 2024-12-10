@@ -1,7 +1,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Material.hpp"
-#include "Graphics/GPU/Image/GPUTexture.hpp"
-#include "Graphics/GPU/GPUInstance.hpp"
+#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/GPUInstance.hpp"
 
 void MaterialInstance::setDirty()
 {

@@ -1,12 +1,12 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/GPU/Mesh/GPUMesh.hpp"
+#include "GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
-#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Core/Config/Paths.hpp"
-#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Core/GPUBuiltIn.hpp"
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"
 

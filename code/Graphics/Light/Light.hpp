@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/ECS/Component.hpp"
-#include "Graphics/GPU/GPULight.hpp"
+#include "GPU/GPULight.hpp"
 
 class Light: public Component
 {

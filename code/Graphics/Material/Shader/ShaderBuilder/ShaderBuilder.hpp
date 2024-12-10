@@ -2,9 +2,9 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
-#include "Graphics/GPU/Buffer/GPUVertexBuffer.hpp"
-#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/Buffer/GPUUniformBuffer.hpp"
+#include "GPU/Buffer/GPUVertexBuffer.hpp"
+#include "GPU/Buffer/GPUBuffersContainer.hpp"
+#include "GPU/Buffer/GPUUniformBuffer.hpp"
 
 class ShaderBuilder
 {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/Mesh/GPUMeshBatcher.hpp"
+#include "GPU/Mesh/GPUMeshBatcher.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshData.hpp"
-#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
+#include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 
 class InstancedMeshRenderer

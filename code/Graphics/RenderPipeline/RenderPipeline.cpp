@@ -1,8 +1,8 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/GPU/GPUInstance.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
 void RenderPipeline::init()
 {

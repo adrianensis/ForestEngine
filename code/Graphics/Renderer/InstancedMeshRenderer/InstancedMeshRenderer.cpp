@@ -2,9 +2,9 @@
 #include "Graphics/Material/Material.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
-#include "Graphics/GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
-#include "Graphics/GPU/GPUInstance.hpp"
+#include "GPU/Mesh/GPUMesh.hpp"
+#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 
 void InstancedMeshRenderer::init(const InstancedMeshData& instancedMeshData)

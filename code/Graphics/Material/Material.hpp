@@ -3,9 +3,9 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Material/Shader/Shader.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
-#include "Graphics/GPU/Buffer/GPUUniformBuffer.hpp"
-#include "Graphics/GPU/Buffer/GPUBuffersContainer.hpp"
-#include "Graphics/GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Buffer/GPUUniformBuffer.hpp"
+#include "GPU/Buffer/GPUBuffersContainer.hpp"
+#include "GPU/Core/GPUBuiltIn.hpp"
 
 class MaterialData
 {

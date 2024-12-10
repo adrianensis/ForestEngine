@@ -2,9 +2,9 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/GPU/Image/GPUTexture.hpp"
-#include "Graphics/GPU/Shader/GPUShader.hpp"
-#include "Graphics/GPU/Shader/GPUShaderModule.h"
+#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/Shader/GPUShader.hpp"
+#include "GPU/Shader/GPUShaderModule.h"
 
 class Material;
 class GPUMesh;

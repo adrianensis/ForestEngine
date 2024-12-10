@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/GPU/Mesh/GPUMesh.hpp"
+#include "GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
 class InstancedMeshData
