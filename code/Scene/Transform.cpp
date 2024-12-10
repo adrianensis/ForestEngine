@@ -228,13 +228,13 @@ const Matrix4& Transform::getViewMatrix() const
 void Transform::addChild(TypedComponentHandler<Transform> child)
 {
     child->mParent = ComponentHandler::getComponentHandler<Transform>(*this);
-    mChildren.insert_or_assign(child.mSlot.getSlot(), child);
+    mChildren.insert_or_assign(child->getObjectId(), child);
 }
 
 void Transform::removeChild(TypedComponentHandler<Transform> child)
 {
     child->mParent.reset();
-    mChildren.erase(child.mSlot.getSlot());
+    mChildren.erase(child->getObjectId());
 }
 
 IMPLEMENT_SERIALIZATION(Transform)

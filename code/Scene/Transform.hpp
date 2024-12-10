@@ -38,7 +38,7 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<u32, TypedComponentHandler<Transform>> mChildren;
+    std::unordered_map<ObjectId, TypedComponentHandler<Transform>> mChildren;
     TypedComponentHandler<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
