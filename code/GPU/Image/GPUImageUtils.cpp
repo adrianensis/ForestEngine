@@ -1,6 +1,7 @@
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "GPU/GPUUtils.hpp"
 #include "Core/Image/ImageUtils.hpp"
+#include "GPU/Buffer/GPUBuffer.h"
 
 bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 {
@@ -130,7 +131,7 @@ void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffe
 }
 
 
-bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, const ImageData& imageData, VkImage image, VkFormat imageFormat, u32 mipMapLevels)
+bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 height, VkImage image, VkFormat imageFormat, u32 mipMapLevels)
 {
     // Check if image format supports linear blitting
     VkFormatProperties formatProperties;
@@ -152,8 +153,8 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, const ImageData&
     barrier.subresourceRange.layerCount = 1;
     barrier.subresourceRange.levelCount = 1;
 
-    i32 mipWidth = imageData.mWidth;
-    i32 mipHeight = imageData.mHeight;
+    i32 mipWidth = width;
+    i32 mipHeight = height;
 
     constexpr VkDependencyFlags dependencyFlags = 0;
     constexpr uint32_t memoryBarrierCount = 0;
@@ -265,3 +266,44 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, const ImageData&
     GPUUtils::endSingleTimeCommands(gpuContext, commandBuffer);
     return true;
 }
+
+bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textureImage, const GPUImageData& textureImageData, byte* data) 
+{
+        /*
+         * Copy image texels to staging buffer
+         */
+
+        VkDeviceSize imageSize = textureImageData.Width * textureImageData.Height * textureImageData.mChannels;//STBI_rgb_alpha;
+        GPUBuffer stagingBuffer;
+
+        GPUBufferData stagingBufferConfig{};
+        stagingBufferConfig.Size = imageSize;
+        stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+        if (!stagingBuffer.init(gpuContext, stagingBufferConfig)) {
+            CHECK_MSG(false,"Could not initialize texture image stagingBuffer");
+            return false;
+        }
+
+        stagingBuffer.setData(data);
+
+        /*
+         * Copy image texels from staging buffer to image
+         */
+
+        if (!GPUImageUtils::transitionImageLayout(gpuContext, textureImage, textureImageData.Format, textureImageData.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageData.MipLevels)) {
+            CHECK_MSG(false,"Could not transition image layout from undefined to transfer destination");
+            return false;
+        }
+        GPUImageUtils::copyBufferToImage(gpuContext, stagingBuffer.getVkBuffer(), textureImage, textureImageData.Width, textureImageData.Height, textureImageData.mOffsetX, textureImageData.mOffsetY);
+        stagingBuffer.terminate();
+
+        if (!GPUImageUtils::generateMipmaps(gpuContext, textureImageData.Width, textureImageData.Height, textureImage, textureImageData.Format, textureImageData.MipLevels)) {
+            CHECK_MSG(false,"Could not generate mipmaps for texture image");
+            return false;
+        }
+
+        LOG("Initialized texture image");
+        return true;
+    }

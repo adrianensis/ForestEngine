@@ -23,12 +23,7 @@ public:
     virtual void onPoolFree() override { terminate(); };
     void enable(u32 textureUnit) const;
     void disable(u32 textureUnit) const;
-
-private:
-    bool initializeTextureImage(const GPUImageData& textureImageData);
-    bool initializeTextureImageView(VkFormat format, VkImageAspectFlagBits imageAspectFlagBits);
-    bool initializeTextureSampler(const VkSamplerCreateInfo& samplerInfo);
-
+    
 private:
 	u32 mGPUTextureId = 0;
     TextureHandle mGPUTextureHandle = 0;

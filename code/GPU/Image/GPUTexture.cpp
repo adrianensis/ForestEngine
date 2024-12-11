@@ -72,44 +72,39 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
-//         u32 texPos = 0;
-//         FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())
-//         {
-// //            GET_SYSTEM(GPUInterface).setSubTexture(mGPUTextureId, texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, mTextureData.mFontData.mGlyphs[c].mData);
-//             // Increase texture offset
+        u32 bytesOffset = 0;
+        FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())
+        {
+//            GET_SYSTEM(GPUInterface).setSubTexture(mGPUTextureId, texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, mTextureData.mFontData.mGlyphs[c].mData);
+            // Increase texture offset
 
+            u32 width = mTextureData.mFontData.mGlyphs[c].mBitmapSize.x;
+            u32 height = mTextureData.mFontData.mGlyphs[c].mBitmapSize.y;
 
+            // " " space case! no size, no data, not supported by vulkan
+            if(width == 0)
+            {
+                bytesOffset = mTextureData.mFontData.mGlyphs[c].mAdvance.x;
+            }
+            else
+            {
+                FOR_RANGE(i, 0, height)
+                {
+                    FOR_RANGE(j, 0, width)
+                    {
+                        mImageData.mData[(i* (mImageData.mWidth)) + j + bytesOffset] = mTextureData.mFontData.mGlyphs[c].mData[(i*width) + j];
+                    }
+                }
+                
+                bytesOffset += width;
+            }
 
-//             GPUImageData subtextureImageData{};
-//             subtextureImageData.Width = mTextureData.mFontData.mGlyphs[c].mBitmapSize.x;
-//             subtextureImageData.Height = mTextureData.mFontData.mGlyphs[c].mBitmapSize.y;
-//             // TODO: " " space case! no size, no data, not supported by vulkan
-            
-//             subtextureImageData.Usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-//             subtextureImageData.Format = format;
-//             subtextureImageData.Tiling = VK_IMAGE_TILING_LINEAR;
-//             subtextureImageData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-//             subtextureImageData.Layout = VK_IMAGE_LAYOUT_UNDEFINED;
-//             subtextureImageData.MipLevels = mMipMapLevels;
-//             subtextureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
-//             subtextureImageData.mOffsetX = texPos;
-//             subtextureImageData.mOffsetY = 0;
-//             subtextureImageData.mChannels = mChannels;
+        }
 
-//             if(subtextureImageData.Width + subtextureImageData.Height == 0)
-//             {
-//                 continue;
-//             }
-//             texPos += mTextureData.mFontData.mGlyphs[c].mBitmapSize.x /*+ 2*/;
-
-//             if (!initializeTextureImage(subtextureImageData))
-//             {
-//                 CHECK_MSG(false,"Could not initialize texture image");
-//             }
-
-//             break;
-            
-//         }
+        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage->getVkImage(), textureImageData, mImageData.mData))
+        {
+            CHECK_MSG(false,"Could not initialize texture image");
+        }
     }
     else
     {
@@ -133,15 +128,16 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
-        if (!initializeTextureImage(textureImageData))
+        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage->getVkImage(), textureImageData, mImageData.mData))
         {
             CHECK_MSG(false,"Could not initialize texture image");
         }
     }
 
-    if (!initializeTextureImageView(format, VK_IMAGE_ASPECT_COLOR_BIT))
+    mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage->getVkImage(), format, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);
+    if (!mTextureImageView)
     {
-        CHECK_MSG(false,"Could not initialize texture image view");
+        CHECK_MSG(false,"Could not create Vulkan texture image view");
     }
 
     VkSamplerCreateInfo samplerInfo = {};
@@ -161,9 +157,11 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
     samplerInfo.mipLodBias = 0.0f;
     samplerInfo.minLod = 0.0f;
     samplerInfo.maxLod = (float) mMipMapLevels;
-    if (!initializeTextureSampler(samplerInfo))
+
+    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    if (vkCreateSampler(mGPUContext->vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &mTextureSampler) != VK_SUCCESS)
     {
-        CHECK_MSG(false,"Could not initialize texture image sampler");
+        CHECK_MSG(false,"Could not create image sampler");
     }
 
     ImageUtils::freeImage(mImageData);
@@ -173,7 +171,6 @@ void GPUTexture::terminate()
 {
     if(mGPUTextureId > 0)
     {
-//        GET_SYSTEM(GPUInterface).deleteTexture(mGPUTextureId);
         mGPUTextureId = 0;
         mGPUTextureHandle = 0;
     }
@@ -184,64 +181,3 @@ void GPUTexture::terminate()
     mVulkanTextureImage->terminate();
 
 }
-
-bool GPUTexture::initializeTextureSampler(const VkSamplerCreateInfo& samplerInfo)
-{
-    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    if (vkCreateSampler(mGPUContext->vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &mTextureSampler) != VK_SUCCESS) {
-        CHECK_MSG(false,"Could not create image sampler");
-        return false;
-    }
-    return true;
-}
-
-bool GPUTexture::initializeTextureImageView(VkFormat format, VkImageAspectFlagBits imageAspectFlagBits) {
-    mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage->getVkImage(), format, imageAspectFlagBits, mMipMapLevels);
-    if (!mTextureImageView) {
-        CHECK_MSG(false,"Could not create Vulkan texture image view");
-        return false;
-    }
-    return true;
-}
-bool GPUTexture::initializeTextureImage(const GPUImageData& textureImageData) 
-{
-        /*
-         * Copy image texels to staging buffer
-         */
-
-        VkDeviceSize imageSize = mImageData.mWidth * mImageData.mHeight * textureImageData.mChannels;//STBI_rgb_alpha;
-        GPUBuffer stagingBuffer;//(/*mGPUContext->vulkanPhysicalDevice, mGPUContext->vulkanDevice*/);
-
-        GPUBufferData stagingBufferConfig{};
-        stagingBufferConfig.Size = imageSize;
-        stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-        if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {
-            CHECK_MSG(false,"Could not initialize texture image stagingBuffer");
-            return false;
-        }
-
-        stagingBuffer.setData(mImageData.mData);
-        // stbi_image_free(pixels);
-
-        /*
-         * Copy image texels from staging buffer to image
-         */
-
-        VkImage textureImage = mVulkanTextureImage->getVkImage();
-        if (!GPUImageUtils::transitionImageLayout(mGPUContext, textureImage, textureImageData.Format, textureImageData.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageData.MipLevels)) {
-            CHECK_MSG(false,"Could not transition image layout from undefined to transfer destination");
-            return false;
-        }
-        GPUImageUtils::copyBufferToImage(mGPUContext, stagingBuffer.getVkBuffer(), textureImage, textureImageData.Width, textureImageData.Height, textureImageData.mOffsetX, textureImageData.mOffsetY);
-        stagingBuffer.terminate();
-
-        if (!GPUImageUtils::generateMipmaps(mGPUContext, mImageData, textureImage, textureImageData.Format, textureImageData.MipLevels)) {
-            CHECK_MSG(false,"Could not generate mipmaps for texture image");
-            return false;
-        }
-
-        LOG("Initialized texture image");
-        return true;
-    }

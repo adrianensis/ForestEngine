@@ -148,7 +148,7 @@ origin(0,0) .              * X        X*                    .               v
 
         std::memcpy(mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.buffer, mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows);
 
-        ImageUtils::flipImageVertically({mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows}, 1);
+        // ImageUtils::flipImageVertically({mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows}, 1);
 
         // Increase texture offset
         texPos += mGlyphs[c].mBitmapSize.x /*+ 2*/;
