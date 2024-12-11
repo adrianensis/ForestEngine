@@ -72,6 +72,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
+        // TODO: move this FOR to Font code
         u32 bytesOffset = 0;
         FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())
         {
