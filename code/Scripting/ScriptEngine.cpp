@@ -25,7 +25,7 @@ void ScriptEngine::update()
     std::vector<TComponentHandler<Script>> newList;
     FOR_ARRAY(i, mScripts)
     {
-        PROFILER_BLOCK_CPU(removeScripts);
+        PROFILER_CPU_NAMED(removeScripts);
 
         TComponentHandler<Script> script = mScripts[i];
         if(script.isValid())

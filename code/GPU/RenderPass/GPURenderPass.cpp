@@ -6,7 +6,9 @@
 GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
         : mGPUContext(gpuContext){}
 
-bool GPURenderPass::initialize() {
+bool GPURenderPass::initialize()
+{
+    PROFILER_CPU()
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
     colorAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
@@ -98,6 +100,8 @@ bool GPURenderPass::initialize() {
 
 bool GPURenderPass::initializeColorResources()
 {
+    PROFILER_CPU()
+
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
     GPUImageData colorImageConfig{};
@@ -121,6 +125,8 @@ bool GPURenderPass::initializeColorResources()
 
 bool GPURenderPass::initializeDepthResources()
 {
+    PROFILER_CPU()
+
     VkFormat depthFormat = findDepthFormat();
 
     GPUImageData depthImageConfig{};
@@ -157,6 +163,7 @@ VkFormat GPURenderPass::findDepthFormat()
 
 bool GPURenderPass::initializeFramebuffers()
 {
+    PROFILER_CPU()
     for (VkImageView swapChainImageView : mGPUContext->vulkanSwapChain->getImageViews()) {
         GPUFramebuffer framebuffer;//(mGPUContext->vulkanDevice, mGPUContext->vulkanSwapChain, vulkanRenderPass);
         if (!framebuffer.initialize(mGPUContext, this, colorImageView, depthImageView, swapChainImageView)) {
@@ -169,7 +176,9 @@ bool GPURenderPass::initializeFramebuffers()
     return true;
 }
 
-void GPURenderPass::terminate() {
+void GPURenderPass::terminate()
+{
+    PROFILER_CPU()
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
@@ -190,18 +199,23 @@ void GPURenderPass::terminate() {
 }
 void GPURenderPass::begin()
 {
+    PROFILER_CPU()
     frameAcquisition();
     commandRecordingBegin();
 }
 
 void GPURenderPass::end()
 {
+    PROFILER_CPU()
     commandRecordingEnd();
     commandSubmission();
     framePresentation();
 }
 
-void GPURenderPass::beginCmd(const GPUCommandBuffer* vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const {
+void GPURenderPass::beginCmd(const GPUCommandBuffer* vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const
+{
+    PROFILER_CPU()
+
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = mRenderPass;
@@ -236,6 +250,8 @@ void GPURenderPass::endCmd(const GPUCommandBuffer* vulkanCommandBuffer) const {
 
 void GPURenderPass::frameAcquisition()
 {
+    PROFILER_CPU()
+
     // Wait until the previous frame has finished
     constexpr uint32_t fenceCount = 1;
     constexpr VkBool32 waitForAllFences = VK_TRUE;
@@ -272,6 +288,7 @@ void GPURenderPass::frameAcquisition()
 
 void GPURenderPass::commandRecordingBegin()
 {
+    PROFILER_CPU()
     const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     vulkanCommandBuffer->reset();
     vulkanCommandBuffer->begin();
@@ -281,6 +298,7 @@ void GPURenderPass::commandRecordingBegin()
 
 void GPURenderPass::commandRecordingEnd()
 {
+    PROFILER_CPU()
     const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     endCmd(vulkanCommandBuffer);
 
@@ -291,6 +309,7 @@ void GPURenderPass::commandRecordingEnd()
 
 void GPURenderPass::commandSubmission()
 {
+    PROFILER_CPU()
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -324,6 +343,7 @@ void GPURenderPass::commandSubmission()
 
 void GPURenderPass::framePresentation()
 {
+    PROFILER_CPU()
     VkPresentInfoKHR presentInfo{};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
@@ -340,12 +360,15 @@ void GPURenderPass::framePresentation()
     presentInfo.swapchainCount = 1;
 
     // Present image to swap chain
-    VkResult presentResult = vkQueuePresentKHR(mGPUContext->vulkanDevice->getPresentQueue(), &presentInfo);
-    if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR /*|| windowResized*/) {
-        // windowResized = false;
-        // recreateRenderingObjects();
-    } else if (presentResult != VK_SUCCESS) {
-        //VD_LOG_CRITICAL("Could not present image to swap chain");
-        throw std::runtime_error("Could not present image to swap chain");
+    {
+        PROFILER_CPU_NAMED(vkQueuePresentKHR)
+        VkResult presentResult = vkQueuePresentKHR(mGPUContext->vulkanDevice->getPresentQueue(), &presentInfo);
+        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR /*|| windowResized*/) {
+            // windowResized = false;
+            // recreateRenderingObjects();
+        } else if (presentResult != VK_SUCCESS) {
+            //VD_LOG_CRITICAL("Could not present image to swap chain");
+            throw std::runtime_error("Could not present image to swap chain");
+        }
     }
 }

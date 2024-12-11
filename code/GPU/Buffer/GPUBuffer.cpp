@@ -3,6 +3,7 @@
 
 bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
 {
+    PROFILER_CPU_NAMED(buffer_init)
     mGPUContext = gpuContext;
     mGPUBufferData = gpuBufferData;
 
@@ -41,6 +42,7 @@ bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferD
 }
 
 void GPUBuffer::terminate() {
+    PROFILER_CPU_NAMED(buffer_terminate)
     if(mInit)
     {
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
@@ -54,6 +56,7 @@ void GPUBuffer::terminate() {
 }
 
 void GPUBuffer::setData(const void* data) const {
+    PROFILER_CPU_NAMED(buffer_set_data)
     void* memory;
     constexpr VkDeviceSize memoryOffset = 0;
     constexpr VkMemoryMapFlags memoryMapFlags = 0;
@@ -62,7 +65,9 @@ void GPUBuffer::setData(const void* data) const {
     vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory);
 }
 
-void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice) {
+void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice)
+{   
+    PROFILER_CPU_NAMED(buffer_copy)
     CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
 
     constexpr uint32_t commandBufferCount = 1;
@@ -70,26 +75,33 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
     CHECK_MSG(commandBuffers.size() == commandBufferCount, "commandBuffers.size() == commandBufferCount")
 
     const GPUCommandBuffer* commandBuffer = commandBuffers[0];
+    VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
+    
     commandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
-    VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
+    {
+        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, commandBuffer->getVkCommandBuffer());
 
-    VkBufferCopy copyRegion{};
-    copyRegion.size = sourceBuffer.mGPUBufferData.Size;
-    constexpr uint32_t regionCount = 1;
-    vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
+        VkBufferCopy copyRegion{};
+        copyRegion.size = sourceBuffer.mGPUBufferData.Size;
+        constexpr uint32_t regionCount = 1;
+        vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
+    }
 
     commandBuffer->end();
 
-    VkSubmitInfo submitInfo{};
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &vkCommandBuffer;
+    {   
+        PROFILER_CPU_NAMED(submit_copy_buffer)
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &vkCommandBuffer;
 
-    constexpr uint32_t submitCount = 1;
-    VkFence fence = VK_NULL_HANDLE;
-    vkQueueSubmit(vulkanDevice.getGraphicsQueue(), submitCount, &submitInfo, fence);
-    vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());
+        constexpr uint32_t submitCount = 1;
+        VkFence fence = VK_NULL_HANDLE;
+        vkQueueSubmit(vulkanDevice.getGraphicsQueue(), submitCount, &submitInfo, fence);
+        vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());
+    }
 
     commandPool.freeCommandBuffer(commandBuffer);
 }

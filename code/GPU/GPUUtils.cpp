@@ -31,7 +31,12 @@ VkCommandBuffer GPUUtils::beginSingleTimeCommands(Ptr<GPUContext> gpuContext) {
     return commandBuffer;
 }
 
-void GPUUtils::endSingleTimeCommands(Ptr<GPUContext> gpuContext, VkCommandBuffer commandBuffer) {
+void GPUUtils::endSingleTimeCommands(Ptr<GPUContext> gpuContext, VkCommandBuffer commandBuffer)
+{
+#if defined(ENGINE_ENABLE_PROFILER)
+  PROFILER_GPU_COLLECT(gpuContext->mTracyContext, commandBuffer);
+#endif
+
     vkEndCommandBuffer(commandBuffer);
 
     VkSubmitInfo submitInfo{};

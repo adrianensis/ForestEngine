@@ -59,6 +59,7 @@ void InstancedMeshRenderer::disable()
 
 void InstancedMeshRenderer::addRenderer(TComponentHandler<MeshRenderer> renderer)
 {
+    PROFILER_CPU_NAMED(add_renderer)
     if(mRendererSlotsManager.isEmpty())
     {
         mRendererSlotsManager.increaseSize(mInitialInstances);
@@ -89,7 +90,7 @@ void InstancedMeshRenderer::update()
     u32 newSize = mRenderersCount;
     if (newSize > mMaxMeshesThreshold)
     {
-        PROFILER_BLOCK_CPU(newSize);
+        PROFILER_CPU_NAMED(newSize);
 		if(mMaxMeshesThreshold == 0)
 		{
 			mMaxMeshesThreshold = newSize;
@@ -102,8 +103,6 @@ void InstancedMeshRenderer::update()
         mGPUMeshBatcher.resize(mMaxMeshesThreshold);
         resizeInstancedBuffers(mMaxMeshesThreshold);
     	resizeIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
-
-        PROFILER_END_BLOCK();
     }
 
     u32 rendererIndex = 0;

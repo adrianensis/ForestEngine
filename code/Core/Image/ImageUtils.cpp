@@ -1,4 +1,5 @@
 #include "Core/Image/ImageUtils.hpp"
+#include "Core/Profiler/Profiler.hpp"
 
 #include "png.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -6,6 +7,7 @@
 
 ImageData ImageUtils::loadImage(HashedString path)
 {
+    PROFILER_CPU()
 	i32 width, height, original_number_channels;
 	stbi_set_flip_vertically_on_load(true);
 
@@ -23,6 +25,7 @@ ImageData ImageUtils::loadImage(HashedString path)
 
 void ImageUtils::freeImage(const ImageData& imageData)
 {
+    PROFILER_CPU()
     if(imageData.mData)
     {
         stbi_image_free(imageData.mData);
@@ -31,5 +34,6 @@ void ImageUtils::freeImage(const ImageData& imageData)
 
 void ImageUtils::flipImageVertically(const ImageData& imageData, u32 bytes_per_pixel)
 {
+    PROFILER_CPU()
     stbi__vertical_flip(imageData.mData, imageData.mWidth, imageData.mHeight, bytes_per_pixel);
 }

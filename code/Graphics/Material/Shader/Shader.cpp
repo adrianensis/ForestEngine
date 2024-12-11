@@ -126,6 +126,8 @@ void Shader::generateShaderGenerationData(ShaderGenerationData& shaderGeneration
 
 OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompileData)
 {
+    PROFILER_CPU_NAMED(compileShader)
+
     mShaderData.mShaderCompileData = shaderCompileData;
 
     std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;

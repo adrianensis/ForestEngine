@@ -102,7 +102,5 @@ void RenderEngine::removeSystemComponent(const ComponentHandler& component)
 void RenderEngine::swap()
 {
     PROFILER_CPU()
-    PROFILER_GPU()
 	GET_SYSTEM(WindowManager).getMainWindow()->swap();
-    PROFILER_GPU_COLLECT();
 }

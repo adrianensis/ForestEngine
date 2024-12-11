@@ -7,26 +7,25 @@
 #include "tracy/TracyC.h"
 #include "vulkan/vulkan.h"
 #include "tracy/TracyVulkan.hpp"
-// #include "glew-2.2.0/include/GL/glew.h"
-#define PROFILER_BLOCK_CPU(varName) ZoneNamedN(__tracy_profiler##varName, #varName, true);
 #define PROFILER_CPU() ZoneScopedN(__PRETTY_FUNCTION__);
-#define PROFILER_GPU() 
-//TracyGpuZone(__PRETTY_FUNCTION__)
-#define PROFILER_END_BLOCK()
-#define PROFILER_GPU_CONTEXT() 
-//TracyGpuContext;
-#define PROFILER_GPU_COLLECT() 
-//TracyGpuCollect;
+#define PROFILER_CPU_NAMED(varName) ZoneNamedN(__tracy_profiler_cpu_##varName, #varName, true);
+#define PROFILER_GPU(context, commandBuffer, name) PROFILER_CPU() TracyVkZone(context, commandBuffer, name)
+#define PROFILER_GPU_NAMED(varName, context, commandBuffer) PROFILER_CPU_NAMED(varName) TracyVkNamedZone(context, __tracy_profiler_gpu_##varName, commandBuffer, #varName, true)
+#define PROFILER_GPU_CONTEXT(...) TracyVkContext(__VA_ARGS__)
+#define PROFILER_GPU_CONTEXT_CALIBRATED(...) TracyVkContextCalibrated(__VA_ARGS__)
+#define PROFILER_GPU_COLLECT(context, commandBuffer) TracyVkCollect(context, commandBuffer)
 #define PROFILER_CALLSTACK_DEPTH 12
 #define PROFILER_ALLOC(pointer, size) TracyCAllocS(pointer, size, PROFILER_CALLSTACK_DEPTH);
 #define PROFILER_FREE(pointer) TracyCFreeS(pointer, PROFILER_CALLSTACK_DEPTH);
 #else
-#define PROFILER_BLOCK_CPU(varName)
 #define PROFILER_CPU()
-#define PROFILER_GPU()
-#define PROFILER_END_BLOCK()
-#define PROFILER_GPU_CONTEXT()
-#define PROFILER_GPU_COLLECT()
+#define PROFILER_CPU_NAMED(varName)
+#define PROFILER_GPU(context, commandBuffer, name)
+#define PROFILER_GPU_NAMED(varName, context, commandBuffer)
+#define PROFILER_GPU_CONTEXT(...)
+#define PROFILER_GPU_CONTEXT_CALIBRATED(...)
+#define PROFILER_GPU_COLLECT(context, commandBuffer)
+#define PROFILER_CALLSTACK_DEPTH
 #define PROFILER_ALLOC(pointer, size)
 #define PROFILER_FREE(pointer)
 #endif

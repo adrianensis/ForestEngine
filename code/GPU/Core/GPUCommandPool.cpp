@@ -1,7 +1,8 @@
 #include "GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
+#include "GPU/Core/GPUContext.hpp"
 
-GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice) : vulkanDevice(vulkanDevice) {}
+GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, Ptr<GPUContext> gpuContext) : vulkanDevice(vulkanDevice), mGPUContext(gpuContext) {}
 
 bool GPUCommandPool::init()
 {
@@ -44,7 +45,7 @@ std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(uint32_t c
     std::vector<GPUCommandBuffer*> vulkanCommandBuffers;
     for (VkCommandBuffer vkCommandBuffer : vkCommandBuffers) {
         GPUCommandBuffer* vulkanCommandBuffer = new GPUCommandBuffer();
-        vulkanCommandBuffer->init(vkCommandBuffer);
+        vulkanCommandBuffer->init(vkCommandBuffer, mGPUContext);
         vulkanCommandBuffers.push_back(vulkanCommandBuffer);
     }
     VULKAN_LOG("Allocated [{}] command buffers");

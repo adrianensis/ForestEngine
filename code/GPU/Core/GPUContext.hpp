@@ -6,7 +6,7 @@
 #include "GPU/Core/GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 
-class GPUContext
+class GPUContext: public EnablePtrToThis
 {
 public:
     void init();
@@ -29,6 +29,12 @@ public:
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
     uint32_t currentFrame = 0;
+
+#ifdef ENGINE_ENABLE_PROFILER
+    TracyVkCtx mTracyContext = nullptr;
+    GPUCommandPool* profilingCommandPool_ = nullptr;
+    GPUCommandBuffer* profilingCommandBuffer_ = nullptr;
+#endif
 
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;

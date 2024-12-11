@@ -29,8 +29,9 @@ private:
     void frameAcquisition();
     void commandSubmission();
     void framePresentation();
-private:
+public:
     Ptr<GPUContext> mGPUContext;
+private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     uint32_t swapChainImageIndex;
     std::vector<GPUFramebuffer> framebuffers;

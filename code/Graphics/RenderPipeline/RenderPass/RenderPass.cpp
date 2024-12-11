@@ -31,6 +31,7 @@ void RenderPass::terminate()
 
 void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
 {
+    PROFILER_CPU_NAMED(RenderPass_add_renderer)
 	InstancedMeshData instancedMeshData;
 	instancedMeshData.init(renderer);
 
@@ -161,7 +162,10 @@ void RenderPass::renderPass()
     // }
 
     vulkanRenderPass->begin();
-    render();
+    {
+        PROFILER_GPU_NAMED(renderPass, vulkanRenderPass->mGPUContext->mTracyContext, vulkanRenderPass->mGPUContext->vulkanCommandBuffers[vulkanRenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
+        render();
+    }
     vulkanRenderPass->end();
 }
 

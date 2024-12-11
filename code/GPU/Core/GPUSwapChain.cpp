@@ -67,6 +67,13 @@ VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurface
 VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const
 {
     VkPresentModeKHR targetPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+    VkPresentModeKHR defaultPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+    VULKAN_LOG("Targeted Presentation Mode: "s + getPresentationModeAsString(targetPresentMode))
+    VULKAN_LOG("Default Presentation Mode: "s + getPresentationModeAsString(defaultPresentMode))
+    for (const auto& availablePresentMode: availablePresentModes)
+    {
+        VULKAN_LOG("Available Presentation Mode: "s + getPresentationModeAsString(availablePresentMode))
+    }
     for (const auto& availablePresentMode: availablePresentModes)
     {
         if (availablePresentMode == targetPresentMode)
@@ -74,7 +81,6 @@ VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentMode
             return availablePresentMode;
         }
     }
-    VkPresentModeKHR defaultPresentMode = VK_PRESENT_MODE_FIFO_KHR;
     VULKAN_LOG_WARNING("Could not find "s + getPresentationModeAsString(targetPresentMode) + " present mode so defaulting to "s + getPresentationModeAsString(defaultPresentMode));
     return defaultPresentMode;
 }

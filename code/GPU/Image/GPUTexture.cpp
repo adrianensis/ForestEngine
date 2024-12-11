@@ -15,6 +15,7 @@ void GPUTexture::disable(u32 textureUnit) const
 
 void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id)
 {
+    PROFILER_CPU_NAMED(init_texture)
     mGPUContext = gpuContext;
     mTextureData = gpuTextureData;
     mID = id;
@@ -34,6 +35,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
     {
         format = VK_FORMAT_R8G8B8A8_SRGB;
         mChannels = 4;
+        PROFILER_CPU_NAMED(load_image)
         mImageData = ImageUtils::loadImage(gpuTextureData.mPath);
         CHECK_MSG(mImageData.mData, "Error loading image " + mTextureData.mPath.get());
 
@@ -51,6 +53,8 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
 
     if(gpuTextureData.mIsFont)
     {
+        PROFILER_CPU_NAMED(init_texture_font)
+
 //        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture1ByteChannel(mWidth, mHeight, nullptr);
 
         CHECK_MSG(!mTextureData.mFontData.mGlyphs.empty(), "Error empty font " + mTextureData.mFontData.mPath.get());
@@ -109,6 +113,8 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
     }
     else
     {
+        PROFILER_CPU_NAMED(init_texture_normal)
+
         // ImageUtils::freeImage(imageData);
 
         GPUImageData textureImageData{};
@@ -141,28 +147,32 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         CHECK_MSG(false,"Could not create Vulkan texture image view");
     }
 
-    VkSamplerCreateInfo samplerInfo = {};
-    samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    samplerInfo.magFilter = VK_FILTER_LINEAR;
-    samplerInfo.minFilter = VK_FILTER_LINEAR;
-    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.anisotropyEnable = VK_TRUE;
-    samplerInfo.maxAnisotropy = mGPUContext->vulkanPhysicalDevice->getProperties().limits.maxSamplerAnisotropy;
-    samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-    samplerInfo.unnormalizedCoordinates = VK_FALSE;
-    samplerInfo.compareEnable = VK_FALSE;
-    samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
-    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-    samplerInfo.mipLodBias = 0.0f;
-    samplerInfo.minLod = 0.0f;
-    samplerInfo.maxLod = (float) mMipMapLevels;
-
-    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    if (vkCreateSampler(mGPUContext->vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &mTextureSampler) != VK_SUCCESS)
     {
-        CHECK_MSG(false,"Could not create image sampler");
+        PROFILER_CPU_NAMED(init_texture_sampler)
+
+        VkSamplerCreateInfo samplerInfo = {};
+        samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        samplerInfo.magFilter = VK_FILTER_LINEAR;
+        samplerInfo.minFilter = VK_FILTER_LINEAR;
+        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        samplerInfo.anisotropyEnable = VK_TRUE;
+        samplerInfo.maxAnisotropy = mGPUContext->vulkanPhysicalDevice->getProperties().limits.maxSamplerAnisotropy;
+        samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+        samplerInfo.unnormalizedCoordinates = VK_FALSE;
+        samplerInfo.compareEnable = VK_FALSE;
+        samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+        samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        samplerInfo.mipLodBias = 0.0f;
+        samplerInfo.minLod = 0.0f;
+        samplerInfo.maxLod = (float) mMipMapLevels;
+
+        VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+        if (vkCreateSampler(mGPUContext->vulkanDevice->getDevice(), &samplerInfo, allocationCallbacks, &mTextureSampler) != VK_SUCCESS)
+        {
+            CHECK_MSG(false,"Could not create image sampler");
+        }
     }
 
     ImageUtils::freeImage(mImageData);
@@ -170,6 +180,8 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
 
 void GPUTexture::terminate() 
 {
+    PROFILER_CPU_NAMED(terminate_texture)
+
     if(mGPUTextureId > 0)
     {
         mGPUTextureId = 0;

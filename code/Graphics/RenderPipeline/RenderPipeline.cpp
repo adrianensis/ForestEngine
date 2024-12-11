@@ -14,7 +14,7 @@ void RenderPipeline::init()
 void RenderPipeline::update()
 {
 	PROFILER_CPU()
-    PROFILER_BLOCK_CPU(updateRenderers);
+    PROFILER_CPU_NAMED(updateRenderers);
     if(!mUsedSlots.empty())
     {
         FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
@@ -46,11 +46,8 @@ void RenderPipeline::update()
         // it->second->disable();
     }
 
-    PROFILER_END_BLOCK()
-
-    PROFILER_BLOCK_CPU(updateModelMatricesBuffer);
+    PROFILER_CPU_NAMED(updateModelMatricesBuffer);
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
-    PROFILER_END_BLOCK()
 
     GET_SYSTEM(MaterialManager).update();
 	// GET_SYSTEM(GPUSkeletalAnimationManager).update();
@@ -92,7 +89,9 @@ void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
     instancedMeshData.init(renderer);
     if(!mInstancedMeshesMap.contains(instancedMeshData))
     {
-        LOG_TRACE_MSG("New Batch")
+        LOG_TRACE_MSG("New Instanced Mesh aka batch")
+        PROFILER_CPU_NAMED(init_instanced_mesh)
+
         mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
         mInstancedMeshesMap.at(instancedMeshData)->init(instancedMeshData);
     }

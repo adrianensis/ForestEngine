@@ -59,6 +59,7 @@ const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
 
 bool GPUVertexBuffer::setData(const void* data, u32 size)
 {
+    PROFILER_CPU_NAMED(vertex_buffer_set_data)
     VkDeviceSize bufferSize = size;
     // VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 

@@ -81,6 +81,7 @@ void Vulkan::terminate() {
 }
 
 bool Vulkan::createInstance() {
+    availableExtensions = findAvailableExtensions();
     const std::vector<const char*>& extensions = findExtensions();
     if (extensions.empty()) {
         CHECK_MSG(false,"Could not get extensions");
@@ -143,22 +144,35 @@ void Vulkan::destroyDebugMessenger() {
     VULKAN_LOG("Destroyed Vulkan debug messenger");
 }
 
-std::vector<const char*> Vulkan::findExtensions() const {
-    std::vector<const char*> requiredExtensions = config.mRequiredExtensions;
-    VULKAN_LOG("Required extensions " + std::to_string(requiredExtensions.size()));
-    for (const char* extension: requiredExtensions) {
+std::vector<const char*> Vulkan::findExtensions() const
+{
+    VULKAN_LOG("Required extensions " + std::to_string(config.mRequiredExtensions.size()));
+    for (const char* extension: config.mRequiredExtensions) {
         VULKAN_LOG(extension);
     }
-    const std::vector<VkExtensionProperties>& availableExtensions = findAvailableExtensions();
+    VULKAN_LOG("Optional extensions " + std::to_string(config.mOptionalExtensions.size()));
+    for (const char* extension: config.mOptionalExtensions) {
+        VULKAN_LOG(extension);
+    }
     VULKAN_LOG("Available extensions " + std::to_string(availableExtensions.size()));
     for (const VkExtensionProperties& extensionProperties: availableExtensions) {
         VULKAN_LOG(extensionProperties.extensionName);
     }
-    if (!hasExtensions(requiredExtensions, availableExtensions)) {
-        CHECK_MSG(false,"Could not find required extensions");
-        return {};
+
+    std::vector<const char*> extensionsFound;
+    bool requiredExtensionsFound = hasExtensions(config.mRequiredExtensions, extensionsFound);
+    if (requiredExtensionsFound)
+    {
+        extensionsFound.insert(extensionsFound.end(), config.mRequiredExtensions.begin(), config.mRequiredExtensions.end());
     }
-    return requiredExtensions;
+    else
+    {
+        CHECK_MSG(false, "Couldn't get all Required extensions.");
+    }
+    
+    bool optionalExtensionsFound = hasExtensions(config.mOptionalExtensions, extensionsFound);
+
+    return extensionsFound;
 }
 
 std::vector<VkExtensionProperties> Vulkan::findAvailableExtensions() const {
@@ -169,21 +183,32 @@ std::vector<VkExtensionProperties> Vulkan::findAvailableExtensions() const {
     return extensions;
 }
 
-bool Vulkan::hasExtensions(const std::vector<const char*>& extensions, const std::vector<VkExtensionProperties>& availableExtensions) const {
+bool Vulkan::hasExtensions(const std::vector<const char*>& extensions, std::vector<const char*>& extensionsFound) const {
+    bool foundAll = true;
     for (const char* extension: extensions) {
-        bool extensionFound = false;
-        for (const VkExtensionProperties& availableExtension: availableExtensions) {
-            if (strcmp(extension, availableExtension.extensionName) == 0) {
-                extensionFound = true;
-                break;
-            }
+        bool extensionFound = isExtensionAvailable(extension);
+        if (extensionFound)
+        {
+            extensionsFound.push_back(extension);
         }
-        if (!extensionFound) {
+        else
+        {
             VULKAN_LOG_WARNING("Could not find extension "s + extension);
-            return false;
+            foundAll = false;
         }
     }
-    return true;
+    return foundAll;
+}
+
+bool Vulkan::isExtensionAvailable(const char* extension) const {
+    bool extensionFound = false;
+    for (const VkExtensionProperties& availableExtension: availableExtensions) {
+        if (strcmp(extension, availableExtension.extensionName) == 0) {
+            extensionFound = true;
+            break;
+        }
+    }
+    return extensionFound;
 }
 
 std::vector<const char*> Vulkan::findValidationLayers() const {

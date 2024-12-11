@@ -3,12 +3,13 @@
 #include "GPU/Core/GPUPhysicalDevice.h"
 #include "GPU/Core/GPUDevice.h"
 
+class GPUContext;
 class GPUCommandBuffer;
 
 class GPUCommandPool
 {
 public:
-    GPUCommandPool(GPUDevice* vulkanDevice);
+    GPUCommandPool(GPUDevice* vulkanDevice, Ptr<GPUContext> gpuContext);
     bool init();
     void terminate();
     std::vector<GPUCommandBuffer*> allocateCommandBuffers(uint32_t count) const;
@@ -17,6 +18,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
     GPUDevice* vulkanDevice;
     VkCommandPool mVkCommandPool = VK_NULL_HANDLE;
+    Ptr<GPUContext> mGPUContext;
 public:
     CRGET(VkCommandPool)
 };

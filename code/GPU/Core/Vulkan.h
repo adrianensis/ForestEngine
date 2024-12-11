@@ -236,6 +236,7 @@ public:
     uint32_t PatchVersion = 0;
     bool ValidationLayersEnabled = true;
     std::vector<const char*> mRequiredExtensions;
+    std::vector<const char*> mOptionalExtensions;
 };
 
 class Vulkan
@@ -247,6 +248,7 @@ public:
     bool isValidationLayersEnabled() const;
     bool init();
     void terminate();
+    bool isExtensionAvailable(const char* extension) const;
 
 private:
     bool createInstance();
@@ -255,7 +257,7 @@ private:
     void destroyDebugMessenger();
     std::vector<const char*> findExtensions() const;
     std::vector<VkExtensionProperties> findAvailableExtensions() const;
-    bool hasExtensions(const std::vector<const char*>& extensions, const std::vector<VkExtensionProperties>& availableExtensions) const;
+    bool hasExtensions(const std::vector<const char*>& extensions, std::vector<const char*>& extensionsFound) const;
     std::vector<const char*> findValidationLayers() const;
     std::vector<VkLayerProperties> findAvailableValidationLayers() const;
     bool hasValidationLayers(const std::vector<const char*>& validationLayers, const std::vector<VkLayerProperties>& availableValidationLayers) const;
@@ -269,4 +271,5 @@ private:
     std::vector<const char*> validationLayers{};
     VkInstance vulkanInstance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
+    std::vector<VkExtensionProperties> availableExtensions;
 };

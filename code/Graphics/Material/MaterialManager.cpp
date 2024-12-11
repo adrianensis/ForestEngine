@@ -217,18 +217,16 @@ void MaterialManager::setMaterialInstanceProperties(PoolHandler<MaterialInstance
 
     if(material->getMaterialData().allowInstances())
     {
-        PROFILER_BLOCK_CPU(allowInstances)
+        PROFILER_CPU_NAMED(allowInstances)
         if(mMaterialPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
             LOG_TRACE()
             PROFILER_CPU()
             CHECK_MSG(mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(materialInstance->mSlot), "Invalid slot!");
             u32 propertiesBlockSizeBytes = material->getMaterialData().getSharedMaterialPropertiesBlockBufferSize();
-            PROFILER_BLOCK_CPU(CopyBuffer)
+            PROFILER_CPU_NAMED(CopyBuffer)
             mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mMaterialPropertiesBlockArray.copyBufferAt(materialInstance->mMaterialPropertiesBlockBuffer.getByteBuffer(), materialInstance->mSlot.getSlot() * propertiesBlockSizeBytes);
-            PROFILER_END_BLOCK()
         }
-        PROFILER_END_BLOCK()
     }
 }
 
