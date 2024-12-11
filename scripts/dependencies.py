@@ -111,7 +111,7 @@ log.log(log.LogLabels.build, "EXTRACTING FILES")
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
 # download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
 download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip")
-download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.0.zip", "tracy-0.11.0.zip")
+download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.1.zip", "tracy-0.11.1.zip")
 download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip")
 download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip")
 download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz", "freetype-2.13.2.tar.xz")
@@ -128,7 +128,7 @@ log.log(log.LogLabels.build, "BUILDING DEPENDENCIES")
 buildType=BuildGlobalData.buildRelease
 buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
-tracyProfiler = "tracy-0.11.0/profiler"
+tracyProfiler = "tracy-0.11.1/profiler"
 tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
 freetypeDir = "freetype-2.13.2"
 freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)

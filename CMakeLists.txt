@@ -134,9 +134,9 @@ if(ENABLE_PROFILER)
     set(DOWNLOAD_GLFW OFF CACHE BOOL "" FORCE)
     set(DOWNLOAD_CAPSTONE OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
-    check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/tracy-0.11.0")
-    include_directories("${DEPENDENCIES_DIR}/tracy-0.11.0/public")
-    add_subdirectory("${DEPENDENCIES_DIR}/tracy-0.11.0")
+    check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/tracy-0.11.1")
+    include_directories("${DEPENDENCIES_DIR}/tracy-0.11.1/public")
+    add_subdirectory("${DEPENDENCIES_DIR}/tracy-0.11.1")
 endif(ENABLE_PROFILER)
 
 # JSON
