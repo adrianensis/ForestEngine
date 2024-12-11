@@ -30,3 +30,7 @@
 #include "Core/Memory/Pool.hpp"
 #include "Core/Memory/SlotsManager.hpp"
 #include "Core/Log/Log.hpp"
+
+#ifdef ENGINE_ENABLE_PROFILER
+#include "Core/Profiler/Profiler.hpp"
+#endif
