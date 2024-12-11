@@ -33,18 +33,19 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     shaderBuilder.getMain().
     set(outColor, baseColor);
     
-    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-    auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
-    Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    // NEXT: Restore ui/font texture
+    // auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
+    // auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+    // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+    // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
-    shaderBuilder.getMain().
-    // ifBlock(textureHandler.notEq("0"s)).
-        set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
-        ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-            line("discard").
-        end();
-    // end();
+    // shaderBuilder.getMain().
+    // // ifBlock(textureHandler.notEq("0"s)).
+    //     set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
+    //     ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+    //         line("discard").
+    //     end();
+    // // end();
 }
 
 void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const

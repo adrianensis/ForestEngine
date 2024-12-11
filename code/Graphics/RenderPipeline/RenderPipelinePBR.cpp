@@ -30,9 +30,9 @@ void RenderPipelinePBR::compile()
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
-    // RenderPassData renderPassUIData;
-    // renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
-    // initRenderPass<RenderPassUI>(renderPassUIData);
+    RenderPassData renderPassUIData;
+    renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
+    initRenderPass<RenderPassUI>(renderPassUIData);
 }
 
 
@@ -63,8 +63,8 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 //    GET_SYSTEM(GPUInterface).clearDepth();
 //    GET_SYSTEM(GPUInterface).clearStencil();
 
-    // Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
-    // renderPassUI->renderPass();
+    Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+    renderPassUI->renderPass();
 
 	// GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
 }
