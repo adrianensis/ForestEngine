@@ -19,14 +19,11 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
     { 
         mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
     }
-
-    vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext);
 }
 
 void RenderPass::terminate()
 {
-    vulkanRenderPass->terminate();
-    delete vulkanRenderPass;
+
 }
 
 void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
@@ -60,7 +57,7 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
         {
             instancedMeshData.mMaterial,
             instancedMeshData.mMesh,
-            vulkanRenderPass,
+            mRenderPipeline->vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID())),
             uniformBuffers,
@@ -161,12 +158,10 @@ void RenderPass::renderPass()
     //     mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
     // }
 
-    vulkanRenderPass->begin();
     {
-        PROFILER_GPU_NAMED(renderPass, vulkanRenderPass->mGPUContext->mTracyContext, vulkanRenderPass->mGPUContext->vulkanCommandBuffers[vulkanRenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
+        PROFILER_GPU_NAMED(renderPass, mRenderPipeline->vulkanRenderPass->mGPUContext->mTracyContext, mRenderPipeline->vulkanRenderPass->mGPUContext->vulkanCommandBuffers[mRenderPipeline->vulkanRenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
         render();
     }
-    vulkanRenderPass->end();
 }
 
 void RenderPass::updateGlobalData()
@@ -178,8 +173,8 @@ void RenderPass::updateGlobalData()
 
     TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    Matrix4 projectionViewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho;
-    Matrix4 viewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : Matrix4::smIdentity;
+    Matrix4 projectionViewMatrix = /*mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ?*/ camera->mProjectionMatrix/* : ortho*/;
+    Matrix4 viewMatrix = /*mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ?*/ camera->mViewMatrix/* : Matrix4::smIdentity*/;
 
     projectionViewMatrix.mul(viewMatrix);
 
@@ -208,8 +203,5 @@ void RenderPass::setupShader(Ptr<Shader> shader) const
 
 void RenderPass::compile()
 {
-    if (!vulkanRenderPass->initialize())
-    {
-        CHECK_MSG(false, "Could not initialize Vulkan render pass");
-    }
+    
 }

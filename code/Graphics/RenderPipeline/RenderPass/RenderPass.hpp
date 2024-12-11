@@ -56,8 +56,6 @@ protected:
     GPUFramebuffer mOutputGPUFramebuffer;
     Ptr<RenderPipeline> mRenderPipeline;
 
-    GPURenderPass* vulkanRenderPass;
-
 public:
     CRGET(RenderPassData)
     CRGET(OutputGPUFramebuffer)

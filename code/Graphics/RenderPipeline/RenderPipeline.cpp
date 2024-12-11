@@ -8,6 +8,12 @@ void RenderPipeline::init()
 {
     LOG_TRACE()
     PROFILER_CPU()
+
+    vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext);
+    if (!vulkanRenderPass->initialize())
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan render pass");
+    }
     initBuffers();
 }
 
@@ -71,6 +77,9 @@ void RenderPipeline::terminate()
 	}
 
     mRenderInstancesSlotsManager.reset();
+
+    vulkanRenderPass->terminate();
+    delete vulkanRenderPass;
 }
 
 void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)

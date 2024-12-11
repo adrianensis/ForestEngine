@@ -40,31 +40,36 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()
 
-    // updateLights(renderData);
-
-//	GET_SYSTEM(GPUInterface).clear();
-
-    // FOR_ARRAY(i, renderData.mPointLights)
+    vulkanRenderPass->begin();
     {
-        // Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
-        // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
-        // renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
-        // renderPassShadowMap->renderPass();
-        Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
-        renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
-        renderPassGeometry->renderPass();
+        PROFILER_GPU_NAMED(renderPass, vulkanRenderPass->mGPUContext->mTracyContext, vulkanRenderPass->mGPUContext->vulkanCommandBuffers[vulkanRenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
+        // updateLights(renderData);
+
+    //	GET_SYSTEM(GPUInterface).clear();
+
+        // FOR_ARRAY(i, renderData.mPointLights)
+        {
+            // Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
+            // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+            // renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
+            // renderPassShadowMap->renderPass();
+            Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+            renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
+            renderPassGeometry->renderPass();
+        }
+        // Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+        // renderPassGeometry->mPointLight = renderData.mPointLights[0];
+        // renderPassGeometry->renderPass();
+
+        // GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
+
+    //    GET_SYSTEM(GPUInterface).clearDepth();
+    //    GET_SYSTEM(GPUInterface).clearStencil();
+
+        Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+        renderPassUI->renderPass();
+
+        // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
     }
-    // Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
-    // renderPassGeometry->mPointLight = renderData.mPointLights[0];
-    // renderPassGeometry->renderPass();
-
-	// GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
-
-//    GET_SYSTEM(GPUInterface).clearDepth();
-//    GET_SYSTEM(GPUInterface).clearStencil();
-
-    Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
-    renderPassUI->renderPass();
-
-	// GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
+    vulkanRenderPass->end();
 }
