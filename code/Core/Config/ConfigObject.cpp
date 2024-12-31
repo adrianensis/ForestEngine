@@ -18,10 +18,6 @@ void ConfigObject::writeToJsonFile(const std::string& path)
 	});
 }
 
-void ConfigObject::init()
-{
-}
-
 bool ConfigObject::contains(const std::string& key) const
 {
 	return mJson.contains(key);
