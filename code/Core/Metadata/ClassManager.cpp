@@ -1,6 +1,6 @@
 #include "Core/Metadata/ClassManager.hpp"
 
-ClassRegister::ClassRegister(const ClassDefinition& classDefinition)
+ClassRegisterHelper::ClassRegisterHelper(const ClassDefinition& classDefinition)
 {
     ClassManager::insert(ClassMetadata(classDefinition));
 }
@@ -22,11 +22,13 @@ MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
 
 void ClassManager::insert(const ClassMetadata& classMetadata)
 {
-    if(!smClassMapByName.contains(classMetadata.mClassDefinition.mName))
+    if(smClassMapByName.contains(classMetadata.mClassDefinition.mName))
     {
-        smClassMapByName.insert_or_assign(classMetadata.mClassDefinition.mName, classMetadata);
-        smClassMapById.insert_or_assign(classMetadata.mClassDefinition.getId(), &smClassMapByName.at(classMetadata.mClassDefinition.mName));
+        CHECK_MSG(false, "Class already registered: " + classMetadata.mClassDefinition.mName.get())
     }
+    
+    smClassMapByName.insert_or_assign(classMetadata.mClassDefinition.mName, classMetadata);
+    smClassMapById.insert_or_assign(classMetadata.mClassDefinition.getId(), &smClassMapByName.at(classMetadata.mClassDefinition.mName));
 }
 
 ClassMetadata& ClassManager::getClassMetadataInternal(const HashedString& className)
@@ -46,10 +48,11 @@ const ClassMetadata& ClassManager::getClassMetadataById(const ClassId classId)
 
 void ClassManager::registerDynamicClass(u64 pointer, ClassId classId)
 {
-    if(!smPointersToDynamicClass.contains(pointer))
+    if(smPointersToDynamicClass.contains(pointer))
     {
-        smPointersToDynamicClass.insert_or_assign(pointer, smClassMapById.at(classId));
+        CHECK_MSG(false, "Pointer already registered")
     }
+    smPointersToDynamicClass.insert_or_assign(pointer, smClassMapById.at(classId));
 }
 
 void ClassManager::unregisterDynamicClass(u64 pointer)

@@ -7,7 +7,7 @@
 
 #define REGISTER_CLASS(...) \
 inline static const ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
-inline static const ClassRegister classRegister_##__VA_ARGS__ = ClassRegister(smClassDefinition_##__VA_ARGS__); \
+inline static const ClassRegisterHelper classRegisterHelper_##__VA_ARGS__ = ClassRegisterHelper(smClassDefinition_##__VA_ARGS__); \
 template<> \
 inline const ClassMetadata& ClassManager::getClassMetadata<__VA_ARGS__>() { return ClassManager::getClassMetadataById(smClassDefinition_##__VA_ARGS__.getId()); } \
 template<> \
@@ -55,10 +55,10 @@ public:
 // CLASS
 // --------------------------------------------------------
 
-class ClassRegister
+class ClassRegisterHelper
 {
 public:
-    ClassRegister(const ClassDefinition& classDefinition);
+    ClassRegisterHelper(const ClassDefinition& classDefinition);
 };
 
 class ClassMetadata
@@ -76,7 +76,7 @@ public:
 
 class ClassManager
 {
-friend ClassRegister;
+friend ClassRegisterHelper;
 friend MemberRegister;
 
 public:
