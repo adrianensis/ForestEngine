@@ -7,7 +7,8 @@
 #define INVALID_INDEX -1
 #define EMPTY_MACRO(...)
 #define ADD_TRAIL_COMMA(token) token ,
-#define TO_STRING_AND_ADD_TRAIL_COMMA(token) #token ,
+#define TO_STRING(token) #token
+#define TO_STRING_AND_ADD_TRAIL_COMMA(token) TO_STRING(token) ,
 
 // --------------------------------------------------------
 // TYPE TRAITS
