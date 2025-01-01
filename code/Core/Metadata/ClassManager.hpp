@@ -80,7 +80,6 @@ friend ClassRegisterHelper;
 friend MemberRegister;
 
 public:
-    static const ClassMetadata& getClassMetadataByName(const HashedString& className);
     static const ClassMetadata& getClassMetadataById(const ClassId classId);
 
     inline static const ClassDefinition smNullClassDefinition = ClassDefinition();
@@ -119,10 +118,9 @@ public:
     }
 private:
     static void insert(const ClassMetadata& classMetadata);
-    static ClassMetadata& getClassMetadataInternal(const HashedString& className);
+    static ClassMetadata& getClassMetadataByIdInternal(const ClassId classId);
     static void registerDynamicClass(u64 pointer, ClassId classId);
     static void unregisterDynamicClass(u64 pointer);
-    inline static std::unordered_map<HashedString, ClassMetadata> smClassMapByName;
-    inline static std::unordered_map<ClassId, ClassMetadata*> smClassMapById;
+    inline static std::unordered_map<ClassId, ClassMetadata> smClassMapById;
     inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
 };
