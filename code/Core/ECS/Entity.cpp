@@ -2,6 +2,7 @@
 #include "Core/ECS/Component.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 #include "Core/ECS/EntityManager.hpp"
+#include "Core/ECS/SystemManager.hpp"
 
 Entity::Entity()
 {
@@ -51,7 +52,7 @@ void Entity::removeComponent(ComponentHandler componentHandler)
             SystemsManager::getInstance().removeComponentFromSystem(componentHandler);
             componentHandler->destroy();
             // mComponentHandlers.erase(it);
-            GET_SYSTEM(ComponentsManager).removeComponent(*it);
+            ComponentsManager::getInstance().removeComponent(*it);
             break;
         }
     }
@@ -81,7 +82,7 @@ void Entity::destroy()
         {
             SystemsManager::getInstance().removeComponentFromSystem(*it);
             (*it).getComponent().destroy();
-            GET_SYSTEM(ComponentsManager).removeComponent(*it);
+            ComponentsManager::getInstance().removeComponent(*it);
         }
 	}
 

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/ECS/System.hpp"
+#include "Core/Memory/Singleton.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
-class EntityManager: public System
+class EntityManager: public Singleton<EntityManager>
 {
 public:
-    virtual void init() override;
-    virtual void terminate() override;
+    void init();
+    void terminate();
 
     template<class T> T_EXTENDS(T, Entity)
     TEntityHandler<T> requestEntity()

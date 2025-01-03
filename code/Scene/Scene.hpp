@@ -23,7 +23,7 @@ public:
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
-		EntityHandler entityHandler = GET_SYSTEM(EntityManager).requestEntity<T>();
+		EntityHandler entityHandler = EntityManager::getInstance().requestEntity<T>();
         entityHandler->init();
         addGameObject(entityHandler);
         return entityHandler;

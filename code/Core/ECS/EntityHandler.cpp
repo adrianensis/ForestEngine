@@ -9,5 +9,5 @@ Entity& EntityHandler::getInternal() const
 
 EntityHandler EntityHandler::getEntityHandler(ClassId id, const Entity& entity)
 {
-    return GET_SYSTEM(EntityManager).getEntityHandler(id, entity);
+    return EntityManager::getInstance().getEntityHandler(id, entity);
 }

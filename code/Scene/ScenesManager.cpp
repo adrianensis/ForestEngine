@@ -39,7 +39,7 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraGameObject = GET_SYSTEM(EntityManager).requestEntity<GameObject>();
+    mCameraGameObject = EntityManager::getInstance().requestEntity<GameObject>();
 	mCameraGameObject->init();
 
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10));

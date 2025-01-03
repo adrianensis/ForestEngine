@@ -1,6 +1,7 @@
 #include "Core/Time/TimerManager.hpp"
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
+#include "Core/ECS/SystemManager.hpp"
 
 void TimerManager::endTimer(Timer * timer)
 {

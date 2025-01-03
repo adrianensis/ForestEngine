@@ -9,5 +9,5 @@ Component& ComponentHandler::getInternal() const
 
 ComponentHandler ComponentHandler::getComponentHandler(ClassId id, const Component& component)
 {
-    return GET_SYSTEM(ComponentsManager).getComponentHanlder(id, component);
+    return ComponentsManager::getInstance().getComponentHanlder(id, component);
 }

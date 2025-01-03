@@ -18,7 +18,7 @@ public:
 	TComponentHandler<T> createComponent(Args&&... args)
 	{
         PROFILER_CPU()
-        TComponentHandler<T> componentHandler = GET_SYSTEM(ComponentsManager).requestComponent<T>();
+        TComponentHandler<T> componentHandler = ComponentsManager::getInstance().requestComponent<T>();
         setComponentOwner(componentHandler);
         componentHandler->init(args...);
         addComponentInternal(componentHandler);

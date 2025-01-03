@@ -21,6 +21,9 @@ void Engine::init()
 
 	Memory::init();
 	Profiler::init();
+    SystemsManager::getInstance().init();
+    EntityManager::getInstance().init();
+    ComponentsManager::getInstance().init();
 
     CREATE_SYSTEM(EngineConfig);
     // CREATE_SYSTEM(GPUInterface);
@@ -36,8 +39,6 @@ void Engine::init()
     GET_SYSTEM(Input).setWindowInputAdapter(GET_SYSTEM(WindowManager).getMainWindow());
     CREATE_SYSTEM(TimerManager);
     CREATE_SYSTEM(EventsManager);
-    CREATE_SYSTEM(EntityManager);
-    CREATE_SYSTEM(ComponentsManager);
     CREATE_SYSTEM(MeshPrimitives);
     CREATE_SYSTEM(MaterialManager);
     CREATE_SYSTEM(CameraManager);
@@ -113,6 +114,8 @@ void Engine::terminate()
 {
 	LOG_TRACE();
 
+    ComponentsManager::getInstance().terminate();
+	EntityManager::getInstance().terminate();
 	SystemsManager::getInstance().terminate();
 	Profiler::terminate();
 	Memory::terminate();

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Core/ECS/System.hpp"
+#include "Core/Memory/Singleton.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
 
 class Component;
 
-class ComponentsManager: public System
+class ComponentsManager: public Singleton<ComponentsManager>
 {
 public:
-    virtual void init() override;
-    virtual void terminate() override;
+    void init();
+    void terminate();
 
     template<class T> T_EXTENDS(T, Component)
     TComponentHandler<T> requestComponent()
