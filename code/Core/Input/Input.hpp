@@ -19,7 +19,7 @@ class Input: public System
 {
 public:
     virtual void init() override;
-    virtual void update() override;
+    void update();
     bool isKeyPressedOnce(i32 key);
     bool isKeyPressed(i32 key);
     bool isModifierPressed(i32 modifier);

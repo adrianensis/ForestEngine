@@ -9,7 +9,6 @@ class System: public IEventObject
 public:
     virtual ~System() = default;
     virtual void init() { };
-    virtual void update() { };
     virtual void terminate() { };
     void registerComponentClass(ClassId classId);
     bool isComponentClassAccepted(ClassId classId) const;

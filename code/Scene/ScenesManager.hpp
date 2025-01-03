@@ -12,7 +12,7 @@ class ScenesManager: public System
 public:	
     virtual void init() override;
     virtual void terminate() override;
-    virtual void update() override;
+    void update();
     void loadPendingScenes();
     bool pendingLoadRequests() const;
     void requestLoadScene(HashedString sceneName);

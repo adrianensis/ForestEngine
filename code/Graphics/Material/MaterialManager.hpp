@@ -21,7 +21,7 @@ class MaterialManager: public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    virtual void update() override;
+    void update();
     PoolHandler<GPUTexture> loadTexture(const GPUTextureData& gpuTextureData);
     void unloadTexture(PoolHandler<GPUTexture>& texture);
 

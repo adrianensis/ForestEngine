@@ -11,7 +11,7 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     void addSystemComponent(const ComponentHandler& component) override;
-    virtual void update() override;
+    void update();
     void preSceneChanged();
     void postSceneChanged();
 

@@ -38,7 +38,7 @@ private:
 public:
     virtual void init() override;
     virtual void terminate() override;
-	virtual void update() override;
+	void update();
 
     void execute(const std::string& commandLine);
     std::string autocomplete(const std::string& commandLine);

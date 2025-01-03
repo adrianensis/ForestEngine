@@ -8,7 +8,7 @@ class TimerManager: public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    virtual void update() override;
+    void update();
     TimerHandle setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback);
     void cancelTimer(const TimerHandle& timerHandle);
 

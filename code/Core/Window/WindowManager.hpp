@@ -8,7 +8,7 @@ class WindowManager : public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    virtual void update() override;
+    void update();
 
     Ptr<Window> createWindow(const WindowData& windowData);
     Ptr<Window> getWindow(u32 index) const;

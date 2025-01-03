@@ -10,7 +10,7 @@ class GPUSkeletalAnimationManager: public System
 public:
     virtual void init() override;
     virtual void terminate() override;
-    virtual void update() override;
+    void update();
     Ptr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
 
     const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(Ptr<const GPUSkeletonState> skeletonState) const;

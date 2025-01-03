@@ -18,7 +18,7 @@ class RenderPipeline: public EnablePtrToThis
 {
 public:
     virtual void init();
-    virtual void update();
+    void update();
     virtual void terminate();
     void addRenderer(TComponentHandler<MeshRenderer> renderer);
     void removeRenderer(TComponentHandler<MeshRenderer> renderer);
