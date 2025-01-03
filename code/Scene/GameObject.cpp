@@ -8,7 +8,8 @@ void GameObject::init()
 {
     PROFILER_CPU()
     Entity::init();
-    mTransform = createComponent<Transform>();
+    mTransform = ComponentsManager::getInstance().requestComponent<Transform>();
+    addComponent(mTransform);
 }
 
 IMPLEMENT_SERIALIZATION(GameObject)

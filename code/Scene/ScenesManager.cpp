@@ -45,10 +45,12 @@ void ScenesManager::init()
 	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
 	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
-    TComponentHandler<Camera> cameraComponent = mCameraGameObject->createComponent<Camera>();
-	cameraComponent->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
+    TComponentHandler<Camera> camera = ComponentsManager::getInstance().requestComponent<Camera>();
+	camera->init();
+    mCameraGameObject->addComponent(camera);
+	camera->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
-    GET_SYSTEM(CameraManager).setCamera(cameraComponent);
+    GET_SYSTEM(CameraManager).setCamera(camera);
 }
 
 void ScenesManager::update()

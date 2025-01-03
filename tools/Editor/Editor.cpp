@@ -250,7 +250,9 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
     materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT});
 	rendererData.mMaterial = (GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData));
 
-	gameObject->createComponent<MeshRenderer>(rendererData);
+	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+    renderer->init(rendererData);
+	gameObject->addComponent(renderer);
 
 	return gameObject;
 }
@@ -266,7 +268,9 @@ EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
     data.mPosition = v;
     data.mDiffuse = Vector3(1,1,1) * 250000;
 
-	gameObject->createComponent<PointLight>(data);
+	TComponentHandler<PointLight> pointLight = ComponentsManager::getInstance().requestComponent<PointLight>();
+    pointLight->init(data);
+	gameObject->addComponent(pointLight);
 
 	return gameObject;
 }
@@ -282,7 +286,9 @@ EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& di
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
-	gameObject->createComponent<DirectionalLight>(directionalLightData);
+	TComponentHandler<DirectionalLight> dirLight = ComponentsManager::getInstance().requestComponent<DirectionalLight>();
+    dirLight->init(directionalLightData);
+	gameObject->addComponent(dirLight);
 
 	return gameObject;
 }
@@ -337,7 +343,9 @@ EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f
         ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	gameObject->createComponent<ModelRenderer>(modelRendererData);
+	TComponentHandler<ModelRenderer> modelRenderer = ComponentsManager::getInstance().requestComponent<ModelRenderer>();
+    modelRenderer->init(modelRendererData);
+	gameObject->addComponent(modelRenderer);
     return gameObject;
 }
 

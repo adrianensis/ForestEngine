@@ -24,7 +24,9 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         TEntityHandler<GameObject> gameObjectParent = getOwnerEntity();
-        gameObjectParent->createComponent<MeshRenderer>(rendererData);
+        TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+        renderer->init(rendererData);
+		gameObjectParent->addComponent(renderer);
 	}
 }
 

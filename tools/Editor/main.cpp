@@ -18,7 +18,8 @@ int main()
 
     // NOTE: this script won't be added to the ScriptEngine in the usual way,
     // since ScriptEngine itself is still not initialized.
-    controller->createComponent<Editor>();
+    TComponentHandler<Editor> editor = ComponentsManager::getInstance().requestComponent<Editor>();
+    controller->addComponent(editor);
 
     GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 

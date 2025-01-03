@@ -13,19 +13,8 @@ public:
     Entity();
 
     virtual void init();
-
-    template <class T, typename ... Args> T_EXTENDS(T, Component)
-	TComponentHandler<T> createComponent(Args&&... args)
-	{
-        PROFILER_CPU()
-        TComponentHandler<T> componentHandler = ComponentsManager::getInstance().requestComponent<T>();
-        setComponentOwner(componentHandler);
-        componentHandler->init(args...);
-        addComponentInternal(componentHandler);
-        return componentHandler;
-	}
-
-	void removeComponent(ComponentHandler componentHandler);
+	void removeComponent(ComponentHandler& componentHandler);
+	void addComponent(const ComponentHandler& componentHandler);
 
 	// template <class T> T_EXTENDS(T, Component)
 	// std::list<Ptr<T>> getComponents() const
@@ -81,12 +70,6 @@ public:
     
     void setIsActive(bool isActive);
     void destroy();
-
-private:
-    // Ptr<Component> addComponentInternal(OwnerPtr<Component>&& component);
-    void setComponentOwner(ComponentHandler componentHandler);
-    void addComponentInternal(ComponentHandler componentHandler);
-    void removeComponentInternal(ComponentHandler componentHandler);
 
 private:
 	std::list<ComponentHandler> mComponentHandlers;
