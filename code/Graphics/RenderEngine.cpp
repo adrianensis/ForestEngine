@@ -12,8 +12,8 @@ void RenderEngine::init()
 {
 	LOG_TRACE()
 
-	registerComponentClass(ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId());
-	registerComponentClass(ClassManager::getClassMetadata<Light>().mClassDefinition.getId());
+	ComponentsManager::getInstance().addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
+	ComponentsManager::getInstance().addComponentListener<Light>(getPtrToThis<RenderEngine>());
 
     mRenderPipeline = OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();
@@ -58,10 +58,8 @@ void RenderEngine::terminate()
     mRenderPipeline->terminate();
 }
 
-void RenderEngine::addSystemComponent(const ComponentHandler& component)
+void RenderEngine::onComponentAdded(const ComponentHandler& component)
 {
-	System::addSystemComponent(component);
-
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         TComponentHandler<MeshRenderer> renderer = component;
@@ -85,10 +83,8 @@ void RenderEngine::addSystemComponent(const ComponentHandler& component)
     }
 }
 
-void RenderEngine::removeSystemComponent(const ComponentHandler& component)
+void RenderEngine::onComponentRemoved(const ComponentHandler& component)
 {
-	System::removeSystemComponent(component);
-
     if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         TComponentHandler<MeshRenderer> renderer = component;

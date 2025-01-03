@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/ECS/System.hpp"
+#include "Core/System/System.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
+#include "Core/ECS/ComponentsManager.hpp"
 
-class RenderEngine : public System
+class RenderEngine : public IComponentsListener, public System
 {
 public:
     virtual void init() override;
@@ -16,8 +17,8 @@ public:
     void postSceneChanged();
     void onResize(u32 width, u32 height);
     
-    void addSystemComponent(const ComponentHandler& component) override;
-    void removeSystemComponent(const ComponentHandler& component) override;
+    virtual void onComponentAdded(const ComponentHandler& component) override;
+    virtual void onComponentRemoved(const ComponentHandler& component) override;
 
 private:
     void swap();

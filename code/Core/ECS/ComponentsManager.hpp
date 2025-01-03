@@ -5,11 +5,50 @@
 
 class Component;
 
+class IComponentsListener
+{
+public:
+    virtual void onComponentAdded(const ComponentHandler& componentHandler) {};
+    virtual void onComponentRemoved(const ComponentHandler& componentHandler) {};
+};
+
 class ComponentsManager: public Singleton<ComponentsManager>
 {
 public:
     void init();
     void terminate();
+
+    template<class T> T_EXTENDS(T, Component)
+    void addComponentListener(Ptr<IComponentsListener> listener)
+    {
+        PROFILER_CPU()
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        ClassId id = classMetaData.mClassDefinition.getId();
+        if(!mComponentListeners.contains(id))
+        {
+            mComponentListeners.emplace(id, std::unordered_set<Ptr<IComponentsListener>>());
+        }
+
+        if(!mComponentListeners.at(id).contains(listener))
+        {
+            mComponentListeners.at(id).emplace(listener);
+        }
+    }
+
+    template<class T> T_EXTENDS(T, Component)
+    void removeComponentListener(Ptr<IComponentsListener> listener)
+    {
+        PROFILER_CPU()
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        ClassId id = classMetaData.mClassDefinition.getId();
+        if(mComponentListeners.contains(id))
+        {
+            if(mComponentListeners.at(id).contains(listener))
+            {
+                mComponentListeners.at(id).erase(listener);
+            }
+        }
+    }
 
     template<class T> T_EXTENDS(T, Component)
     TComponentHandler<T> requestComponent()
@@ -54,6 +93,7 @@ public:
     void removeComponent(ComponentHandler& componentHandler)
     {
         PROFILER_CPU()
+
         ClassId id = componentHandler.mClassId;
         if(mComponentsArrays.contains(id))
         {
@@ -85,6 +125,9 @@ public:
         ComponentHandler componentHandler(id, component.getSlot(), this);
         return componentHandler;
     }
+
+    void notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const;
+    void notifyListenersOnComponentRemoved(const ComponentHandler& componentHandler) const;
 
 private:
     class ComponentsArrayBase
@@ -126,6 +169,7 @@ private:
     };
 
     std::unordered_map<ClassId, OwnerPtr<ComponentsArrayBase>> mComponentsArrays;
+    std::unordered_map<ClassId, std::unordered_set<Ptr<IComponentsListener>>> mComponentListeners;
 
     inline static const u32 smMaxComponents = 100000;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ECS/System.hpp"
+#include "Core/System/System.hpp"
 #include "Graphics/Camera/Camera.hpp"
 
 class CameraManager: public System

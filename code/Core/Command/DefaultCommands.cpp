@@ -1,6 +1,6 @@
 #include "Core/Command/DefaultCommands.hpp"
 #include "Core/Command/CommandLine.hpp"
-#include "Core/ECS/SystemManager.hpp"
+#include "Core/System/SystemManager.hpp"
 
 #include "Core/Log/Log.hpp"
 

@@ -1,18 +1,14 @@
 #include "Scripting/ScriptEngine.hpp"
 #include "Scene/Module.hpp"
 
-
 void ScriptEngine::init()
 {
 	LOG_TRACE()
-
-	registerComponentClass(ClassManager::getClassMetadata<Script>().mClassDefinition.getId());
+	ComponentsManager::getInstance().addComponentListener<Script>(getPtrToThis<ScriptEngine>());
 }
 
-void ScriptEngine::addSystemComponent(const ComponentHandler& component)
+void ScriptEngine::onComponentAdded(const ComponentHandler& component)
 {
-	System::addSystemComponent(component);
-
     TComponentHandler<Script> script = component;
     CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");
     mScripts.push_back(script);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ECS/System.hpp"
+#include "Core/System/System.hpp"
 
 #define GET_SYSTEM_PTR(...) \
     SystemsManager::getInstance().getSystem<__VA_ARGS__>()
@@ -15,38 +15,6 @@ class SystemsManager: public Singleton<SystemsManager>
 {
 public:
     void init();
-
-    void addComponentToSystem(const ComponentHandler& component)
-    {
-        if (component && !component->mAlreadyAddedToSystem)
-        {
-            ClassId componentClassId = component->getSystemComponentId();
-            FOR_MAP(itSystem, mSystems)
-            {
-                Ptr<System> sub = (itSystem->second);
-                if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
-                {
-                    sub->addSystemComponent(component);
-                }
-            }
-        }
-    }
-
-    void removeComponentFromSystem(const ComponentHandler& component)
-    {
-        if (component && component->mAlreadyAddedToSystem)
-        {
-            ClassId componentClassId = component->getSystemComponentId();
-            FOR_MAP(itSystem, mSystems)
-            {
-                Ptr<System> sub = (itSystem->second);
-                if (sub.isValid() && sub->isComponentClassAccepted(componentClassId))
-                {
-                    sub->removeSystemComponent(component);
-                }
-            }
-        }
-    }
 
     template<typename T> T_EXTENDS(T, System)
     Ptr<T> createSystem()

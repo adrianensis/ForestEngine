@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/ECS/System.hpp"
-#include "Core/ECS/SystemManager.hpp"
+#include "Core/System/System.hpp"
+#include "Core/System/SystemManager.hpp"
 #include "Core/Events/Event.hpp"
 
 /*

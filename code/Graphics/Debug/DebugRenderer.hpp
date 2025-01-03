@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/ECS/System.hpp"
+#include "Core/System/System.hpp"
 #include "Graphics/Renderer/ShapeBatchRenderer.hpp"
 
 class DebugRenderer : public System

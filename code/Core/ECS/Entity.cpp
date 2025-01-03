@@ -2,7 +2,7 @@
 #include "Core/ECS/Component.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 #include "Core/ECS/EntityManager.hpp"
-#include "Core/ECS/SystemManager.hpp"
+#include "Core/System/SystemManager.hpp"
 
 Entity::Entity()
 {
@@ -28,7 +28,7 @@ void Entity::addComponentInternal(ComponentHandler componentHandler)
     CHECK_MSG(comp.getOwnerEntity().isValid(), "invalid Entity!");
 	comp.onComponentAdded();
 
-	SystemsManager::getInstance().addComponentToSystem(componentHandler);
+    ComponentsManager::getInstance().notifyListenersOnComponentAdded(componentHandler);
 }
 
 void Entity::setComponentOwner(ComponentHandler componentHandler)
@@ -45,16 +45,21 @@ void Entity::removeComponent(ComponentHandler componentHandler)
     CHECK_MSG(componentHandler.getComponent().getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
     CHECK_MSG(componentHandler.getComponent().getOwnerEntity() == EntityHandler::getEntityHandler(*this), "Component is assigned to another Entity!");
 
-    FOR_LIST(it, mComponentHandlers)
+    bool componentFound = false;
+    FOR_LIST_COND(it, mComponentHandlers, !componentFound)
 	{
         if((*it) == componentHandler)
         {
-            SystemsManager::getInstance().removeComponentFromSystem(componentHandler);
-            componentHandler->destroy();
-            // mComponentHandlers.erase(it);
-            ComponentsManager::getInstance().removeComponent(*it);
-            break;
+            componentFound = true;
+            mComponentHandlers.erase(it);
         }
+    }
+
+    if(componentFound)
+    {
+        ComponentsManager::getInstance().notifyListenersOnComponentRemoved(componentHandler);
+        componentHandler->destroy();
+        ComponentsManager::getInstance().removeComponent(componentHandler);
     }
 }
 
@@ -80,7 +85,7 @@ void Entity::destroy()
 	{
         if((*it).isValid())
         {
-            SystemsManager::getInstance().removeComponentFromSystem(*it);
+            ComponentsManager::getInstance().notifyListenersOnComponentRemoved(*it);
             (*it).getComponent().destroy();
             ComponentsManager::getInstance().removeComponent(*it);
         }

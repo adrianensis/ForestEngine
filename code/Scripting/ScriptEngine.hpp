@@ -1,16 +1,17 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/ECS/System.hpp"
+#include "Core/System/System.hpp"
 #include "Scripting/Script.hpp"
 #include "Core/ECS/ComponentHandler.hpp"
+#include "Core/ECS/ComponentsManager.hpp"
 
-class ScriptEngine: public System
+class ScriptEngine: public IComponentsListener, public System
 {
 public:
     virtual void init() override;
     virtual void terminate() override;
-    void addSystemComponent(const ComponentHandler& component) override;
+    virtual void onComponentAdded(const ComponentHandler& component) override;
     void update();
     void preSceneChanged();
     void postSceneChanged();
