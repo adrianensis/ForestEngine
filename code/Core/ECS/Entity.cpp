@@ -41,12 +41,13 @@ void Entity::removeComponent(ComponentHandler& componentHandler)
     CHECK_MSG(componentHandler->getOwnerEntity() == EntityHandler::getEntityHandler(*this), "Component is assigned to another Entity!");
 
     bool componentFound = false;
-    FOR_LIST_COND(it, mComponentHandlers, !componentFound)
+    FOR_LIST(it, mComponentHandlers)
 	{
         if((*it) == componentHandler)
         {
             componentFound = true;
             mComponentHandlers.erase(it);
+            break;
         }
     }
 
