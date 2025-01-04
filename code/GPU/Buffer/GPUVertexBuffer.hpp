@@ -28,7 +28,7 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        if (!setData((const void*)data.data(), data.size()))
+        if (!setData((const void*)data.data(), data.size() * mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes))
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
