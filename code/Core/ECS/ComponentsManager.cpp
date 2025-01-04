@@ -10,7 +10,7 @@ void ComponentsManager::terminate()
 
 void ComponentsManager::notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const
 {
-    ClassId id = componentHandler.mClassId;
+    ClassId id = componentHandler->getSystemComponentId();
     if(mComponentListeners.contains(id))
     {
         FOR_LIST(it, mComponentListeners.at(id))
