@@ -25,7 +25,7 @@ def generate_cmake_data():
     system_name = platform.system()
     system_info = str(platform.uname())
     max_cpu_cores = os.cpu_count()
-    system_reserved_cores = 6
+    system_reserved_cores = 4
     compilation_cores = max(max_cpu_cores - system_reserved_cores, 2)
 
     data.coresUsed = compilation_cores
