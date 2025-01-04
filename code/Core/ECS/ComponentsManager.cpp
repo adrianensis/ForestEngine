@@ -10,7 +10,7 @@ void ComponentsManager::terminate()
 
 void ComponentsManager::notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const
 {
-    ClassId id = componentHandler->getSystemComponentId();
+    ClassId id = componentHandler->getComponentTypeId();
     if(mComponentListeners.contains(id))
     {
         FOR_LIST(it, mComponentListeners.at(id))
@@ -25,7 +25,7 @@ void ComponentsManager::notifyListenersOnComponentAdded(const ComponentHandler& 
 
 void ComponentsManager::notifyListenersOnComponentRemoved(const ComponentHandler& componentHandler) const
 {
-    ClassId id = componentHandler->getSystemComponentId();
+    ClassId id = componentHandler->getComponentTypeId();
     if(mComponentListeners.contains(id))
     {
         FOR_LIST(it, mComponentListeners.at(id))

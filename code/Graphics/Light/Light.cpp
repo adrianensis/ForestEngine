@@ -3,7 +3,7 @@
 #include "Core/Window/WindowManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
-ClassId Light::getSystemComponentId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.getId(); }
+ClassId Light::getComponentTypeId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.getId(); }
 
 Matrix4 Light::getLightProjectionViewMatrix() const
 {

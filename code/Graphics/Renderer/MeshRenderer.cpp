@@ -10,7 +10,7 @@
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Scene/Module.hpp"
 
-ClassId MeshRenderer::getSystemComponentId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
+ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
 
 void MeshRenderer::init(const RendererData& data) 
 {

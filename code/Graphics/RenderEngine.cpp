@@ -60,7 +60,7 @@ void RenderEngine::terminate()
 
 void RenderEngine::onComponentAdded(const ComponentHandler& component)
 {
-    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
+    if(component->getComponentTypeId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         TComponentHandler<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
@@ -70,7 +70,7 @@ void RenderEngine::onComponentAdded(const ComponentHandler& component)
         //     //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
         // }
     }
-    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
+    else if(component->getComponentTypeId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
         // if(component.getComponent(). <PointLight>())
         // {
@@ -85,12 +85,12 @@ void RenderEngine::onComponentAdded(const ComponentHandler& component)
 
 void RenderEngine::onComponentRemoved(const ComponentHandler& component)
 {
-    if(component->getSystemComponentId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
+    if(component->getComponentTypeId() == ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
         TComponentHandler<MeshRenderer> renderer = component;
         mRenderPipeline->removeRenderer(renderer);
     }
-    else if(component->getSystemComponentId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
+    else if(component->getComponentTypeId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
     }
 }

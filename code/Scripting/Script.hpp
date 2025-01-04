@@ -8,7 +8,7 @@ class GameObject;
 class Script: public Component
 {
 public:
-    ClassId getSystemComponentId() const override;
+    ClassId getComponentTypeId() const override;
 
     virtual void init();
     virtual void firstUpdate();
