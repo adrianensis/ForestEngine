@@ -24,6 +24,7 @@ public:
     static void init();
 
     static void terminate();
+    static void log();
 	
 	template <class T>
 	static void registerNewObject(const T* pointer)

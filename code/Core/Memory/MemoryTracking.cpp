@@ -5,7 +5,7 @@ void MemoryTracking::init()
 {
 }
 
-void MemoryTracking::terminate()
+void MemoryTracking::log()
 {
 #ifdef ENGINE_BUILD_DEBUG
 	LOG("-------- MEM SUMMARY --------")
@@ -16,4 +16,8 @@ void MemoryTracking::terminate()
 	LOG("-----------------------------")
 #endif
 
+}
+void MemoryTracking::terminate()
+{
+	log();
 }
