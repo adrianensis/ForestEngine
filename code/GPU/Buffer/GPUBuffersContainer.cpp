@@ -10,6 +10,7 @@ void GPUVertexBuffersContainer::create()
 
     FOR_ARRAY(i, mVertexBuffers)
     {
+        // TODO: create buffer has no effect! ??¿
         mVertexBuffers[i].createBuffer();
     }
 
@@ -96,6 +97,7 @@ void GPUUniformBuffersContainer::create()
 {   
     FOR_LIST(it, mUniformBuffers)
     {
+        // TODO: create buffer has no effect! ??¿
         it->createBuffer();
     }
 }
