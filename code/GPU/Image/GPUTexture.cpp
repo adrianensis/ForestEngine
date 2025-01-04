@@ -29,7 +29,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         mChannels = 1;
         mImageData.mWidth = mTextureData.mFontData.mWidth;
         mImageData.mHeight = mTextureData.mFontData.mHeight;
-        mImageData.mData = new byte[mImageData.mWidth * mImageData.mHeight * mChannels /*1 channel*/];
+        mImageData.mData = static_cast<byte*>(std::malloc(mImageData.mWidth * mImageData.mHeight * mChannels /*1 channel*/));
     }
     else
     {
