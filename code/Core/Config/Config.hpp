@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/Std.hpp"
-// NEXT: rename ConfigObject -> Config
-class ConfigObject
+// NEXT: rename Config -> Config
+class Config
 {
 public:
 	const JSON& at(const std::string& key) const { return mJson.at(key); }

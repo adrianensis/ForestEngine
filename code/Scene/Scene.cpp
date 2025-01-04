@@ -24,7 +24,7 @@ void Scene::saveToFile(const std::string& path)
 {
 	mPath = path;
 
-	ConfigObject configMap;
+	Config configMap;
 
 	JSON json;
 	serialize(json);

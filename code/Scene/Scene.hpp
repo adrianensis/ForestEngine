@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Config/ConfigObject.hpp"
+#include "Core/Config/Config.hpp"
 #include "Core/ECS/EntityManager.hpp"
 #include "Scene/GameObject.hpp"
 
@@ -44,7 +44,7 @@ private:
 	f32 mSize = 0.0f;
 	std::string mPath;
 
-	ConfigObject mLoadSceneConfig;
+	Config mLoadSceneConfig;
 
 public:
 	CRGET(GameObjects)
