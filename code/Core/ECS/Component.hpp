@@ -6,7 +6,6 @@ class EntityHandler;
 
 class Component: public ISerializable, public IEventObject
 {
-    
 	DECLARE_SERIALIZATION()
 	
 public:
@@ -27,8 +26,32 @@ public:
     // This will automatically work in derived classes, no need to override this method in derived classes
     virtual ClassId getSystemComponentId() const { return 0; }
 
-    const EntityHandler& getOwnerEntity() const;
+    EntityHandler getOwnerEntity() const;
     void setOwnerEntity(const EntityHandler& ownerEntity);
+
+private:
+
+class ComponentOwner
+{
+public:
+
+    ComponentOwner() = default;
+    ComponentOwner(ClassId id, Slot slot)
+    {
+        mClassId = id;
+        mSlot = slot;
+    }
+
+    void reset()
+    {
+        mSlot.reset();
+        mClassId = 0;
+    }
+
+public:
+    Slot mSlot;
+    ClassId mClassId = 0;
+};
 
 public:
     bool mAlreadyAddedToSystem = false;
@@ -37,7 +60,7 @@ private:
 	bool mIsActive = true;
 	bool mIsDestroyed = false;
 	Slot mSlot;
-	EntityHandler* mOwnerEntity = nullptr;
+	ComponentOwner mOwnerEntity;
 
 	u64 mComponentId = 0;
     // Important: starts by 1, 0 is reserved for null

@@ -12,10 +12,7 @@ Component::Component()
 
 Component::~Component()
 {
-    if(mOwnerEntity)
-    {
-        Memory::deleteObject<EntityHandler>(mOwnerEntity);
-    }
+
 }
 
 bool Component::isStatic() const
@@ -40,10 +37,7 @@ void Component::destroy()
     mIsActive = false;
     onDestroy();
     
-    if(mOwnerEntity)
-    {
-        mOwnerEntity->reset();
-    }
+    mOwnerEntity.reset();
 }
 
 void Component::onRecycle(Slot newSlot)
@@ -55,19 +49,15 @@ void Component::onDestroy()
 {
 }
 
-const EntityHandler& Component::getOwnerEntity() const
+EntityHandler Component::getOwnerEntity() const
 {
-    return *mOwnerEntity;
+    EntityHandler entityHandler(mOwnerEntity.mClassId, mOwnerEntity.mSlot, EntityManager::getInstancePtr().getInternalPointer());
+    return entityHandler;
 }
 
 void Component::setOwnerEntity(const EntityHandler& ownerEntity)
 {
-    if(!mOwnerEntity)
-    {
-        mOwnerEntity = Memory::newObject<EntityHandler>();
-    }
-
-    *mOwnerEntity = ownerEntity;
+    mOwnerEntity = ComponentOwner(ownerEntity.mClassId, ownerEntity.mSlot);
 }
 
 IMPLEMENT_SERIALIZATION(Component)

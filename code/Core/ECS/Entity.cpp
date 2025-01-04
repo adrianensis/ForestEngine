@@ -25,12 +25,10 @@ void Entity::addComponent(const ComponentHandler& componentHandler)
     CHECK_MSG(componentHandler.getComponent().getOwnerEntity() != EntityHandler::getEntityHandler(*this), "Component is already assigned to Entity!");
 
     componentHandler->setOwnerEntity(EntityHandler::getEntityHandler(*this));
+    CHECK_MSG(componentHandler.getComponent().getOwnerEntity().isValid(), "invalid Entity!");
 
 	mComponentHandlers.emplace_back(componentHandler);
-    Component& comp = componentHandler.getComponent();
-
-    CHECK_MSG(comp.getOwnerEntity().isValid(), "invalid Entity!");
-	comp.onComponentAdded();
+	componentHandler.getComponent().onComponentAdded();
 
     ComponentsManager::getInstance().notifyListenersOnComponentAdded(componentHandler);
 }
