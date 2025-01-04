@@ -21,14 +21,14 @@ void Entity::addComponent(const ComponentHandler& componentHandler)
 {
     PROFILER_CPU()
     CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
-    CHECK_MSG(!componentHandler.getComponent().getOwnerEntity().isValid(), "Component is assigned to another Entity!");
-    CHECK_MSG(componentHandler.getComponent().getOwnerEntity() != EntityHandler::getEntityHandler(*this), "Component is already assigned to Entity!");
+    CHECK_MSG(!componentHandler->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
+    CHECK_MSG(componentHandler->getOwnerEntity() != EntityHandler::getEntityHandler(*this), "Component is already assigned to Entity!");
 
     componentHandler->setOwnerEntity(EntityHandler::getEntityHandler(*this));
-    CHECK_MSG(componentHandler.getComponent().getOwnerEntity().isValid(), "invalid Entity!");
+    CHECK_MSG(componentHandler->getOwnerEntity().isValid(), "invalid Entity!");
 
 	mComponentHandlers.emplace_back(componentHandler);
-	componentHandler.getComponent().onComponentAdded();
+	componentHandler->onComponentAdded();
 
     ComponentsManager::getInstance().notifyListenersOnComponentAdded(componentHandler);
 }
@@ -37,8 +37,8 @@ void Entity::removeComponent(ComponentHandler& componentHandler)
 {
     PROFILER_CPU()
     CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
-    CHECK_MSG(componentHandler.getComponent().getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
-    CHECK_MSG(componentHandler.getComponent().getOwnerEntity() == EntityHandler::getEntityHandler(*this), "Component is assigned to another Entity!");
+    CHECK_MSG(componentHandler->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
+    CHECK_MSG(componentHandler->getOwnerEntity() == EntityHandler::getEntityHandler(*this), "Component is assigned to another Entity!");
 
     bool componentFound = false;
     FOR_LIST_COND(it, mComponentHandlers, !componentFound)
@@ -65,7 +65,7 @@ void Entity::setIsActive(bool isActive)
 	FOR_LIST(it, mComponentHandlers)
 	// FOR_LIST(it, mComponents)
 	{
-		(*it).getComponent().setIsActive(isActive);
+		(*it)->setIsActive(isActive);
 	}
 }
 
@@ -81,7 +81,7 @@ void Entity::destroy()
         if((*it).isValid())
         {
             ComponentsManager::getInstance().notifyListenersOnComponentRemoved(*it);
-            (*it).getComponent().destroy();
+            (*it)->destroy();
             ComponentsManager::getInstance().removeComponent(*it);
         }
 	}
