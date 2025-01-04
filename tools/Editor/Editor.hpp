@@ -9,10 +9,10 @@
 class Editor: public Script
 {
 public:
-    void init();
-    void firstUpdate();
-    void update();
-    void terminate();
+    virtual void init() override;
+    virtual void firstUpdate() override;
+    virtual void update() override;
+    virtual void terminate() override;
 
 private:
 	EntityHandler createSprite(const Vector3& v, f32 size);

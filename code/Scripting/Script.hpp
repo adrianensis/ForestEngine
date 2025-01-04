@@ -12,7 +12,7 @@ public:
 
     virtual void init();
     virtual void firstUpdate();
-    void update();
+    virtual void update();
     virtual void onEnterCollision(GameObject *otherGameObject);
     virtual void onCollision(GameObject *otherGameObject);
     virtual void onExitCollision(GameObject *otherGameObject);
