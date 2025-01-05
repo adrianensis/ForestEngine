@@ -45,7 +45,7 @@ void GPUUtils::endSingleTimeCommands(Ptr<GPUContext> gpuContext, VkCommandBuffer
     submitInfo.pCommandBuffers = &commandBuffer;
 
     VkFence fence = VK_NULL_HANDLE;
-    constexpr uint32_t submitCount = 1;
+    constexpr u32 submitCount = 1;
     vkQueueSubmit(gpuContext->vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
     vkQueueWaitIdle(gpuContext->vulkanDevice->getGraphicsQueue());
 

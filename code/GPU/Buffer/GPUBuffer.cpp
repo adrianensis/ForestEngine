@@ -70,7 +70,7 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
     PROFILER_CPU_NAMED(buffer_copy)
     CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer.config.Size == destinationBuffer.config.Size");
 
-    constexpr uint32_t commandBufferCount = 1;
+    constexpr u32 commandBufferCount = 1;
     const std::vector<GPUCommandBuffer*> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
     CHECK_MSG(commandBuffers.size() == commandBufferCount, "commandBuffers.size() == commandBufferCount")
 
@@ -84,7 +84,7 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
 
         VkBufferCopy copyRegion{};
         copyRegion.size = sourceBuffer.mGPUBufferData.Size;
-        constexpr uint32_t regionCount = 1;
+        constexpr u32 regionCount = 1;
         vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
     }
 
@@ -97,7 +97,7 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &vkCommandBuffer;
 
-        constexpr uint32_t submitCount = 1;
+        constexpr u32 submitCount = 1;
         VkFence fence = VK_NULL_HANDLE;
         vkQueueSubmit(vulkanDevice.getGraphicsQueue(), submitCount, &submitInfo, fence);
         vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());

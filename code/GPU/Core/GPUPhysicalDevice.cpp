@@ -55,11 +55,11 @@ void GPUPhysicalDevice::updateSwapChainInfo()
     // deviceInfo.mSwapChainInfo = findSwapChainInfo(deviceInfo.mPhysicalDevice);
 }
 
-uint32_t GPUPhysicalDevice::findMemoryType(uint32_t memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const
+u32 GPUPhysicalDevice::findMemoryType(u32 memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const
 {
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
     vkGetPhysicalDeviceMemoryProperties(deviceInfo.mPhysicalDevice, &physicalDeviceMemoryProperties);
-    for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < physicalDeviceMemoryProperties.memoryTypeCount; memoryTypeIndex++)
+    for (u32 memoryTypeIndex = 0; memoryTypeIndex < physicalDeviceMemoryProperties.memoryTypeCount; memoryTypeIndex++)
     {
         /*
             * The memoryTypeBits parameter will be used to specify the bit field of memory types that are suitable.
@@ -104,7 +104,7 @@ VkFormat GPUPhysicalDevice::findSupportedFormat(const std::vector<VkFormat>& can
 
 std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
 {
-    uint32_t deviceCount = 0;
+    u32 deviceCount = 0;
     vkEnumeratePhysicalDevices(vulkan->getGPUInstance(), &deviceCount, nullptr);
 
     std::vector<VkPhysicalDevice> vkPhysicalDevices(deviceCount);
@@ -150,7 +150,7 @@ std::vector<VkExtensionProperties> GPUPhysicalDevice::findExtensions(VkPhysicalD
 {
     const char* layerName = nullptr;
 
-    uint32_t extensionCount = 0;
+    u32 extensionCount = 0;
     vkEnumerateDeviceExtensionProperties(device, layerName, &extensionCount, nullptr);
 
     std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -191,7 +191,7 @@ const std::vector<const char*>& GPUPhysicalDevice::getOptionalExtensions() const
 
 GPUQueueFamilyIndices GPUPhysicalDevice::findQueueFamilyIndices(VkPhysicalDevice device) const
 {
-    uint32_t queueFamilyCount = 0;
+    u32 queueFamilyCount = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
 
     std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
@@ -225,12 +225,12 @@ GPUSwapChainInfo GPUPhysicalDevice::findSwapChainInfo(VkPhysicalDevice device) c
 
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mGPUPhysicalDeviceData.surface, &swapChainInfo.SurfaceCapabilities);
 
-    uint32_t formatCount = 0;
+    u32 formatCount = 0;
     vkGetPhysicalDeviceSurfaceFormatsKHR(device, mGPUPhysicalDeviceData.surface, &formatCount, nullptr);
     swapChainInfo.SurfaceFormats.resize(formatCount);
     vkGetPhysicalDeviceSurfaceFormatsKHR(device, mGPUPhysicalDeviceData.surface, &formatCount, swapChainInfo.SurfaceFormats.data());
 
-    uint32_t presentationModeCount = 0;
+    u32 presentationModeCount = 0;
     vkGetPhysicalDeviceSurfacePresentModesKHR(device, mGPUPhysicalDeviceData.surface, &presentationModeCount, nullptr);
     swapChainInfo.PresentModes.resize(presentationModeCount);
     vkGetPhysicalDeviceSurfacePresentModesKHR(device, mGPUPhysicalDeviceData.surface, &presentationModeCount, swapChainInfo.PresentModes.data());
@@ -270,15 +270,15 @@ std::string GPUPhysicalDevice::getDeviceTypeAsString(VkPhysicalDeviceType device
 
 GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDeviceInfo>& availableDevices) const
 {
-    std::multimap<uint32_t, GPUDeviceInfo> devicesByRating;
+    std::multimap<u32, GPUDeviceInfo> devicesByRating;
     VULKAN_LOG("Device suitability ratings");
     for (const GPUDeviceInfo& device : availableDevices)
     {
-        uint32_t suitabilityRating = getSuitabilityRating(device);
+        u32 suitabilityRating = getSuitabilityRating(device);
         VULKAN_LOG(device.mProperties.deviceName + " : "s + std::to_string(suitabilityRating));
         devicesByRating.insert(std::make_pair(suitabilityRating, device));
     }
-    uint32_t highestRating = devicesByRating.rbegin()->first;
+    u32 highestRating = devicesByRating.rbegin()->first;
     if (highestRating == 0)
     {
         return {};
@@ -289,7 +289,7 @@ GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDev
     return device;
 }
 
-uint32_t GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const
+u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const
 {
     if (!hasRequiredFeatures(deviceInfo.mFeatures))
     {
@@ -311,15 +311,15 @@ uint32_t GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo
         VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required queue family indices"s);
         return 0;
     }
-    uint32_t score = 0;
+    u32 score = 0;
     // Discrete GPUs have a significant performance advantage
     if (deviceInfo.mProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
     {
         score += 1000;
     }
-    score += (uint32_t) deviceInfo.mProperties.limits.maxImageDimension2D;
-    score += (uint32_t) deviceInfo.mProperties.limits.framebufferColorSampleCounts;
-    score += (uint32_t) deviceInfo.mProperties.limits.framebufferDepthSampleCounts;
+    score += (u32) deviceInfo.mProperties.limits.maxImageDimension2D;
+    score += (u32) deviceInfo.mProperties.limits.framebufferColorSampleCounts;
+    score += (u32) deviceInfo.mProperties.limits.framebufferDepthSampleCounts;
     return score;
 }
 

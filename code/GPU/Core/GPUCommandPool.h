@@ -12,7 +12,7 @@ public:
     GPUCommandPool(GPUDevice* vulkanDevice, Ptr<GPUContext> gpuContext);
     bool init();
     void terminate();
-    std::vector<GPUCommandBuffer*> allocateCommandBuffers(uint32_t count) const;
+    std::vector<GPUCommandBuffer*> allocateCommandBuffers(u32 count) const;
     void freeCommandBuffer(const GPUCommandBuffer* commandBuffer) const;
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;

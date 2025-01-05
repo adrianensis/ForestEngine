@@ -11,7 +11,7 @@ void GPUVertexBuffersContainer::enable()
     {
         VkBuffer vertexBuffers[] = {mVertexBuffers[i].getGPUBuffer().getVkBuffer()};
         VkDeviceSize vertexBufferOffsets[] = {0};
-        constexpr uint32_t bindingCount = 1;
+        constexpr u32 bindingCount = 1;
         vkCmdBindVertexBuffers(vulkanCommandBuffer->getVkCommandBuffer(), i, bindingCount, vertexBuffers, vertexBufferOffsets);
     }
 

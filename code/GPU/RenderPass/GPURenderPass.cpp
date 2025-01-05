@@ -69,7 +69,7 @@ bool GPURenderPass::initialize()
     std::array<VkAttachmentDescription, 3> attachments = {colorAttachment, depthAttachment, colorAttachmentResolve};
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassInfo.attachmentCount = (uint32_t) attachments.size();
+    renderPassInfo.attachmentCount = (u32) attachments.size();
     renderPassInfo.pAttachments = attachments.data();
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpass;
@@ -238,7 +238,7 @@ void GPURenderPass::beginCmd(const GPUCommandBuffer* vulkanCommandBuffer, const 
     clearValues[0].color = clearColorValue;
     clearValues[1].depthStencil = clearDepthStencilValue;
 
-    renderPassInfo.clearValueCount = (uint32_t) clearValues.size();
+    renderPassInfo.clearValueCount = (u32) clearValues.size();
     renderPassInfo.pClearValues = clearValues.data();
 
     vkCmdBeginRenderPass(vulkanCommandBuffer->getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -253,7 +253,7 @@ void GPURenderPass::frameAcquisition()
     PROFILER_CPU()
 
     // Wait until the previous frame has finished
-    constexpr uint32_t fenceCount = 1;
+    constexpr u32 fenceCount = 1;
     constexpr VkBool32 waitForAllFences = VK_TRUE;
     constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
     VkFence inFlightFence = mGPUContext->inFlightFences[mGPUContext->currentFrame];
@@ -333,7 +333,7 @@ void GPURenderPass::commandSubmission()
     submitInfo.signalSemaphoreCount = 1;
 
     // Submit recorded graphics commands
-    constexpr uint32_t submitCount = 1;
+    constexpr u32 submitCount = 1;
     VkFence inFlightFence = mGPUContext->inFlightFences[mGPUContext->currentFrame];
     if (vkQueueSubmit(mGPUContext->vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
         //VD_LOG_CRITICAL("Could not submit to graphics queue");

@@ -16,7 +16,7 @@ Vector2 Window::getSizeInPixels() const
 
 std::vector<const char*> Window::getRequiredExtensions() const
 {
-	uint32_t glfwExtensionCount = 0;
+	u32 glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
     return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);

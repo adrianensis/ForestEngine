@@ -43,7 +43,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         * - The floor function handles cases where the largest dimension is not a power of 2.
         * - 1 is added so that the original image has a mip level.
         */
-        mMipMapLevels = ((uint32_t) std::floor(std::log2(std::max(mImageData.mWidth, mImageData.mHeight)))) + 1;
+        mMipMapLevels = ((u32) std::floor(std::log2(std::max(mImageData.mWidth, mImageData.mHeight)))) + 1;
     }
 
     if(gpuTextureData.mIsFont)

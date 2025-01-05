@@ -3,7 +3,7 @@
 #include "Core/Image/ImageUtils.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 
-bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, u32 mipLevels)
 {
     VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
     
@@ -57,11 +57,11 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
         }
 
         constexpr VkDependencyFlags dependencyFlags = 0;
-        constexpr uint32_t memoryBarrierCount = 0;
+        constexpr u32 memoryBarrierCount = 0;
         constexpr VkMemoryBarrier* memoryBarriers = VK_NULL_HANDLE;
-        constexpr uint32_t bufferMemoryBarrierCount = 0;
+        constexpr u32 bufferMemoryBarrierCount = 0;
         constexpr VkBufferMemoryBarrier* bufferMemoryBarriers = VK_NULL_HANDLE;
-        constexpr uint32_t imageMemoryBarrierCount = 1;
+        constexpr u32 imageMemoryBarrierCount = 1;
         vkCmdPipelineBarrier(
                 commandBuffer,
                 sourceStage,
@@ -79,7 +79,7 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
     return true;
 }
 
-VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {
+VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, u32 mipLevels) {
     
     PROFILER_CPU_NAMED(createImageView);
 
@@ -120,11 +120,11 @@ void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffe
 
         bufferImageCopy.imageOffset = {0, 0, 0};
 
-        constexpr uint32_t depth = 1;
+        constexpr u32 depth = 1;
         bufferImageCopy.imageExtent = {width, height, depth };
         bufferImageCopy.imageOffset = {offsetX, offsetY, 0 };
 
-        constexpr uint32_t regionCount = 1;
+        constexpr u32 regionCount = 1;
         constexpr VkImageLayout imageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         vkCmdCopyBufferToImage(
                 commandBuffer,
@@ -167,13 +167,13 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
         i32 mipHeight = height;
 
         constexpr VkDependencyFlags dependencyFlags = 0;
-        constexpr uint32_t memoryBarrierCount = 0;
+        constexpr u32 memoryBarrierCount = 0;
         constexpr VkMemoryBarrier* memoryBarriers = VK_NULL_HANDLE;
-        constexpr uint32_t bufferMemoryBarrierCount = 0;
+        constexpr u32 bufferMemoryBarrierCount = 0;
         constexpr VkBufferMemoryBarrier* bufferMemoryBarriers = VK_NULL_HANDLE;
-        constexpr uint32_t imageMemoryBarrierCount = 1;
+        constexpr u32 imageMemoryBarrierCount = 1;
 
-        for (uint32_t i = 1; i < mipMapLevels; i++) {
+        for (u32 i = 1; i < mipMapLevels; i++) {
             barrier.subresourceRange.baseMipLevel = i - 1;
             barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
             barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
@@ -212,7 +212,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
             VkImageLayout srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
             VkImageLayout dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
             VkFilter filter = VK_FILTER_LINEAR;
-            constexpr uint32_t regionCount = 1;
+            constexpr u32 regionCount = 1;
             vkCmdBlitImage(
                     commandBuffer,
                     image,

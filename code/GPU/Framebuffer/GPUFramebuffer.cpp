@@ -55,7 +55,7 @@ bool GPUFramebuffer::initialize(Ptr<GPUContext> gpuContext, GPURenderPass* vulka
     VkFramebufferCreateInfo framebufferInfo{};
     framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.renderPass = vulkanRenderPass->getRenderPass();
-    framebufferInfo.attachmentCount = (uint32_t) attachments->size();
+    framebufferInfo.attachmentCount = (u32) attachments->size();
     framebufferInfo.pAttachments = attachments->data();
     framebufferInfo.width = mGPUContext->vulkanSwapChain->getExtent().width;
     framebufferInfo.height = mGPUContext->vulkanSwapChain->getExtent().height;

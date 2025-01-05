@@ -16,7 +16,7 @@ private:
     void destroySurface() const;
 
 public:
-    inline static const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+    inline static const u32 MAX_FRAMES_IN_FLIGHT = 2;
 
     Vulkan* vulkan;
     GPUPhysicalDevice* vulkanPhysicalDevice;
@@ -28,7 +28,7 @@ public:
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
-    uint32_t currentFrame = 0;
+    u32 currentFrame = 0;
 
 #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;

@@ -33,7 +33,7 @@ public:
     Ptr<GPUContext> mGPUContext;
 private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
-    uint32_t swapChainImageIndex;
+    u32 swapChainImageIndex;
     std::vector<GPUFramebuffer> framebuffers;
     GPUImage* vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;

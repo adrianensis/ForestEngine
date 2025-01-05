@@ -176,7 +176,7 @@ std::vector<const char*> Vulkan::findExtensions() const
 }
 
 std::vector<VkExtensionProperties> Vulkan::findAvailableExtensions() const {
-    uint32_t extensionCount = 0;
+    u32 extensionCount = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
     std::vector<VkExtensionProperties> extensions(extensionCount);
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
@@ -232,7 +232,7 @@ std::vector<const char*> Vulkan::findValidationLayers() const {
 }
 
 std::vector<VkLayerProperties> Vulkan::findAvailableValidationLayers() const {
-    uint32_t validationLayerCount;
+    u32 validationLayerCount;
     vkEnumerateInstanceLayerProperties(&validationLayerCount, nullptr);
     std::vector<VkLayerProperties> validationLayers(validationLayerCount);
     vkEnumerateInstanceLayerProperties(&validationLayerCount, validationLayers.data());
