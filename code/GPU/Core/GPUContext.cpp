@@ -2,6 +2,7 @@
 #include "Core/Window/WindowSurface.hpp"
 
 #include "Core/Window/WindowManager.hpp"
+#include "GPU/GPUUtils.hpp"
 
 void GPUContext::init()
 {
@@ -69,17 +70,8 @@ void GPUContext::init()
 
     if(vulkan->isExtensionAvailable(VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME))
     {
-        // NEXT: refactor extension loading into GPUUtils
-        const char* functionName_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT";
-        auto function_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = (PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT) vkGetInstanceProcAddr(vulkan->getGPUInstance(), functionName_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT);
-        if (function_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT == nullptr) {
-            CHECK_MSG(false, "Could not look up address of extension function " + std::string(functionName_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT));
-        }
-        const char* functionName_vkGetCalibratedTimestampsEXT = "vkGetCalibratedTimestampsEXT";
-        auto function_vkGetCalibratedTimestampsEXT = (PFN_vkGetCalibratedTimestampsEXT) vkGetInstanceProcAddr(vulkan->getGPUInstance(), functionName_vkGetCalibratedTimestampsEXT);
-        if (function_vkGetCalibratedTimestampsEXT == nullptr) {
-            CHECK_MSG(false, "Could not look up address of extension function " + std::string(functionName_vkGetCalibratedTimestampsEXT));
-        }
+        auto function_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = GPU_LOAD_EXTENSION_FUNCTION(getPtrToThis<GPUContext>(), vkGetPhysicalDeviceCalibrateableTimeDomainsEXT);
+        auto function_vkGetCalibratedTimestampsEXT = GPU_LOAD_EXTENSION_FUNCTION(getPtrToThis<GPUContext>(), vkGetCalibratedTimestampsEXT);
         mTracyContext = PROFILER_GPU_CONTEXT_CALIBRATED(vulkanPhysicalDevice->getPhysicalDevice(),
                                                 vulkanDevice->getDevice(),
                                                 vulkanDevice->getGraphicsQueue(),
