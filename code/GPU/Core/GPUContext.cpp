@@ -50,7 +50,7 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
-    vulkanCommandPool = new GPUCommandPool(vulkanDevice, getPtrToThis<GPUContext>());
+    vulkanCommandPool = new GPUCommandPool(getPtrToThis<GPUContext>());
     if (!vulkanCommandPool->init()) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool");
@@ -62,7 +62,7 @@ void GPUContext::init()
     }
 
 #ifdef ENGINE_ENABLE_PROFILER
-    profilingCommandPool_ = new GPUCommandPool(vulkanDevice, getPtrToThis<GPUContext>());
+    profilingCommandPool_ = new GPUCommandPool(getPtrToThis<GPUContext>());
     profilingCommandPool_->init();
     profilingCommandBuffer_ = profilingCommandPool_->allocateCommandBuffers(1)[0];
 

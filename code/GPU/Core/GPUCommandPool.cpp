@@ -2,16 +2,16 @@
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Core/GPUContext.hpp"
 
-GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, WeakPtr<GPUContext> gpuContext) : vulkanDevice(vulkanDevice), mGPUContext(gpuContext) {}
+GPUCommandPool::GPUCommandPool(WeakPtr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
 
 bool GPUCommandPool::init()
 {
     VkCommandPoolCreateInfo commandPoolInfo{};
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    commandPoolInfo.queueFamilyIndex = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices().GraphicsFamily.value();
+    commandPoolInfo.queueFamilyIndex = mGPUContext->vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices().GraphicsFamily.value();
 
-    if (vkCreateCommandPool(vulkanDevice->getDevice(), &commandPoolInfo, ALLOCATOR, &mVkCommandPool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(mGPUContext->vulkanDevice->getDevice(), &commandPoolInfo, ALLOCATOR, &mVkCommandPool) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan command pool");
         return false;
     }
@@ -22,7 +22,7 @@ bool GPUCommandPool::init()
 
 void GPUCommandPool::terminate()
 {
-    vkDestroyCommandPool(vulkanDevice->getDevice(), mVkCommandPool, ALLOCATOR);
+    vkDestroyCommandPool(mGPUContext->vulkanDevice->getDevice(), mVkCommandPool, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan command pool");
 }
 
@@ -37,7 +37,7 @@ std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(u32 count)
     allocateInfo.commandBufferCount = vkCommandBuffers.size();
     allocateInfo.commandPool = mVkCommandPool;
 
-    if (vkAllocateCommandBuffers(vulkanDevice->getDevice(), &allocateInfo, vkCommandBuffers.data()) != VK_SUCCESS) {
+    if (vkAllocateCommandBuffers(mGPUContext->vulkanDevice->getDevice(), &allocateInfo, vkCommandBuffers.data()) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not allocate [{}] Vulkan command buffers");
         return {};
     }
@@ -55,5 +55,5 @@ std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(u32 count)
 void GPUCommandPool::freeCommandBuffer(const GPUCommandBuffer* commandBuffer) const
 {
     VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
-    vkFreeCommandBuffers(vulkanDevice->getDevice(), mVkCommandPool, 1, &vkCommandBuffer);
+    vkFreeCommandBuffers(mGPUContext->vulkanDevice->getDevice(), mVkCommandPool, 1, &vkCommandBuffer);
 }
