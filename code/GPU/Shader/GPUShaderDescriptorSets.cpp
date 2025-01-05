@@ -47,7 +47,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<u32>(bindings.size()); // TODO: find and replace u32 by u32
+    layoutInfo.bindingCount = static_cast<u32>(bindings.size());
     layoutInfo.pBindings = bindings.data();
 
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
