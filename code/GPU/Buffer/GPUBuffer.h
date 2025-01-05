@@ -17,6 +17,7 @@ class GPUBuffer
 {
 public:
     bool init(WeakPtr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
+    void resize(u32 size);
     void terminate();
     void setData(const void* data) const;
     static void copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice);

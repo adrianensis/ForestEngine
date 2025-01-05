@@ -6,8 +6,7 @@ void GPUIndicesBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUDataType& g
     mIsStatic = isStatic;
     mGPUDataType = gpuDataType;
     GPUBufferData gpuBufferData{};
-    // TODO: remove magic numbers on all Buffer classes, start small, then resize if needed
-    gpuBufferData.Size = sizeof(f32) * 10000 * 10; //bufferSize;;
+    gpuBufferData.Size = mGPUDataType.mTypeSizeInBytes * 10;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
@@ -18,7 +17,7 @@ void GPUIndicesBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUDataType& g
 
 void GPUIndicesBuffer::resize(u32 size)
 {
-//    GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::INDEX, mBufferId, mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
+    buffer.resize(size * mGPUDataType.mTypeSizeInBytes);
 }
 
 const GPUBuffer& GPUIndicesBuffer::getGPUBuffer() const {

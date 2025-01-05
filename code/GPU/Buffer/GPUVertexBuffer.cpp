@@ -19,7 +19,7 @@ void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation
 
     GPUBufferData gpuBufferData{};
     // TODO: remove magic numbers on all Buffer classes, start small, then resize if needed
-    gpuBufferData.Size = mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * 10000 * 10;
+    gpuBufferData.Size = mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * 10;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
@@ -35,8 +35,7 @@ void GPUVertexBuffer::terminate()
 
 void GPUVertexBuffer::resize(u32 size)
 {
-    // TODO: Implement buffer resize (maybe in GPUBuffer class?)
-//	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mBufferId, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
+    buffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
 }
 
 u32 GPUVertexBuffer::getAttributeLocation() const

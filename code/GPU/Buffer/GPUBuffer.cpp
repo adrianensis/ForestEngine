@@ -55,6 +55,18 @@ void GPUBuffer::terminate() {
     }
 }
 
+void GPUBuffer::resize(u32 size)
+{
+    terminate();
+
+    GPUBufferData gpuBufferData = mGPUBufferData;
+    gpuBufferData.Size = size;
+    if(!init(mGPUContext, gpuBufferData))
+    {
+        CHECK_MSG(false,"Could not resize vertex buffer");
+    }
+}
+
 void GPUBuffer::setData(const void* data) const {
     PROFILER_CPU_NAMED(buffer_set_data)
     void* memory;
