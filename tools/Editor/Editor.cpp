@@ -31,7 +31,7 @@ void Editor::firstUpdate()
     PROFILER_CPU();
 
 	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
-	// mCameraGameObject->mTransform->setLocalPosition(Vector3::smZero);
+	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0,0,100));
     TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
@@ -51,9 +51,10 @@ void Editor::firstUpdate()
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
 	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
-	// importModel("Wall/Wall.gltf", Vector3(500,0,0), 1.0f, Vector3(0,90,0), true);
+	// importModel("Wall/Wall.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
+	importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);

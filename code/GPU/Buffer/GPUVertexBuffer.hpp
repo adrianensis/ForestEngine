@@ -23,7 +23,6 @@ class GPUVertexBuffer
 {
 public:
     void init(Ptr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic);
-    void createBuffer();
     void resize(u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data)

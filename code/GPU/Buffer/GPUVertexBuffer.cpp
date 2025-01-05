@@ -27,11 +27,6 @@ void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, co
     }
 }
 
-void GPUVertexBuffer::createBuffer()
-{    
-    u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
-}
-
 void GPUVertexBuffer::terminate()
 {
 //    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);

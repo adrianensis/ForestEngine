@@ -198,8 +198,6 @@ void RenderPipeline::initBuffers()
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(LightBuiltIn::mShadowMappingBufferData, sizeof(LightBuiltIn::ShadowMappingData), false);
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices, sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize(), false);
 
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().create();
-
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).resize<GPUBuiltIn::UniformBuffers::GPUGlobalData>(1);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData).resize<LightBuiltIn::LightsData>(1);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).resize<LightBuiltIn::ShadowMappingData>(1);

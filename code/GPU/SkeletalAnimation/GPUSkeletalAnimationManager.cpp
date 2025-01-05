@@ -41,7 +41,6 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(Ptr<const GPUSkeletonS
 
     SkeletonRenderState skeletonRenderState;
     skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices, sizeof(Matrix4)*GPUBuiltIn::MAX_BONES, false);
-    skeletonRenderState.mGPUUniformBuffersContainer.create();
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }

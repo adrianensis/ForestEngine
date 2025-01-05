@@ -199,7 +199,6 @@ void MaterialManager::initMaterialInstancePropertiesUniformBuffer(const PoolHand
 
                 const GPUUniformBufferData& propertiesBlockUniformBufferData = mMaterialToShader.at(materialID)->getShaderData().mPropertiesBlockUniformBufferData;
                 mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.addUniformBuffer(propertiesBlockUniformBufferData, propertiesBlockSizeBytes * mInitialInstances, false);
-                mMaterialPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.create();
             }
         }
     }

@@ -31,8 +31,6 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataColor, false);
 
-	mGPUVertexBuffersContainer.create();
-
     FOR_RANGE(i, 0, mMaxVertices)
     {
         mIndicesBuffer.push_back(i);

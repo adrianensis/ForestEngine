@@ -133,7 +133,6 @@ void InstancedMeshRenderer::initBuffers()
     PROFILER_CPU()
 
     mInstancedMeshData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, mInstancedMeshData.mIsStatic);
-    mGPUVertexBuffersContainer.create();
     
     // mGPUVertexBuffersContainer.enable();
     mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, mInstancedMeshData.mIsStatic);

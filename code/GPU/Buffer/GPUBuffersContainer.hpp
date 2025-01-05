@@ -10,7 +10,6 @@ class GPUVertexBuffersContainer
 public:
 	GPUVertexBuffersContainer() = default;
 
-    void create();
     void enable();
     void disable();
     void terminate();
@@ -41,7 +40,6 @@ public:
 	GPUUniformBuffersContainer() = default;
 
     void terminate();
-    void create();
     void addUniformBuffer(const GPUUniformBufferData& data, u32 size, bool isStatic);
     GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data);
     const GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data) const;

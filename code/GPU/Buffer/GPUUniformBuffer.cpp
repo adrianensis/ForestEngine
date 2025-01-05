@@ -19,22 +19,6 @@ void GPUUniformBuffer::init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoi
     initialize();
 }
 
-void GPUUniformBuffer::createBuffer()
-{
-//    mBufferId = GET_SYSTEM(GPUInterface).createBuffer(mGPUUniformBufferData.mType);
-//    GET_SYSTEM(GPUInterface).bindUniformBufferToBindingPoint(mGPUUniformBufferData.mType, mBufferId, mBindingPoint);
-    // mGPUPointer = glMapNamedBuffer(mBufferId, GL_READ_WRITE);
-
-    // for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
-    //     GPUUniformBuffer uniformBuffer(GET_SYSTEM(GPUInstance).vulkanPhysicalDevice, GET_SYSTEM(GPUInstance).vulkanDevice);
-    //     if (!uniformBuffer.initialize(sizeof(f32) * 200)) {
-    //         CHECK_MSG(false, "Could not initialize uniform buffer for frame [{}]");
-    //     }
-    //     uniformBuffers.push_back(uniformBuffer);
-    // }
-    // LOG("Initialized [{}] Vulkan uniform buffers");
-}
-
 // void GPUUniformBuffer::terminate()
 // {
 //     // glUnmapNamedBuffer(mBufferId);
