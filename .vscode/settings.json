@@ -96,4 +96,64 @@
     "todo-tree.tree.showBadges": false,
     "todo-tree.tree.disableCompactFolders": false,
     "todo-tree.tree.showCountsInTree": true,
+    "todo-tree.general.tags": [
+        "HACK",
+        "TODO",
+        "NEXT",
+        "OPT",
+        "PERF",
+        "REF",
+        "BUG",
+        "WARN",
+        "INFO",
+        "[ ]",
+        "[x]"
+    ],
+    "todo-tree.highlights.customHighlight": {
+        "BUG": {
+            "icon": "bug",
+            "iconColour": "rgb(255, 80, 80)",
+        },
+        "TODO": {
+            "icon": "checklist",
+            "iconColour": "rgb(13, 228, 107)",
+        },
+        "NEXT": {
+            "icon": "diff-renamed",
+            "iconColour": "rgb(234, 153, 218)",
+        },
+        "OPT": {
+            "icon": "checklist",
+            "iconColour": "rgb(120, 144, 130)",
+        },
+        "HACK": {
+            "icon": "light-bulb",
+            "iconColour": "cyan",
+        },
+        "WARN": {
+            "icon": "alert",
+            "iconColour": "orange",
+        },
+        "INFO": {
+            "icon": "info",
+            "iconColour": "rgb(251, 248, 138)",
+        },
+        "PERF": {
+            "icon": "zap",
+            "iconColour": "yellow",
+        },
+        "REF": {
+            "icon": "tools",
+            "iconColour": "rgb(150, 150, 255)",
+        },
+        "[ ]": {
+            "icon": "issue-draft",
+            "iconColour": "rgb(13, 228, 107)"
+        },
+        "[x]": {
+            "icon": "issue-closed",
+            "iconColour": "rgb(13, 228, 107)"
+        }
+    },
+    "todo-tree.filtering.excludeGlobs":["README.md"]
 }
