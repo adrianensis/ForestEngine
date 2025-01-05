@@ -54,7 +54,7 @@ void InstancedMeshRenderer::disable()
 //        GET_SYSTEM(GPUInterface).disableStencil();
     }
 
-    mGPUVertexBuffersContainer.disable();
+    // mGPUVertexBuffersContainer.disable();
 }
 
 void InstancedMeshRenderer::addRenderer(TComponentHandler<MeshRenderer> renderer)

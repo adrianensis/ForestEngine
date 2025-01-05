@@ -22,7 +22,7 @@ void GPUVertexBuffersContainer::enable()
 
 void GPUVertexBuffersContainer::disable()
 {
-//	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(0);
+
 }
 
 void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data, bool isStatic)
