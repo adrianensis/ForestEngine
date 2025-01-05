@@ -10,8 +10,6 @@
 #define VULKAN_LOG_ERROR(x) VULKAN_LOG_TAG("ERROR", x)
 #define VULKAN_LOG_WARNING(x) VULKAN_LOG_TAG("WARNING", x)
 
-class Camera;
-
 enum class GPUBufferType : u32
 {
     VERTEX,
