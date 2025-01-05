@@ -22,7 +22,7 @@ public:
 class GPUUniformBuffer
 {
 public:
-    void init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic);
+    void init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
     template <class T>
     void setData(const T& data)
     {
@@ -53,7 +53,6 @@ public:
     void setData(const void* data) const;
 
 private:
-    bool initialize();
     void checkMaxSize(u32 bytes) const;
 
 private:

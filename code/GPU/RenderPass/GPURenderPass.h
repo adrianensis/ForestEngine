@@ -6,13 +6,14 @@
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/Image/GPUImage.h"
 
-class GPURenderPass {
+class GPURenderPass : public EnablePtrToThis
+{
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
     GPURenderPass(Ptr<GPUContext> gpuContext);
-    bool initialize();
+    bool init();
     void terminate();
     void begin();
     void end();

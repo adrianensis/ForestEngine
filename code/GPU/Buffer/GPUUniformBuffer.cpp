@@ -8,15 +8,32 @@ GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(u32 i) const
     return data;
 }
 
-void GPUUniformBuffer::init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuBufferData, bool isStatic)
+void GPUUniformBuffer::init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
 {
     mGPUContext = gpuContext;
-	mGPUUniformBufferData = gpuBufferData;
+	mGPUUniformBufferData = gpuUniformBufferData;
     mBindingPoint = bindingPoint;
     mIsStatic = isStatic;
     mSize = size;
 
-    initialize();
+    GPUBufferData gpuBufferData{};
+    gpuBufferData.Size = mSize;
+    switch (mGPUUniformBufferData.mType)
+    {
+    case GPUBufferType::UNIFORM:
+        gpuBufferData.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+        break;
+    case GPUBufferType::STORAGE:
+        gpuBufferData.Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        break;
+    }
+    gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+    if (!mBuffer.init(mGPUContext, gpuBufferData)) {
+        CHECK_MSG(false,"Could not initialize uniform buffer");
+    }
+
+    LOG("Initialized uniform buffer");
 }
 
 // void GPUUniformBuffer::terminate()
@@ -34,29 +51,6 @@ void GPUUniformBuffer::checkMaxSize(u32 bytes) const
 {
 //    u32 maxBytes = GET_SYSTEM(GPUInterface).getMaxBytesInUniformBuffer(mGPUUniformBufferData.mType);
     // CHECK_MSG(bytes <= maxBytes, "Max bytes reached in Shared Buffer!");
-}
-
-bool GPUUniformBuffer::initialize() {
-    GPUBufferData gpuBufferData{};
-    gpuBufferData.Size = mSize;
-    switch (mGPUUniformBufferData.mType)
-    {
-    case GPUBufferType::UNIFORM:
-        gpuBufferData.Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-        break;
-    case GPUBufferType::STORAGE:
-        gpuBufferData.Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-        break;
-    }
-    gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-    if (!mBuffer.init(mGPUContext, gpuBufferData)) {
-        CHECK_MSG(false,"Could not initialize uniform buffer");
-        return false;
-    }
-
-    LOG("Initialized uniform buffer");
-    return true;
 }
 
 void GPUUniformBuffer::terminate() {

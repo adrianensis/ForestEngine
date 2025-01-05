@@ -35,13 +35,12 @@ public:
 class GPUFramebuffer
 {
 public:
-    void init(const GPUFramebufferData& framebufferData);
+    bool init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
     Vector4 readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 
     const VkFramebuffer getFramebuffer() const;
-    bool initialize(Ptr<GPUContext> gpuContext, GPURenderPass* vulkanRenderPasssss, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
     void terminate();
 
 private:
@@ -51,7 +50,7 @@ private:
 
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
-    GPURenderPass* vulkanRenderPass;
+    GPURenderPass* mRenderPass = nullptr;
     VkFramebuffer framebuffer = VK_NULL_HANDLE;
     Ptr<GPUContext> mGPUContext;
 

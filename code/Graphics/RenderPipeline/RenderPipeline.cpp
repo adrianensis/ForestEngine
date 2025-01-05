@@ -10,7 +10,7 @@ void RenderPipeline::init()
     PROFILER_CPU()
 
     vulkanRenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext);
-    if (!vulkanRenderPass->initialize())
+    if (!vulkanRenderPass->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan render pass");
     }

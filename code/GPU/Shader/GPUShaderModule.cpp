@@ -2,7 +2,7 @@
 
 GPUShaderModule::GPUShaderModule(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
 
-bool GPUShaderModule::initialize(const std::vector<byte>& moduleContent) {
+bool GPUShaderModule::init(const std::vector<byte>& moduleContent) {
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = moduleContent.size();

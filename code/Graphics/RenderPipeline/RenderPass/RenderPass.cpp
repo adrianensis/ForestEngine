@@ -17,7 +17,7 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
 
     if(mRenderPassData.mOutputFramebufferData.isValid())
     { 
-        mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
+        // mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
     }
 }
 

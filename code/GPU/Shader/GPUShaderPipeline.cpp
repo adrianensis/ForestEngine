@@ -4,7 +4,7 @@ GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUCon
     : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
 
-bool GPUShaderPipeline::initialize(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
+bool GPUShaderPipeline::init(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
 
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
     vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

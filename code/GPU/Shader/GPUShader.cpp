@@ -115,16 +115,16 @@ void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorS
 
 void GPUShader::compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment)
 {
-    if (!vertexShader->initialize(vertex)) {
+    if (!vertexShader->init(vertex)) {
         CHECK_MSG(false, "Could not initialize vertex shader");
         // return false;
     }
-    if (!fragmentShader->initialize(fragment)) {
+    if (!fragmentShader->init(fragment)) {
         CHECK_MSG(false, "Could not initialize fragment shader");
         // return false;
     }
 
-    if (!gpuShaderPipeline->initialize(*vertexShader, *fragmentShader, mGPUShaderDescriptorSets->descriptorSetLayout, mGPUVertexInputData))
+    if (!gpuShaderPipeline->init(*vertexShader, *fragmentShader, mGPUShaderDescriptorSets->descriptorSetLayout, mGPUVertexInputData))
     {
         CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
     }

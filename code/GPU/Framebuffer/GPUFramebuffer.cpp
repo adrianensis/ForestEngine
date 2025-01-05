@@ -1,20 +1,6 @@
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 
-void GPUFramebuffer::init(const GPUFramebufferData& framebufferData)
-{
-    mFramebufferData = framebufferData;
-//    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mFramebufferData.mWidth, mFramebufferData.mHeight);
-    FOR_LIST(it, mFramebufferData.mAttachments)
-    {
-        const GPUFramebufferAttachmentType& attachmentType = *it;
-//        u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
-        // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
-    }
-
-//    GET_SYSTEM(GPUInterface).checkFramebufferErrors();
-}
-
 Vector4 GPUFramebuffer::readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const
 {
     CHECK_MSG(mFramebufferData.mAttachments.contains(attachmentType), "Attachment not found!");
@@ -42,7 +28,7 @@ const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
     return framebuffer;
 }
 
-bool GPUFramebuffer::initialize(Ptr<GPUContext> gpuContext, GPURenderPass* vulkanRenderPasssss, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView) {
+bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView) {
     std::array<VkImageView, 3> attachments[] = {
             colorImageView,
             depthImageView,
@@ -50,11 +36,22 @@ bool GPUFramebuffer::initialize(Ptr<GPUContext> gpuContext, GPURenderPass* vulka
     };
 
     mGPUContext = gpuContext;
-    vulkanRenderPass = vulkanRenderPasssss;
+    mRenderPass = renderPass;
+
+    mFramebufferData = framebufferData;
+//    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mFramebufferData.mWidth, mFramebufferData.mHeight);
+    FOR_LIST(it, mFramebufferData.mAttachments)
+    {
+        const GPUFramebufferAttachmentType& attachmentType = *it;
+//        u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
+        // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
+    }
+
+//    GET_SYSTEM(GPUInterface).checkFramebufferErrors();
 
     VkFramebufferCreateInfo framebufferInfo{};
     framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebufferInfo.renderPass = vulkanRenderPass->getRenderPass();
+    framebufferInfo.renderPass = mRenderPass->getRenderPass();
     framebufferInfo.attachmentCount = (u32) attachments->size();
     framebufferInfo.pAttachments = attachments->data();
     framebufferInfo.width = mGPUContext->vulkanSwapChain->getExtent().width;

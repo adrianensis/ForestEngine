@@ -7,7 +7,7 @@ class GPUShaderModule {
 
 public:
     explicit GPUShaderModule(Ptr<GPUContext> gpuContext);
-    bool initialize(const std::vector<byte>& moduleContent);
+    bool init(const std::vector<byte>& moduleContent);
     void terminate();
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;

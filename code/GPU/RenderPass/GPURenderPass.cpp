@@ -6,7 +6,7 @@
 GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
         : mGPUContext(gpuContext){}
 
-bool GPURenderPass::initialize()
+bool GPURenderPass::init()
 {
     PROFILER_CPU()
     VkAttachmentDescription colorAttachment{};
@@ -166,7 +166,7 @@ bool GPURenderPass::initializeFramebuffers()
     PROFILER_CPU()
     for (VkImageView swapChainImageView : mGPUContext->vulkanSwapChain->getImageViews()) {
         GPUFramebuffer framebuffer;//(mGPUContext->vulkanDevice, mGPUContext->vulkanSwapChain, vulkanRenderPass);
-        if (!framebuffer.initialize(mGPUContext, this, colorImageView, depthImageView, swapChainImageView)) {
+        if (!framebuffer.init(mGPUContext, GPUFramebufferData{}, this, colorImageView, depthImageView, swapChainImageView)) {
             CHECK_MSG(false,"Could not initialize framebuffers");
             return false;
         }
