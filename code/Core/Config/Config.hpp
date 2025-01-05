@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Std.hpp"
-// NEXT: rename Config -> Config
 class Config
 {
 public:
