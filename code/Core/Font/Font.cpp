@@ -154,6 +154,34 @@ origin(0,0) .              * X        X*                    .               v
         texPos += mGlyphs[c].mBitmapSize.x /*+ 2*/;
     }
 
+    mGlyphAtlasData = new byte[mWidth * mHeight * 1 /*1 channel*/];
+
+    u32 bytesOffset = 0;
+    FOR_RANGE(c, 0, mGlyphs.size())
+    {
+        u32 width = mGlyphs[c].mBitmapSize.x;
+        u32 height = mGlyphs[c].mBitmapSize.y;
+
+        // " " space case! no size, no data, not supported by vulkan
+        if(width == 0)
+        {
+            bytesOffset = mGlyphs[c].mAdvance.x;
+        }
+        else
+        {
+            FOR_RANGE(i, 0, height)
+            {
+                FOR_RANGE(j, 0, width)
+                {
+                    mGlyphAtlasData[(i* (mWidth)) + j + bytesOffset] = mGlyphs[c].mData[(i*width) + j];
+                }
+            }
+            
+            bytesOffset += width;
+        }
+
+    }
+
     _error = FT_Done_Face(mFreeTypeFace);
     CHECK_MSG(!_error, "Failed to free font");
 }
@@ -164,4 +192,6 @@ void FontData::freeGlyphsBuffers()
     {
         mGlyphs[c].freeBuffer();
     }
+
+    delete[] mGlyphAtlasData;
 }

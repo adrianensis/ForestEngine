@@ -26,21 +26,15 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
     if(gpuTextureData.mIsFont)
     {
         format = VK_FORMAT_R8_SRGB;
-        mChannels = 1;
         mImageData.mWidth = mTextureData.mFontData.mWidth;
         mImageData.mHeight = mTextureData.mFontData.mHeight;
-
-        // TODO: unify this with stb_free
-        mImageData.mData = static_cast<byte*>(std::malloc(mImageData.mWidth * mImageData.mHeight * mChannels /*1 channel*/));
     }
     else
     {
         format = VK_FORMAT_R8G8B8A8_SRGB;
-        mChannels = 4;
         PROFILER_CPU_NAMED(load_image)
         mImageData = ImageUtils::loadImage(gpuTextureData.mPath);
         CHECK_MSG(mImageData.mData, "Error loading image " + mTextureData.mPath.get());
-
 
         /*
         * This calculates the number of levels in the mip chain.
@@ -50,14 +44,11 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         * - 1 is added so that the original image has a mip level.
         */
         mMipMapLevels = ((uint32_t) std::floor(std::log2(std::max(mImageData.mWidth, mImageData.mHeight)))) + 1;
-
     }
 
     if(gpuTextureData.mIsFont)
     {
         PROFILER_CPU_NAMED(init_texture_font)
-
-//        mGPUTextureId = GET_SYSTEM(GPUInterface).createTexture1ByteChannel(mWidth, mHeight, nullptr);
 
         CHECK_MSG(!mTextureData.mFontData.mGlyphs.empty(), "Error empty font " + mTextureData.mFontData.mPath.get());
 
@@ -73,42 +64,12 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
         textureImageData.mOffsetX = 0;
         textureImageData.mOffsetY = 0;
-        textureImageData.mChannels = mChannels;
+        textureImageData.mChannels = TO_U32(GPUTextureChannels::SINGLE);
         if (!mVulkanTextureImage->init(mGPUContext, textureImageData)) {
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
-        // TODO: move this FOR to Font code
-        u32 bytesOffset = 0;
-        FOR_RANGE(c, 0, mTextureData.mFontData.mGlyphs.size())
-        {
-//            GET_SYSTEM(GPUInterface).setSubTexture(mGPUTextureId, texPos, 0, mTextureData.mFontData.mGlyphs[c].mBitmapSize.x, mTextureData.mFontData.mGlyphs[c].mBitmapSize.y, GPUTexturePixelFormat::RED, GPUPrimitiveDataType::UNSIGNED_BYTE, mTextureData.mFontData.mGlyphs[c].mData);
-            // Increase texture offset
-
-            u32 width = mTextureData.mFontData.mGlyphs[c].mBitmapSize.x;
-            u32 height = mTextureData.mFontData.mGlyphs[c].mBitmapSize.y;
-
-            // " " space case! no size, no data, not supported by vulkan
-            if(width == 0)
-            {
-                bytesOffset = mTextureData.mFontData.mGlyphs[c].mAdvance.x;
-            }
-            else
-            {
-                FOR_RANGE(i, 0, height)
-                {
-                    FOR_RANGE(j, 0, width)
-                    {
-                        mImageData.mData[(i* (mImageData.mWidth)) + j + bytesOffset] = mTextureData.mFontData.mGlyphs[c].mData[(i*width) + j];
-                    }
-                }
-                
-                bytesOffset += width;
-            }
-
-        }
-
-        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage->getVkImage(), textureImageData, mImageData.mData))
+        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage->getVkImage(), textureImageData, mTextureData.mFontData.mGlyphAtlasData))
         {
             CHECK_MSG(false,"Could not initialize texture image");
         }
@@ -131,7 +92,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
         textureImageData.mOffsetX = 0;
         textureImageData.mOffsetY = 0;
-        textureImageData.mChannels = mChannels;
+        textureImageData.mChannels = TO_U32(GPUTextureChannels::RGBA);
 
         if (!mVulkanTextureImage->init(mGPUContext, textureImageData)) {
             CHECK_MSG(false,"Could not initialize texture image");
@@ -141,6 +102,8 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         {
             CHECK_MSG(false,"Could not initialize texture image");
         }
+
+        ImageUtils::freeImage(mImageData);
     }
 
     mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage->getVkImage(), format, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);
@@ -176,8 +139,6 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
             CHECK_MSG(false,"Could not create image sampler");
         }
     }
-
-    ImageUtils::freeImage(mImageData);
 }
 
 void GPUTexture::terminate() 

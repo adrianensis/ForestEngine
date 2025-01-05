@@ -6,6 +6,13 @@
 #include "GPU/Image/GPUImage.h"
 #include "Core/Image/ImageUtils.hpp"
 
+enum class GPUTextureChannels
+{
+    SINGLE = 1,
+    RGB = 3,
+    RGBA = 4
+};
+
 class GPUTextureData
 {
 public:
@@ -33,7 +40,6 @@ private:
     Ptr<GPUContext> mGPUContext;
     GPUImage* mVulkanTextureImage;
     u32 mMipMapLevels = 1;
-    u32 mChannels = 0;
 
 public:
     VkImageView mTextureImageView = VK_NULL_HANDLE;

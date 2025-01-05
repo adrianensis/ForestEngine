@@ -52,4 +52,5 @@ public:
     u32 mWidth;
     u32 mHeight;
     std::array<FontGlyphData, FontData::MAX_GLYPHS> mGlyphs;
+    byte* mGlyphAtlasData = nullptr;
 };

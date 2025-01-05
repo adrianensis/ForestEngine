@@ -9,6 +9,7 @@
 #define ADD_TRAIL_COMMA(token) token ,
 #define TO_STRING(token) #token
 #define TO_STRING_AND_ADD_TRAIL_COMMA(token) TO_STRING(token) ,
+#define TO_U32(x) static_cast<u32>(x)
 
 // --------------------------------------------------------
 // TYPE TRAITS

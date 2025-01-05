@@ -223,8 +223,6 @@ DECLARE_ENUM(GPUCullFaceType,
     FRONT_AND_BACK, "FRONT_AND_BACK"
 );
 
-#define TO_U32(x) static_cast<u32>(x)
-
 using TextureHandle = u64;
 
 class VulkanConfig
