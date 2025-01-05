@@ -6,6 +6,7 @@ void GPUIndicesBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUDataType& g
     mIsStatic = isStatic;
     mGPUDataType = gpuDataType;
     GPUBufferData gpuBufferData{};
+    // TODO: remove magic numbers on all Buffer classes, start small, then resize if needed
     gpuBufferData.Size = sizeof(f32) * 10000 * 10; //bufferSize;;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
@@ -37,16 +38,6 @@ bool GPUIndicesBuffer::setData(const void* data, u32 size) {
         CHECK_MSG(false,"Could not initialize staging buffer for index buffer");
         return false;
     }
-
-    // GPUBufferData gpuBufferData{};
-    // gpuBufferData.Size = bufferSize;
-    // gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-    // gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-
-    // if (!buffer.init(mGPUContext, gpuBufferData)) {
-    //     CHECK_MSG(false,"Could not initialize index buffer");
-    //     return false;
-    // }
 
     stagingBuffer.setData(data);
     GPUBuffer::copy(stagingBuffer, buffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);

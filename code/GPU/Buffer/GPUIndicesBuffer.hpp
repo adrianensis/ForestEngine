@@ -11,7 +11,10 @@ public:
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-//	    GET_SYSTEM(GPUInterface).setBufferDataArray(GPUBufferType::INDEX, mBufferId, data);
+        if (!setData((const void*)data.data(), data.size() * mGPUDataType.mTypeSizeInBytes))
+        {
+            CHECK_MSG(false, "Could not initialize Vulkan indices buffer");
+        }
     }
     void setDataArray(const ByteBuffer& data)
     {

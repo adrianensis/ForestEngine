@@ -36,23 +36,6 @@ void GPUUniformBuffer::init(WeakPtr<GPUContext> gpuContext, u32 size, u32 bindin
     LOG("Initialized uniform buffer");
 }
 
-// void GPUUniformBuffer::terminate()
-// {
-//     // glUnmapNamedBuffer(mBufferId);
-// //    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
-
-//     for (GPUUniformBuffer& uniformBuffer : uniformBuffers)
-//     {
-//         uniformBuffer.terminate();
-//     }
-// }
-
-void GPUUniformBuffer::checkMaxSize(u32 bytes) const
-{
-//    u32 maxBytes = GET_SYSTEM(GPUInterface).getMaxBytesInUniformBuffer(mGPUUniformBufferData.mType);
-    // CHECK_MSG(bytes <= maxBytes, "Max bytes reached in Shared Buffer!");
-}
-
 void GPUUniformBuffer::terminate() {
     mBuffer.terminate();
 }

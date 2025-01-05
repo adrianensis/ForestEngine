@@ -18,7 +18,8 @@ void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation
     mAttributeOffset += 1;
 
     GPUBufferData gpuBufferData{};
-    gpuBufferData.Size = mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * 10000 * 10; //bufferSize;
+    // TODO: remove magic numbers on all Buffer classes, start small, then resize if needed
+    gpuBufferData.Size = mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * 10000 * 10;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
@@ -29,12 +30,12 @@ void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation
 
 void GPUVertexBuffer::terminate()
 {
-//    GET_SYSTEM(GPUInterface).deleteBuffer(mBufferId);
     buffer.terminate();
 }
 
 void GPUVertexBuffer::resize(u32 size)
 {
+    // TODO: Implement buffer resize (maybe in GPUBuffer class?)
 //	GET_SYSTEM(GPUInterface).resizeBuffer(GPUBufferType::VERTEX, mBufferId, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, size, mIsStatic);
 }
 
@@ -56,7 +57,6 @@ bool GPUVertexBuffer::setData(const void* data, u32 size)
 {
     PROFILER_CPU_NAMED(vertex_buffer_set_data)
     VkDeviceSize bufferSize = size;
-    // VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
     GPUBufferData stagingBufferConfig{};
     stagingBufferConfig.Size = bufferSize;
@@ -68,16 +68,6 @@ bool GPUVertexBuffer::setData(const void* data, u32 size)
         CHECK_MSG(false,"Could not initialize staging buffer for vertex buffer");
         return false;
     }
-
-    // GPUBufferData gpuBufferData{};
-    // gpuBufferData.Size = bufferSize;
-    // gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    // gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-
-    // if (!buffer.init(mGPUContext, gpuBufferData)) {
-    //     CHECK_MSG(false,"Could not initialize vertex buffer");
-    //     return false;
-    // }
 
     stagingBuffer.setData(data);
     GPUBuffer::copy(stagingBuffer, buffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);

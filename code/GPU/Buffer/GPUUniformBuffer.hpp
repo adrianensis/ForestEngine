@@ -26,34 +26,20 @@ public:
     template <class T>
     void setData(const T& data)
     {
-        checkMaxSize(sizeof(T));
-//        // GET_SYSTEM(GPUInterface).setBufferData(mGPUUniformBufferData.mType, mBufferId, data);
-        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUInstance).currentFrame];
-        // uniformBuffer.setData((void*) data);
         mBuffer.setData((const void*) &data);
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        checkMaxSize(sizeof(T) * data.size());
-//        // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUUniformBufferData.mType, mBufferId, data);
-        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUInstance).currentFrame];
         mBuffer.setData((const void*) data.data());
     }
     void setDataArray(const ByteBuffer& data)
     {
-        // TODO: IMPLEMENT setDataArray(const ByteBuffer& data)
-
-//	    // GET_SYSTEM(GPUInterface).setBufferDataArray(mGPUUniformBufferData.mType, mBufferId, data);
-        // const GPUUniformBuffer& uniformBuffer = uniformBuffers[GET_SYSTEM(GPUInstance).currentFrame];
-        // uniformBuffer.setData((void*) data.getBuffer().data());
+        mBuffer.setData((const void*) data.getBuffer().data());
     }
     void terminate();
 
     void setData(const void* data) const;
-
-private:
-    void checkMaxSize(u32 bytes) const;
 
 private:
 	u32 mBindingPoint = 0;
