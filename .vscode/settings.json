@@ -93,5 +93,7 @@
     "python.analysis.typeCheckingMode": "off",
     "python.analysis.autoImportCompletions": true,
     "todo-tree.tree.scanMode": "workspace only",
-    "todo-tree.tree.showBadges": true,
+    "todo-tree.tree.showBadges": false,
+    "todo-tree.tree.disableCompactFolders": false,
+    "todo-tree.tree.showCountsInTree": true,
 }
