@@ -237,11 +237,11 @@ public:
     std::vector<const char*> mOptionalExtensions;
 };
 
-class Vulkan
+class GPUVulkanInstance
 {
 public:
-    Vulkan(const VulkanConfig& config);
-    VkInstance getGPUInstance() const;
+    GPUVulkanInstance(const VulkanConfig& config);
+    VkInstance getVkInstance() const;
     const std::vector<const char*>& getValidationLayers() const;
     bool isValidationLayersEnabled() const;
     bool init();
@@ -267,7 +267,7 @@ private:
 private:
     VulkanConfig config;
     std::vector<const char*> validationLayers{};
-    VkInstance vulkanInstance = VK_NULL_HANDLE;
+    VkInstance mVkInstance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
     std::vector<VkExtensionProperties> availableExtensions;
 };

@@ -1,6 +1,6 @@
 #include "GPUPhysicalDevice.h"
 
-GPUPhysicalDevice::GPUPhysicalDevice(Vulkan* vulkan, GPUPhysicalDeviceData gpuPhysicalDeviceData) : vulkan(vulkan), mGPUPhysicalDeviceData(gpuPhysicalDeviceData) {
+GPUPhysicalDevice::GPUPhysicalDevice(GPUVulkanInstance* mGPUVulkanInstance, GPUPhysicalDeviceData gpuPhysicalDeviceData) : mGPUVulkanInstance(mGPUVulkanInstance), mGPUPhysicalDeviceData(gpuPhysicalDeviceData) {
 }
 
 VkPhysicalDevice GPUPhysicalDevice::getPhysicalDevice() const {
@@ -105,10 +105,10 @@ VkFormat GPUPhysicalDevice::findSupportedFormat(const std::vector<VkFormat>& can
 std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
 {
     u32 deviceCount = 0;
-    vkEnumeratePhysicalDevices(vulkan->getGPUInstance(), &deviceCount, nullptr);
+    vkEnumeratePhysicalDevices(mGPUVulkanInstance->getVkInstance(), &deviceCount, nullptr);
 
     std::vector<VkPhysicalDevice> vkPhysicalDevices(deviceCount);
-    vkEnumeratePhysicalDevices(vulkan->getGPUInstance(), &deviceCount, vkPhysicalDevices.data());
+    vkEnumeratePhysicalDevices(mGPUVulkanInstance->getVkInstance(), &deviceCount, vkPhysicalDevices.data());
 
     std::vector<GPUDeviceInfo> devices;
     for (VkPhysicalDevice vkPhysicalDevice : vkPhysicalDevices)

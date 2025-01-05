@@ -15,7 +15,7 @@ public:
         VULKAN_LOG("Loading Extension Function: ")
         VULKAN_LOG(extensionFunctionName)
         const char* functionName = TO_STRING(extensionFunctionName);\
-        auto function = (T) vkGetInstanceProcAddr(gpuContext->vulkan->getGPUInstance(), functionName);
+        auto function = (T) vkGetInstanceProcAddr(gpuContext->gpuVulkanInstance->getVkInstance(), functionName);
         if (function == nullptr)
         {
             CHECK_MSG(false, "Could not look up address of extension function!")

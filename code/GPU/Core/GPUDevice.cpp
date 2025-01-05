@@ -1,8 +1,8 @@
 #include "GPUDevice.h"
 
 
-GPUDevice::GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice) :
-    mVulkan(vulkan), mPhysicalDevice(vulkanPhysicalDevice) {}
+GPUDevice::GPUDevice(GPUVulkanInstance* gpuVulkanInstance, GPUPhysicalDevice* vulkanPhysicalDevice) :
+    mGPUVulkanInstance(gpuVulkanInstance), mPhysicalDevice(vulkanPhysicalDevice) {}
 
 bool GPUDevice::init()
 {
@@ -69,10 +69,10 @@ bool GPUDevice::createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQ
     createInfo.ppEnabledExtensionNames = mPhysicalDevice->getExtensions().data();
     createInfo.queueCreateInfoCount = deviceQueueCreateInfos.size();
     createInfo.pQueueCreateInfos = deviceQueueCreateInfos.data();
-    if (mVulkan->isValidationLayersEnabled())
+    if (mGPUVulkanInstance->isValidationLayersEnabled())
     {
-        createInfo.enabledLayerCount = mVulkan->getValidationLayers().size();
-        createInfo.ppEnabledLayerNames = mVulkan->getValidationLayers().data();
+        createInfo.enabledLayerCount = mGPUVulkanInstance->getValidationLayers().size();
+        createInfo.ppEnabledLayerNames = mGPUVulkanInstance->getValidationLayers().data();
     }
     else
     {

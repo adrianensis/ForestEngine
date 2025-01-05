@@ -21,8 +21,8 @@ void GPUContext::init()
 #endif
 #endif
 
-    vulkan = new Vulkan(vulkanConfig);
-    if (!vulkan->init())
+    gpuVulkanInstance = new GPUVulkanInstance(vulkanConfig);
+    if (!gpuVulkanInstance->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan");
     }
@@ -35,12 +35,12 @@ void GPUContext::init()
         surface
     };
 
-    vulkanPhysicalDevice = new GPUPhysicalDevice(vulkan, gpuPhysicalDeviceData);
+    vulkanPhysicalDevice = new GPUPhysicalDevice(gpuVulkanInstance, gpuPhysicalDeviceData);
     if (!vulkanPhysicalDevice->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan physical device");
     }
-    vulkanDevice = new GPUDevice(vulkan, vulkanPhysicalDevice);
+    vulkanDevice = new GPUDevice(gpuVulkanInstance, vulkanPhysicalDevice);
     if (!vulkanDevice->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan device");
@@ -68,7 +68,7 @@ void GPUContext::init()
 
 #ifdef VK_EXT_calibrated_timestamps
 
-    if(vulkan->isExtensionAvailable(VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME))
+    if(gpuVulkanInstance->isExtensionAvailable(VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME))
     {
         auto function_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = GPU_LOAD_EXTENSION_FUNCTION(getPtrToThis<GPUContext>(), vkGetPhysicalDeviceCalibrateableTimeDomainsEXT);
         auto function_vkGetCalibratedTimestampsEXT = GPU_LOAD_EXTENSION_FUNCTION(getPtrToThis<GPUContext>(), vkGetCalibratedTimestampsEXT);
@@ -127,18 +127,18 @@ void GPUContext::terminate()
     vulkanCommandPool->terminate();
     vulkanCommandPool->terminate();
     delete vulkanCommandPool;
-    vulkan->terminate();
-    delete vulkan;
+    gpuVulkanInstance->terminate();
+    delete gpuVulkanInstance;
 }
 
 bool GPUContext::createSurface()
 {
-    surface = WindowSurface::createSurface(vulkan->getGPUInstance(), GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer(), ALLOCATOR);
+    surface = WindowSurface::createSurface(gpuVulkanInstance->getVkInstance(), GET_SYSTEM(WindowManager).getMainWindow().getInternalPointer(), ALLOCATOR);
     return true;
 }
 
 void GPUContext::destroySurface() const
 {
-    vkDestroySurfaceKHR(vulkan->getGPUInstance(), surface, ALLOCATOR);
+    vkDestroySurfaceKHR(gpuVulkanInstance->getVkInstance(), surface, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan window surface");
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "GPU/Core/Vulkan.h"
+#include "GPU/Core/GPUVulkanInstance.h"
 #include "GPU/Core/GPUPhysicalDevice.h"
 #include "GPU/Core/GPUDevice.h"
 #include "GPU/Core/GPUSwapChain.h"
@@ -18,7 +18,7 @@ private:
 public:
     inline static const u32 MAX_FRAMES_IN_FLIGHT = 2;
 
-    Vulkan* vulkan;
+    GPUVulkanInstance* gpuVulkanInstance;
     GPUPhysicalDevice* vulkanPhysicalDevice;
     GPUDevice* vulkanDevice;
     VkSurfaceKHR surface = VK_NULL_HANDLE;

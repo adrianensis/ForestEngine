@@ -8,7 +8,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 private:
-    Vulkan* mVulkan;
+    GPUVulkanInstance* mGPUVulkanInstance;
     GPUPhysicalDevice* mPhysicalDevice;
     VkDevice mDevice = VK_NULL_HANDLE;
     VkQueue mGraphicsQueue = VK_NULL_HANDLE;
@@ -16,7 +16,7 @@ private:
     inline static const f32 mQueuesPriority = 1.0;
 
 public:
-    GPUDevice(Vulkan* vulkan, GPUPhysicalDevice* vulkanPhysicalDevice);
+    GPUDevice(GPUVulkanInstance* gpuVulkanInstance, GPUPhysicalDevice* vulkanPhysicalDevice);
     bool init();
     void terminate() const;
     void waitUntilIdle() const;
@@ -28,7 +28,7 @@ private:
     VkQueue findDeviceQueue(u32 queueFamilyIndex) const;
 
 public:
-    GET(Vulkan)
+    GET(GPUVulkanInstance)
     GET(PhysicalDevice)
     CRGET(Device)
     CRGET(GraphicsQueue)

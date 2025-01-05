@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vulkan.h"
+#include "GPUVulkanInstance.h"
 
 #include <vulkan/vulkan.h>
 #include <optional>
@@ -41,12 +41,12 @@ public:
 class GPUPhysicalDevice
 {
 private:
-    Vulkan* vulkan;
+    GPUVulkanInstance* mGPUVulkanInstance;
     GPUDeviceInfo deviceInfo{};
     GPUPhysicalDeviceData mGPUPhysicalDeviceData;
 
 public:
-    explicit GPUPhysicalDevice(Vulkan* vulkan, GPUPhysicalDeviceData gpuPhysicalDeviceData);
+    explicit GPUPhysicalDevice(GPUVulkanInstance* gpuVulkanInstance, GPUPhysicalDeviceData gpuPhysicalDeviceData);
     VkPhysicalDevice getPhysicalDevice() const;
     const VkPhysicalDeviceProperties& getProperties() const;
     const VkPhysicalDeviceFeatures& getFeatures() const;

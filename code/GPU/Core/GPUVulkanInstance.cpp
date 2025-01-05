@@ -1,4 +1,4 @@
-#include "Vulkan.h"
+#include "GPUVulkanInstance.h"
 
 #include <utility>
 #include <cstring>
@@ -29,22 +29,22 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
     return VK_FALSE;
 }
 
-Vulkan::Vulkan(const VulkanConfig& config) : config(config) {
+GPUVulkanInstance::GPUVulkanInstance(const VulkanConfig& config) : config(config) {
 }
 
-VkInstance Vulkan::getGPUInstance() const {
-    return vulkanInstance;
+VkInstance GPUVulkanInstance::getVkInstance() const {
+    return mVkInstance;
 }
 
-const std::vector<const char*>& Vulkan::getValidationLayers() const {
+const std::vector<const char*>& GPUVulkanInstance::getValidationLayers() const {
     return validationLayers;
 }
 
-bool Vulkan::isValidationLayersEnabled() const {
+bool GPUVulkanInstance::isValidationLayersEnabled() const {
     return config.ValidationLayersEnabled;
 }
 
-bool Vulkan::init()
+bool GPUVulkanInstance::init()
 {
 #ifdef ENGINE_PLATFORM_LINUX
     setenv("VK_DRIVER_FILES", "/usr/share/vulkan/icd.d/radeon_icd.x86_64.json", true);
@@ -73,14 +73,14 @@ bool Vulkan::init()
     return true;
 }
 
-void Vulkan::terminate() {
+void GPUVulkanInstance::terminate() {
     if (config.ValidationLayersEnabled) {
         destroyDebugMessenger();
     }
     destroyInstance();
 }
 
-bool Vulkan::createInstance() {
+bool GPUVulkanInstance::createInstance() {
     availableExtensions = findAvailableExtensions();
     const std::vector<const char*>& extensions = findExtensions();
     if (extensions.empty()) {
@@ -114,37 +114,37 @@ bool Vulkan::createInstance() {
         createInfo.pNext = nullptr;
     }
 
-    return vkCreateInstance(&createInfo, ALLOCATOR, &vulkanInstance) == VK_SUCCESS;
+    return vkCreateInstance(&createInfo, ALLOCATOR, &mVkInstance) == VK_SUCCESS;
 }
 
-void Vulkan::destroyInstance() {
-    vkDestroyInstance(vulkanInstance, ALLOCATOR);
+void GPUVulkanInstance::destroyInstance() {
+    vkDestroyInstance(mVkInstance, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan instance");
 }
 
-bool Vulkan::createDebugMessenger() {
+bool GPUVulkanInstance::createDebugMessenger() {
     VkDebugUtilsMessengerCreateInfoEXT createInfo = getDebugMessengerCreateInfo();
     const char* functionName = "vkCreateDebugUtilsMessengerEXT";
-    auto function = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(vulkanInstance, functionName);
+    auto function = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(mVkInstance, functionName);
     if (function == nullptr) {
         CHECK_MSG(false, "Could not look up address of extension function " + std::string(functionName));
         return false;
     }
-    return function(vulkanInstance, &createInfo, ALLOCATOR, &debugMessenger) == VK_SUCCESS;
+    return function(mVkInstance, &createInfo, ALLOCATOR, &debugMessenger) == VK_SUCCESS;
 }
 
-void Vulkan::destroyDebugMessenger() {
+void GPUVulkanInstance::destroyDebugMessenger() {
     const char* functionName = "vkDestroyDebugUtilsMessengerEXT";
-    auto function = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(vulkanInstance, functionName);
+    auto function = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(mVkInstance, functionName);
     if (function == nullptr) {
         CHECK_MSG(false, "Could not look up address of extension function " + std::string(functionName));
         return;
     }
-    function(vulkanInstance, debugMessenger, ALLOCATOR);
+    function(mVkInstance, debugMessenger, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan debug messenger");
 }
 
-std::vector<const char*> Vulkan::findExtensions() const
+std::vector<const char*> GPUVulkanInstance::findExtensions() const
 {
     VULKAN_LOG("Required extensions " + std::to_string(config.mRequiredExtensions.size()));
     for (const char* extension: config.mRequiredExtensions) {
@@ -175,7 +175,7 @@ std::vector<const char*> Vulkan::findExtensions() const
     return extensionsFound;
 }
 
-std::vector<VkExtensionProperties> Vulkan::findAvailableExtensions() const {
+std::vector<VkExtensionProperties> GPUVulkanInstance::findAvailableExtensions() const {
     u32 extensionCount = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
     std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -183,7 +183,7 @@ std::vector<VkExtensionProperties> Vulkan::findAvailableExtensions() const {
     return extensions;
 }
 
-bool Vulkan::hasExtensions(const std::vector<const char*>& extensions, std::vector<const char*>& extensionsFound) const {
+bool GPUVulkanInstance::hasExtensions(const std::vector<const char*>& extensions, std::vector<const char*>& extensionsFound) const {
     bool foundAll = true;
     for (const char* extension: extensions) {
         bool extensionFound = isExtensionAvailable(extension);
@@ -200,7 +200,7 @@ bool Vulkan::hasExtensions(const std::vector<const char*>& extensions, std::vect
     return foundAll;
 }
 
-bool Vulkan::isExtensionAvailable(const char* extension) const {
+bool GPUVulkanInstance::isExtensionAvailable(const char* extension) const {
     bool extensionFound = false;
     for (const VkExtensionProperties& availableExtension: availableExtensions) {
         if (strcmp(extension, availableExtension.extensionName) == 0) {
@@ -211,7 +211,7 @@ bool Vulkan::isExtensionAvailable(const char* extension) const {
     return extensionFound;
 }
 
-std::vector<const char*> Vulkan::findValidationLayers() const {
+std::vector<const char*> GPUVulkanInstance::findValidationLayers() const {
     std::vector<const char*> validationLayers = {
             "VK_LAYER_KHRONOS_validation"
     };
@@ -231,7 +231,7 @@ std::vector<const char*> Vulkan::findValidationLayers() const {
     return validationLayers;
 }
 
-std::vector<VkLayerProperties> Vulkan::findAvailableValidationLayers() const {
+std::vector<VkLayerProperties> GPUVulkanInstance::findAvailableValidationLayers() const {
     u32 validationLayerCount;
     vkEnumerateInstanceLayerProperties(&validationLayerCount, nullptr);
     std::vector<VkLayerProperties> validationLayers(validationLayerCount);
@@ -239,7 +239,7 @@ std::vector<VkLayerProperties> Vulkan::findAvailableValidationLayers() const {
     return validationLayers;
 }
 
-bool Vulkan::hasValidationLayers(const std::vector<const char*>& validationLayers, const std::vector<VkLayerProperties>& availableValidationLayers) const {
+bool GPUVulkanInstance::hasValidationLayers(const std::vector<const char*>& validationLayers, const std::vector<VkLayerProperties>& availableValidationLayers) const {
     for (const char* layerName: validationLayers) {
         bool layerFound = false;
         for (const auto& availableLayer: availableValidationLayers) {
@@ -256,7 +256,7 @@ bool Vulkan::hasValidationLayers(const std::vector<const char*>& validationLayer
     return true;
 }
 
-VkDebugUtilsMessengerCreateInfoEXT Vulkan::getDebugMessengerCreateInfo() const {
+VkDebugUtilsMessengerCreateInfoEXT GPUVulkanInstance::getDebugMessengerCreateInfo() const {
     VkDebugUtilsMessengerCreateInfoEXT createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
     createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
