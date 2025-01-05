@@ -328,7 +328,7 @@ EntityHandler Editor::mousePick()
 
 EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
 {
-	Ptr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
+	WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
     TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = isStatic;

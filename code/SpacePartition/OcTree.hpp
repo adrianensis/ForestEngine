@@ -12,13 +12,13 @@ public:
 	{
     friend IOcTreeElement;
 	private:
-		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsStatic;
-		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamic;
-		std::vector<Ptr<IOcTreeElement>> mOcTreeElementsDynamicReinsert;
+		std::vector<WeakPtr<IOcTreeElement>> mOcTreeElementsStatic;
+		std::vector<WeakPtr<IOcTreeElement>> mOcTreeElementsDynamic;
+		std::vector<WeakPtr<IOcTreeElement>> mOcTreeElementsDynamicReinsert;
 		void updateChildren(OcTree& tree);
-        void addOcTreeElementToChildren(Ptr<IOcTreeElement> element);
-        void addOcTreeElementToLeaf(Ptr<IOcTreeElement> element);
-        void addOcTreeElementToParent(Ptr<IOcTreeElement> element);
+        void addOcTreeElementToChildren(WeakPtr<IOcTreeElement> element);
+        void addOcTreeElementToLeaf(WeakPtr<IOcTreeElement> element);
+        void addOcTreeElementToParent(WeakPtr<IOcTreeElement> element);
         void createChildren(u8 index);
         u32 getElementsCount() const { return mOcTreeElementsStatic.size() + mOcTreeElementsDynamic.size(); }
 
@@ -36,12 +36,12 @@ public:
 		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
         void init(OcTree* tree, OcTreeNode* parent, u8 index, const Cube& cube, u8 depth);
-		void addOcTreeElement(Ptr<IOcTreeElement> element);
+		void addOcTreeElement(WeakPtr<IOcTreeElement> element);
 		void update(OcTree& tree);
 		void updateDynamicElements(OcTree& tree);
         bool isDivisible() const;
-        bool isElementEnclosed(Ptr<IOcTreeElement> element) const;
-        bool isElementOverlappingChild(Ptr<IOcTreeElement> element, u8 childIndex) const;
+        bool isElementEnclosed(WeakPtr<IOcTreeElement> element) const;
+        bool isElementOverlappingChild(WeakPtr<IOcTreeElement> element, u8 childIndex) const;
         u32 getHash() const;
         void drawDebug();
     };
@@ -55,7 +55,7 @@ public:
 	void init(f32 size);
 
 	//void addCollider(Collider *collider);
-    void addOcTreeElement(Ptr<IOcTreeElement> element);
+    void addOcTreeElement(WeakPtr<IOcTreeElement> element);
 	void update();
 };
 
@@ -74,7 +74,7 @@ private:
     // NEXT: CONTINUE HERE
     // track current octancts to avoid re-insertions
     // u8 mOctantHash ?
-    // octanct Ptr?
+    // octanct WeakPtr?
     // std::array<i32, OcTree::OcTreeNode::smMaxChildNumber> mNodes;
     // u8 mNodesIndex = 0;
 public:

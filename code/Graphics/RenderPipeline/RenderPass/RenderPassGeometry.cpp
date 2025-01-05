@@ -4,7 +4,7 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Material/Shader/ShaderPBR.hpp"
 
-void RenderPassGeometry::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
+void RenderPassGeometry::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPipeline, renderPassData);
 }
@@ -57,7 +57,7 @@ void RenderPassGeometry::updateGlobalData()
 void RenderPassGeometry::bindShader(const InstancedMeshData& instancedMeshData)
 {
     RenderPass::bindShader(instancedMeshData);
-    Ptr<GPUShader> gpuShader = mGPUShaders.at(instancedMeshData);
+    WeakPtr<GPUShader> gpuShader = mGPUShaders.at(instancedMeshData);
     // mGPUShaders.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
     // mGPUShaders.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
 }

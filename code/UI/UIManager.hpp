@@ -25,7 +25,7 @@ public:
 		if (!mGroups.contains(groupName))
 		{
 			mGroups.insert_or_assign(groupName, OwnerPtr<UIGroup>::newObject());
-            Ptr<UIGroup> group = mGroups.at(groupName);
+            WeakPtr<UIGroup> group = mGroups.at(groupName);
             group->init();
             group->mName = groupName;
 		}

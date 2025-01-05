@@ -3,7 +3,7 @@
 #include "Core/Image/ImageUtils.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 
-bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, u32 mipLevels)
+bool GPUImageUtils::transitionImageLayout(WeakPtr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, u32 mipLevels)
 {
     VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
     
@@ -79,7 +79,7 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
     return true;
 }
 
-VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, u32 mipLevels) {
+VkImageView GPUImageUtils::createImageView(WeakPtr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, u32 mipLevels) {
     
     PROFILER_CPU_NAMED(createImageView);
 
@@ -102,7 +102,7 @@ VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage i
     return imageView;
 }
 
-void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY)
+void GPUImageUtils::copyBufferToImage(WeakPtr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY)
 {
     VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
     {
@@ -139,7 +139,7 @@ void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffe
 }
 
 
-bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 height, VkImage image, VkFormat imageFormat, u32 mipMapLevels)
+bool GPUImageUtils::generateMipmaps(WeakPtr<GPUContext> gpuContext, u32 width, u32 height, VkImage image, VkFormat imageFormat, u32 mipMapLevels)
 {
     // Check if image format supports linear blitting
     VkFormatProperties formatProperties;
@@ -277,7 +277,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
     return true;
 }
 
-bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textureImage, const GPUImageData& textureImageData, byte* data) 
+bool GPUImageUtils::createTextureImage(WeakPtr<GPUContext> gpuContext, VkImage textureImage, const GPUImageData& textureImageData, byte* data) 
 {
     PROFILER_CPU_NAMED(createTextureImage)
 

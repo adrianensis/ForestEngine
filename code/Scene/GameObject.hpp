@@ -15,7 +15,7 @@ public:
 	virtual void onAddedToScene(){};
 
 public:
-	Ptr<Scene> mScene;
+	WeakPtr<Scene> mScene;
 	TComponentHandler<Transform> mTransform;
 };
 REGISTER_CLASS(GameObject);

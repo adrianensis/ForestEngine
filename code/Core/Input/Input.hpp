@@ -40,7 +40,7 @@ public:
 	f32 smScroll;
 
 private:
-    Ptr<IWindowInputAdapter> mWindowInputAdapter;
+    WeakPtr<IWindowInputAdapter> mWindowInputAdapter;
 
 public:
     GET_SET(WindowInputAdapter);

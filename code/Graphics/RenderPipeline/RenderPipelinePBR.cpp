@@ -23,7 +23,7 @@ void RenderPipelinePBR::compile()
     // );
     // initRenderPass<RenderPassShadowMap>(renderPassShadowMapData);
 
-    // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+    // WeakPtr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
     RenderPassData renderPassGeometryData;
     // renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
     // renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderPBR>();
@@ -49,15 +49,15 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
         // FOR_ARRAY(i, renderData.mPointLights)
         {
-            // Ptr<PointLight> pointLight = renderData.mPointLights.at(i);
-            // Ptr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
+            // WeakPtr<PointLight> pointLight = renderData.mPointLights.at(i);
+            // WeakPtr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
             // renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
             // renderPassShadowMap->renderPass();
-            Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+            WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
             renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
             renderPassGeometry->renderPass();
         }
-        // Ptr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+        // WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
         // renderPassGeometry->mPointLight = renderData.mPointLights[0];
         // renderPassGeometry->renderPass();
 
@@ -66,7 +66,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
     //    GET_SYSTEM(GPUInterface).clearDepth();
     //    GET_SYSTEM(GPUInterface).clearStencil();
 
-        Ptr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+        WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
         renderPassUI->renderPass();
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();

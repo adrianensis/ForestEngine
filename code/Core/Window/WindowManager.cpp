@@ -23,9 +23,9 @@ void WindowManager::update()
     }
 }
 
-Ptr<Window> WindowManager::createWindow(const WindowData& windowData)
+WeakPtr<Window> WindowManager::createWindow(const WindowData& windowData)
 {
-    Ptr<Window> window = mWindows.emplace_back(OwnerPtr<Window>::newObject());
+    WeakPtr<Window> window = mWindows.emplace_back(OwnerPtr<Window>::newObject());
     window->init(mWindows.size() - 1, windowData);
 
     if(windowData.mMainWindow)
@@ -36,8 +36,8 @@ Ptr<Window> WindowManager::createWindow(const WindowData& windowData)
     return window;
 }
 
-Ptr<Window> WindowManager::getWindow(u32 index) const
+WeakPtr<Window> WindowManager::getWindow(u32 index) const
 {
-    Ptr<Window> window = mWindows.at(index);
+    WeakPtr<Window> window = mWindows.at(index);
     return window;
 }

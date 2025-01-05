@@ -25,7 +25,7 @@ public:
 class GPUTexture: public IPoolable
 {
 public:
-    void init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
+    void init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
     void terminate();
     virtual void onPoolFree() override { terminate(); };
     void enable(u32 textureUnit) const;
@@ -37,7 +37,7 @@ private:
     ImageData mImageData;
 	u32 mID = 0;
 	GPUTextureData mTextureData;
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
     GPUImage* mVulkanTextureImage;
     u32 mMipMapLevels = 1;
 

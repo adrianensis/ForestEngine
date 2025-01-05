@@ -22,9 +22,9 @@ void GPUSkeletalAnimationManager::update()
 	}
 }
 
-Ptr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData)
+WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData)
 {
-	Ptr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<GPUSkeletonState>::newObject()).first;
+	WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<GPUSkeletonState>::newObject()).first;
     skeletonState->init(gpuSkeletonStateData);
     initSkeletonRenderState(skeletonState);
     return skeletonState;
@@ -35,7 +35,7 @@ void GPUSkeletalAnimationManager::terminate()
 	mSkeletonStates.clear();
 }
 
-void GPUSkeletalAnimationManager::initSkeletonRenderState(Ptr<const GPUSkeletonState> skeletonState)
+void GPUSkeletalAnimationManager::initSkeletonRenderState(WeakPtr<const GPUSkeletonState> skeletonState)
 {
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
@@ -45,7 +45,7 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(Ptr<const GPUSkeletonS
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }
 
-const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(Ptr<const GPUSkeletonState> skeletonState) const
+const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(WeakPtr<const GPUSkeletonState> skeletonState) const
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
     return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices);

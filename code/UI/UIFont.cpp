@@ -13,19 +13,19 @@ void UIFontsManager::terminate()
     mFontsLibrary.terminate();
 }
 
-Ptr<UIFont> UIFontsManager::loadFont(HashedString fontFile, u32 fontSize)
+WeakPtr<UIFont> UIFontsManager::loadFont(HashedString fontFile, u32 fontSize)
 {
     if(!mFontsMap.contains(fontFile))
     {
         mFontsMap.insert_or_assign(fontFile, OwnerPtr<UIFont>::newObject());
-		Ptr<UIFont> font = mFontsMap.at(fontFile);
+		WeakPtr<UIFont> font = mFontsMap.at(fontFile);
 		font->init(*this, fontFile, fontSize);
     }
 
     return mFontsMap.at(fontFile);
 }
 
-Ptr<UIFont> UIFontsManager::getFont(HashedString fontFile) const
+WeakPtr<UIFont> UIFontsManager::getFont(HashedString fontFile) const
 {
     return mFontsMap.at(fontFile);
 }

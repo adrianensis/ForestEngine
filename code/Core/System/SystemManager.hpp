@@ -17,29 +17,29 @@ public:
     void init();
 
     template<typename T> T_EXTENDS(T, System)
-    Ptr<T> createSystem()
+    WeakPtr<T> createSystem()
     {
         ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         CHECK_MSG(!mSystems.contains(classId), "System already created");
         OwnerPtr<T> newSystem = OwnerPtr<T>::newObject();
         mSystems.insert_or_assign(classId, OwnerPtr<System>::moveCast(newSystem));
         mSystemsInOrder.emplace_back(mSystems.at(classId));
-        Ptr<T> systemPtr = Ptr<T>::cast(mSystems.at(classId));
+        WeakPtr<T> systemPtr = WeakPtr<T>::cast(mSystems.at(classId));
         systemPtr->init();
         return systemPtr;
     }
 
     template<typename T> T_EXTENDS(T, System)
-    Ptr<T> getSystem() const
+    WeakPtr<T> getSystem() const
     {
         ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         CHECK_MSG(mSystems.contains(classId), "System not found!");
-        return Ptr<T>::cast(mSystems.at(classId));
+        return WeakPtr<T>::cast(mSystems.at(classId));
     }
 
     void terminate();
 
 private:
     std::unordered_map<ClassId, OwnerPtr<System>> mSystems;
-    std::vector<Ptr<System>> mSystemsInOrder;
+    std::vector<WeakPtr<System>> mSystemsInOrder;
 };

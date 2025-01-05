@@ -17,7 +17,7 @@ class RenderPassDependency
 public:
     HashedString mSamplerName;
     GPUFramebufferAttachmentType mAttachmentType;
-    Ptr<RenderPass> mRenderPass;
+    WeakPtr<RenderPass> mRenderPass;
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
@@ -32,7 +32,7 @@ public:
 class RenderPass
 {
 public:
-    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
+    virtual void init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     void terminate();
     void addRenderer(TComponentHandler<MeshRenderer> renderer);
     void removeRenderer(TComponentHandler<MeshRenderer> renderer);
@@ -47,14 +47,14 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
-    virtual void setupShader(Ptr<Shader> shader) const;
+    virtual void setupShader(WeakPtr<Shader> shader) const;
 
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
 	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShader>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaders;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
-    Ptr<RenderPipeline> mRenderPipeline;
+    WeakPtr<RenderPipeline> mRenderPipeline;
 
 public:
     CRGET(RenderPassData)

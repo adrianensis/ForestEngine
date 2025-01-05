@@ -88,7 +88,7 @@ bool Shader::hasFramebufferBinding(HashedString bindingName) const
     return mShaderData.mFramebufferBindings.contains(bindingName);
 }
 
-void Shader::bindTextures(Ptr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
+void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
 {
     // gpuShader->enable();
 

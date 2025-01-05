@@ -89,7 +89,7 @@ void ScenesManager::requestLoadScene(HashedString sceneName)
 	mLoadRequests.insert(sceneName);
 }
 
-Ptr<Scene> ScenesManager::getScene(HashedString sceneName) const
+WeakPtr<Scene> ScenesManager::getScene(HashedString sceneName) const
 {
     return mScenes.at(sceneName);
 }

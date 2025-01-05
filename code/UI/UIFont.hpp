@@ -11,8 +11,8 @@ class UIFontsManager
 public:
     void init();
     void terminate();
-    Ptr<UIFont> loadFont(HashedString fontFile, u32 fontSize);
-    Ptr<UIFont> getFont(HashedString fontFile) const;
+    WeakPtr<UIFont> loadFont(HashedString fontFile, u32 fontSize);
+    WeakPtr<UIFont> getFont(HashedString fontFile) const;
 
 private:
     FontsLibrary mFontsLibrary;

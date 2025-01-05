@@ -157,7 +157,7 @@ void InstancedMeshRenderer::resizeInstancedBuffers(u32 maxInstances)
     mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).resize(maxInstances);
 }
 
-void InstancedMeshRenderer::setMeshBuffers(Ptr<const GPUMesh> mesh)
+void InstancedMeshRenderer::setMeshBuffers(WeakPtr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
     FOR_ARRAY(i, mesh->mGPUVertexInputBuffers)
@@ -179,13 +179,13 @@ void InstancedMeshRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>&
 {
 }
 
-void InstancedMeshRenderer::resizeIndicesBuffer(Ptr<const GPUMesh> mesh)
+void InstancedMeshRenderer::resizeIndicesBuffer(WeakPtr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
     mGPUVertexBuffersContainer.getIndicesBuffer().resize(mesh->mIndices.size());
 }
 
-void InstancedMeshRenderer::setIndicesBuffer(Ptr<const GPUMesh> mesh)
+void InstancedMeshRenderer::setIndicesBuffer(WeakPtr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mesh->mIndices);

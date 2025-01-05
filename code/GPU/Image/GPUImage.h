@@ -25,11 +25,11 @@ public:
 class GPUImage
 {
 public:
-    bool init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
+    bool init(WeakPtr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
     void terminate();
 
 private:
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
     VkImage mVkImage = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
 public:

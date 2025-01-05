@@ -11,11 +11,11 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     void update();
-    Ptr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
+    WeakPtr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
 
-    const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(Ptr<const GPUSkeletonState> skeletonState) const;
+    const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(WeakPtr<const GPUSkeletonState> skeletonState) const;
 private:
-    void initSkeletonRenderState(Ptr<const GPUSkeletonState> skeletonState);
+    void initSkeletonRenderState(WeakPtr<const GPUSkeletonState> skeletonState);
 
 private:
     std::unordered_set<OwnerPtr<GPUSkeletonState>> mSkeletonStates;
@@ -26,7 +26,7 @@ private:
         GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     };
 
-	std::unordered_map<Ptr<const GPUSkeletonState>, SkeletonRenderState> mSkeletonRenderStates;
+	std::unordered_map<WeakPtr<const GPUSkeletonState>, SkeletonRenderState> mSkeletonRenderStates;
 
 public:
     CRGET(SkeletonStates)

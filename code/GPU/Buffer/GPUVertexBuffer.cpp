@@ -1,7 +1,7 @@
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 #include "GPU/GPUInstance.hpp"
 
-void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
+void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mData = data;

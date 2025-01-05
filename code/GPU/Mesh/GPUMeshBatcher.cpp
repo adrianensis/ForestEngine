@@ -1,6 +1,6 @@
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
 
-void GPUMeshBatcher::init(Ptr<const GPUMesh> mesh)
+void GPUMeshBatcher::init(WeakPtr<const GPUMesh> mesh)
 {
 	PROFILER_CPU()
     mMesh = mesh;
@@ -10,7 +10,7 @@ void GPUMeshBatcher::init(Ptr<const GPUMesh> mesh)
     appendMeshData(mMesh);
 }
 
-void GPUMeshBatcher::appendMeshData(Ptr<const GPUMesh> mesh)
+void GPUMeshBatcher::appendMeshData(WeakPtr<const GPUMesh> mesh)
 {
     PROFILER_CPU()
 

@@ -13,7 +13,7 @@ void GPUTexture::disable(u32 textureUnit) const
 //    GET_SYSTEM(GPUInterface).disableTexture(textureUnit, mTextureData.mStage);
 }
 
-void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id)
+void GPUTexture::init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id)
 {
     PROFILER_CPU_NAMED(init_texture)
     mGPUContext = gpuContext;

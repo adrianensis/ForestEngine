@@ -31,11 +31,11 @@ REGISTER_CLASS(GPUSkeletalAnimation);
 class GPUSkeletalAnimationState
 {
 public:
-    void init(Ptr<const GPUSkeletalAnimation> animation);
+    void init(WeakPtr<const GPUSkeletalAnimation> animation);
     void update();
 
 private:
-    Ptr<const GPUSkeletalAnimation> mSkeletalAnimation;
+    WeakPtr<const GPUSkeletalAnimation> mSkeletalAnimation;
     f32 mAccumulatedTime = 0;
     f32 mSkeletalAnimationTime = 0;
 
@@ -67,7 +67,7 @@ class GPUSkeletonState
 {
 public:
     void init(const GPUSkeletonStateData& gpuSkeletonStateData);
-    void createSkeletalAnimationState(Ptr<const GPUSkeletalAnimation> animation);
+    void createSkeletalAnimationState(WeakPtr<const GPUSkeletalAnimation> animation);
     void update();
 
 private:
@@ -76,7 +76,7 @@ private:
 private:
     GPUSkeletonStateData mGPUSkeletonStateData;
     std::unordered_map<u32, OwnerPtr<GPUSkeletalAnimationState>> mSkeletalAnimationStates;
-    Ptr<GPUSkeletalAnimationState> mCurrentSkeletalAnimation;
+    WeakPtr<GPUSkeletalAnimationState> mCurrentSkeletalAnimation;
     std::vector<Matrix4> mCurrentBoneTransforms;
 
 public:

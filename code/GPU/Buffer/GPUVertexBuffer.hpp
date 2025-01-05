@@ -22,7 +22,7 @@ public:
 class GPUVertexBuffer
 {
 public:
-    void init(Ptr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic);
+    void init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic);
     void resize(u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data)
@@ -55,7 +55,7 @@ private:
     u32 mPreviousOffsetInBytes = 0;
     bool mIsStatic = false;
 
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
     GPUBuffer buffer;
 
 public:

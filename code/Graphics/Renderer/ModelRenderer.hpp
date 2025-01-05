@@ -9,7 +9,7 @@ class Model;
 class ModelRendererData: public RendererData
 {
 public:
-	Ptr<const Model> mModel;
+	WeakPtr<const Model> mModel;
 };
 
 class ModelRenderer: public Component

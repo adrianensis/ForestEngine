@@ -1,7 +1,7 @@
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 
-bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
+bool GPUBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
 {
     PROFILER_CPU_NAMED(buffer_init)
     mGPUContext = gpuContext;

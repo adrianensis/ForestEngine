@@ -17,14 +17,14 @@ public:
 	void addComponent(const ComponentHandler& componentHandler);
 
 	// template <class T> T_EXTENDS(T, Component)
-	// std::list<Ptr<T>> getComponents() const
+	// std::list<WeakPtr<T>> getComponents() const
 	// {
-	// 	std::list<Ptr<T>> components;
+	// 	std::list<WeakPtr<T>> components;
 	// 	FOR_LIST(it, mComponentHandlers)
 	// 	// FOR_LIST(it, mComponents)
 	// 	{
-    //         Ptr<T> casted = Ptr<T>::cast((*it).getComponent());
-    //         // Ptr<T> casted = Ptr<T>::cast((*it));
+    //         WeakPtr<T> casted = WeakPtr<T>::cast((*it).getComponent());
+    //         // WeakPtr<T> casted = WeakPtr<T>::cast((*it));
     //         if(casted)
     //         {
 	// 		    components.push_back(casted);

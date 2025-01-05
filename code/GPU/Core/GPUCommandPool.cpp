@@ -2,7 +2,7 @@
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Core/GPUContext.hpp"
 
-GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, Ptr<GPUContext> gpuContext) : vulkanDevice(vulkanDevice), mGPUContext(gpuContext) {}
+GPUCommandPool::GPUCommandPool(GPUDevice* vulkanDevice, WeakPtr<GPUContext> gpuContext) : vulkanDevice(vulkanDevice), mGPUContext(gpuContext) {}
 
 bool GPUCommandPool::init()
 {

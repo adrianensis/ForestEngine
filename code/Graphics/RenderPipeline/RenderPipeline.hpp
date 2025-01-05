@@ -37,16 +37,16 @@ protected:
             OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
         );
 
-        Ptr<T> renderPass = getRenderPass<T>();
+        WeakPtr<T> renderPass = getRenderPass<T>();
         renderPass->init(getPtrToThis<RenderPipeline>(), renderPassData);
         renderPass->compile();
     }
 
     template<class T> T_EXTENDS(T, RenderPass)
-    Ptr<T> getRenderPass()
+    WeakPtr<T> getRenderPass()
     {
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-        return Ptr<T>::cast(mRenderPassMap.at(renderPassClassId));
+        return WeakPtr<T>::cast(mRenderPassMap.at(renderPassClassId));
     }
 
     void initBuffers();

@@ -12,7 +12,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    GPURenderPass(Ptr<GPUContext> gpuContext);
+    GPURenderPass(WeakPtr<GPUContext> gpuContext);
     bool init();
     void terminate();
     void begin();
@@ -31,7 +31,7 @@ private:
     void commandSubmission();
     void framePresentation();
 public:
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
 private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     u32 swapChainImageIndex;

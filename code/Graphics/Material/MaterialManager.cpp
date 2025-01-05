@@ -294,7 +294,7 @@ Slot MaterialManager::requestMaterialInstanceSlot(const PoolHandler<Material>& m
     return slot;
 }
 
-Ptr<Shader> MaterialManager::getMaterialShader(const PoolHandler<Material>& handler) const
+WeakPtr<Shader> MaterialManager::getMaterialShader(const PoolHandler<Material>& handler) const
 {
     return mMaterialToShader.at(handler->getID());
 }

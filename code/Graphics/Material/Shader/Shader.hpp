@@ -37,7 +37,7 @@ class ShaderCompileData
 {
 public:
     PoolHandler<Material> mMaterial;
-    Ptr<const GPUMesh> mMesh;
+    WeakPtr<const GPUMesh> mMesh;
     GPURenderPass* vulkanRenderPass;
     HashedString label;
     HashedString id;
@@ -106,7 +106,7 @@ public:
     void disable() const;
     bool hasFramebufferBinding(HashedString bindingName) const;
 
-    void bindTextures(Ptr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const;
+    void bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const;
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,

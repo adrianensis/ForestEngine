@@ -19,14 +19,14 @@ public:
     void terminate();
 
     template<class T> T_EXTENDS(T, Component)
-    void addComponentListener(Ptr<IComponentsListener> listener)
+    void addComponentListener(WeakPtr<IComponentsListener> listener)
     {
         PROFILER_CPU()
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentListeners.contains(id))
         {
-            mComponentListeners.emplace(id, std::unordered_set<Ptr<IComponentsListener>>());
+            mComponentListeners.emplace(id, std::unordered_set<WeakPtr<IComponentsListener>>());
         }
 
         if(!mComponentListeners.at(id).contains(listener))
@@ -36,7 +36,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void removeComponentListener(Ptr<IComponentsListener> listener)
+    void removeComponentListener(WeakPtr<IComponentsListener> listener)
     {
         PROFILER_CPU()
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
@@ -169,7 +169,7 @@ private:
     };
 
     std::unordered_map<ClassId, OwnerPtr<ComponentsArrayBase>> mComponentsArrays;
-    std::unordered_map<ClassId, std::unordered_set<Ptr<IComponentsListener>>> mComponentListeners;
+    std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
 
     inline static const u32 smMaxComponents = 100000;
 };

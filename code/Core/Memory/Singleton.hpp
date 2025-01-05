@@ -9,7 +9,7 @@ public:
 	Singleton() = default;
 	~Singleton() = default;
 
-	static Ptr<T> getInstancePtr()
+	static WeakPtr<T> getInstancePtr()
 	{
 		if (!mInstance.isValid())
 		{

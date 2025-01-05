@@ -3,7 +3,7 @@
 #include "GPU/GPUUtils.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
+GPURenderPass::GPURenderPass(WeakPtr<GPUContext> gpuContext)
         : mGPUContext(gpuContext){}
 
 bool GPURenderPass::init()

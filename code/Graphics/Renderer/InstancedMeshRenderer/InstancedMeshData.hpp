@@ -10,7 +10,7 @@ public:
 	InstancedMeshData() = default;
 	
 	PoolHandler<Material> mMaterial;
-	Ptr<const GPUMesh> mMesh;
+	WeakPtr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
     StencilData mStencilData;
 

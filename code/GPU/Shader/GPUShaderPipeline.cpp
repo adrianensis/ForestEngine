@@ -1,6 +1,6 @@
 #include "GPU/Shader/GPUShaderPipeline.h"
 
-GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
+GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, WeakPtr<GPUContext> gpuContext)
     : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
 }
 

@@ -23,7 +23,7 @@ class GPUMesh;
 class MeshInstanceData
 {
 public:
-    Ptr<const GPUMesh> mMesh;
+    WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMatrix;
 };
 
@@ -49,7 +49,7 @@ private:
     void loadGLTFBones(const cgltf_skin& skin);
     f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
-    void loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation);
+    void loadGLTFSkeletalAnimationFrames(WeakPtr<GPUSkeletalAnimation> animation);
     void loadGLTFSkeletalAnimations();
     static Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
     static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
@@ -95,11 +95,11 @@ private:
     std::vector<MeshInstanceData> mMeshInstances;
     std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
     std::unordered_map<const cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
-    std::unordered_map<Ptr<const GPUMesh>, PoolHandler<Material>> mMeshMaterials;
+    std::unordered_map<WeakPtr<const GPUMesh>, PoolHandler<Material>> mMeshMaterials;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
-    Ptr<GPUSkeletonState> mSkeletonState;
+    WeakPtr<GPUSkeletonState> mSkeletonState;
 
 public:
     CRGET(MeshInstances)

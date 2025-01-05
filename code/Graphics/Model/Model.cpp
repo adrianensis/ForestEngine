@@ -216,7 +216,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "GPUMesh has to be made out of triangles!")
 
     mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<GPUMesh>::newObject());
-    Ptr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
+    WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
     GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
 
     PoolHandler<Material> meshMaterial;
@@ -548,7 +548,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     }
 }
 
-void Model::loadGLTFSkeletalAnimationFrames(Ptr<GPUSkeletalAnimation> animation)
+void Model::loadGLTFSkeletalAnimationFrames(WeakPtr<GPUSkeletalAnimation> animation)
 {
     LOG_TRACE()
     PROFILER_CPU()
@@ -628,7 +628,7 @@ void Model::loadGLTFSkeletalAnimations()
 
         loadGLTFChannels(gltfAnim);
 
-        Ptr<GPUSkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<GPUSkeletalAnimation>::newObject());
+        WeakPtr<GPUSkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<GPUSkeletalAnimation>::newObject());
         animation->init(animIt, animDuration);
 
         loadGLTFSkeletalAnimationFrames(animation);

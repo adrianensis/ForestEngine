@@ -46,7 +46,7 @@ class RendererData
 {
 public:
     StencilData mStencilData;
-    Ptr<const GPUMesh> mMesh;
+    WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
     PoolHandler<Material> mMaterial;
     std::unordered_set<ClassId> mRenderPassIDs;

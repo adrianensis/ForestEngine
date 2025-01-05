@@ -13,13 +13,13 @@ public:
     virtual void init() override;
     virtual void terminate() override;
 
-    Ptr<const Model> loadModel(const std::string& path);
-    void setMeshToModel(Ptr<const GPUMesh> mesh, Ptr<Model> model);
-    Ptr<Model> getModelFromMesh(Ptr<const GPUMesh> mesh) const;
+    WeakPtr<const Model> loadModel(const std::string& path);
+    void setMeshToModel(WeakPtr<const GPUMesh> mesh, WeakPtr<Model> model);
+    WeakPtr<Model> getModelFromMesh(WeakPtr<const GPUMesh> mesh) const;
 
 private:
     std::unordered_map<std::string, OwnerPtr<Model>> mModels;
-    std::unordered_map<Ptr<const GPUMesh>, Ptr<Model>> mMeshToModels;
+    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<Model>> mMeshToModels;
     PoolHandler<Material> mDefaultModelMaterial;
 public:
     GET(DefaultModelMaterial)

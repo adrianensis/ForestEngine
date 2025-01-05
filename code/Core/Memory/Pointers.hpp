@@ -11,7 +11,7 @@ class SharedPtr;
 template<class T>
 class OwnerPtr;
 template<class T>
-class Ptr;
+class WeakPtr;
 
 class ReferenceBlock
 {
@@ -34,26 +34,26 @@ public:
 // };
 
 template <typename U>
-struct get_ptr_type { using type = Ptr<U>; };
+struct get_ptr_type { using type = WeakPtr<U>; };
 template<class T>
-struct get_ptr_type<Ptr<T>> { using type = Ptr<T>; };
+struct get_ptr_type<WeakPtr<T>> { using type = WeakPtr<T>; };
 template<class T>
-struct get_ptr_type<RefCountedPtrBase<T>> { using type = Ptr<T>; };
+struct get_ptr_type<RefCountedPtrBase<T>> { using type = WeakPtr<T>; };
 template<class T>
-struct get_ptr_type<SharedPtr<T>> { using type = Ptr<T>; };
+struct get_ptr_type<SharedPtr<T>> { using type = WeakPtr<T>; };
 template<class T>
-struct get_ptr_type<OwnerPtr<T>> { using type = Ptr<T>; };
+struct get_ptr_type<OwnerPtr<T>> { using type = WeakPtr<T>; };
 
 template <typename U>
-struct get_const_ptr_type { using type = Ptr<const U>; };
+struct get_const_ptr_type { using type = WeakPtr<const U>; };
 template<class T>
-struct get_const_ptr_type<Ptr<T>> { using type = Ptr<const T>; };
+struct get_const_ptr_type<WeakPtr<T>> { using type = WeakPtr<const T>; };
 template<class T>
-struct get_const_ptr_type<RefCountedPtrBase<T>> { using type = Ptr<const T>; };
+struct get_const_ptr_type<RefCountedPtrBase<T>> { using type = WeakPtr<const T>; };
 template<class T>
-struct get_const_ptr_type<SharedPtr<T>> { using type = Ptr<const T>; };
+struct get_const_ptr_type<SharedPtr<T>> { using type = WeakPtr<const T>; };
 template<class T>
-struct get_const_ptr_type<OwnerPtr<T>> { using type = Ptr<const T>; };
+struct get_const_ptr_type<OwnerPtr<T>> { using type = WeakPtr<const T>; };
 
 template <typename V>
 struct get_ptr_type;
@@ -67,7 +67,7 @@ class BaseOwnerPtr {};
 // PTR
 
 template<class T>
-class Ptr : public BasePtr
+class WeakPtr : public BasePtr
 {
 template<class S>
 friend class RefCountedPtrBase;
@@ -76,37 +76,37 @@ friend class SharedPtr;
 template<class V>
 friend class OwnerPtr;
 template<class W>
-friend class Ptr;
+friend class WeakPtr;
 friend class EnablePtrToThis;
 
 public:
     template <class U>
-    static Ptr<T> cast(const Ptr<U>& other)
+    static WeakPtr<T> cast(const WeakPtr<U>& other)
     {
-        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return WeakPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     template <class U>
-    static Ptr<T> cast(const SharedPtr<U>& other)
+    static WeakPtr<T> cast(const SharedPtr<U>& other)
     {
-        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return WeakPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
     template <class U>
-    static Ptr<T> cast(const OwnerPtr<U>& other)
+    static WeakPtr<T> cast(const OwnerPtr<U>& other)
     {
-        return Ptr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
+        return WeakPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    Ptr(const RefCountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
-    // Ptr(const SharedPtr<T>& sharedPtr) {  assign(sharedPtr); }
-    // Ptr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
-    Ptr() = default;
-    Ptr(const Ptr<T>& other) { assign(other); }
-    ~Ptr() { invalidate(); }
-    operator Ptr<const T>() const { return Ptr<const T>(mInternalPointer, mReferenceBlock); }
+    WeakPtr(const RefCountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
+    // WeakPtr(const SharedPtr<T>& sharedPtr) {  assign(sharedPtr); }
+    // WeakPtr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
+    WeakPtr() = default;
+    WeakPtr(const WeakPtr<T>& other) { assign(other); }
+    ~WeakPtr() { invalidate(); }
+    operator WeakPtr<const T>() const { return WeakPtr<const T>(mInternalPointer, mReferenceBlock); }
     template<class U> T_EXTENDS(T, U) 
-    operator Ptr<U>() const { return Ptr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
+    operator WeakPtr<U>() const { return WeakPtr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
     operator SharedPtr<T>() const { return SharedPtr<T>(*this); }
     template<class U> T_EXTENDS(T, U) 
     operator SharedPtr<U>() const { return SharedPtr<U>(*this); }
@@ -128,7 +128,7 @@ public:
         set(nullptr, nullptr);
     }
 
-    Ptr<T>& operator=(const Ptr<T>& other)
+    WeakPtr<T>& operator=(const WeakPtr<T>& other)
     {
         if (this != &other)
         {
@@ -136,14 +136,14 @@ public:
         }
         return *this;
     }
-    bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const WeakPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     operator bool() const { return this->isValid(); }
 
 private:
-    Ptr(T* reference, ReferenceBlock* referenceBlock) { set(reference, referenceBlock); }
+    WeakPtr(T* reference, ReferenceBlock* referenceBlock) { set(reference, referenceBlock); }
 
-    void assign(const Ptr<T>& other)
+    void assign(const WeakPtr<T>& other)
     {
         // if(*this == other) { return; }
         invalidate();
@@ -235,13 +235,13 @@ public:
     virtual ~EnablePtrToThis() override = default;
 protected:
     template<class OtherClass>
-    Ptr<OtherClass> getPtrToThis() { return Ptr<OtherClass>::cast(mPtrToThis); }
+    WeakPtr<OtherClass> getPtrToThis() { return WeakPtr<OtherClass>::cast(mPtrToThis); }
     template<class OtherClass>
-    Ptr<const OtherClass> getPtrToThis() const { return Ptr<const OtherClass>::cast(mPtrToThis); }
+    WeakPtr<const OtherClass> getPtrToThis() const { return WeakPtr<const OtherClass>::cast(mPtrToThis); }
 private:
     template <class OtherClass>
-    void set(const Ptr<OtherClass>& ptr) { mPtrToThis = Ptr<IPointedObject>(dynamic_cast<IPointedObject*>(const_cast<REMOVE_CONST(OtherClass)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
-    Ptr<IPointedObject> mPtrToThis {};
+    void set(const WeakPtr<OtherClass>& ptr) { mPtrToThis = WeakPtr<IPointedObject>(dynamic_cast<IPointedObject*>(const_cast<REMOVE_CONST(OtherClass)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
+    WeakPtr<IPointedObject> mPtrToThis {};
 };
 
 // REF COUNTED PTR BASE
@@ -249,16 +249,16 @@ template<class T>
 class RefCountedPtrBase : public BasePtr
 {
 template<class U>
-friend class Ptr;
+friend class WeakPtr;
 
 public:
     virtual ~RefCountedPtrBase() { invalidate(); }
-    operator Ptr<const T>() const { return Ptr<const T>(dynamic_cast<const T*>(mInternalPointer), mReferenceBlock); }
+    operator WeakPtr<const T>() const { return WeakPtr<const T>(dynamic_cast<const T*>(mInternalPointer), mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     operator bool() const { return this->isValid(); }
-    bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const WeakPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     void invalidate()
     {
@@ -301,7 +301,7 @@ protected:
                 EnablePtrToThis* enablePtrFromThis = dynamic_cast<EnablePtrToThis*>(const_cast<REMOVE_CONST(T)*>(reference));
                 if(enablePtrFromThis)
                 {
-                    enablePtrFromThis->set(Ptr<T>(*this));
+                    enablePtrFromThis->set(WeakPtr<T>(*this));
                 }
             }
         }
@@ -322,7 +322,7 @@ template<class T>
 class SharedPtr : public RefCountedPtrBase<T>
 {
 template<class U>
-friend class Ptr;
+friend class WeakPtr;
 
 public:
     template <class OtherClass>
@@ -333,7 +333,7 @@ public:
 
     explicit SharedPtr(T* reference) { this->init(reference, Memory::newObject<ReferenceBlock>()); }
     SharedPtr() = default;
-    SharedPtr(const Ptr<T>& other) { assign(other); }
+    SharedPtr(const WeakPtr<T>& other) { assign(other); }
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
     SharedPtr(SharedPtr<T>&& other) { assign(other); }
     operator SharedPtr<const T>() const { return SharedPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
@@ -364,7 +364,7 @@ private:
             this->set(other.mInternalPointer, other.mReferenceBlock);
         }
     }
-    void assign(const Ptr<T>& other)
+    void assign(const WeakPtr<T>& other)
     {
         this->invalidate();
         if(other.isValid())
@@ -402,9 +402,9 @@ public:
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
     //operator OwnerPtr<const T>() const { return OwnerPtr<const T>(dynamic_cast<const T*>(this->mInternalPointer), this->mReferenceBlock); }
-    operator Ptr<T>() const { return Ptr<T>(dynamic_cast<T*>(this->mInternalPointer), this->mReferenceBlock); }
+    operator WeakPtr<T>() const { return WeakPtr<T>(dynamic_cast<T*>(this->mInternalPointer), this->mReferenceBlock); }
     template<class U> T_EXTENDS(T, U) 
-    operator Ptr<U>() const { return Ptr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
+    operator WeakPtr<U>() const { return WeakPtr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
     OwnerPtr<T>& operator=(OwnerPtr<T>&& other)
     {
         if (this != &other)
@@ -439,9 +439,9 @@ private:
 // Needed for unordered_map
 namespace std {
   template<class T>
-  struct hash<Ptr<T>> 
+  struct hash<WeakPtr<T>> 
   {
-    size_t operator()(Ptr<T> const& pointer) const 
+    size_t operator()(WeakPtr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }

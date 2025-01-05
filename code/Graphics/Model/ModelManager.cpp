@@ -16,22 +16,22 @@ void ModelManager::terminate()
 {
     mModels.clear();
 }
-void ModelManager::setMeshToModel(Ptr<const GPUMesh> mesh, Ptr<Model> model)
+void ModelManager::setMeshToModel(WeakPtr<const GPUMesh> mesh, WeakPtr<Model> model)
 {
     mMeshToModels.insert_or_assign(mesh, model);
 }
 
-Ptr<Model> ModelManager::getModelFromMesh(Ptr<const GPUMesh> mesh) const
+WeakPtr<Model> ModelManager::getModelFromMesh(WeakPtr<const GPUMesh> mesh) const
 {
     if(!mMeshToModels.contains(mesh))
     {
-        return Ptr<Model>();
+        return WeakPtr<Model>();
     }
 
     return mMeshToModels.at(mesh);
 }
 
-Ptr<const Model> ModelManager::loadModel(const std::string& path)
+WeakPtr<const Model> ModelManager::loadModel(const std::string& path)
 {
     if (!mModels.contains(path))
 	{

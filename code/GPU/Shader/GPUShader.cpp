@@ -31,7 +31,7 @@ void GPUShader::disable() const
 //	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
-void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext)
+void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, WeakPtr<GPUContext> gpuContext)
 {
 //    mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
     mGPUContext = gpuContext;

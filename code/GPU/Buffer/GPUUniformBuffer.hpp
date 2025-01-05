@@ -22,7 +22,7 @@ public:
 class GPUUniformBuffer
 {
 public:
-    void init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
+    void init(WeakPtr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
     template <class T>
     void setData(const T& data)
     {
@@ -62,7 +62,7 @@ private:
     bool mIsStatic = false;
     void* mGPUPointer = nullptr;
 
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
     GPUBuffer mBuffer;
     u32 mSize = 0;
 

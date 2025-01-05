@@ -35,7 +35,7 @@ public:
 class GPUFramebuffer
 {
 public:
-    bool init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
+    bool init(WeakPtr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView);
     Vector4 readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
@@ -52,7 +52,7 @@ private:
 
     GPURenderPass* mRenderPass = nullptr;
     VkFramebuffer framebuffer = VK_NULL_HANDLE;
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
 
 public:
     GET(FramebufferId)

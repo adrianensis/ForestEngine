@@ -11,14 +11,14 @@ public:
     virtual void terminate() override;
 
 	template <class T>
-	Ptr<const GPUMesh> getPrimitive()
+	WeakPtr<const GPUMesh> getPrimitive()
 	{
 		if(!mPrimitivesMap.contains(ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
 		{
 			mPrimitivesMap.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.getId(), createPrimitive<T>());
 		}
 		
-		return Ptr<GPUMesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
+		return WeakPtr<GPUMesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
 	}
 
 private:

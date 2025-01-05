@@ -27,11 +27,11 @@ private:
     void initBuffers();
     void resizeMeshBuffers(u32 maxInstances);
     void resizeInstancedBuffers(u32 maxInstances);
-    void setMeshBuffers(Ptr<const GPUMesh> mesh);
+    void setMeshBuffers(WeakPtr<const GPUMesh> mesh);
     void setInstancedBuffers();
     void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
-    void resizeIndicesBuffer(Ptr<const GPUMesh> mesh);
-    void setIndicesBuffer(Ptr<const GPUMesh> mesh);
+    void resizeIndicesBuffer(WeakPtr<const GPUMesh> mesh);
+    void setIndicesBuffer(WeakPtr<const GPUMesh> mesh);
     void drawCall();
 
 private:

@@ -10,11 +10,11 @@ public:
     virtual void terminate() override;
     void update();
 
-    Ptr<Window> createWindow(const WindowData& windowData);
-    Ptr<Window> getWindow(u32 index) const;
+    WeakPtr<Window> createWindow(const WindowData& windowData);
+    WeakPtr<Window> getWindow(u32 index) const;
 private:
 	std::vector<OwnerPtr<Window>> mWindows;
-    Ptr<Window> mMainWindow;
+    WeakPtr<Window> mMainWindow;
 public:
     GET(MainWindow)
 };

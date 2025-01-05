@@ -52,7 +52,7 @@ public:
 
     const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& getMaterialTextureBindings(const PoolHandler<Material>& handler) const;
     
-    Ptr<Shader> getMaterialShader(const PoolHandler<Material>& handler) const;
+    WeakPtr<Shader> getMaterialShader(const PoolHandler<Material>& handler) const;
 
 private:
     void postMaterialCreated(const PoolHandler<Material>& handler);

@@ -1,6 +1,6 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-GPUShaderModule::GPUShaderModule(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
+GPUShaderModule::GPUShaderModule(WeakPtr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
 
 bool GPUShaderModule::init(const std::vector<byte>& moduleContent) {
     VkShaderModuleCreateInfo createInfo{};

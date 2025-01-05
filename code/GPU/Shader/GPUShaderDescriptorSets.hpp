@@ -31,10 +31,10 @@ public:
 class GPUShaderDescriptorSets
 {    
 public:
-    void init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);
+    void init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, WeakPtr<GPUContext> gpuContext);
     void terminate();
 private:
-    Ptr<GPUContext> mGPUContext;
+    WeakPtr<GPUContext> mGPUContext;
 public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;

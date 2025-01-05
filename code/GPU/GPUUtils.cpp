@@ -13,7 +13,7 @@
     *
     * It's best to do this after the texture mapping works to check if the texture resources are still set up correctly.
     */
-VkCommandBuffer GPUUtils::beginSingleTimeCommands(Ptr<GPUContext> gpuContext) {
+VkCommandBuffer GPUUtils::beginSingleTimeCommands(WeakPtr<GPUContext> gpuContext) {
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -31,7 +31,7 @@ VkCommandBuffer GPUUtils::beginSingleTimeCommands(Ptr<GPUContext> gpuContext) {
     return commandBuffer;
 }
 
-void GPUUtils::endSingleTimeCommands(Ptr<GPUContext> gpuContext, VkCommandBuffer commandBuffer)
+void GPUUtils::endSingleTimeCommands(WeakPtr<GPUContext> gpuContext, VkCommandBuffer commandBuffer)
 {
 #if defined(ENGINE_ENABLE_PROFILER)
   PROFILER_GPU_COLLECT(gpuContext->mTracyContext, commandBuffer);
@@ -53,7 +53,7 @@ void GPUUtils::endSingleTimeCommands(Ptr<GPUContext> gpuContext, VkCommandBuffer
 }
 
 
-bool GPUUtils::initializeSyncObjects(Ptr<GPUContext> gpuContext) {
+bool GPUUtils::initializeSyncObjects(WeakPtr<GPUContext> gpuContext) {
     gpuContext->imageAvailableSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
     gpuContext->renderFinishedSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
     gpuContext->inFlightFences.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
@@ -84,7 +84,7 @@ bool GPUUtils::initializeSyncObjects(Ptr<GPUContext> gpuContext) {
     return true;
 }
 
-bool GPUUtils::hasStencilComponent(Ptr<GPUContext> gpuContext, VkFormat format)
+bool GPUUtils::hasStencilComponent(WeakPtr<GPUContext> gpuContext, VkFormat format)
 {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }

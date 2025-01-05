@@ -67,7 +67,7 @@ void RenderEngine::onComponentAdded(const ComponentHandler& component)
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {
-        //     //octree.addOcTreeElement(Ptr<IOcTreeElement>::cast(renderer));
+        //     //octree.addOcTreeElement(WeakPtr<IOcTreeElement>::cast(renderer));
         // }
     }
     else if(component->getComponentTypeId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())

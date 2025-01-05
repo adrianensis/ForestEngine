@@ -1,6 +1,6 @@
 #include "GPUImage.h"
 
-bool GPUImage::init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData)
+bool GPUImage::init(WeakPtr<GPUContext> gpuContext, const GPUImageData& gpuImageData)
 {
     mGPUContext = gpuContext;
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;

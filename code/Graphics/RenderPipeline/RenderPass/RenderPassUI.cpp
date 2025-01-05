@@ -2,7 +2,7 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "UI/UIMaterial.hpp"
 
-void RenderPassUI::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
+void RenderPassUI::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
     RenderPass::init(renderPipeline, renderPassData);
 }
@@ -62,7 +62,7 @@ void RenderPassUI::render()
 //     FOR_LIST(it, mInstancedMeshRenderers)
 // 	{
 //         const InstancedMeshData& instancedMeshData = *it;
-//         Ptr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
+//         WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
 //         if(instancedMeshData.mStencilData.mUseStencil)
 //         {
 //             if(instancedMeshData.mStencilData.mParentId > 0)
