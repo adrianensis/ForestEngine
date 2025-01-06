@@ -3,16 +3,6 @@
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPUTexture::enable(u32 textureUnit) const
-{
-//    GET_SYSTEM(GPUInterface).enableTexture(mGPUTextureId, textureUnit, mTextureData.mStage);
-}
-
-void GPUTexture::disable(u32 textureUnit) const
-{
-//    GET_SYSTEM(GPUInterface).disableTexture(textureUnit, mTextureData.mStage);
-}
-
 void GPUTexture::init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id)
 {
     PROFILER_CPU_NAMED(init_texture)
@@ -20,7 +10,6 @@ void GPUTexture::init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuT
     mTextureData = gpuTextureData;
     mID = id;
 
-    mVulkanTextureImage = new GPUImage();
     VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
 
     if(gpuTextureData.mIsFont)
@@ -65,11 +54,11 @@ void GPUTexture::init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuT
         textureImageData.mOffsetX = 0;
         textureImageData.mOffsetY = 0;
         textureImageData.mChannels = TO_U32(GPUTextureChannels::SINGLE);
-        if (!mVulkanTextureImage->init(mGPUContext, textureImageData)) {
+        if (!mVulkanTextureImage.init(mGPUContext, textureImageData)) {
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
-        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage->getVkImage(), textureImageData, mTextureData.mFontData.mGlyphAtlasData))
+        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage.getVkImage(), textureImageData, mTextureData.mFontData.mGlyphAtlasData))
         {
             CHECK_MSG(false,"Could not initialize texture image");
         }
@@ -94,11 +83,11 @@ void GPUTexture::init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuT
         textureImageData.mOffsetY = 0;
         textureImageData.mChannels = TO_U32(GPUTextureChannels::RGBA);
 
-        if (!mVulkanTextureImage->init(mGPUContext, textureImageData)) {
+        if (!mVulkanTextureImage.init(mGPUContext, textureImageData)) {
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
-        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage->getVkImage(), textureImageData, mImageData.mData))
+        if (!GPUImageUtils::createTextureImage(mGPUContext, mVulkanTextureImage.getVkImage(), textureImageData, mImageData.mData))
         {
             CHECK_MSG(false,"Could not initialize texture image");
         }
@@ -106,7 +95,7 @@ void GPUTexture::init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuT
         ImageUtils::freeImage(mImageData);
     }
 
-    mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage->getVkImage(), format, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);
+    mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage.getVkImage(), format, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);
     if (!mTextureImageView)
     {
         CHECK_MSG(false,"Could not create Vulkan texture image view");
@@ -154,6 +143,6 @@ void GPUTexture::terminate()
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroySampler(mGPUContext->vulkanDevice->getDevice(), mTextureSampler, allocationCallbacks);
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), mTextureImageView, allocationCallbacks);
-    mVulkanTextureImage->terminate();
+    mVulkanTextureImage.terminate();
 
 }

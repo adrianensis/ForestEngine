@@ -29,8 +29,6 @@ public:
     void init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
     void terminate();
     virtual void onPoolFree() override { terminate(); };
-    void enable(u32 textureUnit) const;
-    void disable(u32 textureUnit) const;
     
 private:
 	u32 mGPUTextureId = 0;
@@ -39,7 +37,7 @@ private:
 	u32 mID = 0;
 	GPUTextureData mTextureData;
     WeakPtr<GPUContext> mGPUContext;
-    GPUImage* mVulkanTextureImage;
+    GPUImage mVulkanTextureImage;
     u32 mMipMapLevels = 1;
 
 public:
