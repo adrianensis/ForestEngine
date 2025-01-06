@@ -114,12 +114,11 @@ bool GPURenderPass::initializeColorResources()
     colorImageConfig.Usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    vulkanColorImage = new GPUImage();
-    if (!vulkanColorImage->init(mGPUContext, colorImageConfig)) {
+    if (!vulkanColorImage.init(mGPUContext, colorImageConfig)) {
         CHECK_MSG(false,"Could not initialize color image");
         return false;
     }
-    colorImageView = GPUImageUtils::createImageView(mGPUContext, vulkanColorImage->getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
+    colorImageView = GPUImageUtils::createImageView(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
     return true;
 }
 
@@ -139,13 +138,12 @@ bool GPURenderPass::initializeDepthResources()
     depthImageConfig.MipLevels = 1;
     depthImageConfig.SampleCount = mGPUContext->vulkanPhysicalDevice->getSampleCount();
 
-    vulkanDepthImage = new GPUImage();
-    if (!vulkanDepthImage->init(mGPUContext, depthImageConfig)) {
+    if (!vulkanDepthImage.init(mGPUContext, depthImageConfig)) {
         CHECK_MSG(false,"Could not initialize depth image");
         return false;
     }
-    depthImageView = GPUImageUtils::createImageView(mGPUContext, vulkanDepthImage->getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
-    GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage->getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
+    depthImageView = GPUImageUtils::createImageView(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
+    GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
     return true;
 }
 
@@ -182,17 +180,14 @@ void GPURenderPass::terminate()
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
-    vulkanColorImage->terminate();
+    vulkanColorImage.terminate();
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
-    vulkanDepthImage->terminate();
+    vulkanDepthImage.terminate();
     for (GPUFramebuffer framebuffer : framebuffers) {
         framebuffer.terminate();
     }
     framebuffers.clear();
     LOG("Destroyed Vulkan framebuffers");
-
-    delete vulkanColorImage;
-    delete vulkanDepthImage;
 
     vkDestroyRenderPass(mGPUContext->vulkanDevice->getDevice(), mRenderPass, ALLOCATOR);
     LOG("Destroyed Vulkan render pass");

@@ -36,9 +36,9 @@ private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     u32 swapChainImageIndex;
     std::vector<GPUFramebuffer> framebuffers;
-    GPUImage* vulkanDepthImage;
+    GPUImage vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;
-    GPUImage* vulkanColorImage;
+    GPUImage vulkanColorImage;
     VkImageView colorImageView = VK_NULL_HANDLE;
 public:
     CRGET(RenderPass)
