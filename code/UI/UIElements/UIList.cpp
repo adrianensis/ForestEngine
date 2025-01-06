@@ -36,7 +36,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform->setLocalScale(Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
 
     RendererData rendererData;
-	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 	rendererData.mMaterial = mConfig.mMaterial;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mStencilData = calculateStencilData();

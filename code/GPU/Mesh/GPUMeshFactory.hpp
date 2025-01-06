@@ -4,7 +4,7 @@
 #include "Core/System/System.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 
-class MeshPrimitives: public System
+class GPUMeshFactory: public System
 {
 public:
     virtual void init() override;
@@ -32,9 +32,9 @@ private:
 private:
 	std::unordered_map<ClassId, OwnerPtr<GPUMesh>> mPrimitivesMap;
 };
-REGISTER_CLASS(MeshPrimitives);
+REGISTER_CLASS(GPUMeshFactory);
 
 template <>
-OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Rectangle>() const;
+OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Rectangle>() const;
 template <>
-OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Cube>() const;
+OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Cube>() const;

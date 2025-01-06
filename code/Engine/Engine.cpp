@@ -39,7 +39,7 @@ void Engine::init()
     GET_SYSTEM(Input).setWindowInputAdapter(GET_SYSTEM(WindowManager).getMainWindow());
     CREATE_SYSTEM(TimerManager);
     CREATE_SYSTEM(EventsManager);
-    CREATE_SYSTEM(MeshPrimitives);
+    CREATE_SYSTEM(GPUMeshFactory);
     CREATE_SYSTEM(MaterialManager);
     CREATE_SYSTEM(CameraManager);
     CREATE_SYSTEM(GPUSkeletalAnimationManager);

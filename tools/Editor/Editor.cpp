@@ -245,7 +245,7 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
     RendererData rendererData;
-	rendererData.mMesh = GET_SYSTEM(MeshPrimitives).getPrimitive<Rectangle>();
+	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 
     MaterialData materialData;
     materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT});

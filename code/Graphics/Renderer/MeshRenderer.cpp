@@ -4,7 +4,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "Graphics/Material/MaterialManager.hpp"
-#include "GPU/Mesh/MeshPrimitives.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"

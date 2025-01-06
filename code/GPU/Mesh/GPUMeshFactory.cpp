@@ -1,18 +1,18 @@
-#include "GPU/Mesh/MeshPrimitives.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
-void MeshPrimitives::init()
+void GPUMeshFactory::init()
 {
 
 }
 
-void MeshPrimitives::terminate()
+void GPUMeshFactory::terminate()
 {
 	mPrimitivesMap.clear();
 }
 
 template <>
-OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Rectangle>() const
+OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Rectangle>() const
 {
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     gpuVertexInputBuffers.push_back(GPUShaderDefinitions::VertexInput::mPosition);
@@ -47,7 +47,7 @@ OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Rectangle>() const
 }
 
 template <>
-OwnerPtr<GPUMesh> MeshPrimitives::createPrimitive<Cube>() const
+OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Cube>() const
 {
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     gpuVertexInputBuffers.push_back(GPUShaderDefinitions::VertexInput::mPosition);
