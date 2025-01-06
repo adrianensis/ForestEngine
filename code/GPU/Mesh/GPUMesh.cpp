@@ -1,4 +1,5 @@
 #include "GPU/Mesh/GPUMesh.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 void GPUMesh::init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers)
 {
@@ -36,9 +37,9 @@ void GPUMesh::clear()
 
 void GPUMesh::setColor(const Vector4 &color)
 {
-    mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).clear();
-    mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).resize(mVertexCount);
-    mBuffers.at(GPUBuiltIn::VertexInput::mColor.mName).fill(color);
+    mBuffers.at(GPUShaderDefinitions::VertexInput::mColor.mName).clear();
+    mBuffers.at(GPUShaderDefinitions::VertexInput::mColor.mName).resize(mVertexCount);
+    mBuffers.at(GPUShaderDefinitions::VertexInput::mColor.mName).fill(color);
 }
 
 bool GPUMesh::hasVertexInputBuffer(const GPUVariableData& data) const
@@ -55,12 +56,12 @@ void GPUMesh::populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVe
         gpuVertexBuffersContainer.addVertexBuffer(bufferData, isStatic);
     }
 
-    GPUVertexBufferData bufferDataInstanceIDs(GPUBuiltIn::VertexInput::mInstanceID, 1);
+    GPUVertexBufferData bufferDataInstanceIDs(GPUShaderDefinitions::VertexInput::mInstanceID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, isStatic);
 
-    GPUVertexBufferData bufferDataObjectIDs(GPUBuiltIn::VertexInput::mObjectID, 1);
+    GPUVertexBufferData bufferDataObjectIDs(GPUShaderDefinitions::VertexInput::mObjectID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, isStatic);
 
-    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUBuiltIn::VertexInput::mMaterialInstanceID, 1);
+    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUShaderDefinitions::VertexInput::mMaterialInstanceID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
 }

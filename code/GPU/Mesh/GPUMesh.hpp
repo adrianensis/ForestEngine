@@ -3,7 +3,6 @@
 #include "Core/Minimal.hpp"
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
 
 class GPUMesh
 {

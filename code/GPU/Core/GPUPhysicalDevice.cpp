@@ -1,4 +1,5 @@
 #include "GPUPhysicalDevice.h"
+#include "GPU/Core/GPULog.h"
 
 GPUPhysicalDevice::GPUPhysicalDevice(GPUVulkanInstance* mGPUVulkanInstance, GPUPhysicalDeviceData gpuPhysicalDeviceData) : mGPUVulkanInstance(mGPUVulkanInstance), mGPUPhysicalDeviceData(gpuPhysicalDeviceData) {
 }

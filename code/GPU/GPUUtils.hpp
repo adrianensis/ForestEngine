@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GPU/Core/GPUContext.hpp"
+#include "GPU/Core/GPULog.h"
 
 #define GPU_LOAD_EXTENSION_FUNCTION(gpuContext, extensionFunctionName) \
 GPUUtils::loadExtensionFunction<PFN_##extensionFunctionName>(gpuContext, TO_STRING(extensionFunctionName));

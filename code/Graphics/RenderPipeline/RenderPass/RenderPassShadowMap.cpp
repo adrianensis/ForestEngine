@@ -46,10 +46,10 @@ void RenderPassShadowMap::updateGlobalData()
     }
     TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    GPUBuiltIn::UniformBuffers::GPUGlobalData gpuGlobalData =
+    GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
         lightProjectionViewMatrix,
         camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }

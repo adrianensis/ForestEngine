@@ -1,5 +1,4 @@
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
 #include "GPU/GPUInstance.hpp"
 
 void GPUVertexBuffersContainer::enable()

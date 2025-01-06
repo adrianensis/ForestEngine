@@ -8,10 +8,10 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateMaterialPr
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
-        {GPUBuiltIn::PrimitiveTypes::mVector4, "color"},
-        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
-        {GPUBuiltIn::PrimitiveTypes::mVector2, "textureRegionSize"},
-        {GPUBuiltIn::PrimitiveTypes::mInt, "depth"},
+        {GPUShaderDefinitions::PrimitiveTypes::mVector4, "color"},
+        {GPUShaderDefinitions::PrimitiveTypes::mVector2, "textureRegionLeftTop"},
+        {GPUShaderDefinitions::PrimitiveTypes::mVector2, "textureRegionSize"},
+        {GPUShaderDefinitions::PrimitiveTypes::mInt, "depth"},
     };
 
     return propertiesBlock;
@@ -21,22 +21,22 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     // ShaderDefault::fragmentShaderCode(shaderBuilder);
 
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mMaterialInstanceID);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable instanceColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     
     Variable baseColor;
     shaderBuilder.getMain().
-    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(materialInstanceId).dot(instanceColor));
+    variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(materialInstanceId).dot(instanceColor));
 
     shaderBuilder.getMain().
     set(outColor, baseColor);
     
     // NEXT: Restore ui/font texture
-    // auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
-    // auto& textureHandler = shaderBuilder.get().getAttribute(GPUBuiltIn::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUBuiltIn::UniformBuffers::mTextures.mInstanceName);    
+    // auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
+    // auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+    // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
     // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     // shaderBuilder.getMain().
@@ -51,17 +51,17 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
 {
     ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
-    auto& textureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mTextureCoords.at(0));
+    auto& textureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0));
     if(textureCoord.isValid())
     {
-        auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mTextureCoords.at(0));
+        auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
 
         Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
         Variable textureRegionLeftTop = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
         Variable textureRegionSize = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
-        auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
+        auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mMaterialInstanceID);
         shaderBuilder.getMain().
-        set(outTextureCoord, call(GPUBuiltIn::PrimitiveTypes::mVector2,
+        set(outTextureCoord, call(GPUShaderDefinitions::PrimitiveTypes::mVector2,
         {
             outTextureCoord.dot("x").mul(propertiesBlock.at(materialInstanceId).dot(textureRegionSize).dot("x")).add(propertiesBlock.at(materialInstanceId).dot(textureRegionLeftTop).dot("x")),
             outTextureCoord.dot("y").mul(propertiesBlock.at(materialInstanceId).dot(textureRegionSize).dot("y")).add(propertiesBlock.at(materialInstanceId).dot(textureRegionLeftTop).dot("y"))
@@ -75,7 +75,7 @@ void ShaderUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBu
 
     Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable depth = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexInput::mMaterialInstanceID);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mMaterialInstanceID);
     shaderBuilder.getMain().
     set(finalPositon.dot("z"), propertiesBlock.at(materialInstanceId).dot(depth));
 }
@@ -84,14 +84,14 @@ void ShaderUIFont::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     ShaderUI::fragmentShaderCode(shaderBuilder);
 
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUBuiltIn::VertexOutput::mMaterialInstanceID);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUBuiltIn::FragmentOutput::mColor);
+    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mMaterialInstanceID);
+    auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable instanceColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     
     Variable baseColor;
     shaderBuilder.getMain().
-    variable(baseColor, GPUBuiltIn::PrimitiveTypes::mVector4, "baseColorFont", propertiesBlock.at(materialInstanceId).dot(instanceColor));
+    variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColorFont", propertiesBlock.at(materialInstanceId).dot(instanceColor));
     
     shaderBuilder.getMain().
     set(outColor.dot("a"), outColor.dot("r"));

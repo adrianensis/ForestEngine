@@ -1,6 +1,6 @@
 #include "Graphics/Renderer/ShapeBatchRenderer.hpp"
 #include "GPU/Shader/GPUShader.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
@@ -26,9 +26,9 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 	mColorBuffer.reserve(mMaxVertices); // 2 vertex per line * 4 floats per vertex
 	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
-    GPUVertexBufferData bufferDataPosition(GPUBuiltIn::VertexInput::mPosition);
+    GPUVertexBufferData bufferDataPosition(GPUShaderDefinitions::VertexInput::mPosition);
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataPosition, false);
-    GPUVertexBufferData bufferDataColor(GPUBuiltIn::VertexInput::mColor);
+    GPUVertexBufferData bufferDataColor(GPUShaderDefinitions::VertexInput::mColor);
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataColor, false);
 
     FOR_RANGE(i, 0, mMaxVertices)
@@ -36,7 +36,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
         mIndicesBuffer.push_back(i);
     }
     // mGPUVertexBuffersContainer.enable();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mUnsignedInt, false);
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, false);
     mGPUVertexBuffersContainer.getIndicesBuffer().resize(mIndicesBuffer.size());
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
     // mGPUVertexBuffersContainer.disable();
@@ -47,7 +47,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mShader->init();
     // mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
 
-    // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
+    // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
 }
 
 void ShapeBatchRenderer::render()
@@ -64,10 +64,10 @@ void ShapeBatchRenderer::render()
 		// mShader->getGPUShader()->enable();
 
 		mGPUVertexBuffersContainer.enable();
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).resize(mPositionBuffer.size());
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mColor).resize(mColorBuffer.size());
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mPosition).setDataArray(mPositionBuffer);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mColor).setDataArray(mColorBuffer);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).resize(mPositionBuffer.size());
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).resize(mColorBuffer.size());
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).setDataArray(mPositionBuffer);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).setDataArray(mColorBuffer);
 //		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersContainer.disable();
 

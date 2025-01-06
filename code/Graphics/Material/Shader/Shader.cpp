@@ -5,7 +5,7 @@
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"
@@ -55,7 +55,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialProp
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock =
     {
-        {GPUBuiltIn::PrimitiveTypes::mInt, "_emptyStructFixHack"}
+        {GPUShaderDefinitions::PrimitiveTypes::mInt, "_emptyStructFixHack"}
     };
 
     return propertiesBlock;
@@ -95,7 +95,7 @@ void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map
     // u32 textureUnit = 0;
     // FOR_MAP(it, mShaderData.mFramebufferBindings)
     // {
-    //     gpuShader->bindUniformValue<i32>(GPUBuiltIn::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
+    //     gpuShader->bindUniformValue<i32>(GPUShaderDefinitions::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
     //     textureUnit++;
     // }
 
@@ -103,13 +103,13 @@ void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map
     // FOR_MAP(it, mShaderData.mTextures)
     // {
     //     // NOTE: We reserve position 0 to represent NULL
-    //     gpuShader->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(*it).mName, 0);
+    //     gpuShader->bindUniformValue<u32>(GPUShaderDefinitions::Uniforms::getTextureHandler(*it).mName, 0);
     // }
 
     // FOR_MAP(it, textures)
     // {
     //     // NOTE: We reserve position 0 to represent NULL
-    //     gpuShader->bindUniformValue<u32>(GPUBuiltIn::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
+    //     gpuShader->bindUniformValue<u32>(GPUShaderDefinitions::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
     // }
 
     // gpuShader->disable();

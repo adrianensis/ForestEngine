@@ -4,6 +4,7 @@
 #include "Core/Font/Font.hpp"
 
 #include "GPU/Image/GPUImage.h"
+#include "GPU/Core/GPUDefinitions.h"
 #include "Core/Image/ImageUtils.hpp"
 
 enum class GPUTextureChannels

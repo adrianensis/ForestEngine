@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-// TODO: move enums outside GPUVulkanInstance.h and remove this include
-#include "GPU/Core/GPUVulkanInstance.h"
+#include "GPU/Core/GPUDefinitions.h"
 
 /*
     - none: (default) local read/write memory,

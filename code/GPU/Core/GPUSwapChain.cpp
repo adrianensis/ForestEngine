@@ -1,6 +1,6 @@
 #include "GPUSwapChain.h"
 #include <limits>
-
+#include "GPU/Core/GPULog.h"
 
 GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels)
         : vulkanDevice(vulkanDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {}

@@ -2,6 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "GPU/Core/GPUContext.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 
 class GPURenderPass;
 

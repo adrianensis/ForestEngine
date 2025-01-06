@@ -1,6 +1,6 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 void GPUSkeletalAnimationManager::init()
 {
@@ -18,7 +18,7 @@ void GPUSkeletalAnimationManager::update()
     FOR_MAP(it, mSkeletonRenderStates)
 	{
         const std::vector<Matrix4>& transforms = it->first->getCurrentBoneTransforms();
-        it->second.mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices).setDataArray(transforms);
+        it->second.mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices).setDataArray(transforms);
 	}
 }
 
@@ -40,7 +40,7 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(WeakPtr<const GPUSkele
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
-    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices, sizeof(Matrix4)*GPUBuiltIn::MAX_BONES, false);
+    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Matrix4)*GPUConstants::MAX_BONES, false);
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }
@@ -48,5 +48,5 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(WeakPtr<const GPUSkele
 const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(WeakPtr<const GPUSkeletonState> skeletonState) const
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
-    return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUBuiltIn::UniformBuffers::mBonesMatrices);
+    return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices);
 }

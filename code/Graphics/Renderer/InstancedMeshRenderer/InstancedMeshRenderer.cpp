@@ -3,7 +3,7 @@
 #include "Graphics/Material/MaterialManager.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
 
@@ -135,7 +135,7 @@ void InstancedMeshRenderer::initBuffers()
     mInstancedMeshData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, mInstancedMeshData.mIsStatic);
     
     // mGPUVertexBuffersContainer.enable();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUBuiltIn::PrimitiveTypes::mFace, mInstancedMeshData.mIsStatic);
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mFace, mInstancedMeshData.mIsStatic);
     // mGPUVertexBuffersContainer.disable();
 }
 
@@ -152,9 +152,9 @@ void InstancedMeshRenderer::resizeMeshBuffers(u32 maxInstances)
 void InstancedMeshRenderer::resizeInstancedBuffers(u32 maxInstances)
 {
     PROFILER_CPU()
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).resize(maxInstances);
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).resize(maxInstances);
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).resize(maxInstances);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(maxInstances);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(maxInstances);
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mMaterialInstanceID).resize(maxInstances);
 }
 
 void InstancedMeshRenderer::setMeshBuffers(WeakPtr<const GPUMesh> mesh)
@@ -170,9 +170,9 @@ void InstancedMeshRenderer::setMeshBuffers(WeakPtr<const GPUMesh> mesh)
 void InstancedMeshRenderer::setInstancedBuffers()
 {
     PROFILER_CPU()
-	mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUBuiltIn::VertexInput::mMaterialInstanceID).setDataArray(mGPUMeshBatcher.getMaterialInstanceIDs());
+	mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mMaterialInstanceID).setDataArray(mGPUMeshBatcher.getMaterialInstanceIDs());
 }
 
 void InstancedMeshRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)

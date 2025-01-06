@@ -39,50 +39,50 @@ protected:
     void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;
 
 protected:
-    inline static const GPUFunctionDefinition mCalculateShadow { GPUBuiltIn::PrimitiveTypes::mFloat, "calculateShadow",
+    inline static const GPUFunctionDefinition mCalculateShadow { GPUShaderDefinitions::PrimitiveTypes::mFloat, "calculateShadow",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector4, "fragPosLightSpace"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDirection"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector4, "fragPosLightSpace"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightDirection"}
         }};
 
-    inline static const GPUFunctionDefinition mCalculatePBR { GPUBuiltIn::PrimitiveTypes::mVector4, "calculatePBR",
+    inline static const GPUFunctionDefinition mCalculatePBR { GPUShaderDefinitions::PrimitiveTypes::mVector4, "calculatePBR",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "baseColor"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "baseColor"}
         }};
-    inline static const GPUFunctionDefinition mCalculatePBRSingleLight { GPUBuiltIn::PrimitiveTypes::mVector3, "calculatePBRSingleLight",
+    inline static const GPUFunctionDefinition mCalculatePBRSingleLight { GPUShaderDefinitions::PrimitiveTypes::mVector3, "calculatePBRSingleLight",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "albedo"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "metallic"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "V"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "N"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "F0"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "lightDirection"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "lightColor"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "albedo"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "metallic"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "roughness"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "V"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "N"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "F0"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightDirection"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightColor"}
         }};
-    inline static const GPUFunctionDefinition mGetNormalFromMap { GPUBuiltIn::PrimitiveTypes::mVector3, "getNormalFromMap" };
-    inline static const GPUFunctionDefinition mDistributionGGX { GPUBuiltIn::PrimitiveTypes::mFloat, "distributionGGX",
+    inline static const GPUFunctionDefinition mGetNormalFromMap { GPUShaderDefinitions::PrimitiveTypes::mVector3, "getNormalFromMap" };
+    inline static const GPUFunctionDefinition mDistributionGGX { GPUShaderDefinitions::PrimitiveTypes::mFloat, "distributionGGX",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "N"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "H"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "N"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "H"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "roughness"}
         }};
-    inline static const GPUFunctionDefinition mGeometrySchlickGGX { GPUBuiltIn::PrimitiveTypes::mFloat, "geometrySchlickGGX",
+    inline static const GPUFunctionDefinition mGeometrySchlickGGX { GPUShaderDefinitions::PrimitiveTypes::mFloat, "geometrySchlickGGX",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "NdotV"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "NdotV"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "roughness"}
         }};
-    inline static const GPUFunctionDefinition mGeometrySmith { GPUBuiltIn::PrimitiveTypes::mFloat, "geometrySmith",
+    inline static const GPUFunctionDefinition mGeometrySmith { GPUShaderDefinitions::PrimitiveTypes::mFloat, "geometrySmith",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "N"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "V"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "L"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "roughness"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "N"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "V"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "L"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "roughness"}
         }};
-    inline static const GPUFunctionDefinition mFresnelSchlick { GPUBuiltIn::PrimitiveTypes::mVector3, "fresnelSchlick",
+    inline static const GPUFunctionDefinition mFresnelSchlick { GPUShaderDefinitions::PrimitiveTypes::mVector3, "fresnelSchlick",
         {
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mFloat, "cosTheta"},
-            {GPUStorage::NONE, GPUBuiltIn::PrimitiveTypes::mVector3, "F0"}
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mFloat, "cosTheta"},
+            {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "F0"}
         }};
 };
 REGISTER_CLASS(ShaderPBR)

@@ -1,6 +1,7 @@
 #include "GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Core/GPUContext.hpp"
+#include "GPU/Core/GPULog.h"
 
 GPUCommandPool::GPUCommandPool(WeakPtr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
 

@@ -3,6 +3,7 @@
 
 #include "Core/Window/WindowManager.hpp"
 #include "GPU/GPUUtils.hpp"
+#include "GPU/Core/GPULog.h"
 
 void GPUContext::init()
 {

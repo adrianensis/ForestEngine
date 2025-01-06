@@ -2,7 +2,7 @@
 
 ShaderBuilder::ShaderBuilder()
 {
-    auto& mainFunc = mProgram.mainFunction(GPUBuiltIn::Functions::mMain);
+    auto& mainFunc = mProgram.mainFunction(GPUShaderDefinitions::Functions::mMain);
 }
 
 ShaderBuilderNodes::BlockStatement& ShaderBuilder::getMain()

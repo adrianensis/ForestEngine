@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 class DirectionalLightData
 {
@@ -34,8 +34,8 @@ public:
     {
         "directionalLight",
         {
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "direction"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"}
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "direction"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "diffuse"}
         }
     };
 
@@ -43,8 +43,8 @@ public:
     {
         "pointLight",
         {
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "position"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"}
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "position"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "diffuse"}
         }
     };
 
@@ -52,11 +52,11 @@ public:
     {
         "spotLight",
         {
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "position"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "direction"},
-            {GPUBuiltIn::PrimitiveTypes::mVector3, "diffuse"},
-            {GPUBuiltIn::PrimitiveTypes::mFloat, "innerCutOff"},
-            {GPUBuiltIn::PrimitiveTypes::mFloat, "outerCutOff"}
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "position"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "direction"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "diffuse"},
+            {GPUShaderDefinitions::PrimitiveTypes::mFloat, "innerCutOff"},
+            {GPUShaderDefinitions::PrimitiveTypes::mFloat, "outerCutOff"}
         }
     };
 
@@ -89,7 +89,7 @@ public:
     {
         GPUBufferType::UNIFORM,
         {
-            {{GPUStorage::UNIFORM, GPUBuiltIn::PrimitiveTypes::mMatrix4, "lightProjectionViewMatrix"}}
+            {{GPUStorage::UNIFORM, GPUShaderDefinitions::PrimitiveTypes::mMatrix4, "lightProjectionViewMatrix"}}
         },
         "ShadowMapping",
         "shadowMapping"

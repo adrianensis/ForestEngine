@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 
 namespace ShaderBuilderNodes
@@ -271,7 +271,7 @@ namespace ShaderBuilderNodes
     {
     public:
         ForStatement(const HashedString& varName, const HashedString& op, const Variable& conditionVar, const HashedString& advanceOp) :
-        mVariable(GPUBuiltIn::PrimitiveTypes::mInt, varName, "0"), mConditionVariable(conditionVar), mContinueExpression(mVariable, op, mConditionVariable),
+        mVariable(GPUShaderDefinitions::PrimitiveTypes::mInt, varName, "0"), mConditionVariable(conditionVar), mContinueExpression(mVariable, op, mConditionVariable),
         mAdvanceExpression(mVariable, advanceOp) {};
 
         std::vector<std::string> toLines(u16 indent) const override;

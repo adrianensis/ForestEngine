@@ -1,14 +1,11 @@
 #pragma once
 
-#include "GPU/Shader/GPUVariable.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 
-class GPUBuiltIn
+class GPUShaderDefinitions
 {
 public:
-
-    inline static const u32 MAX_BONE_INFLUENCE = 4;
-    inline static const u32 MAX_BONES = 65;
 
     class PrimitiveTypes
     {
@@ -35,8 +32,8 @@ public:
     public:
         inline static const GPUVariableDefinitionData mPI{{GPUStorage::CONST, PrimitiveTypes::mFloat, "PI"}, "3.14159265358979323846264338327950288"};
         inline static const GPUVariableDefinitionData mPI180{{GPUStorage::CONST, PrimitiveTypes::mFloat, "PI180"}, "PI/180.0"};
-        inline static const GPUVariableDefinitionData mMaxBones{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONES"}, std::to_string(MAX_BONES)};
-        inline static const GPUVariableDefinitionData mMaxBoneInfluence{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONE_INFLUENCE"}, std::to_string(MAX_BONE_INFLUENCE)};
+        inline static const GPUVariableDefinitionData mMaxBones{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONES"}, std::to_string(GPUConstants::MAX_BONES)};
+        inline static const GPUVariableDefinitionData mMaxBoneInfluence{{GPUStorage::CONST, PrimitiveTypes::mInt, "MAX_BONE_INFLUENCE"}, std::to_string(GPUConstants::MAX_BONE_INFLUENCE)};
     };
 
     class Uniforms
@@ -104,7 +101,7 @@ public:
         {
             GPUBufferType::UNIFORM,
             {
-                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", std::to_string(MAX_BONES)},
+                {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", std::to_string(GPUConstants::MAX_BONES)},
             },
             "BonesMatrices",
             "bonesMatrices"
@@ -117,13 +114,13 @@ public:
         class BoneVertexIDsData
         {
         public:
-            i32 mBonesIDs[GPUBuiltIn::MAX_BONE_INFLUENCE] = {-1, -1, -1, -1};
+            i32 mBonesIDs[GPUConstants::MAX_BONE_INFLUENCE] = {-1, -1, -1, -1};
         };
 
         class BoneVertexWeightsData
         {
         public:
-            f32 mBonesWeights[GPUBuiltIn::MAX_BONE_INFLUENCE] = {0.0f, 0.0f, 0.0f, 0.0f};
+            f32 mBonesWeights[GPUConstants::MAX_BONE_INFLUENCE] = {0.0f, 0.0f, 0.0f, 0.0f};
         };
 
         inline static const GPUVariableDefinitionData mPosition{GPUStorage::IN, PrimitiveTypes::mVector3, "in_position"};

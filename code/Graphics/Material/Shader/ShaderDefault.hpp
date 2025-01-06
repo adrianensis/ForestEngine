@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics/Material/Shader/Shader.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 class TextureBindingNames
 {

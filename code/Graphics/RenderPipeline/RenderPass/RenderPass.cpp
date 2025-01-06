@@ -49,8 +49,8 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
             }
         }
 
-        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
+        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
         WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
         ShaderCompileData shaderCompileData
@@ -107,8 +107,8 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
     //     }
     // }
 
-    // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData));
-    // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mModelMatrices));
+    // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
+    // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
     // mGPUShaders.at(instancedMeshData)->bindTextures(mGPUShaders.at(instancedMeshData)->getGPUShader(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
 }
@@ -178,12 +178,12 @@ void RenderPass::updateGlobalData()
 
     projectionViewMatrix.mul(viewMatrix);
 
-    GPUBuiltIn::UniformBuffers::GPUGlobalData gpuGlobalData =
+    GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
         projectionViewMatrix,
         camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
-	GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUBuiltIn::UniformBuffers::mGlobalData).setData(gpuGlobalData);
+	GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 void RenderPass::setupShader(WeakPtr<Shader> shader) const

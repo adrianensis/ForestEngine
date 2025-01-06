@@ -1,5 +1,4 @@
 #include "GPU/Shader/GPUShaderDescriptorSets.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
 
 void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, WeakPtr<GPUContext> gpuContext)
 {

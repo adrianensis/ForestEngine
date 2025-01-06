@@ -5,7 +5,7 @@
 #include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
-#include "GPU/Core/GPUBuiltIn.hpp"
+#include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 class MaterialData
 {

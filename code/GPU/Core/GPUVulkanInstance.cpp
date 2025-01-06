@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cstdlib>
 
-#include "Core/Minimal.hpp"
+#include "GPU/Core/GPULog.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 {  
