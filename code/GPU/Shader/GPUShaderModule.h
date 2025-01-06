@@ -3,11 +3,10 @@
 #include "GPU/Core/GPUDevice.h"
 #include "GPU/Core/GPUContext.hpp"
 
-class GPUShaderModule {
-
+class GPUShaderModule
+{
 public:
-    explicit GPUShaderModule(WeakPtr<GPUContext> gpuContext);
-    bool init(const std::vector<byte>& moduleContent);
+    bool init(WeakPtr<GPUContext> gpuContext, const std::vector<byte>& moduleContent);
     void terminate();
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;

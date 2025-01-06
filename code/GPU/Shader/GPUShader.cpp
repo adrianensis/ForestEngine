@@ -3,12 +3,6 @@
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 #include "GPU/GPUInstance.hpp"
 
-GPUShader::GPUShader()
-{
-    vertexShader = new GPUShaderModule(GET_SYSTEM(GPUInstance).mGPUContext);
-    fragmentShader = new GPUShaderModule(GET_SYSTEM(GPUInstance).mGPUContext);
-};
-
 void GPUShader::enable() const
 {
 //	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);
@@ -23,7 +17,6 @@ void GPUShader::enable() const
     constexpr u32 dynamicOffsetCount = 0;
     constexpr u32* dynamicOffsets = nullptr;
     vkCmdBindDescriptorSets(vulkanCommandBuffer->getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
-
 }
 
 void GPUShader::disable() const
@@ -115,16 +108,18 @@ void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorS
 
 void GPUShader::compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment)
 {
-    if (!vertexShader->init(vertex)) {
+    if (!vertexShader.init(mGPUContext, vertex))
+    {
         CHECK_MSG(false, "Could not initialize vertex shader");
         // return false;
     }
-    if (!fragmentShader->init(fragment)) {
+    if (!fragmentShader.init(mGPUContext, fragment))
+    {
         CHECK_MSG(false, "Could not initialize fragment shader");
         // return false;
     }
 
-    if (!gpuShaderPipeline->init(*vertexShader, *fragmentShader, mGPUShaderDescriptorSets->descriptorSetLayout, mGPUVertexInputData))
+    if (!gpuShaderPipeline->init(vertexShader, fragmentShader, mGPUShaderDescriptorSets->descriptorSetLayout, mGPUVertexInputData))
     {
         CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
     }

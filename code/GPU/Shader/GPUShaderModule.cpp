@@ -1,8 +1,9 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-GPUShaderModule::GPUShaderModule(WeakPtr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
+bool GPUShaderModule::init(WeakPtr<GPUContext> gpuContext, const std::vector<byte>& moduleContent)
+{
+    mGPUContext = gpuContext;
 
-bool GPUShaderModule::init(const std::vector<byte>& moduleContent) {
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = moduleContent.size();
@@ -17,7 +18,8 @@ bool GPUShaderModule::init(const std::vector<byte>& moduleContent) {
     return true;
 }
 
-void GPUShaderModule::terminate() {
+void GPUShaderModule::terminate()
+{
     vkDestroyShaderModule(mGPUContext->vulkanDevice->getDevice(), mShaderModule, ALLOCATOR);
     LOG("Destroyed Vulkan shader module");
 }
