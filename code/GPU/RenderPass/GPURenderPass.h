@@ -28,7 +28,7 @@ public:
     WeakPtr<GPUContext> mGPUContext;
 private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
-    u32 swapChainImageIndex;
+    u32 swapChainImageIndex = 0;
     std::vector<GPUFramebuffer> framebuffers;
     GPUImage vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;
