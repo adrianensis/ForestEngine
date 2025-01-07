@@ -30,4 +30,10 @@ public:
     static bool initializeSyncObjects(WeakPtr<GPUContext> gpuContext);
 
     static void drawIndexed(VkCommandBuffer commandBuffer, u32 indexCount, u32 instanceCount, u32 firstIndex, i32 vertexOffset, u32 firstInstance);
+
+    static void beginCmd(WeakPtr<GPUContext> gpuContext, VkRenderPass renderPass, VkFramebuffer vulkanFramebuffer);
+    static void endCmd(WeakPtr<GPUContext> gpuContext);
+    static u32 frameAcquisition(WeakPtr<GPUContext> gpuContext);
+    static void commandSubmission(WeakPtr<GPUContext> gpuContext);
+    static void framePresentation(WeakPtr<GPUContext> gpuContext, const std::vector<u32>& imageIndices);
 };

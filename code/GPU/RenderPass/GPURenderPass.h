@@ -23,13 +23,7 @@ private:
     bool initializeDepthResources();
     bool initializeFramebuffers();
 
-    void beginCmd(const GPUCommandBuffer* vulkanCommandBuffer, const GPUFramebuffer& vulkanFramebuffer) const;
-    void endCmd(const GPUCommandBuffer* vulkanCommandBuffer) const;
-    void commandRecordingBegin();
-    void commandRecordingEnd();
-    void frameAcquisition();
-    void commandSubmission();
-    void framePresentation();
+
 public:
     WeakPtr<GPUContext> mGPUContext;
 private:
