@@ -20,9 +20,9 @@ class ShaderDefault : public Shader
 {
 public:
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const override;
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const override;
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder, 
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const override;
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const override;
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
 
 protected:
@@ -38,8 +38,8 @@ protected:
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;
 
-    virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const;
-    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const;
+    virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const;
+    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const;
 
     void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
 };

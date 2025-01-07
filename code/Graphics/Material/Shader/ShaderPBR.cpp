@@ -85,7 +85,7 @@ void ShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerat
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
-void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, GPUShaderDescriptorSets* gpuShaderDescriptorSets) const
+void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
     ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
 

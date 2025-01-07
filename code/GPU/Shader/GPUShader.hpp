@@ -21,10 +21,10 @@ public:
 private:
 	u32 mProgramId = 0;
     WeakPtr<GPUContext> mGPUContext;
-    GPUShaderPipeline* gpuShaderPipeline = nullptr;
+    OwnerPtr<GPUShaderPipeline> mGPUShaderPipeline;
     GPUShaderModule vertexShader;
     GPUShaderModule fragmentShader;
-    GPUShaderDescriptorSets* mGPUShaderDescriptorSets = nullptr;
+    OwnerPtr<GPUShaderDescriptorSets> mGPUShaderDescriptorSets;
     GPUVertexInputData mGPUVertexInputData;
 public:
     GET(GPUShaderDescriptorSets)

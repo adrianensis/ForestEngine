@@ -5,13 +5,12 @@
 
 void GPUShader::enable() const
 {
-//	GET_SYSTEM(GPUInterface).enableProgram(mProgramId);
     const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    gpuShaderPipeline->bind(*vulkanCommandBuffer);
+    mGPUShaderPipeline->bind(*vulkanCommandBuffer);
 
     VkDescriptorSet descriptorSet = mGPUShaderDescriptorSets->descriptorSets[mGPUContext->currentFrame];
     VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    VkPipelineLayout pipelineLayout = gpuShaderPipeline->getPipelineLayout();
+    VkPipelineLayout pipelineLayout = mGPUShaderPipeline->getPipelineLayout();
     constexpr u32 firstSet = 0;
     constexpr u32 descriptorSetCount = 1;
     constexpr u32 dynamicOffsetCount = 0;
@@ -21,31 +20,24 @@ void GPUShader::enable() const
 
 void GPUShader::disable() const
 {
-//	GET_SYSTEM(GPUInterface).disableProgram(mProgramId);
 }
 
 void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, WeakPtr<GPUContext> gpuContext)
 {
-//    mProgramId = GET_SYSTEM(GPUInterface).compileProgram(vertex, fragment);
     mGPUContext = gpuContext;
-    // mUniformBuffers = uniformBuffers;
-    mGPUShaderDescriptorSets = new GPUShaderDescriptorSets();
+    mGPUShaderDescriptorSets = OwnerPtr<GPUShaderDescriptorSets>::newObject();
     mGPUShaderDescriptorSets->init(gpuShaderDescriptorSetsData, mGPUContext);
 
-    if(!gpuShaderPipeline)
+    if(!mGPUShaderPipeline)
     {
-        gpuShaderPipeline = new GPUShaderPipeline(vulkanRenderPass, mGPUContext);
+        mGPUShaderPipeline = OwnerPtr<GPUShaderPipeline>::newObject(vulkanRenderPass, mGPUContext);
     }
-
-    // createDescriptors();
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(vertexInputBuffers.size());
     mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(vertexInputBuffers.size());
     FOR_ARRAY(i, vertexInputBuffers)
     {
         const GPUVertexBuffer& gpuVertexBuffer = vertexInputBuffers[i];
-        // gpuVertexBuffer.mData.mGPUVariableData.
-
         mGPUVertexInputData.mVertexInputBindingDescriptions[i].binding = i;
         mGPUVertexInputData.mVertexInputBindingDescriptions[i].stride = gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes;
         mGPUVertexInputData.mVertexInputBindingDescriptions[i].inputRate = gpuVertexBuffer.mData.mInstanceDivisor == 0 ? VK_VERTEX_INPUT_RATE_VERTEX : VK_VERTEX_INPUT_RATE_INSTANCE;
@@ -111,15 +103,13 @@ void GPUShader::compile(const std::vector<byte>& vertex, const std::vector<byte>
     if (!vertexShader.init(mGPUContext, vertex))
     {
         CHECK_MSG(false, "Could not initialize vertex shader");
-        // return false;
     }
     if (!fragmentShader.init(mGPUContext, fragment))
     {
         CHECK_MSG(false, "Could not initialize fragment shader");
-        // return false;
     }
 
-    if (!gpuShaderPipeline->init(vertexShader, fragmentShader, mGPUShaderDescriptorSets->descriptorSetLayout, mGPUVertexInputData))
+    if (!mGPUShaderPipeline->init(vertexShader, fragmentShader, mGPUShaderDescriptorSets->descriptorSetLayout, mGPUVertexInputData))
     {
         CHECK_MSG(false, "Could not initialize Vulkan graphics pipeline");
     }
@@ -127,12 +117,13 @@ void GPUShader::compile(const std::vector<byte>& vertex, const std::vector<byte>
 
 void GPUShader::terminate()
 {
-    gpuShaderPipeline->terminate();
+    mGPUShaderPipeline->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorSets->descriptorPool, allocationCallbacks);
     vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorSets->descriptorSetLayout, allocationCallbacks);
     
-    delete gpuShaderPipeline;
+    mGPUShaderPipeline.invalidate();
+    mGPUShaderDescriptorSets.invalidate();
 }
 
