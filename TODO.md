@@ -2,6 +2,7 @@
 
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
 - [ ] Shadow Mapping - Use Ortho matrix for directional (the sun) light
+- [ ] Resources - Unload resources: textures, shaders, buffers... everything
 - [ ] UI - Fix scale on resize
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back
