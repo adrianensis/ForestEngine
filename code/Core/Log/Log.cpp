@@ -8,13 +8,16 @@ void Log::init()
 
 void Log::terminate()
 {
-	logFile.close();
+	if(logFile.is_open())
+	{
+		logFile.close();
+	}
 }
 
 void Log::writeLine(const std::string_view& str)
 {
-	std::cout << str << std::endl;
-	logFile << str << std::endl;
+	std::cout << str << "\n";
+	logFile << str << "\n";
 }
 
 void Log::append(const std::string_view& str)
@@ -22,6 +25,10 @@ void Log::append(const std::string_view& str)
 	std::cout << '\r';
 	std::cout << str;
 	logFile << str;
+}
+
+void Log::flush()
+{
 	std::cout.flush();
 }
 

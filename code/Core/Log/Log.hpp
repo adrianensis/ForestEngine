@@ -60,6 +60,7 @@ public:
     static void log(const std::string_view& tag, const std::string_view& message, bool newLine);
     static void brline();
     static void backspace();
+	static void flush();
 
 private:
     static void writeLine(const std::string_view& str);
