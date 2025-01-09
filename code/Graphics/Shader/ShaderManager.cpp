@@ -11,7 +11,11 @@ void ShaderInstance::setDirty()
 void ShaderManager::init()
 {
 	LOG_TRACE()
-    mTextureHandles.resize(300);
+    mTextureHandles.reserve(mInitialTextures);
+    mTextures.reserve(mInitialTextures);
+    // NOTE: We reserve position 0 to represent NULL
+    mTextureHandles.emplace_back();
+    mTextures.emplace_back();
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures, sizeof(TextureHandle) * mTextureHandles.size(), false);
 }
 
@@ -31,7 +35,7 @@ void ShaderManager::update()
 
     FOR_LIST(it, mDirtyShaderInstances)
     {
-        PoolHandler<ShaderInstance> instance = mShaderInstances.getHandler(*it);
+        WeakPtr<ShaderInstance> instance = mShaderInstances.at(*it);
         setShaderInstanceProperties(instance);
     }
     mDirtyShaderInstances.clear();
@@ -45,16 +49,15 @@ void ShaderManager::update()
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
 }
 
-PoolHandler<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
+WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
 {
 	if (!mTexturesByPath.contains(gpuTextureData.mPath))
 	{
         LOG_TRACE()
         PROFILER_CPU()
-        PoolHandler<GPUTexture> shader = mTextures.allocate();
-        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, shader);
-        GPUTexture& texture = mTextures.get(shader);
-        texture.init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, shader.getIndex());
+        WeakPtr<GPUTexture> texture = mTextures.emplace_back(OwnerPtr<GPUTexture>::newObject());
+        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, texture);
+        texture->init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, mTextures.size() - 1);
 
         // u32 size = mTextures.getSize();
         // NOTE: We reserve position 0 to represent NULL
@@ -62,15 +65,10 @@ PoolHandler<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuText
         // mTextureHandles.resize(paddedSize);
         // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
 
-        mTextureHandles[texture.getID() + 1] = texture.getGPUTextureHandle();
+        mTextureHandles.emplace_back(texture->getGPUTextureHandle());
 	}
 
 	return mTexturesByPath.at(gpuTextureData.mPath);
-}
-
-void ShaderManager::unloadTexture(PoolHandler<GPUTexture>& texture)
-{
-    mTextures.free(texture);
 }
 
 void ShaderManager::postShaderCreated(WeakPtr<Shader> shader)
@@ -86,7 +84,7 @@ void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
     {
         LOG_TRACE()
         PROFILER_CPU()
-        mTextureBindingsByShader.emplace(id, std::unordered_map<HashedString, PoolHandler<GPUTexture>>());
+        mTextureBindingsByShader.emplace(id, std::unordered_map<HashedString, WeakPtr<GPUTexture>>());
 
         FOR_MAP(it, shader->getShaderData().mTextureBindings)
         {
@@ -107,24 +105,24 @@ void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
     }
 }
 
-const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& ShaderManager::getShaderTextureBindings(u32 id) const
+const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& ShaderManager::getShaderTextureBindings(u32 id) const
 {
     return mTextureBindingsByShader.at(id);
 }
 
-PoolHandler<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shader)
+WeakPtr<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shader)
 {
     LOG_TRACE()
     PROFILER_CPU()
-    PoolHandler<ShaderInstance> instance = mShaderInstances.allocate();
+    WeakPtr<ShaderInstance> instance = mShaderInstances.emplace_back(OwnerPtr<ShaderInstance>::newObject());
     instance->mShader = shader;
-    instance->mID = instance.getIndex();
+    instance->mID = mShaderInstances.size() - 1;
     instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
     instance->mSlot = requestShaderInstanceSlot(shader);
 
     return instance;
 }
-void ShaderManager::freeShaderInstance(PoolHandler<ShaderInstance> shaderInstance)
+void ShaderManager::freeShaderInstance(WeakPtr<ShaderInstance> shaderInstance)
 {
     LOG_TRACE()
     PROFILER_CPU()
@@ -172,7 +170,7 @@ void ShaderManager::initShaderInstancePropertiesUniformBuffer(WeakPtr<Shader> sh
     }
 }
 
-void ShaderManager::setShaderInstanceProperties(PoolHandler<ShaderInstance> shaderInstance)
+void ShaderManager::setShaderInstanceProperties(WeakPtr<ShaderInstance> shaderInstance)
 {
     PROFILER_CPU()
 
@@ -200,7 +198,7 @@ void ShaderManager::setShaderInstanceDirty(u32 id)
 {
     PROFILER_CPU()
 
-    PoolHandler<ShaderInstance> shaderInstance = mShaderInstances.getHandler(id);
+    WeakPtr<ShaderInstance> shaderInstance = mShaderInstances.at(id);
     CHECK_MSG(shaderInstance.isValid(), "Invalid shader Instance!");
     WeakPtr<Shader> shader = shaderInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");

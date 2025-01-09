@@ -76,7 +76,7 @@ private:
     Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    PoolHandler<ShaderInstance> mShaderInstance;
+    WeakPtr<ShaderInstance> mShaderInstance;
     bool mUpdateMatrix = false;
 
 public:

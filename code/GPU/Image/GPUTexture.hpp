@@ -23,12 +23,11 @@ public:
     FontData mFontData;
 };
 
-class GPUTexture: public IPoolable
+class GPUTexture
 {
 public:
     void init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
     void terminate();
-    virtual void onPoolFree() override { terminate(); };
     
 private:
 	u32 mGPUTextureId = 0;

@@ -133,7 +133,6 @@ public:
     void disable() const;
     bool hasFramebufferBinding(HashedString bindingName) const;
 
-    void bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const;
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,

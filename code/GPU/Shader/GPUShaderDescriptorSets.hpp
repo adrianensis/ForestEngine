@@ -11,7 +11,7 @@ class GPUShaderTextureBinding
 {
 public:
     HashedString mName;
-    PoolHandler<GPUTexture> mGPUTexture;
+    WeakPtr<GPUTexture> mGPUTexture;
 };
 
 class GPUShaderDescriptorSetsData

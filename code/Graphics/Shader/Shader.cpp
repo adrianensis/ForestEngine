@@ -90,33 +90,6 @@ bool Shader::hasFramebufferBinding(HashedString bindingName) const
     return mFramebufferBindings.contains(bindingName);
 }
 
-void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
-{
-    // gpuShader->enable();
-
-    // u32 textureUnit = 0;
-    // FOR_MAP(it, mFramebufferBindings)
-    // {
-    //     gpuShader->bindUniformValue<i32>(GPUShaderDefinitions::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
-    //     textureUnit++;
-    // }
-
-    // // Init all samplers to disable
-    // FOR_MAP(it, mTextures)
-    // {
-    //     // NOTE: We reserve position 0 to represent NULL
-    //     gpuShader->bindUniformValue<u32>(GPUShaderDefinitions::Uniforms::getTextureHandler(*it).mName, 0);
-    // }
-
-    // FOR_MAP(it, textures)
-    // {
-    //     // NOTE: We reserve position 0 to represent NULL
-    //     gpuShader->bindUniformValue<u32>(GPUShaderDefinitions::Uniforms::getTextureHandler(it->first).mName, it->second->getID() + 1);
-    // }
-
-    // gpuShader->disable();
-}
-
 void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
 {
     mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
@@ -133,7 +106,7 @@ OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompilationData& shaderCom
     mShaderCompilationData = shaderCompilationData;
 
     std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
-    const std::unordered_map<HashedString, PoolHandler<GPUTexture>> &shaderTextures = GET_SYSTEM(ShaderManager).getShaderTextureBindings(getID());
+    const std::unordered_map<HashedString, WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(ShaderManager).getShaderTextureBindings(getID());
     FOR_MAP(it, shaderTextures)
     {
         gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
