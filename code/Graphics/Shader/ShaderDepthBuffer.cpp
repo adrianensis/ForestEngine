@@ -1,5 +1,4 @@
-#include "Graphics/Material/Shader/ShaderDepthBuffer.hpp"
-#include "Graphics/Material/Material.hpp"
+#include "Graphics/Shader/ShaderDepthBuffer.hpp"
 #include "Graphics/Light/Light.hpp"
 
 using namespace ShaderBuilderNodes;

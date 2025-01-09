@@ -1,6 +1,6 @@
 #include "UI/UIFont.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
-#include "UI/UIMaterial.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
+#include "UI/UIShader.hpp"
 
 void UIFontsManager::init()
 {
@@ -34,14 +34,14 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
 {
     mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile, fontSize);
 
-    MaterialData materialData;
-    materialData.mMaxInstances = 500;
-    materialData.mIsFont = true;
-    materialData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
-    materialData.mFontData = mFontData;
-    materialData.setSharedMaterialPropertiesBlock<MaterialPropertiesBlockUI>();
-    materialData.mSharedMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
-    mFontMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderUIFont>(materialData);
+    ShaderData shaderData;
+    shaderData.mMaxInstances = 500;
+    shaderData.mIsFont = true;
+    shaderData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath, GPUPipelineStage::FRAGMENT});
+    shaderData.mFontData = mFontData;
+    shaderData.setSharedShaderPropertiesBlock<ShaderPropertiesBlockUI>();
+    shaderData.mSharedShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
+    mFontShader = GET_SYSTEM(ShaderManager).createShader<ShaderUIFont>(shaderData);
 
     mFontData.freeGlyphsBuffers();
 }

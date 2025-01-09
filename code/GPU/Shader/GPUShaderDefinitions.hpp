@@ -137,7 +137,7 @@ public:
         inline static const GPUVariableDefinitionData mBonesWeights{GPUStorage::IN, PrimitiveTypes::mVector4, "in_Weights"};
         inline static const GPUVariableDefinitionData mInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_instanceID"};
         inline static const GPUVariableDefinitionData mObjectID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_objectId"};
-        inline static const GPUVariableDefinitionData mMaterialInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_materialInstanceId"};
+        inline static const GPUVariableDefinitionData mShaderInstanceID{GPUStorage::IN, PrimitiveTypes::mUnsignedInt, "in_shaderInstanceId"};
     };
 
     class VertexOutput
@@ -157,7 +157,7 @@ public:
         inline static const GPUVariableDefinitionData mFragPositionLight{GPUStorage::OUT, PrimitiveTypes::mVector4, "vFragPositionLightSpace"};
         inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vInstanceID"};
         inline static const GPUVariableDefinitionData mObjectID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vObjectId"};
-        inline static const GPUVariableDefinitionData mMaterialInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vMaterialInstanceId"};
+        inline static const GPUVariableDefinitionData mShaderInstanceID{GPUInterpolation::FLAT, GPUStorage::OUT, PrimitiveTypes::mUnsignedInt, "vShaderInstanceId"};
     };
 
     class FragmentInput
@@ -176,7 +176,7 @@ public:
         inline static const GPUVariableDefinitionData mFragPositionLight{GPUStorage::IN, VertexOutput::mFragPositionLight};
         inline static const GPUVariableDefinitionData mInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mInstanceID};
         inline static const GPUVariableDefinitionData mObjectID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mObjectID};
-        inline static const GPUVariableDefinitionData mMaterialInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mMaterialInstanceID};
+        inline static const GPUVariableDefinitionData mShaderInstanceID{GPUInterpolation::FLAT, GPUStorage::IN, VertexOutput::mShaderInstanceID};
     };
 
     class FragmentOutput

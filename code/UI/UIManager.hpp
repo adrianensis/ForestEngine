@@ -6,9 +6,9 @@
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"
 #include "UI/UIFont.hpp"
-#include "UI/UIMaterial.hpp"
+#include "UI/UIShader.hpp"
 
-class Material;
+class Shader;
 class Scene;
 
 class UIManager: public System
@@ -18,7 +18,7 @@ public:
     virtual void terminate() override;
 
     const FontGlyphData& getGlyphData(char character) const;
-    PoolHandler<Material> getFontMaterial() const;
+    WeakPtr<Shader> getFontShader() const;
 
 	UIGroup& getOrCreateGroup(HashedString groupName)
 	{
@@ -42,9 +42,9 @@ private:
 	TEntityHandler<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     HashedString mDefaultFont;
-    PoolHandler<Material> mDefaultUIMaterial;
+    WeakPtr<Shader> mDefaultUIShader;
 
 public:
-    GET(DefaultUIMaterial)
+    GET(DefaultUIShader)
 };
 REGISTER_CLASS(UIManager);

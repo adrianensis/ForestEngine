@@ -62,6 +62,6 @@ void GPUMesh::populateGPUVertexBuffersContainer(GPUVertexBuffersContainer& gpuVe
     GPUVertexBufferData bufferDataObjectIDs(GPUShaderDefinitions::VertexInput::mObjectID, 1);
     gpuVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, isStatic);
 
-    GPUVertexBufferData bufferDataMaterialInstanceIDs(GPUShaderDefinitions::VertexInput::mMaterialInstanceID, 1);
-    gpuVertexBuffersContainer.addVertexBuffer(bufferDataMaterialInstanceIDs, isStatic);
+    GPUVertexBufferData bufferDataShaderInstanceIDs(GPUShaderDefinitions::VertexInput::mShaderInstanceID, 1);
+    gpuVertexBuffersContainer.addVertexBuffer(bufferDataShaderInstanceIDs, isStatic);
 }

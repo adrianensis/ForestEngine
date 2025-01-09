@@ -4,11 +4,11 @@
 #include "SpacePartition/OcTree.hpp"
 
 #include "Scene/Transform.hpp"
-#include "Graphics/Material/Material.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
+#include "Graphics/Shader/Shader.hpp"
 
 class InstancedMeshRenderer;
-class MaterialInstance;
+class ShaderInstance;
 
 class StencilData
 {
@@ -48,7 +48,7 @@ public:
     StencilData mStencilData;
     WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
-    PoolHandler<Material> mMaterial;
+    WeakPtr<Shader> mShader;
     std::unordered_set<ClassId> mRenderPassIDs;
 };
 
@@ -76,7 +76,7 @@ private:
     Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    PoolHandler<MaterialInstance> mMaterialInstance;
+    PoolHandler<ShaderInstance> mShaderInstance;
     bool mUpdateMatrix = false;
 
 public:
@@ -85,7 +85,7 @@ public:
 public:
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
-    RGET(MaterialInstance)
+    RGET(ShaderInstance)
     CRGET_SET(RenderSlot)
     CRGET_SET(InstanceSlot)
     GET_SET(UpdateMatrix)

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 #include "GPU/Shader/GPUShaderModule.h"
+#include "Graphics/TextureAnimation/TextureAnimation.hpp"
 
-class Material;
+class Shader;
 class GPUMesh;
 
 class FramebufferBinding
@@ -33,26 +34,15 @@ public:
     inline static const HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
 };
 
-class ShaderCompileData
+class ShaderCompilationData
 {
 public:
-    PoolHandler<Material> mMaterial;
     WeakPtr<const GPUMesh> mMesh;
     GPURenderPass* vulkanRenderPass;
     HashedString label;
     HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
-};
-
-class ShaderData
-{
-public:
-    GPUStructDefinition mPropertiesBlockStructDefinition;
-    GPUUniformBufferData mPropertiesBlockUniformBufferData;
-    std::unordered_set<HashedString> mTextures;
-    std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
-    ShaderCompileData mShaderCompileData;
 };
 
 class ShaderGenerationDataCommon
@@ -92,6 +82,42 @@ public:
     ShaderGenerationDataFragment mFragmentVariables;
 };
 
+class ShaderData
+{
+public:
+    GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
+    bool mAllowInstances = true;
+    u32 mMaxInstances = 100;
+    bool mIsFont = false;
+    FontData mFontData;
+    std::unordered_map<HashedString, TextureBinding> mTextureBindings;
+    std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
+
+    GenericObjectBuffer mSharedShaderPropertiesBlockBuffer;
+    ClassDefinition mSharedShaderPropertiesBlockClass;
+
+    template<class T>
+    void setSharedShaderPropertiesBlock()
+    {
+        mSharedShaderPropertiesBlockBuffer.set<T>();
+        mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
+    }
+
+    u32 getSharedShaderPropertiesBlockBufferSize() const
+    {
+        return mSharedShaderPropertiesBlockBuffer.getByteBuffer().size();
+    }
+    bool allowInstances() const
+    {
+        return mAllowInstances && mMaxInstances > 0 && getSharedShaderPropertiesBlockBufferSize() > 0;
+    }
+
+    u32 getMaxInstances() const
+    {
+        return mAllowInstances ? mMaxInstances : 1;
+    }
+};
+
 class GPURenderPass;
 
 class Shader
@@ -99,8 +125,9 @@ class Shader
 public:
     Shader() = default;
     virtual ~Shader() = default;
-    void init();
+    void init(const ShaderData& shaderData, u32 id);
     void terminate();
+    // virtual void onPoolFree() override { terminate(); };
 
     void enable() const;
     void disable() const;
@@ -117,18 +144,26 @@ public:
         {};
 
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUShader> compileShader(const ShaderCompileData& shaderCompileData);
+    OwnerPtr<GPUShader> compileShader(const ShaderCompilationData& shaderCompilationData);
 
 
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock();
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock();
     virtual void registerTextures() {};
 
 protected:
+    GPUStructDefinition mPropertiesBlockStructDefinition;
+    GPUUniformBufferData mPropertiesBlockUniformBufferData;
+    std::unordered_set<HashedString> mTextures;
+    std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
+    ShaderCompilationData mShaderCompilationData;
     ShaderData mShaderData;
+    u32 mID = 0;
 
 public:
-
     CRGET(ShaderData)
+    CRGET(PropertiesBlockStructDefinition)
+    CRGET(PropertiesBlockUniformBufferData)
+    GET(ID)
 };
 REGISTER_CLASS(Shader)

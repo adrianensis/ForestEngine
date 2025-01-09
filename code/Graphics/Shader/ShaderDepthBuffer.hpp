@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Material/Shader/ShaderPBR.hpp"
+#include "Graphics/Shader/ShaderPBR.hpp"
 
 class ShaderDepthBuffer : public ShaderPBR
 {

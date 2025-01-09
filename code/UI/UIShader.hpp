@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Graphics/Material/Shader/ShaderDefault.hpp"
-#include "Graphics/Material/Material.hpp"
+#include "Graphics/Shader/ShaderDefault.hpp"
 
-class MaterialPropertiesBlockUI
+class ShaderPropertiesBlockUI
 {
 public:
     Vector4 mColor = Vector4(0,0,0,1);
@@ -11,12 +10,12 @@ public:
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
 };
-REGISTER_CLASS(MaterialPropertiesBlockUI)
+REGISTER_CLASS(ShaderPropertiesBlockUI)
 
 class ShaderUI : public ShaderDefault
 {
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
     virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const override;

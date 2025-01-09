@@ -9,7 +9,7 @@ public:
 
     void init(WeakPtr<const GPUMesh> mesh);
     void resize(u32 size);
-    void setInstanceData(u32 instanceId, u32 objectId, u32 materialInstanceId);
+    void setInstanceData(u32 instanceId, u32 objectId, u32 shaderInstanceId);
 private:
     void appendMeshData(WeakPtr<const GPUMesh> mesh);
     void allocateInstances(u32 maxInstances);
@@ -21,11 +21,11 @@ private:
 	OwnerPtr<GPUMesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;
-    std::vector<u32> mMaterialInstanceIDs;
+    std::vector<u32> mShaderInstanceIDs;
 
 public:
     GET(InternalMesh)
     CRGET(InstanceIDs)
     CRGET(ObjectIDs)
-    CRGET(MaterialInstanceIDs)
+    CRGET(ShaderInstanceIDs)
 };

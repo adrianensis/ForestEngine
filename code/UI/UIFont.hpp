@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Material/Material.hpp"
+#include "Graphics/Shader/Shader.hpp"
 
 class UIFont;
 
@@ -29,9 +29,9 @@ public:
     void init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontSize);
 private:
     FontData mFontData;
-    PoolHandler<Material> mFontMaterial;
+    WeakPtr<Shader> mFontShader;
 public:
-    GET(FontMaterial)
+    GET(FontShader)
     CRGET(FontData)
 };
 REGISTER_CLASS(UIFont);

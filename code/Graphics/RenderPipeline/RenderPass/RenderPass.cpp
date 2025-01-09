@@ -4,8 +4,8 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/Shader/Shader.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
+#include "Graphics/Shader/Shader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
@@ -37,7 +37,7 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
         mInstancedMeshRenderers.insert(instancedMeshData);
 
         std::vector<GPUUniformBuffer> uniformBuffers;
-        uniformBuffers.push_back(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+        uniformBuffers.push_back(GET_SYSTEM(ShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
     
         WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
         if(model)
@@ -53,18 +53,17 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
         uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
         WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-        ShaderCompileData shaderCompileData
+        ShaderCompilationData shaderCompilationData
         {
-            instancedMeshData.mMaterial,
             instancedMeshData.mMesh,
             mRenderPipeline->vulkanRenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-            HashedString(std::to_string(renderer->getMaterialInstance()->mMaterial->getID())),
+            HashedString(std::to_string(renderer->getShaderInstance()->mShader->getID())),
             uniformBuffers,
             instancedMeshRenderer->getGPUVertexBuffersContainer()
         };
 
-        mGPUShaders.emplace(instancedMeshData, GET_SYSTEM(MaterialManager).getMaterialShader(instancedMeshData.mMaterial)->compileShader(shaderCompileData));
+        mGPUShaders.emplace(instancedMeshData, instancedMeshData.mShader->compileShader(shaderCompilationData));
 
         // setupShader(mGPUShaders.at(instancedMeshData));
         // bindShader(instancedMeshData);
@@ -95,7 +94,7 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     WeakPtr<GPUShader> gpuShader = mGPUShaders.at(instancedMeshData);
-    // gpuShader->bindUniformBuffer(GET_SYSTEM(MaterialManager).getMaterialPropertiesGPUUniformBuffer(instancedMeshData.mMaterial));
+    // gpuShader->bindUniformBuffer(GET_SYSTEM(ShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
     
     // WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     // if(model)
@@ -110,7 +109,7 @@ void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
     // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
     // gpuShader->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
-    // mGPUShaders.at(instancedMeshData)->bindTextures(mGPUShaders.at(instancedMeshData)->getGPUShader(), GET_SYSTEM(MaterialManager).getMaterialTextureBindings(instancedMeshData.mMaterial));
+    // mGPUShaders.at(instancedMeshData)->bindTextures(mGPUShaders.at(instancedMeshData)->getGPUShader(), GET_SYSTEM(ShaderManager).getShaderTextureBindings(instancedMeshData.mShader));
 }
 
 void RenderPass::preRender()

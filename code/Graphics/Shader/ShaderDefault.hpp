@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Material/Shader/Shader.hpp"
+#include "Graphics/Shader/Shader.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 class TextureBindingNames
@@ -27,7 +27,7 @@ public:
 
 protected:
     virtual void registerTextures() override;
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
     virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const;

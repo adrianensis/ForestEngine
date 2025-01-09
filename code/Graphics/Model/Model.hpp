@@ -6,7 +6,7 @@
 #include "cgltf.h"
 
 class GPUSkeletalAnimation;
-class Material;
+class Shader;
 struct cgltf_data;
 struct cgltf_accessor;
 struct cgltf_primitive;
@@ -43,7 +43,7 @@ public:
     };
 
 private:
-    void loadGLTFMaterials();
+    void loadGLTFShaders();
     void loadGLTFMeshes();
     void loadGLTFPrimitive(const cgltf_primitive& primitive);
     void loadGLTFBones(const cgltf_skin& skin);
@@ -94,8 +94,8 @@ private:
     std::vector<OwnerPtr<GPUSkeletalAnimation>> mSkeletalAnimations;
     std::vector<MeshInstanceData> mMeshInstances;
     std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
-    std::unordered_map<const cgltf_material*, PoolHandler<Material>> mGLTFMaterials;
-    std::unordered_map<WeakPtr<const GPUMesh>, PoolHandler<Material>> mMeshMaterials;
+    std::unordered_map<const cgltf_material*, WeakPtr<Shader>> mGLTFShaders;
+    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<Shader>> mMeshShaders;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
@@ -103,7 +103,7 @@ private:
 
 public:
     CRGET(MeshInstances)
-    CRGET(MeshMaterials)
+    CRGET(MeshShaders)
     GET(SkeletonState)
 };
 REGISTER_CLASS(Model);

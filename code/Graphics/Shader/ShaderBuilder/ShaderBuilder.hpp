@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilderNodes.hpp"
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"

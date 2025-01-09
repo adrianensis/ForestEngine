@@ -1,6 +1,5 @@
-#include "Graphics/Material/Shader/Shader.hpp"
-#include "Graphics/Material/Material.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Shader/Shader.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShader.hpp"
@@ -13,13 +12,16 @@
 #include "Core/File/FileUtils.hpp"
 #include <cstdlib>
 
-void Shader::init()
+void Shader::init(const ShaderData& shaderData, u32 id)
 {
+    mShaderData = shaderData;
+	mID = id;
+
     GPUStructDefinition propertiesBlockStructDefinition =
     {
         ShaderPropertiesBlockNames::smPropertiesBlockStructName,
         {
-            generateMaterialPropertiesBlock()
+            generateShaderPropertiesBlock()
         }
     };
 
@@ -40,8 +42,8 @@ void Shader::init()
         ShaderPropertiesBlockNames::smPropertiesBlockInstanceName
     };
 
-    mShaderData.mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
-    mShaderData.mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
+    mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;
+    mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
 
     registerTextures();
 }
@@ -51,7 +53,7 @@ void Shader::terminate()
 
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateMaterialPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock =
     {
@@ -65,7 +67,7 @@ void Shader::enable() const
 {
 	PROFILER_CPU()
     u32 textureUnit = 0;
-    FOR_MAP(it, mShaderData.mFramebufferBindings)
+    FOR_MAP(it, mFramebufferBindings)
     {
 //        GET_SYSTEM(GPUInterface).enableTexture(it->second.mTextureID, textureUnit, it->second.mStage);
         textureUnit++;
@@ -76,7 +78,7 @@ void Shader::disable() const
 {
 	PROFILER_CPU()
     u32 textureUnit = 0;
-    FOR_MAP(it, mShaderData.mFramebufferBindings)
+    FOR_MAP(it, mFramebufferBindings)
     {
 //        GET_SYSTEM(GPUInterface).disableTexture(textureUnit, it->second.mStage);
         textureUnit++;
@@ -85,7 +87,7 @@ void Shader::disable() const
 
 bool Shader::hasFramebufferBinding(HashedString bindingName) const
 {
-    return mShaderData.mFramebufferBindings.contains(bindingName);
+    return mFramebufferBindings.contains(bindingName);
 }
 
 void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map<HashedString, PoolHandler<GPUTexture>>& textures) const
@@ -93,14 +95,14 @@ void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map
     // gpuShader->enable();
 
     // u32 textureUnit = 0;
-    // FOR_MAP(it, mShaderData.mFramebufferBindings)
+    // FOR_MAP(it, mFramebufferBindings)
     // {
     //     gpuShader->bindUniformValue<i32>(GPUShaderDefinitions::Uniforms::getSampler(it->second.mSamplerName).mName, textureUnit);
     //     textureUnit++;
     // }
 
     // // Init all samplers to disable
-    // FOR_MAP(it, mShaderData.mTextures)
+    // FOR_MAP(it, mTextures)
     // {
     //     // NOTE: We reserve position 0 to represent NULL
     //     gpuShader->bindUniformValue<u32>(GPUShaderDefinitions::Uniforms::getTextureHandler(*it).mName, 0);
@@ -117,42 +119,42 @@ void Shader::bindTextures(WeakPtr<GPUShader> gpuShader, const std::unordered_map
 
 void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
 {
-    mShaderData.mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
+    mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
 }
 
 void Shader::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
 }
 
-OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompileData)
+OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompilationData& shaderCompilationData)
 {
     PROFILER_CPU_NAMED(compileShader)
 
-    mShaderData.mShaderCompileData = shaderCompileData;
+    mShaderCompilationData = shaderCompilationData;
 
     std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
-    const std::unordered_map<HashedString, PoolHandler<GPUTexture>> &materialTextures = GET_SYSTEM(MaterialManager).getMaterialTextureBindings(mShaderData.mShaderCompileData.mMaterial);
-    FOR_MAP(it, materialTextures)
+    const std::unordered_map<HashedString, PoolHandler<GPUTexture>> &shaderTextures = GET_SYSTEM(ShaderManager).getShaderTextureBindings(getID());
+    FOR_MAP(it, shaderTextures)
     {
         gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
     }
     
     GPUShaderDescriptorSetsData gpuShaderDescriptorSetsData
     {
-        mShaderData.mShaderCompileData.mUniformBuffers,
+        mShaderCompilationData.mUniformBuffers,
         gpuShaderTextureBindings
     };
 
     OwnerPtr<GPUShader> gpuShader = OwnerPtr<GPUShader>::newObject();
-    gpuShader->init(mShaderData.mShaderCompileData.vulkanRenderPass, gpuShaderDescriptorSetsData, mShaderData.mShaderCompileData.mInputVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext);
+    gpuShader->init(mShaderCompilationData.vulkanRenderPass, gpuShaderDescriptorSetsData, mShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(), GET_SYSTEM(GPUInstance).mGPUContext);
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, mShaderData.mShaderCompileData.mInputVertexBuffersContainer, gpuShader->getGPUShaderDescriptorSets());
-    createFragmentShader(sbFrag, mShaderData.mShaderCompileData.mInputVertexBuffersContainer, gpuShader->getGPUShaderDescriptorSets());
+    createVertexShader(sbVert, mShaderCompilationData.mInputVertexBuffersContainer, gpuShader->getGPUShaderDescriptorSets());
+    createFragmentShader(sbFrag, mShaderCompilationData.mInputVertexBuffersContainer, gpuShader->getGPUShaderDescriptorSets());
 
     std::string stringShaderVert = sbVert.getCode();
-    std::string shaderPathVert = Paths::mOutputShaders.get() + mShaderData.mShaderCompileData.id.get() + "_" + mShaderData.mShaderCompileData.label.get() + ".vert";
+    std::string shaderPathVert = Paths::mOutputShaders.get() + mShaderCompilationData.id.get() + "_" + mShaderCompilationData.label.get() + ".vert";
     FileUtils::writeFile(shaderPathVert, [stringShaderVert](std::ofstream& file)
     {
         file << stringShaderVert;
@@ -164,7 +166,7 @@ OwnerPtr<GPUShader> Shader::compileShader(const ShaderCompileData& shaderCompile
     FileUtils::readFileBinaryData(shaderPathVert + ".spv", stringShaderVertSpvBinary);
 
     std::string stringShaderFrag = sbFrag.getCode();
-    std::string shaderPathFrag = Paths::mOutputShaders.get() + mShaderData.mShaderCompileData.id.get() + "_" + mShaderData.mShaderCompileData.label.get() + ".frag";
+    std::string shaderPathFrag = Paths::mOutputShaders.get() + mShaderCompilationData.id.get() + "_" + mShaderCompilationData.label.get() + ".frag";
     FileUtils::writeFile(shaderPathFrag, [stringShaderFrag](std::ofstream& file)
     {
         file << stringShaderFrag;

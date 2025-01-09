@@ -362,8 +362,8 @@ void UIElement::setColorPressed()
 {
     if(!mRenderer) { return; }
 
-    mRenderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = mConfig.mStyle->mColorPressed;
-    mRenderer->getMaterialInstance()->setDirty();
+    mRenderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mColorPressed;
+    mRenderer->getShaderInstance()->setDirty();
 }
 
 void UIElement::setColorRelease()
@@ -371,8 +371,8 @@ void UIElement::setColorRelease()
     if(!mRenderer) { return; }
 
     bool cursorInside = isMouseCursorInsideElement();
-    mRenderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
-    mRenderer->getMaterialInstance()->setDirty();
+    mRenderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
+    mRenderer->getShaderInstance()->setDirty();
 }
 
 void UIElement::setColorHover()
@@ -380,8 +380,8 @@ void UIElement::setColorHover()
     if(!mRenderer) { return; }
 
     bool cursorInside = isMouseCursorInsideElement();
-    mRenderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
-    mRenderer->getMaterialInstance()->setDirty();
+    mRenderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
+    mRenderer->getShaderInstance()->setDirty();
 }
 
 StencilData UIElement::calculateStencilData() const

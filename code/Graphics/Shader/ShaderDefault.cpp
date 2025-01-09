@@ -1,15 +1,14 @@
-#include "Graphics/Material/Shader/ShaderDefault.hpp"
-#include "Graphics/Material/Material.hpp"
+#include "Graphics/Shader/ShaderDefault.hpp"
 #include "Graphics/Light/Light.hpp"
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
 void ShaderDefault::registerTextures()
 {
-    mShaderData.mTextures.insert(TextureBindingNames::smBaseColor);
+    mTextures.insert(TextureBindingNames::smBaseColor);
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> ShaderDefault::generateMaterialPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> ShaderDefault::generateShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -146,10 +145,10 @@ void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderB
 {
     auto& instanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mInstanceID);
     auto& objectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mMaterialInstanceID);
+    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderInstanceID);
     auto& outInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mInstanceID);
     auto& outObjectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mObjectID);
-    auto& outMaterialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mMaterialInstanceID);
+    auto& outShaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderInstanceID);
 
     if(instanceId.isValid())
     {
@@ -161,10 +160,10 @@ void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderB
         shaderBuilder.getMain().
         set(outObjectId, objectId);
     }
-    if(materialInstanceId.isValid())
+    if(shaderInstanceId.isValid())
     {
         shaderBuilder.getMain().
-        set(outMaterialInstanceId, materialInstanceId);
+        set(outShaderInstanceId, shaderInstanceId);
     }
 }
 
@@ -173,13 +172,13 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     auto& inColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mColor);
     auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     
-    auto& materialInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mMaterialInstanceID);
-    Variable propertiesBlock(getShaderData().mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
-    Variable instanceBaseColor = {getShaderData().mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
+    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderInstanceID);
+    Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
+    Variable instanceBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
 
     Variable baseColor;
     shaderBuilder.getMain().
-    variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(materialInstanceId).dot(instanceBaseColor));
+    variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(shaderInstanceId).dot(instanceBaseColor));
 
     if(inColor.isValid())
     {
@@ -205,12 +204,12 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 
 void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    // FOR_MAP(it, mShaderData.mTextures)
+    // FOR_MAP(it, mTextures)
     // {
     //     shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
     // }
     
-    // FOR_MAP(it, getShaderData().mMaterial->getMaterialData().mTextureBindings)
+    // FOR_MAP(it, mShader->getShaderData().mTextureBindings)
     // {
     //     CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
 
@@ -233,7 +232,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     //     }
     // }
 
-    // FOR_MAP(it, getShaderData().mFramebufferBindings)
+    // FOR_MAP(it, mFramebufferBindings)
     // {
     //     CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
 
@@ -252,12 +251,12 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     //     }
     // }
 
-    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(getShaderData().mPropertiesBlockStructDefinition);
+    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(mPropertiesBlockStructDefinition);
 
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUShaderDefinitions::UniformBuffers::mGlobalData);
     // shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUShaderDefinitions::UniformBuffers::mTextures);
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUShaderDefinitions::UniformBuffers::mModelMatrices);
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(getShaderData().mPropertiesBlockUniformBufferData);
+    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(mPropertiesBlockUniformBufferData);
 
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mPI);
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mPI180);
@@ -292,7 +291,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mFragPositionLight);
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mInstanceID);
     // shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mObjectID);
-    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mMaterialInstanceID);
+    shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mShaderInstanceID);
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0)))
     {
@@ -309,7 +308,7 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mFragPositionLight);
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mInstanceID);
     // shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mObjectID);
-    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mMaterialInstanceID);
+    shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mShaderInstanceID);
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUShaderDefinitions::FragmentOutput::mColor);
 }
 
@@ -347,7 +346,7 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
     // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
 
-    FOR_MAP(it, mShaderData.mTextures)
+    FOR_MAP(it, mTextures)
     {
         shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
         shaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));

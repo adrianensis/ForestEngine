@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Material/Shader/ShaderDefault.hpp"
+#include "Graphics/Shader/ShaderDefault.hpp"
 
 // PBR METALLIC
 
@@ -26,7 +26,7 @@ class ShaderPBR : public ShaderDefault
 public:
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateMaterialPropertiesBlock() override;
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
     virtual void registerTextures() override;
     virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;

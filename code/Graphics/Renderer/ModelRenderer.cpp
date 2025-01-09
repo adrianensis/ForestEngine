@@ -2,7 +2,7 @@
 
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
 #include "Scene/Module.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
@@ -19,7 +19,7 @@ void ModelRenderer::onComponentAdded()
         RendererData rendererData;
 		rendererData.mMesh = (*it).mMesh;
 		rendererData.mMeshInstanceMatrix = (*it).mMatrix;
-		rendererData.mMaterial = mModelRendererData.mModel->getMeshMaterials().at((*it).mMesh);
+		rendererData.mShader = mModelRendererData.mModel->getMeshShaders().at((*it).mMesh);
 		rendererData.mStencilData = mModelRendererData.mStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 

@@ -8,7 +8,7 @@
 #include "UI/UIElements/UIText.hpp"
 #include "UI/UIElements/UIPanel.hpp"
 #include "UI/UIElementConfig.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
 #include "Scene/Module.hpp"
 
 
@@ -112,7 +112,7 @@ public:
 	UI_BUILDER_CONFIG_METHODS(SeparatorSize)
 	UI_BUILDER_CONFIG_METHODS(Parent)
 	UI_BUILDER_CONFIG_METHODS(Style)
-	UI_BUILDER_CONFIG_METHODS(Material)
+	UI_BUILDER_CONFIG_METHODS(Shader)
 
 	CRGET_SET(Config)
 };

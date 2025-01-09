@@ -15,11 +15,10 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Light/Light.hpp"
 
-#include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/Material.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShader.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
-#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
+#include "Graphics/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"

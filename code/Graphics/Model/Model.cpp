@@ -1,8 +1,8 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/Shader/ShaderPBR.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
+#include "Graphics/Shader/ShaderPBR.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Core/Config/Paths.hpp"
@@ -37,7 +37,7 @@ void Model::init(const std::string& path)
 	{
         CHECK_MSG(mCGLTFData->skins_count <= 1, "Only 1 Skin allowed!")
 
-        loadGLTFMaterials();
+        loadGLTFShaders();
 
         if(mCGLTFData->meshes_count > 0)
         {
@@ -49,7 +49,7 @@ void Model::init(const std::string& path)
                 loadGLTFBones(skin);
                 loadGLTFSkeletalAnimations();
 
-                mGLTFMaterials.clear();
+                mGLTFShaders.clear();
                 mChannels.clear();
                 mNodeToBoneId.clear();
             }
@@ -64,86 +64,86 @@ bool Model::isSkinned() const
     return mCGLTFData->skins_count == 1;
 }
 
-void Model::loadGLTFMaterials()
+void Model::loadGLTFShaders()
 {
     LOG_TRACE()
     PROFILER_CPU()
 
     if(mCGLTFData->materials_count > 0)
     {
-        FOR_RANGE(materialIt, 0, mCGLTFData->materials_count)
+        FOR_RANGE(shaderIt, 0, mCGLTFData->materials_count)
         {
-            cgltf_material& cgltfMaterial = mCGLTFData->materials[materialIt];
-            MaterialData materialData;
-            materialData.mAllowInstances = false;
-            materialData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
-            PoolHandler<Material> newMaterial;
+            cgltf_material& cgltfMaterial = mCGLTFData->materials[shaderIt];
+            ShaderData shaderData;
+            shaderData.mAllowInstances = false;
+            shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
+            WeakPtr<Shader> newShader;
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR Meshes are supported")
 
-            materialData.setSharedMaterialPropertiesBlock<PropertiesBlockShaderPBR>();
+            shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderPBR>();
 
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+                shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
             }
             else
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
             }
             if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+                shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
             }
             else
             {
-                materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-                materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
+                shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+                shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
             }
 
             if(cgltfMaterial.normal_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
-                materialData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
+                shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string()), GPUPipelineStage::FRAGMENT});
             }
 
-            newMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
+            newShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {
-            //     materialData.mSharedMaterialPropertiesBlockBuffer.set<SpecularGlossiness>();
-            //     shader = new ShaderPBRSpecularGlossiness();
+            //     shaderData.mSharedShaderPropertiesBlockBuffer.set<SpecularGlossiness>();
+            //     material = new ShaderPBRSpecularGlossiness();
 
             //     if(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture)
             //     {
             //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture->image->uri);
-            //         materialData.mTextureBindings[(u32)TextureMap::DIFFUSE] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //         shaderData.mTextureBindings[(u32)TextureMap::DIFFUSE] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
             //     }
             //     else
             //     {
             //         cgltf_float* diffuse = cgltfMaterial.pbr_specular_glossiness.diffuse_factor;
-            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
+            //         shaderData.mSharedShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
             //     }
             //     if(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture)
             //     {
             //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture->image->uri);
-            //         materialData.mTextureBindings[(u32)TextureMap::SPECULAR_GLOSSINESS] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //         shaderData.mTextureBindings[(u32)TextureMap::SPECULAR_GLOSSINESS] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
             //     }
             //     else
             //     {
             //         cgltf_float* specular = cgltfMaterial.pbr_specular_glossiness.specular_factor;
             //         cgltf_float glossiness = cgltfMaterial.pbr_specular_glossiness.glossiness_factor;
-            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(specular[0], specular[1], specular[2]);
-            //         materialData.mSharedMaterialPropertiesBlockBuffer.get<SpecularGlossiness>().mGlossiness = Vector3(glossiness, glossiness, glossiness);
+            //         shaderData.mSharedShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(specular[0], specular[1], specular[2]);
+            //         shaderData.mSharedShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mGlossiness = Vector3(glossiness, glossiness, glossiness);
             //     }
             // }
 
-            if(! mGLTFMaterials.contains(&cgltfMaterial))
+            if(! mGLTFShaders.contains(&cgltfMaterial))
             {
-                mGLTFMaterials.insert_or_assign(&cgltfMaterial, newMaterial);
+                mGLTFShaders.insert_or_assign(&cgltfMaterial, newShader);
             }
         }
     }
@@ -219,17 +219,17 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
     GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
 
-    PoolHandler<Material> meshMaterial;
+    WeakPtr<Shader> meshShader;
     if(primitive.material)
     {
-        meshMaterial = mGLTFMaterials[primitive.material];
+        meshShader = mGLTFShaders[primitive.material];
     }
     else
     {
-        meshMaterial = GET_SYSTEM(ModelManager).getDefaultModelMaterial();
+        meshShader = GET_SYSTEM(ModelManager).getDefaultModelShader();
     }
 
-    mMeshMaterials[mesh] = meshMaterial;
+    mMeshShaders[mesh] = meshShader;
 
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     FOR_RANGE(attributeIt, 0, primitive.attributes_count)

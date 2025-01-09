@@ -2,7 +2,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/Material/Shader/ShaderPBR.hpp"
+#include "Graphics/Shader/ShaderPBR.hpp"
 
 void RenderPassGeometry::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {

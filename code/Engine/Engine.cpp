@@ -40,7 +40,7 @@ void Engine::init()
     CREATE_SYSTEM(TimerManager);
     CREATE_SYSTEM(EventsManager);
     CREATE_SYSTEM(GPUMeshFactory);
-    CREATE_SYSTEM(MaterialManager);
+    CREATE_SYSTEM(ShaderManager);
     CREATE_SYSTEM(CameraManager);
     CREATE_SYSTEM(GPUSkeletalAnimationManager);
     CREATE_SYSTEM(ModelManager);

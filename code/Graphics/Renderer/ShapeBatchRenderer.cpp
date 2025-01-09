@@ -3,9 +3,9 @@
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Graphics/Material/Shader/ShaderBuilder/ShaderBuilder.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
-#include "Graphics/Material/Shader/ShaderDefault.hpp"
+#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
+#include "Graphics/Shader/ShaderDefault.hpp"
 
 void ShapeBatchRenderer::terminate()
 {
@@ -41,11 +41,9 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
     // mGPUVertexBuffersContainer.disable();
 
-    MaterialData materialData;
-    PoolHandler<Material> lineMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
-    mShader = OwnerPtr<Shader>::moveCast(OwnerPtr<ShaderDefault>::newObject());
-    mShader->init();
-    // mShader->compileShader("Shape", HashedString(std::to_string(lineMaterial->getID())), mGPUVertexBuffersContainer);
+    ShaderData shaderData;
+    mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
+    // mShader->compileShader("Shape", HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
 
     // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
 }

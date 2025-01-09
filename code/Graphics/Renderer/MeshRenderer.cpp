@@ -1,12 +1,12 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
-#include "Graphics/Material/TextureAnimation/TextureAnimationFrame.hpp"
+#include "Graphics/TextureAnimation/TextureAnimationFrame.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "GPU/Image/GPUTexture.hpp"
-#include "Graphics/Material/MaterialManager.hpp"
+#include "Graphics/Shader/ShaderManager.hpp"
 #include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Material/TextureAnimation/TextureAnimation.hpp"
+#include "Graphics/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Scene/Module.hpp"
 
@@ -15,8 +15,8 @@ ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClass
 void MeshRenderer::init(const RendererData& data) 
 {
     mRendererData = data;
-    mMaterialInstance = GET_SYSTEM(MaterialManager).createMaterialInstance(mRendererData.mMaterial);
-    mMaterialInstance->setDirty();
+    mShaderInstance = GET_SYSTEM(ShaderManager).createShaderInstance(mRendererData.mShader);
+    mShaderInstance->setDirty();
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -26,7 +26,7 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(MaterialManager).freeMaterialInstance(mMaterialInstance);
+    GET_SYSTEM(ShaderManager).freeShaderInstance(mShaderInstance);
     mRenderSlot.reset();
     mInstanceSlot.reset();
 }
@@ -66,8 +66,8 @@ void MeshRenderer::updateTextureRegion()
     //     const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
     //     // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
     //     // {
-    //     //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
-    //     //     mMaterialInstance.mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+    //     //     mShaderInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
+    //     //     mShaderInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
     //     // }
     // }
 }
@@ -75,7 +75,7 @@ void MeshRenderer::updateTextureRegion()
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    const auto& textureAnimationsMap = mRendererData.mMaterial->getMaterialData().mTextureAnimations;
+    const auto& textureAnimationsMap = mRendererData.mShader->getShaderData().mTextureAnimations;
     if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
     {
         currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);

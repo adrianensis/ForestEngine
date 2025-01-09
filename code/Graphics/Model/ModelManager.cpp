@@ -1,15 +1,15 @@
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Material/Shader/ShaderPBR.hpp"
+#include "Graphics/Shader/ShaderPBR.hpp"
 
 void ModelManager::init()
 {
-    MaterialData materialData;
-    materialData.mMaxInstances = 500;
-    materialData.setSharedMaterialPropertiesBlock<PropertiesBlockShaderPBR>();
+    ShaderData shaderData;
+    shaderData.mMaxInstances = 500;
+    shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderPBR>();
     // pink
-    materialData.mSharedMaterialPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
-    mDefaultModelMaterial = GET_SYSTEM(MaterialManager).createMaterial<ShaderDefault>(materialData);
+    shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
+    mDefaultModelShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
 }
 
 void ModelManager::terminate()

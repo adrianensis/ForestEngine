@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
-#include "Graphics/Material/Shader/Shader.hpp"
+#include "Graphics/Shader/Shader.hpp"
 
 class ShapeBatchRenderer
 {
@@ -20,7 +20,7 @@ private:
     void addPosition(const Vector3& position);
     void addColor(const Vector4& color);
 private: 
-	OwnerPtr<Shader> mShader;
+	WeakPtr<Shader> mShader;
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;

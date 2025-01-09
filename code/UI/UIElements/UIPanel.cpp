@@ -59,7 +59,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
-    rendererData.mMaterial = mConfig.mMaterial;
+    rendererData.mShader = mConfig.mShader;
     rendererData.mStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
@@ -68,7 +68,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
-	renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mDepth = mConfig.mLayer;
-	renderer->getMaterialInstance()->mMaterialPropertiesBlockBuffer.get<MaterialPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
-    renderer->getMaterialInstance()->setDirty();
+	renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
+	renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
+    renderer->getShaderInstance()->setDirty();
 }

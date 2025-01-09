@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "UI/UIMaterial.hpp"
+#include "UI/UIShader.hpp"
 
 void RenderPassUI::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
