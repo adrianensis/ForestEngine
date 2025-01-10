@@ -1,5 +1,6 @@
 # TODO
 
+- [ ] Initialize buffers with size instead of init + resize
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
 - [ ] Shadow Mapping - Use Ortho matrix for directional (the sun) light
 - [ ] Resources - Unload resources: textures, shaders, buffers... everything
