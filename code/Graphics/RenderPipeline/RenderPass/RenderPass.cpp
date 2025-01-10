@@ -19,11 +19,13 @@ void RenderPass::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassDa
     { 
         // mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
     }
+
+    mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 }
 
 void RenderPass::terminate()
 {
-
+    mGPUUniformBuffersContainer.terminate();
 }
 
 void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
@@ -49,7 +51,7 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
             }
         }
 
-        uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
+        uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
         uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
         WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
@@ -172,8 +174,8 @@ void RenderPass::updateGlobalData()
 
     TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    Matrix4 projectionViewMatrix = /*mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ?*/ camera->mProjectionMatrix/* : ortho*/;
-    Matrix4 viewMatrix = /*mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ?*/ camera->mViewMatrix/* : Matrix4::smIdentity*/;
+    Matrix4 projectionViewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho;
+    Matrix4 viewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : Matrix4::smIdentity;
 
     projectionViewMatrix.mul(viewMatrix);
 
@@ -182,7 +184,7 @@ void RenderPass::updateGlobalData()
         projectionViewMatrix,
         camera->getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition()
     };
-	GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
+	mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
 void RenderPass::setupShader(WeakPtr<Shader> shader) const

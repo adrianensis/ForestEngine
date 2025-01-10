@@ -55,8 +55,10 @@ protected:
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
     WeakPtr<RenderPipeline> mRenderPipeline;
+    GPUUniformBuffersContainer mGPUUniformBuffersContainer;
 
 public:
+    RGET(GPUUniformBuffersContainer)
     CRGET(RenderPassData)
     CRGET(OutputGPUFramebuffer)
 };
