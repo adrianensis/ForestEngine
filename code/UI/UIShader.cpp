@@ -16,6 +16,11 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateShaderProp
     return propertiesBlock;
 }
 
+void ShaderUI::registerTextures()
+{
+    //ShaderDefault::registerTextures();
+}
+
 void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     // ShaderDefault::fragmentShaderCode(shaderBuilder);
