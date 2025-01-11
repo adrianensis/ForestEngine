@@ -29,14 +29,10 @@ public:
     bool setData(const void* data, u32 size);
 
 private:
-	u32 mBufferId = 0;
     GPUDataType mGPUDataType;
     bool mIsStatic = false;
 
     
     WeakPtr<GPUContext> mGPUContext;
     GPUBuffer buffer;
-
-public:
-    GET(BufferId)
 };

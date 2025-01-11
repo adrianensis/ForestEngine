@@ -44,7 +44,6 @@ public:
 private:
 	u32 mBindingPoint = 0;
     GPUUniformBufferData mGPUUniformBufferData;
-	u32 mBufferId = 0;
     bool mIsStatic = false;
     void* mGPUPointer = nullptr;
 

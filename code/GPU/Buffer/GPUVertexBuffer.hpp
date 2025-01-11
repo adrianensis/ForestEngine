@@ -49,7 +49,6 @@ public:
 public:
     GPUVertexBufferData mData;
 private:
-	u32 mBufferId = 0;
     u32 mAttributeLocation = 0;
     u32 mAttributeOffset = 0;
     u32 mPreviousOffsetInBytes = 0;
@@ -57,7 +56,4 @@ private:
 
     WeakPtr<GPUContext> mGPUContext;
     GPUBuffer buffer;
-
-public:
-    GET(BufferId)
 };
