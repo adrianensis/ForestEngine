@@ -35,17 +35,20 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     // NEXT: Restore ui/font texture
     auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
     auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    if(inTextureCoord.isValid())
+    if(textureHandler.isValid())
     {
-        // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
-        // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        shaderBuilder.getMain().
-        // ifBlock(textureHandler.notEq("0"s)).
-            set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
-            ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-                line("discard").
-            end();
-        // end();
+        if(inTextureCoord.isValid())
+        {
+            // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+            // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+            shaderBuilder.getMain().
+            // ifBlock(textureHandler.notEq("0"s)).
+                set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
+                ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+                    line("discard").
+                end();
+            // end();
+        }
     }
 }
 
