@@ -116,7 +116,7 @@ origin(0,0) .              * X        X*                    .               v
 
         Vector2 bitmapSize = Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
         Vector2 glyphSizeInAtlasSpace = bitmapSize / Vector2(mWidth, mHeight);
-        Vector2 textureOffset = Vector2((f32)texPos / (f32)mWidth, 0);
+        Vector2 textureOffset = Vector2((f32)texPos / (f32)mWidth, 1);
 
         FontGlyphMetricsData metrics;
         metrics.mSize = Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
@@ -157,7 +157,7 @@ origin(0,0) .              * X        X*                    .               v
     mGlyphAtlasData = new byte[mWidth * mHeight * 1 /*1 channel*/];
 
     u32 bytesOffset = 0;
-    FOR_RANGE(c, 0, mGlyphs.size())
+    FOR_RANGE(c, 0, charSetCount)
     {
         u32 width = mGlyphs[c].mBitmapSize.x;
         u32 height = mGlyphs[c].mBitmapSize.y;
@@ -165,7 +165,7 @@ origin(0,0) .              * X        X*                    .               v
         // " " space case! no size, no data, not supported by vulkan
         if(width == 0)
         {
-            bytesOffset = mGlyphs[c].mAdvance.x;
+            bytesOffset += mGlyphs[c].mAdvance.x;
         }
         else
         {
