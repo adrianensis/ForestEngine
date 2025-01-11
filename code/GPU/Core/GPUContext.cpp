@@ -96,6 +96,39 @@ void GPUContext::init()
     VULKAN_LOG_WARNING("Failed to create Tracy GPU CALIBRATED profiling context.")
     VULKAN_LOG_WARNING("Creating normal Tracy GPU profiling context instead.")
 #endif
+
+    initializeSyncObjects();
+}
+
+void GPUContext::initializeSyncObjects()
+{
+    imageAvailableSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
+    renderFinishedSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
+    inFlightFences.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
+
+    VkSemaphoreCreateInfo semaphoreInfo{};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+    VkFenceCreateInfo fenceInfo{};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
+        if (vkCreateSemaphore(vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &imageAvailableSemaphores[i]) != VK_SUCCESS)
+        {
+            CHECK_MSG(false, "Could not create 'image available' semaphore for frame [{}]");
+        }
+        if (vkCreateSemaphore(vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &renderFinishedSemaphores[i]) != VK_SUCCESS)
+        {
+            CHECK_MSG(false, "Could not create 'render finished' semaphore for frame [{}]");
+        }
+        if (vkCreateFence(vulkanDevice->getDevice(), &fenceInfo, allocationCallbacks, &inFlightFences[i]) != VK_SUCCESS)
+        {
+            CHECK_MSG(false, "Could not create 'in flight' fence for frame [{}]");
+        }
+    }
+    LOG("Created Vulkan sync objects (semaphores & fences)");
 }
 
 void GPUContext::terminate()

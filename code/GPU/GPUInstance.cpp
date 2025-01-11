@@ -12,11 +12,6 @@ void GPUInstance::init()
 
     mGPUContext = OwnerPtr<GPUContext>::newObject();
     mGPUContext->init();
-
-    if (!GPUUtils::initializeSyncObjects(mGPUContext))
-    {
-        CHECK_MSG(false, "Could not create Vulkan sync objects (semaphores & fences)");
-    }
 }
 
 u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)

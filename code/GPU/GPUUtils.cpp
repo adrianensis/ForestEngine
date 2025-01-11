@@ -52,38 +52,6 @@ void GPUUtils::endSingleTimeCommands(WeakPtr<GPUContext> gpuContext, VkCommandBu
     vkFreeCommandBuffers(gpuContext->vulkanDevice->getDevice(), gpuContext->vulkanCommandPool->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
 }
 
-
-bool GPUUtils::initializeSyncObjects(WeakPtr<GPUContext> gpuContext) {
-    gpuContext->imageAvailableSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
-    gpuContext->renderFinishedSemaphores.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
-    gpuContext->inFlightFences.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
-
-    VkSemaphoreCreateInfo semaphoreInfo{};
-    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-    VkFenceCreateInfo fenceInfo{};
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
-        if (vkCreateSemaphore(gpuContext->vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &gpuContext->imageAvailableSemaphores[i]) != VK_SUCCESS)
-        {
-            CHECK_MSG(false, "Could not create 'image available' semaphore for frame [{}]");
-        }
-        if (vkCreateSemaphore(gpuContext->vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &gpuContext->renderFinishedSemaphores[i]) != VK_SUCCESS)
-        {
-            CHECK_MSG(false, "Could not create 'render finished' semaphore for frame [{}]");
-        }
-        if (vkCreateFence(gpuContext->vulkanDevice->getDevice(), &fenceInfo, allocationCallbacks, &gpuContext->inFlightFences[i]) != VK_SUCCESS)
-        {
-            CHECK_MSG(false, "Could not create 'in flight' fence for frame [{}]");
-        }
-    }
-    LOG("Created Vulkan sync objects (semaphores & fences)");
-    return true;
-}
-
 bool GPUUtils::hasStencilComponent(WeakPtr<GPUContext> gpuContext, VkFormat format)
 {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;

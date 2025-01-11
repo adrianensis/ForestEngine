@@ -12,6 +12,7 @@ public:
     void init();
     void terminate();
 private:
+    void initializeSyncObjects();
     bool createSurface();
     void destroySurface() const;
 
