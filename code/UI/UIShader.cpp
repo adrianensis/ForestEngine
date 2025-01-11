@@ -16,16 +16,11 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateShaderProp
     return propertiesBlock;
 }
 
-void ShaderUI::registerTextures()
-{
-    //ShaderDefault::registerTextures();
-}
-
 void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 {
     // ShaderDefault::fragmentShaderCode(shaderBuilder);
 
-    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderInstanceID);
+    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderInstanceID);
     auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable instanceColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
@@ -38,18 +33,20 @@ void ShaderUI::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     set(outColor, baseColor);
     
     // NEXT: Restore ui/font texture
-    // auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
-    // auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
-    // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-
-    // shaderBuilder.getMain().
-    // // ifBlock(textureHandler.notEq("0"s)).
-    //     set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
-    //     ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
-    //         line("discard").
-    //     end();
-    // // end();
+    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
+    auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+    if(inTextureCoord.isValid())
+    {
+        // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+        // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+        shaderBuilder.getMain().
+        // ifBlock(textureHandler.notEq("0"s)).
+            set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
+            ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+                line("discard").
+            end();
+        // end();
+    }
 }
 
 void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const

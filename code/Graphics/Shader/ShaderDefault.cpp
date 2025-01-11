@@ -368,8 +368,11 @@ void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, con
 
     FOR_MAP(it, mTextures)
     {
-        shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
-        shaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
+        if(gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.contains(*it))
+        {
+            shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
+            shaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
+        }
     }
 
     // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { shaderBuilder.get().attribute(Attribute(*it,gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mName))); }

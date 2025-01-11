@@ -17,7 +17,6 @@ class ShaderUI : public ShaderDefault
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
 
-    virtual void registerTextures();
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
     virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const override;
     virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const override;

@@ -41,6 +41,7 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
     shaderData.mFontData = mFontData;
     shaderData.setSharedShaderPropertiesBlock<ShaderPropertiesBlockUI>();
     shaderData.mSharedShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
+    // TODO: share shader between all fonts?? only texture changes
     mFontShader = GET_SYSTEM(ShaderManager).createShader<ShaderUIFont>(shaderData);
 
     mFontData.freeGlyphsBuffers();

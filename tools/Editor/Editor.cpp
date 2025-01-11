@@ -53,8 +53,8 @@ void Editor::firstUpdate()
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
-	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
+	// importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
@@ -407,10 +407,10 @@ void Editor::createUI()
 	// });
 
 
-    mFPSCounter = uiBuilder.
-	setText("000").
-	create<UIText>().
-    getUIElement<UIText>();
+    // mFPSCounter = uiBuilder.
+	// setText("000").
+	// create<UIText>().
+    // getUIElement<UIText>();
 
 	// uiBuilder.
 	// setText("File").
@@ -426,6 +426,13 @@ void Editor::createUI()
 	// addOption("Save", [&](UIElement *uiElement)
 	// {
 	// });
+
+	uiBuilder.
+	setText("ABCDE").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
 	// uiBuilder.
 	// setText("Sprites").
