@@ -116,7 +116,7 @@ origin(0,0) .              * X        X*                    .               v
 
         Vector2 bitmapSize = Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
         Vector2 glyphSizeInAtlasSpace = bitmapSize / Vector2(mWidth, mHeight);
-        Vector2 textureOffset = Vector2((f32)texPos / (f32)mWidth, 1);
+        Vector2 textureOffset = Vector2((f32)texPos / (f32)mWidth, 0);
 
         FontGlyphMetricsData metrics;
         metrics.mSize = Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
@@ -151,7 +151,12 @@ origin(0,0) .              * X        X*                    .               v
         // ImageUtils::flipImageVertically({mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows}, 1);
 
         // Increase texture offset
-        texPos += mGlyphs[c].mBitmapSize.x /*+ 2*/;
+        u32 width = mGlyphs[c].mBitmapSize.x;
+        if(width == 0)
+        {
+            width = mGlyphs[c].mAdvance.x;
+        }
+        texPos += width /*+ 2*/;
     }
 
     mGlyphAtlasData = new byte[mWidth * mHeight * 1 /*1 channel*/];
