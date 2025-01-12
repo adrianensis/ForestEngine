@@ -1,5 +1,4 @@
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
-#include "GPU/GPUInstance.hpp"
 
 GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(u32 i) const
 {
