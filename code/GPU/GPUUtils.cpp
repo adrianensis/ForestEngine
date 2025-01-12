@@ -117,12 +117,7 @@ u32 GPUUtils::frameAcquisition(WeakPtr<GPUContext> gpuContext)
 
     u32 swapChainImageIndex = 0;
 
-    // Wait until the previous frame has finished
-    constexpr u32 fenceCount = 1;
-    constexpr VkBool32 waitForAllFences = VK_TRUE;
-    constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
-    VkFence inFlightFence = gpuContext->inFlightFences[gpuContext->currentFrame];
-    vkWaitForFences(gpuContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
+    waitForFence(gpuContext, gpuContext->currentFrame);
 
     // Acquire an image from the swap chain
     VkFence acquireNextImageFence = VK_NULL_HANDLE;
@@ -149,9 +144,22 @@ u32 GPUUtils::frameAcquisition(WeakPtr<GPUContext> gpuContext)
     }
 
     // After waiting, we need to manually reset the fence to the unsignaled state
+    constexpr u32 fenceCount = 1;
+    VkFence inFlightFence = gpuContext->inFlightFences[gpuContext->currentFrame];
     vkResetFences(gpuContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence);
 
     return swapChainImageIndex;
+}
+
+void GPUUtils::waitForFence(WeakPtr<GPUContext> gpuContext, u32 frameIndex)
+{
+    // Wait until the previous frame has finished
+    constexpr u32 fenceCount = 1;
+    constexpr VkBool32 waitForAllFences = VK_TRUE;
+    constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
+    VkFence inFlightFence = gpuContext->inFlightFences[frameIndex % GPUContext::MAX_FRAMES_IN_FLIGHT];
+    VkResult waitResult = vkWaitForFences(gpuContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
+
 }
 
 void GPUUtils::commandSubmission(WeakPtr<GPUContext> gpuContext)

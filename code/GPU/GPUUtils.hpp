@@ -33,6 +33,7 @@ public:
     static void beginCmd(WeakPtr<GPUContext> gpuContext, VkRenderPass renderPass, VkFramebuffer vulkanFramebuffer);
     static void endCmd(WeakPtr<GPUContext> gpuContext);
     static u32 frameAcquisition(WeakPtr<GPUContext> gpuContext);
+    static void waitForFence(WeakPtr<GPUContext> gpuContext, u32 frameIndex);
     static void commandSubmission(WeakPtr<GPUContext> gpuContext);
     static void framePresentation(WeakPtr<GPUContext> gpuContext, const std::vector<u32>& imageIndices);
 };
