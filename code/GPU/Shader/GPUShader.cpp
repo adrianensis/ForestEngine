@@ -117,6 +117,9 @@ void GPUShader::compile(const std::vector<byte>& vertex, const std::vector<byte>
 
 void GPUShader::terminate()
 {
+    vertexShader.terminate();
+    fragmentShader.terminate();
+
     mGPUShaderPipeline->terminate();
 
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;

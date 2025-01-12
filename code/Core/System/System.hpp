@@ -7,7 +7,7 @@
 class System: public EnablePtrToThis, public IEventObject
 {
 public:
-    virtual ~System() = default;
+    virtual ~System() override = default;
     virtual void init() { };
     virtual void terminate() { };
 };

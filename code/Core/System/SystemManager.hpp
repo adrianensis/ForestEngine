@@ -20,9 +20,10 @@ public:
     WeakPtr<T> createSystem()
     {
         ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        LOG_TAG("SYSTEM", "Creating system: " + std::to_string(classId) + " " + ClassManager::getClassMetadata<T>().mClassDefinition.mName.get());
+        CHECK_MSG(classId > 0, "System has no metadata!");
         CHECK_MSG(!mSystems.contains(classId), "System already created");
-        OwnerPtr<T> newSystem = OwnerPtr<T>::newObject();
-        mSystems.insert_or_assign(classId, OwnerPtr<System>::moveCast(newSystem));
+        mSystems.emplace(classId, OwnerPtr<System>::moveCast(OwnerPtr<T>::newObject()));
         mSystemsInOrder.emplace_back(mSystems.at(classId));
         WeakPtr<T> systemPtr = WeakPtr<T>::cast(mSystems.at(classId));
         systemPtr->init();

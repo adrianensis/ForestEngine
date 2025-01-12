@@ -25,6 +25,7 @@ void Engine::init()
     EntityManager::getInstance().init();
     ComponentsManager::getInstance().init();
 
+    CREATE_SYSTEM(Time);
     CREATE_SYSTEM(EngineConfig);
     // CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(WindowManager);
@@ -67,8 +68,6 @@ void Engine::postSceneChanged()
 
 void Engine::run()
 {
-    CREATE_SYSTEM(Time);
-
 	f32 inverseFPS = 1.0f / mFPS;
 	f32 inverseFPSMillis = inverseFPS * 1000.0f;
 

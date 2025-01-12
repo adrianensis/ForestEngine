@@ -7,7 +7,7 @@
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
-class RenderEngine : public IComponentsListener, public System
+class RenderEngine : public System, public IComponentsListener
 {
 public:
     virtual void init() override;

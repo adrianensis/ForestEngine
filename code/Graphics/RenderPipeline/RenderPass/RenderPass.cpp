@@ -26,6 +26,11 @@ void RenderPass::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassDa
 void RenderPass::terminate()
 {
     mGPUUniformBuffersContainer.terminate();
+
+    FOR_MAP(it, mGPUShaders)
+    {
+        it->second->terminate();
+    }
 }
 
 void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)

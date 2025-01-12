@@ -232,7 +232,10 @@ template<class U>
 friend class RefCountedPtrBase;
 
 public:
-    virtual ~EnablePtrToThis() override = default;
+    virtual ~EnablePtrToThis() override
+    {
+        mPtrToThis.invalidate();
+    };
 protected:
     template<class OtherClass>
     WeakPtr<OtherClass> getPtrToThis() { return WeakPtr<OtherClass>::cast(mPtrToThis); }

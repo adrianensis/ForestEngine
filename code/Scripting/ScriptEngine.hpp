@@ -6,7 +6,7 @@
 #include "Core/ECS/ComponentHandler.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 
-class ScriptEngine: public IComponentsListener, public System
+class ScriptEngine: public System, public IComponentsListener
 {
 public:
     virtual void init() override;

@@ -75,6 +75,10 @@ void RenderPipeline::terminate()
 	{
         it->second->terminate();
 	}
+    FOR_MAP(it, mInstancedMeshesMap)
+	{
+        it->second->terminate();
+	}
 
     mRenderInstancesSlotsManager.reset();
 
