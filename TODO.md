@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Implement resize for Uniform Buffers
 - [ ] Move GPUUtils to GPUContext
 
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
