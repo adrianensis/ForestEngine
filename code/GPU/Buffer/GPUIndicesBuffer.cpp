@@ -1,12 +1,12 @@
 #include "GPU/Buffer/GPUIndicesBuffer.hpp"
 
-void GPUIndicesBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUDataType& gpuDataType, bool isStatic)
+void GPUIndicesBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUDataType& gpuDataType, u32 size, bool isStatic)
 {
     mGPUContext = gpuContext;
     mIsStatic = isStatic;
     mGPUDataType = gpuDataType;
     GPUBufferData gpuBufferData{};
-    gpuBufferData.Size = mGPUDataType.mTypeSizeInBytes * 10;
+    gpuBufferData.Size = mGPUDataType.mTypeSizeInBytes * size;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 

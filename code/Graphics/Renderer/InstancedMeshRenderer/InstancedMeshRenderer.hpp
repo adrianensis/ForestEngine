@@ -22,16 +22,10 @@ public:
     void update();
 
 private:
-    bool shouldRegenerateBuffers() const;
+    bool shouldResize() const;
 
-    void initBuffers();
-    void resizeMeshBuffers(u32 maxInstances);
-    void resizeInstancedBuffers(u32 maxInstances);
     void setMeshBuffers(WeakPtr<const GPUMesh> mesh);
-    void setInstancedBuffers();
     void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
-    void resizeIndicesBuffer(WeakPtr<const GPUMesh> mesh);
-    void setIndicesBuffer(WeakPtr<const GPUMesh> mesh);
     void drawCall();
 
 private:
@@ -39,16 +33,16 @@ private:
 	std::vector<TComponentHandler<MeshRenderer>> mRenderers;
     u32 mRenderersCount = 0;
     std::set<u32> mUsedSlots;
-    inline static const u32 mInitialInstances = 100;
+    inline static const u32 smInitialInstancesSize = 100;
+    u32 mCurrentInstancesSize = 0;
 
 	GPUMeshBatcher mGPUMeshBatcher;
     InstancedMeshData mInstancedMeshData;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 
-	u32 mMaxMeshesThreshold = 0;
-	static const u32 smMeshesIncrement = 100;
-	bool mRegenerateBuffersRequested = false;
+	static const u32 smInstancesSizeIncrement = 100;
+	bool mResizeBuffersRequested = false;
 
 public:
     CRGET(InstancedMeshData)

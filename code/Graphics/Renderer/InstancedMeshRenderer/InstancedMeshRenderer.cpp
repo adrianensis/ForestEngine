@@ -12,14 +12,31 @@ void InstancedMeshRenderer::init(const InstancedMeshData& instancedMeshData)
     PROFILER_CPU()
 	mInstancedMeshData = instancedMeshData;
 
-    mRendererSlotsManager.init(mInitialInstances);
+    mRendererSlotsManager.init(smInitialInstancesSize);
     mRenderers.resize(mRendererSlotsManager.getSize());
 
-	mGPUMeshBatcher.init(mInstancedMeshData.mMesh);
-    initBuffers();
+	mGPUMeshBatcher.init(mInstancedMeshData.mMesh, smInitialInstancesSize);
 
-    resizeMeshBuffers(1);
-    setMeshBuffers(mInstancedMeshData.mMesh);
+    FOR_ARRAY(i, mInstancedMeshData.mMesh->mGPUVertexInputBuffers)
+    {
+        const GPUVariableData& gpuVariableData = mInstancedMeshData.mMesh->mGPUVertexInputBuffers[i];
+        GPUVertexBufferData bufferData(gpuVariableData);
+        // mVertexCount * 1 = only 1 instance
+        mGPUVertexBuffersContainer.addVertexBuffer(bufferData, mInstancedMeshData.mMesh->mVertexCount * 1, mInstancedMeshData.mIsStatic);
+        mGPUVertexBuffersContainer.getVertexBuffer(bufferData).setDataArray(mInstancedMeshData.mMesh->mBuffers.at(bufferData.mGPUVariableData.mName));
+    }
+
+    GPUVertexBufferData bufferDataInstanceIDs(GPUShaderDefinitions::VertexInput::mInstanceID, 1);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
+    GPUVertexBufferData bufferDataObjectIDs(GPUShaderDefinitions::VertexInput::mObjectID, 1);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
+    GPUVertexBufferData bufferDataShaderInstanceIDs(GPUShaderDefinitions::VertexInput::mShaderInstanceID, 1);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataShaderInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
+
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mFace, mGPUMeshBatcher.getInternalMesh()->mIndices.size(), mInstancedMeshData.mIsStatic);
+    mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mGPUMeshBatcher.getInternalMesh()->mIndices);
+    
+    mCurrentInstancesSize = smInitialInstancesSize;
 }
 
 void InstancedMeshRenderer::terminate()
@@ -61,20 +78,20 @@ void InstancedMeshRenderer::addRenderer(TComponentHandler<MeshRenderer> renderer
     PROFILER_CPU_NAMED(add_renderer)
     if(mRendererSlotsManager.isEmpty())
     {
-        mRendererSlotsManager.increaseSize(mInitialInstances);
+        mRendererSlotsManager.increaseSize(smInitialInstancesSize);
         mRenderers.resize(mRendererSlotsManager.getSize());
     }
 
     renderer->setInstanceSlot(mRendererSlotsManager.requestSlot());
     mRenderers.at(renderer->getInstanceSlot().getSlot()) = renderer;
     mUsedSlots.insert(renderer->getInstanceSlot().getSlot());
-	mRegenerateBuffersRequested = true;
+	mResizeBuffersRequested = true;
     mRenderersCount++;
 }
 
 void InstancedMeshRenderer::removeRenderer(TComponentHandler<MeshRenderer> renderer)
 {
-	mRegenerateBuffersRequested = true;
+	mResizeBuffersRequested = true;
     mRenderers.at(renderer->getInstanceSlot().getSlot()).reset();
     mUsedSlots.erase(renderer->getInstanceSlot().getSlot());
     mRendererSlotsManager.freeSlot(renderer->getInstanceSlot());
@@ -83,25 +100,27 @@ void InstancedMeshRenderer::removeRenderer(TComponentHandler<MeshRenderer> rende
 
 void InstancedMeshRenderer::update()
 {
-    if (mRenderers.empty()) { return; }
-    if (!shouldRegenerateBuffers()) { return; }
+    if (mRenderers.empty())
+    {
+        return;
+    }
+    if (!shouldResize())
+    {
+        return;
+    }
 	PROFILER_CPU()
     u32 newSize = mRenderersCount;
-    if (newSize > mMaxMeshesThreshold)
+    if (newSize > mCurrentInstancesSize)
     {
         PROFILER_CPU_NAMED(newSize);
-		if(mMaxMeshesThreshold == 0)
-		{
-			mMaxMeshesThreshold = newSize;
-		}
-		else
-		{
-			mMaxMeshesThreshold += smMeshesIncrement;
-		}
 
-        mGPUMeshBatcher.resize(mMaxMeshesThreshold);
-        resizeInstancedBuffers(mMaxMeshesThreshold);
-    	resizeIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
+		mCurrentInstancesSize += smInstancesSizeIncrement;
+
+        mGPUMeshBatcher.resize(mCurrentInstancesSize);
+        
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(mCurrentInstancesSize);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(mCurrentInstancesSize);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID).resize(mCurrentInstancesSize);
     }
 
     u32 rendererIndex = 0;
@@ -115,79 +134,21 @@ void InstancedMeshRenderer::update()
         }
     }
 
-    mRegenerateBuffersRequested = false;
-
-    setIndicesBuffer(mGPUMeshBatcher.getInternalMesh());
-    setInstancedBuffers();
-}
-
-bool InstancedMeshRenderer::shouldRegenerateBuffers() const
-{
-    // PERF: possible optimization for dynamic objects: only regenerate buffers when transform changes.
-	return mRegenerateBuffersRequested || !mInstancedMeshData.mIsStatic;
-}
-
-void InstancedMeshRenderer::initBuffers()
-{
-    PROFILER_CPU()
-
-    mInstancedMeshData.mMesh->populateGPUVertexBuffersContainer(mGPUVertexBuffersContainer, mInstancedMeshData.mIsStatic);
-    
-    // mGPUVertexBuffersContainer.enable();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mFace, mInstancedMeshData.mIsStatic);
-    // mGPUVertexBuffersContainer.disable();
-}
-
-void InstancedMeshRenderer::resizeMeshBuffers(u32 maxInstances)
-{
-    PROFILER_CPU()
-    FOR_ARRAY(i, mInstancedMeshData.mMesh->mGPUVertexInputBuffers)
-    {
-        const GPUVariableData& gpuVariableData = mInstancedMeshData.mMesh->mGPUVertexInputBuffers[i];
-        mGPUVertexBuffersContainer.getVertexBuffer(gpuVariableData).resize(mInstancedMeshData.mMesh->mVertexCount * maxInstances);
-    }
-}
-
-void InstancedMeshRenderer::resizeInstancedBuffers(u32 maxInstances)
-{
-    PROFILER_CPU()
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(maxInstances);
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(maxInstances);
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID).resize(maxInstances);
-}
-
-void InstancedMeshRenderer::setMeshBuffers(WeakPtr<const GPUMesh> mesh)
-{
-    PROFILER_CPU()
-    FOR_ARRAY(i, mesh->mGPUVertexInputBuffers)
-    {
-        const GPUVariableData& gpuVariableData = mesh->mGPUVertexInputBuffers[i];
-        mGPUVertexBuffersContainer.getVertexBuffer(gpuVariableData).setDataArray(mesh->mBuffers.at(gpuVariableData.mName));
-    }
-}
-
-void InstancedMeshRenderer::setInstancedBuffers()
-{
-    PROFILER_CPU()
-	mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
     mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
     mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID).setDataArray(mGPUMeshBatcher.getShaderInstanceIDs());
+
+    mResizeBuffersRequested = false;
 }
 
 void InstancedMeshRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
 {
 }
 
-void InstancedMeshRenderer::resizeIndicesBuffer(WeakPtr<const GPUMesh> mesh)
+bool InstancedMeshRenderer::shouldResize() const
 {
-    PROFILER_CPU()
-    mGPUVertexBuffersContainer.getIndicesBuffer().resize(mesh->mIndices.size());
-}
-
-void InstancedMeshRenderer::setIndicesBuffer(WeakPtr<const GPUMesh> mesh)
-{
-    PROFILER_CPU()
-    mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mesh->mIndices);
+    // PERF: possible optimization for dynamic objects: only regenerate buffers when transform changes.
+	return mResizeBuffersRequested || !mInstancedMeshData.mIsStatic;
 }
 
 void InstancedMeshRenderer::drawCall()

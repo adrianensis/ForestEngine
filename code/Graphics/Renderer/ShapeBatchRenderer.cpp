@@ -27,17 +27,16 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
 	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
     GPUVertexBufferData bufferDataPosition(GPUShaderDefinitions::VertexInput::mPosition);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataPosition, false);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataPosition, mMaxVertices, false);
     GPUVertexBufferData bufferDataColor(GPUShaderDefinitions::VertexInput::mColor);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataColor, false);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataColor, mMaxVertices, false);
 
     FOR_RANGE(i, 0, mMaxVertices)
     {
         mIndicesBuffer.push_back(i);
     }
     // mGPUVertexBuffersContainer.enable();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, false);
-    mGPUVertexBuffersContainer.getIndicesBuffer().resize(mIndicesBuffer.size());
+    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, mIndicesBuffer.size(), false);
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
     // mGPUVertexBuffersContainer.disable();
 

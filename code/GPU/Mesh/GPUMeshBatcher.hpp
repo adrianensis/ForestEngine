@@ -7,7 +7,7 @@ class GPUMeshBatcher
 public:
 	GPUMeshBatcher() = default;
 
-    void init(WeakPtr<const GPUMesh> mesh);
+    void init(WeakPtr<const GPUMesh> mesh, u32 size);
     void resize(u32 size);
     void setInstanceData(u32 instanceId, u32 objectId, u32 shaderInstanceId);
 private:

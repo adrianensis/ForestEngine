@@ -1,6 +1,6 @@
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
 
-void GPUMeshBatcher::init(WeakPtr<const GPUMesh> mesh)
+void GPUMeshBatcher::init(WeakPtr<const GPUMesh> mesh, u32 size)
 {
 	PROFILER_CPU()
     mMesh = mesh;
@@ -8,6 +8,7 @@ void GPUMeshBatcher::init(WeakPtr<const GPUMesh> mesh)
 
     allocateInstances(1);
     appendMeshData(mMesh);
+	resize(size);
 }
 
 void GPUMeshBatcher::appendMeshData(WeakPtr<const GPUMesh> mesh)

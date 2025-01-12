@@ -13,11 +13,11 @@ public:
     void enable();
     void disable();
     void terminate();
-    void addVertexBuffer(const GPUVertexBufferData& data, bool isStatic);
+    void addVertexBuffer(const GPUVertexBufferData& data, u32 size, bool isStatic);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     const GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data) const;
     bool containsVertexBuffer(const GPUVertexBufferData& data) const;
-    void setIndicesBuffer(const GPUDataType& gpuDataType, bool isStatic);
+    void setIndicesBuffer(const GPUDataType& gpuDataType, u32 size, bool isStatic);
 
 private:
     static u32 findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name);

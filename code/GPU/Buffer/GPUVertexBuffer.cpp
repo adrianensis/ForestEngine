@@ -1,6 +1,6 @@
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 
-void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, bool isStatic)
+void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, u32 size, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mData = data;
@@ -18,7 +18,7 @@ void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation
 
     GPUBufferData gpuBufferData{};
     // TODO: remove magic numbers on all Buffer classes, start small, then resize if needed
-    gpuBufferData.Size = mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * 10;
+    gpuBufferData.Size = mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
