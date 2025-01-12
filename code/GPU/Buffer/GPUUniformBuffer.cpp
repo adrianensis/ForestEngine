@@ -35,6 +35,11 @@ void GPUUniformBuffer::init(WeakPtr<GPUContext> gpuContext, u32 size, u32 bindin
     LOG("Initialized uniform buffer");
 }
 
+void GPUUniformBuffer::resize(u32 size)
+{
+    mBuffer.resize(size);
+}
+
 void GPUUniformBuffer::terminate() {
     mBuffer.terminate();
 }

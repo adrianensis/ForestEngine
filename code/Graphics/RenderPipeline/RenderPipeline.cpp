@@ -91,11 +91,11 @@ void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
     PROFILER_CPU()
     if(mRenderInstancesSlotsManager.isEmpty())
     {
-        // mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
-        // mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
-        // mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-        // mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-        // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
+        mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
+        mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
+        mRenderers.resize(mRenderInstancesSlotsManager.getSize());
+        mMatrices.resize(mRenderInstancesSlotsManager.getSize());
+        GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize(sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize());
     }
 
     InstancedMeshData instancedMeshData;

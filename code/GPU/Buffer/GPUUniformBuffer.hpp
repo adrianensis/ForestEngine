@@ -23,6 +23,7 @@ class GPUUniformBuffer
 {
 public:
     void init(WeakPtr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
+    void resize(u32 size);
     template <class T>
     void setData(const T& data)
     {
