@@ -1,5 +1,6 @@
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Core/GPUCommandBuffer.h"
+#include "GPU/GPUUtils.hpp"
 
 bool GPUBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
 {
@@ -41,10 +42,13 @@ bool GPUBuffer::init(WeakPtr<GPUContext> gpuContext, const GPUBufferData& gpuBuf
     return true;
 }
 
-void GPUBuffer::terminate() {
+void GPUBuffer::terminate()
+{
     PROFILER_CPU_NAMED(buffer_terminate)
     if(mInit)
     {
+        GPUUtils::waitForFence(mGPUContext, mGPUContext->currentFrame - 1);
+
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
         vkDestroyBuffer(mGPUContext->vulkanDevice->getDevice(), mVkBuffer, allocator);
         LOG("Destroyed Vulkan buffer");
@@ -57,6 +61,8 @@ void GPUBuffer::terminate() {
 
 void GPUBuffer::resize(u32 size)
 {
+    GPUUtils::waitForFence(mGPUContext, mGPUContext->currentFrame - 1);
+
     terminate();
 
     GPUBufferData gpuBufferData = mGPUBufferData;
