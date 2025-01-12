@@ -55,5 +55,5 @@ private:
     bool mIsStatic = false;
 
     WeakPtr<GPUContext> mGPUContext;
-    GPUBuffer buffer;
+    GPUBuffer mBuffer;
 };

@@ -22,19 +22,19 @@ void GPUVertexBuffer::init(WeakPtr<GPUContext> gpuContext, u32 attributeLocation
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    if (!buffer.init(mGPUContext, gpuBufferData)) {
+    if (!mBuffer.init(mGPUContext, gpuBufferData)) {
         CHECK_MSG(false,"Could not initialize vertex buffer");
     }
 }
 
 void GPUVertexBuffer::terminate()
 {
-    buffer.terminate();
+    mBuffer.terminate();
 }
 
 void GPUVertexBuffer::resize(u32 size)
 {
-    buffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
+    mBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
 }
 
 u32 GPUVertexBuffer::getAttributeLocation() const
@@ -48,7 +48,7 @@ u32 GPUVertexBuffer::getAttributeLocationWithOffset() const
 }
 
 const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
-    return buffer;
+    return mBuffer;
 }
 
 bool GPUVertexBuffer::setData(const void* data, u32 size)
@@ -68,7 +68,7 @@ bool GPUVertexBuffer::setData(const void* data, u32 size)
     }
 
     stagingBuffer.setData(data);
-    GPUBuffer::copy(stagingBuffer, buffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);
+    GPUBuffer::copy(stagingBuffer, mBuffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);
     LOG("Copied vertices to vertex buffer");
 
     stagingBuffer.terminate();

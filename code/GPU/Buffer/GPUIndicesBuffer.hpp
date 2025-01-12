@@ -34,5 +34,5 @@ private:
 
     
     WeakPtr<GPUContext> mGPUContext;
-    GPUBuffer buffer;
+    GPUBuffer mBuffer;
 };
