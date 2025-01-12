@@ -27,6 +27,21 @@ void ShaderManager::terminate()
     }
 
     mShaderPropertyBlockRenderStates.clear();
+
+    FOR_LIST(it, mTextures)
+    {
+        if(*it)
+        {
+            (*it)->terminate();
+        }
+    }
+    FOR_LIST(it, mShaders)
+    {
+        if(*it)
+        {
+            (*it)->terminate();
+        }
+    }
 }
 
 void ShaderManager::update()
