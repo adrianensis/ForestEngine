@@ -55,9 +55,9 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
         }
     }
 
-    // shaderBuilder.setVariableInCache(finalPositon);
+    shaderBuilder.setVariableInCache(finalPositon);
     
-    // vertexShaderCalculatePositionOutputCustom(shaderBuilder);
+    vertexShaderCalculatePositionOutputCustom(shaderBuilder);
 
     auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData.mInstanceName);    
     Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
