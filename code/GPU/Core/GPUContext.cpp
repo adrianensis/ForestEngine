@@ -143,7 +143,8 @@ void GPUContext::terminate()
     }
 #endif
 
-    destroySurface();
+    // Wait for ALL operations
+    vulkanDevice->waitUntilIdle();    
 
     // terminateSyncObjects
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
@@ -156,12 +157,12 @@ void GPUContext::terminate()
 
     vulkanSwapChain->terminate();
     delete vulkanSwapChain;
+    destroySurface();
+    vulkanCommandPool->terminate();
+    delete vulkanCommandPool;
     vulkanDevice->terminate();
     delete vulkanDevice;
     delete vulkanPhysicalDevice;
-    vulkanCommandPool->terminate();
-    vulkanCommandPool->terminate();
-    delete vulkanCommandPool;
     gpuVulkanInstance->terminate();
     delete gpuVulkanInstance;
 }
