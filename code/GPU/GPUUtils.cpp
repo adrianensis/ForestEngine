@@ -159,7 +159,6 @@ void GPUUtils::waitForFence(WeakPtr<GPUContext> gpuContext, u32 frameIndex)
     constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
     VkFence inFlightFence = gpuContext->inFlightFences[frameIndex % GPUContext::MAX_FRAMES_IN_FLIGHT];
     VkResult waitResult = vkWaitForFences(gpuContext->vulkanDevice->getDevice(), fenceCount, &inFlightFence, waitForAllFences, waitForFenceTimeout);
-
 }
 
 void GPUUtils::commandSubmission(WeakPtr<GPUContext> gpuContext)
