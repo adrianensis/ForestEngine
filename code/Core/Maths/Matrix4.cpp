@@ -256,27 +256,30 @@ void Matrix4::scale(const Vector3& vector)
 void Matrix4::ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far)
 {
     PROFILER_CPU()
+	// INFO: Right-Handed (+Z going out screen), NDC Z Zero-To-One clamped
+
 	this->identity();
 	this->set(0, 0, 2.0f / (right - left));
-	this->set(0, 3, -((right + left) / (right - left)));
 	this->set(1, 1, 2.0f / (top - bottom));
-	this->set(1, 3, -((top + bottom) / (top - bottom)));
-	this->set(2, 2, -2.0f / (far - near));
-	this->set(2, 3, -((far + near) / (far - near)));
+	this->set(2, 2, -1.0f / (far - near));
+	this->set(0, 3, -(right + left) / (right - left));
+	this->set(1, 3, -( top + bottom) / ( top - bottom));
+	this->set(2, 3, -(far + near) / (far - near));
 }
 
 void Matrix4::perspective(f32 near, f32 far, f32 aspect, f32 fovy)
 {
     PROFILER_CPU()
-	f32 zRange = far - near;
-	f32 cotagent = 1.0f / tanf(MathUtils::rad(fovy / 2.0f));
+	// INFO: Right-Handed (+Z going out screen), NDC Z Zero-To-One clamped
+
+	f32 tanHalfFovy = tanf(fovy / 2.0f);
 
 	this->zeros();
-	this->set(0, 0, cotagent / aspect);
-	this->set(1, 1, cotagent);
-	this->set(2, 2, (-(far + near)) / zRange);
-    this->set(2, 3, (-(2.0f * far * near)) / zRange);
-	this->set(3, 2, -1.0f);
+	this->set(0, 0, 1.0f/(aspect * tanHalfFovy));
+	this->set(1, 1, 1.0f/tanHalfFovy);
+	this->set(2, 2, far / (near - far));
+    this->set(2, 3, -(far * near) / (far - near));
+	this->set(3, 2,-1.0f);
 }
 
 void Matrix4::view(const Vector3& worldPosition, const Vector3& localRotation)
