@@ -47,6 +47,7 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
+    virtual Matrix4 calculateProjectionViewMatrix() const;
     virtual void setupShader(WeakPtr<Shader> shader) const;
 
 protected:
