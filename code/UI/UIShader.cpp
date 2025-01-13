@@ -75,13 +75,13 @@ void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shade
 
 void ShaderUI::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
 {    
-    // Variable finalPositon = shaderBuilder.getVariableFromCache("finalPositon");
+    Variable finalPositon = shaderBuilder.getVariableFromCache("finalPositon");
 
-    // Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
-    // Variable depth = {mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
-    // auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderInstanceID);
-    // shaderBuilder.getMain().
-    // set(finalPositon.dot("z"), propertiesBlock.at(shaderInstanceId).dot(depth));
+    Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
+    Variable depth = {mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
+    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderInstanceID);
+    shaderBuilder.getMain().
+    set(finalPositon.dot("z"), propertiesBlock.at(shaderInstanceId).dot(depth));
 }
 
 void ShaderUIFont::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
