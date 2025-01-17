@@ -1,5 +1,7 @@
 # TODO
 
+- Change WeakPtr by Ref non-ownership dependant references (for example: pointers to GPUContext)
+- Review virtual destructors (clean + build to see all the warnings)
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
 - [ ] Shadow Mapping - Use Ortho matrix for directional (the sun) light
 - [ ] Resources - Unload resources: textures, shaders, buffers... everything
