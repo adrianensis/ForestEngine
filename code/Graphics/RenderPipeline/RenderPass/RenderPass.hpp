@@ -52,7 +52,7 @@ protected:
 
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
-	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShader>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaders;
+	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShaderPipeline>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaderPipelines;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
     WeakPtr<RenderPipeline> mRenderPipeline;

@@ -1,11 +1,131 @@
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "GPU/Core/GPULog.h"
 
-GPUShaderPipeline::GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext)
-    : vulkanRenderPass(vulkanRenderPass), mGPUContext(gpuContext) {
+void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData, GPURenderPass* renderPass, Ptr<GPUContext> gpuContext)
+{
+    mGPUShaderPipelineData = gpuShaderPipelineData;
+    mRenderPass = renderPass;
+    mGPUContext = gpuContext;
+
+    mGPUShaderDescriptorSets = OwnerPtr<GPUShaderDescriptorSets>::newObject();
+    mGPUShaderDescriptorSets->init(mGPUShaderPipelineData.mGPUShaderDescriptorSetsData, mGPUContext);
+
+    mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
+    mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
+    FOR_ARRAY(i, mGPUShaderPipelineData.mVertexInputBuffers)
+    {
+        const GPUVertexBuffer& gpuVertexBuffer = mGPUShaderPipelineData.mVertexInputBuffers[i];
+        mGPUVertexInputData.mVertexInputBindingDescriptions[i].binding = i;
+        mGPUVertexInputData.mVertexInputBindingDescriptions[i].stride = gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes;
+        mGPUVertexInputData.mVertexInputBindingDescriptions[i].inputRate = gpuVertexBuffer.mData.mInstanceDivisor == 0 ? VK_VERTEX_INPUT_RATE_VERTEX : VK_VERTEX_INPUT_RATE_INSTANCE;
+    
+        mGPUVertexInputData.mVertexInputAttributeDescriptions[i].binding = i;
+        mGPUVertexInputData.mVertexInputAttributeDescriptions[i].location = i;
+        VkFormat format = VK_FORMAT_UNDEFINED;
+        switch (gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.mPrimitiveDataType)
+        {
+        case GPUPrimitiveDataType::FLOAT:
+            switch (gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType())
+            {
+            case 1:
+                format = VK_FORMAT_R32_SFLOAT;
+                break;
+            case 2:
+                format = VK_FORMAT_R32G32_SFLOAT;
+                break;
+            case 3:
+                format = VK_FORMAT_R32G32B32_SFLOAT;
+                break;
+            case 4:
+                format = VK_FORMAT_R32G32B32A32_SFLOAT;
+                break;
+            default:
+                CHECK_MSG(false, "ERROR")
+                break;
+            }
+            break;
+        case GPUPrimitiveDataType::INT:
+            switch (gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType())
+            {
+            case 1:
+                format = VK_FORMAT_R32_UINT;
+                break;
+            case 2:
+                format = VK_FORMAT_R32G32_UINT;
+                break;
+            case 3:
+                format = VK_FORMAT_R32G32B32_UINT;
+                break;
+            case 4:
+                format = VK_FORMAT_R32G32B32A32_UINT;
+                break;
+            default:
+                CHECK_MSG(false, "ERROR")
+                break;
+            }
+            break;
+        
+        default:
+            CHECK_MSG(false, "ERROR")
+            break;
+        }
+
+        mGPUVertexInputData.mVertexInputAttributeDescriptions[i].format = format;//VK_FORMAT_R32G32B32_SFLOAT;
+        // mGPUVertexInputData.mVertexInputAttributeDescriptions[i].offset = offsetof(Vertex, position);
+    }
 }
 
-bool GPUShaderPipeline::init(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData) {
+void GPUShaderPipeline::terminate()
+{
+    vertexShader.terminate();
+    fragmentShader.terminate();
+
+    vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), mPipeline, ALLOCATOR);
+    VULKAN_LOG("Destroyed Vulkan graphics pipeline");
+    vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
+    VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
+
+    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorSets->descriptorPool, allocationCallbacks);
+    vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorSets->descriptorSetLayout, allocationCallbacks);
+    
+    mGPUShaderDescriptorSets.invalidate();
+}
+
+void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const
+{
+    vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline);
+}
+
+void GPUShaderPipeline::enable() const
+{
+    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    bind(*vulkanCommandBuffer);
+
+    VkDescriptorSet descriptorSet = mGPUShaderDescriptorSets->descriptorSets[mGPUContext->currentFrame];
+    VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    VkPipelineLayout pipelineLayout = mPipelineLayout;
+    constexpr u32 firstSet = 0;
+    constexpr u32 descriptorSetCount = 1;
+    constexpr u32 dynamicOffsetCount = 0;
+    constexpr u32* dynamicOffsets = nullptr;
+    vkCmdBindDescriptorSets(vulkanCommandBuffer->getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
+}
+
+void GPUShaderPipeline::disable() const
+{
+}
+
+void GPUShaderPipeline::compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment)
+{
+    if (!vertexShader.init(mGPUContext, vertex))
+    {
+        CHECK_MSG(false, "Could not initialize vertex shader");
+    }
+    if (!fragmentShader.init(mGPUContext, fragment))
+    {
+        CHECK_MSG(false, "Could not initialize fragment shader");
+    }
 
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
     vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -23,11 +143,7 @@ bool GPUShaderPipeline::init(const GPUShaderModule& vertexShader, const GPUShade
             vertexShaderStageInfo,
             fragmentShaderStageInfo
     };
-
-    // VkVertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
-    // std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::getAttributeDescriptions();
-    mGPUVertexInputData = gpuVertexInputData;
-
+    
     VkPipelineVertexInputStateCreateInfo vertexInputState{};
     vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputState.pVertexBindingDescriptions = mGPUVertexInputData.mVertexInputBindingDescriptions.data();
@@ -113,22 +229,25 @@ bool GPUShaderPipeline::init(const GPUShaderModule& vertexShader, const GPUShade
 
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-    depthStencil.depthTestEnable = VK_TRUE;
-    depthStencil.depthWriteEnable = VK_TRUE;
-    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
-    depthStencil.depthBoundsTestEnable = VK_FALSE;
-    depthStencil.stencilTestEnable = VK_FALSE;
+    depthStencil.depthTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthTestEnable;
+    depthStencil.depthWriteEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthWriteEnable;
+    depthStencil.depthCompareOp = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthCompareOp;
+    depthStencil.depthBoundsTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable;
+    depthStencil.stencilTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilTestEnable;
+    depthStencil.front = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilFront;
+    depthStencil.back = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilBack;
+    depthStencil.minDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMinDepthBounds;
+    depthStencil.maxDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMaxDepthBounds;
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineLayoutInfo.pSetLayouts = &mGPUShaderDescriptorSets->descriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
     if (vkCreatePipelineLayout(mGPUContext->vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &mPipelineLayout) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline layout");
-        return false;
     }
     VULKAN_LOG("Created Vulkan graphics pipeline layout");
 
@@ -145,7 +264,7 @@ bool GPUShaderPipeline::init(const GPUShaderModule& vertexShader, const GPUShade
     pipelineInfo.pColorBlendState = &colorBlendState;
     pipelineInfo.pDynamicState = nullptr;
     pipelineInfo.layout = mPipelineLayout;
-    pipelineInfo.renderPass = vulkanRenderPass->getRenderPass();
+    pipelineInfo.renderPass = mRenderPass->getRenderPass();
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
     pipelineInfo.basePipelineIndex = -1;
@@ -155,20 +274,6 @@ bool GPUShaderPipeline::init(const GPUShaderModule& vertexShader, const GPUShade
 
     if (vkCreateGraphicsPipelines(mGPUContext->vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &mPipeline) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline");
-        return false;
     }
     VULKAN_LOG("Created Vulkan graphics pipeline");
-
-    return true;
-}
-
-void GPUShaderPipeline::terminate() {
-    vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), mPipeline, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan graphics pipeline");
-    vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
-}
-
-void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const {
-    vkCmdBindPipeline(vulkanCommandBuffer.getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline);
 }

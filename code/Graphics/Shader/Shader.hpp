@@ -3,11 +3,10 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 #include "GPU/Image/GPUTexture.hpp"
-#include "GPU/Shader/GPUShader.hpp"
+#include "GPU/Shader/GPUShaderPipeline.h"
 #include "GPU/Shader/GPUShaderModule.h"
 #include "Graphics/TextureAnimation/TextureAnimation.hpp"
 
-class Shader;
 class GPUMesh;
 
 class FramebufferBinding
@@ -38,7 +37,7 @@ class ShaderCompilationData
 {
 public:
     WeakPtr<const GPUMesh> mMesh;
-    GPURenderPass* vulkanRenderPass;
+    GPURenderPass* mRenderPass = nullptr;
     HashedString label;
     HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
@@ -136,15 +135,14 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
         {};
     virtual void createFragmentShader(ShaderBuilder& shaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
         {};
 
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUShader> compileShader(const ShaderCompilationData& shaderCompilationData);
-
+    OwnerPtr<GPUShaderPipeline> compileShader(const ShaderCompilationData& shaderCompilationData);
 
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock();
