@@ -23,7 +23,6 @@ private:
     bool initializeDepthResources();
     bool initializeFramebuffers();
 
-
 public:
     WeakPtr<GPUContext> mGPUContext;
 private:

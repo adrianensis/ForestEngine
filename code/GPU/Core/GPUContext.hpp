@@ -6,15 +6,36 @@
 #include "GPU/Core/GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 
+#define GPU_LOAD_EXTENSION_FUNCTION(extensionFunctionName) \
+loadExtensionFunction<PFN_##extensionFunctionName>(TO_STRING(extensionFunctionName));
+
 class GPUContext: public EnablePtrToThis
 {
 public:
     void init();
     void terminate();
+
+    template<class T>
+    T loadExtensionFunction(const char* extensionFunctionName)
+    {
+        return (T) loadExtensionFunctionInternal(extensionFunctionName);
+    }
+
+    VkCommandBuffer beginSingleTimeCommands();
+    void endSingleTimeCommands(VkCommandBuffer commandBuffer);
+
+    void drawIndexed(VkCommandBuffer commandBuffer, u32 indexCount, u32 instanceCount, u32 firstIndex, i32 vertexOffset, u32 firstInstance);
+
+    u32 frameAcquisition();
+    void waitForFence(u32 frameIndex);
+    void commandSubmission();
+    void framePresentation(const std::vector<u32>& imageIndices);
+
 private:
     void initializeSyncObjects();
     bool createSurface();
     void destroySurface() const;
+    PFN_vkVoidFunction loadExtensionFunctionInternal(const char* extensionFunctionName);
 
 public:
     inline static const u32 MAX_FRAMES_IN_FLIGHT = 2;

@@ -3,7 +3,6 @@
 #include "Core/System/System.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Core/GPUContext.hpp"
-#include "GPU/GPUUtils.hpp"
 
 class GPUInstance: public System
 {

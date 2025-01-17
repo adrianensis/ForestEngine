@@ -31,14 +31,14 @@ void Editor::firstUpdate()
     PROFILER_CPU();
 
 	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
-	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0,0,100));
+	mCameraGameObject->mTransform->setLocalPosition(Vector3(0,0,100));
     TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    // mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
-    // mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
-    // mAxisViewer->createAxis();
+    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
+    mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
+    mAxisViewer->createAxis();
 
     // createPointLight(Vector3(0,50,0), 20);
 
@@ -53,8 +53,8 @@ void Editor::firstUpdate()
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	// importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
+	importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
@@ -188,6 +188,10 @@ void Editor::update()
 		// mDirectionalLight->mTransform->addLocalRotation(Vector3(0, -yaw, 0));
 	}
 
+	// LOG_VAR(cameraTransform->getLocalPosition().x)
+	// LOG_VAR(cameraTransform->getLocalPosition().y)
+	// LOG_VAR(cameraTransform->getLocalPosition().z)
+
 	mLastMousePosition = currentMousePosition;
 
     //mDirectionalLight->mTransform->addLocalRotation(Vector3(0,0.1f,0));
@@ -218,15 +222,15 @@ void Editor::update()
 	}
 
     f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
-    LOG_VAR(fps)
+    // LOG_VAR(fps)
     if(mFPSCounter)
     {
-        // mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
+        mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
     }
 
     mousePick();
 
-    // mAxisViewer->update();
+    mAxisViewer->update();
     // mUISceneTree->update();
     // mUITransform->update(cameraTransform);
 
@@ -407,70 +411,63 @@ void Editor::createUI()
 	// });
 
 
-    // mFPSCounter = uiBuilder.
-	// setText("000").
-	// create<UIText>().
-    // getUIElement<UIText>();
-
-	// uiBuilder.
-	// setText("File").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("New", [&](UIElement *uiElement)
-	// {
-
-	// }).
-	// addOption("Open", [&](UIElement *uiElement)
-	// {
-	// }).
-	// addOption("Save", [&](UIElement *uiElement)
-	// {
-	// });
+    mFPSCounter = uiBuilder.
+	setText("000").
+	create<UIText>().
+    getUIElement<UIText>();
 
 	uiBuilder.
-	setText("ABCDE").
+	setText("File").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("New", [&](UIElement *uiElement)
+	{
+
+	}).
+	addOption("Open", [&](UIElement *uiElement)
+	{
+	}).
+	addOption("Save", [&](UIElement *uiElement)
+	{
+	});
+
+	uiBuilder.
+	setText("Sprites").
 	create<UIButton>().
 	getUIElement<UIButton>()->
 	setOnPressedCallback([&, this](UIElement *uiElement){
 	});
 
-	// uiBuilder.
-	// setText("Sprites").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("Edit").
+	create<UIButton>().
+	getUIElement<UIButton>()->
+	setOnPressedCallback([&, this](UIElement *uiElement){
+	});
 
-	// uiBuilder.
-	// setText("Edit").
-	// create<UIButton>().
-	// getUIElement<UIButton>()->
-	// setOnPressedCallback([&, this](UIElement *uiElement){
-	// });
+	uiBuilder.
+	setText("View").
+	create<UIDropdown>().
+	getUIElement<UIDropdown>()->
+	addOption("Grid", [&](UIElement *uiElement)
+	{
 
-	// uiBuilder.
-	// setText("View").
-	// create<UIDropdown>().
-	// getUIElement<UIDropdown>()->
-	// addOption("Grid", [&](UIElement *uiElement)
-	// {
+	}).
+	addOption("Colliders", [&](UIElement *uiElement)
+	{
+	});
 
-	// }).
-	// addOption("Colliders", [&](UIElement *uiElement)
-	// {
-	// });
+    uiBuilder.
+	setText("a").
+	create<UIEditableText>();
 
-    // uiBuilder.
-	// setText("a").
-	// create<UIEditableText>();
+    uiBuilder.restoreAll();
 
-    // uiBuilder.restoreAll();
-
-    // uiBuilder.
-	// // setPosition(Vector2(0,0)).
-	// setPosition(Vector2(-1,1)).
-	// // setAdjustSizeToText(true).
-	// setSize(Vector2(0.5, 0.5f));
+    uiBuilder.
+	// setPosition(Vector2(0,0)).
+	setPosition(Vector2(-1,1)).
+	// setAdjustSizeToText(true).
+	setSize(Vector2(0.5, 0.5f));
 
     // uiBuilder.
 	// create<UIList>().

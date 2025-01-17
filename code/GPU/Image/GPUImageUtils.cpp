@@ -1,11 +1,10 @@
 #include "GPU/Image/GPUImageUtils.hpp"
-#include "GPU/GPUUtils.hpp"
 #include "Core/Image/ImageUtils.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 
 bool GPUImageUtils::transitionImageLayout(WeakPtr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, u32 mipLevels)
 {
-    VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
+    VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     
     {
         PROFILER_GPU_NAMED(transitionImageLayout, gpuContext->mTracyContext, commandBuffer);
@@ -26,7 +25,7 @@ bool GPUImageUtils::transitionImageLayout(WeakPtr<GPUContext> gpuContext, VkImag
 
         if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
             imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-            if (GPUUtils::hasStencilComponent(gpuContext, format)) {
+            if (hasStencilComponent(format)) {
                 imageMemoryBarrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
             }
         } else {
@@ -75,7 +74,7 @@ bool GPUImageUtils::transitionImageLayout(WeakPtr<GPUContext> gpuContext, VkImag
                 &imageMemoryBarrier
         );
     }
-    GPUUtils::endSingleTimeCommands(gpuContext, commandBuffer);
+    gpuContext->endSingleTimeCommands(commandBuffer);
     return true;
 }
 
@@ -104,7 +103,7 @@ VkImageView GPUImageUtils::createImageView(WeakPtr<GPUContext> gpuContext, VkIma
 
 void GPUImageUtils::copyBufferToImage(WeakPtr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY)
 {
-    VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
+    VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     {
         PROFILER_GPU_NAMED(copyBufferToImage, gpuContext->mTracyContext, commandBuffer);
 
@@ -135,7 +134,7 @@ void GPUImageUtils::copyBufferToImage(WeakPtr<GPUContext> gpuContext, VkBuffer b
                 &bufferImageCopy
         );
     }
-    GPUUtils::endSingleTimeCommands(gpuContext,commandBuffer);
+    gpuContext->endSingleTimeCommands(commandBuffer);
 }
 
 
@@ -149,7 +148,7 @@ bool GPUImageUtils::generateMipmaps(WeakPtr<GPUContext> gpuContext, u32 width, u
         return false;
     }
 
-    VkCommandBuffer commandBuffer = GPUUtils::beginSingleTimeCommands(gpuContext);
+    VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     {
         PROFILER_GPU_NAMED(generateMipmaps, gpuContext->mTracyContext, commandBuffer);
 
@@ -273,7 +272,7 @@ bool GPUImageUtils::generateMipmaps(WeakPtr<GPUContext> gpuContext, u32 width, u
                 &barrier
         );
     }
-    GPUUtils::endSingleTimeCommands(gpuContext, commandBuffer);
+    gpuContext->endSingleTimeCommands(commandBuffer);
     return true;
 }
 
@@ -318,4 +317,9 @@ bool GPUImageUtils::createTextureImage(WeakPtr<GPUContext> gpuContext, VkImage t
 
     LOG("Initialized texture image");
     return true;
+}
+
+bool GPUImageUtils::hasStencilComponent(VkFormat format)
+{
+    return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }

@@ -1,6 +1,5 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
-#include "GPU/GPUUtils.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
 GPURenderPass::GPURenderPass(WeakPtr<GPUContext> gpuContext)
@@ -195,14 +194,49 @@ void GPURenderPass::terminate()
 void GPURenderPass::begin()
 {
     PROFILER_CPU()
-    swapChainImageIndex = GPUUtils::frameAcquisition(mGPUContext);
-    GPUUtils::beginCmd(mGPUContext, mRenderPass, framebuffers.at(swapChainImageIndex).getFramebuffer());
+    swapChainImageIndex = mGPUContext->frameAcquisition();
+    
+    VkRenderPassBeginInfo renderPassInfo{};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassInfo.renderPass = mRenderPass;
+    renderPassInfo.framebuffer = framebuffers.at(swapChainImageIndex).getFramebuffer();
+    renderPassInfo.renderArea.offset = {0, 0};
+    renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();
+
+    VkClearColorValue clearColorValue = {{0.1f, 0.2f, 0.1f, 1.0f}};
+
+    // The range of depths in the depth buffer is 0.0 to 1.0 in Vulkan, where 1.0 lies at the far view plane and 0.0 at the near view plane.
+    // The initial value at each point in the depth buffer should be the furthest possible depth, which is 1.0.
+    VkClearDepthStencilValue clearDepthStencilValue{};
+    clearDepthStencilValue.depth = 1.0f;
+    clearDepthStencilValue.stencil = 0;
+
+    // Note that the order of clearValues should be identical to the order of your attachments.
+    std::array<VkClearValue, 2> clearValues{};
+    clearValues[0].color = clearColorValue;
+    clearValues[1].depthStencil = clearDepthStencilValue;
+
+    renderPassInfo.clearValueCount = (u32) clearValues.size();
+    renderPassInfo.pClearValues = clearValues.data();
+
+    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vulkanCommandBuffer->reset();
+    vulkanCommandBuffer->begin();
+
+    vkCmdBeginRenderPass(vulkanCommandBuffer->getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
 void GPURenderPass::end()
 {
     PROFILER_CPU()
-    GPUUtils::endCmd(mGPUContext);
-    GPUUtils::commandSubmission(mGPUContext);
-    GPUUtils::framePresentation(mGPUContext, {swapChainImageIndex});
+
+    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vkCmdEndRenderPass(vulkanCommandBuffer->getVkCommandBuffer());
+
+    if (!vulkanCommandBuffer->end()) {
+        CHECK_MSG(false, "Could not end frame");
+    }
+
+    mGPUContext->commandSubmission();
+    mGPUContext->framePresentation({swapChainImageIndex});
 }
