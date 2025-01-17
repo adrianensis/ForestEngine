@@ -28,7 +28,7 @@ const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
     return framebuffer;
 }
 
-bool GPUFramebuffer::init(WeakPtr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView) {
+bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView) {
     std::array<VkImageView, 3> attachments[] = {
             colorImageView,
             depthImageView,

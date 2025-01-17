@@ -1,6 +1,6 @@
 #include "GPU/Shader/GPUShaderDescriptorSets.hpp"
 
-void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, WeakPtr<GPUContext> gpuContext)
+void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext)
 {
     mGPUContext = gpuContext;
     mGPUDescriptorData = gpuShaderDescriptorSetsData;

@@ -9,7 +9,7 @@ class GPUCommandBuffer;
 class GPUCommandPool
 {
 public:
-    GPUCommandPool(WeakPtr<GPUContext> gpuContext);
+    GPUCommandPool(Ptr<GPUContext> gpuContext);
     bool init();
     void terminate();
     std::vector<GPUCommandBuffer*> allocateCommandBuffers(u32 count) const;
@@ -17,7 +17,7 @@ public:
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
     VkCommandPool mVkCommandPool = VK_NULL_HANDLE;
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
 public:
     CRGET(VkCommandPool)
 };

@@ -26,7 +26,7 @@ public:
 class GPUTexture
 {
 public:
-    void init(WeakPtr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
+    void init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
     void terminate();
     
 private:
@@ -35,7 +35,7 @@ private:
     ImageData mImageData;
 	u32 mID = 0;
 	GPUTextureData mTextureData;
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
     GPUImage mVulkanTextureImage;
     u32 mMipMapLevels = 1;
 

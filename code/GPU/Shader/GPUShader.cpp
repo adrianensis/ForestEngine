@@ -22,7 +22,7 @@ void GPUShader::disable() const
 {
 }
 
-void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, WeakPtr<GPUContext> gpuContext)
+void GPUShader::init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext)
 {
     mGPUContext = gpuContext;
     mGPUShaderDescriptorSets = OwnerPtr<GPUShaderDescriptorSets>::newObject();

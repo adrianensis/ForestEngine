@@ -6,11 +6,11 @@
 class GPUShaderModule
 {
 public:
-    bool init(WeakPtr<GPUContext> gpuContext, const std::vector<byte>& moduleContent);
+    bool init(Ptr<GPUContext> gpuContext, const std::vector<byte>& moduleContent);
     void terminate();
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
     VkShaderModule mShaderModule = VK_NULL_HANDLE;
 public:
     CRGET(ShaderModule)

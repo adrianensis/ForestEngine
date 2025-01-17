@@ -1,6 +1,6 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-bool GPUShaderModule::init(WeakPtr<GPUContext> gpuContext, const std::vector<byte>& moduleContent)
+bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const std::vector<byte>& moduleContent)
 {
     mGPUContext = gpuContext;
 

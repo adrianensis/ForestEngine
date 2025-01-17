@@ -13,14 +13,14 @@ class GPURenderPass;
 class GPUShader
 {    
 public:
-    void init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, WeakPtr<GPUContext> gpuContext);
+    void init(GPURenderPass* vulkanRenderPass, const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, const std::vector<GPUVertexBuffer>& vertexInputBuffers, Ptr<GPUContext> gpuContext);
     void compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment);
     void terminate();
     void enable() const;
     void disable() const;
 private:
 	u32 mProgramId = 0;
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
     OwnerPtr<GPUShaderPipeline> mGPUShaderPipeline;
     GPUShaderModule vertexShader;
     GPUShaderModule fragmentShader;

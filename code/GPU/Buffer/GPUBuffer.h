@@ -16,14 +16,14 @@ public:
 class GPUBuffer
 {
 public:
-    bool init(WeakPtr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
+    bool init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
     void resize(u32 size);
     void terminate();
     void setData(const void* data) const;
     static void copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice);
 
 private:
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
     GPUBufferData mGPUBufferData;
     VkBuffer mVkBuffer = VK_NULL_HANDLE;
     VkDeviceMemory mVkDeviceMemory = VK_NULL_HANDLE;

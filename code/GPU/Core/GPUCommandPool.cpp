@@ -3,7 +3,7 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Core/GPULog.h"
 
-GPUCommandPool::GPUCommandPool(WeakPtr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
+GPUCommandPool::GPUCommandPool(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
 
 bool GPUCommandPool::init()
 {

@@ -17,14 +17,14 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    GPUShaderPipeline(GPURenderPass* vulkanRenderPass, WeakPtr<GPUContext> gpuContext);
+    GPUShaderPipeline(GPURenderPass* vulkanRenderPass, Ptr<GPUContext> gpuContext);
     bool init(const GPUShaderModule& vertexShader, const GPUShaderModule& fragmentShader, VkDescriptorSetLayout descriptorSetLayout, const GPUVertexInputData& gpuVertexInputData);
     void terminate();
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
 
 private:
     GPURenderPass* vulkanRenderPass;
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
     VkPipelineLayout mPipelineLayout = VK_NULL_HANDLE;
     VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUVertexInputData mGPUVertexInputData;

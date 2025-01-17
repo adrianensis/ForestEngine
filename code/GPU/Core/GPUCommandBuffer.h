@@ -12,14 +12,14 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    void init(VkCommandBuffer commandBuffer, WeakPtr<GPUContext> gpuContext);
+    void init(VkCommandBuffer commandBuffer, Ptr<GPUContext> gpuContext);
     bool begin(VkCommandBufferUsageFlags usageFlags = 0) const;
     bool end() const;
     void reset() const;
 
 private:
     VkCommandBuffer mVkCommandBuffer = VK_NULL_HANDLE;
-    WeakPtr<GPUContext> mGPUContext;
+    Ptr<GPUContext> mGPUContext;
 public:
     CRGET(VkCommandBuffer)
 };
