@@ -5,13 +5,15 @@
 #include <atomic>
 
 template<class T>
-class RefCountedPtrBase;
+class CountedPtrBase;
 template<class T>
 class SharedPtr;
 template<class T>
 class OwnerPtr;
 template<class T>
 class WeakPtr;
+template<class T>
+class Ref;
 
 class ReferenceBlock
 {
@@ -36,9 +38,11 @@ public:
 template <typename U>
 struct get_ptr_type { using type = WeakPtr<U>; };
 template<class T>
+struct get_ptr_type<Ref<T>> { using type = Ref<T>; };
+template<class T>
 struct get_ptr_type<WeakPtr<T>> { using type = WeakPtr<T>; };
 template<class T>
-struct get_ptr_type<RefCountedPtrBase<T>> { using type = WeakPtr<T>; };
+struct get_ptr_type<CountedPtrBase<T>> { using type = WeakPtr<T>; };
 template<class T>
 struct get_ptr_type<SharedPtr<T>> { using type = WeakPtr<T>; };
 template<class T>
@@ -47,9 +51,11 @@ struct get_ptr_type<OwnerPtr<T>> { using type = WeakPtr<T>; };
 template <typename U>
 struct get_const_ptr_type { using type = WeakPtr<const U>; };
 template<class T>
+struct get_const_ptr_type<Ref<T>> { using type = Ref<const T>; };
+template<class T>
 struct get_const_ptr_type<WeakPtr<T>> { using type = WeakPtr<const T>; };
 template<class T>
-struct get_const_ptr_type<RefCountedPtrBase<T>> { using type = WeakPtr<const T>; };
+struct get_const_ptr_type<CountedPtrBase<T>> { using type = WeakPtr<const T>; };
 template<class T>
 struct get_const_ptr_type<SharedPtr<T>> { using type = WeakPtr<const T>; };
 template<class T>
@@ -67,10 +73,153 @@ class BaseOwnerPtr {};
 // PTR
 
 template<class T>
+class Ref : public BasePtr
+{
+template<class S>
+friend class CountedPtrBase;
+template<class U>
+friend class SharedPtr;
+template<class V>
+friend class OwnerPtr;
+template<class W>
+friend class WeakPtr;
+friend class EnablePtrToThis;
+
+public:
+    Ref(T* reference) { set(reference); }
+
+    template <class U>
+    static Ref<T> cast(const Ref<U>& other)
+    {
+        return Ref<T>(dynamic_cast<T*>(other.getInternalPointer()));
+    }
+
+    template <class U>
+    static Ref<T> cast(const WeakPtr<U>& other)
+    {
+        return Ref<T>(dynamic_cast<T*>(other.getInternalPointer()));
+    }
+
+    template <class U>
+    static Ref<T> cast(const SharedPtr<U>& other)
+    {
+        return Ref<T>(dynamic_cast<T*>(other.getInternalPointer()));
+    }
+
+    template <class U>
+    static Ref<T> cast(const OwnerPtr<U>& other)
+    {
+        return Ref<T>(dynamic_cast<T*>(other.getInternalPointer()));
+    }
+
+    Ref(const CountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
+    // WeakPtr(const SharedPtr<T>& sharedPtr) {  assign(sharedPtr); }
+    // WeakPtr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
+    Ref() = default;
+    Ref(const Ref<T>& other) { assign(other); }
+    ~Ref() { invalidate(); }
+    operator Ref<const T>() const { return Ref<const T>(mInternalPointer); }
+    template<class U> T_EXTENDS(T, U) 
+    operator Ref<U>() const { return Ref<U>(dynamic_cast<U*>(this->mInternalPointer)); }
+    T& get() const { return *mInternalPointer; }
+    T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
+    bool isValid() const { return mInternalPointer != nullptr; }
+    void invalidate()
+    {
+        set(nullptr);
+    }
+
+    Ref<T>& operator=(const Ref<T>& other)
+    {
+        if (this != &other)
+        {
+            assign(other);
+        }
+        return *this;
+    }
+    bool operator==(const Ref<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const CountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    operator bool() const { return this->isValid(); }
+
+private:
+    void assign(const Ref<T>& other)
+    {
+        // if(*this == other) { return; }
+        invalidate();
+        if(other.isValid())
+        {
+            set(other.mInternalPointer);
+        }
+    }
+    
+    void assign(const WeakPtr<T>& other)
+    {
+        // if(*this == other) { return; }
+        invalidate();
+        if(other.isValid())
+        {
+            set(other.mInternalPointer);
+        }
+    }
+    
+    void assign(const CountedPtrBase<T>& ownerPtr)
+    {
+        if(*this == ownerPtr)
+        {
+            return;
+        }
+        invalidate();
+        if(ownerPtr.isValid())
+        {
+            set(ownerPtr.mInternalPointer);
+        }
+    }
+    
+    void assign(const SharedPtr<T>& sharedPtr)
+    {
+        if(*this == sharedPtr)
+        {
+            return;
+        }
+        invalidate();
+        if(sharedPtr.isValid())
+        {
+            set(sharedPtr.mInternalPointer);
+        }
+    }
+
+    void assign(const OwnerPtr<T>& ownerPtr)
+    {
+        if(*this == ownerPtr)
+        {
+            return;
+        }
+        invalidate();
+        if(ownerPtr.isValid())
+        {
+            set(ownerPtr.mInternalPointer);
+        }
+    }
+
+    void set(T* reference)
+    {
+        mInternalPointer = reference;
+    }
+
+private:
+    T* mInternalPointer = nullptr;
+
+public:
+    T* getInternalPointer() const { return mInternalPointer; };
+};
+
+// PTR
+
+template<class T>
 class WeakPtr : public BasePtr
 {
 template<class S>
-friend class RefCountedPtrBase;
+friend class CountedPtrBase;
 template<class U>
 friend class SharedPtr;
 template<class V>
@@ -98,7 +247,7 @@ public:
         return WeakPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    WeakPtr(const RefCountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
+    WeakPtr(const CountedPtrBase<T>& refCountedPtr) {  assign(refCountedPtr); }
     // WeakPtr(const SharedPtr<T>& sharedPtr) {  assign(sharedPtr); }
     // WeakPtr(const OwnerPtr<T>& ownerPtr) {  assign(ownerPtr); }
     WeakPtr() = default;
@@ -137,7 +286,7 @@ public:
         return *this;
     }
     bool operator==(const WeakPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
-    bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const CountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     operator bool() const { return this->isValid(); }
 
 private:
@@ -153,7 +302,7 @@ private:
         }
     }
     
-    void assign(const RefCountedPtrBase<T>& ownerPtr)
+    void assign(const CountedPtrBase<T>& ownerPtr)
     {
         if(*this == ownerPtr)
         {
@@ -229,7 +378,7 @@ public:
 class EnablePtrToThis: public IPointedObject
 {
 template<class U>
-friend class RefCountedPtrBase;
+friend class CountedPtrBase;
 
 public:
     virtual ~EnablePtrToThis() override
@@ -249,20 +398,22 @@ private:
 
 // REF COUNTED PTR BASE
 template<class T>
-class RefCountedPtrBase : public BasePtr
+class CountedPtrBase : public BasePtr
 {
 template<class U>
 friend class WeakPtr;
+template<class U>
+friend class Ref;
 
 public:
-    virtual ~RefCountedPtrBase() { invalidate(); }
+    virtual ~CountedPtrBase() { invalidate(); }
     operator WeakPtr<const T>() const { return WeakPtr<const T>(dynamic_cast<const T*>(mInternalPointer), mReferenceBlock); }
     T& get() const { return *mInternalPointer; }
     T* operator->() const { CHECK_MSG(this->isValid(), "Invalid pointer!"); return &get(); }
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     operator bool() const { return this->isValid(); }
     bool operator==(const WeakPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
-    bool operator==(const RefCountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const CountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     void invalidate()
     {
         if(mReferenceBlock)
@@ -322,10 +473,12 @@ public:
 
 // SHARED PTR
 template<class T>
-class SharedPtr : public RefCountedPtrBase<T>
+class SharedPtr : public CountedPtrBase<T>
 {
 template<class U>
 friend class WeakPtr;
+template<class U>
+friend class Ref;
 
 public:
     template <class OtherClass>
@@ -379,7 +532,7 @@ private:
 
 // OWNER PTR
 template<class T>
-class OwnerPtr : public BaseOwnerPtr, public RefCountedPtrBase<T>
+class OwnerPtr : public BaseOwnerPtr, public CountedPtrBase<T>
 {
 public:
     template <class OtherClass>
@@ -442,6 +595,15 @@ private:
 // Needed for unordered_map
 namespace std {
   template<class T>
+  struct hash<Ref<T>> 
+  {
+    size_t operator()(Ref<T> const& pointer) const 
+    {
+      return size_t(&pointer.get());
+    }
+  };
+  
+  template<class T>
   struct hash<WeakPtr<T>> 
   {
     size_t operator()(WeakPtr<T> const& pointer) const 
@@ -451,7 +613,7 @@ namespace std {
   };
   
   template<class T>
-  struct hash<RefCountedPtrBase<T>> 
+  struct hash<CountedPtrBase<T>> 
   {
     size_t operator()(SharedPtr<T> const& pointer) const 
     {
