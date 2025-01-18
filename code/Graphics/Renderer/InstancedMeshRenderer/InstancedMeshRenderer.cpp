@@ -57,15 +57,15 @@ void InstancedMeshRenderer::enable()
 {
     mGPUVertexBuffersContainer.enable();
 
-    if(mInstancedMeshData.mStencilData.mUseStencil)
+    if(mInstancedMeshData.mShaderStencilData.mUseStencil)
     {
-//        GET_SYSTEM(GPUInterface).enableStencil(mInstancedMeshData.mStencilData.mStencilValue, mInstancedMeshData.mStencilData.mStencilFunction, mInstancedMeshData.mStencilData.mStencilPassOp);
+//        GET_SYSTEM(GPUInterface).enableStencil(mInstancedMeshData.mShaderStencilData.mStencilValue, mInstancedMeshData.mShaderStencilData.mStencilFunction, mInstancedMeshData.mShaderStencilData.mStencilPassOp);
     }
 }
 
 void InstancedMeshRenderer::disable()
 {
-    if(mInstancedMeshData.mStencilData.mUseStencil)
+    if(mInstancedMeshData.mShaderStencilData.mUseStencil)
     {
 //        GET_SYSTEM(GPUInterface).disableStencil();
     }

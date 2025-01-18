@@ -384,30 +384,30 @@ void UIElement::setColorHover()
     mRenderer->getShaderInstance()->setDirty();
 }
 
-StencilData UIElement::calculateStencilData() const
+ShaderStencilData UIElement::calculateStencilData() const
 {
-    StencilData stencilData;
+    ShaderStencilData shaderStencilData;
     if(mClipChildren)
     {
-        stencilData.mUseStencil = true;
-        stencilData.mStencilValue = 0;
-        stencilData.mStencilFunction = GPUStencilFunction::EQUAL;
-        stencilData.mStencilPassOp = GPUStencilOp::INCR;
+        shaderStencilData.mUseStencil = true;
+        shaderStencilData.mStencilValue = 0;
+        shaderStencilData.mStencilFunction = GPUStencilFunction::EQUAL;
+        shaderStencilData.mStencilPassOp = GPUStencilOp::INCR;
 
         if(mConfig.mParent)
         {
             TEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
-                StencilData parentStencilData = parentUIElement->calculateStencilData();
+                ShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
                 if(parentStencilData.mUseStencil)
                 {
-                    stencilData = parentStencilData;
+                    shaderStencilData = parentStencilData;
                     // if direct parent is clipping shape, then increment mask
                     if(parentUIElement->mClipChildren)
                     {
-                        stencilData.mStencilValue++;
-                        stencilData.mParentId = parentStencilData.mId;
+                        shaderStencilData.mStencilValue++;
+                        shaderStencilData.mParentId = parentStencilData.mId;
                     }
                 }
             }
@@ -420,24 +420,24 @@ StencilData UIElement::calculateStencilData() const
             TEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
-                StencilData parentStencilData = parentUIElement->calculateStencilData();
+                ShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
                 if(parentStencilData.mUseStencil)
                 {
-                    stencilData = parentStencilData;
+                    shaderStencilData = parentStencilData;
                     // if direct parent is clipping shape, then increment mask
                     if(parentUIElement->mClipChildren)
                     {
-                        stencilData.mStencilValue++;
-                        stencilData.mParentId = parentStencilData.mId;
+                        shaderStencilData.mStencilValue++;
+                        shaderStencilData.mParentId = parentStencilData.mId;
                     }
                 
-                    stencilData.mStencilPassOp = GPUStencilOp::KEEP;
+                    shaderStencilData.mStencilPassOp = GPUStencilOp::KEEP;
                 }
             }
         }
     }
 
-    stencilData.mId = this->getEntityId();
+    shaderStencilData.mId = this->getEntityId();
 
-    return stencilData;
+    return shaderStencilData;
 }

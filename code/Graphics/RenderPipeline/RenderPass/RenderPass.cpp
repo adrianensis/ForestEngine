@@ -60,6 +60,26 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
         uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
         WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
+        GPUShaderPipelineDepthStencilData gpuShaderPipelineDepthStencilData;
+        gpuShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
+        gpuShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
+        gpuShaderPipelineDepthStencilData.mDepthCompareOp = VK_COMPARE_OP_LESS; //VkCompareOp
+        gpuShaderPipelineDepthStencilData.mDepthBoundsTestEnable = VK_FALSE; //bool
+        gpuShaderPipelineDepthStencilData.mStencilTestEnable = instancedMeshData.mShaderStencilData.mUseStencil; //bool
+        
+        VkStencilOpState vkStencilOpState;
+        vkStencilOpState.failOp = (VkStencilOp) instancedMeshData.mShaderStencilData.mStencilFailOp;
+        vkStencilOpState.passOp = (VkStencilOp) instancedMeshData.mShaderStencilData.mStencilPassOp;
+        vkStencilOpState.depthFailOp = (VkStencilOp) instancedMeshData.mShaderStencilData.mDepthFailOp;
+        vkStencilOpState.compareOp = (VkCompareOp) instancedMeshData.mShaderStencilData.mStencilFunction;
+        vkStencilOpState.compareMask = 0xFF;
+        vkStencilOpState.writeMask = 0xFF;
+        vkStencilOpState.reference = instancedMeshData.mShaderStencilData.mStencilValue;
+
+        gpuShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
+        gpuShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
+        gpuShaderPipelineDepthStencilData.mMinDepthBounds = 0; //float
+        gpuShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
         ShaderCompilationData shaderCompilationData
         {
             instancedMeshData.mMesh,
@@ -67,7 +87,8 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(renderer->getShaderInstance()->mShader->getID())),
             uniformBuffers,
-            instancedMeshRenderer->getGPUVertexBuffersContainer()
+            instancedMeshRenderer->getGPUVertexBuffersContainer(),
+            gpuShaderPipelineDepthStencilData
         };
 
         mGPUShaderPipelines.emplace(instancedMeshData, instancedMeshData.mShader->compileShader(shaderCompilationData));

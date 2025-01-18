@@ -60,7 +60,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
     rendererData.mShader = mConfig.mShader;
-    rendererData.mStencilData = calculateStencilData();
+    rendererData.mShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };

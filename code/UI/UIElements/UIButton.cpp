@@ -11,6 +11,9 @@ void UIButton::init()
 {
 	UIPanel::init();
 
+    mClipChildren = true;
+
+
 	subscribeToMouseEvents();
 }
 
@@ -46,7 +49,7 @@ void UIButton::setText(HashedString text)
 			UIBuilder uiBuilder;
 
 			mText = uiBuilder.
-			setPosition(Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
+			// setPosition(Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
 			setSize(mConfig.mDisplaySize).
 			setText(text).
 			setTextScale(mConfig.mTextScale).

@@ -20,7 +20,7 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mMesh = (*it).mMesh;
 		rendererData.mMeshInstanceMatrix = (*it).mMatrix;
 		rendererData.mShader = mModelRendererData.mModel->getMeshShaders().at((*it).mMesh);
-		rendererData.mStencilData = mModelRendererData.mStencilData;
+		rendererData.mShaderStencilData = mModelRendererData.mShaderStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         TEntityHandler<GameObject> gameObjectParent = getOwnerEntity();

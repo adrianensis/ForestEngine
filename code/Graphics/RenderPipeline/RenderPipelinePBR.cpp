@@ -63,8 +63,8 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRenderer.render();
 
-    //    GET_SYSTEM(GPUInterface).clearDepth();
-    //    GET_SYSTEM(GPUInterface).clearStencil();
+        // vulkanRenderPass->clearColor();
+        // vulkanRenderPass->clearDepthStencil();
 
         WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
         renderPassUI->renderPass();

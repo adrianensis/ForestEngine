@@ -23,7 +23,7 @@ bool GPURenderPass::init()
     depthAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -149,9 +149,9 @@ bool GPURenderPass::initializeDepthResources()
 VkFormat GPURenderPass::findDepthFormat()
 {
     std::vector<VkFormat> candidates = {
-            VK_FORMAT_D32_SFLOAT,
-            VK_FORMAT_D32_SFLOAT_S8_UINT,
-            VK_FORMAT_D24_UNORM_S8_UINT
+            VK_FORMAT_D32_SFLOAT_S8_UINT, // max priority for depth 32 bits stencil 8 bits 
+            VK_FORMAT_D24_UNORM_S8_UINT,
+            VK_FORMAT_D32_SFLOAT
     };
     VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
     VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
@@ -239,4 +239,23 @@ void GPURenderPass::end()
 
     mGPUContext->commandSubmission();
     mGPUContext->framePresentation({swapChainImageIndex});
+}
+
+void GPURenderPass::clearColor()
+{
+    PROFILER_CPU()
+    VkClearColorValue clearColorValue = {{0.0f, 0.0f, 0.0f, 1.0f}};
+    const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vkCmdClearColorImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearColorValue, 1, &clear_range);
+}
+void GPURenderPass::clearDepthStencil()
+{
+    PROFILER_CPU()
+    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    VkClearDepthStencilValue clearDepthStencilValue{};
+    clearDepthStencilValue.depth = 1.0f;
+    clearDepthStencilValue.stencil = 0;
+    const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 };
+    vkCmdClearDepthStencilImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanColorImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
 }

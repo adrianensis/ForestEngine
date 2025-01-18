@@ -122,10 +122,7 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
     {
         gpuShaderDescriptorSetsData,
         mShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
-        GPUShaderPipelineDepthStencilData
-        {
-
-        }
+        shaderCompilationData.mGPUShaderPipelineDepthStencilData
     };
     gpuShaderPipeline->init(gpuShaderPipelineData, mShaderCompilationData.mRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
 

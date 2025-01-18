@@ -94,7 +94,7 @@ protected:
 	virtual void onFocus() { }
 	virtual void onFocusLost() { }
 
-    StencilData calculateStencilData() const;
+    ShaderStencilData calculateStencilData() const;
 
 protected:
 	UIElementConfig mConfig;

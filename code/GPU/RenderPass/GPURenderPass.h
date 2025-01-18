@@ -17,6 +17,8 @@ public:
     void terminate();
     void begin();
     void end();
+    void clearColor();
+    void clearDepthStencil();
 private:
     VkFormat findDepthFormat();
     bool initializeColorResources();

@@ -24,6 +24,41 @@ public:
     GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
+
+class ShaderStencilData
+{
+public:
+    bool mUseStencil = false;
+    // aka ref
+    u32 mStencilValue = 0;
+    GPUStencilFunction mStencilFunction = GPUStencilFunction::NOTEQUAL;
+    GPUStencilOp mStencilPassOp = GPUStencilOp::KEEP;
+    GPUStencilOp mStencilFailOp = GPUStencilOp::KEEP;
+    GPUStencilOp mDepthFailOp = GPUStencilOp::KEEP;
+    u64 mParentId = 0;
+    u64 mId = 0;
+
+    bool matches(const ShaderStencilData& other) const
+    {
+        return
+        mUseStencil == other.mUseStencil and
+        mStencilValue == other.mStencilValue and
+        mParentId == other.mParentId and
+        //mId == other.mId && 
+        mStencilFunction == other.mStencilFunction;
+    }
+
+    u64 hash() const
+    {
+        u32 shift = 0;
+        u64 result = (u64)mUseStencil << (shift++);
+        result = result ^ (u64)mStencilValue << (shift++);
+        result = result ^ static_cast<u64>(mStencilFunction) << (shift++);
+        result = result ^ (u64)mParentId << (shift++); /*^ (u64)mId*/;
+        return result;
+    }
+};
+
 class ShaderPropertiesBlockNames
 {
 public:
@@ -42,6 +77,7 @@ public:
     HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
+    GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
 };
 
 class ShaderGenerationDataCommon
