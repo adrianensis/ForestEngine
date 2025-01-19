@@ -17,10 +17,6 @@ public:
     void postSceneChanged();
 
 private:
-    void retrieveControllerFromScene();
-
-private:
 	std::vector<TComponentHandler<Script>> mScripts;
-	TComponentHandler<Script> mController;
 };
 REGISTER_CLASS(ScriptEngine);

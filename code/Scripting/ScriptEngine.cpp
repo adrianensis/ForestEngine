@@ -57,18 +57,9 @@ void ScriptEngine::terminate()
 void ScriptEngine::preSceneChanged()
 {
 	LOG_TRACE()
-    retrieveControllerFromScene();
 }
 
 void ScriptEngine::postSceneChanged()
 {
 	LOG_TRACE()
-}
-
-void ScriptEngine::retrieveControllerFromScene()
-{
-    if(GET_SYSTEM(ScenesManager).getGameObjectController())
-    {
-	    mController = GET_SYSTEM(ScenesManager).getGameObjectController()->getFirstComponent<Script>();
-    }
 }
