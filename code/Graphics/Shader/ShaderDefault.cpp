@@ -102,7 +102,7 @@ void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuild
         if(objectId.isValid())
         {
             /*
-                - NOTE - 
+                - INFO - 
                 There are many sources online that tell you that you need the transpose of the inverse of the world matrix in order to
                 transform the normal vector. This is correct, however, we usually don't need to go that far. Our world matrices are
                 always orthogonal (their vectors are always orthogonal). Since the inverse of an orthogonal matrix is equal to its transpose,

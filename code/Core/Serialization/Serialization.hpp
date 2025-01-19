@@ -77,7 +77,7 @@ public:
 public:\
 	void serialize(JSON& json) const override; \
 	void deserialize(const JSON& json) override; \
-private: // NOTE: notice the last blank space " "
+private: // INFO: notice the last blank space " "
 
 #define IMPLEMENT_SERIALIZATION(...) void __VA_ARGS__::serialize(JSON& json) const  
 #define IMPLEMENT_DESERIALIZATION(...) void __VA_ARGS__::deserialize(const JSON& json)  

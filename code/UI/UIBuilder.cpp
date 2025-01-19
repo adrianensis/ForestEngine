@@ -21,7 +21,7 @@ UIBuilder& UIBuilder::nextRow()
 
 UIBuilder& UIBuilder::nextColumn()
 {
-	return nextRow(); // NOTE : exactly the same code.
+	return nextRow(); // INFO : exactly the same code.
 }
 
 UIBuilder& UIBuilder::saveData()

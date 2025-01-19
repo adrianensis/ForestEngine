@@ -13,7 +13,7 @@ void ShaderManager::init()
 	LOG_TRACE()
     mTextureHandles.reserve(mInitialTextures);
     mTextures.reserve(mInitialTextures);
-    // NOTE: We reserve position 0 to represent NULL
+    // INFO: We reserve position 0 to represent NULL
     mTextureHandles.emplace_back();
     mTextures.emplace_back();
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures, sizeof(TextureHandle) * mTextureHandles.size(), false);
@@ -75,7 +75,7 @@ WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureD
         texture->init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, mTextures.size() - 1);
 
         // u32 size = mTextures.getSize();
-        // NOTE: We reserve position 0 to represent NULL
+        // INFO: We reserve position 0 to represent NULL
         // u32 paddedSize = size + 1;
         // mTextureHandles.resize(paddedSize);
         // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);

@@ -16,8 +16,6 @@ int main()
     TEntityHandler<GameObject> controller = EntityManager::getInstance().requestEntity<GameObject>();
     controller->init();
 
-    // NOTE: this script won't be added to the ScriptEngine in the usual way,
-    // since ScriptEngine itself is still not initialized.
     TComponentHandler<Editor> editor = ComponentsManager::getInstance().requestComponent<Editor>();
     editor->init();
     controller->addComponent(editor);
