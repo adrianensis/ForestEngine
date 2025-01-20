@@ -108,6 +108,10 @@ void InstancedMeshRenderer::update()
     {
         return;
     }
+    if (mRenderersCount == 0)
+    {
+        return;
+    }
 	PROFILER_CPU()
     u32 newSize = mRenderersCount;
     if (newSize > mCurrentInstancesSize)
