@@ -15,6 +15,11 @@ void RenderPass::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassDa
     mRenderPipeline = renderPipeline;
     mRenderPassData = renderPassData;
 
+    mGPURenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext);
+    if (!mGPURenderPass->init(renderPassData.mGPURenderPassData))
+    {
+        CHECK_MSG(false, "Could not initialize render pass");
+    }
     if(mRenderPassData.mOutputFramebufferData.isValid())
     { 
         // mOutputGPUFramebuffer.init(mRenderPassData.mOutputFramebufferData);
@@ -31,6 +36,9 @@ void RenderPass::terminate()
     {
         it->second->terminate();
     }
+
+    mGPURenderPass->terminate();
+    delete mGPURenderPass;
 }
 
 void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
@@ -83,7 +91,7 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
         ShaderCompilationData shaderCompilationData
         {
             instancedMeshData.mMesh,
-            mRenderPipeline->vulkanRenderPass,
+            mGPURenderPass,
             ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             HashedString(std::to_string(renderer->getShaderInstance()->mShader->getID())),
             uniformBuffers,
@@ -184,11 +192,12 @@ void RenderPass::renderPass()
     // {
     //     mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
     // }
-
+    mGPURenderPass->begin();
     {
-        PROFILER_GPU_NAMED(renderPass, mRenderPipeline->vulkanRenderPass->mGPUContext->mTracyContext, mRenderPipeline->vulkanRenderPass->mGPUContext->vulkanCommandBuffers[mRenderPipeline->vulkanRenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
+        PROFILER_GPU_NAMED(renderPass, mGPURenderPass->mGPUContext->mTracyContext, mGPURenderPass->mGPUContext->vulkanCommandBuffers[mGPURenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
         render();
     }
+    mGPURenderPass->end();
 }
 
 void RenderPass::updateGlobalData()

@@ -6,6 +6,36 @@
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/Image/GPUImage.h"
 
+enum class GPUAttachmentLoadOp
+{
+    LOAD = VK_ATTACHMENT_LOAD_OP_LOAD,
+    CLEAR = VK_ATTACHMENT_LOAD_OP_CLEAR,
+    DONT_CARE = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+};
+enum class GPUAttachmentStoreOp
+{
+    STORE = VK_ATTACHMENT_STORE_OP_STORE,
+    DONT_CARE = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+    NONE = VK_ATTACHMENT_STORE_OP_NONE,
+    NONE_KHR = VK_ATTACHMENT_STORE_OP_NONE_KHR,
+    NONE_QCOM = VK_ATTACHMENT_STORE_OP_NONE_QCOM,
+    NONE_EXT = VK_ATTACHMENT_STORE_OP_NONE_EXT,
+};
+
+class GPUAttachmentData
+{
+public:
+    GPUAttachmentLoadOp mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
+    GPUAttachmentStoreOp mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
+};
+
+class GPURenderPassData
+{
+public:
+    GPUAttachmentData mColorAttachment;
+    GPUAttachmentData mDepthStencilAttachment;
+};
+
 class GPURenderPass : public EnablePtrToThis
 {
 private:
@@ -13,7 +43,7 @@ private:
 
 public:
     GPURenderPass(Ptr<GPUContext> gpuContext);
-    bool init();
+    bool init(const GPURenderPassData& gpuRenderPassData);
     void terminate();
     void begin();
     void end();
@@ -29,12 +59,12 @@ public:
     Ptr<GPUContext> mGPUContext;
 private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
-    u32 swapChainImageIndex = 0;
     std::vector<GPUFramebuffer> framebuffers;
     GPUImage vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;
     GPUImage vulkanColorImage;
     VkImageView colorImageView = VK_NULL_HANDLE;
+    GPURenderPassData mGPURenderPassData;
 public:
     CRGET(RenderPass)
 };

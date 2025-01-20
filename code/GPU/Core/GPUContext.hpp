@@ -51,6 +51,7 @@ public:
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
     u32 currentFrame = 0;
+    u32 currentSwapChainImageIndex = 0;
 
 #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;

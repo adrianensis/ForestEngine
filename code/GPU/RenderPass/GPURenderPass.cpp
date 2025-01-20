@@ -5,17 +5,26 @@
 GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
         : mGPUContext(gpuContext){}
 
-bool GPURenderPass::init()
+bool GPURenderPass::init(const GPURenderPassData& gpuRenderPassData)
 {
     PROFILER_CPU()
+    mGPURenderPassData = gpuRenderPassData;
+
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
     colorAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
-    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachment.loadOp = (VkAttachmentLoadOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp; //VK_ATTACHMENT_LOAD_OP_CLEAR;
+    colorAttachment.storeOp = (VkAttachmentStoreOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp; //VK_ATTACHMENT_STORE_OP_STORE;
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
+    {
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    }
+    else
+    {
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    }
     colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     VkAttachmentDescription depthAttachment{};
@@ -23,9 +32,17 @@ bool GPURenderPass::init()
     depthAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    depthAttachment.stencilLoadOp = (VkAttachmentLoadOp) mGPURenderPassData.mDepthStencilAttachment.mGPUAttachmentLoadOp; //VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depthAttachment.stencilStoreOp = (VkAttachmentStoreOp) mGPURenderPassData.mDepthStencilAttachment.mGPUAttachmentStoreOp; //VK_ATTACHMENT_STORE_OP_STORE;
     depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    // if(mGPURenderPassData.mDepthStencilAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
+    // {
+    //     depthAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // }
+    // else
+    // {
+    //     depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    // }
     depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     VkAttachmentDescription colorAttachmentResolve{};
@@ -59,10 +76,10 @@ bool GPURenderPass::init()
 
     VkSubpassDependency dependency{};
     dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependency.srcAccessMask = 0;
     dependency.dstSubpass = 0;
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; //VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; //VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.srcAccessMask = 0;
     dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
     std::array<VkAttachmentDescription, 3> attachments = {colorAttachment, depthAttachment, colorAttachmentResolve};
@@ -110,7 +127,7 @@ bool GPURenderPass::initializeColorResources()
     colorImageConfig.SampleCount = mGPUContext->vulkanPhysicalDevice->getSampleCount();
     colorImageConfig.Format = colorFormat;
     colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
-    colorImageConfig.Usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    colorImageConfig.Usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT |VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
     colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
     if (!vulkanColorImage.init(mGPUContext, colorImageConfig)) {
@@ -118,6 +135,11 @@ bool GPURenderPass::initializeColorResources()
         return false;
     }
     colorImageView = GPUImageUtils::createImageView(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
+    
+    if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
+    {
+        GPUImageUtils::transitionImageLayout(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, colorImageConfig.MipLevels);
+    }
     return true;
 }
 
@@ -142,7 +164,7 @@ bool GPURenderPass::initializeDepthResources()
         return false;
     }
     depthImageView = GPUImageUtils::createImageView(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
-    GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
+    // GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
     return true;
 }
 
@@ -194,12 +216,10 @@ void GPURenderPass::terminate()
 void GPURenderPass::begin()
 {
     PROFILER_CPU()
-    swapChainImageIndex = mGPUContext->frameAcquisition();
-    
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = mRenderPass;
-    renderPassInfo.framebuffer = framebuffers.at(swapChainImageIndex).getFramebuffer();
+    renderPassInfo.framebuffer = framebuffers.at(mGPUContext->currentSwapChainImageIndex).getFramebuffer();
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();
 
@@ -220,9 +240,6 @@ void GPURenderPass::begin()
     renderPassInfo.pClearValues = clearValues.data();
 
     const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    vulkanCommandBuffer->reset();
-    vulkanCommandBuffer->begin();
-
     vkCmdBeginRenderPass(vulkanCommandBuffer->getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
@@ -232,13 +249,6 @@ void GPURenderPass::end()
 
     const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     vkCmdEndRenderPass(vulkanCommandBuffer->getVkCommandBuffer());
-
-    if (!vulkanCommandBuffer->end()) {
-        CHECK_MSG(false, "Could not end frame");
-    }
-
-    mGPUContext->commandSubmission();
-    mGPUContext->framePresentation({swapChainImageIndex});
 }
 
 void GPURenderPass::clearColor()
@@ -247,7 +257,7 @@ void GPURenderPass::clearColor()
     VkClearColorValue clearColorValue = {{0.0f, 0.0f, 0.0f, 1.0f}};
     const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
     const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    vkCmdClearColorImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearColorValue, 1, &clear_range);
+    vkCmdClearColorImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanColorImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearColorValue, 1, &clear_range);
 }
 void GPURenderPass::clearDepthStencil()
 {
@@ -257,5 +267,5 @@ void GPURenderPass::clearDepthStencil()
     clearDepthStencilValue.depth = 1.0f;
     clearDepthStencilValue.stencil = 0;
     const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 };
-    vkCmdClearDepthStencilImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanColorImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
+    vkCmdClearDepthStencilImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
 }

@@ -66,8 +66,6 @@ private:
     std::set<u32> mUsedSlots;
 	std::vector<TComponentHandler<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 100;
-public:
-    GPURenderPass* vulkanRenderPass = nullptr;
 
 public:
     CRGET(InstancedMeshesMap)

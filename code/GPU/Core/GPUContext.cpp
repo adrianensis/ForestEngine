@@ -255,6 +255,9 @@ u32 GPUContext::frameAcquisition()
             acquireNextImageFence,
             &swapChainImageIndex
     );
+
+    currentSwapChainImageIndex = swapChainImageIndex;
+    
     // VK_ERROR_OUT_OF_DATE_KHR: The swap chain has become incompatible with the surface and can no longer be used for rendering. Usually happens after a window resize.
     if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR)
     {

@@ -24,6 +24,7 @@ public:
 class RenderPassData
 {
 public:
+    GPURenderPassData mGPURenderPassData;
     GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
     std::vector<RenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
@@ -57,10 +58,12 @@ protected:
     GPUFramebuffer mOutputGPUFramebuffer;
     WeakPtr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
+    GPURenderPass* mGPURenderPass = nullptr;
 
 public:
     RGET(GPUUniformBuffersContainer)
     CRGET(RenderPassData)
     CRGET(OutputGPUFramebuffer)
+    GET(GPURenderPass)
 };
 REGISTER_CLASS(RenderPass);

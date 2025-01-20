@@ -8,6 +8,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "Graphics/Shader/ShaderPBR.hpp"
+#include "GPU/GPUInstance.hpp"
 
 void RenderPipelinePBR::compile()
 {
@@ -25,12 +26,17 @@ void RenderPipelinePBR::compile()
 
     // WeakPtr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
     RenderPassData renderPassGeometryData;
+    renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
+    renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::STORE;
     // renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
     // renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
+    
     RenderPassData renderPassUIData;
+    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
     renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
     initRenderPass<RenderPassUI>(renderPassUIData);
 }
@@ -40,10 +46,14 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 {
 	PROFILER_CPU()
 
-    vulkanRenderPass->begin();
+    u32 swapChainImageIndex = GET_SYSTEM(GPUInstance).mGPUContext->frameAcquisition();
+    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    vulkanCommandBuffer->reset();
+    vulkanCommandBuffer->begin();
+
     {
-        PROFILER_GPU_NAMED(renderPass, vulkanRenderPass->mGPUContext->mTracyContext, vulkanRenderPass->mGPUContext->vulkanCommandBuffers[vulkanRenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
-        // updateLights(renderData);
+        PROFILER_GPU_NAMED(renderPass, GET_SYSTEM(GPUInstance).mGPUContext->mTracyContext, GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame]->getVkCommandBuffer())
+    //     // updateLights(renderData);
 
     //	GET_SYSTEM(GPUInterface).clear();
 
@@ -55,6 +65,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
             // renderPassShadowMap->renderPass();
             WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
             renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
+            // renderPassGeometry->getGPURenderPass()->clearColor();
             renderPassGeometry->renderPass();
         }
         // WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
@@ -71,5 +82,10 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
     }
-    vulkanRenderPass->end();
+    if (!vulkanCommandBuffer->end()) {
+        CHECK_MSG(false, "Could not end frame");
+    }
+
+    GET_SYSTEM(GPUInstance).mGPUContext->commandSubmission();
+    GET_SYSTEM(GPUInstance).mGPUContext->framePresentation({swapChainImageIndex});
 }
