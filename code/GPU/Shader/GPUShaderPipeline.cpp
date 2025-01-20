@@ -85,10 +85,7 @@ void GPUShaderPipeline::terminate()
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
     VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
 
-    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorSets->descriptorPool, allocationCallbacks);
-    vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), mGPUShaderDescriptorSets->descriptorSetLayout, allocationCallbacks);
-    
+    mGPUShaderDescriptorSets->terminate();
     mGPUShaderDescriptorSets.invalidate();
 }
 
