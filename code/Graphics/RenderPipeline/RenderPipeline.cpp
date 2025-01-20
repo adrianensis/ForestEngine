@@ -81,13 +81,15 @@ void RenderPipeline::terminate()
 void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU()
+    bool compileShader = false;
     if(mRenderInstancesSlotsManager.isEmpty())
     {
         mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
         mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
         mRenderers.resize(mRenderInstancesSlotsManager.getSize());
         mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-        GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize(sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize());
+        // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize(sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize());
+        // compileShader = true;
     }
 
     InstancedMeshData instancedMeshData;
@@ -99,6 +101,8 @@ void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
 
         mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
         mInstancedMeshesMap.at(instancedMeshData)->init(instancedMeshData);
+
+        compileShader = true;
     }
 
     mInstancedMeshesMap.at(instancedMeshData)->addRenderer(renderer);
@@ -120,6 +124,11 @@ void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
         if(mRenderPassMap.contains(*it))
         {
             mRenderPassMap.at(*it)->addRenderer(renderer);
+
+            if(compileShader)
+            {
+                mRenderPassMap.at(*it)->compileShader(renderer);
+            }
         }
     }
 }
@@ -182,7 +191,7 @@ void RenderPipeline::initBuffers()
 {
     // CPU BUFFERS
 
-    mRenderInstancesSlotsManager.init(mInitialInstances);
+    mRenderInstancesSlotsManager.init(mInitialInstances * 100);
     mRenderers.resize(mRenderInstancesSlotsManager.getSize());
     mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
     mMatrices.resize(mRenderInstancesSlotsManager.getSize());
