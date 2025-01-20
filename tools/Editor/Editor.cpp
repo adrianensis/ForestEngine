@@ -61,7 +61,7 @@ void Editor::firstUpdate()
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/glTF/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	importModel("Sponza/new/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Vector3(50,0,0), 10.0f, Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Vector3(-50,0,50), 10.0f, Vector3(0,0,0), true);
 	// importModel("building/building.gltf", Vector3(0,0,0), 10.0f, Vector3(0,0,0), true);
