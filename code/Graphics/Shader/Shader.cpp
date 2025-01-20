@@ -128,8 +128,11 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
 
     ShaderBuilder sbVert;
     ShaderBuilder sbFrag;
-    createVertexShader(sbVert, mShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUShaderDescriptorSets());
-    createFragmentShader(sbFrag, mShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUShaderDescriptorSets());
+    {
+        PROFILER_CPU_NAMED(create_vertex_and_fragment)
+        createVertexShader(sbVert, mShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUShaderDescriptorSets());
+        createFragmentShader(sbFrag, mShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUShaderDescriptorSets());
+    }
 
     std::string stringShaderVert = sbVert.getCode();
     std::string shaderPathVert = Paths::mOutputShaders.get() + mShaderCompilationData.id.get() + "_" + mShaderCompilationData.label.get() + ".vert";
@@ -138,10 +141,18 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
         file << stringShaderVert;
     });
 
-    system(std::string("glslc "s + shaderPathVert + " -o "s + shaderPathVert + ".spv").c_str());
+    {
+        PROFILER_CPU_NAMED(compile_vertex_SPIRV)
+        // PERF: calling external process takes 200ms approx.
+        // TODO: use glslang library instead of calling external process.
+        system(std::string("glslc "s + shaderPathVert + " -o "s + shaderPathVert + ".spv").c_str());
+    }
     
     std::vector<byte> stringShaderVertSpvBinary;
-    FileUtils::readFileBinaryData(shaderPathVert + ".spv", stringShaderVertSpvBinary);
+    {
+        PROFILER_CPU_NAMED(read_vertex_binary_data)
+        FileUtils::readFileBinaryData(shaderPathVert + ".spv", stringShaderVertSpvBinary);
+    }
 
     std::string stringShaderFrag = sbFrag.getCode();
     std::string shaderPathFrag = Paths::mOutputShaders.get() + mShaderCompilationData.id.get() + "_" + mShaderCompilationData.label.get() + ".frag";
@@ -150,10 +161,18 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
         file << stringShaderFrag;
     });
 
-    system(std::string("glslc "s + shaderPathFrag + " -o "s + shaderPathFrag + ".spv").c_str());
+    {
+        PROFILER_CPU_NAMED(compile_fragment_SPIRV)
+        // PERF: calling external process takes 200ms approx.
+        // TODO: use glslang library instead calling external process.
+        system(std::string("glslc "s + shaderPathFrag + " -o "s + shaderPathFrag + ".spv").c_str());
+    }
     
     std::vector<byte> stringShaderFragSpvBinary;
-    FileUtils::readFileBinaryData(shaderPathFrag + ".spv", stringShaderFragSpvBinary);
+    {
+        PROFILER_CPU_NAMED(read_fragment_binary_data)
+        FileUtils::readFileBinaryData(shaderPathFrag + ".spv", stringShaderFragSpvBinary);
+    }
 
     gpuShaderPipeline->compile(stringShaderVertSpvBinary, stringShaderFragSpvBinary);
 

@@ -118,6 +118,7 @@ void GPUShaderPipeline::disable() const
 
 void GPUShaderPipeline::compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment)
 {
+    PROFILER_CPU_NAMED(GPUShaderPipeline_compile)
     if (!vertexShader.init(mGPUContext, vertex))
     {
         CHECK_MSG(false, "Could not initialize vertex shader");
