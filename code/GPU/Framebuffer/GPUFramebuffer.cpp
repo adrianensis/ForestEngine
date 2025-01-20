@@ -29,10 +29,11 @@ const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
 }
 
 bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView) {
-    std::array<VkImageView, 3> attachments[] = {
-            colorImageView,
+    std::array<VkImageView, 2> attachments[] = {
+            // colorImageView,
+            swapChainImageView,
             depthImageView,
-            swapChainImageView
+            // swapChainImageView
     };
 
     mGPUContext = gpuContext;

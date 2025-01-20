@@ -12,24 +12,25 @@ bool GPURenderPass::init(const GPURenderPassData& gpuRenderPassData)
 
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
-    colorAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
+    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;//mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
     colorAttachment.loadOp = (VkAttachmentLoadOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp; //VK_ATTACHMENT_LOAD_OP_CLEAR;
     colorAttachment.storeOp = (VkAttachmentStoreOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp; //VK_ATTACHMENT_STORE_OP_STORE;
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
     {
-        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     }
     else
     {
         colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     }
-    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
     VkAttachmentDescription depthAttachment{};
     depthAttachment.format = findDepthFormat();
-    depthAttachment.samples = mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
+    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;//mGPUContext->vulkanDevice->getPhysicalDevice()->getSampleCount();
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     depthAttachment.stencilLoadOp = (VkAttachmentLoadOp) mGPURenderPassData.mDepthStencilAttachment.mGPUAttachmentLoadOp; //VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -45,15 +46,15 @@ bool GPURenderPass::init(const GPURenderPassData& gpuRenderPassData)
     // }
     depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    VkAttachmentDescription colorAttachmentResolve{};
-    colorAttachmentResolve.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
-    colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
-    colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    // VkAttachmentDescription colorAttachmentResolve{};
+    // colorAttachmentResolve.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
+    // colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
+    // colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    // colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    // colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    // colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    // colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    // colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
     VkAttachmentReference colorAttachmentRef{};
     colorAttachmentRef.attachment = 0;
@@ -63,26 +64,35 @@ bool GPURenderPass::init(const GPURenderPassData& gpuRenderPassData)
     depthAttachmentRef.attachment = 1;
     depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    VkAttachmentReference colorAttachmentResolveRef{};
-    colorAttachmentResolveRef.attachment = 2;
-    colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // VkAttachmentReference colorAttachmentResolveRef{};
+    // colorAttachmentResolveRef.attachment = 2;
+    // colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     VkSubpassDescription subpass{};
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpass.colorAttachmentCount = 1;
     subpass.pColorAttachments = &colorAttachmentRef;
     subpass.pDepthStencilAttachment = &depthAttachmentRef;
-    subpass.pResolveAttachments = &colorAttachmentResolveRef;
+    // subpass.pResolveAttachments = &colorAttachmentResolveRef;
 
-    VkSubpassDependency dependency{};
+    VkSubpassDependency dependency = {};
     dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    dependency.dstSubpass = 0;
-    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; //VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; //VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     dependency.srcAccessMask = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.dstSubpass = 0;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-    std::array<VkAttachmentDescription, 3> attachments = {colorAttachment, depthAttachment, colorAttachmentResolve};
+    // VkSubpassDependency dependency{};
+    // dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    // dependency.dstSubpass = 0;
+    // dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; //VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    // dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; //VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    // dependency.srcAccessMask = 0;
+    // dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+    // std::array<VkAttachmentDescription, 3> attachments = {colorAttachment, depthAttachment, colorAttachmentResolve};
+    std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = (u32) attachments.size();
@@ -124,7 +134,7 @@ bool GPURenderPass::initializeColorResources()
     colorImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
     colorImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
     colorImageConfig.MipLevels = 1;
-    colorImageConfig.SampleCount = mGPUContext->vulkanPhysicalDevice->getSampleCount();
+    colorImageConfig.SampleCount = VK_SAMPLE_COUNT_1_BIT;// mGPUContext->vulkanPhysicalDevice->getSampleCount();
     colorImageConfig.Format = colorFormat;
     colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
     colorImageConfig.Usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT |VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
@@ -136,10 +146,10 @@ bool GPURenderPass::initializeColorResources()
     }
     colorImageView = GPUImageUtils::createImageView(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
     
-    if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
-    {
-        GPUImageUtils::transitionImageLayout(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, colorImageConfig.MipLevels);
-    }
+    // if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
+    // {
+    //     GPUImageUtils::transitionImageLayout(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, colorImageConfig.MipLevels);
+    // }
     return true;
 }
 
@@ -157,7 +167,7 @@ bool GPURenderPass::initializeDepthResources()
     depthImageConfig.Usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     depthImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     depthImageConfig.MipLevels = 1;
-    depthImageConfig.SampleCount = mGPUContext->vulkanPhysicalDevice->getSampleCount();
+    depthImageConfig.SampleCount = VK_SAMPLE_COUNT_1_BIT;// mGPUContext->vulkanPhysicalDevice->getSampleCount();
 
     if (!vulkanDepthImage.init(mGPUContext, depthImageConfig)) {
         CHECK_MSG(false,"Could not initialize depth image");
