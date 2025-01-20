@@ -18,7 +18,6 @@ public:
     HashedString mSamplerName;
     GPUFramebufferAttachmentType mAttachmentType;
     WeakPtr<RenderPass> mRenderPass;
-    GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
 class RenderPassData

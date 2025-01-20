@@ -18,7 +18,6 @@ class GPUTextureData
 {
 public:
     HashedString mPath;
-    GPUPipelineStage mStage = GPUPipelineStage::NONE;
     bool mIsFont = false;
     FontData mFontData;
 };

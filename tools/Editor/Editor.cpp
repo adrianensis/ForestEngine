@@ -252,7 +252,7 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 
     ShaderData shaderData;
-    shaderData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png", GPUPipelineStage::FRAGMENT});
+    shaderData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
 	rendererData.mShader = (GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData));
 
 	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();

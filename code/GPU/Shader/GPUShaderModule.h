@@ -7,7 +7,7 @@
 class GPUShaderModuleData
 {
 public:
-    glslang_stage_t mStage;
+    GPUPipelineStage mStage;
     std::string mModuleContent;
     HashedString id;
 };

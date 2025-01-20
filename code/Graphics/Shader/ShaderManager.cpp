@@ -106,7 +106,6 @@ void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
             CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
             GPUTextureData gpuTextureData;
             gpuTextureData.mPath = it->second.mPath;
-            gpuTextureData.mStage = it->second.mStage;
 
             if(shader->getShaderData().mIsFont)
             {

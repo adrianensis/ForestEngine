@@ -1,10 +1,41 @@
 #include "GPU/Shader/GPUShaderCompiler.hpp"
 
-SPIRVBinary GPUShaderCompiler::compileShaderToSPIRV(glslang_stage_t stage, const char* shaderSource, const char* fileName)
+// INFO: from here https://github.com/KhronosGroup/glslang?tab=readme-ov-file#c-functional-interface-new
+#include <glslang/Include/glslang_c_interface.h>
+// Required for use of glslang_default_resource
+#include <glslang/Public/resource_limits_c.h>
+
+SPIRVBinary GPUShaderCompiler::compileShaderToSPIRV(GPUPipelineStage stage, const char* shaderSource, const char* fileName)
 {
+    glslang_stage_t glsl_stage;
+    switch (stage)
+    {
+        case GPUPipelineStage::VERTEX:
+            glsl_stage = glslang_stage_t::GLSLANG_STAGE_VERTEX;
+            break;
+        case GPUPipelineStage::FRAGMENT:
+            glsl_stage = glslang_stage_t::GLSLANG_STAGE_FRAGMENT;
+            break;
+        case GPUPipelineStage::GEOMETRY:
+            glsl_stage = glslang_stage_t::GLSLANG_STAGE_GEOMETRY;
+            break;
+        case GPUPipelineStage::TESS_CONTROL:
+            glsl_stage = glslang_stage_t::GLSLANG_STAGE_TESSCONTROL;
+            break;
+        case GPUPipelineStage::TESS_EVALUATION:
+            glsl_stage = glslang_stage_t::GLSLANG_STAGE_TESSEVALUATION;
+            break;
+        case GPUPipelineStage::COMPUTE:
+            glsl_stage = glslang_stage_t::GLSLANG_STAGE_COMPUTE;
+            break;
+        default:
+            CHECK_MSG(false, "Unsupported shader stage.")
+            break;
+    };
+
     const glslang_input_t input = {
         .language = GLSLANG_SOURCE_GLSL,
-        .stage = stage,
+        .stage = glsl_stage,
         .client = GLSLANG_CLIENT_VULKAN,
         .client_version = GLSLANG_TARGET_VULKAN_1_1,
         .target_language = GLSLANG_TARGET_SPV,
@@ -52,7 +83,7 @@ SPIRVBinary GPUShaderCompiler::compileShaderToSPIRV(glslang_stage_t stage, const
         return bin;
     }
 
-    glslang_program_SPIRV_generate(program, stage);
+    glslang_program_SPIRV_generate(program, glsl_stage);
 
     bin.mSize = glslang_program_SPIRV_get_size(program);
     bin.mWords = new u32[bin.mSize];

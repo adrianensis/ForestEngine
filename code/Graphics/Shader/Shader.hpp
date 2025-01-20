@@ -14,14 +14,12 @@ class FramebufferBinding
 public:
     HashedString mSamplerName;
     u32 mTextureID = 0;
-    GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
 class TextureBinding
 {
 public:
     HashedString mPath;
-    GPUPipelineStage mStage = GPUPipelineStage::NONE;
 };
 
 
@@ -164,8 +162,6 @@ public:
     void terminate();
     // virtual void onPoolFree() override { terminate(); };
 
-    void enable() const;
-    void disable() const;
     bool hasFramebufferBinding(HashedString bindingName) const;
 
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);

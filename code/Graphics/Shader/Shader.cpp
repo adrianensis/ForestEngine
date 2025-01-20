@@ -62,28 +62,6 @@ std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateShaderProper
     return propertiesBlock;
 }
 
-void Shader::enable() const
-{
-	PROFILER_CPU()
-    u32 textureUnit = 0;
-    FOR_MAP(it, mFramebufferBindings)
-    {
-//        GET_SYSTEM(GPUInterface).enableTexture(it->second.mTextureID, textureUnit, it->second.mStage);
-        textureUnit++;
-    }
-}
-
-void Shader::disable() const
-{
-	PROFILER_CPU()
-    u32 textureUnit = 0;
-    FOR_MAP(it, mFramebufferBindings)
-    {
-//        GET_SYSTEM(GPUInterface).disableTexture(textureUnit, it->second.mStage);
-        textureUnit++;
-    }
-}
-
 bool Shader::hasFramebufferBinding(HashedString bindingName) const
 {
     return mFramebufferBindings.contains(bindingName);
@@ -176,13 +154,13 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
 
     GPUShaderModuleData vertexGPUShaderModuleData
     {
-        glslang_stage_t::GLSLANG_STAGE_VERTEX,
+        GPUPipelineStage::VERTEX,
         stringShaderVert,
         shaderCompilationData.id
     };
     GPUShaderModuleData fragmentGPUShaderModuleData
     {
-        glslang_stage_t::GLSLANG_STAGE_FRAGMENT,
+        GPUPipelineStage::FRAGMENT,
         stringShaderFrag,
         shaderCompilationData.id
     };
