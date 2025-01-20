@@ -116,7 +116,7 @@ void GPUShaderPipeline::disable() const
 {
 }
 
-void GPUShaderPipeline::compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment)
+void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShaderModuleData& fragment)
 {
     PROFILER_CPU_NAMED(GPUShaderPipeline_compile)
     if (!vertexShader.init(mGPUContext, vertex))

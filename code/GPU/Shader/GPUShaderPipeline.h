@@ -35,6 +35,14 @@ public:
     GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
 };
 
+class GPUShaderCompile
+{
+public:
+    GPUShaderDescriptorSetsData mGPUShaderDescriptorSetsData;
+    std::vector<GPUVertexBuffer> mVertexInputBuffers;
+    GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
+};
+
 class GPUShaderPipeline
 {
 private:
@@ -44,7 +52,7 @@ public:
     void init(const GPUShaderPipelineData& gpuShaderPipelineData, GPURenderPass* renderPass, Ptr<GPUContext> gpuContext);
     void terminate();
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
-    void compile(const std::vector<byte>& vertex, const std::vector<byte>& fragment);
+    void compile(const GPUShaderModuleData& vertex, const GPUShaderModuleData& fragment);
     void enable() const;
     void disable() const;
 private:

@@ -1,13 +1,15 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const std::vector<byte>& moduleContent)
+bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const GPUShaderModuleData& gpuShaderModuleData)
 {
     mGPUContext = gpuContext;
 
+    SPIRVBinary spirvBinary = GPUShaderCompiler::compileShaderToSPIRV(gpuShaderModuleData.mStage, gpuShaderModuleData.mModuleContent.data(), gpuShaderModuleData.id.get().data());
+
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.codeSize = moduleContent.size();
-    createInfo.pCode = (const u32*) moduleContent.data();
+    createInfo.codeSize = spirvBinary.mSize * sizeof(u32);
+    createInfo.pCode = spirvBinary.mWords;
 
     if (vkCreateShaderModule(mGPUContext->vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mShaderModule) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan shader module");
@@ -15,6 +17,7 @@ bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const std::vector<byte>& 
     }
 
     LOG("Created Vulkan shader module");
+    GPUShaderCompiler::deleteSPIRVBinary(spirvBinary);
     return true;
 }
 
