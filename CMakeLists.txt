@@ -112,6 +112,9 @@ include_directories(${OPENGL_INCLUDE_DIR})
 # Vulkan
 find_package(Vulkan REQUIRED)
 
+# glslang (glsl runtime compiler)
+find_package(glslang REQUIRED)
+
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -210,6 +213,7 @@ add_library(${PROJECTNAME} STATIC ${OBJECTS})
 target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${PROJECTNAME} Vulkan::Vulkan)
+target_link_libraries(${PROJECTNAME} glslang)
 # target_link_libraries(${PROJECTNAME} glew)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
