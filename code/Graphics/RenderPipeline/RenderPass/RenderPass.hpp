@@ -35,6 +35,7 @@ public:
     virtual void init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     void terminate();
     void addRenderer(TComponentHandler<MeshRenderer> renderer);
+    void compileShader(TComponentHandler<MeshRenderer> renderer);
     void removeRenderer(TComponentHandler<MeshRenderer> renderer);
     virtual void renderPass();
     void compile();
