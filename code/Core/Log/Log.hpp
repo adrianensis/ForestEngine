@@ -2,11 +2,12 @@
 
 #include "Core/StdCore.hpp"
 #include <fstream>
+#include "fmt/core.h"
+#include "fmt/base.h"
 
 class Log
 {
 public:
-	inline static const std::string_view emptyMessage;
 	inline static std::ofstream logFile;
 
     class Prefixes
@@ -35,7 +36,7 @@ public:
 			valueStr = std::to_string(var);
 		}
 
-		log(Prefixes::smVar, std::string(varname) + " : " + valueStr, true);
+		log(Prefixes::smVar, true, std::string(varname) + " : " + valueStr);
 	};
 
 	template <class T>
@@ -51,44 +52,80 @@ public:
 			valueStr = std::to_string(var);
 		}
 
-		log(Prefixes::smLog, valueStr, true);
+		log(Prefixes::smLog, true, valueStr);
 	};
 
     static void init();
     static void terminate();
-    static void trace(const std::string_view file, u32 line, const std::string_view function, const std::string_view message = emptyMessage);
-    static void log(const std::string_view& tag, const std::string_view& message, bool newLine);
-    static void brline();
-    static void backspace();
-	static void flush();
+    static void brline()
+	{
+		// break line
+		writeLine("");
+	}
+
+	static void backspace()
+	{
+		append("\b \b");
+	}
+
+	template <typename... T>
+	static void log(const std::string_view& tag, bool newLine, const std::string_view& fmt, T&&... args)
+	{
+		if(newLine)
+		{
+			writeLine("{} > "s + std::string(fmt), std::string(tag), args...);
+		}
+		else
+		{
+			append("{} > "s + std::string(fmt), std::string(tag), args...);
+		}
+	}
+
+	static void trace(const std::string_view file, u32 line, const std::string_view function, const std::string& message)
+	{
+		log(Prefixes::smTrace, true, "[{}:{}] {}", std::string(function), std::to_string(line), message);
+	}
 
 private:
-    static void writeLine(const std::string_view& str);
-    static void append(const std::string_view& str);
+	template <typename... T>
+	static void writeLine(const std::string_view& fmt, T&&... args)
+	{
+		fmt::println(fmt::runtime(fmt), args...);
+		// logFile << fmt:: << "\n";
+	}
+
+	template <typename... T>
+	static void append(const std::string_view& fmt, T&&... args)
+	{
+		// std::cout << '\r';
+		// std::cout << str;
+		fmt::print(fmt::runtime(fmt), args...);
+		// logFile << str;
+	}
 };
 
 #ifdef ENGINE_ENABLE_LOGS
-#define LOG_TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-#define LOG_TRACE_MSG(x) Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, x);
-#define LOG(x) Log::log(Log::Prefixes::smLog, x, true);
-#define LOG_APPEND(x) Log::log(Log::Prefixes::smLog, x, false);
-#define LOG_TAG(Tag, x) Log::log(Tag, x, true);
-#define LOG_TAG_APPEND(Tag, x) Log::log(Tag, x, false);
+#define LOG_TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, ""s);
+#define LOG_TRACE_MSG(...) Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, __VA_ARGS__);
+#define LOG(...) Log::log(Log::Prefixes::smLog, true, __VA_ARGS__);
+#define LOG_APPEND(...) Log::log(Log::Prefixes::smLog, false, __VA_ARGS__);
+#define LOG_TAG(Tag, ...) Log::log(Tag, true, __VA_ARGS__);
+#define LOG_TAG_APPEND(Tag, ...) Log::log(Tag, false, __VA_ARGS__);
 #define LOG_VAR(x) Log::var<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(#x, x);
 #define LOG_VAL(x) Log::val<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(x);
-#define LOG_ERROR(x) Log::log(Log::Prefixes::smError, x, true);
+#define LOG_ERROR(...) Log::log(Log::Prefixes::smError, true, __VA_ARGS__);
 #define LOG_BRLINE() Log::brline();
 #define LOG_BACKSPACE() Log::backspace();
 #else
 #define LOG_TRACE()
-#define LOG_TRACE_MSG(x)
-#define LOG(x)
-#define LOG_APPEND(x)
-#define LOG_TAG(Tag, x)
-#define LOG_TAG_APPEND(Tag, x)
+#define LOG_TRACE_MSG(...)
+#define LOG(...)
+#define LOG_APPEND(...)
+#define LOG_TAG(Tag, ...)
+#define LOG_TAG_APPEND(Tag, ...)
 #define LOG_VAR(x)
 #define LOG_VAL(x)
-#define LOG_ERROR(x)
+#define LOG_ERROR(...)
 #define LOG_BRLINE()
 #define LOG_BACKSPACE()
 #endif

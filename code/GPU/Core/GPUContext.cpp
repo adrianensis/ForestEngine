@@ -117,15 +117,15 @@ void GPUContext::initializeSyncObjects()
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++) {
         if (vkCreateSemaphore(vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &imageAvailableSemaphores[i]) != VK_SUCCESS)
         {
-            CHECK_MSG(false, "Could not create 'image available' semaphore for frame [{}]");
+            CHECK_MSG(false, "Could not create 'image available' semaphore for frame [{}]", i);
         }
         if (vkCreateSemaphore(vulkanDevice->getDevice(), &semaphoreInfo, allocationCallbacks, &renderFinishedSemaphores[i]) != VK_SUCCESS)
         {
-            CHECK_MSG(false, "Could not create 'render finished' semaphore for frame [{}]");
+            CHECK_MSG(false, "Could not create 'render finished' semaphore for frame [{}]", i);
         }
         if (vkCreateFence(vulkanDevice->getDevice(), &fenceInfo, allocationCallbacks, &inFlightFences[i]) != VK_SUCCESS)
         {
-            CHECK_MSG(false, "Could not create 'in flight' fence for frame [{}]");
+            CHECK_MSG(false, "Could not create 'in flight' fence for frame [{}]", i);
         }
     }
     LOG("Created Vulkan sync objects (semaphores & fences)");

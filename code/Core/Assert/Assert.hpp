@@ -1,13 +1,26 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
+#include "Core/Log/Log.hpp"
 
 class AssertUtils
 {
 public:
-    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& message);
+	template <typename... T>
+    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& fmt, T&&... args)
+    {
+        if (!condition)
+        {
+            std::string composedFmt = "[" + file + ":" + function + ":" + std::to_string(line) + "]";
+            composedFmt += "[" + conditionString + "] ";
+            composedFmt += fmt;
+            Log::log(Log::Prefixes::smAssert, true, composedFmt, args...);
+            sendAssertSignal();
+        }
+    }
+
 private:
     static void sendAssertSignal();
 };
 
-#define CHECK_MSG(condition, message) AssertUtils::checkMsg((condition), #condition, __FILE__, __LINE__, __FUNCTION__, message);
+#define CHECK_MSG(condition, ...) AssertUtils::checkMsg((condition), #condition, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);

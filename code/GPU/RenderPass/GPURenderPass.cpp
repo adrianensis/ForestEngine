@@ -201,7 +201,7 @@ bool GPURenderPass::initializeFramebuffers()
         }
         framebuffers.push_back(framebuffer);
     }
-    LOG("Created [{}] Vulkan framebuffers");
+    LOG("Created [{}] Vulkan framebuffers", framebuffers.size());
     return true;
 }
 

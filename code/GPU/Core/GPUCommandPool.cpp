@@ -39,7 +39,7 @@ std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(u32 count)
     allocateInfo.commandPool = mVkCommandPool;
 
     if (vkAllocateCommandBuffers(mGPUContext->vulkanDevice->getDevice(), &allocateInfo, vkCommandBuffers.data()) != VK_SUCCESS) {
-        CHECK_MSG(false,"Could not allocate [{}] Vulkan command buffers");
+        CHECK_MSG(false,"Could not allocate [{}] Vulkan command buffers", vkCommandBuffers.size());
         return {};
     }
 
@@ -49,7 +49,7 @@ std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(u32 count)
         vulkanCommandBuffer->init(vkCommandBuffer, mGPUContext);
         vulkanCommandBuffers.push_back(vulkanCommandBuffer);
     }
-    VULKAN_LOG("Allocated [{}] command buffers");
+    VULKAN_LOG("Allocated [{}] command buffers", vkCommandBuffers.size());
     return vulkanCommandBuffers;
 }
 

@@ -27,14 +27,14 @@ bool GPUSwapChain::init()
         CHECK_MSG(false,"Could not find any Vulkan swap chain images");
         return false;
     }
-    VULKAN_LOG("Initialized [{}] Vulkan swap chain images");
+    VULKAN_LOG("Initialized [{}] Vulkan swap chain images", imageCount);
 
     if (!createSwapChainImageViews())
     {
         CHECK_MSG(false,"Could not create Vulkan swap chain image views");
         return false;
     }
-    VULKAN_LOG("Created [{}] Vulkan swap chain image views");
+    VULKAN_LOG("Created [{}] Vulkan swap chain image views", imageCount);
 
     return true;
 }

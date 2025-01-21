@@ -99,7 +99,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     descriptorSets.resize(GPUContext::MAX_FRAMES_IN_FLIGHT);
     if (vkAllocateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
     {
-        CHECK_MSG(false, "Could not allocate [{}] descriptor sets" /*allocInfo.descriptorSetCount*/);
+        CHECK_MSG(false, "Could not allocate [{}] descriptor sets", allocInfo.descriptorSetCount);
     }
 
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
