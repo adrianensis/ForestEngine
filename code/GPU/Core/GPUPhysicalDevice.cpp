@@ -140,9 +140,9 @@ std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
 
         devices.push_back(device);
     }
-    VULKAN_LOG("Available physical devices: " + std::to_string(deviceCount));
+    GPU_LOG("Available physical devices: " + std::to_string(deviceCount));
     for (const GPUDeviceInfo& device : devices) {
-        VULKAN_LOG(device.mProperties.deviceName + " : "s + getDeviceTypeAsString(device.mProperties.deviceType));
+        GPU_LOG(device.mProperties.deviceName + " : "s + getDeviceTypeAsString(device.mProperties.deviceType));
     }
     return devices;
 }
@@ -157,10 +157,10 @@ std::vector<VkExtensionProperties> GPUPhysicalDevice::findExtensions(VkPhysicalD
     std::vector<VkExtensionProperties> extensions(extensionCount);
     vkEnumerateDeviceExtensionProperties(device, layerName, &extensionCount, extensions.data());
 
-    VULKAN_LOG("Available device extensions: " + std::to_string(extensions.size()));
+    GPU_LOG("Available device extensions: " + std::to_string(extensions.size()));
     for (const VkExtensionProperties& extensionProperties : extensions)
     {
-        VULKAN_LOG(extensionProperties.extensionName);
+        GPU_LOG(extensionProperties.extensionName);
         for (const char* optionalExtension : getOptionalExtensions())
         {
             if (std::strcmp(extensionProperties.extensionName, optionalExtension) == 0)
@@ -272,11 +272,11 @@ std::string GPUPhysicalDevice::getDeviceTypeAsString(VkPhysicalDeviceType device
 GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDeviceInfo>& availableDevices) const
 {
     std::multimap<u32, GPUDeviceInfo> devicesByRating;
-    VULKAN_LOG("Device suitability ratings");
+    GPU_LOG("Device suitability ratings");
     for (const GPUDeviceInfo& device : availableDevices)
     {
         u32 suitabilityRating = getSuitabilityRating(device);
-        VULKAN_LOG(device.mProperties.deviceName + " : "s + std::to_string(suitabilityRating));
+        GPU_LOG(device.mProperties.deviceName + " : "s + std::to_string(suitabilityRating));
         devicesByRating.insert(std::make_pair(suitabilityRating, device));
     }
     u32 highestRating = devicesByRating.rbegin()->first;
@@ -284,9 +284,9 @@ GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDev
     {
         return {};
     }
-    VULKAN_LOG("Most suitable device");
+    GPU_LOG("Most suitable device");
     const GPUDeviceInfo& device = devicesByRating.rbegin()->second;
-    VULKAN_LOG(device.mProperties.deviceName);
+    GPU_LOG(device.mProperties.deviceName);
     return device;
 }
 
@@ -294,22 +294,22 @@ u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo) con
 {
     if (!hasRequiredFeatures(deviceInfo.mFeatures))
     {
-        VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required device features"s);
+        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required device features"s);
         return 0;
     }
     if (!hasRequiredExtensions(deviceInfo.mExtensions))
     {
-        VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required device extensions"s);
+        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required device extensions"s);
         return 0;
     }
     if (!hasRequiredSwapChainSupport(deviceInfo.mSwapChainInfo))
     {
-        VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required swap chain info"s);
+        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required swap chain info"s);
         return 0;
     }
     if (!hasRequiredQueueFamilyIndices(deviceInfo.mQueueFamilyIndices))
     {
-        VULKAN_LOG(deviceInfo.mProperties.deviceName + " does not have required queue family indices"s);
+        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required queue family indices"s);
         return 0;
     }
     u32 score = 0;

@@ -20,21 +20,21 @@ bool GPUSwapChain::init()
         CHECK_MSG(false,"Could not create Vulkan swap chain");
         return false;
     }
-    VULKAN_LOG("Created Vulkan swap chain");
+    GPU_LOG("Created Vulkan swap chain");
 
     if (!findSwapChainImages(imageCount))
     {
         CHECK_MSG(false,"Could not find any Vulkan swap chain images");
         return false;
     }
-    VULKAN_LOG("Initialized [{}] Vulkan swap chain images", imageCount);
+    GPU_LOG("Initialized [{}] Vulkan swap chain images", imageCount);
 
     if (!createSwapChainImageViews())
     {
         CHECK_MSG(false,"Could not create Vulkan swap chain image views");
         return false;
     }
-    VULKAN_LOG("Created [{}] Vulkan swap chain image views", imageCount);
+    GPU_LOG("Created [{}] Vulkan swap chain image views", imageCount);
 
     return true;
 }
@@ -46,9 +46,9 @@ void GPUSwapChain::terminate()
         vkDestroyImageView(vulkanDevice->getDevice(), imageView, ALLOCATOR);
     }
     mImageViews.clear();
-    VULKAN_LOG("Destroyed Vulkan swap chain image views");
+    GPU_LOG("Destroyed Vulkan swap chain image views");
     vkDestroySwapchainKHR(vulkanDevice->getDevice(), mSwapChain, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan swap chain");
+    GPU_LOG("Destroyed Vulkan swap chain");
 }
 
 VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const
@@ -60,7 +60,7 @@ VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurface
             return availableFormat;
         }
     }
-    VULKAN_LOG_WARNING("Could not find target format so defaulting to first available");
+    GPU_LOG_WARNING("Could not find target format so defaulting to first available");
     return availableFormats[0];
 }
 
@@ -68,11 +68,11 @@ VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentMode
 {
     VkPresentModeKHR targetPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
     VkPresentModeKHR defaultPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-    VULKAN_LOG("Targeted Presentation Mode: "s + getPresentationModeAsString(targetPresentMode))
-    VULKAN_LOG("Default Presentation Mode: "s + getPresentationModeAsString(defaultPresentMode))
+    GPU_LOG("Targeted Presentation Mode: "s + getPresentationModeAsString(targetPresentMode))
+    GPU_LOG("Default Presentation Mode: "s + getPresentationModeAsString(defaultPresentMode))
     for (const auto& availablePresentMode: availablePresentModes)
     {
-        VULKAN_LOG("Available Presentation Mode: "s + getPresentationModeAsString(availablePresentMode))
+        GPU_LOG("Available Presentation Mode: "s + getPresentationModeAsString(availablePresentMode))
     }
     for (const auto& availablePresentMode: availablePresentModes)
     {
@@ -81,7 +81,7 @@ VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentMode
             return availablePresentMode;
         }
     }
-    VULKAN_LOG_WARNING("Could not find "s + getPresentationModeAsString(targetPresentMode) + " present mode so defaulting to "s + getPresentationModeAsString(defaultPresentMode));
+    GPU_LOG_WARNING("Could not find "s + getPresentationModeAsString(targetPresentMode) + " present mode so defaulting to "s + getPresentationModeAsString(defaultPresentMode));
     return defaultPresentMode;
 }
 
@@ -90,10 +90,10 @@ VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCap
     bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<u32>::max();
     if (!extentSizeCanDifferFromWindowResolution)
     {
-        VULKAN_LOG("Extent should match window resolution so using the surface capabilities extent");
+        GPU_LOG("Extent should match window resolution so using the surface capabilities extent");
         return surfaceCapabilities.currentExtent;
     }
-    VULKAN_LOG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
+    GPU_LOG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
     VkExtent2D extent =
     {
             (u32) windowSizeInPixels.x,

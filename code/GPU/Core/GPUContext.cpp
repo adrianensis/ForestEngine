@@ -92,8 +92,8 @@ void GPUContext::init()
             profilingCommandBuffer_->getVkCommandBuffer());
     }
 
-    VULKAN_LOG_WARNING("Failed to create Tracy GPU CALIBRATED profiling context.")
-    VULKAN_LOG_WARNING("Creating normal Tracy GPU profiling context instead.")
+    GPU_LOG_WARNING("Failed to create Tracy GPU CALIBRATED profiling context.")
+    GPU_LOG_WARNING("Creating normal Tracy GPU profiling context instead.")
 #endif
 
     initializeSyncObjects();
@@ -175,7 +175,7 @@ bool GPUContext::createSurface()
 void GPUContext::destroySurface() const
 {
     vkDestroySurfaceKHR(gpuVulkanInstance->getVkInstance(), surface, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan window surface");
+    GPU_LOG("Destroyed Vulkan window surface");
 }
 
 /*
@@ -317,7 +317,7 @@ void GPUContext::commandSubmission()
     constexpr u32 submitCount = 1;
     VkFence inFlightFence = inFlightFences[currentFrame];
     if (vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
-        VULKAN_LOG_ERROR("Could not submit to graphics queue")
+        GPU_LOG_ERROR("Could not submit to graphics queue")
         CHECK_MSG(false, "Could not submit to graphics queue")
     }
 }
@@ -348,7 +348,7 @@ void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
             // windowResized = false;
             // recreateRenderingObjects();
         } else if (presentResult != VK_SUCCESS) {
-            VULKAN_LOG_ERROR("Could not present image to swap chain")
+            GPU_LOG_ERROR("Could not present image to swap chain")
             CHECK_MSG(false, "Could not present image to swap chain")
         }
     }
@@ -356,8 +356,8 @@ void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
 
 PFN_vkVoidFunction GPUContext::loadExtensionFunctionInternal(const char* extensionFunctionName)
 {
-    VULKAN_LOG("Loading Extension Function: ")
-    VULKAN_LOG(extensionFunctionName)
+    GPU_LOG("Loading Extension Function: ")
+    GPU_LOG(extensionFunctionName)
     const char* functionName = TO_STRING(extensionFunctionName);\
     auto function = vkGetInstanceProcAddr(gpuVulkanInstance->getVkInstance(), functionName);
     if (function == nullptr)

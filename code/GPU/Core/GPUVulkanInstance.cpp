@@ -11,18 +11,18 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
     switch (messageSeverity)
     {
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-        VULKAN_LOG_TAG("DEBUG ERROR", pCallbackData->pMessage);
+        GPU_LOG_TAG("DEBUG ERROR", pCallbackData->pMessage);
         CHECK_MSG(false, "VULKAN ASSERT");
     break;    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-        VULKAN_LOG_TAG("DEBUG WARNING", pCallbackData->pMessage);
+        GPU_LOG_TAG("DEBUG WARNING", pCallbackData->pMessage);
         CHECK_MSG(false, "VULKAN ASSERT");
     break;    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-        VULKAN_LOG_TAG("DEBUG INFO", pCallbackData->pMessage);
+        GPU_LOG_TAG("DEBUG INFO", pCallbackData->pMessage);
     break;    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-        VULKAN_LOG_TAG("DEBUG INFO", pCallbackData->pMessage);
+        GPU_LOG_TAG("DEBUG INFO", pCallbackData->pMessage);
     break;
     default:
-        VULKAN_LOG_TAG("DEBUG UNKNOWN", pCallbackData->pMessage);
+        GPU_LOG_TAG("DEBUG UNKNOWN", pCallbackData->pMessage);
         break;
     }
 
@@ -61,15 +61,15 @@ bool GPUVulkanInstance::init()
         CHECK_MSG(false,"Could not create Vulkan instance");
         return false;
     }
-    VULKAN_LOG("Created Vulkan instance");
+    GPU_LOG("Created Vulkan instance");
     if (config.ValidationLayersEnabled) {
         if (!createDebugMessenger()) {
             CHECK_MSG(false,"Could not create debug messenger");
             return false;
         }
-        VULKAN_LOG("Created Vulkan debug messenger");
+        GPU_LOG("Created Vulkan debug messenger");
     }
-    VULKAN_LOG("Initialized Vulkan");
+    GPU_LOG("Initialized Vulkan");
     return true;
 }
 
@@ -119,7 +119,7 @@ bool GPUVulkanInstance::createInstance() {
 
 void GPUVulkanInstance::destroyInstance() {
     vkDestroyInstance(mVkInstance, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan instance");
+    GPU_LOG("Destroyed Vulkan instance");
 }
 
 bool GPUVulkanInstance::createDebugMessenger() {
@@ -141,22 +141,22 @@ void GPUVulkanInstance::destroyDebugMessenger() {
         return;
     }
     function(mVkInstance, debugMessenger, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan debug messenger");
+    GPU_LOG("Destroyed Vulkan debug messenger");
 }
 
 std::vector<const char*> GPUVulkanInstance::findExtensions() const
 {
-    VULKAN_LOG("Required extensions " + std::to_string(config.mRequiredExtensions.size()));
+    GPU_LOG("Required extensions " + std::to_string(config.mRequiredExtensions.size()));
     for (const char* extension: config.mRequiredExtensions) {
-        VULKAN_LOG(extension);
+        GPU_LOG(extension);
     }
-    VULKAN_LOG("Optional extensions " + std::to_string(config.mOptionalExtensions.size()));
+    GPU_LOG("Optional extensions " + std::to_string(config.mOptionalExtensions.size()));
     for (const char* extension: config.mOptionalExtensions) {
-        VULKAN_LOG(extension);
+        GPU_LOG(extension);
     }
-    VULKAN_LOG("Available extensions " + std::to_string(availableExtensions.size()));
+    GPU_LOG("Available extensions " + std::to_string(availableExtensions.size()));
     for (const VkExtensionProperties& extensionProperties: availableExtensions) {
-        VULKAN_LOG(extensionProperties.extensionName);
+        GPU_LOG(extensionProperties.extensionName);
     }
 
     std::vector<const char*> extensionsFound;
@@ -193,7 +193,7 @@ bool GPUVulkanInstance::hasExtensions(const std::vector<const char*>& extensions
         }
         else
         {
-            VULKAN_LOG_WARNING("Could not find extension "s + extension);
+            GPU_LOG_WARNING("Could not find extension "s + extension);
             foundAll = false;
         }
     }
@@ -215,14 +215,14 @@ std::vector<const char*> GPUVulkanInstance::findValidationLayers() const {
     std::vector<const char*> validationLayers = {
             "VK_LAYER_KHRONOS_validation"
     };
-    VULKAN_LOG("Requested validation layers " + std::to_string(validationLayers.size()));
+    GPU_LOG("Requested validation layers " + std::to_string(validationLayers.size()));
     for (const char* validationLayer: validationLayers) {
-        VULKAN_LOG(validationLayer);
+        GPU_LOG(validationLayer);
     }
     const std::vector<VkLayerProperties>& availableValidationLayers = findAvailableValidationLayers();
-    VULKAN_LOG("Available validation layers " + std::to_string(availableValidationLayers.size()));
+    GPU_LOG("Available validation layers " + std::to_string(availableValidationLayers.size()));
     for (const VkLayerProperties& layerProperties: availableValidationLayers) {
-        VULKAN_LOG(layerProperties.layerName);
+        GPU_LOG(layerProperties.layerName);
     }
     if (!hasValidationLayers(validationLayers, availableValidationLayers)) {
         CHECK_MSG(false,"Could not find requested validation layers");
@@ -249,7 +249,7 @@ bool GPUVulkanInstance::hasValidationLayers(const std::vector<const char*>& vali
             }
         }
         if (!layerFound) {
-            VULKAN_LOG_WARNING("Could not find validation layer " + std::string(layerName));
+            GPU_LOG_WARNING("Could not find validation layer " + std::string(layerName));
             return false;
         }
     }

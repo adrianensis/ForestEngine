@@ -81,9 +81,9 @@ void GPUShaderPipeline::terminate()
     fragmentShader.terminate();
 
     vkDestroyPipeline(mGPUContext->vulkanDevice->getDevice(), mPipeline, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan graphics pipeline");
+    GPU_LOG("Destroyed Vulkan graphics pipeline");
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
-    VULKAN_LOG("Destroyed Vulkan graphics pipeline layout");
+    GPU_LOG("Destroyed Vulkan graphics pipeline layout");
 
     mGPUShaderDescriptorSets->terminate();
     mGPUShaderDescriptorSets.invalidate();
@@ -247,7 +247,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     if (vkCreatePipelineLayout(mGPUContext->vulkanDevice->getDevice(), &pipelineLayoutInfo, ALLOCATOR, &mPipelineLayout) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline layout");
     }
-    VULKAN_LOG("Created Vulkan graphics pipeline layout");
+    GPU_LOG("Created Vulkan graphics pipeline layout");
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -273,5 +273,5 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     if (vkCreateGraphicsPipelines(mGPUContext->vulkanDevice->getDevice(), pipelineCache, createInfoCount, &pipelineInfo, ALLOCATOR, &mPipeline) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan graphics pipeline");
     }
-    VULKAN_LOG("Created Vulkan graphics pipeline");
+    GPU_LOG("Created Vulkan graphics pipeline");
 }
