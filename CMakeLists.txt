@@ -160,6 +160,11 @@ include_directories("${DEPENDENCIES_DIR}/freetype-2.13.2/include")
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/cgltf-1.14")
 include_directories("${DEPENDENCIES_DIR}/cgltf-1.14")
 
+# fmt
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/fmt-11.1.2")
+include_directories("${DEPENDENCIES_DIR}/fmt-11.1.2/include")
+add_subdirectory("${DEPENDENCIES_DIR}/fmt-11.1.2")
+
 # TBB
 find_package(TBB REQUIRED)
 
@@ -219,6 +224,7 @@ target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
 target_link_libraries(${PROJECTNAME} freetype)
+target_link_libraries(${PROJECTNAME} fmt)
 # Link against the dependency of Intel TBB (for parallel C++17 algorithms)
 target_link_libraries(${PROJECTNAME} TBB::tbb)
 if(ENABLE_PROFILER)
