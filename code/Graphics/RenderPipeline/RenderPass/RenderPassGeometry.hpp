@@ -5,8 +5,6 @@
 
 class RenderPassGeometry: public RenderPass
 {
-public:
-    virtual void init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
 protected:
     virtual void updateGlobalData() override;
     virtual void bindShader(const InstancedMeshData& instancedMeshData) override;

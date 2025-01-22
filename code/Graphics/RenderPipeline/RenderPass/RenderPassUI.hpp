@@ -4,8 +4,7 @@
 
 class RenderPassUI: public RenderPass
 {
-public:
-    virtual void init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
+protected:
     virtual void preRender() override;
     virtual void render() override;
     virtual void postRender() override;

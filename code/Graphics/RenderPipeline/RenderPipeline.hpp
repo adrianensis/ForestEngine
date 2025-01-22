@@ -38,7 +38,7 @@ protected:
         );
 
         WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(getPtrToThis<RenderPipeline>(), renderPassData);
+        renderPass->init(this, renderPassData);
         renderPass->compile();
     }
 

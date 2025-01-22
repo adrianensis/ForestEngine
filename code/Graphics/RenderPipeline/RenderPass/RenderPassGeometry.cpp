@@ -4,11 +4,6 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "Graphics/Shader/ShaderPBR.hpp"
 
-void RenderPassGeometry::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
-{
-    RenderPass::init(renderPipeline, renderPassData);
-}
-
 void RenderPassGeometry::preRender()
 {
 //    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);

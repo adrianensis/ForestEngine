@@ -10,7 +10,7 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
-void RenderPass::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
+void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
     mRenderPipeline = renderPipeline;
     mRenderPassData = renderPassData;

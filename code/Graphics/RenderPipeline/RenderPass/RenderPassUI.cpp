@@ -2,11 +2,6 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "UI/UIShader.hpp"
 
-void RenderPassUI::init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
-{
-    RenderPass::init(renderPipeline, renderPassData);
-}
-
 void RenderPassUI::preRender()
 {
 //    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);

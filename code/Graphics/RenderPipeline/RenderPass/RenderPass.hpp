@@ -32,7 +32,7 @@ public:
 class RenderPass
 {
 public:
-    virtual void init(WeakPtr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
+    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     void terminate();
     void addRenderer(TComponentHandler<MeshRenderer> renderer);
     void compileShader(TComponentHandler<MeshRenderer> renderer);
@@ -56,7 +56,7 @@ protected:
 	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShaderPipeline>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaderPipelines;
     RenderPassData mRenderPassData;
     GPUFramebuffer mOutputGPUFramebuffer;
-    WeakPtr<RenderPipeline> mRenderPipeline;
+    Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     GPURenderPass* mGPURenderPass = nullptr;
 
