@@ -79,7 +79,7 @@ void Model::loadGLTFShaders()
             shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
             WeakPtr<Shader> newShader;
 
-            CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR Meshes are supported")
+            CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
             shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderPBR>();
 
@@ -110,6 +110,7 @@ void Model::loadGLTFShaders()
                 shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
             }
 
+            // TODO: decouple shader from specific data - for example: textureBindings paths, inject data in later stage
             newShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
