@@ -3,8 +3,6 @@
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
 #include "Core/Input/Input.hpp"
-#include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
-#include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 
 void UITransform::init()
 {
