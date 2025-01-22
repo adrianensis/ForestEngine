@@ -48,11 +48,3 @@ void RenderPassGeometry::updateGlobalData()
 
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
-
-void RenderPassGeometry::bindShader(const InstancedMeshData& instancedMeshData)
-{
-    RenderPass::bindShader(instancedMeshData);
-    WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mGPUShaderPipelines.at(instancedMeshData);
-    // mGPUShaderPipelines.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mLightsBufferData));
-    // mGPUShaderPipelines.at(instancedMeshData)->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData));
-}

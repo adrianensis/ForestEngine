@@ -32,11 +32,6 @@ void RenderPass::terminate()
 {
     mGPUUniformBuffersContainer.terminate();
 
-    FOR_MAP(it, mGPUShaderPipelines)
-    {
-        it->second->terminate();
-    }
-
     mGPURenderPass->terminate();
     delete mGPURenderPass;
 }
@@ -46,26 +41,14 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
 	InstancedMeshData instancedMeshData;
 	instancedMeshData.init(renderer);
-
-    bool newInstancedMeshRenderer = !mInstancedMeshRenderers.contains(instancedMeshData);
-	if (newInstancedMeshRenderer)
-	{
-        mInstancedMeshRenderers.insert(instancedMeshData);
-        // compileShader(renderer);
-    }
+    mInstancedMeshRenderers.insert(instancedMeshData);
 }
 
-void RenderPass::compileShader(TComponentHandler<MeshRenderer> renderer)
+OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
 	InstancedMeshData instancedMeshData;
 	instancedMeshData.init(renderer);
-
-    if(mGPUShaderPipelines.contains(instancedMeshData))
-    {
-        mGPUShaderPipelines.at(instancedMeshData)->terminate();
-        mGPUShaderPipelines.at(instancedMeshData).invalidate();
-    }
 
     std::vector<GPUUniformBuffer> uniformBuffers;
     uniformBuffers.push_back(GET_SYSTEM(ShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
@@ -115,7 +98,7 @@ void RenderPass::compileShader(TComponentHandler<MeshRenderer> renderer)
         gpuShaderPipelineDepthStencilData
     };
 
-    mGPUShaderPipelines.emplace(instancedMeshData, instancedMeshData.mShader->compileShader(shaderCompilationData));
+    return instancedMeshData.mShader->compileShader(shaderCompilationData);
 }
 
 void RenderPass::removeRenderer(TComponentHandler<MeshRenderer> renderer)
@@ -138,28 +121,6 @@ void RenderPass::postFramebufferEnabled()
 {
 }
 
-void RenderPass::bindShader(const InstancedMeshData& instancedMeshData)
-{
-    PROFILER_CPU()
-    WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mGPUShaderPipelines.at(instancedMeshData);
-    // gpuShaderPipeline->bindUniformBuffer(GET_SYSTEM(ShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
-    
-    // WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
-    // if(model)
-    // {
-    //     WeakPtr<GPUSkeletonState> skeletonState = model->getSkeletonState();
-    //     if(skeletonState)
-    //     {
-    //         gpuShaderPipeline->bindUniformBuffer(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
-    //     }
-    // }
-
-    // gpuShaderPipeline->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
-    // gpuShaderPipeline->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
-
-    // mGPUShaderPipelines.at(instancedMeshData)->bindTextures(mGPUShaderPipelines.at(instancedMeshData)->getGPUShader(), GET_SYSTEM(ShaderManager).getShaderTextureBindings(instancedMeshData.mShader));
-}
-
 void RenderPass::preRender()
 {
 }
@@ -176,8 +137,7 @@ void RenderPass::renderInstancedMesh(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mGPUShaderPipelines.at(instancedMeshData);
-
+    WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mRenderPipeline->getGPUShaderPipelines().at(instancedMeshData);
     gpuShaderPipeline->enable();
     instancedMeshRenderer->render();
     gpuShaderPipeline->disable();
@@ -246,20 +206,20 @@ Matrix4 RenderPass::calculateProjectionViewMatrix() const
     return projectionViewMatrix;
 }
 
-void RenderPass::setupShader(WeakPtr<Shader> shader) const
-{
-    PROFILER_CPU()
-    FOR_ARRAY(i, mRenderPassData.mDependencies)
-    {
-        // FramebufferBinding framebufferBinding
-        // {
-            // mRenderPassData.mDependencies[i].mSamplerName,
-            // mRenderPassData.mDependencies[i].mRenderPass->getOutputGPUFramebuffer().getAttachments().at(mRenderPassData.mDependencies[i].mAttachmentType).mAttachmentID,
-            // mRenderPassData.mDependencies[i].mStage
-        // };
-        // shader->addFramebufferBinding(framebufferBinding);
-    }
-}
+// void RenderPass::setupShader(WeakPtr<Shader> shader) const
+// {
+//     PROFILER_CPU()
+//     FOR_ARRAY(i, mRenderPassData.mDependencies)
+//     {
+//         // FramebufferBinding framebufferBinding
+//         // {
+//             // mRenderPassData.mDependencies[i].mSamplerName,
+//             // mRenderPassData.mDependencies[i].mRenderPass->getOutputGPUFramebuffer().getAttachments().at(mRenderPassData.mDependencies[i].mAttachmentType).mAttachmentID,
+//             // mRenderPassData.mDependencies[i].mStage
+//         // };
+//         // shader->addFramebufferBinding(framebufferBinding);
+//     }
+// }
 
 void RenderPass::compile()
 {

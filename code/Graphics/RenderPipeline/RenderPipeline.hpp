@@ -14,7 +14,7 @@ public:
     TComponentHandler<DirectionalLight> mDirectionalLight;
 };
 
-class RenderPipeline: public EnablePtrToThis
+class RenderPipeline
 {
 public:
     virtual void init();
@@ -52,13 +52,14 @@ protected:
     void initBuffers();
     void setRendererMatrix(TComponentHandler<MeshRenderer> renderer);
     void processRenderer(TComponentHandler<MeshRenderer> renderer);
+    void compileShader(TComponentHandler<MeshRenderer> renderer);
 
 public:
-    using InstancedMeshesMap = std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor>;
 private:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
-    InstancedMeshesMap mInstancedMeshesMap;
+    std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshesMap;
+	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShaderPipeline>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaderPipelines;
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
@@ -69,5 +70,6 @@ private:
 
 public:
     CRGET(InstancedMeshesMap)
+    CRGET(GPUShaderPipelines)
 };
 REGISTER_CLASS(RenderPipeline);

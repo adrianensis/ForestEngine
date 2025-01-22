@@ -66,6 +66,11 @@ void RenderPipeline::processRenderer(TComponentHandler<MeshRenderer> renderer)
 
 void RenderPipeline::terminate()
 {
+    FOR_MAP(it, mGPUShaderPipelines)
+    {
+        it->second->terminate();
+    }
+
     FOR_MAP(it, mRenderPassMap)
 	{
         it->second->terminate();
@@ -123,11 +128,18 @@ void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
     {
         if(mRenderPassMap.contains(*it))
         {
-            mRenderPassMap.at(*it)->addRenderer(renderer);
+            Ptr<RenderPass> renderPass = mRenderPassMap.at(*it);
+            renderPass->addRenderer(renderer);
 
             if(compileShader)
             {
-                mRenderPassMap.at(*it)->compileShader(renderer);
+                if(mGPUShaderPipelines.contains(instancedMeshData))
+                {
+                    mGPUShaderPipelines.at(instancedMeshData)->terminate();
+                    mGPUShaderPipelines.at(instancedMeshData).invalidate();
+                }
+
+                mGPUShaderPipelines.emplace(instancedMeshData, renderPass->compileShader(renderer));
             }
         }
     }
