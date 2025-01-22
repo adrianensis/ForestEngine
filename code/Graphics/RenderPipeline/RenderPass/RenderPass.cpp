@@ -92,7 +92,7 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
         instancedMeshData.mMesh,
         mGPURenderPass,
         ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-        HashedString(std::to_string(renderer->getShaderInstance()->mShader->getID())),
+        HashedString(std::to_string(instancedMeshData.mShader->getID())),
         uniformBuffers,
         instancedMeshRenderer->getGPUVertexBuffersContainer(),
         gpuShaderPipelineDepthStencilData
