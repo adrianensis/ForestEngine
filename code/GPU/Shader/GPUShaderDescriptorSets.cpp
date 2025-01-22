@@ -7,7 +7,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
     // LAYOUT
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
-    u32 samplersBindingIndexOffset = mGPUDescriptorData.mUniformBuffers.size();
+    mSamplersBindingIndexOffset = mGPUDescriptorData.mUniformBuffers.size();
     FOR_ARRAY(i, mGPUDescriptorData.mUniformBuffers)
     {
         const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[i];
@@ -34,7 +34,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
         // const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[i];
 
         VkDescriptorSetLayoutBinding layoutBinding{};
-        layoutBinding.binding = i + samplersBindingIndexOffset;
+        layoutBinding.binding = i + mSamplersBindingIndexOffset;
         layoutBinding.descriptorCount = 1;
         layoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
@@ -102,6 +102,11 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
         CHECK_MSG(false, "Could not allocate [{}] descriptor sets", allocInfo.descriptorSetCount);
     }
 
+    update();
+}
+
+void GPUShaderDescriptorSets::update()
+{
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
         FOR_ARRAY(j, mGPUDescriptorData.mUniformBuffers)
@@ -153,7 +158,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = descriptorSets[i];
-            descriptorWrites[0].dstBinding = j + samplersBindingIndexOffset;
+            descriptorWrites[0].dstBinding = j + mSamplersBindingIndexOffset;
             descriptorWrites[0].dstArrayElement = 0;
             descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrites[0].descriptorCount = 1;
@@ -176,4 +181,3 @@ void GPUShaderDescriptorSets::terminate()
     vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
     vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), descriptorSetLayout, allocationCallbacks);
 }
-

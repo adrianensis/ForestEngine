@@ -32,6 +32,7 @@ class GPUShaderDescriptorSets
 {    
 public:
     void init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);
+    void update();
     void terminate();
 private:
     Ptr<GPUContext> mGPUContext;
@@ -41,5 +42,6 @@ public:
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
     GPUShaderDescriptorSetsBindings mGPUShaderDescriptorSetsBindings;
     GPUShaderDescriptorSetsData mGPUDescriptorData;
+    u32 mSamplersBindingIndexOffset = 0;
 };
 REGISTER_CLASS(GPUShaderDescriptorSets);
