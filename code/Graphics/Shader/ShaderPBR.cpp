@@ -56,8 +56,8 @@ void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
 
     auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
     auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
-    auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
-    Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+    // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+    // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
     if(inTextureCoord.isValid())
     {
         shaderBuilder.getMain().
@@ -129,8 +129,8 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
             variable(normalFromTexture, GPUShaderDefinitions::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
             auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
-            auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
-            Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+            // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+            // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
             funcGetNormalFromMap.body().
             // ifBlock(textureHandler.notEq("0"s)).
                 set(normalFromTexture, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
@@ -440,8 +440,8 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(metallic, GPUShaderDefinitions::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(shaderInstanceId).dot(shaderMetallic));
 
         auto& textureHandlerMetallicRoughness = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
-        auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
-        Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+        // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+        // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
 
         if(inTextureCoord.isValid())

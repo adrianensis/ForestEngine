@@ -16,7 +16,6 @@ void ShaderManager::init()
     // INFO: We reserve position 0 to represent NULL
     mTextureHandles.emplace_back();
     mTextures.emplace_back();
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures, sizeof(TextureHandle) * mTextureHandles.size(), false);
 }
 
 void ShaderManager::terminate()
@@ -60,8 +59,6 @@ void ShaderManager::update()
         ByteBuffer& shaderPropertiesBlockArray = it->second.mShaderPropertiesBlockArray;
         it->second.mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).setDataArray(shaderPropertiesBlockArray);
     }
-
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures).setDataArray<TextureHandle>(mTextureHandles);
 }
 
 WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
@@ -73,14 +70,6 @@ WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureD
         WeakPtr<GPUTexture> texture = mTextures.emplace_back(OwnerPtr<GPUTexture>::newObject());
         mTexturesByPath.insert_or_assign(gpuTextureData.mPath, texture);
         texture->init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, mTextures.size() - 1);
-
-        // u32 size = mTextures.getSize();
-        // INFO: We reserve position 0 to represent NULL
-        // u32 paddedSize = size + 1;
-        // mTextureHandles.resize(paddedSize);
-        // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures).resize<TextureHandle>(paddedSize);
-
-        mTextureHandles.emplace_back(texture->getGPUTextureHandle());
 	}
 
 	return mTexturesByPath.at(gpuTextureData.mPath);
@@ -131,7 +120,7 @@ WeakPtr<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shad
     WeakPtr<ShaderInstance> instance = mShaderInstances.emplace_back(OwnerPtr<ShaderInstance>::newObject());
     instance->mShader = shader;
     instance->mID = mShaderInstances.size() - 1;
-    instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
+        instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
     instance->mSlot = requestShaderInstanceSlot(shader);
 
     return instance;
