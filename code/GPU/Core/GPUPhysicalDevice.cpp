@@ -326,7 +326,7 @@ u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo) con
 
 bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures& availableDeviceFeatures) const
 {
-    return availableDeviceFeatures.samplerAnisotropy;
+    return availableDeviceFeatures.samplerAnisotropy && availableDeviceFeatures.shaderSampledImageArrayDynamicIndexing;
 }
 
 bool GPUPhysicalDevice::hasRequiredExtensions(const std::vector<VkExtensionProperties>& availableDeviceExtensions) const
