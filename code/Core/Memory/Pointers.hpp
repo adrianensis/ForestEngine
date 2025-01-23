@@ -137,7 +137,24 @@ public:
         }
         return *this;
     }
+    Ptr<T>& operator=(const WeakPtr<T>& other)
+    {
+        // if (this != &other)
+        {
+            assign(other);
+        }
+        return *this;
+    }
+    Ptr<T>& operator=(const CountedPtrBase<T>& other)
+    {
+        // if (this != &other)
+        {
+            assign(other);
+        }
+        return *this;
+    }
     bool operator==(const Ptr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
+    bool operator==(const WeakPtr<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     bool operator==(const CountedPtrBase<T>& otherRef) const { return this->mInternalPointer == otherRef.mInternalPointer; }
     operator bool() const { return this->isValid(); }
 
@@ -158,7 +175,7 @@ private:
         invalidate();
         if(other.isValid())
         {
-            set(other.mInternalPointer);
+            set(other.getInternalPointer());
         }
     }
     
@@ -171,7 +188,7 @@ private:
         invalidate();
         if(ownerPtr.isValid())
         {
-            set(ownerPtr.mInternalPointer);
+            set(ownerPtr.getInternalPointer());
         }
     }
     
@@ -184,7 +201,7 @@ private:
         invalidate();
         if(sharedPtr.isValid())
         {
-            set(sharedPtr.mInternalPointer);
+            set(sharedPtr.getInternalPointer());
         }
     }
 
@@ -197,7 +214,7 @@ private:
         invalidate();
         if(ownerPtr.isValid())
         {
-            set(ownerPtr.mInternalPointer);
+            set(ownerPtr.getInternalPointer());
         }
     }
 
@@ -256,6 +273,9 @@ public:
     operator WeakPtr<const T>() const { return WeakPtr<const T>(mInternalPointer, mReferenceBlock); }
     template<class U> T_EXTENDS(T, U) 
     operator WeakPtr<U>() const { return WeakPtr<U>(dynamic_cast<U*>(this->mInternalPointer), this->mReferenceBlock); }
+    template<class U> T_EXTENDS(T, U) 
+    operator Ptr<U>() const { return Ptr<U>(dynamic_cast<U*>(this->mInternalPointer)); }
+    operator Ptr<T>() const { return Ptr<T>(mInternalPointer); }
     operator SharedPtr<T>() const { return SharedPtr<T>(*this); }
     template<class U> T_EXTENDS(T, U) 
     operator SharedPtr<U>() const { return SharedPtr<U>(*this); }
