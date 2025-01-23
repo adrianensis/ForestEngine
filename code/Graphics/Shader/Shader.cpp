@@ -128,38 +128,12 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
         file << stringShaderVert;
     });
 
-    // {
-    //     PROFILER_CPU_NAMED(compile_vertex_SPIRV)
-    //     // PERF: calling external process takes 200ms approx.
-    //     // TODO: use glslang library instead of calling external process.
-    //     system(std::string("glslc "s + shaderPathVert + " -o "s + shaderPathVert + ".spv").c_str());
-    // }
-    
-    // std::vector<byte> stringShaderVertSpvBinary;
-    // {
-    //     PROFILER_CPU_NAMED(read_vertex_binary_data)
-    //     FileUtils::readFileBinaryData(shaderPathVert + ".spv", stringShaderVertSpvBinary);
-    // }
-
     std::string stringShaderFrag = sbFrag.getCode();
     std::string shaderPathFrag = Paths::mOutputShaders.get() + mShaderCompilationData.id.get() + "_" + mShaderCompilationData.label.get() + ".frag";
     FileUtils::writeFile(shaderPathFrag, [stringShaderFrag](std::ofstream& file)
     {
         file << stringShaderFrag;
     });
-
-    // {
-    //     PROFILER_CPU_NAMED(compile_fragment_SPIRV)
-    //     // PERF: calling external process takes 200ms approx.
-    //     // TODO: use glslang library instead calling external process.
-    //     system(std::string("glslc "s + shaderPathFrag + " -o "s + shaderPathFrag + ".spv").c_str());
-    // }
-    
-    // std::vector<byte> stringShaderFragSpvBinary;
-    // {
-    //     PROFILER_CPU_NAMED(read_fragment_binary_data)
-    //     FileUtils::readFileBinaryData(shaderPathFrag + ".spv", stringShaderFragSpvBinary);
-    // }
 
     GPUShaderModuleData vertexGPUShaderModuleData
     {

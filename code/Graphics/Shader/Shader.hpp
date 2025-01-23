@@ -157,17 +157,17 @@ REGISTER_CLASS(ShaderInstance);
 class ShaderData
 {
 public:
-    GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
+    // GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
     ShaderTextureBindings mShaderTextureBindings;
-    std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
+    // std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedShaderPropertiesBlockBuffer;
     ClassDefinition mSharedShaderPropertiesBlockClass;
-
+    
     template<class T>
     void setSharedShaderPropertiesBlock()
     {
@@ -197,7 +197,7 @@ class Shader: public EnablePtrToThis
 public:
     Shader() = default;
     virtual ~Shader() = default;
-    void init(const ShaderData& shaderData, u32 id);
+    virtual void init(const ShaderData& shaderData, u32 id);
     void terminate();
     // virtual void onPoolFree() override { terminate(); };
 
