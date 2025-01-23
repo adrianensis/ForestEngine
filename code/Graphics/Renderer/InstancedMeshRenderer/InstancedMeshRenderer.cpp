@@ -30,8 +30,8 @@ void InstancedMeshRenderer::init(const InstancedMeshData& instancedMeshData)
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
     GPUVertexBufferData bufferDataObjectIDs(GPUShaderDefinitions::VertexInput::mObjectID, 1);
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
-    GPUVertexBufferData bufferDataShaderInstanceIDs(GPUShaderDefinitions::VertexInput::mShaderInstanceID, 1);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataShaderInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
+    GPUVertexBufferData bufferDataShaderPropertiesInstanceIDs(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID, 1);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataShaderPropertiesInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
 
     mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mFace, mGPUMeshBatcher.getInternalMesh()->mIndices.size(), mInstancedMeshData.mIsStatic);
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mGPUMeshBatcher.getInternalMesh()->mIndices);
@@ -124,7 +124,7 @@ void InstancedMeshRenderer::update()
         
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(mCurrentInstancesSize);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(mCurrentInstancesSize);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID).resize(mCurrentInstancesSize);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).resize(mCurrentInstancesSize);
     }
 
     u32 rendererIndex = 0;
@@ -133,14 +133,14 @@ void InstancedMeshRenderer::update()
         TComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getShaderInstance()->mSlot.getSlot());
+            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getShaderPropertiesInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }
 
     mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
     mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID).setDataArray(mGPUMeshBatcher.getShaderInstanceIDs());
+    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getShaderPropertiesInstanceIDs());
 
     mResizeBuffersRequested = false;
 }

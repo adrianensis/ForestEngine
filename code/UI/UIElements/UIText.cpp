@@ -25,11 +25,11 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
-    renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
+    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
-    renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
-    renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
-    renderer->getShaderInstance()->setDirty();
+    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
+    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
+    renderer->getShaderPropertiesInstance()->setDirty();
 }
 
 void UIText::initFromConfig(const UIElementConfig& config) 
@@ -112,9 +112,9 @@ void UIText::setText(HashedString text)
                     gameObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
                     TComponentHandler<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
-                    renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
-                    renderer->getShaderInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
-                    renderer->getShaderInstance()->setDirty();
+                    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
+                    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
+                    renderer->getShaderPropertiesInstance()->setDirty();
                 }
                 else
                 {

@@ -151,10 +151,10 @@ void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderB
 {
     auto& instanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mInstanceID);
     auto& objectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
-    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderInstanceID);
+    auto& shaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID);
     auto& outInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mInstanceID);
     auto& outObjectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mObjectID);
-    auto& outShaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderInstanceID);
+    auto& outShaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
 
     if(instanceId.isValid())
     {
@@ -166,10 +166,10 @@ void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderB
         shaderBuilder.getMain().
         set(outObjectId, objectId);
     }
-    if(shaderInstanceId.isValid())
+    if(shaderPropertiesInstanceId.isValid())
     {
         shaderBuilder.getMain().
-        set(outShaderInstanceId, shaderInstanceId);
+        set(outShaderPropertiesInstanceId, shaderPropertiesInstanceId);
     }
 }
 
@@ -178,13 +178,13 @@ void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
     auto& inColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mColor);
     auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     
-    auto& shaderInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderInstanceID);
+    auto& shaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
 
     Variable baseColor;
     shaderBuilder.getMain().
-    variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(shaderInstanceId).dot(instanceBaseColor));
+    variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(shaderPropertiesInstanceId).dot(instanceBaseColor));
 
     if(inColor.isValid())
     {
@@ -303,9 +303,9 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     {
         shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mObjectID);
     }
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID))
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID))
     {
-        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mShaderInstanceID);
+        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
     }
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0)))
@@ -330,9 +330,9 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     {
         shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mObjectID);
     }
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderInstanceID))
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID))
     {
-        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mShaderInstanceID);
+        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
     }
 
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUShaderDefinitions::FragmentOutput::mColor);

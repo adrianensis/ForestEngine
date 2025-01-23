@@ -8,7 +8,7 @@
 #include "Graphics/Shader/Shader.hpp"
 
 class InstancedMeshRenderer;
-class ShaderInstance;
+class ShaderPropertiesInstance;
 
 class RendererData
 {
@@ -44,7 +44,7 @@ private:
     Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    WeakPtr<ShaderInstance> mShaderInstance;
+    WeakPtr<ShaderPropertiesInstance> mShaderPropertiesInstance;
     bool mUpdateMatrix = false;
 
 public:
@@ -53,7 +53,7 @@ public:
 public:
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
-    RGET(ShaderInstance)
+    RGET(ShaderPropertiesInstance)
     CRGET_SET(RenderSlot)
     CRGET_SET(InstanceSlot)
     GET_SET(UpdateMatrix)

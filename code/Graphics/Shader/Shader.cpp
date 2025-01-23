@@ -11,10 +11,10 @@
 #include "Core/File/FileUtils.hpp"
 #include <cstdlib>
 
-void ShaderInstance::setDirty()
+void ShaderPropertiesInstance::setDirty()
 {
     PROFILER_CPU();
-    GET_SYSTEM(ShaderManager).setShaderInstanceDirty(mID);
+    GET_SYSTEM(ShaderManager).setShaderPropertiesInstanceDirty(mID);
 }
 
 void Shader::init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id)

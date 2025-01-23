@@ -41,12 +41,12 @@ void ShaderManager::update()
 {
     PROFILER_CPU();
 
-    FOR_LIST(it, mDirtyShaderInstances)
+    FOR_LIST(it, mDirtyShaderPropertiesInstances)
     {
-        WeakPtr<ShaderInstance> instance = mShaderInstances.at(*it);
-        setShaderInstanceProperties(instance);
+        WeakPtr<ShaderPropertiesInstance> instance = mShaderPropertiesInstances.at(*it);
+        setShaderPropertiesInstanceProperties(instance);
     }
-    mDirtyShaderInstances.clear();
+    mDirtyShaderPropertiesInstances.clear();
 
     FOR_MAP(it, mShaderPropertyBlockRenderStates)
     {
@@ -72,7 +72,7 @@ WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureD
 void ShaderManager::postShaderCreated(WeakPtr<Shader> shader)
 {
     loadShaderTextures(shader);
-    initShaderInstancePropertiesUniformBuffer(shader);
+    initShaderPropertiesInstancePropertiesUniformBuffer(shader);
 }
 
 void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
@@ -107,35 +107,35 @@ const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& ShaderManager::getS
     return mTextureBindingsByShader.at(id);
 }
 
-WeakPtr<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shader)
+WeakPtr<ShaderPropertiesInstance> ShaderManager::createShaderPropertiesInstance(WeakPtr<Shader> shader)
 {
     LOG_TRACE()
     PROFILER_CPU()
-    WeakPtr<ShaderInstance> instance = mShaderInstances.emplace_back(OwnerPtr<ShaderInstance>::newObject());
+    WeakPtr<ShaderPropertiesInstance> instance = mShaderPropertiesInstances.emplace_back(OwnerPtr<ShaderPropertiesInstance>::newObject());
     instance->mShader = shader;
-    instance->mID = mShaderInstances.size() - 1;
+    instance->mID = mShaderPropertiesInstances.size() - 1;
     instance->mShaderPropertiesBlockBuffer = shader->getSharedShaderPropertiesBlockBuffer();
-    instance->mSlot = requestShaderInstanceSlot(shader);
+    instance->mSlot = requestShaderPropertiesInstanceSlot(shader);
 
     return instance;
 }
-void ShaderManager::freeShaderInstance(WeakPtr<ShaderInstance> shaderInstance)
+void ShaderManager::freeShaderPropertiesInstance(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance)
 {
     LOG_TRACE()
     PROFILER_CPU()
-    CHECK_MSG(shaderInstance->mShader.isValid(), "Invalid shader!");
-    ClassId propertiesBlockClassId = shaderInstance->mShader->getSharedShaderPropertiesBlockClass().getId();
+    CHECK_MSG(shaderPropertiesInstance->mShader.isValid(), "Invalid shader!");
+    ClassId propertiesBlockClassId = shaderPropertiesInstance->mShader->getSharedShaderPropertiesBlockClass().getId();
 
     if(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {
-        if(shaderInstance->mShader->getShaderData().mAllowInstances)
+        if(shaderPropertiesInstance->mShader->getShaderData().mAllowInstances)
         {
-            mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.freeSlot(shaderInstance->mSlot);
+            mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.freeSlot(shaderPropertiesInstance->mSlot);
         }
     }  
 }
 
-void ShaderManager::initShaderInstancePropertiesUniformBuffer(WeakPtr<Shader> shader)
+void ShaderManager::initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<Shader> shader)
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
@@ -167,11 +167,11 @@ void ShaderManager::initShaderInstancePropertiesUniformBuffer(WeakPtr<Shader> sh
     }
 }
 
-void ShaderManager::setShaderInstanceProperties(WeakPtr<ShaderInstance> shaderInstance)
+void ShaderManager::setShaderPropertiesInstanceProperties(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance)
 {
     PROFILER_CPU()
 
-    WeakPtr<Shader> shader = shaderInstance->mShader;
+    WeakPtr<Shader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
     ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
@@ -183,21 +183,21 @@ void ShaderManager::setShaderInstanceProperties(WeakPtr<ShaderInstance> shaderIn
         {
             LOG_TRACE()
             PROFILER_CPU()
-            CHECK_MSG(mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderInstance->mSlot), "Invalid slot!");
+            CHECK_MSG(mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderPropertiesInstance->mSlot), "Invalid slot!");
             u32 propertiesBlockSizeBytes = shader->getSharedShaderPropertiesBlockBuffer().getByteBuffer().size();
             PROFILER_CPU_NAMED(CopyBuffer)
-            mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mShaderPropertiesBlockArray.copyBufferAt(shaderInstance->mShaderPropertiesBlockBuffer.getByteBuffer(), shaderInstance->mSlot.getSlot() * propertiesBlockSizeBytes);
+            mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mShaderPropertiesBlockArray.copyBufferAt(shaderPropertiesInstance->mShaderPropertiesBlockBuffer.getByteBuffer(), shaderPropertiesInstance->mSlot.getSlot() * propertiesBlockSizeBytes);
         }
     }
 }
 
-void ShaderManager::setShaderInstanceDirty(u32 id)
+void ShaderManager::setShaderPropertiesInstanceDirty(u32 id)
 {
     PROFILER_CPU()
 
-    WeakPtr<ShaderInstance> shaderInstance = mShaderInstances.at(id);
-    CHECK_MSG(shaderInstance.isValid(), "Invalid shader Instance!");
-    WeakPtr<Shader> shader = shaderInstance->mShader;
+    WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance = mShaderPropertiesInstances.at(id);
+    CHECK_MSG(shaderPropertiesInstance.isValid(), "Invalid shader Instance!");
+    WeakPtr<Shader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
     ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
@@ -206,8 +206,8 @@ void ShaderManager::setShaderInstanceDirty(u32 id)
     {
         if(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
-            CHECK_MSG(mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderInstance->mSlot), "Invalid slot!");
-            mDirtyShaderInstances.insert(id);
+            CHECK_MSG(mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderPropertiesInstance->mSlot), "Invalid slot!");
+            mDirtyShaderPropertiesInstances.insert(id);
         }
     }
 }
@@ -220,7 +220,7 @@ const GPUUniformBuffer& ShaderManager::getShaderPropertiesGPUUniformBuffer(WeakP
     return mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
 
-Slot ShaderManager::requestShaderInstanceSlot(WeakPtr<Shader> shader)
+Slot ShaderManager::requestShaderPropertiesInstanceSlot(WeakPtr<Shader> shader)
 {
     LOG_TRACE()
     PROFILER_CPU()

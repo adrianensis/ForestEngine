@@ -15,8 +15,8 @@ ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClass
 void MeshRenderer::init(const RendererData& data) 
 {
     mRendererData = data;
-    mShaderInstance = GET_SYSTEM(ShaderManager).createShaderInstance(mRendererData.mShader);
-    mShaderInstance->setDirty();
+    mShaderPropertiesInstance = GET_SYSTEM(ShaderManager).createShaderPropertiesInstance(mRendererData.mShader);
+    mShaderPropertiesInstance->setDirty();
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -26,7 +26,7 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(ShaderManager).freeShaderInstance(mShaderInstance);
+    GET_SYSTEM(ShaderManager).freeShaderPropertiesInstance(mShaderPropertiesInstance);
     mRenderSlot.reset();
     mInstanceSlot.reset();
 }
@@ -66,8 +66,8 @@ void MeshRenderer::updateTextureRegion()
     //     const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
     //     // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
     //     // {
-    //     //     mShaderInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
-    //     //     mShaderInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+    //     //     mShaderPropertiesInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
+    //     //     mShaderPropertiesInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
     //     // }
     // }
 }

@@ -25,21 +25,21 @@ public:
         return shader;
     }
 
-    WeakPtr<ShaderInstance> createShaderInstance(WeakPtr<Shader> shader);
-    void freeShaderInstance(WeakPtr<ShaderInstance> shaderInstance);
+    WeakPtr<ShaderPropertiesInstance> createShaderPropertiesInstance(WeakPtr<Shader> shader);
+    void freeShaderPropertiesInstance(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance);
 
-    void setShaderInstanceProperties(const WeakPtr<ShaderInstance> shaderInstance);
-    void setShaderInstanceDirty(u32 id);
+    void setShaderPropertiesInstanceProperties(const WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance);
+    void setShaderPropertiesInstanceDirty(u32 id);
 
     const GPUUniformBuffer& getShaderPropertiesGPUUniformBuffer(WeakPtr<Shader> shader) const;
-    Slot requestShaderInstanceSlot(WeakPtr<Shader> shader);
+    Slot requestShaderPropertiesInstanceSlot(WeakPtr<Shader> shader);
 
     const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& getShaderTextureBindings(u32 id) const;
     
 private:
     void postShaderCreated(WeakPtr<Shader> shader);
     void loadShaderTextures(WeakPtr<Shader> shader);
-    void initShaderInstancePropertiesUniformBuffer(WeakPtr<Shader> shader);
+    void initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<Shader> shader);
 
     class ShaderPropertyBlockRenderState
     {
@@ -56,8 +56,8 @@ private:
     std::unordered_map<HashedString, WeakPtr<GPUTexture>> mTexturesByPath;
 	std::unordered_map<u32, std::unordered_map<HashedString, WeakPtr<GPUTexture>>> mTextureBindingsByShader;
     std::vector<OwnerPtr<Shader>> mShaders;
-    std::vector<OwnerPtr<ShaderInstance>> mShaderInstances;
-    std::unordered_set<u32> mDirtyShaderInstances;
+    std::vector<OwnerPtr<ShaderPropertiesInstance>> mShaderPropertiesInstances;
+    std::unordered_set<u32> mDirtyShaderPropertiesInstances;
     inline static const u32 mInitialInstances = 2000;
     inline static const u32 mInitialTextures = 300;
 };

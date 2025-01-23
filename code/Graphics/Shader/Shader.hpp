@@ -142,7 +142,7 @@ public:
 };
 
 class Shader;
-class ShaderInstance
+class ShaderPropertiesInstance
 {
 public:
     Slot mSlot;
@@ -151,7 +151,7 @@ public:
     GenericObjectBuffer mShaderPropertiesBlockBuffer;
     void setDirty();
 };
-REGISTER_CLASS(ShaderInstance);
+REGISTER_CLASS(ShaderPropertiesInstance);
 
 class ShaderData
 {
