@@ -51,9 +51,6 @@ void Shader::init(const ShaderData& shaderData, u32 id)
     mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
 
     registerTextures();
-
-    mShaderInstance = GET_SYSTEM(ShaderManager).createShaderInstance(getPtrToThis<Shader>());
-    mShaderInstance->setDirty();
 }
 
 void Shader::terminate()

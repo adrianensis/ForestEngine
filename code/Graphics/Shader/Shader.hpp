@@ -226,7 +226,6 @@ protected:
     ShaderCompilationData mShaderCompilationData;
     ShaderData mShaderData;
     u32 mID = 0;
-    WeakPtr<ShaderInstance> mShaderInstance;
 
 public:
     CRGET(ShaderData)
