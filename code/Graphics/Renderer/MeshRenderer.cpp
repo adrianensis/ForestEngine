@@ -75,11 +75,11 @@ void MeshRenderer::updateTextureRegion()
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    const auto& textureAnimationsMap = mRendererData.mShader->getShaderData().mTextureAnimations;
-    if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
-    {
-        currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
-    }
+    // const auto& textureAnimationsMap = mRendererData.mShader->getShaderData().mTextureAnimations;
+    // if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
+    // {
+    //     currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);
+    // }
 
     return currentTextureAnimation;
 }
