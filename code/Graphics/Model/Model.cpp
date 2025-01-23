@@ -81,7 +81,8 @@ void Model::loadGLTFShaders()
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
-            shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderDefault>();
+            // shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderDefault>();
+            PropertiesBlockShaderDefault propertiesBlockShaderDefault;
 
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
@@ -92,7 +93,8 @@ void Model::loadGLTFShaders()
             else
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderDefault>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                propertiesBlockShaderDefault.mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                // shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderDefault>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 // shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
             }
             // if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
@@ -112,7 +114,7 @@ void Model::loadGLTFShaders()
             //     shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
             // }
 
-            newShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
+            newShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault, PropertiesBlockShaderDefault>(shaderData, propertiesBlockShaderDefault);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {

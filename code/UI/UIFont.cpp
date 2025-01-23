@@ -39,9 +39,9 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
     shaderData.mIsFont = true;
     shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath});
     shaderData.mFontData = mFontData;
-    shaderData.setSharedShaderPropertiesBlock<ShaderPropertiesBlockUI>();
-    shaderData.mSharedShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
-    mFontShader = GET_SYSTEM(ShaderManager).createShader<ShaderUIFont>(shaderData);
+    ShaderPropertiesBlockUI shaderPropertiesBlockUI;
+    shaderPropertiesBlockUI.mColor = Vector4(1,1,1,1);
+    mFontShader = GET_SYSTEM(ShaderManager).createShader<ShaderUIFont, ShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
 
     mFontData.freeGlyphsBuffers();
 }

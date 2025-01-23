@@ -17,7 +17,7 @@ void ShaderInstance::setDirty()
     GET_SYSTEM(ShaderManager).setShaderInstanceDirty(mID);
 }
 
-void Shader::init(const ShaderData& shaderData, u32 id)
+void Shader::init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id)
 {
     mShaderData = shaderData;
 	mID = id;
@@ -51,6 +51,8 @@ void Shader::init(const ShaderData& shaderData, u32 id)
     mPropertiesBlockUniformBufferData = propertiesBlockUniformBufferData;
 
     registerTextures();
+    setSharedShaderPropertiesBlock();
+    mSharedShaderPropertiesBlockBuffer = propertiesBlockShaderDefault;
 }
 
 void Shader::terminate()

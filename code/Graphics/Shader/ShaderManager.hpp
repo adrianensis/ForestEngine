@@ -12,11 +12,14 @@ public:
     void update();
     WeakPtr<GPUTexture> loadTexture(const GPUTextureData& gpuTextureData);
 
-    template<class T> T_EXTENDS(T, Shader)
-    WeakPtr<Shader> createShader(const ShaderData& shaderData)
+    template<class T, class P> T_EXTENDS(T, Shader)
+    WeakPtr<Shader> createShader(const ShaderData& shaderData, const P& propertiesBlockDefault)
     {
         WeakPtr<Shader> shader = mShaders.emplace_back(OwnerPtr<Shader>::moveCast(OwnerPtr<T>::newObject()));
-        shader->init(shaderData, mShaders.size() - 1);
+        GenericObjectBuffer propertiesBlockDefaultBuffer;
+        propertiesBlockDefaultBuffer.set<P>();
+        propertiesBlockDefaultBuffer.get<P>() = propertiesBlockDefault;
+        shader->init(shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
         postShaderCreated(shader);
 
         return shader;

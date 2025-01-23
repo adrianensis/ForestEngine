@@ -164,41 +164,19 @@ public:
     ShaderTextureBindings mShaderTextureBindings;
     // std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
 
-    GenericObjectBuffer mSharedShaderPropertiesBlockBuffer;
-    ClassDefinition mSharedShaderPropertiesBlockClass;
-    
-    template<class T>
-    void setSharedShaderPropertiesBlock()
-    {
-        mSharedShaderPropertiesBlockBuffer.set<T>();
-        mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
-    }
-
-    u32 getSharedShaderPropertiesBlockBufferSize() const
-    {
-        return mSharedShaderPropertiesBlockBuffer.getByteBuffer().size();
-    }
-    bool allowInstances() const
-    {
-        return mAllowInstances && mMaxInstances > 0 && getSharedShaderPropertiesBlockBufferSize() > 0;
-    }
-
     u32 getMaxInstances() const
     {
         return mAllowInstances ? mMaxInstances : 1;
     }
 };
 
-class GPURenderPass;
-
 class Shader: public EnablePtrToThis
 {
 public:
     Shader() = default;
     virtual ~Shader() = default;
-    virtual void init(const ShaderData& shaderData, u32 id);
+    virtual void init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id);
     void terminate();
-    // virtual void onPoolFree() override { terminate(); };
 
     bool hasFramebufferBinding(HashedString bindingName) const;
 
@@ -214,9 +192,20 @@ public:
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
     OwnerPtr<GPUShaderPipeline> compileShader(const ShaderCompilationData& shaderCompilationData);
 
+    bool allowInstances() const
+    {
+        return mShaderData.mAllowInstances && mShaderData.mMaxInstances > 0 && getSharedShaderPropertiesBlockBuffer().getByteBuffer().size() > 0;
+    }
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock();
     virtual void registerTextures() {};
+    
+    virtual void setSharedShaderPropertiesBlock()
+    {
+        CHECK_MSG(false, "Implement!")
+        // mSharedShaderPropertiesBlockBuffer.set<T>();
+        // mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
+    }
 
 protected:
     GPUStructDefinition mPropertiesBlockStructDefinition;
@@ -226,9 +215,13 @@ protected:
     ShaderCompilationData mShaderCompilationData;
     ShaderData mShaderData;
     u32 mID = 0;
+    GenericObjectBuffer mSharedShaderPropertiesBlockBuffer;
+    ClassDefinition mSharedShaderPropertiesBlockClass;
 
 public:
     CRGET(ShaderData)
+    CRGET(SharedShaderPropertiesBlockBuffer)
+    CRGET(SharedShaderPropertiesBlockClass)
     CRGET(PropertiesBlockStructDefinition)
     CRGET(PropertiesBlockUniformBufferData)
     GET(ID)

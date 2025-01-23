@@ -40,7 +40,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     // mGPUVertexBuffersContainer.disable();
 
     ShaderData shaderData;
-    mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
+    // mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
     // mShader->compileShader("Shape", HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
 
     // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));

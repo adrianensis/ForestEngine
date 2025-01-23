@@ -244,20 +244,20 @@ void Editor::terminate()
 EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 {
 	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
-	gameObject->mIsStatic = false;
-	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
+	// gameObject->mIsStatic = false;
+	// gameObject->mTransform->setLocalPosition(v);
+	// gameObject->mTransform->setLocalScale(Vector3(size,size,size));
 
-    RendererData rendererData;
-	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
+    // RendererData rendererData;
+	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 
-    ShaderData shaderData;
-    shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
-	rendererData.mShader = (GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData));
+    // ShaderData shaderData;
+    // shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
+	// rendererData.mShader = (GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData));
 
-	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
-    renderer->init(rendererData);
-	gameObject->addComponent(renderer);
+	// TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+    // renderer->init(rendererData);
+	// gameObject->addComponent(renderer);
 
 	return gameObject;
 }

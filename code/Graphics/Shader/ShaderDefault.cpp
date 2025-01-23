@@ -8,6 +8,12 @@ void ShaderDefault::registerTextures()
     mTextures.insert(TextureBindingNames::smBaseColor);
 }
 
+void ShaderDefault::setSharedShaderPropertiesBlock()
+{
+    mSharedShaderPropertiesBlockBuffer.set<PropertiesBlockShaderDefault>();
+    mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<PropertiesBlockShaderDefault>().mClassDefinition;
+}
+
 std::vector<GPUStructDefinition::GPUStructVariable> ShaderDefault::generateShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 

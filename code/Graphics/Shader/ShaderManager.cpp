@@ -114,7 +114,7 @@ WeakPtr<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shad
     WeakPtr<ShaderInstance> instance = mShaderInstances.emplace_back(OwnerPtr<ShaderInstance>::newObject());
     instance->mShader = shader;
     instance->mID = mShaderInstances.size() - 1;
-    instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
+    instance->mShaderPropertiesBlockBuffer = shader->getSharedShaderPropertiesBlockBuffer();
     instance->mSlot = requestShaderInstanceSlot(shader);
 
     return instance;
@@ -124,7 +124,7 @@ void ShaderManager::freeShaderInstance(WeakPtr<ShaderInstance> shaderInstance)
     LOG_TRACE()
     PROFILER_CPU()
     CHECK_MSG(shaderInstance->mShader.isValid(), "Invalid shader!");
-    ClassId propertiesBlockClassId = shaderInstance->mShader->getShaderData().mSharedShaderPropertiesBlockClass.getId();
+    ClassId propertiesBlockClassId = shaderInstance->mShader->getSharedShaderPropertiesBlockClass().getId();
 
     if(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {
@@ -139,13 +139,13 @@ void ShaderManager::initShaderInstancePropertiesUniformBuffer(WeakPtr<Shader> sh
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
-    ClassId propertiesBlockClassId = shader->getShaderData().mSharedShaderPropertiesBlockClass.getId();
+    ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
     
     if(!mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {
-        if(shader->getShaderData().allowInstances())
+        if(shader->allowInstances())
         {
-            u32 propertiesBlockSizeBytes = shader->getShaderData().getSharedShaderPropertiesBlockBufferSize();
+            u32 propertiesBlockSizeBytes = shader->getSharedShaderPropertiesBlockBuffer().getByteBuffer().size();
             if(propertiesBlockSizeBytes > 0)
             {
                 LOG_TRACE()
@@ -158,7 +158,7 @@ void ShaderManager::initShaderInstancePropertiesUniformBuffer(WeakPtr<Shader> sh
 
                 // Reserve index 0 for default shader instance
                 Slot defaultSlot = mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
-                mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mShaderPropertiesBlockArray.copyBufferAt(shader->getShaderData().mSharedShaderPropertiesBlockBuffer.getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
+                mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mShaderPropertiesBlockArray.copyBufferAt(shader->getSharedShaderPropertiesBlockBuffer().getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
                 const GPUUniformBufferData& propertiesBlockUniformBufferData = shader->getPropertiesBlockUniformBufferData();
                 mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.addUniformBuffer(propertiesBlockUniformBufferData, propertiesBlockSizeBytes * mInitialInstances, false);
@@ -174,9 +174,9 @@ void ShaderManager::setShaderInstanceProperties(WeakPtr<ShaderInstance> shaderIn
     WeakPtr<Shader> shader = shaderInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
-    ClassId propertiesBlockClassId = shader->getShaderData().mSharedShaderPropertiesBlockClass.getId();
+    ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
 
-    if(shader->getShaderData().allowInstances())
+    if(shader->allowInstances())
     {
         PROFILER_CPU_NAMED(allowInstances)
         if(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
@@ -184,7 +184,7 @@ void ShaderManager::setShaderInstanceProperties(WeakPtr<ShaderInstance> shaderIn
             LOG_TRACE()
             PROFILER_CPU()
             CHECK_MSG(mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderInstance->mSlot), "Invalid slot!");
-            u32 propertiesBlockSizeBytes = shader->getShaderData().getSharedShaderPropertiesBlockBufferSize();
+            u32 propertiesBlockSizeBytes = shader->getSharedShaderPropertiesBlockBuffer().getByteBuffer().size();
             PROFILER_CPU_NAMED(CopyBuffer)
             mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mShaderPropertiesBlockArray.copyBufferAt(shaderInstance->mShaderPropertiesBlockBuffer.getByteBuffer(), shaderInstance->mSlot.getSlot() * propertiesBlockSizeBytes);
         }
@@ -200,9 +200,9 @@ void ShaderManager::setShaderInstanceDirty(u32 id)
     WeakPtr<Shader> shader = shaderInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
-    ClassId propertiesBlockClassId = shader->getShaderData().mSharedShaderPropertiesBlockClass.getId();
+    ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
 
-    if(shader->getShaderData().allowInstances())
+    if(shader->allowInstances())
     {
         if(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
@@ -215,7 +215,7 @@ void ShaderManager::setShaderInstanceDirty(u32 id)
 const GPUUniformBuffer& ShaderManager::getShaderPropertiesGPUUniformBuffer(WeakPtr<Shader> shader) const
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
-    ClassId propertiesBlockClassId = shader->getShaderData().mSharedShaderPropertiesBlockClass.getId();
+    ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
     CHECK_MSG(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId), "Shader Property Block not found!");
     return mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
@@ -226,7 +226,7 @@ Slot ShaderManager::requestShaderInstanceSlot(WeakPtr<Shader> shader)
     PROFILER_CPU()
 
     CHECK_MSG(shader.isValid(), "Invalid shader!");
-    ClassId propertiesBlockClassId = shader->getShaderData().mSharedShaderPropertiesBlockClass.getId();
+    ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
     
     Slot slot;
     if(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
@@ -237,7 +237,7 @@ Slot ShaderManager::requestShaderInstanceSlot(WeakPtr<Shader> shader)
             {
                 CHECK_MSG(false, "mShaderPropertyBlockRenderStates propertiesBlockClassId mSlotsManager.isEmpty!");
 
-                u32 propertiesBlockSizeBytes = shader->getShaderData().getSharedShaderPropertiesBlockBufferSize();
+                u32 propertiesBlockSizeBytes = shader->getSharedShaderPropertiesBlockBuffer().getByteBuffer().size();
                 mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.increaseSize(mInitialInstances);
                 mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mShaderPropertiesBlockArray.resize(mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize() * propertiesBlockSizeBytes);
                 // mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize());

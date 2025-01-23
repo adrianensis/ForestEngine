@@ -27,6 +27,7 @@ public:
 
 protected:
     virtual void registerTextures() override;
+    virtual void setSharedShaderPropertiesBlock() override;
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
     virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
     virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;

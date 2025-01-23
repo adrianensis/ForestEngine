@@ -3,6 +3,12 @@
 using namespace ShaderBuilderNodes;
 using namespace ShaderBuilderNodes::Expressions;
 
+void ShaderUI::setSharedShaderPropertiesBlock()
+{
+    mSharedShaderPropertiesBlockBuffer.set<ShaderPropertiesBlockUI>();
+    mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<ShaderPropertiesBlockUI>().mClassDefinition;
+}
+
 std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 

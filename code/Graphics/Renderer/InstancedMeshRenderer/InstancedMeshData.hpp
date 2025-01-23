@@ -26,7 +26,7 @@ public:
 
 	bool operator==(const InstancedMeshData& otherInstancedMeshData) const
 	{
-        bool result = ClassManager::getDynamicClassMetadata(mShader.getInternalPointer()).mClassDefinition.getId() == ClassManager::getDynamicClassMetadata(otherInstancedMeshData.mShader.getInternalPointer()).mClassDefinition.getId()/*mShader == otherInstancedMeshData.mShader*/ and
+        bool result = mShader == otherInstancedMeshData.mShader and
         mMesh == otherInstancedMeshData.mMesh and
         mIsStatic == otherInstancedMeshData.mIsStatic and
         mShaderStencilData == otherInstancedMeshData.mShaderStencilData and
@@ -40,7 +40,7 @@ public:
 		size_t operator()(const InstancedMeshData& key) const
 		{
             u32 shift = 0;
-            u64 result = ClassManager::getDynamicClassMetadata(key.mShader.getInternalPointer()).mClassDefinition.getId() << (shift++);
+            u64 result = key.mShader->getID() << (shift++);
             result = result ^ key.mMesh->mMeshID << (shift++);
 			result = result ^ static_cast<u64>(key.mIsStatic) << (shift++);
             if(key.mShaderStencilData.mUseStencil)

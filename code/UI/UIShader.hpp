@@ -15,6 +15,7 @@ REGISTER_CLASS(ShaderPropertiesBlockUI)
 class ShaderUI : public ShaderDefault
 {
 protected:
+    virtual void setSharedShaderPropertiesBlock() override;
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
 
     virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
