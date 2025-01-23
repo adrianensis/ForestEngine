@@ -13,6 +13,7 @@ public:
 	WeakPtr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
     ShaderStencilData mShaderStencilData;
+    ShaderTextureBindings mShaderTextureBindings;
 
 	void init(TComponentHandler<MeshRenderer> renderer)
     {
@@ -20,13 +21,15 @@ public:
         mMesh = renderer->getRendererData().mMesh;
         mIsStatic = renderer->isStatic();
         mShaderStencilData = renderer->getRendererData().mShaderStencilData;
+        mShaderTextureBindings = renderer->getShaderInstance()->mShaderTextureBindings;
     }
 
 	bool operator==(const InstancedMeshData& otherInstancedMeshData) const
 	{
-        bool result = mShader == otherInstancedMeshData.mShader && mMesh == otherInstancedMeshData.mMesh and
+        bool result = mShader == otherInstancedMeshData.mShader and mMesh == otherInstancedMeshData.mMesh and
         mIsStatic == otherInstancedMeshData.mIsStatic and
-        mShaderStencilData.matches(otherInstancedMeshData.mShaderStencilData);
+        mShaderStencilData == otherInstancedMeshData.mShaderStencilData and
+        mShaderTextureBindings== otherInstancedMeshData.mShaderTextureBindings;
         return result;
 	}
 
@@ -43,6 +46,8 @@ public:
             {
                 result = result ^ (key.mShaderStencilData.hash() << (shift++));
             }
+
+            result = result ^ (key.mShaderTextureBindings.hash() << (shift++));
             
             return result;
 		}

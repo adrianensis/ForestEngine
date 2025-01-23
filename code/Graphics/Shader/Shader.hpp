@@ -20,8 +20,8 @@ class TextureBinding
 {
 public:
     HashedString mPath;
+    bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
-
 
 class ShaderStencilData
 {
@@ -36,8 +36,9 @@ public:
     u64 mParentId = 0;
     u64 mId = 0;
 
-    bool matches(const ShaderStencilData& other) const
+    bool operator==(const ShaderStencilData& other) const
     {
+        if(this == &other) {return true;}
         return
         mUseStencil == other.mUseStencil and
         mStencilValue == other.mStencilValue and
@@ -114,6 +115,31 @@ public:
     ShaderGenerationDataVertex mVertexVariables;
     ShaderGenerationDataFragment mFragmentVariables;
 };
+class ShaderTextureBindings
+{
+public:
+    std::unordered_map<HashedString, TextureBinding> mTextureBindings;
+
+    bool operator==(const ShaderTextureBindings& other) const
+    {
+        if(this == &other) {return true;}
+        return mTextureBindings == other.mTextureBindings;
+    }
+
+    u64 hash() const
+    {
+        u32 shift = 0;
+        u64 result = 0;
+        
+        FOR_MAP(it, mTextureBindings)
+        {
+            result = result ^ (u64)it->first.getHash() << (shift++);
+            result = result ^ (u64)it->second.mPath.getHash() << (shift++);
+        }
+
+        return result;
+    }
+};
 
 class Shader;
 class ShaderInstance
@@ -123,6 +149,7 @@ public:
     u32 mID = 0;
     WeakPtr<Shader> mShader;
     GenericObjectBuffer mShaderPropertiesBlockBuffer;
+    ShaderTextureBindings mShaderTextureBindings;
     void setDirty();
 };
 REGISTER_CLASS(ShaderInstance);
@@ -135,7 +162,7 @@ public:
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
-    std::unordered_map<HashedString, TextureBinding> mTextureBindings;
+    ShaderTextureBindings mShaderTextureBindings;
     std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
 
     GenericObjectBuffer mSharedShaderPropertiesBlockBuffer;
@@ -165,7 +192,7 @@ public:
 
 class GPURenderPass;
 
-class Shader
+class Shader: public EnablePtrToThis
 {
 public:
     Shader() = default;
@@ -200,6 +227,7 @@ protected:
     ShaderCompilationData mShaderCompilationData;
     ShaderData mShaderData;
     u32 mID = 0;
+    WeakPtr<ShaderInstance> mShaderInstance;
 
 public:
     CRGET(ShaderData)

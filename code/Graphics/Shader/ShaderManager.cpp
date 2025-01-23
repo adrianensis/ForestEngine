@@ -84,7 +84,7 @@ void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
         PROFILER_CPU()
         mTextureBindingsByShader.emplace(id, std::unordered_map<HashedString, WeakPtr<GPUTexture>>());
 
-        FOR_MAP(it, shader->getShaderData().mTextureBindings)
+        FOR_MAP(it, shader->getShaderData().mShaderTextureBindings.mTextureBindings)
         {
             CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
             GPUTextureData gpuTextureData;
@@ -114,7 +114,8 @@ WeakPtr<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shad
     WeakPtr<ShaderInstance> instance = mShaderInstances.emplace_back(OwnerPtr<ShaderInstance>::newObject());
     instance->mShader = shader;
     instance->mID = mShaderInstances.size() - 1;
-        instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
+    instance->mShaderTextureBindings = shader->getShaderData().mShaderTextureBindings;
+    instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
     instance->mSlot = requestShaderInstanceSlot(shader);
 
     return instance;

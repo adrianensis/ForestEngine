@@ -86,7 +86,7 @@ void Model::loadGLTFShaders()
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string())});
+                shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string())});
             }
             else
             {
@@ -96,7 +96,7 @@ void Model::loadGLTFShaders()
             if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string())});
+                shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string())});
             }
             else
             {
@@ -107,7 +107,7 @@ void Model::loadGLTFShaders()
             if(cgltfMaterial.normal_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
-                shaderData.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
+                shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
             }
 
             // TODO: decouple shader from specific data - for example: textureBindings paths, inject data in later stage

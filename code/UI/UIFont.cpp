@@ -37,7 +37,7 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
     ShaderData shaderData;
     shaderData.mMaxInstances = 500;
     shaderData.mIsFont = true;
-    shaderData.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath});
+    shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath});
     shaderData.mFontData = mFontData;
     shaderData.setSharedShaderPropertiesBlock<ShaderPropertiesBlockUI>();
     shaderData.mSharedShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
