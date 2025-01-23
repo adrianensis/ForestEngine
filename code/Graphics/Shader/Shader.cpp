@@ -11,6 +11,12 @@
 #include "Core/File/FileUtils.hpp"
 #include <cstdlib>
 
+void ShaderInstance::setDirty()
+{
+    PROFILER_CPU();
+    GET_SYSTEM(ShaderManager).setShaderInstanceDirty(mID);
+}
+
 void Shader::init(const ShaderData& shaderData, u32 id)
 {
     mShaderData = shaderData;

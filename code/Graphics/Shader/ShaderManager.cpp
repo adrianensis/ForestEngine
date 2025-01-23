@@ -2,12 +2,6 @@
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/GPUInstance.hpp"
 
-void ShaderInstance::setDirty()
-{
-    PROFILER_CPU();
-    GET_SYSTEM(ShaderManager).setShaderInstanceDirty(mID);
-}
-
 void ShaderManager::init()
 {
 	LOG_TRACE()

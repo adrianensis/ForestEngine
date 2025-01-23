@@ -115,6 +115,18 @@ public:
     ShaderGenerationDataFragment mFragmentVariables;
 };
 
+class Shader;
+class ShaderInstance
+{
+public:
+    Slot mSlot;
+    u32 mID = 0;
+    WeakPtr<Shader> mShader;
+    GenericObjectBuffer mShaderPropertiesBlockBuffer;
+    void setDirty();
+};
+REGISTER_CLASS(ShaderInstance);
+
 class ShaderData
 {
 public:
