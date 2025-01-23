@@ -21,7 +21,7 @@ public:
         mMesh = renderer->getRendererData().mMesh;
         mIsStatic = renderer->isStatic();
         mShaderStencilData = renderer->getRendererData().mShaderStencilData;
-        mShaderTextureBindings = renderer->getShaderInstance()->mShaderTextureBindings;
+        mShaderTextureBindings = mShader->getShaderData().mShaderTextureBindings;
     }
 
 	bool operator==(const InstancedMeshData& otherInstancedMeshData) const

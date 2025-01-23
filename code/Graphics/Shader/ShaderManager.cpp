@@ -114,7 +114,6 @@ WeakPtr<ShaderInstance> ShaderManager::createShaderInstance(WeakPtr<Shader> shad
     WeakPtr<ShaderInstance> instance = mShaderInstances.emplace_back(OwnerPtr<ShaderInstance>::newObject());
     instance->mShader = shader;
     instance->mID = mShaderInstances.size() - 1;
-    instance->mShaderTextureBindings = shader->getShaderData().mShaderTextureBindings;
     instance->mShaderPropertiesBlockBuffer = shader->getShaderData().mSharedShaderPropertiesBlockBuffer;
     instance->mSlot = requestShaderInstanceSlot(shader);
 

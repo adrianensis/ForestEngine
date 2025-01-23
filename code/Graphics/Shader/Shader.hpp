@@ -149,7 +149,6 @@ public:
     u32 mID = 0;
     WeakPtr<Shader> mShader;
     GenericObjectBuffer mShaderPropertiesBlockBuffer;
-    ShaderTextureBindings mShaderTextureBindings;
     void setDirty();
 };
 REGISTER_CLASS(ShaderInstance);
