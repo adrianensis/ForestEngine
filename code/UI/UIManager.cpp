@@ -15,6 +15,7 @@ void UIManager::init()
     ShaderData shaderData;
     shaderData.mMaxInstances = 500;
     shaderData.setSharedShaderPropertiesBlock<ShaderPropertiesBlockUI>();
+    shaderData.mSharedShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = Vector4(1,1,1,1);
     mDefaultUIShader = GET_SYSTEM(ShaderManager).createShader<ShaderUI>(shaderData);
 }
 
