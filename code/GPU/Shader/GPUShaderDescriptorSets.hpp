@@ -32,7 +32,8 @@ class GPUShaderDescriptorSets
 {    
 public:
     void init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);
-    void update();
+    void updateBuffers();
+    void updateSamplers();
     void terminate();
 private:
     Ptr<GPUContext> mGPUContext;

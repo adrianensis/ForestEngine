@@ -102,10 +102,11 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderD
         CHECK_MSG(false, "Could not allocate [{}] descriptor sets", allocInfo.descriptorSetCount);
     }
 
-    update();
+    updateBuffers();
+    updateSamplers();
 }
 
-void GPUShaderDescriptorSets::update()
+void GPUShaderDescriptorSets::updateBuffers()
 {
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -144,7 +145,12 @@ void GPUShaderDescriptorSets::update()
             constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
             vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
-
+    }
+}
+void GPUShaderDescriptorSets::updateSamplers()
+{
+    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
+    {
         FOR_ARRAY(j, mGPUDescriptorData.mTextureBindings)
         {
             const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[j];
