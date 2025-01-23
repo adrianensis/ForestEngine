@@ -6,9 +6,9 @@ void ModelManager::init()
 {
     ShaderData shaderData;
     shaderData.mMaxInstances = 500;
-    shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderPBR>();
+    shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderDefault>();
     // pink
-    shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
+    shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderDefault>().mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
     mDefaultModelShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
 }
 
