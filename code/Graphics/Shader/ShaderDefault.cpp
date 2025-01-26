@@ -41,13 +41,13 @@ void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBui
     shaderBuilder.getMain().
     variable(finalPositon, GPUShaderDefinitions::PrimitiveTypes::mVector4, "finalPositon", call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {position, {"1.0f"}}));
     
-    // auto& bonesIDs = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
-    // if(bonesIDs.isValid())
-    // {
-    //     Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
-    //     shaderBuilder.getMain().
-    //     set(finalPositon, boneMatrix.mul(finalPositon));
-    // }
+    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
+    if(bonesIDs.isValid())
+    {
+        Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
+        shaderBuilder.getMain().
+        set(finalPositon, boneMatrix.mul(finalPositon));
+    }
 
     auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices.mInstanceName);
     if(modelMatricesBuffer.isValid())
@@ -266,12 +266,12 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
 
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mPI);
     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mPI180);
-    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
-    // {
-    //     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mMaxBones);
-    //     shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mMaxBoneInfluence);
-    //     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUShaderDefinitions::UniformBuffers::mBonesMatrices);
-    // }
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
+    {
+        shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mMaxBones);
+        shaderGenerationData.mCommonVariables.mConsts.push_back(GPUShaderDefinitions::Consts::mMaxBoneInfluence);
+        shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPUShaderDefinitions::UniformBuffers::mBonesMatrices);
+    }
 
     FOR_LIST(it, gpuVertexBuffersContainer.getVertexBuffers())
     {
@@ -354,10 +354,10 @@ void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const
     u32 vertexOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++; }
 
-    // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
-    // {
-    //     registerFunctionCalculateBoneTransform(shaderBuilder);
-    // }
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
+    {
+        registerFunctionCalculateBoneTransform(shaderBuilder);
+    }
 }
 
 void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const

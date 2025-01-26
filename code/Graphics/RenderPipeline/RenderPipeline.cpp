@@ -51,7 +51,7 @@ void RenderPipeline::update()
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
 
     GET_SYSTEM(ShaderManager).update();
-	// GET_SYSTEM(GPUSkeletalAnimationManager).update();
+	GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
 void RenderPipeline::processRenderer(TComponentHandler<MeshRenderer> renderer)

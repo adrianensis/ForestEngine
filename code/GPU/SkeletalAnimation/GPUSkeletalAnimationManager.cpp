@@ -32,6 +32,10 @@ WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const
 
 void GPUSkeletalAnimationManager::terminate()
 {
+    FOR_MAP(it, mSkeletonRenderStates)
+	{
+        it->second.mGPUUniformBuffersContainer.terminate();
+	}
 	mSkeletonStates.clear();
 }
 

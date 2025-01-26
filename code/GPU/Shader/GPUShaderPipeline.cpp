@@ -48,6 +48,26 @@ void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData,
             switch (gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType())
             {
             case 1:
+                format = VK_FORMAT_R32_SINT;
+                break;
+            case 2:
+                format = VK_FORMAT_R32G32_SINT;
+                break;
+            case 3:
+                format = VK_FORMAT_R32G32B32_SINT;
+                break;
+            case 4:
+                format = VK_FORMAT_R32G32B32A32_SINT;
+                break;
+            default:
+                CHECK_MSG(false, "ERROR")
+                break;
+            }
+            break;
+         case GPUPrimitiveDataType::UNSIGNED_INT:
+            switch (gpuVertexBuffer.mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType())
+            {
+            case 1:
                 format = VK_FORMAT_R32_UINT;
                 break;
             case 2:

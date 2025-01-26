@@ -53,7 +53,7 @@ void Editor::firstUpdate()
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
+	// importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
@@ -68,7 +68,9 @@ void Editor::firstUpdate()
 	// importModel("building/building.gltf", Vector3(-50,0,0), 10.0f, Vector3(0,0,0), true);
 	// importModel("s5avfuixwjy8-calisma/Calisma2.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
 	// importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
-	// auto obj = importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(300,150,-150), 100.0f, Vector3(90,0,0), false);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(100,0,0), 100.0f, Vector3(90,0,0), false);
+	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
     // i32 size = 25;            

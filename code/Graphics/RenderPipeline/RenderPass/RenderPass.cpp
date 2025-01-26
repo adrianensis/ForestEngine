@@ -59,7 +59,7 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
         WeakPtr<GPUSkeletonState> skeletonState = model->getSkeletonState();
         if(skeletonState)
         {
-            // uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
         }
     }
 

@@ -13,7 +13,7 @@ public:
         inline static const GPUDataType mVoid{"void",0, GPUPrimitiveDataType::VOID};
         inline static const GPUDataType mBool{"bool",sizeof(bool), GPUPrimitiveDataType::BOOL};
         inline static const GPUDataType mInt{"int",sizeof(i32), GPUPrimitiveDataType::INT};
-        inline static const GPUDataType mUnsignedInt{"uint",sizeof(u32), GPUPrimitiveDataType::INT};
+        inline static const GPUDataType mUnsignedInt{"uint",sizeof(u32), GPUPrimitiveDataType::UNSIGNED_INT};
         inline static const GPUDataType mFloat{"float",sizeof(f32), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mVector2{"vec2",sizeof(Vector2), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mVector2i{"ivec2",sizeof(i32) * 2, GPUPrimitiveDataType::INT};

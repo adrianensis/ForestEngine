@@ -56,6 +56,9 @@ public:
             case GPUPrimitiveDataType::INT:
                 primitiveTypeSizeInBytes = sizeof(i32);
             break;
+            case GPUPrimitiveDataType::UNSIGNED_INT:
+                primitiveTypeSizeInBytes = sizeof(u32);
+            break;
             case GPUPrimitiveDataType::BOOL:
                 primitiveTypeSizeInBytes = sizeof(bool);
             break;
