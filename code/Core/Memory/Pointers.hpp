@@ -291,7 +291,8 @@ public:
             decrement();
             if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
-                Memory::deleteObject(mReferenceBlock);
+                // TODO: [BUG - reference block] step 2) - When a OwnerPtr is deleted, if the class is EnablePtrToThis, it could first delete mReferenceBlock 
+                //Memory::deleteObject(mReferenceBlock);
             }
         }
         set(nullptr, nullptr);
@@ -441,10 +442,12 @@ public:
             CHECK_MSG(mReferenceBlock->isReferenced(), "Weak references are already 0!")
             decrement();
             
-            if(!mReferenceBlock->isReferenced())
+            if(mInternalPointer && !mReferenceBlock->isReferenced())
             {
+                // TODO: [BUG - reference block] step 1) - Here mReferenceBlock is deleted if class is EnablePtrToThis
                 Memory::deleteObject(mInternalPointer);
             }
+            // TODO: [BUG - reference block] step 3) - and here it crashes
             if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
                 Memory::deleteObject(mReferenceBlock);
