@@ -307,7 +307,7 @@ bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textu
         return false;
     }
 
-    stagingBuffer.setData(data);
+    stagingBuffer.setData(data, imageSize);
 
     /*
         * Copy image texels from staging buffer to image

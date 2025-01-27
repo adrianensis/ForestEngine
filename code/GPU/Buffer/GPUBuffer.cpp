@@ -1,5 +1,6 @@
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Core/GPUCommandBuffer.h"
+#include "GPU/Core/GPULog.h"
 
 bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
 {
@@ -37,7 +38,7 @@ bool GPUBuffer::init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferD
     vkBindBufferMemory(mGPUContext->vulkanDevice->getDevice(), mVkBuffer, mVkDeviceMemory, memoryOffset);
 
     mInit = true;
-    LOG("Initialized Vulkan buffer");
+    GPU_LOG("Initialized Vulkan buffer");
     return true;
 }
 
@@ -50,10 +51,10 @@ void GPUBuffer::terminate()
 
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
         vkDestroyBuffer(mGPUContext->vulkanDevice->getDevice(), mVkBuffer, allocator);
-        LOG("Destroyed Vulkan buffer");
+        GPU_LOG("Destroyed Vulkan buffer");
         vkFreeMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory, allocator);
-        LOG("Freed Vulkan buffer memory");
-        LOG("Terminated Vulkan buffer");
+        GPU_LOG("Freed Vulkan buffer memory");
+        GPU_LOG("Terminated Vulkan buffer");
         mInit = false;
     }
 }
@@ -72,13 +73,17 @@ void GPUBuffer::resize(u32 size)
     }
 }
 
-void GPUBuffer::setData(const void* data) const {
+void GPUBuffer::setData(const void* data, u32 size) const
+{
     PROFILER_CPU_NAMED(buffer_set_data)
-    void* memory;
+    CHECK_MSG(size > 0, "size > 0")
+    CHECK_MSG(size <= mGPUBufferData.Size, "size <= mGPUBufferData.Size")
+
+    void* memory = nullptr;
     constexpr VkDeviceSize memoryOffset = 0;
     constexpr VkMemoryMapFlags memoryMapFlags = 0;
-    vkMapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory, memoryOffset, mGPUBufferData.Size, memoryMapFlags, &memory);
-    std::memcpy(memory, data, mGPUBufferData.Size);
+    vkMapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory, memoryOffset, size, memoryMapFlags, &memory);
+    std::memcpy(memory, data, size);
     vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory);
 }
 

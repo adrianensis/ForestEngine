@@ -27,20 +27,18 @@ public:
     template <class T>
     void setData(const T& data)
     {
-        mBuffer.setData((const void*) &data);
+        mBuffer.setData((const void*) &data, sizeof(T));
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        mBuffer.setData((const void*) data.data());
+        mBuffer.setData((const void*) data.data(), sizeof(T) * data.size());
     }
     void setDataArray(const ByteBuffer& data)
     {
-        mBuffer.setData((const void*) data.getBuffer().data());
+        mBuffer.setData((const void*) data.getBuffer().data(), data.sizeInBytes());
     }
     void terminate();
-
-    void setData(const void* data) const;
 
 private:
 	u32 mBindingPoint = 0;

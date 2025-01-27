@@ -43,7 +43,3 @@ void GPUUniformBuffer::resize(u32 size)
 void GPUUniformBuffer::terminate() {
     mBuffer.terminate();
 }
-
-void GPUUniformBuffer::setData(const void* data) const {
-    mBuffer.setData(data);
-}

@@ -67,7 +67,7 @@ bool GPUVertexBuffer::setData(const void* data, u32 size)
         return false;
     }
 
-    stagingBuffer.setData(data);
+    stagingBuffer.setData(data, size);
     GPUBuffer::copy(stagingBuffer, mBuffer, *mGPUContext->vulkanCommandPool, *mGPUContext->vulkanDevice);
     LOG("Copied vertices to vertex buffer");
 
