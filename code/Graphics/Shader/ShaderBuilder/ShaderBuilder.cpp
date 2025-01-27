@@ -1,5 +1,10 @@
 #include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
 
+ShaderBuilder::~ShaderBuilder()
+{
+    mProgram.terminate();
+}
+
 ShaderBuilder::ShaderBuilder()
 {
     auto& mainFunc = mProgram.mainFunction(GPUShaderDefinitions::Functions::mMain);

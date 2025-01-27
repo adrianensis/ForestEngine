@@ -303,6 +303,7 @@ namespace ShaderBuilderNodes
             }
         };
         BlockStatement& body() { return mBlockStatement; };
+        void terminate() override;
         std::vector<std::string> toLines(u16 indent) const override;
 
         GPUDataType mType;

@@ -10,6 +10,7 @@ class ShaderBuilder
 {
 public:
     ShaderBuilder();
+    ~ShaderBuilder();
     ShaderBuilderNodes::Program& get() { return mProgram; }
     ShaderBuilderNodes::BlockStatement& getMain();
     std::string getCode() const;

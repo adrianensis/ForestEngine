@@ -243,6 +243,11 @@ namespace ShaderBuilderNodes
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;
     }
+
+    void FunctionDefinition::terminate()
+    {
+        mBlockStatement.terminate();
+    }
     
     Struct& Program::structType(const Struct& structType)
     {
