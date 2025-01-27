@@ -33,6 +33,7 @@ class RenderPass
 {
 public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
+    virtual ~RenderPass() = default;
     void terminate();
     void addRenderer(TComponentHandler<MeshRenderer> renderer);
     OwnerPtr<GPUShaderPipeline> compileShader(TComponentHandler<MeshRenderer> renderer);

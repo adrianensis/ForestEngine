@@ -18,6 +18,7 @@ class RenderPipeline
 {
 public:
     virtual void init();
+    virtual ~RenderPipeline() = default;
     void update();
     virtual void terminate();
     void addRenderer(TComponentHandler<MeshRenderer> renderer);
