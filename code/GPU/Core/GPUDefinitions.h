@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
+#include <vulkan/vulkan.h>
 
 enum class GPUBufferType : u32
 {
