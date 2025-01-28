@@ -137,6 +137,7 @@ void GPUContext::terminate()
     if (mTracyContext)
     {
         TracyVkDestroy(mTracyContext);
+        profilingCommandPool_->freeCommandBuffer(profilingCommandBuffer_);
         profilingCommandPool_->terminate();
         delete profilingCommandPool_;
     }
@@ -157,6 +158,10 @@ void GPUContext::terminate()
     vulkanSwapChain->terminate();
     delete vulkanSwapChain;
     destroySurface();
+    FOR_RANGE(i, 0, GPUContext::MAX_FRAMES_IN_FLIGHT)
+    {
+        vulkanCommandPool->freeCommandBuffer(vulkanCommandBuffers[i]);
+    }
     vulkanCommandPool->terminate();
     delete vulkanCommandPool;
     vulkanDevice->terminate();
