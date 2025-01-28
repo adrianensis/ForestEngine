@@ -75,7 +75,7 @@ void GPUContext::init()
         mTracyContext = PROFILER_GPU_CONTEXT_CALIBRATED(vulkanPhysicalDevice->getPhysicalDevice(),
                                                 vulkanDevice->getDevice(),
                                                 vulkanDevice->getGraphicsQueue(),
-                                                profilingCommandBuffer_->getVkCommandBuffer(),
+                                                profilingCommandBuffer_.getVkCommandBuffer(),
                                                 function_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT,
                                                 function_vkGetCalibratedTimestampsEXT);
     }
@@ -89,7 +89,7 @@ void GPUContext::init()
             vulkanPhysicalDevice->getPhysicalDevice(),
             vulkanDevice->getDevice(),
             vulkanDevice->getGraphicsQueue(),
-            profilingCommandBuffer_->getVkCommandBuffer());
+            profilingCommandBuffer_.getVkCommandBuffer());
     }
 
     GPU_LOG_WARNING("Failed to create Tracy GPU CALIBRATED profiling context.")
@@ -299,8 +299,8 @@ void GPUContext::commandSubmission()
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-    const GPUCommandBuffer* vulkanCommandBuffer = vulkanCommandBuffers[currentFrame];
-    VkCommandBuffer vkCommandBuffer = vulkanCommandBuffer->getVkCommandBuffer();
+    const GPUCommandBuffer& vulkanCommandBuffer = vulkanCommandBuffers[currentFrame];
+    VkCommandBuffer vkCommandBuffer = vulkanCommandBuffer.getVkCommandBuffer();
     submitInfo.pCommandBuffers = &vkCommandBuffer;
     submitInfo.commandBufferCount = 1;
 

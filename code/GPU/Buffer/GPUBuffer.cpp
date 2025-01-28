@@ -93,16 +93,16 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
     CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer size <= destinationBuffer size: " + std::to_string(sourceBuffer.mGPUBufferData.Size) +" "+ std::to_string(destinationBuffer.mGPUBufferData.Size));
 
     constexpr u32 commandBufferCount = 1;
-    const std::vector<GPUCommandBuffer*> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
+    const std::vector<GPUCommandBuffer> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
     CHECK_MSG(commandBuffers.size() == commandBufferCount, "commandBuffers.size() == commandBufferCount")
 
-    const GPUCommandBuffer* commandBuffer = commandBuffers[0];
-    VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
+    const GPUCommandBuffer& commandBuffer = commandBuffers[0];
+    VkCommandBuffer vkCommandBuffer = commandBuffer.getVkCommandBuffer();
     
-    commandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+    commandBuffer.begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
     {
-        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, commandBuffer->getVkCommandBuffer());
+        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, commandBuffer.getVkCommandBuffer());
 
         VkBufferCopy copyRegion{};
         copyRegion.size = sourceBuffer.mGPUBufferData.Size;
@@ -110,7 +110,7 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
         vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
     }
 
-    commandBuffer->end();
+    commandBuffer.end();
 
     {   
         PROFILER_CPU_NAMED(submit_copy_buffer)

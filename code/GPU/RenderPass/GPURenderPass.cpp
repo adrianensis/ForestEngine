@@ -249,16 +249,16 @@ void GPURenderPass::begin()
     renderPassInfo.clearValueCount = (u32) clearValues.size();
     renderPassInfo.pClearValues = clearValues.data();
 
-    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    vkCmdBeginRenderPass(vulkanCommandBuffer->getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vkCmdBeginRenderPass(vulkanCommandBuffer.getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
 void GPURenderPass::end()
 {
     PROFILER_CPU()
 
-    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    vkCmdEndRenderPass(vulkanCommandBuffer->getVkCommandBuffer());
+    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vkCmdEndRenderPass(vulkanCommandBuffer.getVkCommandBuffer());
 }
 
 void GPURenderPass::clearColor()
@@ -266,16 +266,16 @@ void GPURenderPass::clearColor()
     PROFILER_CPU()
     VkClearColorValue clearColorValue = {{0.0f, 0.0f, 0.0f, 1.0f}};
     const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    vkCmdClearColorImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanColorImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearColorValue, 1, &clear_range);
+    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vkCmdClearColorImage(vulkanCommandBuffer.getVkCommandBuffer(), vulkanColorImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearColorValue, 1, &clear_range);
 }
 void GPURenderPass::clearDepthStencil()
 {
     PROFILER_CPU()
-    const GPUCommandBuffer* vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     VkClearDepthStencilValue clearDepthStencilValue{};
     clearDepthStencilValue.depth = 1.0f;
     clearDepthStencilValue.stencil = 0;
     const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 };
-    vkCmdClearDepthStencilImage(vulkanCommandBuffer->getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
+    vkCmdClearDepthStencilImage(vulkanCommandBuffer.getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
 }

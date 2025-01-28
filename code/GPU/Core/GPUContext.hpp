@@ -46,7 +46,7 @@ public:
     VkSurfaceKHR surface = VK_NULL_HANDLE;
     GPUSwapChain* vulkanSwapChain;
     GPUCommandPool* vulkanCommandPool;
-    std::vector<GPUCommandBuffer*> vulkanCommandBuffers;
+    std::vector<GPUCommandBuffer> vulkanCommandBuffers;
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
@@ -56,7 +56,7 @@ public:
 #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;
     GPUCommandPool* profilingCommandPool_ = nullptr;
-    GPUCommandBuffer* profilingCommandBuffer_ = nullptr;
+    GPUCommandBuffer profilingCommandBuffer_;
 #endif
 
 private:

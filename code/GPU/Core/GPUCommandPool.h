@@ -12,8 +12,8 @@ public:
     GPUCommandPool(Ptr<GPUContext> gpuContext);
     bool init();
     void terminate();
-    std::vector<GPUCommandBuffer*> allocateCommandBuffers(u32 count) const;
-    void freeCommandBuffer(const GPUCommandBuffer* commandBuffer) const;
+    std::vector<GPUCommandBuffer> allocateCommandBuffers(u32 count) const;
+    void freeCommandBuffer(const GPUCommandBuffer& commandBuffer) const;
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
     VkCommandPool mVkCommandPool = VK_NULL_HANDLE;

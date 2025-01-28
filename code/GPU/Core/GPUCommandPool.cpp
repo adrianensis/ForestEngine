@@ -27,7 +27,7 @@ void GPUCommandPool::terminate()
     GPU_LOG("Destroyed Vulkan command pool");
 }
 
-std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(u32 count) const
+std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(u32 count) const
 {
     std::vector<VkCommandBuffer> vkCommandBuffers;
     vkCommandBuffers.resize(count);
@@ -43,18 +43,18 @@ std::vector<GPUCommandBuffer*> GPUCommandPool::allocateCommandBuffers(u32 count)
         return {};
     }
 
-    std::vector<GPUCommandBuffer*> vulkanCommandBuffers;
+    std::vector<GPUCommandBuffer> vulkanCommandBuffers;
     for (VkCommandBuffer vkCommandBuffer : vkCommandBuffers) {
-        GPUCommandBuffer* vulkanCommandBuffer = new GPUCommandBuffer();
-        vulkanCommandBuffer->init(vkCommandBuffer, mGPUContext);
+        GPUCommandBuffer vulkanCommandBuffer;
+        vulkanCommandBuffer.init(vkCommandBuffer, mGPUContext);
         vulkanCommandBuffers.push_back(vulkanCommandBuffer);
     }
     GPU_LOG("Allocated [{}] command buffers", vkCommandBuffers.size());
     return vulkanCommandBuffers;
 }
 
-void GPUCommandPool::freeCommandBuffer(const GPUCommandBuffer* commandBuffer) const
+void GPUCommandPool::freeCommandBuffer(const GPUCommandBuffer& commandBuffer) const
 {
-    VkCommandBuffer vkCommandBuffer = commandBuffer->getVkCommandBuffer();
+    VkCommandBuffer vkCommandBuffer = commandBuffer.getVkCommandBuffer();
     vkFreeCommandBuffers(mGPUContext->vulkanDevice->getDevice(), mVkCommandPool, 1, &vkCommandBuffer);
 }

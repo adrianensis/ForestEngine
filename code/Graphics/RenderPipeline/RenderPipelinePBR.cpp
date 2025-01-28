@@ -47,12 +47,12 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 	PROFILER_CPU()
 
     u32 swapChainImageIndex = GET_SYSTEM(GPUInstance).mGPUContext->frameAcquisition();
-    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-    vulkanCommandBuffer->reset();
-    vulkanCommandBuffer->begin();
+    const GPUCommandBuffer& vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    vulkanCommandBuffer.reset();
+    vulkanCommandBuffer.begin();
 
     {
-        PROFILER_GPU_NAMED(renderPass, GET_SYSTEM(GPUInstance).mGPUContext->mTracyContext, GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame]->getVkCommandBuffer())
+        PROFILER_GPU_NAMED(renderPass, GET_SYSTEM(GPUInstance).mGPUContext->mTracyContext, GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame].getVkCommandBuffer())
     //     // updateLights(renderData);
 
     //	GET_SYSTEM(GPUInterface).clear();
@@ -82,7 +82,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
     }
-    if (!vulkanCommandBuffer->end()) {
+    if (!vulkanCommandBuffer.end()) {
         CHECK_MSG(false, "Could not end frame");
     }
 

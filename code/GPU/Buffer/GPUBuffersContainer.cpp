@@ -4,19 +4,19 @@
 void GPUVertexBuffersContainer::enable()
 {
 //	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
-    const GPUCommandBuffer* vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    const GPUCommandBuffer vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
     
     FOR_ARRAY(i, mVertexBuffers)
     {
         VkBuffer vertexBuffers[] = {mVertexBuffers[i].getGPUBuffer().getVkBuffer()};
         VkDeviceSize vertexBufferOffsets[] = {0};
         constexpr u32 bindingCount = 1;
-        vkCmdBindVertexBuffers(vulkanCommandBuffer->getVkCommandBuffer(), i, bindingCount, vertexBuffers, vertexBufferOffsets);
+        vkCmdBindVertexBuffers(vulkanCommandBuffer.getVkCommandBuffer(), i, bindingCount, vertexBuffers, vertexBufferOffsets);
     }
 
     constexpr VkDeviceSize indexBufferOffset = 0;
     constexpr VkIndexType indexType = VK_INDEX_TYPE_UINT32;
-    vkCmdBindIndexBuffer(vulkanCommandBuffer->getVkCommandBuffer(), mIndicesBuffer.getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
+    vkCmdBindIndexBuffer(vulkanCommandBuffer.getVkCommandBuffer(), mIndicesBuffer.getGPUBuffer().getVkBuffer(), indexBufferOffset, indexType);
 }
 
 void GPUVertexBuffersContainer::disable()

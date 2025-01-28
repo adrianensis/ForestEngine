@@ -166,7 +166,7 @@ void RenderPass::renderPass()
     // }
     mGPURenderPass->begin();
     {
-        PROFILER_GPU_NAMED(renderPass, mGPURenderPass->mGPUContext->mTracyContext, mGPURenderPass->mGPUContext->vulkanCommandBuffers[mGPURenderPass->mGPUContext->currentFrame]->getVkCommandBuffer())
+        PROFILER_GPU_NAMED(renderPass, mGPURenderPass->mGPUContext->mTracyContext, mGPURenderPass->mGPUContext->vulkanCommandBuffers[mGPURenderPass->mGPUContext->currentFrame].getVkCommandBuffer())
         render();
     }
     mGPURenderPass->end();
