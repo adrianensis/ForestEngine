@@ -124,6 +124,7 @@ namespace ShaderBuilderNodes
     {
         FOR_LIST(it, mStatements)
         {
+            (*it)->terminate();
             delete *it;
         }
         mStatements.clear();
