@@ -5,7 +5,7 @@
 #include "Core/ECS/EntityManager.hpp"
 #include "Scene/GameObject.hpp"
 
-class Scene: public ISerializable, public EnablePtrToThis
+class Scene: public ISerializable, public EnableWeakPtrToThis
 {
     DECLARE_SERIALIZATION()
 

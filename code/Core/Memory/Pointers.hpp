@@ -83,7 +83,7 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class WeakPtr;
-friend class EnablePtrToThis;
+friend class EnableWeakPtrToThis;
 
 public:
     Ptr(T* reference) { set(reference); }
@@ -243,7 +243,7 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class WeakPtr;
-friend class EnablePtrToThis;
+friend class EnableWeakPtrToThis;
 
 public:
     template <class U>
@@ -285,17 +285,7 @@ public:
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     void invalidate()
     {
-        if(mReferenceBlock)
-        {
-            CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
-            decrement();
-            if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
-            {
-                // TODO: [BUG - reference block] step 2) - When a OwnerPtr is deleted, if the class is EnablePtrToThis, it could first delete mReferenceBlock 
-                //Memory::deleteObject(mReferenceBlock);
-            }
-        }
-        set(nullptr, nullptr);
+        internalInvalidate(true);
     }
 
     WeakPtr<T>& operator=(const WeakPtr<T>& other)
@@ -377,6 +367,25 @@ private:
             mReferenceBlock = nullptr;
         }
     }
+
+    void internalInvalidate(bool shouldDeleteReferenceBlock)
+    {
+        if(mReferenceBlock)
+        {
+            CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
+            decrement();
+            
+            // INFO: When a OwnerPtr is deleted, if the class is EnableWeakPtrToThis, it could first delete mReferenceBlock and crash in OwnerPtr::invalidate
+            if(shouldDeleteReferenceBlock)
+            {
+                if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
+                {
+                    Memory::deleteObject(mReferenceBlock);
+                }
+            }
+        }
+        set(nullptr, nullptr);
+    }
     
     void increment() { mReferenceBlock->mWeakReferenceCounter += 1;}
     void decrement() { mReferenceBlock->mWeakReferenceCounter -= 1;}
@@ -396,15 +405,16 @@ public:
     virtual ~IPointedObject() = default;
 };
 
-class EnablePtrToThis: public IPointedObject
+class EnableWeakPtrToThis: public IPointedObject
 {
 template<class U>
 friend class CountedPtrBase;
 
 public:
-    virtual ~EnablePtrToThis() override
+    virtual ~EnableWeakPtrToThis() override
     {
-        mPtrToThis.invalidate();
+        // INFO: This will invalidate the WeakPtr without removing mReferenceBlock, the block will be removed by the parent OwnerPtr!
+        mPtrToThis.internalInvalidate(false);
     };
 protected:
     template<class OtherClass>
@@ -444,10 +454,9 @@ public:
             
             if(mInternalPointer && !mReferenceBlock->isReferenced())
             {
-                // TODO: [BUG - reference block] step 1) - Here mReferenceBlock is deleted if class is EnablePtrToThis
+                // INFO: if class is EnableWeakPtrToThis derived, the mReferenceBlock will be removed by the parent OwnerPtr in the next if statement!
                 Memory::deleteObject(mInternalPointer);
             }
-            // TODO: [BUG - reference block] step 3) - and here it crashes
             if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
                 Memory::deleteObject(mReferenceBlock);
@@ -473,12 +482,12 @@ protected:
             mInternalPointer = reference;
             mReferenceBlock = referenceBlock;
             increment();
-            if constexpr (IS_BASE_OF(EnablePtrToThis, T))
+            if constexpr (IS_BASE_OF(EnableWeakPtrToThis, T))
             {
-                EnablePtrToThis* enablePtrFromThis = dynamic_cast<EnablePtrToThis*>(const_cast<REMOVE_CONST(T)*>(reference));
-                if(enablePtrFromThis)
+                EnableWeakPtrToThis* enableWeakPtrToThis = dynamic_cast<EnableWeakPtrToThis*>(const_cast<REMOVE_CONST(T)*>(reference));
+                if(enableWeakPtrToThis)
                 {
-                    enablePtrFromThis->set(WeakPtr<T>(*this));
+                    enableWeakPtrToThis->set(WeakPtr<T>(*this));
                 }
             }
         }

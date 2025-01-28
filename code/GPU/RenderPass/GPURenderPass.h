@@ -36,7 +36,7 @@ public:
     GPUAttachmentData mDepthStencilAttachment;
 };
 
-class GPURenderPass : public EnablePtrToThis
+class GPURenderPass : public EnableWeakPtrToThis
 {
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;

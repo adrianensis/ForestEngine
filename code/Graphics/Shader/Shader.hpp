@@ -170,7 +170,7 @@ public:
     }
 };
 
-class Shader: public EnablePtrToThis
+class Shader: public EnableWeakPtrToThis
 {
 public:
     Shader() = default;

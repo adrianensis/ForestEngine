@@ -27,7 +27,7 @@ public:
     Matrix4 mMatrix;
 };
 
-class Model: public EnablePtrToThis
+class Model: public EnableWeakPtrToThis
 {
 public:
     void init(const std::string& path);

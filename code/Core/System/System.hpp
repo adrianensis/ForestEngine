@@ -4,7 +4,7 @@
 #include "Core/Memory/Singleton.hpp"
 #include "Core/Events/Event.hpp"
 
-class System: public EnablePtrToThis, public IEventObject
+class System: public EnableWeakPtrToThis, public IEventObject
 {
 public:
     virtual ~System() override = default;
