@@ -75,7 +75,7 @@ void Model::loadGLTFShaders()
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[shaderIt];
             ShaderData shaderData;
-            shaderData.mAllowInstances = false;
+            // shaderData.mAllowInstances = false;
             // shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
             WeakPtr<Shader> newShader;
 
