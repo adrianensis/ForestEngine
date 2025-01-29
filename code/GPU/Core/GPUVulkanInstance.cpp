@@ -51,6 +51,7 @@ bool GPUVulkanInstance::init()
 #endif
 
     if (config.ValidationLayersEnabled) {
+        debugMessengerCreateInfo = getDebugMessengerCreateInfo();
         validationLayers = findValidationLayers();
         if (validationLayers.empty()) {
             CHECK_MSG(false,"Could not get validation layers");
@@ -82,7 +83,7 @@ void GPUVulkanInstance::terminate() {
 
 bool GPUVulkanInstance::createInstance() {
     availableExtensions = findAvailableExtensions();
-    const std::vector<const char*>& extensions = findExtensions();
+    const std::vector<const char*> extensions = findExtensions();
     if (extensions.empty()) {
         CHECK_MSG(false,"Could not get extensions");
         return false;
@@ -91,30 +92,39 @@ bool GPUVulkanInstance::createInstance() {
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = config.Name.c_str();
-    appInfo.applicationVersion = VK_MAKE_VERSION(config.MajorVersion, config.MinorVersion, config.PatchVersion);
+    appInfo.applicationVersion = 0;//VK_MAKE_VERSION(config.MajorVersion, config.MinorVersion, config.PatchVersion);
     appInfo.pEngineName = config.Name.c_str();
-    appInfo.engineVersion = VK_MAKE_VERSION(config.MajorVersion, config.MinorVersion, config.PatchVersion);
+    appInfo.engineVersion = 0;//VK_MAKE_VERSION(config.MajorVersion, config.MinorVersion, config.PatchVersion);
     appInfo.apiVersion = VK_API_VERSION_1_1;
+    appInfo.pNext = nullptr;
 
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
     createInfo.enabledExtensionCount = extensions.size();
     createInfo.ppEnabledExtensionNames = extensions.data();
-    if (Environment::mPlatform == Environment::Platform::MACOS) {
+    createInfo.flags = 0;
+    if (Environment::mPlatform == Environment::Platform::MACOS)
+    {
         createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     }
-    if (config.ValidationLayersEnabled) {
+
+    createInfo.enabledLayerCount = 0;
+    createInfo.ppEnabledLayerNames = nullptr;
+    createInfo.pNext = nullptr;
+
+    GPU_LOG("ValidationLayersEnabled {}", config.ValidationLayersEnabled);
+    if (config.ValidationLayersEnabled)
+    {
         createInfo.enabledLayerCount = validationLayers.size();
         createInfo.ppEnabledLayerNames = validationLayers.data();
-        VkDebugUtilsMessengerCreateInfoEXT debugMessengerCreateInfo = getDebugMessengerCreateInfo();
         createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugMessengerCreateInfo;
-    } else {
-        createInfo.enabledLayerCount = 0;
-        createInfo.pNext = nullptr;
     }
 
-    return vkCreateInstance(&createInfo, ALLOCATOR, &mVkInstance) == VK_SUCCESS;
+    GPU_LOG("Creating Instance");
+    VkResult result = vkCreateInstance(&createInfo, ALLOCATOR, &mVkInstance);
+    GPU_LOG("Instance created: ", result == VK_SUCCESS);
+    return result == VK_SUCCESS;
 }
 
 void GPUVulkanInstance::destroyInstance() {
@@ -123,14 +133,13 @@ void GPUVulkanInstance::destroyInstance() {
 }
 
 bool GPUVulkanInstance::createDebugMessenger() {
-    VkDebugUtilsMessengerCreateInfoEXT createInfo = getDebugMessengerCreateInfo();
     const char* functionName = "vkCreateDebugUtilsMessengerEXT";
     auto function = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(mVkInstance, functionName);
     if (function == nullptr) {
         CHECK_MSG(false, "Could not look up address of extension function " + std::string(functionName));
         return false;
     }
-    return function(mVkInstance, &createInfo, ALLOCATOR, &debugMessenger) == VK_SUCCESS;
+    return function(mVkInstance, &debugMessengerCreateInfo, ALLOCATOR, &debugMessenger) == VK_SUCCESS;
 }
 
 void GPUVulkanInstance::destroyDebugMessenger() {
@@ -161,16 +170,14 @@ std::vector<const char*> GPUVulkanInstance::findExtensions() const
 
     std::vector<const char*> extensionsFound;
     bool requiredExtensionsFound = hasExtensions(config.mRequiredExtensions, extensionsFound);
-    if (requiredExtensionsFound)
-    {
-        extensionsFound.insert(extensionsFound.end(), config.mRequiredExtensions.begin(), config.mRequiredExtensions.end());
-    }
-    else
+    GPU_LOG("Required Extensions found: {}", requiredExtensionsFound);
+    if (!requiredExtensionsFound)
     {
         CHECK_MSG(false, "Couldn't get all Required extensions.");
     }
     
     bool optionalExtensionsFound = hasExtensions(config.mOptionalExtensions, extensionsFound);
+    GPU_LOG("Optional Extensions found: {}", requiredExtensionsFound);
 
     return extensionsFound;
 }

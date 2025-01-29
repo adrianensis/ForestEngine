@@ -49,5 +49,6 @@ private:
     std::vector<const char*> validationLayers{};
     VkInstance mVkInstance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
+    VkDebugUtilsMessengerCreateInfoEXT debugMessengerCreateInfo;
     std::vector<VkExtensionProperties> availableExtensions;
 };
