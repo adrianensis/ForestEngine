@@ -116,7 +116,7 @@ void InstancedMeshRenderer::update()
     u32 newSize = mRenderersCount;
     if (newSize > mCurrentInstancesSize)
     {
-        PROFILER_CPU_NAMED(newSize);
+        PROFILER_CPU_NAMED(InstancedBuffers_Resize)
 
 		mCurrentInstancesSize += smInstancesSizeIncrement;
 
@@ -138,9 +138,12 @@ void InstancedMeshRenderer::update()
         }
     }
 
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
-    mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getShaderPropertiesInstanceIDs());
+    {
+        PROFILER_CPU_NAMED(InstancedBuffers_SetData)
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getShaderPropertiesInstanceIDs());
+    }
 
     mResizeBuffersRequested = false;
 }
