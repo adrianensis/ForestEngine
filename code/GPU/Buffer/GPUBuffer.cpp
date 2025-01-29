@@ -101,5 +101,5 @@ void GPUBuffer::copy(Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, 
         constexpr u32 regionCount = 1;
         vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
     }
-    gpuContext->endSingleTimeCommands(vkCommandBuffer);
+    gpuContext->endSingleTimeCommands(vkCommandBuffer, VK_NULL_HANDLE);
 }

@@ -84,7 +84,7 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
                 &imageMemoryBarrier
         );
     }
-    gpuContext->endSingleTimeCommands(commandBuffer);
+    gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
     return true;
 }
 
@@ -144,7 +144,7 @@ void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffe
                 &bufferImageCopy
         );
     }
-    gpuContext->endSingleTimeCommands(commandBuffer);
+    gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
 }
 
 
@@ -282,7 +282,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
                 &barrier
         );
     }
-    gpuContext->endSingleTimeCommands(commandBuffer);
+    gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
     return true;
 }
 

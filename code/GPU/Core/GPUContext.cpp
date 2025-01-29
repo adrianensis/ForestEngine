@@ -222,7 +222,7 @@ VkCommandBuffer GPUContext::beginSingleTimeCommands()
     return commandBuffer;
 }
 
-void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer)
+void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fence)
 {
 #if defined(ENGINE_ENABLE_PROFILER)
   PROFILER_GPU_COLLECT(mTracyContext, commandBuffer);
@@ -237,9 +237,11 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer)
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
-    VkFence fence = VK_NULL_HANDLE;
     constexpr u32 submitCount = 1;
     vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
+
+    // INFO: if no fence, wait queue idle
+    if(fence == VK_NULL_HANDLE)
     {
         PROFILER_CPU_NAMED(wait_queue_idle)
         vkQueueWaitIdle(vulkanDevice->getGraphicsQueue());
