@@ -25,16 +25,27 @@ void GPUVertexBuffer::init(Ptr<GPUContext> gpuContext, u32 attributeLocation, co
     if (!mBuffer.init(mGPUContext, gpuBufferData)) {
         CHECK_MSG(false,"Could not initialize vertex buffer");
     }
+
+    GPUBufferData stagingBufferConfig{};
+    stagingBufferConfig.Size = gpuBufferData.Size;
+    stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+    if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {
+        CHECK_MSG(false,"Could not initialize staging buffer for vertex buffer");
+    }
 }
 
 void GPUVertexBuffer::terminate()
 {
     mBuffer.terminate();
+    stagingBuffer.terminate();
 }
 
 void GPUVertexBuffer::resize(u32 size)
 {
     mBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
+    stagingBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
 }
 
 u32 GPUVertexBuffer::getAttributeLocation() const
@@ -51,29 +62,12 @@ const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
     return mBuffer;
 }
 
-bool GPUVertexBuffer::setData(const void* data, u32 size)
+bool GPUVertexBuffer::setData(const void* data, u32 size, VkCommandBuffer* commandBuffer)
 {
     PROFILER_CPU_NAMED(vertex_buffer_set_data)
-    VkDeviceSize bufferSize = size;
-
-    GPUBufferData stagingBufferConfig{};
-    stagingBufferConfig.Size = bufferSize;
-    stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-    GPUBuffer stagingBuffer;
-    if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {
-        CHECK_MSG(false,"Could not initialize staging buffer for vertex buffer");
-        return false;
-    }
 
     stagingBuffer.setData(data, size);
-    GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer);
+    GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer, commandBuffer);
     LOG("Copied vertices to vertex buffer");
-
-    stagingBuffer.terminate();
-    LOG("Terminated staging buffer for vertex buffer");
-
-    LOG("Initialized Vulkan vertex buffer");
     return true;
 }

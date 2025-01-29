@@ -19,7 +19,7 @@ public:
     bool isEmpty() const { return mRenderersCount == 0; }
     void enable();
     void disable();
-    void update();
+    void update(VkCommandBuffer commandBuffer);
 
 private:
     bool shouldResize() const;

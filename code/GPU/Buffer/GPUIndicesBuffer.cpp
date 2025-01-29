@@ -39,7 +39,7 @@ bool GPUIndicesBuffer::setData(const void* data, u32 size) {
     }
 
     stagingBuffer.setData(data, size);
-    GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer);
+    GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer, nullptr);
     LOG("Copied indices to index buffer");
 
     stagingBuffer.terminate();

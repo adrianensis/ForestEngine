@@ -70,24 +70,25 @@ void Editor::firstUpdate()
 	// importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(100,0,0), 100.0f, Vector3(90,0,0), false);
-	importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
+	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 
-    // i32 size = 25;            
-    // FOR_RANGE(i, -size, size)
-    // {
-    //     FOR_RANGE(j, -size, size)
-    //     {
-    //         if(j % 2 == 0)
-    //         {
-    //             mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
-    //         }
-    //         else
-    //         {
-    //     	    mBuildings.push_back(importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
-    //         }
-    //     }
-    // }
+    i32 size = 6;            
+    FOR_RANGE(i, -size, size)
+    {
+        FOR_RANGE(j, -size, size)
+        {
+			importModel("BrainStem/glTF/BrainStem.gltf", Vector3(150*i,0,150*j), 100.0f, Vector3(0,0,0), true);
+            // if(j % 2 == 0)
+            // {
+            //     mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
+            // }
+            // else
+            // {
+        	//     mBuildings.push_back(importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
+            // }
+        }
+    }
 
 
 	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);

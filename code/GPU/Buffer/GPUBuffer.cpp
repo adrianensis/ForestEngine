@@ -87,19 +87,32 @@ void GPUBuffer::setData(const void* data, u32 size) const
     vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory);
 }
 
-void GPUBuffer::copy(Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer)
+void GPUBuffer::copy(Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer)
 {   
     PROFILER_CPU_NAMED(buffer_copy)
     CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer size <= destinationBuffer size: " + std::to_string(sourceBuffer.mGPUBufferData.Size) +" "+ std::to_string(destinationBuffer.mGPUBufferData.Size));
 
-    VkCommandBuffer vkCommandBuffer = gpuContext->beginSingleTimeCommands();
+    VkCommandBuffer vkCommandBufferLocal;
+    if(vkCommandBuffer)
     {
-        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, vkCommandBuffer);
+        vkCommandBufferLocal = *vkCommandBuffer;
+    }
+    else
+    {
+        vkCommandBufferLocal = gpuContext->beginSingleTimeCommands();
+    }
+    
+    {
+        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, vkCommandBufferLocal);
 
         VkBufferCopy copyRegion{};
         copyRegion.size = sourceBuffer.mGPUBufferData.Size;
         constexpr u32 regionCount = 1;
-        vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
+        vkCmdCopyBuffer(vkCommandBufferLocal, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
     }
-    gpuContext->endSingleTimeCommands(vkCommandBuffer, VK_NULL_HANDLE);
+
+    if(!vkCommandBuffer)
+    {
+        gpuContext->endSingleTimeCommands(vkCommandBufferLocal, VK_NULL_HANDLE);
+    }
 }

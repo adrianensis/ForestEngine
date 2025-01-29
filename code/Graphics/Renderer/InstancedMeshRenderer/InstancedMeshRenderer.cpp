@@ -98,7 +98,7 @@ void InstancedMeshRenderer::removeRenderer(TComponentHandler<MeshRenderer> rende
     mRenderersCount--;
 }
 
-void InstancedMeshRenderer::update()
+void InstancedMeshRenderer::update(VkCommandBuffer commandBuffer)
 {
     if (mRenderers.empty())
     {
@@ -140,9 +140,9 @@ void InstancedMeshRenderer::update()
 
     {
         PROFILER_CPU_NAMED(InstancedBuffers_SetData)
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs());
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs());
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getShaderPropertiesInstanceIDs());
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs(), commandBuffer);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs(), commandBuffer);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getShaderPropertiesInstanceIDs(), commandBuffer);
     }
 
     mResizeBuffersRequested = false;

@@ -4,7 +4,7 @@
 
 #include "GPU/Core/GPUPhysicalDevice.h"
 #include "GPU/Core/GPUDevice.h"
-#include "GPU/Core/GPUCommandPool.h"
+#include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Buffer/GPUBuffer.h"
 
 class GPUVertexBufferData
@@ -25,16 +25,24 @@ public:
     void init(Ptr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, u32 size, bool isStatic);
     void resize(u32 size);
     template <class T>
+    void setDataArray(const std::vector<T>& data, VkCommandBuffer commandBuffer)
+    {
+        if (!setData((const void*)data.data(), data.size() * mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, &commandBuffer))
+        {
+            CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
+        }
+    }
+    template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        if (!setData((const void*)data.data(), data.size() * mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes))
+        if (!setData((const void*)data.data(), data.size() * mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, nullptr))
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
     }
     void setDataArray(const ByteBuffer& data)
     {
-        if (!setData((const void*)data.getBuffer().data(), data.getBuffer().size()))
+        if (!setData((const void*)data.getBuffer().data(), data.getBuffer().size(), nullptr))
         {
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
@@ -44,7 +52,7 @@ public:
     void terminate();
 
     const GPUBuffer& getGPUBuffer() const;
-    bool setData(const void* data, u32 size);
+    bool setData(const void* data, u32 size, VkCommandBuffer* commandBuffer);
 
 public:
     GPUVertexBufferData mData;
@@ -56,4 +64,5 @@ private:
 
     Ptr<GPUContext> mGPUContext;
     GPUBuffer mBuffer;
+    GPUBuffer stagingBuffer;
 };

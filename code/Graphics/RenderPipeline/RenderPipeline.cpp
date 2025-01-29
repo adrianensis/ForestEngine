@@ -40,12 +40,14 @@ void RenderPipeline::update()
     //     }
     // });
 
+    VkCommandBuffer vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->beginSingleTimeCommands();
     FOR_MAP(it, mInstancedMeshesMap)
     {
         // it->second->enable();
-        it->second->update();
+        it->second->update(vulkanCommandBuffer);
         // it->second->disable();
     }
+    GET_SYSTEM(GPUInstance).mGPUContext->endSingleTimeCommands(vulkanCommandBuffer, VK_NULL_HANDLE);
 
     PROFILER_CPU_NAMED(updateModelMatricesBuffer);
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mMatrices);

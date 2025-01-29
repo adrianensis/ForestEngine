@@ -244,8 +244,11 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
         vkResetFences(vulkanDevice->getDevice(), fenceCount, &fence);
     }
 
-    constexpr u32 submitCount = 1;
-    vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
+    {
+        PROFILER_CPU_NAMED(queue_submit)
+        constexpr u32 submitCount = 1;
+        vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
+    }
 
     // INFO: if no fence, wait queue idle
     if(fence == VK_NULL_HANDLE)
