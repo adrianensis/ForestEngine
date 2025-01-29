@@ -9,8 +9,7 @@ class GPUCommandBuffer;
 class GPUCommandPool
 {
 public:
-    GPUCommandPool(Ptr<GPUContext> gpuContext);
-    bool init();
+    bool init(Ptr<GPUContext> gpuContext, VkCommandPoolCreateFlags creationFlags);
     void terminate();
     std::vector<GPUCommandBuffer> allocateCommandBuffers(u32 count) const;
     void freeCommandBuffer(const GPUCommandBuffer& commandBuffer) const;

@@ -3,13 +3,12 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Core/GPULog.h"
 
-GPUCommandPool::GPUCommandPool(Ptr<GPUContext> gpuContext) : mGPUContext(gpuContext) {}
-
-bool GPUCommandPool::init()
+bool GPUCommandPool::init(Ptr<GPUContext> gpuContext, VkCommandPoolCreateFlags creationFlags)
 {
+    mGPUContext = gpuContext;
     VkCommandPoolCreateInfo commandPoolInfo{};
     commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | creationFlags;
     commandPoolInfo.queueFamilyIndex = mGPUContext->vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices().GraphicsFamily.value();
 
     if (vkCreateCommandPool(mGPUContext->vulkanDevice->getDevice(), &commandPoolInfo, ALLOCATOR, &mVkCommandPool) != VK_SUCCESS) {

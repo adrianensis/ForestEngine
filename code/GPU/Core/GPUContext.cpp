@@ -50,10 +50,15 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
-    vulkanCommandPool = new GPUCommandPool(this);
-    if (!vulkanCommandPool->init()) 
+    vulkanCommandPool = OwnerPtr<GPUCommandPool>::newObject();
+    if (!vulkanCommandPool->init(this, 0)) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool");
+    }
+    vulkanCommandPoolSingleUse = OwnerPtr<GPUCommandPool>::newObject();
+    if (!vulkanCommandPoolSingleUse->init(this, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT)) 
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan command pool Single Use");
     }
     vulkanCommandBuffers = vulkanCommandPool->allocateCommandBuffers(GPUContext::MAX_FRAMES_IN_FLIGHT);
     if (vulkanCommandBuffers.empty())
@@ -62,9 +67,9 @@ void GPUContext::init()
     }
 
 #ifdef ENGINE_ENABLE_PROFILER
-    profilingCommandPool_ = new GPUCommandPool(this);
-    profilingCommandPool_->init();
-    profilingCommandBuffer_ = profilingCommandPool_->allocateCommandBuffers(1)[0];
+    profilingCommandPool = OwnerPtr<GPUCommandPool>::newObject();
+    profilingCommandPool->init(this, 0);
+    profilingCommandBuffer_ = profilingCommandPool->allocateCommandBuffers(1)[0];
 
 #ifdef VK_EXT_calibrated_timestamps
 
@@ -137,9 +142,9 @@ void GPUContext::terminate()
     if (mTracyContext)
     {
         TracyVkDestroy(mTracyContext);
-        profilingCommandPool_->freeCommandBuffer(profilingCommandBuffer_);
-        profilingCommandPool_->terminate();
-        delete profilingCommandPool_;
+        profilingCommandPool->freeCommandBuffer(profilingCommandBuffer_);
+        profilingCommandPool->terminate();
+        profilingCommandPool.invalidate();
     }
 #endif
 
@@ -163,7 +168,9 @@ void GPUContext::terminate()
         vulkanCommandPool->freeCommandBuffer(vulkanCommandBuffers[i]);
     }
     vulkanCommandPool->terminate();
-    delete vulkanCommandPool;
+    vulkanCommandPool.invalidate();
+    vulkanCommandPoolSingleUse->terminate();
+    vulkanCommandPoolSingleUse.invalidate();
     vulkanDevice->terminate();
     delete vulkanDevice;
     delete vulkanPhysicalDevice;
@@ -201,7 +208,7 @@ VkCommandBuffer GPUContext::beginSingleTimeCommands()
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandPool = vulkanCommandPool->getVkCommandPool();
+    allocInfo.commandPool = vulkanCommandPoolSingleUse->getVkCommandPool();
     allocInfo.commandBufferCount = 1;
 
     VkCommandBuffer commandBuffer;
@@ -238,7 +245,7 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer)
         vkQueueWaitIdle(vulkanDevice->getGraphicsQueue());
     }
 
-    vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPool->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
+    vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPoolSingleUse->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
 }
 
 void GPUContext::drawIndexed(VkCommandBuffer commandBuffer, u32 indexCount, u32 instanceCount, u32 firstIndex, i32 vertexOffset, u32 firstInstance)
