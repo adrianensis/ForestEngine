@@ -196,7 +196,8 @@ void GPUContext::destroySurface() const
     *
     * It's best to do this after the texture mapping works to check if the texture resources are still set up correctly.
     */
-VkCommandBuffer GPUContext::beginSingleTimeCommands() {
+VkCommandBuffer GPUContext::beginSingleTimeCommands()
+{
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -220,6 +221,8 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer)
   PROFILER_GPU_COLLECT(mTracyContext, commandBuffer);
 #endif
 
+    PROFILER_CPU()
+
     vkEndCommandBuffer(commandBuffer);
 
     VkSubmitInfo submitInfo{};
@@ -230,7 +233,10 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer)
     VkFence fence = VK_NULL_HANDLE;
     constexpr u32 submitCount = 1;
     vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
-    vkQueueWaitIdle(vulkanDevice->getGraphicsQueue());
+    {
+        PROFILER_CPU_NAMED(wait_queue_idle)
+        vkQueueWaitIdle(vulkanDevice->getGraphicsQueue());
+    }
 
     vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPool->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
 }

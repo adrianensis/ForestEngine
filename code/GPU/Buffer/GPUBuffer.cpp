@@ -87,46 +87,19 @@ void GPUBuffer::setData(const void* data, u32 size) const
     vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory);
 }
 
-void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice)
+void GPUBuffer::copy(Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer)
 {   
     PROFILER_CPU_NAMED(buffer_copy)
     CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer size <= destinationBuffer size: " + std::to_string(sourceBuffer.mGPUBufferData.Size) +" "+ std::to_string(destinationBuffer.mGPUBufferData.Size));
 
-    constexpr u32 commandBufferCount = 1;
-    const std::vector<GPUCommandBuffer> commandBuffers = commandPool.allocateCommandBuffers(commandBufferCount);
-    CHECK_MSG(commandBuffers.size() == commandBufferCount, "commandBuffers.size() == commandBufferCount")
-
-    const GPUCommandBuffer& commandBuffer = commandBuffers[0];
-    VkCommandBuffer vkCommandBuffer = commandBuffer.getVkCommandBuffer();
-    
-    commandBuffer.begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-
+    VkCommandBuffer vkCommandBuffer = gpuContext->beginSingleTimeCommands();
     {
-        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, commandBuffer.getVkCommandBuffer());
+        PROFILER_GPU_NAMED(copy_buffer, sourceBuffer.mGPUContext->mTracyContext, vkCommandBuffer);
 
         VkBufferCopy copyRegion{};
         copyRegion.size = sourceBuffer.mGPUBufferData.Size;
         constexpr u32 regionCount = 1;
         vkCmdCopyBuffer(vkCommandBuffer, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
     }
-
-    commandBuffer.end();
-
-    {   
-        PROFILER_CPU_NAMED(submit_copy_buffer)
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &vkCommandBuffer;
-
-        constexpr u32 submitCount = 1;
-        VkFence fence = VK_NULL_HANDLE;
-        vkQueueSubmit(vulkanDevice.getGraphicsQueue(), submitCount, &submitInfo, fence);
-        {
-            PROFILER_CPU_NAMED(wait_queue_idle)
-            vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());
-        }
-    }
-
-    commandPool.freeCommandBuffer(commandBuffer);
+    gpuContext->endSingleTimeCommands(vkCommandBuffer);
 }

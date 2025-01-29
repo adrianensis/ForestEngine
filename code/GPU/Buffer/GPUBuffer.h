@@ -20,7 +20,7 @@ public:
     void resize(u32 size);
     void terminate();
     void setData(const void* data, u32 size) const;
-    static void copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, const GPUCommandPool& commandPool, const GPUDevice& vulkanDevice);
+    static void copy(Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer);
 
 private:
     Ptr<GPUContext> mGPUContext;
