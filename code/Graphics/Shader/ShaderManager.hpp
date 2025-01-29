@@ -58,7 +58,7 @@ private:
     std::vector<OwnerPtr<Shader>> mShaders;
     std::vector<OwnerPtr<ShaderPropertiesInstance>> mShaderPropertiesInstances;
     std::unordered_set<u32> mDirtyShaderPropertiesInstances;
-    inline static const u32 mInitialInstances = 2000;
+    inline static const u32 mInitialInstances = 20000;
     inline static const u32 mInitialTextures = 300;
 };
 REGISTER_CLASS(ShaderManager);

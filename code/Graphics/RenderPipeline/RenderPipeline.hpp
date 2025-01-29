@@ -67,7 +67,7 @@ private:
 	std::vector<TComponentHandler<MeshRenderer>> mRenderers;
     std::set<u32> mUsedSlots;
 	std::vector<TComponentHandler<MeshRenderer>> mRenderersStatic;
-    inline static const u32 mInitialInstances = 100;
+    inline static const u32 mInitialInstances = 1000;
 
 public:
     CRGET(InstancedMeshesMap)
