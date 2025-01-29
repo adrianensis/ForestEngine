@@ -122,7 +122,10 @@ void GPUBuffer::copy(const GPUBuffer& sourceBuffer, const GPUBuffer& destination
         constexpr u32 submitCount = 1;
         VkFence fence = VK_NULL_HANDLE;
         vkQueueSubmit(vulkanDevice.getGraphicsQueue(), submitCount, &submitInfo, fence);
-        vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());
+        {
+            PROFILER_CPU_NAMED(wait_queue_idle)
+            vkQueueWaitIdle(vulkanDevice.getGraphicsQueue());
+        }
     }
 
     commandPool.freeCommandBuffer(commandBuffer);
