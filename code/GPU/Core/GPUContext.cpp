@@ -237,6 +237,13 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &commandBuffer;
 
+    if(fence != VK_NULL_HANDLE)
+    {
+        // After waiting, we need to manually reset the fence to the unsignaled state
+        constexpr u32 fenceCount = 1;
+        vkResetFences(vulkanDevice->getDevice(), fenceCount, &fence);
+    }
+
     constexpr u32 submitCount = 1;
     vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
 
@@ -245,6 +252,14 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     {
         PROFILER_CPU_NAMED(wait_queue_idle)
         vkQueueWaitIdle(vulkanDevice->getGraphicsQueue());
+    }
+    else
+    {
+            // Wait until the previous frame has finished
+        constexpr u32 fenceCount = 1;
+        constexpr VkBool32 waitForAllFences = VK_TRUE;
+        constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
+        VkResult waitResult = vkWaitForFences(vulkanDevice->getDevice(), fenceCount, &fence, waitForAllFences, waitForFenceTimeout);
     }
 
     vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPoolSingleUse->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
