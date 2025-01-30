@@ -1,7 +1,5 @@
 # TODO
 
-- [ ] Use vkCmdClearDepthStencilImage (for RenderPassUI)
-- [ ] Use vkCmdClearColorImage similar to glClear
 - [ ] Change WeakPtr by Ref non-ownership dependant references (for example: pointers to GPUContext)
 - [ ] Review virtual destructors (clean + build to see all the warnings)
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
@@ -14,6 +12,7 @@
 
 ## Vulkan Port
 - [ ] The VK_EXT_graphics_pipeline_library extensions allows separate compilation of different parts of the graphics pipeline. With this it’s now possible to split up the monolithic pipeline creation into different steps and re-use common parts shared across different pipelines. [Optimize Graphics Pipeline](https://docs.vulkan.org/samples/latest/samples/extensions/graphics_pipeline_library/README.html)
+- [ ] Use VulkanMemoryAllocator to allocate big chunk and avoid vkAllocateMemory per buffer.
 
 ## Interesting / Nice To Have / Optimizations
 
