@@ -78,14 +78,14 @@ void Editor::firstUpdate()
     {
         FOR_RANGE(j, -size, size)
         {
-			importModel("BrainStem/glTF/BrainStem.gltf", Vector3(150*i,0,150*j), 100.0f, Vector3(0,0,0), true);
+			// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(150*i,0,150*j), 100.0f, Vector3(0,0,0), true);
             // if(j % 2 == 0)
-            // {
-            //     mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
-            // }
+            {
+				importModel("tower/tower.gltf", Vector3(500*i,0,500*j), 100.0f, Vector3(0,0,0), true);
+            }
             // else
             // {
-        	//     mBuildings.push_back(importModel("building/building.gltf", Vector3(50*i,0,50*j), 10.0f, Vector3(0,0,0), true));
+			// 	importModel("cottage/cottage_blender.gltf", Vector3(250*i,0,250*j), 100.0f, Vector3(0,0,0), true);
             // }
         }
     }
