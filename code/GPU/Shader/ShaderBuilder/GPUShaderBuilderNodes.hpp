@@ -4,7 +4,7 @@
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 
-namespace ShaderBuilderNodes
+namespace GPUShaderBuilderNodes
 {
     class Statement
     {

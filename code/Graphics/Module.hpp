@@ -17,7 +17,7 @@
 
 #include "Graphics/Shader/ShaderManager.hpp"
 #include "GPU/Image/GPUTexture.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 
 #include "Graphics/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"

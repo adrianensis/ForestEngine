@@ -1,7 +1,7 @@
 #include "Graphics/Shader/ShaderPBR.hpp"
 #include "Graphics/Light/Light.hpp"
-using namespace ShaderBuilderNodes;
-using namespace ShaderBuilderNodes::Expressions;
+using namespace GPUShaderBuilderNodes;
+using namespace GPUShaderBuilderNodes::Expressions;
 
 // PBR METALLIC
 
@@ -25,49 +25,49 @@ void ShaderPBR::registerTextures()
     mTextures.insert(TextureBindingNamesPBR::smShadowMap);
 }
 
-void ShaderPBR::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    ShaderDefault::vertexShaderCalculatePositionOutput(shaderBuilder);
+    ShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder);
 
-    auto& shadowMappingBuffer = shaderBuilder.get().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
+    auto& shadowMappingBuffer = GPUShaderBuilder.get().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
     Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
-    auto& fragPosition = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
-    auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPositionLight);
-    shaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
+    auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
+    auto& fragPositionLight = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPositionLight);
+    GPUShaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
 }
 
-void ShaderPBR::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // ShaderDefault::fragmentShaderCode(shaderBuilder);
+    // ShaderDefault::fragmentShaderCode(GPUShaderBuilder);
 
-    auto& shaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
+    auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable lightingModel = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     
     Variable baseColor;
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(shaderPropertiesInstanceId).dot(instanceBaseColor));
 
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     set(outColor, baseColor);
 
-    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
-    auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
-    // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+    auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
+    auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smBaseColor));
+    // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
     // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
     if(inTextureCoord.isValid())
     {
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         // ifBlock(textureHandler.notEq("0"s)).
             set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
         // end();
     }
 
     Variable PBRMetallicRoughness;
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     variable(PBRMetallicRoughness, GPUShaderDefinitions::PrimitiveTypes::mVector4, "PBRMetallicRoughness", call(mCalculatePBR, {call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {outColor.dot("xyz")})})).
     set(outColor, PBRMetallicRoughness);
 }
@@ -84,22 +84,22 @@ void ShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerat
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
-void ShaderPBR::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void ShaderPBR::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
-    ShaderDefault::registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    ShaderDefault::registerFragmentShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
 
-    registerFunctionsGetNormalFromMap(shaderBuilder);
+    registerFunctionsGetNormalFromMap(GPUShaderBuilder);
     
     if(mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
     {
-        registerFunctionsShadowCalculation(shaderBuilder);
+        registerFunctionsShadowCalculation(GPUShaderBuilder);
     }
     
-    registerFunctionsPBRHelpers(shaderBuilder);
-    registerFunctionCalculatePBR(shaderBuilder);
+    registerFunctionsPBRHelpers(GPUShaderBuilder);
+    registerFunctionCalculatePBR(GPUShaderBuilder);
 }
 
-void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcGetNormalFromMap(mGetNormalFromMap);
@@ -118,9 +118,9 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
         Variable B;
         Variable TBN;
 
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
-        auto& fragPosition = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
-        auto& inNormal = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
+        auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
+        auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
+        auto& inNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
         
         if(inTextureCoord.isValid())
         {
@@ -128,8 +128,8 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
             funcGetNormalFromMap.body().
             variable(normalFromTexture, GPUShaderDefinitions::PrimitiveTypes::mVector4, "normalFromTexture", call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {{"0.0"}, {"0.0"}, {"0.0"}, {"0.0"}}));
 
-            auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
-            // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+            auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
+            // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
             // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
             funcGetNormalFromMap.body().
             // ifBlock(textureHandler.notEq("0"s)).
@@ -155,11 +155,11 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) 
             ret(call("normalize", {inNormal}));
         }
 
-        shaderBuilder.get().function(funcGetNormalFromMap);
+        GPUShaderBuilder.get().function(funcGetNormalFromMap);
     }
 }
 
-void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::registerFunctionsShadowCalculation(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcCalculateShadow(mCalculateShadow);
@@ -175,14 +175,14 @@ void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder)
         Variable currentDepth;
         Variable shadow;
 
-        auto& samplerShadowMap = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap).mName);
-        auto& inNormal = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
-        auto& fragPosition = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
+        auto& samplerShadowMap = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap).mName);
+        auto& inNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
+        auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
 
         funcCalculateShadow.body().
         variable(normal, GPUShaderDefinitions::PrimitiveTypes::mVector3, "normal", call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-            auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal));
+            auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal));
             funcCalculateShadow.body().
             // ifBlock(textureHandler.notEq("0"s)).
                 // set(normal, call(mGetNormalFromMap, {})).
@@ -208,11 +208,11 @@ void ShaderPBR::registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder)
         variable(shadow, GPUShaderDefinitions::PrimitiveTypes::mFloat, "shadow", currentDepth.great(closestDepth).ternary("0.5"s, "0.0"s)).
         ret(shadow);
 
-        shaderBuilder.get().function(funcCalculateShadow);
+        GPUShaderBuilder.get().function(funcCalculateShadow);
     }
 }
 
-void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::registerFunctionsPBRHelpers(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcDistributionGGX(mDistributionGGX);
@@ -237,7 +237,7 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
         set(denom, Variable(GPUShaderDefinitions::Consts::mPI).mul(denom.mul(denom))).
         ret(nom.div(denom));
 
-        shaderBuilder.get().function(funcDistributionGGX);
+        GPUShaderBuilder.get().function(funcDistributionGGX);
     }
 
     {
@@ -257,7 +257,7 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
         variable(denom, GPUShaderDefinitions::PrimitiveTypes::mFloat, "denom", NdotV.mul(paren(Variable("1.0").sub(k)).add(k))).
         ret(nom.div(denom));
 
-        shaderBuilder.get().function(funcGeometrySchlickGGX);
+        GPUShaderBuilder.get().function(funcGeometrySchlickGGX);
     }
 
     {
@@ -279,7 +279,7 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
         variable(ggx1, GPUShaderDefinitions::PrimitiveTypes::mFloat, "ggx1", call("geometrySchlickGGX", {NdotL, roughness})).
         ret(ggx1.mul(ggx2));
 
-        shaderBuilder.get().function(funcGeometrySmith);
+        GPUShaderBuilder.get().function(funcGeometrySmith);
     }
 
     {
@@ -299,11 +299,11 @@ void ShaderPBR::registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const
                 )
             )
         );
-        shaderBuilder.get().function(funcFresnelSchlick);
+        GPUShaderBuilder.get().function(funcFresnelSchlick);
     }
 }
 
-void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
+void ShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcCalculatePBRSingleLight(mCalculatePBRSingleLight);
@@ -401,18 +401,18 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(Lo, GPUShaderDefinitions::PrimitiveTypes::mVector3, "Lo", paren(paren(kD.mul(albedo).div(GPUShaderDefinitions::Consts::mPI).add(specular)).mul(radiance).mul(NdotL))).
         ret(Lo);
 
-        shaderBuilder.get().function(funcCalculatePBRSingleLight);
+        GPUShaderBuilder.get().function(funcCalculatePBRSingleLight);
     }
 
     {
         FunctionDefinition funcCalculatePBR(mCalculatePBR);
         Variable baseColor = funcCalculatePBR.mParameters[0];
 
-        auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData.mInstanceName);    
+        auto& globalDataBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData.mInstanceName);    
         Variable cameraPosition(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
-        auto& inNormal = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
-        auto& fragPosition = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
-        auto& ligthsDataBuffer = shaderBuilder.get().getUniformBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    
+        auto& inNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
+        auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
+        auto& ligthsDataBuffer = GPUShaderBuilder.get().getUniformBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    
         Variable pointLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         Variable pointLightPos = {LightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[0]};
         Variable pointLightDiffuse = {LightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[1]};
@@ -431,7 +431,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         Variable shaderBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
         Variable shaderMetallic = {mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
         Variable shaderRoughness = {mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
-        auto& shaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
+        auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
 
         Variable roughness;
         Variable metallic;
@@ -439,10 +439,10 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         variable(roughness, GPUShaderDefinitions::PrimitiveTypes::mFloat, "roughness", propertiesBlock.at(shaderPropertiesInstanceId).dot(shaderRoughness)).
         variable(metallic, GPUShaderDefinitions::PrimitiveTypes::mFloat, "metallic", propertiesBlock.at(shaderPropertiesInstanceId).dot(shaderMetallic));
 
-        auto& textureHandlerMetallicRoughness = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
-        // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+        auto& textureHandlerMetallicRoughness = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smMetallicRoughness).mName);
+        // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
         // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
+        auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
 
         if(inTextureCoord.isValid())
         {
@@ -474,7 +474,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         variable(N, GPUShaderDefinitions::PrimitiveTypes::mVector3, "N", call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-        auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
+        auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNamesPBR::smNormal).mName);
         funcCalculatePBR.body().
         // ifBlock(textureHandler.notEq("0"s)).
         //     set(N, call(mGetNormalFromMap, {})).
@@ -554,7 +554,7 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         Variable sampler = GPUShaderDefinitions::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap);
         if(mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))
         {
-            auto& fragPositionLight = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPositionLight);
+            auto& fragPositionLight = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPositionLight);
             
             Variable shadow;
             funcCalculatePBR.body().
@@ -565,6 +565,6 @@ void ShaderPBR::registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const
         funcCalculatePBR.body().
         ret(call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {PBRFinalColor, {"1"}}));
 
-        shaderBuilder.get().function(funcCalculatePBR);
+        GPUShaderBuilder.get().function(funcCalculatePBR);
     }
 }

@@ -1,40 +1,40 @@
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 
-ShaderBuilder::~ShaderBuilder()
+GPUShaderBuilder::~GPUShaderBuilder()
 {
     mProgram.terminate();
 }
 
-ShaderBuilder::ShaderBuilder()
+GPUShaderBuilder::GPUShaderBuilder()
 {
     auto& mainFunc = mProgram.mainFunction(GPUShaderDefinitions::Functions::mMain);
 }
 
-ShaderBuilderNodes::BlockStatement& ShaderBuilder::getMain()
+GPUShaderBuilderNodes::BlockStatement& GPUShaderBuilder::getMain()
 {
     auto& mainFunc = mProgram.getMainFunctionDefinition();
     return mainFunc.body();
 }
 
-void ShaderBuilder::setVariableInCache(ShaderBuilderNodes::Variable& variable)
+void GPUShaderBuilder::setVariableInCache(GPUShaderBuilderNodes::Variable& variable)
 {
     CHECK_MSG(!mVariablesCache.contains(variable.getNameOrValue()), "Variable already found in cache!: " + variable.getNameOrValue());
     mVariablesCache.insert_or_assign(variable.getNameOrValue(), variable);
 }
 
-void ShaderBuilder::removeVariableFromCache(ShaderBuilderNodes::Variable& variable)
+void GPUShaderBuilder::removeVariableFromCache(GPUShaderBuilderNodes::Variable& variable)
 {
     CHECK_MSG(mVariablesCache.contains(variable.getNameOrValue()), "Variable not found in cache!: " + variable.getNameOrValue());
     mVariablesCache.erase(variable.getNameOrValue());
 }
 
-const ShaderBuilderNodes::Variable& ShaderBuilder::getVariableFromCache(const std::string& variableName) const
+const GPUShaderBuilderNodes::Variable& GPUShaderBuilder::getVariableFromCache(const std::string& variableName) const
 {
     CHECK_MSG(mVariablesCache.contains(variableName), "Variable not found in cache!: " + variableName);
     return mVariablesCache.at(variableName);
 }
 
-std::string ShaderBuilder::getCode() const
+std::string GPUShaderBuilder::getCode() const
 {
     std::string code = "";
     auto codeLines = mProgram.toLines(0);

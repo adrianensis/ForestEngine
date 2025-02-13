@@ -28,15 +28,15 @@ public:
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
     virtual void registerTextures() override;
-    virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
-    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
+    virtual void vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 
-    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const override;
+    virtual void registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const override;
 
-    void registerFunctionsGetNormalFromMap(ShaderBuilder& shaderBuilder) const;
-    void registerFunctionsShadowCalculation(ShaderBuilder& shaderBuilder) const;
-    void registerFunctionsPBRHelpers(ShaderBuilder& shaderBuilder) const;
-    void registerFunctionCalculatePBR(ShaderBuilder& shaderBuilder) const;
+    void registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShaderBuilder) const;
+    void registerFunctionsShadowCalculation(GPUShaderBuilder& GPUShaderBuilder) const;
+    void registerFunctionsPBRHelpers(GPUShaderBuilder& GPUShaderBuilder) const;
+    void registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuilder) const;
 
 protected:
     inline static const GPUFunctionDefinition mCalculateShadow { GPUShaderDefinitions::PrimitiveTypes::mFloat, "calculateShadow",

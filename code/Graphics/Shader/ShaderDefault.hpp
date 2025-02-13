@@ -19,9 +19,9 @@ REGISTER_CLASS(PropertiesBlockShaderDefault)
 class ShaderDefault : public Shader
 {
 public:
-    virtual void createVertexShader(ShaderBuilder& shaderBuilder,
+    virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const override;
-    virtual void createFragmentShader(ShaderBuilder& shaderBuilder, 
+    virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, 
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const override;
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
 
@@ -29,19 +29,19 @@ protected:
     virtual void registerTextures() override;
     virtual void setSharedShaderPropertiesBlock() override;
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
-    virtual void vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const;
-    virtual void vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const;
+    virtual void vertexShaderCalculateBoneMatrix(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexShaderCalculateNormalOutput(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexShaderCalculateVertexColorOutput(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexShaderCalculateInstanceIdOutput(GPUShaderBuilder& GPUShaderBuilder) const;
 
-    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const;
+    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const;
 
-    virtual void registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const;
-    virtual void registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const;
+    virtual void registerVertexShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const;
+    virtual void registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const;
 
-    void registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const;
+    void registerFunctionCalculateBoneTransform(GPUShaderBuilder& GPUShaderBuilder) const;
 };
 REGISTER_CLASS(ShaderDefault)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "GPU/Shader/GPUShaderModule.h"
@@ -182,10 +182,10 @@ public:
 
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
-    virtual void createVertexShader(ShaderBuilder& shaderBuilder,
+    virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
         {};
-    virtual void createFragmentShader(ShaderBuilder& shaderBuilder,
+    virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder,
         const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
         {};
 

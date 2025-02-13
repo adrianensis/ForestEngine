@@ -1,10 +1,10 @@
 #include "Graphics/Shader/ShaderDepthBuffer.hpp"
 #include "Graphics/Light/Light.hpp"
 
-using namespace ShaderBuilderNodes;
-using namespace ShaderBuilderNodes::Expressions;
+using namespace GPUShaderBuilderNodes;
+using namespace GPUShaderBuilderNodes::Expressions;
 
-void ShaderDepthBuffer::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+void ShaderDepthBuffer::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // ShaderPBR::fragmentShaderCode(shaderBuilder);
+    // ShaderPBR::fragmentShaderCode(GPUShaderBuilder);
 }

@@ -1,7 +1,7 @@
 #include "Graphics/Shader/ShaderDefault.hpp"
 #include "Graphics/Light/Light.hpp"
-using namespace ShaderBuilderNodes;
-using namespace ShaderBuilderNodes::Expressions;
+using namespace GPUShaderBuilderNodes;
+using namespace GPUShaderBuilderNodes::Expressions;
 
 void ShaderDefault::registerTextures()
 {
@@ -24,87 +24,87 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderDefault::generateShade
     return propertiesBlock;
 }
 
-void ShaderDefault::vertexShaderCalculateBoneMatrix(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateBoneMatrix(GPUShaderBuilder& GPUShaderBuilder) const
 {
     Variable boneMatrix;
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     variable(boneMatrix, GPUShaderDefinitions::PrimitiveTypes::mMatrix4, "boneMatrix", call(GPUShaderDefinitions::Functions::mCalculateBoneTransform, {}));
 
-    shaderBuilder.setVariableInCache(boneMatrix);
+    GPUShaderBuilder.setVariableInCache(boneMatrix);
 }
 
-void ShaderDefault::vertexShaderCalculatePositionOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    auto& position = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mPosition);
+    auto& position = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mPosition);
 
     Variable finalPositon;
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     variable(finalPositon, GPUShaderDefinitions::PrimitiveTypes::mVector4, "finalPositon", call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {position, {"1.0f"}}));
     
-    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
+    auto& bonesIDs = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
     if(bonesIDs.isValid())
     {
-        Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
-        shaderBuilder.getMain().
+        Variable boneMatrix = GPUShaderBuilder.getVariableFromCache("boneMatrix");
+        GPUShaderBuilder.getMain().
         set(finalPositon, boneMatrix.mul(finalPositon));
     }
 
-    auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices.mInstanceName);
+    auto& modelMatricesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices.mInstanceName);
     if(modelMatricesBuffer.isValid())
     {
         Variable modelMatrices;
         modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        auto& objectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
+        auto& objectId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
         if(objectId.isValid())
         {
-            shaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
+            GPUShaderBuilder.getMain().set(finalPositon, modelMatrices.at(objectId).mul(finalPositon));
         }
     }
 
-    shaderBuilder.setVariableInCache(finalPositon);
+    GPUShaderBuilder.setVariableInCache(finalPositon);
     
-    vertexShaderCalculatePositionOutputCustom(shaderBuilder);
+    vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder);
 
-    auto& globalDataBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData.mInstanceName);    
+    auto& globalDataBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData.mInstanceName);    
     Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     set(GPUShaderDefinitions::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
 
-    // auto& fragPosition = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
-    // shaderBuilder.getMain().set(fragPosition, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {finalPositon}));
+    // auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
+    // GPUShaderBuilder.getMain().set(fragPosition, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {finalPositon}));
 }
 
-void ShaderDefault::vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const
 {
 
 }
 
-void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateNormalOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    auto& normal = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mNormal);
+    auto& normal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mNormal);
 
     Variable finalNormal;
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     variable(finalNormal, GPUShaderDefinitions::PrimitiveTypes::mVector3, "finalNormal", call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {normal}));
 
-    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
+    auto& bonesIDs = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
     if(bonesIDs.isValid())
     {
-        Variable boneMatrix = shaderBuilder.getVariableFromCache("boneMatrix");
+        Variable boneMatrix = GPUShaderBuilder.getVariableFromCache("boneMatrix");
         Variable transformedNormal;
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         variable(transformedNormal, GPUShaderDefinitions::PrimitiveTypes::mVector4, "transformedNormal", boneMatrix.mul(call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {finalNormal, {"1.0f"}}))).
         set(finalNormal, transformedNormal.dot("xyz"));
     }
 
-    auto& outNormal = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mNormal);
-    auto& modelMatricesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices.mInstanceName);
+    auto& outNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mNormal);
+    auto& modelMatricesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices.mInstanceName);
     if(modelMatricesBuffer.isValid())
     {
         Variable modelMatrices;
         modelMatrices = Variable(modelMatricesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        auto& objectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
+        auto& objectId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
         if(objectId.isValid())
         {
             /*
@@ -115,93 +115,93 @@ void ShaderDefault::vertexShaderCalculateNormalOutput(ShaderBuilder& shaderBuild
                 the transpose of the inverse is actually the transpose of the transpose, so we end up with the original matrix.
                 As long as we avoid doing distortions (scaling one axis differently than the rest) we are fine with the approach I presented above. 
             */
-            // shaderBuilder.getMain().
-            shaderBuilder.getMain().
+            // GPUShaderBuilder.getMain().
+            GPUShaderBuilder.getMain().
             set(outNormal, call("mat3", {call("transpose", {call("inverse", {modelMatrices.at(objectId)})})}).mul(finalNormal));
             // set(outNormal, call(GPUShaderDefinitions::PrimitiveTypes::mMatrix3, {modelMatrices.at(objectId)}).mul(finalNormal));
         }
     }
     else
     {
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         set(outNormal, finalNormal);
     }
 }
 
-void ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {   
-    auto& textureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0));
+    auto& textureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0));
     if(textureCoord.isValid())
     {
-        auto& outTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
-        shaderBuilder.getMain().
+        auto& outTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
+        GPUShaderBuilder.getMain().
         set(outTextureCoord, textureCoord);
     }
 }
 
-void ShaderDefault::vertexShaderCalculateVertexColorOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateVertexColorOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    auto& color = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mColor);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mColor);
-    shaderBuilder.getMain().
+    auto& color = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mColor);
+    auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mColor);
+    GPUShaderBuilder.getMain().
     set(outColor, color);
 }
 
-void ShaderDefault::vertexShaderCalculateInstanceIdOutput(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::vertexShaderCalculateInstanceIdOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    auto& instanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mInstanceID);
-    auto& objectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
-    auto& shaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID);
-    auto& outInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mInstanceID);
-    auto& outObjectId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mObjectID);
-    auto& outShaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
+    auto& instanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mInstanceID);
+    auto& objectId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID);
+    auto& outInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mInstanceID);
+    auto& outObjectId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mObjectID);
+    auto& outShaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
 
     if(instanceId.isValid())
     {
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         set(outInstanceId, instanceId);
     }
     if(objectId.isValid())
     {
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         set(outObjectId, objectId);
     }
     if(shaderPropertiesInstanceId.isValid())
     {
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         set(outShaderPropertiesInstanceId, shaderPropertiesInstanceId);
     }
 }
 
-void ShaderDefault::fragmentShaderCode(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    auto& inColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mColor);
-    auto& outColor = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
+    auto& inColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mColor);
+    auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     
-    auto& shaderPropertiesInstanceId = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
 
     Variable baseColor;
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(shaderPropertiesInstanceId).dot(instanceBaseColor));
 
     if(inColor.isValid())
     {
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         set(baseColor, inColor);
     }
 
-    shaderBuilder.getMain().
+    GPUShaderBuilder.getMain().
     set(outColor, baseColor);
 
-    auto& inTextureCoord = shaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
+    auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
     if(inTextureCoord.isValid())
     {
-        auto& textureHandler = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-        // auto& texturesBuffer = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+        auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+        // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
         // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        shaderBuilder.getMain().
+        GPUShaderBuilder.getMain().
         // ifBlock(textureHandler.notEq("0"s)).
             set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
         // end();
@@ -338,102 +338,102 @@ void ShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGen
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUShaderDefinitions::FragmentOutput::mColor);
 }
 
-void ShaderDefault::registerVertexShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void ShaderDefault::registerVertexShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
     ShaderGenerationData shaderGenerationData;
     generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderGenerationData.mVertexVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexInputs) { shaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { GPUShaderBuilder.get().structType(*it); }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderGenerationData.mVertexVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexInputs) { GPUShaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
 
-    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
-    // FOR_LIST(it, shaderGenerationData.mVertexVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
+    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
+    // FOR_LIST(it, shaderGenerationData.mVertexVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
 
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
     u32 vertexOutputIndex = 0;
-    FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs) { shaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++; }
+    FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs) { GPUShaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++; }
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
     {
-        registerFunctionCalculateBoneTransform(shaderBuilder);
+        registerFunctionCalculateBoneTransform(GPUShaderBuilder);
     }
 }
 
-void ShaderDefault::registerFragmentShaderData(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void ShaderDefault::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
     ShaderGenerationData shaderGenerationData;
     generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { shaderBuilder.get().structType(*it); }
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { shaderBuilder.get().attribute(*it); }
-    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mConsts) { shaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { GPUShaderBuilder.get().structType(*it); }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
+    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
 
-    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
-    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { shaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { shaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
+    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
+    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
 
     FOR_MAP(it, mTextures)
     {
         if(gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.contains(*it))
         {
             shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
-            shaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
+            GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
         }
     }
 
-    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { shaderBuilder.get().attribute(Attribute(*it,gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mName))); }
+    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { GPUShaderBuilder.get().attribute(Attribute(*it,gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mName))); }
     u32 fragmentInputIndex = 0;
-    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentInputs) { shaderBuilder.get().attribute(Attribute(*it, fragmentInputIndex)); fragmentInputIndex++; }
+    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentInputs) { GPUShaderBuilder.get().attribute(Attribute(*it, fragmentInputIndex)); fragmentInputIndex++; }
     u32 fragmentOutputIndex = 0;
-    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentOutputs) { shaderBuilder.get().attribute(Attribute(*it, fragmentOutputIndex)); fragmentOutputIndex++; }
+    FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentOutputs) { GPUShaderBuilder.get().attribute(Attribute(*it, fragmentOutputIndex)); fragmentOutputIndex++; }
 }
 
-void ShaderDefault::createVertexShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void ShaderDefault::createVertexShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
-    registerVertexShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    registerVertexShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
 
-    // shaderBuilder.get().extension("GL_ARB_bindless_texture");
+    // GPUShaderBuilder.get().extension("GL_ARB_bindless_texture");
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
     {
-        vertexShaderCalculateBoneMatrix(shaderBuilder);
+        vertexShaderCalculateBoneMatrix(GPUShaderBuilder);
     }
 
-    vertexShaderCalculatePositionOutput(shaderBuilder);
+    vertexShaderCalculatePositionOutput(GPUShaderBuilder);
 
     // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mNormal))
     // {
-    //     vertexShaderCalculateNormalOutput(shaderBuilder);
+    //     vertexShaderCalculateNormalOutput(GPUShaderBuilder);
     // }
 
-    vertexShaderCalculateTextureCoordinateOutput(shaderBuilder);
+    vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
 
     // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mColor))
     // {
-    //     vertexShaderCalculateVertexColorOutput(shaderBuilder);
+    //     vertexShaderCalculateVertexColorOutput(GPUShaderBuilder);
     // }
 
-    vertexShaderCalculateInstanceIdOutput(shaderBuilder);
+    vertexShaderCalculateInstanceIdOutput(GPUShaderBuilder);
 }
 
-void ShaderDefault::createFragmentShader(ShaderBuilder& shaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void ShaderDefault::createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
-    registerFragmentShaderData(shaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    registerFragmentShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
     
-    // shaderBuilder.get().extension("GL_ARB_bindless_texture");
+    // GPUShaderBuilder.get().extension("GL_ARB_bindless_texture");
 
-    fragmentShaderCode(shaderBuilder);
+    fragmentShaderCode(GPUShaderBuilder);
 }
 
-void ShaderDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shaderBuilder) const
+void ShaderDefault::registerFunctionCalculateBoneTransform(GPUShaderBuilder& GPUShaderBuilder) const
 {
     FunctionDefinition func(GPUShaderDefinitions::Functions::mCalculateBoneTransform);
     
-    auto& bonesIDs = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
-    auto& bonesWeights = shaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesWeights);
-    auto& MAX_BONES = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Consts::mMaxBones);
-    auto& MAX_BONE_INFLUENCE = shaderBuilder.get().getAttribute(GPUShaderDefinitions::Consts::mMaxBoneInfluence);
-    auto& bonesMatricesblock = shaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices.mInstanceName);    
+    auto& bonesIDs = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesIDs);
+    auto& bonesWeights = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mBonesWeights);
+    auto& MAX_BONES = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Consts::mMaxBones);
+    auto& MAX_BONE_INFLUENCE = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Consts::mMaxBoneInfluence);
+    auto& bonesMatricesblock = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices.mInstanceName);    
     Variable bonesTransform(bonesMatricesblock.mGPUUniformBufferData.getScopedGPUVariableData(0));
     Variable currentBoneTransform;
     Variable currentBoneTransformMulWeight;
@@ -455,5 +455,5 @@ void ShaderDefault::registerFunctionCalculateBoneTransform(ShaderBuilder& shader
     func.body().
     ret(finalBoneTransform);
 
-    shaderBuilder.get().function(func);
+    GPUShaderBuilder.get().function(func);
 }

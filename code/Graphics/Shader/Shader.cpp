@@ -112,8 +112,8 @@ OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& s
     };
     gpuShaderPipeline->init(gpuShaderPipelineData, mShaderCompilationData.mRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
 
-    ShaderBuilder sbVert;
-    ShaderBuilder sbFrag;
+    GPUShaderBuilder sbVert;
+    GPUShaderBuilder sbFrag;
     {
         PROFILER_CPU_NAMED(create_vertex_and_fragment)
         createVertexShader(sbVert, mShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUShaderDescriptorSets());

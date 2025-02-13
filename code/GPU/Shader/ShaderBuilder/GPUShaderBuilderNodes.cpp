@@ -1,6 +1,6 @@
-#include "Graphics/Shader/ShaderBuilder/ShaderBuilder.hpp"
+#include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 
-namespace ShaderBuilderNodes
+namespace GPUShaderBuilderNodes
 {
     std::string Statement::getIndent(u16 indent)
     {

@@ -18,9 +18,9 @@ protected:
     virtual void setSharedShaderPropertiesBlock() override;
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
 
-    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
-    virtual void vertexShaderCalculateTextureCoordinateOutput(ShaderBuilder& shaderBuilder) const override;
-    virtual void vertexShaderCalculatePositionOutputCustom(ShaderBuilder& shaderBuilder) const override;
+    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
 REGISTER_CLASS(ShaderUI)
 
@@ -28,6 +28,6 @@ REGISTER_CLASS(ShaderUI)
 class ShaderUIFont : public ShaderUI
 {
 protected:
-    virtual void fragmentShaderCode(ShaderBuilder& shaderBuilder) const override;
+    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
 REGISTER_CLASS(ShaderUIFont)
