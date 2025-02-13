@@ -21,8 +21,6 @@ public:
     virtual void onComponentRemoved(const ComponentHandler& component) override;
 
 private:
-    void swap();
-private:
     RenderPipelineData mRenderPipelineData;
     OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;

@@ -28,7 +28,6 @@ void RenderEngine::update()
     mRenderPipeline->render(mRenderPipelineData);
 
     GET_SYSTEM(GPUInstance).mGPUContext->currentFrame = (GET_SYSTEM(GPUInstance).mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
-	swap();
 }
 
 void RenderEngine::preSceneChanged()
@@ -92,10 +91,4 @@ void RenderEngine::onComponentRemoved(const ComponentHandler& component)
     else if(component->getComponentTypeId() == ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
     {
     }
-}
-
-void RenderEngine::swap()
-{
-    PROFILER_CPU()
-	GET_SYSTEM(WindowManager).getMainWindow()->swap();
 }
