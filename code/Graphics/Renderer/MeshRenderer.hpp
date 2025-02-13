@@ -6,9 +6,10 @@
 #include "Scene/Transform.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Shader/Shader.hpp"
+#include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
 
 class InstancedMeshRenderer;
-class ShaderPropertiesInstance;
+class TextureAnimation;
 
 class RendererData
 {

@@ -1,12 +1,10 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
-#include "Graphics/TextureAnimation/TextureAnimationFrame.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "Graphics/Shader/ShaderManager.hpp"
 #include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/TextureAnimation/TextureAnimation.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Scene/Module.hpp"
 

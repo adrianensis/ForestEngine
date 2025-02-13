@@ -5,7 +5,6 @@
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "GPU/Shader/GPUShaderModule.h"
-#include "Graphics/TextureAnimation/TextureAnimation.hpp"
 
 class GPUMesh;
 
@@ -162,7 +161,6 @@ public:
     bool mIsFont = false;
     FontData mFontData;
     ShaderTextureBindings mShaderTextureBindings;
-    // std::unordered_map<HashedString, TextureAnimation> mTextureAnimations;
 
     u32 getMaxInstances() const
     {

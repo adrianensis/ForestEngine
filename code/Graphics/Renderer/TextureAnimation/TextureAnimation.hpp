@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/TextureAnimation/TextureAnimationFrame.hpp"
+#include "Graphics/Renderer/TextureAnimation/TextureAnimationFrame.hpp"
 
 class TextureAnimation
 {
