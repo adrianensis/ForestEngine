@@ -74,52 +74,52 @@ void Model::loadGLTFShaders()
         FOR_RANGE(shaderIt, 0, mCGLTFData->materials_count)
         {
             cgltf_material& cgltfMaterial = mCGLTFData->materials[shaderIt];
-            ShaderData shaderData;
+            GPUShaderData shaderData;
             // shaderData.mAllowInstances = false;
             // shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
             WeakPtr<GPUShader> newShader;
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
-            // shaderData.setSharedShaderPropertiesBlock<PropertiesBlockShaderDefault>();
-            PropertiesBlockShaderDefault propertiesBlockShaderDefault;
+            // shaderData.setSharedGPUShaderPropertiesBlock<PropertiesBlockGPUShaderDefault>();
+            PropertiesBlockGPUShaderDefault propertiesBlockGPUShaderDefault;
 
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{HashedString(texturePath.string())});
-                // shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string())});
+                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{HashedString(texturePath.string())});
+                // shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{HashedString(texturePath.string())});
             }
             else
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                propertiesBlockShaderDefault.mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
-                // shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderDefault>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
-                // shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                propertiesBlockGPUShaderDefault.mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                // shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderDefault>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                // shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderPBR>().mBaseColor = Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
             }
             // if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
             // {
             //     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-            //     shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string())});
+            //     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{HashedString(texturePath.string())});
             // }
             // else
             // {
-            //     shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-            //     shaderData.mSharedShaderPropertiesBlockBuffer.get<PropertiesBlockShaderPBR>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
+            //     shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderPBR>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+            //     shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderPBR>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
             // }
 
             // if(cgltfMaterial.normal_texture.texture)
             // {
             //     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
-            //     shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
+            //     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
             // }
 
-            newShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockShaderDefault>(shaderData, propertiesBlockShaderDefault);
+            newShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, propertiesBlockGPUShaderDefault);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {
-            //     shaderData.mSharedShaderPropertiesBlockBuffer.set<SpecularGlossiness>();
-            //     material = new ShaderPBRSpecularGlossiness();
+            //     shaderData.mSharedGPUShaderPropertiesBlockBuffer.set<SpecularGlossiness>();
+            //     material = new GPUShaderPBRSpecularGlossiness();
 
             //     if(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture)
             //     {
@@ -129,7 +129,7 @@ void Model::loadGLTFShaders()
             //     else
             //     {
             //         cgltf_float* diffuse = cgltfMaterial.pbr_specular_glossiness.diffuse_factor;
-            //         shaderData.mSharedShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
+            //         shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(diffuse[0], diffuse[1], diffuse[2]);
             //     }
             //     if(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture)
             //     {
@@ -140,8 +140,8 @@ void Model::loadGLTFShaders()
             //     {
             //         cgltf_float* specular = cgltfMaterial.pbr_specular_glossiness.specular_factor;
             //         cgltf_float glossiness = cgltfMaterial.pbr_specular_glossiness.glossiness_factor;
-            //         shaderData.mSharedShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(specular[0], specular[1], specular[2]);
-            //         shaderData.mSharedShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mGlossiness = Vector3(glossiness, glossiness, glossiness);
+            //         shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mDiffuse = Vector3(specular[0], specular[1], specular[2]);
+            //         shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<SpecularGlossiness>().mGlossiness = Vector3(glossiness, glossiness, glossiness);
             //     }
             // }
 

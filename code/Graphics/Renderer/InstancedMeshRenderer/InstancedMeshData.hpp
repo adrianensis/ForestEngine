@@ -12,14 +12,14 @@ public:
 	WeakPtr<GPUShader> mShader;
 	WeakPtr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
-    ShaderStencilData mShaderStencilData;
+    GPUShaderStencilData mGPUShaderStencilData;
 
 	void init(TComponentHandler<MeshRenderer> renderer)
     {
         mShader = renderer->getRendererData().mShader;
         mMesh = renderer->getRendererData().mMesh;
         mIsStatic = renderer->isStatic();
-        mShaderStencilData = renderer->getRendererData().mShaderStencilData;
+        mGPUShaderStencilData = renderer->getRendererData().mGPUShaderStencilData;
     }
 
 	bool operator==(const InstancedMeshData& otherInstancedMeshData) const
@@ -27,7 +27,7 @@ public:
         bool result = mShader == otherInstancedMeshData.mShader and
         mMesh == otherInstancedMeshData.mMesh and
         mIsStatic == otherInstancedMeshData.mIsStatic and
-        mShaderStencilData == otherInstancedMeshData.mShaderStencilData;
+        mGPUShaderStencilData == otherInstancedMeshData.mGPUShaderStencilData;
         return result;
 	}
 
@@ -40,9 +40,9 @@ public:
             u64 result = key.mShader->getID() << (shift++);
             result = result ^ key.mMesh->mMeshID << (shift++);
 			result = result ^ static_cast<u64>(key.mIsStatic) << (shift++);
-            if(key.mShaderStencilData.mUseStencil)
+            if(key.mGPUShaderStencilData.mUseStencil)
             {
-                result = result ^ (key.mShaderStencilData.hash() << (shift++));
+                result = result ^ (key.mGPUShaderStencilData.hash() << (shift++));
             }
             
             return result;

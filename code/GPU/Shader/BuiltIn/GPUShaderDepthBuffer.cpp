@@ -4,7 +4,7 @@
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
-void GPUShaderDepthBuffer::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDepthBuffer::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // GPUShaderPBR::fragmentShaderCode(GPUShaderBuilder);
+    // GPUShaderPBR::fragmentGPUShaderCode(GPUShaderBuilder);
 }

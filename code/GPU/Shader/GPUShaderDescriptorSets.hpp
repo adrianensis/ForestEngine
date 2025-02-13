@@ -31,7 +31,7 @@ public:
 class GPUShaderDescriptorSets
 {    
 public:
-    void init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);
+    void init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);
     void updateBuffers();
     void updateSamplers();
     void terminate();

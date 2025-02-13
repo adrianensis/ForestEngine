@@ -1,9 +1,9 @@
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "GPU/Core/GPULog.h"
 
-void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData, GPURenderPass* renderPass, Ptr<GPUContext> gpuContext)
+void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPURenderPass* renderPass, Ptr<GPUContext> gpuContext)
 {
-    mGPUShaderPipelineData = gpuShaderPipelineData;
+    mGPUShaderPipelineData = gpuGPUShaderPipelineData;
     mRenderPass = renderPass;
     mGPUContext = gpuContext;
 
@@ -145,21 +145,21 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
         CHECK_MSG(false, "Could not initialize fragment shader");
     }
 
-    VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
-    vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    vertexShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-    vertexShaderStageInfo.module = vertexShader.getShaderModule();
-    vertexShaderStageInfo.pName = "main";
+    VkPipelineShaderStageCreateInfo vertexGPUShaderStageInfo{};
+    vertexGPUShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    vertexGPUShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+    vertexGPUShaderStageInfo.module = vertexShader.getGPUShaderModule();
+    vertexGPUShaderStageInfo.pName = "main";
 
-    VkPipelineShaderStageCreateInfo fragmentShaderStageInfo{};
-    fragmentShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    fragmentShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    fragmentShaderStageInfo.module = fragmentShader.getShaderModule();
-    fragmentShaderStageInfo.pName = "main";
+    VkPipelineShaderStageCreateInfo fragmentGPUShaderStageInfo{};
+    fragmentGPUShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    fragmentGPUShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    fragmentGPUShaderStageInfo.module = fragmentShader.getGPUShaderModule();
+    fragmentGPUShaderStageInfo.pName = "main";
 
     VkPipelineShaderStageCreateInfo shaderStages[] = {
-            vertexShaderStageInfo,
-            fragmentShaderStageInfo
+            vertexGPUShaderStageInfo,
+            fragmentGPUShaderStageInfo
     };
     
     VkPipelineVertexInputStateCreateInfo vertexInputState{};

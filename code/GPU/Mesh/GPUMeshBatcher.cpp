@@ -27,7 +27,7 @@ void GPUMeshBatcher::resize(u32 size)
 	PROFILER_CPU()
 
 	mObjectIDs.resize(size);
-	mShaderPropertiesInstanceIDs.resize(size);
+	mGPUShaderPropertiesInstanceIDs.resize(size);
     mInstanceIDs.resize(size);
 	generateInstanceIDsData(size);
 }
@@ -44,7 +44,7 @@ void GPUMeshBatcher::setInstanceData(u32 instanceId, u32 objectId, u32 shaderPro
 	PROFILER_CPU()
 
     mObjectIDs[instanceId] = (objectId);
-    mShaderPropertiesInstanceIDs[instanceId] = (shaderPropertiesInstanceId);
+    mGPUShaderPropertiesInstanceIDs[instanceId] = (shaderPropertiesInstanceId);
 }
 
 void GPUMeshBatcher::generateIndicesData(u32 meshesCount)

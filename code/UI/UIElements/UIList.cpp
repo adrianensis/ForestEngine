@@ -39,7 +39,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
-    rendererData.mShaderStencilData = calculateStencilData();
+    rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
@@ -49,9 +49,9 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
-	renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
-	renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
-    renderer->getShaderPropertiesInstance()->setDirty();
+	renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
+	renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
+    renderer->getGPUShaderPropertiesInstance()->setDirty();
 
 	setOnPressedCallback([&](UIElement* uiElement) 
 	{

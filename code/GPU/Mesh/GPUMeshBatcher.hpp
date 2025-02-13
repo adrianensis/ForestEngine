@@ -21,11 +21,11 @@ private:
 	OwnerPtr<GPUMesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;
-    std::vector<u32> mShaderPropertiesInstanceIDs;
+    std::vector<u32> mGPUShaderPropertiesInstanceIDs;
 
 public:
     GET(InternalMesh)
     CRGET(InstanceIDs)
     CRGET(ObjectIDs)
-    CRGET(ShaderPropertiesInstanceIDs)
+    CRGET(GPUShaderPropertiesInstanceIDs)
 };

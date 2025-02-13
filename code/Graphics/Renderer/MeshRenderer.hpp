@@ -14,7 +14,7 @@ class TextureAnimation;
 class RendererData
 {
 public:
-    ShaderStencilData mShaderStencilData;
+    GPUShaderStencilData mGPUShaderStencilData;
     WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
     WeakPtr<GPUShader> mShader;
@@ -45,7 +45,7 @@ private:
     Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    WeakPtr<ShaderPropertiesInstance> mShaderPropertiesInstance;
+    WeakPtr<GPUShaderPropertiesInstance> mGPUShaderPropertiesInstance;
     bool mUpdateMatrix = false;
 
 public:
@@ -54,7 +54,7 @@ public:
 public:
     CRGET(RendererModelMatrix)
     CRGET(RendererData)
-    RGET(ShaderPropertiesInstance)
+    RGET(GPUShaderPropertiesInstance)
     CRGET_SET(RenderSlot)
     CRGET_SET(InstanceSlot)
     GET_SET(UpdateMatrix)

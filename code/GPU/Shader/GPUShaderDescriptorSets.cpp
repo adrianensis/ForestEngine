@@ -1,9 +1,9 @@
 #include "GPU/Shader/GPUShaderDescriptorSets.hpp"
 
-void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuShaderDescriptorSetsData, Ptr<GPUContext> gpuContext)
+void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, Ptr<GPUContext> gpuContext)
 {
     mGPUContext = gpuContext;
-    mGPUDescriptorData = gpuShaderDescriptorSetsData;
+    mGPUDescriptorData = gpuGPUShaderDescriptorSetsData;
     // LAYOUT
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;

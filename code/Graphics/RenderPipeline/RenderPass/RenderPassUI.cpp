@@ -23,16 +23,16 @@ void RenderPassUI::renderStencilCascade(u64 id)
     FOR_LIST(it, mInstancedMeshRenderers)
 	{
         const InstancedMeshData& instancedMeshData = *it;
-		if(id == instancedMeshData.mShaderStencilData.mId)
+		if(id == instancedMeshData.mGPUShaderStencilData.mId)
 		{
-            if(instancedMeshData.mShaderStencilData.mParentId > 0)
+            if(instancedMeshData.mGPUShaderStencilData.mParentId > 0)
             {
-                renderStencilCascade(instancedMeshData.mShaderStencilData.mParentId);
+                renderStencilCascade(instancedMeshData.mGPUShaderStencilData.mParentId);
             }
 
-            if(!mStencilsRendered.contains(instancedMeshData.mShaderStencilData.mId))
+            if(!mStencilsRendered.contains(instancedMeshData.mGPUShaderStencilData.mId))
             {
-                mStencilsRendered.insert(instancedMeshData.mShaderStencilData.mId);
+                mStencilsRendered.insert(instancedMeshData.mGPUShaderStencilData.mId);
                 renderInstancedMesh(instancedMeshData);
             }
 
@@ -53,9 +53,9 @@ void RenderPassUI::render()
 	{
         const InstancedMeshData& instancedMeshData = *it;
         WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-        if(instancedMeshData.mShaderStencilData.mUseStencil)
+        if(instancedMeshData.mGPUShaderStencilData.mUseStencil)
         {
-            if(instancedMeshData.mShaderStencilData.mParentId > 0)
+            if(instancedMeshData.mGPUShaderStencilData.mParentId > 0)
             {
                 stencilInstancedMeshRenderers.push_back(instancedMeshData);
             }
@@ -68,8 +68,8 @@ void RenderPassUI::render()
 
     auto compareStencilBatch = [](InstancedMeshData b1, InstancedMeshData b2)
     {
-        u64 o1 = b1.mShaderStencilData.mParentId;
-        u64 o2 = b2.mShaderStencilData.mParentId;
+        u64 o1 = b1.mGPUShaderStencilData.mParentId;
+        u64 o2 = b2.mGPUShaderStencilData.mParentId;
         return (o1 < o2);
     };
   
@@ -79,14 +79,14 @@ void RenderPassUI::render()
     FOR_LIST(it, stencilInstancedMeshRenderers)
 	{
         const InstancedMeshData& instancedMeshData = *it;
-        if(currentId != instancedMeshData.mShaderStencilData.mParentId)
+        if(currentId != instancedMeshData.mGPUShaderStencilData.mParentId)
         {
 //            GET_SYSTEM(GPUInterface).clearStencil();
         }
 
-        currentId = instancedMeshData.mShaderStencilData.mParentId;
+        currentId = instancedMeshData.mGPUShaderStencilData.mParentId;
 
-        renderStencilCascade(instancedMeshData.mShaderStencilData.mId);
+        renderStencilCascade(instancedMeshData.mGPUShaderStencilData.mId);
 	}
 
 //    GET_SYSTEM(GPUInterface).clearStencil();

@@ -13,8 +13,8 @@ ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClass
 void MeshRenderer::init(const RendererData& data) 
 {
     mRendererData = data;
-    mShaderPropertiesInstance = GET_SYSTEM(GPUShaderManager).createShaderPropertiesInstance(mRendererData.mShader);
-    mShaderPropertiesInstance->setDirty();
+    mGPUShaderPropertiesInstance = GET_SYSTEM(GPUShaderManager).createGPUShaderPropertiesInstance(mRendererData.mShader);
+    mGPUShaderPropertiesInstance->setDirty();
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -24,7 +24,7 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(GPUShaderManager).freeShaderPropertiesInstance(mShaderPropertiesInstance);
+    GET_SYSTEM(GPUShaderManager).freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
     mRenderSlot.reset();
     mInstanceSlot.reset();
 }
@@ -64,8 +64,8 @@ void MeshRenderer::updateTextureRegion()
     //     const TextureAnimationFrame& frame = mCurrentTextureAnimationUpdater.nextFrame();
     //     // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
     //     // {
-    //     //     mShaderPropertiesInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
-    //     //     mShaderPropertiesInstance.mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+    //     //     mGPUShaderPropertiesInstance.mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
+    //     //     mGPUShaderPropertiesInstance.mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
     //     // }
     // }
 }
@@ -73,7 +73,7 @@ void MeshRenderer::updateTextureRegion()
 const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
 {
 	const TextureAnimation* currentTextureAnimation = nullptr;
-    // const auto& textureAnimationsMap = mRendererData.mShader->getShaderData().mTextureAnimations;
+    // const auto& textureAnimationsMap = mRendererData.mShader->getGPUShaderData().mTextureAnimations;
     // if (textureAnimationsMap.contains(mCurrentTextureAnimationKey))
     // {
     //     currentTextureAnimation = &textureAnimationsMap.at(mCurrentTextureAnimationKey);

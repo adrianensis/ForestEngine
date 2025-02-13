@@ -39,7 +39,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
     // mGPUVertexBuffersContainer.disable();
 
-    ShaderData shaderData;
+    GPUShaderData shaderData;
     // mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData);
     // mShader->compileShader("Shape", HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
 

@@ -30,8 +30,8 @@ void InstancedMeshRenderer::init(const InstancedMeshData& instancedMeshData)
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
     GPUVertexBufferData bufferDataObjectIDs(GPUShaderDefinitions::VertexInput::mObjectID, 1);
     mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
-    GPUVertexBufferData bufferDataShaderPropertiesInstanceIDs(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID, 1);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataShaderPropertiesInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
+    GPUVertexBufferData bufferDataGPUShaderPropertiesInstanceIDs(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID, 1);
+    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataGPUShaderPropertiesInstanceIDs, smInitialInstancesSize, mInstancedMeshData.mIsStatic);
 
     mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mFace, mGPUMeshBatcher.getInternalMesh()->mIndices.size(), mInstancedMeshData.mIsStatic);
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mGPUMeshBatcher.getInternalMesh()->mIndices);
@@ -57,15 +57,15 @@ void InstancedMeshRenderer::enable()
 {
     mGPUVertexBuffersContainer.enable();
 
-    if(mInstancedMeshData.mShaderStencilData.mUseStencil)
+    if(mInstancedMeshData.mGPUShaderStencilData.mUseStencil)
     {
-//        GET_SYSTEM(GPUInterface).enableStencil(mInstancedMeshData.mShaderStencilData.mStencilValue, mInstancedMeshData.mShaderStencilData.mStencilFunction, mInstancedMeshData.mShaderStencilData.mStencilPassOp);
+//        GET_SYSTEM(GPUInterface).enableStencil(mInstancedMeshData.mGPUShaderStencilData.mStencilValue, mInstancedMeshData.mGPUShaderStencilData.mStencilFunction, mInstancedMeshData.mGPUShaderStencilData.mStencilPassOp);
     }
 }
 
 void InstancedMeshRenderer::disable()
 {
-    if(mInstancedMeshData.mShaderStencilData.mUseStencil)
+    if(mInstancedMeshData.mGPUShaderStencilData.mUseStencil)
     {
 //        GET_SYSTEM(GPUInterface).disableStencil();
     }
@@ -124,7 +124,7 @@ void InstancedMeshRenderer::update(VkCommandBuffer commandBuffer)
         
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(mCurrentInstancesSize);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(mCurrentInstancesSize);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).resize(mCurrentInstancesSize);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID).resize(mCurrentInstancesSize);
     }
 
     u32 rendererIndex = 0;
@@ -133,7 +133,7 @@ void InstancedMeshRenderer::update(VkCommandBuffer commandBuffer)
         TComponentHandler<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
-            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getShaderPropertiesInstance()->mSlot.getSlot());
+            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getGPUShaderPropertiesInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }
@@ -142,7 +142,7 @@ void InstancedMeshRenderer::update(VkCommandBuffer commandBuffer)
         PROFILER_CPU_NAMED(InstancedBuffers_SetData)
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).setDataArray(mGPUMeshBatcher.getInstanceIDs(), commandBuffer);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).setDataArray(mGPUMeshBatcher.getObjectIDs(), commandBuffer);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getShaderPropertiesInstanceIDs(), commandBuffer);
+        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID).setDataArray(mGPUMeshBatcher.getGPUShaderPropertiesInstanceIDs(), commandBuffer);
     }
 
     mResizeBuffersRequested = false;

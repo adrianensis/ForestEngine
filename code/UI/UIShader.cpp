@@ -3,13 +3,13 @@
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
-void ShaderUI::setSharedShaderPropertiesBlock()
+void GPUShaderUI::setSharedGPUShaderPropertiesBlock()
 {
-    mSharedShaderPropertiesBlockBuffer.set<ShaderPropertiesBlockUI>();
-    mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<ShaderPropertiesBlockUI>().mClassDefinition;
+    mSharedGPUShaderPropertiesBlockBuffer.set<GPUShaderPropertiesBlockUI>();
+    mSharedGPUShaderPropertiesBlockClass = ClassManager::getClassMetadata<GPUShaderPropertiesBlockUI>().mClassDefinition;
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateShaderPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderUI::generateGPUShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -22,11 +22,11 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateShaderProp
     return propertiesBlock;
 }
 
-void ShaderUI::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderUI::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // GPUShaderDefault::fragmentShaderCode(GPUShaderBuilder);
+    // GPUShaderDefault::fragmentGPUShaderCode(GPUShaderBuilder);
 
-    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mGPUShaderPropertiesInstanceID);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable instanceColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
@@ -58,9 +58,9 @@ void ShaderUI::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
     }
 }
 
-void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderUI::vertexGPUShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    GPUShaderDefault::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
+    GPUShaderDefault::vertexGPUShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
     auto& textureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0));
     if(textureCoord.isValid())
     {
@@ -69,7 +69,7 @@ void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GP
         Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
         Variable textureRegionLeftTop = {mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
         Variable textureRegionSize = {mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
-        auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID);
+        auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID);
         GPUShaderBuilder.getMain().
         set(outTextureCoord, call(GPUShaderDefinitions::PrimitiveTypes::mVector2,
         {
@@ -79,22 +79,22 @@ void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GP
     }
 }
 
-void ShaderUI::vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderUI::vertexGPUShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const
 {    
     Variable finalPositon = GPUShaderBuilder.getVariableFromCache("finalPositon");
 
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable depth = {mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
-    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID);
     GPUShaderBuilder.getMain().
     set(finalPositon.dot("z"), propertiesBlock.at(shaderPropertiesInstanceId).dot(depth));
 }
 
-void ShaderUIFont::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderUIFont::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    ShaderUI::fragmentShaderCode(GPUShaderBuilder);
+    GPUShaderUI::fragmentGPUShaderCode(GPUShaderBuilder);
 
-    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mGPUShaderPropertiesInstanceID);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable instanceColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));

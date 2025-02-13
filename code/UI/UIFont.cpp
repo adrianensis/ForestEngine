@@ -34,14 +34,14 @@ void UIFont::init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontS
 {
     mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile, fontSize);
 
-    ShaderData shaderData;
+    GPUShaderData shaderData;
     shaderData.mMaxInstances = 500;
     shaderData.mIsFont = true;
-    shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath});
+    shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath});
     shaderData.mFontData = mFontData;
-    ShaderPropertiesBlockUI shaderPropertiesBlockUI;
+    GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Vector4(1,1,1,1);
-    mFontShader = GET_SYSTEM(GPUShaderManager).createShader<ShaderUIFont, ShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
+    mFontShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
 
     mFontData.freeGlyphsBuffers();
 }

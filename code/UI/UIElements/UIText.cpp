@@ -17,7 +17,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     RendererData rendererData;
     rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
     rendererData.mShader = GET_SYSTEM(UIManager).getFontShader();
-    rendererData.mShaderStencilData = calculateStencilData();
+    rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
@@ -25,11 +25,11 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
-    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
+    renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
-    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
-    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
-    renderer->getShaderPropertiesInstance()->setDirty();
+    renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
+    renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
+    renderer->getGPUShaderPropertiesInstance()->setDirty();
 }
 
 void UIText::initFromConfig(const UIElementConfig& config) 
@@ -112,9 +112,9 @@ void UIText::setText(HashedString text)
                     gameObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
                     TComponentHandler<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
-                    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
-                    renderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
-                    renderer->getShaderPropertiesInstance()->setDirty();
+                    renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
+                    renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
+                    renderer->getGPUShaderPropertiesInstance()->setDirty();
                 }
                 else
                 {

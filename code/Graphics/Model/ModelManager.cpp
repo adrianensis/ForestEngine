@@ -4,12 +4,12 @@
 
 void ModelManager::init()
 {
-    ShaderData shaderData;
+    GPUShaderData shaderData;
     shaderData.mMaxInstances = 500;
-    PropertiesBlockShaderDefault propertiesBlockShaderDefault;
+    PropertiesBlockGPUShaderDefault propertiesBlockGPUShaderDefault;
     // pink
-    propertiesBlockShaderDefault.mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
-    mDefaultModelShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockShaderDefault>(shaderData, propertiesBlockShaderDefault);
+    propertiesBlockGPUShaderDefault.mBaseColor = Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
+    mDefaultModelShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, propertiesBlockGPUShaderDefault);
 }
 
 void ModelManager::terminate()

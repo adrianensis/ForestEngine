@@ -5,7 +5,7 @@ using namespace GPUShaderBuilderNodes::Expressions;
 
 // PBR METALLIC
 
-std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderPBR::generateShaderPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderPBR::generateGPUShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -25,9 +25,9 @@ void GPUShaderPBR::registerTextures()
     mTextures.insert(TextureBindingNamesPBR::smShadowMap);
 }
 
-void GPUShaderPBR::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    GPUShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder);
+    GPUShaderDefault::vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder);
 
     auto& shadowMappingBuffer = GPUShaderBuilder.get().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
     Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
@@ -37,11 +37,11 @@ void GPUShaderPBR::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShad
     GPUShaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
 }
 
-void GPUShaderPBR::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // GPUShaderDefault::fragmentShaderCode(GPUShaderBuilder);
+    // GPUShaderDefault::fragmentGPUShaderCode(GPUShaderBuilder);
 
-    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mGPUShaderPropertiesInstanceID);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     Variable lightingModel = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
@@ -72,9 +72,9 @@ void GPUShaderPBR::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
     set(outColor, PBRMetallicRoughness);
 }
 
-void GPUShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void GPUShaderPBR::generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    GPUShaderDefault::generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
+    GPUShaderDefault::generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
     
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mLightsBufferData);
     shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
@@ -84,9 +84,9 @@ void GPUShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGene
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
-void GPUShaderPBR::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void GPUShaderPBR::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
-    GPUShaderDefault::registerFragmentShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuGPUShaderDescriptorSets);
 
     registerFunctionsGetNormalFromMap(GPUShaderBuilder);
     
@@ -431,7 +431,7 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable shaderBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
         Variable shaderMetallic = {mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
         Variable shaderRoughness = {mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
-        auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
+        auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mGPUShaderPropertiesInstanceID);
 
         Variable roughness;
         Variable metallic;

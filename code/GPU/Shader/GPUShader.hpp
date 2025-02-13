@@ -22,7 +22,7 @@ public:
     bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
 
-class ShaderStencilData
+class GPUShaderStencilData
 {
 public:
     bool mUseStencil = false;
@@ -35,7 +35,7 @@ public:
     u64 mParentId = 0;
     u64 mId = 0;
 
-    bool operator==(const ShaderStencilData& other) const
+    bool operator==(const GPUShaderStencilData& other) const
     {
         if(this == &other) {return true;}
         return
@@ -57,7 +57,7 @@ public:
     }
 };
 
-class ShaderPropertiesBlockNames
+class GPUShaderPropertiesBlockNames
 {
 public:
     inline static const HashedString smPropertiesBlockStructName = "propertiesBlockStruct";
@@ -66,7 +66,7 @@ public:
     inline static const HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
 };
 
-class ShaderCompilationData
+class GPUShaderCompilationData
 {
 public:
     WeakPtr<const GPUMesh> mMesh;
@@ -78,7 +78,7 @@ public:
     GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
 };
 
-class ShaderGenerationDataCommon
+class GPUShaderGenerationDataCommon
 {
 public:
     std::vector<GPUStructDefinition> mStructDefinitions;
@@ -87,7 +87,7 @@ public:
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
-class ShaderGenerationDataVertex
+class GPUShaderGenerationDataVertex
 {
 public:
     std::vector<GPUVertexBuffer> mVertexInputs;
@@ -97,7 +97,7 @@ public:
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
-class ShaderGenerationDataFragment
+class GPUShaderGenerationDataFragment
 {
 public:
     std::vector<GPUVariableDefinitionData> mFragmentInputs;
@@ -107,19 +107,19 @@ public:
     std::vector<GPUVariableDefinitionData> mConsts;
 };
 
-class ShaderGenerationData
+class GPUShaderGenerationData
 {
 public:
-    ShaderGenerationDataCommon mCommonVariables;
-    ShaderGenerationDataVertex mVertexVariables;
-    ShaderGenerationDataFragment mFragmentVariables;
+    GPUShaderGenerationDataCommon mCommonVariables;
+    GPUShaderGenerationDataVertex mVertexVariables;
+    GPUShaderGenerationDataFragment mFragmentVariables;
 };
-class ShaderTextureBindings
+class GPUShaderTextureBindings
 {
 public:
     std::unordered_map<HashedString, TextureBinding> mTextureBindings;
 
-    bool operator==(const ShaderTextureBindings& other) const
+    bool operator==(const GPUShaderTextureBindings& other) const
     {
         if(this == &other) {return true;}
         return mTextureBindings == other.mTextureBindings;
@@ -141,18 +141,18 @@ public:
 };
 
 class GPUShader;
-class ShaderPropertiesInstance
+class GPUShaderPropertiesInstance
 {
 public:
     Slot mSlot;
     u32 mID = 0;
     WeakPtr<GPUShader> mShader;
-    GenericObjectBuffer mShaderPropertiesBlockBuffer;
+    GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
 };
-REGISTER_CLASS(ShaderPropertiesInstance);
+REGISTER_CLASS(GPUShaderPropertiesInstance);
 
-class ShaderData
+class GPUShaderData
 {
 public:
     // GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
@@ -160,7 +160,7 @@ public:
     u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
-    ShaderTextureBindings mShaderTextureBindings;
+    GPUShaderTextureBindings mGPUShaderTextureBindings;
 
     u32 getMaxInstances() const
     {
@@ -173,7 +173,7 @@ class GPUShader: public EnableWeakPtrToThis
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id);
+    virtual void init(const GPUShaderData& shaderData, const GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id);
     void terminate();
 
     bool hasFramebufferBinding(HashedString bindingName) const;
@@ -181,28 +181,28 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
         {};
     virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
         {};
 
-    virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUShaderPipeline> compileShader(const ShaderCompilationData& shaderCompilationData);
+    virtual void generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
+    OwnerPtr<GPUShaderPipeline> compileShader(const GPUShaderCompilationData& shaderCompilationData);
 
     bool allowInstances() const
     {
-        return mShaderData.mAllowInstances && mShaderData.mMaxInstances > 0 && getSharedShaderPropertiesBlockBuffer().getByteBuffer().size() > 0;
+        return mGPUShaderData.mAllowInstances && mGPUShaderData.mMaxInstances > 0 && getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size() > 0;
     }
 protected:
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock();
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateGPUShaderPropertiesBlock();
     virtual void registerTextures() {};
     
-    virtual void setSharedShaderPropertiesBlock()
+    virtual void setSharedGPUShaderPropertiesBlock()
     {
         CHECK_MSG(false, "Implement!")
-        // mSharedShaderPropertiesBlockBuffer.set<T>();
-        // mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
+        // mSharedGPUShaderPropertiesBlockBuffer.set<T>();
+        // mSharedGPUShaderPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
     }
 
 protected:
@@ -210,16 +210,16 @@ protected:
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<HashedString> mTextures;
     std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
-    ShaderCompilationData mShaderCompilationData;
-    ShaderData mShaderData;
+    GPUShaderCompilationData mGPUShaderCompilationData;
+    GPUShaderData mGPUShaderData;
     u32 mID = 0;
-    GenericObjectBuffer mSharedShaderPropertiesBlockBuffer;
-    ClassDefinition mSharedShaderPropertiesBlockClass;
+    GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
+    ClassDefinition mSharedGPUShaderPropertiesBlockClass;
 
 public:
-    CRGET(ShaderData)
-    CRGET(SharedShaderPropertiesBlockBuffer)
-    CRGET(SharedShaderPropertiesBlockClass)
+    CRGET(GPUShaderData)
+    CRGET(SharedGPUShaderPropertiesBlockBuffer)
+    CRGET(SharedGPUShaderPropertiesBlockClass)
     CRGET(PropertiesBlockStructDefinition)
     CRGET(PropertiesBlockUniformBufferData)
     GET(ID)

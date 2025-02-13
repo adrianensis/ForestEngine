@@ -2,7 +2,7 @@
 
 #include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 
-class ShaderPropertiesBlockUI
+class GPUShaderPropertiesBlockUI
 {
 public:
     Vector4 mColor = Vector4(0,0,0,1);
@@ -10,24 +10,24 @@ public:
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
     alignas(16) i32 mDepth = 0;
 };
-REGISTER_CLASS(ShaderPropertiesBlockUI)
+REGISTER_CLASS(GPUShaderPropertiesBlockUI)
 
-class ShaderUI : public GPUShaderDefault
+class GPUShaderUI : public GPUShaderDefault
 {
 protected:
-    virtual void setSharedShaderPropertiesBlock() override;
-    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateShaderPropertiesBlock() override;
+    virtual void setSharedGPUShaderPropertiesBlock() override;
+    virtual std::vector<GPUStructDefinition::GPUStructVariable> generateGPUShaderPropertiesBlock() override;
 
-    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
-    virtual void vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
-    virtual void vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void vertexGPUShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void vertexGPUShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
-REGISTER_CLASS(ShaderUI)
+REGISTER_CLASS(GPUShaderUI)
 
 
-class ShaderUIFont : public ShaderUI
+class GPUShaderUIFont : public GPUShaderUI
 {
 protected:
-    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
-REGISTER_CLASS(ShaderUIFont)
+REGISTER_CLASS(GPUShaderUIFont)

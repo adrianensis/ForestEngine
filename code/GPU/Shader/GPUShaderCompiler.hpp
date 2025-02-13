@@ -15,6 +15,6 @@ class GPUShaderCompiler
 {
 public:
     // SPIR-V words
-    static SPIRVBinary compileShaderToSPIRV(GPUPipelineStage stage, const char* shaderSource, const char* fileName);
+    static SPIRVBinary compileGPUShaderToSPIRV(GPUPipelineStage stage, const char* shaderSource, const char* fileName);
     static void deleteSPIRVBinary(SPIRVBinary& spirvBinary);
 };

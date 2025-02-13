@@ -51,7 +51,7 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
 	instancedMeshData.init(renderer);
 
     std::vector<GPUUniformBuffer> uniformBuffers;
-    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
+    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
 
     WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
@@ -67,27 +67,27 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
     uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
     WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    GPUShaderPipelineDepthStencilData gpuShaderPipelineDepthStencilData;
-    gpuShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
-    gpuShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
-    gpuShaderPipelineDepthStencilData.mDepthCompareOp = VK_COMPARE_OP_LESS; //VkCompareOp
-    gpuShaderPipelineDepthStencilData.mDepthBoundsTestEnable = VK_FALSE; //bool
-    gpuShaderPipelineDepthStencilData.mStencilTestEnable = instancedMeshData.mShaderStencilData.mUseStencil; //bool
+    GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;
+    gpuGPUShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
+    gpuGPUShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
+    gpuGPUShaderPipelineDepthStencilData.mDepthCompareOp = VK_COMPARE_OP_LESS; //VkCompareOp
+    gpuGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable = VK_FALSE; //bool
+    gpuGPUShaderPipelineDepthStencilData.mStencilTestEnable = instancedMeshData.mGPUShaderStencilData.mUseStencil; //bool
     
     VkStencilOpState vkStencilOpState;
-    vkStencilOpState.failOp = (VkStencilOp) instancedMeshData.mShaderStencilData.mStencilFailOp;
-    vkStencilOpState.passOp = (VkStencilOp) instancedMeshData.mShaderStencilData.mStencilPassOp;
-    vkStencilOpState.depthFailOp = (VkStencilOp) instancedMeshData.mShaderStencilData.mDepthFailOp;
-    vkStencilOpState.compareOp = (VkCompareOp) instancedMeshData.mShaderStencilData.mStencilFunction;
+    vkStencilOpState.failOp = (VkStencilOp) instancedMeshData.mGPUShaderStencilData.mStencilFailOp;
+    vkStencilOpState.passOp = (VkStencilOp) instancedMeshData.mGPUShaderStencilData.mStencilPassOp;
+    vkStencilOpState.depthFailOp = (VkStencilOp) instancedMeshData.mGPUShaderStencilData.mDepthFailOp;
+    vkStencilOpState.compareOp = (VkCompareOp) instancedMeshData.mGPUShaderStencilData.mStencilFunction;
     vkStencilOpState.compareMask = 0xFF;
     vkStencilOpState.writeMask = 0xFF;
-    vkStencilOpState.reference = instancedMeshData.mShaderStencilData.mStencilValue;
+    vkStencilOpState.reference = instancedMeshData.mGPUShaderStencilData.mStencilValue;
 
-    gpuShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
-    gpuShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
-    gpuShaderPipelineDepthStencilData.mMinDepthBounds = 0; //float
-    gpuShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
-    ShaderCompilationData shaderCompilationData
+    gpuGPUShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
+    gpuGPUShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
+    gpuGPUShaderPipelineDepthStencilData.mMinDepthBounds = 0; //float
+    gpuGPUShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
+    GPUShaderCompilationData shaderCompilationData
     {
         instancedMeshData.mMesh,
         mGPURenderPass,
@@ -95,7 +95,7 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
         HashedString(std::to_string(instancedMeshData.mShader->getID())),
         uniformBuffers,
         instancedMeshRenderer->getGPUVertexBuffersContainer(),
-        gpuShaderPipelineDepthStencilData
+        gpuGPUShaderPipelineDepthStencilData
     };
 
     return instancedMeshData.mShader->compileShader(shaderCompilationData);
@@ -137,10 +137,10 @@ void RenderPass::renderInstancedMesh(const InstancedMeshData& instancedMeshData)
 {
     PROFILER_CPU()
     WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mRenderPipeline->getGPUShaderPipelines().at(instancedMeshData);
-    gpuShaderPipeline->enable();
+    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mRenderPipeline->getGPUShaderPipelines().at(instancedMeshData);
+    gpuGPUShaderPipeline->enable();
     instancedMeshRenderer->render();
-    gpuShaderPipeline->disable();
+    gpuGPUShaderPipeline->disable();
 }
 
 void RenderPass::renderPass()

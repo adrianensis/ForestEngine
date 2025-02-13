@@ -5,6 +5,6 @@
 class GPUShaderDepthBuffer : public GPUShaderPBR
 {
 protected:
-    virtual void fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
+    virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
 REGISTER_CLASS(GPUShaderDepthBuffer)

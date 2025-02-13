@@ -8,13 +8,13 @@ void GPUShaderDefault::registerTextures()
     mTextures.insert(TextureBindingNames::smBaseColor);
 }
 
-void GPUShaderDefault::setSharedShaderPropertiesBlock()
+void GPUShaderDefault::setSharedGPUShaderPropertiesBlock()
 {
-    mSharedShaderPropertiesBlockBuffer.set<PropertiesBlockShaderDefault>();
-    mSharedShaderPropertiesBlockClass = ClassManager::getClassMetadata<PropertiesBlockShaderDefault>().mClassDefinition;
+    mSharedGPUShaderPropertiesBlockBuffer.set<PropertiesBlockGPUShaderDefault>();
+    mSharedGPUShaderPropertiesBlockClass = ClassManager::getClassMetadata<PropertiesBlockGPUShaderDefault>().mClassDefinition;
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderDefault::generateShaderPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderDefault::generateGPUShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -24,7 +24,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderDefault::generateSh
     return propertiesBlock;
 }
 
-void GPUShaderDefault::vertexShaderCalculateBoneMatrix(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculateBoneMatrix(GPUShaderBuilder& GPUShaderBuilder) const
 {
     Variable boneMatrix;
     GPUShaderBuilder.getMain().
@@ -33,7 +33,7 @@ void GPUShaderDefault::vertexShaderCalculateBoneMatrix(GPUShaderBuilder& GPUShad
     GPUShaderBuilder.setVariableInCache(boneMatrix);
 }
 
-void GPUShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
     auto& position = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mPosition);
 
@@ -63,7 +63,7 @@ void GPUShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPU
 
     GPUShaderBuilder.setVariableInCache(finalPositon);
     
-    vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder);
+    vertexGPUShaderCalculatePositionOutputCustom(GPUShaderBuilder);
 
     auto& globalDataBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData.mInstanceName);    
     Variable projectionViewMatrix(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
@@ -75,12 +75,12 @@ void GPUShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPU
     // GPUShaderBuilder.getMain().set(fragPosition, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {finalPositon}));
 }
 
-void GPUShaderDefault::vertexShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const
 {
 
 }
 
-void GPUShaderDefault::vertexShaderCalculateNormalOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculateNormalOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
     auto& normal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mNormal);
 
@@ -128,7 +128,7 @@ void GPUShaderDefault::vertexShaderCalculateNormalOutput(GPUShaderBuilder& GPUSh
     }
 }
 
-void GPUShaderDefault::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {   
     auto& textureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0));
     if(textureCoord.isValid())
@@ -139,7 +139,7 @@ void GPUShaderDefault::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBui
     }
 }
 
-void GPUShaderDefault::vertexShaderCalculateVertexColorOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculateVertexColorOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
     auto& color = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mColor);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mColor);
@@ -147,14 +147,14 @@ void GPUShaderDefault::vertexShaderCalculateVertexColorOutput(GPUShaderBuilder& 
     set(outColor, color);
 }
 
-void GPUShaderDefault::vertexShaderCalculateInstanceIdOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::vertexGPUShaderCalculateInstanceIdOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
     auto& instanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mInstanceID);
     auto& objectId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mObjectID);
-    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID);
     auto& outInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mInstanceID);
     auto& outObjectId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mObjectID);
-    auto& outShaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
+    auto& outGPUShaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mGPUShaderPropertiesInstanceID);
 
     if(instanceId.isValid())
     {
@@ -169,16 +169,16 @@ void GPUShaderDefault::vertexShaderCalculateInstanceIdOutput(GPUShaderBuilder& G
     if(shaderPropertiesInstanceId.isValid())
     {
         GPUShaderBuilder.getMain().
-        set(outShaderPropertiesInstanceId, shaderPropertiesInstanceId);
+        set(outGPUShaderPropertiesInstanceId, shaderPropertiesInstanceId);
     }
 }
 
-void GPUShaderDefault::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderDefault::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
     auto& inColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mColor);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
     
-    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
+    auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mGPUShaderPropertiesInstanceID);
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
 
@@ -208,14 +208,14 @@ void GPUShaderDefault::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) co
     }
 }
 
-void GPUShaderDefault::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void GPUShaderDefault::generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
     // FOR_MAP(it, mTextures)
     // {
     //     shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
     // }
     
-    // FOR_MAP(it, mShader->getShaderData().mTextureBindings)
+    // FOR_MAP(it, mShader->getGPUShaderData().mTextureBindings)
     // {
     //     CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
 
@@ -303,9 +303,9 @@ void GPUShaderDefault::generateShaderGenerationData(ShaderGenerationData& shader
     {
         shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mObjectID);
     }
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID))
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID))
     {
-        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
+        shaderGenerationData.mVertexVariables.mVertexOutputs.push_back(GPUShaderDefinitions::VertexOutput::mGPUShaderPropertiesInstanceID);
     }
     
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0)))
@@ -330,27 +330,27 @@ void GPUShaderDefault::generateShaderGenerationData(ShaderGenerationData& shader
     {
         shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mObjectID);
     }
-    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mShaderPropertiesInstanceID))
+    if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID))
     {
-        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
+        shaderGenerationData.mFragmentVariables.mFragmentInputs.push_back(GPUShaderDefinitions::FragmentInput::mGPUShaderPropertiesInstanceID);
     }
 
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUShaderDefinitions::FragmentOutput::mColor);
 }
 
-void GPUShaderDefault::registerVertexShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
-    ShaderGenerationData shaderGenerationData;
-    generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
+    GPUShaderGenerationData shaderGenerationData;
+    generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { GPUShaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexInputs) { GPUShaderBuilder.get().attribute({it->mData.mGPUVariableData, it->getAttributeLocation()}); }
 
-    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
-    // FOR_LIST(it, shaderGenerationData.mVertexVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
+    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
+    // FOR_LIST(it, shaderGenerationData.mVertexVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); }
 
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
     u32 vertexOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs) { GPUShaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++; }
 
@@ -360,69 +360,69 @@ void GPUShaderDefault::registerVertexShaderData(GPUShaderBuilder& GPUShaderBuild
     }
 }
 
-void GPUShaderDefault::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
-    ShaderGenerationData shaderGenerationData;
-    generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
+    GPUShaderGenerationData shaderGenerationData;
+    generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mStructDefinitions) { GPUShaderBuilder.get().structType(*it); }
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mConsts) { GPUShaderBuilder.get().attribute(*it); }
 
-    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
-    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
-    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
+    // FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
+    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mUniforms) { GPUShaderBuilder.get().attribute(Attribute(*it,binding, gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mSets.at((*it).mName))); binding++; }
+    FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers) { GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mBufferName))); }
 
     FOR_MAP(it, mTextures)
     {
-        if(gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.contains(*it))
+        if(gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.contains(*it))
         {
             shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
-            GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
+            GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
         }
     }
 
-    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { GPUShaderBuilder.get().attribute(Attribute(*it,gpuShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mName))); }
+    // FOR_LIST(it, shaderGenerationData.mFragmentVariables.mSamplers) { GPUShaderBuilder.get().attribute(Attribute(*it,gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at((*it).mName))); }
     u32 fragmentInputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentInputs) { GPUShaderBuilder.get().attribute(Attribute(*it, fragmentInputIndex)); fragmentInputIndex++; }
     u32 fragmentOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentOutputs) { GPUShaderBuilder.get().attribute(Attribute(*it, fragmentOutputIndex)); fragmentOutputIndex++; }
 }
 
-void GPUShaderDefault::createVertexShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void GPUShaderDefault::createVertexShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
-    registerVertexShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    registerVertexGPUShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuGPUShaderDescriptorSets);
 
     // GPUShaderBuilder.get().extension("GL_ARB_bindless_texture");
 
     if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mBonesIDs))
     {
-        vertexShaderCalculateBoneMatrix(GPUShaderBuilder);
+        vertexGPUShaderCalculateBoneMatrix(GPUShaderBuilder);
     }
 
-    vertexShaderCalculatePositionOutput(GPUShaderBuilder);
+    vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder);
 
     // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mNormal))
     // {
-    //     vertexShaderCalculateNormalOutput(GPUShaderBuilder);
+    //     vertexGPUShaderCalculateNormalOutput(GPUShaderBuilder);
     // }
 
-    vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
+    vertexGPUShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
 
     // if(gpuVertexBuffersContainer.containsVertexBuffer(GPUShaderDefinitions::VertexInput::mColor))
     // {
-    //     vertexShaderCalculateVertexColorOutput(GPUShaderBuilder);
+    //     vertexGPUShaderCalculateVertexColorOutput(GPUShaderBuilder);
     // }
 
-    vertexShaderCalculateInstanceIdOutput(GPUShaderBuilder);
+    vertexGPUShaderCalculateInstanceIdOutput(GPUShaderBuilder);
 }
 
-void GPUShaderDefault::createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void GPUShaderDefault::createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
-    registerFragmentShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    registerFragmentGPUShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuGPUShaderDescriptorSets);
     
     // GPUShaderBuilder.get().extension("GL_ARB_bindless_texture");
 
-    fragmentShaderCode(GPUShaderBuilder);
+    fragmentGPUShaderCode(GPUShaderBuilder);
 }
 
 void GPUShaderDefault::registerFunctionCalculateBoneTransform(GPUShaderBuilder& GPUShaderBuilder) const

@@ -12,11 +12,11 @@ void UIManager::init()
     mFontsManager.init();
     mFontsManager.loadFont(mDefaultFont, 12);
 
-    ShaderData shaderData;
+    GPUShaderData shaderData;
     shaderData.mMaxInstances = 500;
-    ShaderPropertiesBlockUI shaderPropertiesBlockUI;
+    GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Vector4(1,1,1,1);
-    mDefaultUIShader = GET_SYSTEM(GPUShaderManager).createShader<ShaderUI, ShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
+    mDefaultUIShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUI, GPUShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
 }
 
 void UIManager::terminate()
@@ -30,7 +30,7 @@ void UIManager::terminate()
 const FontGlyphData& UIManager::getGlyphData(char character) const
 {
     const auto& font = mFontsManager.getFont(mDefaultFont);
-    const auto& glyphsArray = font->getFontShader()->getShaderData().mFontData.mGlyphs;
+    const auto& glyphsArray = font->getFontShader()->getGPUShaderData().mFontData.mGlyphs;
     const FontGlyphData& glyph = glyphsArray.at(character);
     return glyph;
 }

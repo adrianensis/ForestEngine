@@ -362,8 +362,8 @@ void UIElement::setColorPressed()
 {
     if(!mRenderer) { return; }
 
-    mRenderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mColorPressed;
-    mRenderer->getShaderPropertiesInstance()->setDirty();
+    mRenderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mColorPressed;
+    mRenderer->getGPUShaderPropertiesInstance()->setDirty();
 }
 
 void UIElement::setColorRelease()
@@ -371,8 +371,8 @@ void UIElement::setColorRelease()
     if(!mRenderer) { return; }
 
     bool cursorInside = isMouseCursorInsideElement();
-    mRenderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
-    mRenderer->getShaderPropertiesInstance()->setDirty();
+    mRenderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
+    mRenderer->getGPUShaderPropertiesInstance()->setDirty();
 }
 
 void UIElement::setColorHover()
@@ -380,13 +380,13 @@ void UIElement::setColorHover()
     if(!mRenderer) { return; }
 
     bool cursorInside = isMouseCursorInsideElement();
-    mRenderer->getShaderPropertiesInstance()->mShaderPropertiesBlockBuffer.get<ShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
-    mRenderer->getShaderPropertiesInstance()->setDirty();
+    mRenderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
+    mRenderer->getGPUShaderPropertiesInstance()->setDirty();
 }
 
-ShaderStencilData UIElement::calculateStencilData() const
+GPUShaderStencilData UIElement::calculateStencilData() const
 {
-    ShaderStencilData shaderStencilData;
+    GPUShaderStencilData shaderStencilData;
     if(mClipChildren)
     {
         shaderStencilData.mUseStencil = true;
@@ -399,7 +399,7 @@ ShaderStencilData UIElement::calculateStencilData() const
             TEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
-                ShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
+                GPUShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
                 if(parentStencilData.mUseStencil)
                 {
                     shaderStencilData = parentStencilData;
@@ -420,7 +420,7 @@ ShaderStencilData UIElement::calculateStencilData() const
             TEntityHandler<UIElement> parentUIElement = mConfig.mParent;
             if(parentUIElement)
             {
-                ShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
+                GPUShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
                 if(parentStencilData.mUseStencil)
                 {
                     shaderStencilData = parentStencilData;

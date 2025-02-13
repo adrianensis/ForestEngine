@@ -1,17 +1,17 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const GPUShaderModuleData& gpuShaderModuleData)
+bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData)
 {
     mGPUContext = gpuContext;
 
-    SPIRVBinary spirvBinary = GPUShaderCompiler::compileShaderToSPIRV(gpuShaderModuleData.mStage, gpuShaderModuleData.mModuleContent.data(), gpuShaderModuleData.id.get().data());
+    SPIRVBinary spirvBinary = GPUShaderCompiler::compileGPUShaderToSPIRV(gpuGPUShaderModuleData.mStage, gpuGPUShaderModuleData.mModuleContent.data(), gpuGPUShaderModuleData.id.get().data());
 
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = spirvBinary.mSize * sizeof(u32);
     createInfo.pCode = spirvBinary.mWords;
 
-    if (vkCreateShaderModule(mGPUContext->vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mShaderModule) != VK_SUCCESS) {
+    if (vkCreateShaderModule(mGPUContext->vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mGPUShaderModule) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan shader module");
         return false;
     }
@@ -23,6 +23,6 @@ bool GPUShaderModule::init(Ptr<GPUContext> gpuContext, const GPUShaderModuleData
 
 void GPUShaderModule::terminate()
 {
-    vkDestroyShaderModule(mGPUContext->vulkanDevice->getDevice(), mShaderModule, ALLOCATOR);
+    vkDestroyShaderModule(mGPUContext->vulkanDevice->getDevice(), mGPUShaderModule, ALLOCATOR);
     LOG("Destroyed Vulkan shader module");
 }

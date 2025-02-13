@@ -5,7 +5,7 @@
 // Required for use of glslang_default_resource
 #include <glslang/Public/resource_limits_c.h>
 
-SPIRVBinary GPUShaderCompiler::compileShaderToSPIRV(GPUPipelineStage stage, const char* shaderSource, const char* fileName)
+SPIRVBinary GPUShaderCompiler::compileGPUShaderToSPIRV(GPUPipelineStage stage, const char* shaderSource, const char* fileName)
 {
     glslang_stage_t glsl_stage;
     switch (stage)
