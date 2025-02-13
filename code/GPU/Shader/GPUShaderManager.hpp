@@ -2,9 +2,9 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
-#include "Graphics/Shader/Shader.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 
-class ShaderManager: public System
+class GPUShaderManager: public System
 {
 public:
     virtual void init() override;
@@ -12,10 +12,10 @@ public:
     void update();
     WeakPtr<GPUTexture> loadTexture(const GPUTextureData& gpuTextureData);
 
-    template<class T, class P> T_EXTENDS(T, Shader)
-    WeakPtr<Shader> createShader(const ShaderData& shaderData, const P& propertiesBlockDefault)
+    template<class T, class P> T_EXTENDS(T, GPUShader)
+    WeakPtr<GPUShader> createShader(const ShaderData& shaderData, const P& propertiesBlockDefault)
     {
-        WeakPtr<Shader> shader = mShaders.emplace_back(OwnerPtr<Shader>::moveCast(OwnerPtr<T>::newObject()));
+        WeakPtr<GPUShader> shader = mShaders.emplace_back(OwnerPtr<GPUShader>::moveCast(OwnerPtr<T>::newObject()));
         GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
         propertiesBlockDefaultBuffer.get<P>() = propertiesBlockDefault;
@@ -25,21 +25,21 @@ public:
         return shader;
     }
 
-    WeakPtr<ShaderPropertiesInstance> createShaderPropertiesInstance(WeakPtr<Shader> shader);
+    WeakPtr<ShaderPropertiesInstance> createShaderPropertiesInstance(WeakPtr<GPUShader> shader);
     void freeShaderPropertiesInstance(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance);
 
     void setShaderPropertiesInstanceProperties(const WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance);
     void setShaderPropertiesInstanceDirty(u32 id);
 
-    const GPUUniformBuffer& getShaderPropertiesGPUUniformBuffer(WeakPtr<Shader> shader) const;
-    Slot requestShaderPropertiesInstanceSlot(WeakPtr<Shader> shader);
+    const GPUUniformBuffer& getShaderPropertiesGPUUniformBuffer(WeakPtr<GPUShader> shader) const;
+    Slot requestShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader);
 
     const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& getShaderTextureBindings(u32 id) const;
     
 private:
-    void postShaderCreated(WeakPtr<Shader> shader);
-    void loadShaderTextures(WeakPtr<Shader> shader);
-    void initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<Shader> shader);
+    void postShaderCreated(WeakPtr<GPUShader> shader);
+    void loadShaderTextures(WeakPtr<GPUShader> shader);
+    void initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<GPUShader> shader);
 
     class ShaderPropertyBlockRenderState
     {
@@ -55,10 +55,10 @@ private:
     std::vector<TextureHandle> mTextureHandles;
     std::unordered_map<HashedString, WeakPtr<GPUTexture>> mTexturesByPath;
 	std::unordered_map<u32, std::unordered_map<HashedString, WeakPtr<GPUTexture>>> mTextureBindingsByShader;
-    std::vector<OwnerPtr<Shader>> mShaders;
+    std::vector<OwnerPtr<GPUShader>> mShaders;
     std::vector<OwnerPtr<ShaderPropertiesInstance>> mShaderPropertiesInstances;
     std::unordered_set<u32> mDirtyShaderPropertiesInstances;
     inline static const u32 mInitialInstances = 20000;
     inline static const u32 mInitialTextures = 300;
 };
-REGISTER_CLASS(ShaderManager);
+REGISTER_CLASS(GPUShaderManager);

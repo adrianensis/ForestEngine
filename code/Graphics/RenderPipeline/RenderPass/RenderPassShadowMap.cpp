@@ -3,7 +3,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "Core/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/Shader/ShaderDepthBuffer.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderDepthBuffer.hpp"
 #include "Core/ECS/EntityHandler.hpp"
 
 void RenderPassShadowMap::preRender()

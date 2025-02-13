@@ -2,7 +2,7 @@
 
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "Scene/Module.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
 

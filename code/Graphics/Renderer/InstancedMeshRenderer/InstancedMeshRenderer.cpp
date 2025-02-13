@@ -1,5 +1,5 @@
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"

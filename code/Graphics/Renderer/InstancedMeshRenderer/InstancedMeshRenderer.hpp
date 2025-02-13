@@ -4,7 +4,7 @@
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshData.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
-#include "Graphics/Shader/Shader.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 
 class InstancedMeshRenderer
 {

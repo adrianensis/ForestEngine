@@ -4,8 +4,8 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
-#include "Graphics/Shader/Shader.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/ECS/EntityHandler.hpp"
@@ -51,7 +51,7 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
 	instancedMeshData.init(renderer);
 
     std::vector<GPUUniformBuffer> uniformBuffers;
-    uniformBuffers.push_back(GET_SYSTEM(ShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
+    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
 
     WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
     if(model)
@@ -206,7 +206,7 @@ Matrix4 RenderPass::calculateProjectionViewMatrix() const
     return projectionViewMatrix;
 }
 
-// void RenderPass::setupShader(WeakPtr<Shader> shader) const
+// void RenderPass::setupShader(WeakPtr<GPUShader> shader) const
 // {
 //     PROFILER_CPU()
 //     FOR_ARRAY(i, mRenderPassData.mDependencies)

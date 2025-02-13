@@ -15,7 +15,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Light/Light.hpp"
 
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 

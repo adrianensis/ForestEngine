@@ -2,7 +2,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "Graphics/Shader/ShaderPBR.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 
 void RenderPassGeometry::preRender()
 {

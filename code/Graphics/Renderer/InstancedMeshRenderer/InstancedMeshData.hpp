@@ -9,7 +9,7 @@ class InstancedMeshData
 public:
 	InstancedMeshData() = default;
 	
-	WeakPtr<Shader> mShader;
+	WeakPtr<GPUShader> mShader;
 	WeakPtr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
     ShaderStencilData mShaderStencilData;

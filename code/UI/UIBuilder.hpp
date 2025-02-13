@@ -8,7 +8,7 @@
 #include "UI/UIElements/UIText.hpp"
 #include "UI/UIElements/UIPanel.hpp"
 #include "UI/UIElementConfig.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "Scene/Module.hpp"
 
 

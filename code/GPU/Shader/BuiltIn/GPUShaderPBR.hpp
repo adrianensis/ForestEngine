@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Shader/ShaderDefault.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 
 // PBR METALLIC
 
@@ -21,7 +21,7 @@ public:
 };
 REGISTER_CLASS(PropertiesBlockShaderPBR)
 
-class ShaderPBR : public ShaderDefault
+class GPUShaderPBR : public GPUShaderDefault
 {
 public:
     virtual void generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const override;
@@ -85,4 +85,4 @@ protected:
             {GPUStorage::NONE, GPUShaderDefinitions::PrimitiveTypes::mVector3, "F0"}
         }};
 };
-REGISTER_CLASS(ShaderPBR)
+REGISTER_CLASS(GPUShaderPBR)

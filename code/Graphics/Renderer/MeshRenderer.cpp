@@ -2,7 +2,7 @@
 
 #include "GPU/GPUInstance.hpp"
 #include "GPU/Image/GPUTexture.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
@@ -13,7 +13,7 @@ ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClass
 void MeshRenderer::init(const RendererData& data) 
 {
     mRendererData = data;
-    mShaderPropertiesInstance = GET_SYSTEM(ShaderManager).createShaderPropertiesInstance(mRendererData.mShader);
+    mShaderPropertiesInstance = GET_SYSTEM(GPUShaderManager).createShaderPropertiesInstance(mRendererData.mShader);
     mShaderPropertiesInstance->setDirty();
 }
 
@@ -24,7 +24,7 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(ShaderManager).freeShaderPropertiesInstance(mShaderPropertiesInstance);
+    GET_SYSTEM(GPUShaderManager).freeShaderPropertiesInstance(mShaderPropertiesInstance);
     mRenderSlot.reset();
     mInstanceSlot.reset();
 }

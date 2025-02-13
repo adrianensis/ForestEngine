@@ -3,8 +3,8 @@
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
-#include "Graphics/Shader/ShaderDefault.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 
 void ShapeBatchRenderer::terminate()
 {
@@ -40,7 +40,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     // mGPUVertexBuffersContainer.disable();
 
     ShaderData shaderData;
-    // mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData);
+    // mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData);
     // mShader->compileShader("Shape", HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
 
     // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));

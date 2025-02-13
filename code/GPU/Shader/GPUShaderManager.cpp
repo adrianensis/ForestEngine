@@ -1,8 +1,8 @@
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/GPUInstance.hpp"
 
-void ShaderManager::init()
+void GPUShaderManager::init()
 {
 	LOG_TRACE()
     mTextureHandles.reserve(mInitialTextures);
@@ -12,7 +12,7 @@ void ShaderManager::init()
     mTextures.emplace_back();
 }
 
-void ShaderManager::terminate()
+void GPUShaderManager::terminate()
 {
     FOR_MAP(it, mShaderPropertyBlockRenderStates)
     {
@@ -37,7 +37,7 @@ void ShaderManager::terminate()
     }
 }
 
-void ShaderManager::update()
+void GPUShaderManager::update()
 {
     PROFILER_CPU();
 
@@ -55,7 +55,7 @@ void ShaderManager::update()
     }
 }
 
-WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
+WeakPtr<GPUTexture> GPUShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
 {
 	if (!mTexturesByPath.contains(gpuTextureData.mPath))
 	{
@@ -69,13 +69,13 @@ WeakPtr<GPUTexture> ShaderManager::loadTexture(const GPUTextureData& gpuTextureD
 	return mTexturesByPath.at(gpuTextureData.mPath);
 }
 
-void ShaderManager::postShaderCreated(WeakPtr<Shader> shader)
+void GPUShaderManager::postShaderCreated(WeakPtr<GPUShader> shader)
 {
     loadShaderTextures(shader);
     initShaderPropertiesInstancePropertiesUniformBuffer(shader);
 }
 
-void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
+void GPUShaderManager::loadShaderTextures(WeakPtr<GPUShader> shader)
 {
     u32 id = shader->getID();
     if(!mTextureBindingsByShader.contains(id))
@@ -97,17 +97,17 @@ void ShaderManager::loadShaderTextures(WeakPtr<Shader> shader)
                 gpuTextureData.mFontData = shader->getShaderData().mFontData;
             }
 
-            mTextureBindingsByShader.at(id).insert_or_assign(it->first, GET_SYSTEM(ShaderManager).loadTexture(gpuTextureData));
+            mTextureBindingsByShader.at(id).insert_or_assign(it->first, GET_SYSTEM(GPUShaderManager).loadTexture(gpuTextureData));
         }
     }
 }
 
-const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& ShaderManager::getShaderTextureBindings(u32 id) const
+const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& GPUShaderManager::getShaderTextureBindings(u32 id) const
 {
     return mTextureBindingsByShader.at(id);
 }
 
-WeakPtr<ShaderPropertiesInstance> ShaderManager::createShaderPropertiesInstance(WeakPtr<Shader> shader)
+WeakPtr<ShaderPropertiesInstance> GPUShaderManager::createShaderPropertiesInstance(WeakPtr<GPUShader> shader)
 {
     LOG_TRACE()
     PROFILER_CPU()
@@ -119,7 +119,7 @@ WeakPtr<ShaderPropertiesInstance> ShaderManager::createShaderPropertiesInstance(
 
     return instance;
 }
-void ShaderManager::freeShaderPropertiesInstance(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance)
+void GPUShaderManager::freeShaderPropertiesInstance(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance)
 {
     LOG_TRACE()
     PROFILER_CPU()
@@ -135,7 +135,7 @@ void ShaderManager::freeShaderPropertiesInstance(WeakPtr<ShaderPropertiesInstanc
     }  
 }
 
-void ShaderManager::initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<Shader> shader)
+void GPUShaderManager::initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<GPUShader> shader)
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
@@ -167,11 +167,11 @@ void ShaderManager::initShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<
     }
 }
 
-void ShaderManager::setShaderPropertiesInstanceProperties(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance)
+void GPUShaderManager::setShaderPropertiesInstanceProperties(WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance)
 {
     PROFILER_CPU()
 
-    WeakPtr<Shader> shader = shaderPropertiesInstance->mShader;
+    WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
     ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
@@ -191,13 +191,13 @@ void ShaderManager::setShaderPropertiesInstanceProperties(WeakPtr<ShaderProperti
     }
 }
 
-void ShaderManager::setShaderPropertiesInstanceDirty(u32 id)
+void GPUShaderManager::setShaderPropertiesInstanceDirty(u32 id)
 {
     PROFILER_CPU()
 
     WeakPtr<ShaderPropertiesInstance> shaderPropertiesInstance = mShaderPropertiesInstances.at(id);
     CHECK_MSG(shaderPropertiesInstance.isValid(), "Invalid shader Instance!");
-    WeakPtr<Shader> shader = shaderPropertiesInstance->mShader;
+    WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
     ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
@@ -212,15 +212,15 @@ void ShaderManager::setShaderPropertiesInstanceDirty(u32 id)
     }
 }
 
-const GPUUniformBuffer& ShaderManager::getShaderPropertiesGPUUniformBuffer(WeakPtr<Shader> shader) const
+const GPUUniformBuffer& GPUShaderManager::getShaderPropertiesGPUUniformBuffer(WeakPtr<GPUShader> shader) const
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     ClassId propertiesBlockClassId = shader->getSharedShaderPropertiesBlockClass().getId();
-    CHECK_MSG(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId), "Shader Property Block not found!");
+    CHECK_MSG(mShaderPropertyBlockRenderStates.contains(propertiesBlockClassId), "GPUShader Property Block not found!");
     return mShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(ShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
 
-Slot ShaderManager::requestShaderPropertiesInstanceSlot(WeakPtr<Shader> shader)
+Slot GPUShaderManager::requestShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader)
 {
     LOG_TRACE()
     PROFILER_CPU()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Shader/Shader.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 
 class UIFont;
 
@@ -29,7 +29,7 @@ public:
     void init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontSize);
 private:
     FontData mFontData;
-    WeakPtr<Shader> mFontShader;
+    WeakPtr<GPUShader> mFontShader;
 public:
     GET(FontShader)
     CRGET(FontData)

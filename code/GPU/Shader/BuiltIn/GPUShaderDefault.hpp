@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Shader/Shader.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 class TextureBindingNames
@@ -16,7 +16,7 @@ public:
 };
 REGISTER_CLASS(PropertiesBlockShaderDefault)
 
-class ShaderDefault : public Shader
+class GPUShaderDefault : public GPUShader
 {
 public:
     virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
@@ -44,4 +44,4 @@ protected:
 
     void registerFunctionCalculateBoneTransform(GPUShaderBuilder& GPUShaderBuilder) const;
 };
-REGISTER_CLASS(ShaderDefault)
+REGISTER_CLASS(GPUShaderDefault)

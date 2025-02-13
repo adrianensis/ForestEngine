@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Shader/ShaderDefault.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 
 class ShaderPropertiesBlockUI
 {
@@ -12,7 +12,7 @@ public:
 };
 REGISTER_CLASS(ShaderPropertiesBlockUI)
 
-class ShaderUI : public ShaderDefault
+class ShaderUI : public GPUShaderDefault
 {
 protected:
     virtual void setSharedShaderPropertiesBlock() override;

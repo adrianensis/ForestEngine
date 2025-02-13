@@ -6,7 +6,7 @@
 #include "cgltf.h"
 
 class GPUSkeletalAnimation;
-class Shader;
+class GPUShader;
 struct cgltf_data;
 struct cgltf_accessor;
 struct cgltf_primitive;
@@ -94,8 +94,8 @@ private:
     std::vector<OwnerPtr<GPUSkeletalAnimation>> mSkeletalAnimations;
     std::vector<MeshInstanceData> mMeshInstances;
     std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
-    std::unordered_map<const cgltf_material*, WeakPtr<Shader>> mGLTFShaders;
-    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<Shader>> mMeshShaders;
+    std::unordered_map<const cgltf_material*, WeakPtr<GPUShader>> mGLTFShaders;
+    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<GPUShader>> mMeshShaders;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;

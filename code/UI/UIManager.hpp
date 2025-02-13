@@ -8,7 +8,7 @@
 #include "UI/UIFont.hpp"
 #include "UI/UIShader.hpp"
 
-class Shader;
+class GPUShader;
 class Scene;
 
 class UIManager: public System
@@ -18,7 +18,7 @@ public:
     virtual void terminate() override;
 
     const FontGlyphData& getGlyphData(char character) const;
-    WeakPtr<Shader> getFontShader() const;
+    WeakPtr<GPUShader> getFontShader() const;
 
 	UIGroup& getOrCreateGroup(HashedString groupName)
 	{
@@ -42,7 +42,7 @@ private:
 	TEntityHandler<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     HashedString mDefaultFont;
-    WeakPtr<Shader> mDefaultUIShader;
+    WeakPtr<GPUShader> mDefaultUIShader;
 
 public:
     GET(DefaultUIShader)

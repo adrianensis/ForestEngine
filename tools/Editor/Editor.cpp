@@ -256,7 +256,7 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 
     // ShaderData shaderData;
     // shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
-	// rendererData.mShader = (GET_SYSTEM(ShaderManager).createShader<ShaderDefault>(shaderData));
+	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
 	// TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
     // renderer->init(rendererData);

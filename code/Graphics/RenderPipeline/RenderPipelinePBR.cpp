@@ -7,7 +7,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
-#include "Graphics/Shader/ShaderPBR.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 #include "GPU/GPUInstance.hpp"
 
 void RenderPipelinePBR::compile()
@@ -28,8 +28,8 @@ void RenderPipelinePBR::compile()
     RenderPassData renderPassGeometryData;
     renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
     renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::STORE;
-    // renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault>();
-    // renderPassGeometryData.mShader = GET_SYSTEM(ShaderManager).createShader<ShaderPBR>();
+    // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>();
+    // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);

@@ -1,8 +1,8 @@
 #include "Graphics/Model/Model.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
-#include "Graphics/Shader/ShaderPBR.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Core/Config/Paths.hpp"
@@ -77,7 +77,7 @@ void Model::loadGLTFShaders()
             ShaderData shaderData;
             // shaderData.mAllowInstances = false;
             // shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
-            WeakPtr<Shader> newShader;
+            WeakPtr<GPUShader> newShader;
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
@@ -114,7 +114,7 @@ void Model::loadGLTFShaders()
             //     shaderData.mShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{HashedString(texturePath.string())});
             // }
 
-            newShader = GET_SYSTEM(ShaderManager).createShader<ShaderDefault, PropertiesBlockShaderDefault>(shaderData, propertiesBlockShaderDefault);
+            newShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockShaderDefault>(shaderData, propertiesBlockShaderDefault);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {
@@ -223,7 +223,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
     GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
 
-    WeakPtr<Shader> meshShader;
+    WeakPtr<GPUShader> meshShader;
     if(primitive.material)
     {
         meshShader = mGLTFShaders[primitive.material];

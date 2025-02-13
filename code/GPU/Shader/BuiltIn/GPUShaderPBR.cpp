@@ -1,11 +1,11 @@
-#include "Graphics/Shader/ShaderPBR.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 #include "Graphics/Light/Light.hpp"
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
 // PBR METALLIC
 
-std::vector<GPUStructDefinition::GPUStructVariable> ShaderPBR::generateShaderPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderPBR::generateShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
     {
@@ -17,17 +17,17 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderPBR::generateShaderPro
     return propertiesBlock;
 }
 
-void ShaderPBR::registerTextures()
+void GPUShaderPBR::registerTextures()
 {
-    ShaderDefault::registerTextures();
+    GPUShaderDefault::registerTextures();
     mTextures.insert(TextureBindingNamesPBR::smMetallicRoughness);
     mTextures.insert(TextureBindingNamesPBR::smNormal);
     mTextures.insert(TextureBindingNamesPBR::smShadowMap);
 }
 
-void ShaderPBR::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    ShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder);
+    GPUShaderDefault::vertexShaderCalculatePositionOutput(GPUShaderBuilder);
 
     auto& shadowMappingBuffer = GPUShaderBuilder.get().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
     Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
@@ -37,9 +37,9 @@ void ShaderPBR::vertexShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderB
     GPUShaderBuilder.getMain().set(fragPositionLight, lightProjectionViewMatrix.mul(call(GPUShaderDefinitions::PrimitiveTypes::mVector4, {fragPosition, {"1"}})));
 }
 
-void ShaderPBR::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // ShaderDefault::fragmentShaderCode(GPUShaderBuilder);
+    // GPUShaderDefault::fragmentShaderCode(GPUShaderBuilder);
 
     auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mShaderPropertiesInstanceID);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
@@ -72,9 +72,9 @@ void ShaderPBR::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
     set(outColor, PBRMetallicRoughness);
 }
 
-void ShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void GPUShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
-    ShaderDefault::generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
+    GPUShaderDefault::generateShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
     
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mLightsBufferData);
     shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
@@ -84,9 +84,9 @@ void ShaderPBR::generateShaderGenerationData(ShaderGenerationData& shaderGenerat
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
 }
 
-void ShaderPBR::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
+void GPUShaderPBR::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuShaderDescriptorSets) const
 {
-    ShaderDefault::registerFragmentShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
+    GPUShaderDefault::registerFragmentShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuShaderDescriptorSets);
 
     registerFunctionsGetNormalFromMap(GPUShaderBuilder);
     
@@ -99,7 +99,7 @@ void ShaderPBR::registerFragmentShaderData(GPUShaderBuilder& GPUShaderBuilder, c
     registerFunctionCalculatePBR(GPUShaderBuilder);
 }
 
-void ShaderPBR::registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcGetNormalFromMap(mGetNormalFromMap);
@@ -159,7 +159,7 @@ void ShaderPBR::registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShaderBui
     }
 }
 
-void ShaderPBR::registerFunctionsShadowCalculation(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::registerFunctionsShadowCalculation(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcCalculateShadow(mCalculateShadow);
@@ -212,7 +212,7 @@ void ShaderPBR::registerFunctionsShadowCalculation(GPUShaderBuilder& GPUShaderBu
     }
 }
 
-void ShaderPBR::registerFunctionsPBRHelpers(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::registerFunctionsPBRHelpers(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcDistributionGGX(mDistributionGGX);
@@ -303,7 +303,7 @@ void ShaderPBR::registerFunctionsPBRHelpers(GPUShaderBuilder& GPUShaderBuilder) 
     }
 }
 
-void ShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuilder) const
+void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuilder) const
 {
     {
         FunctionDefinition funcCalculatePBRSingleLight(mCalculatePBRSingleLight);

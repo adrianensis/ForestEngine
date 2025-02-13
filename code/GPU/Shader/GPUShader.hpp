@@ -140,13 +140,13 @@ public:
     }
 };
 
-class Shader;
+class GPUShader;
 class ShaderPropertiesInstance
 {
 public:
     Slot mSlot;
     u32 mID = 0;
-    WeakPtr<Shader> mShader;
+    WeakPtr<GPUShader> mShader;
     GenericObjectBuffer mShaderPropertiesBlockBuffer;
     void setDirty();
 };
@@ -168,11 +168,11 @@ public:
     }
 };
 
-class Shader: public EnableWeakPtrToThis
+class GPUShader: public EnableWeakPtrToThis
 {
 public:
-    Shader() = default;
-    virtual ~Shader() = default;
+    GPUShader() = default;
+    virtual ~GPUShader() = default;
     virtual void init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id);
     void terminate();
 
@@ -224,4 +224,4 @@ public:
     CRGET(PropertiesBlockUniformBufferData)
     GET(ID)
 };
-REGISTER_CLASS(Shader)
+REGISTER_CLASS(GPUShader)

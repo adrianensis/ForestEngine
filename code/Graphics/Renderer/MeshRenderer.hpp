@@ -5,7 +5,7 @@
 
 #include "Scene/Transform.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Shader/Shader.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
 
 class InstancedMeshRenderer;
@@ -17,7 +17,7 @@ public:
     ShaderStencilData mShaderStencilData;
     WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
-    WeakPtr<Shader> mShader;
+    WeakPtr<GPUShader> mShader;
     std::unordered_set<ClassId> mRenderPassIDs;
 };
 

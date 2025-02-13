@@ -1,5 +1,5 @@
-#include "Graphics/Shader/Shader.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShader.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
 #include "Graphics/Camera/Camera.hpp"
@@ -14,10 +14,10 @@
 void ShaderPropertiesInstance::setDirty()
 {
     PROFILER_CPU();
-    GET_SYSTEM(ShaderManager).setShaderPropertiesInstanceDirty(mID);
+    GET_SYSTEM(GPUShaderManager).setShaderPropertiesInstanceDirty(mID);
 }
 
-void Shader::init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id)
+void GPUShader::init(const ShaderData& shaderData, const GenericObjectBuffer& propertiesBlockShaderDefault, u32 id)
 {
     mShaderData = shaderData;
 	mID = id;
@@ -55,12 +55,12 @@ void Shader::init(const ShaderData& shaderData, const GenericObjectBuffer& prope
     mSharedShaderPropertiesBlockBuffer = propertiesBlockShaderDefault;
 }
 
-void Shader::terminate()
+void GPUShader::terminate()
 {
 
 }
 
-std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateShaderPropertiesBlock()
+std::vector<GPUStructDefinition::GPUStructVariable> GPUShader::generateShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock =
     {
@@ -70,28 +70,28 @@ std::vector<GPUStructDefinition::GPUStructVariable> Shader::generateShaderProper
     return propertiesBlock;
 }
 
-bool Shader::hasFramebufferBinding(HashedString bindingName) const
+bool GPUShader::hasFramebufferBinding(HashedString bindingName) const
 {
     return mFramebufferBindings.contains(bindingName);
 }
 
-void Shader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
+void GPUShader::addFramebufferBinding(const FramebufferBinding& framebufferBinding)
 {
     mFramebufferBindings.insert_or_assign(framebufferBinding.mSamplerName, framebufferBinding);
 }
 
-void Shader::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
+void GPUShader::generateShaderGenerationData(ShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const
 {
 }
 
-OwnerPtr<GPUShaderPipeline> Shader::compileShader(const ShaderCompilationData& shaderCompilationData)
+OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const ShaderCompilationData& shaderCompilationData)
 {
     PROFILER_CPU_NAMED(compileShader)
 
     mShaderCompilationData = shaderCompilationData;
 
     std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
-    const std::unordered_map<HashedString, WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(ShaderManager).getShaderTextureBindings(getID());
+    const std::unordered_map<HashedString, WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(GPUShaderManager).getShaderTextureBindings(getID());
     FOR_MAP(it, shaderTextures)
     {
         gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});

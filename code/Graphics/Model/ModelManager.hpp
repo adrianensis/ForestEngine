@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 
 class Model;
@@ -20,7 +20,7 @@ public:
 private:
     std::unordered_map<std::string, OwnerPtr<Model>> mModels;
     std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<Model>> mMeshToModels;
-    WeakPtr<Shader> mDefaultModelShader;
+    WeakPtr<GPUShader> mDefaultModelShader;
 public:
     GET(DefaultModelShader)
     CRGET(Models)

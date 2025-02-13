@@ -4,7 +4,7 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Scene/ScenesManager.hpp"
 
-class Shader;
+class GPUShader;
 class Scene;
 class GameObject;
 class UIStyle;
@@ -35,7 +35,7 @@ public:
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
-	WeakPtr<Shader> mShader;
+	WeakPtr<GPUShader> mShader;
 	HashedString mGroup;
 	TEntityHandler<GameObject> mParent;
 	f32 mSeparatorSize = 0.01f;

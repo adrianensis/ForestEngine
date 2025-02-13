@@ -16,7 +16,7 @@ void UIManager::init()
     shaderData.mMaxInstances = 500;
     ShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Vector4(1,1,1,1);
-    mDefaultUIShader = GET_SYSTEM(ShaderManager).createShader<ShaderUI, ShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
+    mDefaultUIShader = GET_SYSTEM(GPUShaderManager).createShader<ShaderUI, ShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
 }
 
 void UIManager::terminate()
@@ -35,7 +35,7 @@ const FontGlyphData& UIManager::getGlyphData(char character) const
     return glyph;
 }
 
-WeakPtr<Shader> UIManager::getFontShader() const
+WeakPtr<GPUShader> UIManager::getFontShader() const
 {
     const auto& f = mFontsManager.getFont(mDefaultFont);
     return f->getFontShader();

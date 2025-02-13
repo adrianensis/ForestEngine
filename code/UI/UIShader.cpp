@@ -24,7 +24,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> ShaderUI::generateShaderProp
 
 void ShaderUI::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    // ShaderDefault::fragmentShaderCode(GPUShaderBuilder);
+    // GPUShaderDefault::fragmentShaderCode(GPUShaderBuilder);
 
     auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mShaderPropertiesInstanceID);
     auto& outColor = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentOutput::mColor);
@@ -60,7 +60,7 @@ void ShaderUI::fragmentShaderCode(GPUShaderBuilder& GPUShaderBuilder) const
 
 void ShaderUI::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const
 {
-    ShaderDefault::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
+    GPUShaderDefault::vertexShaderCalculateTextureCoordinateOutput(GPUShaderBuilder);
     auto& textureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexInput::mTextureCoords.at(0));
     if(textureCoord.isValid())
     {

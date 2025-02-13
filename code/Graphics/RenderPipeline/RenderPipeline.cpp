@@ -1,7 +1,7 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Scene/Module.hpp"
-#include "Graphics/Shader/ShaderManager.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
 void RenderPipeline::init()
@@ -52,7 +52,7 @@ void RenderPipeline::update()
     PROFILER_CPU_NAMED(updateModelMatricesBuffer);
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
 
-    GET_SYSTEM(ShaderManager).update();
+    GET_SYSTEM(GPUShaderManager).update();
 	GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
