@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Scene/ScenesManager.hpp"
+#include "GPU/Shader/GPUShader.hpp"
 
-class GPUShader;
 class Scene;
 class GameObject;
 class UIStyle;

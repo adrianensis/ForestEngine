@@ -2,7 +2,6 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
-#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/ECS/ComponentsManager.hpp"
