@@ -42,8 +42,8 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    GPURenderPass(Ptr<GPUContext> gpuContext);
-    bool init(const GPURenderPassData& gpuRenderPassData);
+    GPURenderPass();
+    bool init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gpuRenderPassData);
     void terminate();
     void begin();
     void end();

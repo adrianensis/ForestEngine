@@ -15,8 +15,8 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
     mRenderPipeline = renderPipeline;
     mRenderPassData = renderPassData;
 
-    mGPURenderPass = new GPURenderPass(GET_SYSTEM(GPUInstance).mGPUContext);
-    if (!mGPURenderPass->init(renderPassData.mGPURenderPassData))
+    mGPURenderPass = new GPURenderPass();
+    if (!mGPURenderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, renderPassData.mGPURenderPassData))
     {
         CHECK_MSG(false, "Could not initialize render pass");
     }

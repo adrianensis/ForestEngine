@@ -2,12 +2,12 @@
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-GPURenderPass::GPURenderPass(Ptr<GPUContext> gpuContext)
-        : mGPUContext(gpuContext){}
+GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(const GPURenderPassData& gpuRenderPassData)
+bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gpuRenderPassData)
 {
     PROFILER_CPU()
+    mGPUContext = gpuContext;
     mGPURenderPassData = gpuRenderPassData;
 
     VkAttachmentDescription colorAttachment{};
