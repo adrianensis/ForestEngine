@@ -1,8 +1,8 @@
 #include "Scene/GameObject.hpp"
-#include "Core/ECS/Component.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "Scene/Transform.hpp"
 #include "Core/Events/EventsManager.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 
 void GameObject::init()
 {

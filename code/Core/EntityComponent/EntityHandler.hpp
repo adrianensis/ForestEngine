@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ECS/Entity.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 
 class EntityManager;
 

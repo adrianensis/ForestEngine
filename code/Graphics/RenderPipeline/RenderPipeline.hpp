@@ -5,7 +5,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
-#include "Core/ECS/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentHandler.hpp"
 
 class RenderPipelineData
 {

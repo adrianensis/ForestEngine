@@ -1,4 +1,4 @@
-#include "Core/ECS/ComponentsManager.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 
 void ComponentsManager::init() 
 {

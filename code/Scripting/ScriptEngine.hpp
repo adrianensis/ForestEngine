@@ -3,8 +3,8 @@
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
 #include "Scripting/Script.hpp"
-#include "Core/ECS/ComponentHandler.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
+#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 
 class ScriptEngine: public System, public IComponentsListener
 {

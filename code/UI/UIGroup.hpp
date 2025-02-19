@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/ECS/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
 
 class UIElement;
 

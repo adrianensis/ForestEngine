@@ -1,5 +1,5 @@
-#include "Core/ECS/EntityHandler.hpp"
-#include "Core/ECS/EntityManager.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityManager.hpp"
 
 Entity& EntityHandler::getInternal() const
 {

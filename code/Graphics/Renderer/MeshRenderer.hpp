@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ECS/Component.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "SpacePartition/OcTree.hpp"
 
 #include "Scene/Transform.hpp"

@@ -1,5 +1,5 @@
-#include "Core/ECS/ComponentHandler.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
+#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 
 Component& ComponentHandler::getInternal() const
 {

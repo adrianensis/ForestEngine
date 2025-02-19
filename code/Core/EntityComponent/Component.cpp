@@ -1,6 +1,6 @@
-#include "Core/ECS/Component.hpp"
-#include "Core/ECS/EntityHandler.hpp"
-#include "Core/ECS/EntityManager.hpp"
+#include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityManager.hpp"
 
 Component::Component()
 {

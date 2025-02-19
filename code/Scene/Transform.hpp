@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/ECS/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentHandler.hpp"
 
 class Transform: public Component
 {

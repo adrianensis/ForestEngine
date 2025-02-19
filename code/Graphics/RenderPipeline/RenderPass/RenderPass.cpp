@@ -8,7 +8,7 @@
 #include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "Core/ECS/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {

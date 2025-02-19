@@ -1,5 +1,5 @@
 #include "Scene/Transform.hpp"
-#include "Core/ECS/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
 
 void Transform::init() 
 {

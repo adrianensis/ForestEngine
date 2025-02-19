@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Config/Config.hpp"
-#include "Core/ECS/EntityManager.hpp"
+#include "Core/EntityComponent/EntityManager.hpp"
 #include "Scene/GameObject.hpp"
 
 class Scene: public ISerializable, public EnableWeakPtrToThis

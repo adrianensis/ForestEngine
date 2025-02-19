@@ -1,8 +1,8 @@
 #include "Engine/Engine.hpp"
 #include "Scene/Module.hpp"
 #include "Scripting/Module.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
-#include "Core/ECS/EntityManager.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityManager.hpp"
 
 #include "Editor.hpp"
 

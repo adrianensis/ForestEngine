@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/ECS/Entity.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 
 class Transform;
 class Scene;

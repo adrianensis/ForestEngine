@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/ECS/ComponentHandler.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
+#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 #include "Core/Events/Event.hpp"
 
 class Entity: public ISerializable, public IEventObject

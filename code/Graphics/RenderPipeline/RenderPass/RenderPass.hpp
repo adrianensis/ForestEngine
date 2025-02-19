@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"

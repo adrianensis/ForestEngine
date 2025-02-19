@@ -1,7 +1,7 @@
-#include "Core/ECS/Entity.hpp"
-#include "Core/ECS/Component.hpp"
-#include "Core/ECS/ComponentsManager.hpp"
-#include "Core/ECS/EntityManager.hpp"
+#include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityManager.hpp"
 #include "Core/System/SystemManager.hpp"
 
 Entity::Entity()

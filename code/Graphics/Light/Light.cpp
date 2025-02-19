@@ -1,7 +1,7 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Core/Window/WindowManager.hpp"
-#include "Core/ECS/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
 
 ClassId Light::getComponentTypeId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.getId(); }
 
