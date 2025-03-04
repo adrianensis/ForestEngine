@@ -26,7 +26,7 @@ public:
     f32 mOuterCutOff = 0;
 };
 
-class LightBuiltIn
+class GPULightBuiltIn
 {
 public:
 

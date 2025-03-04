@@ -1,5 +1,5 @@
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
-#include "Graphics/Light/Light.hpp"
+#include "GPU/GPULight.hpp"
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
@@ -29,7 +29,7 @@ void GPUShaderPBR::vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUS
 {
     GPUShaderDefault::vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder);
 
-    auto& shadowMappingBuffer = GPUShaderBuilder.get().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData.mInstanceName);    
+    auto& shadowMappingBuffer = GPUShaderBuilder.get().getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData.mInstanceName);    
     Variable lightProjectionViewMatrix(shadowMappingBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
 
     auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
@@ -76,12 +76,12 @@ void GPUShaderPBR::generateGPUShaderGenerationData(GPUShaderGenerationData& shad
 {
     GPUShaderDefault::generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
     
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mLightsBufferData);
-    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mDirectionalLightStructDefinition);
-    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mPointLightStructDefinition);
-    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(LightBuiltIn::mSpotLightStructDefinition);
+    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPULightBuiltIn::mLightsBufferData);
+    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mDirectionalLightStructDefinition);
+    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mPointLightStructDefinition);
+    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mSpotLightStructDefinition);
 
-    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(LightBuiltIn::mShadowMappingBufferData);
+    shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPULightBuiltIn::mShadowMappingBufferData);
 }
 
 void GPUShaderPBR::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
@@ -412,20 +412,20 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable cameraPosition(globalDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
         auto& inNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
         auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
-        auto& ligthsDataBuffer = GPUShaderBuilder.get().getUniformBuffer(LightBuiltIn::mLightsBufferData.mInstanceName);    
+        auto& ligthsDataBuffer = GPUShaderBuilder.get().getUniformBuffer(GPULightBuiltIn::mLightsBufferData.mInstanceName);    
         Variable pointLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-        Variable pointLightPos = {LightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[0]};
-        Variable pointLightDiffuse = {LightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[1]};
+        Variable pointLightPos = {GPULightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[0]};
+        Variable pointLightDiffuse = {GPULightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[1]};
 
         Variable spotLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
-        Variable spotLightPos = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[0]};
-        Variable spotLightDiffuse = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[1]};
-        Variable spotLightInnerCutOff = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[2]};
-        Variable spotLightOuterCutOff = {LightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[3]};
+        Variable spotLightPos = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[0]};
+        Variable spotLightDiffuse = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[1]};
+        Variable spotLightInnerCutOff = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[2]};
+        Variable spotLightOuterCutOff = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[3]};
 
         Variable directionalLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(2));
-        Variable directionalLightDirection = {LightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[0]};
-        Variable directionalLightDiffuse = {LightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[1]};
+        Variable directionalLightDirection = {GPULightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[0]};
+        Variable directionalLightDiffuse = {GPULightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[1]};
 
         Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
         Variable shaderBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};

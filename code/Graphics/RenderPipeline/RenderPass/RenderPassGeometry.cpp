@@ -43,8 +43,8 @@ void RenderPassGeometry::updateGlobalData()
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
     }
-    LightBuiltIn::ShadowMappingData shadowMappingData;
+    GPULightBuiltIn::ShadowMappingData shadowMappingData;
     shadowMappingData.mLightProjectionViewMatrix = lightProjectionViewMatrix;
 
-    // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(LightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
+    // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData).setData(shadowMappingData);
 }
