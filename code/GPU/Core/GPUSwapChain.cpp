@@ -2,11 +2,12 @@
 #include <limits>
 #include "GPU/Core/GPULog.h"
 
-GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface, Vector2 windowSizeInPixels)
-        : vulkanDevice(vulkanDevice), vkSurface(vkSurface), windowSizeInPixels(windowSizeInPixels) {}
+GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface)
+        : vulkanDevice(vulkanDevice), vkSurface(vkSurface)  {}
 
-bool GPUSwapChain::init()
+bool GPUSwapChain::init(Vector2 windowSizeInPixels)
 {
+    mWindowSizeInPixels = windowSizeInPixels;
     const GPUSwapChainInfo& swapChainInfo = vulkanDevice->getPhysicalDevice()->getSwapChainInfo();
 
     mSurfaceFormat = chooseSurfaceFormat(swapChainInfo.SurfaceFormats);
@@ -96,8 +97,8 @@ VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCap
     GPU_LOG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
     VkExtent2D extent =
     {
-            (u32) windowSizeInPixels.x,
-            (u32) windowSizeInPixels.y
+            (u32) mWindowSizeInPixels.x,
+            (u32) mWindowSizeInPixels.y
     };
     extent.width = std::clamp(extent.width, surfaceCapabilities.minImageExtent.width, surfaceCapabilities.maxImageExtent.width);
     extent.height = std::clamp(extent.height, surfaceCapabilities.minImageExtent.height, surfaceCapabilities.maxImageExtent.height);

@@ -45,8 +45,8 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan device");
     }
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface, GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize());
-    if (!vulkanSwapChain->init())
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface);
+    if (!vulkanSwapChain->init(GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize()))
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
@@ -411,10 +411,7 @@ void GPUContext::recreateRenderingObjects()
     vulkanDevice->getPhysicalDevice()->updateSwapChainInfo();
 
     vulkanSwapChain->terminate();
-    delete vulkanSwapChain;
-
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface, GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize());
-    if (!vulkanSwapChain->init())
+    if (!vulkanSwapChain->init(GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize()))
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
