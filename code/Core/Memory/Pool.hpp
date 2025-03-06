@@ -130,5 +130,6 @@ public:
 
     std::unordered_map<ClassId, OwnerPtr<PoolArrayBase<BaseClass>>> mPools;
 
+    // TODO: remove magic number, refactor to constructor parameter
     u32 mMaxElements = 100000;
 };
