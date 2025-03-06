@@ -85,6 +85,14 @@ void RenderPipeline::terminate()
     mRenderInstancesSlotsManager.reset();
 }
 
+void RenderPipeline::onResize()
+{
+    FOR_MAP(it, mRenderPassMap)
+	{
+        it->second->onResize();
+	}
+}
+
 void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
 {
     PROFILER_CPU()

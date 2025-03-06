@@ -5,8 +5,9 @@
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/Window/Window.hpp"
 
-class RenderEngine : public System, public IComponentsListener
+class RenderEngine : public System, public IComponentsListener, public IWindowListener
 {
 public:
     virtual void init() override;
@@ -14,7 +15,7 @@ public:
     void update();
     void preSceneChanged();
     void postSceneChanged();
-    void onResize(u32 width, u32 height);
+    void onResize() override;
     
     virtual void onComponentAdded(const ComponentHandler& component) override;
     virtual void onComponentRemoved(const ComponentHandler& component) override;

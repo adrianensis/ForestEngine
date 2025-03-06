@@ -45,7 +45,7 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan device");
     }
-    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface, GET_SYSTEM(WindowManager).getMainWindow()->getSizeInPixels());
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface, GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize());
     if (!vulkanSwapChain->init())
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
@@ -382,9 +382,9 @@ void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
     {
         PROFILER_CPU_NAMED(vkQueuePresentKHR)
         VkResult presentResult = vkQueuePresentKHR(vulkanDevice->getPresentQueue(), &presentInfo);
-        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR /*|| windowResized*/) {
-            // windowResized = false;
-            // recreateRenderingObjects();
+        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR || mWindowResized) {
+            mWindowResized = false;
+            //recreateRenderingObjects();
         } else if (presentResult != VK_SUCCESS) {
             GPU_LOG_ERROR("Could not present image to swap chain")
             CHECK_MSG(false, "Could not present image to swap chain")
@@ -403,4 +403,24 @@ PFN_vkVoidFunction GPUContext::loadExtensionFunctionInternal(const char* extensi
         CHECK_MSG(false, "Could not look up address of extension function!")
     }
     return function;
+}
+
+void GPUContext::recreateRenderingObjects()
+{
+    vulkanDevice->waitUntilIdle();
+    vulkanDevice->getPhysicalDevice()->updateSwapChainInfo();
+
+    vulkanSwapChain->terminate();
+    delete vulkanSwapChain;
+
+    vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface, GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize());
+    if (!vulkanSwapChain->init())
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan swap chain");
+    }
+}
+
+void GPUContext::setWindowResized()
+{
+    mWindowResized = true;
 }

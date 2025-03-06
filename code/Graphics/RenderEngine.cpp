@@ -19,6 +19,8 @@ void RenderEngine::init()
     mRenderPipeline->compile();
 
 	// octree.init(5000);
+
+    GET_SYSTEM(WindowManager).getMainWindow()->addWindowListener(this);
 }
 
 void RenderEngine::update()
@@ -41,10 +43,13 @@ void RenderEngine::postSceneChanged()
 	LOG_TRACE()
 }
 
-void RenderEngine::onResize(u32 width, u32 height)
+void RenderEngine::onResize()
 {
 	LOG_TRACE()
 //	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
+    GET_SYSTEM(GPUInstance).mGPUContext->setWindowResized();
+    GET_SYSTEM(GPUInstance).mGPUContext->recreateRenderingObjects();
+    mRenderPipeline->onResize();
     TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }

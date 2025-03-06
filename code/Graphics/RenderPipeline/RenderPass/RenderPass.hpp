@@ -39,7 +39,7 @@ public:
     OwnerPtr<GPUShaderPipeline> compileShader(TComponentHandler<MeshRenderer> renderer);
     void removeRenderer(TComponentHandler<MeshRenderer> renderer);
     virtual void renderPass();
-    void compile();
+    void onResize();
 protected:
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();

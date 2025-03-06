@@ -31,11 +31,15 @@ public:
     void commandSubmission();
     void framePresentation(const std::vector<u32>& imageIndices);
 
+    void setWindowResized();
+    void recreateRenderingObjects();
+
 private:
     void initializeSyncObjects();
     bool createSurface();
     void destroySurface() const;
     PFN_vkVoidFunction loadExtensionFunctionInternal(const char* extensionFunctionName);
+
 
 public:
     inline static const u32 MAX_FRAMES_IN_FLIGHT = 2;
@@ -53,6 +57,7 @@ public:
     std::vector<VkFence> inFlightFences;
     u32 currentFrame = 0;
     u32 currentSwapChainImageIndex = 0;
+    bool mWindowResized = false;
 
 #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;

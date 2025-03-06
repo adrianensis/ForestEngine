@@ -12,6 +12,12 @@ public:
     HashedString mTitle;
 };
 
+class IWindowListener
+{
+public:
+    virtual void onResize() = 0;
+};
+
 class Window: public IWindowInputAdapter
 {
 public:
@@ -19,18 +25,21 @@ public:
     void terminate();
 
     GLFWwindow* getGlfwWindow() const;
-    Vector2 getSizeInPixels() const;
     std::vector<const char*> getRequiredExtensions() const;
 
-    Vector2 getWindowSize();
-    f32 getAspectRatio();
-    bool isClosed();
+    Vector2 getWindowSize() const;
+    f32 getAspectRatio() const;
+    bool isClosed() const;
     void swap();
 
     void pollEvents() const;
     
     void setCursorVisibility(bool visible);
     virtual Vector2 getMousePosition() const override;
+
+    void waitUntilNotMinimized() const;
+    bool isIconified() const;
+    void addWindowListener(Ptr<IWindowListener> windowListener);
 
 private:
     void onResize(GLFWwindow *window, i32 width, i32 height);
@@ -50,6 +59,8 @@ private:
 	GLFWwindow *mGLTFWindow = nullptr;
 	WindowData mWindowData;
     i32 mID = -1;
+
+    std::vector<Ptr<IWindowListener>> mWindowListeners;
 
 public:
     CGET(GLTFWindow);

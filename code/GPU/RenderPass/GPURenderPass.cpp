@@ -251,6 +251,26 @@ void GPURenderPass::begin()
 
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     vkCmdBeginRenderPass(vulkanCommandBuffer.getVkCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+    //set dynamic viewport and scissor
+	VkViewport viewport = {};
+	viewport.x = 0;
+	viewport.y = 0;
+    viewport.y = (float) mGPUContext->vulkanSwapChain->getExtent().height;
+    viewport.width = (float) mGPUContext->vulkanSwapChain->getExtent().width;
+    viewport.height = -(float) mGPUContext->vulkanSwapChain->getExtent().height;
+	viewport.minDepth = 0.f;
+	viewport.maxDepth = 1.f;
+
+	vkCmdSetViewport(vulkanCommandBuffer.getVkCommandBuffer(), 0, 1, &viewport);
+
+	VkRect2D scissor = {};
+	scissor.offset.x = 0;
+	scissor.offset.y = 0;
+	scissor.extent.width = mGPUContext->vulkanSwapChain->getExtent().width;
+	scissor.extent.height = mGPUContext->vulkanSwapChain->getExtent().height;
+
+	vkCmdSetScissor(vulkanCommandBuffer.getVkCommandBuffer(), 0, 1, &scissor);
 }
 
 void GPURenderPass::end()
@@ -278,4 +298,32 @@ void GPURenderPass::clearDepthStencil()
     clearDepthStencilValue.stencil = 0;
     const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 };
     vkCmdClearDepthStencilImage(vulkanCommandBuffer.getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
+}
+
+void GPURenderPass::onResize()
+{
+    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
+    vulkanColorImage.terminate();
+    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
+    vulkanDepthImage.terminate();
+
+    for (GPUFramebuffer framebuffer : framebuffers) {
+        framebuffer.terminate();
+    }
+    framebuffers.clear();
+    LOG("Destroyed Vulkan framebuffers");
+
+    if (!initializeColorResources())
+    {
+        CHECK_MSG(false, "Could not initialize color resources");
+    }
+    if (!initializeDepthResources())
+    {
+        CHECK_MSG(false, "Could not initialize depth resources");
+    }
+    if (!initializeFramebuffers())
+    {
+        CHECK_MSG(false, "Could not initialize Vulkan framebuffers");
+    }
 }

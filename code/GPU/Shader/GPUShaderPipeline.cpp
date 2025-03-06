@@ -269,6 +269,16 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     }
     GPU_LOG("Created Vulkan graphics pipeline layout");
 
+    VkDynamicState dynamicStateEnables[2] = {
+        VK_DYNAMIC_STATE_VIEWPORT,
+        VK_DYNAMIC_STATE_SCISSOR,
+    };
+    VkPipelineDynamicStateCreateInfo dynamicState = {};
+    dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicState.pNext = NULL;
+    dynamicState.pDynamicStates = dynamicStateEnables;
+    dynamicState.dynamicStateCount = 2;
+
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.stageCount = 2;
@@ -280,7 +290,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     pipelineInfo.pMultisampleState = &multisampleState;
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &colorBlendState;
-    pipelineInfo.pDynamicState = nullptr;
+    pipelineInfo.pDynamicState = &dynamicState;
     pipelineInfo.layout = mPipelineLayout;
     pipelineInfo.renderPass = mRenderPass->getRenderPass();
     pipelineInfo.subpass = 0;

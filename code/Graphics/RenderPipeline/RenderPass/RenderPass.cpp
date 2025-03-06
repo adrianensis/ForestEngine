@@ -221,7 +221,7 @@ Matrix4 RenderPass::calculateProjectionViewMatrix() const
 //     }
 // }
 
-void RenderPass::compile()
+void RenderPass::onResize()
 {
-    
+    mGPURenderPass->onResize();
 }

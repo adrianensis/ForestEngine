@@ -6,14 +6,6 @@ GLFWwindow* Window::getGlfwWindow() const
     return mGLTFWindow;
 }
 
-Vector2 Window::getSizeInPixels() const
-{
-    i32 width = 0;
-    i32 height = 0;
-    glfwGetFramebufferSize(mGLTFWindow, &width, &height);
-    return Vector2(width, height);
-}
-
 std::vector<const char*> Window::getRequiredExtensions() const
 {
 	u32 glfwExtensionCount = 0;
@@ -22,12 +14,12 @@ std::vector<const char*> Window::getRequiredExtensions() const
     return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
 }
 
-Vector2 Window::getWindowSize()
+Vector2 Window::getWindowSize() const
 {
 	return mWindowData.mWindowSize;
 }
 
-f32 Window::getAspectRatio()
+f32 Window::getAspectRatio() const
 {
 	return mWindowData.mWindowSize.x / mWindowData.mWindowSize.y;
 }
@@ -97,7 +89,7 @@ void Window::init(i32 id, const WindowData& windowData)
     glfwSetFramebufferSizeCallback(mGLTFWindow, &this->onResizeGLFW);
 }
 
-bool Window::isClosed()
+bool Window::isClosed() const
 {
 	return glfwWindowShouldClose(mGLTFWindow);
 }
@@ -124,7 +116,13 @@ void Window::setCursorVisibility(bool visible)
 void Window::onResize(GLFWwindow *window, i32 width, i32 height)
 {
 	mWindowData.mWindowSize.set(width, height);
+	waitUntilNotMinimized();
 	// GET_SYSTEM(RenderEngine).onResize(width, height);
+
+	FOR_ARRAY(i, mWindowListeners)
+	{
+		mWindowListeners[i]->onResize();
+	}
 }
 
 void Window::onResizeGLFW(GLFWwindow *windowGLFW, i32 width, i32 height)
@@ -311,4 +309,31 @@ Vector2 Window::getMousePosition() const
 void Window::pollEvents() const
 {
     glfwPollEvents();
+}
+
+void Window::waitUntilNotMinimized() const
+{
+	Vector2 size = getWindowSize();
+	int width = size.x;
+	int height = size.y;
+
+	bool iconified = isIconified();
+
+	while (width == 0 || height == 0 || iconified) {
+		size = getWindowSize();
+		width = size.x;
+		height = size.y;
+		iconified = isIconified();
+		glfwWaitEvents();
+	}
+}
+
+bool Window::isIconified() const
+{
+	return glfwGetWindowAttrib(mGLTFWindow, GLFW_ICONIFIED) == 1;
+}
+
+void Window::addWindowListener(Ptr<IWindowListener> windowListener)
+{
+	mWindowListeners.push_back(windowListener);
 }

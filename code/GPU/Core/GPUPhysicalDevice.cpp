@@ -52,8 +52,7 @@ bool GPUPhysicalDevice::init()
 
 void GPUPhysicalDevice::updateSwapChainInfo()
 {
-    CHECK_MSG(false,"Weird, this is not used (??¿?)");
-    // deviceInfo.mSwapChainInfo = findSwapChainInfo(deviceInfo.mPhysicalDevice);
+    deviceInfo.mSwapChainInfo = findSwapChainInfo(deviceInfo.mPhysicalDevice);
 }
 
 u32 GPUPhysicalDevice::findMemoryType(u32 memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const

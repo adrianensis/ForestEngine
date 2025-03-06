@@ -49,6 +49,7 @@ public:
     void end();
     void clearColor();
     void clearDepthStencil();
+    void onResize();
 private:
     VkFormat findDepthFormat();
     bool initializeColorResources();

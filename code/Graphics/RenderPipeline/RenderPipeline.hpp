@@ -25,6 +25,7 @@ public:
     void removeRenderer(TComponentHandler<MeshRenderer> renderer);
     virtual void render(RenderPipelineData& renderData);
     virtual void compile();
+    void onResize();
 
 protected:
     void updateLights(RenderPipelineData& renderData);
@@ -40,7 +41,6 @@ protected:
 
         WeakPtr<T> renderPass = getRenderPass<T>();
         renderPass->init(this, renderPassData);
-        renderPass->compile();
     }
 
     template<class T> T_EXTENDS(T, RenderPass)
@@ -55,8 +55,7 @@ protected:
     void processRenderer(TComponentHandler<MeshRenderer> renderer);
     void compileShader(TComponentHandler<MeshRenderer> renderer);
 
-public:
-private:
+protected:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
     std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshesMap;
