@@ -46,12 +46,12 @@ public:
             namedSampler.mName = HashedString(namedSampler.mName.get() + "_" + name.get());
             return namedSampler;
         }
-        inline static const GPUVariableDefinitionData mTextureHandler{GPUStorage::UNIFORM, /*PrimitiveTypes::mUnsignedInt*/PrimitiveTypes::mSampler2D, "textureHandler"};
-        static GPUVariableDefinitionData getTextureHandler(const HashedString& name)
+        inline static const GPUVariableDefinitionData mTextureHandle{GPUStorage::UNIFORM, /*PrimitiveTypes::mUnsignedInt*/PrimitiveTypes::mSampler2D, "textureHandle"};
+        static GPUVariableDefinitionData getTextureHandle(const HashedString& name)
         {
-            GPUVariableDefinitionData namedTextureHandler = mTextureHandler;
-            namedTextureHandler.mName = HashedString(namedTextureHandler.mName.get() + "_" + name.get());
-            return namedTextureHandler;
+            GPUVariableDefinitionData namedTextureHandle = mTextureHandle;
+            namedTextureHandle.mName = HashedString(namedTextureHandle.mName.get() + "_" + name.get());
+            return namedTextureHandle;
         }
     };
 

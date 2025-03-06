@@ -3,7 +3,7 @@
 
 Entity& EntityPtr::getInternal() const
 {
-    CHECK_MSG(EntityPtr::isValid(), "Invalid handler!");
+    CHECK_MSG(EntityPtr::isValid(), "Invalid handle!");
     return mEntityManager->getPoolsManager().getElementBase(mClassId, mSlot);
 }
 

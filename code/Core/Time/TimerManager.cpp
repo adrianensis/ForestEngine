@@ -41,12 +41,12 @@ TimerHandle TimerManager::setTimer(f32 duration, TimerDurationType durationType,
 	Timer *timer = Memory::newObject<Timer>();
 	timer->init(duration, durationType, callback);
 
-	TimerHandle timerHandler;
-	timerHandler.init(timer);
+	TimerHandle timerHandle;
+	timerHandle.init(timer);
 
 	mTimers.push_back(timer);
 
-	return timerHandler;
+	return timerHandle;
 }
 
 void TimerManager::cancelTimer(const TimerHandle& timerHandle)

@@ -35,7 +35,7 @@ public:
             mClassId = other.mClassId;
             mSlot = other.mSlot;
             mComponentsManager = other.mComponentsManager;
-            CHECK_MSG(isValid(), "Invalid handler!");
+            CHECK_MSG(isValid(), "Invalid handle!");
         }
         return *this;
     }

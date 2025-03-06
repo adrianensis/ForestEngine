@@ -40,16 +40,16 @@ void GPUShaderUI::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) cons
     
     // NEXT: Restore ui/font texture
     auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
-    auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
-    if(textureHandler.isValid())
+    auto& textureHandle = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNames::smBaseColor));
+    if(textureHandle.isValid())
     {
         if(inTextureCoord.isValid())
         {
             // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
             // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
             GPUShaderBuilder.getMain().
-            // ifBlock(textureHandler.notEq("0"s)).
-                set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord})).
+            // ifBlock(textureHandle.notEq("0"s)).
+                set(outColor, call("texture", {/*textures.at(textureHandle)*/textureHandle, inTextureCoord})).
                 ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
                     line("discard").
                 end();

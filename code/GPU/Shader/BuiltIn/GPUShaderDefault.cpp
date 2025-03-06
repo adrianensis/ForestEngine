@@ -197,12 +197,12 @@ void GPUShaderDefault::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder)
     auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
     if(inTextureCoord.isValid())
     {
-        auto& textureHandler = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandler(TextureBindingNames::smBaseColor));
+        auto& textureHandle = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNames::smBaseColor));
         // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
         // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         GPUShaderBuilder.getMain().
-        // ifBlock(textureHandler.notEq("0"s)).
-            set(outColor, call("texture", {/*textures.at(textureHandler)*/textureHandler, inTextureCoord}));
+        // ifBlock(textureHandle.notEq("0"s)).
+            set(outColor, call("texture", {/*textures.at(textureHandle)*/textureHandle, inTextureCoord}));
         // end();
     }
 }
@@ -211,7 +211,7 @@ void GPUShaderDefault::generateGPUShaderGenerationData(GPUShaderGenerationData& 
 {
     // FOR_MAP(it, mTextures)
     // {
-    //     shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
+    //     shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandle(*it));
     // }
     
     // FOR_MAP(it, mShader->getGPUShaderData().mTextureBindings)
@@ -223,12 +223,12 @@ void GPUShaderDefault::generateGPUShaderGenerationData(GPUShaderGenerationData& 
     //     {
     //         // case GPUPipelineStage::VERTEX:
     //         // {
-    //         //     shaderGenerationData.mVertexVariables.mUniforms.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(samplerName));
+    //         //     shaderGenerationData.mVertexVariables.mUniforms.push_back(GPUShaderDefinitions::Uniforms::getTextureHandle(samplerName));
     //         // }
     //         // break;
     //         case GPUPipelineStage::FRAGMENT:
     //         {
-    //             shaderGenerationData.mFragmentVariables.mUniforms.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(samplerName));
+    //             shaderGenerationData.mFragmentVariables.mUniforms.push_back(GPUShaderDefinitions::Uniforms::getTextureHandle(samplerName));
     //         }
     //         break;
 
@@ -375,8 +375,8 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
     {
         if(gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.contains(*it))
         {
-            shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandler(*it));
-            GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandler(*it),gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
+            shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandle(*it));
+            GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandle(*it),gpuGPUShaderDescriptorSets->mGPUShaderDescriptorSetsBindings.mBindings.at(*it)));
         }
     }
 
