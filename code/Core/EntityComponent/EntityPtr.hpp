@@ -2,25 +2,18 @@
 
 #include "Core/EntityComponent/Entity.hpp"
 
-class EntityManager;
-
 class EntityPtr
 {
 public:
 
     EntityPtr() = default;
-    EntityPtr(ClassId id, Slot slot, EntityManager* entityManager)
+    EntityPtr(ClassId id, Slot slot)
     {
         mClassId = id;
         mSlot = slot;
-        mEntityManager = entityManager;
     }
 
-    EntityPtr(ClassId id, Slot slot, const EntityManager* entityManager): EntityPtr(id, slot, const_cast<EntityManager*>(entityManager))
-    {
-    }
-
-    EntityPtr(const EntityPtr& other): EntityPtr(other.mClassId, other.mSlot, other.mEntityManager)
+    EntityPtr(const EntityPtr& other): EntityPtr(other.mClassId, other.mSlot)
     {
     }
 
@@ -57,18 +50,16 @@ public:
         {
             mClassId = other.mClassId;
             mSlot = other.mSlot;
-            mEntityManager = other.mEntityManager;
         }
         return *this;
     }
 
     Entity* operator->() const { return getEntityPointer(); }
-    virtual bool isValid() const { return mEntityManager && mClassId > 0 && mSlot.isValid(); }
+    virtual bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
     operator bool() const { return this->isValid(); }
     bool operator==(const EntityPtr& other) const
 	{
 		return
-         mEntityManager == other.mEntityManager &&
          mClassId == other.mClassId &&
          mSlot.getSlot() == other.mSlot.getSlot();
 	}
@@ -77,7 +68,6 @@ public:
     {
         mSlot.reset();
         mClassId = 0;
-        mEntityManager = nullptr;
     }
 
 protected:
@@ -91,7 +81,6 @@ protected:
 public:
     Slot mSlot;
     ClassId mClassId = 0;
-    EntityManager* mEntityManager = nullptr;
 };
 
 template<class T>// T_EXTENDS(T, Entity)
@@ -99,15 +88,11 @@ class TEntityPtr : public EntityPtr
 {
 public:
     TEntityPtr() = default;
-    TEntityPtr(ClassId id, Slot slot, EntityManager* entityManager): EntityPtr(id, slot, entityManager)
+    TEntityPtr(ClassId id, Slot slot): EntityPtr(id, slot)
     {
     }
 
-    TEntityPtr(ClassId id, Slot slot, const EntityManager* entityManager): TEntityPtr(id, slot, const_cast<EntityManager*>(entityManager))
-    {
-    }
-
-    TEntityPtr(const EntityPtr& other): TEntityPtr(other.mClassId, other.mSlot, other.mEntityManager)
+    TEntityPtr(const EntityPtr& other): TEntityPtr(other.mClassId, other.mSlot)
     {
     }
 
@@ -119,13 +104,16 @@ public:
     T* operator->() const { return &get(); }
     virtual bool isValid() const override
     {
-        if(!mEntityManager) {return false;}
+        if(!EntityPtr::isValid())
+        {
+            return false;
+        }
 
         Entity* pointer = &getInternal();
         T* castedPointer = dynamic_cast<T*>(pointer);
-        return mClassId > 0 && mSlot.isValid() && castedPointer;
+        return castedPointer;
     }
-    operator TEntityPtr<const T>() const { return TEntityPtr<const T>(mClassId, mSlot, mEntityManager); }
+    operator TEntityPtr<const T>() const { return TEntityPtr<const T>(mClassId, mSlot); }
     template<class U> T_EXTENDS(T, U)
-    operator TEntityPtr<U>() const { return TEntityPtr<U>(mClassId, mSlot, mEntityManager); }
+    operator TEntityPtr<U>() const { return TEntityPtr<U>(mClassId, mSlot); }
 };

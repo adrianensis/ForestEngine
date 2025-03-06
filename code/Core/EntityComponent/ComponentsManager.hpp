@@ -58,7 +58,7 @@ public:
         Slot slot = mPoolsManager.requestElement<T>();
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId classId = classMetaData.mClassDefinition.getId();
-        ComponentPtr componentPtr(classId, slot, this);
+        ComponentPtr componentPtr(classId, slot);
         if(componentPtr.isValid())
         {
             T& comp = mPoolsManager.getElement<T>(slot);

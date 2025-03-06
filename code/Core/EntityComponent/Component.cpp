@@ -51,7 +51,7 @@ void Component::onDestroy()
 
 EntityPtr Component::getOwnerEntity() const
 {
-    EntityPtr entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot, EntityManager::getInstancePtr().getInternalPointer());
+    EntityPtr entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot);
     return entityPtr;
 }
 

@@ -15,7 +15,7 @@ public:
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId classId = classMetaData.mClassDefinition.getId();
         Slot slot = mPoolsManager.requestElement<T>();
-        EntityPtr entityPtr(classId, slot, this);
+        EntityPtr entityPtr(classId, slot);
         if(entityPtr.isValid())
         {
             T& entity = mPoolsManager.getElement<T>(slot);
