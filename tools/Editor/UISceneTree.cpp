@@ -6,14 +6,14 @@
 
 void UISceneTree::init()
 {
-    GameObject::init();
+    SceneObject::init();
 }
 
 void UISceneTree::update()
 {
     // FOR_LIST(it, mTexts)
     // {
-    //     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(it->second);
+    //     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(it->second);
     // }
 
     UIBuilder uiBuilder;
@@ -27,8 +27,8 @@ void UISceneTree::update()
 	setTextScale(0.5f).
 	setSize(Vector2(0.5, 0.05f));
 
-    const std::list<TEntityHandler<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
-    std::list<TEntityHandler<GameObject>> objectsInmutableList;
+    const std::list<TEntityHandler<SceneObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();
+    std::list<TEntityHandler<SceneObject>> objectsInmutableList;
     FOR_LIST(it, objects)
     {
         objectsInmutableList.push_back(*it);
@@ -50,5 +50,5 @@ void UISceneTree::update()
 void UISceneTree::onDestroy()
 {
 
-    GameObject::onDestroy();
+    SceneObject::onDestroy();
 }

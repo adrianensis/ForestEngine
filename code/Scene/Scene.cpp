@@ -1,12 +1,12 @@
 #include "Scene/Scene.hpp"
-#include "Scene/GameObject.hpp"
+#include "Scene/SceneObject.hpp"
 #include "Scene/Transform.hpp"
 #include "Graphics/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 
 void Scene::terminate()
 {
-    destroyGameObjects();
+    destroySceneObjects();
 }
 
 void Scene::init(HashedString sceneName)
@@ -53,7 +53,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 {
 	f32 maxSize = 0;
 
-	FOR_LIST(it, mGameObjects)
+	FOR_LIST(it, mSceneObjects)
 	{
 		if((*it))
 		{
@@ -70,9 +70,9 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerEntityHandler gameObject)
+//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEntityHandler sceneObject)
 //	{
-//		return gameObject->mShouldPersist;
+//		return sceneObject->mShouldPersist;
 //	})
 
 	SERIALIZE("size", maxSize * 2.0f)
@@ -84,17 +84,17 @@ IMPLEMENT_DESERIALIZATION(Scene)
 
 //	if(json.contains("objects"))
 //	{
-//		std::list<GameObject *> tmpList;
+//		std::list<SceneObject *> tmpList;
 //		DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
 //		{
-//			GameObject *gameObject = nullptr;//INSTANCE_BY_NAME(json["class"], GameObject);
-//			return gameObject;
+//			SceneObject *sceneObject = nullptr;//INSTANCE_BY_NAME(json["class"], SceneObject);
+//			return sceneObject;
 //		})
 //
 //		FOR_LIST(it, tmpList)
 //		{
 //			(*it)->init();
-//			addGameObject(*it);
+//			addSceneObject(*it);
 //		}
 //	}
 }
@@ -106,82 +106,82 @@ void Scene::loadScene()
 
 void Scene::unloadScene()
 {
-	destroyGameObjects();
+	destroySceneObjects();
 }
 
-void Scene::addGameObject(TEntityHandler<GameObject> gameObject)
+void Scene::addSceneObject(TEntityHandler<SceneObject> sceneObject)
 {
-    if(gameObject)
+    if(sceneObject)
     {
-        gameObject->mScene = getPtrToThis<Scene>();
-        gameObject->onAddedToScene();
-        mNewGameObjects.emplace_back(gameObject);
+        sceneObject->mScene = getPtrToThis<Scene>();
+        sceneObject->onAddedToScene();
+        mNewSceneObjects.emplace_back(sceneObject);
     }
 }
 
-void Scene::removeGameObject(TEntityHandler<GameObject> gameObject)
+void Scene::removeSceneObject(TEntityHandler<SceneObject> sceneObject)
 {
-	if (gameObject && !gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
+	if (sceneObject && !sceneObject->getIsDestroyed() && !sceneObject->getIsPendingToBeDestroyed())
 	{
-        gameObject->destroy();
-        gameObject->finallyDestroy();
+        sceneObject->destroy();
+        sceneObject->finallyDestroy();
 
-        auto it = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
-        if (it != mGameObjects.end())
+        auto it = std::find(mSceneObjects.begin(), mSceneObjects.end(), sceneObject);
+        if (it != mSceneObjects.end())
         {
-            mGameObjects.erase(it);
+            mSceneObjects.erase(it);
         }
 
-        auto itNew = std::find(mNewGameObjects.begin(), mNewGameObjects.end(), gameObject);
-        if (itNew != mNewGameObjects.end())
+        auto itNew = std::find(mNewSceneObjects.begin(), mNewSceneObjects.end(), sceneObject);
+        if (itNew != mNewSceneObjects.end())
         {
-            mNewGameObjects.erase(itNew);
+            mNewSceneObjects.erase(itNew);
         }
 
-        EntityManager::getInstance().removeEntity(gameObject);
+        EntityManager::getInstance().removeEntity(sceneObject);
     }
 }
 
 void Scene::update()
 {
-	/*if (mGameObjectsToLoadIndex < mGameObjectsToLoadTotal)
+	/*if (mSceneObjectsToLoadIndex < mSceneObjectsToLoadTotal)
 	{
-		FOR_RANGE_COND(i, 0, mMaxGameObjectsToLoadPerFrame, mGameObjectsToLoadIndex < mGameObjectsToLoadTotal)
+		FOR_RANGE_COND(i, 0, mMaxSceneObjectsToLoadPerFrame, mSceneObjectsToLoadIndex < mSceneObjectsToLoadTotal)
 		{
-			std::string className = "GameObject"; //mLoadSceneConfig->at("class").get<std::string>();
+			std::string className = "SceneObject"; //mLoadSceneConfig->at("class").get<std::string>();
 
-			GameObject *gameObject = (GameObject*) INSTANCE_BY_NAME(className); //Memory::fromClassName<GameObject>(className));
-			gameObject->init();
-			gameObject->deserialize(JSON());
-			addGameObject(gameObject);
-			mGameObjectsToLoadIndex += 1;
+			SceneObject *sceneObject = (SceneObject*) INSTANCE_BY_NAME(className); //Memory::fromClassName<SceneObject>(className));
+			sceneObject->init();
+			sceneObject->deserialize(JSON());
+			addSceneObject(sceneObject);
+			mSceneObjectsToLoadIndex += 1;
 		}
 	}*/
 
-	if (thereAreNewGameObjects())
+	if (thereAreNewSceneObjects())
 	{
-		flushNewGameObjects();
+		flushNewSceneObjects();
 	}
 }
 
-void Scene::flushNewGameObjects()
+void Scene::flushNewSceneObjects()
 {
-	FOR_LIST(it, mNewGameObjects)
+	FOR_LIST(it, mNewSceneObjects)
 	{
-		mGameObjects.emplace_back(std::move(*it));
+		mSceneObjects.emplace_back(std::move(*it));
 	}
 
-	mNewGameObjects.clear();
+	mNewSceneObjects.clear();
 }
 
-bool Scene::thereAreNewGameObjects() const
+bool Scene::thereAreNewSceneObjects() const
 {
-	return mNewGameObjects.size() > 0;
+	return mNewSceneObjects.size() > 0;
 }
 
-void Scene::destroyGameObjects()
+void Scene::destroySceneObjects()
 {
-	FOR_LIST(it, mGameObjects)
+	FOR_LIST(it, mSceneObjects)
 	{
         if ((*it))
 		{
@@ -193,5 +193,5 @@ void Scene::destroyGameObjects()
         }
 	}
 
-    mGameObjects.clear();
+    mSceneObjects.clear();
 }

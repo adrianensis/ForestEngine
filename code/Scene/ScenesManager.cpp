@@ -1,23 +1,23 @@
 #include "ScenesManager.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/GameObject.hpp"
+#include "Scene/SceneObject.hpp"
 #include "Graphics/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 
 void ScenesManager::terminate() 
 {
-    if(mGameObjectController)
+    if(mSceneObjectController)
     {
-	    mGameObjectController->destroy();
+	    mSceneObjectController->destroy();
     }
-    mGameObjectController.reset();
+    mSceneObjectController.reset();
 
-	if (mCameraGameObject)
+	if (mCameraSceneObject)
 	{
-		TComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
-		mCameraGameObject->removeComponent(cameraComponent);
-		mCameraGameObject->destroy();
-        mCameraGameObject.reset();
+		TComponentHandler<Camera> cameraComponent = mCameraSceneObject->getFirstComponent<Camera>();
+		mCameraSceneObject->removeComponent(cameraComponent);
+		mCameraSceneObject->destroy();
+        mCameraSceneObject.reset();
 	}
 
     FOR_MAP(it, mScenes)
@@ -39,15 +39,15 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraGameObject = EntityManager::getInstance().requestEntity<GameObject>();
-	mCameraGameObject->init();
+    mCameraSceneObject = EntityManager::getInstance().requestEntity<SceneObject>();
+	mCameraSceneObject->init();
 
-	// mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
-	mCameraGameObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
+	// mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
+	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
     TComponentHandler<Camera> camera = ComponentsManager::getInstance().requestComponent<Camera>();
 	camera->init();
-    mCameraGameObject->addComponent(camera);
+    mCameraSceneObject->addComponent(camera);
 	camera->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
     GET_SYSTEM(CameraManager).setCamera(camera);
@@ -57,7 +57,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    TComponentHandler<Camera> cameraComponent = mCameraGameObject->getFirstComponent<Camera>();
+    TComponentHandler<Camera> cameraComponent = mCameraSceneObject->getFirstComponent<Camera>();
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

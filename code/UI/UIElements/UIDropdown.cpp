@@ -93,7 +93,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				mScene->removeGameObject(*it);
+				mScene->removeSceneObject(*it);
 			}
 
 			mButtons.clear();

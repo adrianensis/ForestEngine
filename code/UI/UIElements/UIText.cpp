@@ -47,11 +47,11 @@ void UIText::onDestroy()
 {
 	UIArea::onDestroy();
 
-    mScene->removeGameObject(mBackground);
+    mScene->removeSceneObject(mBackground);
 
     FOR_LIST(it, mFontRenderers)
     {
-        mScene->removeGameObject(*it);
+        mScene->removeSceneObject(*it);
     }
 }
 
@@ -67,7 +67,7 @@ void UIText::setText(HashedString text)
             u32 diff = glyphRenderersLen - textLen;
             FOR_RANGE(i, 0, diff)
             {
-                mScene->removeGameObject(mFontRenderers.back());
+                mScene->removeSceneObject(mFontRenderers.back());
                 mFontRenderers.pop_back();
             }
         }
@@ -103,14 +103,14 @@ void UIText::setText(HashedString text)
 
                 if(i < mFontRenderers.size())
                 {
-                    TEntityHandler<UITextGlyph> gameObjectGlyph = mFontRenderers[i];
-                    UIElementConfig glyphConfig = gameObjectGlyph->getConfig();
+                    TEntityHandler<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
+                    UIElementConfig glyphConfig = sceneObjectGlyph->getConfig();
                     glyphConfig.mPosition = glyphPositionScreenSpace;
                     glyphConfig.mSize = glyphSizeScreenSpace;
-                    glyphConfig = gameObjectGlyph->calculateConfig(glyphConfig);
-                    gameObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
-                    gameObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
-                    TComponentHandler<MeshRenderer> renderer = gameObjectGlyph->getFirstComponent<MeshRenderer>();
+                    glyphConfig = sceneObjectGlyph->calculateConfig(glyphConfig);
+                    sceneObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
+                    sceneObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
+                    TComponentHandler<MeshRenderer> renderer = sceneObjectGlyph->getFirstComponent<MeshRenderer>();
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
@@ -119,7 +119,7 @@ void UIText::setText(HashedString text)
                 else
                 {
                     UIBuilder uiBuilder;
-                    TEntityHandler<UITextGlyph> gameObjectGlyph = uiBuilder.
+                    TEntityHandler<UITextGlyph> sceneObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).
@@ -130,7 +130,7 @@ void UIText::setText(HashedString text)
                     create<UITextGlyph>().
                     getUIElement<UITextGlyph>();
 
-                    mFontRenderers.push_back(gameObjectGlyph);
+                    mFontRenderers.push_back(sceneObjectGlyph);
                 }
 
                 offset += UIUtils::toScreenSpace(Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;

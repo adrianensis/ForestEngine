@@ -13,14 +13,14 @@ int main()
 {
     Engine::getInstance().init();
 
-    TEntityHandler<GameObject> controller = EntityManager::getInstance().requestEntity<GameObject>();
+    TEntityHandler<SceneObject> controller = EntityManager::getInstance().requestEntity<SceneObject>();
     controller->init();
 
     TComponentHandler<Editor> editor = ComponentsManager::getInstance().requestComponent<Editor>();
     editor->init();
     controller->addComponent(editor);
 
-    GET_SYSTEM(ScenesManager).setGameObjectController(controller);
+    GET_SYSTEM(ScenesManager).setSceneObjectController(controller);
 
     Engine::getInstance().run();
     Engine::getInstance().terminate();

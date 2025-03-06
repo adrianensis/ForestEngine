@@ -6,7 +6,7 @@
 class Transform;
 class Scene;
 
-class GameObject: public Entity
+class SceneObject: public Entity
 {
 	DECLARE_SERIALIZATION()
 	
@@ -18,4 +18,4 @@ public:
 	WeakPtr<Scene> mScene;
 	TComponentHandler<Transform> mTransform;
 };
-REGISTER_CLASS(GameObject);
+REGISTER_CLASS(SceneObject);

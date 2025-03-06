@@ -2,7 +2,7 @@
 
 #include "UI/Module.hpp"
 
-class UIVector: public GameObject
+class UIVector: public SceneObject
 {
 public:
     virtual void init() override;

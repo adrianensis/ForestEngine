@@ -30,13 +30,13 @@ void Editor::firstUpdate()
 {
     PROFILER_CPU();
 
-	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
-	mCameraGameObject->mTransform->setLocalPosition(Vector3(0,0,100));
-    TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
+	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
+    TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
+    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UIAxisGizmo>();
     mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
     mAxisViewer->createAxis();
 
@@ -49,7 +49,7 @@ void Editor::firstUpdate()
     // createSprite(Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
-	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
+	// sceneObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
 	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
@@ -71,7 +71,7 @@ void Editor::firstUpdate()
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(100,0,0), 100.0f, Vector3(90,0,0), false);
 	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
-    // mGameObjectsArray.push_back(obj);
+    // mSceneObjectsArray.push_back(obj);
 
     i32 size = 6;            
     FOR_RANGE(i, -size, size)
@@ -92,7 +92,7 @@ void Editor::firstUpdate()
 
 
 	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
-    // mGameObjectsArray.push_back(obj);
+    // mSceneObjectsArray.push_back(obj);
 	// importModel("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, Vector3(0,0,0), true);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
 	// importModel("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, Vector3(0,0,0), true);
@@ -103,7 +103,7 @@ void Editor::firstUpdate()
     createUI();
     // mousePick();
 
-    // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
+    // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISceneTree>();
     // mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
     // mUISceneTree->update();
 }
@@ -112,11 +112,11 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
-	TComponentHandler<Transform> cameraTransform = mCameraGameObject->mTransform;
+    TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+	TComponentHandler<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
-	Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
+	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
 
 	if(GET_SYSTEM(Input).isKeyPressed(GLFW_KEY_LEFT))
@@ -168,11 +168,11 @@ void Editor::update()
     // currentMousePosition.set(-1,0,0);
     // LOG_VAR(currentMousePosition.x);
     // LOG_VAR(currentMousePosition.y);
-    if(mSelectedGameObject)
+    if(mSelectedSceneObject)
     {
-        Vector3 position = camera->screenToWorld(currentMousePosition, mSelectedGameObject->mTransform->getWorldPosition().z);
-        // position.z = mSelectedGameObject->mTransform->getLocalPosition().z;
-        mSelectedGameObject->mTransform->setLocalPosition(position);
+        Vector3 position = camera->screenToWorld(currentMousePosition, mSelectedSceneObject->mTransform->getWorldPosition().z);
+        // position.z = mSelectedSceneObject->mTransform->getLocalPosition().z;
+        mSelectedSceneObject->mTransform->setLocalPosition(position);
         // LOG_VAR(position.x);
         // LOG_VAR(position.y);
         // LOG_VAR(position.z);
@@ -246,10 +246,10 @@ void Editor::terminate()
 
 EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 {
-	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
-	// gameObject->mIsStatic = false;
-	// gameObject->mTransform->setLocalPosition(v);
-	// gameObject->mTransform->setLocalScale(Vector3(size,size,size));
+	TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	// sceneObject->mIsStatic = false;
+	// sceneObject->mTransform->setLocalPosition(v);
+	// sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
 
     // RendererData rendererData;
 	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
@@ -260,17 +260,17 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
 
 	// TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
-	// gameObject->addComponent(renderer);
+	// sceneObject->addComponent(renderer);
 
-	return gameObject;
+	return sceneObject;
 }
 
 EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
 {
-	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
-	gameObject->mIsStatic = false;
-	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalScale(Vector3(size,size,size));
+	TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	sceneObject->mIsStatic = false;
+	sceneObject->mTransform->setLocalPosition(v);
+	sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
 
     PointLightData data;
     data.mPosition = v;
@@ -278,17 +278,17 @@ EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
 
 	TComponentHandler<PointLight> pointLight = ComponentsManager::getInstance().requestComponent<PointLight>();
     pointLight->init(data);
-	gameObject->addComponent(pointLight);
+	sceneObject->addComponent(pointLight);
 
-	return gameObject;
+	return sceneObject;
 }
 
 EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
-	TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
-    gameObject->mIsStatic = false;
-	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->lookAt(v + dir);
+	TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+    sceneObject->mIsStatic = false;
+	sceneObject->mTransform->setLocalPosition(v);
+	sceneObject->mTransform->lookAt(v + dir);
 
     DirectionalLightData directionalLightData;
     directionalLightData.mDirection = dir;
@@ -296,9 +296,9 @@ EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& di
 
 	TComponentHandler<DirectionalLight> dirLight = ComponentsManager::getInstance().requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
-	gameObject->addComponent(dirLight);
+	sceneObject->addComponent(dirLight);
 
-	return gameObject;
+	return sceneObject;
 }
 
 EntityHandler Editor::mousePick()
@@ -306,11 +306,11 @@ EntityHandler Editor::mousePick()
 
     f32 speed = 100 * GET_SYSTEM(Time).getDeltaTimeSeconds();
     EntityHandler obj;
-    FOR_LIST(it, mGameObjectsArray)
+    FOR_LIST(it, mSceneObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
         // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -337,11 +337,11 @@ EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f
 {
 	WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    TEntityHandler<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
-	gameObject->mIsStatic = isStatic;
-	gameObject->mTransform->setLocalPosition(v);
-	gameObject->mTransform->setLocalScale(Vector3::smOne * size);
-	gameObject->mTransform->setLocalRotation(rot);
+    TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	sceneObject->mIsStatic = isStatic;
+	sceneObject->mTransform->setLocalPosition(v);
+	sceneObject->mTransform->setLocalScale(Vector3::smOne * size);
+	sceneObject->mTransform->setLocalRotation(rot);
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
@@ -353,8 +353,8 @@ EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f
 
 	TComponentHandler<ModelRenderer> modelRenderer = ComponentsManager::getInstance().requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
-	gameObject->addComponent(modelRenderer);
-    return gameObject;
+	sceneObject->addComponent(modelRenderer);
+    return sceneObject;
 }
 
 void Editor::handlePressedKeys()
@@ -366,21 +366,21 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
 	{
-        // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mBuildings.front());
+        // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
         // mBuildings.pop_front();
-        // TComponentHandler<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
+        // TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);
-        // mGameObjectsArray.push_back(obj);
-        if(!mSelectedGameObject)
+        // mSceneObjectsArray.push_back(obj);
+        if(!mSelectedSceneObject)
         {
-            mSelectedGameObject = mousePick();
+            mSelectedSceneObject = mousePick();
         }
 	}
     else
     {
-        mSelectedGameObject.reset();
+        mSelectedSceneObject.reset();
     }
     
     if(GET_SYSTEM(Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
@@ -481,7 +481,7 @@ void Editor::createUI()
 	// }).
     // toggle();
 
-    // mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UITransform>();
+    // mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UITransform>();
     // mUITransform->mTransform->setLocalPosition(Vector2(-0.7, -0.8));
     // mUITransform->mIsStatic = true;
     // mUIVector->update();

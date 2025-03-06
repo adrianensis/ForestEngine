@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/GameObject.hpp"
+#include "Scene/SceneObject.hpp"
 
 class Camera;
 
@@ -26,16 +26,16 @@ private:
 	std::unordered_map<HashedString, WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<HashedString> mLoadRequests;
 
-    EntityHandler mGameObjectController;
-	TEntityHandler<GameObject> mCameraGameObject;
+    EntityHandler mSceneObjectController;
+	TEntityHandler<SceneObject> mCameraSceneObject;
 
 public:
     inline static const HashedString smDefaultSceneName = HashedString("Default");
     inline static const HashedString smDefaultUISceneName = HashedString("DefaultUI");
 
 public:
-	GET(GameObjectController)
-	SET(GameObjectController)
-	GET(CameraGameObject)
+	GET(SceneObjectController)
+	SET(SceneObjectController)
+	GET(CameraSceneObject)
 };
 REGISTER_CLASS(ScenesManager);

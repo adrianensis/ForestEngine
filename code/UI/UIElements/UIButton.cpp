@@ -25,7 +25,7 @@ void UIButton::onDestroy()
 {
 	if (mText)
 	{
-		mScene->removeGameObject(mText);
+		mScene->removeSceneObject(mText);
 		mText.reset();
 	}
 

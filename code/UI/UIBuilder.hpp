@@ -57,7 +57,7 @@ public:
         mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
-	    TEntityHandler<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createGameObject<T>();
+	    TEntityHandler<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createSceneObject<T>();
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 

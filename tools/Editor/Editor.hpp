@@ -27,13 +27,13 @@ private:
     TEntityHandler<UIText> mFPSCounter;
     TEntityHandler<UITransform> mUITransform;
     TEntityHandler<UISceneTree> mUISceneTree;
-	TEntityHandler<GameObject> mCameraGameObject;
-	TEntityHandler<GameObject> mDirectionalLight;
-	TEntityHandler<GameObject> mSelectedGameObject;
-	std::list<TEntityHandler<GameObject>> mBuildings;
+	TEntityHandler<SceneObject> mCameraSceneObject;
+	TEntityHandler<SceneObject> mDirectionalLight;
+	TEntityHandler<SceneObject> mSelectedSceneObject;
+	std::list<TEntityHandler<SceneObject>> mBuildings;
 	TEntityHandler<UIAxisGizmo> mAxisViewer;
 
-    std::vector<TEntityHandler<GameObject>> mGameObjectsArray;
+    std::vector<TEntityHandler<SceneObject>> mSceneObjectsArray;
 
     Vector2 mLastMousePosition;
 };

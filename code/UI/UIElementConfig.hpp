@@ -5,7 +5,7 @@
 #include "GPU/Shader/GPUShader.hpp"
 
 class Scene;
-class GameObject;
+class SceneObject;
 class UIStyle;
 
 enum class UILayout
@@ -36,6 +36,6 @@ public:
 	bool mIsAffectedByLayout = true;
 	WeakPtr<GPUShader> mShader;
 	HashedString mGroup;
-	TEntityHandler<GameObject> mParent;
+	TEntityHandler<SceneObject> mParent;
 	f32 mSeparatorSize = 0.01f;
 };

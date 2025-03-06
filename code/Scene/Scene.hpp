@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/Config/Config.hpp"
 #include "Core/EntityComponent/EntityManager.hpp"
-#include "Scene/GameObject.hpp"
+#include "Scene/SceneObject.hpp"
 
 class Scene: public ISerializable, public EnableWeakPtrToThis
 {
@@ -16,30 +16,30 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addGameObject(TEntityHandler<GameObject> gameObject);
+    void addSceneObject(TEntityHandler<SceneObject> sceneObject);
 
-    template <class T> T_EXTENDS(T, GameObject)
-	TEntityHandler<T> createGameObject()
+    template <class T> T_EXTENDS(T, SceneObject)
+	TEntityHandler<T> createSceneObject()
 	{
         PROFILER_CPU()
-        CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
+        CHECK_MSG(IS_BASE_OF(SceneObject, T), "T class is not derived from SceneObject");
 		EntityHandler entityHandler = EntityManager::getInstance().requestEntity<T>();
         entityHandler->init();
-        addGameObject(entityHandler);
+        addSceneObject(entityHandler);
         return entityHandler;
 	}
-    void removeGameObject(TEntityHandler<GameObject> gameObject);
+    void removeSceneObject(TEntityHandler<SceneObject> sceneObject);
     void update();
-    void flushNewGameObjects();
-    bool thereAreNewGameObjects() const;
+    void flushNewSceneObjects();
+    bool thereAreNewSceneObjects() const;
 
 private:
-    void destroyGameObjects();
+    void destroySceneObjects();
 
 private:
     HashedString mSceneName;
-	std::list<TEntityHandler<GameObject>> mGameObjects;
-	std::list<TEntityHandler<GameObject>> mNewGameObjects;
+	std::list<TEntityHandler<SceneObject>> mSceneObjects;
+	std::list<TEntityHandler<SceneObject>> mNewSceneObjects;
 
 	f32 mSize = 0.0f;
 	std::string mPath;
@@ -47,8 +47,8 @@ private:
 	Config mLoadSceneConfig;
 
 public:
-	CRGET(GameObjects)
-	CRGET(NewGameObjects)
+	CRGET(SceneObjects)
+	CRGET(NewSceneObjects)
 	GET(Size)
 	GET(Path)
 };

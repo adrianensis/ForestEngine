@@ -1,10 +1,10 @@
-#include "Scene/GameObject.hpp"
+#include "Scene/SceneObject.hpp"
 #include "Core/EntityComponent/Component.hpp"
 #include "Scene/Transform.hpp"
 #include "Core/Events/EventsManager.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
 
-void GameObject::init()
+void SceneObject::init()
 {
     PROFILER_CPU()
     Entity::init();
@@ -13,12 +13,12 @@ void GameObject::init()
     addComponent(mTransform);
 }
 
-IMPLEMENT_SERIALIZATION(GameObject)
+IMPLEMENT_SERIALIZATION(SceneObject)
 {
 	SERIALIZE("transform", mTransform.get())
 }
 
-IMPLEMENT_DESERIALIZATION(GameObject)
+IMPLEMENT_DESERIALIZATION(SceneObject)
 {
 	DESERIALIZE("transform", mTransform.get())
 }

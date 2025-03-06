@@ -3,7 +3,7 @@
 #include "Core/EntityComponent/Component.hpp"
 
 
-class GameObject;
+class SceneObject;
 
 class Script: public Component
 {
@@ -13,9 +13,9 @@ public:
     virtual void init();
     virtual void firstUpdate();
     virtual void update();
-    virtual void onEnterCollision(GameObject *otherGameObject);
-    virtual void onCollision(GameObject *otherGameObject);
-    virtual void onExitCollision(GameObject *otherGameObject);
+    virtual void onEnterCollision(SceneObject *otherSceneObject);
+    virtual void onCollision(SceneObject *otherSceneObject);
+    virtual void onExitCollision(SceneObject *otherSceneObject);
     virtual void terminate();
     void onDestroy() override;
 	
