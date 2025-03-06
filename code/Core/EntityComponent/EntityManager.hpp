@@ -20,7 +20,6 @@ public:
         {
             Entity& entity = mPoolsManager.getElementBase(classId, slot);
             T* entityT = static_cast<T*>(&entity);
-            *entityT = T();
             entityT->onRecycle(entityHandler.mSlot);
         }
         else
@@ -35,11 +34,6 @@ public:
     {
         mPoolsManager.removeElement(entityHandler.mClassId, entityHandler.mSlot);
         entityHandler.reset();
-    }
-
-    Entity& getEntity(EntityHandler entityHandler) const
-    {
-        return mPoolsManager.getElementBase(entityHandler.mClassId, entityHandler.mSlot);
     }
 
 private:
