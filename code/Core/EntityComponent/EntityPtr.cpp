@@ -4,7 +4,7 @@
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EntityManager::getInstance().getPoolsManager().getElementBase(mClassId, mSlot);
+    return EntityManager::getInstance().getPool().getElementBase(mClassId, mSlot);
 }
 
 EntityPtr EntityPtr::getEntityPtr(ClassId id, const Entity& entity)

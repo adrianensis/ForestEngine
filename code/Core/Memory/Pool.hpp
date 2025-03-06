@@ -6,11 +6,11 @@
 #include "Core/Memory/SlotsManager.hpp"
 
 template<class BaseClass>
-class PoolBase
+class PoolArrayBase
 {
 public:
-    virtual ~PoolBase() = default;
-    PoolBase(u32 reservedElements)
+    virtual ~PoolArrayBase() = default;
+    PoolArrayBase(u32 reservedElements)
     {
         mSlotsManager.init(reservedElements);
     }
@@ -22,10 +22,10 @@ public:
 };
 
 template <class T, class BaseClass> T_EXTENDS(T, BaseClass)
-class Pool : public PoolBase<BaseClass>
+class PoolArray : public PoolArrayBase<BaseClass>
 {
 public:
-    Pool(u32 reservedElements) : PoolBase<BaseClass>(reservedElements)
+    PoolArray(u32 reservedElements) : PoolArrayBase<BaseClass>(reservedElements)
     {
         PROFILER_CPU()
         mElements.reserve(reservedElements);
@@ -50,7 +50,7 @@ public:
 };
 
 template<class BaseClass>
-class PoolsManager
+class Pool
 {
 public:
     // void init() { }
@@ -72,7 +72,7 @@ public:
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mPools.contains(id))
         {
-            mPools.emplace(id, OwnerPtr<PoolBase<BaseClass>>::moveCast(OwnerPtr<Pool<T, BaseClass>>::newObject(mMaxElements)));
+            mPools.emplace(id, OwnerPtr<PoolArrayBase<BaseClass>>::moveCast(OwnerPtr<PoolArray<T, BaseClass>>::newObject(mMaxElements)));
         }
 
         if(mPools.at(id)->size() == mMaxElements)
@@ -128,7 +128,7 @@ public:
         return mPools.at(classId)->at(slot.getSlot());
     }
 
-    std::unordered_map<ClassId, OwnerPtr<PoolBase<BaseClass>>> mPools;
+    std::unordered_map<ClassId, OwnerPtr<PoolArrayBase<BaseClass>>> mPools;
 
     u32 mMaxElements = 100000;
 };

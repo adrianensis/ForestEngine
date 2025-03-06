@@ -17,7 +17,7 @@ class ComponentsManager: public Singleton<ComponentsManager>
 {
 public:
     void init() {}
-    void terminate() { mPoolsManager.terminate(); }
+    void terminate() { mPool.terminate(); }
 
     template<class T> T_EXTENDS(T, Component)
     void addComponentListener(WeakPtr<IComponentsListener> listener)
@@ -55,13 +55,13 @@ public:
     TComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
-        Slot slot = mPoolsManager.requestElement<T>();
+        Slot slot = mPool.requestElement<T>();
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId classId = classMetaData.mClassDefinition.getId();
         ComponentPtr componentPtr(classId, slot);
         if(componentPtr.isValid())
         {
-            T& comp = mPoolsManager.getElement<T>(slot);
+            T& comp = mPool.getElement<T>(slot);
             comp.onRecycle(componentPtr.mSlot);
         }
         else
@@ -76,24 +76,24 @@ public:
     {
         PROFILER_CPU()
 
-        mPoolsManager.removeElement(componentPtr.mClassId, componentPtr.mSlot);
+        mPool.removeElement(componentPtr.mClassId, componentPtr.mSlot);
         componentPtr.reset();
     }
 
     template<class T> T_EXTENDS(T, Component)
     T& getComponent(ComponentPtr componentPtr) const
     {
-        return mPoolsManager.getElement<T>(componentPtr.mSlot);
+        return mPool.getElement<T>(componentPtr.mSlot);
     }
 
     void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const;
     void notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const;
 
 private:
-    PoolsManager<Component> mPoolsManager;
+    Pool<Component> mPool;
     std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
 
 public:
-    CRGET(PoolsManager)
+    CRGET(Pool)
 };
 REGISTER_CLASS(ComponentsManager);

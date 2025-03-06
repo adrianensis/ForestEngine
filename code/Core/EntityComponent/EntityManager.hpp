@@ -7,18 +7,18 @@ class EntityManager: public Singleton<EntityManager>
 {
 public:
     void init() {}
-    void terminate() { mPoolsManager.terminate(); }
+    void terminate() { mPool.terminate(); }
 
     template<class T> T_EXTENDS(T, Entity)
     TEntityPtr<T> requestEntity()
     {
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId classId = classMetaData.mClassDefinition.getId();
-        Slot slot = mPoolsManager.requestElement<T>();
+        Slot slot = mPool.requestElement<T>();
         EntityPtr entityPtr(classId, slot);
         if(entityPtr.isValid())
         {
-            T& entity = mPoolsManager.getElement<T>(slot);
+            T& entity = mPool.getElement<T>(slot);
             entity.onRecycle(entityPtr.mSlot);
         }
         else
@@ -31,14 +31,14 @@ public:
 
     void removeEntity(EntityPtr& entityPtr)
     {
-        mPoolsManager.removeElement(entityPtr.mClassId, entityPtr.mSlot);
+        mPool.removeElement(entityPtr.mClassId, entityPtr.mSlot);
         entityPtr.reset();
     }
 
 private:
-    PoolsManager<Entity> mPoolsManager;
+    Pool<Entity> mPool;
 
 public:
-    CRGET(PoolsManager)
+    CRGET(Pool)
 };
 REGISTER_CLASS(EntityManager);
