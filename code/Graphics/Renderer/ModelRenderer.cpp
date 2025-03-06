@@ -3,8 +3,8 @@
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
-#include "Scene/Module.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityHandler.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
 {
@@ -23,10 +23,10 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mGPUShaderStencilData = mModelRendererData.mGPUShaderStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
-        TEntityHandler<GameObject> gameObjectParent = getOwnerEntity();
+        EntityHandler parent = getOwnerEntity();
         TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
         renderer->init(rendererData);
-		gameObjectParent->addComponent(renderer);
+		parent->addComponent(renderer);
 	}
 }
 
