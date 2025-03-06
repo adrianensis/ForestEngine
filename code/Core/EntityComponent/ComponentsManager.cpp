@@ -1,30 +1,30 @@
 #include "Core/EntityComponent/ComponentsManager.hpp"
 
-void ComponentsManager::notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const
+void ComponentsManager::notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const
 {
-    ClassId id = componentHandler->getComponentTypeId();
+    ClassId id = componentPtr->getComponentTypeId();
     if(mComponentListeners.contains(id))
     {
         FOR_LIST(it, mComponentListeners.at(id))
         {
             if((*it).isValid())
             {
-                (*it)->onComponentAdded(componentHandler);
+                (*it)->onComponentAdded(componentPtr);
             }
         }
     }
 }
 
-void ComponentsManager::notifyListenersOnComponentRemoved(const ComponentHandler& componentHandler) const
+void ComponentsManager::notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const
 {
-    ClassId id = componentHandler->getComponentTypeId();
+    ClassId id = componentPtr->getComponentTypeId();
     if(mComponentListeners.contains(id))
     {
         FOR_LIST(it, mComponentListeners.at(id))
         {
             if((*it).isValid())
             {
-                (*it)->onComponentRemoved(componentHandler);
+                (*it)->onComponentRemoved(componentPtr);
             }
         }
     }

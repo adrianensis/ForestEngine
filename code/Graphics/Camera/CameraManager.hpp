@@ -6,7 +6,7 @@
 class CameraManager: public System
 {
 private:
-	TComponentHandler<Camera> mCamera;
+	TComponentPtr<Camera> mCamera;
 
 public:
     GET_SET(Camera)

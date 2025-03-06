@@ -17,45 +17,45 @@ void Entity::init()
 	
 }
 
-void Entity::addComponent(const ComponentHandler& componentHandler)
+void Entity::addComponent(const ComponentPtr& componentPtr)
 {
     PROFILER_CPU()
-    CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
-    CHECK_MSG(!componentHandler->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
-    CHECK_MSG(componentHandler->getOwnerEntity() != EntityHandler::getEntityHandler(*this), "Component is already assigned to Entity!");
+    CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
+    CHECK_MSG(!componentPtr->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
+    CHECK_MSG(componentPtr->getOwnerEntity() != EntityPtr::getEntityPtr(*this), "Component is already assigned to Entity!");
 
-    componentHandler->setOwnerEntity(EntityHandler::getEntityHandler(*this));
-    CHECK_MSG(componentHandler->getOwnerEntity().isValid(), "invalid Entity!");
+    componentPtr->setOwnerEntity(EntityPtr::getEntityPtr(*this));
+    CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
 
-	mComponentHandlers.emplace_back(componentHandler);
-	componentHandler->onComponentAdded();
+	mComponentPtrs.emplace_back(componentPtr);
+	componentPtr->onComponentAdded();
 
-    ComponentsManager::getInstance().notifyListenersOnComponentAdded(componentHandler);
+    ComponentsManager::getInstance().notifyListenersOnComponentAdded(componentPtr);
 }
 
-void Entity::removeComponent(ComponentHandler& componentHandler)
+void Entity::removeComponent(ComponentPtr& componentPtr)
 {
     PROFILER_CPU()
-    CHECK_MSG(componentHandler.isValid(), "Invalid Component!");
-    CHECK_MSG(componentHandler->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
-    CHECK_MSG(componentHandler->getOwnerEntity() == EntityHandler::getEntityHandler(*this), "Component is assigned to another Entity!");
+    CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
+    CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
+    CHECK_MSG(componentPtr->getOwnerEntity() == EntityPtr::getEntityPtr(*this), "Component is assigned to another Entity!");
 
     bool componentFound = false;
-    FOR_LIST(it, mComponentHandlers)
+    FOR_LIST(it, mComponentPtrs)
 	{
-        if((*it) == componentHandler)
+        if((*it) == componentPtr)
         {
             componentFound = true;
-            mComponentHandlers.erase(it);
+            mComponentPtrs.erase(it);
             break;
         }
     }
 
     if(componentFound)
     {
-        ComponentsManager::getInstance().notifyListenersOnComponentRemoved(componentHandler);
-        componentHandler->destroy();
-        ComponentsManager::getInstance().removeComponent(componentHandler);
+        ComponentsManager::getInstance().notifyListenersOnComponentRemoved(componentPtr);
+        componentPtr->destroy();
+        ComponentsManager::getInstance().removeComponent(componentPtr);
     }
 }
 
@@ -63,7 +63,7 @@ void Entity::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
-	FOR_LIST(it, mComponentHandlers)
+	FOR_LIST(it, mComponentPtrs)
 	// FOR_LIST(it, mComponents)
 	{
 		(*it)->setIsActive(isActive);
@@ -77,7 +77,7 @@ void Entity::destroy()
 
 	onDestroy();
 
-	FOR_LIST(it, mComponentHandlers)
+	FOR_LIST(it, mComponentPtrs)
 	{
         if((*it).isValid())
         {
@@ -87,7 +87,7 @@ void Entity::destroy()
         }
 	}
 
-	mComponentHandlers.clear();
+	mComponentPtrs.clear();
 }
 
 void Entity::onRecycle(Slot newSlot)

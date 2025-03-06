@@ -35,9 +35,9 @@ public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
     void terminate();
-    void addRenderer(TComponentHandler<MeshRenderer> renderer);
-    OwnerPtr<GPUShaderPipeline> compileShader(TComponentHandler<MeshRenderer> renderer);
-    void removeRenderer(TComponentHandler<MeshRenderer> renderer);
+    void addRenderer(TComponentPtr<MeshRenderer> renderer);
+    OwnerPtr<GPUShaderPipeline> compileShader(TComponentPtr<MeshRenderer> renderer);
+    void removeRenderer(TComponentPtr<MeshRenderer> renderer);
     virtual void renderPass();
     void onResize();
 protected:

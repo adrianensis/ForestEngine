@@ -1,5 +1,5 @@
 #include "Scene/Transform.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 
 void Transform::init() 
 {
@@ -19,7 +19,7 @@ void Transform::onDestroy()
 {
     if(mParent)
     {
-        mParent->removeChild(ComponentHandler::getComponentHandler<Transform>(*this));
+        mParent->removeChild(ComponentPtr::getComponentPtr<Transform>(*this));
     }
 }
 
@@ -225,13 +225,13 @@ const Matrix4& Transform::getViewMatrix() const
     return mViewMatrix;
 }
 
-void Transform::addChild(TComponentHandler<Transform> child)
+void Transform::addChild(TComponentPtr<Transform> child)
 {
-    child->mParent = ComponentHandler::getComponentHandler<Transform>(*this);
+    child->mParent = ComponentPtr::getComponentPtr<Transform>(*this);
     mChildren.insert_or_assign(child->getComponentId(), child);
 }
 
-void Transform::removeChild(TComponentHandler<Transform> child)
+void Transform::removeChild(TComponentPtr<Transform> child)
 {
     child->mParent.reset();
     mChildren.erase(child->getComponentId());

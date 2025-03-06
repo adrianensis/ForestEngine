@@ -8,7 +8,7 @@
 #include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 
 void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
 {
@@ -36,7 +36,7 @@ void RenderPass::terminate()
     delete mGPURenderPass;
 }
 
-void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
+void RenderPass::addRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
 	InstancedMeshData instancedMeshData;
@@ -44,7 +44,7 @@ void RenderPass::addRenderer(TComponentHandler<MeshRenderer> renderer)
     mInstancedMeshRenderers.insert(instancedMeshData);
 }
 
-OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRenderer> renderer)
+OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
 	InstancedMeshData instancedMeshData;
@@ -101,7 +101,7 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentHandler<MeshRend
     return instancedMeshData.mShader->compileShader(shaderCompilationData);
 }
 
-void RenderPass::removeRenderer(TComponentHandler<MeshRenderer> renderer)
+void RenderPass::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     InstancedMeshData instancedMeshData;
 	instancedMeshData.init(renderer);
@@ -177,7 +177,7 @@ void RenderPass::updateGlobalData()
 	PROFILER_CPU()
 
     Matrix4 projectionViewMatrix = calculateProjectionViewMatrix();
-    TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
@@ -196,7 +196,7 @@ Matrix4 RenderPass::calculateProjectionViewMatrix() const
     Matrix4 view2D;
     view2D.view(Vector3(0,0,1000), Vector3(0,0,0));
 
-    TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 projectionViewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho;
     Matrix4 viewMatrix = mRenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : view2D;

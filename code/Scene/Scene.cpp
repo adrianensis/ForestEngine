@@ -70,7 +70,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEntityHandler sceneObject)
+//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEntityPtr sceneObject)
 //	{
 //		return sceneObject->mShouldPersist;
 //	})
@@ -109,7 +109,7 @@ void Scene::unloadScene()
 	destroySceneObjects();
 }
 
-void Scene::addSceneObject(TEntityHandler<SceneObject> sceneObject)
+void Scene::addSceneObject(TEntityPtr<SceneObject> sceneObject)
 {
     if(sceneObject)
     {
@@ -119,7 +119,7 @@ void Scene::addSceneObject(TEntityHandler<SceneObject> sceneObject)
     }
 }
 
-void Scene::removeSceneObject(TEntityHandler<SceneObject> sceneObject)
+void Scene::removeSceneObject(TEntityPtr<SceneObject> sceneObject)
 {
 	if (sceneObject && !sceneObject->getIsDestroyed() && !sceneObject->getIsPendingToBeDestroyed())
 	{

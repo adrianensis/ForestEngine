@@ -1,5 +1,5 @@
 #include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 #include "Core/EntityComponent/EntityManager.hpp"
 
 Component::Component()
@@ -49,13 +49,13 @@ void Component::onDestroy()
 {
 }
 
-EntityHandler Component::getOwnerEntity() const
+EntityPtr Component::getOwnerEntity() const
 {
-    EntityHandler entityHandler(mOwnerEntity.mClassId, mOwnerEntity.mSlot, EntityManager::getInstancePtr().getInternalPointer());
-    return entityHandler;
+    EntityPtr entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot, EntityManager::getInstancePtr().getInternalPointer());
+    return entityPtr;
 }
 
-void Component::setOwnerEntity(const EntityHandler& ownerEntity)
+void Component::setOwnerEntity(const EntityPtr& ownerEntity)
 {
     mOwnerEntity = ComponentOwner(ownerEntity.mClassId, ownerEntity.mSlot);
 }

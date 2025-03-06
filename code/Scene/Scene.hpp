@@ -16,19 +16,19 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addSceneObject(TEntityHandler<SceneObject> sceneObject);
+    void addSceneObject(TEntityPtr<SceneObject> sceneObject);
 
     template <class T> T_EXTENDS(T, SceneObject)
-	TEntityHandler<T> createSceneObject()
+	TEntityPtr<T> createSceneObject()
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(SceneObject, T), "T class is not derived from SceneObject");
-		EntityHandler entityHandler = EntityManager::getInstance().requestEntity<T>();
-        entityHandler->init();
-        addSceneObject(entityHandler);
-        return entityHandler;
+		EntityPtr entityPtr = EntityManager::getInstance().requestEntity<T>();
+        entityPtr->init();
+        addSceneObject(entityPtr);
+        return entityPtr;
 	}
-    void removeSceneObject(TEntityHandler<SceneObject> sceneObject);
+    void removeSceneObject(TEntityPtr<SceneObject> sceneObject);
     void update();
     void flushNewSceneObjects();
     bool thereAreNewSceneObjects() const;
@@ -38,8 +38,8 @@ private:
 
 private:
     HashedString mSceneName;
-	std::list<TEntityHandler<SceneObject>> mSceneObjects;
-	std::list<TEntityHandler<SceneObject>> mNewSceneObjects;
+	std::list<TEntityPtr<SceneObject>> mSceneObjects;
+	std::list<TEntityPtr<SceneObject>> mNewSceneObjects;
 
 	f32 mSize = 0.0f;
 	std::string mPath;

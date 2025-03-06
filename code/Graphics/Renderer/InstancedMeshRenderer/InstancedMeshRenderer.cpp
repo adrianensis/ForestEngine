@@ -73,7 +73,7 @@ void InstancedMeshRenderer::disable()
     // mGPUVertexBuffersContainer.disable();
 }
 
-void InstancedMeshRenderer::addRenderer(TComponentHandler<MeshRenderer> renderer)
+void InstancedMeshRenderer::addRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(add_renderer)
     if(mRendererSlotsManager.isEmpty())
@@ -89,7 +89,7 @@ void InstancedMeshRenderer::addRenderer(TComponentHandler<MeshRenderer> renderer
     mRenderersCount++;
 }
 
-void InstancedMeshRenderer::removeRenderer(TComponentHandler<MeshRenderer> renderer)
+void InstancedMeshRenderer::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
 	mResizeBuffersRequested = true;
     mRenderers.at(renderer->getInstanceSlot().getSlot()).reset();
@@ -130,7 +130,7 @@ void InstancedMeshRenderer::update(VkCommandBuffer commandBuffer)
     u32 rendererIndex = 0;
     FOR_RANGE(i, 0, (*mUsedSlots.rbegin())+1)
     {
-        TComponentHandler<MeshRenderer> renderer = mRenderers[i];
+        TComponentPtr<MeshRenderer> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getGPUShaderPropertiesInstance()->mSlot.getSlot());

@@ -32,7 +32,7 @@ void Editor::firstUpdate()
 
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
-    TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+    TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -112,8 +112,8 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
-	TComponentHandler<Transform> cameraTransform = mCameraSceneObject->mTransform;
+    TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
@@ -244,9 +244,9 @@ void Editor::terminate()
 
 }
 
-EntityHandler Editor::createSprite(const Vector3& v, f32 size)
+EntityPtr Editor::createSprite(const Vector3& v, f32 size)
 {
-	TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	// sceneObject->mIsStatic = false;
 	// sceneObject->mTransform->setLocalPosition(v);
 	// sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -258,16 +258,16 @@ EntityHandler Editor::createSprite(const Vector3& v, f32 size)
     // shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	// TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// sceneObject->addComponent(renderer);
 
 	return sceneObject;
 }
 
-EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
+EntityPtr Editor::createPointLight(const Vector3& v, f32 size)
 {
-	TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -276,16 +276,16 @@ EntityHandler Editor::createPointLight(const Vector3& v, f32 size)
     data.mPosition = v;
     data.mDiffuse = Vector3(1,1,1) * 250000;
 
-	TComponentHandler<PointLight> pointLight = ComponentsManager::getInstance().requestComponent<PointLight>();
+	TComponentPtr<PointLight> pointLight = ComponentsManager::getInstance().requestComponent<PointLight>();
     pointLight->init(data);
 	sceneObject->addComponent(pointLight);
 
 	return sceneObject;
 }
 
-EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
+EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
-	TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
     sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->lookAt(v + dir);
@@ -294,23 +294,23 @@ EntityHandler Editor::createDirectionalLight(const Vector3& v, const Vector3& di
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
-	TComponentHandler<DirectionalLight> dirLight = ComponentsManager::getInstance().requestComponent<DirectionalLight>();
+	TComponentPtr<DirectionalLight> dirLight = ComponentsManager::getInstance().requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
 	sceneObject->addComponent(dirLight);
 
 	return sceneObject;
 }
 
-EntityHandler Editor::mousePick()
+EntityPtr Editor::mousePick()
 {
 
     f32 speed = 100 * GET_SYSTEM(Time).getDeltaTimeSeconds();
-    EntityHandler obj;
+    EntityPtr obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
         // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -333,11 +333,11 @@ EntityHandler Editor::mousePick()
     return obj;
 }
 
-EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
+EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
 {
 	WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    TEntityHandler<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+    TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = isStatic;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->setLocalScale(Vector3::smOne * size);
@@ -351,7 +351,7 @@ EntityHandler Editor::importModel( const std::string& pFile, const Vector3& v, f
         ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	TComponentHandler<ModelRenderer> modelRenderer = ComponentsManager::getInstance().requestComponent<ModelRenderer>();
+	TComponentPtr<ModelRenderer> modelRenderer = ComponentsManager::getInstance().requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
 	sceneObject->addComponent(modelRenderer);
     return sceneObject;
@@ -368,7 +368,7 @@ void Editor::handleMouse()
 	{
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
         // mBuildings.pop_front();
-        // TComponentHandler<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Vector2 currentMousePosition = GET_SYSTEM(Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);

@@ -2,7 +2,7 @@
 
 #include "Core/Events/Event.hpp"
 
-class EntityHandler;
+class EntityPtr;
 
 class Component: public ISerializable, public IEventObject
 {
@@ -26,8 +26,8 @@ public:
     // This will automatically work in derived classes, no need to override this method in derived classes
     virtual ClassId getComponentTypeId() const { return 0; }
 
-    EntityHandler getOwnerEntity() const;
-    void setOwnerEntity(const EntityHandler& ownerEntity);
+    EntityPtr getOwnerEntity() const;
+    void setOwnerEntity(const EntityPtr& ownerEntity);
 
 private:
 

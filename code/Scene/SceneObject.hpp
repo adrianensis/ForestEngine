@@ -16,6 +16,6 @@ public:
 
 public:
 	WeakPtr<Scene> mScene;
-	TComponentHandler<Transform> mTransform;
+	TComponentPtr<Transform> mTransform;
 };
 REGISTER_CLASS(SceneObject);

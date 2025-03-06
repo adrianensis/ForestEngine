@@ -11,6 +11,6 @@ protected:
     virtual void render() override;
     virtual void postRender() override;
 public:
-    TComponentHandler<DirectionalLight> mDirectionalLight;
+    TComponentPtr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassGeometry);

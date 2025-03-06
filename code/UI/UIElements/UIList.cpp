@@ -46,7 +46,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
-	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
 	renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
@@ -92,7 +92,7 @@ void UIList::toggle()
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
-            setParent(EntityHandler::getEntityHandler(*this));
+            setParent(EntityPtr::getEntityPtr(*this));
 
 		FOR_LIST(it, mEntries)
 		{
@@ -104,7 +104,7 @@ void UIList::toggle()
 			create<UIButton>();
 
 
-			TEntityHandler<UIButton> button = uiBuilder.getUIElement<UIButton>();
+			TEntityPtr<UIButton> button = uiBuilder.getUIElement<UIButton>();
 			button->setOnPressedCallback(onPressedCallback);
 
 			mButtons.push_back(button);

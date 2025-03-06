@@ -26,8 +26,8 @@ private:
 	std::unordered_map<HashedString, WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<HashedString> mLoadRequests;
 
-    EntityHandler mSceneObjectController;
-	TEntityHandler<SceneObject> mCameraSceneObject;
+    EntityPtr mSceneObjectController;
+	TEntityPtr<SceneObject> mCameraSceneObject;
 
 public:
     inline static const HashedString smDefaultSceneName = HashedString("Default");

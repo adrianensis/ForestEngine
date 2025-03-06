@@ -22,7 +22,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
     renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
@@ -103,14 +103,14 @@ void UIText::setText(HashedString text)
 
                 if(i < mFontRenderers.size())
                 {
-                    TEntityHandler<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
+                    TEntityPtr<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
                     UIElementConfig glyphConfig = sceneObjectGlyph->getConfig();
                     glyphConfig.mPosition = glyphPositionScreenSpace;
                     glyphConfig.mSize = glyphSizeScreenSpace;
                     glyphConfig = sceneObjectGlyph->calculateConfig(glyphConfig);
                     sceneObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     sceneObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
-                    TComponentHandler<MeshRenderer> renderer = sceneObjectGlyph->getFirstComponent<MeshRenderer>();
+                    TComponentPtr<MeshRenderer> renderer = sceneObjectGlyph->getFirstComponent<MeshRenderer>();
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
@@ -119,14 +119,14 @@ void UIText::setText(HashedString text)
                 else
                 {
                     UIBuilder uiBuilder;
-                    TEntityHandler<UITextGlyph> sceneObjectGlyph = uiBuilder.
+                    TEntityPtr<UITextGlyph> sceneObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).
                     setText(HashedString(std::string() + character)).
                     setLayer(mConfig.mLayer + 1).
                     setIsAffectedByLayout(false).
-                    setParent(EntityHandler::getEntityHandler(*this)).
+                    setParent(EntityPtr::getEntityPtr(*this)).
                     create<UITextGlyph>().
                     getUIElement<UITextGlyph>();
 

@@ -7,12 +7,12 @@ class UITransform: public SceneObject
 {
 public:
     virtual void init() override;
-    void update(TComponentHandler<const Transform> transform);
+    void update(TComponentPtr<const Transform> transform);
     virtual void onDestroy() override;
 
 private:
-    TEntityHandler<UIVector> mPosition;
-    TEntityHandler<UIVector> mRotation;
-    TEntityHandler<UIVector> mScale;
+    TEntityPtr<UIVector> mPosition;
+    TEntityPtr<UIVector> mRotation;
+    TEntityPtr<UIVector> mScale;
 };
 REGISTER_CLASS(UITransform)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentPtr.hpp"
 #include "Core/Memory/Pool.hpp"
 
 class Component;
@@ -9,8 +9,8 @@ class Component;
 class IComponentsListener
 {
 public:
-    virtual void onComponentAdded(const ComponentHandler& componentHandler) {};
-    virtual void onComponentRemoved(const ComponentHandler& componentHandler) {};
+    virtual void onComponentAdded(const ComponentPtr& componentPtr) {};
+    virtual void onComponentRemoved(const ComponentPtr& componentPtr) {};
 };
 
 class ComponentsManager: public Singleton<ComponentsManager>
@@ -52,42 +52,42 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    TComponentHandler<T> requestComponent()
+    TComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
         Slot slot = mPoolsManager.requestElement<T>();
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId classId = classMetaData.mClassDefinition.getId();
-        ComponentHandler componentHandler(classId, slot, this);
-        if(componentHandler.isValid())
+        ComponentPtr componentPtr(classId, slot, this);
+        if(componentPtr.isValid())
         {
             T& comp = mPoolsManager.getElement<T>(slot);
-            comp.onRecycle(componentHandler.mSlot);
+            comp.onRecycle(componentPtr.mSlot);
         }
         else
         {
             CHECK_MSG(false, "Invalid Component!");
         }
 
-        return componentHandler;
+        return componentPtr;
     }
 
-    void removeComponent(ComponentHandler& componentHandler)
+    void removeComponent(ComponentPtr& componentPtr)
     {
         PROFILER_CPU()
 
-        mPoolsManager.removeElement(componentHandler.mClassId, componentHandler.mSlot);
-        componentHandler.reset();
+        mPoolsManager.removeElement(componentPtr.mClassId, componentPtr.mSlot);
+        componentPtr.reset();
     }
 
     template<class T> T_EXTENDS(T, Component)
-    T& getComponent(ComponentHandler componentHandler) const
+    T& getComponent(ComponentPtr componentPtr) const
     {
-        return mPoolsManager.getElement<T>(componentHandler.mSlot);
+        return mPoolsManager.getElement<T>(componentPtr.mSlot);
     }
 
-    void notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const;
-    void notifyListenersOnComponentRemoved(const ComponentHandler& componentHandler) const;
+    void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const;
+    void notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const;
 
 private:
     PoolsManager<Component> mPoolsManager;

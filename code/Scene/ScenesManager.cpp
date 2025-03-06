@@ -14,7 +14,7 @@ void ScenesManager::terminate()
 
 	if (mCameraSceneObject)
 	{
-		TComponentHandler<Camera> cameraComponent = mCameraSceneObject->getFirstComponent<Camera>();
+		TComponentPtr<Camera> cameraComponent = mCameraSceneObject->getFirstComponent<Camera>();
 		mCameraSceneObject->removeComponent(cameraComponent);
 		mCameraSceneObject->destroy();
         mCameraSceneObject.reset();
@@ -45,7 +45,7 @@ void ScenesManager::init()
 	// mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
-    TComponentHandler<Camera> camera = ComponentsManager::getInstance().requestComponent<Camera>();
+    TComponentPtr<Camera> camera = ComponentsManager::getInstance().requestComponent<Camera>();
 	camera->init();
     mCameraSceneObject->addComponent(camera);
 	camera->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
@@ -57,7 +57,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    TComponentHandler<Camera> cameraComponent = mCameraSceneObject->getFirstComponent<Camera>();
+    TComponentPtr<Camera> cameraComponent = mCameraSceneObject->getFirstComponent<Camera>();
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

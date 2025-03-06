@@ -11,7 +11,7 @@ public:
     void onPostPressed() override;
 
 private:
-    TEntityHandler<UIDropdown> mParentDropdown;
+    TEntityPtr<UIDropdown> mParentDropdown;
 public:
 	GET_SET(ParentDropdown)
 };
@@ -43,7 +43,7 @@ private:
     void setEntriesVisibility(bool visible);
 
 private:
-	std::list<TEntityHandler<UIDropdownButton>> mButtons;
+	std::list<TEntityPtr<UIDropdownButton>> mButtons;
 	std::list<UIDropdownEntry> mEntries;
 
 };

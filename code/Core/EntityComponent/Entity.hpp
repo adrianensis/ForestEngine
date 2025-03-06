@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentPtr.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
 #include "Core/Events/Event.hpp"
 
@@ -13,14 +13,14 @@ public:
     Entity();
 
     virtual void init();
-	void removeComponent(ComponentHandler& componentHandler);
-	void addComponent(const ComponentHandler& componentHandler);
+	void removeComponent(ComponentPtr& componentPtr);
+	void addComponent(const ComponentPtr& componentPtr);
 
 	// template <class T> T_EXTENDS(T, Component)
 	// std::list<WeakPtr<T>> getComponents() const
 	// {
 	// 	std::list<WeakPtr<T>> components;
-	// 	FOR_LIST(it, mComponentHandlers)
+	// 	FOR_LIST(it, mComponentPtrs)
 	// 	// FOR_LIST(it, mComponents)
 	// 	{
     //         WeakPtr<T> casted = WeakPtr<T>::cast((*it).getComponent());
@@ -35,17 +35,17 @@ public:
 	// }
 
 	template <class T> T_EXTENDS(T, Component)
-	TComponentHandler<T> getFirstComponent() const
+	TComponentPtr<T> getFirstComponent() const
 	{   
-        TComponentHandler<T> componentToReturn;
-        FOR_LIST(it, mComponentHandlers)
+        TComponentPtr<T> componentToReturn;
+        FOR_LIST(it, mComponentPtrs)
         {
-            ComponentHandler componentHandler = (*it);
-            if(componentHandler.isValid())
+            ComponentPtr componentPtr = (*it);
+            if(componentPtr.isValid())
             {
-                if(dynamic_cast<const T *>(&componentHandler.getComponent()) != nullptr)
+                if(dynamic_cast<const T *>(&componentPtr.getComponent()) != nullptr)
                 {
-                    componentToReturn = componentHandler;
+                    componentToReturn = componentPtr;
                     break;
                 }
             }
@@ -72,7 +72,7 @@ public:
     void destroy();
 
 private:
-	std::list<ComponentHandler> mComponentHandlers;
+	std::list<ComponentPtr> mComponentPtrs;
 	bool mIsActive = true;
 
 	bool mIsPendingToBeDestroyed = false;

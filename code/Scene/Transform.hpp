@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentPtr.hpp"
 
 class Transform: public Component
 {
@@ -19,8 +19,8 @@ public:
 
     const Matrix4& calculateModelMatrix() const;
 
-    void addChild(TComponentHandler<Transform> child);
-    void removeChild(TComponentHandler<Transform> child);
+    void addChild(TComponentPtr<Transform> child);
+    void removeChild(TComponentPtr<Transform> child);
 
     Vector3 getWorldPosition() const;
     Vector3 getWorldScale() const;
@@ -39,8 +39,8 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<ObjectId, TComponentHandler<Transform>> mChildren;
-    TComponentHandler<Transform> mParent;
+    std::unordered_map<ObjectId, TComponentPtr<Transform>> mChildren;
+    TComponentPtr<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
     mutable bool mLocalTranslationMatrixDirty = true;

@@ -11,8 +11,8 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
     mAxisName = axisName;
     mNegAxisName = HashedString("-" + mAxisName.get());
 
-    TEntityHandler<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    TComponentHandler<Camera> camera = cameraSceneObject->getFirstComponent<Camera>();
+    TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
+    TComponentPtr<Camera> camera = cameraSceneObject->getFirstComponent<Camera>();
 
     Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Vector4(UIUtils::correctAspectRatioVectorX(
@@ -45,7 +45,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(EntityHandler::getEntityHandler(*this)).
+    setParent(EntityPtr::getEntityPtr(*this)).
 	setTextScale(0.5f);
 
     mPositive = uiBuilder.
@@ -62,7 +62,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(EntityHandler::getEntityHandler(*this)).
+    setParent(EntityPtr::getEntityPtr(*this)).
 	setTextScale(0.5f);
 
     mNegative = uiBuilder.
@@ -73,8 +73,8 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 
 void UISingleAxisGizmo::update()
 {
-    TEntityHandler<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    TComponentHandler<Camera> camera = cameraSceneObject->getFirstComponent<Camera>();
+    TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
+    TComponentPtr<Camera> camera = cameraSceneObject->getFirstComponent<Camera>();
 
     Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Vector4(UIUtils::correctAspectRatioVectorX(

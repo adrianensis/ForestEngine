@@ -36,7 +36,7 @@ void RenderPassGeometry::updateGlobalData()
 	PROFILER_CPU()
     RenderPass::updateGlobalData();
 
-    TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 lightProjectionViewMatrix = Matrix4::smIdentity;
     if(mDirectionalLight)

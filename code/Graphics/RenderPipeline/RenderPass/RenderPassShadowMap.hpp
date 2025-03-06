@@ -11,6 +11,6 @@ protected:
     virtual void postRender() override;
     virtual void updateGlobalData() override;
 public:
-    TComponentHandler<DirectionalLight> mDirectionalLight;
+    TComponentPtr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassShadowMap);

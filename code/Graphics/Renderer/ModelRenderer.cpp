@@ -4,7 +4,7 @@
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
 {
@@ -23,8 +23,8 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mGPUShaderStencilData = mModelRendererData.mGPUShaderStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
-        EntityHandler parent = getOwnerEntity();
-        TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+        EntityPtr parent = getOwnerEntity();
+        TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
         renderer->init(rendererData);
 		parent->addComponent(renderer);
 	}

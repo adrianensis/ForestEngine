@@ -5,13 +5,13 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
-#include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/EntityComponent/ComponentPtr.hpp"
 
 class RenderPipelineData
 {
 public:
-    std::vector<TComponentHandler<PointLight>> mPointLights;
-    TComponentHandler<DirectionalLight> mDirectionalLight;
+    std::vector<TComponentPtr<PointLight>> mPointLights;
+    TComponentPtr<DirectionalLight> mDirectionalLight;
 };
 
 class RenderPipeline
@@ -21,8 +21,8 @@ public:
     virtual ~RenderPipeline() = default;
     void update();
     virtual void terminate();
-    void addRenderer(TComponentHandler<MeshRenderer> renderer);
-    void removeRenderer(TComponentHandler<MeshRenderer> renderer);
+    void addRenderer(TComponentPtr<MeshRenderer> renderer);
+    void removeRenderer(TComponentPtr<MeshRenderer> renderer);
     virtual void render(RenderPipelineData& renderData);
     virtual void compile();
     void onResize();
@@ -51,9 +51,9 @@ protected:
     }
 
     void initBuffers();
-    void setRendererMatrix(TComponentHandler<MeshRenderer> renderer);
-    void processRenderer(TComponentHandler<MeshRenderer> renderer);
-    void compileShader(TComponentHandler<MeshRenderer> renderer);
+    void setRendererMatrix(TComponentPtr<MeshRenderer> renderer);
+    void processRenderer(TComponentPtr<MeshRenderer> renderer);
+    void compileShader(TComponentPtr<MeshRenderer> renderer);
 
 protected:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
@@ -63,9 +63,9 @@ protected:
 
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
-	std::vector<TComponentHandler<MeshRenderer>> mRenderers;
+	std::vector<TComponentPtr<MeshRenderer>> mRenderers;
     std::set<u32> mUsedSlots;
-	std::vector<TComponentHandler<MeshRenderer>> mRenderersStatic;
+	std::vector<TComponentPtr<MeshRenderer>> mRenderersStatic;
     inline static const u32 mInitialInstances = 1000;
 
 public:

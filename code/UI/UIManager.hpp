@@ -34,12 +34,12 @@ public:
 	}
 
 
-    TEntityHandler<UIElement> getFocusedElement() const { return mFocusedElement; };
-    void setFocusedElement(TEntityHandler<UIElement> focusedElement);
+    TEntityPtr<UIElement> getFocusedElement() const { return mFocusedElement; };
+    void setFocusedElement(TEntityPtr<UIElement> focusedElement);
 
 private:
 	std::unordered_map<HashedString, OwnerPtr<UIGroup>> mGroups;
-	TEntityHandler<UIElement> mFocusedElement;
+	TEntityPtr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     HashedString mDefaultFont;
     WeakPtr<GPUShader> mDefaultUIShader;

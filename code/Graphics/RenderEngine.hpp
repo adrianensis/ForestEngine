@@ -17,8 +17,8 @@ public:
     void postSceneChanged();
     void onResize() override;
     
-    virtual void onComponentAdded(const ComponentHandler& component) override;
-    virtual void onComponentRemoved(const ComponentHandler& component) override;
+    virtual void onComponentAdded(const ComponentPtr& component) override;
+    virtual void onComponentRemoved(const ComponentPtr& component) override;
 
 private:
     RenderPipelineData mRenderPipelineData;

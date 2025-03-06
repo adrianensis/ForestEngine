@@ -4,31 +4,31 @@
 
 class ComponentsManager;
 
-class ComponentHandler
+class ComponentPtr
 {
 public:
-    ComponentHandler() = default;
-    ComponentHandler(ClassId id, Slot slot, ComponentsManager* componentsManager)
+    ComponentPtr() = default;
+    ComponentPtr(ClassId id, Slot slot, ComponentsManager* componentsManager)
     {
         mClassId = id;
         mSlot = slot;
         mComponentsManager = componentsManager;
     }
 
-    ComponentHandler(ClassId id, Slot slot, const ComponentsManager* componentsManager): ComponentHandler(id, slot, const_cast<ComponentsManager*>(componentsManager))
+    ComponentPtr(ClassId id, Slot slot, const ComponentsManager* componentsManager): ComponentPtr(id, slot, const_cast<ComponentsManager*>(componentsManager))
     {
     }
 
-    ComponentHandler(const ComponentHandler& other): ComponentHandler(other.mClassId, other.mSlot, other.mComponentsManager)
+    ComponentPtr(const ComponentPtr& other): ComponentPtr(other.mClassId, other.mSlot, other.mComponentsManager)
     {
     }
 
-    virtual ~ComponentHandler()
+    virtual ~ComponentPtr()
     {
         reset();
     }
 
-    ComponentHandler& operator=(const ComponentHandler& other)
+    ComponentPtr& operator=(const ComponentPtr& other)
     {
         if (other.isValid() && this != &other)
         {
@@ -58,7 +58,7 @@ public:
 
     virtual bool isValid() const { return mComponentsManager && mClassId > 0 && mSlot.isValid(); }
     operator bool() const { return this->isValid(); }
-    bool operator==(const ComponentHandler& other) const
+    bool operator==(const ComponentPtr& other) const
 	{
 		return
          mComponentsManager == other.mComponentsManager &&
@@ -74,12 +74,12 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    static ComponentHandler getComponentHandler(T& component)
+    static ComponentPtr getComponentPtr(T& component)
     {
         ClassId id = ClassManager::getDynamicClassMetadata(&component).mClassDefinition.getId();
-        return getComponentHandler(id, component);
+        return getComponentPtr(id, component);
     }
-    static ComponentHandler getComponentHandler(ClassId id, const Component& component);
+    static ComponentPtr getComponentPtr(ClassId id, const Component& component);
 
 protected:
     Component& getInternal() const;
@@ -91,24 +91,24 @@ public:
 };
 
 template<class T>// T_EXTENDS(T, Component)
-class TComponentHandler : public ComponentHandler
+class TComponentPtr : public ComponentPtr
 {
 public:
-    TComponentHandler() = default;
-    TComponentHandler(ClassId id, Slot slot, ComponentsManager* componentsManager): ComponentHandler(id, slot, componentsManager)
+    TComponentPtr() = default;
+    TComponentPtr(ClassId id, Slot slot, ComponentsManager* componentsManager): ComponentPtr(id, slot, componentsManager)
     {
     }
 
-    TComponentHandler(ClassId id, Slot slot, const ComponentsManager* componentsManager): TComponentHandler(id, slot, const_cast<ComponentsManager*>(componentsManager))
+    TComponentPtr(ClassId id, Slot slot, const ComponentsManager* componentsManager): TComponentPtr(id, slot, const_cast<ComponentsManager*>(componentsManager))
     {
     }
 
-    TComponentHandler(const ComponentHandler& other): TComponentHandler(other.mClassId, other.mSlot, other.mComponentsManager)
+    TComponentPtr(const ComponentPtr& other): TComponentPtr(other.mClassId, other.mSlot, other.mComponentsManager)
     {
     }
     T& get() const
     {
-        return ComponentHandler::get<T>();
+        return ComponentPtr::get<T>();
     }
     
     T* operator->() const { return &get(); }
@@ -120,7 +120,7 @@ public:
         T* castedPointer = dynamic_cast<T*>(pointer);
         return mClassId > 0 && mSlot.isValid() && castedPointer;
     }
-    operator TComponentHandler<const T>() const { return TComponentHandler<const T>(mClassId, mSlot, mComponentsManager); }
+    operator TComponentPtr<const T>() const { return TComponentPtr<const T>(mClassId, mSlot, mComponentsManager); }
     template<class U> T_EXTENDS(T, U)
-    operator TComponentHandler<U>() const { return TComponentHandler<U>(*this); }
+    operator TComponentPtr<U>() const { return TComponentPtr<U>(*this); }
 };

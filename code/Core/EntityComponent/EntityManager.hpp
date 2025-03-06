@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 
 class EntityManager: public Singleton<EntityManager>
 {
@@ -10,29 +10,29 @@ public:
     void terminate() { mPoolsManager.terminate(); }
 
     template<class T> T_EXTENDS(T, Entity)
-    TEntityHandler<T> requestEntity()
+    TEntityPtr<T> requestEntity()
     {
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId classId = classMetaData.mClassDefinition.getId();
         Slot slot = mPoolsManager.requestElement<T>();
-        EntityHandler entityHandler(classId, slot, this);
-        if(entityHandler.isValid())
+        EntityPtr entityPtr(classId, slot, this);
+        if(entityPtr.isValid())
         {
             T& entity = mPoolsManager.getElement<T>(slot);
-            entity.onRecycle(entityHandler.mSlot);
+            entity.onRecycle(entityPtr.mSlot);
         }
         else
         {
             CHECK_MSG(false, "Invalid Entity!");
         }
 
-        return entityHandler;
+        return entityPtr;
     }
 
-    void removeEntity(EntityHandler& entityHandler)
+    void removeEntity(EntityPtr& entityPtr)
     {
-        mPoolsManager.removeElement(entityHandler.mClassId, entityHandler.mSlot);
-        entityHandler.reset();
+        mPoolsManager.removeElement(entityPtr.mClassId, entityPtr.mSlot);
+        entityPtr.reset();
     }
 
 private:

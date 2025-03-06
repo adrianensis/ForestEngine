@@ -65,7 +65,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
 
-	TComponentHandler<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	addComponent(renderer);
 	renderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;

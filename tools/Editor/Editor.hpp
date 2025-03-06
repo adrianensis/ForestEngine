@@ -15,25 +15,25 @@ public:
     virtual void terminate() override;
 
 private:
-	EntityHandler createSprite(const Vector3& v, f32 size);
-	EntityHandler createPointLight(const Vector3& v, f32 size);
-	EntityHandler createDirectionalLight(const Vector3& v, const Vector3& dir);
-	EntityHandler mousePick();
-    EntityHandler importModel(const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic);
+	EntityPtr createSprite(const Vector3& v, f32 size);
+	EntityPtr createPointLight(const Vector3& v, f32 size);
+	EntityPtr createDirectionalLight(const Vector3& v, const Vector3& dir);
+	EntityPtr mousePick();
+    EntityPtr importModel(const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic);
 	void handlePressedKeys();
 	void handleMouse();
     void createUI();
 private:
-    TEntityHandler<UIText> mFPSCounter;
-    TEntityHandler<UITransform> mUITransform;
-    TEntityHandler<UISceneTree> mUISceneTree;
-	TEntityHandler<SceneObject> mCameraSceneObject;
-	TEntityHandler<SceneObject> mDirectionalLight;
-	TEntityHandler<SceneObject> mSelectedSceneObject;
-	std::list<TEntityHandler<SceneObject>> mBuildings;
-	TEntityHandler<UIAxisGizmo> mAxisViewer;
+    TEntityPtr<UIText> mFPSCounter;
+    TEntityPtr<UITransform> mUITransform;
+    TEntityPtr<UISceneTree> mUISceneTree;
+	TEntityPtr<SceneObject> mCameraSceneObject;
+	TEntityPtr<SceneObject> mDirectionalLight;
+	TEntityPtr<SceneObject> mSelectedSceneObject;
+	std::list<TEntityPtr<SceneObject>> mBuildings;
+	TEntityPtr<UIAxisGizmo> mAxisViewer;
 
-    std::vector<TEntityHandler<SceneObject>> mSceneObjectsArray;
+    std::vector<TEntityPtr<SceneObject>> mSceneObjectsArray;
 
     Vector2 mLastMousePosition;
 };

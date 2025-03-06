@@ -16,7 +16,7 @@ void UIVector::init()
 	setIsStatic(mIsStatic).
 	setIsStaticText(false).
 	setIsAffectedByLayout(true).
-    setParent(EntityHandler::getEntityHandler(*this)).
+    setParent(EntityPtr::getEntityPtr(*this)).
 	setTextScale(0.5f).
 	setSize(Vector2(0.5, 0.05f));
 

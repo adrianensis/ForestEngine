@@ -14,7 +14,7 @@ public:
 	bool mIsStatic = true;
     GPUShaderStencilData mGPUShaderStencilData;
 
-	void init(TComponentHandler<MeshRenderer> renderer)
+	void init(TComponentPtr<MeshRenderer> renderer)
     {
         mShader = renderer->getRendererData().mShader;
         mMesh = renderer->getRendererData().mMesh;

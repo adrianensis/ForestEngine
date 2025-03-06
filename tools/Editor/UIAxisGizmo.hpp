@@ -15,8 +15,8 @@ private:
     Vector4 mColor;
     HashedString mAxisName;
     HashedString mNegAxisName;
-    TEntityHandler<UIText> mPositive;
-    TEntityHandler<UIText> mNegative;
+    TEntityPtr<UIText> mPositive;
+    TEntityPtr<UIText> mNegative;
 };
 
 REGISTER_CLASS(UISingleAxisGizmo)
@@ -29,8 +29,8 @@ public:
     virtual void onDestroy() override;
 
 private:
-    TEntityHandler<UISingleAxisGizmo> mAxisX;
-    TEntityHandler<UISingleAxisGizmo> mAxisY;
-    TEntityHandler<UISingleAxisGizmo> mAxisZ;
+    TEntityPtr<UISingleAxisGizmo> mAxisX;
+    TEntityPtr<UISingleAxisGizmo> mAxisY;
+    TEntityPtr<UISingleAxisGizmo> mAxisZ;
 };
 REGISTER_CLASS(UIAxisGizmo)

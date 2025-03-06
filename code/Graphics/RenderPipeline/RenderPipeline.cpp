@@ -20,7 +20,7 @@ void RenderPipeline::update()
     {
         FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
         {
-            TComponentHandler<MeshRenderer> renderer = mRenderers[i];
+            TComponentPtr<MeshRenderer> renderer = mRenderers[i];
             if(renderer.isValid())
             {
                 processRenderer(renderer);
@@ -32,7 +32,7 @@ void RenderPipeline::update()
     // std::execution::par,
     // mRenderers.begin(),
     // mRenderers.end(),
-    // [this](TComponentHandler<MeshRenderer> renderer)
+    // [this](TComponentPtr<MeshRenderer> renderer)
     // {
     //     if(renderer.isValid())
     //     {
@@ -56,7 +56,7 @@ void RenderPipeline::update()
 	GET_SYSTEM(GPUSkeletalAnimationManager).update();
 }
 
-void RenderPipeline::processRenderer(TComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::processRenderer(TComponentPtr<MeshRenderer> renderer)
 {
 	PROFILER_CPU()
     if(!renderer->isStatic())
@@ -93,7 +93,7 @@ void RenderPipeline::onResize()
 	}
 }
 
-void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     bool compileShader = false;
@@ -155,7 +155,7 @@ void RenderPipeline::addRenderer(TComponentHandler<MeshRenderer> renderer)
     }
 }
 
-void RenderPipeline::removeRenderer(TComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     if(renderer->isStatic())
@@ -231,7 +231,7 @@ void RenderPipeline::initBuffers()
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
 }
 
-void RenderPipeline::setRendererMatrix(TComponentHandler<MeshRenderer> renderer)
+void RenderPipeline::setRendererMatrix(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     if(renderer->getUpdateMatrix())

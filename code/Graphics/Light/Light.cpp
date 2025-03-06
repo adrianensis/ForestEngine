@@ -1,13 +1,13 @@
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Core/Window/WindowManager.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 
 ClassId Light::getComponentTypeId() const { return ClassManager::getClassMetadata<Light>().mClassDefinition.getId(); }
 
 Matrix4 Light::getLightProjectionViewMatrix() const
 {
-    TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 lightViewMatrix;
     lightViewMatrix = getOwnerEntity()->getFirstComponent<Transform>()->getViewMatrix();

@@ -4,7 +4,7 @@
 #include "Core/Window/WindowManager.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDepthBuffer.hpp"
-#include "Core/EntityComponent/EntityHandler.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
 
 void RenderPassShadowMap::preRender()
 {
@@ -44,7 +44,7 @@ void RenderPassShadowMap::updateGlobalData()
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
     }
-    TComponentHandler<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {

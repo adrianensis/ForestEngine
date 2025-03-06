@@ -36,6 +36,6 @@ public:
 	bool mIsAffectedByLayout = true;
 	WeakPtr<GPUShader> mShader;
 	HashedString mGroup;
-	TEntityHandler<SceneObject> mParent;
+	TEntityPtr<SceneObject> mParent;
 	f32 mSeparatorSize = 0.01f;
 };
