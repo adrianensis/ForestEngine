@@ -2,6 +2,7 @@
 
 #include "Core/Memory/Singleton.hpp"
 #include "Core/EntityComponent/ComponentHandler.hpp"
+#include "Core/Memory/Pool.hpp"
 
 class Component;
 
@@ -15,8 +16,8 @@ public:
 class ComponentsManager: public Singleton<ComponentsManager>
 {
 public:
-    void init();
-    void terminate();
+    void init() {}
+    void terminate() { mPoolsManager.terminate(); }
 
     template<class T> T_EXTENDS(T, Component)
     void addComponentListener(WeakPtr<IComponentsListener> listener)
@@ -54,32 +55,14 @@ public:
     TComponentHandler<T> requestComponent()
     {
         PROFILER_CPU()
+        Slot slot = mPoolsManager.requestElement<T>();
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
-        ClassId id = classMetaData.mClassDefinition.getId();
-        if(!mComponentsArrays.contains(id))
-        {
-            mComponentsArrays.emplace(id, OwnerPtr<ComponentsArrayBase>::moveCast(OwnerPtr<ComponentsArray<T>>::newObject(smMaxComponents)));
-        }
-
-        if(mComponentsArrays.at(id)->size() == smMaxComponents)
-        {
-            CHECK_MSG(false, "No space available for Components!");
-            // mComponentsArrays.at(id).mSlotsManager.increaseSize(smInitialComponents);
-            // mComponentsArrays.at(id).mComponents.resize(mComponentsArrays.at(id).mSlotsManager.getSize());
-        }
-
-        ComponentHandler componentHandler(id, mComponentsArrays.at(id)->mSlotsManager.requestSlot(), this);
+        ClassId classId = classMetaData.mClassDefinition.getId();
+        ComponentHandler componentHandler(classId, slot, this);
         if(componentHandler.isValid())
         {
-            if(componentHandler.mSlot.getSlot() == mComponentsArrays.at(id)->size())
-            {
-                mComponentsArrays.at(id)->emplaceBack();
-            }
-
-            Component& comp = mComponentsArrays.at(id)->at(componentHandler.mSlot.getSlot());
+            Component& comp = mPoolsManager.getElementBase(classId, slot);
             T* compT = static_cast<T*>(&comp);
-            *compT = T();
-            Memory::registerPointer<T>(compT);
             compT->onRecycle(componentHandler.mSlot);
         }
         else
@@ -94,83 +77,24 @@ public:
     {
         PROFILER_CPU()
 
-        ClassId id = componentHandler.mClassId;
-        if(mComponentsArrays.contains(id))
-        {
-            mComponentsArrays.at(id)->mSlotsManager.freeSlot(componentHandler.mSlot);
-        }
-        Memory::unregisterPointer(&componentHandler.getComponent());
+        mPoolsManager.removeElement(componentHandler.mClassId, componentHandler.mSlot);
         componentHandler.reset();
     }
 
     template<class T> T_EXTENDS(T, Component)
     T& getComponent(ComponentHandler componentHandler) const
     {
-        u32 slot = componentHandler.mSlot.getSlot();
-        return mComponentsArrays.at(componentHandler.mClassId)->at(slot);
-    }
-
-    const Component& getComponentFromSlot(ClassId classId, const Slot& slot) const
-    {
-        return mComponentsArrays.at(classId)->at(slot.getSlot());
-    }
-
-    Component& getComponentFromSlot(ClassId classId, const Slot& slot)
-    {
-        return mComponentsArrays.at(classId)->at(slot.getSlot());
-    }
-
-    ComponentHandler getComponentHanlder(ClassId id, const Component& component)
-    {
-        ComponentHandler componentHandler(id, component.getSlot(), this);
-        return componentHandler;
+        return mPoolsManager.getElement<T>(componentHandler.mSlot);
     }
 
     void notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const;
     void notifyListenersOnComponentRemoved(const ComponentHandler& componentHandler) const;
 
 private:
-    class ComponentsArrayBase
-    {
-    public:
-        virtual ~ComponentsArrayBase() = default;
-        ComponentsArrayBase(u32 reservedComponents)
-        {
-            mSlotsManager.init(reservedComponents);
-        }
-        virtual Component& at(u32 index) = 0;
-        virtual u32 size() const = 0;
-        virtual void emplaceBack() = 0;
-        SlotsManager mSlotsManager;
-    };
-    template <class T> T_EXTENDS(T, Component)
-    class ComponentsArray : public ComponentsArrayBase
-    {
-    public:
-        ComponentsArray(u32 reservedComponents) : ComponentsArrayBase(reservedComponents)
-        {
-            PROFILER_CPU()
-            mComponents.reserve(reservedComponents);
-            mSlotsManager.init(reservedComponents);
-        }
-        virtual Component& at(u32 index) override
-        {
-            return mComponents.at(index);
-        }
-        virtual u32 size() const override
-        {
-            return mComponents.size();
-        }
-        virtual void emplaceBack() override
-        {
-            mComponents.emplace_back();
-        }
-        std::vector<T> mComponents;
-    };
-
-    std::unordered_map<ClassId, OwnerPtr<ComponentsArrayBase>> mComponentsArrays;
+    PoolsManager<Component> mPoolsManager;
     std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
 
-    inline static const u32 smMaxComponents = 100000;
+public:
+    CRGET(PoolsManager)
 };
 REGISTER_CLASS(ComponentsManager);

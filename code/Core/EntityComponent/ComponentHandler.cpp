@@ -4,10 +4,10 @@
 Component& ComponentHandler::getInternal() const
 {
     CHECK_MSG(ComponentHandler::isValid(), "Invalid handler!");
-    return mComponentsManager->getComponentFromSlot(mClassId, mSlot);
+    return mComponentsManager->getPoolsManager().getElementBase(mClassId, mSlot);
 }
 
 ComponentHandler ComponentHandler::getComponentHandler(ClassId id, const Component& component)
 {
-    return ComponentsManager::getInstance().getComponentHanlder(id, component);
+    return ComponentHandler(id, component.getSlot(), ComponentsManager::getInstance().getInstancePtr().getInternalPointer());
 }

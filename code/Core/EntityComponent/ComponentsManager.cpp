@@ -1,13 +1,5 @@
 #include "Core/EntityComponent/ComponentsManager.hpp"
 
-void ComponentsManager::init() 
-{
-}
-
-void ComponentsManager::terminate() 
-{
-}
-
 void ComponentsManager::notifyListenersOnComponentAdded(const ComponentHandler& componentHandler) const
 {
     ClassId id = componentHandler->getComponentTypeId();

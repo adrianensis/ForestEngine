@@ -21,9 +21,9 @@ void Engine::init()
 
 	Memory::init();
 	Profiler::init();
-    SystemsManager::getInstance().init();
     EntityManager::getInstance().init();
     ComponentsManager::getInstance().init();
+    SystemsManager::getInstance().init();
 
     CREATE_SYSTEM(Time);
     CREATE_SYSTEM(EngineConfig);
@@ -114,9 +114,9 @@ void Engine::terminate()
 	LOG_TRACE();
 
 	MemoryTracking::log();
+	SystemsManager::getInstance().terminate();
     ComponentsManager::getInstance().terminate();
 	EntityManager::getInstance().terminate();
-	SystemsManager::getInstance().terminate();
 	Profiler::terminate();
 	Memory::terminate();
 

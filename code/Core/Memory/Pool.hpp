@@ -1,207 +1,134 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
-#include <unordered_set>
+#include <vector>
 #include "Core/Memory/MemoryTracking.hpp"
+#include "Core/Memory/SlotsManager.hpp"
 
-template <class T>
-class Pool;
-
-template <class T>
-class PoolHandler
+template<class BaseClass>
+class PoolBase
 {
 public:
-    PoolHandler() = default;
-    PoolHandler(i32 index, Pool<T>* pool)
+    virtual ~PoolBase() = default;
+    PoolBase(u32 reservedElements)
     {
-        mIndex = index;
-        mPool = pool;
-        CHECK_MSG(isValid(), "Invalid handler!");
-        mPool->registerHandler(*this);
+        mSlotsManager.init(reservedElements);
     }
-
-    PoolHandler(i32 index, const Pool<T>* pool): PoolHandler(index, const_cast<Pool<T>*>(pool))
-    {
-    }
-
-    ~PoolHandler()
-    {
-        reset();
-    }
-
-    u32 getIndex() const { return (u32)mIndex; }
-    T& get() const;
-    bool isValid() const { return mPool && mIndex > INVALID_INDEX; }
-    T* operator->() const { return &get(); }
-
-    bool operator==(const PoolHandler<T>& other) const
-	{
-		return isValid() && other.isValid() && mPool == other.mPool && mIndex == other.mIndex;
-	}
-
-    void reset()
-    {
-        if(mPool)
-        {
-            mPool->unregisterHandler(*this);
-        }
-        mIndex = INVALID_INDEX;
-        mPool = nullptr;
-    }
-
-private:
-    i32 mIndex = INVALID_INDEX;
-    Pool<T>* mPool = nullptr;
+    virtual BaseClass& at(u32 index) = 0;
+    virtual u32 size() const = 0;
+    virtual void emplaceBack() = 0;
+    virtual void clear() = 0;
+    SlotsManager mSlotsManager;
 };
 
-template <class T>
-class Pool;
-
-class IPoolable
+template <class T, class BaseClass> T_EXTENDS(T, BaseClass)
+class Pool : public PoolBase<BaseClass>
 {
-template <class T>
-friend class Pool;
 public:
-    virtual void onPoolAllocate() {};
-    virtual void onPoolFree() {};
+    Pool(u32 reservedElements) : PoolBase<BaseClass>(reservedElements)
+    {
+        PROFILER_CPU()
+        mElements.reserve(reservedElements);
+    }
+    virtual BaseClass& at(u32 index) override
+    {
+        return *static_cast<BaseClass*>(&mElements.at(index));
+    }
+    virtual u32 size() const override
+    {
+        return mElements.size();
+    }
+    virtual void emplaceBack() override
+    {
+        mElements.emplace_back();
+    }
+    virtual void clear() override
+    {
+        mElements.clear();
+    }
+    std::vector<T> mElements;
 };
 
-template <class T>
-class Pool
+template<class BaseClass>
+class PoolsManager
 {
 public:
-    Pool() = default;
-
-    ~Pool() 
+    // void init() { }
+    void terminate()
     {
-        clear();
-    }
-
-    void clear() 
-    {
-        FOR_MAP(it, mAllocatedObjects)
+        FOR_MAP(it, mPools)
         {
-            internalFreeObject(*it);
+            it->second->clear();
         }
 
-        mObjects.clear();
-        mHandlers.clear();
-        mFreeObjects.clear();
-        mAllocatedObjects.clear();
+        mPools.clear();
     }
 
-    template <typename ... Args>
-    PoolHandler<T> allocate(Args&&... args)
+    template<class T> T_EXTENDS(T, BaseClass)
+    Slot requestElement()
     {
-        u32 index = 0;
-        if (mFreeObjects.empty())
+        PROFILER_CPU()
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        ClassId id = classMetaData.mClassDefinition.getId();
+        if(!mPools.contains(id))
         {
-            mObjects.emplace_back(args...);
-            mHandlers.emplace_back();
-            index = mObjects.size() - 1;
+            mPools.emplace(id, OwnerPtr<PoolBase<BaseClass>>::moveCast(OwnerPtr<Pool<T, BaseClass>>::newObject(mMaxElements)));
+        }
 
-            // MemoryTracking::registerNewObject<T>(&mObjects.at(index));
+        if(mPools.at(id)->size() == mMaxElements)
+        {
+            CHECK_MSG(false, "No space available for Elements!");
+            // mPools.at(id).mSlotsManager.increaseSize(smInitialElements);
+            // mPools.at(id).mElements.resize(mPools.at(id).mSlotsManager.getSize());
+        }
+
+        Slot slot = mPools.at(id)->mSlotsManager.requestSlot();
+        if(slot.isValid())
+        {
+            if(slot.getSlot() == mPools.at(id)->size())
+            {
+                mPools.at(id)->emplaceBack();
+            }
+
+            BaseClass& element = mPools.at(id)->at(slot.getSlot());
+            T* elementT = static_cast<T*>(&element);
+            *elementT = T();
+            Memory::registerPointer<T>(elementT);
         }
         else
         {
-            index = *mFreeObjects.begin();
-            mFreeObjects.erase(index);
+            CHECK_MSG(false, "Invalid Slot!");
         }
+
+        return slot;
+    }
+
+    void removeElement(ClassId classId, const Slot& slot)
+    {
+        PROFILER_CPU()
+
+        Memory::unregisterPointer(&getElementBase(classId, slot));
         
-        mAllocatedObjects.insert(index);
-        
-        PoolHandler<T> handler(index, this);
-
-        if constexpr (IS_BASE_OF(IPoolable, T))
+        if(mPools.contains(classId))
         {
-            get(handler).onPoolAllocate();
-        }
-
-        return handler;
-    }
-
-    void registerHandler(PoolHandler<T>& handler)
-    {
-        CHECK_MSG(handler.isValid(), "Invalid handler!");
-        mHandlers[handler.getIndex()].insert(&handler);
-    }
-
-    void unregisterHandler(PoolHandler<T>& handler)
-    {
-        if(!mHandlers.empty())
-        {
-            CHECK_MSG(handler.isValid(), "Invalid handler!");
-            mHandlers[handler.getIndex()].erase(&handler);
+            mPools.at(classId)->mSlotsManager.freeSlot(slot);
         }
     }
 
-    T& get(const PoolHandler<T>& handler)
+    template<class T> T_EXTENDS(T, BaseClass)
+    T& getElement(const Slot& slot) const
     {
-        CHECK_MSG(handler.isValid(), "Invalid handler!");
-        return mObjects.at(handler.getIndex());
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        ClassId classId = classMetaData.mClassDefinition.getId();
+        return *static_cast<T*>(&getElementBase(classId, slot));
     }
 
-    const T& get(const PoolHandler<T>& handler) const
+    BaseClass& getElementBase(ClassId classId, const Slot& slot) const
     {
-        CHECK_MSG(handler.isValid(), "Invalid handler!");
-        return mObjects.at(handler.getIndex());
+        return mPools.at(classId)->at(slot.getSlot());
     }
 
-    u32 getSize() const
-    {
-        return mObjects.size();
-    }
+    std::unordered_map<ClassId, OwnerPtr<PoolBase<BaseClass>>> mPools;
 
-    PoolHandler<T> getHandler(u32 index) const
-    {
-        PoolHandler<T> handler;
-        if(mAllocatedObjects.contains(index))
-        {
-            handler = PoolHandler<T>(index, this);
-        }
-        return handler;
-    }
-
-    void free(PoolHandler<T>& handler)
-    {
-        if(handler.isValid())
-        {
-            u32 index = handler.getIndex();
-            FOR_MAP(it, mHandlers[index])
-            {
-                (*it)->reset();
-            }
-
-            mFreeObjects.insert(index);
-            mAllocatedObjects.erase(index);
-
-            internalFreeObject(index);
-        }
-    }
-
-private:
-    void internalFreeObject(u32 index)
-    {
-        if constexpr (IS_BASE_OF(IPoolable, T))
-        {
-            mObjects.at(index).onPoolFree();
-        }
-
-        // MemoryTracking::unregisterDeletedObject<T>(&mObjects.at(index));
-    }
-
-private:
-    std::vector<T> mObjects;
-    mutable std::vector<std::unordered_set<PoolHandler<T>*>> mHandlers;
-    std::unordered_set<u32> mFreeObjects;
-    std::unordered_set<u32> mAllocatedObjects;
-public:
-    RGET(Objects)
+    u32 mMaxElements = 100000;
 };
-
-template<class T>
-T& PoolHandler<T>::get() const
-{
-    CHECK_MSG(isValid(), "Invalid handler!");
-    return mPool->get(*this);
-}

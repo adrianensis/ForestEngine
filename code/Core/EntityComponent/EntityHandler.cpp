@@ -4,10 +4,10 @@
 Entity& EntityHandler::getInternal() const
 {
     CHECK_MSG(EntityHandler::isValid(), "Invalid handler!");
-    return mEntityManager->getEntityFromSlot(mClassId, mSlot);
+    return mEntityManager->getPoolsManager().getElementBase(mClassId, mSlot);
 }
 
 EntityHandler EntityHandler::getEntityHandler(ClassId id, const Entity& entity)
 {
-    return EntityManager::getInstance().getEntityHandler(id, entity);
+    return EntityHandler(id, entity.getSlot(), EntityManager::getInstance().getInstancePtr().getInternalPointer());
 }

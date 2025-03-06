@@ -6,38 +6,21 @@
 class EntityManager: public Singleton<EntityManager>
 {
 public:
-    void init();
-    void terminate();
+    void init() {}
+    void terminate() { mPoolsManager.terminate(); }
 
     template<class T> T_EXTENDS(T, Entity)
     TEntityHandler<T> requestEntity()
     {
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
-        ClassId id = classMetaData.mClassDefinition.getId();
-        if(!mEntitiesArrays.contains(id))
-        {
-            mEntitiesArrays.emplace(id, OwnerPtr<EntitiesArrayBase>::moveCast(OwnerPtr<EntitiesArray<T>>::newObject(smMaxEntities)));
-        }
-
-        if(mEntitiesArrays.at(id)->size() == smMaxEntities)
-        {
-            CHECK_MSG(false, "No space available for Entities!");
-            // mEntitiesArrays.at(id).mSlotsManager.increaseSize(smInitialEntities);
-            // mEntitiesArrays.at(id).mEntities.resize(mEntitiesArrays.at(id).mSlotsManager.getSize());
-        }
-
-        EntityHandler entityHandler(id, mEntitiesArrays.at(id)->mSlotsManager.requestSlot(), this);
+        ClassId classId = classMetaData.mClassDefinition.getId();
+        Slot slot = mPoolsManager.requestElement<T>();
+        EntityHandler entityHandler(classId, slot, this);
         if(entityHandler.isValid())
         {
-            if(entityHandler.mSlot.getSlot() == mEntitiesArrays.at(id)->size())
-            {
-                mEntitiesArrays.at(id)->emplaceBack();
-            }
-
-            Entity& entity = mEntitiesArrays.at(id)->at(entityHandler.mSlot.getSlot());
+            Entity& entity = mPoolsManager.getElementBase(classId, slot);
             T* entityT = static_cast<T*>(&entity);
             *entityT = T();
-            Memory::registerPointer<T>(entityT);
             entityT->onRecycle(entityHandler.mSlot);
         }
         else
@@ -50,73 +33,19 @@ public:
 
     void removeEntity(EntityHandler& entityHandler)
     {
-        ClassId id = entityHandler.mClassId;
-
-        if(mEntitiesArrays.contains(id))
-        {
-            mEntitiesArrays.at(id)->mSlotsManager.freeSlot(entityHandler.mSlot);
-        }
-        Memory::unregisterPointer(&entityHandler.getEntity());
+        mPoolsManager.removeElement(entityHandler.mClassId, entityHandler.mSlot);
         entityHandler.reset();
     }
 
     Entity& getEntity(EntityHandler entityHandler) const
     {
-        u32 slot = entityHandler.mSlot.getSlot();
-        return mEntitiesArrays.at(entityHandler.mClassId)->at(slot);
-    }
-
-    Entity& getEntityFromSlot(ClassId classId, const Slot& slot) const
-    {
-        return mEntitiesArrays.at(classId)->at(slot.getSlot());
-    }
-
-    EntityHandler getEntityHandler(ClassId id, const Entity& entity)
-    {
-        EntityHandler entityHandler(id, entity.getSlot(), this);
-        return entityHandler;
+        return mPoolsManager.getElementBase(entityHandler.mClassId, entityHandler.mSlot);
     }
 
 private:
-    class EntitiesArrayBase
-    {
-    public:
-        virtual ~EntitiesArrayBase() = default;
-        EntitiesArrayBase(u32 reservedEntities)
-        {
-            mSlotsManager.init(reservedEntities);
-        }
-        virtual Entity& at(u32 index) = 0;
-        virtual u32 size() const = 0;
-        virtual void emplaceBack() = 0;
-        SlotsManager mSlotsManager;
-    };
-    template <class T> T_EXTENDS(T, Entity)
-    class EntitiesArray : public EntitiesArrayBase
-    {
-    public:
-        EntitiesArray(u32 reservedEntities) : EntitiesArrayBase(reservedEntities)
-        {
-            mEntities.reserve(reservedEntities);
-            mSlotsManager.init(reservedEntities);
-        }
-        virtual Entity& at(u32 index) override
-        {
-            return mEntities.at(index);
-        }
-        virtual u32 size() const override
-        {
-            return mEntities.size();
-        }
-        virtual void emplaceBack() override
-        {
-            mEntities.emplace_back();
-        }
-        std::vector<T> mEntities;
-    };
+    PoolsManager<Entity> mPoolsManager;
 
-    std::unordered_map<ClassId, OwnerPtr<EntitiesArrayBase>> mEntitiesArrays;
-
-    inline static const u32 smMaxEntities = 100000;
+public:
+    CRGET(PoolsManager)
 };
 REGISTER_CLASS(EntityManager);
