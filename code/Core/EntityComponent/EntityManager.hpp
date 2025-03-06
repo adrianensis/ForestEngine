@@ -18,9 +18,8 @@ public:
         EntityHandler entityHandler(classId, slot, this);
         if(entityHandler.isValid())
         {
-            Entity& entity = mPoolsManager.getElementBase(classId, slot);
-            T* entityT = static_cast<T*>(&entity);
-            entityT->onRecycle(entityHandler.mSlot);
+            T& entity = mPoolsManager.getElement<T>(slot);
+            entity.onRecycle(entityHandler.mSlot);
         }
         else
         {

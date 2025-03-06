@@ -61,9 +61,8 @@ public:
         ComponentHandler componentHandler(classId, slot, this);
         if(componentHandler.isValid())
         {
-            Component& comp = mPoolsManager.getElementBase(classId, slot);
-            T* compT = static_cast<T*>(&comp);
-            compT->onRecycle(componentHandler.mSlot);
+            T& comp = mPoolsManager.getElement<T>(slot);
+            comp.onRecycle(componentHandler.mSlot);
         }
         else
         {
