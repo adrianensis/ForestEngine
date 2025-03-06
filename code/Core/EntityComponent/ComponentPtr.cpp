@@ -3,7 +3,7 @@
 
 Component& ComponentPtr::getInternal() const
 {
-    CHECK_MSG(ComponentPtr::isValid(), "Invalid handle!");
+    CHECK_MSG(isValid(), "Invalid handle!");
     return ComponentsManager::getInstance().getPoolsManager().getElementBase(mClassId, mSlot);
 }
 

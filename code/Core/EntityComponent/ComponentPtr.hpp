@@ -23,11 +23,10 @@ public:
 
     ComponentPtr& operator=(const ComponentPtr& other)
     {
-        if (other.isValid() && this != &other)
+        if (this != &other)
         {
             mClassId = other.mClassId;
             mSlot = other.mSlot;
-            CHECK_MSG(isValid(), "Invalid handle!");
         }
         return *this;
     }
@@ -48,7 +47,7 @@ public:
 
     Component* operator->() const { return &getComponent(); }
 
-    virtual bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
+    bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
     operator bool() const { return this->isValid(); }
     bool operator==(const ComponentPtr& other) const
 	{
@@ -86,6 +85,7 @@ public:
     TComponentPtr() = default;
     TComponentPtr(ClassId id, Slot slot): ComponentPtr(id, slot)
     {
+        checkValid();
     }
 
     TComponentPtr(const ComponentPtr& other): TComponentPtr(other.mClassId, other.mSlot)
@@ -96,18 +96,31 @@ public:
         return ComponentPtr::get<T>();
     }
     
-    T* operator->() const { return &get(); }
-    virtual bool isValid() const override
+    TComponentPtr& operator=(const ComponentPtr& other)
     {
-        if(!ComponentPtr::isValid())
+        if (this != &other)
         {
-            return false;
+            mClassId = other.mClassId;
+            mSlot = other.mSlot;
+            checkValid();
         }
-
-        Component* pointer = &getInternal();
-        T* castedPointer = dynamic_cast<T*>(pointer);
-        return castedPointer;
+        return *this;
     }
+
+    void checkValid()
+    {
+        if(isValid())
+        {
+            Component* pointer = &getInternal();
+            T* castedPointer = dynamic_cast<T*>(pointer);
+            if(!castedPointer)
+            {
+                reset();
+            }
+        }
+    }
+
+    T* operator->() const { return &get(); }
     operator TComponentPtr<const T>() const { return TComponentPtr<const T>(mClassId, mSlot); }
     template<class U> T_EXTENDS(T, U)
     operator TComponentPtr<U>() const { return TComponentPtr<U>(*this); }

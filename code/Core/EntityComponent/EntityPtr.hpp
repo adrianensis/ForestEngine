@@ -55,7 +55,7 @@ public:
     }
 
     Entity* operator->() const { return getEntityPointer(); }
-    virtual bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
+    bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
     operator bool() const { return this->isValid(); }
     bool operator==(const EntityPtr& other) const
 	{
@@ -90,6 +90,7 @@ public:
     TEntityPtr() = default;
     TEntityPtr(ClassId id, Slot slot): EntityPtr(id, slot)
     {
+        checkValid();
     }
 
     TEntityPtr(const EntityPtr& other): TEntityPtr(other.mClassId, other.mSlot)
@@ -100,19 +101,33 @@ public:
     {
         return EntityPtr::get<T>();
     }
+
+    TEntityPtr& operator=(const EntityPtr& other)
+    {
+        if (this != &other)
+        {
+            mClassId = other.mClassId;
+            mSlot = other.mSlot;
+
+            checkValid();
+        }
+        return *this;
+    }
+
+    void checkValid()
+    {
+        if(isValid())
+        {
+            Entity* pointer = &getInternal();
+            T* castedPointer = dynamic_cast<T*>(pointer);
+            if(!castedPointer)
+            {
+                reset();
+            }
+        }
+    }
     
     T* operator->() const { return &get(); }
-    virtual bool isValid() const override
-    {
-        if(!EntityPtr::isValid())
-        {
-            return false;
-        }
-
-        Entity* pointer = &getInternal();
-        T* castedPointer = dynamic_cast<T*>(pointer);
-        return castedPointer;
-    }
     operator TEntityPtr<const T>() const { return TEntityPtr<const T>(mClassId, mSlot); }
     template<class U> T_EXTENDS(T, U)
     operator TEntityPtr<U>() const { return TEntityPtr<U>(mClassId, mSlot); }
