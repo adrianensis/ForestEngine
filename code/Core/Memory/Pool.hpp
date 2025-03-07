@@ -17,7 +17,10 @@ public:
     virtual BaseClass& at(u32 index) = 0;
     virtual u32 size() const = 0;
     virtual void emplaceBack() = 0;
-    virtual void clear() = 0;
+    virtual void clear()
+    {
+        mSlotsManager.reset();
+    }
     SlotsManager mSlotsManager;
 };
 
@@ -44,6 +47,7 @@ public:
     }
     virtual void clear() override
     {
+        PoolArrayBase<BaseClass>::clear();
         mElements.clear();
     }
     std::vector<T> mElements;
@@ -58,6 +62,11 @@ public:
     {
         FOR_MAP(it, mPools)
         {
+            FOR_ARRAY(i, it->second.get())
+            {
+                BaseClass& element = it->second->at(i);
+                Memory::unregisterPointer(&element);
+            }
             it->second->clear();
         }
 

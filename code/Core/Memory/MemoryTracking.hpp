@@ -59,10 +59,17 @@ public:
 	template <class T>
 	static void unregisterDeletedObject(const T* pointer)
 	{
-        PROFILER_CPU()
+		
+#ifdef ENGINE_BUILD_DEBUG
+		PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
-#ifdef ENGINE_BUILD_DEBUG
+		u64 ptrU64 = reinterpret_cast<u64>(pointer);
+		if(!smPointersToDynamicClassName.contains(ptrU64))
+		{
+			return;
+		}
+
 		HashedString className;
 		if (ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
 		{
@@ -70,10 +77,11 @@ public:
 		}
 		else
 		{
-			className = smPointersToDynamicClassName.at(reinterpret_cast<u64>(pointer));
+			
+			className = smPointersToDynamicClassName.at(ptrU64);
 		}
 
-        smPointersToDynamicClassName.erase(reinterpret_cast<u64>(pointer));
+        smPointersToDynamicClassName.erase(ptrU64);
 
         CHECK_MSG(smAllocationsMap.contains(className), "No prevoius allocation for class: " + className.get());
         smAllocationsMap[className].mCurrentAllocations -= 1;
