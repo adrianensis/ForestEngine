@@ -4,7 +4,6 @@
 
 void GPUShaderManager::init()
 {
-	LOG_TRACE()
     mTextureHandles.reserve(mInitialTextures);
     mTextures.reserve(mInitialTextures);
     // INFO: We reserve position 0 to represent NULL
@@ -59,7 +58,6 @@ WeakPtr<GPUTexture> GPUShaderManager::loadTexture(const GPUTextureData& gpuTextu
 {
 	if (!mTexturesByPath.contains(gpuTextureData.mPath))
 	{
-        LOG_TRACE()
         PROFILER_CPU()
         WeakPtr<GPUTexture> texture = mTextures.emplace_back(OwnerPtr<GPUTexture>::newObject());
         mTexturesByPath.insert_or_assign(gpuTextureData.mPath, texture);
@@ -80,7 +78,6 @@ void GPUShaderManager::loadGPUShaderTextures(WeakPtr<GPUShader> shader)
     u32 id = shader->getID();
     if(!mTextureBindingsByShader.contains(id))
     {
-        LOG_TRACE()
         PROFILER_CPU()
         mTextureBindingsByShader.emplace(id, std::unordered_map<HashedString, WeakPtr<GPUTexture>>());
 
@@ -109,7 +106,6 @@ const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& GPUShaderManager::g
 
 WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderPropertiesInstance(WeakPtr<GPUShader> shader)
 {
-    LOG_TRACE()
     PROFILER_CPU()
     WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.emplace_back(OwnerPtr<GPUShaderPropertiesInstance>::newObject());
     instance->mShader = shader;
@@ -121,7 +117,6 @@ WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderProperties
 }
 void GPUShaderManager::freeGPUShaderPropertiesInstance(WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
 {
-    LOG_TRACE()
     PROFILER_CPU()
     CHECK_MSG(shaderPropertiesInstance->mShader.isValid(), "Invalid shader!");
     ClassId propertiesBlockClassId = shaderPropertiesInstance->mShader->getSharedGPUShaderPropertiesBlockClass().getId();
@@ -148,7 +143,6 @@ void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(We
             u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
             if(propertiesBlockSizeBytes > 0)
             {
-                LOG_TRACE()
                 PROFILER_CPU()
                 mGPUShaderPropertyBlockRenderStates.emplace(propertiesBlockClassId, GPUShaderPropertyBlockRenderState());
 
@@ -181,7 +175,6 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(WeakPtr<GPUShade
         PROFILER_CPU_NAMED(allowInstances)
         if(mGPUShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
         {
-            LOG_TRACE()
             PROFILER_CPU()
             CHECK_MSG(mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderPropertiesInstance->mSlot), "Invalid slot!");
             u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
@@ -222,7 +215,6 @@ const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer
 
 Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     CHECK_MSG(shader.isValid(), "Invalid shader!");

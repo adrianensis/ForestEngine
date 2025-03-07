@@ -10,8 +10,6 @@
 
 void Server::init(u16 port)
 {
-	LOG_TRACE()
-
 	mStatus = ServerStatus::UNINITIALIZED;
 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)

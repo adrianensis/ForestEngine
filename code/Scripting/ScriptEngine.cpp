@@ -3,7 +3,6 @@
 
 void ScriptEngine::init()
 {
-	LOG_TRACE()
 	ComponentsManager::getInstance().addComponentListener<Script>(getPtrToThis<ScriptEngine>());
 }
 
@@ -51,15 +50,12 @@ void ScriptEngine::update()
 
 void ScriptEngine::terminate()
 {
-	LOG_TRACE()
 }
 
 void ScriptEngine::preSceneChanged()
 {
-	LOG_TRACE()
 }
 
 void ScriptEngine::postSceneChanged()
 {
-	LOG_TRACE()
 }

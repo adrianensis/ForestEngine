@@ -11,8 +11,6 @@ void Scene::terminate()
 
 void Scene::init(HashedString sceneName)
 {
-	LOG_TRACE()
-
     mSceneName = sceneName;
 	mSize = 0;
 

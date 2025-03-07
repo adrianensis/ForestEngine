@@ -8,7 +8,6 @@
 
 void InstancedMeshRenderer::init(const InstancedMeshData& instancedMeshData)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 	mInstancedMeshData = instancedMeshData;
 

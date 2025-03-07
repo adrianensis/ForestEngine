@@ -5,8 +5,6 @@
 
 void Camera::init()
 {
-	LOG_TRACE()
-
 	mIsOrtho = true;
 	mZoom = 1;
 	

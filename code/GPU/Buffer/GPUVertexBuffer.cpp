@@ -68,6 +68,6 @@ bool GPUVertexBuffer::setData(const void* data, u32 size, VkCommandBuffer* comma
 
     stagingBuffer.setData(data, size);
     GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer, commandBuffer);
-    LOG("Copied vertices to vertex buffer");
+    // LOG("Copied vertices to vertex buffer");
     return true;
 }

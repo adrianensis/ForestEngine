@@ -4,8 +4,6 @@
 
 void Input::init()
 {
-	LOG_TRACE()
-
 	smMouseCoordinates = Vector2();
 	smLastMouseButtonPressed = INVALID_INDEX;
 	smLastKeyPressed = INVALID_INDEX;

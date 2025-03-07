@@ -35,7 +35,6 @@ WeakPtr<const Model> ModelManager::loadModel(const std::string& path)
 {
     if (!mModels.contains(path))
 	{
-        LOG_TRACE()
         PROFILER_CPU()
 		mModels.insert_or_assign(path, OwnerPtr<Model>::newObject());
 		mModels.at(path)->init(path);

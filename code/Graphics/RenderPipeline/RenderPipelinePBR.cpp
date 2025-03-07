@@ -12,7 +12,6 @@
 
 void RenderPipelinePBR::compile()
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     // RenderPassData renderPassShadowMapData;

@@ -2,8 +2,6 @@
 
 void WindowManager::init()
 {
-	LOG_TRACE()
-
 	glfwInit();
 }
 

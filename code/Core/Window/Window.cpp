@@ -26,8 +26,6 @@ f32 Window::getAspectRatio() const
 
 void Window::init(i32 id, const WindowData& windowData)
 {
-	LOG_TRACE()
-
     mID = id;
     mWindowData = windowData;
 

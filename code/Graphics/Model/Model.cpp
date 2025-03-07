@@ -12,7 +12,6 @@
 
 void Model::init(const std::string& path)
 {
-    LOG_TRACE()
     PROFILER_CPU()
     mPath = Paths::mResources.get() + path;
 
@@ -66,7 +65,6 @@ bool Model::isSkinned() const
 
 void Model::loadGLTFShaders()
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     if(mCGLTFData->materials_count > 0)
@@ -155,7 +153,6 @@ void Model::loadGLTFShaders()
 
 void Model::loadGLTFMeshes()
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     FOR_RANGE(nodeIt, 0, mCGLTFData->nodes_count)
@@ -214,7 +211,6 @@ void Model::loadGLTFMeshes()
 
 void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "GPUMesh has to be made out of triangles!")
@@ -401,7 +397,6 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
 void Model::loadGLTFBones(const cgltf_skin& skin)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     mBonesIndexCount = (u32)skin.joints_count;
@@ -500,7 +495,6 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
 
 f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     f32 animDuration = 0.0f;
@@ -515,7 +509,6 @@ f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
 
 void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
@@ -554,7 +547,6 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
 
 void Model::loadGLTFSkeletalAnimationFrames(WeakPtr<GPUSkeletalAnimation> animation)
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
@@ -621,7 +613,6 @@ void Model::loadGLTFSkeletalAnimationFrames(WeakPtr<GPUSkeletalAnimation> animat
 
 void Model::loadGLTFSkeletalAnimations()
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)

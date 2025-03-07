@@ -111,7 +111,6 @@ void Engine::run()
 
 void Engine::terminate()
 {
-	LOG_TRACE();
 
 	MemoryTracking::log();
 	SystemsManager::getInstance().terminate();

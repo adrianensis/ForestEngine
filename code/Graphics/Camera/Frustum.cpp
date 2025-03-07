@@ -5,8 +5,6 @@
 
 void Frustum::init(Camera *camera)
 {
-	LOG_TRACE()
-
 	mCamera = camera;
 
 	for (u32 i = 0; i < mPlanes.size(); ++i)

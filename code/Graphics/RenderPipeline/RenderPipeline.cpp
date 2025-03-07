@@ -6,7 +6,6 @@
 
 void RenderPipeline::init()
 {
-    LOG_TRACE()
     PROFILER_CPU()
 
     initBuffers();
@@ -111,7 +110,6 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
     instancedMeshData.init(renderer);
     if(!mInstancedMeshesMap.contains(instancedMeshData))
     {
-        LOG_TRACE_MSG("New Instanced Mesh aka batch")
         PROFILER_CPU_NAMED(init_instanced_mesh)
 
         mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());

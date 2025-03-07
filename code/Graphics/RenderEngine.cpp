@@ -9,8 +9,6 @@
 
 void RenderEngine::init()
 {
-	LOG_TRACE()
-
 	ComponentsManager::getInstance().addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
 	ComponentsManager::getInstance().addComponentListener<Light>(getPtrToThis<RenderEngine>());
 
@@ -34,18 +32,15 @@ void RenderEngine::update()
 
 void RenderEngine::preSceneChanged()
 {
-	LOG_TRACE()
     mCompileRequest = true;
 }
 
 void RenderEngine::postSceneChanged()
 {
-	LOG_TRACE()
 }
 
 void RenderEngine::onResize()
 {
-	LOG_TRACE()
 //	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
     GET_SYSTEM(GPUInstance).mGPUContext->setWindowResized();
     GET_SYSTEM(GPUInstance).mGPUContext->recreateRenderingObjects();
@@ -56,7 +51,6 @@ void RenderEngine::onResize()
 
 void RenderEngine::terminate()
 {
-	LOG_TRACE()
     
     mRenderPipeline->terminate();
 }
