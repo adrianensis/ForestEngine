@@ -22,9 +22,9 @@ void Entity::addComponent(const ComponentPtr& componentPtr)
     PROFILER_CPU()
     CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
     CHECK_MSG(!componentPtr->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
-    CHECK_MSG(componentPtr->getOwnerEntity() != EntityPtr::getEntityPtr(*this), "Component is already assigned to Entity!");
+    CHECK_MSG(componentPtr->getOwnerEntity() != TEntityPtr(this), "Component is already assigned to Entity!");
 
-    componentPtr->setOwnerEntity(EntityPtr::getEntityPtr(*this));
+    componentPtr->setOwnerEntity(TEntityPtr(this));
     CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
 
 	mComponentPtrs.emplace_back(componentPtr);
@@ -38,7 +38,7 @@ void Entity::removeComponent(ComponentPtr& componentPtr)
     PROFILER_CPU()
     CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
     CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
-    CHECK_MSG(componentPtr->getOwnerEntity() == EntityPtr::getEntityPtr(*this), "Component is assigned to another Entity!");
+    CHECK_MSG(componentPtr->getOwnerEntity() == TEntityPtr(this), "Component is assigned to another Entity!");
 
     bool componentFound = false;
     FOR_LIST(it, mComponentPtrs)

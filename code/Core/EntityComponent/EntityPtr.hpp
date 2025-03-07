@@ -36,14 +36,6 @@ public:
         return get<Entity>();
     }
 
-    template<class T> T_EXTENDS(T, Entity)
-    static EntityPtr getEntityPtr(T& entity)
-    {
-        ClassId id = ClassManager::getDynamicClassMetadata(&entity).mClassDefinition.getId();
-        return getEntityPtr(id, entity);
-    }
-    static EntityPtr getEntityPtr(ClassId id, const Entity& entity);
-
     EntityPtr& operator=(const EntityPtr& other)
     {
         if (this != &other)
@@ -88,6 +80,11 @@ class TEntityPtr : public EntityPtr
 {
 public:
     TEntityPtr() = default;
+    TEntityPtr(const T* entity)
+    {
+        ClassId id = ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
+        *this = TEntityPtr(id, entity->getSlot());
+    }
     TEntityPtr(ClassId id, Slot slot): EntityPtr(id, slot)
     {
         checkValid();
@@ -113,6 +110,22 @@ public:
         }
         return *this;
     }
+
+    bool operator==(const T& entity) const
+	{
+        TEntityPtr other(entity);
+		return
+            mClassId == other.mClassId &&
+            mSlot.getSlot() == other.mSlot.getSlot();
+	}
+
+    bool operator==(const T* entity) const
+	{
+        TEntityPtr other(entity);
+		return
+            mClassId == other.mClassId &&
+            mSlot.getSlot() == other.mSlot.getSlot();
+	}
 
     void checkValid()
     {

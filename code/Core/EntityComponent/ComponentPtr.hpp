@@ -62,14 +62,6 @@ public:
         mClassId = 0;
     }
 
-    template<class T> T_EXTENDS(T, Component)
-    static ComponentPtr getComponentPtr(T& component)
-    {
-        ClassId id = ClassManager::getDynamicClassMetadata(&component).mClassDefinition.getId();
-        return getComponentPtr(id, component);
-    }
-    static ComponentPtr getComponentPtr(ClassId id, const Component& component);
-
 protected:
     Component& getInternal() const;
 
@@ -83,6 +75,11 @@ class TComponentPtr : public ComponentPtr
 {
 public:
     TComponentPtr() = default;
+    TComponentPtr(const T* component)
+    {
+        ClassId id = ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
+        *this = TComponentPtr(id, component->getSlot());
+    }
     TComponentPtr(ClassId id, Slot slot): ComponentPtr(id, slot)
     {
         checkValid();

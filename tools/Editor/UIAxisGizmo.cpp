@@ -45,7 +45,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(EntityPtr::getEntityPtr(*this)).
+    setParent(this).
 	setTextScale(0.5f);
 
     mPositive = uiBuilder.
@@ -62,7 +62,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(EntityPtr::getEntityPtr(*this)).
+    setParent(this).
 	setTextScale(0.5f);
 
     mNegative = uiBuilder.

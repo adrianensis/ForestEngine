@@ -19,7 +19,7 @@ void Transform::onDestroy()
 {
     if(mParent)
     {
-        mParent->removeChild(ComponentPtr::getComponentPtr<Transform>(*this));
+        mParent->removeChild(this);
     }
 }
 
@@ -227,7 +227,7 @@ const Matrix4& Transform::getViewMatrix() const
 
 void Transform::addChild(TComponentPtr<Transform> child)
 {
-    child->mParent = ComponentPtr::getComponentPtr<Transform>(*this);
+    child->mParent = this;
     mChildren.insert_or_assign(child->getComponentId(), child);
 }
 

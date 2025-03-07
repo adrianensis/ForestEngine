@@ -92,7 +92,7 @@ void UIList::toggle()
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
-            setParent(EntityPtr::getEntityPtr(*this));
+            setParent(this);
 
 		FOR_LIST(it, mEntries)
 		{

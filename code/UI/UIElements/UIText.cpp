@@ -126,7 +126,7 @@ void UIText::setText(HashedString text)
                     setText(HashedString(std::string() + character)).
                     setLayer(mConfig.mLayer + 1).
                     setIsAffectedByLayout(false).
-                    setParent(EntityPtr::getEntityPtr(*this)).
+                    setParent(this).
                     create<UITextGlyph>().
                     getUIElement<UITextGlyph>();
 

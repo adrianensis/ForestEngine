@@ -35,7 +35,7 @@ void UIElement::onDestroy()
 
 bool UIElement::hasFocus() const
 {
-	return EntityPtr::getEntityPtr(*this) == GET_SYSTEM(UIManager).getFocusedElement();
+	return GET_SYSTEM(UIManager).getFocusedElement() == this;
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -325,7 +325,7 @@ void UIElement::requestFocus()
         lastFocusedElement->releaseFocus();
     }
 
-    GET_SYSTEM(UIManager).setFocusedElement(EntityPtr::getEntityPtr(*this));
+    GET_SYSTEM(UIManager).setFocusedElement(this);
 
     mInputString.clear();
     setText(HashedString(mInputString));

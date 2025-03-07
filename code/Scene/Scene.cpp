@@ -181,14 +181,17 @@ bool Scene::thereAreNewSceneObjects() const
 
 void Scene::destroySceneObjects()
 {
-	FOR_LIST(it, mSceneObjects)
+	std::list<TEntityPtr<SceneObject>> immutableList(mSceneObjects);
+
+	FOR_LIST(it, immutableList)
 	{
-        if ((*it))
+		TEntityPtr<SceneObject> sceneObject = *it;
+        if (sceneObject)
 		{
-            if (!(*it)->getIsDestroyed())
+            if (!sceneObject->getIsDestroyed())
             {
-                (*it)->destroy();
-                (*it).reset();
+                sceneObject->destroy();
+                sceneObject.reset();
             }
         }
 	}

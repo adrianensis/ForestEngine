@@ -6,8 +6,3 @@ Component& ComponentPtr::getInternal() const
     CHECK_MSG(isValid(), "Invalid handle!");
     return ComponentsManager::getInstance().getPool().getElementBase(mClassId, mSlot);
 }
-
-ComponentPtr ComponentPtr::getComponentPtr(ClassId id, const Component& component)
-{
-    return ComponentPtr(id, component.getSlot());
-}

@@ -26,7 +26,7 @@ void UIEditableText::setBackground(const UIElementConfig& config)
         setSize(mConfig.mDisplaySize).
         setLayer(mConfig.mLayer).
         setIsAffectedByLayout(false).
-        setParent(EntityPtr::getEntityPtr(*this)).
+        setParent(this).
         setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).
         create<UIPanel>().
         getUIElement<UIPanel>();
