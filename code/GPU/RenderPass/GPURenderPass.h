@@ -34,6 +34,7 @@ class GPURenderPassData
 public:
     GPUAttachmentData mColorAttachment;
     GPUAttachmentData mDepthStencilAttachment;
+    VkSampleCountFlagBits mSampleCountFlagBits = VK_SAMPLE_COUNT_1_BIT;
 };
 
 class GPURenderPass : public EnableWeakPtrToThis
@@ -68,6 +69,7 @@ private:
     GPURenderPassData mGPURenderPassData;
 public:
     CRGET(RenderPass)
+    CRGET(GPURenderPassData)
 };
 
 
