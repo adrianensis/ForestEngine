@@ -28,14 +28,8 @@ const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
     return framebuffer;
 }
 
-bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, VkImageView colorImageView, VkImageView depthImageView, VkImageView swapChainImageView) {
-    std::array<VkImageView, 2> attachments[] = {
-            // colorImageView,
-            swapChainImageView,
-            depthImageView,
-            // swapChainImageView
-    };
-
+bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass, const std::vector<VkImageView>& attachments)
+{
     mGPUContext = gpuContext;
     mRenderPass = renderPass;
 
@@ -53,8 +47,8 @@ bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& 
     VkFramebufferCreateInfo framebufferInfo{};
     framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.renderPass = mRenderPass->getRenderPass();
-    framebufferInfo.attachmentCount = (u32) attachments->size();
-    framebufferInfo.pAttachments = attachments->data();
+    framebufferInfo.attachmentCount = (u32) attachments.size();
+    framebufferInfo.pAttachments = attachments.data();
     framebufferInfo.width = mGPUContext->vulkanSwapChain->getExtent().width;
     framebufferInfo.height = mGPUContext->vulkanSwapChain->getExtent().height;
     framebufferInfo.layers = 1;
