@@ -151,6 +151,8 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     createInfo.presentMode = presentMode;
     createInfo.clipped = VK_TRUE;
+
+    // TODO: provide old swapchain in recreation
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
     return vkCreateSwapchainKHR(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mSwapChain) == VK_SUCCESS;
