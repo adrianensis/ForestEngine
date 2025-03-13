@@ -208,7 +208,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
 
     VkPipelineMultisampleStateCreateInfo multisampleState{};
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;//mGPUContext->vulkanPhysicalDevice->getSampleCount();
+    multisampleState.rasterizationSamples = mRenderPass->getGPURenderPassData().mSampleCountFlagBits;
     // multisampleState.pSampleMask = nullptr;
     // multisampleState.alphaToCoverageEnable = VK_FALSE;
     // multisampleState.alphaToOneEnable = VK_FALSE;
