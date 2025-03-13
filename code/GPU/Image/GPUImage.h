@@ -15,7 +15,7 @@ public:
     VkImageTiling Tiling;
     VkImageUsageFlags Usage;
     VkMemoryPropertyFlags MemoryProperties;
-    VkImageLayout Layout;
+    VkImageLayout InitialLayout;
     VkSampleCountFlagBits SampleCount;
     i32 mOffsetX = 0;
     i32 mOffsetY = 0;

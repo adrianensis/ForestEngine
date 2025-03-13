@@ -48,7 +48,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         textureImageData.Format = format;
         textureImageData.Tiling = VK_IMAGE_TILING_LINEAR;
         textureImageData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        textureImageData.Layout = VK_IMAGE_LAYOUT_UNDEFINED;
+        textureImageData.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         textureImageData.MipLevels = mMipMapLevels;
         textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
         textureImageData.mOffsetX = 0;
@@ -76,7 +76,7 @@ void GPUTexture::init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextu
         textureImageData.Format = format;
         textureImageData.Tiling = VK_IMAGE_TILING_OPTIMAL;
         textureImageData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        textureImageData.Layout = VK_IMAGE_LAYOUT_UNDEFINED;
+        textureImageData.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         textureImageData.MipLevels = mMipMapLevels;
         textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
         textureImageData.mOffsetX = 0;

@@ -313,7 +313,7 @@ bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textu
         * Copy image texels from staging buffer to image
         */
 
-    if (!GPUImageUtils::transitionImageLayout(gpuContext, textureImage, textureImageData.Format, textureImageData.Layout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageData.MipLevels)) {
+    if (!GPUImageUtils::transitionImageLayout(gpuContext, textureImage, textureImageData.Format, textureImageData.InitialLayout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, textureImageData.MipLevels)) {
         CHECK_MSG(false,"Could not transition image layout from undefined to transfer destination");
         return false;
     }

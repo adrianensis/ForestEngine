@@ -15,7 +15,7 @@ bool GPUImage::init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData
     imageInfo.arrayLayers = 1;
     imageInfo.format = gpuImageData.Format;
     imageInfo.tiling = gpuImageData.Tiling;
-    imageInfo.initialLayout = gpuImageData.Layout;
+    imageInfo.initialLayout = gpuImageData.InitialLayout;
     imageInfo.usage = gpuImageData.Usage;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.samples = gpuImageData.SampleCount;
