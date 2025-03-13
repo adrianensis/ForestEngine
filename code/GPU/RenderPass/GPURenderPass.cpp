@@ -221,11 +221,9 @@ VkFormat GPURenderPass::findDepthFormat()
 bool GPURenderPass::initializeFramebuffers()
 {
     PROFILER_CPU()
-    for (VkImageView swapChainImageView : mGPUContext->vulkanSwapChain->getImageViews()) {
-        GPUFramebuffer framebuffer;//(mGPUContext->vulkanDevice, mGPUContext->vulkanSwapChain, vulkanRenderPass);
-
+    for (VkImageView swapChainImageView : mGPUContext->vulkanSwapChain->getImageViews())
+    {
         std::vector<VkImageView> attachments;
-
         if(mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT)
         {
             attachments =
@@ -243,7 +241,8 @@ bool GPURenderPass::initializeFramebuffers()
                 swapChainImageView
             };
         }
-
+        
+        GPUFramebuffer framebuffer;
         if (!framebuffer.init(mGPUContext, GPUFramebufferData{}, this, attachments))
         {
             CHECK_MSG(false,"Could not initialize framebuffers");
