@@ -43,6 +43,9 @@ void GPUMeshBatcher::setInstanceData(u32 instanceId, u32 objectId, u32 shaderPro
 {
 	PROFILER_CPU()
 
+	CHECK_MSG(instanceId < mObjectIDs.size(), "Out of bounds!")
+	CHECK_MSG(instanceId < mGPUShaderPropertiesInstanceIDs.size(), "Out of bounds!")
+	
     mObjectIDs[instanceId] = (objectId);
     mGPUShaderPropertiesInstanceIDs[instanceId] = (shaderPropertiesInstanceId);
 }

@@ -117,6 +117,7 @@ void InstancedMeshRenderer::update(VkCommandBuffer commandBuffer)
     {
         PROFILER_CPU_NAMED(InstancedBuffers_Resize)
 
+		mCurrentInstancesSize = newSize;
 		mCurrentInstancesSize += smInstancesSizeIncrement;
 
         mGPUMeshBatcher.resize(mCurrentInstancesSize);
