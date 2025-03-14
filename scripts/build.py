@@ -17,7 +17,7 @@ buildUnitTests=False
 buildIntegrationTests=False
 enableLogs=False
 enableProfiler=False
-enableAddressSanitizer=False
+enableSanitizer=False
 enableGPUDebug=False
 
 appsToBuild = []
@@ -27,13 +27,16 @@ argv = []
 if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
+log.log(log.LogLabels.info, "Parsin options")
 try:
-  opts, args = getopt.getopt(argv, "uilcprd", ["app=", "tool=", "asan", "gpuDbg"])
+  opts, args = getopt.getopt(argv, "uilcprd", ["app=", "tool=", "sanitizer", "gpuDbg"])
 except:
   log.log(log.LogLabels.error, "Error parsing options!")
   exit(1)
 
 buildType=BuildGlobalData.buildDebug
+
+log.log(log.LogLabels.info, str(opts))
 
 for opt, arg in opts:
     arg_list = arg.split(",")
@@ -42,6 +45,8 @@ for opt, arg in opts:
       os.system('./scripts/clean.sh')
     elif opt in ['-r']:
       buildType=BuildGlobalData.buildRelease
+    elif opt in ['-d']:
+      buildType=BuildGlobalData.buildDebug
     elif opt in ['-u']:
       buildUnitTests=True
     elif opt in ['-i']:
@@ -54,12 +59,14 @@ for opt, arg in opts:
       enableLogs=True
     elif opt in ['-p']:
       enableProfiler=True
-    elif opt in ['-d']:
-      enableProfiler=True
-    elif opt in ['--asan']:
-      enableAddressSanitizer=True
+    elif opt in ['--sanitizer']:
+      enableSanitizer=True
     elif opt in ['--gpuDbg']:
       enableGPUDebug=True
+    else:
+      log.log(log.LogLabels.error, "Unkown option! ->" + opt)
+      exit(1)
+      
 
 buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
@@ -81,7 +88,7 @@ buildCommandArgs = [
     "-DAPPS_TO_BUILD=" + str(";".join(appsToBuild)),
     "-DENABLE_LOGS=" + str(enableLogs),
     "-DENABLE_PROFILER=" + str(enableProfiler),
-    "-DENABLE_ADDRESS_SANITIZER=" + str(enableAddressSanitizer),
+    "-DENABLE_SANITIZER=" + str(enableSanitizer),
     "-DENABLE_GPU_DEBUG=" + str(enableGPUDebug),
     # "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold",
     # "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold",
