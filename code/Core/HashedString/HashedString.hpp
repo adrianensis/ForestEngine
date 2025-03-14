@@ -46,6 +46,11 @@ struct std::hash<HashedString>
 class HashedStringsManager
 {
 public:
+    static void terminate()
+    {
+        mHashToString.clear();
+    } 
+
     static bool containsString(HashValue hashValue)
     {
         return mHashToString.contains(hashValue);

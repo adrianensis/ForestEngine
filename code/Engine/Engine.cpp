@@ -114,10 +114,14 @@ void Engine::terminate()
 
 	MemoryTracking::log();
 	SystemsManager::getInstance().terminate();
+	SystemsManager::deleteInstance();
     ComponentsManager::getInstance().terminate();
+    ComponentsManager::deleteInstance();
 	EntityManager::getInstance().terminate();
+	EntityManager::deleteInstance();
 	Profiler::terminate();
 	Memory::terminate();
+    HashedStringsManager::terminate();
 
     LOG("Terminated OK!")
 }

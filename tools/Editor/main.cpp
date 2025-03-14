@@ -11,7 +11,8 @@
 
 int main()
 {
-    Engine::getInstance().init();
+    Engine engine;
+    engine.init();
 
     TEntityPtr<SceneObject> controller = EntityManager::getInstance().requestEntity<SceneObject>();
     controller->init();
@@ -22,9 +23,7 @@ int main()
 
     GET_SYSTEM(ScenesManager).setSceneObjectController(controller);
 
-    Engine::getInstance().run();
-    Engine::getInstance().terminate();
-    Engine::deleteInstance();
-
+    engine.run();
+    engine.terminate();
     return 0;
 }

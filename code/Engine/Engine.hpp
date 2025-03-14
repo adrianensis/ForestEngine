@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Memory/Singleton.hpp"
+#include "Core/Minimal.hpp"
 
-class Engine: public Singleton<Engine>
+class Engine
 {
 
 public:
