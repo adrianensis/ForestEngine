@@ -333,3 +333,15 @@ bool GPUImageUtils::hasStencilComponent(VkFormat format)
 {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
+
+VkFormat GPUImageUtils::findDepthFormat(Ptr<GPUContext> gpuContext)
+{
+    std::vector<VkFormat> candidates = {
+            VK_FORMAT_D32_SFLOAT_S8_UINT, // max priority for depth 32 bits stencil 8 bits 
+            VK_FORMAT_D24_UNORM_S8_UINT,
+            VK_FORMAT_D32_SFLOAT
+    };
+    VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
+    VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    return gpuContext->vulkanPhysicalDevice->findSupportedFormat(candidates, tiling, features);
+}

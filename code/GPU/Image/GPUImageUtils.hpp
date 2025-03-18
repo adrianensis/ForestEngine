@@ -13,4 +13,5 @@ public:
     static void copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY);
     static bool generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 height, VkImage image, VkFormat imageFormat, u32 mipMapLevels);
     static bool hasStencilComponent(VkFormat format);
+    static VkFormat findDepthFormat(Ptr<GPUContext> gpuContext);
 };
