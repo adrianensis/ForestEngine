@@ -53,7 +53,6 @@ protected:
 protected:
 	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
     RenderPassData mRenderPassData;
-    GPUFramebuffer mOutputGPUFramebuffer;
     Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     GPURenderPass* mGPURenderPass = nullptr;
@@ -61,7 +60,6 @@ protected:
 public:
     RGET(GPUUniformBuffersContainer)
     CRGET(RenderPassData)
-    CRGET(OutputGPUFramebuffer)
     GET(GPURenderPass)
 };
 REGISTER_CLASS(RenderPass);
