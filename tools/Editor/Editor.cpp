@@ -69,7 +69,7 @@ void Editor::firstUpdate()
 	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
     // mSceneObjectsArray.push_back(obj);
 	
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(500*i,650,500*j), 100.0f, Vector3(90,0,0), false);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
     i32 size = 12;            
     FOR_RANGE(i, -size, size)
     {
