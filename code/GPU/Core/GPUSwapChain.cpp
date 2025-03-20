@@ -161,19 +161,19 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
 bool GPUSwapChain::findSwapChainImages(u32 imageCount)
 {
     vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), mSwapChain, &imageCount, nullptr);
-    images.resize(imageCount);
-    vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), mSwapChain, &imageCount, images.data());
-    return !images.empty();
+    mImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), mSwapChain, &imageCount, mImages.data());
+    return !mImages.empty();
 }
 
 bool GPUSwapChain::createSwapChainImageViews()
 {
-    mImageViews.resize(images.size());
-    for (size_t i = 0; i < images.size(); i++)
+    mImageViews.resize(mImages.size());
+    for (size_t i = 0; i < mImages.size(); i++)
     {
         VkImageViewCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        createInfo.image = images[i];
+        createInfo.image = mImages[i];
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         createInfo.format = mSurfaceFormat.format;
         createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;

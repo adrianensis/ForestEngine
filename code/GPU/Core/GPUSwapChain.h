@@ -36,13 +36,14 @@ private:
     VkPresentModeKHR presentMode{};
     VkExtent2D mExtent{};
     VkSwapchainKHR mSwapChain = VK_NULL_HANDLE;
-    std::vector<VkImage> images;
+    std::vector<VkImage> mImages;
     std::vector<VkImageView> mImageViews;
 public:
     CRGET(SwapChain);
     CRGET(SurfaceFormat);
     CRGET(Extent);
     CRGET(ImageViews);
+    CRGET(Images);
 };
 
 
