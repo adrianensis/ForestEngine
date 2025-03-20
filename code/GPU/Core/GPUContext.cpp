@@ -368,9 +368,14 @@ void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
 
     // Which semaphores to wait on before presentation can happen
     VkSemaphore renderFinishedSemaphore = renderFinishedSemaphores[currentFrame];
-    VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
-    presentInfo.pWaitSemaphores = signalSemaphores;
-    presentInfo.waitSemaphoreCount = 1;
+
+    // Check if a wait semaphore has been specified to wait for before presenting the image
+    if(renderFinishedSemaphore != VK_NULL_HANDLE)
+    {
+        VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
+        presentInfo.pWaitSemaphores = signalSemaphores;
+        presentInfo.waitSemaphoreCount = 1;
+    }
 
     // Which swap chain to present image to
     VkSwapchainKHR swapChains[] = {vulkanSwapChain->getSwapChain()};
@@ -385,6 +390,7 @@ void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
         if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR || mWindowResized) {
             mWindowResized = false;
             //recreateRenderingObjects();
+            GPU_LOG_ERROR("Could not present image to swap chain")
         } else if (presentResult != VK_SUCCESS) {
             GPU_LOG_ERROR("Could not present image to swap chain")
             CHECK_MSG(false, "Could not present image to swap chain")
