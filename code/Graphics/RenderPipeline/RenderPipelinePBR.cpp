@@ -32,12 +32,21 @@ void RenderPipelinePBR::compile()
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
+
+    // RenderPassData renderPassResolveData;
+    // renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+    // renderPassResolveData.mGPURenderPassData.mIsResolvePass = true;
+    // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>();
+    // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
+    // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
+    // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
+    // initRenderPass<RenderPass>(renderPassResolveData);
     
-    RenderPassData renderPassUIData;
-    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
-    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
-    initRenderPass<RenderPassUI>(renderPassUIData);
+    // RenderPassData renderPassUIData;
+    // renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+    // renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
+    // renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
+    // initRenderPass<RenderPassUI>(renderPassUIData);
 }
 
 
@@ -76,10 +85,13 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
         // vulkanRenderPass->clearColor();
         // vulkanRenderPass->clearDepthStencil();
 
-        WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
-        renderPassUI->renderPass();
+        // WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+        // renderPassUI->renderPass();
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
+
+        // WeakPtr<RenderPass> renderPassResolve = getRenderPass<RenderPass>();
+        // renderPassResolve->renderPass();
     }
     if (!vulkanCommandBuffer.end()) {
         CHECK_MSG(false, "Could not end frame");

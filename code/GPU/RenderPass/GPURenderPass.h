@@ -35,6 +35,7 @@ public:
     GPUAttachmentData mColorAttachment;
     GPUAttachmentData mDepthStencilAttachment;
     VkSampleCountFlagBits mSampleCountFlagBits = VK_SAMPLE_COUNT_1_BIT;
+    bool mIsResolvePass = false;
 };
 
 class GPURenderPass : public EnableWeakPtrToThis
@@ -48,13 +49,9 @@ public:
     void terminate();
     void begin();
     void end();
-    void clearColor();
-    void clearDepthStencil();
     void onResize();
 private:
-    VkFormat findDepthFormat();
-    bool initializeColorResources();
-    bool initializeDepthResources();
+
     bool initializeFramebuffers();
 
 public:
@@ -62,11 +59,9 @@ public:
 private:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     std::vector<GPUFramebuffer> framebuffers;
-    GPUImage vulkanDepthImage;
-    VkImageView depthImageView = VK_NULL_HANDLE;
-    GPUImage vulkanColorImage;
-    VkImageView colorImageView = VK_NULL_HANDLE;
+
     GPURenderPassData mGPURenderPassData;
+    GPUFramebuffer mOutputGPUFramebuffer;
 public:
     CRGET(RenderPass)
     CRGET(GPURenderPassData)

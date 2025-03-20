@@ -10,7 +10,13 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     mGPUContext = gpuContext;
     mGPURenderPassData = gpuRenderPassData;
 
+    // if(mGPURenderPassData.mIsResolvePass)
+    // {
+    //     CHECK_MSG(mGPURenderPassData.mSampleCountFlagBits > VK_SAMPLE_COUNT_1_BIT, "Resolve pass must be SAMPLE BIT > 1.")
+    // }
+
     VkAttachmentDescription colorAttachment{};
+    // TODO: colorAttachment.format must come from Output Framebuffer config
     colorAttachment.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
     colorAttachment.samples = mGPURenderPassData.mSampleCountFlagBits;
     colorAttachment.loadOp = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
@@ -22,23 +28,30 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 
+    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
     {
-        colorAttachment.initialLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
-            VK_IMAGE_LAYOUT_PRESENT_SRC_KHR :
-            VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        // colorAttachment.initialLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
+        //     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR :
+        //     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     }
     else
     {
         colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     }
-
-    colorAttachment.finalLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
-        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR :
-        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // colorAttachment.finalLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
+    //     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR :
+    //     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // if(mGPURenderPassData.mIsResolvePass && mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT)
+    // {
+        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    // }
 
     VkAttachmentDescription depthAttachment{};
-    depthAttachment.format = findDepthFormat();
+    // TODO: depthAttachment.format must come from Output Framebuffer config
+    depthAttachment.format = GPUImageUtils::findDepthFormat(mGPUContext);
     depthAttachment.samples = mGPURenderPassData.mSampleCountFlagBits;
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -72,32 +85,26 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     std::array<VkSubpassDependency, 1> dependencies{};
     // std::array<VkSubpassDependency, 2> dependencies{};
 
-    // Depth attachment
-    // dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-    // dependencies[0].dstSubpass = 0;
-    // dependencies[0].srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
-    // dependencies[0].dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
-    // dependencies[0].srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    // dependencies[0].dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
-    // dependencies[0].dependencyFlags = 0;
     // Color attachment
-    // dependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
-    // dependencies[1].dstSubpass = 0;
-    // dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    // dependencies[1].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    // dependencies[1].srcAccessMask = 0;
-    // dependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-    // dependencies[1].dependencyFlags = 0;
     dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     dependencies[0].dstSubpass = 0;
-    dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; // | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; // | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     dependencies[0].srcAccessMask = 0;
     dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+    dependencies[0].dependencyFlags = 0;
+    // Depth attachment
+    dependencies[1].srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependencies[1].dstSubpass = 0;
+    dependencies[1].srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+    dependencies[1].dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+    dependencies[1].srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    dependencies[1].dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+    dependencies[1].dependencyFlags = 0;
 
     std::vector<VkAttachmentDescription> attachments = {colorAttachment, depthAttachment};
 
-    if(mGPURenderPassData.mSampleCountFlagBits > VK_SAMPLE_COUNT_1_BIT)
+    if(mGPURenderPassData.mSampleCountFlagBits > VK_SAMPLE_COUNT_1_BIT && mGPURenderPassData.mIsResolvePass)
     {
         VkAttachmentDescription colorAttachmentResolve{};
         colorAttachmentResolve.format = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
@@ -134,14 +141,6 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     }
     LOG("Created Vulkan render pass");
 
-    if (!initializeColorResources())
-    {
-        CHECK_MSG(false, "Could not initialize color resources");
-    }
-    if (!initializeDepthResources())
-    {
-        CHECK_MSG(false, "Could not initialize depth resources");
-    }
     if (!initializeFramebuffers())
     {
         CHECK_MSG(false, "Could not initialize Vulkan framebuffers");
@@ -150,107 +149,33 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     return true;
 }
 
-bool GPURenderPass::initializeColorResources()
-{
-    PROFILER_CPU()
-
-    VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
-
-    GPUImageData colorImageConfig{};
-    colorImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
-    colorImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
-    colorImageConfig.MipLevels = 1;
-    colorImageConfig.SampleCount = mGPURenderPassData.mSampleCountFlagBits;
-    colorImageConfig.Format = colorFormat;
-    colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
-    colorImageConfig.Usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
-    colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    colorImageConfig.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-    if (!vulkanColorImage.init(mGPUContext, colorImageConfig)) {
-        CHECK_MSG(false,"Could not initialize color image");
-        return false;
-    }
-    colorImageView = GPUImageUtils::createImageView(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
-    
-    // if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
-    // {
-    //     GPUImageUtils::transitionImageLayout(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, colorImageConfig.MipLevels);
-    // }
-    return true;
-}
-
-bool GPURenderPass::initializeDepthResources()
-{
-    PROFILER_CPU()
-
-    VkFormat depthFormat = findDepthFormat();
-
-    GPUImageData depthImageConfig{};
-    depthImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
-    depthImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
-    depthImageConfig.Format = depthFormat;
-    depthImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
-    depthImageConfig.Usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    depthImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    depthImageConfig.MipLevels = 1;
-    depthImageConfig.SampleCount = mGPURenderPassData.mSampleCountFlagBits;
-    depthImageConfig.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-    if (!vulkanDepthImage.init(mGPUContext, depthImageConfig)) {
-        CHECK_MSG(false,"Could not initialize depth image");
-        return false;
-    }
-    depthImageView = GPUImageUtils::createImageView(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
-    // GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
-    return true;
-}
-
-VkFormat GPURenderPass::findDepthFormat()
-{
-    std::vector<VkFormat> candidates = {
-            VK_FORMAT_D32_SFLOAT_S8_UINT, // max priority for depth 32 bits stencil 8 bits 
-            VK_FORMAT_D24_UNORM_S8_UINT,
-            VK_FORMAT_D32_SFLOAT
-    };
-    VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
-    VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    return mGPUContext->vulkanPhysicalDevice->findSupportedFormat(candidates, tiling, features);
-}
-
 bool GPURenderPass::initializeFramebuffers()
 {
     PROFILER_CPU()
-    for (VkImageView swapChainImageView : mGPUContext->vulkanSwapChain->getImageViews())
+
+    // if(mGPURenderPassData.mIsResolvePass)
     {
-        std::vector<VkImageView> attachments;
-        if(mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT)
-        {
-            attachments =
+        FOR_RANGE(i, 0, mGPUContext->vulkanSwapChain->getImageViews().size())
+        {        
+            GPUFramebuffer framebuffer;
+            GPUFramebufferData gpuFramebufferData;
+            gpuFramebufferData.mIsResolveFramebuffer = true;
+            gpuFramebufferData.mSwapchainIndex = i;
+            if (!framebuffer.init(mGPUContext, gpuFramebufferData, this))
             {
-                swapChainImageView,
-                depthImageView,
-            };
+                CHECK_MSG(false,"Could not initialize framebuffers");
+                return false;
+            }
+            framebuffers.push_back(framebuffer);
         }
-        else
-        {
-            attachments =
-            {
-                colorImageView,
-                depthImageView,
-                swapChainImageView
-            };
-        }
-        
-        GPUFramebuffer framebuffer;
-        if (!framebuffer.init(mGPUContext, GPUFramebufferData{}, this, attachments))
-        {
-            CHECK_MSG(false,"Could not initialize framebuffers");
-            return false;
-        }
-        framebuffers.push_back(framebuffer);
+        LOG("Created [{}] Vulkan framebuffers", framebuffers.size());
     }
-    LOG("Created [{}] Vulkan framebuffers", framebuffers.size());
+    // else
+    // {
+    //     GPUFramebufferData gpuFramebufferData;
+    //     mOutputGPUFramebuffer.init(mGPUContext, gpuFramebufferData, this);
+    // }
+
     return true;
 }
 
@@ -258,11 +183,6 @@ void GPURenderPass::terminate()
 {
     PROFILER_CPU()
 
-    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
-    vulkanColorImage.terminate();
-    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
-    vulkanDepthImage.terminate();
     for (GPUFramebuffer framebuffer : framebuffers) {
         framebuffer.terminate();
     }
@@ -278,7 +198,14 @@ void GPURenderPass::begin()
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = mRenderPass;
-    renderPassInfo.framebuffer = framebuffers.at(mGPUContext->currentSwapChainImageIndex).getFramebuffer();
+    // if(mGPURenderPassData.mIsResolvePass)
+    {
+        renderPassInfo.framebuffer = framebuffers.at(mGPUContext->currentSwapChainImageIndex).getFramebuffer();
+    }
+    // else
+    // {
+    //     renderPassInfo.framebuffer = mOutputGPUFramebuffer.getFramebuffer();
+    // }
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();
 
@@ -337,47 +264,14 @@ void GPURenderPass::end()
     vkCmdEndRenderPass(vulkanCommandBuffer.getVkCommandBuffer());
 }
 
-void GPURenderPass::clearColor()
-{
-    PROFILER_CPU()
-    VkClearColorValue clearColorValue = {{0.0f, 0.0f, 0.0f, 1.0f}};
-    const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    vkCmdClearColorImage(vulkanCommandBuffer.getVkCommandBuffer(), vulkanColorImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearColorValue, 1, &clear_range);
-}
-void GPURenderPass::clearDepthStencil()
-{
-    PROFILER_CPU()
-    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
-    VkClearDepthStencilValue clearDepthStencilValue{};
-    clearDepthStencilValue.depth = 1.0f;
-    clearDepthStencilValue.stencil = 0;
-    const VkImageSubresourceRange clear_range = { VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 };
-    vkCmdClearDepthStencilImage(vulkanCommandBuffer.getVkCommandBuffer(), vulkanDepthImage.getVkImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL/*VK_IMAGE_LAYOUT_GENERAL*/, &clearDepthStencilValue, 1, &clear_range);
-}
-
 void GPURenderPass::onResize()
 {
-    VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
-    vulkanColorImage.terminate();
-    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
-    vulkanDepthImage.terminate();
-
     for (GPUFramebuffer framebuffer : framebuffers) {
         framebuffer.terminate();
     }
     framebuffers.clear();
     LOG("Destroyed Vulkan framebuffers");
 
-    if (!initializeColorResources())
-    {
-        CHECK_MSG(false, "Could not initialize color resources");
-    }
-    if (!initializeDepthResources())
-    {
-        CHECK_MSG(false, "Could not initialize depth resources");
-    }
     if (!initializeFramebuffers())
     {
         CHECK_MSG(false, "Could not initialize Vulkan framebuffers");
