@@ -36,10 +36,6 @@ void Editor::firstUpdate()
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UIAxisGizmo>();
-    mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
-    mAxisViewer->createAxis();
-
     // createPointLight(Vector3(0,50,0), 20);
 
     mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward + -Vector3::smUp);
@@ -72,8 +68,9 @@ void Editor::firstUpdate()
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(100,0,0), 100.0f, Vector3(90,0,0), false);
 	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
     // mSceneObjectsArray.push_back(obj);
-
-    i32 size = 6;            
+	
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(500*i,650,500*j), 100.0f, Vector3(90,0,0), false);
+    i32 size = 12;            
     FOR_RANGE(i, -size, size)
     {
         FOR_RANGE(j, -size, size)
@@ -81,7 +78,8 @@ void Editor::firstUpdate()
 			// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(150*i,0,150*j), 100.0f, Vector3(0,0,0), true);
             // if(j % 2 == 0)
             {
-				importModel("tower/tower.gltf", Vector3(500*i,0,500*j), 100.0f, Vector3(0,0,0), true);
+				// importModel("tower/tower.gltf", Vector3(500*i,3,500*j), 100.0f, Vector3(0,0,0), false);
+				// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(500*i,650,500*j), 100.0f, Vector3(90,0,0), false);
             }
             // else
             // {
@@ -100,7 +98,7 @@ void Editor::firstUpdate()
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
 
-    createUI();
+    // createUI();
     // mousePick();
 
     // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISceneTree>();
@@ -233,7 +231,10 @@ void Editor::update()
 
     mousePick();
 
-    mAxisViewer->update();
+	if(mAxisViewer)
+	{
+		mAxisViewer->update();
+	}
     // mUISceneTree->update();
     // mUITransform->update(cameraTransform);
 
@@ -392,6 +393,10 @@ void Editor::handleMouse()
 
 void Editor::createUI()
 {
+    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UIAxisGizmo>();
+    mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
+    mAxisViewer->createAxis();
+
     UIBuilder uiBuilder;
 
 	uiBuilder.
