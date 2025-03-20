@@ -9,61 +9,293 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
     {
         PROFILER_GPU_NAMED(transitionImageLayout, gpuContext->mTracyContext, commandBuffer);
 
+        // VkImageMemoryBarrier imageMemoryBarrier{};
+        // imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        // imageMemoryBarrier.oldLayout = oldLayout;
+        // imageMemoryBarrier.newLayout = newLayout;
+        // imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        // imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        // imageMemoryBarrier.image = image;
+        // imageMemoryBarrier.srcAccessMask = 0;
+        // imageMemoryBarrier.dstAccessMask = 0;
+        // imageMemoryBarrier.subresourceRange.baseMipLevel = 0;
+        // imageMemoryBarrier.subresourceRange.levelCount = mipLevels;
+        // imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+        // imageMemoryBarrier.subresourceRange.layerCount = 1;
+
+        // if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+        // {
+        //     imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+        //     if (hasStencilComponent(format))
+        //     {
+        //         imageMemoryBarrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        //     }
+        // }
+        // else
+        // {
+        //     imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        // }
+
+        // VkPipelineStageFlags sourceStage;
+        // VkPipelineStageFlags destinationStage;
+
+        // if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+        // {
+        //     imageMemoryBarrier.srcAccessMask = 0;
+        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        //     sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        //     destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+        // }
+        // else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+        // {
+        //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        //     sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+        //     destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        // }
+        // else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+        // {
+        //     imageMemoryBarrier.srcAccessMask = 0;
+        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        //     sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        //     destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+        // }
+        // else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+        // {
+        //     // imageMemoryBarrier.srcAccessMask = 0;
+        //     // imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        //     // sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        //     // destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+ 
+        //     // imageMemoryBarrier.srcAccessMask = 0;
+        //     // imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        //     // sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        //     // destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT;
+            
+        //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
+        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+        //     sourceStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+        //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        // }
+        // // else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
+        // // {
+        // //     imageMemoryBarrier.srcAccessMask = 0;
+        // //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        // //     sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        // //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        // // }
+        // else
+        // {
+        //     CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
+        //     return false;
+        // }
+
+        VkPipelineStageFlags sourceStage = 0;
+        VkPipelineStageFlags destinationStage = 0;
+    
         VkImageMemoryBarrier imageMemoryBarrier{};
         imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        imageMemoryBarrier.oldLayout = oldLayout;
-        imageMemoryBarrier.newLayout = newLayout;
+        imageMemoryBarrier.pNext = nullptr;
+        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;
+        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
         imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         imageMemoryBarrier.image = image;
-        imageMemoryBarrier.srcAccessMask = 0;
-        imageMemoryBarrier.dstAccessMask = 0;
         imageMemoryBarrier.subresourceRange.baseMipLevel = 0;
         imageMemoryBarrier.subresourceRange.levelCount = mipLevels;
-        imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+        imageMemoryBarrier.subresourceRange.baseArrayLayer= 0;
         imageMemoryBarrier.subresourceRange.layerCount = 1;
 
-        if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+        if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+        {
             imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-            if (hasStencilComponent(format)) {
+            if (hasStencilComponent(format))
+            {
                 imageMemoryBarrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
             }
-        } else {
+        }
+        else
+        {
             imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         }
+    
+        const VkPipelineStageFlags all_shader_stages =
+            VK_PIPELINE_STAGE_VERTEX_SHADER_BIT |
+            VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT |
+            VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT |
+            VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT |
+            VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
+            VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+    
+        // source stage/access/layout
+        switch (oldLayout)
+        {
+            case VK_IMAGE_LAYOUT_UNDEFINED:
+            {
+                sourceStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+            {
+                sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+            {
+                sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+            {
+                sourceStage = all_shader_stages;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_GENERAL:
+            {
+                sourceStage = all_shader_stages;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+            {
+                sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+            {
+                sourceStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+                imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            }
+            break;
+    
+            // case tr_texture_usage_resolve_src: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+            //     sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+            //     imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            // }
+            // break;
+    
+            // case tr_texture_usage_resolve_dst: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+            //     sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            //     imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            // }
+            // break;
+    
+            case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+            {
+                sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+                imageMemoryBarrier.srcAccessMask = 0;
+                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            }
+            break;
 
-        VkPipelineStageFlags sourceStage;
-        VkPipelineStageFlags destinationStage;
-
-        if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
-            imageMemoryBarrier.srcAccessMask = 0;
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-        } else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
-            imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-            destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        } else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
-            imageMemoryBarrier.srcAccessMask = 0;
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-        } else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
-            imageMemoryBarrier.srcAccessMask = 0;
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        } else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
-            imageMemoryBarrier.srcAccessMask = 0;
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        } else {
-            CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
-            return false;
+            default:
+                CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
         }
+    
+        // destination stage/access/layout
+        switch (newLayout)
+        {
+            case VK_IMAGE_LAYOUT_UNDEFINED:
+            {
+                destinationStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            }
+            break;
+    
+           case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+           {
+                destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+            {
+                destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+            {
+                destinationStage = all_shader_stages;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_GENERAL:
+            {
+                destinationStage = all_shader_stages;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+            {
+                destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            }
+            break;
+    
+            case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+            {
+                destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+                imageMemoryBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            }
+            break;
+    
+            // case tr_texture_usage_resolve_src: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+            //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+            //     imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            // }
+            // break;
+    
+            // case tr_texture_usage_resolve_dst: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+            //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            //     imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            // }
+            // break;
+    
+            case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+            {
+                destinationStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+                imageMemoryBarrier.dstAccessMask = 0;
+                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            }
+            break;
+
+            default:
+                CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
+         }
 
         constexpr VkDependencyFlags dependencyFlags = 0;
         constexpr u32 memoryBarrierCount = 0;
@@ -162,15 +394,15 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
     {
         PROFILER_GPU_NAMED(generateMipmaps, gpuContext->mTracyContext, commandBuffer);
 
-        VkImageMemoryBarrier barrier{};
-        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        barrier.image = image;
-        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        barrier.subresourceRange.baseArrayLayer = 0;
-        barrier.subresourceRange.layerCount = 1;
-        barrier.subresourceRange.levelCount = 1;
+        VkImageMemoryBarrier imageMemoryBarrier{};
+        imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        imageMemoryBarrier.image = image;
+        imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+        imageMemoryBarrier.subresourceRange.layerCount = 1;
+        imageMemoryBarrier.subresourceRange.levelCount = 1;
 
         i32 mipWidth = width;
         i32 mipHeight = height;
@@ -183,11 +415,11 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
         constexpr u32 imageMemoryBarrierCount = 1;
 
         for (u32 i = 1; i < mipMapLevels; i++) {
-            barrier.subresourceRange.baseMipLevel = i - 1;
-            barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-            barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-            barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            imageMemoryBarrier.subresourceRange.baseMipLevel = i - 1;
+            imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 
             VkPipelineStageFlagBits sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
             VkPipelineStageFlagBits destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
@@ -201,7 +433,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
                     bufferMemoryBarrierCount,
                     bufferMemoryBarriers,
                     imageMemoryBarrierCount,
-                    &barrier
+                    &imageMemoryBarrier
             );
 
             VkImageBlit blit{};
@@ -233,10 +465,10 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
                     filter
             );
 
-            barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-            barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
             sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
             destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
@@ -250,7 +482,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
                     bufferMemoryBarrierCount,
                     bufferMemoryBarriers,
                     imageMemoryBarrierCount,
-                    &barrier
+                    &imageMemoryBarrier
             );
 
             if (mipWidth > 1) {
@@ -261,11 +493,11 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
             }
         }
 
-        barrier.subresourceRange.baseMipLevel = mipMapLevels - 1;
-        barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        imageMemoryBarrier.subresourceRange.baseMipLevel = mipMapLevels - 1;
+        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
         VkPipelineStageFlagBits sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         VkPipelineStageFlagBits destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
@@ -279,7 +511,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
                 bufferMemoryBarrierCount,
                 bufferMemoryBarriers,
                 imageMemoryBarrierCount,
-                &barrier
+                &imageMemoryBarrier
         );
     }
     gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
@@ -325,7 +557,7 @@ bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textu
         return false;
     }
 
-    LOG("Initialized texture image");
+    // LOG("Initialized texture image");
     return true;
 }
 
