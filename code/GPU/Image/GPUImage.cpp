@@ -45,7 +45,7 @@ bool GPUImage::init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData
     constexpr u32 memoryOffset = 0;
     vkBindImageMemory(mGPUContext->vulkanDevice->getDevice(), mVkImage, vkDeviceMemory, memoryOffset);
 
-    LOG("Initialized image");
+    // LOG("Initialized image");
     return true;
 }
 

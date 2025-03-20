@@ -40,16 +40,16 @@ bool GPUIndicesBuffer::setData(const void* data, u32 size) {
 
     stagingBuffer.setData(data, size);
     GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer, nullptr);
-    LOG("Copied indices to index buffer");
+    // LOG("Copied indices to index buffer");
 
     stagingBuffer.terminate();
-    LOG("Terminated staging buffer for index buffer");
+    // LOG("Terminated staging buffer for index buffer");
 
-    LOG("Initialized Vulkan index buffer");
+    // LOG("Initialized Vulkan index buffer");
     return true;
 }
 
 void GPUIndicesBuffer::terminate() {
     mBuffer.terminate();
-    LOG("Terminated Vulkan index buffer");
+    // LOG("Terminated Vulkan index buffer");
 }

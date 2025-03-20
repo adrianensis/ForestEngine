@@ -32,7 +32,7 @@ void GPUUniformBuffer::init(Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoi
         CHECK_MSG(false,"Could not initialize uniform buffer");
     }
 
-    LOG("Initialized uniform buffer");
+    // LOG("Initialized uniform buffer");
 }
 
 void GPUUniformBuffer::resize(u32 size)

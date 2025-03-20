@@ -16,7 +16,7 @@ bool GPUCommandPool::init(Ptr<GPUContext> gpuContext, VkCommandPoolCreateFlags c
         return false;
     }
 
-    GPU_LOG("Created Vulkan command pool");
+    // GPU_LOG("Created Vulkan command pool");
     return true;
 }
 
@@ -48,7 +48,7 @@ std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(u32 count) 
         vulkanCommandBuffer.init(vkCommandBuffer, mGPUContext);
         vulkanCommandBuffers.push_back(vulkanCommandBuffer);
     }
-    GPU_LOG("Allocated [{}] command buffers", vkCommandBuffers.size());
+    // GPU_LOG("Allocated [{}] command buffers", vkCommandBuffers.size());
     return vulkanCommandBuffers;
 }
 
