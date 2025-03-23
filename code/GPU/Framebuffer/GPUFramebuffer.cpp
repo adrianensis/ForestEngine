@@ -129,7 +129,7 @@ bool GPUFramebuffer::initializeColorResources()
     colorImageConfig.SampleCount = mFramebufferData.mSampleCountFlagBits;
     colorImageConfig.Format = colorFormat;
     colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
-    colorImageConfig.Usage = /*VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT |*/ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
+    colorImageConfig.Usage = /*VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT |*/ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
     colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     colorImageConfig.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
