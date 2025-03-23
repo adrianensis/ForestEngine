@@ -8,15 +8,15 @@
 class GPUImageData
 {
 public:
-    u32 Width;
-    u32 Height;
-    u32 MipLevels;
-    VkFormat Format;
-    VkImageTiling Tiling;
-    VkImageUsageFlags Usage;
-    VkMemoryPropertyFlags MemoryProperties;
-    VkImageLayout InitialLayout;
-    VkSampleCountFlagBits SampleCount;
+    u32 Width = 0;
+    u32 Height = 0;
+    u32 MipLevels = 0;
+    VkFormat Format = VK_FORMAT_UNDEFINED;
+    VkImageTiling Tiling = VK_IMAGE_TILING_OPTIMAL;
+    VkImageUsageFlags Usage = 0;
+    VkMemoryPropertyFlags MemoryProperties = 0;
+    VkImageLayout InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    VkSampleCountFlagBits SampleCount = VK_SAMPLE_COUNT_1_BIT;
     i32 mOffsetX = 0;
     i32 mOffsetY = 0;
     u32 mChannels = 0;
@@ -26,12 +26,18 @@ class GPUImage
 {
 public:
     bool init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
+    void transition(VkImageLayout destinationLayout);
+    void copyToImage(GPUImage& destinationImage);
     void terminate();
 
 private:
     Ptr<GPUContext> mGPUContext;
     VkImage mVkImage = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+    GPUImageData mGPUImageData;
+    VkImageLayout mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 public:
     CRGET(VkImage)
+    CRGET(GPUImageData)
+    GET(CurrentLayout)
 };

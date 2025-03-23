@@ -1,24 +1,27 @@
 #include "GPUImage.h"
+#include "GPU/Image/GPUImageUtils.hpp"
 
 bool GPUImage::init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData)
 {
     mGPUContext = gpuContext;
+    mGPUImageData = gpuImageData;
+    mCurrentLayout = mGPUImageData.InitialLayout;
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
 
     VkImageCreateInfo imageInfo{};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
-    imageInfo.extent.width = gpuImageData.Width;
-    imageInfo.extent.height = gpuImageData.Height;
+    imageInfo.extent.width = mGPUImageData.Width;
+    imageInfo.extent.height = mGPUImageData.Height;
     imageInfo.extent.depth = 1;
-    imageInfo.mipLevels = gpuImageData.MipLevels;
+    imageInfo.mipLevels = mGPUImageData.MipLevels;
     imageInfo.arrayLayers = 1;
-    imageInfo.format = gpuImageData.Format;
-    imageInfo.tiling = gpuImageData.Tiling;
-    imageInfo.initialLayout = gpuImageData.InitialLayout;
-    imageInfo.usage = gpuImageData.Usage;
+    imageInfo.format = mGPUImageData.Format;
+    imageInfo.tiling = mGPUImageData.Tiling;
+    imageInfo.initialLayout = mGPUImageData.InitialLayout;
+    imageInfo.usage = mGPUImageData.Usage;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    imageInfo.samples = gpuImageData.SampleCount;
+    imageInfo.samples = mGPUImageData.SampleCount;
 
     if (vkCreateImage(mGPUContext->vulkanDevice->getDevice(), &imageInfo, allocationCallbacks, &mVkImage) != VK_SUCCESS)
     {
@@ -29,7 +32,7 @@ bool GPUImage::init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData
     VkMemoryRequirements memoryRequirements;
     vkGetImageMemoryRequirements(mGPUContext->vulkanDevice->getDevice(), mVkImage, &memoryRequirements);
 
-    u32 memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, gpuImageData.MemoryProperties);
+    u32 memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, mGPUImageData.MemoryProperties);
 
     VkMemoryAllocateInfo memoryAllocateInfo{};
     memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -55,4 +58,15 @@ void GPUImage::terminate()
     vkDestroyImage(mGPUContext->vulkanDevice->getDevice(), mVkImage, allocationCallbacks);
     vkFreeMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, allocationCallbacks);
     LOG("Terminated image");
+}
+
+void GPUImage::transition(VkImageLayout destinationLayout)
+{
+    GPUImageUtils::transitionImageLayout(mGPUContext, mVkImage, mGPUImageData.Format, mCurrentLayout, destinationLayout, mGPUImageData.MipLevels);
+    mCurrentLayout = destinationLayout;
+}
+
+void GPUImage::copyToImage(GPUImage& destinationImage)
+{
+    GPUImageUtils::copyImageToImage(mGPUContext, mVkImage, mCurrentLayout, destinationImage.getVkImage(), destinationImage.getCurrentLayout(), mGPUImageData.Width, mGPUImageData.Height,0,0, mGPUImageData.MipLevels);
 }

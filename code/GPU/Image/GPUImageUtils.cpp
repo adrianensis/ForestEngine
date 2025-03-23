@@ -437,7 +437,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
     return true;
 }
 
-void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, u32 width, u32 height, i32 offsetX, i32 offsetY)
+void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, u32 width, u32 height, i32 offsetX, i32 offsetY, u32 mipLevels)
     // VkCommandBuffer commandBuffer,
     // VkImage sourceImage,
     // VkExtent2D sourceExtent,
@@ -453,11 +453,11 @@ void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceI
 
         // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
         // TODO: handle mipsLevel == 1, pass the correct count
-        GPUImageUtils::transitionImageLayout(gpuContext, sourceImage, VK_FORMAT_UNDEFINED, sourceLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 1);
+        GPUImageUtils::transitionImageLayout(gpuContext, sourceImage, VK_FORMAT_UNDEFINED, sourceLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mipLevels);
 
         // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
         // TODO: handle mipsLevel == 1, pass the correct count
-        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, destinationLayout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1);
+        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, destinationLayout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 
         VkImageCopy copyRegion{};
         copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -491,10 +491,15 @@ void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceI
             &copyRegion
         );
 
+        // Restore original layouts
+        
         // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
         // TODO: handle mipsLevel == 1, pass the correct count
-        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, destinationLayout, 1);
+        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, destinationLayout, mipLevels);
 
+        // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
+        // TODO: handle mipsLevel == 1, pass the correct count
+        GPUImageUtils::transitionImageLayout(gpuContext, sourceImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, sourceLayout, mipLevels);
     }
     gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
 }

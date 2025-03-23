@@ -141,7 +141,7 @@ bool GPUFramebuffer::initializeColorResources()
     
     // if(!mFramebufferData.mIsResolveFramebuffer)
     {
-        GPUImageUtils::transitionImageLayout(mGPUContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, colorImageConfig.MipLevels);
+        vulkanColorImage.transition(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
     }
     return true;
 }
