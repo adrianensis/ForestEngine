@@ -9,87 +9,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
     {
         PROFILER_GPU_NAMED(transitionImageLayout, gpuContext->mTracyContext, commandBuffer);
 
-        // VkImageMemoryBarrier imageMemoryBarrier{};
-        // imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        // imageMemoryBarrier.oldLayout = oldLayout;
-        // imageMemoryBarrier.newLayout = newLayout;
-        // imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        // imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        // imageMemoryBarrier.image = image;
-        // imageMemoryBarrier.srcAccessMask = 0;
-        // imageMemoryBarrier.dstAccessMask = 0;
-        // imageMemoryBarrier.subresourceRange.baseMipLevel = 0;
-        // imageMemoryBarrier.subresourceRange.levelCount = mipLevels;
-        // imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
-        // imageMemoryBarrier.subresourceRange.layerCount = 1;
-
-        // if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-        // {
-        //     imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-        //     if (hasStencilComponent(format))
-        //     {
-        //         imageMemoryBarrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
-        //     }
-        // }
-        // else
-        // {
-        //     imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        // }
-
-        // VkPipelineStageFlags sourceStage;
-        // VkPipelineStageFlags destinationStage;
-
-        // if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-        // {
-        //     imageMemoryBarrier.srcAccessMask = 0;
-        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        //     sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-        //     destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-        // }
-        // else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-        // {
-        //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-        //     sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-        //     destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        // }
-        // else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-        // {
-        //     imageMemoryBarrier.srcAccessMask = 0;
-        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-        //     sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-        //     destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-        // }
-        // else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-        // {
-        //     // imageMemoryBarrier.srcAccessMask = 0;
-        //     // imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        //     // sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-        //     // destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
- 
-        //     // imageMemoryBarrier.srcAccessMask = 0;
-        //     // imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        //     // sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-        //     // destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT;
-            
-        //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-        //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-        //     sourceStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
-        //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        // }
-        // // else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
-        // // {
-        // //     imageMemoryBarrier.srcAccessMask = 0;
-        // //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        // //     sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-        // //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        // // }
-        // else
-        // {
-        //     CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
-        //     return false;
-        // }
-
         VkPipelineStageFlags sourceStage = 0;
         VkPipelineStageFlags destinationStage = 0;
     
@@ -532,49 +451,13 @@ void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceI
     {
         PROFILER_GPU_NAMED(generateMipmaps, gpuContext->mTracyContext, commandBuffer);
 
-        // Transition Source Image Layout to TRANSFER_SRC_OPTIMAL (if not already)
-        VkImageMemoryBarrier srcLayoutBarrier{};
-        srcLayoutBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        srcLayoutBarrier.srcAccessMask = 0; // Depends on the previous usage
-        srcLayoutBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-        srcLayoutBarrier.oldLayout = sourceLayout;
-        srcLayoutBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-        srcLayoutBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        srcLayoutBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        srcLayoutBarrier.image = sourceImage;
-        srcLayoutBarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+        // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
+        // TODO: handle mipsLevel == 1, pass the correct count
+        GPUImageUtils::transitionImageLayout(gpuContext, sourceImage, VK_FORMAT_UNDEFINED, sourceLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 1);
 
-        vkCmdPipelineBarrier(
-            commandBuffer,
-            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            VK_PIPELINE_STAGE_TRANSFER_BIT,
-            0,
-            0, nullptr,
-            0, nullptr,
-            1, &srcLayoutBarrier
-        );
-
-        // Transition Destination Image Layout to TRANSFER_DST_OPTIMAL (if not already)
-        VkImageMemoryBarrier dstLayoutBarrier{};
-        dstLayoutBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        dstLayoutBarrier.srcAccessMask = 0; // Depends on the previous usage
-        dstLayoutBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        dstLayoutBarrier.oldLayout = destinationLayout;
-        dstLayoutBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        dstLayoutBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        dstLayoutBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        dstLayoutBarrier.image = destinationImage;
-        dstLayoutBarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
-
-        vkCmdPipelineBarrier(
-            commandBuffer,
-            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            VK_PIPELINE_STAGE_TRANSFER_BIT,
-            0,
-            0, nullptr,
-            0, nullptr,
-            1, &dstLayoutBarrier
-        );
+        // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
+        // TODO: handle mipsLevel == 1, pass the correct count
+        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, destinationLayout, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1);
 
         VkImageCopy copyRegion{};
         copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -608,27 +491,10 @@ void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceI
             &copyRegion
         );
 
-        // 5. Transition Destination Image Layout back to its intended usage (e.g., PRESENT_SRC_KHR for swapchain)
-        VkImageMemoryBarrier dstLayoutBarrierEnd{};
-        dstLayoutBarrierEnd.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        dstLayoutBarrierEnd.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        dstLayoutBarrierEnd.dstAccessMask = 0; // Depends on the next usage
-        dstLayoutBarrierEnd.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        dstLayoutBarrierEnd.newLayout = destinationLayout;
-        dstLayoutBarrierEnd.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        dstLayoutBarrierEnd.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        dstLayoutBarrierEnd.image = destinationImage;
-        dstLayoutBarrierEnd.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+        // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
+        // TODO: handle mipsLevel == 1, pass the correct count
+        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, destinationLayout, 1);
 
-        vkCmdPipelineBarrier(
-            commandBuffer,
-            VK_PIPELINE_STAGE_TRANSFER_BIT,
-            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            0,
-            0, nullptr,
-            0, nullptr,
-            1, &dstLayoutBarrierEnd
-        );
     }
     gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
 }
