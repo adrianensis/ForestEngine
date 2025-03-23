@@ -9,6 +9,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 #include "GPU/GPUInstance.hpp"
+#include "GPU/Image/GPUImageUtils.hpp"
 
 void RenderPipelinePBR::compile()
 {
@@ -33,14 +34,14 @@ void RenderPipelinePBR::compile()
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
 
-    // RenderPassData renderPassResolveData;
+    RenderPassData renderPassResolveData;
     // renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
-    // renderPassResolveData.mGPURenderPassData.mIsResolvePass = true;
+    renderPassResolveData.mGPURenderPassData.mIsResolvePass = true;
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>();
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
-    // initRenderPass<RenderPass>(renderPassResolveData);
+    initRenderPass<RenderPass>(renderPassResolveData);
     
     // RenderPassData renderPassUIData;
     // renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
@@ -66,7 +67,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
     //	GET_SYSTEM(GPUInterface).clear();
 
         // FOR_ARRAY(i, renderData.mPointLights)
-        {
+        // {
             // WeakPtr<PointLight> pointLight = renderData.mPointLights.at(i);
             // WeakPtr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
             // renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
@@ -75,7 +76,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
             renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
             // renderPassGeometry->getGPURenderPass()->clearColor();
             renderPassGeometry->renderPass();
-        }
+        // }
         // WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
         // renderPassGeometry->mPointLight = renderData.mPointLights[0];
         // renderPassGeometry->renderPass();
@@ -90,8 +91,18 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
 
-        // WeakPtr<RenderPass> renderPassResolve = getRenderPass<RenderPass>();
-        // renderPassResolve->renderPass();
+        // FOR_RANGE(i, 0, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImageViews().size())
+        // { 
+            // VkFormat colorFormat = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
+            // GPUImageUtils::transitionImageLayout(GET_SYSTEM(GPUInstance).mGPUContext, renderPassGeometry->getGPURenderPass()->getOutputGPUFramebuffer().vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 1);
+        // }
+
+//         GPUImageUtils::copyImageToImage(GET_SYSTEM(GPUInstance).mGPUContext, renderPassGeometry->getGPURenderPass()->getOutputGPUFramebuffer().vulkanColorImage.getVkImage(),
+//     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex],
+// VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().width, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().height, 0,0);
+
+        WeakPtr<RenderPass> renderPassResolve = getRenderPass<RenderPass>();
+        renderPassResolve->renderPass();
     }
     if (!vulkanCommandBuffer.end()) {
         CHECK_MSG(false, "Could not end frame");

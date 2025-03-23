@@ -153,13 +153,13 @@ bool GPURenderPass::initializeFramebuffers()
 {
     PROFILER_CPU()
 
-    // if(mGPURenderPassData.mIsResolvePass)
+    if(mGPURenderPassData.mIsResolvePass)
     {
         FOR_RANGE(i, 0, mGPUContext->vulkanSwapChain->getImageViews().size())
-        {        
+        {
             GPUFramebuffer framebuffer;
             GPUFramebufferData gpuFramebufferData;
-            gpuFramebufferData.mIsResolveFramebuffer = true;
+            gpuFramebufferData.mIsResolveFramebuffer = mGPURenderPassData.mIsResolvePass;
             gpuFramebufferData.mSwapchainIndex = i;
             if (!framebuffer.init(mGPUContext, gpuFramebufferData, this))
             {
@@ -170,11 +170,12 @@ bool GPURenderPass::initializeFramebuffers()
         }
         LOG("Created [{}] Vulkan framebuffers", framebuffers.size());
     }
-    // else
-    // {
-    //     GPUFramebufferData gpuFramebufferData;
-    //     mOutputGPUFramebuffer.init(mGPUContext, gpuFramebufferData, this);
-    // }
+    else
+    {
+        GPUFramebufferData gpuFramebufferData;
+        mOutputGPUFramebuffer.init(mGPUContext, gpuFramebufferData, this);
+        framebuffers.push_back(mOutputGPUFramebuffer);
+    }
 
     return true;
 }
@@ -198,14 +199,14 @@ void GPURenderPass::begin()
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = mRenderPass;
-    // if(mGPURenderPassData.mIsResolvePass)
+    if(mGPURenderPassData.mIsResolvePass)
     {
         renderPassInfo.framebuffer = framebuffers.at(mGPUContext->currentSwapChainImageIndex).getFramebuffer();
     }
-    // else
-    // {
-    //     renderPassInfo.framebuffer = mOutputGPUFramebuffer.getFramebuffer();
-    // }
+    else
+    {
+        renderPassInfo.framebuffer = mOutputGPUFramebuffer.getFramebuffer();
+    }
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = mGPUContext->vulkanSwapChain->getExtent();
 
