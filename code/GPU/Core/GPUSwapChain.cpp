@@ -127,7 +127,7 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     createInfo.imageColorSpace = mSurfaceFormat.colorSpace;
     createInfo.imageExtent = mExtent;
     createInfo.imageArrayLayers = 1;
-    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
     const GPUQueueFamilyIndices& queueFamilyIndices = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices();
     if (queueFamilyIndices.GraphicsFamily != queueFamilyIndices.PresentationFamily)
