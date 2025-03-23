@@ -518,6 +518,121 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
     return true;
 }
 
+void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, u32 width, u32 height, i32 offsetX, i32 offsetY)
+    // VkCommandBuffer commandBuffer,
+    // VkImage sourceImage,
+    // VkExtent2D sourceExtent,
+    // VkImage destinationImage,
+    // VkExtent2D destinationExtent
+// )
+{
+    // TODO: Ensure that the format and dimensions of the source and destination images are compatible for a direct copy
+
+    VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
+    {
+        PROFILER_GPU_NAMED(generateMipmaps, gpuContext->mTracyContext, commandBuffer);
+
+        // Transition Source Image Layout to TRANSFER_SRC_OPTIMAL (if not already)
+        VkImageMemoryBarrier srcLayoutBarrier{};
+        srcLayoutBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        srcLayoutBarrier.srcAccessMask = 0; // Depends on the previous usage
+        srcLayoutBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+        srcLayoutBarrier.oldLayout = sourceLayout;
+        srcLayoutBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+        srcLayoutBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        srcLayoutBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        srcLayoutBarrier.image = sourceImage;
+        srcLayoutBarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+        vkCmdPipelineBarrier(
+            commandBuffer,
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            0,
+            0, nullptr,
+            0, nullptr,
+            1, &srcLayoutBarrier
+        );
+
+        // Transition Destination Image Layout to TRANSFER_DST_OPTIMAL (if not already)
+        VkImageMemoryBarrier dstLayoutBarrier{};
+        dstLayoutBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        dstLayoutBarrier.srcAccessMask = 0; // Depends on the previous usage
+        dstLayoutBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        dstLayoutBarrier.oldLayout = destinationLayout;
+        dstLayoutBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        dstLayoutBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        dstLayoutBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        dstLayoutBarrier.image = destinationImage;
+        dstLayoutBarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+        vkCmdPipelineBarrier(
+            commandBuffer,
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            0,
+            0, nullptr,
+            0, nullptr,
+            1, &dstLayoutBarrier
+        );
+
+        VkImageCopy copyRegion{};
+        copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        copyRegion.srcSubresource.mipLevel = 0;
+        copyRegion.srcSubresource.baseArrayLayer = 0;
+        copyRegion.srcSubresource.layerCount = 1;
+        copyRegion.srcOffset = {0, 0, 0}; // Top-left corner of the source image
+
+        copyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        copyRegion.dstSubresource.mipLevel = 0;
+        copyRegion.dstSubresource.baseArrayLayer = 0;
+        copyRegion.dstSubresource.layerCount = 1;
+        copyRegion.dstOffset = {0, 0, 0}; // Top-left corner of the destination image
+
+        // The extent defines the size of the region to copy.
+        // It should ideally match the dimensions of the source image
+        // or the region you intend to copy.
+        // copyRegion.extent.width = std::min(sourceExtent.width, destinationExtent.width);
+        // copyRegion.extent.height = std::min(sourceExtent.height, destinationExtent.height);
+        copyRegion.extent.width = width;
+        copyRegion.extent.height = height;
+        copyRegion.extent.depth = 1;
+
+        vkCmdCopyImage(
+            commandBuffer,
+            sourceImage,
+            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            destinationImage,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            1,
+            &copyRegion
+        );
+
+        // 5. Transition Destination Image Layout back to its intended usage (e.g., PRESENT_SRC_KHR for swapchain)
+        VkImageMemoryBarrier dstLayoutBarrierEnd{};
+        dstLayoutBarrierEnd.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        dstLayoutBarrierEnd.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        dstLayoutBarrierEnd.dstAccessMask = 0; // Depends on the next usage
+        dstLayoutBarrierEnd.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        dstLayoutBarrierEnd.newLayout = destinationLayout;
+        dstLayoutBarrierEnd.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        dstLayoutBarrierEnd.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        dstLayoutBarrierEnd.image = destinationImage;
+        dstLayoutBarrierEnd.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+        vkCmdPipelineBarrier(
+            commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            0,
+            0, nullptr,
+            0, nullptr,
+            1, &dstLayoutBarrierEnd
+        );
+    }
+    gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
+}
+
 bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textureImage, const GPUImageData& textureImageData, byte* data) 
 {
     PROFILER_CPU_NAMED(createTextureImage)
