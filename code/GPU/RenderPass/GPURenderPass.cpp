@@ -44,10 +44,14 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     // colorAttachment.finalLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
     //     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR :
     //     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    // if(mGPURenderPassData.mIsResolvePass && mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT)
-    // {
+    if(mGPURenderPassData.mIsResolvePass)
+    {
         colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    // }
+    }
+    else
+    {
+        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    }
 
     VkAttachmentDescription depthAttachment{};
     // TODO: depthAttachment.format must come from Output Framebuffer config
