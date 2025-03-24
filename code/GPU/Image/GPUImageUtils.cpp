@@ -57,61 +57,62 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
             {
                 sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
             {
                 sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
             {
                 sourceStage = all_shader_stages;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_GENERAL:
             {
                 sourceStage = all_shader_stages;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
             {
                 sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                // TODO: read needed? we just want to protect against Writes right?
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
             {
                 sourceStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
             }
             break;
-    
+
             // case tr_texture_usage_resolve_src: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
             //     sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
             // }
             // break;
-    
+
             // case tr_texture_usage_resolve_dst: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
             //     sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
             // }
             // break;
-    
+
             case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
             {
                 sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -122,7 +123,7 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             default:
                 CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
         }
-    
+
         // destination stage/access/layout
         switch (newLayout)
         {
@@ -132,63 +133,64 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
             }
             break;
-    
-           case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
-           {
+
+            case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+            {
                 destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
             {
                 destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
             {
                 destinationStage = all_shader_stages;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_GENERAL:
             {
                 destinationStage = all_shader_stages;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
             {
                 destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                // TODO: read needed? we just want to protect against Writes right?
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
             }
             break;
-    
+
             case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
             {
                 destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
             }
             break;
-    
+
             // case tr_texture_usage_resolve_src: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
             //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
             //     imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             // }
             // break;
-    
+
             // case tr_texture_usage_resolve_dst: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
             //     destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             //     imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
             //     imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             // }
             // break;
-    
+
             case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
             {
                 destinationStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -199,7 +201,7 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
 
             default:
                 CHECK_MSG(false,"Could not transition image layout: Unsupported transition");
-         }
+        }
 
         constexpr VkDependencyFlags dependencyFlags = 0;
         constexpr u32 memoryBarrierCount = 0;
