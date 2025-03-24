@@ -68,5 +68,10 @@ void GPUImage::transition(VkImageLayout destinationLayout)
 
 void GPUImage::copyToImage(GPUImage& destinationImage)
 {
-    GPUImageUtils::copyImageToImage(mGPUContext, mVkImage, mCurrentLayout, destinationImage.getVkImage(), destinationImage.getCurrentLayout(), mGPUImageData.Width, mGPUImageData.Height,0,0, mGPUImageData.MipLevels);
+    copyToVkImage(destinationImage.getVkImage(), destinationImage.getCurrentLayout());
+}
+
+void GPUImage::copyToVkImage(VkImage destinationImage, VkImageLayout destinationLayout)
+{
+    GPUImageUtils::copyImageToImage(mGPUContext, mVkImage, mCurrentLayout, destinationImage, destinationLayout, mGPUImageData.Width, mGPUImageData.Height,0,0, mGPUImageData.MipLevels);
 }

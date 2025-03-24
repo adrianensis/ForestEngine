@@ -28,6 +28,7 @@ public:
     bool init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
     void transition(VkImageLayout destinationLayout);
     void copyToImage(GPUImage& destinationImage);
+    void copyToVkImage(VkImage destinationImage, VkImageLayout destinationLayout);
     void terminate();
 
 private:
