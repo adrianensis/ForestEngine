@@ -24,6 +24,8 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
         imageMemoryBarrier.subresourceRange.levelCount = mipLevels;
         imageMemoryBarrier.subresourceRange.baseArrayLayer= 0;
         imageMemoryBarrier.subresourceRange.layerCount = 1;
+        imageMemoryBarrier.oldLayout = oldLayout;
+        imageMemoryBarrier.newLayout = newLayout;
 
         if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
         {
@@ -53,7 +55,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
             }
             break;
     
@@ -61,7 +62,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
             }
             break;
     
@@ -69,7 +69,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
             }
             break;
     
@@ -77,7 +76,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = all_shader_stages;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             }
             break;
     
@@ -85,7 +83,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = all_shader_stages;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;
             }
             break;
     
@@ -93,7 +90,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             }
             break;
     
@@ -101,21 +97,18 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
             }
             break;
     
             // case tr_texture_usage_resolve_src: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
             //     sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-            //     imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             // }
             // break;
     
             // case tr_texture_usage_resolve_dst: { // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
             //     sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             //     imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            //     imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             // }
             // break;
     
@@ -123,7 +116,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
                 imageMemoryBarrier.srcAccessMask = 0;
-                imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
             }
             break;
 
@@ -138,7 +130,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 destinationStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_UNDEFINED;
             }
             break;
     
@@ -146,7 +137,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
            {
                 destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
             }
             break;
     
@@ -154,7 +144,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
             }
             break;
     
@@ -162,7 +151,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 destinationStage = all_shader_stages;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             }
             break;
     
@@ -170,7 +158,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 destinationStage = all_shader_stages;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
             }
             break;
     
@@ -178,7 +165,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             }
             break;
     
@@ -186,7 +172,6 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             {
                 destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
             }
             break;
     
@@ -207,8 +192,8 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
             case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
             {
                 destinationStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+                // destinationStage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
                 imageMemoryBarrier.dstAccessMask = 0;
-                imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
             }
             break;
 
