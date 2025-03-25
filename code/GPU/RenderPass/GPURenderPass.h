@@ -65,7 +65,7 @@ private:
 public:
     CRGET(RenderPass)
     CRGET(GPURenderPassData)
-    CRGET(OutputGPUFramebuffer)
+    RGET(OutputGPUFramebuffer)
 };
 
 

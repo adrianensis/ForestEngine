@@ -482,11 +482,11 @@ void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceI
         
         // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
         // TODO: handle mipsLevel == 1, pass the correct count
-        GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, destinationLayout, mipLevels);
+        // GPUImageUtils::transitionImageLayout(gpuContext, destinationImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, destinationLayout, mipLevels);
 
         // TODO: handle VK_FORMAT_UNDEFINED format, pass the correct format
         // TODO: handle mipsLevel == 1, pass the correct count
-        GPUImageUtils::transitionImageLayout(gpuContext, sourceImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, sourceLayout, mipLevels);
+        // GPUImageUtils::transitionImageLayout(gpuContext, sourceImage, VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, sourceLayout, mipLevels);
     }
     gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
 }

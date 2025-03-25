@@ -22,14 +22,14 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     colorAttachment.loadOp = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
         (VkAttachmentLoadOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp :
         VK_ATTACHMENT_LOAD_OP_CLEAR;
-    colorAttachment.storeOp = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
-        (VkAttachmentStoreOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp :
-        VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    colorAttachment.storeOp = /*mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
+        (VkAttachmentStoreOp) mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp :*/
+        VK_ATTACHMENT_STORE_OP_STORE;
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 
     colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    if(mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
+    if(!mGPURenderPassData.mIsResolvePass && mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
     {
         colorAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         // colorAttachment.initialLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
@@ -39,6 +39,14 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gp
     else
     {
         colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    }
+
+    if(mGPURenderPassData.mIsResolvePass && mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp == GPUAttachmentLoadOp::LOAD)
+    {
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        // colorAttachment.initialLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?
+        //     VK_IMAGE_LAYOUT_PRESENT_SRC_KHR :
+        //     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     }
     // colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     // colorAttachment.finalLayout = mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT ?

@@ -37,6 +37,8 @@ void RenderPipelinePBR::compile()
     RenderPassData renderPassResolveData;
     // renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
     renderPassResolveData.mGPURenderPassData.mIsResolvePass = true;
+    renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>();
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
@@ -48,8 +50,18 @@ void RenderPipelinePBR::compile()
     // renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
     // renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
     // initRenderPass<RenderPassUI>(renderPassUIData);
-}
 
+    // FOR_RANGE(i, 0, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages().size())
+    // {
+    //     GPUImageUtils::transitionImageLayout(
+    //         GET_SYSTEM(GPUInstance).mGPUContext,
+    //         GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[i],
+    //         GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getSurfaceFormat().format,
+    //         VK_IMAGE_LAYOUT_UNDEFINED,
+    //         VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+    //         1);
+    // }
+}
 
 void RenderPipelinePBR::render(RenderPipelineData& renderData)
 {
@@ -100,6 +112,9 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
 //         GPUImageUtils::copyImageToImage(GET_SYSTEM(GPUInstance).mGPUContext, renderPassGeometry->getGPURenderPass()->getOutputGPUFramebuffer().vulkanColorImage.getVkImage(),
 //     VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex],
 // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().width, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().height, 0,0);
+
+        renderPassGeometry->getGPURenderPass()->getOutputGPUFramebuffer().vulkanColorImage.copyToVkImage(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_IMAGE_LAYOUT_UNDEFINED);
+        GPUImageUtils::transitionImageLayout(GET_SYSTEM(GPUInstance).mGPUContext, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 1);
 
         WeakPtr<RenderPass> renderPassResolve = getRenderPass<RenderPass>();
         renderPassResolve->renderPass();
