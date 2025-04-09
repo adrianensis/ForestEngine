@@ -34,6 +34,12 @@ void RenderPipelinePBR::compile()
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
 
+    RenderPassData renderPassUIData;
+    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
+    renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
+    initRenderPass<RenderPassUI>(renderPassUIData);
+
     RenderPassData renderPassResolveData;
     // renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
     renderPassResolveData.mGPURenderPassData.mIsResolvePass = true;
@@ -45,11 +51,6 @@ void RenderPipelinePBR::compile()
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPass>(renderPassResolveData);
     
-    // RenderPassData renderPassUIData;
-    // renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
-    // renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    // renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
-    // initRenderPass<RenderPassUI>(renderPassUIData);
 
     // FOR_RANGE(i, 0, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages().size())
     // {
@@ -98,8 +99,8 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
         // vulkanRenderPass->clearColor();
         // vulkanRenderPass->clearDepthStencil();
 
-        // WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
-        // renderPassUI->renderPass();
+        WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+        renderPassUI->renderPass();
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
 
