@@ -27,6 +27,7 @@ class GPUAttachmentData
 public:
     GPUAttachmentLoadOp mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
     GPUAttachmentStoreOp mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
+    Ptr<GPUImage> mGPUImage;
 };
 
 class GPURenderPassData

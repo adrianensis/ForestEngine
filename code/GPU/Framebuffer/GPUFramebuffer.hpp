@@ -25,6 +25,7 @@ public:
     VkSampleCountFlagBits mSampleCountFlagBits = VK_SAMPLE_COUNT_1_BIT;
     bool mIsResolveFramebuffer = false;
     u32 mSwapchainIndex = 0;
+    Ptr<GPUImage> mColorImage;
     
 private:
     bool mIsValid = false;

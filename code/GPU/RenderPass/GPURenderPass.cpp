@@ -173,6 +173,7 @@ bool GPURenderPass::initializeFramebuffers()
             GPUFramebufferData gpuFramebufferData;
             gpuFramebufferData.mIsResolveFramebuffer = mGPURenderPassData.mIsResolvePass;
             gpuFramebufferData.mSwapchainIndex = i;
+            gpuFramebufferData.mColorImage = mGPURenderPassData.mColorAttachment.mGPUImage;
             if (!framebuffer.init(mGPUContext, gpuFramebufferData, this))
             {
                 CHECK_MSG(false,"Could not initialize framebuffers");
@@ -185,6 +186,7 @@ bool GPURenderPass::initializeFramebuffers()
     else
     {
         GPUFramebufferData gpuFramebufferData;
+        gpuFramebufferData.mColorImage = mGPURenderPassData.mColorAttachment.mGPUImage;
         mOutputGPUFramebuffer.init(mGPUContext, gpuFramebufferData, this);
         framebuffers.push_back(mOutputGPUFramebuffer);
     }
