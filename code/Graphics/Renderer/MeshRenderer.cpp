@@ -1,12 +1,9 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
-#include "GPU/GPUInstance.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
-#include "GPU/Mesh/GPUMesh.hpp"
-#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
-#include "Scene/Module.hpp"
+#include "Core/EntityComponent/EntityPtr.hpp"
+#include "Scene/Transform.hpp"
 
 ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
 

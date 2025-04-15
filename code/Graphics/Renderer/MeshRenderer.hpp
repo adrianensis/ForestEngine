@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/ComponentPtr.hpp"
 #include "SpacePartition/OcTree.hpp"
 
-#include "Scene/Transform.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
