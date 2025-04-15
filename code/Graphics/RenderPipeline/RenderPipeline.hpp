@@ -58,9 +58,13 @@ protected:
 protected:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
+    // TODO: move these 2 maps to it's own container: ???
+    // So it can be passed to RenderGraph and other places...
     std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshesMap;
 	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShaderPipeline>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaderPipelines;
 
+    // TODO: move to a Renderers Container (??)
+    // So it can be passed as parameter...
     std::vector<Matrix4> mMatrices;
     SlotsManager mRenderInstancesSlotsManager;
 	std::vector<TComponentPtr<MeshRenderer>> mRenderers;
