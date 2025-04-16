@@ -24,35 +24,9 @@ public:
     void onDestroy() override;
     void update();
 
-    const GPURenderItemData& getRendererData() const
+    const GPURenderItemData& getGPURenderItemData() const
     {
         return mGPURenderItem->getGPURenderItemData();
-    }
-
-    const Matrix4& getRendererModelMatrix() const
-    {
-        return mGPURenderItem->getRendererModelMatrix();
-    }
-
-    WeakPtr<GPUShaderPropertiesInstance> getGPUShaderPropertiesInstance()
-    {
-        return mGPURenderItem->getGPUShaderPropertiesInstance();
-    }
-    const Slot& getRenderSlot() const
-    {
-        return mGPURenderItem->getRenderSlot();
-    }
-    const Slot& getInstanceSlot() const
-    {
-        return mGPURenderItem->getInstanceSlot();
-    }
-    void setRenderSlot(const Slot& slot)
-    {
-        mGPURenderItem->setRenderSlot(slot);
-    }
-    void setInstanceSlot(const Slot& slot)
-    {
-        mGPURenderItem->setInstanceSlot(slot);
     }
 
 private:

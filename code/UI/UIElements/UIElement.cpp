@@ -362,8 +362,8 @@ void UIElement::setColorPressed()
 {
     if(!mRenderer) { return; }
 
-    mRenderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mColorPressed;
-    mRenderer->getGPUShaderPropertiesInstance()->setDirty();
+    mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mColorPressed;
+    mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();
 }
 
 void UIElement::setColorRelease()
@@ -371,8 +371,8 @@ void UIElement::setColorRelease()
     if(!mRenderer) { return; }
 
     bool cursorInside = isMouseCursorInsideElement();
-    mRenderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
-    mRenderer->getGPUShaderPropertiesInstance()->setDirty();
+    mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
+    mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();
 }
 
 void UIElement::setColorHover()
@@ -380,8 +380,8 @@ void UIElement::setColorHover()
     if(!mRenderer) { return; }
 
     bool cursorInside = isMouseCursorInsideElement();
-    mRenderer->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
-    mRenderer->getGPUShaderPropertiesInstance()->setDirty();
+    mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = cursorInside ? mConfig.mStyle->mColorHovered : mConfig.mStyle->mBackgroundColor;
+    mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();
 }
 
 GPUShaderStencilData UIElement::calculateStencilData() const

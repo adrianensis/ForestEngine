@@ -82,7 +82,7 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 
     mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
     
-    FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
+    FOR_LIST(it, renderer->getGPURenderItemData().mRenderPassIDs)
     {
         if(mRenderPassMap.contains(*it))
         {
@@ -111,7 +111,7 @@ void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 
     mMeshRendererManager.removeRenderer(renderer);
 
-    FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
+    FOR_LIST(it, renderer->getGPURenderItemData().mRenderPassIDs)
     {
         if(mRenderPassMap.contains(*it))
         {

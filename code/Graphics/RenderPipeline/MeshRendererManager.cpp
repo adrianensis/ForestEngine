@@ -59,16 +59,16 @@ void MeshRendererManager::addRenderer(TComponentPtr<MeshRenderer> renderer)
         // compileShader = true;
     }
 
-    renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
+    renderer->getGPURenderItem()->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
     if(renderer->isStatic())
     {
         setRendererMatrix(renderer);
-        mRenderersStatic.at(renderer->getRenderSlot().getSlot()) = renderer;
+        mRenderersStatic.at(renderer->getGPURenderItem()->getRenderSlot().getSlot()) = renderer;
     }
     else
     {
-        mUsedSlots.insert(renderer->getRenderSlot().getSlot());
-        mRenderers.at(renderer->getRenderSlot().getSlot()) = renderer;
+        mUsedSlots.insert(renderer->getGPURenderItem()->getRenderSlot().getSlot());
+        mRenderers.at(renderer->getGPURenderItem()->getRenderSlot().getSlot()) = renderer;
     }
 }
 
@@ -77,17 +77,17 @@ void MeshRendererManager::removeRenderer(TComponentPtr<MeshRenderer> renderer)
     PROFILER_CPU()
     if(renderer->isStatic())
     {
-        mRenderersStatic.at(renderer->getRenderSlot().getSlot()).reset();
+        mRenderersStatic.at(renderer->getGPURenderItem()->getRenderSlot().getSlot()).reset();
     }
     else
     {
-        mUsedSlots.erase(renderer->getRenderSlot().getSlot());
-        mRenderers.at(renderer->getRenderSlot().getSlot()).reset();
+        mUsedSlots.erase(renderer->getGPURenderItem()->getRenderSlot().getSlot());
+        mRenderers.at(renderer->getGPURenderItem()->getRenderSlot().getSlot()).reset();
     }
 
-    mRenderInstancesSlotsManager.freeSlot(renderer->getRenderSlot());
+    mRenderInstancesSlotsManager.freeSlot(renderer->getGPURenderItem()->getRenderSlot());
 
-    // FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
+    // FOR_LIST(it, renderer->getGPURenderItemData().mRenderPassIDs)
     // {
     //     if(mRenderPassMap.contains(*it))
     //     {
@@ -101,9 +101,9 @@ void MeshRendererManager::setRendererMatrix(TComponentPtr<MeshRenderer> renderer
     PROFILER_CPU()
     if(renderer->getUpdateMatrix())
     {
-        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderSlot()), "Invalid slot!");
-        mMatrices.at(renderer->getRenderSlot().getSlot()) = rendererModelMatrix;
+        const Matrix4& rendererModelMatrix = renderer->getGPURenderItem()->getRendererModelMatrix();
+        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getGPURenderItem()->getRenderSlot()), "Invalid slot!");
+        mMatrices.at(renderer->getGPURenderItem()->getRenderSlot().getSlot()) = rendererModelMatrix;
         renderer->setUpdateMatrix(false);
     }
 }
