@@ -1,8 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "GPU/GPUInstance.hpp"
-#include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 
 void RenderPassGeometry::preRender()
 {

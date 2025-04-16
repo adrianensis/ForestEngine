@@ -1,6 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
-#include "UI/UIShader.hpp"
 
 void RenderPassUI::preRender()
 {
