@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
-#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
+#include "GPU/GPUInstanceRenderer/GPUInstanceRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
 
@@ -60,8 +60,8 @@ protected:
     
     // TODO: move these 2 maps to it's own container: ???
     // So it can be passed to RenderGraph and other places...
-    std::unordered_map<InstancedMeshData, OwnerPtr<InstancedMeshRenderer>, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshesMap;
-	std::unordered_map<InstancedMeshData, OwnerPtr<GPUShaderPipeline>, InstancedMeshData::InstancedMeshDataFunctor> mGPUShaderPipelines;
+    std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendereresMap;
+	std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
 
     // TODO: move to a Renderers Container (??)
     // So it can be passed as parameter...
@@ -73,7 +73,7 @@ protected:
     inline static const u32 mInitialInstances = 1000;
 
 public:
-    CRGET(InstancedMeshesMap)
+    CRGET(GPUInstanceRendereresMap)
     CRGET(GPUShaderPipelines)
 };
 REGISTER_CLASS(RenderPipeline);

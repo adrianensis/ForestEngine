@@ -22,9 +22,9 @@ void RenderPassGeometry::postRender()
 void RenderPassGeometry::render()
 {
 	PROFILER_CPU()
-    FOR_LIST(it, mInstancedMeshRenderers)
+    FOR_LIST(it, mGPUInstanceRendererRenderers)
 	{
-        renderInstancedMesh(*it);
+        renderGPUInstanceRenderer(*it);
 	}
 }
 

@@ -5,20 +5,11 @@
 
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShader.hpp"
+#include "GPU/RenderItem/GPURenderItem.hpp"
 #include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
 
-class InstancedMeshRenderer;
+class GPUInstanceRenderer;
 class TextureAnimation;
-
-class RendererData
-{
-public:
-    GPUShaderStencilData mGPUShaderStencilData;
-    WeakPtr<const GPUMesh> mMesh;
-    Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
-    WeakPtr<GPUShader> mShader;
-    std::unordered_set<ClassId> mRenderPassIDs;
-};
 
 class MeshRenderer: public Component, public IOcTreeElement
 {
@@ -28,10 +19,41 @@ class MeshRenderer: public Component, public IOcTreeElement
 public:
     ClassId getComponentTypeId() const override;
 
-    void init(const RendererData& data);
+    void init(const GPURenderItemData& data);
     void onComponentAdded() override;
     void onDestroy() override;
     void update();
+
+    const GPURenderItemData& getRendererData() const
+    {
+        return mGPURenderItem->getGPURenderItemData();
+    }
+
+    const Matrix4& getRendererModelMatrix() const
+    {
+        return mGPURenderItem->getRendererModelMatrix();
+    }
+
+    WeakPtr<GPUShaderPropertiesInstance> getGPUShaderPropertiesInstance()
+    {
+        return mGPURenderItem->getGPUShaderPropertiesInstance();
+    }
+    const Slot& getRenderSlot() const
+    {
+        return mGPURenderItem->getRenderSlot();
+    }
+    const Slot& getInstanceSlot() const
+    {
+        return mGPURenderItem->getInstanceSlot();
+    }
+    void setRenderSlot(const Slot& slot)
+    {
+        mGPURenderItem->setRenderSlot(slot);
+    }
+    void setInstanceSlot(const Slot& slot)
+    {
+        mGPURenderItem->setInstanceSlot(slot);
+    }
 
 private:
     void calculateRendererModelMatrix();
@@ -39,23 +61,16 @@ private:
     void updateTextureRegion();
 
 private:
-    RendererData mRendererData;
-    Slot mInstanceSlot;
-    Slot mRenderSlot;
-    Matrix4 mRendererModelMatrix;
     TextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    WeakPtr<GPUShaderPropertiesInstance> mGPUShaderPropertiesInstance;
     bool mUpdateMatrix = false;
+
+    OwnerPtr<GPURenderItem> mGPURenderItem;
 
 public:
     HashedString mCurrentTextureAnimationKey;
 
 public:
-    CRGET(RendererModelMatrix)
-    CRGET(RendererData)
-    RGET(GPUShaderPropertiesInstance)
-    CRGET_SET(RenderSlot)
-    CRGET_SET(InstanceSlot)
+    GET(GPURenderItem)
     GET_SET(UpdateMatrix)
 };
 REGISTER_CLASS(MeshRenderer);

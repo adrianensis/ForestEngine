@@ -40,7 +40,7 @@ void RenderPipeline::update()
     // });
 
     VkCommandBuffer vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->beginSingleTimeCommands();
-    FOR_MAP(it, mInstancedMeshesMap)
+    FOR_MAP(it, mGPUInstanceRendereresMap)
     {
         // it->second->enable();
         it->second->update(vulkanCommandBuffer);
@@ -76,7 +76,7 @@ void RenderPipeline::terminate()
 	{
         it->second->terminate();
 	}
-    FOR_MAP(it, mInstancedMeshesMap)
+    FOR_MAP(it, mGPUInstanceRendereresMap)
 	{
         it->second->terminate();
 	}
@@ -106,19 +106,19 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
         // compileShader = true;
     }
 
-    InstancedMeshData instancedMeshData;
-    instancedMeshData.init(renderer);
-    if(!mInstancedMeshesMap.contains(instancedMeshData))
+    GPUInstanceRendererData gpuInstanceRendererData;
+    gpuInstanceRendererData.init(renderer->getGPURenderItem());
+    if(!mGPUInstanceRendereresMap.contains(gpuInstanceRendererData))
     {
         PROFILER_CPU_NAMED(init_instanced_mesh)
 
-        mInstancedMeshesMap.insert_or_assign(instancedMeshData, OwnerPtr<InstancedMeshRenderer>::newObject());
-        mInstancedMeshesMap.at(instancedMeshData)->init(instancedMeshData);
+        mGPUInstanceRendereresMap.insert_or_assign(gpuInstanceRendererData, OwnerPtr<GPUInstanceRenderer>::newObject());
+        mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->init(gpuInstanceRendererData);
 
         compileShader = true;
     }
 
-    mInstancedMeshesMap.at(instancedMeshData)->addRenderer(renderer);
+    mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
 
     renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
     if(renderer->isStatic())
@@ -141,13 +141,13 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 
             if(compileShader)
             {
-                if(mGPUShaderPipelines.contains(instancedMeshData))
+                if(mGPUShaderPipelines.contains(gpuInstanceRendererData))
                 {
-                    mGPUShaderPipelines.at(instancedMeshData)->terminate();
-                    mGPUShaderPipelines.at(instancedMeshData).invalidate();
+                    mGPUShaderPipelines.at(gpuInstanceRendererData)->terminate();
+                    mGPUShaderPipelines.at(gpuInstanceRendererData).invalidate();
                 }
 
-                mGPUShaderPipelines.emplace(instancedMeshData, renderPass->compileShader(renderer));
+                mGPUShaderPipelines.emplace(gpuInstanceRendererData, renderPass->compileShader(renderer));
             }
         }
     }
@@ -176,9 +176,9 @@ void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
         }
     }
 
-    InstancedMeshData instancedMeshData;
-    instancedMeshData.init(renderer);
-    mInstancedMeshesMap.at(instancedMeshData)->removeRenderer(renderer);
+    GPUInstanceRendererData gpuInstanceRendererData;
+    gpuInstanceRendererData.init(renderer->getGPURenderItem());
+    mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem());
 }
 
 void RenderPipeline::render(RenderPipelineData& renderData)

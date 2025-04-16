@@ -39,21 +39,21 @@ void RenderPass::terminate()
 void RenderPass::addRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
-	InstancedMeshData instancedMeshData;
-	instancedMeshData.init(renderer);
-    mInstancedMeshRenderers.insert(instancedMeshData);
+	GPUInstanceRendererData gpuInstanceRendererData;
+	gpuInstanceRendererData.init(renderer->getGPURenderItem());
+    mGPUInstanceRendererRenderers.insert(gpuInstanceRendererData);
 }
 
 OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
-	InstancedMeshData instancedMeshData;
-	instancedMeshData.init(renderer);
+	GPUInstanceRendererData gpuInstanceRendererData;
+	gpuInstanceRendererData.init(renderer->getGPURenderItem());
 
     std::vector<GPUUniformBuffer> uniformBuffers;
-    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(instancedMeshData.mShader));
+    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
 
-    WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(instancedMeshData.mMesh);
+    WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(gpuInstanceRendererData.mMesh);
     if(model)
     {
         WeakPtr<GPUSkeletonState> skeletonState = model->getSkeletonState();
@@ -66,22 +66,22 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentPtr<MeshRenderer
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
     uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
-    WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
     GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;
     gpuGPUShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
     gpuGPUShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
     gpuGPUShaderPipelineDepthStencilData.mDepthCompareOp = VK_COMPARE_OP_LESS; //VkCompareOp
     gpuGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable = VK_FALSE; //bool
-    gpuGPUShaderPipelineDepthStencilData.mStencilTestEnable = instancedMeshData.mGPUShaderStencilData.mUseStencil; //bool
+    gpuGPUShaderPipelineDepthStencilData.mStencilTestEnable = gpuInstanceRendererData.mGPUShaderStencilData.mUseStencil; //bool
     
     VkStencilOpState vkStencilOpState;
-    vkStencilOpState.failOp = (VkStencilOp) instancedMeshData.mGPUShaderStencilData.mStencilFailOp;
-    vkStencilOpState.passOp = (VkStencilOp) instancedMeshData.mGPUShaderStencilData.mStencilPassOp;
-    vkStencilOpState.depthFailOp = (VkStencilOp) instancedMeshData.mGPUShaderStencilData.mDepthFailOp;
-    vkStencilOpState.compareOp = (VkCompareOp) instancedMeshData.mGPUShaderStencilData.mStencilFunction;
+    vkStencilOpState.failOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFailOp;
+    vkStencilOpState.passOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilPassOp;
+    vkStencilOpState.depthFailOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mDepthFailOp;
+    vkStencilOpState.compareOp = (VkCompareOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFunction;
     vkStencilOpState.compareMask = 0xFF;
     vkStencilOpState.writeMask = 0xFF;
-    vkStencilOpState.reference = instancedMeshData.mGPUShaderStencilData.mStencilValue;
+    vkStencilOpState.reference = gpuInstanceRendererData.mGPUShaderStencilData.mStencilValue;
 
     gpuGPUShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
     gpuGPUShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
@@ -89,27 +89,27 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentPtr<MeshRenderer
     gpuGPUShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
     GPUShaderCompilationData shaderCompilationData
     {
-        instancedMeshData.mMesh,
+        gpuInstanceRendererData.mMesh,
         mGPURenderPass,
         ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-        HashedString(std::to_string(instancedMeshData.mShader->getID())),
+        HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
         uniformBuffers,
-        instancedMeshRenderer->getGPUVertexBuffersContainer(),
+        gpuInstanceRenderer->getGPUVertexBuffersContainer(),
         gpuGPUShaderPipelineDepthStencilData
     };
 
-    return instancedMeshData.mShader->compileShader(shaderCompilationData);
+    return gpuInstanceRendererData.mShader->compileShader(shaderCompilationData);
 }
 
 void RenderPass::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
-    InstancedMeshData instancedMeshData;
-	instancedMeshData.init(renderer);
+    GPUInstanceRendererData gpuInstanceRendererData;
+	gpuInstanceRendererData.init(renderer->getGPURenderItem());
 
-    // WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    // if(instancedMeshRenderer->isEmpty())
+    // WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
+    // if(gpuInstanceRenderer->isEmpty())
     // {
-    //     mInstancedMeshRenderers.erase(instancedMeshData);
+    //     mGPUInstanceRendererRenderers.erase(gpuInstanceRendererData);
     // }
 }
 
@@ -133,13 +133,13 @@ void RenderPass::render()
 {
 }
 
-void RenderPass::renderInstancedMesh(const InstancedMeshData& instancedMeshData)
+void RenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
-    WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mRenderPipeline->getGPUShaderPipelines().at(instancedMeshData);
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
+    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mRenderPipeline->getGPUShaderPipelines().at(gpuInstanceRendererData);
     gpuGPUShaderPipeline->enable();
-    instancedMeshRenderer->render();
+    gpuInstanceRenderer->render();
     gpuGPUShaderPipeline->disable();
 }
 

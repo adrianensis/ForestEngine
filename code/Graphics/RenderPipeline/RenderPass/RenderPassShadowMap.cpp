@@ -28,9 +28,9 @@ void RenderPassShadowMap::postRender()
 void RenderPassShadowMap::render()
 {
 	PROFILER_CPU()
-    FOR_MAP(it, mInstancedMeshRenderers)
+    FOR_MAP(it, mGPUInstanceRendererRenderers)
 	{
-        renderInstancedMesh(*it);
+        renderGPUInstanceRenderer(*it);
 	}
 }
 

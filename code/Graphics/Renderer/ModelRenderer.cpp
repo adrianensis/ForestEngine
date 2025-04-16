@@ -16,7 +16,7 @@ void ModelRenderer::onComponentAdded()
 	const auto& meshes = mModelRendererData.mModel->getMeshInstances();
     FOR_LIST(it, meshes)
 	{
-        RendererData rendererData;
+        GPURenderItemData rendererData;
 		rendererData.mMesh = (*it).mMesh;
 		rendererData.mMeshInstanceMatrix = (*it).mMatrix;
 		rendererData.mShader = mModelRendererData.mModel->getMeshShaders().at((*it).mMesh);

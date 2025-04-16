@@ -1,20 +1,19 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
-#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshData.hpp"
+#include "GPU/GPUInstanceRenderer/GPUInstanceRendererData.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
-class InstancedMeshRenderer
+class GPUInstanceRenderer
 {
 public:
-    void init(const InstancedMeshData& instancedMeshData);
+    void init(const GPUInstanceRendererData& gpuInstanceRendererData);
     void terminate();
 
     void render();
-    void addRenderer(TComponentPtr<MeshRenderer> renderer);
-    void removeRenderer(TComponentPtr<MeshRenderer> renderer);
+    void addRenderer(WeakPtr<GPURenderItem> renderItem);
+    void removeRenderer(WeakPtr<GPURenderItem> renderItem);
 
     bool isEmpty() const { return mRenderersCount == 0; }
     void enable();
@@ -30,14 +29,14 @@ private:
 
 private:
     SlotsManager mRendererSlotsManager;
-	std::vector<TComponentPtr<MeshRenderer>> mRenderers;
+	std::vector<WeakPtr<GPURenderItem>> mRenderers;
     u32 mRenderersCount = 0;
     std::set<u32> mUsedSlots;
     inline static const u32 smInitialInstancesSize = 100;
     u32 mCurrentInstancesSize = 0;
 
 	GPUMeshBatcher mGPUMeshBatcher;
-    InstancedMeshData mInstancedMeshData;
+    GPUInstanceRendererData mGPUInstanceRendererData;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 
@@ -45,7 +44,7 @@ private:
 	bool mResizeBuffersRequested = false;
 
 public:
-    CRGET(InstancedMeshData)
+    CRGET(GPUInstanceRendererData)
     CRGET(GPUVertexBuffersContainer)
 };
-REGISTER_CLASS(InstancedMeshRenderer);
+REGISTER_CLASS(GPUInstanceRenderer);

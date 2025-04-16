@@ -57,7 +57,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
 {
     UIArea::initFromConfig(config);
 
-    RendererData rendererData;
+    GPURenderItemData rendererData;
     rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUShaderStencilData = calculateStencilData();

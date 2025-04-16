@@ -19,20 +19,20 @@ void RenderPassUI::postRender()
 
 void RenderPassUI::renderStencilCascade(u64 id)
 {    
-    FOR_LIST(it, mInstancedMeshRenderers)
+    FOR_LIST(it, mGPUInstanceRendererRenderers)
 	{
-        const InstancedMeshData& instancedMeshData = *it;
-		if(id == instancedMeshData.mGPUShaderStencilData.mId)
+        const GPUInstanceRendererData& gpuInstanceRendererData = *it;
+		if(id == gpuInstanceRendererData.mGPUShaderStencilData.mId)
 		{
-            if(instancedMeshData.mGPUShaderStencilData.mParentId > 0)
+            if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
             {
-                renderStencilCascade(instancedMeshData.mGPUShaderStencilData.mParentId);
+                renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mParentId);
             }
 
-            if(!mStencilsRendered.contains(instancedMeshData.mGPUShaderStencilData.mId))
+            if(!mStencilsRendered.contains(gpuInstanceRendererData.mGPUShaderStencilData.mId))
             {
-                mStencilsRendered.insert(instancedMeshData.mGPUShaderStencilData.mId);
-                renderInstancedMesh(instancedMeshData);
+                mStencilsRendered.insert(gpuInstanceRendererData.mGPUShaderStencilData.mId);
+                renderGPUInstanceRenderer(gpuInstanceRendererData);
             }
 
             break;
@@ -46,52 +46,52 @@ void RenderPassUI::render()
 
     mStencilsRendered.clear();
 
-    std::vector<InstancedMeshData> noStencilInstancedMeshRenderers;
-    std::vector<InstancedMeshData> stencilInstancedMeshRenderers;
-    FOR_LIST(it, mInstancedMeshRenderers)
+    std::vector<GPUInstanceRendererData> noStencilGPUInstanceRendererRenderers;
+    std::vector<GPUInstanceRendererData> stencilGPUInstanceRendererRenderers;
+    FOR_LIST(it, mGPUInstanceRendererRenderers)
 	{
-        const InstancedMeshData& instancedMeshData = *it;
-        WeakPtr<InstancedMeshRenderer> instancedMeshRenderer = mRenderPipeline->getInstancedMeshesMap().at(instancedMeshData);
-        if(instancedMeshData.mGPUShaderStencilData.mUseStencil)
+        const GPUInstanceRendererData& gpuInstanceRendererData = *it;
+        WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
+        if(gpuInstanceRendererData.mGPUShaderStencilData.mUseStencil)
         {
-            if(instancedMeshData.mGPUShaderStencilData.mParentId > 0)
+            if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
             {
-                stencilInstancedMeshRenderers.push_back(instancedMeshData);
+                stencilGPUInstanceRendererRenderers.push_back(gpuInstanceRendererData);
             }
         }
         else
         {
-            noStencilInstancedMeshRenderers.push_back(instancedMeshData);
+            noStencilGPUInstanceRendererRenderers.push_back(gpuInstanceRendererData);
         }
     }
 
-    auto compareStencilBatch = [](InstancedMeshData b1, InstancedMeshData b2)
+    auto compareStencilBatch = [](GPUInstanceRendererData b1, GPUInstanceRendererData b2)
     {
         u64 o1 = b1.mGPUShaderStencilData.mParentId;
         u64 o2 = b2.mGPUShaderStencilData.mParentId;
         return (o1 < o2);
     };
   
-    std::sort(stencilInstancedMeshRenderers.begin(), stencilInstancedMeshRenderers.end(), compareStencilBatch);
+    std::sort(stencilGPUInstanceRendererRenderers.begin(), stencilGPUInstanceRendererRenderers.end(), compareStencilBatch);
 
     u64 currentId = 0;
-    FOR_LIST(it, stencilInstancedMeshRenderers)
+    FOR_LIST(it, stencilGPUInstanceRendererRenderers)
 	{
-        const InstancedMeshData& instancedMeshData = *it;
-        if(currentId != instancedMeshData.mGPUShaderStencilData.mParentId)
+        const GPUInstanceRendererData& gpuInstanceRendererData = *it;
+        if(currentId != gpuInstanceRendererData.mGPUShaderStencilData.mParentId)
         {
 //            GET_SYSTEM(GPUInterface).clearStencil();
         }
 
-        currentId = instancedMeshData.mGPUShaderStencilData.mParentId;
+        currentId = gpuInstanceRendererData.mGPUShaderStencilData.mParentId;
 
-        renderStencilCascade(instancedMeshData.mGPUShaderStencilData.mId);
+        renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mId);
 	}
 
 //    GET_SYSTEM(GPUInterface).clearStencil();
 
-    FOR_LIST(it, noStencilInstancedMeshRenderers)
+    FOR_LIST(it, noStencilGPUInstanceRendererRenderers)
 	{
-        renderInstancedMesh(*it);
+        renderGPUInstanceRenderer(*it);
     }
 }

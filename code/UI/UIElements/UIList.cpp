@@ -35,7 +35,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
 	mTransform->setLocalScale(Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
 
-    RendererData rendererData;
+    GPURenderItemData rendererData;
 	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);

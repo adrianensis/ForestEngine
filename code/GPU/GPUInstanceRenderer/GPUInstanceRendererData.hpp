@@ -1,0 +1,49 @@
+#pragma once
+
+#include "GPU/RenderItem/GPURenderItem.hpp"
+
+class GPUInstanceRendererData
+{
+public:
+	GPUInstanceRendererData() = default;
+	
+	WeakPtr<GPUShader> mShader;
+	WeakPtr<const GPUMesh> mMesh;
+	bool mIsStatic = true;
+    GPUShaderStencilData mGPUShaderStencilData;
+
+	void init(WeakPtr<GPURenderItem> renderItem)
+    {
+        mShader = renderItem->getGPURenderItemData().mShader;
+        mMesh = renderItem->getGPURenderItemData().mMesh;
+        mIsStatic = renderItem->isStatic();
+        mGPUShaderStencilData = renderItem->getGPURenderItemData().mGPUShaderStencilData;
+    }
+
+	bool operator==(const GPUInstanceRendererData& otherGPUInstanceRendererData) const
+	{
+        bool result = mShader == otherGPUInstanceRendererData.mShader and
+        mMesh == otherGPUInstanceRendererData.mMesh and
+        mIsStatic == otherGPUInstanceRendererData.mIsStatic and
+        mGPUShaderStencilData == otherGPUInstanceRendererData.mGPUShaderStencilData;
+        return result;
+	}
+
+	class GPUInstanceRendererDataFunctor
+	{
+	public:
+		size_t operator()(const GPUInstanceRendererData& key) const
+		{
+            u32 shift = 0;
+            u64 result = key.mShader->getID() << (shift++);
+            result = result ^ key.mMesh->mMeshID << (shift++);
+			result = result ^ static_cast<u64>(key.mIsStatic) << (shift++);
+            if(key.mGPUShaderStencilData.mUseStencil)
+            {
+                result = result ^ (key.mGPUShaderStencilData.hash() << (shift++));
+            }
+            
+            return result;
+		}
+	};
+};

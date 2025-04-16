@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
+#include "GPU/GPUInstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
 
@@ -44,14 +44,14 @@ protected:
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();
     virtual void preRender();
-    virtual void renderInstancedMesh(const InstancedMeshData& instancedMeshData);
+    virtual void renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData);
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
     virtual Matrix4 calculateProjectionViewMatrix() const;
 
 protected:
-	std::unordered_set<InstancedMeshData, InstancedMeshData::InstancedMeshDataFunctor> mInstancedMeshRenderers;
+	std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendererRenderers;
     RenderPassData mRenderPassData;
     Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;

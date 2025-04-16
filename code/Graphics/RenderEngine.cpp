@@ -1,5 +1,4 @@
 #include "Graphics/RenderEngine.hpp"
-#include "Graphics/Renderer/InstancedMeshRenderer/InstancedMeshRenderer.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Core/Window/WindowManager.hpp"

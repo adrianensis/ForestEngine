@@ -6,7 +6,7 @@
 
 class Model;
 
-class ModelRendererData: public RendererData
+class ModelRendererData: public GPURenderItemData
 {
 public:
 	WeakPtr<const Model> mModel;

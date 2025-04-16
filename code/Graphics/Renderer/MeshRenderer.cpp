@@ -1,37 +1,36 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
-#include "GPU/Shader/GPUShaderManager.hpp"
 #include "Core/EntityComponent/EntityPtr.hpp"
 #include "Scene/Transform.hpp"
 
 ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
 
-void MeshRenderer::init(const RendererData& data) 
+void MeshRenderer::init(const GPURenderItemData& data) 
 {
-    mRendererData = data;
-    mGPUShaderPropertiesInstance = GET_SYSTEM(GPUShaderManager).createGPUShaderPropertiesInstance(mRendererData.mShader);
-    mGPUShaderPropertiesInstance->setDirty();
+    mGPURenderItem = OwnerPtr<GPURenderItem>::newObject();
+    mGPURenderItem->init(data, false);
 }
 
 void MeshRenderer::onComponentAdded() 
 {
+    mGPURenderItem->setIsStatic(isStatic());
     calculateRendererModelMatrix();
 }
 
 void MeshRenderer::onDestroy() 
 {
-    GET_SYSTEM(GPUShaderManager).freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
-    mRenderSlot.reset();
-    mInstanceSlot.reset();
+    mGPURenderItem->terminate();
+    mGPURenderItem.invalidate();
 }
 
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    mRendererModelMatrix = getOwnerEntity()->getFirstComponent<Transform>()->calculateModelMatrix();
-    mRendererModelMatrix.mul(mRendererData.mMeshInstanceMatrix);
+    Matrix4 rendererModelMatrix = getOwnerEntity()->getFirstComponent<Transform>()->calculateModelMatrix();
+    rendererModelMatrix.mul(mGPURenderItem->getGPURenderItemData().mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
+    mGPURenderItem->setRendererModelMatrix(rendererModelMatrix);
     setUpdateMatrix(true);
 }
 
