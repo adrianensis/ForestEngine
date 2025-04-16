@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
-#include "GPU/GPUInstanceRenderer/GPUInstanceRendererData.hpp"
+#include "GPU/InstanceRenderer/GPUInstanceRendererData.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 

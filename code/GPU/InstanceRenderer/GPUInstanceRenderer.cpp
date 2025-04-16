@@ -1,4 +1,4 @@
-#include "GPU/GPUInstanceRenderer/GPUInstanceRenderer.hpp"
+#include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"

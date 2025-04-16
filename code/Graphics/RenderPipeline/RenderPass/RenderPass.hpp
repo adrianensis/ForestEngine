@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "GPU/GPUInstanceRenderer/GPUInstanceRenderer.hpp"
+#include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 
