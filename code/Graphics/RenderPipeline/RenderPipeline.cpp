@@ -8,36 +8,15 @@ void RenderPipeline::init()
 {
     PROFILER_CPU()
 
+    mMeshRendererManager.init();
     initBuffers();
 }
 
 void RenderPipeline::update()
 {
 	PROFILER_CPU()
-    PROFILER_CPU_NAMED(updateRenderers);
-    if(!mUsedSlots.empty())
-    {
-        FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
-        {
-            TComponentPtr<MeshRenderer> renderer = mRenderers[i];
-            if(renderer.isValid())
-            {
-                processRenderer(renderer);
-            }
-        }
-    }
 
-    // std::for_each(
-    // std::execution::par,
-    // mRenderers.begin(),
-    // mRenderers.end(),
-    // [this](TComponentPtr<MeshRenderer> renderer)
-    // {
-    //     if(renderer.isValid())
-    //     {
-    //         processRenderer(renderer);
-    //     }
-    // });
+    mMeshRendererManager.update();
 
     VkCommandBuffer vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->beginSingleTimeCommands();
     FOR_MAP(it, mGPUInstanceRendereresMap)
@@ -49,20 +28,10 @@ void RenderPipeline::update()
     GET_SYSTEM(GPUInstance).mGPUContext->endSingleTimeCommands(vulkanCommandBuffer, VK_NULL_HANDLE);
 
     PROFILER_CPU_NAMED(updateModelMatricesBuffer);
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mMatrices);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mMeshRendererManager.getMatrices());
 
     GET_SYSTEM(GPUShaderManager).update();
 	GET_SYSTEM(GPUSkeletalAnimationManager).update();
-}
-
-void RenderPipeline::processRenderer(TComponentPtr<MeshRenderer> renderer)
-{
-	PROFILER_CPU()
-    if(!renderer->isStatic())
-    {
-        renderer->update();
-        setRendererMatrix(renderer);
-    }
 }
 
 void RenderPipeline::terminate()
@@ -81,7 +50,7 @@ void RenderPipeline::terminate()
         it->second->terminate();
 	}
 
-    mRenderInstancesSlotsManager.reset();
+    mMeshRendererManager.terminate();
 }
 
 void RenderPipeline::onResize()
@@ -96,15 +65,8 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     bool compileShader = false;
-    if(mRenderInstancesSlotsManager.isEmpty())
-    {
-        mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
-        mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
-        mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-        mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-        // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize(sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize());
-        // compileShader = true;
-    }
+
+    mMeshRendererManager.addRenderer(renderer);
 
     GPUInstanceRendererData gpuInstanceRendererData;
     gpuInstanceRendererData.init(renderer->getGPURenderItem());
@@ -119,18 +81,6 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
     }
 
     mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
-
-    renderer->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
-    if(renderer->isStatic())
-    {
-        setRendererMatrix(renderer);
-        mRenderersStatic.at(renderer->getRenderSlot().getSlot()) = renderer;
-    }
-    else
-    {
-        mUsedSlots.insert(renderer->getRenderSlot().getSlot());
-        mRenderers.at(renderer->getRenderSlot().getSlot()) = renderer;
-    }
     
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
@@ -156,17 +106,7 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
-    if(renderer->isStatic())
-    {
-        mRenderersStatic.at(renderer->getRenderSlot().getSlot()).reset();
-    }
-    else
-    {
-        mUsedSlots.erase(renderer->getRenderSlot().getSlot());
-        mRenderers.at(renderer->getRenderSlot().getSlot()).reset();
-    }
-
-    mRenderInstancesSlotsManager.freeSlot(renderer->getRenderSlot());
+    mMeshRendererManager.removeRenderer(renderer);
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
@@ -209,34 +149,13 @@ void RenderPipeline::updateLights(RenderPipelineData& renderData)
 
 void RenderPipeline::initBuffers()
 {
-    // CPU BUFFERS
-
-    mRenderInstancesSlotsManager.init(mInitialInstances * 100);
-    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-    mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
-    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-
-    // GPU BUFFERS
-
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPULightBuiltIn::mLightsBufferData, sizeof(GPULightBuiltIn::LightsData), false);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData, sizeof(GPULightBuiltIn::ShadowMappingData), false);
-    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices, sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize(), false);
+    GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices, sizeof(Matrix4) * mMeshRendererManager.getSize(), false);
 
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).resize<GPUShaderDefinitions::UniformBuffers::GPUGlobalData>(1);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mLightsBufferData).resize<GPULightBuiltIn::LightsData>(1);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData).resize<GPULightBuiltIn::ShadowMappingData>(1);
     // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize<Matrix4>(mRenderInstancesSlotsManager.getSize());
-}
-
-void RenderPipeline::setRendererMatrix(TComponentPtr<MeshRenderer> renderer)
-{
-    PROFILER_CPU()
-    if(renderer->getUpdateMatrix())
-    {
-        const Matrix4& rendererModelMatrix = renderer->getRendererModelMatrix();
-        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderer->getRenderSlot()), "Invalid slot!");
-        mMatrices.at(renderer->getRenderSlot().getSlot()) = rendererModelMatrix;
-        renderer->setUpdateMatrix(false);
-    }
 }

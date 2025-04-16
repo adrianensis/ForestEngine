@@ -6,6 +6,7 @@
 #include "GPU/GPUInstanceRenderer/GPUInstanceRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
+#include "Graphics/RenderPipeline/MeshRendererManager.hpp"
 
 class RenderPipelineData
 {
@@ -51,8 +52,6 @@ protected:
     }
 
     void initBuffers();
-    void setRendererMatrix(TComponentPtr<MeshRenderer> renderer);
-    void processRenderer(TComponentPtr<MeshRenderer> renderer);
     void compileShader(TComponentPtr<MeshRenderer> renderer);
 
 protected:
@@ -63,14 +62,7 @@ protected:
     std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendereresMap;
 	std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
 
-    // TODO: move to a Renderers Container (??)
-    // So it can be passed as parameter...
-    std::vector<Matrix4> mMatrices;
-    SlotsManager mRenderInstancesSlotsManager;
-	std::vector<TComponentPtr<MeshRenderer>> mRenderers;
-    std::set<u32> mUsedSlots;
-	std::vector<TComponentPtr<MeshRenderer>> mRenderersStatic;
-    inline static const u32 mInitialInstances = 1000;
+    MeshRendererManager mMeshRendererManager;
 
 public:
     CRGET(GPUInstanceRendereresMap)
