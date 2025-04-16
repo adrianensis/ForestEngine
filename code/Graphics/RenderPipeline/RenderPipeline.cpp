@@ -97,7 +97,7 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
                     mGPUShaderPipelines.at(gpuInstanceRendererData).invalidate();
                 }
 
-                mGPUShaderPipelines.emplace(gpuInstanceRendererData, renderPass->compileShader(renderer));
+                mGPUShaderPipelines.emplace(gpuInstanceRendererData, renderPass->compileShader(renderer->getGPURenderItem()));
             }
         }
     }

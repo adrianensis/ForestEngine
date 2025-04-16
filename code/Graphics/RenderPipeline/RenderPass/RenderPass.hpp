@@ -3,12 +3,8 @@
 #include "Core/Minimal.hpp"
 #include "GPU/GPUInstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
-
-#include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 
-class MeshRenderer;
 class RenderPipeline;
 class RenderPass;
 
@@ -35,7 +31,7 @@ public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
     void terminate();
-    OwnerPtr<GPUShaderPipeline> compileShader(TComponentPtr<MeshRenderer> renderer);
+    OwnerPtr<GPUShaderPipeline> compileShader(WeakPtr<GPURenderItem> renderItem);
     virtual void renderPass(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
     void onResize();
 protected:
