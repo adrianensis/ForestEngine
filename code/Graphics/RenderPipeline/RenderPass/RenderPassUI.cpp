@@ -17,16 +17,16 @@ void RenderPassUI::postRender()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
-void RenderPassUI::renderStencilCascade(u64 id)
+void RenderPassUI::renderStencilCascade(u64 id, const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
 {    
-    FOR_LIST(it, mGPUInstanceRendererRenderers)
+    FOR_LIST(it, gpuInstanceRendererDataByRenderPass)
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
 		if(id == gpuInstanceRendererData.mGPUShaderStencilData.mId)
 		{
             if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
             {
-                renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mParentId);
+                renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mParentId, gpuInstanceRendererDataByRenderPass);
             }
 
             if(!mStencilsRendered.contains(gpuInstanceRendererData.mGPUShaderStencilData.mId))
@@ -40,7 +40,7 @@ void RenderPassUI::renderStencilCascade(u64 id)
 	}
 }
 
-void RenderPassUI::render()
+void RenderPassUI::render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
 {
 	PROFILER_CPU()
 
@@ -48,7 +48,7 @@ void RenderPassUI::render()
 
     std::vector<GPUInstanceRendererData> noStencilGPUInstanceRendererRenderers;
     std::vector<GPUInstanceRendererData> stencilGPUInstanceRendererRenderers;
-    FOR_LIST(it, mGPUInstanceRendererRenderers)
+    FOR_LIST(it, gpuInstanceRendererDataByRenderPass)
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
         WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
@@ -85,7 +85,7 @@ void RenderPassUI::render()
 
         currentId = gpuInstanceRendererData.mGPUShaderStencilData.mParentId;
 
-        renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mId);
+        renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mId, gpuInstanceRendererDataByRenderPass);
 	}
 
 //    GET_SYSTEM(GPUInterface).clearStencil();

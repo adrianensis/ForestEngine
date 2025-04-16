@@ -19,10 +19,10 @@ void RenderPassGeometry::postRender()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
-void RenderPassGeometry::render()
+void RenderPassGeometry::render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
 {
 	PROFILER_CPU()
-    FOR_LIST(it, mGPUInstanceRendererRenderers)
+    FOR_LIST(it, gpuInstanceRendererDataByRenderPass)
 	{
         renderGPUInstanceRenderer(*it);
 	}

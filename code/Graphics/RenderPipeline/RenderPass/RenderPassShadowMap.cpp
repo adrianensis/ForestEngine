@@ -25,10 +25,10 @@ void RenderPassShadowMap::postRender()
 //    GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }
 
-void RenderPassShadowMap::render()
+void RenderPassShadowMap::render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
 {
 	PROFILER_CPU()
-    FOR_MAP(it, mGPUInstanceRendererRenderers)
+    FOR_MAP(it, gpuInstanceRendererDataByRenderPass)
 	{
         renderGPUInstanceRenderer(*it);
 	}

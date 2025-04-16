@@ -86,9 +86,9 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
     {
         if(mRenderPassMap.contains(*it))
         {
+            mGPUInstanceRendererDataByRenderPass.at(*it).insert(gpuInstanceRendererData);
+            
             Ptr<RenderPass> renderPass = mRenderPassMap.at(*it);
-            renderPass->addRenderer(renderer);
-
             if(compileShader)
             {
                 if(mGPUShaderPipelines.contains(gpuInstanceRendererData))
@@ -106,18 +106,20 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
+    GPUInstanceRendererData gpuInstanceRendererData;
+    gpuInstanceRendererData.init(renderer->getGPURenderItem());
+
     mMeshRendererManager.removeRenderer(renderer);
 
     FOR_LIST(it, renderer->getRendererData().mRenderPassIDs)
     {
         if(mRenderPassMap.contains(*it))
         {
-            mRenderPassMap.at(*it)->removeRenderer(renderer);
+            // TODO: Only remove if renderers count == 0
+            // mGPUInstanceRendererDataByRenderPass.at(*it).erase(gpuInstanceRendererData);
         }
     }
 
-    GPUInstanceRendererData gpuInstanceRendererData;
-    gpuInstanceRendererData.init(renderer->getGPURenderItem());
     mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem());
 }
 

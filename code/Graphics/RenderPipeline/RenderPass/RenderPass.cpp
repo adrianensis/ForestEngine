@@ -36,14 +36,6 @@ void RenderPass::terminate()
     mGPURenderPass.invalidate();
 }
 
-void RenderPass::addRenderer(TComponentPtr<MeshRenderer> renderer)
-{
-    PROFILER_CPU_NAMED(RenderPass_add_renderer)
-	GPUInstanceRendererData gpuInstanceRendererData;
-	gpuInstanceRendererData.init(renderer->getGPURenderItem());
-    mGPUInstanceRendererRenderers.insert(gpuInstanceRendererData);
-}
-
 OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
@@ -101,18 +93,6 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(TComponentPtr<MeshRenderer
     return gpuInstanceRendererData.mShader->compileShader(shaderCompilationData);
 }
 
-void RenderPass::removeRenderer(TComponentPtr<MeshRenderer> renderer)
-{
-    GPUInstanceRendererData gpuInstanceRendererData;
-	gpuInstanceRendererData.init(renderer->getGPURenderItem());
-
-    // WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
-    // if(gpuInstanceRenderer->isEmpty())
-    // {
-    //     mGPUInstanceRendererRenderers.erase(gpuInstanceRendererData);
-    // }
-}
-
 void RenderPass::preFramebufferEnabled()
 {
 }
@@ -129,7 +109,7 @@ void RenderPass::postRender()
 {
 }
 
-void RenderPass::render()
+void RenderPass::render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
 {
 }
 
@@ -143,7 +123,7 @@ void RenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuIns
     gpuGPUShaderPipeline->disable();
 }
 
-void RenderPass::renderPass()
+void RenderPass::renderPass(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
 {
 	PROFILER_CPU()
 
@@ -167,7 +147,7 @@ void RenderPass::renderPass()
     mGPURenderPass->begin();
     {
         PROFILER_GPU_NAMED(renderPass, mGPURenderPass->mGPUContext->mTracyContext, mGPURenderPass->mGPUContext->vulkanCommandBuffers[mGPURenderPass->mGPUContext->currentFrame].getVkCommandBuffer())
-        render();
+        render(gpuInstanceRendererDataByRenderPass);
     }
     mGPURenderPass->end();
 }

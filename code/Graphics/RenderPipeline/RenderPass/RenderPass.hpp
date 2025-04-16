@@ -35,23 +35,20 @@ public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
     void terminate();
-    void addRenderer(TComponentPtr<MeshRenderer> renderer);
     OwnerPtr<GPUShaderPipeline> compileShader(TComponentPtr<MeshRenderer> renderer);
-    void removeRenderer(TComponentPtr<MeshRenderer> renderer);
-    virtual void renderPass();
+    virtual void renderPass(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
     void onResize();
 protected:
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();
     virtual void preRender();
     virtual void renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData);
-    virtual void render();
+    virtual void render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
     virtual void postRender();
     virtual void updateGlobalData();
     virtual Matrix4 calculateProjectionViewMatrix() const;
 
 protected:
-	std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendererRenderers;
     RenderPassData mRenderPassData;
     Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;

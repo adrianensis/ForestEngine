@@ -35,6 +35,12 @@ protected:
     void initRenderPass(const RenderPassData& renderPassData)
     {
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+
+        if(!mGPUInstanceRendererDataByRenderPass.contains(renderPassClassId))
+        {
+            mGPUInstanceRendererDataByRenderPass.insert({renderPassClassId, {}});
+        }
+
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
             OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
@@ -61,6 +67,7 @@ protected:
     // So it can be passed to RenderGraph and other places...
     std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendereresMap;
 	std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
+	std::unordered_map<ClassId, std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>> mGPUInstanceRendererDataByRenderPass;
 
     MeshRendererManager mMeshRendererManager;
 

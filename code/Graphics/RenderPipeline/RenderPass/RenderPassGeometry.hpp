@@ -8,7 +8,7 @@ class RenderPassGeometry: public RenderPass
 protected:
     virtual void updateGlobalData() override;
     virtual void preRender() override;
-    virtual void render() override;
+    virtual void render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass) override;
     virtual void postRender() override;
 public:
     TComponentPtr<DirectionalLight> mDirectionalLight;
