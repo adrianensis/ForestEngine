@@ -70,7 +70,7 @@ class GPUShaderCompilationData
 {
 public:
     WeakPtr<const GPUMesh> mMesh;
-    GPURenderPass* mRenderPass = nullptr;
+    WeakPtr<GPURenderPass> mRenderPass;
     HashedString label;
     HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;

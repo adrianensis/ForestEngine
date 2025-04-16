@@ -55,7 +55,7 @@ protected:
     RenderPassData mRenderPassData;
     Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
-    GPURenderPass* mGPURenderPass = nullptr;
+    OwnerPtr<GPURenderPass> mGPURenderPass;
 
 public:
     RGET(GPUUniformBuffersContainer)

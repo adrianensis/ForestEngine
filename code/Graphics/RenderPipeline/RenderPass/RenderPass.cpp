@@ -15,7 +15,7 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
     mRenderPipeline = renderPipeline;
     mRenderPassData = renderPassData;
 
-    mGPURenderPass = new GPURenderPass();
+    mGPURenderPass = OwnerPtr<GPURenderPass>::newObject();
     if (!mGPURenderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, renderPassData.mGPURenderPassData))
     {
         CHECK_MSG(false, "Could not initialize render pass");
@@ -33,7 +33,7 @@ void RenderPass::terminate()
     mGPUUniformBuffersContainer.terminate();
 
     mGPURenderPass->terminate();
-    delete mGPURenderPass;
+    mGPURenderPass.invalidate();
 }
 
 void RenderPass::addRenderer(TComponentPtr<MeshRenderer> renderer)
