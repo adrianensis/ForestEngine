@@ -5,6 +5,7 @@
 class RenderPipelinePBR: public RenderPipeline
 {
 public:
+    virtual void terminate() override;
     virtual void render(RenderPipelineData& renderData) override;
     virtual void compile() override;
 

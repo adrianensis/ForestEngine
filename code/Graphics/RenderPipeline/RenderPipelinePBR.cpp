@@ -11,6 +11,13 @@
 #include "GPU/GPUInstance.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
+void RenderPipelinePBR::terminate()
+{
+    RenderPipeline::terminate();
+    
+    vulkanColorImage.terminate();
+}
+
 void RenderPipelinePBR::compile()
 {
     PROFILER_CPU()
