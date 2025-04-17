@@ -31,7 +31,7 @@ public:
     virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
     void terminate();
-    OwnerPtr<GPUShaderPipeline> compileShader(WeakPtr<GPURenderItem> renderItem);
+    void compileShader(WeakPtr<GPURenderItem> renderItem);
     virtual void renderPass(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
     void onResize();
 protected:
@@ -49,6 +49,7 @@ protected:
     Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     OwnerPtr<GPURenderPass> mGPURenderPass;
+    std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
 
 public:
     RGET(GPUUniformBuffersContainer)

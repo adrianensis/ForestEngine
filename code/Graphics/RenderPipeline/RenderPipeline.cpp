@@ -36,11 +36,6 @@ void RenderPipeline::update()
 
 void RenderPipeline::terminate()
 {
-    FOR_MAP(it, mGPUShaderPipelines)
-    {
-        it->second->terminate();
-    }
-
     FOR_MAP(it, mRenderPassMap)
 	{
         it->second->terminate();
@@ -87,18 +82,9 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
         if(mRenderPassMap.contains(*it))
         {
             mGPUInstanceRendererDataByRenderPass.at(*it).insert(gpuInstanceRendererData);
-            
-            Ptr<RenderPass> renderPass = mRenderPassMap.at(*it);
-            if(compileShader)
-            {
-                if(mGPUShaderPipelines.contains(gpuInstanceRendererData))
-                {
-                    mGPUShaderPipelines.at(gpuInstanceRendererData)->terminate();
-                    mGPUShaderPipelines.at(gpuInstanceRendererData).invalidate();
-                }
 
-                mGPUShaderPipelines.emplace(gpuInstanceRendererData, renderPass->compileShader(renderer->getGPURenderItem()));
-            }
+            Ptr<RenderPass> renderPass = mRenderPassMap.at(*it);
+            renderPass->compileShader(renderer->getGPURenderItem());
         }
     }
 }

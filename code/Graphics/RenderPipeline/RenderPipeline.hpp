@@ -66,13 +66,11 @@ protected:
     // TODO: move these 2 maps to it's own container: ???
     // So it can be passed to RenderGraph and other places...
     std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendereresMap;
-	std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
 	std::unordered_map<ClassId, std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>> mGPUInstanceRendererDataByRenderPass;
 
     MeshRendererManager mMeshRendererManager;
 
 public:
     CRGET(GPUInstanceRendereresMap)
-    CRGET(GPUShaderPipelines)
 };
 REGISTER_CLASS(RenderPipeline);

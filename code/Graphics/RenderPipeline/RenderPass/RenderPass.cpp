@@ -30,13 +30,18 @@ void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& 
 
 void RenderPass::terminate()
 {
+    FOR_MAP(it, mGPUShaderPipelines)
+    {
+        it->second->terminate();
+    }
+
     mGPUUniformBuffersContainer.terminate();
 
     mGPURenderPass->terminate();
     mGPURenderPass.invalidate();
 }
 
-OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(WeakPtr<GPURenderItem> renderItem)
+void RenderPass::compileShader(WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
 	GPUInstanceRendererData gpuInstanceRendererData;
@@ -90,7 +95,10 @@ OwnerPtr<GPUShaderPipeline> RenderPass::compileShader(WeakPtr<GPURenderItem> ren
         gpuGPUShaderPipelineDepthStencilData
     };
 
-    return gpuInstanceRendererData.mShader->compileShader(shaderCompilationData);
+    if(!mGPUShaderPipelines.contains(gpuInstanceRendererData))
+    {
+        mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));
+    }
 }
 
 void RenderPass::preFramebufferEnabled()
@@ -117,7 +125,7 @@ void RenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuIns
 {
     PROFILER_CPU()
     WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
-    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mRenderPipeline->getGPUShaderPipelines().at(gpuInstanceRendererData);
+    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     gpuGPUShaderPipeline->enable();
     gpuInstanceRenderer->render();
     gpuGPUShaderPipeline->disable();
