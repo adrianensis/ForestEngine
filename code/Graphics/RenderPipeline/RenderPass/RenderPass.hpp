@@ -53,7 +53,6 @@ protected:
     WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
 public:
-    RGET(GPUInstanceRendererRegistry)
     CRGET(RenderPassData)
     GET(GPURenderPass)
 };
