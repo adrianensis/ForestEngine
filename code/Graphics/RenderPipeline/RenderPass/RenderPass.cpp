@@ -99,7 +99,7 @@ void RenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRendere
 
 void RenderPass::addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
-    getGPUInstanceRendererRegistry().addInstanceRendererData(gpuInstanceRendererData);
+    mGPUInstanceRendererRegistry.addInstanceRendererData(gpuInstanceRendererData);
     compileShader(gpuInstanceRendererData);
 }
 
