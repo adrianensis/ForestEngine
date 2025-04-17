@@ -1,10 +1,8 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "GPU/GPUInstance.hpp"
-#include "Graphics/Model/Model.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/GPUShader.hpp"
-#include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/EntityComponent/EntityPtr.hpp"
 
@@ -46,14 +44,10 @@ void RenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRendere
     std::vector<GPUUniformBuffer> uniformBuffers;
     uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
 
-    WeakPtr<Model> model = GET_SYSTEM(ModelManager).getModelFromMesh(gpuInstanceRendererData.mMesh);
-    if(model)
+    WeakPtr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+    if(skeletonState)
     {
-        WeakPtr<GPUSkeletonState> skeletonState = model->getSkeletonState();
-        if(skeletonState)
-        {
-            uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
-        }
+        uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
     }
 
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
