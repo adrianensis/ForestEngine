@@ -169,3 +169,75 @@ void GPUInstanceRenderer::drawCall()
         GET_SYSTEM(GPUInstance).mGPUContext->drawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), mGPUInstanceRendererData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
     }
 }
+
+void GPUInstanceRendererManager::terminate()
+{
+    FOR_MAP(it, mGPUInstanceRenderers)
+	{
+        it->second->terminate();
+	}
+}
+
+void GPUInstanceRendererManager::update(Ptr<GPUContext> gpuContext)
+{
+    VkCommandBuffer vulkanCommandBuffer = gpuContext->beginSingleTimeCommands();
+    FOR_MAP(it, mGPUInstanceRenderers)
+	{
+        it->second->update(vulkanCommandBuffer);
+	}
+    gpuContext->endSingleTimeCommands(vulkanCommandBuffer, VK_NULL_HANDLE);
+}
+
+bool GPUInstanceRendererManager::addInstanceRenderer(const GPUInstanceRendererData& data)
+{
+    bool result = false;
+    if(!mGPUInstanceRenderers.contains(data))
+    {
+        PROFILER_CPU_NAMED(init_instanced_mesh)
+
+        mGPUInstanceRenderers.insert_or_assign(data, OwnerPtr<GPUInstanceRenderer>::newObject());
+        mGPUInstanceRenderers.at(data)->init(data);
+        result = true;
+    }
+
+    return result;
+}
+
+bool GPUInstanceRendererManager::removeInstanceRenderer(const GPUInstanceRendererData& data)
+{
+    bool result = false;
+    if(mGPUInstanceRenderers.contains(data))
+    {
+        mGPUInstanceRenderers.at(data)->terminate();
+        mGPUInstanceRenderers.erase(data);
+        result = true;
+    }
+
+    return result;
+}
+
+const WeakPtr<GPUInstanceRenderer> GPUInstanceRendererManager::getInstanceRenderer(const GPUInstanceRendererData& data) const
+{
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer;
+    if(mGPUInstanceRenderers.contains(data))
+    {
+        gpuInstanceRenderer = mGPUInstanceRenderers.at(data);
+    }
+
+    return gpuInstanceRenderer;
+}
+
+void GPUInstanceRendererRegistry::addInstanceRendererData(const GPUInstanceRendererData& data)
+{
+    mGPUInstanceRendererDataSet.insert(data);
+}
+
+void GPUInstanceRendererRegistry::removeInstanceRendererData(const GPUInstanceRendererData& data)
+{
+    mGPUInstanceRendererDataSet.erase(data);
+}
+
+bool GPUInstanceRendererRegistry::contains(const GPUInstanceRendererData& data) const
+{
+    return mGPUInstanceRendererDataSet.contains(data);
+}

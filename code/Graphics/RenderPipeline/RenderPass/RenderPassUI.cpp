@@ -17,16 +17,16 @@ void RenderPassUI::postRender()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
-void RenderPassUI::renderStencilCascade(u64 id, const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
+void RenderPassUI::renderStencilCascade(u64 id)
 {    
-    FOR_LIST(it, gpuInstanceRendererDataByRenderPass)
+    FOR_LIST(it, mGPUInstanceRendererRegistry.getGPUInstanceRendererDataSet())
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
 		if(id == gpuInstanceRendererData.mGPUShaderStencilData.mId)
 		{
             if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
             {
-                renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mParentId, gpuInstanceRendererDataByRenderPass);
+                renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mParentId);
             }
 
             if(!mStencilsRendered.contains(gpuInstanceRendererData.mGPUShaderStencilData.mId))
@@ -40,7 +40,7 @@ void RenderPassUI::renderStencilCascade(u64 id, const std::unordered_set<GPUInst
 	}
 }
 
-void RenderPassUI::render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
+void RenderPassUI::render()
 {
 	PROFILER_CPU()
 
@@ -48,10 +48,10 @@ void RenderPassUI::render(const std::unordered_set<GPUInstanceRendererData, GPUI
 
     std::vector<GPUInstanceRendererData> noStencilGPUInstanceRendererRenderers;
     std::vector<GPUInstanceRendererData> stencilGPUInstanceRendererRenderers;
-    FOR_LIST(it, gpuInstanceRendererDataByRenderPass)
+    FOR_LIST(it, mGPUInstanceRendererRegistry.getGPUInstanceRendererDataSet())
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
-        WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
+        WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
         if(gpuInstanceRendererData.mGPUShaderStencilData.mUseStencil)
         {
             if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
@@ -85,7 +85,7 @@ void RenderPassUI::render(const std::unordered_set<GPUInstanceRendererData, GPUI
 
         currentId = gpuInstanceRendererData.mGPUShaderStencilData.mParentId;
 
-        renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mId, gpuInstanceRendererDataByRenderPass);
+        renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mId);
 	}
 
 //    GET_SYSTEM(GPUInterface).clearStencil();

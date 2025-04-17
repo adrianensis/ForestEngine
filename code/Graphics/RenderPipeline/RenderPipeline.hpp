@@ -36,18 +36,13 @@ protected:
     {
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
-        if(!mGPUInstanceRendererDataByRenderPass.contains(renderPassClassId))
-        {
-            mGPUInstanceRendererDataByRenderPass.insert({renderPassClassId, {}});
-        }
-
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
             OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
         );
 
         WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(this, renderPassData);
+        renderPass->init(mGPUInstanceRendererManager, renderPassData);
     }
 
     template<class T> T_EXTENDS(T, RenderPass)
@@ -62,14 +57,7 @@ protected:
 protected:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
     
-    // TODO: move these 2 maps to it's own container: ???
-    // So it can be passed to RenderGraph and other places...
-    std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendereresMap;
-	std::unordered_map<ClassId, std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>> mGPUInstanceRendererDataByRenderPass;
-
+    OwnerPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     MeshRendererManager mMeshRendererManager;
-
-public:
-    CRGET(GPUInstanceRendereresMap)
 };
 REGISTER_CLASS(RenderPipeline);

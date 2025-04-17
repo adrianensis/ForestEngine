@@ -5,7 +5,6 @@
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 
-class RenderPipeline;
 class RenderPass;
 
 class RenderPassDependency
@@ -28,31 +27,32 @@ public:
 class RenderPass
 {
 public:
-    virtual void init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData);
+    virtual void init(WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
     void terminate();
     void compileShader(WeakPtr<GPURenderItem> renderItem);
-    virtual void renderPass(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
+    virtual void renderPass();
     void onResize();
 protected:
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();
     virtual void preRender();
     virtual void renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData);
-    virtual void render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
+    virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
     virtual Matrix4 calculateProjectionViewMatrix() const;
 
 protected:
     RenderPassData mRenderPassData;
-    Ptr<RenderPipeline> mRenderPipeline;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     OwnerPtr<GPURenderPass> mGPURenderPass;
     std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
-
+    WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
 public:
     RGET(GPUUniformBuffersContainer)
+    RGET(GPUInstanceRendererRegistry)
     CRGET(RenderPassData)
     GET(GPURenderPass)
 };

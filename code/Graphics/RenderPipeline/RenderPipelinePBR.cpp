@@ -120,7 +120,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
             WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
             renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
             // renderPassGeometry->getGPURenderPass()->clearColor();
-            renderPassGeometry->renderPass(mGPUInstanceRendererDataByRenderPass.at(ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId()));
+            renderPassGeometry->renderPass();
         // }
         // WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
         // renderPassGeometry->mPointLight = renderData.mPointLights[0];
@@ -132,7 +132,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
         // vulkanRenderPass->clearDepthStencil();
 
         WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
-        renderPassUI->renderPass(mGPUInstanceRendererDataByRenderPass.at(ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()));
+        renderPassUI->renderPass();
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
 
@@ -150,7 +150,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
         GPUImageUtils::transitionImageLayout(GET_SYSTEM(GPUInstance).mGPUContext, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 1);
 
         WeakPtr<RenderPass> renderPassResolve = getRenderPass<RenderPass>();
-        renderPassResolve->renderPass({});
+        renderPassResolve->renderPass();
     }
     if (!vulkanCommandBuffer.end()) {
         CHECK_MSG(false, "Could not end frame");

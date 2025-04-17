@@ -48,3 +48,28 @@ public:
     CRGET(GPUVertexBuffersContainer)
 };
 REGISTER_CLASS(GPUInstanceRenderer);
+
+class GPUInstanceRendererManager
+{
+public:
+    void terminate();
+    void update(Ptr<GPUContext> gpuContext);
+    bool addInstanceRenderer(const GPUInstanceRendererData& data);
+    bool removeInstanceRenderer(const GPUInstanceRendererData& data);
+    const WeakPtr<GPUInstanceRenderer> getInstanceRenderer(const GPUInstanceRendererData& data) const;
+private:
+    std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRenderers;
+    using AA = std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>;
+};
+
+class GPUInstanceRendererRegistry
+{
+public:
+    void addInstanceRendererData(const GPUInstanceRendererData& data);
+    void removeInstanceRendererData(const GPUInstanceRendererData& data);
+    bool contains(const GPUInstanceRendererData& data) const;
+private:
+    std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendererDataSet;
+public:
+    CRGET(GPUInstanceRendererDataSet)
+};

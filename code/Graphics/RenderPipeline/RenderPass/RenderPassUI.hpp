@@ -6,10 +6,10 @@ class RenderPassUI: public RenderPass
 {
 protected:
     virtual void preRender() override;
-    virtual void render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass) override;
+    virtual void render() override;
     virtual void postRender() override;
 private:
-    void renderStencilCascade(u64 id, const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass);
+    void renderStencilCascade(u64 id);
 private:
     std::unordered_set<u64> mStencilsRendered;
 };

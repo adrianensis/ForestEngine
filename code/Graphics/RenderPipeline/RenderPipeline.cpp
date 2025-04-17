@@ -8,6 +8,7 @@ void RenderPipeline::init()
 {
     PROFILER_CPU()
 
+    mGPUInstanceRendererManager = OwnerPtr<GPUInstanceRendererManager>::newObject();
     mMeshRendererManager.init();
     initBuffers();
 }
@@ -17,15 +18,7 @@ void RenderPipeline::update()
 	PROFILER_CPU()
 
     mMeshRendererManager.update();
-
-    VkCommandBuffer vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->beginSingleTimeCommands();
-    FOR_MAP(it, mGPUInstanceRendereresMap)
-    {
-        // it->second->enable();
-        it->second->update(vulkanCommandBuffer);
-        // it->second->disable();
-    }
-    GET_SYSTEM(GPUInstance).mGPUContext->endSingleTimeCommands(vulkanCommandBuffer, VK_NULL_HANDLE);
+    mGPUInstanceRendererManager->update(GET_SYSTEM(GPUInstance).mGPUContext);
 
     PROFILER_CPU_NAMED(updateModelMatricesBuffer);
     GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mMeshRendererManager.getMatrices());
@@ -40,11 +33,9 @@ void RenderPipeline::terminate()
 	{
         it->second->terminate();
 	}
-    FOR_MAP(it, mGPUInstanceRendereresMap)
-	{
-        it->second->terminate();
-	}
 
+    mGPUInstanceRendererManager->terminate();
+    mGPUInstanceRendererManager.invalidate();
     mMeshRendererManager.terminate();
 }
 
@@ -59,31 +50,20 @@ void RenderPipeline::onResize()
 void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
-    bool compileShader = false;
-
     mMeshRendererManager.addRenderer(renderer);
 
     GPUInstanceRendererData gpuInstanceRendererData;
     gpuInstanceRendererData.init(renderer->getGPURenderItem());
-    if(!mGPUInstanceRendereresMap.contains(gpuInstanceRendererData))
-    {
-        PROFILER_CPU_NAMED(init_instanced_mesh)
 
-        mGPUInstanceRendereresMap.insert_or_assign(gpuInstanceRendererData, OwnerPtr<GPUInstanceRenderer>::newObject());
-        mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->init(gpuInstanceRendererData);
-
-        compileShader = true;
-    }
-
-    mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
+    mGPUInstanceRendererManager->addInstanceRenderer(gpuInstanceRendererData);
+    mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
     
     FOR_LIST(it, renderer->getGPURenderItemData().mRenderPassIDs)
     {
         if(mRenderPassMap.contains(*it))
         {
-            mGPUInstanceRendererDataByRenderPass.at(*it).insert(gpuInstanceRendererData);
-
             Ptr<RenderPass> renderPass = mRenderPassMap.at(*it);
+            renderPass->getGPUInstanceRendererRegistry().addInstanceRendererData(gpuInstanceRendererData);
             renderPass->compileShader(renderer->getGPURenderItem());
         }
     }
@@ -102,11 +82,11 @@ void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
         if(mRenderPassMap.contains(*it))
         {
             // TODO: Only remove if renderers count == 0
-            // mGPUInstanceRendererDataByRenderPass.at(*it).erase(gpuInstanceRendererData);
+            // renderPass->getGPUInstanceRendererRegistry().removeInstanceRendererData(gpuInstanceRendererData);
         }
     }
 
-    mGPUInstanceRendereresMap.at(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem());
+    mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem());
 }
 
 void RenderPipeline::render(RenderPipelineData& renderData)

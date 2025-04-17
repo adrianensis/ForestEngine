@@ -1,18 +1,16 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Model/Model.hpp"
-#include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Core/EntityComponent/EntityPtr.hpp"
 
-void RenderPass::init(Ptr<RenderPipeline> renderPipeline, const RenderPassData& renderPassData)
+void RenderPass::init(WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const RenderPassData& renderPassData)
 {
-    mRenderPipeline = renderPipeline;
+    mGPUInstanceRendererManager = gpuInstanceRendererManager;
     mRenderPassData = renderPassData;
 
     mGPURenderPass = OwnerPtr<GPURenderPass>::newObject();
@@ -63,7 +61,7 @@ void RenderPass::compileShader(WeakPtr<GPURenderItem> renderItem)
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
     uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
 
-    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;
     gpuGPUShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
     gpuGPUShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
@@ -117,21 +115,21 @@ void RenderPass::postRender()
 {
 }
 
-void RenderPass::render(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
+void RenderPass::render()
 {
 }
 
 void RenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
-    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mRenderPipeline->getGPUInstanceRendereresMap().at(gpuInstanceRendererData);
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     gpuGPUShaderPipeline->enable();
     gpuInstanceRenderer->render();
     gpuGPUShaderPipeline->disable();
 }
 
-void RenderPass::renderPass(const std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>& gpuInstanceRendererDataByRenderPass)
+void RenderPass::renderPass()
 {
 	PROFILER_CPU()
 
@@ -155,7 +153,7 @@ void RenderPass::renderPass(const std::unordered_set<GPUInstanceRendererData, GP
     mGPURenderPass->begin();
     {
         PROFILER_GPU_NAMED(renderPass, mGPURenderPass->mGPUContext->mTracyContext, mGPURenderPass->mGPUContext->vulkanCommandBuffers[mGPURenderPass->mGPUContext->currentFrame].getVkCommandBuffer())
-        render(gpuInstanceRendererDataByRenderPass);
+        render();
     }
     mGPURenderPass->end();
 }
