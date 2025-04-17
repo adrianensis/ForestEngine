@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GPU/Shader/GPUShaderModule.h"
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
