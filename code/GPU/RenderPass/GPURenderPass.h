@@ -38,7 +38,7 @@ public:
     bool mIsResolvePass = false;
 };
 
-class GPURenderPass : public EnableWeakPtrToThis
+class GPURenderPass
 {
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;

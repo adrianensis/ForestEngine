@@ -9,7 +9,7 @@
 #define GPU_LOAD_EXTENSION_FUNCTION(extensionFunctionName) \
 loadExtensionFunction<PFN_##extensionFunctionName>(TO_STRING(extensionFunctionName));
 
-class GPUContext: public EnableWeakPtrToThis
+class GPUContext
 {
 public:
     void init();

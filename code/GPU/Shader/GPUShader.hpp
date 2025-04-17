@@ -168,7 +168,7 @@ public:
     }
 };
 
-class GPUShader: public EnableWeakPtrToThis
+class GPUShader
 {
 public:
     GPUShader() = default;
