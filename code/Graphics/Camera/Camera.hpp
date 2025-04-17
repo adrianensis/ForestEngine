@@ -33,8 +33,7 @@ private:
 	Matrix4 mInverseViewMatrix;
 	Matrix4 mInversePVMatrix;
 
-	mutable bool mProjectionViewMatrixNeedsUpdate = true;
-	mutable bool mInversePVMatrixNeedsUpdate = true;
+	bool mInversePVMatrixNeedsUpdate = true;
 
 	f32 mLeft = 0.0f;
 	f32 mRight = 0.0f;
