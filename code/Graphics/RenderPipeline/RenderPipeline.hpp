@@ -58,7 +58,6 @@ protected:
     }
 
     void initBuffers();
-    void compileShader(TComponentPtr<MeshRenderer> renderer);
 
 protected:
     std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
