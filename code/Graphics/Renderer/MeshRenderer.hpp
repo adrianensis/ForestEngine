@@ -8,7 +8,6 @@
 #include "GPU/RenderItem/GPURenderItem.hpp"
 #include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
 
-class GPUInstanceRenderer;
 class TextureAnimation;
 
 class MeshRenderer: public Component, public IOcTreeElement

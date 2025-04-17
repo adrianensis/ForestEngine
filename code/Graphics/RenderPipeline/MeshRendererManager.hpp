@@ -3,7 +3,6 @@
 #include "Core/Minimal.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
-#include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
 
