@@ -403,6 +403,11 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
 
     GPUSkeletonStateData gpuSkeletonStateData;
 
+    FOR_MAP(it, mGLTFMeshes)
+    {
+        gpuSkeletonStateData.mMeshes.push_back(it->second);
+    }
+
     gpuSkeletonStateData.mBones.reserve(mBonesIndexCount);
     mChannels.resize(mBonesIndexCount);
     gpuSkeletonStateData.mInverseBindMatrices.resize(mBonesIndexCount);

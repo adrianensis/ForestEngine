@@ -2,6 +2,7 @@
 
 #include "Core/Minimal.hpp"
 
+class GPUMesh;
 class Frame
 {
 public:
@@ -61,6 +62,7 @@ class GPUSkeletonStateData
 public:
     std::vector<GPUBoneData> mBones;
     std::vector<Matrix4> mInverseBindMatrices;
+    std::vector<WeakPtr<const GPUMesh>> mMeshes;
 };
 
 class GPUSkeletonState

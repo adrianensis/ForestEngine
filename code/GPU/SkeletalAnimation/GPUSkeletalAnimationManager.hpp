@@ -14,6 +14,7 @@ public:
     WeakPtr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
 
     const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(WeakPtr<const GPUSkeletonState> skeletonState) const;
+    WeakPtr<GPUSkeletonState> getSkeletonStateFromMesh(WeakPtr<const GPUMesh> mesh) const;
 private:
     void initSkeletonRenderState(WeakPtr<const GPUSkeletonState> skeletonState);
 
@@ -27,6 +28,7 @@ private:
     };
 
 	std::unordered_map<WeakPtr<const GPUSkeletonState>, SkeletonRenderState> mSkeletonRenderStates;
+    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<GPUSkeletonState>> mMeshToSkeletonState;
 
 public:
     CRGET(SkeletonStates)

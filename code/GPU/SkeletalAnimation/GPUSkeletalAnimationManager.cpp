@@ -26,6 +26,12 @@ WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const
 {
 	WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<GPUSkeletonState>::newObject()).first;
     skeletonState->init(gpuSkeletonStateData);
+
+    FOR_LIST(it, gpuSkeletonStateData.mMeshes)
+    {
+        mMeshToSkeletonState.insert({*it, skeletonState});
+    }
+
     initSkeletonRenderState(skeletonState);
     return skeletonState;
 }
@@ -53,4 +59,14 @@ const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUn
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
     return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices);
+}
+
+WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::getSkeletonStateFromMesh(WeakPtr<const GPUMesh> mesh) const
+{
+    WeakPtr<GPUSkeletonState> result;
+    if(mMeshToSkeletonState.contains(mesh))
+    {
+        result = mMeshToSkeletonState.at(mesh);
+    }
+    return result;
 }
