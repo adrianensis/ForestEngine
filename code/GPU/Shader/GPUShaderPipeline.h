@@ -1,10 +1,11 @@
 #pragma once
 
 #include "GPU/Shader/GPUShaderModule.h"
-#include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Shader/GPUShaderDescriptorSets.hpp"
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
+
+class GPURenderPass;
 
 class GPUVertexInputData
 {

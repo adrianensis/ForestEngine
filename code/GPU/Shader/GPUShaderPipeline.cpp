@@ -1,4 +1,5 @@
 #include "GPU/Shader/GPUShaderPipeline.h"
+#include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Core/GPULog.h"
 
 void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, WeakPtr<GPURenderPass> renderPass, Ptr<GPUContext> gpuContext)
