@@ -30,10 +30,12 @@ public:
     virtual void init(WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
     void terminate();
-    void compileShader(WeakPtr<GPURenderItem> renderItem);
     virtual void renderPass();
     void onResize();
+    void addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData);
+
 protected:
+    void compileShader(const GPUInstanceRendererData& gpuInstanceRendererData);
     virtual void preFramebufferEnabled();
     virtual void postFramebufferEnabled();
     virtual void preRender();

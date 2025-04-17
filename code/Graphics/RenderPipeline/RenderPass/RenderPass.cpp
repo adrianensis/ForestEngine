@@ -39,11 +39,9 @@ void RenderPass::terminate()
     mGPURenderPass.invalidate();
 }
 
-void RenderPass::compileShader(WeakPtr<GPURenderItem> renderItem)
+void RenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU_NAMED(RenderPass_add_renderer)
-	GPUInstanceRendererData gpuInstanceRendererData;
-	gpuInstanceRendererData.init(renderItem);
 
     std::vector<GPUUniformBuffer> uniformBuffers;
     uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
@@ -97,6 +95,12 @@ void RenderPass::compileShader(WeakPtr<GPURenderItem> renderItem)
     {
         mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));
     }
+}
+
+void RenderPass::addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData)
+{
+    getGPUInstanceRendererRegistry().addInstanceRendererData(gpuInstanceRendererData);
+    compileShader(gpuInstanceRendererData);
 }
 
 void RenderPass::preFramebufferEnabled()
