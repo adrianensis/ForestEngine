@@ -25,7 +25,7 @@ public:
     virtual void terminate();
     void addRenderer(TComponentPtr<MeshRenderer> renderer);
     void removeRenderer(TComponentPtr<MeshRenderer> renderer);
-    virtual void render(RenderPipelineData& renderData);
+    void render(RenderPipelineData& renderData);
     virtual void compile();
     void onResize();
 

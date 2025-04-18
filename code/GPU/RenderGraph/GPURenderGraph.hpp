@@ -36,8 +36,13 @@ public:
             OwnerPtr<GPURenderPass>::moveCast(OwnerPtr<T>::newObject())
         );
 
+        GPURenderPassOutputData renderPassOutputData;
+        renderPassOutputData.mColorGPUImage = &vulkanColorImage;
+
         WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, mGPUInstanceRendererManager, renderPassData);
+        renderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, mGPUInstanceRendererManager, renderPassData, renderPassOutputData);
+
+        mRenderPassesArray.push_back(renderPass);
     }
 
     template<class T> T_EXTENDS(T, GPURenderPass)
@@ -52,6 +57,9 @@ public:
 private:
     Ptr<GPUContext> mGPUContext;
     std::unordered_map<ClassId, OwnerPtr<GPURenderPass>> mRenderPassMap;
+    std::vector<WeakPtr<GPURenderPass>> mRenderPassesArray;
     WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    OwnerPtr<GPURenderPass> mRenderPassResolve;
+    GPUImage vulkanColorImage;
 };
 REGISTER_CLASS(GPURenderGraph);

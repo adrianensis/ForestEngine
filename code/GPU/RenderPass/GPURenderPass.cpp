@@ -7,12 +7,13 @@
 
 GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData)
+bool GPURenderPass::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
     mGPURenderPassData = gpuRenderPassData;
+    mGPURenderPassOutputData = gpuRenderPassOutputData;
 
     mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 
@@ -179,7 +180,10 @@ bool GPURenderPass::initializeFramebuffers()
             GPUFramebufferData gpuFramebufferData;
             gpuFramebufferData.mIsResolveFramebuffer = mGPURenderPassData.mIsResolvePass;
             gpuFramebufferData.mSwapchainIndex = i;
-            gpuFramebufferData.mColorImage = mGPURenderPassData.mColorAttachment.mGPUImage;
+            gpuFramebufferData.mColorImage =
+                mGPURenderPassData.mColorAttachment.mUseDefaultOutput ?
+                    mGPURenderPassOutputData.mColorGPUImage :
+                    mGPURenderPassData.mColorAttachment.mOutputGPUImage;
             if (!framebuffer.init(mGPUContext, gpuFramebufferData, this))
             {
                 CHECK_MSG(false,"Could not initialize framebuffers");
@@ -192,7 +196,10 @@ bool GPURenderPass::initializeFramebuffers()
     else
     {
         GPUFramebufferData gpuFramebufferData;
-        gpuFramebufferData.mColorImage = mGPURenderPassData.mColorAttachment.mGPUImage;
+        gpuFramebufferData.mColorImage =
+            mGPURenderPassData.mColorAttachment.mUseDefaultOutput ?
+                mGPURenderPassOutputData.mColorGPUImage :
+                mGPURenderPassData.mColorAttachment.mOutputGPUImage;
         mOutputGPUFramebuffer.init(mGPUContext, gpuFramebufferData, this);
         framebuffers.push_back(mOutputGPUFramebuffer);
     }

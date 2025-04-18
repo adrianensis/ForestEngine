@@ -27,7 +27,15 @@ class GPUAttachmentData
 public:
     GPUAttachmentLoadOp mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
     GPUAttachmentStoreOp mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    Ptr<GPUImage> mGPUImage;
+    Ptr<GPUImage> mOutputGPUImage;
+    bool mUseDefaultOutput = true;
+};
+
+class GPURenderPassOutputData
+{
+public:
+    Ptr<GPUImage> mColorGPUImage;
+    Ptr<GPUImage> mDepthGPUImage;
 };
 
 class GPURenderPass;
@@ -59,7 +67,7 @@ private:
 public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
-    bool init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData);
+    bool init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData);
     void terminate();
     void begin();
     virtual void renderPass();
@@ -87,6 +95,7 @@ protected:
     std::vector<GPUFramebuffer> framebuffers;
 
     GPURenderPassData mGPURenderPassData;
+    GPURenderPassOutputData mGPURenderPassOutputData;
     GPUFramebuffer mOutputGPUFramebuffer;
 
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;

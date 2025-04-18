@@ -1,18 +1,72 @@
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
-#include "GPU/GPUInstance.hpp"
-#include "GPU/Shader/GPUShaderManager.hpp"
-#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "GPU/GPULight.hpp"
+#include "GPU/Image/GPUImageUtils.hpp"
 
 void GPURenderGraph::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
+
+    VkFormat colorFormat = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
+
+    GPUImageData colorImageConfig{};
+    colorImageConfig.Width = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().width;
+    colorImageConfig.Height = GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getExtent().height;
+    colorImageConfig.MipLevels = 1;
+    colorImageConfig.SampleCount = VK_SAMPLE_COUNT_1_BIT;
+    colorImageConfig.Format = colorFormat;
+    colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
+    colorImageConfig.Usage = VK_IMAGE_USAGE_SAMPLED_BIT|/*VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT |*/ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
+    colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    colorImageConfig.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    vulkanColorImage.init(GET_SYSTEM(GPUInstance).mGPUContext, colorImageConfig);
+    
+    // colorImageView = GPUImageUtils::createImageView(gpuContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
+    
+    // if(!mFramebufferData.mIsResolveFramebuffer)
+    {
+        vulkanColorImage.transition(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+    }
+
+    GPURenderPassData renderPassResolveData;
+    renderPassResolveData.mIsResolvePass = true;
+    renderPassResolveData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+
+    GPURenderPassOutputData renderPassOutputData;
+    renderPassOutputData.mColorGPUImage = &vulkanColorImage;
+    
+    mRenderPassResolve = OwnerPtr<GPURenderPass>::newObject();
+    mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, renderPassResolveData, renderPassOutputData);
 }
 
 void GPURenderGraph::render(GPURenderGraphData& renderData)
 {
+    u32 swapChainImageIndex = mGPUContext->frameAcquisition();
+    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    vulkanCommandBuffer.reset();
+    vulkanCommandBuffer.begin();
+
+    {
+        PROFILER_GPU_NAMED(renderPass, mGPUContext->mTracyContext, mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame].getVkCommandBuffer())
+
+        FOR_ARRAY(i, mRenderPassesArray)
+        {
+            WeakPtr<GPURenderPass> renderPass = mRenderPassesArray[i];
+            renderPass->renderPass();
+        }
+
+        vulkanColorImage.copyToVkImage(mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_IMAGE_LAYOUT_UNDEFINED);
+        GPUImageUtils::transitionImageLayout(mGPUContext, mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 1);
+
+        mRenderPassResolve->renderPass();
+    }
+    if (!vulkanCommandBuffer.end()) {
+        CHECK_MSG(false, "Could not end frame");
+    }
+
+    mGPUContext->commandSubmission();
+    mGPUContext->framePresentation({swapChainImageIndex});
 }
 
 void GPURenderGraph::update()
@@ -23,10 +77,14 @@ void GPURenderGraph::update()
 
 void GPURenderGraph::terminate()
 {
+    vulkanColorImage.terminate();
+
     FOR_MAP(it, mRenderPassMap)
 	{
         it->second->terminate();
 	}
+
+    mRenderPassResolve->terminate();
 }
 
 void GPURenderGraph::onResize()
@@ -84,5 +142,5 @@ void GPURenderGraph::updateLights(GPURenderGraphData& renderData)
     //     lightsData.mDirectionalLight = renderData.mDirectionalLight->calculateLightData();
     // }
 
-    // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mLightsBufferData).setData(lightsData);
+    // getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mLightsBufferData).setData(lightsData);
 }
