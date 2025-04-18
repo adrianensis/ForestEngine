@@ -62,7 +62,9 @@ void RenderPipelinePBR::compile()
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
-    initRenderPass<RenderPassGeometry>(renderPassGeometryData);
+    // initRenderPass<RenderPassGeometry>(renderPassGeometryData);
+
+    mGPURenderGraph.initRenderPass<RenderPassGeometry>(renderPassGeometryData);
 
     GPURenderPassData renderPassUIData;
     renderPassUIData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
@@ -70,7 +72,9 @@ void RenderPipelinePBR::compile()
     renderPassUIData.mColorAttachment.mGPUImage = &vulkanColorImage;
 
     renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
-    initRenderPass<RenderPassUI>(renderPassUIData);
+    // initRenderPass<RenderPassUI>(renderPassUIData);
+
+    mGPURenderGraph.initRenderPass<RenderPassUI>(renderPassUIData);
 
     GPURenderPassData renderPassResolveData;
     // renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
@@ -81,7 +85,9 @@ void RenderPipelinePBR::compile()
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
-    initRenderPass<RenderPassBase>(renderPassResolveData);
+    // initRenderPass<RenderPassBase>(renderPassResolveData);
+
+    mGPURenderGraph.initRenderPass<RenderPassBase>(renderPassResolveData);
     
 
     // FOR_RANGE(i, 0, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages().size())
@@ -117,7 +123,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
             // WeakPtr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
             // renderPassShadowMap->mDirectionalLight = renderData.mDirectionalLight;
             // renderPassShadowMap->renderPass();
-            WeakPtr<RenderPassGeometry> renderPassGeometry = getRenderPass<RenderPassGeometry>();
+            WeakPtr<RenderPassGeometry> renderPassGeometry = mGPURenderGraph.getRenderPass<RenderPassGeometry>();
             renderPassGeometry->mDirectionalLight = renderData.mDirectionalLight;
             // renderPassGeometry->getGPURenderPass()->clearColor();
             renderPassGeometry->renderPass();
@@ -131,7 +137,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
         // vulkanRenderPass->clearColor();
         // vulkanRenderPass->clearDepthStencil();
 
-        WeakPtr<RenderPassUI> renderPassUI = getRenderPass<RenderPassUI>();
+        WeakPtr<RenderPassUI> renderPassUI = mGPURenderGraph.getRenderPass<RenderPassUI>();
         renderPassUI->renderPass();
 
         // GET_SYSTEM(DebugRenderer).mShapeBatchRendererScreenSpace.render();
@@ -149,7 +155,7 @@ void RenderPipelinePBR::render(RenderPipelineData& renderData)
         vulkanColorImage.copyToVkImage(GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_IMAGE_LAYOUT_UNDEFINED);
         GPUImageUtils::transitionImageLayout(GET_SYSTEM(GPUInstance).mGPUContext, GET_SYSTEM(GPUInstance).mGPUContext->vulkanSwapChain->getImages()[swapChainImageIndex], VK_FORMAT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 1);
 
-        WeakPtr<RenderPassBase> renderPassResolve = getRenderPass<RenderPassBase>();
+        WeakPtr<RenderPassBase> renderPassResolve = mGPURenderGraph.getRenderPass<RenderPassBase>();
         renderPassResolve->renderPass();
     }
     if (!vulkanCommandBuffer.end()) {

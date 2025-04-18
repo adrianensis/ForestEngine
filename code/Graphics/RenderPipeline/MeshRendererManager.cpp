@@ -55,8 +55,6 @@ void MeshRendererManager::addRenderer(TComponentPtr<MeshRenderer> renderer)
         mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
         mRenderers.resize(mRenderInstancesSlotsManager.getSize());
         mMatrices.resize(mRenderInstancesSlotsManager.getSize());
-        // GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).resize(sizeof(Matrix4) * mRenderInstancesSlotsManager.getSize());
-        // compileShader = true;
     }
 
     renderer->getGPURenderItem()->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());

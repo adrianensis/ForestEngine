@@ -1,6 +1,10 @@
 #pragma once
 
 #include "GPU/Core/GPUContext.hpp"
+// TODO: fix .h extension, should be .hpp
+#include "GPU/RenderPass/GPURenderPass.h"
+#include "GPU/RenderItem/GPURenderItem.hpp"
+#include "GPU/GPUInstance.hpp"
 
 class GPURenderGraphData
 {
@@ -12,35 +16,42 @@ public:
 class GPURenderGraph
 {
 public:
-    void init(Ptr<GPUContext> gpuContext);
+    void init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager);
     void update();
     virtual void terminate();
     virtual void render(GPURenderGraphData& renderData);
+    void addRenderer(WeakPtr<GPURenderItem> renderItem);
+    void removeRenderer(WeakPtr<GPURenderItem> renderItem);
     void onResize();
 
-protected:
-    // template<class T> T_EXTENDS(T, RenderPass)
-    // void initRenderPass(const RenderPassData& renderPassData)
-    // {
-    //     ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-    //     mRenderPassMap.insert_or_assign(
-    //         renderPassClassId,
-    //         OwnerPtr<RenderPass>::moveCast(OwnerPtr<T>::newObject())
-    //     );
+    void updateLights(GPURenderGraphData& renderData);
 
-    //     WeakPtr<T> renderPass = getRenderPass<T>();
-    //     renderPass->init(this, renderPassData);
-    // }
+    template<class T> T_EXTENDS(T, GPURenderPass)
+    void initRenderPass(const GPURenderPassData& renderPassData)
+    {
+        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
-    // template<class T> T_EXTENDS(T, RenderPass)
-    // WeakPtr<T> getRenderPass()
-    // {
-    //     ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-    //     return WeakPtr<T>::cast(mRenderPassMap.at(renderPassClassId));
-    // }
+        mRenderPassMap.insert_or_assign(
+            renderPassClassId,
+            OwnerPtr<GPURenderPass>::moveCast(OwnerPtr<T>::newObject())
+        );
 
-protected:
+        WeakPtr<T> renderPass = getRenderPass<T>();
+        renderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, mGPUInstanceRendererManager, renderPassData);
+    }
+
+    template<class T> T_EXTENDS(T, GPURenderPass)
+    WeakPtr<T> getRenderPass()
+    {
+        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        return WeakPtr<T>::cast(mRenderPassMap.at(renderPassClassId));
+    }
+
+    void initBuffers();
+
+private:
     Ptr<GPUContext> mGPUContext;
-    // std::unordered_map<ClassId, OwnerPtr<RenderPass>> mRenderPassMap;
+    std::unordered_map<ClassId, OwnerPtr<GPURenderPass>> mRenderPassMap;
+    WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
 };
 REGISTER_CLASS(GPURenderGraph);
