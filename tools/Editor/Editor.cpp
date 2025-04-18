@@ -168,7 +168,7 @@ void Editor::update()
     // LOG_VAR(currentMousePosition.y);
     if(mSelectedSceneObject)
     {
-        Vector3 position = camera->screenToWorld(currentMousePosition, mSelectedSceneObject->mTransform->getWorldPosition().z);
+        Vector3 position = camera->getGPUCamera().screenToWorld(currentMousePosition, mSelectedSceneObject->mTransform->getWorldPosition().z);
         // position.z = mSelectedSceneObject->mTransform->getLocalPosition().z;
         mSelectedSceneObject->mTransform->setLocalPosition(position);
         // LOG_VAR(position.x);

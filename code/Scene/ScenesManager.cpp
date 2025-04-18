@@ -48,7 +48,7 @@ void ScenesManager::init()
     TComponentPtr<Camera> camera = ComponentsManager::getInstance().requestComponent<Camera>();
 	camera->init();
     mCameraSceneObject->addComponent(camera);
-	camera->setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
+	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
     GET_SYSTEM(CameraManager).setCamera(camera);
 }

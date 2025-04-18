@@ -28,8 +28,8 @@ Matrix4 RenderPassBase::calculateProjectionViewMatrix() const
 
     TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    Matrix4 projectionViewMatrix = mGPURenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mProjectionMatrix : ortho;
-    Matrix4 viewMatrix = mGPURenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->mViewMatrix : view2D;
+    Matrix4 projectionViewMatrix = mGPURenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->getGPUCamera().mProjectionMatrix : ortho;
+    Matrix4 viewMatrix = mGPURenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->getGPUCamera().mViewMatrix : view2D;
 
     projectionViewMatrix.mul(viewMatrix);
 

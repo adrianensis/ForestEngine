@@ -2,12 +2,12 @@
 
 #include "Core/Minimal.hpp"
 
-class Camera;
+class GPUCamera;
 
-class Frustum
+class GPUFrustum
 {
 public:
-    void init(Camera *camera);
+    void init(GPUCamera *camera);
     bool testSphere(const Vector3& center, f32 radius) const;
     bool testPoint(const Vector3& point) const;
     bool testRectangle(const Vector3& leftTop, f32 width, f32 height) const;
@@ -15,6 +15,6 @@ public:
 	
 private: 
 	Matrix4 mVPmatrix;
-	Camera* mCamera = nullptr;
+	GPUCamera* mCamera = nullptr;
 	std::array<Vector4, 6> mPlanes;
 };
