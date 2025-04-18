@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
-#include "Graphics/Renderer/ShapeBatchRenderer.hpp"
+#include "Graphics/Shapes/ShapeBatchRenderer.hpp"
 
 class DebugRenderer : public System
 {

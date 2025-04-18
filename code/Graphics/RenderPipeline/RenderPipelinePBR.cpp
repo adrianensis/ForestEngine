@@ -1,5 +1,5 @@
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
-#include "Graphics/Renderer/ShapeBatchRenderer.hpp"
+#include "Graphics/Shapes/ShapeBatchRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Scene/Module.hpp"
 #include "Core/Window/WindowManager.hpp"

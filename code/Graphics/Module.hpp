@@ -10,7 +10,7 @@
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
-#include "Graphics/Renderer/ModelRenderer.hpp"
+#include "Graphics/Model/ModelRenderer.hpp"
 #include "Graphics/Camera/Camera.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Light/Light.hpp"

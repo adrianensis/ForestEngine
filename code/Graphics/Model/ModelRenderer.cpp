@@ -1,4 +1,4 @@
-#include "Graphics/Renderer/ModelRenderer.hpp"
+#include "Graphics/Model/ModelRenderer.hpp"
 
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"

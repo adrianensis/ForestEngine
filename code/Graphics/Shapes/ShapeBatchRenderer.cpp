@@ -1,4 +1,4 @@
-#include "Graphics/Renderer/ShapeBatchRenderer.hpp"
+#include "Graphics/Shapes/ShapeBatchRenderer.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
