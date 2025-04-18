@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
 
 class MeshRendererManager

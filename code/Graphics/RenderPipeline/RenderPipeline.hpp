@@ -4,7 +4,7 @@
 #include "Graphics/Light/Light.hpp"
 #include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
-#include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
 #include "Graphics/RenderPipeline/MeshRendererManager.hpp"
 #include "GPU/GPUInstance.hpp"

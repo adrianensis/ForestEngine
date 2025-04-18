@@ -1,4 +1,4 @@
-#include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
 #include "Core/EntityComponent/EntityPtr.hpp"

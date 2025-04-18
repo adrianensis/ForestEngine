@@ -2,7 +2,7 @@
 
 #include "Core/EntityComponent/Component.hpp"
 
-#include "Graphics/Renderer/MeshRenderer.hpp"
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
 class Model;
 
