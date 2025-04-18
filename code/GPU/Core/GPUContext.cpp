@@ -370,9 +370,9 @@ void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
     VkSemaphore renderFinishedSemaphore = renderFinishedSemaphores[currentFrame];
 
     // Check if a wait semaphore has been specified to wait for before presenting the image
+    VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
     if(renderFinishedSemaphore != VK_NULL_HANDLE)
     {
-        VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
         presentInfo.pWaitSemaphores = signalSemaphores;
         presentInfo.waitSemaphoreCount = 1;
     }
