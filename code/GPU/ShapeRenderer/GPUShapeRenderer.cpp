@@ -1,7 +1,6 @@
 #include "GPU/ShapeRenderer/GPUShapeRenderer.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
-#include "Graphics/Camera/Camera.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
