@@ -25,6 +25,20 @@ void GPURenderItemManager::update()
             }
         }
     }
+
+    // std::for_each(
+    //     std::execution::par_unseq,
+    //     mUsedSlots.begin(),
+    //     mUsedSlots.end(),
+    //     [this](u32 i)
+    //     {
+    //         WeakPtr<GPURenderItem> renderItem = mRenderers[i];
+    //         if(renderItem.isValid())
+    //         {
+    //             processRenderer(renderItem);
+    //         }
+    //     }
+    // );
 }
 
 void GPURenderItemManager::processRenderer(WeakPtr<GPURenderItem> renderItem)
