@@ -6,7 +6,7 @@
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
-#include "Graphics/RenderPipeline/MeshRendererManager.hpp"
+#include "GPU/RenderItem/GPURenderItemManager.hpp"
 #include "GPU/GPUInstance.hpp"
 
 class RenderPipelineData
@@ -34,8 +34,9 @@ protected:
     void initBuffers();
 
 protected:
-    MeshRendererManager mMeshRendererManager;
+    GPURenderItemManager mGPURenderItemManager;
     OwnerPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     GPURenderGraph mGPURenderGraph;
+    std::vector<TComponentPtr<MeshRenderer>> mMeshRenderers;
 };
 REGISTER_CLASS(RenderPipeline);

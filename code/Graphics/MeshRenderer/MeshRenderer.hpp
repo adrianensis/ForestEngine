@@ -35,8 +35,6 @@ private:
 
 private:
     GPUTextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    bool mUpdateMatrix = false;
-
     OwnerPtr<GPURenderItem> mGPURenderItem;
 
 public:
@@ -44,6 +42,5 @@ public:
 
 public:
     GET(GPURenderItem)
-    GET_SET(UpdateMatrix)
 };
 REGISTER_CLASS(MeshRenderer);

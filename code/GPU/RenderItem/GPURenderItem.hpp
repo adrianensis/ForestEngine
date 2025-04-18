@@ -27,6 +27,7 @@ private:
     Matrix4 mRendererModelMatrix;
     WeakPtr<GPUShaderPropertiesInstance> mGPUShaderPropertiesInstance;
     bool mIsStatic = false;
+    bool mUpdateMatrix = false;
 
 public:
     CRGET_SET(RendererModelMatrix)
@@ -35,5 +36,6 @@ public:
     CRGET_SET(RenderSlot)
     CRGET_SET(InstanceSlot)
     SET(IsStatic)
+    GET_SET(UpdateMatrix)
 };
 REGISTER_CLASS(GPURenderItem);

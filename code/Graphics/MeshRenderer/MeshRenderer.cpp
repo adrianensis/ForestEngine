@@ -31,7 +31,7 @@ void MeshRenderer::calculateRendererModelMatrix()
     rendererModelMatrix.mul(mGPURenderItem->getGPURenderItemData().mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     mGPURenderItem->setRendererModelMatrix(rendererModelMatrix);
-    setUpdateMatrix(true);
+    mGPURenderItem->setUpdateMatrix(true);
 }
 
 void MeshRenderer::update()
