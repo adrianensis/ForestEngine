@@ -4,10 +4,10 @@
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
-class ShapeBatchRenderer
+class GPUShapeRenderer
 {
 public:
-	ShapeBatchRenderer() = default;
+	GPUShapeRenderer() = default;
 
     void init(u32 verticesPerShape);
     void terminate();

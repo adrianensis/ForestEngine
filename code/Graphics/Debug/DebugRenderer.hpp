@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
-#include "Graphics/Shapes/ShapeBatchRenderer.hpp"
+#include "GPU/ShapeRenderer/GPUShapeRenderer.hpp"
 
 class DebugRenderer : public System
 {
@@ -15,7 +15,7 @@ public:
     void drawCube(const Cube& cube, f32 thickness= 1, GeometricSpace geometricSpace = GeometricSpace::WORLD, Vector4 color = Vector4(1,1,1,1));
 
 public:
-	ShapeBatchRenderer mShapeBatchRenderer;
-	ShapeBatchRenderer mShapeBatchRendererScreenSpace;
+	GPUShapeRenderer mShapeBatchRenderer;
+	GPUShapeRenderer mShapeBatchRendererScreenSpace;
 };
 REGISTER_CLASS(DebugRenderer);

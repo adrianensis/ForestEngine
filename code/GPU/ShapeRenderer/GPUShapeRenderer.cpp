@@ -1,4 +1,4 @@
-#include "Graphics/Shapes/ShapeBatchRenderer.hpp"
+#include "GPU/ShapeRenderer/GPUShapeRenderer.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Camera/Camera.hpp"
@@ -6,7 +6,7 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 
-void ShapeBatchRenderer::terminate()
+void GPUShapeRenderer::terminate()
 {
 	mGPUVertexBuffersContainer.terminate();
 	mPositionBuffer.clear();
@@ -16,7 +16,7 @@ void ShapeBatchRenderer::terminate()
 	mShapesCounter = 0;
 }
 
-void ShapeBatchRenderer::init(u32 verticesPerShape)
+void GPUShapeRenderer::init(u32 verticesPerShape)
 {
 	mVerticesPerShape = verticesPerShape;
     mMaxVertices = mMaxShapes * mVerticesPerShape;
@@ -46,7 +46,7 @@ void ShapeBatchRenderer::init(u32 verticesPerShape)
     // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
 }
 
-void ShapeBatchRenderer::render()
+void GPUShapeRenderer::render()
 {
 //    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
 //    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
@@ -79,19 +79,19 @@ void ShapeBatchRenderer::render()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
-void ShapeBatchRenderer::addPosition(const Vector3& position)
+void GPUShapeRenderer::addPosition(const Vector3& position)
 {
     PROFILER_CPU()
 	mPositionBuffer.push_back(position);
 }
 
-void ShapeBatchRenderer::addColor(const Vector4& color)
+void GPUShapeRenderer::addColor(const Vector4& color)
 {
     PROFILER_CPU()
 	mColorBuffer.push_back(color);
 }
 
-void ShapeBatchRenderer::addLine(const Line& line, const Vector4& color)
+void GPUShapeRenderer::addLine(const Line& line, const Vector4& color)
 {
     PROFILER_CPU()
     if(mShapesCounter < mMaxShapes)
