@@ -18,8 +18,8 @@ class GPURenderGraph
 public:
     void init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager);
     void update();
-    virtual void terminate();
-    virtual void render(GPURenderGraphData& renderData);
+    void terminate();
+    void render(GPURenderGraphData& renderData);
     void addRenderer(WeakPtr<GPURenderItem> renderItem);
     void removeRenderer(WeakPtr<GPURenderItem> renderItem);
     void onResize();
