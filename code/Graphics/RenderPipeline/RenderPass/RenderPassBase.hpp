@@ -6,14 +6,12 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 
 class RenderPass;
-
-
-class RenderPass : public GPURenderPass
+class RenderPassBase : public GPURenderPass
 {
 public:
-    virtual ~RenderPass() = default;
+    virtual ~RenderPassBase() = default;
 protected:
     virtual void updateGlobalData() override;
     virtual Matrix4 calculateProjectionViewMatrix() const override;
 };
-REGISTER_CLASS(RenderPass);
+REGISTER_CLASS(RenderPassBase);

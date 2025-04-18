@@ -31,7 +31,7 @@ void RenderPassGeometry::render()
 void RenderPassGeometry::updateGlobalData()
 {
 	PROFILER_CPU()
-    RenderPass::updateGlobalData();
+    RenderPassBase::updateGlobalData();
 
     TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 

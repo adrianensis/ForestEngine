@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Light/Light.hpp"
 // TODO: Fix ComponentPtr includes everywhere
 #include "Core/EntityComponent/ComponentPtr.hpp"
-class RenderPassGeometry: public RenderPass
+class RenderPassGeometry: public RenderPassBase
 {
 protected:
     virtual void updateGlobalData() override;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 
-class RenderPassUI: public RenderPass
+class RenderPassUI: public RenderPassBase
 {
 protected:
     virtual void preRender() override;

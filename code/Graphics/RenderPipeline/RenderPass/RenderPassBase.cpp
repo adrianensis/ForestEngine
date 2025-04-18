@@ -1,8 +1,8 @@
-#include "Graphics/RenderPipeline/RenderPass/RenderPass.hpp"
+#include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Core/EntityComponent/EntityPtr.hpp"
 
-void RenderPass::updateGlobalData()
+void RenderPassBase::updateGlobalData()
 {
 	PROFILER_CPU()
 
@@ -17,7 +17,7 @@ void RenderPass::updateGlobalData()
 	mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Matrix4 RenderPass::calculateProjectionViewMatrix() const
+Matrix4 RenderPassBase::calculateProjectionViewMatrix() const
 {
 	PROFILER_CPU()
 

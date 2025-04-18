@@ -62,7 +62,7 @@ void RenderPipeline::addRenderer(TComponentPtr<MeshRenderer> renderer)
     {
         if(mRenderPassMap.contains(*it))
         {
-            Ptr<RenderPass> renderPass = mRenderPassMap.at(*it);
+            Ptr<GPURenderPass> renderPass = mRenderPassMap.at(*it);
             renderPass->addInstanceRendererData(gpuInstanceRendererData);
         }
     }
