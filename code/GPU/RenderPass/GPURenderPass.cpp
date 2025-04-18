@@ -1,14 +1,20 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
+#include "GPU/GPUInstance.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
 GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(Ptr<GPUContext> gpuContext, const GPURenderPassData& gpuRenderPassData)
+bool GPURenderPass::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
+    mGPUInstanceRendererManager = gpuInstanceRendererManager;
     mGPURenderPassData = gpuRenderPassData;
+
+    mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 
     // if(mGPURenderPassData.mIsResolvePass)
     // {
@@ -198,7 +204,15 @@ void GPURenderPass::terminate()
 {
     PROFILER_CPU()
 
-    for (GPUFramebuffer framebuffer : framebuffers) {
+    FOR_MAP(it, mGPUShaderPipelines)
+    {
+        it->second->terminate();
+    }
+
+    mGPUUniformBuffersContainer.terminate();
+
+    for (GPUFramebuffer framebuffer : framebuffers)
+    {
         framebuffer.terminate();
     }
     framebuffers.clear();
@@ -291,4 +305,133 @@ void GPURenderPass::onResize()
     {
         CHECK_MSG(false, "Could not initialize Vulkan framebuffers");
     }
+}
+
+void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRendererData)
+{
+    PROFILER_CPU_NAMED(RenderPass_compileShader)
+
+    std::vector<GPUUniformBuffer> uniformBuffers;
+    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
+
+    WeakPtr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+    if(skeletonState)
+    {
+        uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+    }
+
+    uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
+    uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
+    // TODO: check GET_SYSTEM(GPUInstance) accesses from GPU module (?)
+
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+    GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;
+    gpuGPUShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
+    gpuGPUShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
+    gpuGPUShaderPipelineDepthStencilData.mDepthCompareOp = VK_COMPARE_OP_LESS; //VkCompareOp
+    gpuGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable = VK_FALSE; //bool
+    gpuGPUShaderPipelineDepthStencilData.mStencilTestEnable = gpuInstanceRendererData.mGPUShaderStencilData.mUseStencil; //bool
+    
+    VkStencilOpState vkStencilOpState;
+    vkStencilOpState.failOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFailOp;
+    vkStencilOpState.passOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilPassOp;
+    vkStencilOpState.depthFailOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mDepthFailOp;
+    vkStencilOpState.compareOp = (VkCompareOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFunction;
+    vkStencilOpState.compareMask = 0xFF;
+    vkStencilOpState.writeMask = 0xFF;
+    vkStencilOpState.reference = gpuInstanceRendererData.mGPUShaderStencilData.mStencilValue;
+
+    gpuGPUShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
+    gpuGPUShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
+    gpuGPUShaderPipelineDepthStencilData.mMinDepthBounds = 0; //float
+    gpuGPUShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
+    GPUShaderCompilationData shaderCompilationData
+    {
+        gpuInstanceRendererData.mMesh,
+        this,
+        ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+        HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
+        uniformBuffers,
+        gpuInstanceRenderer->getGPUVertexBuffersContainer(),
+        gpuGPUShaderPipelineDepthStencilData
+    };
+
+    if(!mGPUShaderPipelines.contains(gpuInstanceRendererData))
+    {
+        mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));
+    }
+}
+
+void GPURenderPass::addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData)
+{
+    mGPUInstanceRendererRegistry.addInstanceRendererData(gpuInstanceRendererData);
+    compileShader(gpuInstanceRendererData);
+}
+
+void GPURenderPass::preFramebufferEnabled()
+{
+}
+
+void GPURenderPass::postFramebufferEnabled()
+{
+}
+
+void GPURenderPass::preRender()
+{
+}
+
+void GPURenderPass::postRender()
+{
+}
+
+void GPURenderPass::render()
+{
+}
+
+void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData)
+{
+    PROFILER_CPU()
+    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
+    gpuGPUShaderPipeline->enable();
+    gpuInstanceRenderer->render();
+    gpuGPUShaderPipeline->disable();
+}
+
+void GPURenderPass::renderPass()
+{
+	PROFILER_CPU()
+
+    updateGlobalData();
+
+    // if(mRenderPassData.mOutputFramebufferData.isValid())
+    // {
+    //     preFramebufferEnabled();
+    //     mOutputGPUFramebuffer.enable(GPUFramebufferOperationType::READ_AND_DRAW);
+    //     postFramebufferEnabled();
+    // }
+
+    // preRender();
+    // render();
+    // postRender();
+
+    // if(mRenderPassData.mOutputFramebufferData.isValid())
+    // {
+    //     mOutputGPUFramebuffer.disable(GPUFramebufferOperationType::READ_AND_DRAW);
+    // }
+    begin();
+    {
+        PROFILER_GPU_NAMED(renderPass, mGPUContext->mTracyContext, mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame].getVkCommandBuffer())
+        render();
+    }
+    end();
+}
+
+void GPURenderPass::updateGlobalData()
+{
+}
+
+Matrix4 GPURenderPass::calculateProjectionViewMatrix() const
+{
+	return Matrix4::smIdentity;
 }

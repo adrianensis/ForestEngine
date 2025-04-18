@@ -7,53 +7,13 @@
 
 class RenderPass;
 
-class RenderPassDependency
-{
-public:
-    HashedString mSamplerName;
-    GPUFramebufferAttachmentType mAttachmentType;
-    WeakPtr<RenderPass> mRenderPass;
-};
 
-class RenderPassData
+class RenderPass : public GPURenderPass
 {
 public:
-    GPURenderPassData mGPURenderPassData;
-    GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
-    std::vector<RenderPassDependency> mDependencies;
-    GPUFramebufferData mOutputFramebufferData;
-};
-
-class RenderPass
-{
-public:
-    virtual void init(WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const RenderPassData& renderPassData);
     virtual ~RenderPass() = default;
-    void terminate();
-    virtual void renderPass();
-    void onResize();
-    void addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData);
-
 protected:
-    void compileShader(const GPUInstanceRendererData& gpuInstanceRendererData);
-    virtual void preFramebufferEnabled();
-    virtual void postFramebufferEnabled();
-    virtual void preRender();
-    virtual void renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData);
-    virtual void render();
-    virtual void postRender();
-    virtual void updateGlobalData();
-    virtual Matrix4 calculateProjectionViewMatrix() const;
-
-protected:
-    RenderPassData mRenderPassData;
-    GPUUniformBuffersContainer mGPUUniformBuffersContainer;
-    OwnerPtr<GPURenderPass> mGPURenderPass;
-    std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
-    WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
-    GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
-public:
-    CRGET(RenderPassData)
-    GET(GPURenderPass)
+    virtual void updateGlobalData() override;
+    virtual Matrix4 calculateProjectionViewMatrix() const override;
 };
 REGISTER_CLASS(RenderPass);

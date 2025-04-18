@@ -50,7 +50,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    void init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, WeakPtr<GPURenderPass> renderPass, Ptr<GPUContext> gpuContext);
+    void init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, Ptr<GPURenderPass> renderPass, Ptr<GPUContext> gpuContext);
     void terminate();
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
     void compile(const GPUShaderModuleData& vertex, const GPUShaderModuleData& fragment);
@@ -61,7 +61,7 @@ private:
     GPUShaderModule vertexShader;
     GPUShaderModule fragmentShader;
     GPUVertexInputData mGPUVertexInputData;
-    WeakPtr<GPURenderPass> mRenderPass;
+    Ptr<GPURenderPass> mRenderPass;
     Ptr<GPUContext> mGPUContext;
     VkPipelineLayout mPipelineLayout = VK_NULL_HANDLE;
     VkPipeline mPipeline = VK_NULL_HANDLE;

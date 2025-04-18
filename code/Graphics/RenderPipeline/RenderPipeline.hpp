@@ -7,6 +7,7 @@
 #include "Graphics/Renderer/MeshRenderer.hpp"
 #include "Core/EntityComponent/ComponentPtr.hpp"
 #include "Graphics/RenderPipeline/MeshRendererManager.hpp"
+#include "GPU/GPUInstance.hpp"
 
 class RenderPipelineData
 {
@@ -32,7 +33,7 @@ protected:
     void updateLights(RenderPipelineData& renderData);
 
     template<class T> T_EXTENDS(T, RenderPass)
-    void initRenderPass(const RenderPassData& renderPassData)
+    void initRenderPass(const GPURenderPassData& renderPassData)
     {
         ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
@@ -42,7 +43,7 @@ protected:
         );
 
         WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(mGPUInstanceRendererManager, renderPassData);
+        renderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, mGPUInstanceRendererManager, renderPassData);
     }
 
     template<class T> T_EXTENDS(T, RenderPass)

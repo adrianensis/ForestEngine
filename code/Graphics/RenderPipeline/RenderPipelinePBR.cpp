@@ -54,28 +54,28 @@ void RenderPipelinePBR::compile()
     }
 
     // WeakPtr<RenderPassShadowMap> renderPassShadowMap = getRenderPass<RenderPassShadowMap>();
-    RenderPassData renderPassGeometryData;
-    renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
-    renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::STORE;
-    renderPassGeometryData.mGPURenderPassData.mColorAttachment.mGPUImage = &vulkanColorImage;
+    GPURenderPassData renderPassGeometryData;
+    renderPassGeometryData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
+    renderPassGeometryData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::STORE;
+    renderPassGeometryData.mColorAttachment.mGPUImage = &vulkanColorImage;
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>();
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
     // renderPassGeometryData.mDependencies.push_back(RenderPassDependency{TextureBindingNamesPBR::smShadowMap,
     // GPUFramebufferAttachmentType::DEPTH, renderPassShadowMap, GPUPipelineStage::FRAGMENT});
     initRenderPass<RenderPassGeometry>(renderPassGeometryData);
 
-    RenderPassData renderPassUIData;
-    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
-    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    renderPassUIData.mGPURenderPassData.mColorAttachment.mGPUImage = &vulkanColorImage;
+    GPURenderPassData renderPassUIData;
+    renderPassUIData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+    renderPassUIData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
+    renderPassUIData.mColorAttachment.mGPUImage = &vulkanColorImage;
 
     renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
     initRenderPass<RenderPassUI>(renderPassUIData);
 
-    RenderPassData renderPassResolveData;
+    GPURenderPassData renderPassResolveData;
     // renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
-    renderPassResolveData.mGPURenderPassData.mIsResolvePass = true;
-    renderPassResolveData.mGPURenderPassData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
+    renderPassResolveData.mIsResolvePass = true;
+    renderPassResolveData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
 
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>();
     // renderPassGeometryData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderPBR>();
