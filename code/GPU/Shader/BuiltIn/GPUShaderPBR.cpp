@@ -1,5 +1,5 @@
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
-#include "GPU/GPULight.hpp"
+#include "GPU/Light/GPULight.hpp"
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
