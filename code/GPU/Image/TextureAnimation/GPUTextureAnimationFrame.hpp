@@ -2,8 +2,7 @@
 
 #include "Core/Minimal.hpp"
 
-
-class TextureAnimationFrame
+class GPUTextureAnimationFrame
 {
 public:
     void init(const Vector2& position, f32 width, f32 height);

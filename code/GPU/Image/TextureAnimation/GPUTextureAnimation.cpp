@@ -1,9 +1,9 @@
-#include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
+#include "GPU/Image/TextureAnimation/GPUTextureAnimation.hpp"
 #include "Core/Time/TimeUtils.hpp"
 
-TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
+GPUTextureAnimation GPUTextureAnimation::create(u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, f32 width, f32 height, f32 speed)
 {
-	TextureAnimation TextureAnimation;
+	GPUTextureAnimation TextureAnimation;
 	TextureAnimation.init();
 	TextureAnimation.mSpeed = speed;
 
@@ -43,7 +43,7 @@ TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool 
 		if (verticalDir != 0)
 			pos.y += i * height;
 
-		TextureAnimationFrame frame;
+		GPUTextureAnimationFrame frame;
 		frame.init(pos, width, height);
 		TextureAnimation.mFrames.push_back(frame);
 	}
@@ -51,17 +51,17 @@ TextureAnimation TextureAnimation::create(u32 frameCount, bool horizontal, bool 
 	return TextureAnimation;
 }
 
-void TextureAnimation::init()
+void GPUTextureAnimation::init()
 {
 	mFrames.clear();
 }
 
-u32 TextureAnimation::getNumberOfFrames() const
+u32 GPUTextureAnimation::getNumberOfFrames() const
 {
 	return mFrames.size();
 }
 
-const TextureAnimationFrame& TextureAnimationUpdater::nextFrame()
+const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::nextFrame()
 {
 	f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
 	mTimeAccumulator += GET_SYSTEM(Time).getDeltaTimeMillis();
@@ -76,12 +76,12 @@ const TextureAnimationFrame& TextureAnimationUpdater::nextFrame()
 	return mTextureAnimation->mFrames.at(mCurrentFrameNumber);
 }
 
-const TextureAnimationFrame& TextureAnimationUpdater::getCurrentFrame() const
+const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::getCurrentFrame() const
 {
 	return mTextureAnimation->mFrames.at(mCurrentFrameNumber);
 }
 
-void TextureAnimationUpdater::setTextureAnimation(const TextureAnimation& textureAnimation)
+void GPUTextureAnimationUpdater::setTextureAnimation(const GPUTextureAnimation& textureAnimation)
 {
     mCurrentFrameNumber = 0;
 	mTimeAccumulator = 0.0f;

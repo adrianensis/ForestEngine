@@ -6,7 +6,7 @@
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 #include "GPU/RenderItem/GPURenderItem.hpp"
-#include "Graphics/Renderer/TextureAnimation/TextureAnimation.hpp"
+#include "GPU/Image/TextureAnimation/GPUTextureAnimation.hpp"
 
 class TextureAnimation;
 
@@ -34,7 +34,7 @@ private:
     void updateTextureRegion();
 
 private:
-    TextureAnimationUpdater mCurrentTextureAnimationUpdater;
+    GPUTextureAnimationUpdater mCurrentTextureAnimationUpdater;
     bool mUpdateMatrix = false;
 
     OwnerPtr<GPURenderItem> mGPURenderItem;
