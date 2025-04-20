@@ -111,3 +111,9 @@ IMPLEMENT_DESERIALIZATION(Entity)
 
 	// DESERIALIZE("tag", mTag)
 }
+
+Entity& EntityPtr::getInternal() const
+{
+    CHECK_MSG(isValid(), "Invalid handle!");
+    return EntityManager::getInstance().getPool().getElementBase(mClassId, mSlot);
+}

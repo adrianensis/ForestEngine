@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/EntityComponent/ComponentPtr.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "SpacePartition/OcTree.hpp"
 
 #include "GPU/Mesh/GPUMesh.hpp"

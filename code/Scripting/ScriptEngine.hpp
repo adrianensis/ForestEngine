@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include "Core/System/System.hpp"
 #include "Scripting/Script.hpp"
-#include "Core/EntityComponent/ComponentPtr.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
 
 class ScriptEngine: public System, public IComponentsListener

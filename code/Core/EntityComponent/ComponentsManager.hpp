@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Core/EntityComponent/ComponentPtr.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "Core/Memory/Pool.hpp"
-
-class Component;
 
 class IComponentsListener
 {

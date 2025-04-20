@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Core/EntityComponent/EntityPtr.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 
 class EntityManager: public Singleton<EntityManager>
 {

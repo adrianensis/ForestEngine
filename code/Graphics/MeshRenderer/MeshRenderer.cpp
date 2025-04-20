@@ -1,7 +1,7 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
-#include "Core/EntityComponent/EntityPtr.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 #include "Scene/Transform.hpp"
 
 ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }

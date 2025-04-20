@@ -1,6 +1,7 @@
 #include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/EntityPtr.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 #include "Core/EntityComponent/EntityManager.hpp"
+#include "Core/EntityComponent/ComponentsManager.hpp"
 
 Component::Component()
 {
@@ -67,4 +68,10 @@ IMPLEMENT_SERIALIZATION(Component)
 IMPLEMENT_DESERIALIZATION(Component)
 {
  
+}
+
+Component& ComponentPtr::getInternal() const
+{
+    CHECK_MSG(isValid(), "Invalid handle!");
+    return ComponentsManager::getInstance().getPool().getElementBase(mClassId, mSlot);
 }

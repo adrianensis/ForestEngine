@@ -2,8 +2,7 @@
 
 #include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Light/Light.hpp"
-// TODO: Fix ComponentPtr includes everywhere
-#include "Core/EntityComponent/ComponentPtr.hpp"
+#include "Core/EntityComponent/Component.hpp"
 
 class RenderPassShadowMap: public RenderPassBase
 {

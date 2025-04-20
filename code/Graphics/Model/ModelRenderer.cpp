@@ -4,7 +4,7 @@
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
-#include "Core/EntityComponent/EntityPtr.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
 {

@@ -5,7 +5,7 @@
 #include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Core/EntityComponent/ComponentPtr.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "GPU/RenderItem/GPURenderItemManager.hpp"
 #include "GPU/GPUInstance.hpp"
 
