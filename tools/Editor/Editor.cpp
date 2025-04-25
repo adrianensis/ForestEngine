@@ -39,7 +39,7 @@ void Editor::firstUpdate()
     // createPointLight(Vector3(0,50,0), 20);
 
     mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward + -Vector3::smUp);
-    // createSprite(Vector3(0,1000,0), 10);
+    createSprite(Vector3(0,0,0), 100);
     // createSprite(Vector3(-100,0,0), 100);
     // createSprite(Vector3(100,0,0), 100);
     // createSprite(Vector3(0,0,-100), 10);
@@ -255,13 +255,25 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
     // RendererData rendererData;
 	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
 
-    // GPUShaderData shaderData;
-    // shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
+    GPUShaderData shaderData;
+    shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
+	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
 	// TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// sceneObject->addComponent(renderer);
+
+	GPURenderItemData rendererData;
+    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
+    rendererData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, shaderPropertiesBlock);
+    rendererData.mRenderPassIDs = {
+        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+    };
+
+	TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	renderer->init(rendererData);
+	sceneObject->addComponent(renderer);
 
 	return sceneObject;
 }
