@@ -3,8 +3,6 @@
 #include "Core/EntityComponent/Component.hpp"
 #include "SpacePartition/OcTree.hpp"
 
-#include "GPU/Mesh/GPUMesh.hpp"
-#include "GPU/Shader/GPUShader.hpp"
 #include "GPU/RenderItem/GPURenderItem.hpp"
 #include "GPU/Image/TextureAnimation/GPUTextureAnimation.hpp"
 
