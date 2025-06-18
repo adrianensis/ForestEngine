@@ -33,7 +33,12 @@ namespace Hash
     constexpr inline static HashValue hashString(const char *str)
     {
         HashValue hashResult = 5381;
-        u32 strSize = std::strlen(str);
+        // NOTE: std::strlen is not constexpr
+        // so we need to use std::char_traits<char>::length()
+        u32 strSize = std::char_traits<char>::length(str);
+        // Other alternatives:
+        // std::string_view(str).size()
+        // constexpr std::size_t f(const char*)
         FOR_RANGE(i, 0, strSize)
         {
             hashResult = ((hashResult << 5) + hashResult) + str[i]; /* hash * 33 + c */
