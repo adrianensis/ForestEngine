@@ -4,6 +4,8 @@
 #include "Core/EntityComponent/ComponentsManager.hpp"
 #include "Core/Events/Event.hpp"
 
+// TODO: Fix ECS include mess
+
 class Entity: public ISerializable, public IEventObject
 {
     
