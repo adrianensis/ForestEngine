@@ -128,10 +128,6 @@ public:
 
 protected:
     Entity& getInternal() const;
-
-public:
-    Slot mSlot;
-    ClassId mClassId = 0;
 };
 
 template<class T>// T_EXTENDS(T, Entity)
