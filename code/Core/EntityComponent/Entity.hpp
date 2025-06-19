@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
 #include "Core/Events/Event.hpp"
 
 // TODO: Fix ECS include mess

@@ -84,8 +84,35 @@ public:
         return mPool.getElement<T>(componentPtr.mSlot);
     }
 
-    void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const;
-    void notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const;
+    void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const
+    {
+        ClassId id = componentPtr->getComponentTypeId();
+        if(mComponentListeners.contains(id))
+        {
+            FOR_LIST(it, mComponentListeners.at(id))
+            {
+                if((*it).isValid())
+                {
+                    (*it)->onComponentAdded(componentPtr);
+                }
+            }
+        }
+    }
+
+    void notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const
+    {
+        ClassId id = componentPtr->getComponentTypeId();
+        if(mComponentListeners.contains(id))
+        {
+            FOR_LIST(it, mComponentListeners.at(id))
+            {
+                if((*it).isValid())
+                {
+                    (*it)->onComponentRemoved(componentPtr);
+                }
+            }
+        }
+    }
 
 private:
     Pool<Component> mPool;
