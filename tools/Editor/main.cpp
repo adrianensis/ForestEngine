@@ -1,8 +1,7 @@
 #include "Engine/Engine.hpp"
 #include "Scene/Module.hpp"
 #include "Scripting/Module.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
-#include "Core/EntityComponent/EntityManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 #include "Editor.hpp"
 
@@ -14,10 +13,10 @@ int main()
     Engine engine;
     engine.init();
 
-    TEntityPtr<SceneObject> controller = EntityManager::getInstance().requestEntity<SceneObject>();
+    TEntityPtr<SceneObject> controller = EntityComponentManager::getInstance().requestEntity<SceneObject>();
     controller->init();
 
-    TComponentPtr<Editor> editor = ComponentsManager::getInstance().requestComponent<Editor>();
+    TComponentPtr<Editor> editor = EntityComponentManager::getInstance().requestComponent<Editor>();
     editor->init();
     controller->addComponent(editor);
 

@@ -260,7 +260,7 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	// TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// sceneObject->addComponent(renderer);
 
@@ -271,7 +271,7 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
         ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+	TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
 	sceneObject->addComponent(renderer);
 
@@ -289,7 +289,7 @@ EntityPtr Editor::createPointLight(const Vector3& v, f32 size)
     data.mPosition = v;
     data.mDiffuse = Vector3(1,1,1) * 250000;
 
-	TComponentPtr<PointLight> pointLight = ComponentsManager::getInstance().requestComponent<PointLight>();
+	TComponentPtr<PointLight> pointLight = EntityComponentManager::getInstance().requestComponent<PointLight>();
     pointLight->init(data);
 	sceneObject->addComponent(pointLight);
 
@@ -307,7 +307,7 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
-	TComponentPtr<DirectionalLight> dirLight = ComponentsManager::getInstance().requestComponent<DirectionalLight>();
+	TComponentPtr<DirectionalLight> dirLight = EntityComponentManager::getInstance().requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
 	sceneObject->addComponent(dirLight);
 
@@ -364,7 +364,7 @@ EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 s
         ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	TComponentPtr<ModelRenderer> modelRenderer = ComponentsManager::getInstance().requestComponent<ModelRenderer>();
+	TComponentPtr<ModelRenderer> modelRenderer = EntityComponentManager::getInstance().requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
 	sceneObject->addComponent(modelRenderer);
     return sceneObject;
