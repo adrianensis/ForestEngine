@@ -2,13 +2,13 @@
 #include "Core/EntityComponent/Component.hpp"
 #include "Scene/Transform.hpp"
 #include "Core/Events/EventsManager.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 void SceneObject::init()
 {
     PROFILER_CPU()
     Entity::init();
-    mTransform = ComponentsManager::getInstance().requestComponent<Transform>();
+    mTransform = EntityComponentManager::getInstance().requestComponent<Transform>();
     mTransform->init();
     addComponent(mTransform);
 }

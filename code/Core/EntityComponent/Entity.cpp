@@ -1,7 +1,6 @@
 #include "Core/EntityComponent/Entity.hpp"
 #include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
-#include "Core/EntityComponent/EntityManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 Entity::Entity()
 {
@@ -29,7 +28,7 @@ void Entity::addComponent(const ComponentPtr& componentPtr)
 	mComponentPtrs.emplace_back(componentPtr);
 	componentPtr->onComponentAdded();
 
-    ComponentsManager::getInstance().notifyListenersOnComponentAdded(componentPtr);
+    EntityComponentManager::getInstance().notifyListenersOnComponentAdded(componentPtr);
 }
 
 void Entity::removeComponent(ComponentPtr& componentPtr)
@@ -52,9 +51,9 @@ void Entity::removeComponent(ComponentPtr& componentPtr)
 
     if(componentFound)
     {
-        ComponentsManager::getInstance().notifyListenersOnComponentRemoved(componentPtr);
+        EntityComponentManager::getInstance().notifyListenersOnComponentRemoved(componentPtr);
         componentPtr->destroy();
-        ComponentsManager::getInstance().removeComponent(componentPtr);
+        EntityComponentManager::getInstance().removeComponent(componentPtr);
     }
 }
 
@@ -80,9 +79,9 @@ void Entity::destroy()
 	{
         if((*it).isValid())
         {
-            ComponentsManager::getInstance().notifyListenersOnComponentRemoved(*it);
+            EntityComponentManager::getInstance().notifyListenersOnComponentRemoved(*it);
             (*it)->destroy();
-            ComponentsManager::getInstance().removeComponent(*it);
+            EntityComponentManager::getInstance().removeComponent(*it);
         }
 	}
 
@@ -114,5 +113,5 @@ IMPLEMENT_DESERIALIZATION(Entity)
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EntityManager::getInstance().getPool().getElementBase(*this);
+    return EntityComponentManager::getInstance().getEntitiesPool().getElementBase(*this);
 }

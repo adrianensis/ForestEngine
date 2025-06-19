@@ -39,13 +39,13 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraSceneObject = EntityManager::getInstance().requestEntity<SceneObject>();
+    mCameraSceneObject = EntityComponentManager::getInstance().requestEntity<SceneObject>();
 	mCameraSceneObject->init();
 
 	// mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
-    TComponentPtr<Camera> camera = ComponentsManager::getInstance().requestComponent<Camera>();
+    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().requestComponent<Camera>();
 	camera->init();
     mCameraSceneObject->addComponent(camera);
 	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);

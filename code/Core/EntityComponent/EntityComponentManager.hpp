@@ -2,6 +2,7 @@
 
 #include "Core/Memory/Singleton.hpp"
 #include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 #include "Core/Memory/Pool.hpp"
 
 class IComponentsListener
@@ -11,11 +12,15 @@ public:
     virtual void onComponentRemoved(const ComponentPtr& componentPtr) {};
 };
 
-class ComponentsManager: public Singleton<ComponentsManager>
+class EntityComponentManager: public Singleton<EntityComponentManager>
 {
 public:
     void init() {}
-    void terminate() { mPool.terminate(); }
+    void terminate()
+    { 
+        mEntitiesPool.terminate();
+        mComponentsPool.terminate();
+    }
 
     template<class T> T_EXTENDS(T, Component)
     void addComponentListener(WeakPtr<IComponentsListener> listener)
@@ -53,11 +58,11 @@ public:
     TComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
-        PoolElementPtr poolPtr = mPool.requestElement<T>();
+        PoolElementPtr poolPtr = mComponentsPool.requestElement<T>();
         ComponentPtr componentPtr = poolPtr;
         if(componentPtr.isValid())
         {
-            T& comp = mPool.getElement<T>(componentPtr);
+            T& comp = mComponentsPool.getElement<T>(componentPtr);
             comp.onRecycle(componentPtr.mSlot);
         }
         else
@@ -72,14 +77,14 @@ public:
     {
         PROFILER_CPU()
 
-        mPool.removeElement(componentPtr);
+        mComponentsPool.removeElement(componentPtr);
         componentPtr.reset();
     }
 
     template<class T> T_EXTENDS(T, Component)
     T& getComponent(ComponentPtr componentPtr) const
     {
-        return mPool.getElement<T>(componentPtr.mSlot);
+        return mComponentsPool.getElement<T>(componentPtr.mSlot);
     }
 
     void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const
@@ -111,12 +116,37 @@ public:
             }
         }
     }
+    template<class T> T_EXTENDS(T, Entity)
+    TEntityPtr<T> requestEntity()
+    {
+        PoolElementPtr poolPtr = mEntitiesPool.requestElement<T>();
+        EntityPtr entityPtr = poolPtr;
+        if(entityPtr.isValid())
+        {
+            T& entity = mEntitiesPool.getElement<T>(poolPtr);
+            entity.onRecycle(entityPtr.mSlot);
+        }
+        else
+        {
+            CHECK_MSG(false, "Invalid Entity!");
+        }
+
+        return entityPtr;
+    }
+
+    void removeEntity(EntityPtr& entityPtr)
+    {
+        mEntitiesPool.removeElement(entityPtr);
+        entityPtr.reset();
+    }
 
 private:
-    Pool<Component> mPool;
+    Pool<Entity> mEntitiesPool;
+    Pool<Component> mComponentsPool;
     std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
 
 public:
-    CRGET(Pool)
+    CRGET(EntitiesPool)
+    CRGET(ComponentsPool)
 };
-REGISTER_CLASS(ComponentsManager);
+REGISTER_CLASS(EntityComponentManager);

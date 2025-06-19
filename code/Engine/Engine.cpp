@@ -21,8 +21,7 @@ void Engine::init()
 
 	Memory::init();
 	Profiler::init();
-    EntityManager::getInstance().init();
-    ComponentsManager::getInstance().init();
+    EntityComponentManager::getInstance().init();
     SystemsManager::getInstance().init();
 
     CREATE_SYSTEM(Time);
@@ -115,10 +114,8 @@ void Engine::terminate()
 	MemoryTracking::log();
 	SystemsManager::getInstance().terminate();
 	SystemsManager::deleteInstance();
-    ComponentsManager::getInstance().terminate();
-    ComponentsManager::deleteInstance();
-	EntityManager::getInstance().terminate();
-	EntityManager::deleteInstance();
+    EntityComponentManager::getInstance().terminate();
+    EntityComponentManager::deleteInstance();
 	Profiler::terminate();
 	Memory::terminate();
     HashedStringsManager::terminate();

@@ -3,7 +3,7 @@
 
 void ScriptEngine::init()
 {
-	ComponentsManager::getInstance().addComponentListener<Script>(getPtrToThis<ScriptEngine>());
+	EntityComponentManager::getInstance().addComponentListener<Script>(getPtrToThis<ScriptEngine>());
 }
 
 void ScriptEngine::onComponentAdded(const ComponentPtr& component)

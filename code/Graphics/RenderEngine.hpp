@@ -4,7 +4,7 @@
 #include "Core/System/System.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Core/Window/Window.hpp"
 
 class RenderEngine : public System, public IComponentsListener, public IWindowListener

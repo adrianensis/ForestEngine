@@ -8,8 +8,8 @@
 
 void RenderEngine::init()
 {
-	ComponentsManager::getInstance().addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
-	ComponentsManager::getInstance().addComponentListener<Light>(getPtrToThis<RenderEngine>());
+	EntityComponentManager::getInstance().addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
+	EntityComponentManager::getInstance().addComponentListener<Light>(getPtrToThis<RenderEngine>());
 
     mRenderPipeline = OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();

@@ -3,7 +3,7 @@
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Core/EntityComponent/Entity.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
@@ -24,7 +24,7 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         EntityPtr parent = getOwnerEntity();
-        TComponentPtr<MeshRenderer> renderer = ComponentsManager::getInstance().requestComponent<MeshRenderer>();
+        TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
         renderer->init(rendererData);
 		parent->addComponent(renderer);
 	}

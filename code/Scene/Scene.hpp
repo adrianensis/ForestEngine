@@ -2,7 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/Config/Config.hpp"
-#include "Core/EntityComponent/EntityManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/SceneObject.hpp"
 
 class Scene: public ISerializable, public EnableWeakPtrToThis
@@ -23,7 +23,7 @@ public:
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(SceneObject, T), "T class is not derived from SceneObject");
-		EntityPtr entityPtr = EntityManager::getInstance().requestEntity<T>();
+		EntityPtr entityPtr = EntityComponentManager::getInstance().requestEntity<T>();
         entityPtr->init();
         addSceneObject(entityPtr);
         return entityPtr;

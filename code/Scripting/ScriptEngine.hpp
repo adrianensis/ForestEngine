@@ -4,7 +4,7 @@
 #include "Core/System/System.hpp"
 #include "Scripting/Script.hpp"
 #include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/ComponentsManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 class ScriptEngine: public System, public IComponentsListener
 {
