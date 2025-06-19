@@ -115,5 +115,5 @@ IMPLEMENT_DESERIALIZATION(Entity)
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EntityManager::getInstance().getPool().getElementBase(mClassId, mSlot);
+    return EntityManager::getInstance().getPool().getElementBase(*this);
 }

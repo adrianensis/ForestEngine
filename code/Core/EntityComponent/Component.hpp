@@ -76,33 +76,20 @@ public:
 REGISTER_CLASS(Component);
 
 
-class ComponentPtr
+class ComponentPtr: public PoolElementPtr
 {
 public:
-    ComponentPtr() = default;
-    ComponentPtr(ClassId id, Slot slot)
-    {
-        mClassId = id;
-        mSlot = slot;
-    }
-
-    ComponentPtr(const ComponentPtr& other): ComponentPtr(other.mClassId, other.mSlot)
+    ComponentPtr(): PoolElementPtr()
     {
     }
-
-    virtual ~ComponentPtr()
+    ComponentPtr(ClassId id, Slot slot): PoolElementPtr(id, slot)
     {
-        reset();
     }
-
-    ComponentPtr& operator=(const ComponentPtr& other)
+    ComponentPtr(const ComponentPtr& other): PoolElementPtr(other)
     {
-        if (this != &other)
-        {
-            mClassId = other.mClassId;
-            mSlot = other.mSlot;
-        }
-        return *this;
+    }
+    ComponentPtr(const PoolElementPtr& other): PoolElementPtr(other)
+    {
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -114,34 +101,10 @@ public:
         return *castedPointer;
     }
 
-    Component& getComponent() const
-    {
-        return get<Component>();
-    }
-
-    Component* operator->() const { return &getComponent(); }
-
-    bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
-    operator bool() const { return this->isValid(); }
-    bool operator==(const ComponentPtr& other) const
-	{
-		return
-         mClassId == other.mClassId &&
-         mSlot.getSlot() == other.mSlot.getSlot();
-	}
-
-    void reset()
-    {
-        mSlot.reset();
-        mClassId = 0;
-    }
+    Component* operator->() const { return &getInternal(); }
 
 protected:
     Component& getInternal() const;
-
-public:
-    Slot mSlot;
-    ClassId mClassId = 0;
 };
 
 template<class T>// T_EXTENDS(T, Component)

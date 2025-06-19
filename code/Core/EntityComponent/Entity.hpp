@@ -44,7 +44,7 @@ public:
             ComponentPtr componentPtr = (*it);
             if(componentPtr.isValid())
             {
-                if(dynamic_cast<const T *>(&componentPtr.getComponent()) != nullptr)
+                if(dynamic_cast<const T *>(&componentPtr.get<T>()) != nullptr)
                 {
                     componentToReturn = componentPtr;
                     break;
@@ -97,24 +97,22 @@ public:
 REGISTER_CLASS(Entity);
 
 
-class EntityPtr
+class EntityPtr: public PoolElementPtr
 {
 public:
 
-    EntityPtr() = default;
-    EntityPtr(ClassId id, Slot slot)
+    EntityPtr(): PoolElementPtr()
     {
-        mClassId = id;
-        mSlot = slot;
     }
-
-    EntityPtr(const EntityPtr& other): EntityPtr(other.mClassId, other.mSlot)
+    EntityPtr(ClassId id, Slot slot): PoolElementPtr(id, slot)
     {
     }
 
-    virtual ~EntityPtr()
+    EntityPtr(const EntityPtr& other): PoolElementPtr(other)
     {
-        reset();
+    }
+    EntityPtr(const PoolElementPtr& other): PoolElementPtr(other)
+    {
     }
 
     template<class T> T_EXTENDS(T, Entity)
@@ -126,43 +124,9 @@ public:
         return *castedPointer;
     }
 
-    Entity& getEntity() const
-    {
-        return get<Entity>();
-    }
-
-    EntityPtr& operator=(const EntityPtr& other)
-    {
-        if (this != &other)
-        {
-            mClassId = other.mClassId;
-            mSlot = other.mSlot;
-        }
-        return *this;
-    }
-
-    Entity* operator->() const { return getEntityPointer(); }
-    bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
-    operator bool() const { return this->isValid(); }
-    bool operator==(const EntityPtr& other) const
-	{
-		return
-         mClassId == other.mClassId &&
-         mSlot.getSlot() == other.mSlot.getSlot();
-	}
-
-    void reset()
-    {
-        mSlot.reset();
-        mClassId = 0;
-    }
+    Entity* operator->() const { return &getInternal(); }
 
 protected:
-    Entity* getEntityPointer() const
-    {
-        return& getInternal();
-    }
-
     Entity& getInternal() const;
 
 public:

@@ -12,13 +12,11 @@ public:
     template<class T> T_EXTENDS(T, Entity)
     TEntityPtr<T> requestEntity()
     {
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
-        ClassId classId = classMetaData.mClassDefinition.getId();
-        Slot slot = mPool.requestElement<T>();
-        EntityPtr entityPtr(classId, slot);
+        PoolElementPtr poolPtr = mPool.requestElement<T>();
+        EntityPtr entityPtr = poolPtr;
         if(entityPtr.isValid())
         {
-            T& entity = mPool.getElement<T>(slot);
+            T& entity = mPool.getElement<T>(poolPtr);
             entity.onRecycle(entityPtr.mSlot);
         }
         else
@@ -31,7 +29,7 @@ public:
 
     void removeEntity(EntityPtr& entityPtr)
     {
-        mPool.removeElement(entityPtr.mClassId, entityPtr.mSlot);
+        mPool.removeElement(entityPtr);
         entityPtr.reset();
     }
 

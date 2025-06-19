@@ -53,13 +53,11 @@ public:
     TComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
-        Slot slot = mPool.requestElement<T>();
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
-        ClassId classId = classMetaData.mClassDefinition.getId();
-        ComponentPtr componentPtr(classId, slot);
+        PoolElementPtr poolPtr = mPool.requestElement<T>();
+        ComponentPtr componentPtr = poolPtr;
         if(componentPtr.isValid())
         {
-            T& comp = mPool.getElement<T>(slot);
+            T& comp = mPool.getElement<T>(componentPtr);
             comp.onRecycle(componentPtr.mSlot);
         }
         else
@@ -74,7 +72,7 @@ public:
     {
         PROFILER_CPU()
 
-        mPool.removeElement(componentPtr.mClassId, componentPtr.mSlot);
+        mPool.removeElement(componentPtr);
         componentPtr.reset();
     }
 

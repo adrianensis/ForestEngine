@@ -73,5 +73,5 @@ IMPLEMENT_DESERIALIZATION(Component)
 Component& ComponentPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return ComponentsManager::getInstance().getPool().getElementBase(mClassId, mSlot);
+    return ComponentsManager::getInstance().getPool().getElementBase(*this);
 }

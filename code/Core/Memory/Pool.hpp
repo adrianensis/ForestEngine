@@ -6,6 +6,55 @@
 #include "Core/Memory/Pointers.hpp"
 #include "Core/Memory/SlotsManager.hpp"
 
+class PoolElementPtr
+{
+public:
+    PoolElementPtr() = default;
+    PoolElementPtr(ClassId id, Slot slot)
+    {
+        mClassId = id;
+        mSlot = slot;
+    }
+
+    PoolElementPtr(const PoolElementPtr& other): PoolElementPtr(other.mClassId, other.mSlot)
+    {
+    }
+
+    virtual ~PoolElementPtr()
+    {
+        reset();
+    }
+
+    PoolElementPtr& operator=(const PoolElementPtr& other)
+    {
+        if (this != &other)
+        {
+            mClassId = other.mClassId;
+            mSlot = other.mSlot;
+        }
+        return *this;
+    }
+
+    bool isValid() const { return mClassId > 0 && mSlot.isValid(); }
+    operator bool() const { return this->isValid(); }
+    bool operator==(const PoolElementPtr& other) const
+	{
+		return
+         mClassId == other.mClassId &&
+         mSlot.getSlot() == other.mSlot.getSlot();
+	}
+
+    void reset()
+    {
+        mSlot.reset();
+        mClassId = 0;
+    }
+
+public:
+    Slot mSlot;
+    ClassId mClassId = 0;
+};
+
 template<class BaseClass>
 class PoolArrayBase
 {
@@ -75,7 +124,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, BaseClass)
-    Slot requestElement()
+    PoolElementPtr requestElement()
     {
         PROFILER_CPU()
         const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
@@ -110,32 +159,30 @@ public:
             CHECK_MSG(false, "Invalid Slot!");
         }
 
-        return slot;
+        return PoolElementPtr(id, slot);
     }
 
-    void removeElement(ClassId classId, const Slot& slot)
+    void removeElement(const PoolElementPtr& ptr)
     {
         PROFILER_CPU()
 
-        Memory::unregisterPointer(&getElementBase(classId, slot));
+        Memory::unregisterPointer(&getElementBase(ptr));
         
-        if(mPools.contains(classId))
+        if(mPools.contains(ptr.mClassId))
         {
-            mPools.at(classId)->mSlotsManager.freeSlot(slot);
+            mPools.at(ptr.mClassId)->mSlotsManager.freeSlot(ptr.mSlot);
         }
     }
 
     template<class T> T_EXTENDS(T, BaseClass)
-    T& getElement(const Slot& slot) const
+    T& getElement(const PoolElementPtr& ptr) const
     {
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
-        ClassId classId = classMetaData.mClassDefinition.getId();
-        return *static_cast<T*>(&getElementBase(classId, slot));
+        return *static_cast<T*>(&getElementBase(ptr));
     }
 
-    BaseClass& getElementBase(ClassId classId, const Slot& slot) const
+    BaseClass& getElementBase(const PoolElementPtr& ptr) const
     {
-        return mPools.at(classId)->at(slot.getSlot());
+        return mPools.at(ptr.mClassId)->at(ptr.mSlot.getSlot());
     }
 
     std::unordered_map<ClassId, OwnerPtr<PoolArrayBase<BaseClass>>> mPools;
