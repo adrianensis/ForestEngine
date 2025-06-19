@@ -2,7 +2,8 @@
 
 #include "Core/StdCore.hpp"
 #include <vector>
-#include "Core/Memory/MemoryTracking.hpp"
+#include "Core/Memory/Memory.hpp"
+#include "Core/Memory/Pointers.hpp"
 #include "Core/Memory/SlotsManager.hpp"
 
 template<class BaseClass>
