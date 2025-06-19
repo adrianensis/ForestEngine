@@ -44,7 +44,7 @@ public:
             ComponentPtr componentPtr = (*it);
             if(componentPtr.isValid())
             {
-                if(dynamic_cast<const T *>(&componentPtr.get<T>()) != nullptr)
+                if(dynamic_cast<const T *>(&componentPtr.get<Component>()) != nullptr)
                 {
                     componentToReturn = componentPtr;
                     break;
