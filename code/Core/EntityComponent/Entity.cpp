@@ -2,7 +2,6 @@
 #include "Core/EntityComponent/Component.hpp"
 #include "Core/EntityComponent/ComponentsManager.hpp"
 #include "Core/EntityComponent/EntityManager.hpp"
-#include "Core/System/SystemManager.hpp"
 
 Entity::Entity()
 {
