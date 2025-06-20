@@ -68,9 +68,6 @@ endif(ENABLE_PROFILER)
 if(UNIX)
     set(PROJECT_COMPILER_FLAGS "${PROJECT_COMPILER_FLAGS}-mavx;-Wall;-Werror=return-type;-Wcast-align;-Wcast-qual;-Wpointer-arith;-Wfloat-equal;") # -flto=auto
   
-    # Define -DPARALLEL (for parallel C++17 algorithms)
-    set(PROJECT_COMPILER_FLAGS "${PROJECT_COMPILER_FLAGS}-DPARALLEL;")
-    
     if(ENABLE_SANITIZER)
         set(PROJECT_COMPILER_FLAGS "${PROJECT_COMPILER_FLAGS}-fsanitize=address;")
     endif(ENABLE_SANITIZER)
@@ -86,8 +83,8 @@ if(UNIX)
     set(PROJECT_LINKER_FLAGS_RELEASE "${PROJECT_LINKER_FLAGS_RELEASE}${PROJECT_LINKER_FLAGS_RELEASE}")
     
     if(ENABLE_SANITIZER)
-        set(PROJECT_LINKER_FLAGS_DEBUG "${PROJECT_LINKER_FLAGS_DEBUG}${PROJECT_LINKER_FLAGS_DEBUG}-fsanitize=address;-static-libasan;")
-        set(PROJECT_LINKER_FLAGS_RELEASE "${PROJECT_LINKER_FLAGS_RELEASE}${PROJECT_LINKER_FLAGS_RELEASE}-fsanitize=address;-static-libasan;")
+        set(PROJECT_LINKER_FLAGS_DEBUG "${PROJECT_LINKER_FLAGS_DEBUG}${PROJECT_LINKER_FLAGS_DEBUG}-fsanitize=address;-static-libsan;")
+        set(PROJECT_LINKER_FLAGS_RELEASE "${PROJECT_LINKER_FLAGS_RELEASE}${PROJECT_LINKER_FLAGS_RELEASE}-fsanitize=address;-static-libsan;")
     endif(ENABLE_SANITIZER)
 endif(UNIX)
 
@@ -105,10 +102,10 @@ endif(WIN32)
 #     message("Not Using CCACHE")
 # endif()
 
-message("Compiler: ${CMAKE_CXX_COMPILER}")
-message("Release: ${CMAKE_CXX_FLAGS_RELEASE}")
-message("Debug: ${CMAKE_CXX_FLAGS_DEBUG}")
-message("Selected Build target: ${CMAKE_BUILD_TYPE}")
+message("Compiler: " ${CMAKE_CXX_COMPILER})
+message("Release: " ${PROJECT_COMPILER_FLAGS_RELEASE})
+message("Debug: " ${PROJECT_COMPILER_FLAGS_DEBUG})
+message("Selected Build target: " ${CMAKE_BUILD_TYPE})
 
 # ----------------------------------------------------------------------------
 # OUTPUT DIRECTORIES
@@ -242,7 +239,7 @@ target_link_options(${PROJECTNAME} PUBLIC "$<$<CONFIG:RELEASE>:${PROJECT_LINKER_
 #     ${Vulkan_LIBRARIES}
 # )
 
-# link libraries with forest library
+# link libraries with main library
 # target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
 # target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${PROJECTNAME} Vulkan::Vulkan)
