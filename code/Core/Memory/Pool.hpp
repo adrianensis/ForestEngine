@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/HashedString/HashedString.hpp"
 #include "Core/StdCore.hpp"
 #include <vector>
 #include "Core/Memory/Memory.hpp"
@@ -82,6 +83,13 @@ public:
     {
         PROFILER_CPU()
         mElements.reserve(reservedElements);
+
+        #ifdef ENGINE_BUILD_DEBUG
+        const ClassMetadata& baseClassMetaData = ClassManager::getClassMetadata<BaseClass>();
+        mDebugStringBaseClass = baseClassMetaData.mClassDefinition.mName;
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        mDebugStringClass = classMetaData.mClassDefinition.mName;
+        #endif
     }
     virtual BaseClass& at(u32 index) override
     {
@@ -101,13 +109,26 @@ public:
         mElements.clear();
     }
     std::vector<T> mElements;
+
+    #ifdef ENGINE_BUILD_DEBUG
+    HashedString mDebugStringBaseClass;
+    HashedString mDebugStringClass;
+    #endif
 };
 
 template<class BaseClass>
 class Pool
 {
 public:
-    // void init() { }
+    void init(u32 maxElements)
+    {
+        mMaxElements = maxElements;
+
+        #ifdef ENGINE_BUILD_DEBUG
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<BaseClass>();
+        mDebugString = classMetaData.mClassDefinition.mName;
+        #endif
+    }
     void terminate()
     {
         FOR_MAP(it, mPools)
@@ -186,7 +207,9 @@ public:
     }
 
     std::unordered_map<ClassId, OwnerPtr<PoolArrayBase<BaseClass>>> mPools;
+    u32 mMaxElements = 0;
 
-    // TODO: remove magic number, refactor to constructor parameter
-    u32 mMaxElements = 100000;
+    #ifdef ENGINE_BUILD_DEBUG
+    HashedString mDebugString;
+    #endif
 };
