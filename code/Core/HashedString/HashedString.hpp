@@ -9,6 +9,7 @@ class HashedString
 public:
     HashedString() = default;
     HashedString(const std::string_view& str);
+    HashedString(const std::string& str);
     HashedString(const char* str);
     const std::string& get() const;
     bool isValid() const;
@@ -22,15 +23,24 @@ public:
         {
             this->mHash = other.mHash;
             #ifdef ENGINE_BUILD_DEBUG
-            this->mString = other.mString;
+            this->mDebugString = other.mDebugString;
             #endif
         }
         return *this;
     }
+
+private:
+    void set(const char* str);
+
 private:
     HashValue mHash = 0;
     #ifdef ENGINE_BUILD_DEBUG
-    const std::string* mString = nullptr;
+    const std::string* mDebugString = nullptr;
+    #endif
+
+public:
+    #ifdef ENGINE_BUILD_DEBUG
+    const std::string& getDebugString() const { return *mDebugString;};
     #endif
 };
 

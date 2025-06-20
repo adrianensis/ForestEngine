@@ -2,6 +2,17 @@
 
 HashedString::HashedString(const char* str)
 {
+    set(str);
+}
+HashedString::HashedString(const std::string& str) : HashedString(str.data())
+{
+}
+HashedString::HashedString(const std::string_view& str) : HashedString(str.data())
+{
+}
+
+void HashedString::set(const char* str)
+{
     if(std::strlen(str) == 0)
     {
         return;
@@ -14,11 +25,8 @@ HashedString::HashedString(const char* str)
     }
 
     #ifdef ENGINE_BUILD_DEBUG
-    mString = &get();
+    mDebugString = &get();
     #endif
-}
-HashedString::HashedString(const std::string_view& str) : HashedString(str.data())
-{
 }
 
 const std::string& HashedString::get() const

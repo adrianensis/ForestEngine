@@ -4,6 +4,8 @@
 #include "Core/EntityComponent/Component.hpp"
 #include "Core/EntityComponent/Entity.hpp"
 #include "Core/Memory/Pool.hpp"
+#include "Core/Metadata/ClassManager.hpp"
+#include <string>
 
 class IComponentsListener
 {
@@ -66,6 +68,10 @@ public:
         {
             T& comp = mComponentsPool.getElement<T>(componentPtr);
             comp.onRecycle(componentPtr.mSlot);
+            #ifdef ENGINE_BUILD_DEBUG
+            comp.mDebugString = ClassManager::getClassMetadataById(componentPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(componentPtr.mSlot.getSlot());
+            componentPtr.mDebugPointer = &comp;
+            #endif
         }
         else
         {
@@ -224,6 +230,10 @@ public:
         {
             T& entity = mEntitiesPool.getElement<T>(poolPtr);
             entity.onRecycle(entityPtr.mSlot);
+            #ifdef ENGINE_BUILD_DEBUG
+            entity.mDebugString = ClassManager::getClassMetadataById(entityPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(entityPtr.mSlot.getSlot());
+            entityPtr.mDebugPointer = &entity;
+            #endif
         }
         else
         {

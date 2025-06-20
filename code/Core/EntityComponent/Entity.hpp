@@ -44,6 +44,10 @@ public:
 	bool mIsStatic = false;
 	HashedString mTag;
 	bool mShouldPersist = false;
+
+    #ifdef ENGINE_BUILD_DEBUG
+    HashedString mDebugString;
+    #endif
     
 	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
@@ -61,12 +65,17 @@ public:
     }
     EntityPtr(ClassId id, Slot slot): PoolElementPtr(id, slot)
     {
+        #ifdef ENGINE_BUILD_DEBUG
+        mDebugPointer = nullptr;
+        #endif
     }
-
-    EntityPtr(const EntityPtr& other): PoolElementPtr(other)
+    EntityPtr(const EntityPtr& other): EntityPtr(other.mClassId, other.mSlot)
     {
+        #ifdef ENGINE_BUILD_DEBUG
+        mDebugPointer = other.mDebugPointer;
+        #endif
     }
-    EntityPtr(const PoolElementPtr& other): PoolElementPtr(other)
+    EntityPtr(const PoolElementPtr& other): EntityPtr(other.mClassId, other.mSlot)
     {
     }
 
@@ -83,6 +92,11 @@ public:
 
 protected:
     Entity& getInternal() const;
+
+public:
+    #ifdef ENGINE_BUILD_DEBUG
+    Entity* mDebugPointer = nullptr;
+    #endif
 };
 
 template<class T>// T_EXTENDS(T, Entity)
@@ -100,8 +114,9 @@ public:
         checkValid();
     }
 
-    TEntityPtr(const EntityPtr& other): TEntityPtr(other.mClassId, other.mSlot)
+    TEntityPtr(const EntityPtr& other): EntityPtr(other)
     {
+        checkValid();
     }
 
     T& get() const
@@ -115,7 +130,9 @@ public:
         {
             mClassId = other.mClassId;
             mSlot = other.mSlot;
-
+            #ifdef ENGINE_BUILD_DEBUG
+            mDebugPointer = other.mDebugPointer;
+            #endif
             checkValid();
         }
         return *this;

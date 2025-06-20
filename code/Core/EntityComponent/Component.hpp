@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Events/Event.hpp"
+#include "Core/HashedString/HashedString.hpp"
 
 class EntityPtr;
 
@@ -66,10 +67,13 @@ private:
     // Important: starts by 1, 0 is reserved for null
 	inline static u64 smComponentIdCounter = 1;
 
+    
 public:
-    GET(ComponentId)
+    #ifdef ENGINE_BUILD_DEBUG
+    HashedString mDebugString;
+    #endif
 
-public:
+    GET(ComponentId)
 	GET(IsDestroyed)
 	GET(Slot)
 };
@@ -84,11 +88,17 @@ public:
     }
     ComponentPtr(ClassId id, Slot slot): PoolElementPtr(id, slot)
     {
+        #ifdef ENGINE_BUILD_DEBUG
+        mDebugPointer = nullptr;
+        #endif
     }
-    ComponentPtr(const ComponentPtr& other): PoolElementPtr(other)
+    ComponentPtr(const ComponentPtr& other): ComponentPtr(other.mClassId, other.mSlot)
     {
+        #ifdef ENGINE_BUILD_DEBUG
+        mDebugPointer = other.mDebugPointer;
+        #endif
     }
-    ComponentPtr(const PoolElementPtr& other): PoolElementPtr(other)
+    ComponentPtr(const PoolElementPtr& other): ComponentPtr(other.mClassId, other.mSlot)
     {
     }
 
@@ -105,6 +115,11 @@ public:
 
 protected:
     Component& getInternal() const;
+
+public:
+    #ifdef ENGINE_BUILD_DEBUG
+    Component* mDebugPointer = nullptr;
+    #endif
 };
 
 template<class T>// T_EXTENDS(T, Component)
@@ -122,8 +137,9 @@ public:
         checkValid();
     }
 
-    TComponentPtr(const ComponentPtr& other): TComponentPtr(other.mClassId, other.mSlot)
+    TComponentPtr(const ComponentPtr& other): ComponentPtr(other)
     {
+        checkValid();
     }
     T& get() const
     {
@@ -136,6 +152,9 @@ public:
         {
             mClassId = other.mClassId;
             mSlot = other.mSlot;
+            #ifdef ENGINE_BUILD_DEBUG
+            mDebugPointer = other.mDebugPointer;
+            #endif
             checkValid();
         }
         return *this;
