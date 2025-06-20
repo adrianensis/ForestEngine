@@ -147,6 +147,8 @@ cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, bu
 
 # profiler GUI
 buildCommandArgs = [
+    "-DCMAKE_C_COMPILER=/usr/bin/clang",
+    "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
     "-DCMAKE_BUILD_TYPE=" + buildType,
     "-DLEGACY=ON",
     "-DDOWNLOAD_CAPSTONE=OFF",

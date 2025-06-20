@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "forest build debug",
+			"label": "build debug",
 			"command": "python3",
 			"args": [
 				"scripts/build.py",
@@ -12,7 +12,23 @@
 				"--tool=Editor"
 			],
 			"problemMatcher": [
-				"$gcc"
+				// "$gcc"
+				{
+					"name": "clang",
+					"owner": "cpp",
+					"fileLocation": [
+						"relative",
+						"${workspaceRoot}"
+					],
+					"pattern": {
+						"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"severity": 4,
+						"message": 5
+					}
+				}
 			],
 			"group": {
 				"kind": "build",
@@ -21,7 +37,7 @@
 		},
 		{
 			"type": "shell",
-			"label": "forest build release",
+			"label": "build release",
 			"command": "python3",
 			"args": [
 				"scripts/build.py",
@@ -29,13 +45,29 @@
 				"--tool=Editor",
 			],
 			"problemMatcher": [
-				"$gcc"
+				// "$gcc"
+				{
+					"name": "clang",
+					"owner": "cpp",
+					"fileLocation": [
+						"relative",
+						"${workspaceRoot}"
+					],
+					"pattern": {
+						"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"severity": 4,
+						"message": 5
+					}
+				}
 			],
 			"group": "build"
 		},
 		{
 			"type": "shell",
-			"label": "forest clean",
+			"label": "clean",
 			"command": "./scripts/clean.sh",
 			"group": "build"
 		}

@@ -14,7 +14,8 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
+            "MIMode": "lldb",
+            "miDebuggerPath": "/usr/bin/lldb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -22,7 +23,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "forest build debug"
+            "preLaunchTask": "build debug"
         },
         {
             "name": "Release",
@@ -34,7 +35,8 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
+            "MIMode": "lldb",
+            "miDebuggerPath": "/usr/bin/lldb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -42,7 +44,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "forest build release"
+            "preLaunchTask": "build release"
         }
     ]
 }
