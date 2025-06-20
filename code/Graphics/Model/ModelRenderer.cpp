@@ -26,7 +26,7 @@ void ModelRenderer::onComponentAdded()
         EntityPtr parent = getOwnerEntity();
         TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
         renderer->init(rendererData);
-		parent->addComponent(renderer);
+    	EntityComponentManager::getInstance().addComponent(parent, renderer);
 	}
 }
 

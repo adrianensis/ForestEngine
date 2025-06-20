@@ -2,6 +2,7 @@
 
 #include "Core/Minimal.hpp"
 #include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Component.hpp"
 
 class Transform;
 class Scene;

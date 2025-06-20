@@ -1,7 +1,7 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
-#include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/Transform.hpp"
 
 ClassId MeshRenderer::getComponentTypeId() const { return ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
@@ -27,7 +27,7 @@ void MeshRenderer::onDestroy()
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    Matrix4 rendererModelMatrix = getOwnerEntity()->getFirstComponent<Transform>()->calculateModelMatrix();
+    Matrix4 rendererModelMatrix = EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
     rendererModelMatrix.mul(mGPURenderItem->getGPURenderItemData().mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     mGPURenderItem->setRendererModelMatrix(rendererModelMatrix);
@@ -40,7 +40,7 @@ void MeshRenderer::update()
 
     if(!isStatic())
     {
-        if(getOwnerEntity()->getFirstComponent<Transform>()->getModelMatrixDirty())
+        if(EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
         {
             calculateRendererModelMatrix();
         }

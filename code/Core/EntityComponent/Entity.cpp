@@ -15,53 +15,12 @@ void Entity::init()
 	
 }
 
-void Entity::addComponent(const ComponentPtr& componentPtr)
-{
-    PROFILER_CPU()
-    CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
-    CHECK_MSG(!componentPtr->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
-    CHECK_MSG(componentPtr->getOwnerEntity() != TEntityPtr(this), "Component is already assigned to Entity!");
-
-    componentPtr->setOwnerEntity(TEntityPtr(this));
-    CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
-
-	mComponentPtrs.emplace_back(componentPtr);
-	componentPtr->onComponentAdded();
-
-    EntityComponentManager::getInstance().notifyListenersOnComponentAdded(componentPtr);
-}
-
-void Entity::removeComponent(ComponentPtr& componentPtr)
-{
-    PROFILER_CPU()
-    CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
-    CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
-    CHECK_MSG(componentPtr->getOwnerEntity() == TEntityPtr(this), "Component is assigned to another Entity!");
-
-    bool componentFound = false;
-    FOR_LIST(it, mComponentPtrs)
-	{
-        if((*it) == componentPtr)
-        {
-            componentFound = true;
-            mComponentPtrs.erase(it);
-            break;
-        }
-    }
-
-    if(componentFound)
-    {
-        EntityComponentManager::getInstance().notifyListenersOnComponentRemoved(componentPtr);
-        componentPtr->destroy();
-        EntityComponentManager::getInstance().removeComponent(componentPtr);
-    }
-}
-
 void Entity::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
-	FOR_LIST(it, mComponentPtrs)
+    const auto& components = EntityComponentManager::getInstance().getComponents(TEntityPtr(this));
+	FOR_LIST(it, components)
 	// FOR_LIST(it, mComponents)
 	{
 		(*it)->setIsActive(isActive);
@@ -74,18 +33,7 @@ void Entity::destroy()
 	mIsActive = false;
 
 	onDestroy();
-
-	FOR_LIST(it, mComponentPtrs)
-	{
-        if((*it).isValid())
-        {
-            EntityComponentManager::getInstance().notifyListenersOnComponentRemoved(*it);
-            (*it)->destroy();
-            EntityComponentManager::getInstance().removeComponent(*it);
-        }
-	}
-
-	mComponentPtrs.clear();
+    EntityComponentManager::getInstance().removeComponents(TEntityPtr(this));
 }
 
 void Entity::onRecycle(Slot newSlot)

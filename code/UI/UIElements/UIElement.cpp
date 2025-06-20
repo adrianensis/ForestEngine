@@ -1,5 +1,6 @@
 #include "UI/UIElements/UIElement.hpp"
 
+#include "Core/EntityComponent/Entity.hpp"
 #include "Graphics/Module.hpp"
 
 #include "UI/UIManager.hpp"
@@ -111,7 +112,7 @@ void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 
 void UIElement::postInit()
 {
-	mRenderer = getFirstComponent<MeshRenderer>();
+    mRenderer = EntityComponentManager::getInstance().getFirstComponent<MeshRenderer>(TEntityPtr(this));
 }
 
 void UIElement::subscribeToKeyEvents()

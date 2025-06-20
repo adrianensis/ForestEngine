@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
 #include "Core/Events/Event.hpp"
-
-// TODO: Fix ECS include mess
 
 class Entity: public ISerializable, public IEventObject
 {
@@ -14,46 +11,6 @@ public:
     Entity();
 
     virtual void init();
-	void removeComponent(ComponentPtr& componentPtr);
-	void addComponent(const ComponentPtr& componentPtr);
-
-	// template <class T> T_EXTENDS(T, Component)
-	// std::list<WeakPtr<T>> getComponents() const
-	// {
-	// 	std::list<WeakPtr<T>> components;
-	// 	FOR_LIST(it, mComponentPtrs)
-	// 	// FOR_LIST(it, mComponents)
-	// 	{
-    //         WeakPtr<T> casted = WeakPtr<T>::cast((*it).getComponent());
-    //         // WeakPtr<T> casted = WeakPtr<T>::cast((*it));
-    //         if(casted)
-    //         {
-	// 		    components.push_back(casted);
-    //         }
-	// 	}
-
-	// 	return components;
-	// }
-
-	template <class T> T_EXTENDS(T, Component)
-	TComponentPtr<T> getFirstComponent() const
-	{   
-        TComponentPtr<T> componentToReturn;
-        FOR_LIST(it, mComponentPtrs)
-        {
-            ComponentPtr componentPtr = (*it);
-            if(componentPtr.isValid())
-            {
-                if(dynamic_cast<const T *>(&componentPtr.get<Component>()) != nullptr)
-                {
-                    componentToReturn = componentPtr;
-                    break;
-                }
-            }
-        }
-
-        return componentToReturn;
-	}
 
 	bool isActive() const
 	{
@@ -73,7 +30,6 @@ public:
     void destroy();
 
 private:
-	std::list<ComponentPtr> mComponentPtrs;
 	bool mIsActive = true;
 
 	bool mIsPendingToBeDestroyed = false;
@@ -95,7 +51,6 @@ public:
 	GET(EntityId)
 };
 REGISTER_CLASS(Entity);
-
 
 class EntityPtr: public PoolElementPtr
 {

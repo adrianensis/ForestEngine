@@ -48,7 +48,8 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	
 	TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-	addComponent(renderer);
+    EntityComponentManager::getInstance().addComponent(TEntityPtr(this), renderer);
+
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();

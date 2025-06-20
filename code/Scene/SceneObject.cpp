@@ -1,5 +1,6 @@
 #include "Scene/SceneObject.hpp"
 #include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 #include "Scene/Transform.hpp"
 #include "Core/Events/EventsManager.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
@@ -10,7 +11,7 @@ void SceneObject::init()
     Entity::init();
     mTransform = EntityComponentManager::getInstance().requestComponent<Transform>();
     mTransform->init();
-    addComponent(mTransform);
+    EntityComponentManager::getInstance().addComponent(TEntityPtr(this), mTransform);
 }
 
 IMPLEMENT_SERIALIZATION(SceneObject)

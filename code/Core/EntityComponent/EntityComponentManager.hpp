@@ -73,12 +73,109 @@ public:
         return componentPtr;
     }
 
-    void removeComponent(ComponentPtr& componentPtr)
+    void addComponent(const EntityPtr& entityPtr, const ComponentPtr& componentPtr)
+    {
+        PROFILER_CPU()
+        CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
+        CHECK_MSG(!componentPtr->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
+        CHECK_MSG(componentPtr->getOwnerEntity() != entityPtr, "Component is already assigned to Entity!");
+
+        componentPtr->setOwnerEntity(entityPtr);
+        CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
+
+        ClassId id = entityPtr.mClassId;
+        Slot slot = entityPtr.mSlot;
+        if(!mEntityComponents.contains(id))
+        {
+            mEntityComponents.emplace(id, std::unordered_map<u32, std::list<ComponentPtr>>());
+        }
+
+        if(!mEntityComponents.at(id).contains((slot.getSlot())))
+        {
+            mEntityComponents.at(id).emplace(slot.getSlot(), std::list<ComponentPtr>());
+        }
+
+        mEntityComponents.at(id).at(slot.getSlot()).emplace_back(componentPtr);
+        
+        componentPtr->onComponentAdded();
+
+        EntityComponentManager::getInstance().notifyListenersOnComponentAdded(componentPtr);
+    }
+
+    void removeComponent(const EntityPtr& entityPtr, ComponentPtr componentPtr)
+    {
+        PROFILER_CPU()
+        CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
+        CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
+        CHECK_MSG(componentPtr->getOwnerEntity() == entityPtr, "Component is assigned to another Entity!");
+
+        bool componentFound = false;
+        ClassId id = entityPtr.mClassId;
+        Slot slot = entityPtr.mSlot;
+        auto& components = mEntityComponents.at(id).at(slot.getSlot());
+        FOR_LIST(it, components)
+        {
+            if((*it) == componentPtr)
+            {
+                componentFound = true;
+                components.erase(it);
+                break;
+            }
+        }
+
+        if(componentFound)
+        {
+            EntityComponentManager::getInstance().notifyListenersOnComponentRemoved(componentPtr);
+            componentPtr->destroy();
+
+            mComponentsPool.removeElement(componentPtr);
+        }
+    }
+
+    void removeComponents(const EntityPtr& entityPtr)
     {
         PROFILER_CPU()
 
-        mComponentsPool.removeElement(componentPtr);
-        componentPtr.reset();
+        ClassId id = entityPtr.mClassId;
+        Slot slot = entityPtr.mSlot;
+        auto& components = mEntityComponents.at(id).at(slot.getSlot());
+        FOR_LIST(it, components)
+        {
+            EntityComponentManager::getInstance().notifyListenersOnComponentRemoved((*it));
+            (*it)->destroy();
+
+            mComponentsPool.removeElement((*it));
+        }
+
+        components.clear();
+    }
+
+    const std::list<ComponentPtr>& getComponents(const EntityPtr& entityPtr)
+    {
+        ClassId id = entityPtr.mClassId;
+        Slot slot = entityPtr.mSlot;
+        return mEntityComponents.at(id).at(slot.getSlot());
+    }
+
+	template <class T> T_EXTENDS(T, Component)
+    TComponentPtr<T> getFirstComponent(const EntityPtr& entityPtr)
+    {
+        const auto& components = getComponents(entityPtr);
+        TComponentPtr<T> componentToReturn;
+        FOR_LIST(it, components)
+        {
+            ComponentPtr componentPtr = (*it);
+            if(componentPtr.isValid())
+            {
+                if(dynamic_cast<const T *>(&componentPtr.get<Component>()) != nullptr)
+                {
+                    componentToReturn = componentPtr;
+                    break;
+                }
+            }
+        }
+
+        return componentToReturn;
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -144,6 +241,7 @@ private:
     Pool<Entity> mEntitiesPool;
     Pool<Component> mComponentsPool;
     std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
+    std::unordered_map<ClassId, std::unordered_map<u32, std::list<ComponentPtr>>> mEntityComponents;
 
 public:
     CRGET(EntitiesPool)
