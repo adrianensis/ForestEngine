@@ -74,7 +74,7 @@ if installSystemDepencencies:
             #update
             os.system("sudo apt-get -y update")
             #install packages
-            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang lldb")
+            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang lldb liblldb-dev")
             os.system("sudo apt-get -y install mesa-common-dev")
             os.system("sudo apt-get -y install libtbb-dev") # needed by GDD in order to use c++ parallel for_each
             os.system("sudo apt-get -y install xorg-dev libxkbcommon-dev") # glfw3 dependency
@@ -108,6 +108,8 @@ if installSystemDepencencies:
 
 log.log(log.LogLabels.build, "-----------------------------------")
 log.log(log.LogLabels.build, "EXTRACTING FILES")
+# lldb-mi mi engine for vscode launch.json
+download_dependency("https://github.com/lldb-tools/lldb-mi/archive/refs/heads/main.zip", "lldb-mi.zip")
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
 # download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
 download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip")
@@ -133,13 +135,26 @@ tracyProfiler = "tracy-0.11.1/profiler"
 tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
 freetypeDir = "freetype-2.13.2"
 freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)
+lldbmiDir = "lldb-mi-main"
+lldbmiDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, lldbmiDir)
 # glewDir = "glew-2.2.0"
 # glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
 
 cmake_generated_data = cmake_build.generate_cmake_data()
 
+# lldb-mi
+buildCommandArgs = [
+    "-DCMAKE_C_COMPILER=/usr/bin/clang",
+    "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+    "-DCMAKE_BUILD_TYPE=" + buildType
+]
+
+cmake_build.build_cmake(lldbmiDepencencyDir, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+
 # freetype
 buildCommandArgs = [
+    "-DCMAKE_C_COMPILER=/usr/bin/clang",
+    "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
     "-DCMAKE_BUILD_TYPE=" + buildType
 ]
 
@@ -180,4 +195,9 @@ if os.path.isfile(bin_gui_path_destiny):
     os.remove(bin_gui_path_destiny)
 os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
 log.log(log.LogLabels.build, "tracy profiler gui: " + bin_gui_path_destiny)
+# lldb-mi mi engine for vscode launch.json
+bin_lldb_mi_path_destiny = os.path.join(bin_dependencies_path_destiny, "lldb-mi")
+lldb_mi_bin_path_source = os.path.join(cwd, os.path.join(lldbmiDepencencyDir, buildTargetDir), "src/lldb-mi")
+os.symlink(lldb_mi_bin_path_source, bin_lldb_mi_path_destiny)
+log.log(log.LogLabels.build, "lldb-mi: " + bin_lldb_mi_path_destiny)
 log.log(log.LogLabels.build, "-----------------------------------")
