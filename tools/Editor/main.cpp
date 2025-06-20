@@ -18,7 +18,7 @@ int main()
 
     TComponentPtr<Editor> editor = EntityComponentManager::getInstance().requestComponent<Editor>();
     editor->init();
-    controller->addComponent(editor);
+    EntityComponentManager::getInstance().addComponent(controller, editor);
 
     GET_SYSTEM(ScenesManager).setSceneObjectController(controller);
 

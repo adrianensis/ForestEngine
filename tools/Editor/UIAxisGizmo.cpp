@@ -12,7 +12,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
     mNegAxisName = HashedString("-" + mAxisName.get());
 
     TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    TComponentPtr<Camera> camera = cameraSceneObject->getFirstComponent<Camera>();
+    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().getFirstComponent<Camera>(cameraSceneObject);
 
     Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Vector4(UIUtils::correctAspectRatioVectorX(
@@ -74,7 +74,7 @@ void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedSt
 void UISingleAxisGizmo::update()
 {
     TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    TComponentPtr<Camera> camera = cameraSceneObject->getFirstComponent<Camera>();
+    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().getFirstComponent<Camera>(cameraSceneObject);
 
     Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Vector4(UIUtils::correctAspectRatioVectorX(

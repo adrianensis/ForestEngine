@@ -32,7 +32,7 @@ void Editor::firstUpdate()
 
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
-    TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().getFirstComponent<Camera>(mCameraSceneObject);
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -110,7 +110,7 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().getFirstComponent<Camera>(mCameraSceneObject);
 	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
@@ -273,7 +273,7 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
 
 	TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-	sceneObject->addComponent(renderer);
+    EntityComponentManager::getInstance().addComponent(sceneObject, renderer);
 
 	return sceneObject;
 }
@@ -291,7 +291,7 @@ EntityPtr Editor::createPointLight(const Vector3& v, f32 size)
 
 	TComponentPtr<PointLight> pointLight = EntityComponentManager::getInstance().requestComponent<PointLight>();
     pointLight->init(data);
-	sceneObject->addComponent(pointLight);
+    EntityComponentManager::getInstance().addComponent(sceneObject, pointLight);
 
 	return sceneObject;
 }
@@ -309,7 +309,7 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 
 	TComponentPtr<DirectionalLight> dirLight = EntityComponentManager::getInstance().requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
-	sceneObject->addComponent(dirLight);
+    EntityComponentManager::getInstance().addComponent(sceneObject, dirLight);
 
 	return sceneObject;
 }
@@ -366,7 +366,8 @@ EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 s
 
 	TComponentPtr<ModelRenderer> modelRenderer = EntityComponentManager::getInstance().requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
-	sceneObject->addComponent(modelRenderer);
+    EntityComponentManager::getInstance().addComponent(sceneObject, modelRenderer);
+
     return sceneObject;
 }
 
