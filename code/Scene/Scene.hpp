@@ -23,7 +23,7 @@ public:
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(SceneObject, T), "T class is not derived from SceneObject");
-		EntityPtr entityPtr = EntityComponentManager::getInstance().requestEntity<T>();
+		EntityPtr entityPtr = EC.requestEntity<T>();
         entityPtr->init();
         addSceneObject(entityPtr);
         return entityPtr;

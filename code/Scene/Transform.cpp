@@ -216,8 +216,8 @@ const Matrix4& Transform::getViewMatrix() const
 {
     if(mViewMatrixDirty)
     {
-        Vector3 worldPosition = EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
-        const Matrix4& rotationMatrix = EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+        Vector3 worldPosition = EC.getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
+        const Matrix4& rotationMatrix = EC.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
         mViewMatrix.view(worldPosition, rotationMatrix);
         mViewMatrixDirty = false;
     }

@@ -23,9 +23,9 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
+	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    EntityComponentManager::getInstance().addComponent(TEntityPtr(this), renderer);
+    EC.addComponent(TEntityPtr(this), renderer);
 
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
@@ -112,7 +112,7 @@ void UIText::setText(HashedString text)
                     glyphConfig = sceneObjectGlyph->calculateConfig(glyphConfig);
                     sceneObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     sceneObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
-                    TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().getFirstComponent<MeshRenderer>(sceneObjectGlyph);
+                    TComponentPtr<MeshRenderer> renderer = EC.getFirstComponent<MeshRenderer>(sceneObjectGlyph);
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();

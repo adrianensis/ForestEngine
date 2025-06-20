@@ -13,12 +13,12 @@ int main()
     Engine engine;
     engine.init();
 
-    TEntityPtr<SceneObject> controller = EntityComponentManager::getInstance().requestEntity<SceneObject>();
+    TEntityPtr<SceneObject> controller = EC.requestEntity<SceneObject>();
     controller->init();
 
-    TComponentPtr<Editor> editor = EntityComponentManager::getInstance().requestComponent<Editor>();
+    TComponentPtr<Editor> editor = EC.requestComponent<Editor>();
     editor->init();
-    EntityComponentManager::getInstance().addComponent(controller, editor);
+    EC.addComponent(controller, editor);
 
     GET_SYSTEM(ScenesManager).setSceneObjectController(controller);
 

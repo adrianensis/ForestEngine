@@ -24,9 +24,9 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         EntityPtr parent = getOwnerEntity();
-        TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
+        TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
         renderer->init(rendererData);
-    	EntityComponentManager::getInstance().addComponent(parent, renderer);
+    	EC.addComponent(parent, renderer);
 	}
 }
 

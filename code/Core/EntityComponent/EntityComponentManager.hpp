@@ -12,6 +12,8 @@ public:
     virtual void onComponentRemoved(const ComponentPtr& componentPtr) {};
 };
 
+#define EC EntityComponentManager::getInstance()
+
 class EntityComponentManager: public Singleton<EntityComponentManager>
 {
 public:
@@ -99,7 +101,7 @@ public:
         
         componentPtr->onComponentAdded();
 
-        EntityComponentManager::getInstance().notifyListenersOnComponentAdded(componentPtr);
+        EC.notifyListenersOnComponentAdded(componentPtr);
     }
 
     void removeComponent(const EntityPtr& entityPtr, ComponentPtr componentPtr)
@@ -125,7 +127,7 @@ public:
 
         if(componentFound)
         {
-            EntityComponentManager::getInstance().notifyListenersOnComponentRemoved(componentPtr);
+            EC.notifyListenersOnComponentRemoved(componentPtr);
             componentPtr->destroy();
 
             mComponentsPool.removeElement(componentPtr);
@@ -141,7 +143,7 @@ public:
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
-            EntityComponentManager::getInstance().notifyListenersOnComponentRemoved((*it));
+            EC.notifyListenersOnComponentRemoved((*it));
             (*it)->destroy();
 
             mComponentsPool.removeElement((*it));

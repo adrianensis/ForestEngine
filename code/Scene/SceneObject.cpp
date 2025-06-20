@@ -9,9 +9,9 @@ void SceneObject::init()
 {
     PROFILER_CPU()
     Entity::init();
-    mTransform = EntityComponentManager::getInstance().requestComponent<Transform>();
+    mTransform = EC.requestComponent<Transform>();
     mTransform->init();
-    EntityComponentManager::getInstance().addComponent(TEntityPtr(this), mTransform);
+    EC.addComponent(TEntityPtr(this), mTransform);
 }
 
 IMPLEMENT_SERIALIZATION(SceneObject)

@@ -19,7 +19,7 @@ void Entity::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
-    const auto& components = EntityComponentManager::getInstance().getComponents(TEntityPtr(this));
+    const auto& components = EC.getComponents(TEntityPtr(this));
 	FOR_LIST(it, components)
 	// FOR_LIST(it, mComponents)
 	{
@@ -33,7 +33,7 @@ void Entity::destroy()
 	mIsActive = false;
 
 	onDestroy();
-    EntityComponentManager::getInstance().removeComponents(TEntityPtr(this));
+    EC.removeComponents(TEntityPtr(this));
 }
 
 void Entity::onRecycle(Slot newSlot)
@@ -61,5 +61,5 @@ IMPLEMENT_DESERIALIZATION(Entity)
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EntityComponentManager::getInstance().getEntitiesPool().getElementBase(*this);
+    return EC.getEntitiesPool().getElementBase(*this);
 }

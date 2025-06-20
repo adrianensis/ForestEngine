@@ -136,7 +136,7 @@ void Scene::removeSceneObject(TEntityPtr<SceneObject> sceneObject)
             mNewSceneObjects.erase(itNew);
         }
 
-        EntityComponentManager::getInstance().removeEntity(sceneObject);
+        EC.removeEntity(sceneObject);
     }
 }
 

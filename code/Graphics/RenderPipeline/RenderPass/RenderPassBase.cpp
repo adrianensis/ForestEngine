@@ -12,7 +12,7 @@ void RenderPassBase::updateGlobalData()
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
         projectionViewMatrix,
-        EntityComponentManager::getInstance().getFirstComponent<Transform>(camera->getOwnerEntity())->getWorldPosition()
+        EC.getFirstComponent<Transform>(camera->getOwnerEntity())->getWorldPosition()
     };
 	mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }

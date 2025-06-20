@@ -72,5 +72,5 @@ IMPLEMENT_DESERIALIZATION(Component)
 Component& ComponentPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EntityComponentManager::getInstance().getComponentsPool().getElementBase(*this);
+    return EC.getComponentsPool().getElementBase(*this);
 }

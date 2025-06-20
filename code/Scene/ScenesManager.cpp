@@ -14,8 +14,8 @@ void ScenesManager::terminate()
 
 	if (mCameraSceneObject)
 	{
-        TComponentPtr<Camera> cameraComponent = EntityComponentManager::getInstance().getFirstComponent<Camera>(mCameraSceneObject);
-        EntityComponentManager::getInstance().removeComponent(mCameraSceneObject, cameraComponent);
+        TComponentPtr<Camera> cameraComponent = EC.getFirstComponent<Camera>(mCameraSceneObject);
+        EC.removeComponent(mCameraSceneObject, cameraComponent);
 		mCameraSceneObject->destroy();
         mCameraSceneObject.reset();
 	}
@@ -39,15 +39,15 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraSceneObject = EntityComponentManager::getInstance().requestEntity<SceneObject>();
+    mCameraSceneObject = EC.requestEntity<SceneObject>();
 	mCameraSceneObject->init();
 
 	// mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
 
-    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().requestComponent<Camera>();
+    TComponentPtr<Camera> camera = EC.requestComponent<Camera>();
 	camera->init();
-    EntityComponentManager::getInstance().addComponent(mCameraSceneObject, camera);
+    EC.addComponent(mCameraSceneObject, camera);
 
 	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(WindowManager).getMainWindow()->getAspectRatio(), 90);
 
@@ -58,7 +58,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    TComponentPtr<Camera> cameraComponent = EntityComponentManager::getInstance().getFirstComponent<Camera>(mCameraSceneObject);
+    TComponentPtr<Camera> cameraComponent = EC.getFirstComponent<Camera>(mCameraSceneObject);
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

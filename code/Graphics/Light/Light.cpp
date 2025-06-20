@@ -10,7 +10,7 @@ Matrix4 Light::getLightProjectionViewMatrix() const
     TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Matrix4 lightViewMatrix;
-    lightViewMatrix = EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
+    lightViewMatrix = EC.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
     lightViewMatrix.invert();
 
     Matrix4 lightProjectionViewMatrix;
@@ -43,7 +43,7 @@ void DirectionalLight::init(const DirectionalLightData& data)
 DirectionalLightData DirectionalLight::calculateLightData() const
 {
     DirectionalLightData data = mLightData;
-    const Matrix4& rotationMatrix = EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+    const Matrix4& rotationMatrix = EC.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
     data.mDirection = rotationMatrix.mulVector(Vector4(-Vector3::smForward, 1));
     // data.mDirection += getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition();
     data.mDirection.mul(-1);

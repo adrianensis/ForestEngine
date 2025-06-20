@@ -32,7 +32,7 @@ void Editor::firstUpdate()
 
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
-    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().getFirstComponent<Camera>(mCameraSceneObject);
+    TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
     Vector2 windowSize = GET_SYSTEM(WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -110,7 +110,7 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    TComponentPtr<Camera> camera = EntityComponentManager::getInstance().getFirstComponent<Camera>(mCameraSceneObject);
+    TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
 	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
 
@@ -260,7 +260,7 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
+	// TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// sceneObject->addComponent(renderer);
 
@@ -271,9 +271,9 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
         ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	TComponentPtr<MeshRenderer> renderer = EntityComponentManager::getInstance().requestComponent<MeshRenderer>();
+	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    EntityComponentManager::getInstance().addComponent(sceneObject, renderer);
+    EC.addComponent(sceneObject, renderer);
 
 	return sceneObject;
 }
@@ -289,9 +289,9 @@ EntityPtr Editor::createPointLight(const Vector3& v, f32 size)
     data.mPosition = v;
     data.mDiffuse = Vector3(1,1,1) * 250000;
 
-	TComponentPtr<PointLight> pointLight = EntityComponentManager::getInstance().requestComponent<PointLight>();
+	TComponentPtr<PointLight> pointLight = EC.requestComponent<PointLight>();
     pointLight->init(data);
-    EntityComponentManager::getInstance().addComponent(sceneObject, pointLight);
+    EC.addComponent(sceneObject, pointLight);
 
 	return sceneObject;
 }
@@ -307,9 +307,9 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
-	TComponentPtr<DirectionalLight> dirLight = EntityComponentManager::getInstance().requestComponent<DirectionalLight>();
+	TComponentPtr<DirectionalLight> dirLight = EC.requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
-    EntityComponentManager::getInstance().addComponent(sceneObject, dirLight);
+    EC.addComponent(sceneObject, dirLight);
 
 	return sceneObject;
 }
@@ -364,9 +364,9 @@ EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 s
         ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	TComponentPtr<ModelRenderer> modelRenderer = EntityComponentManager::getInstance().requestComponent<ModelRenderer>();
+	TComponentPtr<ModelRenderer> modelRenderer = EC.requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
-    EntityComponentManager::getInstance().addComponent(sceneObject, modelRenderer);
+    EC.addComponent(sceneObject, modelRenderer);
 
     return sceneObject;
 }

@@ -27,7 +27,7 @@ void MeshRenderer::onDestroy()
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    Matrix4 rendererModelMatrix = EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
+    Matrix4 rendererModelMatrix = EC.getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
     rendererModelMatrix.mul(mGPURenderItem->getGPURenderItemData().mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     mGPURenderItem->setRendererModelMatrix(rendererModelMatrix);
@@ -40,7 +40,7 @@ void MeshRenderer::update()
 
     if(!isStatic())
     {
-        if(EntityComponentManager::getInstance().getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
+        if(EC.getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
         {
             calculateRendererModelMatrix();
         }
