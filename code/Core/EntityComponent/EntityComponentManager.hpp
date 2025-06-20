@@ -19,7 +19,11 @@ public:
 class EntityComponentManager: public Singleton<EntityComponentManager>
 {
 public:
-    void init() {}
+    void init()
+    {
+        mEntitiesPool.init(100000);
+        mComponentsPool.init(100000);
+    }
     void terminate()
     { 
         mEntitiesPool.terminate();
