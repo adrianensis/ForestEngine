@@ -12,7 +12,7 @@ class SceneObject: public Entity
 	DECLARE_SERIALIZATION()
 	
 public:
-    virtual void init();
+    void init() override;
 	virtual void onAddedToScene(){};
 
 public:
