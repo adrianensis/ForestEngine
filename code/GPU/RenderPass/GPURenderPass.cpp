@@ -101,8 +101,7 @@ bool GPURenderPass::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRenderer
     subpass.pColorAttachments = &colorAttachmentRef;
     subpass.pDepthStencilAttachment = &depthAttachmentRef;
 
-    std::array<VkSubpassDependency, 1> dependencies{};
-    // std::array<VkSubpassDependency, 2> dependencies{};
+    std::array<VkSubpassDependency, 2> dependencies{};
 
     // Color attachment
     dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
