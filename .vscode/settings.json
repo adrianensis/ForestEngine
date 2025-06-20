@@ -87,7 +87,7 @@
         "*.inc": "cpp"
     },
 
-    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.intelliSenseEngine": "disabled",
     "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "enabled",
     "python.analysis.typeCheckingMode": "off",

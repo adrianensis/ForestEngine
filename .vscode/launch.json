@@ -15,14 +15,14 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb",
-            "miDebuggerPath": "/usr/bin/lldb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
+            "miDebuggerPath": "${workspaceFolder}/dependencies/binaries/Release/lldb-mi",
+            // "setupCommands": [
+            //     {
+            //         "description": "Enable pretty-printing for gdb",
+            //         "text": "-enable-pretty-printing",
+            //         "ignoreFailures": true
+            //     }
+            // ],
             "preLaunchTask": "build debug"
         },
         {
@@ -36,14 +36,14 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb",
-            "miDebuggerPath": "/usr/bin/lldb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
+            "miDebuggerPath": "${workspaceFolder}/dependencies/binaries/Release/lldb-mi",
+            // "setupCommands": [
+            //     {
+            //         "description": "Enable pretty-printing for gdb",
+            //         "text": "-enable-pretty-printing",
+            //         "ignoreFailures": true
+            //     }
+            // ],
             "preLaunchTask": "build release"
         }
     ]
