@@ -1,52 +1,86 @@
 #include "Core/Command/CommandLine.hpp"
 
+#include "Core/Assert/Assert.hpp"
 #include "Core/Command/DefaultCommands.hpp"
+#include "Core/Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Events/EventsManager.hpp"
-#include "Core/Input/Input.hpp"
+#include "Core/StdMacros.hpp"
+#include "GLFW/glfw3.h"
 
+#include <cstdio>
 #include <regex>
+#include <string>
+#include <unistd.h>
 
 void CommandLine::init()
 {
-    mBuffer = "";
+    mBuffer.reserve(smBufferSize);
     mIsOpen = false;
 
-    // SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
-    // {
-    //     if(mIsOpen)
-    //     {
-    //         const InputEventChar *e = (const InputEventChar*) event;
-    //         char c = e->mChar;
-    //         mBuffer.push_back(c);
-    //         writeLine(mBuffer, false);
-    //     }
-    // });
+	SUBSCRIBE_TO_EVENT(InputEventKeyReleased, nullptr, this, [this](const Event *event)
+	{
+        const InputEventKeyReleased *e = (const InputEventKeyReleased *)event;
+        if(e->mKey == GLFW_KEY_GRAVE_ACCENT)
+        {
+            if(mIsOpen)
+            {
+                close();
+            }
+            else
+            {
+                open();
+            }
+        }
+	});
 
-    // SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
-    // {
-    //     if(mIsOpen)
-    //     {
-    //         LOG_BRLINE();
-    //         execute(mBuffer);
-    //         mBuffer.clear();
-    //         writeLine("", false);
-    //     }
-    // });
+    SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            const InputEventChar *e = (const InputEventChar*) event;
+            char c = e->mChar;
+            mBuffer.push_back(c);
+            mBufferDirty = true;
 
-    // SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
-    // {
-    //     if(mIsOpen)
-    //     {
-    //         if(!mBuffer.empty())
-    //         {
-    //             LOG_BACKSPACE()
-    //             mBuffer.pop_back();
-    //         }
+            // writeLine(mBuffer);
+        }
+    });
+
+    SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            execute();
+            mBuffer.clear();
+            mBufferDirty = true;
+
+            // writeLine("", false);
+        }
+    });
+
+    SUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            autocomplete();
+        }
+    });
+
+    SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            if(!mBuffer.empty())
+            {
+                LOG_BACKSPACE()
+                mBuffer.pop_back();
+                mBufferDirty = true;
+            }
             
-    //         writeLine(mBuffer, false);
-    //     }
-    // });
+            // writeLine(mBuffer, false);
+        }
+    });
 
     // SUBSCRIBE_TO_EVENT(InputEventKeyArrow, nullptr, this, [this](const Event *event)
     // {
@@ -104,87 +138,147 @@ void CommandLine::writeLine(const std::string& line, bool newLine /*= true*/) co
 
 void CommandLine::update()
 {
-
+    if(mIsOpen && mBufferDirty)
+    {
+        writeLine(mBuffer);
+        
+        mBufferDirty = false;
+    }
 }
 
 void CommandLine::terminate()
 {
-
+    if(mIsOpen)
+    {
+        close();
+    }
 }
 
-void CommandLine::execute(const std::string& commandLine)
+Command CommandLine::extractCommand(const std::string& commandLine) const
 {
-    std::string patternValidName("[-+]?[a-zA-Z_\\.0-9]+");
-    std::regex regexCommand("^\\s*(" + patternValidName + ")\\s*");
+    Command command;
 
+    std::regex regexCommand("^\\s*(" + mPatternValidName + ")\\s*");
     std::smatch matchCommand;
     std::regex_search(commandLine, matchCommand, regexCommand);
-    bool isCommand = !matchCommand.empty();
-
     std::string commandName = matchCommand[1];
+    //writeLine("command: " + commandName);
 
-    if(isCommand && mCommandsMap.contains(commandName))
+    command.setName(commandName);
+
+    if(mCommandsMap.contains(commandName))
     {
-        //writeLine("command: " + commandName);
+        command = mCommandsMap.at(commandName).mCommand;
+        command.clearArguments();
+    }
 
-        CommandFunctor& functor = mCommandsMap.at(commandName);
-        functor.mCommand.clearArguments();
+    std::string patternAssignation("\\s*=\\s*");
+    std::regex regexCommandWithArgumentList("^\\s*" + mPatternValidName + "\\s+((" + mPatternValidName + "(" + patternAssignation + mPatternValidName + ")?\\s*)+)\\s*");
 
-        std::string patternAssignation("\\s*=\\s*");
-        std::regex regexCommandWithArgumentList("^\\s*" + patternValidName + "\\s+((" + patternValidName + "(" + patternAssignation + patternValidName + ")?\\s*)+)\\s*");
+    std::smatch matchCommandWithArgumentList;
+    std::regex_search(commandLine, matchCommandWithArgumentList, regexCommandWithArgumentList);
+    bool isCommandWithArgumentList = !matchCommandWithArgumentList.empty();
+    if(isCommandWithArgumentList)
+    {
+        std::string argumentList = matchCommandWithArgumentList[1].str();
 
-        std::smatch matchCommandWithArgumentList;
-        std::regex_search(commandLine, matchCommandWithArgumentList, regexCommandWithArgumentList);
-        bool isCommandWithArgumentList = !matchCommandWithArgumentList.empty();
+        std::regex regexArgument("\\s*(" + mPatternValidName + "(" + patternAssignation + mPatternValidName + ")?)\\s*");
 
-        if(isCommandWithArgumentList)
+        auto argumentlistBegin = std::sregex_iterator(argumentList.begin(), argumentList.end(), regexArgument);
+        auto argumentlistEnd = std::sregex_iterator();
+    
+        //writeLine("arguments");
+        //LOG_VAL(std::distance(argumentlistBegin, argumentlistEnd))
+    
+        command.setArgumentsString(argumentList);
+
+        for (std::sregex_iterator i = argumentlistBegin; i != argumentlistEnd; ++i)
         {
-            std::string argumentList = matchCommandWithArgumentList[1].str();
+            std::smatch argumentMatch = *i;                                                 
+            std::string argumentStr = argumentMatch.str(); 
 
-            std::regex regexArgument("\\s*(" + patternValidName + "(" + patternAssignation + patternValidName + ")?)\\s*");
+            std::regex regexPair("(" + mPatternValidName + ")(" + patternAssignation + "(" + mPatternValidName + "))?");
 
-            auto argumentlistBegin = std::sregex_iterator(argumentList.begin(), argumentList.end(), regexArgument);
-            auto argumentlistEnd = std::sregex_iterator();
-        
-            //writeLine("arguments");
-            //LOG_VAL(std::distance(argumentlistBegin, argumentlistEnd))
-        
-            functor.mCommand.setArgumentsString(argumentList);
+            std::smatch matchPair;
+            std::regex_search(argumentStr, matchPair, regexPair);
+            //bool isPair = !matchPair.empty();
 
-            for (std::sregex_iterator i = argumentlistBegin; i != argumentlistEnd; ++i) {
-                std::smatch argumentMatch = *i;                                                 
-                std::string argumentStr = argumentMatch.str(); 
+            //LOG_VAL(matchPair[1].str())
+            //LOG_VAL(matchPair[3].str())
 
-                std::regex regexPair("(" + patternValidName + ")(" + patternAssignation + "(" + patternValidName + "))?");
+            CommandArgument arg;
+            arg.setName(matchPair[1].str());
+            arg.setValue(matchPair[3].str());
+            command.addArgument(arg);
+        }   
+    }
 
-                std::smatch matchPair;
-                std::regex_search(argumentStr, matchPair, regexPair);
-                //bool isPair = !matchPair.empty();
+    return command;
+}
 
-                //LOG_VAL(matchPair[1].str())
-                //LOG_VAL(matchPair[3].str())
+bool CommandLine::checkCommand(const Command& command) const
+{
+    return command.isValid() && mCommandsMap.contains(command.getName().get());
+}
 
-                CommandArgument arg;
-                arg.setName(matchPair[1].str());
-                arg.setValue(matchPair[3].str());
-                functor.mCommand.addArgument(arg);
-            }   
-        }
-        
+void CommandLine::execute()
+{
+    // white line case
+    if(mBuffer.empty())
+    {
+        return;
+    }
+
+    Command command = extractCommand(mBuffer);
+    if(checkCommand(command))
+    {
+        CommandFunctor functor = mCommandsMap.at(command.getName());
+        functor.mCommand = command;
         functor.execute();
     }
     else
     {
-        writeLine("command: " + commandLine + " not recognized.");
+        writeLine("command: " + mBuffer + " not recognized.");
     }
 
-    mHistory.push_back(commandLine);
+    mHistory.push_back(mBuffer);
     mHistoryIterator = mHistory.end();
 }
 
-std::string CommandLine::autocomplete(const std::string& commandLine)
+void CommandLine::autocomplete()
 {
-    return std::string(); // NEXT : implement command autocomplete
+    // white line case
+    if(mBuffer.empty())
+    {
+        return;
+    }
+
+    Command command = extractCommand(mBuffer);
+    
+    // only autocomplete first token (command name), if arguments found, skip
+    if(!command.getArguments().empty())
+    {
+        return;
+    }
+
+    if(!checkCommand(command))
+    {
+        FOR_MAP(it, mCommandsMap)
+        {
+            Command predictedCommand;
+
+            if(it->first.get().find(command.getName().get()) != std::string::npos)
+            {
+                predictedCommand = it->second.mCommand;
+                CHECK_MSG((predictedCommand.getName().get().size() + 1) < smBufferSize, "String size is greater than max buffer size.")
+                mBuffer.clear();
+                mBuffer = predictedCommand.getName().get();
+                mBuffer += " ";
+                mBufferDirty = true;
+                break;
+            }
+        }
+    }
 }
 
 void CommandLine::registerCommand(const std::string& commandName, CommandCallback callback)
@@ -204,14 +298,13 @@ void CommandLine::registerCommand(const std::string& commandName, CommandCallbac
 void CommandLine::open()
 {
     mIsOpen = true;
+    mBufferDirty = true;
     writeLine("CMD Opened");
-    writeLine(mBuffer, false);
 }
 
 void CommandLine::close()
 {
     mIsOpen = false;
-    writeLine(mBuffer);
     writeLine("CMD Closed");
 }
 

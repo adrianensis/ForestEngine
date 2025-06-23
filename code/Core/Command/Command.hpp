@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/HashedString/HashedString.hpp"
 #include "Core/Std.hpp"
 
 class CommandArgument
@@ -17,11 +18,11 @@ public:
 class Command
 {
 private:
-    std::string mName;
+    HashedString mName;
     std::string mArgumentsString;
     std::unordered_map<std::string, CommandArgument> mArguments;
 
-    inline static const std::string smDefaultArgumentValue = ""; 
+    inline static const std::string smDefaultArgumentValue = "";
 
 public:
 
@@ -29,7 +30,8 @@ public:
     void addArgument(const CommandArgument& arg) { mArguments.insert_or_assign(arg.getName(), arg); };
     bool argumentExists(const std::string& argName) const { return mArguments.contains(argName); };
     const std::string& getValue(const std::string& argName) const { return argumentExists(argName) ? mArguments.at(argName).getValue() : smDefaultArgumentValue; };
-
+    bool isValid() const { return mName.isValid(); }
+    
     CRGET_SET(Name)
     CRGET_SET(ArgumentsString)
     CRGET(Arguments)
