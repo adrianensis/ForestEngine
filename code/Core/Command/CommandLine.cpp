@@ -238,7 +238,7 @@ void CommandLine::execute()
     }
     else
     {
-        writeLine("command: " + mBuffer + " not recognized.");
+        writeLine("command: '" + mBuffer + "' not recognized.");
     }
 
     mHistory.push_back(mBuffer);
@@ -300,6 +300,7 @@ void CommandLine::open()
     mIsOpen = true;
     mBufferDirty = true;
     writeLine("CMD Opened");
+    writeLine("Press [`] (grave accent) to toggle command line.");
 }
 
 void CommandLine::close()
