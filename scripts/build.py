@@ -27,7 +27,7 @@ argv = []
 if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
-log.log(log.LogLabels.info, "Parsin options")
+log.log(log.LogLabels.info, "Parsing options")
 try:
   opts, args = getopt.getopt(argv, "uilcprd", ["app=", "tool=", "sanitizer", "gpuDbg"])
 except:
