@@ -4,8 +4,6 @@
 
 ## Forest Engine
 
-<!-- <img src="./forest.png" width=50%> -->
-
 > Forest Engine is a C++ / OpenGL Game Engine made from scratch with the only purpose of improving my gamedev and programming skills.
 
 Forest Engine has been the latest iteration of my Game Engine (previously [DruidEngine](https://github.com/adrianensis/DruidEngine) and before that it was [ThiefEngine](https://github.com/adrianensis/ThiefEngine)).
