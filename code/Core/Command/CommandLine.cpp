@@ -23,64 +23,9 @@ void CommandLine::init()
         const InputEventKeyReleased *e = (const InputEventKeyReleased *)event;
         if(e->mKey == GLFW_KEY_GRAVE_ACCENT)
         {
-            if(mIsOpen)
-            {
-                close();
-            }
-            else
-            {
-                open();
-            }
+            toggle();
         }
 	});
-
-    SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            const InputEventChar *e = (const InputEventChar*) event;
-            char c = e->mChar;
-            mBuffer.push_back(c);
-            mBufferDirty = true;
-
-            // writeLine(mBuffer);
-        }
-    });
-
-    SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            execute();
-            mBuffer.clear();
-            mBufferDirty = true;
-
-            // writeLine("", false);
-        }
-    });
-
-    SUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            autocomplete();
-        }
-    });
-
-    SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
-    {
-        if(mIsOpen)
-        {
-            if(!mBuffer.empty())
-            {
-                LOG_BACKSPACE()
-                mBuffer.pop_back();
-                mBufferDirty = true;
-            }
-            
-            // writeLine(mBuffer, false);
-        }
-    });
 
     // SUBSCRIBE_TO_EVENT(InputEventKeyArrow, nullptr, this, [this](const Event *event)
     // {
@@ -152,6 +97,17 @@ void CommandLine::terminate()
     {
         close();
     }
+}
+
+void CommandLine::charReceived(char c)
+{
+    mBuffer.push_back(c);
+    mBufferDirty = true;
+}
+
+void CommandLine::clearBuffer()
+{
+    mBuffer.clear();
 }
 
 Command CommandLine::extractCommand(const std::string& commandLine) const
@@ -271,7 +227,7 @@ void CommandLine::autocomplete()
             {
                 predictedCommand = it->second.mCommand;
                 CHECK_MSG((predictedCommand.getName().get().size() + 1) < smBufferSize, "String size is greater than max buffer size.")
-                mBuffer.clear();
+                clearBuffer();
                 mBuffer = predictedCommand.getName().get();
                 mBuffer += " ";
                 mBufferDirty = true;
@@ -297,6 +253,8 @@ void CommandLine::registerCommand(const std::string& commandName, CommandCallbac
 
 void CommandLine::open()
 {
+    subscribeToEvents();
+    clearBuffer();
     mIsOpen = true;
     mBufferDirty = true;
     writeLine("CMD Opened");
@@ -305,6 +263,8 @@ void CommandLine::open()
 
 void CommandLine::close()
 {
+    unsubscribeToEvents();
+    clearBuffer();
     mIsOpen = false;
     writeLine("CMD Closed");
 }
@@ -319,4 +279,69 @@ void CommandLine::toggle()
     {
         open();
     }
+}
+
+void CommandLine::subscribeToEvents()
+{
+    SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
+    {
+        
+        if(mIsOpen)
+        {
+            const InputEventChar *e = (const InputEventChar*) event;
+            char c = e->mChar;
+            
+            if(c == '`') // ignore GLFW_KEY_GRAVE_ACCENT
+            {
+                return;
+            }
+            
+            charReceived(c);
+
+            // writeLine(mBuffer);
+        }
+    });
+
+    SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            execute();
+            clearBuffer();
+            mBufferDirty = true;
+
+            // writeLine("", false);
+        }
+    });
+
+    SUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            autocomplete();
+        }
+    });
+
+    SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
+    {
+        if(mIsOpen)
+        {
+            if(!mBuffer.empty())
+            {
+                LOG_BACKSPACE()
+                mBuffer.pop_back();
+                mBufferDirty = true;
+            }
+            
+            // writeLine(mBuffer, false);
+        }
+    });
+}
+
+void CommandLine::unsubscribeToEvents()
+{
+    UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
 }

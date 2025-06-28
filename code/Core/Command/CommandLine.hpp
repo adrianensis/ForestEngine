@@ -35,6 +35,10 @@ public:
 	void toggle();
 	
 private:
+	void subscribeToEvents();
+	void unsubscribeToEvents();
+	void charReceived(char c);
+	void clearBuffer();
 	Command extractCommand(const std::string& commandLine) const;
 	void execute();
 	void autocomplete();
