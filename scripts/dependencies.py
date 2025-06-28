@@ -74,7 +74,7 @@ if installSystemDepencencies:
             #update
             os.system("sudo apt-get -y update")
             #install packages
-            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang lldb liblldb-dev")
+            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang clangd lldb liblldb-dev")
             os.system("sudo apt-get -y install mesa-common-dev")
             os.system("sudo apt-get -y install libtbb-dev") # needed by GDD in order to use c++ parallel for_each
             os.system("sudo apt-get -y install xorg-dev libxkbcommon-dev") # glfw3 dependency
