@@ -2,6 +2,7 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/Log/Log.hpp"
+#include "Core/Signal/Signal.hpp"
 
 class AssertUtils
 {
@@ -15,12 +16,9 @@ public:
             composedFmt += "[" + conditionString + "] ";
             composedFmt += fmt;
             Log::log(Log::Prefixes::smAssert, true, composedFmt, args...);
-            sendAssertSignal();
+            SignalUtils::breakpointTrap();
         }
     }
-
-private:
-    static void sendAssertSignal();
 };
 
 #define CHECK_MSG(condition, ...) AssertUtils::checkMsg((condition), #condition, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
