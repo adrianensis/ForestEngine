@@ -1,7 +1,6 @@
 #include "Core/Image/ImageUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
-#include "png.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
