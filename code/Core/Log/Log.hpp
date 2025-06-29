@@ -2,8 +2,10 @@
 
 #include "Core/StdCore.hpp"
 #include <fstream>
+#include <ostream>
 #include "fmt/core.h"
 #include "fmt/base.h"
+#include "fmt/ostream.h"
 
 class Log
 {
@@ -91,16 +93,16 @@ private:
 	static void writeLine(const std::string_view& fmt, T&&... args)
 	{
 		fmt::println(fmt::runtime(fmt), args...);
-		// logFile << fmt:: << "\n";
+		fmt::println(logFile, fmt::runtime(fmt), args...);
+		std::flush(logFile);
 	}
 
 	template <typename... T>
 	static void append(const std::string_view& fmt, T&&... args)
 	{
-		// std::cout << '\r';
-		// std::cout << str;
 		fmt::print(fmt::runtime(fmt), args...);
-		// logFile << str;
+		fmt::print(logFile, fmt::runtime(fmt), args...);
+		std::flush(logFile);
 	}
 };
 

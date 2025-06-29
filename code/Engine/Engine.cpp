@@ -19,6 +19,8 @@ void Engine::init()
 {
 	mFPS = 60;
 
+	Log::init();
+
 	Memory::init();
 	Profiler::init();
     EC.init();
@@ -121,4 +123,6 @@ void Engine::terminate()
     HashedStringsManager::terminate();
 
     LOG("Terminated OK!")
+
+	Log::terminate();
 }
