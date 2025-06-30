@@ -2,6 +2,8 @@
 #include "Core/Assert/Assert.hpp"
 #include <iostream>
 
+NS_BEGIN(Core)
+
 void FileUtils::readFile(const std::string& path, std::function<void(std::ifstream& file)> callback)
 {
 	std::ifstream file;
@@ -58,3 +60,5 @@ void FileUtils::writeFile(const std::string& path, std::function<void(std::ofstr
     }
 	file.close();
 }
+
+NS_END

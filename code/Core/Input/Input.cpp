@@ -2,6 +2,7 @@
 #include "Core/Log/Log.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
+NS_BEGIN(Core)
 void Input::init()
 {
 	smMouseCoordinates = Vector2();
@@ -29,14 +30,14 @@ void Input::update()
 	{
 		smMouseCoordinates.set(newMouseCoordinates);
 
-		InputEventMouseMoved event;
+		Core::InputEventMouseMoved event;
 		
         SEND_INPUT_EVENT(event);
 	}
 
 	if(smLastMouseButtonPressed != -1)
 	{
-		InputEventMouseButtonHold event;
+		Core::InputEventMouseButtonHold event;
 		event.mButton = smLastMouseButtonPressed;
 		event.mMods = smModifier;
 		SEND_INPUT_EVENT(event);
@@ -44,7 +45,7 @@ void Input::update()
 
 	if(smLastKeyPressed != -1)
 	{
-		InputEventKeyHold event;
+		Core::InputEventKeyHold event;
 		event.mKey = smLastKeyPressed;
 		event.mMods = smModifier;
 		SEND_INPUT_EVENT(event);
@@ -100,3 +101,4 @@ void Input::clearKey()
 	smKeyJustPressed = false;
 }
 
+NS_END

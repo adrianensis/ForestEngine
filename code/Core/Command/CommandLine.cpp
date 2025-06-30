@@ -13,6 +13,7 @@
 #include <string>
 #include <unistd.h>
 
+NS_BEGIN(Core)
 void CommandLine::init()
 {
     mBuffer.reserve(smBufferSize);
@@ -345,3 +346,4 @@ void CommandLine::unsubscribeToEvents()
     UNSUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this);
     UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
 }
+NS_END

@@ -13,7 +13,7 @@
 void Model::init(const std::string& path)
 {
     PROFILER_CPU()
-    mPath = Paths::mResources.get() + path;
+    mPath = Core::Paths::mResources.get() + path;
 
     // https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#skins
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md

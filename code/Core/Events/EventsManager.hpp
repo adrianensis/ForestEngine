@@ -4,13 +4,14 @@
 #include "Core/System/SystemManager.hpp"
 #include "Core/Events/Event.hpp"
 
+NS_BEGIN(Core)
 /*
   Macros for (un)susbscribing and sending events.
 */
 
-#define SUBSCRIBE_TO_EVENT(EventClassName, owner, receiver, eventCallback) GET_SYSTEM(EventsManager).subscribe<EventClassName>(owner, receiver, eventCallback);
-#define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(EventsManager).unsubscribe<EventClassName>(owner, receiver);
-#define SEND_EVENT(owner, instigator, event) GET_SYSTEM(EventsManager).send<REMOVE_REFERENCE(decltype(event))>(owner, instigator, &event);
+#define SUBSCRIBE_TO_EVENT(EventClassName, owner, receiver, eventCallback) GET_SYSTEM(Core::EventsManager).subscribe<EventClassName>(owner, receiver, eventCallback);
+#define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(Core::EventsManager).unsubscribe<EventClassName>(owner, receiver);
+#define SEND_EVENT(owner, instigator, event) GET_SYSTEM(Core::EventsManager).send<REMOVE_REFERENCE(decltype(event))>(owner, instigator, &event);
 
 class EventsManager: public System
 {
@@ -56,3 +57,5 @@ private:
     void send(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventInstigator, Event *event);
 };
 REGISTER_CLASS(EventsManager);
+
+NS_END

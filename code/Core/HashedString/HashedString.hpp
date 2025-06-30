@@ -4,6 +4,7 @@
 #include "Core/Assert/Assert.hpp"
 #include <unordered_map>
 
+// NS_BEGIN(Core)
 class HashedString
 {
 public:
@@ -86,3 +87,4 @@ private:
 public:
 	inline static const std::string mNullString;
 };
+// NS_END

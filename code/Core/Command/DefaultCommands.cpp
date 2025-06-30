@@ -4,6 +4,8 @@
 
 #include "Core/Log/Log.hpp"
 
+NS_BEGIN(Core)
+
 void DefaultCommands::registerDefaultCommands()
 {
     CommandLine& cmd = GET_SYSTEM(CommandLine);
@@ -13,3 +15,4 @@ void DefaultCommands::registerDefaultCommands()
         LOG(command.getArgumentsString());
     });
 }
+NS_END

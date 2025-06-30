@@ -171,12 +171,12 @@ void UIText::setIsEditable(bool editable)
 
 	if(!editable && getIsEditable())
 	{
-		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonPressed, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventMouseButtonReleased, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(InputEventKeyEsc, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonPressed, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonReleased, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(Core::InputEventChar, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyBackspace, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyEnter, nullptr, this);
+		UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyEsc, nullptr, this);
 		mOnlyReleaseOnClickOutside = true;
 	}
 }

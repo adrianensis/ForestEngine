@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core/Std.hpp"
+
+NS_BEGIN(Core)
+
 class Config
 {
 public:
@@ -14,3 +17,5 @@ private:
 public:
 	CRGET_SET(Json)
 };
+
+NS_END

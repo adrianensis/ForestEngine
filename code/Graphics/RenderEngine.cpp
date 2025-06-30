@@ -17,7 +17,7 @@ void RenderEngine::init()
 
 	// octree.init(5000);
 
-    GET_SYSTEM(WindowManager).getMainWindow()->addWindowListener(this);
+    GET_SYSTEM(Core::WindowManager).getMainWindow()->addWindowListener(this);
 }
 
 void RenderEngine::update()

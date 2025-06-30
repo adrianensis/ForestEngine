@@ -2,7 +2,7 @@
 
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/Std.hpp"
-
+NS_BEGIN(Core)
 class CommandArgument
 {
 private:
@@ -36,3 +36,4 @@ public:
     CRGET_SET(ArgumentsString)
     CRGET(Arguments)
 };
+NS_END

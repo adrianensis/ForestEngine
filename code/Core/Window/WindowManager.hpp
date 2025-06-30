@@ -2,7 +2,7 @@
 
 #include "Core/System/System.hpp"
 #include "Core/Window/Window.hpp"
-
+NS_BEGIN(Core)
 class WindowManager : public System
 {
 public:
@@ -19,3 +19,4 @@ public:
     GET(MainWindow)
 };
 REGISTER_CLASS(WindowManager);
+NS_END

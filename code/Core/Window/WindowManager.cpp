@@ -1,5 +1,6 @@
 #include "Core/Window/WindowManager.hpp"
 
+NS_BEGIN(Core)
 void WindowManager::init()
 {
 	glfwInit();
@@ -39,3 +40,4 @@ WeakPtr<Window> WindowManager::getWindow(u32 index) const
     WeakPtr<Window> window = mWindows.at(index);
     return window;
 }
+NS_END

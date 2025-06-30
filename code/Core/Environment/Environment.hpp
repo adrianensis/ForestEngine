@@ -1,5 +1,7 @@
 #pragma once
+#include "Core/StdMacros.hpp"
 
+NS_BEGIN(Core)
 #if defined(_WIN64)
 	#define ENGINE_PLATFORM_WINDOWS
 #elif defined(__APPLE__)
@@ -87,3 +89,5 @@ public:
         Build::NONE;
 #endif
 };
+
+NS_END

@@ -2,7 +2,7 @@
 
 #include "Core/Events/Event.hpp"
 
-class Entity: public ISerializable, public IEventObject
+class Entity: public ISerializable, public Core::IEventObject
 {
     
 	DECLARE_SERIALIZATION()

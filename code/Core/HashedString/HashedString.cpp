@@ -1,5 +1,6 @@
 #include "Core/HashedString/HashedString.hpp"
 
+// NS_BEGIN(Core)
 HashedString::HashedString(const char* str)
 {
     set(str);
@@ -43,3 +44,5 @@ bool HashedString::isValid() const
 {
     return mHash > 0;
 }
+
+// NS_END

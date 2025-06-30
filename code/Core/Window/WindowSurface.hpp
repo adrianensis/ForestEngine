@@ -1,10 +1,13 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+#include "Core/StdCore.hpp"
 
+NS_BEGIN(Core)
 class Window;
 class WindowSurface
 {
 public:
     static VkSurfaceKHR createSurface(VkInstance vulkan, Window* window, const VkAllocationCallbacks *allocator);
 };
+NS_END

@@ -15,7 +15,7 @@ public:
     void init(f32 duration, TimerDurationType durationType, std::function<void()> callback);
 
 public:
-	FunctorVoid mFunctor;
+	Core::FunctorVoid mFunctor;
 private:
 	f32 mDuration = 0.0f;
 	f32 mTimeCounter = 0.0f;

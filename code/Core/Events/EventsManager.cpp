@@ -1,5 +1,6 @@
 #include "Core/Events/EventsManager.hpp"
 
+NS_BEGIN(Core)
 
 void EventsManager::init()
 {
@@ -97,3 +98,5 @@ void EventsManager::unsubscribe(ClassId eventClassId, IEventObject *eventOwner, 
 		}
 	}
 }
+
+NS_END

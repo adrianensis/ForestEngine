@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Core/StdMacros.hpp"
 #include "Core/System/System.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Input/InputEvents.hpp"
 
+NS_BEGIN(Core)
 class IWindowInputAdapter
 {
 public:
@@ -46,3 +48,4 @@ public:
     GET_SET(WindowInputAdapter);
 };
 REGISTER_CLASS(Input);
+NS_END

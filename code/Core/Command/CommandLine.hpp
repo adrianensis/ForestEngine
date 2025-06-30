@@ -4,6 +4,8 @@
 #include "Core/System/System.hpp"
 #include "Core/Command/Command.hpp"
 
+NS_BEGIN(Core)
+
 using CommandCallback = std::function<void(const Command& command)>;
 
 class CommandFunctor: public Functor<CommandCallback>
@@ -63,3 +65,4 @@ public:
 	CRGET(Buffer)
 };
 REGISTER_CLASS(CommandLine);
+NS_END

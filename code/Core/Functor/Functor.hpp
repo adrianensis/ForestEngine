@@ -3,6 +3,7 @@
 #include <functional>
 #include "Core/Assert/Assert.hpp"
 
+NS_BEGIN(Core)
 template <class T>
 class Functor
 {
@@ -26,3 +27,5 @@ public:
 		}
 	}
 };
+
+NS_END

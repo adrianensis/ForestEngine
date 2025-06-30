@@ -44,7 +44,7 @@ private:
 	f32 mSize = 0.0f;
 	std::string mPath;
 
-	Config mLoadSceneConfig;
+	Core::Config mLoadSceneConfig;
 
 public:
 	CRGET(SceneObjects)

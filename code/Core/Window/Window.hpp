@@ -3,6 +3,8 @@
 #include "Core/Input/Input.hpp"
 #include "Core/Window/WindowFramework.hpp"
 
+NS_BEGIN(Core)
+
 class WindowData
 {
 public:
@@ -67,3 +69,4 @@ public:
     CRGET(WindowData);
 };
 REGISTER_CLASS(Window);
+NS_END

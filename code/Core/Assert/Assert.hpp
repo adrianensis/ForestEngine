@@ -3,6 +3,9 @@
 #include "Core/StdCore.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Signal/Signal.hpp"
+#include "Core/StdMacros.hpp"
+
+NS_BEGIN(Core)
 
 class AssertUtils
 {
@@ -21,4 +24,6 @@ public:
     }
 };
 
-#define CHECK_MSG(condition, ...) AssertUtils::checkMsg((condition), #condition, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+#define CHECK_MSG(condition, ...) Core::AssertUtils::checkMsg((condition), #condition, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+
+NS_END

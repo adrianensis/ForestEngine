@@ -10,6 +10,8 @@
 #define TO_STRING(token) #token
 #define TO_STRING_AND_ADD_TRAIL_COMMA(token) TO_STRING(token) ,
 #define TO_U32(x) static_cast<u32>(x)
+#define NS_BEGIN(...) namespace __VA_ARGS__ {
+#define NS_END }
 
 // --------------------------------------------------------
 // TYPE TRAITS

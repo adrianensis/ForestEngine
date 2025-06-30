@@ -1,6 +1,7 @@
 #include "Core/Window/Window.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
+NS_BEGIN(Core)
 GLFWwindow* Window::getGlfwWindow() const 
 {
     return mGLTFWindow;
@@ -155,44 +156,44 @@ void Window::charCallbackGLFW(GLFWwindow *windowGLFW, u32 codepoint)
 
 void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 {
-	GET_SYSTEM(Input).smModifier = mods;
+	GET_SYSTEM(Core::Input).smModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			GET_SYSTEM(Input).smLastKeyPressed = key;
-			GET_SYSTEM(Input).smKeyJustPressed = true;
+			GET_SYSTEM(Core::Input).smLastKeyPressed = key;
+			GET_SYSTEM(Core::Input).smKeyJustPressed = true;
 
 			switch (key)
 			{
 				case GLFW_KEY_ENTER:
 				{
-					InputEventKeyEnter event;
+					Core::InputEventKeyEnter event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_ESCAPE:
 				{
-					InputEventKeyEsc event;
+					Core::InputEventKeyEsc event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_DELETE:
 				{
-					InputEventKeyDelete event;
+					Core::InputEventKeyDelete event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_BACKSPACE:
 				{
-					InputEventKeyBackspace event;
+					Core::InputEventKeyBackspace event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_TAB:
 				{
-					InputEventKeyTab event;
+					Core::InputEventKeyTab event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
@@ -201,14 +202,14 @@ void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 				case GLFW_KEY_LEFT:
 				case GLFW_KEY_RIGHT:
 				{
-					InputEventKeyArrow event;
+					Core::InputEventKeyArrow event;
 					event.mArrowButton = key;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				default:
 				{
-					InputEventKeyPressed event;
+					Core::InputEventKeyPressed event;
 					event.mKey = key;
 					event.mMods = mods;
 					SEND_INPUT_EVENT(event);
@@ -219,17 +220,17 @@ void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 		}
 		case GLFW_RELEASE:
 		{
-			InputEventKeyReleased event;
+			Core::InputEventKeyReleased event;
 			event.mKey = key;
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
 
-			GET_SYSTEM(Input).clearKey();
+			GET_SYSTEM(Core::Input).clearKey();
 			break;
 		}
 		case GLFW_REPEAT:
 		{
-			InputEventKeyHold event;
+			Core::InputEventKeyHold event;
 			event.mKey = key;
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
@@ -241,16 +242,16 @@ void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 
 void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
 {
-	GET_SYSTEM(Input).smModifier = mods;
+	GET_SYSTEM(Core::Input).smModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			GET_SYSTEM(Input).smLastMouseButtonPressed = button;
-			GET_SYSTEM(Input).smButtonJustPressed = true;
+			GET_SYSTEM(Core::Input).smLastMouseButtonPressed = button;
+			GET_SYSTEM(Core::Input).smButtonJustPressed = true;
 
-			InputEventMouseButtonPressed event;
+			Core::InputEventMouseButtonPressed event;
 			event.mButton = button;
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
@@ -258,11 +259,11 @@ void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
 		}
 		case GLFW_RELEASE:
 		{
-			InputEventMouseButtonReleased event;
+			Core::InputEventMouseButtonReleased event;
 			event.mButton = button;
 			event.mMods = mods;
 			
-            GET_SYSTEM(Input).clearMouseButton();
+            GET_SYSTEM(Core::Input).clearMouseButton();
 
 			SEND_INPUT_EVENT(event);
 
@@ -273,16 +274,16 @@ void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
 
 void Window::scrollCallback(f64 xoffset, f64 yoffset)
 {
-	GET_SYSTEM(Input).smScroll = yoffset;
+	GET_SYSTEM(Core::Input).smScroll = yoffset;
 
-	InputEventScroll event;
+	Core::InputEventScroll event;
 	event.mScroll = yoffset;
 	SEND_INPUT_EVENT(event);
 }
 
 void Window::charCallback(u32 codepoint)
 {
-	InputEventChar event;
+	Core::InputEventChar event;
 	event.mChar = (char)codepoint;
 	SEND_INPUT_EVENT(event);
 }
@@ -335,3 +336,4 @@ void Window::addWindowListener(Ptr<IWindowListener> windowListener)
 {
 	mWindowListeners.push_back(windowListener);
 }
+NS_END

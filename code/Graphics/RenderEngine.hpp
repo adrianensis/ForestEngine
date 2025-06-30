@@ -7,7 +7,7 @@
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Core/Window/Window.hpp"
 
-class RenderEngine : public System, public IComponentsListener, public IWindowListener
+class RenderEngine : public System, public IComponentsListener, public Core::IWindowListener
 {
 public:
     virtual void init() override;

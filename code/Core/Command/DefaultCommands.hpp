@@ -1,7 +1,13 @@
 #pragma once
 
+#include "Core/Std.hpp"
+
+NS_BEGIN(Core)
+
 class DefaultCommands
 {
-public:
+    public:
     static void registerDefaultCommands();
 };
+
+NS_END

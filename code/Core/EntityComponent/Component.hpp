@@ -5,7 +5,7 @@
 
 class EntityPtr;
 
-class Component: public ISerializable, public IEventObject
+class Component: public ISerializable, public Core::IEventObject
 {
 	DECLARE_SERIALIZATION()
 	

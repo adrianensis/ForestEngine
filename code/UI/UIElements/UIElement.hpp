@@ -17,7 +17,7 @@ class UIElement;
 
 using UIElementCallback = std::function<void(UIElement *uiElement)>;
 
-class FunctorUIElement: public Functor<UIElementCallback>
+class FunctorUIElement: public Core::Functor<UIElementCallback>
 {
 public:
 	void execute() override

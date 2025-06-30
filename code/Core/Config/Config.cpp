@@ -1,5 +1,8 @@
 #include "Core/Config/Config.hpp"
 #include "Core/File/FileUtils.hpp"
+#include "Core/StdMacros.hpp"
+
+NS_BEGIN(Core)
 
 void Config::readFromJsonFile(const std::string& path)
 {
@@ -22,3 +25,5 @@ bool Config::contains(const std::string& key) const
 {
 	return mJson.contains(key);
 }
+
+NS_END

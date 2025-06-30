@@ -2,9 +2,11 @@
 
 #include "Core/Events/EventsManager.hpp"
 
-#define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(Input), event);
+NS_BEGIN(Core)
 
-#define CLASS_EVENT_SPECIFIC_KEY(KeyName) class InputEventKey##KeyName: public Event {  }; REGISTER_CLASS(InputEventKey##KeyName);
+#define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(Core::Input), event);
+
+#define CLASS_EVENT_SPECIFIC_KEY(KeyName) class InputEventKey##KeyName: public Core::Event {  }; REGISTER_CLASS(InputEventKey##KeyName);
 
 CLASS_EVENT_SPECIFIC_KEY(Enter)
 CLASS_EVENT_SPECIFIC_KEY(Esc)
@@ -84,3 +86,5 @@ public:
     char mChar;
 };
 REGISTER_CLASS(InputEventChar);
+
+NS_END

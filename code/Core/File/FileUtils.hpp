@@ -3,6 +3,7 @@
 #include "Core/Std.hpp"
 #include <fstream>
 
+NS_BEGIN(Core)
 class FileUtils
 {
 public:
@@ -10,3 +11,4 @@ public:
     static void readFileBinaryData(const std::string& path, std::vector<byte>& output);
     static void writeFile(const std::string& path, std::function<void(std::ofstream& file)> callback);
 };
+NS_END

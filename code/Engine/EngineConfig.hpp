@@ -10,7 +10,7 @@ public:
     void init() override;
 
 private:
-	Config mConfig;
+	Core::Config mConfig;
 
 public:
 	CRGET(Config)

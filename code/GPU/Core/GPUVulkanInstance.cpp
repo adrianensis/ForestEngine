@@ -104,7 +104,7 @@ bool GPUVulkanInstance::createInstance() {
     createInfo.enabledExtensionCount = extensions.size();
     createInfo.ppEnabledExtensionNames = extensions.data();
     createInfo.flags = 0;
-    if (Environment::mPlatform == Environment::Platform::MACOS)
+    if (Core::Environment::mPlatform == Core::Environment::Platform::MACOS)
     {
         createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     }
