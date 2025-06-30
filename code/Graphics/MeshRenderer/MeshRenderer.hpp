@@ -36,7 +36,7 @@ private:
     OwnerPtr<GPURenderItem> mGPURenderItem;
 
 public:
-    HashedString mCurrentTextureAnimationKey;
+    Core::HashedString mCurrentTextureAnimationKey;
 
 public:
     GET(GPURenderItem)

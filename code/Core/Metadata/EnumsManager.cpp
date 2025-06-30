@@ -1,5 +1,6 @@
 #include "Core/Metadata/EnumsManager.hpp"
 
+NS_BEGIN(Core)
 EnumRegister::EnumRegister(const HashedString& name, const std::vector<HashedString>& valueNames)
 {
     EnumsManager::create(name, valueNames);
@@ -25,3 +26,4 @@ const EnumDefinition& EnumsManager::create(const HashedString& name, const std::
 
     return mEnumsMapByName.at(name);
 }
+NS_END

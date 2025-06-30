@@ -85,9 +85,9 @@ public:
         mElements.reserve(reservedElements);
 
         #ifdef ENGINE_BUILD_DEBUG
-        const ClassMetadata& baseClassMetaData = ClassManager::getClassMetadata<BaseClass>();
+        const Core::ClassMetadata& baseClassMetaData = Core::ClassManager::getClassMetadata<BaseClass>();
         mDebugStringBaseClass = baseClassMetaData.mClassDefinition.mName;
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         mDebugStringClass = classMetaData.mClassDefinition.mName;
         #endif
     }
@@ -111,8 +111,8 @@ public:
     std::vector<T> mElements;
 
     #ifdef ENGINE_BUILD_DEBUG
-    HashedString mDebugStringBaseClass;
-    HashedString mDebugStringClass;
+    Core::HashedString mDebugStringBaseClass;
+    Core::HashedString mDebugStringClass;
     #endif
 };
 
@@ -125,7 +125,7 @@ public:
         mMaxElements = maxElements;
 
         #ifdef ENGINE_BUILD_DEBUG
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<BaseClass>();
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<BaseClass>();
         mDebugString = classMetaData.mClassDefinition.mName;
         #endif
     }
@@ -148,7 +148,7 @@ public:
     PoolElementPtr requestElement()
     {
         PROFILER_CPU()
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mPools.contains(id))
         {
@@ -210,6 +210,6 @@ public:
     u32 mMaxElements = 0;
 
     #ifdef ENGINE_BUILD_DEBUG
-    HashedString mDebugString;
+    Core::HashedString mDebugString;
     #endif
 };

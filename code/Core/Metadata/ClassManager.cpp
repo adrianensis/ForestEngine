@@ -1,5 +1,6 @@
 #include "Core/Metadata/ClassManager.hpp"
 
+NS_BEGIN(Core)
 ClassRegisterHelper::ClassRegisterHelper(InternalCPPTypeId internalCPPId, const ClassDefinition& classDefinition)
 {
     ClassManager::insert(internalCPPId, ClassMetadata(classDefinition));
@@ -62,3 +63,4 @@ void ClassManager::unregisterDynamicClass(u64 pointer)
 {
     smPointersToDynamicClass.erase(pointer);
 }
+NS_END

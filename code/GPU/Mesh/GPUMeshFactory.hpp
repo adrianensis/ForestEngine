@@ -13,12 +13,12 @@ public:
 	template <class T>
 	WeakPtr<const GPUMesh> getPrimitive()
 	{
-		if(!mPrimitivesMap.contains(ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
+		if(!mPrimitivesMap.contains(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
 		{
-			mPrimitivesMap.insert_or_assign(ClassManager::getClassMetadata<T>().mClassDefinition.getId(), createPrimitive<T>());
+			mPrimitivesMap.insert_or_assign(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId(), createPrimitive<T>());
 		}
 		
-		return WeakPtr<GPUMesh>(mPrimitivesMap.at(ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
+		return WeakPtr<GPUMesh>(mPrimitivesMap.at(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
 	}
 
 private:

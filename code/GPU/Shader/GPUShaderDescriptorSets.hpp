@@ -10,7 +10,7 @@ class GPURenderPass;
 class GPUShaderTextureBinding
 {
 public:
-    HashedString mName;
+    Core::HashedString mName;
     WeakPtr<GPUTexture> mGPUTexture;
 };
 
@@ -24,8 +24,8 @@ public:
 class GPUShaderDescriptorSetsBindings
 {
 public:
-    std::unordered_map<HashedString, u32> mBindings;
-    std::unordered_map<HashedString, u32> mSets;
+    std::unordered_map<Core::HashedString, u32> mBindings;
+    std::unordered_map<Core::HashedString, u32> mSets;
 };
 
 class GPUShaderDescriptorSets

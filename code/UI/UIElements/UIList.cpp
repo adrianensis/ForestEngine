@@ -41,7 +41,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
+        Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
 	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(Core::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
@@ -97,7 +97,7 @@ void UIList::toggle()
 
 		FOR_LIST(it, mEntries)
 		{
-			HashedString label = HashedString((*it).mLabel);
+			Core::HashedString label = Core::HashedString((*it).mLabel);
 			UIElementCallback onPressedCallback = (*it).mCallback;
 
 			uiBuilder.

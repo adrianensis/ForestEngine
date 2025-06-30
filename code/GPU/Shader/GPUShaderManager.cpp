@@ -79,7 +79,7 @@ void GPUShaderManager::loadGPUShaderTextures(WeakPtr<GPUShader> shader)
     if(!mTextureBindingsByShader.contains(id))
     {
         PROFILER_CPU()
-        mTextureBindingsByShader.emplace(id, std::unordered_map<HashedString, WeakPtr<GPUTexture>>());
+        mTextureBindingsByShader.emplace(id, std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>());
 
         FOR_MAP(it, shader->getGPUShaderData().mGPUShaderTextureBindings.mTextureBindings)
         {
@@ -99,7 +99,7 @@ void GPUShaderManager::loadGPUShaderTextures(WeakPtr<GPUShader> shader)
     }
 }
 
-const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& GPUShaderManager::getGPUShaderTextureBindings(u32 id) const
+const std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>& GPUShaderManager::getGPUShaderTextureBindings(u32 id) const
 {
     return mTextureBindingsByShader.at(id);
 }

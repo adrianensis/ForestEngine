@@ -355,8 +355,8 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     {
         gpuInstanceRendererData.mMesh,
         this,
-        ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-        HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
+        Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+        Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
         uniformBuffers,
         gpuInstanceRenderer->getGPUVertexBuffersContainer(),
         gpuGPUShaderPipelineDepthStencilData

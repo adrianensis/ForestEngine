@@ -54,7 +54,7 @@ public:
 	UIBuilder& create()
 	{
         PROFILER_CPU()
-        mConfig.mUIElementClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        mConfig.mUIElementClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
 	    TEntityPtr<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createSceneObject<T>();

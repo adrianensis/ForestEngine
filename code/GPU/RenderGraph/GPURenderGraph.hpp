@@ -29,7 +29,7 @@ public:
     template<class T> T_EXTENDS(T, GPURenderPass)
     void initRenderPass(const GPURenderPassData& renderPassData)
     {
-        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
@@ -48,7 +48,7 @@ public:
     template<class T> T_EXTENDS(T, GPURenderPass)
     WeakPtr<T> getRenderPass()
     {
-        ClassId renderPassClassId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         return WeakPtr<T>::cast(mRenderPassMap.at(renderPassClassId));
     }
 

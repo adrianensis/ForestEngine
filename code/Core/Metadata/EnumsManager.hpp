@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+NS_BEGIN(Core)
 #define DECLARE_ENUM(EnumName, ...) \
 enum class EnumName : u32\
 {\
@@ -13,8 +14,8 @@ enum class EnumName : u32\
     MAX\
 };\
 template <>\
-inline const HashedString& EnumsManager::getEnumNameFromTemplate<EnumName>() { static HashedString name = #EnumName; return name; } \
-inline static EnumRegister enumRegister_##EnumName = EnumRegister(#EnumName, { FOR_EACH_EVEN(ADD_TRAIL_COMMA, __VA_ARGS__) });
+inline const Core::HashedString& Core::EnumsManager::getEnumNameFromTemplate<EnumName>() { static Core::HashedString name = #EnumName; return name; } \
+inline static Core::EnumRegister enumRegister_##EnumName = Core::EnumRegister(#EnumName, { FOR_EACH_EVEN(ADD_TRAIL_COMMA, __VA_ARGS__) });
 
 // --------------------------------------------------------
 // ENUMS
@@ -71,3 +72,4 @@ private:
     inline static std::unordered_map<HashedString, EnumDefinition> mEnumsMapByName;
     inline static HashedString mEmptyName;
 };
+NS_END

@@ -14,7 +14,7 @@ public:
 class ImageUtils
 {
 public:
-	static ImageData loadImage(HashedString path);
+	static ImageData loadImage(Core::HashedString path);
 	static void freeImage(const ImageData& imageData);
 	static void flipImageVertically(const ImageData& imageData, u32 bytes_per_pixel);
 };

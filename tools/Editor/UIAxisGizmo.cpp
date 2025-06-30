@@ -4,12 +4,12 @@
 #include "UI/Module.hpp"
 #include "Core/Input/Input.hpp"
 
-void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, HashedString axisName)
+void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, Core::HashedString axisName)
 {
     mAxis = line;
     mColor = color;
     mAxisName = axisName;
-    mNegAxisName = HashedString("-" + mAxisName.get());
+    mNegAxisName = Core::HashedString("-" + mAxisName.get());
 
     TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
     TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(cameraSceneObject);

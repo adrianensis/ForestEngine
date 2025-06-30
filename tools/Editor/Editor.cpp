@@ -226,7 +226,7 @@ void Editor::update()
     // LOG_VAR(fps)
     if(mFPSCounter)
     {
-        mFPSCounter->setText(HashedString(std::to_string((u32)fps)));
+        mFPSCounter->setText(Core::HashedString(std::to_string((u32)fps)));
     }
 
     mousePick();
@@ -268,7 +268,7 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
     rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
     rendererData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+        Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
 	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
@@ -360,8 +360,8 @@ EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 s
     modelRendererData.mModel = model;
     modelRendererData.mRenderPassIDs =
     {
-        ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
-        ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
+        Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+        Core::ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
 	TComponentPtr<ModelRenderer> modelRenderer = EC.requestComponent<ModelRenderer>();

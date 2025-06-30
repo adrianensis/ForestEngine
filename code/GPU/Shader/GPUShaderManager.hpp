@@ -34,7 +34,7 @@ public:
     const GPUUniformBuffer& getGPUShaderPropertiesGPUUniformBuffer(WeakPtr<GPUShader> shader) const;
     Slot requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader);
 
-    const std::unordered_map<HashedString, WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(u32 id) const;
+    const std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(u32 id) const;
     
 private:
     void postGPUShaderCreated(WeakPtr<GPUShader> shader);
@@ -53,8 +53,8 @@ private:
 	
     std::vector<OwnerPtr<GPUTexture>> mTextures;
     std::vector<TextureHandle> mTextureHandles;
-    std::unordered_map<HashedString, WeakPtr<GPUTexture>> mTexturesByPath;
-	std::unordered_map<u32, std::unordered_map<HashedString, WeakPtr<GPUTexture>>> mTextureBindingsByShader;
+    std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>> mTexturesByPath;
+	std::unordered_map<u32, std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>> mTextureBindingsByShader;
     std::vector<OwnerPtr<GPUShader>> mShaders;
     std::vector<OwnerPtr<GPUShaderPropertiesInstance>> mGPUShaderPropertiesInstances;
     std::unordered_set<u32> mDirtyGPUShaderPropertiesInstances;

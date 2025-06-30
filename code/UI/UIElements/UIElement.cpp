@@ -278,7 +278,7 @@ void UIElement::onCharEventReceived(char character)
 	if (!hasFocus()) { return; }
 
     mInputString.push_back(character);
-    setText(HashedString(mInputString));
+    setText(Core::HashedString(mInputString));
     onChar(character);
 }
 
@@ -287,7 +287,7 @@ void UIElement::onBackspaceEventReceived()
 	if(mInputString.empty()) { return; }
 
     mInputString.pop_back();
-    setText(HashedString(mInputString));
+    setText(Core::HashedString(mInputString));
     onBackspace();
 }
 
@@ -329,7 +329,7 @@ void UIElement::requestFocus()
     GET_SYSTEM(UIManager).setFocusedElement(this);
 
     mInputString.clear();
-    setText(HashedString(mInputString));
+    setText(Core::HashedString(mInputString));
     onFocus();
 }
 

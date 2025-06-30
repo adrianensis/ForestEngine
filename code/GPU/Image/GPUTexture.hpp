@@ -17,7 +17,7 @@ enum class GPUTextureChannels
 class GPUTextureData
 {
 public:
-    HashedString mPath;
+    Core::HashedString mPath;
     bool mIsFont = false;
     FontData mFontData;
 };

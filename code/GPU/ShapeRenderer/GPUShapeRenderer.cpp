@@ -40,7 +40,7 @@ void GPUShapeRenderer::init(u32 verticesPerShape)
 
     GPUShaderData shaderData;
     // mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData);
-    // mShader->compileShader("Shape", HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
+    // mShader->compileShader("Shape", Core::HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
 
     // mShader->getGPUShader()->bindUniformBuffer(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
 }

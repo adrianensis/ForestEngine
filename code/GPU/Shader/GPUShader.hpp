@@ -9,14 +9,14 @@ class GPUMesh;
 class FramebufferBinding
 {
 public:
-    HashedString mSamplerName;
+    Core::HashedString mSamplerName;
     u32 mTextureID = 0;
 };
 
 class TextureBinding
 {
 public:
-    HashedString mPath;
+    Core::HashedString mPath;
     bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
 
@@ -58,10 +58,10 @@ public:
 class GPUShaderPropertiesBlockNames
 {
 public:
-    inline static const HashedString smPropertiesBlockStructName = "propertiesBlockStruct";
-    inline static const HashedString smPropertiesBlockBufferName = "PropertiesBlock";
-    inline static const HashedString smPropertiesBlockInstanceName = "propertiesBlock";
-    inline static const HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
+    inline static const Core::HashedString smPropertiesBlockStructName = "propertiesBlockStruct";
+    inline static const Core::HashedString smPropertiesBlockBufferName = "PropertiesBlock";
+    inline static const Core::HashedString smPropertiesBlockInstanceName = "propertiesBlock";
+    inline static const Core::HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
 };
 
 class GPUShaderCompilationData
@@ -69,8 +69,8 @@ class GPUShaderCompilationData
 public:
     WeakPtr<const GPUMesh> mMesh;
     Ptr<GPURenderPass> mRenderPass;
-    HashedString label;
-    HashedString id;
+    Core::HashedString label;
+    Core::HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
     GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
@@ -115,7 +115,7 @@ public:
 class GPUShaderTextureBindings
 {
 public:
-    std::unordered_map<HashedString, TextureBinding> mTextureBindings;
+    std::unordered_map<Core::HashedString, TextureBinding> mTextureBindings;
 
     bool operator==(const GPUShaderTextureBindings& other) const
     {
@@ -174,7 +174,7 @@ public:
     virtual void init(const GPUShaderData& shaderData, const GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id);
     void terminate();
 
-    bool hasFramebufferBinding(HashedString bindingName) const;
+    bool hasFramebufferBinding(Core::HashedString bindingName) const;
 
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
@@ -200,19 +200,19 @@ protected:
     {
         CHECK_MSG(false, "Implement!")
         // mSharedGPUShaderPropertiesBlockBuffer.set<T>();
-        // mSharedGPUShaderPropertiesBlockClass = ClassManager::getClassMetadata<T>().mClassDefinition;
+        // mSharedGPUShaderPropertiesBlockClass = Core::ClassManager::getClassMetadata<T>().mClassDefinition;
     }
 
 protected:
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
-    std::unordered_set<HashedString> mTextures;
-    std::unordered_map<HashedString, FramebufferBinding> mFramebufferBindings;
+    std::unordered_set<Core::HashedString> mTextures;
+    std::unordered_map<Core::HashedString, FramebufferBinding> mFramebufferBindings;
     GPUShaderCompilationData mGPUShaderCompilationData;
     GPUShaderData mGPUShaderData;
     u32 mID = 0;
     GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
-    ClassDefinition mSharedGPUShaderPropertiesBlockClass;
+    Core::ClassDefinition mSharedGPUShaderPropertiesBlockClass;
 
 public:
     CRGET(GPUShaderData)

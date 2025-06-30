@@ -53,8 +53,8 @@ namespace GPUShaderBuilderNodes
         {
             layoutStr = "layout(" + /* (setStr.empty() ? setStr : setStr + ",") + */ locationStr + ")";
         }
-        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : EnumsManager::toString(mGPUInterpolation).get() + " ";
-        std::string storageStr = EnumsManager::toString(mGPUStorage).get() + " ";
+        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : Core::EnumsManager::toString(mGPUInterpolation).get() + " ";
+        std::string storageStr = Core::EnumsManager::toString(mGPUStorage).get() + " ";
         return {getIndent(indent) + layoutStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
     
@@ -140,7 +140,7 @@ namespace GPUShaderBuilderNodes
     {
         return set(a, Variable(value));
     }
-    BlockStatement& BlockStatement::ifBlock(const Variable& a, const HashedString& op , const Variable& b)
+    BlockStatement& BlockStatement::ifBlock(const Variable& a, const Core::HashedString& op , const Variable& b)
     {
         BlockStatement* newStatement = new IfStatement(a, op, b);
         newStatement->mParent = this;
@@ -265,7 +265,7 @@ namespace GPUShaderBuilderNodes
         return mUniformBuffers.emplace_back(uniformBuffer);
     }
     
-    const Struct& Program::getStruct(const HashedString& structName) const
+    const Struct& Program::getStruct(const Core::HashedString& structName) const
     {
         FOR_LIST(it, mStructs)
         {
@@ -278,7 +278,7 @@ namespace GPUShaderBuilderNodes
         return mNullStructDefinition;
     }
 
-    const Attribute& Program::getAttribute(const HashedString& attributeName) const
+    const Attribute& Program::getAttribute(const Core::HashedString& attributeName) const
     {
         FOR_LIST(it, mAttributes)
         {
@@ -291,7 +291,7 @@ namespace GPUShaderBuilderNodes
         return mNullAttribute;
     }
 
-    const UniformBuffer& Program::getUniformBuffer(const HashedString& uniformBufferName) const
+    const UniformBuffer& Program::getUniformBuffer(const Core::HashedString& uniformBufferName) const
     {
         FOR_LIST(it, mUniformBuffers)
         {
@@ -304,7 +304,7 @@ namespace GPUShaderBuilderNodes
         return mNullUniformBuffer;
     }
 
-    FunctionDefinition& Program::getFunctionDefinition(const HashedString& functionDefinitionName)
+    FunctionDefinition& Program::getFunctionDefinition(const Core::HashedString& functionDefinitionName)
     {
         FOR_LIST(it, mFunctionDefinitions)
         {

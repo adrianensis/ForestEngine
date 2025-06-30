@@ -120,7 +120,7 @@ void Engine::terminate()
     EntityComponentManager::deleteInstance();
 	Profiler::terminate();
 	Memory::terminate();
-    HashedStringsManager::terminate();
+    Core::HashedStringsManager::terminate();
 
     LOG("Terminated OK!")
 

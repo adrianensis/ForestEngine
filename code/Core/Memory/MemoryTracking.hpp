@@ -32,11 +32,11 @@ public:
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
 #ifdef ENGINE_BUILD_DEBUG
-		HashedString className;
+		Core::HashedString className;
 
-		if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
+		if (Core::ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
 		{
-			className = ClassManager::getClassMetadata<T>().mClassDefinition.mName;
+			className = Core::ClassManager::getClassMetadata<T>().mClassDefinition.mName;
 		}
 		else
 		{
@@ -69,10 +69,10 @@ public:
 			return;
 		}
 
-		HashedString className;
-		if (ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
+		Core::HashedString className;
+		if (Core::ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
 		{
-			className = ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.mName;
+			className = Core::ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.mName;
 		}
 		else
 		{
@@ -89,7 +89,7 @@ public:
 
 private:
 #ifdef ENGINE_BUILD_DEBUG
-	inline static std::unordered_map<HashedString, AllocationInfo> smAllocationsMap;
-    inline static std::unordered_map<u64, HashedString> smPointersToDynamicClassName;
+	inline static std::unordered_map<Core::HashedString, AllocationInfo> smAllocationsMap;
+    inline static std::unordered_map<u64, Core::HashedString> smPointersToDynamicClassName;
 #endif
 };

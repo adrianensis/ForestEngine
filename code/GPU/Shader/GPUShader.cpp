@@ -67,7 +67,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> GPUShader::generateGPUShader
     return propertiesBlock;
 }
 
-bool GPUShader::hasFramebufferBinding(HashedString bindingName) const
+bool GPUShader::hasFramebufferBinding(Core::HashedString bindingName) const
 {
     return mFramebufferBindings.contains(bindingName);
 }
@@ -88,7 +88,7 @@ OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompilationD
     mGPUShaderCompilationData = shaderCompilationData;
 
     std::vector<GPUShaderTextureBinding> gpuGPUShaderTextureBindings;
-    const std::unordered_map<HashedString, WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(GPUShaderManager).getGPUShaderTextureBindings(getID());
+    const std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(GPUShaderManager).getGPUShaderTextureBindings(getID());
     FOR_MAP(it, shaderTextures)
     {
         gpuGPUShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});

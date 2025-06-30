@@ -11,12 +11,12 @@ class UIFontsManager
 public:
     void init();
     void terminate();
-    WeakPtr<UIFont> loadFont(HashedString fontFile, u32 fontSize);
-    WeakPtr<UIFont> getFont(HashedString fontFile) const;
+    WeakPtr<UIFont> loadFont(Core::HashedString fontFile, u32 fontSize);
+    WeakPtr<UIFont> getFont(Core::HashedString fontFile) const;
 
 private:
     FontsLibrary mFontsLibrary;
-    std::unordered_map<HashedString, OwnerPtr<UIFont>> mFontsMap;
+    std::unordered_map<Core::HashedString, OwnerPtr<UIFont>> mFontsMap;
 public:
     RGET(FontsLibrary)
 };
@@ -26,7 +26,7 @@ class UIFont
 {
     
 public:
-    void init(UIFontsManager& fontsManager, HashedString fontFile, u32 fontSize);
+    void init(UIFontsManager& fontsManager, Core::HashedString fontFile, u32 fontSize);
 private:
     FontData mFontData;
     WeakPtr<GPUShader> mFontShader;

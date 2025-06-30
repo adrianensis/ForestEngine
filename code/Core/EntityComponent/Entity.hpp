@@ -42,11 +42,11 @@ private:
 
 public:
 	bool mIsStatic = false;
-	HashedString mTag;
+	Core::HashedString mTag;
 	bool mShouldPersist = false;
 
     #ifdef ENGINE_BUILD_DEBUG
-    HashedString mDebugString;
+    Core::HashedString mDebugString;
     #endif
     
 	GET(IsPendingToBeDestroyed)
@@ -106,7 +106,7 @@ public:
     TEntityPtr() = default;
     TEntityPtr(const T* entity)
     {
-        ClassId id = ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
+        ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
         *this = TEntityPtr(id, entity->getSlot());
     }
     TEntityPtr(ClassId id, Slot slot): EntityPtr(id, slot)

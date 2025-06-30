@@ -10,7 +10,7 @@ void GPUShaderDefault::registerTextures()
 void GPUShaderDefault::setSharedGPUShaderPropertiesBlock()
 {
     mSharedGPUShaderPropertiesBlockBuffer.set<PropertiesBlockGPUShaderDefault>();
-    mSharedGPUShaderPropertiesBlockClass = ClassManager::getClassMetadata<PropertiesBlockGPUShaderDefault>().mClassDefinition;
+    mSharedGPUShaderPropertiesBlockClass = Core::ClassManager::getClassMetadata<PropertiesBlockGPUShaderDefault>().mClassDefinition;
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderDefault::generateGPUShaderPropertiesBlock()
@@ -218,7 +218,7 @@ void GPUShaderDefault::generateGPUShaderGenerationData(GPUShaderGenerationData& 
     // {
     //     CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
 
-    //     HashedString samplerName = it->first;
+    //     Core::HashedString samplerName = it->first;
     //     switch (it->second.mStage)
     //     {
     //         // case GPUPipelineStage::VERTEX:
@@ -241,7 +241,7 @@ void GPUShaderDefault::generateGPUShaderGenerationData(GPUShaderGenerationData& 
     // {
     //     CHECK_MSG(!it->second.mSamplerName.get().empty(), "frambuffer texture samplerName cannot be empty!");
 
-    //     HashedString samplerName = it->second.mSamplerName;
+    //     Core::HashedString samplerName = it->second.mSamplerName;
     //     switch (it->second.mStage)
     //     {
     //         // case GPUPipelineStage::VERTEX:

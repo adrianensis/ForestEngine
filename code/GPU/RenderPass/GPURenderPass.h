@@ -42,7 +42,7 @@ class GPURenderPass;
 class GPURenderPassDependency
 {
 public:
-    HashedString mSamplerName;
+    Core::HashedString mSamplerName;
     GPUFramebufferAttachmentType mAttachmentType;
     WeakPtr<GPURenderPass> mRenderPass;
 };

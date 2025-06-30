@@ -35,8 +35,8 @@ void UISceneTree::update()
     }
     FOR_LIST(it, objectsInmutableList)
     {
-        HashedString className = ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName;
-        HashedString inspectorName(className.get() /*+ std::to_string(id)*/);
+        Core::HashedString className = Core::ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName;
+        Core::HashedString inspectorName(className.get() /*+ std::to_string(id)*/);
         TEntityPtr<UIButton> uiText = uiBuilder.
         setText(inspectorName).
         // setIsStatic(false).

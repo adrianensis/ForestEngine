@@ -9,28 +9,29 @@
 using ClassId = u64;
 using InternalCPPTypeId = u64;
 
+NS_BEGIN(Core)
 #define REGISTER_CLASS(...) \
-inline static const ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
-inline static const ClassRegisterHelper classRegisterHelper_##__VA_ARGS__ = ClassRegisterHelper(typeid(__VA_ARGS__).hash_code(), smClassDefinition_##__VA_ARGS__);
+    inline static const Core::ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
+    inline static const Core::ClassRegisterHelper classRegisterHelper_##__VA_ARGS__ = Core::ClassRegisterHelper(typeid(__VA_ARGS__).hash_code(), smClassDefinition_##__VA_ARGS__);
 
 #define REGISTER_MEMBER(memberName, ...) \
-    inline static const MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
-    inline static const MemberRegister memberRegister_##memberName = MemberRegister(ClassManager::getClassMetadata<ThisClass>().mClassDefinition.mName, smMemberDefinition_##memberName);
+    inline static const Core::MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
+    inline static const Core::MemberRegister memberRegister_##memberName = Core::MemberRegister(Core::ClassManager::getClassMetadata<ThisClass>().mClassDefinition.mName, smMemberDefinition_##memberName);
 
 class ClassDefinition
 {
 public:
     ClassId getId() const { return mName.getHash(); };
 public:
-    HashedString mName;
+    Core::HashedString mName;
     u32 mTypeSize = 0;
 };
 
 class MemberDefinition
 {
 public:
-    HashedString mName;
-    HashedString mClassName;
+    Core::HashedString mName;
+    Core::HashedString mClassName;
     u32 mOffset = 0;
 };
 
@@ -41,7 +42,7 @@ public:
 class MemberRegister
 {
 public:
-    MemberRegister(const HashedString& ownerClassName, const MemberDefinition& memberDefinition);
+    MemberRegister(const Core::HashedString& ownerClassName, const MemberDefinition& memberDefinition);
 };
 
 class MemberMetadata
@@ -67,7 +68,7 @@ public:
     ClassMetadata(const ClassDefinition& classDefinition);
 
     ClassDefinition mClassDefinition;
-    std::unordered_map<HashedString, MemberMetadata> mMembersMap;
+    std::unordered_map<Core::HashedString, MemberMetadata> mMembersMap;
 };
 
 // --------------------------------------------------------
@@ -138,3 +139,4 @@ private:
     inline static std::unordered_map<ClassId, ClassMetadata> smClassMapById;
     inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
 };
+NS_END

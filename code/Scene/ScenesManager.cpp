@@ -71,7 +71,7 @@ void ScenesManager::loadPendingScenes()
 {
     FOR_LIST(it, mLoadRequests)
     {
-        HashedString sceneName = *it;
+        Core::HashedString sceneName = *it;
         if(mScenes.contains(sceneName) && !mLoadedScenes.contains(sceneName))
         {
             internalLoadScene(sceneName);
@@ -85,17 +85,17 @@ bool ScenesManager::pendingLoadRequests() const
 	return !mLoadRequests.empty();
 }
 
-void ScenesManager::requestLoadScene(HashedString sceneName)
+void ScenesManager::requestLoadScene(Core::HashedString sceneName)
 {
 	mLoadRequests.insert(sceneName);
 }
 
-WeakPtr<Scene> ScenesManager::getScene(HashedString sceneName) const
+WeakPtr<Scene> ScenesManager::getScene(Core::HashedString sceneName) const
 {
     return mScenes.at(sceneName);
 }
 
-void ScenesManager::internalLoadScene(HashedString sceneName)
+void ScenesManager::internalLoadScene(Core::HashedString sceneName)
 {
 	mLoadedScenes.insert_or_assign(sceneName, mScenes.at(sceneName));
     mLoadedScenes.at(sceneName)->loadScene();

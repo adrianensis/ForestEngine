@@ -11,8 +11,8 @@ void SystemsManager::terminate()
     for (auto it = mSystemsInOrder.rbegin(); it != mSystemsInOrder.rend(); ++it)
     {
         (*it)->terminate();
-        LOG_TAG("SYSTEM", "Terminating system: " + std::to_string(ClassManager::getDynamicClassMetadata((*it).getInternalPointer()).mClassDefinition.getId()) + " " + ClassManager::getDynamicClassMetadata((*it).getInternalPointer()).mClassDefinition.mName.get())
-        mSystems.erase(ClassManager::getDynamicClassMetadata((*it).getInternalPointer()).mClassDefinition.getId());
+        LOG_TAG("SYSTEM", "Terminating system: " + std::to_string(Core::ClassManager::getDynamicClassMetadata((*it).getInternalPointer()).mClassDefinition.getId()) + " " + Core::ClassManager::getDynamicClassMetadata((*it).getInternalPointer()).mClassDefinition.mName.get())
+        mSystems.erase(Core::ClassManager::getDynamicClassMetadata((*it).getInternalPointer()).mClassDefinition.getId());
     }
 
     mSystemsInOrder.clear();

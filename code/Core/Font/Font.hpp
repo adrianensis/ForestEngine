@@ -42,13 +42,13 @@ public:
 class FontData
 {
 public:
-	void loadFont(FontsLibrary& fontsLibrary, HashedString fontFile, u32 fontSize);
+	void loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile, u32 fontSize);
 	void freeGlyphsBuffers();
 public:
     inline static const u32 MAX_GLYPHS = 128;
 public:
     FT_Face mFreeTypeFace;
-    HashedString mPath;
+    Core::HashedString mPath;
     u32 mWidth;
     u32 mHeight;
     std::array<FontGlyphData, FontData::MAX_GLYPHS> mGlyphs;

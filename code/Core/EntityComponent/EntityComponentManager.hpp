@@ -34,7 +34,7 @@ public:
     void addComponentListener(WeakPtr<IComponentsListener> listener)
     {
         PROFILER_CPU()
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentListeners.contains(id))
         {
@@ -51,7 +51,7 @@ public:
     void removeComponentListener(WeakPtr<IComponentsListener> listener)
     {
         PROFILER_CPU()
-        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(mComponentListeners.contains(id))
         {
@@ -73,7 +73,7 @@ public:
             T& comp = mComponentsPool.getElement<T>(componentPtr);
             comp.onRecycle(componentPtr.mSlot);
             #ifdef ENGINE_BUILD_DEBUG
-            comp.mDebugString = ClassManager::getClassMetadataById(componentPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(componentPtr.mSlot.getSlot());
+            comp.mDebugString = Core::ClassManager::getClassMetadataById(componentPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(componentPtr.mSlot.getSlot());
             componentPtr.mDebugPointer = &comp;
             #endif
         }
@@ -235,7 +235,7 @@ public:
             T& entity = mEntitiesPool.getElement<T>(poolPtr);
             entity.onRecycle(entityPtr.mSlot);
             #ifdef ENGINE_BUILD_DEBUG
-            entity.mDebugString = ClassManager::getClassMetadataById(entityPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(entityPtr.mSlot.getSlot());
+            entity.mDebugString = Core::ClassManager::getClassMetadataById(entityPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(entityPtr.mSlot.getSlot());
             entityPtr.mDebugPointer = &entity;
             #endif
         }

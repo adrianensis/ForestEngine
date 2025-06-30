@@ -22,19 +22,19 @@ public:
 	template <class E> T_EXTENDS(E, Event)
 	void subscribe(IEventObject * eventOwner, IEventObject * eventReceiver, EventCallback eventCallback)
 	{
-        subscribe(ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver, eventCallback);
+        subscribe(Core::ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver, eventCallback);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
 	void unsubscribe(IEventObject * eventOwner, IEventObject * eventReceiver)
 	{
-        unsubscribe(ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver);
+        unsubscribe(Core::ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
     void send(IEventObject *eventOwner, IEventObject *eventInstigator, Event *event)
     {
-        ClassId eventClassId = ClassManager::getClassMetadata<E>().mClassDefinition.getId();
+        ClassId eventClassId = Core::ClassManager::getClassMetadata<E>().mClassDefinition.getId();
         send(eventClassId, eventOwner, eventInstigator, event);
     }
 

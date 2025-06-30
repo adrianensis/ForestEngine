@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-ImageData ImageUtils::loadImage(HashedString path)
+ImageData ImageUtils::loadImage(Core::HashedString path)
 {
     PROFILER_CPU()
 	i32 width, height, original_number_channels;

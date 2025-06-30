@@ -21,22 +21,22 @@ void UIVector::init()
 	setSize(Vector2(0.5, 0.05f));
 
     mX = uiBuilder.
-	setText(HashedString("000000.000")).
+	setText(Core::HashedString("000000.000")).
     // setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
     mY = uiBuilder.
-	setText(HashedString("000000.000")).
+	setText(Core::HashedString("000000.000")).
     // setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
     mZ = uiBuilder.
-	setText(HashedString("000000.000")).
+	setText(Core::HashedString("000000.000")).
     // setIsStatic(false).
 	create<UIText>().
 	getUIElement<UIText>();
     // mW = uiBuilder.
-	// setText(HashedString(std::to_string(v.x))).
+	// setText(Core::HashedString(std::to_string(v.x))).
     // setIsStatic(false).
 	// create<UIText>().
 	// getUIElement<UIText>();
@@ -44,9 +44,9 @@ void UIVector::init()
 
 void UIVector::update(const Vector3& v)
 {
-    mX->setText(HashedString(std::to_string(v.x).substr(0, 10)));
-    mY->setText(HashedString(std::to_string(v.y).substr(0, 10)));
-    mZ->setText(HashedString(std::to_string(v.z).substr(0, 10)));
+    mX->setText(Core::HashedString(std::to_string(v.x).substr(0, 10)));
+    mY->setText(Core::HashedString(std::to_string(v.y).substr(0, 10)));
+    mZ->setText(Core::HashedString(std::to_string(v.z).substr(0, 10)));
 }
 
 void UIVector::onDestroy()

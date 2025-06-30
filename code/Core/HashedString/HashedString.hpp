@@ -4,7 +4,7 @@
 #include "Core/Assert/Assert.hpp"
 #include <unordered_map>
 
-// NS_BEGIN(Core)
+NS_BEGIN(Core)
 class HashedString
 {
 public:
@@ -17,8 +17,8 @@ public:
     HashValue getHash() const { return mHash; }
     const std::string& operator*() const { CHECK_MSG(this->isValid(), "Invalid string!"); return get(); }
     const std::string* operator->() const { return &(operator*()); }
-    bool operator==(const HashedString& other) const { return this->mHash == other.mHash; }
-    HashedString& operator=(const HashedString& other)
+    bool operator==(const Core::HashedString& other) const { return this->mHash == other.mHash; }
+    Core::HashedString& operator=(const Core::HashedString& other)
     {
         if (this != &other)
         {
@@ -43,15 +43,6 @@ public:
     #ifdef ENGINE_BUILD_DEBUG
     const std::string& getDebugString() const { return *mDebugString;};
     #endif
-};
-
-template<>
-struct std::hash<HashedString> 
-{
-    size_t operator()(const HashedString& str) const 
-    {
-        return str.getHash();
-    }
 };
 
 class HashedStringsManager
@@ -87,4 +78,13 @@ private:
 public:
 	inline static const std::string mNullString;
 };
-// NS_END
+NS_END
+
+template<>
+struct std::hash<Core::HashedString> 
+{
+    size_t operator()(const Core::HashedString& str) const 
+    {
+        return str.getHash();
+    }
+};

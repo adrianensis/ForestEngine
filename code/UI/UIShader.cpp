@@ -6,7 +6,7 @@ using namespace GPUShaderBuilderNodes::Expressions;
 void GPUShaderUI::setSharedGPUShaderPropertiesBlock()
 {
     mSharedGPUShaderPropertiesBlockBuffer.set<GPUShaderPropertiesBlockUI>();
-    mSharedGPUShaderPropertiesBlockClass = ClassManager::getClassMetadata<GPUShaderPropertiesBlockUI>().mClassDefinition;
+    mSharedGPUShaderPropertiesBlockClass = Core::ClassManager::getClassMetadata<GPUShaderPropertiesBlockUI>().mClassDefinition;
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderUI::generateGPUShaderPropertiesBlock()

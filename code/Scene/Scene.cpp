@@ -9,7 +9,7 @@ void Scene::terminate()
     destroySceneObjects();
 }
 
-void Scene::init(HashedString sceneName)
+void Scene::init(Core::HashedString sceneName)
 {
     mSceneName = sceneName;
 	mSize = 0;

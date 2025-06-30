@@ -14,7 +14,7 @@ public:
     void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
     void onLabelDestroy();
-    void setText(HashedString text) override;
+    void setText(Core::HashedString text) override;
     void setVisibility(bool visibility) override;
 
 private:

@@ -15,7 +15,7 @@ public:
 public:
 
     std::vector<GPUVariableData> mGPUVertexInputBuffers;
-    std::unordered_map<HashedString, TByteBuffer> mBuffers;
+    std::unordered_map<Core::HashedString, TByteBuffer> mBuffers;
     TByteBuffer mIndices = TByteBuffer(sizeof(Face));
 
 	u32 mVertexCount = 0;

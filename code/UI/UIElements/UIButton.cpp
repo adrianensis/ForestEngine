@@ -37,7 +37,7 @@ void UIButton::onLabelDestroy()
 	mText.reset();
 }
 
-void UIButton::setText(HashedString text)
+void UIButton::setText(Core::HashedString text)
 {
 	if (text.get().length() > 0)
 	{

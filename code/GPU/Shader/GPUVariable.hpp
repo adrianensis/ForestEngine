@@ -41,7 +41,7 @@ DECLARE_ENUM(GPUInterpolation,
 class GPUDataType
 {
 public:
-    HashedString mName;
+    Core::HashedString mName;
     u32 mTypeSizeInBytes = 0;
     GPUPrimitiveDataType mPrimitiveDataType = GPUPrimitiveDataType::FLOAT;
 
@@ -88,7 +88,7 @@ class GPUVariableData
 {
 public:
     GPUVariableData() = default;
-    GPUVariableData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const HashedString& name):
+    GPUVariableData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const Core::HashedString& name):
     mGPUStorage(gpuStorage), mGPUDataType(gpuDataType), mName(name)
     {}
     GPUVariableData(GPUStorage gpuStorage, const GPUVariableData& otherGPUVariableData):
@@ -97,14 +97,14 @@ public:
 
     GPUStorage mGPUStorage = GPUStorage::NONE;
     GPUDataType mGPUDataType;
-    HashedString mName;
+    Core::HashedString mName;
 };
 
 class GPUVariableDefinitionData: public GPUVariableData
 {
 public:
     GPUVariableDefinitionData() = default;
-    GPUVariableDefinitionData(GPUInterpolation gpuInterpolation, GPUStorage gpuStorage, const GPUDataType& gpuDataType, const HashedString& name):
+    GPUVariableDefinitionData(GPUInterpolation gpuInterpolation, GPUStorage gpuStorage, const GPUDataType& gpuDataType, const Core::HashedString& name):
     GPUVariableData(gpuStorage, gpuDataType, name), mGPUInterpolation(gpuInterpolation)
     {}
     GPUVariableDefinitionData(const GPUVariableData& gpuVariableData):
@@ -119,7 +119,7 @@ public:
     GPUVariableDefinitionData(GPUStorage gpuStorage, const GPUVariableData& gpuVariableData):
     GPUVariableData(gpuStorage, gpuVariableData)
     {}
-    GPUVariableDefinitionData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const HashedString& name):
+    GPUVariableDefinitionData(GPUStorage gpuStorage, const GPUDataType& gpuDataType, const Core::HashedString& name):
     GPUVariableData(gpuStorage, gpuDataType, name)
     {}
     GPUVariableDefinitionData(GPUInterpolation gpuInterpolation, const GPUVariableData& gpuVariableData, const std::string& value, const std::string& arraySize):
@@ -141,14 +141,14 @@ public:
     {
     public:
         GPUDataType mGPUDataType;
-        HashedString mName;
+        Core::HashedString mName;
     };
 
-    HashedString mName;
+    Core::HashedString mName;
     std::vector<GPUStructVariable> mPrimitiveVariables;
 
     GPUStructDefinition() = default;
-    GPUStructDefinition(const HashedString& name, const std::vector<GPUStructVariable>& primitiveVariables):
+    GPUStructDefinition(const Core::HashedString& name, const std::vector<GPUStructVariable>& primitiveVariables):
         mName(name), mPrimitiveVariables(primitiveVariables){}
 
     u32 getTypeSizeInBytes() const
@@ -167,6 +167,6 @@ class GPUFunctionDefinition
 {
 public:
     GPUDataType mType;
-    HashedString mName;
+    Core::HashedString mName;
     std::vector<GPUVariableData> mParameters;
 };

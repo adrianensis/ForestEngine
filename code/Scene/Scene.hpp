@@ -10,7 +10,7 @@ class Scene: public ISerializable, public EnableWeakPtrToThis
     DECLARE_SERIALIZATION()
 
 public:
-    void init(HashedString sceneName);
+    void init(Core::HashedString sceneName);
     void loadScene();
     void unloadScene();
     void terminate();
@@ -37,7 +37,7 @@ private:
     void destroySceneObjects();
 
 private:
-    HashedString mSceneName;
+    Core::HashedString mSceneName;
 	std::list<TEntityPtr<SceneObject>> mSceneObjects;
 	std::list<TEntityPtr<SceneObject>> mNewSceneObjects;
 

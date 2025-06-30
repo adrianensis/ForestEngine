@@ -53,7 +53,7 @@ bool GPUVertexBuffersContainer::containsVertexBuffer(const GPUVertexBufferData& 
     return mVertexBuffersMap.contains(data.mGPUVariableData.mName);
 }
 
-u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name)
+u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, u32>& indexMap, const Core::HashedString& name)
 {
     CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUVertexBuffersContainer!");
     u32 index = indexMap.at(name);
@@ -97,12 +97,12 @@ const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(const GPUUn
     return mUniformBuffers.at(findIndex(mUniformBuffersMap, data.mBufferName));
 }
 
-GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(HashedString bufferName)
+GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(Core::HashedString bufferName)
 {
     return mUniformBuffers.at(findIndex(mUniformBuffersMap, bufferName));
 }
 
-const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(HashedString bufferName) const
+const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(Core::HashedString bufferName) const
 {
     return mUniformBuffers.at(findIndex(mUniformBuffersMap, bufferName));
 }
@@ -112,7 +112,7 @@ bool GPUUniformBuffersContainer::containsUniformBuffer(const GPUUniformBufferDat
     return mUniformBuffersMap.contains(data.mBufferName);
 }
 
-u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<HashedString, u32>& indexMap, const HashedString& name)
+u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, u32>& indexMap, const Core::HashedString& name)
 {
     CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUUniformBuffersContainer!");
     u32 index = indexMap.at(name);

@@ -7,7 +7,7 @@ class GPUUniformBufferData
 {
 public:
 	GPUUniformBufferData() = default;
-	GPUUniformBufferData(GPUBufferType gpuUniformBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, HashedString blockName, HashedString instanceName):
+	GPUUniformBufferData(GPUBufferType gpuUniformBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, Core::HashedString blockName, Core::HashedString instanceName):
         mType(gpuUniformBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBufferName(blockName), mInstanceName(instanceName) {}
 
     GPUVariableData getScopedGPUVariableData(u32 i) const;
@@ -15,8 +15,8 @@ public:
 public:
     GPUBufferType mType = GPUBufferType::UNIFORM;
     std::vector<GPUVariableDefinitionData> mGPUVariableDefinitionDataArray;
-    HashedString mBufferName;
-    HashedString mInstanceName;
+    Core::HashedString mBufferName;
+    Core::HashedString mInstanceName;
 };
 
 class GPUUniformBuffer

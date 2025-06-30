@@ -15,23 +15,23 @@ public:
     void update();
     void loadPendingScenes();
     bool pendingLoadRequests() const;
-    void requestLoadScene(HashedString sceneName);
-    WeakPtr<Scene> getScene(HashedString sceneName) const;
+    void requestLoadScene(Core::HashedString sceneName);
+    WeakPtr<Scene> getScene(Core::HashedString sceneName) const;
 
 private:
-    void internalLoadScene(HashedString sceneName);
+    void internalLoadScene(Core::HashedString sceneName);
 
 private:
-	std::unordered_map<HashedString, OwnerPtr<Scene>> mScenes;
-	std::unordered_map<HashedString, WeakPtr<Scene>> mLoadedScenes;
-	std::unordered_set<HashedString> mLoadRequests;
+	std::unordered_map<Core::HashedString, OwnerPtr<Scene>> mScenes;
+	std::unordered_map<Core::HashedString, WeakPtr<Scene>> mLoadedScenes;
+	std::unordered_set<Core::HashedString> mLoadRequests;
 
     EntityPtr mSceneObjectController;
 	TEntityPtr<SceneObject> mCameraSceneObject;
 
 public:
-    inline static const HashedString smDefaultSceneName = HashedString("Default");
-    inline static const HashedString smDefaultUISceneName = HashedString("DefaultUI");
+    inline static const Core::HashedString smDefaultSceneName = Core::HashedString("Default");
+    inline static const Core::HashedString smDefaultUISceneName = Core::HashedString("DefaultUI");
 
 public:
 	GET(SceneObjectController)

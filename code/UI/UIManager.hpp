@@ -20,7 +20,7 @@ public:
     const FontGlyphData& getGlyphData(char character) const;
     WeakPtr<GPUShader> getFontShader() const;
 
-	UIGroup& getOrCreateGroup(HashedString groupName)
+	UIGroup& getOrCreateGroup(Core::HashedString groupName)
 	{
 		if (!mGroups.contains(groupName))
 		{
@@ -38,10 +38,10 @@ public:
     void setFocusedElement(TEntityPtr<UIElement> focusedElement);
 
 private:
-	std::unordered_map<HashedString, OwnerPtr<UIGroup>> mGroups;
+	std::unordered_map<Core::HashedString, OwnerPtr<UIGroup>> mGroups;
 	TEntityPtr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
-    HashedString mDefaultFont;
+    Core::HashedString mDefaultFont;
     WeakPtr<GPUShader> mDefaultUIShader;
 
 public:

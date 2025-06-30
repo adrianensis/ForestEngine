@@ -62,7 +62,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
+        Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
 
 	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();

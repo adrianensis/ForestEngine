@@ -20,7 +20,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     rendererData.mShader = GET_SYSTEM(UIManager).getFontShader();
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
+        Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
 	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
@@ -57,7 +57,7 @@ void UIText::onDestroy()
     }
 }
 
-void UIText::setText(HashedString text) 
+void UIText::setText(Core::HashedString text) 
 {
     PROFILER_CPU()
 	if (mString != text)
@@ -125,7 +125,7 @@ void UIText::setText(HashedString text)
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).
-                    setText(HashedString(std::string() + character)).
+                    setText(Core::HashedString(std::string() + character)).
                     setLayer(mConfig.mLayer + 1).
                     setIsAffectedByLayout(false).
                     setParent(this).

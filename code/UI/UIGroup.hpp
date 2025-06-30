@@ -16,7 +16,7 @@ public:
     void setVisibility(bool visibility);
 
 public:
-	HashedString mName;
+	Core::HashedString mName;
 	bool mVisible = false;
 	std::list<TEntityPtr<UIElement>> mUIElements;
 	

@@ -70,7 +70,7 @@ private:
     
 public:
     #ifdef ENGINE_BUILD_DEBUG
-    HashedString mDebugString;
+    Core::HashedString mDebugString;
     #endif
 
     GET(ComponentId)
@@ -129,7 +129,7 @@ public:
     TComponentPtr() = default;
     TComponentPtr(const T* component)
     {
-        ClassId id = ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
+        ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
         *this = TComponentPtr(id, component->getSlot());
     }
     TComponentPtr(ClassId id, Slot slot): ComponentPtr(id, slot)

@@ -6,7 +6,7 @@
 class TextureBindingNames
 {
 public:
-    inline static const HashedString smBaseColor = "BaseColor";
+    inline static const Core::HashedString smBaseColor = "BaseColor";
 };
 
 class PropertiesBlockGPUShaderDefault
