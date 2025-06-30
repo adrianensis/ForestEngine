@@ -3,7 +3,7 @@
 #include "Core/System/System.hpp"
 #include "Core/Window/Window.hpp"
 NS_BEGIN(Core)
-class WindowManager : public System
+class WindowManager : public Core::System
 {
 public:
     virtual void init() override;

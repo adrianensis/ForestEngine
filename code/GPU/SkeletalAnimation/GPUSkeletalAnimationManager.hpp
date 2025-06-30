@@ -5,7 +5,7 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 
-class GPUSkeletalAnimationManager: public System
+class GPUSkeletalAnimationManager: public Core::System
 {
 public:
     virtual void init() override;

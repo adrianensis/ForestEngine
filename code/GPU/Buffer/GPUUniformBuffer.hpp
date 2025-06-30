@@ -34,7 +34,7 @@ public:
     {
         mBuffer.setData((const void*) data.data(), sizeof(T) * data.size());
     }
-    void setDataArray(const ByteBuffer& data)
+    void setDataArray(const Core::ByteBuffer& data)
     {
         mBuffer.setData((const void*) data.getBuffer().data(), data.sizeInBytes());
     }

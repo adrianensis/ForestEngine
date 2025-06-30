@@ -49,7 +49,7 @@ public:
 	GET(IsStarted)
 };
 
-class Time: public System
+class Time: public Core::System
 {
 public:
 	virtual void init() override {mInternalTimeMark.init();}

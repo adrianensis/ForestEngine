@@ -16,7 +16,7 @@ public:
             CHECK_MSG(false, "Could not initialize Vulkan indices buffer");
         }
     }
-    void setDataArray(const ByteBuffer& data)
+    void setDataArray(const Core::ByteBuffer& data)
     {
         if (!setData((const void*)data.getBuffer().data(), data.getBuffer().size()))
         {

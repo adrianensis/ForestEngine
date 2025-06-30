@@ -4,6 +4,7 @@
 #include "Core/Assert/Assert.hpp"
 #include <vector>
 
+NS_BEGIN(Core)
 class ByteBuffer
 {
 public:
@@ -221,3 +222,4 @@ private:
 private:
     u32 mElementSizeInBytes = 0;
 };
+NS_END

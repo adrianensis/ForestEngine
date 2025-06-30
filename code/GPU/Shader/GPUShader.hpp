@@ -142,10 +142,10 @@ class GPUShader;
 class GPUShaderPropertiesInstance
 {
 public:
-    Slot mSlot;
+    Core::Slot mSlot;
     u32 mID = 0;
     WeakPtr<GPUShader> mShader;
-    GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
+    Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
 };
 REGISTER_CLASS(GPUShaderPropertiesInstance);
@@ -171,7 +171,7 @@ class GPUShader
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(const GPUShaderData& shaderData, const GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id);
+    virtual void init(const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id);
     void terminate();
 
     bool hasFramebufferBinding(Core::HashedString bindingName) const;
@@ -211,7 +211,7 @@ protected:
     GPUShaderCompilationData mGPUShaderCompilationData;
     GPUShaderData mGPUShaderData;
     u32 mID = 0;
-    GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
+    Core::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
     Core::ClassDefinition mSharedGPUShaderPropertiesBlockClass;
 
 public:

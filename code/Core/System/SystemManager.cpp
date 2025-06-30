@@ -1,6 +1,7 @@
 #include "Core/System/SystemManager.hpp"
 #include "Core/Log/Log.hpp"
 
+NS_BEGIN(Core)
 void SystemsManager::init()
 {
 
@@ -18,3 +19,4 @@ void SystemsManager::terminate()
     mSystemsInOrder.clear();
     mSystems.clear();
 }
+NS_END

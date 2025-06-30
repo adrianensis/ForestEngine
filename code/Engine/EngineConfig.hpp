@@ -3,7 +3,7 @@
 #include "Core/System/System.hpp"
 #include "Core/Config/Config.hpp"
 
-class EngineConfig: public System
+class EngineConfig: public Core::System
 {
 	
 public:

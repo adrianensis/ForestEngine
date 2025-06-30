@@ -4,7 +4,7 @@
 #include "Core/System/System.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 
-class GPUMeshFactory: public System
+class GPUMeshFactory: public Core::System
 {
 public:
     virtual void init() override;

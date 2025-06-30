@@ -6,7 +6,7 @@
 #include "Core/EntityComponent/Component.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 
-class ScriptEngine: public System, public IComponentsListener
+class ScriptEngine: public Core::System, public IComponentsListener
 {
 public:
     virtual void init() override;

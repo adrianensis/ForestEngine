@@ -20,7 +20,7 @@ public:
     void setIsActive(bool isActive);
     void destroy();
     virtual void onDestroy();
-    virtual void onRecycle(Slot newSlot);
+    virtual void onRecycle(Core::Slot newSlot);
 
     // Important: Override this in ONLY those component classes allowed to be injected into engine systems
     // MeshRenderer for RenderEngine, Script for RenderEngine, ...
@@ -37,7 +37,7 @@ class ComponentOwner
 public:
 
     ComponentOwner() = default;
-    ComponentOwner(ClassId id, Slot slot)
+    ComponentOwner(ClassId id, Core::Slot slot)
     {
         mClassId = id;
         mSlot = slot;
@@ -50,7 +50,7 @@ public:
     }
 
 public:
-    Slot mSlot;
+    Core::Slot mSlot;
     ClassId mClassId = 0;
 };
 
@@ -60,7 +60,7 @@ public:
 private:
 	bool mIsActive = true;
 	bool mIsDestroyed = false;
-	Slot mSlot;
+	Core::Slot mSlot;
 	ComponentOwner mOwnerEntity;
 
 	u64 mComponentId = 0;
@@ -80,13 +80,13 @@ public:
 REGISTER_CLASS(Component);
 
 
-class ComponentPtr: public PoolElementPtr
+class ComponentPtr: public Core::PoolElementPtr
 {
 public:
-    ComponentPtr(): PoolElementPtr()
+    ComponentPtr(): Core::PoolElementPtr()
     {
     }
-    ComponentPtr(ClassId id, Slot slot): PoolElementPtr(id, slot)
+    ComponentPtr(ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
@@ -98,7 +98,7 @@ public:
         mDebugPointer = other.mDebugPointer;
         #endif
     }
-    ComponentPtr(const PoolElementPtr& other): ComponentPtr(other.mClassId, other.mSlot)
+    ComponentPtr(const Core::PoolElementPtr& other): ComponentPtr(other.mClassId, other.mSlot)
     {
     }
 
@@ -132,7 +132,7 @@ public:
         ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
         *this = TComponentPtr(id, component->getSlot());
     }
-    TComponentPtr(ClassId id, Slot slot): ComponentPtr(id, slot)
+    TComponentPtr(ClassId id, Core::Slot slot): ComponentPtr(id, slot)
     {
         checkValid();
     }

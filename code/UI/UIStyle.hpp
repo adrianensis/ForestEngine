@@ -31,7 +31,7 @@ public:
 };
 REGISTER_CLASS(UIStyleDefault)
 
-class UIStyleManager: public Singleton<UIStyleManager>
+class UIStyleManager: public Core::Singleton<UIStyleManager>
 {
 	
 	

@@ -107,7 +107,7 @@ void OcTree::OcTreeNode::addOcTreeElementToChildren(WeakPtr<IOcTreeElement> elem
 void OcTree::OcTreeNode::createChildren(u8 index)
 {
     PROFILER_CPU()
-    mChildren[index] = Memory::newObject<OcTreeNode>();
+    mChildren[index] = Core::Memory::newObject<OcTreeNode>();
     mChildren[index]->init(mTree, this, index, mChildrenBoundingBoxes[index], mDepth + 1);
 }
 
@@ -218,7 +218,7 @@ void OcTree::OcTreeNode::updateChildren(OcTree& tree)
             {
                 if(node->mActiveChildrenIndex == 0)
                 {
-                    Memory::deleteObject(node);
+                    Core::Memory::deleteObject(node);
                     mChildren[childrenIndex] = nullptr;
                     continue;
                 }

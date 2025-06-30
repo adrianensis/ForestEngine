@@ -4,7 +4,7 @@
 #include "Core/System/System.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
-class GPUShaderManager: public System
+class GPUShaderManager: public Core::System
 {
 public:
     virtual void init() override;
@@ -16,7 +16,7 @@ public:
     WeakPtr<GPUShader> createShader(const GPUShaderData& shaderData, const P& propertiesBlockDefault)
     {
         WeakPtr<GPUShader> shader = mShaders.emplace_back(OwnerPtr<GPUShader>::moveCast(OwnerPtr<T>::newObject()));
-        GenericObjectBuffer propertiesBlockDefaultBuffer;
+        Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
         propertiesBlockDefaultBuffer.get<P>() = propertiesBlockDefault;
         shader->init(shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
@@ -32,7 +32,7 @@ public:
     void setGPUShaderPropertiesInstanceDirty(u32 id);
 
     const GPUUniformBuffer& getGPUShaderPropertiesGPUUniformBuffer(WeakPtr<GPUShader> shader) const;
-    Slot requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader);
+    Core::Slot requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader);
 
     const std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(u32 id) const;
     
@@ -44,9 +44,9 @@ private:
     class GPUShaderPropertyBlockRenderState
     {
     public:
-        ByteBuffer mGPUShaderPropertiesBlockArray;
+        Core::ByteBuffer mGPUShaderPropertiesBlockArray;
         GPUUniformBuffersContainer mGPUUniformBuffersContainer;
-        SlotsManager mSlotsManager;
+        Core::SlotsManager mSlotsManager;
     };
 
 	std::unordered_map<ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;

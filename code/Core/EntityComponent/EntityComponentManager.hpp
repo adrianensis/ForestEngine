@@ -16,7 +16,7 @@ public:
 
 #define EC EntityComponentManager::getInstance()
 
-class EntityComponentManager: public Singleton<EntityComponentManager>
+class EntityComponentManager: public Core::Singleton<EntityComponentManager>
 {
 public:
     void init()
@@ -66,7 +66,7 @@ public:
     TComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
-        PoolElementPtr poolPtr = mComponentsPool.requestElement<T>();
+        Core::PoolElementPtr poolPtr = mComponentsPool.requestElement<T>();
         ComponentPtr componentPtr = poolPtr;
         if(componentPtr.isValid())
         {
@@ -96,7 +96,7 @@ public:
         CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
 
         ClassId id = entityPtr.mClassId;
-        Slot slot = entityPtr.mSlot;
+        Core::Slot slot = entityPtr.mSlot;
         if(!mEntityComponents.contains(id))
         {
             mEntityComponents.emplace(id, std::unordered_map<u32, std::list<ComponentPtr>>());
@@ -123,7 +123,7 @@ public:
 
         bool componentFound = false;
         ClassId id = entityPtr.mClassId;
-        Slot slot = entityPtr.mSlot;
+        Core::Slot slot = entityPtr.mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
@@ -149,7 +149,7 @@ public:
         PROFILER_CPU()
 
         ClassId id = entityPtr.mClassId;
-        Slot slot = entityPtr.mSlot;
+        Core::Slot slot = entityPtr.mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
@@ -165,7 +165,7 @@ public:
     const std::list<ComponentPtr>& getComponents(const EntityPtr& entityPtr)
     {
         ClassId id = entityPtr.mClassId;
-        Slot slot = entityPtr.mSlot;
+        Core::Slot slot = entityPtr.mSlot;
         return mEntityComponents.at(id).at(slot.getSlot());
     }
 
@@ -228,7 +228,7 @@ public:
     template<class T> T_EXTENDS(T, Entity)
     TEntityPtr<T> requestEntity()
     {
-        PoolElementPtr poolPtr = mEntitiesPool.requestElement<T>();
+        Core::PoolElementPtr poolPtr = mEntitiesPool.requestElement<T>();
         EntityPtr entityPtr = poolPtr;
         if(entityPtr.isValid())
         {
@@ -254,8 +254,8 @@ public:
     }
 
 private:
-    Pool<Entity> mEntitiesPool;
-    Pool<Component> mComponentsPool;
+    Core::Pool<Entity> mEntitiesPool;
+    Core::Pool<Component> mComponentsPool;
     std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
     std::unordered_map<ClassId, std::unordered_map<u32, std::list<ComponentPtr>>> mEntityComponents;
 

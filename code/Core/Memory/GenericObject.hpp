@@ -2,6 +2,7 @@
 
 #include "Core/Memory/ByteBuffer.hpp"
 
+NS_BEGIN(Core)
 class GenericObjectBuffer
 {
 public:
@@ -37,3 +38,4 @@ private:
 public:
     const ByteBuffer& getByteBuffer() const { return mByteBuffer; }
 };
+NS_END

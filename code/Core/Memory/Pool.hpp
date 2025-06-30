@@ -7,6 +7,7 @@
 #include "Core/Memory/Pointers.hpp"
 #include "Core/Memory/SlotsManager.hpp"
 
+NS_BEGIN(Core)
 class PoolElementPtr
 {
 public:
@@ -136,7 +137,7 @@ public:
             FOR_ARRAY(i, it->second.get())
             {
                 BaseClass& element = it->second->at(i);
-                Memory::unregisterPointer(&element);
+                Core::Memory::unregisterPointer(&element);
             }
             it->second->clear();
         }
@@ -173,7 +174,7 @@ public:
             BaseClass& element = mPools.at(id)->at(slot.getSlot());
             T* elementT = static_cast<T*>(&element);
             *elementT = T();
-            Memory::registerPointer<T>(elementT);
+            Core::Memory::registerPointer<T>(elementT);
         }
         else
         {
@@ -187,7 +188,7 @@ public:
     {
         PROFILER_CPU()
 
-        Memory::unregisterPointer(&getElementBase(ptr));
+        Core::Memory::unregisterPointer(&getElementBase(ptr));
         
         if(mPools.contains(ptr.mClassId))
         {
@@ -213,3 +214,4 @@ public:
     Core::HashedString mDebugString;
     #endif
 };
+NS_END

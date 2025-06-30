@@ -49,7 +49,7 @@ void GPUShaderManager::update()
 
     FOR_MAP(it, mGPUShaderPropertyBlockRenderStates)
     {
-        ByteBuffer& shaderPropertiesBlockArray = it->second.mGPUShaderPropertiesBlockArray;
+        Core::ByteBuffer& shaderPropertiesBlockArray = it->second.mGPUShaderPropertiesBlockArray;
         it->second.mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName).setDataArray(shaderPropertiesBlockArray);
     }
 }
@@ -151,7 +151,7 @@ void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(We
                 mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUShaderPropertiesBlockArray.resize(mInitialInstances * propertiesBlockSizeBytes);
 
                 // Reserve index 0 for default shader instance
-                Slot defaultSlot = mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
+                Core::Slot defaultSlot = mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.requestSlot();
                 mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUShaderPropertiesBlockArray.copyBufferAt(shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer(), defaultSlot.getSlot() * propertiesBlockSizeBytes);
 
                 const GPUUniformBufferData& propertiesBlockUniformBufferData = shader->getPropertiesBlockUniformBufferData();
@@ -213,14 +213,14 @@ const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer
     return mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
 
-Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader)
+Core::Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader)
 {
     PROFILER_CPU()
 
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
     
-    Slot slot;
+    Core::Slot slot;
     if(mGPUShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {    
         if(shader->getGPUShaderData().mAllowInstances)

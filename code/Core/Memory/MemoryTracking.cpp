@@ -1,6 +1,7 @@
 #include "Core/Memory/MemoryTracking.hpp"
 #include "Core/Log/Log.hpp"
 
+NS_BEGIN(Core)
 void MemoryTracking::init()
 {
 }
@@ -21,3 +22,5 @@ void MemoryTracking::terminate()
 {
 	log();
 }
+
+NS_END

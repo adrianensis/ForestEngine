@@ -28,7 +28,7 @@ private:
     void drawCall();
 
 private:
-    SlotsManager mRendererSlotsManager;
+    Core::SlotsManager mRendererSlotsManager;
 	std::vector<WeakPtr<GPURenderItem>> mRenderers;
     u32 mRenderersCount = 0;
     std::set<u32> mUsedSlots;

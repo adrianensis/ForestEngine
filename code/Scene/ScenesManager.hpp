@@ -7,7 +7,7 @@
 
 class Camera;
 
-class ScenesManager: public System
+class ScenesManager: public Core::System
 {
 public:	
     virtual void init() override;

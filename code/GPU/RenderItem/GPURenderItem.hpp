@@ -22,8 +22,8 @@ public:
 
 private:
     GPURenderItemData mGPURenderItemData;
-    Slot mInstanceSlot;
-    Slot mRenderSlot;
+    Core::Slot mInstanceSlot;
+    Core::Slot mRenderSlot;
     Matrix4 mRendererModelMatrix;
     WeakPtr<GPUShaderPropertiesInstance> mGPUShaderPropertiesInstance;
     bool mIsStatic = false;

@@ -4,7 +4,7 @@
 #include "Core/System/System.hpp"
 #include "GPU/ShapeRenderer/GPUShapeRenderer.hpp"
 
-class DebugRenderer : public System
+class DebugRenderer : public Core::System
 {
 public:
     virtual void init() override;

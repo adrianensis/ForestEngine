@@ -3,7 +3,7 @@
 #include "Core/System/System.hpp"
 #include "Core/Time/Timer.hpp"
 
-class TimerManager: public System
+class TimerManager: public Core::System
 {
 public:
     virtual void init() override;

@@ -13,7 +13,7 @@ NS_BEGIN(Core)
 #define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(Core::EventsManager).unsubscribe<EventClassName>(owner, receiver);
 #define SEND_EVENT(owner, instigator, event) GET_SYSTEM(Core::EventsManager).send<REMOVE_REFERENCE(decltype(event))>(owner, instigator, &event);
 
-class EventsManager: public System
+class EventsManager: public Core::System
 {
 public:
     virtual void init() override;

@@ -4,6 +4,7 @@
 #include "Core/Memory/Singleton.hpp"
 #include "Core/Events/Event.hpp"
 
+NS_BEGIN(Core)
 class System: public EnableWeakPtrToThis, public Core::IEventObject
 {
 public:
@@ -12,3 +13,4 @@ public:
     virtual void terminate() { };
 };
 REGISTER_CLASS(System);
+NS_END

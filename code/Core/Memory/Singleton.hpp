@@ -2,6 +2,7 @@
 
 #include "Core/Std.hpp"
 
+NS_BEGIN(Core)
 template <class T>
 class Singleton
 {
@@ -35,3 +36,5 @@ public:
 private:
 	inline static OwnerPtr<T> mInstance;
 };
+
+NS_END

@@ -19,12 +19,12 @@ void Engine::init()
 {
 	mFPS = 60;
 
-	Log::init();
+	Core::Log::init();
 
-	Memory::init();
+	Core::Memory::init();
 	Profiler::init();
     EC.init();
-    SystemsManager::getInstance().init();
+    Core::SystemsManager::getInstance().init();
 
     CREATE_SYSTEM(Time);
     CREATE_SYSTEM(EngineConfig);
@@ -113,16 +113,16 @@ void Engine::run()
 void Engine::terminate()
 {
 
-	MemoryTracking::log();
-	SystemsManager::getInstance().terminate();
-	SystemsManager::deleteInstance();
+	Core::MemoryTracking::log();
+	Core::SystemsManager::getInstance().terminate();
+	Core::SystemsManager::deleteInstance();
     EC.terminate();
     EntityComponentManager::deleteInstance();
 	Profiler::terminate();
-	Memory::terminate();
+	Core::Memory::terminate();
     Core::HashedStringsManager::terminate();
 
     LOG("Terminated OK!")
 
-	Log::terminate();
+	Core::Log::terminate();
 }

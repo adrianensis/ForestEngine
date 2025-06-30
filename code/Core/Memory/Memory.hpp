@@ -5,6 +5,7 @@
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
+NS_BEGIN(Core)
 class Memory
 {
 public:
@@ -57,3 +58,5 @@ public:
         MemoryTracking::unregisterDeletedObject(pointer);
 	}
 };
+
+NS_END

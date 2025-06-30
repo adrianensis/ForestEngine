@@ -2,6 +2,7 @@
 #include "Core/Log/Log.hpp"
 #include "Core/Assert/Assert.hpp"
 
+NS_BEGIN(Core)
 void Memory::init()
 {
     MemoryTracking::init();
@@ -11,3 +12,5 @@ void Memory::terminate()
 {
     MemoryTracking::terminate();
 }
+
+NS_END

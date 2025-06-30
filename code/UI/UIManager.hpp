@@ -11,7 +11,7 @@
 class GPUShader;
 class Scene;
 
-class UIManager: public System
+class UIManager: public Core::System
 {
 public:
     virtual void init() override;

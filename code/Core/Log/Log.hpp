@@ -7,6 +7,7 @@
 #include "fmt/base.h"
 #include "fmt/ostream.h"
 
+NS_BEGIN(Core)
 class Log
 {
 public:
@@ -107,17 +108,17 @@ private:
 };
 
 #ifdef ENGINE_ENABLE_LOGS
-#define LOG_TRACE() Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, ""s);
-#define LOG_TRACE_MSG(...) Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, __VA_ARGS__);
-#define LOG(...) Log::log(Log::Prefixes::smLog, true, __VA_ARGS__);
-#define LOG_APPEND(...) Log::log(Log::Prefixes::smLog, false, __VA_ARGS__);
-#define LOG_TAG(Tag, ...) Log::log(Tag, true, __VA_ARGS__);
-#define LOG_TAG_APPEND(Tag, ...) Log::log(Tag, false, __VA_ARGS__);
-#define LOG_VAR(x) Log::var<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(#x, x);
-#define LOG_VAL(x) Log::val<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(x);
-#define LOG_ERROR(...) Log::log(Log::Prefixes::smError, true, __VA_ARGS__);
-#define LOG_BRLINE() Log::brline();
-#define LOG_BACKSPACE() Log::backspace();
+#define LOG_TRACE() Core::Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, ""s);
+#define LOG_TRACE_MSG(...) Core::Log::trace(__FILE__, __LINE__, __PRETTY_FUNCTION__, __VA_ARGS__);
+#define LOG(...) Core::Log::log(Core::Log::Prefixes::smLog, true, __VA_ARGS__);
+#define LOG_APPEND(...) Core::Log::log(Core::Log::Prefixes::smLog, false, __VA_ARGS__);
+#define LOG_TAG(Tag, ...) Core::Log::log(Tag, true, __VA_ARGS__);
+#define LOG_TAG_APPEND(Tag, ...) Core::Log::log(Tag, false, __VA_ARGS__);
+#define LOG_VAR(x) Core::Log::var<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(#x, x);
+#define LOG_VAL(x) Core::Log::val<REMOVE_POINTER(REMOVE_REFERENCE(decltype(x)))>(x);
+#define LOG_ERROR(...) Core::Log::log(Core::Log::Prefixes::smError, true, __VA_ARGS__);
+#define LOG_BRLINE() Core::Log::brline();
+#define LOG_BACKSPACE() Core::Log::backspace();
 #else
 #define LOG_TRACE()
 #define LOG_TRACE_MSG(...)
@@ -131,3 +132,4 @@ private:
 #define LOG_BRLINE()
 #define LOG_BACKSPACE()
 #endif
+NS_END

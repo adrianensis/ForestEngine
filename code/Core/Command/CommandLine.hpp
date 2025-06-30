@@ -23,7 +23,7 @@ public:
     Command mCommand;
 };
 
-class CommandLine: public System
+class CommandLine: public Core::System
 {
 public:
 	virtual void init() override;

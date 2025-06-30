@@ -6,6 +6,7 @@
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
+NS_BEGIN(Core)
 class MemoryTracking
 {
 private:
@@ -93,3 +94,5 @@ private:
     inline static std::unordered_map<u64, Core::HashedString> smPointersToDynamicClassName;
 #endif
 };
+
+NS_END

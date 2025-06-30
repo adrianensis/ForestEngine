@@ -17,7 +17,7 @@ public:
     virtual Vector2 getMousePosition() const = 0;
 };
 
-class Input: public System
+class Input: public Core::System
 {
 public:
     virtual void init() override;

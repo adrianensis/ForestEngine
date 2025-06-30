@@ -20,7 +20,7 @@ private:
 
 private:
     std::vector<Matrix4> mMatrices;
-    SlotsManager mRenderInstancesSlotsManager;
+    Core::SlotsManager mRenderInstancesSlotsManager;
 	std::vector<WeakPtr<GPURenderItem>> mRenderers;
     std::set<u32> mUsedSlots;
 	std::vector<WeakPtr<GPURenderItem>> mRenderersStatic;

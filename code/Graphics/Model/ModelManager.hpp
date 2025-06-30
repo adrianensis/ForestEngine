@@ -7,7 +7,7 @@
 
 class Model;
 
-class ModelManager: public System
+class ModelManager: public Core::System
 {
 public:
     virtual void init() override;

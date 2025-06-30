@@ -380,7 +380,7 @@ private:
             {
                 if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
                 {
-                    Memory::deleteObject(mReferenceBlock);
+                    Core::Memory::deleteObject(mReferenceBlock);
                 }
             }
         }
@@ -455,11 +455,11 @@ public:
             if(mInternalPointer && !mReferenceBlock->isReferenced())
             {
                 // INFO: if class is EnableWeakPtrToThis derived, the mReferenceBlock will be removed by the parent OwnerPtr in the next if statement!
-                Memory::deleteObject(mInternalPointer);
+                Core::Memory::deleteObject(mInternalPointer);
             }
             if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
-                Memory::deleteObject(mReferenceBlock);
+                Core::Memory::deleteObject(mReferenceBlock);
             }
         }
         set(nullptr, nullptr);
@@ -519,7 +519,7 @@ public:
         return SharedPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    explicit SharedPtr(T* reference) { this->init(reference, Memory::newObject<ReferenceBlock>()); }
+    explicit SharedPtr(T* reference) { this->init(reference, Core::Memory::newObject<ReferenceBlock>()); }
     SharedPtr() = default;
     SharedPtr(const WeakPtr<T>& other) { assign(other); }
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
@@ -537,7 +537,7 @@ public:
     template <typename ... Args>
 	static SharedPtr<T> newObject(Args&&... args)
 	{
-        return SharedPtr<T>(Memory::newObject<T>(args...));
+        return SharedPtr<T>(Core::Memory::newObject<T>(args...));
     }
 
 private:
@@ -585,7 +585,7 @@ public:
 
     explicit OwnerPtr(T* reference)
     {
-        this->init(reference, Memory::newObject<ReferenceBlock>());
+        this->init(reference, Core::Memory::newObject<ReferenceBlock>());
     }
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
@@ -605,7 +605,7 @@ public:
     template <typename ... Args>
 	static OwnerPtr<T> newObject(Args&&... args)
 	{
-        return OwnerPtr<T>(Memory::newObject<T>(args...));
+        return OwnerPtr<T>(Core::Memory::newObject<T>(args...));
     }
 
 private:

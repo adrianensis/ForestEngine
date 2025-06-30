@@ -2,16 +2,18 @@
 
 #include "Core/System/System.hpp"
 
+NS_BEGIN(Core)
+
 #define GET_SYSTEM_PTR(...) \
-    SystemsManager::getInstance().getSystem<__VA_ARGS__>()
+    Core::SystemsManager::getInstance().getSystem<__VA_ARGS__>()
 
 #define GET_SYSTEM(...) \
     GET_SYSTEM_PTR(__VA_ARGS__).get()
 
 #define CREATE_SYSTEM(...) \
-    SystemsManager::getInstance().createSystem<__VA_ARGS__>().get();
+    Core::SystemsManager::getInstance().createSystem<__VA_ARGS__>().get();
 
-class SystemsManager: public Singleton<SystemsManager>
+class SystemsManager: public Core::Singleton<SystemsManager>
 {
 public:
     void init();
@@ -44,3 +46,4 @@ private:
     std::unordered_map<ClassId, OwnerPtr<System>> mSystems;
     std::vector<WeakPtr<System>> mSystemsInOrder;
 };
+NS_END

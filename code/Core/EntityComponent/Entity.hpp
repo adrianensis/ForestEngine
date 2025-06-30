@@ -24,7 +24,7 @@ public:
 	};
 
 	virtual void onDestroy(){};
-    virtual void onRecycle(Slot newSlot);
+    virtual void onRecycle(Core::Slot newSlot);
     
     void setIsActive(bool isActive);
     void destroy();
@@ -34,7 +34,7 @@ private:
 
 	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
-    Slot mSlot;
+    Core::Slot mSlot;
 
 	u64 mEntityId = 0;
     // Important: starts by 1, 0 is reserved for null
@@ -56,14 +56,14 @@ public:
 };
 REGISTER_CLASS(Entity);
 
-class EntityPtr: public PoolElementPtr
+class EntityPtr: public Core::PoolElementPtr
 {
 public:
 
-    EntityPtr(): PoolElementPtr()
+    EntityPtr(): Core::PoolElementPtr()
     {
     }
-    EntityPtr(ClassId id, Slot slot): PoolElementPtr(id, slot)
+    EntityPtr(ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
@@ -75,7 +75,7 @@ public:
         mDebugPointer = other.mDebugPointer;
         #endif
     }
-    EntityPtr(const PoolElementPtr& other): EntityPtr(other.mClassId, other.mSlot)
+    EntityPtr(const Core::PoolElementPtr& other): EntityPtr(other.mClassId, other.mSlot)
     {
     }
 
@@ -109,7 +109,7 @@ public:
         ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
         *this = TEntityPtr(id, entity->getSlot());
     }
-    TEntityPtr(ClassId id, Slot slot): EntityPtr(id, slot)
+    TEntityPtr(ClassId id, Core::Slot slot): EntityPtr(id, slot)
     {
         checkValid();
     }

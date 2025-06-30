@@ -36,7 +36,7 @@ void Entity::destroy()
     EC.removeComponents(TEntityPtr(this));
 }
 
-void Entity::onRecycle(Slot newSlot)
+void Entity::onRecycle(Core::Slot newSlot)
 {
     mSlot = newSlot;
 };

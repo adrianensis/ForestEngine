@@ -14,7 +14,7 @@ void GPUShaderPropertiesInstance::setDirty()
     GET_SYSTEM(GPUShaderManager).setGPUShaderPropertiesInstanceDirty(mID);
 }
 
-void GPUShader::init(const GPUShaderData& shaderData, const GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id)
+void GPUShader::init(const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id)
 {
     mGPUShaderData = shaderData;
 	mID = id;

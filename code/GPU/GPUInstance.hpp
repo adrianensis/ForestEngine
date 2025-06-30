@@ -4,7 +4,7 @@
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Core/GPUContext.hpp"
 
-class GPUInstance: public System
+class GPUInstance: public Core::System
 {
 public:
     virtual void init() override;

@@ -40,7 +40,7 @@ void Component::destroy()
     mOwnerEntity.reset();
 }
 
-void Component::onRecycle(Slot newSlot)
+void Component::onRecycle(Core::Slot newSlot)
 {
     mSlot = newSlot;
 }

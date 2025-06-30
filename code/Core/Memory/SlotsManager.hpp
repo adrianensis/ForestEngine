@@ -6,6 +6,7 @@
 #include <vector>
 #include <set>
 
+NS_BEGIN(Core)
 class Slot
 {
 public:
@@ -98,3 +99,5 @@ private:
     u32 mSize = 0;
 public:
 };
+
+NS_END

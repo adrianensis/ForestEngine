@@ -148,7 +148,7 @@ void Scene::update()
 		{
 			std::string className = "SceneObject"; //mLoadSceneConfig->at("class").get<std::string>();
 
-			SceneObject *sceneObject = (SceneObject*) INSTANCE_BY_NAME(className); //Memory::fromClassName<SceneObject>(className));
+			SceneObject *sceneObject = (SceneObject*) INSTANCE_BY_NAME(className); //Core::Memory::fromClassName<SceneObject>(className));
 			sceneObject->init();
 			sceneObject->deserialize(JSON());
 			addSceneObject(sceneObject);
