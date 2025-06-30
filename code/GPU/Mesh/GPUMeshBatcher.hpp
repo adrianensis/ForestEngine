@@ -7,18 +7,18 @@ class GPUMeshBatcher
 public:
 	GPUMeshBatcher() = default;
 
-    void init(WeakPtr<const GPUMesh> mesh, u32 size);
+    void init(Core::WeakPtr<const GPUMesh> mesh, u32 size);
     void resize(u32 size);
     void setInstanceData(u32 instanceId, u32 objectId, u32 shaderPropertiesInstanceId);
 private:
-    void appendMeshData(WeakPtr<const GPUMesh> mesh);
+    void appendMeshData(Core::WeakPtr<const GPUMesh> mesh);
     void allocateInstances(u32 maxInstances);
     void generateIndicesData(u32 meshesCount);
     void generateInstanceIDsData(u32 meshesCount);
 
 private:
-    WeakPtr<const GPUMesh> mMesh;
-	OwnerPtr<GPUMesh> mInternalMesh;
+    Core::WeakPtr<const GPUMesh> mMesh;
+	Core::OwnerPtr<GPUMesh> mInternalMesh;
     std::vector<u32> mInstanceIDs;
     std::vector<u32> mObjectIDs;
     std::vector<u32> mGPUShaderPropertiesInstanceIDs;

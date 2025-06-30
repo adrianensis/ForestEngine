@@ -3,7 +3,7 @@
 #include "Core/Std.hpp"
 #include "Core/System/System.hpp"
 #include <chrono>
-
+NS_BEGIN(Core)
 class TimeMark
 {
 public:
@@ -64,3 +64,4 @@ private:
 	TimeMark mInternalTimeMark;
 };
 REGISTER_CLASS(Time);
+NS_END

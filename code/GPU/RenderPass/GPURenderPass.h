@@ -27,15 +27,15 @@ class GPUAttachmentData
 public:
     GPUAttachmentLoadOp mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
     GPUAttachmentStoreOp mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    Ptr<GPUImage> mOutputGPUImage;
+    Core::Ptr<GPUImage> mOutputGPUImage;
     bool mUseDefaultOutput = true;
 };
 
 class GPURenderPassOutputData
 {
 public:
-    Ptr<GPUImage> mColorGPUImage;
-    Ptr<GPUImage> mDepthGPUImage;
+    Core::Ptr<GPUImage> mColorGPUImage;
+    Core::Ptr<GPUImage> mDepthGPUImage;
 };
 
 class GPURenderPass;
@@ -44,7 +44,7 @@ class GPURenderPassDependency
 public:
     Core::HashedString mSamplerName;
     GPUFramebufferAttachmentType mAttachmentType;
-    WeakPtr<GPURenderPass> mRenderPass;
+    Core::WeakPtr<GPURenderPass> mRenderPass;
 };
 
 class GPURenderPassData
@@ -67,7 +67,7 @@ private:
 public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
-    bool init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData);
+    bool init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData);
     void terminate();
     void begin();
     virtual void renderPass();
@@ -89,7 +89,7 @@ protected:
     bool initializeFramebuffers();
 
 public:
-    Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUContext> mGPUContext;
 protected:
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     std::vector<GPUFramebuffer> framebuffers;
@@ -99,8 +99,8 @@ protected:
     GPUFramebuffer mOutputGPUFramebuffer;
 
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
-    std::unordered_map<GPUInstanceRendererData, OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
-    WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
+    Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
 public:
     CRGET(RenderPass)

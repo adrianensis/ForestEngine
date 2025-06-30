@@ -22,7 +22,7 @@ public:
 
 private:
     RenderPipelineData mRenderPipelineData;
-    OwnerPtr<RenderPipelinePBR> mRenderPipeline;
+    Core::OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;
 public:
 	OcTree octree;

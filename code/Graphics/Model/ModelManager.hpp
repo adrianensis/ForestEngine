@@ -13,14 +13,14 @@ public:
     virtual void init() override;
     virtual void terminate() override;
 
-    WeakPtr<const Model> loadModel(const std::string& path);
-    void setMeshToModel(WeakPtr<const GPUMesh> mesh, WeakPtr<Model> model);
-    WeakPtr<Model> getModelFromMesh(WeakPtr<const GPUMesh> mesh) const;
+    Core::WeakPtr<const Model> loadModel(const std::string& path);
+    void setMeshToModel(Core::WeakPtr<const GPUMesh> mesh, Core::WeakPtr<Model> model);
+    Core::WeakPtr<Model> getModelFromMesh(Core::WeakPtr<const GPUMesh> mesh) const;
 
 private:
-    std::unordered_map<std::string, OwnerPtr<Model>> mModels;
-    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<Model>> mMeshToModels;
-    WeakPtr<GPUShader> mDefaultModelShader;
+    std::unordered_map<std::string, Core::OwnerPtr<Model>> mModels;
+    std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::WeakPtr<Model>> mMeshToModels;
+    Core::WeakPtr<GPUShader> mDefaultModelShader;
 public:
     GET(DefaultModelShader)
     CRGET(Models)

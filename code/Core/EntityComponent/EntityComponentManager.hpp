@@ -31,14 +31,14 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void addComponentListener(WeakPtr<IComponentsListener> listener)
+    void addComponentListener(Core::WeakPtr<IComponentsListener> listener)
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentListeners.contains(id))
         {
-            mComponentListeners.emplace(id, std::unordered_set<WeakPtr<IComponentsListener>>());
+            mComponentListeners.emplace(id, std::unordered_set<Core::WeakPtr<IComponentsListener>>());
         }
 
         if(!mComponentListeners.at(id).contains(listener))
@@ -48,7 +48,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void removeComponentListener(WeakPtr<IComponentsListener> listener)
+    void removeComponentListener(Core::WeakPtr<IComponentsListener> listener)
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
@@ -256,7 +256,7 @@ public:
 private:
     Core::Pool<Entity> mEntitiesPool;
     Core::Pool<Component> mComponentsPool;
-    std::unordered_map<ClassId, std::unordered_set<WeakPtr<IComponentsListener>>> mComponentListeners;
+    std::unordered_map<ClassId, std::unordered_set<Core::WeakPtr<IComponentsListener>>> mComponentListeners;
     std::unordered_map<ClassId, std::unordered_map<u32, std::list<ComponentPtr>>> mEntityComponents;
 
 public:

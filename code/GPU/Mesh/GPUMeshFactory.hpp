@@ -11,30 +11,30 @@ public:
     virtual void terminate() override;
 
 	template <class T>
-	WeakPtr<const GPUMesh> getPrimitive()
+	Core::WeakPtr<const GPUMesh> getPrimitive()
 	{
 		if(!mPrimitivesMap.contains(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId()))
 		{
 			mPrimitivesMap.insert_or_assign(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId(), createPrimitive<T>());
 		}
 		
-		return WeakPtr<GPUMesh>(mPrimitivesMap.at(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
+		return Core::WeakPtr<GPUMesh>(mPrimitivesMap.at(Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId()));
 	}
 
 private:
 	template <class T>
-	OwnerPtr<GPUMesh> createPrimitive() const
+	Core::OwnerPtr<GPUMesh> createPrimitive() const
 	{
 		CHECK_MSG(false, "GPUMesh Primitive not implemented");
-		return OwnerPtr<GPUMesh>();
+		return Core::OwnerPtr<GPUMesh>();
 	}
 
 private:
-	std::unordered_map<ClassId, OwnerPtr<GPUMesh>> mPrimitivesMap;
+	std::unordered_map<ClassId, Core::OwnerPtr<GPUMesh>> mPrimitivesMap;
 };
 REGISTER_CLASS(GPUMeshFactory);
 
 template <>
-OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Rectangle>() const;
+Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Rectangle>() const;
 template <>
-OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Cube>() const;
+Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Cube>() const;

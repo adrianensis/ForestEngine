@@ -26,7 +26,7 @@ void Engine::init()
     EC.init();
     Core::SystemsManager::getInstance().init();
 
-    CREATE_SYSTEM(Time);
+    CREATE_SYSTEM(Core::Time);
     CREATE_SYSTEM(EngineConfig);
     // CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(Core::WindowManager);
@@ -39,7 +39,7 @@ void Engine::init()
     CREATE_SYSTEM(GPUInstance);
     CREATE_SYSTEM(Core::Input);
     GET_SYSTEM(Core::Input).setWindowInputAdapter(GET_SYSTEM(Core::WindowManager).getMainWindow());
-    CREATE_SYSTEM(TimerManager);
+    CREATE_SYSTEM(Core::TimerManager);
     CREATE_SYSTEM(Core::EventsManager);
     CREATE_SYSTEM(GPUMeshFactory);
     CREATE_SYSTEM(GPUShaderManager);
@@ -58,7 +58,7 @@ void Engine::preSceneChanged()
 {
 	GET_SYSTEM(ScriptEngine).preSceneChanged();
 	GET_SYSTEM(RenderEngine).preSceneChanged();
-	GET_SYSTEM(TimerManager).terminate();
+	GET_SYSTEM(Core::TimerManager).terminate();
 }
 
 void Engine::postSceneChanged()
@@ -77,7 +77,7 @@ void Engine::run()
 	while (!GET_SYSTEM(Core::WindowManager).getMainWindow()->isClosed())
 	{
         //FrameMarkStart("frame");
-		GET_SYSTEM(Time).startFrame();
+		GET_SYSTEM(Core::Time).startFrame();
 
 		if (GET_SYSTEM(ScenesManager).pendingLoadRequests())
 		{
@@ -92,11 +92,11 @@ void Engine::run()
 		GET_SYSTEM(Core::CommandLine).update();
 
 		GET_SYSTEM(ScenesManager).update();
-		GET_SYSTEM(TimerManager).update();
+		GET_SYSTEM(Core::TimerManager).update();
 		GET_SYSTEM(ScriptEngine).update();
 		GET_SYSTEM(RenderEngine).update();
 
-		f32 dtMillis = GET_SYSTEM(Time).getElapsedTimeMillis();
+		f32 dtMillis = GET_SYSTEM(Core::Time).getElapsedTimeMillis();
 		
 		if (inverseFPSMillis >= dtMillis)
 		{
@@ -105,7 +105,7 @@ void Engine::run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
 		}
 		
-		GET_SYSTEM(Time).endFrame();
+		GET_SYSTEM(Core::Time).endFrame();
         //FrameMarkEnd("frame");
 	}
 }

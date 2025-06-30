@@ -54,7 +54,7 @@ bool OcTree::OcTreeNode::isDivisible() const
     return mDepth < (mTree->mMaxDepth - 1);
 }
 
-bool OcTree::OcTreeNode::isElementEnclosed(WeakPtr<IOcTreeElement> element) const
+bool OcTree::OcTreeNode::isElementEnclosed(Core::WeakPtr<IOcTreeElement> element) const
 {
     PROFILER_CPU()
     bool test = Geometry::testSphereInsideCube(mCube,
@@ -62,7 +62,7 @@ bool OcTree::OcTreeNode::isElementEnclosed(WeakPtr<IOcTreeElement> element) cons
     return test;
 }
 
-bool OcTree::OcTreeNode::isElementOverlappingChild(WeakPtr<IOcTreeElement> element, u8 childIndex) const
+bool OcTree::OcTreeNode::isElementOverlappingChild(Core::WeakPtr<IOcTreeElement> element, u8 childIndex) const
 {
     PROFILER_CPU()
     bool test = Geometry::testCubeSphere(mChildrenBoundingBoxes[childIndex],
@@ -70,7 +70,7 @@ bool OcTree::OcTreeNode::isElementOverlappingChild(WeakPtr<IOcTreeElement> eleme
     return test;
 }
 
-void OcTree::OcTreeNode::addOcTreeElement(WeakPtr<IOcTreeElement> element)
+void OcTree::OcTreeNode::addOcTreeElement(Core::WeakPtr<IOcTreeElement> element)
 {
     PROFILER_CPU()
 
@@ -84,7 +84,7 @@ void OcTree::OcTreeNode::addOcTreeElement(WeakPtr<IOcTreeElement> element)
     }
 }
 
-void OcTree::OcTreeNode::addOcTreeElementToChildren(WeakPtr<IOcTreeElement> element)
+void OcTree::OcTreeNode::addOcTreeElementToChildren(Core::WeakPtr<IOcTreeElement> element)
 {
     PROFILER_CPU()
 
@@ -111,7 +111,7 @@ void OcTree::OcTreeNode::createChildren(u8 index)
     mChildren[index]->init(mTree, this, index, mChildrenBoundingBoxes[index], mDepth + 1);
 }
 
-void OcTree::OcTreeNode::addOcTreeElementToLeaf(WeakPtr<IOcTreeElement> element)
+void OcTree::OcTreeNode::addOcTreeElementToLeaf(Core::WeakPtr<IOcTreeElement> element)
 {
     PROFILER_CPU()
     auto* octreeNodeElements = &mOcTreeElementsStatic;
@@ -124,7 +124,7 @@ void OcTree::OcTreeNode::addOcTreeElementToLeaf(WeakPtr<IOcTreeElement> element)
     octreeNodeElements->push_back(element);
 }
 
-void OcTree::OcTreeNode::addOcTreeElementToParent(WeakPtr<IOcTreeElement> element)
+void OcTree::OcTreeNode::addOcTreeElementToParent(Core::WeakPtr<IOcTreeElement> element)
 {
     PROFILER_CPU()
 
@@ -152,7 +152,7 @@ void OcTree::OcTreeNode::update(OcTree& tree)
 	{
         FOR_LIST(it, mOcTreeElementsDynamicReinsert)
         {
-            WeakPtr<IOcTreeElement> element = *it;
+            Core::WeakPtr<IOcTreeElement> element = *it;
             addOcTreeElementToChildren(element);
             element->mPendingToReinsert = false;
         }
@@ -184,7 +184,7 @@ void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree)
         mOcTreeElementsDynamic.clear();
         FOR_LIST(it, dynamicElementsCopyArray)
         {
-            WeakPtr<IOcTreeElement> element = *it;
+            Core::WeakPtr<IOcTreeElement> element = *it;
             if(isElementEnclosed(element))
             {
                 mOcTreeElementsDynamic.push_back(element);
@@ -273,12 +273,12 @@ void OcTree::OcTreeNode::drawDebug()
 
             // FOR_RANGE(i,0,mOcTreeElementsStatic.size())
             // {
-            //     WeakPtr<IOcTreeElement> element = mOcTreeElementsStatic[i];
+            //     Core::WeakPtr<IOcTreeElement> element = mOcTreeElementsStatic[i];
             //     GET_SYSTEM(DebugRenderer).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(0,0.8,0.8,1));
             // }
             // FOR_RANGE(i,0,mOcTreeElementsDynamic.size())
             // {
-            //     WeakPtr<IOcTreeElement> element = mOcTreeElementsDynamic[i];
+            //     Core::WeakPtr<IOcTreeElement> element = mOcTreeElementsDynamic[i];
             //     GET_SYSTEM(DebugRenderer).drawCube(element->getOcTreeBoundingBox(),1,true,Vector4(1,0,0,1));
             // }
         }
@@ -299,7 +299,7 @@ void OcTree::update()
 	mRoot.update(*this);
 }
 
-void OcTree::addOcTreeElement(WeakPtr<IOcTreeElement> element)
+void OcTree::addOcTreeElement(Core::WeakPtr<IOcTreeElement> element)
 {
     PROFILER_CPU()
     mRoot.addOcTreeElement(element);

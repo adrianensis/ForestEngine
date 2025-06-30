@@ -11,7 +11,7 @@ class GPUShaderTextureBinding
 {
 public:
     Core::HashedString mName;
-    WeakPtr<GPUTexture> mGPUTexture;
+    Core::WeakPtr<GPUTexture> mGPUTexture;
 };
 
 class GPUShaderDescriptorSetsData
@@ -31,12 +31,12 @@ public:
 class GPUShaderDescriptorSets
 {    
 public:
-    void init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, Ptr<GPUContext> gpuContext);
+    void init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, Core::Ptr<GPUContext> gpuContext);
     void updateBuffers();
     void updateSamplers();
     void terminate();
 private:
-    Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUContext> mGPUContext;
 public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;

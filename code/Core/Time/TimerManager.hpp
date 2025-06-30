@@ -3,6 +3,7 @@
 #include "Core/System/System.hpp"
 #include "Core/Time/Timer.hpp"
 
+NS_BEGIN(Core)
 class TimerManager: public Core::System
 {
 public:
@@ -19,3 +20,5 @@ private:
 	std::list<Timer *> mTimers;
 };
 REGISTER_CLASS(TimerManager);
+
+NS_END

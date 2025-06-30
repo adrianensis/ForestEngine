@@ -2,7 +2,7 @@
 #include "Core/Image/ImageUtils.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 
-bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, u32 mipLevels)
+bool GPUImageUtils::transitionImageLayout(Core::Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, u32 mipLevels)
 {
     VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     
@@ -226,7 +226,7 @@ bool GPUImageUtils::transitionImageLayout(Ptr<GPUContext> gpuContext, VkImage im
     return true;
 }
 
-VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, u32 mipLevels) {
+VkImageView GPUImageUtils::createImageView(Core::Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, u32 mipLevels) {
     
     PROFILER_CPU_NAMED(createImageView);
 
@@ -249,7 +249,7 @@ VkImageView GPUImageUtils::createImageView(Ptr<GPUContext> gpuContext, VkImage i
     return imageView;
 }
 
-void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY)
+void GPUImageUtils::copyBufferToImage(Core::Ptr<GPUContext> gpuContext, VkBuffer buffer, VkImage image, u32 width, u32 height, i32 offsetX, i32 offsetY)
 {
     VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     {
@@ -286,7 +286,7 @@ void GPUImageUtils::copyBufferToImage(Ptr<GPUContext> gpuContext, VkBuffer buffe
 }
 
 
-bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 height, VkImage image, VkFormat imageFormat, u32 mipMapLevels)
+bool GPUImageUtils::generateMipmaps(Core::Ptr<GPUContext> gpuContext, u32 width, u32 height, VkImage image, VkFormat imageFormat, u32 mipMapLevels)
 {
     // Check if image format supports linear blitting
     VkFormatProperties formatProperties;
@@ -424,7 +424,7 @@ bool GPUImageUtils::generateMipmaps(Ptr<GPUContext> gpuContext, u32 width, u32 h
     return true;
 }
 
-void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, u32 width, u32 height, i32 offsetX, i32 offsetY, u32 mipLevels)
+void GPUImageUtils::copyImageToImage(Core::Ptr<GPUContext> gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, u32 width, u32 height, i32 offsetX, i32 offsetY, u32 mipLevels)
     // VkCommandBuffer commandBuffer,
     // VkImage sourceImage,
     // VkExtent2D sourceExtent,
@@ -491,7 +491,7 @@ void GPUImageUtils::copyImageToImage(Ptr<GPUContext> gpuContext, VkImage sourceI
     gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
 }
 
-bool GPUImageUtils::createTextureImage(Ptr<GPUContext> gpuContext, VkImage textureImage, const GPUImageData& textureImageData, byte* data) 
+bool GPUImageUtils::createTextureImage(Core::Ptr<GPUContext> gpuContext, VkImage textureImage, const GPUImageData& textureImageData, byte* data) 
 {
     PROFILER_CPU_NAMED(createTextureImage)
 
@@ -539,7 +539,7 @@ bool GPUImageUtils::hasStencilComponent(VkFormat format)
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-VkFormat GPUImageUtils::findDepthFormat(Ptr<GPUContext> gpuContext)
+VkFormat GPUImageUtils::findDepthFormat(Core::Ptr<GPUContext> gpuContext)
 {
     std::vector<VkFormat> candidates = {
             VK_FORMAT_D32_SFLOAT_S8_UINT, // max priority for depth 32 bits stencil 8 bits 

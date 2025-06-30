@@ -10,7 +10,7 @@ void GPUInstance::init()
 //    mMaxUniformBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::UNIFORM);
 //    mMaxUniformBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::STORAGE);
 
-    mGPUContext = OwnerPtr<GPUContext>::newObject();
+    mGPUContext = Core::OwnerPtr<GPUContext>::newObject();
     mGPUContext->init();
 }
 

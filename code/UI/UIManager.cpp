@@ -34,7 +34,7 @@ const FontGlyphData& UIManager::getGlyphData(char character) const
     return glyph;
 }
 
-WeakPtr<GPUShader> UIManager::getFontShader() const
+Core::WeakPtr<GPUShader> UIManager::getFontShader() const
 {
     const auto& f = mFontsManager.getFont(mDefaultFont);
     return f->getFontShader();

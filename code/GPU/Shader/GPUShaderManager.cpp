@@ -42,7 +42,7 @@ void GPUShaderManager::update()
 
     FOR_LIST(it, mDirtyGPUShaderPropertiesInstances)
     {
-        WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.at(*it);
+        Core::WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.at(*it);
         setGPUShaderPropertiesInstanceProperties(instance);
     }
     mDirtyGPUShaderPropertiesInstances.clear();
@@ -54,12 +54,12 @@ void GPUShaderManager::update()
     }
 }
 
-WeakPtr<GPUTexture> GPUShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
+Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(const GPUTextureData& gpuTextureData)
 {
 	if (!mTexturesByPath.contains(gpuTextureData.mPath))
 	{
         PROFILER_CPU()
-        WeakPtr<GPUTexture> texture = mTextures.emplace_back(OwnerPtr<GPUTexture>::newObject());
+        Core::WeakPtr<GPUTexture> texture = mTextures.emplace_back(Core::OwnerPtr<GPUTexture>::newObject());
         mTexturesByPath.insert_or_assign(gpuTextureData.mPath, texture);
         texture->init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, mTextures.size() - 1);
 	}
@@ -67,19 +67,19 @@ WeakPtr<GPUTexture> GPUShaderManager::loadTexture(const GPUTextureData& gpuTextu
 	return mTexturesByPath.at(gpuTextureData.mPath);
 }
 
-void GPUShaderManager::postGPUShaderCreated(WeakPtr<GPUShader> shader)
+void GPUShaderManager::postGPUShaderCreated(Core::WeakPtr<GPUShader> shader)
 {
     loadGPUShaderTextures(shader);
     initGPUShaderPropertiesInstancePropertiesUniformBuffer(shader);
 }
 
-void GPUShaderManager::loadGPUShaderTextures(WeakPtr<GPUShader> shader)
+void GPUShaderManager::loadGPUShaderTextures(Core::WeakPtr<GPUShader> shader)
 {
     u32 id = shader->getID();
     if(!mTextureBindingsByShader.contains(id))
     {
         PROFILER_CPU()
-        mTextureBindingsByShader.emplace(id, std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>());
+        mTextureBindingsByShader.emplace(id, std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>());
 
         FOR_MAP(it, shader->getGPUShaderData().mGPUShaderTextureBindings.mTextureBindings)
         {
@@ -99,15 +99,15 @@ void GPUShaderManager::loadGPUShaderTextures(WeakPtr<GPUShader> shader)
     }
 }
 
-const std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>>& GPUShaderManager::getGPUShaderTextureBindings(u32 id) const
+const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>& GPUShaderManager::getGPUShaderTextureBindings(u32 id) const
 {
     return mTextureBindingsByShader.at(id);
 }
 
-WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderPropertiesInstance(WeakPtr<GPUShader> shader)
+Core::WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderPropertiesInstance(Core::WeakPtr<GPUShader> shader)
 {
     PROFILER_CPU()
-    WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.emplace_back(OwnerPtr<GPUShaderPropertiesInstance>::newObject());
+    Core::WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.emplace_back(Core::OwnerPtr<GPUShaderPropertiesInstance>::newObject());
     instance->mShader = shader;
     instance->mID = mGPUShaderPropertiesInstances.size() - 1;
     instance->mGPUShaderPropertiesBlockBuffer = shader->getSharedGPUShaderPropertiesBlockBuffer();
@@ -115,7 +115,7 @@ WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderProperties
 
     return instance;
 }
-void GPUShaderManager::freeGPUShaderPropertiesInstance(WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
+void GPUShaderManager::freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
 {
     PROFILER_CPU()
     CHECK_MSG(shaderPropertiesInstance->mShader.isValid(), "Invalid shader!");
@@ -130,7 +130,7 @@ void GPUShaderManager::freeGPUShaderPropertiesInstance(WeakPtr<GPUShaderProperti
     }  
 }
 
-void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(WeakPtr<GPUShader> shader)
+void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(Core::WeakPtr<GPUShader> shader)
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
@@ -161,11 +161,11 @@ void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(We
     }
 }
 
-void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
+void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
 {
     PROFILER_CPU()
 
-    WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
+    Core::WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
     ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
@@ -188,9 +188,9 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(u32 id)
 {
     PROFILER_CPU()
 
-    WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance = mGPUShaderPropertiesInstances.at(id);
+    Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance = mGPUShaderPropertiesInstances.at(id);
     CHECK_MSG(shaderPropertiesInstance.isValid(), "Invalid shader Instance!");
-    WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
+    Core::WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     u32 shaderID = shader->getID();
     ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
@@ -205,7 +205,7 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(u32 id)
     }
 }
 
-const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer(WeakPtr<GPUShader> shader) const
+const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer(Core::WeakPtr<GPUShader> shader) const
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
@@ -213,7 +213,7 @@ const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer
     return mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
 
-Core::Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(WeakPtr<GPUShader> shader)
+Core::Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(Core::WeakPtr<GPUShader> shader)
 {
     PROFILER_CPU()
 

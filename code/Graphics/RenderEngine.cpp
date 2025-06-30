@@ -11,7 +11,7 @@ void RenderEngine::init()
 	EC.addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
 	EC.addComponentListener<Light>(getPtrToThis<RenderEngine>());
 
-    mRenderPipeline = OwnerPtr<RenderPipelinePBR>::newObject();
+    mRenderPipeline = Core::OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();
     mRenderPipeline->compile();
 
@@ -63,7 +63,7 @@ void RenderEngine::onComponentAdded(const ComponentPtr& component)
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
         // {
-        //     //octree.addOcTreeElement(WeakPtr<IOcTreeElement>::cast(renderer));
+        //     //octree.addOcTreeElement(Core::WeakPtr<IOcTreeElement>::cast(renderer));
         // }
     }
     else if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId())

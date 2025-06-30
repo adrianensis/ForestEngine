@@ -2,6 +2,8 @@
 
 #include "Core/Std.hpp"
 
+NS_BEGIN(Core)
+
 enum class TimerDurationType
 {
 	NONE,
@@ -40,3 +42,4 @@ public:
 		mTimerReference = timerReference;
 	}
 };
+NS_END

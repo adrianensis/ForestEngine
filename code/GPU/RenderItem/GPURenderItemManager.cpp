@@ -18,7 +18,7 @@ void GPURenderItemManager::update()
     {
         FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
         {
-            WeakPtr<GPURenderItem> renderItem = mRenderers[i];
+            Core::WeakPtr<GPURenderItem> renderItem = mRenderers[i];
             if(renderItem.isValid())
             {
                 processRenderer(renderItem);
@@ -32,7 +32,7 @@ void GPURenderItemManager::update()
     //     mUsedSlots.end(),
     //     [this](u32 i)
     //     {
-    //         WeakPtr<GPURenderItem> renderItem = mRenderers[i];
+    //         Core::WeakPtr<GPURenderItem> renderItem = mRenderers[i];
     //         if(renderItem.isValid())
     //         {
     //             processRenderer(renderItem);
@@ -41,7 +41,7 @@ void GPURenderItemManager::update()
     // );
 }
 
-void GPURenderItemManager::processRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::processRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
 	PROFILER_CPU()
     if(!renderItem->isStatic())
@@ -56,7 +56,7 @@ void GPURenderItemManager::terminate()
     mRenderInstancesSlotsManager.reset();
 }
 
-void GPURenderItemManager::addRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU()
     if(mRenderInstancesSlotsManager.isEmpty())
@@ -80,7 +80,7 @@ void GPURenderItemManager::addRenderer(WeakPtr<GPURenderItem> renderItem)
     }
 }
 
-void GPURenderItemManager::removeRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU()
     if(renderItem->isStatic())
@@ -104,7 +104,7 @@ void GPURenderItemManager::removeRenderer(WeakPtr<GPURenderItem> renderItem)
     // }
 }
 
-void GPURenderItemManager::setRendererMatrix(WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::setRendererMatrix(Core::WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU()
     if(renderItem->getUpdateMatrix())

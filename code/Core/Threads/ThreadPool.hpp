@@ -2,6 +2,8 @@
 
 #include "Core/Threads/Thread.hpp"
 
+
+NS_BEGIN(Core)
 class ThreadPool
 {
 public:
@@ -26,3 +28,5 @@ public:
 		}
 	}
 };
+
+NS_END

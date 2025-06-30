@@ -67,8 +67,8 @@ public:
 class GPUShaderCompilationData
 {
 public:
-    WeakPtr<const GPUMesh> mMesh;
-    Ptr<GPURenderPass> mRenderPass;
+    Core::WeakPtr<const GPUMesh> mMesh;
+    Core::Ptr<GPURenderPass> mRenderPass;
     Core::HashedString label;
     Core::HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
@@ -144,7 +144,7 @@ class GPUShaderPropertiesInstance
 public:
     Core::Slot mSlot;
     u32 mID = 0;
-    WeakPtr<GPUShader> mShader;
+    Core::WeakPtr<GPUShader> mShader;
     Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
 };
@@ -179,14 +179,14 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
         {};
     virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
         {};
 
     virtual void generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    OwnerPtr<GPUShaderPipeline> compileShader(const GPUShaderCompilationData& shaderCompilationData);
+    Core::OwnerPtr<GPUShaderPipeline> compileShader(const GPUShaderCompilationData& shaderCompilationData);
 
     bool allowInstances() const
     {

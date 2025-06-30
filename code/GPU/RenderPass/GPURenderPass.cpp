@@ -7,7 +7,7 @@
 
 GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData)
+bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -320,7 +320,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     std::vector<GPUUniformBuffer> uniformBuffers;
     uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
 
-    WeakPtr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+    Core::WeakPtr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
     if(skeletonState)
     {
         uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
@@ -330,7 +330,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
     // TODO: check GET_SYSTEM(GPUInstance) accesses from GPU module (?)
 
-    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;
     gpuGPUShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
     gpuGPUShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
@@ -397,8 +397,8 @@ void GPURenderPass::render()
 void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
-    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
-    WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
+    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+    Core::WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     gpuGPUShaderPipeline->enable();
     gpuInstanceRenderer->render();
     gpuGPUShaderPipeline->disable();

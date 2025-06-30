@@ -17,7 +17,7 @@ f32 GPUSkeletalAnimation::calculateCurrentSkeletalAnimationTime(f32 accumulatedT
     return animationTime;
 }
 
-void GPUSkeletalAnimationState::init(WeakPtr<const GPUSkeletalAnimation> animation)
+void GPUSkeletalAnimationState::init(Core::WeakPtr<const GPUSkeletalAnimation> animation)
 {
     mSkeletalAnimation = animation;
 }
@@ -26,7 +26,7 @@ void GPUSkeletalAnimationState::update()
 {
     mSkeletalAnimationTime = mSkeletalAnimation->calculateCurrentSkeletalAnimationTime(mAccumulatedTime);
 
-    f32 dt = GET_SYSTEM(Time).getDeltaTimeSeconds();
+    f32 dt = GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
     mAccumulatedTime += dt;
 
     // reset accumulatedTime to avoid overflow
@@ -53,13 +53,13 @@ void GPUSkeletonState::update()
     }
 }
 
-void GPUSkeletonState::createSkeletalAnimationState(WeakPtr<const GPUSkeletalAnimation> animation)
+void GPUSkeletonState::createSkeletalAnimationState(Core::WeakPtr<const GPUSkeletalAnimation> animation)
 {
     u32 animationId = animation->mID;
 
 	if(!mSkeletalAnimationStates.contains(animationId))
 	{
-		mSkeletalAnimationStates.insert_or_assign(animationId, OwnerPtr<GPUSkeletalAnimationState>::newObject());
+		mSkeletalAnimationStates.insert_or_assign(animationId, Core::OwnerPtr<GPUSkeletalAnimationState>::newObject());
 		mSkeletalAnimationStates.at(animationId)->init(animation);
 	}
 

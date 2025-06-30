@@ -9,21 +9,21 @@ public:
     virtual void init();
     void update();
     virtual void terminate();
-    void addRenderer(WeakPtr<GPURenderItem> renderItem);
-    void removeRenderer(WeakPtr<GPURenderItem> renderItem);
+    void addRenderer(Core::WeakPtr<GPURenderItem> renderItem);
+    void removeRenderer(Core::WeakPtr<GPURenderItem> renderItem);
 
     u32 getSize() { return mRenderInstancesSlotsManager.getSize(); }
 
 private:
-    void setRendererMatrix(WeakPtr<GPURenderItem> renderItem);
-    void processRenderer(WeakPtr<GPURenderItem> renderItem);
+    void setRendererMatrix(Core::WeakPtr<GPURenderItem> renderItem);
+    void processRenderer(Core::WeakPtr<GPURenderItem> renderItem);
 
 private:
     std::vector<Matrix4> mMatrices;
     Core::SlotsManager mRenderInstancesSlotsManager;
-	std::vector<WeakPtr<GPURenderItem>> mRenderers;
+	std::vector<Core::WeakPtr<GPURenderItem>> mRenderers;
     std::set<u32> mUsedSlots;
-	std::vector<WeakPtr<GPURenderItem>> mRenderersStatic;
+	std::vector<Core::WeakPtr<GPURenderItem>> mRenderersStatic;
     inline static const u32 mInitialInstances = 1000;
 
 public:

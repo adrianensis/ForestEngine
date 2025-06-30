@@ -49,8 +49,8 @@ public:
     GPUDevice* vulkanDevice;
     VkSurfaceKHR surface = VK_NULL_HANDLE;
     GPUSwapChain* vulkanSwapChain;
-    OwnerPtr<GPUCommandPool> vulkanCommandPool;
-    OwnerPtr<GPUCommandPool> vulkanCommandPoolSingleUse;
+    Core::OwnerPtr<GPUCommandPool> vulkanCommandPool;
+    Core::OwnerPtr<GPUCommandPool> vulkanCommandPoolSingleUse;
     std::vector<GPUCommandBuffer> vulkanCommandBuffers;
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -61,7 +61,7 @@ public:
 
 #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;
-    OwnerPtr<GPUCommandPool> profilingCommandPool;
+    Core::OwnerPtr<GPUCommandPool> profilingCommandPool;
     GPUCommandBuffer profilingCommandBuffer_;
 #endif
 

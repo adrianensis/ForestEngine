@@ -34,7 +34,7 @@ public:
 	bool mAdjustSizeToText = false;
 	i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
-	WeakPtr<GPUShader> mShader;
+	Core::WeakPtr<GPUShader> mShader;
 	Core::HashedString mGroup;
 	TEntityPtr<SceneObject> mParent;
 	f32 mSeparatorSize = 0.01f;

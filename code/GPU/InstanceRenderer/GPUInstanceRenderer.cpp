@@ -69,7 +69,7 @@ void GPUInstanceRenderer::disable()
     // mGPUVertexBuffersContainer.disable();
 }
 
-void GPUInstanceRenderer::addRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPUInstanceRenderer::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU_NAMED(add_renderer)
     if(mRendererSlotsManager.isEmpty())
@@ -85,7 +85,7 @@ void GPUInstanceRenderer::addRenderer(WeakPtr<GPURenderItem> renderItem)
     mRenderersCount++;
 }
 
-void GPUInstanceRenderer::removeRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPUInstanceRenderer::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
 	mResizeBuffersRequested = true;
     // mRenderers.at(renderer->getInstanceSlot().getSlot()).reset();
@@ -127,7 +127,7 @@ void GPUInstanceRenderer::update(VkCommandBuffer commandBuffer)
     u32 rendererIndex = 0;
     FOR_RANGE(i, 0, (*mUsedSlots.rbegin())+1)
     {
-        WeakPtr<GPURenderItem> renderer = mRenderers[i];
+        Core::WeakPtr<GPURenderItem> renderer = mRenderers[i];
         if(renderer.isValid())
         {
             mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getGPUShaderPropertiesInstance()->mSlot.getSlot());
@@ -178,7 +178,7 @@ void GPUInstanceRendererManager::terminate()
 	}
 }
 
-void GPUInstanceRendererManager::update(Ptr<GPUContext> gpuContext)
+void GPUInstanceRendererManager::update(Core::Ptr<GPUContext> gpuContext)
 {
     VkCommandBuffer vulkanCommandBuffer = gpuContext->beginSingleTimeCommands();
     FOR_MAP(it, mGPUInstanceRenderers)
@@ -195,7 +195,7 @@ bool GPUInstanceRendererManager::addInstanceRenderer(const GPUInstanceRendererDa
     {
         PROFILER_CPU_NAMED(init_instanced_mesh)
 
-        mGPUInstanceRenderers.insert_or_assign(data, OwnerPtr<GPUInstanceRenderer>::newObject());
+        mGPUInstanceRenderers.insert_or_assign(data, Core::OwnerPtr<GPUInstanceRenderer>::newObject());
         mGPUInstanceRenderers.at(data)->init(data);
         result = true;
     }
@@ -216,9 +216,9 @@ bool GPUInstanceRendererManager::removeInstanceRenderer(const GPUInstanceRendere
     return result;
 }
 
-const WeakPtr<GPUInstanceRenderer> GPUInstanceRendererManager::getInstanceRenderer(const GPUInstanceRendererData& data) const
+const Core::WeakPtr<GPUInstanceRenderer> GPUInstanceRendererManager::getInstanceRenderer(const GPUInstanceRendererData& data) const
 {
-    WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer;
+    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer;
     if(mGPUInstanceRenderers.contains(data))
     {
         gpuInstanceRenderer = mGPUInstanceRenderers.at(data);

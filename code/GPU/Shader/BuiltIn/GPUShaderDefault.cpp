@@ -337,7 +337,7 @@ void GPUShaderDefault::generateGPUShaderGenerationData(GPUShaderGenerationData& 
     shaderGenerationData.mFragmentVariables.mFragmentOutputs.push_back(GPUShaderDefinitions::FragmentOutput::mColor);
 }
 
-void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
+void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
     GPUShaderGenerationData shaderGenerationData;
     generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
@@ -359,7 +359,7 @@ void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBu
     }
 }
 
-void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
+void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
     GPUShaderGenerationData shaderGenerationData;
     generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
@@ -387,7 +387,7 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentOutputs) { GPUShaderBuilder.get().attribute(Attribute(*it, fragmentOutputIndex)); fragmentOutputIndex++; }
 }
 
-void GPUShaderDefault::createVertexShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
+void GPUShaderDefault::createVertexShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
     registerVertexGPUShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuGPUShaderDescriptorSets);
 
@@ -415,7 +415,7 @@ void GPUShaderDefault::createVertexShader(GPUShaderBuilder& GPUShaderBuilder, co
     vertexGPUShaderCalculateInstanceIdOutput(GPUShaderBuilder);
 }
 
-void GPUShaderDefault::createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
+void GPUShaderDefault::createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const
 {
     registerFragmentGPUShaderData(GPUShaderBuilder, gpuVertexBuffersContainer, gpuGPUShaderDescriptorSets);
     

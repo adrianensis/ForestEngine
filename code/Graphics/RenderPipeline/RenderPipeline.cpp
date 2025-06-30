@@ -11,7 +11,7 @@ void RenderPipeline::init()
     mGPURenderItemManager.init();
     initBuffers();
 
-    mGPUInstanceRendererManager = OwnerPtr<GPUInstanceRendererManager>::newObject();
+    mGPUInstanceRendererManager = Core::OwnerPtr<GPUInstanceRendererManager>::newObject();
     mGPURenderGraph.init(GET_SYSTEM(GPUInstance).mGPUContext, mGPUInstanceRendererManager);
 
     mMeshRenderers.resize(mGPURenderItemManager.getSize());

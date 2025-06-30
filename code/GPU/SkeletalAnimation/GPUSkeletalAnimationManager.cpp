@@ -22,9 +22,9 @@ void GPUSkeletalAnimationManager::update()
 	}
 }
 
-WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData)
+Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData)
 {
-	WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(OwnerPtr<GPUSkeletonState>::newObject()).first;
+	Core::WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(Core::OwnerPtr<GPUSkeletonState>::newObject()).first;
     skeletonState->init(gpuSkeletonStateData);
 
     FOR_LIST(it, gpuSkeletonStateData.mMeshes)
@@ -45,7 +45,7 @@ void GPUSkeletalAnimationManager::terminate()
 	mSkeletonStates.clear();
 }
 
-void GPUSkeletalAnimationManager::initSkeletonRenderState(WeakPtr<const GPUSkeletonState> skeletonState)
+void GPUSkeletalAnimationManager::initSkeletonRenderState(Core::WeakPtr<const GPUSkeletonState> skeletonState)
 {
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
@@ -55,15 +55,15 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(WeakPtr<const GPUSkele
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }
 
-const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(WeakPtr<const GPUSkeletonState> skeletonState) const
+const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(Core::WeakPtr<const GPUSkeletonState> skeletonState) const
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
     return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices);
 }
 
-WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::getSkeletonStateFromMesh(WeakPtr<const GPUMesh> mesh) const
+Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::getSkeletonStateFromMesh(Core::WeakPtr<const GPUMesh> mesh) const
 {
-    WeakPtr<GPUSkeletonState> result;
+    Core::WeakPtr<GPUSkeletonState> result;
     if(mMeshToSkeletonState.contains(mesh))
     {
         result = mMeshToSkeletonState.at(mesh);

@@ -64,7 +64,7 @@ u32 GPUTextureAnimation::getNumberOfFrames() const
 const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::nextFrame()
 {
 	f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
-	mTimeAccumulator += GET_SYSTEM(Time).getDeltaTimeMillis();
+	mTimeAccumulator += GET_SYSTEM(Core::Time).getDeltaTimeMillis();
     mHasFrameChanged = false;
 	if (mTimeAccumulator >= time)
 	{

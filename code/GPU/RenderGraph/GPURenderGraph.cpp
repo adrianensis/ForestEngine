@@ -1,7 +1,7 @@
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPURenderGraph::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager)
+void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -36,7 +36,7 @@ void GPURenderGraph::init(Ptr<GPUContext> gpuContext, WeakPtr<GPUInstanceRendere
     GPURenderPassOutputData renderPassOutputData;
     renderPassOutputData.mColorGPUImage = &vulkanColorImage;
     
-    mRenderPassResolve = OwnerPtr<GPURenderPass>::newObject();
+    mRenderPassResolve = Core::OwnerPtr<GPURenderPass>::newObject();
     mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, renderPassResolveData, renderPassOutputData);
 }
 
@@ -52,7 +52,7 @@ void GPURenderGraph::render(GPURenderGraphData& renderData)
 
         FOR_ARRAY(i, mRenderPassesArray)
         {
-            WeakPtr<GPURenderPass> renderPass = mRenderPassesArray[i];
+            Core::WeakPtr<GPURenderPass> renderPass = mRenderPassesArray[i];
             renderPass->renderPass();
         }
 
@@ -95,7 +95,7 @@ void GPURenderGraph::onResize()
 	}
 }
 
-void GPURenderGraph::addRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPURenderGraph::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU()
     GPUInstanceRendererData gpuInstanceRendererData;
@@ -105,13 +105,13 @@ void GPURenderGraph::addRenderer(WeakPtr<GPURenderItem> renderItem)
     {
         if(mRenderPassMap.contains(*it))
         {
-            Ptr<GPURenderPass> renderPass = mRenderPassMap.at(*it);
+            Core::Ptr<GPURenderPass> renderPass = mRenderPassMap.at(*it);
             renderPass->addInstanceRendererData(gpuInstanceRendererData);
         }
     }
 }
 
-void GPURenderGraph::removeRenderer(WeakPtr<GPURenderItem> renderItem)
+void GPURenderGraph::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
     PROFILER_CPU()
     GPUInstanceRendererData gpuInstanceRendererData;

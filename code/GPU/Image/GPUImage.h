@@ -25,14 +25,14 @@ public:
 class GPUImage
 {
 public:
-    bool init(Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
+    bool init(Core::Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData);
     void transition(VkImageLayout destinationLayout);
     void copyToImage(GPUImage& destinationImage);
     void copyToVkImage(VkImage destinationImage, VkImageLayout destinationLayout);
     void terminate();
 
 private:
-    Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUContext> mGPUContext;
     VkImage mVkImage = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
     GPUImageData mGPUImageData;

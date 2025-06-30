@@ -16,7 +16,7 @@ public:
 	virtual void onAddedToScene(){};
 
 public:
-	WeakPtr<Scene> mScene;
+	Core::WeakPtr<Scene> mScene;
 	TComponentPtr<Transform> mTransform;
 };
 REGISTER_CLASS(SceneObject);

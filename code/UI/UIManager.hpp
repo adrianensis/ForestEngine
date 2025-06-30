@@ -18,14 +18,14 @@ public:
     virtual void terminate() override;
 
     const FontGlyphData& getGlyphData(char character) const;
-    WeakPtr<GPUShader> getFontShader() const;
+    Core::WeakPtr<GPUShader> getFontShader() const;
 
 	UIGroup& getOrCreateGroup(Core::HashedString groupName)
 	{
 		if (!mGroups.contains(groupName))
 		{
-			mGroups.insert_or_assign(groupName, OwnerPtr<UIGroup>::newObject());
-            WeakPtr<UIGroup> group = mGroups.at(groupName);
+			mGroups.insert_or_assign(groupName, Core::OwnerPtr<UIGroup>::newObject());
+            Core::WeakPtr<UIGroup> group = mGroups.at(groupName);
             group->init();
             group->mName = groupName;
 		}
@@ -38,11 +38,11 @@ public:
     void setFocusedElement(TEntityPtr<UIElement> focusedElement);
 
 private:
-	std::unordered_map<Core::HashedString, OwnerPtr<UIGroup>> mGroups;
+	std::unordered_map<Core::HashedString, Core::OwnerPtr<UIGroup>> mGroups;
 	TEntityPtr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     Core::HashedString mDefaultFont;
-    WeakPtr<GPUShader> mDefaultUIShader;
+    Core::WeakPtr<GPUShader> mDefaultUIShader;
 
 public:
     GET(DefaultUIShader)

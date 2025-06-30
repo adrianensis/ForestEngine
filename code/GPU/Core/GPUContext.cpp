@@ -50,12 +50,12 @@ void GPUContext::init()
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
-    vulkanCommandPool = OwnerPtr<GPUCommandPool>::newObject();
+    vulkanCommandPool = Core::OwnerPtr<GPUCommandPool>::newObject();
     if (!vulkanCommandPool->init(this, 0)) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool");
     }
-    vulkanCommandPoolSingleUse = OwnerPtr<GPUCommandPool>::newObject();
+    vulkanCommandPoolSingleUse = Core::OwnerPtr<GPUCommandPool>::newObject();
     if (!vulkanCommandPoolSingleUse->init(this, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT)) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool Single Use");
@@ -67,7 +67,7 @@ void GPUContext::init()
     }
 
 #ifdef ENGINE_ENABLE_PROFILER
-    profilingCommandPool = OwnerPtr<GPUCommandPool>::newObject();
+    profilingCommandPool = Core::OwnerPtr<GPUCommandPool>::newObject();
     profilingCommandPool->init(this, 0);
     profilingCommandBuffer_ = profilingCommandPool->allocateCommandBuffers(1)[0];
 

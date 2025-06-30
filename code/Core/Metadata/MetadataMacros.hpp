@@ -5,8 +5,8 @@
 // --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
-#define IS_SMART_POINTER(Class) IS_BASE_OF(BasePtr, REMOVE_REFERENCE(Class))
-#define IS_OWNER_POINTER(Class) IS_BASE_OF(BaseOwnerPtr, REMOVE_REFERENCE(Class))
+#define IS_SMART_POINTER(Class) IS_BASE_OF(Core::BasePtr, REMOVE_REFERENCE(Class))
+#define IS_OWNER_POINTER(Class) IS_BASE_OF(Core::BaseOwnerPtr, REMOVE_REFERENCE(Class))
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
@@ -26,7 +26,7 @@
             REMOVE_REFERENCE(Type),                     \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
-                typename get_ptr_type<Type>::type,       \
+                typename Core::get_ptr_type<Type>::type,       \
                 Type \
             )  \
         ) \
@@ -41,7 +41,7 @@
             REMOVE_REFERENCE(Type),                         \
             COND_TYPE(                                \
                 IS_SMART_POINTER(Type),               \
-                typename get_const_ptr_type<Type>::type,       \
+                typename Core::get_const_ptr_type<Type>::type,       \
                 GETTER_TYPE(Type) \
             )  \
         ) \

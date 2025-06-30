@@ -8,7 +8,7 @@ ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManager::ge
 
 void MeshRenderer::init(const GPURenderItemData& data) 
 {
-    mGPURenderItem = OwnerPtr<GPURenderItem>::newObject();
+    mGPURenderItem = Core::OwnerPtr<GPURenderItem>::newObject();
     mGPURenderItem->init(data, false);
 }
 

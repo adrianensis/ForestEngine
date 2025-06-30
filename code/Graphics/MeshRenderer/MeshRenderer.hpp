@@ -33,7 +33,7 @@ private:
 
 private:
     GPUTextureAnimationUpdater mCurrentTextureAnimationUpdater;
-    OwnerPtr<GPURenderItem> mGPURenderItem;
+    Core::OwnerPtr<GPURenderItem> mGPURenderItem;
 
 public:
     Core::HashedString mCurrentTextureAnimationKey;

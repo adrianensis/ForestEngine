@@ -75,7 +75,7 @@ void Model::loadGLTFShaders()
             GPUShaderData shaderData;
             // shaderData.mAllowInstances = false;
             // shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
-            WeakPtr<GPUShader> newShader;
+            Core::WeakPtr<GPUShader> newShader;
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
@@ -215,11 +215,11 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     CHECK_MSG(primitive.type == cgltf_primitive_type::cgltf_primitive_type_triangles, "GPUMesh has to be made out of triangles!")
 
-    mGLTFMeshes.insert_or_assign(&primitive, OwnerPtr<GPUMesh>::newObject());
-    WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
+    mGLTFMeshes.insert_or_assign(&primitive, Core::OwnerPtr<GPUMesh>::newObject());
+    Core::WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
     GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
 
-    WeakPtr<GPUShader> meshShader;
+    Core::WeakPtr<GPUShader> meshShader;
     if(primitive.material)
     {
         meshShader = mGLTFShaders[primitive.material];
@@ -550,7 +550,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     }
 }
 
-void Model::loadGLTFSkeletalAnimationFrames(WeakPtr<GPUSkeletalAnimation> animation)
+void Model::loadGLTFSkeletalAnimationFrames(Core::WeakPtr<GPUSkeletalAnimation> animation)
 {
     PROFILER_CPU()
 
@@ -628,7 +628,7 @@ void Model::loadGLTFSkeletalAnimations()
 
         loadGLTFChannels(gltfAnim);
 
-        WeakPtr<GPUSkeletalAnimation> animation = mSkeletalAnimations.emplace_back(OwnerPtr<GPUSkeletalAnimation>::newObject());
+        Core::WeakPtr<GPUSkeletalAnimation> animation = mSkeletalAnimations.emplace_back(Core::OwnerPtr<GPUSkeletalAnimation>::newObject());
         animation->init(animIt, animDuration);
 
         loadGLTFSkeletalAnimationFrames(animation);

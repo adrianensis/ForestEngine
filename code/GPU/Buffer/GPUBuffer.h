@@ -16,14 +16,14 @@ public:
 class GPUBuffer
 {
 public:
-    bool init(Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
+    bool init(Core::Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
     void resize(u32 size);
     void terminate();
     void setData(const void* data, u32 size) const;
-    static void copy(Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer);
+    static void copy(Core::Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer);
 
 private:
-    Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUContext> mGPUContext;
     GPUBufferData mGPUBufferData;
     VkBuffer mVkBuffer = VK_NULL_HANDLE;
     VkDeviceMemory mVkDeviceMemory = VK_NULL_HANDLE;

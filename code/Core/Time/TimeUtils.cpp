@@ -1,5 +1,6 @@
 #include "Core/Time/TimeUtils.hpp"
 
+NS_BEGIN(Core)
 void TimeMark::init()
 {
 	mIsStarted = false;
@@ -44,3 +45,4 @@ f32 TimeMark::getDeltaTimeSeconds()
 {
 	return getDeltaTimeMillis() / 1000.0f;
 }
+NS_END

@@ -81,14 +81,14 @@ void GPUShader::generateGPUShaderGenerationData(GPUShaderGenerationData& shaderG
 {
 }
 
-OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompilationData& shaderCompilationData)
+Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompilationData& shaderCompilationData)
 {
     PROFILER_CPU_NAMED(compileShader)
 
     mGPUShaderCompilationData = shaderCompilationData;
 
     std::vector<GPUShaderTextureBinding> gpuGPUShaderTextureBindings;
-    const std::unordered_map<Core::HashedString, WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(GPUShaderManager).getGPUShaderTextureBindings(getID());
+    const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(GPUShaderManager).getGPUShaderTextureBindings(getID());
     FOR_MAP(it, shaderTextures)
     {
         gpuGPUShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
@@ -100,7 +100,7 @@ OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompilationD
         gpuGPUShaderTextureBindings
     };
 
-    OwnerPtr<GPUShaderPipeline> gpuGPUShaderPipeline = OwnerPtr<GPUShaderPipeline>::newObject();
+    Core::OwnerPtr<GPUShaderPipeline> gpuGPUShaderPipeline = Core::OwnerPtr<GPUShaderPipeline>::newObject();
     GPUShaderPipelineData gpuGPUShaderPipelineData
     {
         gpuGPUShaderDescriptorSetsData,

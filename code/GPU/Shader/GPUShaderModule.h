@@ -15,11 +15,11 @@ public:
 class GPUShaderModule
 {
 public:
-    bool init(Ptr<GPUContext> gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData);
+    bool init(Core::Ptr<GPUContext> gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData);
     void terminate();
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
-    Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUContext> mGPUContext;
     VkShaderModule mGPUShaderModule = VK_NULL_HANDLE;
     Core::HashedString mID;
 public:

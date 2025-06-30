@@ -19,7 +19,7 @@ private:
     i32 mMaxUniformBufferBindingPointsStorage = 0;
 
 public:
-    OwnerPtr<GPUContext> mGPUContext;
+    Core::OwnerPtr<GPUContext> mGPUContext;
 
 public:
     RGET(GPUUniformBuffersContainer)

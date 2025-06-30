@@ -16,27 +16,27 @@ void ModelManager::terminate()
 {
     mModels.clear();
 }
-void ModelManager::setMeshToModel(WeakPtr<const GPUMesh> mesh, WeakPtr<Model> model)
+void ModelManager::setMeshToModel(Core::WeakPtr<const GPUMesh> mesh, Core::WeakPtr<Model> model)
 {
     mMeshToModels.insert_or_assign(mesh, model);
 }
 
-WeakPtr<Model> ModelManager::getModelFromMesh(WeakPtr<const GPUMesh> mesh) const
+Core::WeakPtr<Model> ModelManager::getModelFromMesh(Core::WeakPtr<const GPUMesh> mesh) const
 {
     if(!mMeshToModels.contains(mesh))
     {
-        return WeakPtr<Model>();
+        return Core::WeakPtr<Model>();
     }
 
     return mMeshToModels.at(mesh);
 }
 
-WeakPtr<const Model> ModelManager::loadModel(const std::string& path)
+Core::WeakPtr<const Model> ModelManager::loadModel(const std::string& path)
 {
     if (!mModels.contains(path))
 	{
         PROFILER_CPU()
-		mModels.insert_or_assign(path, OwnerPtr<Model>::newObject());
+		mModels.insert_or_assign(path, Core::OwnerPtr<Model>::newObject());
 		mModels.at(path)->init(path);
 	}
 

@@ -112,7 +112,7 @@ void Editor::update()
 
     TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
 	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
-	f32 speed = 400 * GET_SYSTEM(Time).getDeltaTimeSeconds();
+	f32 speed = 400 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
@@ -178,7 +178,7 @@ void Editor::update()
 
 	if(!mLastMousePosition.eq(currentMousePosition))
 	{
-        f32 camSpeed = 200 * GET_SYSTEM(Time).getDeltaTimeSeconds();
+        f32 camSpeed = 200 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
 		Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
 		Vector3 direction;
 
@@ -222,7 +222,7 @@ void Editor::update()
 		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-2000), Vector3(x,0,2000)), 1, GeometricSpace::WORLD, Vector4(1,1,1,0.3f));
 	}
 
-    f32 fps = 1000.0f/GET_SYSTEM(Time).getDeltaTimeMillis();
+    f32 fps = 1000.0f/GET_SYSTEM(Core::Time).getDeltaTimeMillis();
     // LOG_VAR(fps)
     if(mFPSCounter)
     {
@@ -317,7 +317,7 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 EntityPtr Editor::mousePick()
 {
 
-    f32 speed = 100 * GET_SYSTEM(Time).getDeltaTimeSeconds();
+    f32 speed = 100 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
     EntityPtr obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
@@ -348,7 +348,7 @@ EntityPtr Editor::mousePick()
 
 EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
 {
-	WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
+	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
     TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = isStatic;

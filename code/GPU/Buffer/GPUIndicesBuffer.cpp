@@ -1,6 +1,6 @@
 #include "GPU/Buffer/GPUIndicesBuffer.hpp"
 
-void GPUIndicesBuffer::init(Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, u32 size, bool isStatic)
+void GPUIndicesBuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, u32 size, bool isStatic)
 {
     mGPUContext = gpuContext;
     mIsStatic = isStatic;

@@ -3,7 +3,7 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Core/GPULog.h"
 
-bool GPUCommandPool::init(Ptr<GPUContext> gpuContext, VkCommandPoolCreateFlags creationFlags)
+bool GPUCommandPool::init(Core::Ptr<GPUContext> gpuContext, VkCommandPoolCreateFlags creationFlags)
 {
     mGPUContext = gpuContext;
     VkCommandPoolCreateInfo commandPoolInfo{};

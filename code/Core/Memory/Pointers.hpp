@@ -4,6 +4,8 @@
 #include "Core/Assert/Assert.hpp"
 #include <atomic>
 
+NS_BEGIN(Core)
+
 template<class T>
 class CountedPtrBase;
 template<class T>
@@ -622,50 +624,51 @@ private:
         }
     }
 };
+NS_END
 
 // HASH
 // Needed for unordered_map
 namespace std {
   template<class T>
-  struct hash<Ptr<T>> 
+  struct hash<Core::Ptr<T>> 
   {
-    size_t operator()(Ptr<T> const& pointer) const 
+    size_t operator()(Core::Ptr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }
   };
   
   template<class T>
-  struct hash<WeakPtr<T>> 
+  struct hash<Core::WeakPtr<T>> 
   {
-    size_t operator()(WeakPtr<T> const& pointer) const 
+    size_t operator()(Core::WeakPtr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }
   };
   
   template<class T>
-  struct hash<CountedPtrBase<T>> 
+  struct hash<Core::CountedPtrBase<T>> 
   {
-    size_t operator()(SharedPtr<T> const& pointer) const 
+    size_t operator()(Core::CountedPtrBase<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }
   };
 
   template<class T>
-  struct hash<SharedPtr<T>> 
+  struct hash<Core::SharedPtr<T>> 
   {
-    size_t operator()(SharedPtr<T> const& pointer) const 
+    size_t operator()(Core::SharedPtr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }
   };
 
   template<class T>
-  struct hash<OwnerPtr<T>> 
+  struct hash<Core::OwnerPtr<T>> 
   {
-    size_t operator()(OwnerPtr<T> const& pointer) const 
+    size_t operator()(Core::OwnerPtr<T> const& pointer) const 
     {
       return size_t(&pointer.get());
     }

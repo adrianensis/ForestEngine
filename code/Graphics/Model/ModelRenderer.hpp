@@ -9,7 +9,7 @@ class Model;
 class ModelRendererData: public GPURenderItemData
 {
 public:
-	WeakPtr<const Model> mModel;
+	Core::WeakPtr<const Model> mModel;
 };
 
 class ModelRenderer: public Component

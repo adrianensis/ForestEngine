@@ -2,7 +2,7 @@
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
 #include "Core/System/SystemManager.hpp"
-
+NS_BEGIN(Core)
 void TimerManager::endTimer(Timer * timer)
 {
 	mTimers.remove(timer);
@@ -17,7 +17,7 @@ void TimerManager::update()
 	PROFILER_CPU()
 	if (!mTimers.empty())
 	{
-		f32 deltaTime = GET_SYSTEM(Time).getDeltaTimeSeconds(); // seconds
+		f32 deltaTime = GET_SYSTEM(Core::Time).getDeltaTimeSeconds(); // seconds
 		std::list<Timer *> timers(mTimers);
 
 		for (auto itTimer = timers.begin(); itTimer != timers.end(); ++itTimer)
@@ -58,3 +58,4 @@ void TimerManager::terminate()
 {
 	mTimers.clear();
 }
+NS_END

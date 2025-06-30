@@ -23,11 +23,11 @@ class GPUMesh;
 class MeshInstanceData
 {
 public:
-    WeakPtr<const GPUMesh> mMesh;
+    Core::WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMatrix;
 };
 
-class Model: public EnableWeakPtrToThis
+class Model: public Core::EnableWeakPtrToThis
 {
 public:
     void init(const std::string& path);
@@ -49,7 +49,7 @@ private:
     void loadGLTFBones(const cgltf_skin& skin);
     f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
-    void loadGLTFSkeletalAnimationFrames(WeakPtr<GPUSkeletalAnimation> animation);
+    void loadGLTFSkeletalAnimationFrames(Core::WeakPtr<GPUSkeletalAnimation> animation);
     void loadGLTFSkeletalAnimations();
     static Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
     static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
@@ -91,15 +91,15 @@ private:
 private:
     cgltf_data* mCGLTFData = nullptr;
 	std::filesystem::path mPath;
-    std::vector<OwnerPtr<GPUSkeletalAnimation>> mSkeletalAnimations;
+    std::vector<Core::OwnerPtr<GPUSkeletalAnimation>> mSkeletalAnimations;
     std::vector<MeshInstanceData> mMeshInstances;
-    std::unordered_map<const cgltf_primitive*, OwnerPtr<GPUMesh>> mGLTFMeshes;
-    std::unordered_map<const cgltf_material*, WeakPtr<GPUShader>> mGLTFShaders;
-    std::unordered_map<WeakPtr<const GPUMesh>, WeakPtr<GPUShader>> mMeshShaders;
+    std::unordered_map<const cgltf_primitive*, Core::OwnerPtr<GPUMesh>> mGLTFMeshes;
+    std::unordered_map<const cgltf_material*, Core::WeakPtr<GPUShader>> mGLTFShaders;
+    std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::WeakPtr<GPUShader>> mMeshShaders;
     std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     u32 mBonesIndexCount = 0;
-    WeakPtr<GPUSkeletonState> mSkeletonState;
+    Core::WeakPtr<GPUSkeletonState> mSkeletonState;
 
 public:
     CRGET(MeshInstances)

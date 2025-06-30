@@ -29,7 +29,7 @@ const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
     return framebuffer;
 }
 
-bool GPUFramebuffer::init(Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass)
+bool GPUFramebuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass)
 {
     mGPUContext = gpuContext;
     mRenderPass = renderPass;

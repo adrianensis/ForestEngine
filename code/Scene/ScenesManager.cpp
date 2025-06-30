@@ -30,8 +30,8 @@ void ScenesManager::terminate()
 
 void ScenesManager::init()
 {
-    mScenes.emplace(smDefaultSceneName, OwnerPtr<Scene>::newObject());
-    mScenes.emplace(smDefaultUISceneName, OwnerPtr<Scene>::newObject());
+    mScenes.emplace(smDefaultSceneName, Core::OwnerPtr<Scene>::newObject());
+    mScenes.emplace(smDefaultUISceneName, Core::OwnerPtr<Scene>::newObject());
 
     mScenes.at(smDefaultSceneName)->init(smDefaultSceneName);
     mScenes.at(smDefaultUISceneName)->init(smDefaultUISceneName);
@@ -90,7 +90,7 @@ void ScenesManager::requestLoadScene(Core::HashedString sceneName)
 	mLoadRequests.insert(sceneName);
 }
 
-WeakPtr<Scene> ScenesManager::getScene(Core::HashedString sceneName) const
+Core::WeakPtr<Scene> ScenesManager::getScene(Core::HashedString sceneName) const
 {
     return mScenes.at(sceneName);
 }

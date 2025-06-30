@@ -2,13 +2,13 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Core/GPULog.h"
 
-void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, Ptr<GPURenderPass> renderPass, Ptr<GPUContext> gpuContext)
+void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, Core::Ptr<GPURenderPass> renderPass, Core::Ptr<GPUContext> gpuContext)
 {
     mGPUShaderPipelineData = gpuGPUShaderPipelineData;
     mRenderPass = renderPass;
     mGPUContext = gpuContext;
 
-    mGPUShaderDescriptorSets = OwnerPtr<GPUShaderDescriptorSets>::newObject();
+    mGPUShaderDescriptorSets = Core::OwnerPtr<GPUShaderDescriptorSets>::newObject();
     mGPUShaderDescriptorSets->init(mGPUShaderPipelineData.mGPUShaderDescriptorSetsData, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());

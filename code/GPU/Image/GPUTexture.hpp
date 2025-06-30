@@ -25,7 +25,7 @@ public:
 class GPUTexture
 {
 public:
-    void init(Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
+    void init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
     void terminate();
     
 private:
@@ -34,7 +34,7 @@ private:
     ImageData mImageData;
 	u32 mID = 0;
 	GPUTextureData mTextureData;
-    Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUContext> mGPUContext;
     GPUImage mVulkanTextureImage;
     u32 mMipMapLevels = 1;
 

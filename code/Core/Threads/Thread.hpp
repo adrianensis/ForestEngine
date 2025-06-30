@@ -8,6 +8,8 @@
 #include <functional>
 #include "Core/Memory/Pointers.hpp"
 
+
+NS_BEGIN(Core)
 class Thread
 {
 private:
@@ -77,3 +79,5 @@ public:
 		condition.wait(lock, [this]() { return jobQueue.empty(); });
 	}
 };
+
+NS_END

@@ -16,14 +16,14 @@ public:
     void loadPendingScenes();
     bool pendingLoadRequests() const;
     void requestLoadScene(Core::HashedString sceneName);
-    WeakPtr<Scene> getScene(Core::HashedString sceneName) const;
+    Core::WeakPtr<Scene> getScene(Core::HashedString sceneName) const;
 
 private:
     void internalLoadScene(Core::HashedString sceneName);
 
 private:
-	std::unordered_map<Core::HashedString, OwnerPtr<Scene>> mScenes;
-	std::unordered_map<Core::HashedString, WeakPtr<Scene>> mLoadedScenes;
+	std::unordered_map<Core::HashedString, Core::OwnerPtr<Scene>> mScenes;
+	std::unordered_map<Core::HashedString, Core::WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<Core::HashedString> mLoadRequests;
 
     EntityPtr mSceneObjectController;

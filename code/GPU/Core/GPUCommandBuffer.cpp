@@ -1,7 +1,7 @@
 #include "GPUCommandBuffer.h"
 #include "GPU/Core/GPUContext.hpp"
 
-void GPUCommandBuffer::init(VkCommandBuffer commandBuffer, Ptr<GPUContext> gpuContext)
+void GPUCommandBuffer::init(VkCommandBuffer commandBuffer, Core::Ptr<GPUContext> gpuContext)
 {
     mGPUContext = gpuContext;
     mVkCommandBuffer = commandBuffer;

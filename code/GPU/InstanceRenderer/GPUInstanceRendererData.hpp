@@ -7,12 +7,12 @@ class GPUInstanceRendererData
 public:
 	GPUInstanceRendererData() = default;
 	
-	WeakPtr<GPUShader> mShader;
-	WeakPtr<const GPUMesh> mMesh;
+	Core::WeakPtr<GPUShader> mShader;
+	Core::WeakPtr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
     GPUShaderStencilData mGPUShaderStencilData;
 
-	void init(WeakPtr<GPURenderItem> renderItem)
+	void init(Core::WeakPtr<GPURenderItem> renderItem)
     {
         mShader = renderItem->getGPURenderItemData().mShader;
         mMesh = renderItem->getGPURenderItemData().mMesh;

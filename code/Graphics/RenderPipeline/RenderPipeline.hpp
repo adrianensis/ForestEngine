@@ -35,7 +35,7 @@ protected:
 
 protected:
     GPURenderItemManager mGPURenderItemManager;
-    OwnerPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    Core::OwnerPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     GPURenderGraph mGPURenderGraph;
     std::vector<TComponentPtr<MeshRenderer>> mMeshRenderers;
 };
