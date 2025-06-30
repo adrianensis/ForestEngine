@@ -23,10 +23,17 @@ MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
 
 void ClassManager::insert(InternalCPPTypeId internalCPPId, const ClassMetadata& classMetadata)
 {
-    if(smClassMapById.contains(classMetadata.mClassDefinition.getId()))
+    if(smInternalCPPTypeIdToClassId.contains(internalCPPId))
     {
         return;
     }
+
+    // NOTE: Different CPP class with SAME name are not allowed.
+    if(smClassMapById.contains(classMetadata.mClassDefinition.getId()))
+    {
+        CHECK_MSG(false, "Class already registered! {}", classMetadata.mClassDefinition.mName.get())
+    }
+    
     
     smInternalCPPTypeIdToClassId.insert_or_assign(internalCPPId, classMetadata.mClassDefinition.getId());
     smClassMapById.insert_or_assign(classMetadata.mClassDefinition.getId(), classMetadata);
