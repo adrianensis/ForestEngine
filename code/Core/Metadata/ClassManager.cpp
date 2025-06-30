@@ -1,8 +1,8 @@
 #include "Core/Metadata/ClassManager.hpp"
 
-ClassRegisterHelper::ClassRegisterHelper(const ClassDefinition& classDefinition)
+ClassRegisterHelper::ClassRegisterHelper(InternalCPPTypeId internalCPPId, const ClassDefinition& classDefinition)
 {
-    ClassManager::insert(ClassMetadata(classDefinition));
+    ClassManager::insert(internalCPPId, ClassMetadata(classDefinition));
 }
 
 ClassMetadata::ClassMetadata(const ClassDefinition& classDefinition)
@@ -21,13 +21,14 @@ MemberMetadata::MemberMetadata(const MemberDefinition& memberDefinition)
     mMemberDefinition = memberDefinition;
 }
 
-void ClassManager::insert(const ClassMetadata& classMetadata)
+void ClassManager::insert(InternalCPPTypeId internalCPPId, const ClassMetadata& classMetadata)
 {
     if(smClassMapById.contains(classMetadata.mClassDefinition.getId()))
     {
         return;
     }
     
+    smInternalCPPTypeIdToClassId.insert_or_assign(internalCPPId, classMetadata.mClassDefinition.getId());
     smClassMapById.insert_or_assign(classMetadata.mClassDefinition.getId(), classMetadata);
 }
 

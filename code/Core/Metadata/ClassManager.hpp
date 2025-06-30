@@ -4,14 +4,14 @@
 #include "Core/Metadata/MetadataMacros.hpp"
 #include "Core/HashedString/HashedString.hpp"
 #include <unordered_map>
+#include <typeinfo>
+
+using ClassId = u64;
+using InternalCPPTypeId = u64;
 
 #define REGISTER_CLASS(...) \
 inline static const ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
-inline static const ClassRegisterHelper classRegisterHelper_##__VA_ARGS__ = ClassRegisterHelper(smClassDefinition_##__VA_ARGS__); \
-template<> \
-inline const ClassMetadata& ClassManager::getClassMetadata<__VA_ARGS__>() { return ClassManager::getClassMetadataById(smClassDefinition_##__VA_ARGS__.getId()); } \
-template<> \
-inline const ClassMetadata& ClassManager::getClassMetadataNoAssert<__VA_ARGS__>() { return getClassMetadata<__VA_ARGS__>(); }
+inline static const ClassRegisterHelper classRegisterHelper_##__VA_ARGS__ = ClassRegisterHelper(typeid(__VA_ARGS__).hash_code(), smClassDefinition_##__VA_ARGS__);
 
 #define REGISTER_MEMBER(memberName, ...) \
     inline static const MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
@@ -58,7 +58,7 @@ public:
 class ClassRegisterHelper
 {
 public:
-    ClassRegisterHelper(const ClassDefinition& classDefinition);
+    ClassRegisterHelper(InternalCPPTypeId internalCPPId, const ClassDefinition& classDefinition);
 };
 
 class ClassMetadata
@@ -87,14 +87,27 @@ public:
     template<class T>
     static const ClassMetadata& getClassMetadata()
     {
-        CHECK_MSG(false, "getClassDefinition not specialized!");
-        return smNullClassMetadata;
+        InternalCPPTypeId internalCPPTypeId = typeid(T).hash_code();
+        
+        if(! smInternalCPPTypeIdToClassId.contains(internalCPPTypeId))
+        {
+            CHECK_MSG(false, "getClassDefinition not specialized!");
+        }
+
+        return smClassMapById.at(smInternalCPPTypeIdToClassId.at(internalCPPTypeId));
     }
 
     template<class T>
     static const ClassMetadata& getClassMetadataNoAssert()
     {
-        return smNullClassMetadata;
+        InternalCPPTypeId internalCPPTypeId = typeid(T).hash_code();
+        
+        if(! smInternalCPPTypeIdToClassId.contains(internalCPPTypeId))
+        {
+            return smNullClassMetadata;
+        }
+
+        return smClassMapById.at(smInternalCPPTypeIdToClassId.at(internalCPPTypeId));
     }
 
     static const ClassMetadata& getDynamicClassMetadata(const void* pointer)
@@ -117,10 +130,11 @@ public:
         unregisterDynamicClass(reinterpret_cast<u64>(pointer));
     }
 private:
-    static void insert(const ClassMetadata& classMetadata);
+    static void insert(InternalCPPTypeId internalCPPId, const ClassMetadata& classMetadata);
     static ClassMetadata& getClassMetadataByIdInternal(const ClassId classId);
     static void registerDynamicClass(u64 pointer, ClassId classId);
     static void unregisterDynamicClass(u64 pointer);
+    inline static std::unordered_map<InternalCPPTypeId, ClassId> smInternalCPPTypeIdToClassId;
     inline static std::unordered_map<ClassId, ClassMetadata> smClassMapById;
     inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
 };

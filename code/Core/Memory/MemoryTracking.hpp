@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <typeinfo>
 #include "Core/Assert/Assert.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/HashedString/HashedString.hpp"
