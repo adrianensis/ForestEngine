@@ -1,7 +1,7 @@
-#include "Core/Window/WindowSurface.hpp"
-#include "Core/Window/Window.hpp"
+#include "Window/WindowSurface.hpp"
+#include "Window/Window.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Window)
 VkSurfaceKHR WindowSurface::createSurface(VkInstance gpuVulkanInstance, Window* window, const VkAllocationCallbacks *allocator)
 {
     VkSurfaceKHR surface = VK_NULL_HANDLE;

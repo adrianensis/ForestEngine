@@ -33,7 +33,7 @@ void Editor::firstUpdate()
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
     TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
-    Vector2 windowSize = GET_SYSTEM(Core::WindowManager).getMainWindow()->getWindowSize();
+    Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
     // createPointLight(Vector3(0,50,0), 20);

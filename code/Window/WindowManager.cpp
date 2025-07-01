@@ -1,6 +1,6 @@
-#include "Core/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Window)
 void WindowManager::init()
 {
 	glfwInit();
@@ -22,9 +22,9 @@ void WindowManager::update()
     }
 }
 
-WeakPtr<Window> WindowManager::createWindow(const WindowData& windowData)
+Core::WeakPtr<Window> WindowManager::createWindow(const WindowData& windowData)
 {
-    WeakPtr<Window> window = mWindows.emplace_back(OwnerPtr<Window>::newObject());
+    Core::WeakPtr<Window> window = mWindows.emplace_back(Core::OwnerPtr<Window>::newObject());
     window->init(mWindows.size() - 1, windowData);
 
     if(windowData.mMainWindow)
@@ -35,9 +35,9 @@ WeakPtr<Window> WindowManager::createWindow(const WindowData& windowData)
     return window;
 }
 
-WeakPtr<Window> WindowManager::getWindow(u32 index) const
+Core::WeakPtr<Window> WindowManager::getWindow(Core::u32 index) const
 {
-    WeakPtr<Window> window = mWindows.at(index);
+    Core::WeakPtr<Window> window = mWindows.at(index);
     return window;
 }
 NS_END

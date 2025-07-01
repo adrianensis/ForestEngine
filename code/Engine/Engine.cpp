@@ -29,16 +29,16 @@ void Engine::init()
     CREATE_SYSTEM(Core::Time);
     CREATE_SYSTEM(EngineConfig);
     // CREATE_SYSTEM(GPUInterface);
-    CREATE_SYSTEM(Core::WindowManager);
-    Core::WindowData windowData;
+    CREATE_SYSTEM(Window::WindowManager);
+    Window::WindowData windowData;
     windowData.mTitle = "Vulkan Engine";
     windowData.mFullScreen = false;
     windowData.mWindowSize.set(800, 600);
     windowData.mMainWindow = true;
-    GET_SYSTEM(Core::WindowManager).createWindow(windowData);
+    GET_SYSTEM(Window::WindowManager).createWindow(windowData);
     CREATE_SYSTEM(GPUInstance);
     CREATE_SYSTEM(Core::Input);
-    GET_SYSTEM(Core::Input).setWindowInputAdapter(GET_SYSTEM(Core::WindowManager).getMainWindow());
+    GET_SYSTEM(Core::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(Core::TimerManager);
     CREATE_SYSTEM(Core::EventsManager);
     CREATE_SYSTEM(GPUMeshFactory);
@@ -74,7 +74,7 @@ void Engine::run()
 
 	Core::f32 diff = 0;
 
-	while (!GET_SYSTEM(Core::WindowManager).getMainWindow()->isClosed())
+	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{
         //FrameMarkStart("frame");
 		GET_SYSTEM(Core::Time).startFrame();
@@ -87,7 +87,7 @@ void Engine::run()
 		}
 
 		GET_SYSTEM(Core::Input).update();
-		GET_SYSTEM(Core::WindowManager).getMainWindow()->pollEvents();
+		GET_SYSTEM(Window::WindowManager).getMainWindow()->pollEvents();
 
 		GET_SYSTEM(Core::CommandLine).update();
 

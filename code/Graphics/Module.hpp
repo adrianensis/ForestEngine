@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/RenderEngine.hpp"
 

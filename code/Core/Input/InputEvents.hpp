@@ -4,7 +4,7 @@
 
 NS_BEGIN(Core)
 
-#define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(Input), event);
+#define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(Core::Input), event);
 
 #define CLASS_EVENT_SPECIFIC_KEY(KeyName) class InputEventKey##KeyName: public Event {  }; REGISTER_CLASS(InputEventKey##KeyName);
 

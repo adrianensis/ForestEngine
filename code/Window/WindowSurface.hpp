@@ -3,7 +3,7 @@
 #include <vulkan/vulkan.h>
 #include "Core/StdCore.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Window)
 class Window;
 class WindowSurface
 {

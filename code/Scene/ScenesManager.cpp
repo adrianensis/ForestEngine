@@ -49,7 +49,7 @@ void ScenesManager::init()
 	camera->init();
     EC.addComponent(mCameraSceneObject, camera);
 
-	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(Core::WindowManager).getMainWindow()->getAspectRatio(), 90);
+	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), 90);
 
     GET_SYSTEM(CameraManager).setCamera(camera);
 }

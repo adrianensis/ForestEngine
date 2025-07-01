@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Core/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDepthBuffer.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 
@@ -21,7 +21,7 @@ void RenderPassShadowMap::postRender()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
     
-    Vector2 windowSize = GET_SYSTEM(Core::WindowManager).getMainWindow()->getWindowSize();
+    Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
 //    GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }
 

@@ -1,7 +1,7 @@
 #include "Graphics/RenderEngine.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Core/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
@@ -17,7 +17,7 @@ void RenderEngine::init()
 
 	// octree.init(5000);
 
-    GET_SYSTEM(Core::WindowManager).getMainWindow()->addWindowListener(this);
+    GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(this);
 }
 
 void RenderEngine::update()

@@ -5,9 +5,9 @@
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
-#include "Core/Window/Window.hpp"
+#include "Window/Window.hpp"
 
-class RenderEngine : public Core::System, public IComponentsListener, public Core::IWindowListener
+class RenderEngine : public Core::System, public IComponentsListener, public Window::IWindowListener
 {
 public:
     virtual void init() override;
