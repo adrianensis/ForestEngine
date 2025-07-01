@@ -30,9 +30,11 @@
 #define PROFILER_FREE(pointer)
 #endif
 
+NS_BEGIN(Core)
 class Profiler
 {
 public:
     static void init();
     static void terminate();
 };
+NS_END

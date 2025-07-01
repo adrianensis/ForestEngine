@@ -22,7 +22,7 @@ void Engine::init()
 	Core::Log::init();
 
 	Core::Memory::init();
-	Profiler::init();
+	Core::Profiler::init();
     EC.init();
     Core::SystemsManager::getInstance().init();
 
@@ -118,7 +118,7 @@ void Engine::terminate()
 	Core::SystemsManager::deleteInstance();
     EC.terminate();
     EntityComponentManager::deleteInstance();
-	Profiler::terminate();
+	Core::Profiler::terminate();
 	Core::Memory::terminate();
     Core::HashedStringsManager::terminate();
 
