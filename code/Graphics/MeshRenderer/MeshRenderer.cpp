@@ -4,7 +4,7 @@
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/Transform.hpp"
 
-ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
+Core::ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
 
 void MeshRenderer::init(const GPURenderItemData& data) 
 {

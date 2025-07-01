@@ -49,7 +49,7 @@ private:
         Core::SlotsManager mSlotsManager;
     };
 
-	std::unordered_map<ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
+	std::unordered_map<Core::ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
 	
     std::vector<Core::OwnerPtr<GPUTexture>> mTextures;
     std::vector<TextureHandle> mTextureHandles;

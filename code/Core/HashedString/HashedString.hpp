@@ -17,8 +17,8 @@ public:
     HashValue getHash() const { return mHash; }
     const std::string& operator*() const { CHECK_MSG(this->isValid(), "Invalid string!"); return get(); }
     const std::string* operator->() const { return &(operator*()); }
-    bool operator==(const Core::HashedString& other) const { return this->mHash == other.mHash; }
-    Core::HashedString& operator=(const Core::HashedString& other)
+    bool operator==(const HashedString& other) const { return this->mHash == other.mHash; }
+    HashedString& operator=(const HashedString& other)
     {
         if (this != &other)
         {

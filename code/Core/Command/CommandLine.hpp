@@ -23,7 +23,7 @@ public:
     Command mCommand;
 };
 
-class CommandLine: public Core::System
+class CommandLine: public System
 {
 public:
 	virtual void init() override;
@@ -50,7 +50,7 @@ private:
 private:
 	std::unordered_map<HashedString, CommandFunctor> mCommandsMap;
 	std::string mBuffer;
-	static const Core::u32 smBufferSize = 1024;
+	static const u32 smBufferSize = 1024;
 
 	std::list<std::string> mHistory;
 	std::list<std::string>::iterator mHistoryIterator;

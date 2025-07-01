@@ -35,7 +35,7 @@ public:
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
-        ClassId id = classMetaData.mClassDefinition.getId();
+        Core::ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentListeners.contains(id))
         {
             mComponentListeners.emplace(id, std::unordered_set<Core::WeakPtr<IComponentsListener>>());
@@ -52,7 +52,7 @@ public:
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
-        ClassId id = classMetaData.mClassDefinition.getId();
+        Core::ClassId id = classMetaData.mClassDefinition.getId();
         if(mComponentListeners.contains(id))
         {
             if(mComponentListeners.at(id).contains(listener))
@@ -95,7 +95,7 @@ public:
         componentPtr->setOwnerEntity(entityPtr);
         CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
 
-        ClassId id = entityPtr.mClassId;
+        Core::ClassId id = entityPtr.mClassId;
         Core::Slot slot = entityPtr.mSlot;
         if(!mEntityComponents.contains(id))
         {
@@ -122,7 +122,7 @@ public:
         CHECK_MSG(componentPtr->getOwnerEntity() == entityPtr, "Component is assigned to another Entity!");
 
         bool componentFound = false;
-        ClassId id = entityPtr.mClassId;
+        Core::ClassId id = entityPtr.mClassId;
         Core::Slot slot = entityPtr.mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
@@ -148,7 +148,7 @@ public:
     {
         PROFILER_CPU()
 
-        ClassId id = entityPtr.mClassId;
+        Core::ClassId id = entityPtr.mClassId;
         Core::Slot slot = entityPtr.mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
@@ -164,7 +164,7 @@ public:
 
     const std::list<ComponentPtr>& getComponents(const EntityPtr& entityPtr)
     {
-        ClassId id = entityPtr.mClassId;
+        Core::ClassId id = entityPtr.mClassId;
         Core::Slot slot = entityPtr.mSlot;
         return mEntityComponents.at(id).at(slot.getSlot());
     }
@@ -198,7 +198,7 @@ public:
 
     void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const
     {
-        ClassId id = componentPtr->getComponentTypeId();
+        Core::ClassId id = componentPtr->getComponentTypeId();
         if(mComponentListeners.contains(id))
         {
             FOR_LIST(it, mComponentListeners.at(id))
@@ -213,7 +213,7 @@ public:
 
     void notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const
     {
-        ClassId id = componentPtr->getComponentTypeId();
+        Core::ClassId id = componentPtr->getComponentTypeId();
         if(mComponentListeners.contains(id))
         {
             FOR_LIST(it, mComponentListeners.at(id))
@@ -256,8 +256,8 @@ public:
 private:
     Core::Pool<Entity> mEntitiesPool;
     Core::Pool<Component> mComponentsPool;
-    std::unordered_map<ClassId, std::unordered_set<Core::WeakPtr<IComponentsListener>>> mComponentListeners;
-    std::unordered_map<ClassId, std::unordered_map<Core::u32, std::list<ComponentPtr>>> mEntityComponents;
+    std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<IComponentsListener>>> mComponentListeners;
+    std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<ComponentPtr>>> mEntityComponents;
 
 public:
     CRGET(EntitiesPool)

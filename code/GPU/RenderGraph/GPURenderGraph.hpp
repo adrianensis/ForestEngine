@@ -29,7 +29,7 @@ public:
     template<class T> T_EXTENDS(T, GPURenderPass)
     void initRenderPass(const GPURenderPassData& renderPassData)
     {
-        ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
@@ -48,7 +48,7 @@ public:
     template<class T> T_EXTENDS(T, GPURenderPass)
     Core::WeakPtr<T> getRenderPass()
     {
-        ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         return Core::WeakPtr<T>::cast(mRenderPassMap.at(renderPassClassId));
     }
 
@@ -56,7 +56,7 @@ public:
 
 private:
     Core::Ptr<GPUContext> mGPUContext;
-    std::unordered_map<ClassId, Core::OwnerPtr<GPURenderPass>> mRenderPassMap;
+    std::unordered_map<Core::ClassId, Core::OwnerPtr<GPURenderPass>> mRenderPassMap;
     std::vector<Core::WeakPtr<GPURenderPass>> mRenderPassesArray;
     Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     Core::OwnerPtr<GPURenderPass> mRenderPassResolve;

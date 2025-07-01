@@ -1,7 +1,7 @@
 #include "Scripting/Script.hpp"
 #include "Scene/Module.hpp"
 
-ClassId Script::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<Script>().mClassDefinition.getId(); }
+Core::ClassId Script::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<Script>().mClassDefinition.getId(); }
 
 void Script::init()
 {

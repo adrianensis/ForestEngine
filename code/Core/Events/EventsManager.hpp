@@ -13,7 +13,7 @@ NS_BEGIN(Core)
 #define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) GET_SYSTEM(Core::EventsManager).unsubscribe<EventClassName>(owner, receiver);
 #define SEND_EVENT(owner, instigator, event) GET_SYSTEM(Core::EventsManager).send<REMOVE_REFERENCE(decltype(event))>(owner, instigator, &event);
 
-class EventsManager: public Core::System
+class EventsManager: public System
 {
 public:
     virtual void init() override;
@@ -22,19 +22,19 @@ public:
 	template <class E> T_EXTENDS(E, Event)
 	void subscribe(IEventObject * eventOwner, IEventObject * eventReceiver, EventCallback eventCallback)
 	{
-        subscribe(Core::ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver, eventCallback);
+        subscribe(ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver, eventCallback);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
 	void unsubscribe(IEventObject * eventOwner, IEventObject * eventReceiver)
 	{
-        unsubscribe(Core::ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver);
+        unsubscribe(ClassManager::getClassMetadata<E>().mClassDefinition.getId(), eventOwner, eventReceiver);
 	}
 
 	template <class E> T_EXTENDS(E, Event)
     void send(IEventObject *eventOwner, IEventObject *eventInstigator, Event *event)
     {
-        ClassId eventClassId = Core::ClassManager::getClassMetadata<E>().mClassDefinition.getId();
+        ClassId eventClassId = ClassManager::getClassMetadata<E>().mClassDefinition.getId();
         send(eventClassId, eventOwner, eventInstigator, event);
     }
 

@@ -23,14 +23,14 @@ public:
 class Window: public IWindowInputAdapter
 {
 public:
-    void init(Core::i32 id, const WindowData& windowData);
+    void init(i32 id, const WindowData& windowData);
     void terminate();
 
     GLFWwindow* getGlfwWindow() const;
     std::vector<const char*> getRequiredExtensions() const;
 
     Vector2 getWindowSize() const;
-    Core::f32 getAspectRatio() const;
+    f32 getAspectRatio() const;
     bool isClosed() const;
     void swap();
 
@@ -44,23 +44,23 @@ public:
     void addWindowListener(Ptr<IWindowListener> windowListener);
 
 private:
-    void onResize(GLFWwindow *window, Core::i32 width, Core::i32 height);
+    void onResize(GLFWwindow *window, i32 width, i32 height);
 
-    static void onResizeGLFW(GLFWwindow *window, Core::i32 width, Core::i32 height);
-    static void keyCallbackGLFW(GLFWwindow *window, Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods);
-    static void mouseButtonCallbackGLFW(GLFWwindow *window, Core::i32 button, Core::i32 action, Core::i32 mods);
-    static void scrollCallbackGLFW(GLFWwindow *window, Core::f64 xoffset, Core::f64 yoffset);
-    static void charCallbackGLFW(GLFWwindow *window, Core::u32 codepoint);
+    static void onResizeGLFW(GLFWwindow *window, i32 width, i32 height);
+    static void keyCallbackGLFW(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods);
+    static void mouseButtonCallbackGLFW(GLFWwindow *window, i32 button, i32 action, i32 mods);
+    static void scrollCallbackGLFW(GLFWwindow *window, f64 xoffset, f64 yoffset);
+    static void charCallbackGLFW(GLFWwindow *window, u32 codepoint);
 
-    virtual void keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods) override;
-    virtual void mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 mods) override;
-    virtual void scrollCallback(Core::f64 xoffset, Core::f64 yoffset) override;
-    virtual void charCallback(Core::u32 codepoint) override;
+    virtual void keyCallback(i32 key, i32 scancode, i32 action, i32 mods) override;
+    virtual void mouseButtonCallback(i32 button, i32 action, i32 mods) override;
+    virtual void scrollCallback(f64 xoffset, f64 yoffset) override;
+    virtual void charCallback(u32 codepoint) override;
 
 private:
 	GLFWwindow *mGLTFWindow = nullptr;
 	WindowData mWindowData;
-    Core::i32 mID = -1;
+    i32 mID = -1;
 
     std::vector<Ptr<IWindowListener>> mWindowListeners;
 

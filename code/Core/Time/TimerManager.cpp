@@ -6,7 +6,7 @@ NS_BEGIN(Core)
 void TimerManager::endTimer(Timer * timer)
 {
 	mTimers.remove(timer);
-	Core::Memory::deleteObject(timer);
+	Memory::deleteObject(timer);
 }
 
 void TimerManager::init() {
@@ -17,7 +17,7 @@ void TimerManager::update()
 	PROFILER_CPU()
 	if (!mTimers.empty())
 	{
-		Core::f32 deltaTime = GET_SYSTEM(Core::Time).getDeltaTimeSeconds(); // seconds
+		f32 deltaTime = GET_SYSTEM(Time).getDeltaTimeSeconds(); // seconds
 		std::list<Timer *> timers(mTimers);
 
 		for (auto itTimer = timers.begin(); itTimer != timers.end(); ++itTimer)
@@ -36,9 +36,9 @@ void TimerManager::update()
 
 }
 
-TimerHandle TimerManager::setTimer(Core::f32 duration, TimerDurationType durationType, std::function<void()> callback)
+TimerHandle TimerManager::setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback)
 {
-	Timer *timer = Core::Memory::newObject<Timer>();
+	Timer *timer = Memory::newObject<Timer>();
 	timer->init(duration, durationType, callback);
 
 	TimerHandle timerHandle;

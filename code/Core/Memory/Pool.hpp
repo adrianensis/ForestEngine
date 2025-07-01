@@ -62,12 +62,12 @@ class PoolArrayBase
 {
 public:
     virtual ~PoolArrayBase() = default;
-    PoolArrayBase(Core::u32 reservedElements)
+    PoolArrayBase(u32 reservedElements)
     {
         mSlotsManager.init(reservedElements);
     }
-    virtual BaseClass& at(Core::u32 index) = 0;
-    virtual Core::u32 size() const = 0;
+    virtual BaseClass& at(u32 index) = 0;
+    virtual u32 size() const = 0;
     virtual void emplaceBack() = 0;
     virtual void clear()
     {
@@ -80,23 +80,23 @@ template <class T, class BaseClass> T_EXTENDS(T, BaseClass)
 class PoolArray : public PoolArrayBase<BaseClass>
 {
 public:
-    PoolArray(Core::u32 reservedElements) : PoolArrayBase<BaseClass>(reservedElements)
+    PoolArray(u32 reservedElements) : PoolArrayBase<BaseClass>(reservedElements)
     {
         PROFILER_CPU()
         mElements.reserve(reservedElements);
 
         #ifdef ENGINE_BUILD_DEBUG
-        const Core::ClassMetadata& baseClassMetaData = Core::ClassManager::getClassMetadata<BaseClass>();
+        const ClassMetadata& baseClassMetaData = ClassManager::getClassMetadata<BaseClass>();
         mDebugStringBaseClass = baseClassMetaData.mClassDefinition.mName;
-        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         mDebugStringClass = classMetaData.mClassDefinition.mName;
         #endif
     }
-    virtual BaseClass& at(Core::u32 index) override
+    virtual BaseClass& at(u32 index) override
     {
         return *static_cast<BaseClass*>(&mElements.at(index));
     }
-    virtual Core::u32 size() const override
+    virtual u32 size() const override
     {
         return mElements.size();
     }
@@ -112,8 +112,8 @@ public:
     std::vector<T> mElements;
 
     #ifdef ENGINE_BUILD_DEBUG
-    Core::HashedString mDebugStringBaseClass;
-    Core::HashedString mDebugStringClass;
+    HashedString mDebugStringBaseClass;
+    HashedString mDebugStringClass;
     #endif
 };
 
@@ -121,12 +121,12 @@ template<class BaseClass>
 class Pool
 {
 public:
-    void init(Core::u32 maxElements)
+    void init(u32 maxElements)
     {
         mMaxElements = maxElements;
 
         #ifdef ENGINE_BUILD_DEBUG
-        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<BaseClass>();
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<BaseClass>();
         mDebugString = classMetaData.mClassDefinition.mName;
         #endif
     }
@@ -137,7 +137,7 @@ public:
             FOR_ARRAY(i, it->second.get())
             {
                 BaseClass& element = it->second->at(i);
-                Core::Memory::unregisterPointer(&element);
+                Memory::unregisterPointer(&element);
             }
             it->second->clear();
         }
@@ -149,7 +149,7 @@ public:
     PoolElementPtr requestElement()
     {
         PROFILER_CPU()
-        const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
+        const ClassMetadata& classMetaData = ClassManager::getClassMetadata<T>();
         ClassId id = classMetaData.mClassDefinition.getId();
         if(!mPools.contains(id))
         {
@@ -174,7 +174,7 @@ public:
             BaseClass& element = mPools.at(id)->at(slot.getSlot());
             T* elementT = static_cast<T*>(&element);
             *elementT = T();
-            Core::Memory::registerPointer<T>(elementT);
+            Memory::registerPointer<T>(elementT);
         }
         else
         {
@@ -188,7 +188,7 @@ public:
     {
         PROFILER_CPU()
 
-        Core::Memory::unregisterPointer(&getElementBase(ptr));
+        Memory::unregisterPointer(&getElementBase(ptr));
         
         if(mPools.contains(ptr.mClassId))
         {
@@ -208,10 +208,10 @@ public:
     }
 
     std::unordered_map<ClassId, OwnerPtr<PoolArrayBase<BaseClass>>> mPools;
-    Core::u32 mMaxElements = 0;
+    u32 mMaxElements = 0;
 
     #ifdef ENGINE_BUILD_DEBUG
-    Core::HashedString mDebugString;
+    HashedString mDebugString;
     #endif
 };
 NS_END

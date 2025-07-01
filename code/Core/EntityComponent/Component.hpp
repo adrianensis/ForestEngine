@@ -25,7 +25,7 @@ public:
     // Important: Override this in ONLY those component classes allowed to be injected into engine systems
     // MeshRenderer for RenderEngine, Script for RenderEngine, ...
     // This will automatically work in derived classes, no need to override this method in derived classes
-    virtual ClassId getComponentTypeId() const { return 0; }
+    virtual Core::ClassId getComponentTypeId() const { return 0; }
 
     EntityPtr getOwnerEntity() const;
     void setOwnerEntity(const EntityPtr& ownerEntity);
@@ -37,7 +37,7 @@ class ComponentOwner
 public:
 
     ComponentOwner() = default;
-    ComponentOwner(ClassId id, Core::Slot slot)
+    ComponentOwner(Core::ClassId id, Core::Slot slot)
     {
         mClassId = id;
         mSlot = slot;
@@ -51,7 +51,7 @@ public:
 
 public:
     Core::Slot mSlot;
-    ClassId mClassId = 0;
+    Core::ClassId mClassId = 0;
 };
 
 public:
@@ -86,7 +86,7 @@ public:
     ComponentPtr(): Core::PoolElementPtr()
     {
     }
-    ComponentPtr(ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
+    ComponentPtr(Core::ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
@@ -129,10 +129,10 @@ public:
     TComponentPtr() = default;
     TComponentPtr(const T* component)
     {
-        ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
+        Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
         *this = TComponentPtr(id, component->getSlot());
     }
-    TComponentPtr(ClassId id, Core::Slot slot): ComponentPtr(id, slot)
+    TComponentPtr(Core::ClassId id, Core::Slot slot): ComponentPtr(id, slot)
     {
         checkValid();
     }

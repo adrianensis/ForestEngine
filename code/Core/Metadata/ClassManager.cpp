@@ -50,7 +50,7 @@ const ClassMetadata& ClassManager::getClassMetadataById(const ClassId classId)
     return getClassMetadataByIdInternal(classId);
 }
 
-void ClassManager::registerDynamicClass(Core::u64 pointer, ClassId classId)
+void ClassManager::registerDynamicClass(u64 pointer, ClassId classId)
 {
     if(smPointersToDynamicClass.contains(pointer))
     {
@@ -59,7 +59,7 @@ void ClassManager::registerDynamicClass(Core::u64 pointer, ClassId classId)
     smPointersToDynamicClass.insert_or_assign(pointer, &smClassMapById.at(classId));
 }
 
-void ClassManager::unregisterDynamicClass(Core::u64 pointer)
+void ClassManager::unregisterDynamicClass(u64 pointer)
 {
     smPointersToDynamicClass.erase(pointer);
 }

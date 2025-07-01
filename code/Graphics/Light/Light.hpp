@@ -6,7 +6,7 @@
 class Light: public Component
 {
 public:
-    ClassId getComponentTypeId() const override;
+    Core::ClassId getComponentTypeId() const override;
     virtual Matrix4 getLightProjectionViewMatrix() const;
 };
 REGISTER_CLASS(Light);

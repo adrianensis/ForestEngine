@@ -63,7 +63,7 @@ public:
     EntityPtr(): Core::PoolElementPtr()
     {
     }
-    EntityPtr(ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
+    EntityPtr(Core::ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
@@ -106,10 +106,10 @@ public:
     TEntityPtr() = default;
     TEntityPtr(const T* entity)
     {
-        ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
+        Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
         *this = TEntityPtr(id, entity->getSlot());
     }
-    TEntityPtr(ClassId id, Core::Slot slot): EntityPtr(id, slot)
+    TEntityPtr(Core::ClassId id, Core::Slot slot): EntityPtr(id, slot)
     {
         checkValid();
     }

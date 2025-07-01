@@ -3,7 +3,7 @@
 #include "Core/System/System.hpp"
 #include "Core/Window/Window.hpp"
 NS_BEGIN(Core)
-class WindowManager : public Core::System
+class WindowManager : public System
 {
 public:
     virtual void init() override;
@@ -11,7 +11,7 @@ public:
     void update();
 
     WeakPtr<Window> createWindow(const WindowData& windowData);
-    WeakPtr<Window> getWindow(Core::u32 index) const;
+    WeakPtr<Window> getWindow(u32 index) const;
 private:
 	std::vector<OwnerPtr<Window>> mWindows;
     WeakPtr<Window> mMainWindow;

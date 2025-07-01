@@ -10,7 +10,7 @@ NS_BEGIN(Core)
 class Slot
 {
 public:
-    void set(Core::u32 slot)
+    void set(u32 slot)
     {
         mSlot = slot;
         mIsValid = true;
@@ -21,26 +21,26 @@ public:
         mIsValid = false;
     }
 private:
-    Core::u32 mSlot = 0;
+    u32 mSlot = 0;
     bool mIsValid = false;
 public:
-    Core::u32 getSlot() const { return mSlot; }
+    u32 getSlot() const { return mSlot; }
     bool isValid() const { return mIsValid; }
 };
 
 class SlotsManager
 {
 public:
-    void init(Core::u32 initialAvailableSlots)
+    void init(u32 initialAvailableSlots)
     {
         PROFILER_CPU()
         resize(initialAvailableSlots);
     }
 
-    void resize(Core::u32 slotsCount)
+    void resize(u32 slotsCount)
     {
         PROFILER_CPU()
-        Core::u32 currentSize = mSize;
+        u32 currentSize = mSize;
         mSize = slotsCount;
         CHECK_MSG(mSize > 0, "SlotManager is empty!");
         FOR_RANGE(i, currentSize, mSize)
@@ -49,7 +49,7 @@ public:
         }
     }
 
-    void increaseSize(Core::u32 extra)
+    void increaseSize(u32 extra)
     {
         PROFILER_CPU()
         resize(mSize + extra);
@@ -62,7 +62,7 @@ public:
         CHECK_MSG(!isEmpty(), "SlotManager is empty!");
 
         Slot slot;
-        Core::u32 i = *mAvailableSlots.begin();
+        u32 i = *mAvailableSlots.begin();
         mAvailableSlots.erase(mAvailableSlots.begin());
         slot.set(i);
 
@@ -90,13 +90,13 @@ public:
         return bounds && isValid;
     }
 
-    Core::u32 getSize() const { return mSize; }
+    u32 getSize() const { return mSize; }
     void reset() { mAvailableSlots.clear(); }
     bool isEmpty() const { return mAvailableSlots.empty(); }
 
 private:
-    std::set<Core::u32> mAvailableSlots;
-    Core::u32 mSize = 0;
+    std::set<u32> mAvailableSlots;
+    u32 mSize = 0;
 public:
 };
 

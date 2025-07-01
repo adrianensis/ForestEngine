@@ -24,8 +24,8 @@ public:
     bool isReferenced() const { return mReferenceCounter > 0; }
     bool isWeakReferenced() const { return mWeakReferenceCounter > 0; }
 public:
-    Core::u32 mWeakReferenceCounter = 0;
-    Core::u32 mReferenceCounter = 0;
+    u32 mWeakReferenceCounter = 0;
+    u32 mReferenceCounter = 0;
 };
 
 // SNIFAE
@@ -382,7 +382,7 @@ private:
             {
                 if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
                 {
-                    Core::Memory::deleteObject(mReferenceBlock);
+                    Memory::deleteObject(mReferenceBlock);
                 }
             }
         }
@@ -457,11 +457,11 @@ public:
             if(mInternalPointer && !mReferenceBlock->isReferenced())
             {
                 // INFO: if class is EnableWeakPtrToThis derived, the mReferenceBlock will be removed by the parent OwnerPtr in the next if statement!
-                Core::Memory::deleteObject(mInternalPointer);
+                Memory::deleteObject(mInternalPointer);
             }
             if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
-                Core::Memory::deleteObject(mReferenceBlock);
+                Memory::deleteObject(mReferenceBlock);
             }
         }
         set(nullptr, nullptr);
@@ -521,7 +521,7 @@ public:
         return SharedPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    explicit SharedPtr(T* reference) { this->init(reference, Core::Memory::newObject<ReferenceBlock>()); }
+    explicit SharedPtr(T* reference) { this->init(reference, Memory::newObject<ReferenceBlock>()); }
     SharedPtr() = default;
     SharedPtr(const WeakPtr<T>& other) { assign(other); }
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
@@ -539,7 +539,7 @@ public:
     template <typename ... Args>
 	static SharedPtr<T> newObject(Args&&... args)
 	{
-        return SharedPtr<T>(Core::Memory::newObject<T>(args...));
+        return SharedPtr<T>(Memory::newObject<T>(args...));
     }
 
 private:
@@ -587,7 +587,7 @@ public:
 
     explicit OwnerPtr(T* reference)
     {
-        this->init(reference, Core::Memory::newObject<ReferenceBlock>());
+        this->init(reference, Memory::newObject<ReferenceBlock>());
     }
     OwnerPtr() = default;
     OwnerPtr(OwnerPtr<T>&& other) { assign(other); }
@@ -607,7 +607,7 @@ public:
     template <typename ... Args>
 	static OwnerPtr<T> newObject(Args&&... args)
 	{
-        return OwnerPtr<T>(Core::Memory::newObject<T>(args...));
+        return OwnerPtr<T>(Memory::newObject<T>(args...));
     }
 
 private:
@@ -628,7 +628,8 @@ NS_END
 
 // HASH
 // Needed for unordered_map
-namespace std {
+namespace std
+{
   template<class T>
   struct hash<Core::Ptr<T>> 
   {

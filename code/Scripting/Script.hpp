@@ -8,7 +8,7 @@ class SceneObject;
 class Script: public Component
 {
 public:
-    ClassId getComponentTypeId() const override;
+    Core::ClassId getComponentTypeId() const override;
 
     virtual void init();
     virtual void firstUpdate();

@@ -13,7 +13,7 @@ NS_BEGIN(Core)
 #define CREATE_SYSTEM(...) \
     Core::SystemsManager::getInstance().createSystem<__VA_ARGS__>().get();
 
-class SystemsManager: public Core::Singleton<SystemsManager>
+class SystemsManager: public Singleton<SystemsManager>
 {
 public:
     void init();
@@ -21,8 +21,8 @@ public:
     template<typename T> T_EXTENDS(T, System)
     WeakPtr<T> createSystem()
     {
-        ClassId classId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-        LOG_TAG("SYSTEM", "Creating system: " + std::to_string(classId) + " " + Core::ClassManager::getClassMetadata<T>().mClassDefinition.mName.get());
+        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        LOG_TAG("SYSTEM", "Creating system: " + std::to_string(classId) + " " + ClassManager::getClassMetadata<T>().mClassDefinition.mName.get());
         CHECK_MSG(classId > 0, "System has no metadata!");
         CHECK_MSG(!mSystems.contains(classId), "System already created");
         mSystems.emplace(classId, OwnerPtr<System>::moveCast(OwnerPtr<T>::newObject()));
@@ -35,7 +35,7 @@ public:
     template<typename T> T_EXTENDS(T, System)
     WeakPtr<T> getSystem() const
     {
-        ClassId classId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        ClassId classId = ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         CHECK_MSG(mSystems.contains(classId), "System not found!");
         return WeakPtr<T>::cast(mSystems.at(classId));
     }

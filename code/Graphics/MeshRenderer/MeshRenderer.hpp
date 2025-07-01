@@ -14,7 +14,7 @@ class MeshRenderer: public Component, public IOcTreeElement
 	DECLARE_SERIALIZATION()
 	
 public:
-    ClassId getComponentTypeId() const override;
+    Core::ClassId getComponentTypeId() const override;
 
     void init(const GPURenderItemData& data);
     void onComponentAdded() override;

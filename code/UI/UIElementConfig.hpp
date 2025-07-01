@@ -18,7 +18,7 @@ class UIElementConfig
 {
 public:
 	const UIStyle* mStyle = nullptr;
-	ClassId mUIElementClassId = 0;
+	Core::ClassId mUIElementClassId = 0;
 	Vector2 mPosition = Vector2::smZero;
 	Vector2 mSize = Vector2::smOne;
 	Vector2 mDisplayPosition = Vector2::smZero;

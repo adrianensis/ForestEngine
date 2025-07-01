@@ -30,14 +30,14 @@ void Input::update()
 	{
 		smMouseCoordinates.set(newMouseCoordinates);
 
-		Core::InputEventMouseMoved event;
+		InputEventMouseMoved event;
 		
         SEND_INPUT_EVENT(event);
 	}
 
 	if(smLastMouseButtonPressed != -1)
 	{
-		Core::InputEventMouseButtonHold event;
+		InputEventMouseButtonHold event;
 		event.mButton = smLastMouseButtonPressed;
 		event.mMods = smModifier;
 		SEND_INPUT_EVENT(event);
@@ -45,34 +45,34 @@ void Input::update()
 
 	if(smLastKeyPressed != -1)
 	{
-		Core::InputEventKeyHold event;
+		InputEventKeyHold event;
 		event.mKey = smLastKeyPressed;
 		event.mMods = smModifier;
 		SEND_INPUT_EVENT(event);
 	}
 }
 
-bool Input::isKeyPressedOnce(Core::i32 key)
+bool Input::isKeyPressedOnce(i32 key)
 {
 	return smKeyJustPressed && key == smLastKeyPressed;
 }
 
-bool Input::isKeyPressed(Core::i32 key)
+bool Input::isKeyPressed(i32 key)
 {
 	return key == smLastKeyPressed;
 }
 
-bool Input::isModifierPressed(Core::i32 modifier)
+bool Input::isModifierPressed(i32 modifier)
 {
 	return modifier == smModifier;
 }
 
-bool Input::isMouseButtonPressedOnce(Core::i32 button)
+bool Input::isMouseButtonPressedOnce(i32 button)
 {
 	return smButtonJustPressed && button == smLastMouseButtonPressed;
 }
 
-bool Input::isMouseButtonPressed(Core::i32 button)
+bool Input::isMouseButtonPressed(i32 button)
 {
 	return button == smLastMouseButtonPressed;
 }
@@ -82,7 +82,7 @@ const Vector2& Input::getMousePosition()
 	return smMouseCoordinates;
 }
 
-Core::f32 Input::getScroll()
+f32 Input::getScroll()
 {
 	return smScroll;
 }

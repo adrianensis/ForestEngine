@@ -30,7 +30,7 @@ private:
 	}
 
 private:
-	std::unordered_map<ClassId, Core::OwnerPtr<GPUMesh>> mPrimitivesMap;
+	std::unordered_map<Core::ClassId, Core::OwnerPtr<GPUMesh>> mPrimitivesMap;
 };
 REGISTER_CLASS(GPUMeshFactory);
 

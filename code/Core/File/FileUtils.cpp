@@ -28,7 +28,7 @@ void FileUtils::readFileBinaryData(const std::string& path, std::vector<byte>& o
     CHECK_MSG(file.good() && !file.fail(), "Couldn't open " + path);
 
     // read the file size
-    Core::u32 length = file.tellg();
+    u32 length = file.tellg();
     // go back to beginning
     file.seekg(0, std::ios_base::beg);
 

@@ -10,7 +10,7 @@ public:
     Core::WeakPtr<const GPUMesh> mMesh;
     Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
     Core::WeakPtr<GPUShader> mShader;
-    std::unordered_set<ClassId> mRenderPassIDs;
+    std::unordered_set<Core::ClassId> mRenderPassIDs;
 };
 
 class GPURenderItem

@@ -30,9 +30,9 @@ public:
 	{
         PROFILER_CPU()
 		CHECK_MSG(object != nullptr, "pointer is nullptr");
-        if (Core::ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
+        if (ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId() > 0)
 		{
-            Core::ClassManager::registerDynamicClass<T>(object);
+            ClassManager::registerDynamicClass<T>(object);
 		}
         MemoryTracking::registerNewObject(object);
 	}
@@ -51,9 +51,9 @@ public:
 	{
         PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
-        if (Core::ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
+        if (ClassManager::getDynamicClassMetadata(pointer).mClassDefinition.getId() > 0)
 		{
-		    Core::ClassManager::unregisterDynamicClass(pointer);
+		    ClassManager::unregisterDynamicClass(pointer);
         }
         MemoryTracking::unregisterDeletedObject(pointer);
 	}

@@ -17,29 +17,29 @@ public:
     virtual Vector2 getMousePosition() const = 0;
 };
 
-class Input: public Core::System
+class Input: public System
 {
 public:
     virtual void init() override;
     void update();
-    bool isKeyPressedOnce(Core::i32 key);
-    bool isKeyPressed(Core::i32 key);
-    bool isModifierPressed(Core::i32 modifier);
-    bool isMouseButtonPressedOnce(Core::i32 button);
-    bool isMouseButtonPressed(Core::i32 button);
+    bool isKeyPressedOnce(i32 key);
+    bool isKeyPressed(i32 key);
+    bool isModifierPressed(i32 modifier);
+    bool isMouseButtonPressedOnce(i32 button);
+    bool isMouseButtonPressed(i32 button);
     const Vector2& getMousePosition();
-    Core::f32 getScroll();
+    f32 getScroll();
     void clearMouseButton();
     void clearKey();
     
 public:
 	Vector2 smMouseCoordinates;
-	Core::i32 smLastMouseButtonPressed;
-	Core::i32 smLastKeyPressed;
-	Core::i32 smModifier;
+	i32 smLastMouseButtonPressed;
+	i32 smLastKeyPressed;
+	i32 smModifier;
 	bool smKeyJustPressed;
 	bool smButtonJustPressed;
-	Core::f32 smScroll;
+	f32 smScroll;
 
 private:
     WeakPtr<IWindowInputAdapter> mWindowInputAdapter;

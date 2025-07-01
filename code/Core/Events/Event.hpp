@@ -10,7 +10,7 @@ class IEventObject
 class Event
 {
 public:
-	Core::f32 mDelayAmount = 0.0f;
+	f32 mDelayAmount = 0.0f;
 	TimerDurationType mDelayType;
 	IEventObject* mInstigator = nullptr;
 	
@@ -20,7 +20,7 @@ REGISTER_CLASS(Event);
 using EventCallback = std::function<void(const Event *)>;
 
 template<class E> T_EXTENDS(E, Event)
-class EventFunctor: public Core::Functor<EventCallback>
+class EventFunctor: public Functor<EventCallback>
 {
 public:
 	E* mEvent = nullptr;
