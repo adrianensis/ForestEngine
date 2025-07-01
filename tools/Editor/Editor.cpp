@@ -5,7 +5,7 @@
 #include "Engine/Input/Input.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
-#include "Core/Time/TimeUtils.hpp"
+#include "Engine/Time/TimeUtils.hpp"
 
 void Editor::init()
 {
@@ -112,7 +112,7 @@ void Editor::update()
 
     TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
 	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
-	Core::f32 speed = 400 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+	Core::f32 speed = 400 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
@@ -178,7 +178,7 @@ void Editor::update()
 
 	if(!mLastMousePosition.eq(currentMousePosition))
 	{
-        Core::f32 camSpeed = 200 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+        Core::f32 camSpeed = 200 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
 		Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
 		Vector3 direction;
 
@@ -222,7 +222,7 @@ void Editor::update()
 		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-2000), Vector3(x,0,2000)), 1, GeometricSpace::WORLD, Vector4(1,1,1,0.3f));
 	}
 
-    Core::f32 fps = 1000.0f/GET_SYSTEM(Core::Time).getDeltaTimeMillis();
+    Core::f32 fps = 1000.0f/GET_SYSTEM(Time::Time).getDeltaTimeMillis();
     // LOG_VAR(fps)
     if(mFPSCounter)
     {
@@ -317,7 +317,7 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 EntityPtr Editor::mousePick()
 {
 
-    Core::f32 speed = 100 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+    Core::f32 speed = 100 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
     EntityPtr obj;
     FOR_LIST(it, mSceneObjectsArray)
     {

@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Core/System/System.hpp"
-#include "Core/Time/Timer.hpp"
+#include "Engine/Time/Timer.hpp"
 
-NS_BEGIN(Core)
-class TimerManager: public System
+NS_BEGIN(Time)
+class TimerManager: public Core::System
 {
 public:
     virtual void init() override;
     virtual void terminate() override;
     void update();
-    TimerHandle setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback);
+    TimerHandle setTimer(Core::f32 duration, TimerDurationType durationType, std::function<void()> callback);
     void cancelTimer(const TimerHandle& timerHandle);
 
 private:

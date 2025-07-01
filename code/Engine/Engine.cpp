@@ -1,7 +1,7 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "Engine/Command/CommandLine.hpp"
-#include "Core/Time/TimerManager.hpp"
+#include "Engine/Time/TimerManager.hpp"
 #include "Engine/Input/Input.hpp"
 #include "Core/Events/EventsManager.hpp"
 #include "Graphics/Module.hpp"
@@ -9,7 +9,7 @@
 
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
-#include "Core/Time/TimeUtils.hpp"
+#include "Engine/Time/TimeUtils.hpp"
 
 #include <thread>
 
@@ -26,7 +26,7 @@ void Engine::init()
     EC.init();
     Core::SystemsManager::getInstance().init();
 
-    CREATE_SYSTEM(Core::Time);
+    CREATE_SYSTEM(Time::Time);
     CREATE_SYSTEM(EngineConfig);
     // CREATE_SYSTEM(GPUInterface);
     CREATE_SYSTEM(Window::WindowManager);
@@ -39,7 +39,7 @@ void Engine::init()
     CREATE_SYSTEM(GPUInstance);
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
-    CREATE_SYSTEM(Core::TimerManager);
+    CREATE_SYSTEM(Time::TimerManager);
     CREATE_SYSTEM(Core::EventsManager);
     CREATE_SYSTEM(GPUMeshFactory);
     CREATE_SYSTEM(GPUShaderManager);
@@ -58,7 +58,7 @@ void Engine::preSceneChanged()
 {
 	GET_SYSTEM(ScriptEngine).preSceneChanged();
 	GET_SYSTEM(RenderEngine).preSceneChanged();
-	GET_SYSTEM(Core::TimerManager).terminate();
+	GET_SYSTEM(Time::TimerManager).terminate();
 }
 
 void Engine::postSceneChanged()
@@ -77,7 +77,7 @@ void Engine::run()
 	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{
         //FrameMarkStart("frame");
-		GET_SYSTEM(Core::Time).startFrame();
+		GET_SYSTEM(Time::Time).startFrame();
 
 		if (GET_SYSTEM(ScenesManager).pendingLoadRequests())
 		{
@@ -92,11 +92,11 @@ void Engine::run()
 		GET_SYSTEM(Command::CommandLine).update();
 
 		GET_SYSTEM(ScenesManager).update();
-		GET_SYSTEM(Core::TimerManager).update();
+		GET_SYSTEM(Time::TimerManager).update();
 		GET_SYSTEM(ScriptEngine).update();
 		GET_SYSTEM(RenderEngine).update();
 
-		Core::f32 dtMillis = GET_SYSTEM(Core::Time).getElapsedTimeMillis();
+		Core::f32 dtMillis = GET_SYSTEM(Time::Time).getElapsedTimeMillis();
 		
 		if (inverseFPSMillis >= dtMillis)
 		{
@@ -105,7 +105,7 @@ void Engine::run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
 		}
 		
-		GET_SYSTEM(Core::Time).endFrame();
+		GET_SYSTEM(Time::Time).endFrame();
         //FrameMarkEnd("frame");
 	}
 }

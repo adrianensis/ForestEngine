@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Time/Timer.hpp"
+#include "Engine/Time/Timer.hpp"
 
 NS_BEGIN(Core)
 class IEventObject
@@ -11,7 +11,7 @@ class Event
 {
 public:
 	f32 mDelayAmount = 0.0f;
-	TimerDurationType mDelayType;
+	Time::TimerDurationType mDelayType;
 	IEventObject* mInstigator = nullptr;
 	
 };
