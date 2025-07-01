@@ -1,5 +1,5 @@
 #include "Scene/Transform.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 
 void Transform::init() 
 {
@@ -216,8 +216,8 @@ const Matrix4& Transform::getViewMatrix() const
 {
     if(mViewMatrixDirty)
     {
-        Vector3 worldPosition = EC.getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
-        const Matrix4& rotationMatrix = EC.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+        Vector3 worldPosition = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
+        const Matrix4& rotationMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
         mViewMatrix.view(worldPosition, rotationMatrix);
         mViewMatrixDirty = false;
     }
@@ -225,13 +225,13 @@ const Matrix4& Transform::getViewMatrix() const
     return mViewMatrix;
 }
 
-void Transform::addChild(TComponentPtr<Transform> child)
+void Transform::addChild(EC::TComponentPtr<Transform> child)
 {
     child->mParent = this;
     mChildren.insert_or_assign(child->getComponentId(), child);
 }
 
-void Transform::removeChild(TComponentPtr<Transform> child)
+void Transform::removeChild(EC::TComponentPtr<Transform> child)
 {
     child->mParent.reset();
     mChildren.erase(child->getComponentId());
@@ -239,7 +239,7 @@ void Transform::removeChild(TComponentPtr<Transform> child)
 
 IMPLEMENT_SERIALIZATION(Transform)
 {
-	Component::serialize(json);
+	EC::Component::serialize(json);
 
 	SERIALIZE("local_position", mLocalPosition);
 	SERIALIZE("scale", mLocalScale);
@@ -248,7 +248,7 @@ IMPLEMENT_SERIALIZATION(Transform)
 
 IMPLEMENT_DESERIALIZATION(Transform)
 {
-	Component::deserialize(json);
+	EC::Component::deserialize(json);
 
 	DESERIALIZE("local_position", mLocalPosition);
 	DESERIALIZE("scale", mLocalScale);

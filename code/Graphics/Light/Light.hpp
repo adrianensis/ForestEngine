@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 #include "GPU/Light/GPULight.hpp"
 
-class Light: public Component
+class Light: public EC::Component
 {
 public:
     Core::ClassId getComponentTypeId() const override;

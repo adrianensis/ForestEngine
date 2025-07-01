@@ -3,12 +3,12 @@
 
 void ScriptEngine::init()
 {
-	EC.addComponentListener<Script>(getPtrToThis<ScriptEngine>());
+	ECManager.addComponentListener<Script>(getPtrToThis<ScriptEngine>());
 }
 
-void ScriptEngine::onComponentAdded(const ComponentPtr& component)
+void ScriptEngine::onComponentAdded(const EC::ComponentPtr& component)
 {
-    TComponentPtr<Script> script = component;
+    EC::TComponentPtr<Script> script = component;
     CHECK_MSG(script.isValid(), "Trying to add a not valid Script derived component.");
     mScripts.push_back(script);
 }
@@ -17,12 +17,12 @@ void ScriptEngine::update()
 {
 	PROFILER_CPU()
 
-    std::vector<TComponentPtr<Script>> newList;
+    std::vector<EC::TComponentPtr<Script>> newList;
     FOR_ARRAY(i, mScripts)
     {
         PROFILER_CPU_NAMED(removeScripts);
 
-        TComponentPtr<Script> script = mScripts[i];
+        EC::TComponentPtr<Script> script = mScripts[i];
         if(script.isValid())
         {
             newList.push_back(script);
@@ -34,7 +34,7 @@ void ScriptEngine::update()
 
     FOR_ARRAY(i, mScripts)
 	{
-        TComponentPtr<Script> script = mScripts[i];
+        EC::TComponentPtr<Script> script = mScripts[i];
         if (script->isActive())
         {
             if (!script->getFirstUpdateDone())

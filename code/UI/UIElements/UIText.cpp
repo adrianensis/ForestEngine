@@ -1,5 +1,5 @@
 #include "UI/UIElements/UIText.hpp"
-#include "Core/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
 #include "Graphics/Module.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIElements/UIPanel.hpp"
@@ -23,9 +23,9 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
+	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    EC.addComponent(TEntityPtr(this), renderer);
+    ECManager.addComponent(EC::TEntityPtr(this), renderer);
 
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
@@ -105,14 +105,14 @@ void UIText::setText(Core::HashedString text)
 
                 if(i < mFontRenderers.size())
                 {
-                    TEntityPtr<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
+                    EC::TEntityPtr<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
                     UIElementConfig glyphConfig = sceneObjectGlyph->getConfig();
                     glyphConfig.mPosition = glyphPositionScreenSpace;
                     glyphConfig.mSize = glyphSizeScreenSpace;
                     glyphConfig = sceneObjectGlyph->calculateConfig(glyphConfig);
                     sceneObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     sceneObjectGlyph->mTransform->setLocalScale(Vector3(glyphConfig.mDisplaySize, 1));
-                    TComponentPtr<MeshRenderer> renderer = EC.getFirstComponent<MeshRenderer>(sceneObjectGlyph);
+                    EC::TComponentPtr<MeshRenderer> renderer = ECManager.getFirstComponent<MeshRenderer>(sceneObjectGlyph);
                     Rectangle textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
@@ -121,7 +121,7 @@ void UIText::setText(Core::HashedString text)
                 else
                 {
                     UIBuilder uiBuilder;
-                    TEntityPtr<UITextGlyph> sceneObjectGlyph = uiBuilder.
+                    EC::TEntityPtr<UITextGlyph> sceneObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).

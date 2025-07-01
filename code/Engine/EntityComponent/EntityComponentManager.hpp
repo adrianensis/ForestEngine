@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include <string>
 
+NS_BEGIN(EC)
 class IComponentsListener
 {
 public:
@@ -14,7 +15,7 @@ public:
     virtual void onComponentRemoved(const ComponentPtr& componentPtr) {};
 };
 
-#define EC EntityComponentManager::getInstance()
+#define ECManager EC::EntityComponentManager::getInstance()
 
 class EntityComponentManager: public Core::Singleton<EntityComponentManager>
 {
@@ -31,14 +32,14 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void addComponentListener(Core::WeakPtr<IComponentsListener> listener)
+    void addComponentListener(Core::WeakPtr<EC::IComponentsListener> listener)
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         Core::ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentListeners.contains(id))
         {
-            mComponentListeners.emplace(id, std::unordered_set<Core::WeakPtr<IComponentsListener>>());
+            mComponentListeners.emplace(id, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>());
         }
 
         if(!mComponentListeners.at(id).contains(listener))
@@ -48,7 +49,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void removeComponentListener(Core::WeakPtr<IComponentsListener> listener)
+    void removeComponentListener(Core::WeakPtr<EC::IComponentsListener> listener)
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
@@ -111,7 +112,7 @@ public:
         
         componentPtr->onComponentAdded();
 
-        EC.notifyListenersOnComponentAdded(componentPtr);
+        ECManager.notifyListenersOnComponentAdded(componentPtr);
     }
 
     void removeComponent(const EntityPtr& entityPtr, ComponentPtr componentPtr)
@@ -137,7 +138,7 @@ public:
 
         if(componentFound)
         {
-            EC.notifyListenersOnComponentRemoved(componentPtr);
+            ECManager.notifyListenersOnComponentRemoved(componentPtr);
             componentPtr->destroy();
 
             mComponentsPool.removeElement(componentPtr);
@@ -153,7 +154,7 @@ public:
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
-            EC.notifyListenersOnComponentRemoved((*it));
+            ECManager.notifyListenersOnComponentRemoved((*it));
             (*it)->destroy();
 
             mComponentsPool.removeElement((*it));
@@ -256,7 +257,7 @@ public:
 private:
     Core::Pool<Entity> mEntitiesPool;
     Core::Pool<Component> mComponentsPool;
-    std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<IComponentsListener>>> mComponentListeners;
+    std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
     std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<ComponentPtr>>> mEntityComponents;
 
 public:
@@ -264,3 +265,4 @@ public:
     CRGET(ComponentsPool)
 };
 REGISTER_CLASS(EntityComponentManager);
+NS_END

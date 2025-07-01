@@ -2,7 +2,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Engine/Window/WindowManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDepthBuffer.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 
 void RenderPassShadowMap::preRender()
 {
@@ -42,12 +42,12 @@ void RenderPassShadowMap::updateGlobalData()
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
     }
-    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
         lightProjectionViewMatrix,
-        EC.getFirstComponent<Transform>(camera->getOwnerEntity())->getWorldPosition()
+        ECManager.getFirstComponent<Transform>(camera->getOwnerEntity())->getWorldPosition()
     };
     mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }

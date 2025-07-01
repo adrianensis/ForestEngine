@@ -3,6 +3,7 @@
 #include "Engine/Events/Event.hpp"
 #include "Core/HashedString/HashedString.hpp"
 
+NS_BEGIN(EC)
 class EntityPtr;
 
 class Component: public ISerializable, public Event::IEventObject
@@ -178,3 +179,4 @@ public:
     template<class U> T_EXTENDS(T, U)
     operator TComponentPtr<U>() const { return TComponentPtr<U>(*this); }
 };
+NS_END

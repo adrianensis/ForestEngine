@@ -2,7 +2,7 @@
 
 #include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 class RenderPassGeometry: public RenderPassBase
 {
 protected:
@@ -11,6 +11,6 @@ protected:
     virtual void render() override;
     virtual void postRender() override;
 public:
-    TComponentPtr<DirectionalLight> mDirectionalLight;
+    EC::TComponentPtr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassGeometry);

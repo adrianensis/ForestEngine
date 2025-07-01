@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 #include "Scene/Transform.hpp"
 #include "GPU/Camera/GPUCamera.hpp"
 
-class Camera: public Component
+class Camera: public EC::Component
 {
 public:
     void init();

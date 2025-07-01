@@ -1,7 +1,8 @@
-#include "Core/EntityComponent/Entity.hpp"
-#include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 
+NS_BEGIN(EC)
 Entity::Entity()
 {
     if (mEntityId == 0)
@@ -19,7 +20,7 @@ void Entity::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
-    const auto& components = EC.getComponents(TEntityPtr(this));
+    const auto& components = ECManager.getComponents(TEntityPtr(this));
 	FOR_LIST(it, components)
 	// FOR_LIST(it, mComponents)
 	{
@@ -33,7 +34,7 @@ void Entity::destroy()
 	mIsActive = false;
 
 	onDestroy();
-    EC.removeComponents(TEntityPtr(this));
+    ECManager.removeComponents(TEntityPtr(this));
 }
 
 void Entity::onRecycle(Core::Slot newSlot)
@@ -61,5 +62,6 @@ IMPLEMENT_DESERIALIZATION(Entity)
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EC.getEntitiesPool().getElementBase(*this);
+    return ECManager.getEntitiesPool().getElementBase(*this);
 }
+NS_END

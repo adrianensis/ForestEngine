@@ -8,8 +8,8 @@
 
 void RenderEngine::init()
 {
-	EC.addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
-	EC.addComponentListener<Light>(getPtrToThis<RenderEngine>());
+	ECManager.addComponentListener<MeshRenderer>(getPtrToThis<RenderEngine>());
+	ECManager.addComponentListener<Light>(getPtrToThis<RenderEngine>());
 
     mRenderPipeline = Core::OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();
@@ -44,7 +44,7 @@ void RenderEngine::onResize()
     GET_SYSTEM(GPUInstance).mGPUContext->setWindowResized();
     GET_SYSTEM(GPUInstance).mGPUContext->recreateRenderingObjects();
     mRenderPipeline->onResize();
-    TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }
 
@@ -54,11 +54,11 @@ void RenderEngine::terminate()
     mRenderPipeline->terminate();
 }
 
-void RenderEngine::onComponentAdded(const ComponentPtr& component)
+void RenderEngine::onComponentAdded(const EC::ComponentPtr& component)
 {
     if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        TComponentPtr<MeshRenderer> renderer = component;
+        EC::TComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
 
         // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
@@ -70,20 +70,20 @@ void RenderEngine::onComponentAdded(const ComponentPtr& component)
     {
         // if(component.getComponent(). <PointLight>())
         // {
-        //     mRenderPipelineData.mPointLights.push_back(TComponentPtr<PointLight>(component));
+        //     mRenderPipelineData.mPointLights.push_back(EC::TComponentPtr<PointLight>(component));
         // }
         // else if(component.getComponent(). <DirectionalLight>())
         // {
-        //     mRenderPipelineData.mDirectionalLight = TComponentPtr<DirectionalLight>(component);
+        //     mRenderPipelineData.mDirectionalLight = EC::TComponentPtr<DirectionalLight>(component);
         // }
     }
 }
 
-void RenderEngine::onComponentRemoved(const ComponentPtr& component)
+void RenderEngine::onComponentRemoved(const EC::ComponentPtr& component)
 {
     if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        TComponentPtr<MeshRenderer> renderer = component;
+        EC::TComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->removeRenderer(renderer);
     }
     else if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId())

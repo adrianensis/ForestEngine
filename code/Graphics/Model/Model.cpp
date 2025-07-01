@@ -687,7 +687,7 @@ void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
     CHECK_MSG(result, "Error obtaining keyframe data!");
-    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not Core::f32!");
+    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "EC::Component type is not Core::f32!");
     CHECK_MSG(output->type == cgltf_type_vec3, "Type is not vec3!");
 
     if(interpolation == cgltf_interpolation_type_linear)
@@ -726,7 +726,7 @@ void Model::getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type in
     bool result = findKeyframeData(input, currentTime, keyframeData);
 
     CHECK_MSG(result, "Error obtaining keyframe data!");
-    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not Core::f32!");
+    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "EC::Component type is not Core::f32!");
     CHECK_MSG(output->type == cgltf_type_vec4, "Type is not vec4!");
     
     

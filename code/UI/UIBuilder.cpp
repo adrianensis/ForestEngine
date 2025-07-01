@@ -37,7 +37,7 @@ UIBuilder& UIBuilder::restoreData()
 	return *this;
 }
 
-void UIBuilder::registerUIElement(TEntityPtr<UIElement> uiElement)
+void UIBuilder::registerUIElement(EC::TEntityPtr<UIElement> uiElement)
 {
 	mCurrentUIElement = uiElement;
 

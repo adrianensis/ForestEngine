@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
 
 class UIElement;
 
@@ -9,16 +9,16 @@ class UIGroup
 {
 public:
     void init();
-    void addUIElement(TEntityPtr<UIElement> uiElement);
-    void removeUIElement(TEntityPtr<UIElement> uiElement);
-    void destroyUIElement(TEntityPtr<UIElement> uiElement);
+    void addUIElement(EC::TEntityPtr<UIElement> uiElement);
+    void removeUIElement(EC::TEntityPtr<UIElement> uiElement);
+    void destroyUIElement(EC::TEntityPtr<UIElement> uiElement);
     void destroyAllUIElements();
     void setVisibility(bool visibility);
 
 public:
 	Core::HashedString mName;
 	bool mVisible = false;
-	std::list<TEntityPtr<UIElement>> mUIElements;
+	std::list<EC::TEntityPtr<UIElement>> mUIElements;
 	
 	CRGET(Name)
 	GET(Visible)

@@ -4,10 +4,10 @@
 #include "Engine/System/System.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Engine/Window/Window.hpp"
 
-class RenderEngine : public System::System, public IComponentsListener, public Window::IWindowListener
+class RenderEngine : public System::System, public EC::IComponentsListener, public Window::IWindowListener
 {
 public:
     virtual void init() override;
@@ -17,8 +17,8 @@ public:
     void postSceneChanged();
     void onResize() override;
     
-    virtual void onComponentAdded(const ComponentPtr& component) override;
-    virtual void onComponentRemoved(const ComponentPtr& component) override;
+    virtual void onComponentAdded(const EC::ComponentPtr& component) override;
+    virtual void onComponentRemoved(const EC::ComponentPtr& component) override;
 
 private:
     RenderPipelineData mRenderPipelineData;

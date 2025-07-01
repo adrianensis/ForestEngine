@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
@@ -12,7 +12,7 @@ public:
 	Core::WeakPtr<const Model> mModel;
 };
 
-class ModelRenderer: public Component
+class ModelRenderer: public EC::Component
 {
     
 	DECLARE_SERIALIZATION()

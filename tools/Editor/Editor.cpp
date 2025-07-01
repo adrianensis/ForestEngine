@@ -32,7 +32,7 @@ void Editor::firstUpdate()
 
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
 	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
-    TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
+    EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
     Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -110,8 +110,8 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
-	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
+    EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
+	EC::TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	Core::f32 speed = 400 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
@@ -245,9 +245,9 @@ void Editor::terminate()
 
 }
 
-EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
+EC::EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
 {
-	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	// sceneObject->mIsStatic = false;
 	// sceneObject->mTransform->setLocalPosition(v);
 	// sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -260,7 +260,7 @@ EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
+	// EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// sceneObject->addComponent(renderer);
 
@@ -271,16 +271,16 @@ EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
+	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    EC.addComponent(sceneObject, renderer);
+    ECManager.addComponent(sceneObject, renderer);
 
 	return sceneObject;
 }
 
-EntityPtr Editor::createPointLight(const Vector3& v, Core::f32 size)
+EC::EntityPtr Editor::createPointLight(const Vector3& v, Core::f32 size)
 {
-	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
@@ -289,16 +289,16 @@ EntityPtr Editor::createPointLight(const Vector3& v, Core::f32 size)
     data.mPosition = v;
     data.mDiffuse = Vector3(1,1,1) * 250000;
 
-	TComponentPtr<PointLight> pointLight = EC.requestComponent<PointLight>();
+	EC::TComponentPtr<PointLight> pointLight = ECManager.requestComponent<PointLight>();
     pointLight->init(data);
-    EC.addComponent(sceneObject, pointLight);
+    ECManager.addComponent(sceneObject, pointLight);
 
 	return sceneObject;
 }
 
-EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
+EC::EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 {
-	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
     sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->lookAt(v + dir);
@@ -307,23 +307,23 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
 
-	TComponentPtr<DirectionalLight> dirLight = EC.requestComponent<DirectionalLight>();
+	EC::TComponentPtr<DirectionalLight> dirLight = ECManager.requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
-    EC.addComponent(sceneObject, dirLight);
+    ECManager.addComponent(sceneObject, dirLight);
 
 	return sceneObject;
 }
 
-EntityPtr Editor::mousePick()
+EC::EntityPtr Editor::mousePick()
 {
 
     Core::f32 speed = 100 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
-    EntityPtr obj;
+    EC::EntityPtr obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
         // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // EC::TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -346,11 +346,11 @@ EntityPtr Editor::mousePick()
     return obj;
 }
 
-EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, Core::f32 size, const Vector3& rot, bool isStatic)
+EC::EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, Core::f32 size, const Vector3& rot, bool isStatic)
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+    EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = isStatic;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->setLocalScale(Vector3::smOne * size);
@@ -364,9 +364,9 @@ EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, Core:
         Core::ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	TComponentPtr<ModelRenderer> modelRenderer = EC.requestComponent<ModelRenderer>();
+	EC::TComponentPtr<ModelRenderer> modelRenderer = ECManager.requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
-    EC.addComponent(sceneObject, modelRenderer);
+    ECManager.addComponent(sceneObject, modelRenderer);
 
     return sceneObject;
 }
@@ -382,7 +382,7 @@ void Editor::handleMouse()
 	{
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
         // mBuildings.pop_front();
-        // TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // EC::TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);

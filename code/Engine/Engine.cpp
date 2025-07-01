@@ -24,7 +24,7 @@ void Engine::init()
 	Core::Memory::init();
 	Core::Profiler::init();
 	Event::EventsManager::getInstance().init();
-    EC.init();
+    ECManager.init();
     System::SystemsManager::getInstance().init();
 
     CREATE_SYSTEM(Time::Time);
@@ -116,8 +116,8 @@ void Engine::terminate()
 	Core::MemoryTracking::log();
 	System::SystemsManager::getInstance().terminate();
 	System::SystemsManager::deleteInstance();
-    EC.terminate();
-    EntityComponentManager::deleteInstance();
+    ECManager.terminate();
+    EC::EntityComponentManager::deleteInstance();
 	Event::EventsManager::getInstance().terminate();
 	Event::EventsManager::deleteInstance();
 	Core::Profiler::terminate();

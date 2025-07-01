@@ -1,7 +1,8 @@
-#include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/Entity.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 
+NS_BEGIN(EC)
 Component::Component()
 {
     if (mComponentId == 0)
@@ -72,5 +73,6 @@ IMPLEMENT_DESERIALIZATION(Component)
 Component& ComponentPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return EC.getComponentsPool().getElementBase(*this);
+    return ECManager.getComponentsPool().getElementBase(*this);
 }
+NS_END

@@ -2,7 +2,7 @@
 
 #include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 
 class RenderPassShadowMap: public RenderPassBase
 {
@@ -12,6 +12,6 @@ protected:
     virtual void postRender() override;
     virtual void updateGlobalData() override;
 public:
-    TComponentPtr<DirectionalLight> mDirectionalLight;
+    EC::TComponentPtr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassShadowMap);

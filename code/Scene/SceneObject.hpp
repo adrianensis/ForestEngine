@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/EntityComponent/Entity.hpp"
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 
 class Transform;
 class Scene;
 
-class SceneObject: public Entity
+class SceneObject: public EC::Entity
 {
 	DECLARE_SERIALIZATION()
 	
@@ -17,6 +17,6 @@ public:
 
 public:
 	Core::WeakPtr<Scene> mScene;
-	TComponentPtr<Transform> mTransform;
+	EC::TComponentPtr<Transform> mTransform;
 };
 REGISTER_CLASS(SceneObject);

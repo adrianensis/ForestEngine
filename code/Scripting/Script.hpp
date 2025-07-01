@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 
 
 class SceneObject;
 
-class Script: public Component
+class Script: public EC::Component
 {
 public:
     Core::ClassId getComponentTypeId() const override;

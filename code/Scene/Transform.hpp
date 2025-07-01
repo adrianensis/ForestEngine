@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 
-class Transform: public Component
+class Transform: public EC::Component
 {
     
 	DECLARE_SERIALIZATION()
@@ -19,8 +19,8 @@ public:
 
     const Matrix4& calculateModelMatrix() const;
 
-    void addChild(TComponentPtr<Transform> child);
-    void removeChild(TComponentPtr<Transform> child);
+    void addChild(EC::TComponentPtr<Transform> child);
+    void removeChild(EC::TComponentPtr<Transform> child);
 
     Vector3 getWorldPosition() const;
     Vector3 getWorldScale() const;
@@ -39,8 +39,8 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<Core::ObjectId, TComponentPtr<Transform>> mChildren;
-    TComponentPtr<Transform> mParent;
+    std::unordered_map<Core::ObjectId, EC::TComponentPtr<Transform>> mChildren;
+    EC::TComponentPtr<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
     mutable bool mLocalTranslationMatrixDirty = true;

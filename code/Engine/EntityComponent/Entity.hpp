@@ -2,6 +2,7 @@
 
 #include "Engine/Events/Event.hpp"
 
+NS_BEGIN(EC)
 class Entity: public ISerializable, public Event::IEventObject
 {
     
@@ -172,3 +173,4 @@ public:
     template<class U> T_EXTENDS(T, U)
     operator TEntityPtr<U>() const { return TEntityPtr<U>(mClassId, mSlot); }
 };
+NS_END

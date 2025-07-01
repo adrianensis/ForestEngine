@@ -6,7 +6,7 @@
 class CameraManager: public System::System
 {
 private:
-	TComponentPtr<Camera> mCamera;
+	EC::TComponentPtr<Camera> mCamera;
 
 public:
     GET_SET(Camera)

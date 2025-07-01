@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Component.hpp"
 #include "SpacePartition/OcTree.hpp"
 
 #include "GPU/RenderItem/GPURenderItem.hpp"
@@ -8,7 +8,7 @@
 
 class TextureAnimation;
 
-class MeshRenderer: public Component, public IOcTreeElement
+class MeshRenderer: public EC::Component, public IOcTreeElement
 {
     
 	DECLARE_SERIALIZATION()

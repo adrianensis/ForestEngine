@@ -3,8 +3,8 @@
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
-#include "Core/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
 {
@@ -23,10 +23,10 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mGPUShaderStencilData = mModelRendererData.mGPUShaderStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
-        EntityPtr parent = getOwnerEntity();
-        TComponentPtr<MeshRenderer> renderer = EC.requestComponent<MeshRenderer>();
+        EC::EntityPtr parent = getOwnerEntity();
+        EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
         renderer->init(rendererData);
-    	EC.addComponent(parent, renderer);
+    	ECManager.addComponent(parent, renderer);
 	}
 }
 

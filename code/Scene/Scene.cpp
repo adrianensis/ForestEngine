@@ -68,7 +68,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 		}
 	}
 
-//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEntityPtr sceneObject)
+//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEC::EntityPtr sceneObject)
 //	{
 //		return sceneObject->mShouldPersist;
 //	})
@@ -107,7 +107,7 @@ void Scene::unloadScene()
 	destroySceneObjects();
 }
 
-void Scene::addSceneObject(TEntityPtr<SceneObject> sceneObject)
+void Scene::addSceneObject(EC::TEntityPtr<SceneObject> sceneObject)
 {
     if(sceneObject)
     {
@@ -117,7 +117,7 @@ void Scene::addSceneObject(TEntityPtr<SceneObject> sceneObject)
     }
 }
 
-void Scene::removeSceneObject(TEntityPtr<SceneObject> sceneObject)
+void Scene::removeSceneObject(EC::TEntityPtr<SceneObject> sceneObject)
 {
 	if (sceneObject && !sceneObject->getIsDestroyed() && !sceneObject->getIsPendingToBeDestroyed())
 	{
@@ -136,7 +136,7 @@ void Scene::removeSceneObject(TEntityPtr<SceneObject> sceneObject)
             mNewSceneObjects.erase(itNew);
         }
 
-        EC.removeEntity(sceneObject);
+        ECManager.removeEntity(sceneObject);
     }
 }
 
@@ -179,11 +179,11 @@ bool Scene::thereAreNewSceneObjects() const
 
 void Scene::destroySceneObjects()
 {
-	std::list<TEntityPtr<SceneObject>> immutableList(mSceneObjects);
+	std::list<EC::TEntityPtr<SceneObject>> immutableList(mSceneObjects);
 
 	FOR_LIST(it, immutableList)
 	{
-		TEntityPtr<SceneObject> sceneObject = *it;
+		EC::TEntityPtr<SceneObject> sceneObject = *it;
         if (sceneObject)
 		{
             if (!sceneObject->getIsDestroyed())

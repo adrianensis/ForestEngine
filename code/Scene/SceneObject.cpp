@@ -1,17 +1,17 @@
 #include "Scene/SceneObject.hpp"
-#include "Core/EntityComponent/Component.hpp"
-#include "Core/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/Component.hpp"
+#include "Engine/EntityComponent/Entity.hpp"
 #include "Scene/Transform.hpp"
 #include "Engine/Events/EventsManager.hpp"
-#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 
 void SceneObject::init()
 {
     PROFILER_CPU()
-    Entity::init();
-    mTransform = EC.requestComponent<Transform>();
+    EC::Entity::init();
+    mTransform = ECManager.requestComponent<Transform>();
     mTransform->init();
-    EC.addComponent(TEntityPtr(this), mTransform);
+    ECManager.addComponent(EC::TEntityPtr(this), mTransform);
 }
 
 IMPLEMENT_SERIALIZATION(SceneObject)

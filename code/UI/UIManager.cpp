@@ -40,7 +40,7 @@ Core::WeakPtr<GPUShader> UIManager::getFontShader() const
     return f->getFontShader();
 }
 
-void UIManager::setFocusedElement(TEntityPtr<UIElement> focusedElement)
+void UIManager::setFocusedElement(EC::TEntityPtr<UIElement> focusedElement)
 {
 	mFocusedElement = focusedElement;
 }

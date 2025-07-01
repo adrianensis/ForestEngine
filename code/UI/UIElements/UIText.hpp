@@ -28,11 +28,11 @@ protected:
 private:
 	Core::i32 mLayer = 0;
 	Core::HashedString mString;
-	std::vector<TEntityPtr<UITextGlyph>> mFontRenderers;
+	std::vector<EC::TEntityPtr<UITextGlyph>> mFontRenderers;
     bool mIsEditable = false;
 
 protected:
-    TEntityPtr<UIPanel> mBackground;
+    EC::TEntityPtr<UIPanel> mBackground;
 
 public:
 	GET(IsEditable)

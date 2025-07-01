@@ -8,7 +8,7 @@ void UIGroup::init()
 	mName = "";
 }
 
-void UIGroup::addUIElement(TEntityPtr<UIElement> uiElement)
+void UIGroup::addUIElement(EC::TEntityPtr<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -16,7 +16,7 @@ void UIGroup::addUIElement(TEntityPtr<UIElement> uiElement)
 	}
 }
 
-void UIGroup::removeUIElement(TEntityPtr<UIElement> uiElement)
+void UIGroup::removeUIElement(EC::TEntityPtr<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -24,7 +24,7 @@ void UIGroup::removeUIElement(TEntityPtr<UIElement> uiElement)
 	}
 }
 
-void UIGroup::destroyUIElement(TEntityPtr<UIElement> uiElement)
+void UIGroup::destroyUIElement(EC::TEntityPtr<UIElement> uiElement)
 {
 	if (uiElement)
 	{
@@ -37,7 +37,7 @@ void UIGroup::destroyAllUIElements()
 {
 	FOR_LIST(it, mUIElements)
 	{
-		TEntityPtr<UIElement> element = *it;
+		EC::TEntityPtr<UIElement> element = *it;
 		element->mScene->removeSceneObject(element);
 	}
 

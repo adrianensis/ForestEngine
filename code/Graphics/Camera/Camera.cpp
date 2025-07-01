@@ -17,7 +17,7 @@ void Camera::update()
 {
 	PROFILER_CPU()
 	
-	const Matrix4& viewMatrix = EC.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
+	const Matrix4& viewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
 	mGPUCamera.update(viewMatrix);
 }
 
