@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/StdMacros.hpp"
-#include "Core/System/System.hpp"
+#include "Core/System/SystemManager.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Engine/Input/InputEvents.hpp"
 
@@ -34,7 +34,7 @@ public:
     void clearMouseButton();
     void clearKey();
 
-    template<class E> T_EXTENDS(E, Core::Event)
+    template<class E> T_EXTENDS(E, Event::Event)
     static void sendInputEvent(E& event)
     {
         SEND_EVENT(nullptr, &GET_SYSTEM(Input), event);

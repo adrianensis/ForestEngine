@@ -4,7 +4,7 @@
 #include "Engine/Command/DefaultCommands.hpp"
 #include "Engine/Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
-#include "Core/Events/EventsManager.hpp"
+#include "Engine/Events/EventsManager.hpp"
 #include "Core/StdMacros.hpp"
 #include "GLFW/glfw3.h"
 
@@ -19,7 +19,7 @@ void CommandLine::init()
     mBuffer.reserve(smBufferSize);
     mIsOpen = false;
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Event::Event *event)
 	{
         const Input::InputEventKeyReleased *e = (const Input::InputEventKeyReleased *)event;
         if(e->mKey == GLFW_KEY_GRAVE_ACCENT)
@@ -288,7 +288,7 @@ void CommandLine::toggle()
 
 void CommandLine::subscribeToEvents()
 {
-    SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Event::Event *event)
     {
         
         if(mIsOpen)
@@ -305,7 +305,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Event::Event *event)
     {
         if(mIsOpen)
         {
@@ -315,7 +315,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    SUBSCRIBE_TO_EVENT(Input::InputEventKeyTab, nullptr, this, [this](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventKeyTab, nullptr, this, [this](const Event::Event *event)
     {
         if(mIsOpen)
         {
@@ -323,7 +323,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Event::Event *event)
     {
         if(mIsOpen)
         {

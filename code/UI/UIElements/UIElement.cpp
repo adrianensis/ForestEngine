@@ -117,13 +117,13 @@ void UIElement::postInit()
 
 void UIElement::subscribeToKeyEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [this](const Event::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Event::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -132,14 +132,14 @@ void UIElement::subscribeToKeyEvents()
 
 void UIElement::subscribeToCharEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onCharEventReceived(((const Input::InputEventChar *)event)->mChar);
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -149,7 +149,7 @@ void UIElement::subscribeToCharEvents()
 
 void UIElement::subscribeToMouseEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -161,7 +161,7 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -172,7 +172,7 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventMouseMoved, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventMouseMoved, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -182,7 +182,7 @@ void UIElement::subscribeToMouseEvents()
 
 void UIElement::subscribeToScrollEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventScroll, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventScroll, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -193,7 +193,7 @@ void UIElement::subscribeToScrollEvents()
 
 void UIElement::subscribeToEnterEvent()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -203,7 +203,7 @@ void UIElement::subscribeToEnterEvent()
 
 void UIElement::subscribeToEscEvent()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }

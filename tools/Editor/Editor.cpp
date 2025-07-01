@@ -10,17 +10,17 @@
 void Editor::init()
 {
     PROFILER_CPU();
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [&](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [&](const Event::Event *event)
 	{
 		handlePressedKeys();
 	});
 
-    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonHold, nullptr, this, [&](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonHold, nullptr, this, [&](const Event::Event *event)
 	{
 		handleMouse();
 	});
 
-    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [&](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [&](const Event::Event *event)
 	{
 		handleMouse();
 	});

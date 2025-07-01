@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Input/Input.hpp"
+#include "Core/System/SystemManager.hpp"
 #include "Engine/Window/WindowFramework.hpp"
 
 NS_BEGIN(Window)

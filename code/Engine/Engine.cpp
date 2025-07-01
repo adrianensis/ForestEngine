@@ -3,7 +3,7 @@
 #include "Engine/Command/CommandLine.hpp"
 #include "Engine/Time/TimerManager.hpp"
 #include "Engine/Input/Input.hpp"
-#include "Core/Events/EventsManager.hpp"
+#include "Engine/Events/EventsManager.hpp"
 #include "Graphics/Module.hpp"
 #include "Scripting/Module.hpp"
 
@@ -23,6 +23,7 @@ void Engine::init()
 
 	Core::Memory::init();
 	Core::Profiler::init();
+	Event::EventsManager::getInstance().init();
     EC.init();
     Core::SystemsManager::getInstance().init();
 
@@ -40,7 +41,6 @@ void Engine::init()
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(Time::TimerManager);
-    CREATE_SYSTEM(Core::EventsManager);
     CREATE_SYSTEM(GPUMeshFactory);
     CREATE_SYSTEM(GPUShaderManager);
     CREATE_SYSTEM(CameraManager);
@@ -118,6 +118,8 @@ void Engine::terminate()
 	Core::SystemsManager::deleteInstance();
     EC.terminate();
     EntityComponentManager::deleteInstance();
+	Event::EventsManager::getInstance().terminate();
+	Event::EventsManager::deleteInstance();
 	Core::Profiler::terminate();
 	Core::Memory::terminate();
     Core::HashedStringsManager::terminate();

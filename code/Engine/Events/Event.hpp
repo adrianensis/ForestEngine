@@ -2,7 +2,7 @@
 
 #include "Engine/Time/Timer.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Event)
 class IEventObject
 {
 };
@@ -10,7 +10,7 @@ class IEventObject
 class Event
 {
 public:
-	f32 mDelayAmount = 0.0f;
+	Core::f32 mDelayAmount = 0.0f;
 	Time::TimerDurationType mDelayType;
 	IEventObject* mInstigator = nullptr;
 	
@@ -20,11 +20,11 @@ REGISTER_CLASS(Event);
 using EventCallback = std::function<void(const Event *)>;
 
 template<class E> T_EXTENDS(E, Event)
-class EventFunctor: public Functor<EventCallback>
+class EventFunctor: public Core::Functor<EventCallback>
 {
 public:
 	E* mEvent = nullptr;
-	ClassId mEventClassId;
+	Core::ClassId mEventClassId;
 	IEventObject* mEventReceiver = nullptr;
 
 	void execute() override

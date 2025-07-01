@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Events/Event.hpp"
+#include "Engine/Events/Event.hpp"
 
-class Entity: public ISerializable, public Core::IEventObject
+class Entity: public ISerializable, public Event::IEventObject
 {
     
 	DECLARE_SERIALIZATION()

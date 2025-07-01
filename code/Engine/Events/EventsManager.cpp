@@ -1,6 +1,6 @@
-#include "Core/Events/EventsManager.hpp"
+#include "Engine/Events/EventsManager.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Event)
 
 void EventsManager::init()
 {
@@ -11,7 +11,7 @@ void EventsManager::terminate()
 	removeMapContent();
 }
 
-void EventsManager::send(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventInstigator, Event *event)
+void EventsManager::send(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventInstigator, Event *event)
 {
 	if (ownerExists(eventOwner))
 	{
@@ -40,17 +40,17 @@ bool EventsManager::ownerExists(IEventObject *eventOwner) const
 	return mOwnersMap.contains(eventOwner);
 }
 
-bool EventsManager::ownerHasEventType(IEventObject *eventOwner, ClassId eventClassId) const
+bool EventsManager::ownerHasEventType(IEventObject *eventOwner, Core::ClassId eventClassId) const
 {
 	return mOwnersMap.at(eventOwner).contains(eventClassId);
 }
 
-bool EventsManager::eventTypeHasReceiver(IEventObject *eventOwner, ClassId eventClassId, IEventObject *eventReceiver) const
+bool EventsManager::eventTypeHasReceiver(IEventObject *eventOwner, Core::ClassId eventClassId, IEventObject *eventReceiver) const
 {
 	return mOwnersMap.at(eventOwner).at(eventClassId).contains(eventReceiver);
 }
 
-void EventsManager::insertEventCallback(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver, EventCallback eventCallback)
+void EventsManager::insertEventCallback(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver, EventCallback eventCallback)
 {
 	EventFunctor<Event> eventFunctor;
 	eventFunctor.mCallback = eventCallback;
@@ -60,17 +60,17 @@ void EventsManager::insertEventCallback(ClassId eventClassId, IEventObject *even
 	mOwnersMap.at(eventOwner).at(eventClassId).insert_or_assign(eventReceiver, eventFunctor);
 }
 
-void EventsManager::removeEventCallback(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver)
+void EventsManager::removeEventCallback(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver)
 {
 	mOwnersMap.at(eventOwner).at(eventClassId).erase(eventReceiver);
 }
 
-EventsManager::ReceiversFunctorMap& EventsManager::getReceiversFunctorMap(IEventObject *eventOwner, ClassId eventClassId)
+EventsManager::ReceiversFunctorMap& EventsManager::getReceiversFunctorMap(IEventObject *eventOwner, Core::ClassId eventClassId)
 {
 	return mOwnersMap.at(eventOwner).at(eventClassId);
 }
 
-void EventsManager::subscribe(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver, EventCallback eventCallback)
+void EventsManager::subscribe(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver, EventCallback eventCallback)
 {
 	if (!ownerExists(eventOwner))
 	{
@@ -85,7 +85,7 @@ void EventsManager::subscribe(ClassId eventClassId, IEventObject *eventOwner, IE
 	insertEventCallback(eventClassId, eventOwner, eventReceiver, eventCallback);
 }
 
-void EventsManager::unsubscribe(ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver)
+void EventsManager::unsubscribe(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver)
 {
 	if (ownerExists(eventOwner))
 	{

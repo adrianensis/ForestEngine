@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/Events/Event.hpp"
+#include "Engine/Events/Event.hpp"
 #include "Core/HashedString/HashedString.hpp"
 
 class EntityPtr;
 
-class Component: public ISerializable, public Core::IEventObject
+class Component: public ISerializable, public Event::IEventObject
 {
 	DECLARE_SERIALIZATION()
 	
