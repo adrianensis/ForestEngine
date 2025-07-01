@@ -3,6 +3,7 @@
 #include "Core/StdCore.hpp"
 #include <csignal>
 
+NS_BEGIN(Core)
 class SignalUtils
 {
 public:
@@ -31,3 +32,4 @@ private:
         exit(sig);
     }
 };
+NS_END
