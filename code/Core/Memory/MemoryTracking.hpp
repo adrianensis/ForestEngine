@@ -49,7 +49,7 @@ public:
 			smAllocationsMap.insert_or_assign(className, AllocationInfo());
 		}
 
-        smPointersToDynamicClassName.insert_or_assign(reinterpret_cast<u64>(pointer), className);
+        smPointersToDynamicClassName.insert_or_assign(reinterpret_cast<Core::u64>(pointer), className);
 
         smAllocationsMap[className].mCurrentAllocations += 1;
         smAllocationsMap[className].mMaxAllocations = std::max(smAllocationsMap[className].mCurrentAllocations, smAllocationsMap[className].mMaxAllocations);
@@ -64,7 +64,7 @@ public:
 		PROFILER_CPU()
 		CHECK_MSG(pointer != nullptr, "pointer is nullptr");
 
-		u64 ptrU64 = reinterpret_cast<u64>(pointer);
+		Core::u64 ptrU64 = reinterpret_cast<Core::u64>(pointer);
 		if(!smPointersToDynamicClassName.contains(ptrU64))
 		{
 			return;
@@ -91,7 +91,7 @@ public:
 private:
 #ifdef ENGINE_BUILD_DEBUG
 	inline static std::unordered_map<Core::HashedString, AllocationInfo> smAllocationsMap;
-    inline static std::unordered_map<u64, Core::HashedString> smPointersToDynamicClassName;
+    inline static std::unordered_map<Core::u64, Core::HashedString> smPointersToDynamicClassName;
 #endif
 };
 

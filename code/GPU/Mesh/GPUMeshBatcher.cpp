@@ -1,6 +1,6 @@
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
 
-void GPUMeshBatcher::init(Core::WeakPtr<const GPUMesh> mesh, u32 size)
+void GPUMeshBatcher::init(Core::WeakPtr<const GPUMesh> mesh, Core::u32 size)
 {
 	PROFILER_CPU()
     mMesh = mesh;
@@ -22,7 +22,7 @@ void GPUMeshBatcher::appendMeshData(Core::WeakPtr<const GPUMesh> mesh)
     }
 }
 
-void GPUMeshBatcher::resize(u32 size)
+void GPUMeshBatcher::resize(Core::u32 size)
 {
 	PROFILER_CPU()
 
@@ -32,14 +32,14 @@ void GPUMeshBatcher::resize(u32 size)
 	generateInstanceIDsData(size);
 }
 
-void GPUMeshBatcher::allocateInstances(u32 maxInstances)
+void GPUMeshBatcher::allocateInstances(Core::u32 maxInstances)
 {
 	PROFILER_CPU()
     mInternalMesh->init(mMesh->mVertexCount * maxInstances, mMesh->mIndicesCount * maxInstances, mMesh->mGPUVertexInputBuffers);
     generateIndicesData(maxInstances);
 }
 
-void GPUMeshBatcher::setInstanceData(u32 instanceId, u32 objectId, u32 shaderPropertiesInstanceId)
+void GPUMeshBatcher::setInstanceData(Core::u32 instanceId, Core::u32 objectId, Core::u32 shaderPropertiesInstanceId)
 {
 	PROFILER_CPU()
 
@@ -50,12 +50,12 @@ void GPUMeshBatcher::setInstanceData(u32 instanceId, u32 objectId, u32 shaderPro
     mGPUShaderPropertiesInstanceIDs[instanceId] = (shaderPropertiesInstanceId);
 }
 
-void GPUMeshBatcher::generateIndicesData(u32 meshesCount)
+void GPUMeshBatcher::generateIndicesData(Core::u32 meshesCount)
 {
 	PROFILER_CPU()
 	FOR_RANGE(i, 0, meshesCount)
 	{
-		u32 offset = (i * mMesh->mVertexCount);
+		Core::u32 offset = (i * mMesh->mVertexCount);
 		FOR_RANGE(faceIndex, 0, mMesh->mIndices.size())
 		{
 			Face newFace = mMesh->mIndices.get<Face>(faceIndex);
@@ -67,7 +67,7 @@ void GPUMeshBatcher::generateIndicesData(u32 meshesCount)
 	}
 }
 
-void GPUMeshBatcher::generateInstanceIDsData(u32 meshesCount)
+void GPUMeshBatcher::generateInstanceIDsData(Core::u32 meshesCount)
 {
 	PROFILER_CPU()
     FOR_RANGE(meshId, 0, meshesCount)

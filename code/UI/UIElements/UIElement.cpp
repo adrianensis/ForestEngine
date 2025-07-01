@@ -266,7 +266,7 @@ void UIElement::onMouseMovedEventReceived()
     }
 }
 
-void UIElement::onScrollEventReceived(f32 scrollValue)
+void UIElement::onScrollEventReceived(Core::f32 scrollValue)
 {
 	if (!isMouseCursorInsideElement()) { return; }
     
@@ -333,7 +333,7 @@ void UIElement::requestFocus()
     onFocus();
 }
 
-void UIElement::scroll(f32 scrollValue)
+void UIElement::scroll(Core::f32 scrollValue)
 {
 	mOnScrollFunctor.execute();
 	onScroll(scrollValue);

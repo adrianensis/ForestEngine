@@ -9,7 +9,7 @@ class GPUShapeRenderer
 public:
 	GPUShapeRenderer() = default;
 
-    void init(u32 verticesPerShape);
+    void init(Core::u32 verticesPerShape);
     void terminate();
     void render();
 
@@ -23,11 +23,11 @@ private:
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Vector3> mPositionBuffer;
 	std::vector<Vector4> mColorBuffer;
-	std::vector<u32> mIndicesBuffer;
+	std::vector<Core::u32> mIndicesBuffer;
 
 protected:
-	u32 mMaxShapes = 10000;
-	u32 mShapesCounter = 0;
-	u32 mVerticesPerShape = 0;
-	u32 mMaxVertices = 0;
+	Core::u32 mMaxShapes = 10000;
+	Core::u32 mShapesCounter = 0;
+	Core::u32 mVerticesPerShape = 0;
+	Core::u32 mMaxVertices = 0;
 };

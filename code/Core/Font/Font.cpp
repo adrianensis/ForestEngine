@@ -21,7 +21,7 @@ void FontGlyphData::freeBuffer()
     mData = nullptr;
 }
 
-void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile, u32 fontSize)
+void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile, Core::u32 fontSize)
 {
     mPath = fontFile;
 
@@ -57,7 +57,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile,
     // In Terms Of 1/64ths Of Pixels.  Thus, To Make A Font
     // h Pixels High, We Need To Request A Size Of h*64.
     // (h << 6 Is Just A Prettier Way Of Writing h*64)
-    // u32 fontSize = 18;
+    // Core::u32 fontSize = 18;
     // FT_Set_Char_Size( mFreeTypeFace, fontSize << 6, fontSize << 6, 96, 96);
     // if(_error)
     // {
@@ -66,7 +66,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile,
 
     CHECK_MSG(!_error, "Failed to open font");
 
-    u32 charSetCount = MAX_GLYPHS;
+    Core::u32 charSetCount = MAX_GLYPHS;
     FOR_RANGE(c, 0, charSetCount)
     {
         _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
@@ -76,7 +76,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile,
         // Note: We add 2 pixels of blank space between glyphs for padding - this helps reduce texture bleeding
         //       that can occur with antialiasing
 
-        mHeight = std::max(mHeight, (u32)mFreeTypeFace->glyph->bitmap.rows);
+        mHeight = std::max(mHeight, (Core::u32)mFreeTypeFace->glyph->bitmap.rows);
     }
 
 /*
@@ -105,7 +105,7 @@ origin(0,0) .              * X        X*                    .               v
             .                 advance                       .
 */
 
-    u32 texPos = 0;
+    Core::u32 texPos = 0;
     FOR_RANGE(c, 0, charSetCount)
     {
         _error = FT_Load_Char(mFreeTypeFace, c, FT_LOAD_DEFAULT);
@@ -116,7 +116,7 @@ origin(0,0) .              * X        X*                    .               v
 
         Vector2 bitmapSize = Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
         Vector2 glyphSizeInAtlasSpace = bitmapSize / Vector2(mWidth, mHeight);
-        Vector2 textureOffset = Vector2((f32)texPos / (f32)mWidth, 0);
+        Vector2 textureOffset = Vector2((Core::f32)texPos / (Core::f32)mWidth, 0);
 
         FontGlyphMetricsData metrics;
         metrics.mSize = Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
@@ -144,14 +144,14 @@ origin(0,0) .              * X        X*                    .               v
             nullptr
         };
 
-        mGlyphs[c].mData = new byte[mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows];
+        mGlyphs[c].mData = new Core::byte[mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows];
 
         std::memcpy(mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.buffer, mFreeTypeFace->glyph->bitmap.width * mFreeTypeFace->glyph->bitmap.rows);
 
         // ImageUtils::flipImageVertically({mGlyphs[c].mData, mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows}, 1);
 
         // Increase texture offset
-        u32 width = mGlyphs[c].mBitmapSize.x;
+        Core::u32 width = mGlyphs[c].mBitmapSize.x;
         if(width == 0)
         {
             width = mGlyphs[c].mAdvance.x;
@@ -159,13 +159,13 @@ origin(0,0) .              * X        X*                    .               v
         texPos += width /*+ 2*/;
     }
 
-    mGlyphAtlasData = new byte[mWidth * mHeight * 1 /*1 channel*/];
+    mGlyphAtlasData = new Core::byte[mWidth * mHeight * 1 /*1 channel*/];
 
-    u32 bytesOffset = 0;
+    Core::u32 bytesOffset = 0;
     FOR_RANGE(c, 0, charSetCount)
     {
-        u32 width = mGlyphs[c].mBitmapSize.x;
-        u32 height = mGlyphs[c].mBitmapSize.y;
+        Core::u32 width = mGlyphs[c].mBitmapSize.x;
+        Core::u32 height = mGlyphs[c].mBitmapSize.y;
 
         // " " space case! no size, no data, not supported by vulkan
         if(width == 0)

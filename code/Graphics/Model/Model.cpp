@@ -122,7 +122,7 @@ void Model::loadGLTFShaders()
             //     if(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture)
             //     {
             //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.diffuse_texture.texture->image->uri);
-            //         shaderData.mTextureBindings[(u32)TextureMap::DIFFUSE] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //         shaderData.mTextureBindings[(Core::u32)TextureMap::DIFFUSE] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
             //     }
             //     else
             //     {
@@ -132,7 +132,7 @@ void Model::loadGLTFShaders()
             //     if(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture)
             //     {
             //         std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_specular_glossiness.specular_glossiness_texture.texture->image->uri);
-            //         shaderData.mTextureBindings[(u32)TextureMap::SPECULAR_GLOSSINESS] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
+            //         shaderData.mTextureBindings[(Core::u32)TextureMap::SPECULAR_GLOSSINESS] = TextureBinding{texturePath, GPUPipelineStage::FRAGMENT};
             //     }
             //     else
             //     {
@@ -289,7 +289,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
             FOR_RANGE(vertexIt, 0, attribute.data->count)
             {
-                Vector3* positionsArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                Vector3* positionsArray = reinterpret_cast<Vector3*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& position = positionsArray[vertexIt];
                 mesh->mBuffers.at(GPUShaderDefinitions::VertexInput::mPosition.mName).pushBack(position);
             }
@@ -298,7 +298,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         {
             FOR_RANGE(vertexIt, 0, attribute.data->count)
             {
-                Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                Vector2* texCoordArray = reinterpret_cast<Vector2*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector2& texCoord = texCoordArray[vertexIt];
                 texCoord.y = 1.0f - texCoord.y;
                 mesh->mBuffers.at(GPUShaderDefinitions::VertexInput::mTextureCoords.at(attribute.index).mName).pushBack(texCoord);
@@ -308,7 +308,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         {
             FOR_RANGE(vertexIt, 0, attribute.data->count)
             {
-                Vector4* colorArray = reinterpret_cast<Vector4*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                Vector4* colorArray = reinterpret_cast<Vector4*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector4& color = colorArray[vertexIt];
                 mesh->mBuffers.at(GPUShaderDefinitions::VertexInput::mColor.mName).pushBack(color);
             }
@@ -317,7 +317,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
         {
             FOR_RANGE(vertexIt, 0, attribute.data->count)
             {
-                Vector3* normalArray = reinterpret_cast<Vector3*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                Vector3* normalArray = reinterpret_cast<Vector3*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                 Vector3& normal = normalArray[vertexIt];
                 mesh->mBuffers.at(GPUShaderDefinitions::VertexInput::mNormal.mName).pushBack(normal);
             }
@@ -328,8 +328,8 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 FOR_RANGE(vertexIt, 0, attribute.data->count)
                 {
-                    GLTFBoneVertexIDsData<i8>* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData<i8>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
-                    GLTFBoneVertexIDsData<i8>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
+                    GLTFBoneVertexIDsData<Core::i8>* boneVertexIDsDataU8Array = reinterpret_cast<GLTFBoneVertexIDsData<Core::i8>*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GLTFBoneVertexIDsData<Core::i8>& boneVertexIDsDataU8 = boneVertexIDsDataU8Array[vertexIt];
 
                     GPUShaderDefinitions::VertexInput::BoneVertexIDsData boneVertexIDsData;
                     FOR_RANGE(i, 0, GPUConstants::MAX_BONE_INFLUENCE)
@@ -344,8 +344,8 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 FOR_RANGE(vertexIt, 0, attribute.data->count)
                 {
-                    GLTFBoneVertexIDsData<i16>* boneVertexIDsDataU16Array = reinterpret_cast<GLTFBoneVertexIDsData<i16>*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
-                    GLTFBoneVertexIDsData<i16>& boneVertexIDsDataU16 = boneVertexIDsDataU16Array[vertexIt];
+                    GLTFBoneVertexIDsData<Core::i16>* boneVertexIDsDataU16Array = reinterpret_cast<GLTFBoneVertexIDsData<Core::i16>*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GLTFBoneVertexIDsData<Core::i16>& boneVertexIDsDataU16 = boneVertexIDsDataU16Array[vertexIt];
 
                     GPUShaderDefinitions::VertexInput::BoneVertexIDsData boneVertexIDsData;
                     FOR_RANGE(i, 0, GPUConstants::MAX_BONE_INFLUENCE)
@@ -358,7 +358,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             }
             else
             {
-                CHECK_MSG(false, "Joint attribute data format not supported, use vec4 u8 or u16");
+                CHECK_MSG(false, "Joint attribute data format not supported, use vec4 Core::u8 or Core::u16");
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_weights)
@@ -367,14 +367,14 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
             {
                 FOR_RANGE(vertexIt, 0, attribute.data->count)
                 {
-                    GPUShaderDefinitions::VertexInput::BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<GPUShaderDefinitions::VertexInput::BoneVertexWeightsData*>(reinterpret_cast<byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
+                    GPUShaderDefinitions::VertexInput::BoneVertexWeightsData* boneVertexWeightsDataArray = reinterpret_cast<GPUShaderDefinitions::VertexInput::BoneVertexWeightsData*>(reinterpret_cast<Core::byte*>(attribute.data->buffer_view->buffer->data) + attribute.data->offset + attribute.data->buffer_view->offset);
                     GPUShaderDefinitions::VertexInput::BoneVertexWeightsData& boneVertexWeightsData = boneVertexWeightsDataArray[vertexIt];
                     mesh->mBuffers.at(GPUShaderDefinitions::VertexInput::mBonesWeights.mName).pushBack(boneVertexWeightsData);
                 }
             }
             else
             {
-                CHECK_MSG(false, "Weights attribute data format not supported, use vec4 f32");
+                CHECK_MSG(false, "Weights attribute data format not supported, use vec4 Core::f32");
             }
         }
         else if(attribute.type == cgltf_attribute_type::cgltf_attribute_type_tangent)
@@ -389,7 +389,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     FOR_RANGE(faceIt, 0, primitive.indices->count / 3)
     {
-        GLTFFace* indicesArray = reinterpret_cast<GLTFFace*>(reinterpret_cast<byte*>(primitive.indices->buffer_view->buffer->data) + primitive.indices->offset + primitive.indices->buffer_view->offset);
+        GLTFFace* indicesArray = reinterpret_cast<GLTFFace*>(reinterpret_cast<Core::byte*>(primitive.indices->buffer_view->buffer->data) + primitive.indices->offset + primitive.indices->buffer_view->offset);
         GLTFFace& face = indicesArray[faceIt];
         mesh->mIndices.pushBack(Face(face.mIndices[0], face.mIndices[1], face.mIndices[2]));
     }
@@ -399,7 +399,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
 {
     PROFILER_CPU()
 
-    mBonesIndexCount = (u32)skin.joints_count;
+    mBonesIndexCount = (Core::u32)skin.joints_count;
 
     GPUSkeletonStateData gpuSkeletonStateData;
 
@@ -419,7 +419,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     {
         if(skin.inverse_bind_matrices)
         {
-            std::array<f32, Matrix4::smMatrixSize> inverseMatrixData;
+            std::array<Core::f32, Matrix4::smMatrixSize> inverseMatrixData;
             cgltf_accessor_read_float(skin.inverse_bind_matrices, i, inverseMatrixData.data(), Matrix4::smMatrixSize);
             Matrix4 inverse;
             inverse.init(inverseMatrixData);
@@ -462,7 +462,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
             originalBindMatrices[i] = boneData.mBindMatrix;
 
             // Find parent bone index
-            i32 parentIndex = INVALID_INDEX;
+            Core::i32 parentIndex = INVALID_INDEX;
 
             FOR_RANGE(j, 0, mBonesIndexCount)
             {
@@ -498,15 +498,15 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
     mSkeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletonState(gpuSkeletonStateData);
 }
 
-f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
+Core::f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)
 {
     PROFILER_CPU()
 
-    f32 animDuration = 0.0f;
+    Core::f32 animDuration = 0.0f;
     FOR_RANGE(channelIt, 0, gltfAnim.channels_count)
     {
         cgltf_animation_channel& channel = gltfAnim.channels[channelIt];
-        f32 samplerDuration = channel.sampler->input->max[0];
+        Core::f32 samplerDuration = channel.sampler->input->max[0];
         animDuration = std::max(samplerDuration, animDuration);
     }
     return animDuration;
@@ -520,7 +520,7 @@ void Model::loadGLTFChannels(const cgltf_animation& gltfAnim)
     {
         cgltf_animation_channel& channel = gltfAnim.channels[channelIt];
 
-        i32 boneIndex = INVALID_INDEX;
+        Core::i32 boneIndex = INVALID_INDEX;
         if(mNodeToBoneId.contains(channel.target_node))
         {
             boneIndex = mNodeToBoneId.at(channel.target_node);
@@ -562,7 +562,7 @@ void Model::loadGLTFSkeletalAnimationFrames(Core::WeakPtr<GPUSkeletalAnimation> 
         std::vector<Matrix4> originalFrameTransforms;
         originalFrameTransforms.resize(mBonesIndexCount);
 
-        f32 currentSkeletalAnimationTime = frameIt * GPUSkeletalAnimation::smSkeletalAnimationFrameRateSeconds;
+        Core::f32 currentSkeletalAnimationTime = frameIt * GPUSkeletalAnimation::smSkeletalAnimationFrameRateSeconds;
         FOR_RANGE(boneIt, 0, mBonesIndexCount)
         {
             Vector3 translation(0, 0, 0);
@@ -623,7 +623,7 @@ void Model::loadGLTFSkeletalAnimations()
     FOR_RANGE(animIt, 0, mCGLTFData->animations_count)
     {
         const cgltf_animation& gltfAnim = mCGLTFData->animations[animIt];
-        f32 animDuration = 0.0f;
+        Core::f32 animDuration = 0.0f;
         animDuration = loadGLTFSkeletalAnimationDuration(gltfAnim);
 
         loadGLTFChannels(gltfAnim);
@@ -637,7 +637,7 @@ void Model::loadGLTFSkeletalAnimations()
     }
 }
 
-Matrix4 Model::calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones)
+Matrix4 Model::calculateHierarchicalBoneTransform(Core::u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones)
 {
     Matrix4 boneBindTransform = originalFrameTransforms[boneId];
     if (bones[boneId].mParentId >= 0)
@@ -650,7 +650,7 @@ Matrix4 Model::calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix
     return boneBindTransform;
 }
 
-bool Model::findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData)
+bool Model::findKeyframeData(cgltf_accessor *input, Core::f32 currentTime, KeyframeData& keyframeData)
 {
     keyframeData.mPreviousTime = 0.0f;
     keyframeData.mNextTime = 0.0f;
@@ -682,12 +682,12 @@ bool Model::findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeDat
     return true;
 }
 
-void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out)
+void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Vector3& out)
 {
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
     CHECK_MSG(result, "Error obtaining keyframe data!");
-    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
+    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not Core::f32!");
     CHECK_MSG(output->type == cgltf_type_vec3, "Type is not vec3!");
 
     if(interpolation == cgltf_interpolation_type_linear)
@@ -715,18 +715,18 @@ void Model::getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type
         CHECK_MSG(false, "Unsuported Interpolation Type!");
     }
 }
-void Model::getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out)
+void Model::getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Vector3& out)
 {
     // use same code as Translation
     return getTranslationAtTime(input, interpolation, output, currentTime, out);
 }
-void Model::getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Quaternion& out)
+void Model::getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Quaternion& out)
 {
     KeyframeData keyframeData;
     bool result = findKeyframeData(input, currentTime, keyframeData);
 
     CHECK_MSG(result, "Error obtaining keyframe data!");
-    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not f32!");
+    CHECK_MSG(output->component_type == cgltf_component_type_r_32f, "Component type is not Core::f32!");
     CHECK_MSG(output->type == cgltf_type_vec4, "Type is not vec4!");
     
     

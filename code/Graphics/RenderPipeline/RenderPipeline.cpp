@@ -78,7 +78,7 @@ void RenderPipeline::removeRenderer(TComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
 
-    u32 slot = renderer->getGPURenderItem()->getRenderSlot().getSlot();
+    Core::u32 slot = renderer->getGPURenderItem()->getRenderSlot().getSlot();
     
     mGPURenderItemManager.removeRenderer(renderer->getGPURenderItem());
     GPUInstanceRendererData gpuInstanceRendererData;

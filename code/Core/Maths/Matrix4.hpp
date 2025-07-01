@@ -25,29 +25,29 @@ class Matrix4
 {
 public:
 
-	inline static constexpr const u16 smColumnSize = 4;
-	inline static constexpr const u16 smMatrixSize = smColumnSize * smColumnSize;
+	inline static constexpr const Core::u16 smColumnSize = 4;
+	inline static constexpr const Core::u16 smMatrixSize = smColumnSize * smColumnSize;
 
     Matrix4();
-    Matrix4(const std::array<f32, smColumnSize> &row0, const std::array<f32, smColumnSize> &row1, const std::array<f32, smColumnSize> &row2, const std::array<f32, smColumnSize> &row3);
+    Matrix4(const std::array<Core::f32, smColumnSize> &row0, const std::array<Core::f32, smColumnSize> &row1, const std::array<Core::f32, smColumnSize> &row2, const std::array<Core::f32, smColumnSize> &row3);
     Matrix4(const Matrix4& other);
-    void init(f32 n);
+    void init(Core::f32 n);
     void init(const Matrix4& other);
-    void init(const std::array<f32, 16> &data);
-    void init(const std::array<f32, smColumnSize> &row0, const std::array<f32, smColumnSize> &row1, const std::array<f32, smColumnSize> &row2, const std::array<f32, smColumnSize> &row3);
+    void init(const std::array<Core::f32, 16> &data);
+    void init(const std::array<Core::f32, smColumnSize> &row0, const std::array<Core::f32, smColumnSize> &row1, const std::array<Core::f32, smColumnSize> &row2, const std::array<Core::f32, smColumnSize> &row3);
     void init(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3);
 
-	const f32 *getData() const
+	const Core::f32 *getData() const
 	{
 		return mData;
 	}
 
-    inline f32 get(u8 row, u8 col) const
+    inline Core::f32 get(Core::u8 row, Core::u8 col) const
     {
         return mData[row + (smColumnSize * col)];
     }
 
-    inline void set(u8 row, u8 col, f32 value)
+    inline void set(Core::u8 row, Core::u8 col, Core::f32 value)
     {
         mData[row + (smColumnSize * col)] = value;
     }
@@ -61,8 +61,8 @@ public:
     void translation(const Vector3& vector);
     void rotation(const Vector3& vector);
     void scale(const Vector3& vector);
-    void ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
-    void perspective(f32 near, f32 far, f32 aspect, f32 fovy);
+    void ortho(Core::f32 left, Core::f32 right, Core::f32 bottom, Core::f32 top, Core::f32 near, Core::f32 far);
+    void perspective(Core::f32 near, Core::f32 far, Core::f32 aspect, Core::f32 fovy);
     void view(const Vector3& worldPosition, const Vector3& localRotation);
     void view(const Vector3& worldPosition, const Matrix4& localRotationMatrix);
     void lookAt(const Vector3& worldPosition, const Vector3& targetPosition);
@@ -82,7 +82,7 @@ public:
 	static const Matrix4 smIdentity;
 	
 private:
-	f32 mData[smMatrixSize];
+	Core::f32 mData[smMatrixSize];
 };
 
 inline const Matrix4 Matrix4::smIdentity = Matrix4({1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1});

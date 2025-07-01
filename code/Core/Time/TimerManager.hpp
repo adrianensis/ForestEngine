@@ -10,7 +10,7 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     void update();
-    TimerHandle setTimer(f32 duration, TimerDurationType durationType, std::function<void()> callback);
+    TimerHandle setTimer(Core::f32 duration, TimerDurationType durationType, std::function<void()> callback);
     void cancelTimer(const TimerHandle& timerHandle);
 
 private:

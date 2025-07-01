@@ -146,7 +146,7 @@ bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInst
     // std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassInfo.attachmentCount = (u32) attachments.size();
+    renderPassInfo.attachmentCount = (Core::u32) attachments.size();
     renderPassInfo.pAttachments = attachments.data();
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpass;
@@ -264,7 +264,7 @@ void GPURenderPass::begin()
         clearValues[2].color = clearColorValue;
     }
 
-    renderPassInfo.clearValueCount = (u32) clearValues.size();
+    renderPassInfo.clearValueCount = (Core::u32) clearValues.size();
     renderPassInfo.pClearValues = clearValues.data();
 
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];

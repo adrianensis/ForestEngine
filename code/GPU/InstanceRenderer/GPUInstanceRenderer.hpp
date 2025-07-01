@@ -30,17 +30,17 @@ private:
 private:
     Core::SlotsManager mRendererSlotsManager;
 	std::vector<Core::WeakPtr<GPURenderItem>> mRenderers;
-    u32 mRenderersCount = 0;
-    std::set<u32> mUsedSlots;
-    inline static const u32 smInitialInstancesSize = 100;
-    u32 mCurrentInstancesSize = 0;
+    Core::u32 mRenderersCount = 0;
+    std::set<Core::u32> mUsedSlots;
+    inline static const Core::u32 smInitialInstancesSize = 100;
+    Core::u32 mCurrentInstancesSize = 0;
 
 	GPUMeshBatcher mGPUMeshBatcher;
     GPUInstanceRendererData mGPUInstanceRendererData;
 
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 
-	static const u32 smInstancesSizeIncrement = 100;
+	static const Core::u32 smInstancesSizeIncrement = 100;
 	bool mResizeBuffersRequested = false;
 
 public:

@@ -1,7 +1,7 @@
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
-void GPUMesh::init(u32 vertexCount, u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers)
+void GPUMesh::init(Core::u32 vertexCount, Core::u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers)
 {
     if (mMeshID == 0)
     {

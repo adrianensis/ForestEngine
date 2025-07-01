@@ -39,7 +39,7 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<ObjectId, TComponentPtr<Transform>> mChildren;
+    std::unordered_map<Core::ObjectId, TComponentPtr<Transform>> mChildren;
     TComponentPtr<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;

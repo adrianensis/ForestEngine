@@ -46,7 +46,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
 
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<u32>(bindings.size());
+    layoutInfo.bindingCount = static_cast<Core::u32>(bindings.size());
     layoutInfo.pBindings = bindings.data();
 
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
@@ -67,7 +67,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.poolSizeCount = (u32) poolSizes.size();
+    poolInfo.poolSizeCount = (Core::u32) poolSizes.size();
     poolInfo.pPoolSizes = poolSizes.data();
     // TODO: select a correct poolInfo.maxSets number
     poolInfo.maxSets = 64;//GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
@@ -140,8 +140,8 @@ void GPUShaderDescriptorSets::updateBuffers()
             mGPUShaderDescriptorSetsBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrites[0].dstBinding);
             mGPUShaderDescriptorSetsBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
 
-            auto descriptorWriteCount = (u32) descriptorWrites.size();
-            constexpr u32 descriptorCopyCount = 0;
+            auto descriptorWriteCount = (Core::u32) descriptorWrites.size();
+            constexpr Core::u32 descriptorCopyCount = 0;
             constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
             vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
@@ -173,8 +173,8 @@ void GPUShaderDescriptorSets::updateSamplers()
             mGPUShaderDescriptorSetsBindings.mBindings.emplace(textureBinding.mName, descriptorWrites[0].dstBinding);
             mGPUShaderDescriptorSetsBindings.mSets.emplace(textureBinding.mName,i);
 
-            auto descriptorWriteCount = (u32) descriptorWrites.size();
-            constexpr u32 descriptorCopyCount = 0;
+            auto descriptorWriteCount = (Core::u32) descriptorWrites.size();
+            constexpr Core::u32 descriptorCopyCount = 0;
             constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
             vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }

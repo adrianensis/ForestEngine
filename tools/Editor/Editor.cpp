@@ -70,7 +70,7 @@ void Editor::firstUpdate()
     // mSceneObjectsArray.push_back(obj);
 	
 	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
-    i32 size = 12;            
+    Core::i32 size = 12;            
     FOR_RANGE(i, -size, size)
     {
         FOR_RANGE(j, -size, size)
@@ -112,7 +112,7 @@ void Editor::update()
 
     TComponentPtr<Camera> camera = EC.getFirstComponent<Camera>(mCameraSceneObject);
 	TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
-	f32 speed = 400 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+	Core::f32 speed = 400 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
 
 	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
@@ -178,12 +178,12 @@ void Editor::update()
 
 	if(!mLastMousePosition.eq(currentMousePosition))
 	{
-        f32 camSpeed = 200 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+        Core::f32 camSpeed = 200 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
 		Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
 		Vector3 direction;
 
-		f32 yaw = mouseVector.x;
-		f32 pitch = mouseVector.y;
+		Core::f32 yaw = mouseVector.x;
+		Core::f32 pitch = mouseVector.y;
 
 		cameraTransform->addLocalRotation(Vector3(pitch, -yaw, 0));
 		// mDirectionalLight->mTransform->addLocalRotation(Vector3(0, -yaw, 0));
@@ -217,16 +217,16 @@ void Editor::update()
     // // -z
 	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
 
-	for(i32 x = -2000; x < 2000; x+=100)
+	for(Core::i32 x = -2000; x < 2000; x+=100)
 	{
 		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-2000), Vector3(x,0,2000)), 1, GeometricSpace::WORLD, Vector4(1,1,1,0.3f));
 	}
 
-    f32 fps = 1000.0f/GET_SYSTEM(Core::Time).getDeltaTimeMillis();
+    Core::f32 fps = 1000.0f/GET_SYSTEM(Core::Time).getDeltaTimeMillis();
     // LOG_VAR(fps)
     if(mFPSCounter)
     {
-        mFPSCounter->setText(Core::HashedString(std::to_string((u32)fps)));
+        mFPSCounter->setText(Core::HashedString(std::to_string((Core::u32)fps)));
     }
 
     mousePick();
@@ -245,7 +245,7 @@ void Editor::terminate()
 
 }
 
-EntityPtr Editor::createSprite(const Vector3& v, f32 size)
+EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
 {
 	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	// sceneObject->mIsStatic = false;
@@ -278,7 +278,7 @@ EntityPtr Editor::createSprite(const Vector3& v, f32 size)
 	return sceneObject;
 }
 
-EntityPtr Editor::createPointLight(const Vector3& v, f32 size)
+EntityPtr Editor::createPointLight(const Vector3& v, Core::f32 size)
 {
 	TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = false;
@@ -317,7 +317,7 @@ EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
 EntityPtr Editor::mousePick()
 {
 
-    f32 speed = 100 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+    Core::f32 speed = 100 * GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
     EntityPtr obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
@@ -346,7 +346,7 @@ EntityPtr Editor::mousePick()
     return obj;
 }
 
-EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic)
+EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, Core::f32 size, const Vector3& rot, bool isStatic)
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 

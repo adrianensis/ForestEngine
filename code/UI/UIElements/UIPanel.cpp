@@ -29,8 +29,8 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
 	if (newConfig.mAdjustSizeToText)
 	{
         Vector2 textSize(0,0);
-        f32 maxAscender = 0;
-        f32 maxDescender = 0;
+        Core::f32 maxAscender = 0;
+        Core::f32 maxDescender = 0;
         FOR_ARRAY(i, newConfig.mText.get())
         {
             char character = newConfig.mText.get().at(i);

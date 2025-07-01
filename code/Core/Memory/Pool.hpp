@@ -62,12 +62,12 @@ class PoolArrayBase
 {
 public:
     virtual ~PoolArrayBase() = default;
-    PoolArrayBase(u32 reservedElements)
+    PoolArrayBase(Core::u32 reservedElements)
     {
         mSlotsManager.init(reservedElements);
     }
-    virtual BaseClass& at(u32 index) = 0;
-    virtual u32 size() const = 0;
+    virtual BaseClass& at(Core::u32 index) = 0;
+    virtual Core::u32 size() const = 0;
     virtual void emplaceBack() = 0;
     virtual void clear()
     {
@@ -80,7 +80,7 @@ template <class T, class BaseClass> T_EXTENDS(T, BaseClass)
 class PoolArray : public PoolArrayBase<BaseClass>
 {
 public:
-    PoolArray(u32 reservedElements) : PoolArrayBase<BaseClass>(reservedElements)
+    PoolArray(Core::u32 reservedElements) : PoolArrayBase<BaseClass>(reservedElements)
     {
         PROFILER_CPU()
         mElements.reserve(reservedElements);
@@ -92,11 +92,11 @@ public:
         mDebugStringClass = classMetaData.mClassDefinition.mName;
         #endif
     }
-    virtual BaseClass& at(u32 index) override
+    virtual BaseClass& at(Core::u32 index) override
     {
         return *static_cast<BaseClass*>(&mElements.at(index));
     }
-    virtual u32 size() const override
+    virtual Core::u32 size() const override
     {
         return mElements.size();
     }
@@ -121,7 +121,7 @@ template<class BaseClass>
 class Pool
 {
 public:
-    void init(u32 maxElements)
+    void init(Core::u32 maxElements)
     {
         mMaxElements = maxElements;
 
@@ -208,7 +208,7 @@ public:
     }
 
     std::unordered_map<ClassId, OwnerPtr<PoolArrayBase<BaseClass>>> mPools;
-    u32 mMaxElements = 0;
+    Core::u32 mMaxElements = 0;
 
     #ifdef ENGINE_BUILD_DEBUG
     Core::HashedString mDebugString;

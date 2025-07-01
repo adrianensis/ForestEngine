@@ -13,16 +13,16 @@ namespace GPUShaderBuilderNodes
         virtual ~Statement() = default;
         virtual void terminate() {};
         virtual std::string toString() const { std::vector<std::string> lines = toLines(0); return std::accumulate(lines.begin(), lines.end(), std::string("")); };
-        virtual std::vector<std::string> toLines(u16 indent) const { return {"// none"}; };
+        virtual std::vector<std::string> toLines(Core::u16 indent) const { return {"// none"}; };
     protected:
-        static std::string getIndent(u16 indent);
+        static std::string getIndent(Core::u16 indent);
     };
 
     class LineCode : public Statement
     {
     public:
         LineCode(const std::string& code) : mLine(code) {}
-        std::vector<std::string> toLines(u16 indent) const override { return {getIndent(indent) + mLine + ";"}; };
+        std::vector<std::string> toLines(Core::u16 indent) const override { return {getIndent(indent) + mLine + ";"}; };
 
         std::string mLine;
     };
@@ -59,7 +59,7 @@ namespace GPUShaderBuilderNodes
     {
     public:
         Struct(const GPUStructDefinition& structDefinition): mStructDefinition(structDefinition) {};
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
 
         GPUStructDefinition mStructDefinition;
     };
@@ -81,7 +81,7 @@ namespace GPUShaderBuilderNodes
         Variable(const GPUDataType& type, const Core::HashedString& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
         Variable(const GPUVariableDefinitionData& gpuVariableData) : mType(gpuVariableData.mGPUDataType), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize){};
         Variable(const GPUStructDefinition::GPUStructVariable& gpuStructVariableData) : mType(gpuStructVariableData.mGPUDataType), mName(gpuStructVariableData.mName) {};
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
 
         const std::string& getNameOrValue() const { return mName.isValid() ? mName.get() : mValue; }
         bool isEmpty() const {return getNameOrValue().empty(); };
@@ -121,7 +121,7 @@ namespace GPUShaderBuilderNodes
         {
             callStr += params[i].getNameOrValue();
 
-            if((u32)(i) < params.size() - 1)
+            if((Core::u32)(i) < params.size() - 1)
             {
                 callStr += ",";
             }
@@ -146,28 +146,28 @@ namespace GPUShaderBuilderNodes
     {
     public:
         Attribute(const GPUVariableDefinitionData& gpuVariableData) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage) {};
-        Attribute(const GPUVariableDefinitionData& gpuVariableData, u32 locationOrBinding) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding) {};
-        Attribute(const GPUVariableDefinitionData& gpuVariableData, u32 locationOrBinding, u32 set) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding), mSet(set) {};
+        Attribute(const GPUVariableDefinitionData& gpuVariableData, Core::u32 locationOrBinding) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding) {};
+        Attribute(const GPUVariableDefinitionData& gpuVariableData, Core::u32 locationOrBinding, Core::u32 set) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding), mSet(set) {};
 
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
 
         GPUInterpolation mGPUInterpolation = GPUInterpolation::NONE;
         GPUStorage mGPUStorage = GPUStorage::NONE;
-        i32 mLocationOrBinding = INVALID_INDEX;
-        i32 mSet = INVALID_INDEX;
+        Core::i32 mLocationOrBinding = INVALID_INDEX;
+        Core::i32 mSet = INVALID_INDEX;
     };
 
     class UniformBuffer : public Statement
     {
     public:
         UniformBuffer() {};
-        UniformBuffer(const GPUUniformBufferData& gpuBlockData, u32 binding) : mGPUUniformBufferData(gpuBlockData), mBinding(binding) {};
+        UniformBuffer(const GPUUniformBufferData& gpuBlockData, Core::u32 binding) : mGPUUniformBufferData(gpuBlockData), mBinding(binding) {};
 
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
         bool isValid() const { return mGPUUniformBufferData.mInstanceName.isValid(); }
 
         GPUUniformBufferData mGPUUniformBufferData;
-        i32 mBinding = INVALID_INDEX;
+        Core::i32 mBinding = INVALID_INDEX;
     }; 
 
     // EXPRESSIONS
@@ -183,7 +183,7 @@ namespace GPUShaderBuilderNodes
         public:
             Unary(const Core::HashedString& op, const Variable& var) : mOp(op), mVariable(var) {};
             Unary(const Variable& var, const Core::HashedString& op) : mOp(op), mVariable(var), mFront(false) {};
-            std::vector<std::string> toLines(u16 indent) const override;
+            std::vector<std::string> toLines(Core::u16 indent) const override;
 
             Core::HashedString mOp;
             Variable mVariable;
@@ -194,7 +194,7 @@ namespace GPUShaderBuilderNodes
         {
         public:
             Binary(const Variable& a, const Core::HashedString& op, const Variable& b) : mOp(op), mVariableA(a), mVariableB(b) {};
-            std::vector<std::string> toLines(u16 indent) const override;
+            std::vector<std::string> toLines(Core::u16 indent) const override;
 
             Core::HashedString mOp;
             Variable mVariableA;
@@ -205,7 +205,7 @@ namespace GPUShaderBuilderNodes
         {
         public:
             Assign(const Variable& a, const Variable& b) : Binary(a, "=", b) {};
-            std::vector<std::string> toLines(u16 indent) const override;
+            std::vector<std::string> toLines(Core::u16 indent) const override;
         };
     }
 
@@ -241,7 +241,7 @@ namespace GPUShaderBuilderNodes
         BlockStatement& ret(const Variable& a);
         BlockStatement& end();
 
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
         void terminate() override;
 
         BlockStatement* mParent = nullptr;
@@ -254,7 +254,7 @@ namespace GPUShaderBuilderNodes
         IfStatement(const Variable& a, const Core::HashedString& op , const Variable& b) : mExpression(a, op, b) {};
         IfStatement(const Variable& boolean) : mExpression(boolean, "", {}) {};
 
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
 
         Expressions::Binary mExpression;
     };
@@ -264,7 +264,7 @@ namespace GPUShaderBuilderNodes
     public:
         ElseStatement() {};
 
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
     };
 
     class ForStatement : public BlockStatement
@@ -274,7 +274,7 @@ namespace GPUShaderBuilderNodes
         mVariable(GPUShaderDefinitions::PrimitiveTypes::mInt, varName, "0"), mConditionVariable(conditionVar), mContinueExpression(mVariable, op, mConditionVariable),
         mAdvanceExpression(mVariable, advanceOp) {};
 
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
         
         Variable mVariable;
         Variable mConditionVariable;
@@ -304,7 +304,7 @@ namespace GPUShaderBuilderNodes
         };
         BlockStatement& body() { return mBlockStatement; };
         void terminate() override;
-        std::vector<std::string> toLines(u16 indent) const override;
+        std::vector<std::string> toLines(Core::u16 indent) const override;
 
         GPUDataType mType;
         Core::HashedString mName;
@@ -354,7 +354,7 @@ namespace GPUShaderBuilderNodes
             return mMainFunctionDefinition;
         }
 
-        std::vector<std::string> toLines(u16 indent) const;
+        std::vector<std::string> toLines(Core::u16 indent) const;
         void terminate();
 
         std::vector<Struct> mStructs;
@@ -363,7 +363,7 @@ namespace GPUShaderBuilderNodes
         std::vector<FunctionDefinition> mFunctionDefinitions;
         std::vector<Core::HashedString> mExtensions;
         FunctionDefinition mMainFunctionDefinition = GPUFunctionDefinition{};
-        u16 mVersion = 460;
+        Core::u16 mVersion = 460;
     private:
         inline static Attribute mNullAttribute {GPUVariableDefinitionData{}};
         inline static UniformBuffer mNullUniformBuffer {};

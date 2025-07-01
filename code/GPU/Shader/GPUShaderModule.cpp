@@ -8,7 +8,7 @@ bool GPUShaderModule::init(Core::Ptr<GPUContext> gpuContext, const GPUShaderModu
 
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.codeSize = spirvBinary.mSize * sizeof(u32);
+    createInfo.codeSize = spirvBinary.mSize * sizeof(Core::u32);
     createInfo.pCode = spirvBinary.mWords;
 
     if (vkCreateShaderModule(mGPUContext->vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mGPUShaderModule) != VK_SUCCESS) {

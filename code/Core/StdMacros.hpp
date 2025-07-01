@@ -9,7 +9,7 @@
 #define ADD_TRAIL_COMMA(token) token ,
 #define TO_STRING(token) #token
 #define TO_STRING_AND_ADD_TRAIL_COMMA(token) TO_STRING(token) ,
-#define TO_U32(x) static_cast<u32>(x)
+#define TO_U32(x) static_cast<Core::u32>(x)
 #define NS_BEGIN(...) namespace __VA_ARGS__ {
 #define NS_END }
 
@@ -39,8 +39,8 @@
 #define FOR_MAP(it, map) \
 	for (auto it = (map).begin(); it != (map).end(); ++it)
 
-#define FOR_RANGE(it, start, size) for (i32 it = start; it < (i32)(size); ++it)
-#define FOR_RANGE_COND(it, start, size, condition) for (i32 it = start; (it < (i32)(size)) && (condition); ++it)
+#define FOR_RANGE(it, start, size) for (Core::i32 it = start; it < (Core::i32)(size); ++it)
+#define FOR_RANGE_COND(it, start, size, condition) for (Core::i32 it = start; (it < (Core::i32)(size)) && (condition); ++it)
 
 #define FOR_ARRAY(it, array) FOR_RANGE(it, 0, (array).size())
 #define FOR_ARRAY_COND(it, array, condition) FOR_RANGE_COND(it, 0, (array).size(), (condition))

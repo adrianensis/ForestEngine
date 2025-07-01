@@ -13,21 +13,21 @@ public:
     void enable();
     void disable();
     void terminate();
-    void addVertexBuffer(const GPUVertexBufferData& data, u32 size, bool isStatic);
+    void addVertexBuffer(const GPUVertexBufferData& data, Core::u32 size, bool isStatic);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     const GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data) const;
     bool containsVertexBuffer(const GPUVertexBufferData& data) const;
-    void setIndicesBuffer(const GPUDataType& gpuDataType, u32 size, bool isStatic);
+    void setIndicesBuffer(const GPUDataType& gpuDataType, Core::u32 size, bool isStatic);
 
 private:
-    static u32 findIndex(const std::unordered_map<Core::HashedString, u32>& indexMap, const Core::HashedString& name);
+    static Core::u32 findIndex(const std::unordered_map<Core::HashedString, Core::u32>& indexMap, const Core::HashedString& name);
 
 private:
-    u32 mVertexBufferLayoutId = 0;
+    Core::u32 mVertexBufferLayoutId = 0;
     GPUIndicesBuffer mIndicesBuffer;
-    u32 mAttributeIndex = 0;
+    Core::u32 mAttributeIndex = 0;
     std::vector<GPUVertexBuffer> mVertexBuffers;
-    std::unordered_map<Core::HashedString, u32> mVertexBuffersMap;
+    std::unordered_map<Core::HashedString, Core::u32> mVertexBuffersMap;
 
 public:
     CRGET(VertexBuffers)
@@ -40,7 +40,7 @@ public:
 	GPUUniformBuffersContainer() = default;
 
     void terminate();
-    void addUniformBuffer(const GPUUniformBufferData& data, u32 size, bool isStatic);
+    void addUniformBuffer(const GPUUniformBufferData& data, Core::u32 size, bool isStatic);
     GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data);
     const GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data) const;
     GPUUniformBuffer& getUniformBuffer(Core::HashedString bufferName);
@@ -48,11 +48,11 @@ public:
     bool containsUniformBuffer(const GPUUniformBufferData& data) const;
 
 private:
-    static u32 findIndex(const std::unordered_map<Core::HashedString, u32>& indexMap, const Core::HashedString& name);
+    static Core::u32 findIndex(const std::unordered_map<Core::HashedString, Core::u32>& indexMap, const Core::HashedString& name);
 
 private:
     std::vector<GPUUniformBuffer> mUniformBuffers;
-    std::unordered_map<Core::HashedString, u32> mUniformBuffersMap;
+    std::unordered_map<Core::HashedString, Core::u32> mUniformBuffersMap;
 public:
     CRGET(UniformBuffers)
 };

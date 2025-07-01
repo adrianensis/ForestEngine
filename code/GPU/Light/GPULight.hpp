@@ -22,8 +22,8 @@ public:
     alignas(16) Vector3 mPosition = Vector3::smZero;
     alignas(16) Vector3 mDirection = Vector3::smZero;
     alignas(16) Vector3 mDiffuse = Vector3::smZero;
-    alignas(16) f32 mInnerCutOff = 0;
-    f32 mOuterCutOff = 0;
+    alignas(16) Core::f32 mInnerCutOff = 0;
+    Core::f32 mOuterCutOff = 0;
 };
 
 class GPULightBuiltIn

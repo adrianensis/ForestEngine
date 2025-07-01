@@ -59,7 +59,7 @@ void GPUBuffer::terminate()
     }
 }
 
-void GPUBuffer::resize(u32 size)
+void GPUBuffer::resize(Core::u32 size)
 {
     mGPUContext->waitForFence(mGPUContext->currentFrame - 1);
 
@@ -73,7 +73,7 @@ void GPUBuffer::resize(u32 size)
     }
 }
 
-void GPUBuffer::setData(const void* data, u32 size) const
+void GPUBuffer::setData(const void* data, Core::u32 size) const
 {
     PROFILER_CPU_NAMED(buffer_set_data)
     CHECK_MSG(size > 0, "size > 0")
@@ -107,7 +107,7 @@ void GPUBuffer::copy(Core::Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBu
 
         VkBufferCopy copyRegion{};
         copyRegion.size = sourceBuffer.mGPUBufferData.Size;
-        constexpr u32 regionCount = 1;
+        constexpr Core::u32 regionCount = 1;
         vkCmdCopyBuffer(vkCommandBufferLocal, sourceBuffer.mVkBuffer, destinationBuffer.mVkBuffer, regionCount, &copyRegion);
     }
 

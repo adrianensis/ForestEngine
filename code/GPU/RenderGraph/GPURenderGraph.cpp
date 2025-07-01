@@ -42,7 +42,7 @@ void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUIns
 
 void GPURenderGraph::render(GPURenderGraphData& renderData)
 {
-    u32 swapChainImageIndex = mGPUContext->frameAcquisition();
+    Core::u32 swapChainImageIndex = mGPUContext->frameAcquisition();
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     vulkanCommandBuffer.reset();
     vulkanCommandBuffer.begin();

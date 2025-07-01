@@ -10,7 +10,7 @@ class IEventObject
 class Event
 {
 public:
-	f32 mDelayAmount = 0.0f;
+	Core::f32 mDelayAmount = 0.0f;
 	TimerDurationType mDelayType;
 	IEventObject* mInstigator = nullptr;
 	

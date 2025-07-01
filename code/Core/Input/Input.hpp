@@ -22,24 +22,24 @@ class Input: public Core::System
 public:
     virtual void init() override;
     void update();
-    bool isKeyPressedOnce(i32 key);
-    bool isKeyPressed(i32 key);
-    bool isModifierPressed(i32 modifier);
-    bool isMouseButtonPressedOnce(i32 button);
-    bool isMouseButtonPressed(i32 button);
+    bool isKeyPressedOnce(Core::i32 key);
+    bool isKeyPressed(Core::i32 key);
+    bool isModifierPressed(Core::i32 modifier);
+    bool isMouseButtonPressedOnce(Core::i32 button);
+    bool isMouseButtonPressed(Core::i32 button);
     const Vector2& getMousePosition();
-    f32 getScroll();
+    Core::f32 getScroll();
     void clearMouseButton();
     void clearKey();
     
 public:
 	Vector2 smMouseCoordinates;
-	i32 smLastMouseButtonPressed;
-	i32 smLastKeyPressed;
-	i32 smModifier;
+	Core::i32 smLastMouseButtonPressed;
+	Core::i32 smLastKeyPressed;
+	Core::i32 smModifier;
 	bool smKeyJustPressed;
 	bool smButtonJustPressed;
-	f32 smScroll;
+	Core::f32 smScroll;
 
 private:
     WeakPtr<IWindowInputAdapter> mWindowInputAdapter;

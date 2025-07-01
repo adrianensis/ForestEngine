@@ -13,6 +13,6 @@ public:
     void terminate();
 
 private:
-	f32 mFPS = 0.0f;
+	Core::f32 mFPS = 0.0f;
 };
 REGISTER_CLASS(Engine);

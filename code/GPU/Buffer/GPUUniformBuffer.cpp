@@ -1,13 +1,13 @@
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 
-GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(u32 i) const
+GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(Core::u32 i) const
 {
     GPUVariableData data = mGPUVariableDefinitionDataArray[i];
     data.mName = Core::HashedString(mInstanceName.get() + "." + data.mName.get());
     return data;
 }
 
-void GPUUniformBuffer::init(Core::Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
+void GPUUniformBuffer::init(Core::Ptr<GPUContext> gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mGPUUniformBufferData = gpuUniformBufferData;
@@ -35,7 +35,7 @@ void GPUUniformBuffer::init(Core::Ptr<GPUContext> gpuContext, u32 size, u32 bind
     // LOG("Initialized uniform buffer");
 }
 
-void GPUUniformBuffer::resize(u32 size)
+void GPUUniformBuffer::resize(Core::u32 size)
 {
     mBuffer.resize(size);
 }

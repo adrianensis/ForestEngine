@@ -24,8 +24,8 @@ public:
     bool isReferenced() const { return mReferenceCounter > 0; }
     bool isWeakReferenced() const { return mWeakReferenceCounter > 0; }
 public:
-    u32 mWeakReferenceCounter = 0;
-    u32 mReferenceCounter = 0;
+    Core::u32 mWeakReferenceCounter = 0;
+    Core::u32 mReferenceCounter = 0;
 };
 
 // SNIFAE

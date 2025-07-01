@@ -13,7 +13,7 @@ void UIFontsManager::terminate()
     mFontsLibrary.terminate();
 }
 
-Core::WeakPtr<UIFont> UIFontsManager::loadFont(Core::HashedString fontFile, u32 fontSize)
+Core::WeakPtr<UIFont> UIFontsManager::loadFont(Core::HashedString fontFile, Core::u32 fontSize)
 {
     if(!mFontsMap.contains(fontFile))
     {
@@ -30,7 +30,7 @@ Core::WeakPtr<UIFont> UIFontsManager::getFont(Core::HashedString fontFile) const
     return mFontsMap.at(fontFile);
 }
 
-void UIFont::init(UIFontsManager& fontsManager, Core::HashedString fontFile, u32 fontSize)
+void UIFont::init(UIFontsManager& fontsManager, Core::HashedString fontFile, Core::u32 fontSize)
 {
     mFontData.loadFont(fontsManager.getFontsLibrary(), fontFile, fontSize);
 

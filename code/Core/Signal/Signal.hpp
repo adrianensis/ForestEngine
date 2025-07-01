@@ -7,12 +7,12 @@ NS_BEGIN(Core)
 class SignalUtils
 {
 public:
-    static void registerSignalHandler(i32 sig)
+    static void registerSignalHandler(Core::i32 sig)
     {
         std::signal(sig, signalHandler);
     }
 
-    static void signal(i32 sig)
+    static void signal(Core::i32 sig)
     {
         std::raise(sig);
     }
@@ -27,7 +27,7 @@ public:
     }
 private:
     // Signal handler function
-    static void signalHandler(i32 sig) {
+    static void signalHandler(Core::i32 sig) {
         // Optionally exit the program after handling
         exit(sig);
     }

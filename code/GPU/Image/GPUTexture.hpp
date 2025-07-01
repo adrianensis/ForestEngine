@@ -25,18 +25,18 @@ public:
 class GPUTexture
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id);
+    void init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id);
     void terminate();
     
 private:
-	u32 mGPUTextureId = 0;
+	Core::u32 mGPUTextureId = 0;
     TextureHandle mGPUTextureHandle = 0;
     ImageData mImageData;
-	u32 mID = 0;
+	Core::u32 mID = 0;
 	GPUTextureData mTextureData;
     Core::Ptr<GPUContext> mGPUContext;
     GPUImage mVulkanTextureImage;
-    u32 mMipMapLevels = 1;
+    Core::u32 mMipMapLevels = 1;
 
 public:
     VkImageView mTextureImageView = VK_NULL_HANDLE;

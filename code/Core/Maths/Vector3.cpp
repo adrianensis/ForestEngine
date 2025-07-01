@@ -6,7 +6,7 @@ Vector3::Vector3(const Vector2& other) : x(other.x), y(other.y), z(0.0f)
 {
 }
 
-Vector3::Vector3(const Vector2& other, f32 z) : x(other.x), y(other.y), z(z)
+Vector3::Vector3(const Vector2& other, Core::f32 z) : x(other.x), y(other.y), z(z)
 {
 }
 
@@ -16,13 +16,13 @@ Vector3::Vector3(const Vector4& other) : x(other.x), y(other.y), z(other.z)
 
 Vector3& Vector3::cross(const Vector3& v)
 {
-	f32 x1 = this->x;
-	f32 y1 = this->y;
-	f32 z1 = this->z;
+	Core::f32 x1 = this->x;
+	Core::f32 y1 = this->y;
+	Core::f32 z1 = this->z;
 
-	f32 x2 = v.x;
-	f32 y2 = v.y;
-	f32 z2 = v.z;
+	Core::f32 x2 = v.x;
+	Core::f32 y2 = v.y;
+	Core::f32 z2 = v.z;
 
 	this->x = y1 * z2 - z1 * y2;
 	this->y = z1 * x2 - x1 * z2;
@@ -31,25 +31,25 @@ Vector3& Vector3::cross(const Vector3& v)
 	return *this;
 }
 
-Vector3& Vector3::nlerp(const Vector3& target, f32 t)
+Vector3& Vector3::nlerp(const Vector3& target, Core::f32 t)
 {
 	this->lerp(target, t).nor();
 	return *this;
 }
 
-Vector3& Vector3::slerp(const Vector3& target, f32 t)
+Vector3& Vector3::slerp(const Vector3& target, Core::f32 t)
 {
 	if (t == 0)
 		return *this;
 
-	f32 theta = angle(target);
+	Core::f32 theta = angle(target);
 
-	f32 sinTheta = sinf(theta);
+	Core::f32 sinTheta = sinf(theta);
 
 	return this->mul(sinf((1 - t) * theta) / sinTheta).add(target * (sinf(t * theta) / sinTheta));
 }
 
-f32 Vector3::angle(const Vector3& v) const
+Core::f32 Vector3::angle(const Vector3& v) const
 {
 	/*
 	* angle is acute (positive dot product)
@@ -59,11 +59,11 @@ f32 Vector3::angle(const Vector3& v) const
 	return acosf(this->dot(v) / (this->len() * v.len()));
 }
 
-f32 Vector3::angle(const Vector3& v, const Vector3& n) const
+Core::f32 Vector3::angle(const Vector3& v, const Vector3& n) const
 {
-	f32 dot = this->dot(v);
+	Core::f32 dot = this->dot(v);
 	Vector3 cross = Vector3(*this).cross(v);
-	f32 radians = atan2f(cross.len(), dot);
+	Core::f32 radians = atan2f(cross.len(), dot);
 
 	radians = n.dot(cross) < 0.0f ? (2.0f * MathUtils::PI) - radians : radians;
 

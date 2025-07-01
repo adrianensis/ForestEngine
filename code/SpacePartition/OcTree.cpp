@@ -3,7 +3,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 
-void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, u8 index, const Cube& cube, u8 depth)
+void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, Core::u8 index, const Cube& cube, Core::u8 depth)
 {
     mTree = tree;
     mParent = parent;
@@ -62,7 +62,7 @@ bool OcTree::OcTreeNode::isElementEnclosed(Core::WeakPtr<IOcTreeElement> element
     return test;
 }
 
-bool OcTree::OcTreeNode::isElementOverlappingChild(Core::WeakPtr<IOcTreeElement> element, u8 childIndex) const
+bool OcTree::OcTreeNode::isElementOverlappingChild(Core::WeakPtr<IOcTreeElement> element, Core::u8 childIndex) const
 {
     PROFILER_CPU()
     bool test = Geometry::testCubeSphere(mChildrenBoundingBoxes[childIndex],
@@ -104,7 +104,7 @@ void OcTree::OcTreeNode::addOcTreeElementToChildren(Core::WeakPtr<IOcTreeElement
     }
 }
 
-void OcTree::OcTreeNode::createChildren(u8 index)
+void OcTree::OcTreeNode::createChildren(Core::u8 index)
 {
     PROFILER_CPU()
     mChildren[index] = Core::Memory::newObject<OcTreeNode>();
@@ -170,7 +170,7 @@ void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree)
 	{
         FOR_RANGE(i, 0, mActiveChildrenIndex)
         {
-            i8 childrenIndex = mActiveChildren[i];
+            Core::i8 childrenIndex = mActiveChildren[i];
             OcTreeNode* node = mChildren[childrenIndex];
             if(node)
             {
@@ -205,12 +205,12 @@ void OcTree::OcTreeNode::updateDynamicElements(OcTree& tree)
 
 void OcTree::OcTreeNode::updateChildren(OcTree& tree)
 {
-    u32 newActiveChildrenIndex = 0;
-    std::array<i8, smMaxChildNumber> newActiveChildren;
+    Core::u32 newActiveChildrenIndex = 0;
+    std::array<Core::i8, smMaxChildNumber> newActiveChildren;
 
     FOR_RANGE(i, 0, mActiveChildrenIndex)
     {
-        i8 childrenIndex = mActiveChildren[i];
+        Core::i8 childrenIndex = mActiveChildren[i];
         OcTreeNode* node = mChildren[childrenIndex];
         if(node)
         {
@@ -233,7 +233,7 @@ void OcTree::OcTreeNode::updateChildren(OcTree& tree)
 
     FOR_RANGE(i, 0, mActiveChildrenIndex)
     {
-        i8 childrenIndex = mActiveChildren[i];
+        Core::i8 childrenIndex = mActiveChildren[i];
         OcTreeNode* node = mChildren[childrenIndex];
         if(node)
         {
@@ -242,9 +242,9 @@ void OcTree::OcTreeNode::updateChildren(OcTree& tree)
 	}
 }
 
-u32 OcTree::OcTreeNode::getHash() const
+Core::u32 OcTree::OcTreeNode::getHash() const
 {
-    u32 parentHash = 0;
+    Core::u32 parentHash = 0;
     if(mParent)
     {
         parentHash = mParent->getHash();
@@ -285,7 +285,7 @@ void OcTree::OcTreeNode::drawDebug()
     }
 }
 
-void OcTree::init(f32 size)
+void OcTree::init(Core::f32 size)
 {
 	mSize.set(size, size, size);
     mMaxDepth = 4;
@@ -325,13 +325,13 @@ void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, co
     // }
 }
 
-// void IOcTreeElement::addNode(u32 nodeHash)
+// void IOcTreeElement::addNode(Core::u32 nodeHash)
 // {
-//     u8 freeSlot = 0;
+//     Core::u8 freeSlot = 0;
 //     bool found = false;
 //     FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
 //     {
-//         found = mNodes[i] == (i32)(nodeHash);
+//         found = mNodes[i] == (Core::i32)(nodeHash);
 //         if(found)
 //         {
 //             break;
@@ -349,11 +349,11 @@ void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, co
 //     }
 // }
 
-// void IOcTreeElement::removeNode(u32 nodeHash)
+// void IOcTreeElement::removeNode(Core::u32 nodeHash)
 // {
 //     FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
 //     {
-//         if(mNodes[i] == (i32)(nodeHash))
+//         if(mNodes[i] == (Core::i32)(nodeHash))
 //         {
 //             mNodes[i] = INVALID_INDEX;
 //             break;
@@ -361,12 +361,12 @@ void IOcTreeElement::init(const Matrix4& modelMatrix, const Vector3& AABBMin, co
 //     }
 // }
 
-// bool IOcTreeElement::isInNode(u32 nodeHash) const
+// bool IOcTreeElement::isInNode(Core::u32 nodeHash) const
 // {
 //     bool found = false;
 //     FOR_RANGE(i, 0, OcTree::OcTreeNode::smMaxChildNumber)
 //     {
-//         found = mNodes[i] == (i32)(nodeHash);
+//         found = mNodes[i] == (Core::i32)(nodeHash);
 //         if(found)
 //         {
 //             break;

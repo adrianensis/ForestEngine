@@ -240,13 +240,13 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     if(fence != VK_NULL_HANDLE)
     {
         // After waiting, we need to manually reset the fence to the unsignaled state
-        constexpr u32 fenceCount = 1;
+        constexpr Core::u32 fenceCount = 1;
         vkResetFences(vulkanDevice->getDevice(), fenceCount, &fence);
     }
 
     {
         PROFILER_CPU_NAMED(queue_submit)
-        constexpr u32 submitCount = 1;
+        constexpr Core::u32 submitCount = 1;
         vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
     }
 
@@ -259,7 +259,7 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     else
     {
             // Wait until the previous frame has finished
-        constexpr u32 fenceCount = 1;
+        constexpr Core::u32 fenceCount = 1;
         constexpr VkBool32 waitForAllFences = VK_TRUE;
         constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
         VkResult waitResult = vkWaitForFences(vulkanDevice->getDevice(), fenceCount, &fence, waitForAllFences, waitForFenceTimeout);
@@ -268,16 +268,16 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPoolSingleUse->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
 }
 
-void GPUContext::drawIndexed(VkCommandBuffer commandBuffer, u32 indexCount, u32 instanceCount, u32 firstIndex, i32 vertexOffset, u32 firstInstance)
+void GPUContext::drawIndexed(VkCommandBuffer commandBuffer, Core::u32 indexCount, Core::u32 instanceCount, Core::u32 firstIndex, Core::i32 vertexOffset, Core::u32 firstInstance)
 {
     vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
 
-u32 GPUContext::frameAcquisition()
+Core::u32 GPUContext::frameAcquisition()
 {
     PROFILER_CPU()
 
-    u32 swapChainImageIndex = 0;
+    Core::u32 swapChainImageIndex = 0;
 
     waitForFence(currentFrame);
 
@@ -309,17 +309,17 @@ u32 GPUContext::frameAcquisition()
     }
 
     // After waiting, we need to manually reset the fence to the unsignaled state
-    constexpr u32 fenceCount = 1;
+    constexpr Core::u32 fenceCount = 1;
     VkFence inFlightFence = inFlightFences[currentFrame];
     vkResetFences(vulkanDevice->getDevice(), fenceCount, &inFlightFence);
 
     return swapChainImageIndex;
 }
 
-void GPUContext::waitForFence(u32 frameIndex)
+void GPUContext::waitForFence(Core::u32 frameIndex)
 {
     // Wait until the previous frame has finished
-    constexpr u32 fenceCount = 1;
+    constexpr Core::u32 fenceCount = 1;
     constexpr VkBool32 waitForAllFences = VK_TRUE;
     constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
     VkFence inFlightFence = inFlightFences[frameIndex % GPUContext::MAX_FRAMES_IN_FLIGHT];
@@ -352,7 +352,7 @@ void GPUContext::commandSubmission()
     submitInfo.signalSemaphoreCount = 1;
 
     // Submit recorded graphics commands
-    constexpr u32 submitCount = 1;
+    constexpr Core::u32 submitCount = 1;
     VkFence inFlightFence = inFlightFences[currentFrame];
     if (vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
         GPU_LOG_ERROR("Could not submit to graphics queue")
@@ -360,7 +360,7 @@ void GPUContext::commandSubmission()
     }
 }
 
-void GPUContext::framePresentation(const std::vector<u32>& imageIndices)
+void GPUContext::framePresentation(const std::vector<Core::u32>& imageIndices)
 {
     PROFILER_CPU()
     VkPresentInfoKHR presentInfo{};

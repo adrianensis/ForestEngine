@@ -10,7 +10,7 @@ public:
 	GPUUniformBufferData(GPUBufferType gpuUniformBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, Core::HashedString blockName, Core::HashedString instanceName):
         mType(gpuUniformBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBufferName(blockName), mInstanceName(instanceName) {}
 
-    GPUVariableData getScopedGPUVariableData(u32 i) const;
+    GPUVariableData getScopedGPUVariableData(Core::u32 i) const;
 
 public:
     GPUBufferType mType = GPUBufferType::UNIFORM;
@@ -22,8 +22,8 @@ public:
 class GPUUniformBuffer
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, u32 size, u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
-    void resize(u32 size);
+    void init(Core::Ptr<GPUContext> gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
+    void resize(Core::u32 size);
     template <class T>
     void setData(const T& data)
     {
@@ -41,14 +41,14 @@ public:
     void terminate();
 
 private:
-	u32 mBindingPoint = 0;
+	Core::u32 mBindingPoint = 0;
     GPUUniformBufferData mGPUUniformBufferData;
     bool mIsStatic = false;
     void* mGPUPointer = nullptr;
 
     Core::Ptr<GPUContext> mGPUContext;
     GPUBuffer mBuffer;
-    u32 mSize = 0;
+    Core::u32 mSize = 0;
 
 public:
     GET(BindingPoint)

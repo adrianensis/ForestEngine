@@ -8,7 +8,7 @@ public:
     Vector4 mColor = Vector4(0,0,0,1);
     alignas(16) Vector2 mTextureRegionLeftTop = Vector2(0.0, 0.0);
     Vector2 mTextureRegionSize = Vector2(1.0, 1.0);
-    alignas(16) i32 mDepth = 0;
+    alignas(16) Core::i32 mDepth = 0;
 };
 REGISTER_CLASS(GPUShaderPropertiesBlockUI)
 

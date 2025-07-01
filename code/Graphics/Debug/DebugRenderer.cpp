@@ -12,7 +12,7 @@ void DebugRenderer::terminate()
 	mShapeBatchRendererScreenSpace.terminate();
 }
 
-void DebugRenderer::drawLine(const Line& line, f32 thickness /*= 1*/, GeometricSpace geometricSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
+void DebugRenderer::drawLine(const Line& line, Core::f32 thickness /*= 1*/, GeometricSpace geometricSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
     PROFILER_CPU()
 	if (geometricSpace == GeometricSpace::WORLD)
@@ -25,7 +25,7 @@ void DebugRenderer::drawLine(const Line& line, f32 thickness /*= 1*/, GeometricS
 	}
 }
 
-void DebugRenderer::drawRectangle(const Rectangle& rectangle, f32 thickness/*= 1*/, GeometricSpace geometricSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
+void DebugRenderer::drawRectangle(const Rectangle& rectangle, Core::f32 thickness/*= 1*/, GeometricSpace geometricSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
     PROFILER_CPU()
 	const Vector3& leftTopFront = rectangle.getLeftTopFront();
@@ -36,7 +36,7 @@ void DebugRenderer::drawRectangle(const Rectangle& rectangle, f32 thickness/*= 1
 	drawLine(Line(Vector3(leftTopFront.x + size.x, leftTopFront.y, leftTopFront.z), Vector3(leftTopFront.x, leftTopFront.y, leftTopFront.z)), thickness, geometricSpace, color);
 }
 
-void DebugRenderer::drawCube(const Cube& cube, f32 thickness/*= 1*/, GeometricSpace geometricSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
+void DebugRenderer::drawCube(const Cube& cube, Core::f32 thickness/*= 1*/, GeometricSpace geometricSpace /*= true*/, Vector4 color /*= Vector4(1,1,1,1)*/)
 {
     PROFILER_CPU()
 	const Vector3& leftTopFront = cube.getLeftTopFront();

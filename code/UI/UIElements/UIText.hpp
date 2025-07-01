@@ -26,7 +26,7 @@ protected:
     void setIsEditable(bool editable);
     virtual void setBackground(const UIElementConfig& config) { };
 private:
-	i32 mLayer = 0;
+	Core::i32 mLayer = 0;
 	Core::HashedString mString;
 	std::vector<TEntityPtr<UITextGlyph>> mFontRenderers;
     bool mIsEditable = false;

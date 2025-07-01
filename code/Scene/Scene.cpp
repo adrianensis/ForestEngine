@@ -15,7 +15,7 @@ void Scene::init(Core::HashedString sceneName)
 	mSize = 0;
 
 	mPath = "config/sceneTmp.json";
-	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
+	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<Core::f32>();
 }
 
 void Scene::saveToFile(const std::string& path)
@@ -38,10 +38,10 @@ void Scene::loadToFile(const std::string& path)
 
 	mLoadSceneConfig.readFromJsonFile(mPath); // PERF: do async / in other thread.
 
-    mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<f32>();
+    mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<Core::f32>();
 	if (mLoadSceneConfig.contains("size"))
 	{
-		mSize = mLoadSceneConfig.at("size").get<f32>();
+		mSize = mLoadSceneConfig.at("size").get<Core::f32>();
 	}
 
 	deserialize(mLoadSceneConfig.getJson());
@@ -49,7 +49,7 @@ void Scene::loadToFile(const std::string& path)
 
 IMPLEMENT_SERIALIZATION(Scene)
 {
-	f32 maxSize = 0;
+	Core::f32 maxSize = 0;
 
 	FOR_LIST(it, mSceneObjects)
 	{
@@ -61,7 +61,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 				Vector3 worldPosition = t->getWorldPosition();
 				Vector3 scale = t->getLocalScale();
 
-				f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
+				Core::f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
 				maxSize = std::max(std::max(maxSize, std::abs(worldPosition.x) + maxObjectScale),
 								std::abs(worldPosition.y) + maxObjectScale);
 			}

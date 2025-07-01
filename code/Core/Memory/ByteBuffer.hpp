@@ -38,7 +38,7 @@ public:
             mBuffer.insert(mBuffer.end(), elements.mBuffer.begin(), elements.mBuffer.end());
         }
     }
-    void copyBufferAt(const ByteBuffer& elements, u32 offset)
+    void copyBufferAt(const ByteBuffer& elements, Core::u32 offset)
     {
         if(!elements.mBuffer.empty())
         {
@@ -49,19 +49,19 @@ public:
         }
     }
     template<class T>
-    T& get(u32 index)
+    T& get(Core::u32 index)
     {
         checkIndex(index);
         return *reinterpret_cast<T*>(&mBuffer.at(index * sizeof(T)));
     }
     template<class T>
-    const T& get(u32 index) const
+    const T& get(Core::u32 index) const
     {
         checkIndex(index);
         return *reinterpret_cast<const T*>(&mBuffer.at(index * sizeof(T)));
     }
     template <class T, typename ... Args>
-    void set(u32 index, Args&&... args)
+    void set(Core::u32 index, Args&&... args)
     {
         checkIndex(index);
         T element(args...);
@@ -71,15 +71,15 @@ public:
     {
         mBuffer.clear();
     }
-    u32 sizeInBytes() const
+    Core::u32 sizeInBytes() const
     {
         return mBuffer.size();
     }
-    virtual u32 size() const
+    virtual Core::u32 size() const
     {
         return sizeInBytes();
     }
-    virtual u32 capacity() const
+    virtual Core::u32 capacity() const
     {
         return mBuffer.capacity();
     }
@@ -91,24 +91,24 @@ public:
     {
         return mBuffer.data();
     }
-    virtual void reserve(u32 size)
+    virtual void reserve(Core::u32 size)
     {
         mBuffer.reserve(size);
     }
-    virtual void resize(u32 size)
+    virtual void resize(Core::u32 size)
     {
         mBuffer.resize(size);
     }
 
     template<class T>
-    void remove(u32 index)
+    void remove(Core::u32 index)
     {
         std::memset(&mBuffer[index*sizeof(T)], 0, sizeof(T));
     }
     // template<class T>
     // void fill(const T& element)
     // {
-    //     u32 typedSize = size();
+    //     Core::u32 typedSize = size();
     //     FOR_RANGE(i, 0, typedSize)
     //     {
     //         get<T>(i) = element;
@@ -116,7 +116,7 @@ public:
     // }
 
 protected:
-    void checkIndex(u32 i) const
+    void checkIndex(Core::u32 i) const
     {
         CHECK_MSG(i >= 0, "Index < 0!");
         CHECK_MSG(i < size(), "Index out of bounds!");
@@ -134,7 +134,7 @@ class TByteBuffer : public ByteBuffer
 {
 public:
     TByteBuffer() = default;
-    TByteBuffer(u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
+    TByteBuffer(Core::u32 elementSizeInBytes) : mElementSizeInBytes(elementSizeInBytes) { }
 
     template<class T>
     void pushBack(const T& element)
@@ -160,41 +160,41 @@ public:
         ByteBuffer::append(elements);
     }
     template<class T>
-    T& get(u32 index)
+    T& get(Core::u32 index)
     {
         checkType<T>();
         return ByteBuffer::get<T>(index);
     }
     template<class T>
-    const T& get(u32 index) const
+    const T& get(Core::u32 index) const
     {
         checkType<T>();
         return ByteBuffer::get<T>(index);
     }
     template <class T, typename ... Args>
-    void set(u32 index, Args&&... args)
+    void set(Core::u32 index, Args&&... args)
     {
         checkType<T>();
         ByteBuffer::set<T>(index, args...);
     }
-    virtual u32 size() const override
+    virtual Core::u32 size() const override
     {
         return ByteBuffer::size() / mElementSizeInBytes;
     }
-    virtual u32 capacity() const override
+    virtual Core::u32 capacity() const override
     {
         return ByteBuffer::capacity() / mElementSizeInBytes;
     }
-    virtual void reserve(u32 size) override
+    virtual void reserve(Core::u32 size) override
     {
         ByteBuffer::reserve(size * mElementSizeInBytes);
     }
-    virtual void resize(u32 size) override
+    virtual void resize(Core::u32 size) override
     {
         ByteBuffer::resize(size * mElementSizeInBytes);
     }
     template<class T>
-    void remove(u32 index)
+    void remove(Core::u32 index)
     {
         ByteBuffer::remove<T>(index);
     }
@@ -202,14 +202,14 @@ public:
     void fill(const T& element)
     {
         checkType<T>();
-        u32 typedSize = size();
+        Core::u32 typedSize = size();
         FOR_RANGE(i, 0, typedSize)
         {
             get<T>(i) = element;
         }
     }
 
-    u32 getElementSizeInBytes() const { return mElementSizeInBytes; };
+    Core::u32 getElementSizeInBytes() const { return mElementSizeInBytes; };
 
 private:
     template<class T>
@@ -220,6 +220,6 @@ private:
     }
 
 private:
-    u32 mElementSizeInBytes = 0;
+    Core::u32 mElementSizeInBytes = 0;
 };
 NS_END

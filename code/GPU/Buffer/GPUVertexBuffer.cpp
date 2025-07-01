@@ -1,6 +1,6 @@
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 
-void GPUVertexBuffer::init(Core::Ptr<GPUContext> gpuContext, u32 attributeLocation, const GPUVertexBufferData& data, u32 size, bool isStatic)
+void GPUVertexBuffer::init(Core::Ptr<GPUContext> gpuContext, Core::u32 attributeLocation, const GPUVertexBufferData& data, Core::u32 size, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mData = data;
@@ -9,10 +9,10 @@ void GPUVertexBuffer::init(Core::Ptr<GPUContext> gpuContext, u32 attributeLocati
 
     // sizeInPrimitiveTypes: size of the object divided in primitive types
     // ex: Vector3 -> 3 floats
-    u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
+    Core::u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
 //    // GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, primitiveType, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
     // accumulative offset in bytes
-    u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
+    Core::u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;
     mAttributeOffset += 1;
 
@@ -41,18 +41,18 @@ void GPUVertexBuffer::terminate()
     stagingBuffer.terminate();
 }
 
-void GPUVertexBuffer::resize(u32 size)
+void GPUVertexBuffer::resize(Core::u32 size)
 {
     mBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
     stagingBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
 }
 
-u32 GPUVertexBuffer::getAttributeLocation() const
+Core::u32 GPUVertexBuffer::getAttributeLocation() const
 {
     return mAttributeLocation;
 }
 
-u32 GPUVertexBuffer::getAttributeLocationWithOffset() const
+Core::u32 GPUVertexBuffer::getAttributeLocationWithOffset() const
 {
     return getAttributeLocation() + mAttributeOffset;
 }
@@ -61,7 +61,7 @@ const GPUBuffer& GPUVertexBuffer::getGPUBuffer() const {
     return mBuffer;
 }
 
-bool GPUVertexBuffer::setData(const void* data, u32 size, VkCommandBuffer* commandBuffer)
+bool GPUVertexBuffer::setData(const void* data, Core::u32 size, VkCommandBuffer* commandBuffer)
 {
     PROFILER_CPU_NAMED(vertex_buffer_set_data)
 

@@ -26,7 +26,7 @@ void GPUCommandPool::terminate()
     GPU_LOG("Destroyed Vulkan command pool");
 }
 
-std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(u32 count) const
+std::vector<GPUCommandBuffer> GPUCommandPool::allocateCommandBuffers(Core::u32 count) const
 {
     std::vector<VkCommandBuffer> vkCommandBuffers;
     vkCommandBuffers.resize(count);

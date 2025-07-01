@@ -17,7 +17,7 @@ void RenderPassUI::postRender()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
-void RenderPassUI::renderStencilCascade(u64 id)
+void RenderPassUI::renderStencilCascade(Core::u64 id)
 {    
     FOR_LIST(it, mGPUInstanceRendererRegistry.getGPUInstanceRendererDataSet())
 	{
@@ -67,14 +67,14 @@ void RenderPassUI::render()
 
     auto compareStencilBatch = [](GPUInstanceRendererData b1, GPUInstanceRendererData b2)
     {
-        u64 o1 = b1.mGPUShaderStencilData.mParentId;
-        u64 o2 = b2.mGPUShaderStencilData.mParentId;
+        Core::u64 o1 = b1.mGPUShaderStencilData.mParentId;
+        Core::u64 o2 = b2.mGPUShaderStencilData.mParentId;
         return (o1 < o2);
     };
   
     std::sort(stencilGPUInstanceRendererRenderers.begin(), stencilGPUInstanceRendererRenderers.end(), compareStencilBatch);
 
-    u64 currentId = 0;
+    Core::u64 currentId = 0;
     FOR_LIST(it, stencilGPUInstanceRendererRenderers)
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;

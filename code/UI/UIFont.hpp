@@ -11,7 +11,7 @@ class UIFontsManager
 public:
     void init();
     void terminate();
-    Core::WeakPtr<UIFont> loadFont(Core::HashedString fontFile, u32 fontSize);
+    Core::WeakPtr<UIFont> loadFont(Core::HashedString fontFile, Core::u32 fontSize);
     Core::WeakPtr<UIFont> getFont(Core::HashedString fontFile) const;
 
 private:
@@ -26,7 +26,7 @@ class UIFont
 {
     
 public:
-    void init(UIFontsManager& fontsManager, Core::HashedString fontFile, u32 fontSize);
+    void init(UIFontsManager& fontsManager, Core::HashedString fontFile, Core::u32 fontSize);
 private:
     FontData mFontData;
     Core::WeakPtr<GPUShader> mFontShader;

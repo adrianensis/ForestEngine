@@ -57,8 +57,8 @@ Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Cube>() const
 	Core::OwnerPtr<GPUMesh> mesh = Core::OwnerPtr<GPUMesh>::newObject();
 	mesh->init(4*6, 2*6, gpuVertexInputBuffers);
 
-	u32 elementOffsetIncrement = 4;
-	u32 elementOffset = 0;
+	Core::u32 elementOffsetIncrement = 4;
+	Core::u32 elementOffset = 0;
 
 	Vector3 bottomLeftFront(-0.5f, -0.5f, 0.5f); // bottom left front
 	Vector3 bottomRightFront(0.5f, -0.5f, 0.5f); // bottom right front

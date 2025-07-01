@@ -6,15 +6,15 @@ Quaternion::Quaternion()
 {
 }
 
-Quaternion::Quaternion(f32 x, f32 y, f32 z, f32 w) : v(x, y, z), w(w)
+Quaternion::Quaternion(Core::f32 x, Core::f32 y, Core::f32 z, Core::f32 w) : v(x, y, z), w(w)
 {
 }
 
-Quaternion::Quaternion(const Vector3& v, f32 w) : v(v), w(w)
+Quaternion::Quaternion(const Vector3& v, Core::f32 w) : v(v), w(w)
 {
 }
 
-Quaternion::Quaternion(f32 roll, f32 pitch, f32 yaw)
+Quaternion::Quaternion(Core::f32 roll, Core::f32 pitch, Core::f32 yaw)
 {
 	fromEuler(roll, pitch, yaw);
 }
@@ -31,14 +31,14 @@ Quaternion::Quaternion(const Quaternion& other) : v(other.v), w(other.w)
 {
 }
 
-Quaternion& Quaternion::set(f32 x, f32 y, f32 z, f32 w)
+Quaternion& Quaternion::set(Core::f32 x, Core::f32 y, Core::f32 z, Core::f32 w)
 {
 	v.set(x, y, z);
 	this->w = w;
 	return *this;
 }
 
-Quaternion& Quaternion::set(const Vector3& v, f32 w)
+Quaternion& Quaternion::set(const Vector3& v, Core::f32 w)
 {
 	this->v.set(v);
 	this->w = w;
@@ -67,7 +67,7 @@ Quaternion& Quaternion::sub(const Quaternion& rhs)
 
 Quaternion& Quaternion::mul(const Quaternion& rhs)
 {
-	f32 w_total = (w * rhs.w) - (v.dot(rhs.v));
+	Core::f32 w_total = (w * rhs.w) - (v.dot(rhs.v));
 	v.set(rhs.v * w + v * w + Vector3(v).cross(rhs.v));
 	w = w_total;
 	return *this;
@@ -79,57 +79,57 @@ Quaternion& Quaternion::div(const Quaternion& rhs)
 	return *this;
 }
 
-Quaternion& Quaternion::add(f32 rhs)
+Quaternion& Quaternion::add(Core::f32 rhs)
 {
 	v.add(rhs);
 	w = w + rhs;
 	return *this;
 }
 
-Quaternion& Quaternion::sub(f32 rhs)
+Quaternion& Quaternion::sub(Core::f32 rhs)
 {
 	v.sub(rhs);
 	w = w - rhs;
 	return *this;
 }
 
-Quaternion& Quaternion::mul(f32 rhs)
+Quaternion& Quaternion::mul(Core::f32 rhs)
 {
 	v.mul(rhs);
 	w = w * rhs;
 	return *this;
 }
 
-Quaternion& Quaternion::div(f32 rhs)
+Quaternion& Quaternion::div(Core::f32 rhs)
 {
 	v.div(rhs);
 	w = w / rhs;
 	return *this;
 }
 
-f32 Quaternion::dot(const Quaternion& q) const
+Core::f32 Quaternion::dot(const Quaternion& q) const
 {
-	f32 xx = v.x * q.v.x;
-	f32 yy = v.y * q.v.y;
-	f32 zz = v.z * q.v.z;
-	f32 ww = w * q.w;
+	Core::f32 xx = v.x * q.v.x;
+	Core::f32 yy = v.y * q.v.y;
+	Core::f32 zz = v.z * q.v.z;
+	Core::f32 ww = w * q.w;
 
 	return xx + yy + zz + ww;
 }
 
-f32 Quaternion::sqrlen() const
+Core::f32 Quaternion::sqrlen() const
 {
 	return dot(*this);
 }
 
-f32 Quaternion::len() const
+Core::f32 Quaternion::len() const
 {
 	return sqrtf(this->sqrlen());
 }
 
 Quaternion& Quaternion::nor()
 {
-	f32 len = this->len();
+	Core::f32 len = this->len();
 
 	CHECK_MSG(len > 0, "Length is zero.");
 	this->div(len);
@@ -137,7 +137,7 @@ Quaternion& Quaternion::nor()
 	return *this;
 }
 
-bool Quaternion::eq(const Quaternion& q, f32 e) const
+bool Quaternion::eq(const Quaternion& q, Core::f32 e) const
 {
 	return v.eq(q.v, e) && MathUtils::eqf(this->w, q.w, e);
 }
@@ -159,7 +159,7 @@ Quaternion& Quaternion::inv()
 	return *this;
 }
 
-f32 Quaternion::angle(const Quaternion& q) const
+Core::f32 Quaternion::angle(const Quaternion& q) const
 {
 	/*
 	* angle is acute (positive dot product)
@@ -170,25 +170,25 @@ f32 Quaternion::angle(const Quaternion& q) const
     Quaternion copyOther = q;
     copyThis.nor();
     copyOther.nor();
-    f32 cosOfAngle = copyThis.dot(copyOther) / (copyThis.len() * copyOther.len());
+    Core::f32 cosOfAngle = copyThis.dot(copyOther) / (copyThis.len() * copyOther.len());
 	return std::acos(cosOfAngle);
 }
 
-Quaternion& Quaternion::lerp(const Quaternion& target, f32 t)
+Quaternion& Quaternion::lerp(const Quaternion& target, Core::f32 t)
 {
-	f32 tt = 1 - t;
+	Core::f32 tt = 1 - t;
 	this->mul(tt);
 	this->add(Quaternion(target).mul(tt));
 	return *this;
 }
 
-Quaternion& Quaternion::nlerp(const Quaternion& target, f32 t)
+Quaternion& Quaternion::nlerp(const Quaternion& target, Core::f32 t)
 {
 	this->lerp(target, t).nor();
 	return *this;
 }
 
-Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
+Quaternion& Quaternion::slerp(const Quaternion& target, Core::f32 t)
 {
     // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
     // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
@@ -197,7 +197,7 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
     Quaternion qb = target;
 
 	// Calculate angle between them.
-    f32 cosHalfTheta = qa.dot(qb);
+    Core::f32 cosHalfTheta = qa.dot(qb);
 
     //make sure we take the shortest path in case dot Product is negative
     if(cosHalfTheta < 0.0f)
@@ -214,8 +214,8 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 	}
 
 	// Calculate temporary values.
-	f32 halfTheta = std::acos(cosHalfTheta);
-	f32 sinHalfTheta = std::sqrt(1.0f - cosHalfTheta*cosHalfTheta);
+	Core::f32 halfTheta = std::acos(cosHalfTheta);
+	Core::f32 sinHalfTheta = std::sqrt(1.0f - cosHalfTheta*cosHalfTheta);
 
 	// if theta = 180 degrees then result is not fully defined
 	// we could rotate around any axis normal to qa or qb
@@ -226,8 +226,8 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 		return *this;
 	}
 
-	f32 ratioA = std::sin((1.0f - t) * halfTheta) / sinHalfTheta;
-	f32 ratioB = std::sin(t * halfTheta) / sinHalfTheta; 
+	Core::f32 ratioA = std::sin((1.0f - t) * halfTheta) / sinHalfTheta;
+	Core::f32 ratioB = std::sin(t * halfTheta) / sinHalfTheta; 
 
 	//calculate Quaternion.
     *this = qa.mul(ratioA) + qb.mul(ratioB);
@@ -237,12 +237,12 @@ Quaternion& Quaternion::slerp(const Quaternion& target, f32 t)
 Vector3 Quaternion::toEuler() const
 {
     // if the input quaternion is normalized, this is exactly one. Otherwise, this acts as a correction factor for the quaternion's not-normalizedness
-    f32 unit = (v.x * v.x) + (v.y * v.y) + (v.z * v.z) + (w * w);
+    Core::f32 unit = (v.x * v.x) + (v.y * v.y) + (v.z * v.z) + (w * w);
 
     // this will have a magnitude of 0.5 or greater if and only if this is a singularity case
-    f32 test = v.x * w - v.y * v.z;
+    Core::f32 test = v.x * w - v.y * v.z;
 
-    f32 x, z, y;
+    Core::f32 x, z, y;
     if (test > 0.4995f * unit) // singularity at north pole
     {
         x = MathUtils::PI/2.0f;
@@ -268,20 +268,20 @@ Vector3 Quaternion::toEuler() const
     return euler;
 }
 
-void Quaternion::fromEuler(f32 roll, f32 pitch, f32 yaw)
+void Quaternion::fromEuler(Core::f32 roll, Core::f32 pitch, Core::f32 yaw)
 { // pitch attitude, yaw heading, or roll bank
 
 
-	f32 roll2 = MathUtils::rad(roll) * 0.5f;   // x
-	f32 pitch2 = MathUtils::rad(pitch) * 0.5f; // y
-	f32 yaw2 = MathUtils::rad(yaw) * 0.5f;	   // z
+	Core::f32 roll2 = MathUtils::rad(roll) * 0.5f;   // x
+	Core::f32 pitch2 = MathUtils::rad(pitch) * 0.5f; // y
+	Core::f32 yaw2 = MathUtils::rad(yaw) * 0.5f;	   // z
 
-	f32 cy = cos(yaw2);
-	f32 sy = sin(yaw2);
-	f32 cp = cos(pitch2);
-	f32 sp = sin(pitch2);
-	f32 cr = cos(roll2);
-	f32 sr = sin(roll2);
+	Core::f32 cy = cos(yaw2);
+	Core::f32 sy = sin(yaw2);
+	Core::f32 cp = cos(pitch2);
+	Core::f32 sp = sin(pitch2);
+	Core::f32 cr = cos(roll2);
+	Core::f32 sr = sin(roll2);
 
 	w = cr * cp * cy + sr * sp * sy;
 	v.x = sr * cp * cy - cr * sp * sy;
@@ -299,17 +299,17 @@ void Quaternion::toMatrix(Matrix4& outMatrix) const
 	Quaternion copy((*this));
 	copy.nor();
 
-	f32 xx2 = 2 * copy.v.x * copy.v.x;
-	f32 yy2 = 2 * copy.v.y * copy.v.y;
-	f32 zz2 = 2 * copy.v.z * copy.v.z;
+	Core::f32 xx2 = 2 * copy.v.x * copy.v.x;
+	Core::f32 yy2 = 2 * copy.v.y * copy.v.y;
+	Core::f32 zz2 = 2 * copy.v.z * copy.v.z;
 
-	f32 xy2 = 2 * copy.v.x * copy.v.y;
-	f32 xz2 = 2 * copy.v.x * copy.v.z;
-	f32 yz2 = 2 * copy.v.y * copy.v.z;
+	Core::f32 xy2 = 2 * copy.v.x * copy.v.y;
+	Core::f32 xz2 = 2 * copy.v.x * copy.v.z;
+	Core::f32 yz2 = 2 * copy.v.y * copy.v.z;
 
-	f32 wx2 = 2 * copy.w * copy.v.x;
-	f32 wy2 = 2 * copy.w * copy.v.y;
-	f32 wz2 = 2 * copy.w * copy.v.z;
+	Core::f32 wx2 = 2 * copy.w * copy.v.x;
+	Core::f32 wy2 = 2 * copy.w * copy.v.y;
+	Core::f32 wz2 = 2 * copy.w * copy.v.z;
 
 	outMatrix.identity();
 
@@ -328,15 +328,15 @@ void Quaternion::toMatrix(Matrix4& outMatrix) const
 
 void Quaternion::fromMatrix(const Matrix4& matrix)
 {
-    f32 m00 = matrix.get(0,0);
-    f32 m02 = matrix.get(0,2);
-    f32 m10 = matrix.get(1,0);
-    f32 m11 = matrix.get(1,1);
-    f32 m12 = matrix.get(1,2);
-    f32 m20 = matrix.get(2,0);
-    f32 m22 = matrix.get(2,2);
+    Core::f32 m00 = matrix.get(0,0);
+    Core::f32 m02 = matrix.get(0,2);
+    Core::f32 m10 = matrix.get(1,0);
+    Core::f32 m11 = matrix.get(1,1);
+    Core::f32 m12 = matrix.get(1,2);
+    Core::f32 m20 = matrix.get(2,0);
+    Core::f32 m22 = matrix.get(2,2);
 
-    f32 x, z, y;
+    Core::f32 x, z, y;
     // Assuming the angles are in radians.
     if (m10 > 0.998) { // singularity at north pole
         x = 0;

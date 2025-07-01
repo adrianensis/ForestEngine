@@ -62,11 +62,11 @@ void UIText::setText(Core::HashedString text)
     PROFILER_CPU()
 	if (mString != text)
 	{
-        const u32 textLen = text.get().length();
-        const u32 glyphRenderersLen = static_cast<u32>(mFontRenderers.size());
+        const Core::u32 textLen = text.get().length();
+        const Core::u32 glyphRenderersLen = static_cast<Core::u32>(mFontRenderers.size());
         if(textLen < glyphRenderersLen)
         {
-            u32 diff = glyphRenderersLen - textLen;
+            Core::u32 diff = glyphRenderersLen - textLen;
             FOR_RANGE(i, 0, diff)
             {
                 mScene->removeSceneObject(mFontRenderers.back());
@@ -76,8 +76,8 @@ void UIText::setText(Core::HashedString text)
 
 		if (!text.get().empty())
 		{
-            f32 maxAscender = 0;
-            f32 maxDescender = 0;
+            Core::f32 maxAscender = 0;
+            Core::f32 maxDescender = 0;
             FOR_ARRAY(i, text.get())
             {
                 char character = text.get().at(i);
@@ -89,9 +89,9 @@ void UIText::setText(Core::HashedString text)
 
             Vector2 maxDescenderVec(0, maxDescender);
             Vector2 maxDescenderVecScreenSpace(UIUtils::toScreenSpace(maxDescenderVec * mConfig.mTextScale));
-            f32 baseLineScreenSpace = mConfig.mDisplaySize.y - maxDescenderVecScreenSpace.y;
+            Core::f32 baseLineScreenSpace = mConfig.mDisplaySize.y - maxDescenderVecScreenSpace.y;
             
-            f32 offset = -mConfig.mDisplaySize.x/2.0f;
+            Core::f32 offset = -mConfig.mDisplaySize.x/2.0f;
 			FOR_RANGE(i, 0, textLen)
 			{
                 char character = text.get().at(i);

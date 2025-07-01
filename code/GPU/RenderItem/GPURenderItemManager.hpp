@@ -12,7 +12,7 @@ public:
     void addRenderer(Core::WeakPtr<GPURenderItem> renderItem);
     void removeRenderer(Core::WeakPtr<GPURenderItem> renderItem);
 
-    u32 getSize() { return mRenderInstancesSlotsManager.getSize(); }
+    Core::u32 getSize() { return mRenderInstancesSlotsManager.getSize(); }
 
 private:
     void setRendererMatrix(Core::WeakPtr<GPURenderItem> renderItem);
@@ -22,9 +22,9 @@ private:
     std::vector<Matrix4> mMatrices;
     Core::SlotsManager mRenderInstancesSlotsManager;
 	std::vector<Core::WeakPtr<GPURenderItem>> mRenderers;
-    std::set<u32> mUsedSlots;
+    std::set<Core::u32> mUsedSlots;
 	std::vector<Core::WeakPtr<GPURenderItem>> mRenderersStatic;
-    inline static const u32 mInitialInstances = 1000;
+    inline static const Core::u32 mInitialInstances = 1000;
 
 public:
     CRGET(Matrices)

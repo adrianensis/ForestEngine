@@ -13,7 +13,7 @@ private:
     VkDevice mDevice = VK_NULL_HANDLE;
     VkQueue mGraphicsQueue = VK_NULL_HANDLE;
     VkQueue mPresentQueue = VK_NULL_HANDLE;
-    inline static const f32 mQueuesPriority = 1.0;
+    inline static const Core::f32 mQueuesPriority = 1.0;
 
 public:
     GPUDevice(GPUVulkanInstance* gpuVulkanInstance, GPUPhysicalDevice* vulkanPhysicalDevice);
@@ -25,7 +25,7 @@ private:
     std::vector<VkDeviceQueueCreateInfo> getDeviceQueueCreateInfos(const GPUQueueFamilyIndices& queueFamilyIndices) const;
     bool createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQueueCreateInfos);
     bool findDeviceQueues(const GPUQueueFamilyIndices& queueFamilyIndices);
-    VkQueue findDeviceQueue(u32 queueFamilyIndex) const;
+    VkQueue findDeviceQueue(Core::u32 queueFamilyIndex) const;
 
 public:
     GET(GPUVulkanInstance)

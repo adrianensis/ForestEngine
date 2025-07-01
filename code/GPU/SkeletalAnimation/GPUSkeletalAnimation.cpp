@@ -1,7 +1,7 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "Core/Time/TimeUtils.hpp"
 
-void GPUSkeletalAnimation::init(u32 id, f32 animDurationInSeconds)
+void GPUSkeletalAnimation::init(Core::u32 id, Core::f32 animDurationInSeconds)
 {
     mID = id;
     mDurationInSeconds = animDurationInSeconds;
@@ -10,10 +10,10 @@ void GPUSkeletalAnimation::init(u32 id, f32 animDurationInSeconds)
     mFrames.resize(mDurationInTicks);
 }
 
-f32 GPUSkeletalAnimation::calculateCurrentSkeletalAnimationTime(f32 accumulatedTime) const
+Core::f32 GPUSkeletalAnimation::calculateCurrentSkeletalAnimationTime(Core::f32 accumulatedTime) const
 {
-    f32 timeInTicks = accumulatedTime * mTicksPerSecond;
-    f32 animationTime = fmod(timeInTicks, mDurationInTicks);
+    Core::f32 timeInTicks = accumulatedTime * mTicksPerSecond;
+    Core::f32 animationTime = fmod(timeInTicks, mDurationInTicks);
     return animationTime;
 }
 
@@ -26,7 +26,7 @@ void GPUSkeletalAnimationState::update()
 {
     mSkeletalAnimationTime = mSkeletalAnimation->calculateCurrentSkeletalAnimationTime(mAccumulatedTime);
 
-    f32 dt = GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
+    Core::f32 dt = GET_SYSTEM(Core::Time).getDeltaTimeSeconds();
     mAccumulatedTime += dt;
 
     // reset accumulatedTime to avoid overflow
@@ -55,7 +55,7 @@ void GPUSkeletonState::update()
 
 void GPUSkeletonState::createSkeletalAnimationState(Core::WeakPtr<const GPUSkeletalAnimation> animation)
 {
-    u32 animationId = animation->mID;
+    Core::u32 animationId = animation->mID;
 
 	if(!mSkeletalAnimationStates.contains(animationId))
 	{
@@ -84,7 +84,7 @@ void GPUSkeletonState::getBoneTransformsFromCurrentSkeletalAnimation(std::vector
     Matrix4 Identity;
 	Identity.identity();
 
-    f32 animationTime = mCurrentSkeletalAnimation->getSkeletalAnimationTime();
+    Core::f32 animationTime = mCurrentSkeletalAnimation->getSkeletalAnimationTime();
 
     Transforms = mCurrentSkeletalAnimation->getSkeletalAnimation()->mFrames[animationTime].mTransforms;
 }

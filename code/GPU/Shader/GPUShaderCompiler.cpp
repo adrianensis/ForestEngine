@@ -86,7 +86,7 @@ SPIRVBinary GPUShaderCompiler::compileGPUShaderToSPIRV(GPUPipelineStage stage, c
     glslang_program_SPIRV_generate(program, glsl_stage);
 
     bin.mSize = glslang_program_SPIRV_get_size(program);
-    bin.mWords = new u32[bin.mSize];
+    bin.mWords = new Core::u32[bin.mSize];
     glslang_program_SPIRV_get(program, bin.mWords);
 
     const char* spirv_messages = glslang_program_SPIRV_get_messages(program);

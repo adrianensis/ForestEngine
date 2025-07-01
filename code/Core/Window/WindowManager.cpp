@@ -35,7 +35,7 @@ WeakPtr<Window> WindowManager::createWindow(const WindowData& windowData)
     return window;
 }
 
-WeakPtr<Window> WindowManager::getWindow(u32 index) const
+WeakPtr<Window> WindowManager::getWindow(Core::u32 index) const
 {
     WeakPtr<Window> window = mWindows.at(index);
     return window;

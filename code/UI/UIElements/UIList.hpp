@@ -25,7 +25,7 @@ public:
 	UIList& addOption(const std::string & label, UIElementCallback onPressedCallback);
 
 	void toggle();
-	void onScroll(f32 scroll) override;
+	void onScroll(Core::f32 scroll) override;
 
 private:
 	void setEntriesVisibility(bool visible);

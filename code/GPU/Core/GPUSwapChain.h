@@ -22,9 +22,9 @@ private:
     VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
     VkPresentModeKHR choosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) const;
     VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
-    u32 getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
-    bool createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, u32 imageCount);
-    bool findSwapChainImages(u32 imageCount);
+    Core::u32 getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const;
+    bool createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, Core::u32 imageCount);
+    bool findSwapChainImages(Core::u32 imageCount);
     bool createSwapChainImageViews();
     std::string getPresentationModeAsString(VkPresentModeKHR presentMode) const;
 

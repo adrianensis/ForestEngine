@@ -32,7 +32,7 @@ bool GPUImage::init(Core::Ptr<GPUContext> gpuContext, const GPUImageData& gpuIma
     VkMemoryRequirements memoryRequirements;
     vkGetImageMemoryRequirements(mGPUContext->vulkanDevice->getDevice(), mVkImage, &memoryRequirements);
 
-    u32 memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, mGPUImageData.MemoryProperties);
+    Core::u32 memoryTypeIndex = mGPUContext->vulkanPhysicalDevice->findMemoryType(memoryRequirements.memoryTypeBits, mGPUImageData.MemoryProperties);
 
     VkMemoryAllocateInfo memoryAllocateInfo{};
     memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -45,7 +45,7 @@ bool GPUImage::init(Core::Ptr<GPUContext> gpuContext, const GPUImageData& gpuIma
         return false;
     }
 
-    constexpr u32 memoryOffset = 0;
+    constexpr Core::u32 memoryOffset = 0;
     vkBindImageMemory(mGPUContext->vulkanDevice->getDevice(), mVkImage, vkDeviceMemory, memoryOffset);
 
     // LOG("Initialized image");

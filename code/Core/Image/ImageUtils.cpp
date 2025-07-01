@@ -7,7 +7,7 @@
 ImageData ImageUtils::loadImage(Core::HashedString path)
 {
     PROFILER_CPU()
-	i32 width, height, original_number_channels;
+	Core::i32 width, height, original_number_channels;
 	stbi_set_flip_vertically_on_load(true);
 
 	// if(path.find("\\") != std::string::npos)
@@ -31,7 +31,7 @@ void ImageUtils::freeImage(const ImageData& imageData)
     }
 }
 
-void ImageUtils::flipImageVertically(const ImageData& imageData, u32 bytes_per_pixel)
+void ImageUtils::flipImageVertically(const ImageData& imageData, Core::u32 bytes_per_pixel)
 {
     PROFILER_CPU()
     stbi__vertical_flip(imageData.mData, imageData.mWidth, imageData.mHeight, bytes_per_pixel);

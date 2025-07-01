@@ -36,9 +36,9 @@ private:
 	bool mIsDestroyed = false;
     Core::Slot mSlot;
 
-	u64 mEntityId = 0;
+	Core::u64 mEntityId = 0;
     // Important: starts by 1, 0 is reserved for null
-	inline static u64 smEntityIdCounter = 1;
+	inline static Core::u64 smEntityIdCounter = 1;
 
 public:
 	bool mIsStatic = false;

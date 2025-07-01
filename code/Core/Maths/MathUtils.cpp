@@ -1,32 +1,32 @@
 #include "Core/Maths/MathUtils.hpp"
 
 
-f32 MathUtils::rad(f32 deg)
+Core::f32 MathUtils::rad(Core::f32 deg)
 {
 	return deg * PI_180;
 }
 
-f32 MathUtils::deg(f32 rad)
+Core::f32 MathUtils::deg(Core::f32 rad)
 {
 	return rad * INV_PI_180;
 }
 
-bool MathUtils::eqf(f32 a, f32 b, f32 epsilon)
+bool MathUtils::eqf(Core::f32 a, Core::f32 b, Core::f32 epsilon)
 {
 	return fabsf(a - b) < epsilon;
 }
 
-bool MathUtils::eqf(f32 a, f32 b)
+bool MathUtils::eqf(Core::f32 a, Core::f32 b)
 {
 	return eqf(a, b, FLOAT_EPSILON);
 }
 
-f32 MathUtils::clamp(f32 n, f32 lower, f32 upper)
+Core::f32 MathUtils::clamp(Core::f32 n, Core::f32 lower, Core::f32 upper)
 {
 	return std::max(lower, std::min(n, upper));
 }
 
-f32 MathUtils::det(f32 a, f32 b, f32 c, f32 d)
+Core::f32 MathUtils::det(Core::f32 a, Core::f32 b, Core::f32 c, Core::f32 d)
 {
 	return a * d - b * c;
 }

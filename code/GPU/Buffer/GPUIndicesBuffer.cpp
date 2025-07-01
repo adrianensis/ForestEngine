@@ -1,6 +1,6 @@
 #include "GPU/Buffer/GPUIndicesBuffer.hpp"
 
-void GPUIndicesBuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, u32 size, bool isStatic)
+void GPUIndicesBuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
 {
     mGPUContext = gpuContext;
     mIsStatic = isStatic;
@@ -15,7 +15,7 @@ void GPUIndicesBuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUDataType&
     }
 }
 
-void GPUIndicesBuffer::resize(u32 size)
+void GPUIndicesBuffer::resize(Core::u32 size)
 {
     mBuffer.resize(size * mGPUDataType.mTypeSizeInBytes);
 }
@@ -24,7 +24,7 @@ const GPUBuffer& GPUIndicesBuffer::getGPUBuffer() const {
     return mBuffer;
 }
 
-bool GPUIndicesBuffer::setData(const void* data, u32 size) {
+bool GPUIndicesBuffer::setData(const void* data, Core::u32 size) {
     VkDeviceSize bufferSize = size;
 
     GPUBufferData stagingBufferConfig{};

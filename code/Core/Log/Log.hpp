@@ -84,7 +84,7 @@ public:
 		}
 	}
 
-	static void trace(const std::string_view file, u32 line, const std::string_view function, const std::string& message)
+	static void trace(const std::string_view file, Core::u32 line, const std::string_view function, const std::string& message)
 	{
 		log(Prefixes::smTrace, true, "[{}:{}] {}", std::string(function), std::to_string(line), message);
 	}

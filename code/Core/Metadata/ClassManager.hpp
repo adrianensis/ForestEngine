@@ -6,8 +6,8 @@
 #include <unordered_map>
 #include <typeinfo>
 
-using ClassId = u64;
-using InternalCPPTypeId = u64;
+using ClassId = Core::u64;
+using InternalCPPTypeId = Core::u64;
 
 NS_BEGIN(Core)
 #define REGISTER_CLASS(...) \
@@ -24,7 +24,7 @@ public:
     ClassId getId() const { return mName.getHash(); };
 public:
     Core::HashedString mName;
-    u32 mTypeSize = 0;
+    Core::u32 mTypeSize = 0;
 };
 
 class MemberDefinition
@@ -32,7 +32,7 @@ class MemberDefinition
 public:
     Core::HashedString mName;
     Core::HashedString mClassName;
-    u32 mOffset = 0;
+    Core::u32 mOffset = 0;
 };
 
 // --------------------------------------------------------
@@ -113,9 +113,9 @@ public:
 
     static const ClassMetadata& getDynamicClassMetadata(const void* pointer)
     {
-        if(smPointersToDynamicClass.contains(reinterpret_cast<u64>(pointer)))
+        if(smPointersToDynamicClass.contains(reinterpret_cast<Core::u64>(pointer)))
         {
-            return *smPointersToDynamicClass.at(reinterpret_cast<u64>(pointer));
+            return *smPointersToDynamicClass.at(reinterpret_cast<Core::u64>(pointer));
         }
 
         return smNullClassMetadata;
@@ -124,19 +124,19 @@ public:
     template<class T>
     static void registerDynamicClass(const T* pointer)
     {
-        registerDynamicClass(reinterpret_cast<u64>(pointer), ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId());
+        registerDynamicClass(reinterpret_cast<Core::u64>(pointer), ClassManager::getClassMetadataNoAssert<T>().mClassDefinition.getId());
     }
     static void unregisterDynamicClass(const void* pointer)
     {
-        unregisterDynamicClass(reinterpret_cast<u64>(pointer));
+        unregisterDynamicClass(reinterpret_cast<Core::u64>(pointer));
     }
 private:
     static void insert(InternalCPPTypeId internalCPPId, const ClassMetadata& classMetadata);
     static ClassMetadata& getClassMetadataByIdInternal(const ClassId classId);
-    static void registerDynamicClass(u64 pointer, ClassId classId);
-    static void unregisterDynamicClass(u64 pointer);
+    static void registerDynamicClass(Core::u64 pointer, ClassId classId);
+    static void unregisterDynamicClass(Core::u64 pointer);
     inline static std::unordered_map<InternalCPPTypeId, ClassId> smInternalCPPTypeIdToClassId;
     inline static std::unordered_map<ClassId, ClassMetadata> smClassMapById;
-    inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
+    inline static std::unordered_map<Core::u64, ClassMetadata*> smPointersToDynamicClass;
 };
 NS_END

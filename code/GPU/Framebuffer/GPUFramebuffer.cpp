@@ -2,7 +2,7 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-Vector4 GPUFramebuffer::readPixel(u32 x, u32 y, GPUFramebufferAttachmentType attachmentType) const
+Vector4 GPUFramebuffer::readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const
 {
     CHECK_MSG(mFramebufferData.mAttachments.contains(attachmentType), "Attachment not found!");
 
@@ -48,7 +48,7 @@ bool GPUFramebuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUFramebuffer
     FOR_LIST(it, mFramebufferData.mAttachments)
     {
         const GPUFramebufferAttachmentType& attachmentType = *it;
-//        u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
+//        Core::u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
         // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
     }
 
@@ -92,7 +92,7 @@ bool GPUFramebuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUFramebuffer
     VkFramebufferCreateInfo framebufferInfo{};
     framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.renderPass = mRenderPass->getRenderPass();
-    framebufferInfo.attachmentCount = (u32) attachments.size();
+    framebufferInfo.attachmentCount = (Core::u32) attachments.size();
     framebufferInfo.pAttachments = attachments.data();
     framebufferInfo.width = mGPUContext->vulkanSwapChain->getExtent().width;
     framebufferInfo.height = mGPUContext->vulkanSwapChain->getExtent().height;

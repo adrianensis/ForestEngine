@@ -63,7 +63,7 @@ private:
     void onPressedEventReceived();
     void onReleasedEventReceived();
     void onMouseMovedEventReceived();
-    void onScrollEventReceived(f32 scrollValue);
+    void onScrollEventReceived(Core::f32 scrollValue);
 
     void onCharEventReceived(char character);
     void onBackspaceEventReceived();
@@ -73,7 +73,7 @@ private:
     void releaseFocus();
     void requestFocus();
 
-    void scroll(f32 scrollValue);
+    void scroll(Core::f32 scrollValue);
 
     // void releaseOtherToggleElements();
 
@@ -90,7 +90,7 @@ protected:
 	virtual void onEsc() { }
 	virtual void onMouseOverEnter() { }
 	virtual void onMouseOverExit() { }
-	virtual void onScroll(f32 scroll) { }
+	virtual void onScroll(Core::f32 scroll) { }
 	virtual void onFocus() { }
 	virtual void onFocusLost() { }
 

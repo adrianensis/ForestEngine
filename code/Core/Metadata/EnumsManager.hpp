@@ -7,7 +7,7 @@
 
 NS_BEGIN(Core)
 #define DECLARE_ENUM(EnumName, ...) \
-enum class EnumName : u32\
+enum class EnumName : Core::u32\
 {\
     /* Notice extra MAX enum token! */ \
     FOR_EACH_ODD(ADD_TRAIL_COMMA, __VA_ARGS__) \
@@ -49,14 +49,14 @@ public:
     template <typename E>
     static const HashedString& toString(E enumToken)
     {
-        return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
+        return getEnumMetadata<E>().mValueNames[static_cast<Core::u8>(enumToken)];
     }
     template <typename E>
-    static const HashedString& toString(u8 enumToken)
+    static const HashedString& toString(Core::u8 enumToken)
     {
-        return getEnumMetadata<E>().mValueNames[static_cast<u8>(enumToken)];
+        return getEnumMetadata<E>().mValueNames[static_cast<Core::u8>(enumToken)];
     }
-    static const HashedString& toString(const HashedString& name, u8 enumToken)
+    static const HashedString& toString(const HashedString& name, Core::u8 enumToken)
     {
         return getEnumMetadata(name).mValueNames[enumToken];
     }

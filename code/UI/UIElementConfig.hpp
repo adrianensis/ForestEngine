@@ -30,12 +30,12 @@ public:
 	bool mReleaseOnSameGroupPressed = false;
 	// Vector2 mTextScale;
 	Core::HashedString mText;
-	f32 mTextScale = 1.0f;
+	Core::f32 mTextScale = 1.0f;
 	bool mAdjustSizeToText = false;
-	i32 mLayer = 0;
+	Core::i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
 	Core::WeakPtr<GPUShader> mShader;
 	Core::HashedString mGroup;
 	TEntityPtr<SceneObject> mParent;
-	f32 mSeparatorSize = 0.01f;
+	Core::f32 mSeparatorSize = 0.01f;
 };

@@ -6,9 +6,9 @@
 class ImageData
 {
 public:
-    byte* mData = nullptr;
-    u32 mWidth = 0;
-	u32 mHeight = 0;
+    Core::byte* mData = nullptr;
+    Core::u32 mWidth = 0;
+	Core::u32 mHeight = 0;
 };
 
 class ImageUtils
@@ -16,5 +16,5 @@ class ImageUtils
 public:
 	static ImageData loadImage(Core::HashedString path);
 	static void freeImage(const ImageData& imageData);
-	static void flipImageVertically(const ImageData& imageData, u32 bytes_per_pixel);
+	static void flipImageVertically(const ImageData& imageData, Core::u32 bytes_per_pixel);
 };

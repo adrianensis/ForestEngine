@@ -69,10 +69,10 @@ void Engine::postSceneChanged()
 
 void Engine::run()
 {
-	f32 inverseFPS = 1.0f / mFPS;
-	f32 inverseFPSMillis = inverseFPS * 1000.0f;
+	Core::f32 inverseFPS = 1.0f / mFPS;
+	Core::f32 inverseFPSMillis = inverseFPS * 1000.0f;
 
-	f32 diff = 0;
+	Core::f32 diff = 0;
 
 	while (!GET_SYSTEM(Core::WindowManager).getMainWindow()->isClosed())
 	{
@@ -96,7 +96,7 @@ void Engine::run()
 		GET_SYSTEM(ScriptEngine).update();
 		GET_SYSTEM(RenderEngine).update();
 
-		f32 dtMillis = GET_SYSTEM(Core::Time).getElapsedTimeMillis();
+		Core::f32 dtMillis = GET_SYSTEM(Core::Time).getElapsedTimeMillis();
 		
 		if (inverseFPSMillis >= dtMillis)
 		{

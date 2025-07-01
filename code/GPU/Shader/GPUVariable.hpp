@@ -42,22 +42,22 @@ class GPUDataType
 {
 public:
     Core::HashedString mName;
-    u32 mTypeSizeInBytes = 0;
+    Core::u32 mTypeSizeInBytes = 0;
     GPUPrimitiveDataType mPrimitiveDataType = GPUPrimitiveDataType::FLOAT;
 
-    u32 getPrimitiveTypeSizeInBytes() const
+    Core::u32 getPrimitiveTypeSizeInBytes() const
     {
-        u32 primitiveTypeSizeInBytes = 0;
+        Core::u32 primitiveTypeSizeInBytes = 0;
         switch (mPrimitiveDataType)
         {
             case GPUPrimitiveDataType::FLOAT:
-                primitiveTypeSizeInBytes = sizeof(f32);
+                primitiveTypeSizeInBytes = sizeof(Core::f32);
             break;
             case GPUPrimitiveDataType::INT:
-                primitiveTypeSizeInBytes = sizeof(i32);
+                primitiveTypeSizeInBytes = sizeof(Core::i32);
             break;
             case GPUPrimitiveDataType::UNSIGNED_INT:
-                primitiveTypeSizeInBytes = sizeof(u32);
+                primitiveTypeSizeInBytes = sizeof(Core::u32);
             break;
             case GPUPrimitiveDataType::BOOL:
                 primitiveTypeSizeInBytes = sizeof(bool);
@@ -76,10 +76,10 @@ public:
         return primitiveTypeSizeInBytes;
     }
 
-    u32 getSizePrimitiveType() const
+    Core::u32 getSizePrimitiveType() const
     {
-        u32 primitiveTypeSizeInBytes = getPrimitiveTypeSizeInBytes();
-        u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
+        Core::u32 primitiveTypeSizeInBytes = getPrimitiveTypeSizeInBytes();
+        Core::u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
         return sizeInPrimitiveTypes;
     }
 };
@@ -151,9 +151,9 @@ public:
     GPUStructDefinition(const Core::HashedString& name, const std::vector<GPUStructVariable>& primitiveVariables):
         mName(name), mPrimitiveVariables(primitiveVariables){}
 
-    u32 getTypeSizeInBytes() const
+    Core::u32 getTypeSizeInBytes() const
     {
-        u32 typeSizeInBytes = 0;
+        Core::u32 typeSizeInBytes = 0;
         FOR_ARRAY(i, mPrimitiveVariables)
         {
             typeSizeInBytes += mPrimitiveVariables[i].mGPUDataType.mTypeSizeInBytes;

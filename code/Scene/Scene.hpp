@@ -41,7 +41,7 @@ private:
 	std::list<TEntityPtr<SceneObject>> mSceneObjects;
 	std::list<TEntityPtr<SceneObject>> mNewSceneObjects;
 
-	f32 mSize = 0.0f;
+	Core::f32 mSize = 0.0f;
 	std::string mPath;
 
 	Core::Config mLoadSceneConfig;

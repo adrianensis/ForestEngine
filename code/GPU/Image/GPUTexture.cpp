@@ -3,7 +3,7 @@
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPUTexture::init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, u32 id)
+void GPUTexture::init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id)
 {
     PROFILER_CPU_NAMED(init_texture)
     mGPUContext = gpuContext;
@@ -32,7 +32,7 @@ void GPUTexture::init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gp
         * - The floor function handles cases where the largest dimension is not a power of 2.
         * - 1 is added so that the original image has a mip level.
         */
-        mMipMapLevels = ((u32) std::floor(std::log2(std::max(mImageData.mWidth, mImageData.mHeight)))) + 1;
+        mMipMapLevels = ((Core::u32) std::floor(std::log2(std::max(mImageData.mWidth, mImageData.mHeight)))) + 1;
     }
 
     if(gpuTextureData.mIsFont)

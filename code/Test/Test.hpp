@@ -20,10 +20,10 @@
                    << std::endl;                                                   \
     theClass __test__any;                                                          \
     bool __test__bool = 0;                                                             \
-    f32 __test__float = 0;                                                             \
-    f64 __test__float_precision = 0;                                                   \
-    i64 __test__sint = 0;                                                              \
-    u64 __test__uint = 0;                                                              \
+    Core::f32 __test__float = 0;                                                             \
+    Core::f64 __test__float_precision = 0;                                                   \
+    Core::i64 __test__sint = 0;                                                              \
+    Core::u64 __test__uint = 0;                                                              \
     int __test__ok = 0;                                                            \
     int __test__total = 0;                                                         \
     bool __test__b = false;

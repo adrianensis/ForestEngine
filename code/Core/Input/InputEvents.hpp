@@ -17,7 +17,7 @@ CLASS_EVENT_SPECIFIC_KEY(Backspace)
 class InputEventKeyArrow: public Event
 {
 public:
-    u32 mArrowButton = 0;
+    Core::u32 mArrowButton = 0;
 };
 REGISTER_CLASS(InputEventKeyArrow);
 
@@ -28,55 +28,55 @@ REGISTER_CLASS(InputEventMouseMoved);
 class InputEventMouseButtonPressed: public Event
 {
 public:
-    u32 mButton = 0;
-    u32 mMods = 0;
+    Core::u32 mButton = 0;
+    Core::u32 mMods = 0;
 };
 REGISTER_CLASS(InputEventMouseButtonPressed);
 
 class InputEventMouseButtonHold: public Event
 {
 public:
-    u32 mButton = 0;
-    u32 mMods = 0;
+    Core::u32 mButton = 0;
+    Core::u32 mMods = 0;
 };
 REGISTER_CLASS(InputEventMouseButtonHold);
 
 class InputEventMouseButtonReleased: public Event
 {
 public:
-    u32 mButton = 0;
-    u32 mMods = 0;
+    Core::u32 mButton = 0;
+    Core::u32 mMods = 0;
 };
 REGISTER_CLASS(InputEventMouseButtonReleased);
 
 class InputEventKeyPressed: public Event
 {
 public:
-    u32 mKey = 0;
-    u32 mMods = 0;
+    Core::u32 mKey = 0;
+    Core::u32 mMods = 0;
 };
 REGISTER_CLASS(InputEventKeyPressed);
 
 class InputEventKeyHold: public Event
 {
 public:
-    u32 mKey = 0;
-    u32 mMods = 0;
+    Core::u32 mKey = 0;
+    Core::u32 mMods = 0;
 };
 REGISTER_CLASS(InputEventKeyHold);
 
 class InputEventKeyReleased: public Event
 {
 public:
-    u32 mKey = 0;
-    u32 mMods = 0;
+    Core::u32 mKey = 0;
+    Core::u32 mMods = 0;
 };
 REGISTER_CLASS(InputEventKeyReleased);
 
 class InputEventScroll: public Event
 {
 public:
-    f32 mScroll = 0.0f;
+    Core::f32 mScroll = 0.0f;
 };
 REGISTER_CLASS(InputEventScroll);
 

@@ -1,7 +1,7 @@
 #include "Core/Time/TimerManager.hpp"
 
 NS_BEGIN(Core)
-void Timer::init(f32 duration, TimerDurationType durationType, std::function<void()> callback)
+void Timer::init(Core::f32 duration, TimerDurationType durationType, std::function<void()> callback)
 {
 	mDurationType = durationType;
 	mDuration = duration;

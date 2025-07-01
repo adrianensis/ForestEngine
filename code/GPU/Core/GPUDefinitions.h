@@ -3,7 +3,7 @@
 #include "Core/Minimal.hpp"
 #include <vulkan/vulkan.h>
 
-enum class GPUBufferType : u32
+enum class GPUBufferType : Core::u32
 {
     VERTEX,
     INDEX,
@@ -11,13 +11,13 @@ enum class GPUBufferType : u32
     STORAGE
 };
 
-enum class GPUDrawPrimitive: u32
+enum class GPUDrawPrimitive: Core::u32
 {
     LINES,
     TRIANGLES
 };
 
-enum class GPUFramebufferAttachmentType: u32
+enum class GPUFramebufferAttachmentType: Core::u32
 {
     NONE,
     COLOR0,
@@ -41,7 +41,7 @@ enum class GPUFramebufferAttachmentType: u32
     DEPTH_STENCIL
 };
 
-enum class GPUFramebufferOperationType: u32
+enum class GPUFramebufferOperationType: Core::u32
 {
     READ,
     DRAW,
@@ -49,7 +49,7 @@ enum class GPUFramebufferOperationType: u32
 };
 
 // aka internal format in OpenGL
-enum class GPUTextureFormat: u32
+enum class GPUTextureFormat: Core::u32
 {
     // Sized
     DEPTH_COMPONENT32F,
@@ -108,7 +108,7 @@ enum class GPUTextureFormat: u32
     RGBA32UI
 };
 
-enum class GPUTexturePixelFormat: u32
+enum class GPUTexturePixelFormat: Core::u32
 {
     RED,
     RGB,
@@ -118,7 +118,7 @@ enum class GPUTexturePixelFormat: u32
     STENCIL_INDEX
 };
 
-enum class GPUPipelineStage: u32
+enum class GPUPipelineStage: Core::u32
 {
     NONE,
     VERTEX,
@@ -129,7 +129,7 @@ enum class GPUPipelineStage: u32
     COMPUTE
 };
 
-enum class GPUPrimitiveDataType : u32
+enum class GPUPrimitiveDataType : Core::u32
 {
     VOID,
     STRUCT,
@@ -145,7 +145,7 @@ enum class GPUPrimitiveDataType : u32
     BOOL
 };
 
-enum class GPUStencilFunction : u32
+enum class GPUStencilFunction : Core::u32
 {
     NEVER = VK_COMPARE_OP_NEVER,
     ALWAYS = VK_COMPARE_OP_ALWAYS,
@@ -157,7 +157,7 @@ enum class GPUStencilFunction : u32
     NOTEQUAL = VK_COMPARE_OP_NOT_EQUAL
 };
 
-enum class GPUStencilOp : u32
+enum class GPUStencilOp : Core::u32
 {
     KEEP = VK_STENCIL_OP_KEEP,
     INVERT = VK_STENCIL_OP_INVERT,
@@ -169,7 +169,7 @@ enum class GPUStencilOp : u32
     DECR_WRAP = VK_STENCIL_OP_DECREMENT_AND_WRAP 
 };
 
-enum class GPUBlendFactor : u32
+enum class GPUBlendFactor : Core::u32
 {
     ZERO,
     ONE,
@@ -187,7 +187,7 @@ enum class GPUBlendFactor : u32
     ONE_MINUS_CONSTANT_ALPHA
 };
 
-enum class GPUDepthFunc : u32
+enum class GPUDepthFunc : Core::u32
 {
     NEVER,
     LESS,
@@ -199,7 +199,7 @@ enum class GPUDepthFunc : u32
     ALWAYS
 };
 
-enum class GPUFlags : u32
+enum class GPUFlags : Core::u32
 {
     MULTISAMPLE,
     DEPTH_TEST,
@@ -214,11 +214,11 @@ DECLARE_ENUM(GPUCullFaceType,
     FRONT_AND_BACK, "FRONT_AND_BACK"
 );
 
-using TextureHandle = u64;
+using TextureHandle = Core::u64;
 
 class GPUConstants
 {
 public:
-    inline static const u32 MAX_BONE_INFLUENCE = 4;
-    inline static const u32 MAX_BONES = 65;
+    inline static const Core::u32 MAX_BONE_INFLUENCE = 4;
+    inline static const Core::u32 MAX_BONES = 65;
 };

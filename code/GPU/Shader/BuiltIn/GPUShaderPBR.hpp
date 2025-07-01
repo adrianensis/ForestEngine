@@ -16,8 +16,8 @@ class PropertiesBlockGPUShaderPBR
 {
 public:
     Vector4 mBaseColor = Vector4(0,0,0,1);
-    alignas(16) f32 mMetallic = 0;
-    alignas(16) f32 mRoughness = 0;
+    alignas(16) Core::f32 mMetallic = 0;
+    alignas(16) Core::f32 mRoughness = 0;
 };
 REGISTER_CLASS(PropertiesBlockGPUShaderPBR)
 

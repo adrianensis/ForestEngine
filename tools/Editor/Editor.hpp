@@ -15,11 +15,11 @@ public:
     virtual void terminate() override;
 
 private:
-	EntityPtr createSprite(const Vector3& v, f32 size);
-	EntityPtr createPointLight(const Vector3& v, f32 size);
+	EntityPtr createSprite(const Vector3& v, Core::f32 size);
+	EntityPtr createPointLight(const Vector3& v, Core::f32 size);
 	EntityPtr createDirectionalLight(const Vector3& v, const Vector3& dir);
 	EntityPtr mousePick();
-    EntityPtr importModel(const std::string& pFile, const Vector3& v, f32 size, const Vector3& rot, bool isStatic);
+    EntityPtr importModel(const std::string& pFile, const Vector3& v, Core::f32 size, const Vector3& rot, bool isStatic);
 	void handlePressedKeys();
 	void handleMouse();
     void createUI();

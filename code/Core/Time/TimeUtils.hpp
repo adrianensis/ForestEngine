@@ -10,13 +10,13 @@ public:
     void init();
     void start();
     void end();
-    f32 getElapsedTimeMillis();
-    f32 getElapsedTimeSeconds();
-    f32 getDeltaTimeMillis();
-    f32 getDeltaTimeSeconds();
+    Core::f32 getElapsedTimeMillis();
+    Core::f32 getElapsedTimeSeconds();
+    Core::f32 getDeltaTimeMillis();
+    Core::f32 getDeltaTimeSeconds();
 
 private:
-	f32 mDeltaTimeMillis = 0.0f;
+	Core::f32 mDeltaTimeMillis = 0.0f;
 	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
 	std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
 	bool mIsStarted = false;
@@ -32,17 +32,17 @@ public:
     void init();
     void start();
     void end();
-    f32 getDeltaTimeMillis();
-    f32 getDeltaTimeSeconds();
+    Core::f32 getDeltaTimeMillis();
+    Core::f32 getDeltaTimeSeconds();
 
 private:
-	u32 mQueryIDStart;
-	u32 mQueryIDEnd;
+	Core::u32 mQueryIDStart;
+	Core::u32 mQueryIDEnd;
 
-	f32 mDeltaTimeMillis = 0.0f;
-	u32 mDeltaTimeChronoDuration;
-	u64 mStartTime;
-	u64 mLastTime;
+	Core::f32 mDeltaTimeMillis = 0.0f;
+	Core::u32 mDeltaTimeChronoDuration;
+	Core::u64 mStartTime;
+	Core::u64 mLastTime;
 	bool mIsStarted = false;
 
 public:
@@ -55,10 +55,10 @@ public:
 	virtual void init() override {mInternalTimeMark.init();}
 	void startFrame() { mInternalTimeMark.start(); }
 	void endFrame() { mInternalTimeMark.end(); }
-	f32 getElapsedTimeMillis() { return mInternalTimeMark.getElapsedTimeMillis(); }
-	f32 getElapsedTimeSeconds() { return mInternalTimeMark.getElapsedTimeSeconds(); }
-	f32 getDeltaTimeMillis() { return mInternalTimeMark.getDeltaTimeMillis(); }
-	f32 getDeltaTimeSeconds() { return mInternalTimeMark.getDeltaTimeSeconds(); }
+	Core::f32 getElapsedTimeMillis() { return mInternalTimeMark.getElapsedTimeMillis(); }
+	Core::f32 getElapsedTimeSeconds() { return mInternalTimeMark.getElapsedTimeSeconds(); }
+	Core::f32 getDeltaTimeMillis() { return mInternalTimeMark.getDeltaTimeMillis(); }
+	Core::f32 getDeltaTimeSeconds() { return mInternalTimeMark.getDeltaTimeSeconds(); }
 
 private:
 	TimeMark mInternalTimeMark;

@@ -24,8 +24,8 @@ public:
 class GPUShaderDescriptorSetsBindings
 {
 public:
-    std::unordered_map<Core::HashedString, u32> mBindings;
-    std::unordered_map<Core::HashedString, u32> mSets;
+    std::unordered_map<Core::HashedString, Core::u32> mBindings;
+    std::unordered_map<Core::HashedString, Core::u32> mSets;
 };
 
 class GPUShaderDescriptorSets
@@ -43,6 +43,6 @@ public:
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
     GPUShaderDescriptorSetsBindings mGPUShaderDescriptorSetsBindings;
     GPUShaderDescriptorSetsData mGPUDescriptorData;
-    u32 mSamplersBindingIndexOffset = 0;
+    Core::u32 mSamplersBindingIndexOffset = 0;
 };
 REGISTER_CLASS(GPUShaderDescriptorSets);

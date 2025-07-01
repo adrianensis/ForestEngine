@@ -15,7 +15,7 @@ void GPUShapeRenderer::terminate()
 	mShapesCounter = 0;
 }
 
-void GPUShapeRenderer::init(u32 verticesPerShape)
+void GPUShapeRenderer::init(Core::u32 verticesPerShape)
 {
 	mVerticesPerShape = verticesPerShape;
     mMaxVertices = mMaxShapes * mVerticesPerShape;

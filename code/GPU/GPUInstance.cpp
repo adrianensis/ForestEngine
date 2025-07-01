@@ -14,23 +14,23 @@ void GPUInstance::init()
     mGPUContext->init();
 }
 
-u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
+Core::u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
 {
-    u32 bindingPoint = 0;
+    Core::u32 bindingPoint = 0;
     switch (gpuUniformBufferType)
     {
     case GPUBufferType::UNIFORM:
         {
             bindingPoint = mBindingPointsIndexUniform;
             mBindingPointsIndexUniform++;
-            // CHECK_MSG((i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
+            // CHECK_MSG((Core::i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
         }
         break;
     case GPUBufferType::STORAGE:
         {
             bindingPoint = mBindingPointsIndexStorage;
             mBindingPointsIndexStorage++;
-            // CHECK_MSG((i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
+            // CHECK_MSG((Core::i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
         }
         break;
     default:

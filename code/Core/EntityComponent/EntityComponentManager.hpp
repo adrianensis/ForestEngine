@@ -99,7 +99,7 @@ public:
         Core::Slot slot = entityPtr.mSlot;
         if(!mEntityComponents.contains(id))
         {
-            mEntityComponents.emplace(id, std::unordered_map<u32, std::list<ComponentPtr>>());
+            mEntityComponents.emplace(id, std::unordered_map<Core::u32, std::list<ComponentPtr>>());
         }
 
         if(!mEntityComponents.at(id).contains((slot.getSlot())))
@@ -257,7 +257,7 @@ private:
     Core::Pool<Entity> mEntitiesPool;
     Core::Pool<Component> mComponentsPool;
     std::unordered_map<ClassId, std::unordered_set<Core::WeakPtr<IComponentsListener>>> mComponentListeners;
-    std::unordered_map<ClassId, std::unordered_map<u32, std::list<ComponentPtr>>> mEntityComponents;
+    std::unordered_map<ClassId, std::unordered_map<Core::u32, std::list<ComponentPtr>>> mEntityComponents;
 
 public:
     CRGET(EntitiesPool)

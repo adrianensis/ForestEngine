@@ -10,7 +10,7 @@ class FramebufferBinding
 {
 public:
     Core::HashedString mSamplerName;
-    u32 mTextureID = 0;
+    Core::u32 mTextureID = 0;
 };
 
 class TextureBinding
@@ -25,13 +25,13 @@ class GPUShaderStencilData
 public:
     bool mUseStencil = false;
     // aka ref
-    u32 mStencilValue = 0;
+    Core::u32 mStencilValue = 0;
     GPUStencilFunction mStencilFunction = GPUStencilFunction::NOTEQUAL;
     GPUStencilOp mStencilPassOp = GPUStencilOp::KEEP;
     GPUStencilOp mStencilFailOp = GPUStencilOp::KEEP;
     GPUStencilOp mDepthFailOp = GPUStencilOp::KEEP;
-    u64 mParentId = 0;
-    u64 mId = 0;
+    Core::u64 mParentId = 0;
+    Core::u64 mId = 0;
 
     bool operator==(const GPUShaderStencilData& other) const
     {
@@ -44,13 +44,13 @@ public:
         mStencilFunction == other.mStencilFunction;
     }
 
-    u64 hash() const
+    Core::u64 hash() const
     {
-        u32 shift = 0;
-        u64 result = (u64)mUseStencil << (shift++);
-        result = result ^ (u64)mStencilValue << (shift++);
-        result = result ^ static_cast<u64>(mStencilFunction) << (shift++);
-        result = result ^ (u64)mParentId << (shift++); /*^ (u64)mId*/;
+        Core::u32 shift = 0;
+        Core::u64 result = (Core::u64)mUseStencil << (shift++);
+        result = result ^ (Core::u64)mStencilValue << (shift++);
+        result = result ^ static_cast<Core::u64>(mStencilFunction) << (shift++);
+        result = result ^ (Core::u64)mParentId << (shift++); /*^ (Core::u64)mId*/;
         return result;
     }
 };
@@ -123,15 +123,15 @@ public:
         return mTextureBindings == other.mTextureBindings;
     }
 
-    u64 hash() const
+    Core::u64 hash() const
     {
-        u32 shift = 0;
-        u64 result = 0;
+        Core::u32 shift = 0;
+        Core::u64 result = 0;
         
         FOR_MAP(it, mTextureBindings)
         {
-            result = result ^ (u64)it->first.getHash() << (shift++);
-            result = result ^ (u64)it->second.mPath.getHash() << (shift++);
+            result = result ^ (Core::u64)it->first.getHash() << (shift++);
+            result = result ^ (Core::u64)it->second.mPath.getHash() << (shift++);
         }
 
         return result;
@@ -143,7 +143,7 @@ class GPUShaderPropertiesInstance
 {
 public:
     Core::Slot mSlot;
-    u32 mID = 0;
+    Core::u32 mID = 0;
     Core::WeakPtr<GPUShader> mShader;
     Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
@@ -155,12 +155,12 @@ class GPUShaderData
 public:
     // GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
-    u32 mMaxInstances = 100;
+    Core::u32 mMaxInstances = 100;
     bool mIsFont = false;
     FontData mFontData;
     GPUShaderTextureBindings mGPUShaderTextureBindings;
 
-    u32 getMaxInstances() const
+    Core::u32 getMaxInstances() const
     {
         return mAllowInstances ? mMaxInstances : 1;
     }
@@ -171,7 +171,7 @@ class GPUShader
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, u32 id);
+    virtual void init(const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
     void terminate();
 
     bool hasFramebufferBinding(Core::HashedString bindingName) const;
@@ -210,7 +210,7 @@ protected:
     std::unordered_map<Core::HashedString, FramebufferBinding> mFramebufferBindings;
     GPUShaderCompilationData mGPUShaderCompilationData;
     GPUShaderData mGPUShaderData;
-    u32 mID = 0;
+    Core::u32 mID = 0;
     Core::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
     Core::ClassDefinition mSharedGPUShaderPropertiesBlockClass;
 

@@ -9,7 +9,7 @@ GLFWwindow* Window::getGlfwWindow() const
 
 std::vector<const char*> Window::getRequiredExtensions() const
 {
-	u32 glfwExtensionCount = 0;
+	Core::u32 glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
     return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
@@ -20,12 +20,12 @@ Vector2 Window::getWindowSize() const
 	return mWindowData.mWindowSize;
 }
 
-f32 Window::getAspectRatio() const
+Core::f32 Window::getAspectRatio() const
 {
 	return mWindowData.mWindowSize.x / mWindowData.mWindowSize.y;
 }
 
-void Window::init(i32 id, const WindowData& windowData)
+void Window::init(Core::i32 id, const WindowData& windowData)
 {
     mID = id;
     mWindowData = windowData;
@@ -112,7 +112,7 @@ void Window::setCursorVisibility(bool visible)
     glfwSetInputMode(mGLTFWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
-void Window::onResize(GLFWwindow *window, i32 width, i32 height)
+void Window::onResize(GLFWwindow *window, Core::i32 width, Core::i32 height)
 {
 	mWindowData.mWindowSize.set(width, height);
 	waitUntilNotMinimized();
@@ -124,37 +124,37 @@ void Window::onResize(GLFWwindow *window, i32 width, i32 height)
 	}
 }
 
-void Window::onResizeGLFW(GLFWwindow *windowGLFW, i32 width, i32 height)
+void Window::onResizeGLFW(GLFWwindow *windowGLFW, Core::i32 width, Core::i32 height)
 {
 	Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->onResize(windowGLFW, width, height);
 }
 
-void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, i32 key, i32 scancode, i32 action, i32 mods)
+void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->keyCallback(key, scancode, action, mods);
 }
 
-void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, i32 button, i32 action, i32 mods)
+void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, Core::i32 button, Core::i32 action, Core::i32 mods)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->mouseButtonCallback(button, action, mods);
 }
 
-void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, f64 xoffset, f64 yoffset)
+void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, Core::f64 xoffset, Core::f64 yoffset)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->scrollCallback(xoffset, yoffset);
 }
 
-void Window::charCallbackGLFW(GLFWwindow *windowGLFW, u32 codepoint)
+void Window::charCallbackGLFW(GLFWwindow *windowGLFW, Core::u32 codepoint)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->charCallback(codepoint);
 }
 
-void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
+void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods)
 {
 	GET_SYSTEM(Core::Input).smModifier = mods;
 
@@ -240,7 +240,7 @@ void Window::keyCallback(i32 key, i32 scancode, i32 action, i32 mods)
 	}
 }
 
-void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
+void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 mods)
 {
 	GET_SYSTEM(Core::Input).smModifier = mods;
 
@@ -272,7 +272,7 @@ void Window::mouseButtonCallback(i32 button, i32 action, i32 mods)
 	}
 }
 
-void Window::scrollCallback(f64 xoffset, f64 yoffset)
+void Window::scrollCallback(Core::f64 xoffset, Core::f64 yoffset)
 {
 	GET_SYSTEM(Core::Input).smScroll = yoffset;
 
@@ -281,7 +281,7 @@ void Window::scrollCallback(f64 xoffset, f64 yoffset)
 	SEND_INPUT_EVENT(event);
 }
 
-void Window::charCallback(u32 codepoint)
+void Window::charCallback(Core::u32 codepoint)
 {
 	Core::InputEventChar event;
 	event.mChar = (char)codepoint;
@@ -290,12 +290,12 @@ void Window::charCallback(u32 codepoint)
 
 Vector2 Window::getMousePosition() const
 {
-	f64 mouseCoordX, mouseCoordY;
+	Core::f64 mouseCoordX, mouseCoordY;
 
 	glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
 
-	f64 halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
-	f64 halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
+	Core::f64 halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
+	Core::f64 halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
 
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;

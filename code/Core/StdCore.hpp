@@ -10,6 +10,7 @@
 
 using namespace std::literals;
 
+NS_BEGIN(Core)
 using f32 = float;
 using f64 = double;
 
@@ -24,8 +25,8 @@ using u16 = std::uint16_t;
 using u32 = std::uint32_t;
 using u64 = std::uint64_t;
 
-using ObjectId = u64;
-using HashValue = u64;
+using ObjectId = Core::u64;
+using HashValue = Core::u64;
 
 namespace Hash
 {
@@ -34,7 +35,7 @@ namespace Hash
         HashValue hashResult = 5381;
         // NOTE: std::strlen is not constexpr
         // so we need to use std::char_traits<char>::length()
-        u32 strSize = std::char_traits<char>::length(str);
+        Core::u32 strSize = std::char_traits<char>::length(str);
         // Other alternatives:
         // std::string_view(str).size()
         // constexpr std::size_t f(const char*)
@@ -56,12 +57,13 @@ namespace Hash
 		return hashString(str.data());
 	}
 }
+NS_END
 
 template<>
 struct std::hash<const char *> 
 {
     size_t operator()(const char * str) const 
     {
-        return Hash::hashString(str);
+        return Core::Hash::hashString(str);
     }
 };

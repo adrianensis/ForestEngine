@@ -8,7 +8,7 @@
 #include <string.h>
 
 
-void Server::init(u16 port)
+void Server::init(Core::u16 port)
 {
 	mStatus = ServerStatus::UNINITIALIZED;
 
@@ -103,7 +103,7 @@ void Server::writeData(const std::string& data) const
 	}
 }
 
-std::string Server::readData(u32 size /*= DEFAULT_SOCKET_READ_SIZE*/) const
+std::string Server::readData(Core::u32 size /*= DEFAULT_SOCKET_READ_SIZE*/) const
 {
 	buffer.clear();
 	buffer.resize(size);
@@ -133,7 +133,7 @@ void Server::writeJSON(JSON& json) const
 {
 }
 
-JSON Server::readSimpleJSON(u32 size  /*= DEFAULT_SOCKET_READ_SIZE*/) const
+JSON Server::readSimpleJSON(Core::u32 size  /*= DEFAULT_SOCKET_READ_SIZE*/) const
 {
 	JSON json;
 	std::string data = readData(size);

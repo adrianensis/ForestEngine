@@ -9,9 +9,9 @@ class VulkanConfig
 {
 public:
     std::string Name;
-    u32 MajorVersion = 1;
-    u32 MinorVersion = 0;
-    u32 PatchVersion = 0;
+    Core::u32 MajorVersion = 1;
+    Core::u32 MinorVersion = 0;
+    Core::u32 PatchVersion = 0;
     bool ValidationLayersEnabled = true;
     std::vector<const char*> mRequiredExtensions;
     std::vector<const char*> mOptionalExtensions;

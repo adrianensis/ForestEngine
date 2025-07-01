@@ -19,40 +19,40 @@ public:
         void addOcTreeElementToChildren(Core::WeakPtr<IOcTreeElement> element);
         void addOcTreeElementToLeaf(Core::WeakPtr<IOcTreeElement> element);
         void addOcTreeElementToParent(Core::WeakPtr<IOcTreeElement> element);
-        void createChildren(u8 index);
-        u32 getElementsCount() const { return mOcTreeElementsStatic.size() + mOcTreeElementsDynamic.size(); }
+        void createChildren(Core::u8 index);
+        Core::u32 getElementsCount() const { return mOcTreeElementsStatic.size() + mOcTreeElementsDynamic.size(); }
 
 	public:
         OcTree* mTree = nullptr;
         OcTreeNode* mParent = nullptr;
 		Cube mCube;
-    	u8 mDepth = 0;
-        u8 mIndex = 0;
-		inline static const u8 smMaxChildNumber = 8;
+    	Core::u8 mDepth = 0;
+        Core::u8 mIndex = 0;
+		inline static const Core::u8 smMaxChildNumber = 8;
 
 		std::array<OcTreeNode*, smMaxChildNumber> mChildren;
-		std::array<i8, smMaxChildNumber> mActiveChildren;
-		u8 mActiveChildrenIndex = 0;
+		std::array<Core::i8, smMaxChildNumber> mActiveChildren;
+		Core::u8 mActiveChildrenIndex = 0;
 		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTree* tree, OcTreeNode* parent, u8 index, const Cube& cube, u8 depth);
+        void init(OcTree* tree, OcTreeNode* parent, Core::u8 index, const Cube& cube, Core::u8 depth);
 		void addOcTreeElement(Core::WeakPtr<IOcTreeElement> element);
 		void update(OcTree& tree);
 		void updateDynamicElements(OcTree& tree);
         bool isDivisible() const;
         bool isElementEnclosed(Core::WeakPtr<IOcTreeElement> element) const;
-        bool isElementOverlappingChild(Core::WeakPtr<IOcTreeElement> element, u8 childIndex) const;
-        u32 getHash() const;
+        bool isElementOverlappingChild(Core::WeakPtr<IOcTreeElement> element, Core::u8 childIndex) const;
+        Core::u32 getHash() const;
         void drawDebug();
     };
 
 private:
 	OcTreeNode mRoot;
-    u8 mMaxDepth = 0;
+    Core::u8 mMaxDepth = 0;
 	Vector3 mSize;
 
 public:
-	void init(f32 size);
+	void init(Core::f32 size);
 
 	//void addCollider(Collider *collider);
     void addOcTreeElement(Core::WeakPtr<IOcTreeElement> element);
@@ -63,9 +63,9 @@ class IOcTreeElement
 {
 public:
     void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax, bool isStatic);
-    // void addNode(u32 nodeHash);
-    // void removeNode(u32 nodeHash);
-    // bool isInNode(u32 nodeHash) const;
+    // void addNode(Core::u32 nodeHash);
+    // void removeNode(Core::u32 nodeHash);
+    // bool isInNode(Core::u32 nodeHash) const;
 
 private:
     Cube mOcTreeBoundingBox;
@@ -73,10 +73,10 @@ private:
 
     // NEXT: CONTINUE HERE
     // track current octancts to avoid re-insertions
-    // u8 mOctantHash ?
+    // Core::u8 mOctantHash ?
     // octanct Core::WeakPtr?
-    // std::array<i32, OcTree::OcTreeNode::smMaxChildNumber> mNodes;
-    // u8 mNodesIndex = 0;
+    // std::array<Core::i32, OcTree::OcTreeNode::smMaxChildNumber> mNodes;
+    // Core::u8 mNodesIndex = 0;
 public:
     bool mPendingToReinsert = false;
 

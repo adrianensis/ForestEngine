@@ -36,10 +36,10 @@ public:
     class KeyframeData
     {
     public:
-        f32 mPreviousTime = 0.0f;
-        f32 mNextTime = 0.0f;
-        u32 mKeyframe = 0;
-        f32 mInterpolationValue = 0;
+        Core::f32 mPreviousTime = 0.0f;
+        Core::f32 mNextTime = 0.0f;
+        Core::u32 mKeyframe = 0;
+        Core::f32 mInterpolationValue = 0;
     };
 
 private:
@@ -47,22 +47,22 @@ private:
     void loadGLTFMeshes();
     void loadGLTFPrimitive(const cgltf_primitive& primitive);
     void loadGLTFBones(const cgltf_skin& skin);
-    f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
+    Core::f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
     void loadGLTFSkeletalAnimationFrames(Core::WeakPtr<GPUSkeletalAnimation> animation);
     void loadGLTFSkeletalAnimations();
-    static Matrix4 calculateHierarchicalBoneTransform(u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
-    static bool findKeyframeData(cgltf_accessor *input, f32 currentTime, KeyframeData& keyframeData);
-    static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
-    static void getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Vector3& out);
-    static void getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, f32 currentTime, Quaternion& out);
+    static Matrix4 calculateHierarchicalBoneTransform(Core::u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
+    static bool findKeyframeData(cgltf_accessor *input, Core::f32 currentTime, KeyframeData& keyframeData);
+    static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Vector3& out);
+    static void getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Vector3& out);
+    static void getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Quaternion& out);
     bool isSkinned() const;
 
 private:
     class GLTFFace
     {
     public:
-        GLTFFace(u16 index0, u16 index1, u16 index2)
+        GLTFFace(Core::u16 index0, Core::u16 index1, Core::u16 index2)
         {
             mIndices[0] = index0;
             mIndices[1] = index1;
@@ -70,7 +70,7 @@ private:
         }
 
     public:
-        u16 mIndices[3] {0,0,0};
+        Core::u16 mIndices[3] {0,0,0};
     };
 
     template<class T>
@@ -96,9 +96,9 @@ private:
     std::unordered_map<const cgltf_primitive*, Core::OwnerPtr<GPUMesh>> mGLTFMeshes;
     std::unordered_map<const cgltf_material*, Core::WeakPtr<GPUShader>> mGLTFShaders;
     std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::WeakPtr<GPUShader>> mMeshShaders;
-    std::unordered_map<const cgltf_node*, u32> mNodeToBoneId;
+    std::unordered_map<const cgltf_node*, Core::u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
-    u32 mBonesIndexCount = 0;
+    Core::u32 mBonesIndexCount = 0;
     Core::WeakPtr<GPUSkeletonState> mSkeletonState;
 
 public:

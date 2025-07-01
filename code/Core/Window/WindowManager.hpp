@@ -11,7 +11,7 @@ public:
     void update();
 
     WeakPtr<Window> createWindow(const WindowData& windowData);
-    WeakPtr<Window> getWindow(u32 index) const;
+    WeakPtr<Window> getWindow(Core::u32 index) const;
 private:
 	std::vector<OwnerPtr<Window>> mWindows;
     WeakPtr<Window> mMainWindow;

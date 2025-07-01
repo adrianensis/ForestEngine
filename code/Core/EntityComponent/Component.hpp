@@ -63,9 +63,9 @@ private:
 	Core::Slot mSlot;
 	ComponentOwner mOwnerEntity;
 
-	u64 mComponentId = 0;
+	Core::u64 mComponentId = 0;
     // Important: starts by 1, 0 is reserved for null
-	inline static u64 smComponentIdCounter = 1;
+	inline static Core::u64 smComponentIdCounter = 1;
 
     
 public:

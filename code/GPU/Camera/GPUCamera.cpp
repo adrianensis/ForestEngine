@@ -39,7 +39,7 @@ void GPUCamera::recalculateProjectionMatrix()
 	mFrustum.build();
 }
 
-void GPUCamera::setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far)
+void GPUCamera::setOrtho(Core::f32 left, Core::f32 right, Core::f32 bottom, Core::f32 top, Core::f32 near, Core::f32 far)
 {
 	mIsOrtho = true;
 	
@@ -54,7 +54,7 @@ void GPUCamera::setOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32
 							mTop* mZoom, mNear, mFar);
 }
 
-void GPUCamera::setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
+void GPUCamera::setPerspective(Core::f32 near, Core::f32 far, Core::f32 aspect, Core::f32 fov)
 {
 	mIsOrtho = false;
 
@@ -66,7 +66,7 @@ void GPUCamera::setPerspective(f32 near, f32 far, f32 aspect, f32 fov)
 	mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov * mZoom);
 }
 
-void GPUCamera::onResize(const Vector2& windowSize, f32 aspectRatio)
+void GPUCamera::onResize(const Vector2& windowSize, Core::f32 aspectRatio)
 {
     if (mIsOrtho)
 	{
@@ -80,7 +80,7 @@ void GPUCamera::onResize(const Vector2& windowSize, f32 aspectRatio)
 	recalculateProjectionMatrix();
 }
 
-Vector3 GPUCamera::screenToWorld(const Vector2& screenPosition, f32 depth)
+Vector3 GPUCamera::screenToWorld(const Vector2& screenPosition, Core::f32 depth)
 {	
 	calculateInverseMatrix();
 
@@ -105,15 +105,15 @@ Vector2 GPUCamera::worldToScreen(const Vector3& worldPosition)
 	return result;
 }
 
-void GPUCamera::setZoom(f32 zoom)
+void GPUCamera::setZoom(Core::f32 zoom)
 {
 	mZoom = zoom;
 	recalculateProjectionMatrix();
 }
 
-void GPUCamera::zoomIn(f32 zoomDelta)
+void GPUCamera::zoomIn(Core::f32 zoomDelta)
 {
-	f32 newZoom = mZoom - zoomDelta;
+	Core::f32 newZoom = mZoom - zoomDelta;
 
 	if(newZoom < 0)
 	{
@@ -123,9 +123,9 @@ void GPUCamera::zoomIn(f32 zoomDelta)
 	setZoom(newZoom);
 }
 
-void GPUCamera::zoomOut(f32 zoomDelta)
+void GPUCamera::zoomOut(Core::f32 zoomDelta)
 {
-	f32 newZoom = mZoom + zoomDelta;
+	Core::f32 newZoom = mZoom + zoomDelta;
 	setZoom(newZoom);
 }
 

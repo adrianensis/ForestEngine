@@ -171,7 +171,7 @@ void UIList::setEntriesVisibility(bool visible)
 	}
 }
 
-void UIList::onScroll(f32 scroll)
+void UIList::onScroll(Core::f32 scroll)
 {
 	UIElement::onScroll(scroll);
 

@@ -11,7 +11,7 @@ class AssertUtils
 {
 public:
 	template <typename... T>
-    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, u32 line, const std::string& function, const std::string& fmt, T&&... args)
+    static void checkMsg(bool condition, const std::string& conditionString, const std::string& file, Core::u32 line, const std::string& function, const std::string& fmt, T&&... args)
     {
         if (!condition)
         {

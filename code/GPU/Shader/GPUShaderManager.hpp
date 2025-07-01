@@ -29,12 +29,12 @@ public:
     void freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance);
 
     void setGPUShaderPropertiesInstanceProperties(const Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance);
-    void setGPUShaderPropertiesInstanceDirty(u32 id);
+    void setGPUShaderPropertiesInstanceDirty(Core::u32 id);
 
     const GPUUniformBuffer& getGPUShaderPropertiesGPUUniformBuffer(Core::WeakPtr<GPUShader> shader) const;
     Core::Slot requestGPUShaderPropertiesInstanceSlot(Core::WeakPtr<GPUShader> shader);
 
-    const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(u32 id) const;
+    const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(Core::u32 id) const;
     
 private:
     void postGPUShaderCreated(Core::WeakPtr<GPUShader> shader);
@@ -54,11 +54,11 @@ private:
     std::vector<Core::OwnerPtr<GPUTexture>> mTextures;
     std::vector<TextureHandle> mTextureHandles;
     std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> mTexturesByPath;
-	std::unordered_map<u32, std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>> mTextureBindingsByShader;
+	std::unordered_map<Core::u32, std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>> mTextureBindingsByShader;
     std::vector<Core::OwnerPtr<GPUShader>> mShaders;
     std::vector<Core::OwnerPtr<GPUShaderPropertiesInstance>> mGPUShaderPropertiesInstances;
-    std::unordered_set<u32> mDirtyGPUShaderPropertiesInstances;
-    inline static const u32 mInitialInstances = 20000;
-    inline static const u32 mInitialTextures = 300;
+    std::unordered_set<Core::u32> mDirtyGPUShaderPropertiesInstances;
+    inline static const Core::u32 mInitialInstances = 20000;
+    inline static const Core::u32 mInitialTextures = 300;
 };
 REGISTER_CLASS(GPUShaderManager);

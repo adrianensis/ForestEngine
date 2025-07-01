@@ -15,7 +15,7 @@ public:
     Vector2(const Vector3& other);
     Vector2(const Vector4& other);
 
-    f32 angle(const Vector2& v) const;
+    Core::f32 angle(const Vector2& v) const;
 };
 VECTOR_STATIC_DEFINITION(2)
 TEMPLATED_SERIALIZATION(Vector2)

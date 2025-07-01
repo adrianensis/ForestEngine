@@ -24,6 +24,6 @@ void Camera::update()
 void Camera::onResize()
 {
 	Vector2 windowSize = GET_SYSTEM(Core::WindowManager).getMainWindow()->getWindowSize();
-	f32 aspectRatio = GET_SYSTEM(Core::WindowManager).getMainWindow()->getAspectRatio();
+	Core::f32 aspectRatio = GET_SYSTEM(Core::WindowManager).getMainWindow()->getAspectRatio();
     mGPUCamera.onResize(windowSize, aspectRatio);
 }

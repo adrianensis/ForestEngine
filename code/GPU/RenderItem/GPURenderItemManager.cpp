@@ -30,7 +30,7 @@ void GPURenderItemManager::update()
     //     std::execution::par_unseq,
     //     mUsedSlots.begin(),
     //     mUsedSlots.end(),
-    //     [this](u32 i)
+    //     [this](Core::u32 i)
     //     {
     //         Core::WeakPtr<GPURenderItem> renderItem = mRenderers[i];
     //         if(renderItem.isValid())

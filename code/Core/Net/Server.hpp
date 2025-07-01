@@ -15,15 +15,15 @@ enum class ServerStatus
 class Server
 {
 public:
-    void init(u16 port);
+    void init(Core::u16 port);
     bool checkConnectionRequest();
     void writeData(const std::string& data) const;
-    std::string readData(u32 size = DEFAULT_SOCKET_READ_SIZE) const;
+    std::string readData(Core::u32 size = DEFAULT_SOCKET_READ_SIZE) const;
     JSON readJSON() const;
     void writeJSON(JSON& json) const;
 
 private:
-    JSON readSimpleJSON(u32 size  = DEFAULT_SOCKET_READ_SIZE) const;
+    JSON readSimpleJSON(Core::u32 size  = DEFAULT_SOCKET_READ_SIZE) const;
 
 private:
 	ServerStatus mStatus;

@@ -17,9 +17,9 @@ class GPUBuffer
 {
 public:
     bool init(Core::Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData);
-    void resize(u32 size);
+    void resize(Core::u32 size);
     void terminate();
-    void setData(const void* data, u32 size) const;
+    void setData(const void* data, Core::u32 size) const;
     static void copy(Core::Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer);
 
 private:

@@ -36,21 +36,21 @@ public:
     Vector2 mBitmapTopLeft;
     FontGlyphMetricsData mMetrics;
     Rectangle mTextureRegion;
-    byte* mData = nullptr;
+    Core::byte* mData = nullptr;
 };
 
 class FontData
 {
 public:
-	void loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile, u32 fontSize);
+	void loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile, Core::u32 fontSize);
 	void freeGlyphsBuffers();
 public:
-    inline static const u32 MAX_GLYPHS = 128;
+    inline static const Core::u32 MAX_GLYPHS = 128;
 public:
     FT_Face mFreeTypeFace;
     Core::HashedString mPath;
-    u32 mWidth;
-    u32 mHeight;
+    Core::u32 mWidth;
+    Core::u32 mHeight;
     std::array<FontGlyphData, FontData::MAX_GLYPHS> mGlyphs;
-    byte* mGlyphAtlasData = nullptr;
+    Core::byte* mGlyphAtlasData = nullptr;
 };
