@@ -5,13 +5,11 @@
 #include "Engine/Input/Input.hpp"
 #include "Engine/Events/EventsManager.hpp"
 #include "Graphics/Module.hpp"
-#include "Scripting/Module.hpp"
+#include "Scripting/ScriptEngine.hpp"
 
-#include "Scene/Module.hpp"
-#include "UI/Module.hpp"
+#include "Scene/ScenesManager.hpp"
+#include "UI/UIManager.hpp"
 #include "Engine/Time/TimeUtils.hpp"
-
-#include <thread>
 
 using namespace std::chrono_literals;
 
