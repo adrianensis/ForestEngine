@@ -2,7 +2,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
-#include "Core/Input/Input.hpp"
+#include "Engine/Input/Input.hpp"
 
 void UISingleAxisGizmo::setAxis(const Line& line, const Vector4& color, Core::HashedString axisName)
 {

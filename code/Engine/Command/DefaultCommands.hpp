@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Command)
 
 class DefaultCommands
 {

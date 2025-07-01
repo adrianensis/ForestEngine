@@ -1,8 +1,8 @@
-#include "Core/Input/Input.hpp"
+#include "Engine/Input/Input.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Input)
 void Input::init()
 {
 	smMouseCoordinates = Vector2();
@@ -52,27 +52,27 @@ void Input::update()
 	}
 }
 
-bool Input::isKeyPressedOnce(i32 key)
+bool Input::isKeyPressedOnce(Core::i32 key)
 {
 	return smKeyJustPressed && key == smLastKeyPressed;
 }
 
-bool Input::isKeyPressed(i32 key)
+bool Input::isKeyPressed(Core::i32 key)
 {
 	return key == smLastKeyPressed;
 }
 
-bool Input::isModifierPressed(i32 modifier)
+bool Input::isModifierPressed(Core::i32 modifier)
 {
 	return modifier == smModifier;
 }
 
-bool Input::isMouseButtonPressedOnce(i32 button)
+bool Input::isMouseButtonPressedOnce(Core::i32 button)
 {
 	return smButtonJustPressed && button == smLastMouseButtonPressed;
 }
 
-bool Input::isMouseButtonPressed(i32 button)
+bool Input::isMouseButtonPressed(Core::i32 button)
 {
 	return button == smLastMouseButtonPressed;
 }
@@ -82,7 +82,7 @@ const Vector2& Input::getMousePosition()
 	return smMouseCoordinates;
 }
 
-f32 Input::getScroll()
+Core::f32 Input::getScroll()
 {
 	return smScroll;
 }

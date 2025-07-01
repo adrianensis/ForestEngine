@@ -2,7 +2,8 @@
 
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/Std.hpp"
-NS_BEGIN(Core)
+
+NS_BEGIN(Command)
 class CommandArgument
 {
 private:
@@ -18,7 +19,7 @@ public:
 class Command
 {
 private:
-    HashedString mName;
+    Core::HashedString mName;
     std::string mArgumentsString;
     std::unordered_map<std::string, CommandArgument> mArguments;
 

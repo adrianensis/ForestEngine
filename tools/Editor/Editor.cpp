@@ -2,7 +2,7 @@
 #include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
-#include "Core/Input/Input.hpp"
+#include "Engine/Input/Input.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Core/Time/TimeUtils.hpp"
@@ -10,17 +10,17 @@
 void Editor::init()
 {
     PROFILER_CPU();
-	SUBSCRIBE_TO_EVENT(Core::InputEventKeyPressed, nullptr, this, [&](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [&](const Core::Event *event)
 	{
 		handlePressedKeys();
 	});
 
-    SUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonHold, nullptr, this, [&](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonHold, nullptr, this, [&](const Core::Event *event)
 	{
 		handleMouse();
 	});
 
-    SUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonReleased, nullptr, this, [&](const Core::Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [&](const Core::Event *event)
 	{
 		handleMouse();
 	});
@@ -117,52 +117,52 @@ void Editor::update()
 	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
 
-	if(GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_LEFT))
+	if(GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(-speed,0,0,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Vector3(0,-speed,0));
         // cameraTransform->addLocalTranslation(Vector3(-speed,0,0));
 	}
-	else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_RIGHT))
+	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(speed,0,0,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Vector3(0,speed,0));
         // cameraTransform->addLocalTranslation(Vector3(speed,0,0));
 	}
-	else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_UP))
+	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_UP))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,-speed,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Vector4(0,0,-speed,1));
         // cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
 		// cameraTransform->addLocalTranslation(Vector3(0,speed,0));
 	}
-	else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_DOWN))
+	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,speed,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Vector4(0,0,speed,1));
         // cameraTransform->addLocalTranslation(Vector3(0,0,speed));
 		// cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
 	}
-	else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_PAGE_UP))
+	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_PAGE_UP))
 	{
 		cameraTransform->addLocalTranslation(Vector3(0,speed,0));
 	}
-	else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
+	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
 	{
 		cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
 	}
-    else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_HOME))
+    else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_HOME))
 	{
 		// cameraTransform->addLocalRotation(Vector3(0,-speed,0));
         cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smForward);
 	}
-	else if (GET_SYSTEM(Core::Input).isKeyPressed(GLFW_KEY_END))
+	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_END))
 	{
 		// cameraTransform->addLocalRotation(Vector3(0,speed,0));
         cameraTransform->lookAt(cameraTransform->getWorldPosition() + -Vector3::smForward);
 	}
 
-    Vector2 currentMousePosition = GET_SYSTEM(Core::Input).getMousePosition();
+    Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
     // currentMousePosition.set(-1,0,0);
     // LOG_VAR(currentMousePosition.x);
     // LOG_VAR(currentMousePosition.y);
@@ -331,7 +331,7 @@ EntityPtr Editor::mousePick()
 
         // // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(0.3,0,1,1));
 
-        // Vector3 mousePosition = GET_SYSTEM(Core::Input).getMousePosition();
+        // Vector3 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
         // bool hit = Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
         // if(hit)
         // {
@@ -378,12 +378,12 @@ void Editor::handlePressedKeys()
 
 void Editor::handleMouse()
 {
-	if(GET_SYSTEM(Core::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
+	if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
 	{
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
         // mBuildings.pop_front();
         // TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
-        // Vector2 currentMousePosition = GET_SYSTEM(Core::Input).getMousePosition();
+        // Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
         // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);
         // mSceneObjectsArray.push_back(obj);
@@ -397,7 +397,7 @@ void Editor::handleMouse()
         mSelectedSceneObject.reset();
     }
     
-    if(GET_SYSTEM(Core::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
+    if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
     {
         // mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(0,100,0), 10.0f, Vector3(0,0,0), false));
         

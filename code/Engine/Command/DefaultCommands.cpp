@@ -1,18 +1,15 @@
-#include "Core/Command/DefaultCommands.hpp"
-#include "Core/Command/CommandLine.hpp"
+#include "Engine/Command/DefaultCommands.hpp"
+#include "Engine/Command/CommandLine.hpp"
 #include "Core/System/SystemManager.hpp"
 
-#include "Core/Log/Log.hpp"
-
-NS_BEGIN(Core)
+NS_BEGIN(Command)
 
 void DefaultCommands::registerDefaultCommands()
 {
     CommandLine& cmd = GET_SYSTEM(CommandLine);
-
     cmd.registerCommand("echo", [](const Command& command)
     {
-        LOG(command.getArgumentsString());
+        GET_SYSTEM(CommandLine).writeLine(command.getArgumentsString());
     });
 }
 NS_END

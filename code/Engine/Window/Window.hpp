@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Input/Input.hpp"
-#include "Window/WindowFramework.hpp"
+#include "Engine/Input/Input.hpp"
+#include "Engine/Window/WindowFramework.hpp"
 
 NS_BEGIN(Window)
 
@@ -20,7 +20,7 @@ public:
     virtual void onResize() = 0;
 };
 
-class Window: public Core::IWindowInputAdapter
+class Window: public Input::IWindowInputAdapter
 {
 public:
     void init(Core::i32 id, const WindowData& windowData);

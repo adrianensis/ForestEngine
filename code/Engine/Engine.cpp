@@ -1,8 +1,8 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Core/Command/CommandLine.hpp"
+#include "Engine/Command/CommandLine.hpp"
 #include "Core/Time/TimerManager.hpp"
-#include "Core/Input/Input.hpp"
+#include "Engine/Input/Input.hpp"
 #include "Core/Events/EventsManager.hpp"
 #include "Graphics/Module.hpp"
 #include "Scripting/Module.hpp"
@@ -37,8 +37,8 @@ void Engine::init()
     windowData.mMainWindow = true;
     GET_SYSTEM(Window::WindowManager).createWindow(windowData);
     CREATE_SYSTEM(GPUInstance);
-    CREATE_SYSTEM(Core::Input);
-    GET_SYSTEM(Core::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
+    CREATE_SYSTEM(Input::Input);
+    GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(Core::TimerManager);
     CREATE_SYSTEM(Core::EventsManager);
     CREATE_SYSTEM(GPUMeshFactory);
@@ -50,7 +50,7 @@ void Engine::init()
     CREATE_SYSTEM(DebugRenderer);
     CREATE_SYSTEM(UIManager);
     CREATE_SYSTEM(ScenesManager);
-    CREATE_SYSTEM(Core::CommandLine);
+    CREATE_SYSTEM(Command::CommandLine);
     CREATE_SYSTEM(ScriptEngine);
 }
 
@@ -86,10 +86,10 @@ void Engine::run()
 			postSceneChanged();
 		}
 
-		GET_SYSTEM(Core::Input).update();
+		GET_SYSTEM(Input::Input).update();
 		GET_SYSTEM(Window::WindowManager).getMainWindow()->pollEvents();
 
-		GET_SYSTEM(Core::CommandLine).update();
+		GET_SYSTEM(Command::CommandLine).update();
 
 		GET_SYSTEM(ScenesManager).update();
 		GET_SYSTEM(Core::TimerManager).update();

@@ -1,7 +1,7 @@
 #include "GPU/Core/GPUContext.hpp"
-#include "Window/WindowSurface.hpp"
+#include "Engine/Window/WindowSurface.hpp"
 
-#include "Window/WindowManager.hpp"
+#include "Engine/Window/WindowManager.hpp"
 #include "GPU/Core/GPULog.h"
 
 void GPUContext::init()

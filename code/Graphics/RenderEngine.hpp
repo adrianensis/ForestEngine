@@ -5,7 +5,7 @@
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
-#include "Window/Window.hpp"
+#include "Engine/Window/Window.hpp"
 
 class RenderEngine : public Core::System, public IComponentsListener, public Window::IWindowListener
 {

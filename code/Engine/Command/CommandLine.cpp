@@ -1,8 +1,8 @@
-#include "Core/Command/CommandLine.hpp"
+#include "Engine/Command/CommandLine.hpp"
 
 #include "Core/Assert/Assert.hpp"
-#include "Core/Command/DefaultCommands.hpp"
-#include "Core/Input/InputEvents.hpp"
+#include "Engine/Command/DefaultCommands.hpp"
+#include "Engine/Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Events/EventsManager.hpp"
 #include "Core/StdMacros.hpp"
@@ -13,28 +13,28 @@
 #include <string>
 #include <unistd.h>
 
-NS_BEGIN(Core)
+NS_BEGIN(Command)
 void CommandLine::init()
 {
     mBuffer.reserve(smBufferSize);
     mIsOpen = false;
 
-	SUBSCRIBE_TO_EVENT(InputEventKeyReleased, nullptr, this, [this](const Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Core::Event *event)
 	{
-        const InputEventKeyReleased *e = (const InputEventKeyReleased *)event;
+        const Input::InputEventKeyReleased *e = (const Input::InputEventKeyReleased *)event;
         if(e->mKey == GLFW_KEY_GRAVE_ACCENT)
         {
             toggle();
         }
 	});
 
-    // SUBSCRIBE_TO_EVENT(InputEventKeyArrow, nullptr, this, [this](const Event *event)
+    // SUBSCRIBE_TO_EVENT(Input::InputEventKeyArrow, nullptr, this, [this](const Event *event)
     // {
     //     if(mIsOpen)
     //     {
     //         // NEXT: GLFW_KEY_UP && DOWN creates a dependency with Graphics/Window module 
 
-    //         // const InputEventKeyArrow *e = (const InputEventKeyArrow*) event;
+    //         // const Input::InputEventKeyArrow *e = (const Input::InputEventKeyArrow*) event;
 
     //         // switch (e->mArrowButton)
     //         // {
@@ -72,22 +72,29 @@ void CommandLine::init()
 
 void CommandLine::writeLine(const std::string& line, bool newLine /*= true*/) const
 {
-    if(newLine)
+    if(mPrintToConsole)
     {
-        LOG_TAG("CMD", line)
-    }
-    else
-    {
-        LOG_TAG_APPEND("CMD", line)
+        if(newLine)
+        {
+            LOG_TAG("CMD", line)
+        }
+        else
+        {
+            LOG_TAG_APPEND("CMD", line)
+        }
     }
 }
 
 void CommandLine::update()
 {
+    flush();
+}
+
+void CommandLine::flush()
+{
     if(mIsOpen && mBufferDirty)
     {
         writeLine(mBuffer);
-        
         mBufferDirty = false;
     }
 }
@@ -103,7 +110,7 @@ void CommandLine::terminate()
 void CommandLine::charReceived(char c)
 {
     mBuffer.push_back(c);
-    mBufferDirty = true;
+    writeLine(mBuffer);
 }
 
 void CommandLine::clearBuffer()
@@ -119,7 +126,6 @@ Command CommandLine::extractCommand(const std::string& commandLine) const
     std::smatch matchCommand;
     std::regex_search(commandLine, matchCommand, regexCommand);
     std::string commandName = matchCommand[1];
-    //writeLine("command: " + commandName);
 
     command.setName(commandName);
 
@@ -144,7 +150,6 @@ Command CommandLine::extractCommand(const std::string& commandLine) const
         auto argumentlistBegin = std::sregex_iterator(argumentList.begin(), argumentList.end(), regexArgument);
         auto argumentlistEnd = std::sregex_iterator();
     
-        //writeLine("arguments");
         //LOG_VAL(std::distance(argumentlistBegin, argumentlistEnd))
     
         command.setArgumentsString(argumentList);
@@ -257,7 +262,6 @@ void CommandLine::open()
     subscribeToEvents();
     clearBuffer();
     mIsOpen = true;
-    mBufferDirty = true;
     writeLine("CMD Opened");
     writeLine("Press [`] (grave accent) to toggle command line.");
 }
@@ -284,12 +288,12 @@ void CommandLine::toggle()
 
 void CommandLine::subscribeToEvents()
 {
-    SUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this, [this](const Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Core::Event *event)
     {
         
         if(mIsOpen)
         {
-            const InputEventChar *e = (const InputEventChar*) event;
+            const Input::InputEventChar *e = (const Input::InputEventChar*) event;
             char c = e->mChar;
             
             if(c == '`') // ignore GLFW_KEY_GRAVE_ACCENT
@@ -298,24 +302,20 @@ void CommandLine::subscribeToEvents()
             }
             
             charReceived(c);
-
-            // writeLine(mBuffer);
         }
     });
 
-    SUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this, [this](const Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Core::Event *event)
     {
         if(mIsOpen)
         {
             execute();
             clearBuffer();
             mBufferDirty = true;
-
-            // writeLine("", false);
         }
     });
 
-    SUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this, [this](const Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventKeyTab, nullptr, this, [this](const Core::Event *event)
     {
         if(mIsOpen)
         {
@@ -323,7 +323,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    SUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this, [this](const Event *event)
+    SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Core::Event *event)
     {
         if(mIsOpen)
         {
@@ -333,17 +333,15 @@ void CommandLine::subscribeToEvents()
                 mBuffer.pop_back();
                 mBufferDirty = true;
             }
-            
-            // writeLine(mBuffer, false);
         }
     });
 }
 
 void CommandLine::unsubscribeToEvents()
 {
-    UNSUBSCRIBE_TO_EVENT(InputEventChar, nullptr, this);
-    UNSUBSCRIBE_TO_EVENT(InputEventKeyEnter, nullptr, this);
-    UNSUBSCRIBE_TO_EVENT(InputEventKeyTab, nullptr, this);
-    UNSUBSCRIBE_TO_EVENT(InputEventKeyBackspace, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyTab, nullptr, this);
+    UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this);
 }
 NS_END

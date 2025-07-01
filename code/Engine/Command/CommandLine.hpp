@@ -2,13 +2,13 @@
 
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/System/System.hpp"
-#include "Core/Command/Command.hpp"
+#include "Engine/Command/Command.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Command)
 
 using CommandCallback = std::function<void(const Command& command)>;
 
-class CommandFunctor: public Functor<CommandCallback>
+class CommandFunctor: public Core::Functor<CommandCallback>
 {
 public:
 
@@ -23,7 +23,7 @@ public:
     Command mCommand;
 };
 
-class CommandLine: public System
+class CommandLine: public Core::System
 {
 public:
 	virtual void init() override;
@@ -35,6 +35,7 @@ public:
 	void open();
 	void close();
 	void toggle();
+	void writeLine(const std::string& line, bool newLine = true) const;
 	
 private:
 	void subscribeToEvents();
@@ -45,12 +46,12 @@ private:
 	void execute();
 	void autocomplete();
 	bool checkCommand(const Command& command) const;
-    void writeLine(const std::string& line, bool newLine = true) const;
+	void flush();
 
 private:
-	std::unordered_map<HashedString, CommandFunctor> mCommandsMap;
+	std::unordered_map<Core::HashedString, CommandFunctor> mCommandsMap;
 	std::string mBuffer;
-	static const u32 smBufferSize = 1024;
+	static const Core::u32 smBufferSize = 1024;
 
 	std::list<std::string> mHistory;
 	std::list<std::string>::iterator mHistoryIterator;
@@ -60,9 +61,12 @@ private:
 
     std::string mPatternValidName = "[-+]?[a-zA-Z_\\.0-9]+";
 
+	bool mPrintToConsole = true;
+
 
 public:
 	CRGET(Buffer)
+	GET_SET(PrintToConsole)
 };
 REGISTER_CLASS(CommandLine);
 NS_END

@@ -17,16 +17,16 @@ void UIElement::initFromConfig(const UIElementConfig& config)
 void UIElement::onDestroy()
 {
 	SceneObject::onDestroy();
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyPressed, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyReleased, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonPressed, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonReleased, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventScroll, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventChar, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyBackspace, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyEnter, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventKeyEsc, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Core::InputEventMouseMoved, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventScroll, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this);
+	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseMoved, nullptr, this);
 
 	if (hasFocus())
 	{
@@ -57,11 +57,11 @@ bool UIElement::isMouseCursorInsideElement() const
         return false;
     }
 
-	Vector2 mousePosition = GET_SYSTEM(Core::Input).getMousePosition();
+	Vector2 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
 
 	// if(mTransform->mGeometricSpace == GeometricSpace::WORLD)
 	{
-		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Core::Input).getMousePosition());
+		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input::Input).getMousePosition());
 	}
 
     // GET_SYSTEM(DebugRenderer).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);
@@ -117,13 +117,13 @@ void UIElement::postInit()
 
 void UIElement::subscribeToKeyEvents()
 {
-	SUBSCRIBE_TO_EVENT(Core::InputEventKeyPressed, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [this](const Core::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
 	});
 
-	SUBSCRIBE_TO_EVENT(Core::InputEventKeyReleased, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Core::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -132,14 +132,14 @@ void UIElement::subscribeToKeyEvents()
 
 void UIElement::subscribeToCharEvents()
 {
-	SUBSCRIBE_TO_EVENT(Core::InputEventChar, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
-        onCharEventReceived(((const Core::InputEventChar *)event)->mChar);
+        onCharEventReceived(((const Input::InputEventChar *)event)->mChar);
 	});
 
-	SUBSCRIBE_TO_EVENT(Core::InputEventKeyBackspace, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -149,11 +149,11 @@ void UIElement::subscribeToCharEvents()
 
 void UIElement::subscribeToMouseEvents()
 {
-	SUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonPressed, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
-        const Core::InputEventMouseButtonPressed *e = (const Core::InputEventMouseButtonPressed *)event;
+        const Input::InputEventMouseButtonPressed *e = (const Input::InputEventMouseButtonPressed *)event;
 
         if (e->mButton == GLFW_MOUSE_BUTTON_LEFT)
         {
@@ -161,18 +161,18 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	SUBSCRIBE_TO_EVENT(Core::InputEventMouseButtonReleased, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
-        const Core::InputEventMouseButtonReleased *e = (const Core::InputEventMouseButtonReleased *)event;
+        const Input::InputEventMouseButtonReleased *e = (const Input::InputEventMouseButtonReleased *)event;
         if (e->mButton == GLFW_MOUSE_BUTTON_LEFT)
         {
             onReleasedEventReceived();
         }
 	});
 
-	SUBSCRIBE_TO_EVENT(Core::InputEventMouseMoved, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventMouseMoved, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -182,18 +182,18 @@ void UIElement::subscribeToMouseEvents()
 
 void UIElement::subscribeToScrollEvents()
 {
-	SUBSCRIBE_TO_EVENT(Core::InputEventScroll, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventScroll, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
-        const Core::InputEventScroll *e = (const Core::InputEventScroll *)event;
+        const Input::InputEventScroll *e = (const Input::InputEventScroll *)event;
         onScrollEventReceived(e->mScroll);
 	});
 }
 
 void UIElement::subscribeToEnterEvent()
 {
-	SUBSCRIBE_TO_EVENT(Core::InputEventKeyEnter, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -203,7 +203,7 @@ void UIElement::subscribeToEnterEvent()
 
 void UIElement::subscribeToEscEvent()
 {
-	SUBSCRIBE_TO_EVENT(Core::InputEventKeyEsc, nullptr, this, [this](const Core::Event *event)
+	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this, [this](const Core::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -222,7 +222,7 @@ void UIElement::onPressedEventReceived()
 
     if (mConsumeInput)
     {
-        GET_SYSTEM(Core::Input).clearMouseButton();
+        GET_SYSTEM(Input::Input).clearMouseButton();
     }
 }
 
@@ -236,7 +236,7 @@ void UIElement::onReleasedEventReceived()
 
     if (mConsumeInput)
     {
-        GET_SYSTEM(Core::Input).clearMouseButton();
+        GET_SYSTEM(Input::Input).clearMouseButton();
     }
 
     onPrePressed();

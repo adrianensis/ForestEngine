@@ -1,4 +1,4 @@
-#include "Window/Window.hpp"
+#include "Engine/Window/Window.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
 NS_BEGIN(Window)
@@ -156,44 +156,44 @@ void Window::charCallbackGLFW(GLFWwindow *windowGLFW, Core::u32 codepoint)
 
 void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods)
 {
-	GET_SYSTEM(Core::Input).smModifier = mods;
+	GET_SYSTEM(Input::Input).smModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			GET_SYSTEM(Core::Input).smLastKeyPressed = key;
-			GET_SYSTEM(Core::Input).smKeyJustPressed = true;
+			GET_SYSTEM(Input::Input).smLastKeyPressed = key;
+			GET_SYSTEM(Input::Input).smKeyJustPressed = true;
 
 			switch (key)
 			{
 				case GLFW_KEY_ENTER:
 				{
-					Core::InputEventKeyEnter event;
+					Input::InputEventKeyEnter event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_ESCAPE:
 				{
-					Core::InputEventKeyEsc event;
+					Input::InputEventKeyEsc event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_DELETE:
 				{
-					Core::InputEventKeyDelete event;
+					Input::InputEventKeyDelete event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_BACKSPACE:
 				{
-					Core::InputEventKeyBackspace event;
+					Input::InputEventKeyBackspace event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				case GLFW_KEY_TAB:
 				{
-					Core::InputEventKeyTab event;
+					Input::InputEventKeyTab event;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
@@ -202,14 +202,14 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 				case GLFW_KEY_LEFT:
 				case GLFW_KEY_RIGHT:
 				{
-					Core::InputEventKeyArrow event;
+					Input::InputEventKeyArrow event;
 					event.mArrowButton = key;
 					SEND_INPUT_EVENT(event);
 					break;
 				}
 				default:
 				{
-					Core::InputEventKeyPressed event;
+					Input::InputEventKeyPressed event;
 					event.mKey = key;
 					event.mMods = mods;
 					SEND_INPUT_EVENT(event);
@@ -220,17 +220,17 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 		}
 		case GLFW_RELEASE:
 		{
-			Core::InputEventKeyReleased event;
+			Input::InputEventKeyReleased event;
 			event.mKey = key;
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
 
-			GET_SYSTEM(Core::Input).clearKey();
+			GET_SYSTEM(Input::Input).clearKey();
 			break;
 		}
 		case GLFW_REPEAT:
 		{
-			Core::InputEventKeyHold event;
+			Input::InputEventKeyHold event;
 			event.mKey = key;
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
@@ -242,16 +242,16 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 
 void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 mods)
 {
-	GET_SYSTEM(Core::Input).smModifier = mods;
+	GET_SYSTEM(Input::Input).smModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			GET_SYSTEM(Core::Input).smLastMouseButtonPressed = button;
-			GET_SYSTEM(Core::Input).smButtonJustPressed = true;
+			GET_SYSTEM(Input::Input).smLastMouseButtonPressed = button;
+			GET_SYSTEM(Input::Input).smButtonJustPressed = true;
 
-			Core::InputEventMouseButtonPressed event;
+			Input::InputEventMouseButtonPressed event;
 			event.mButton = button;
 			event.mMods = mods;
 			SEND_INPUT_EVENT(event);
@@ -259,11 +259,11 @@ void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 m
 		}
 		case GLFW_RELEASE:
 		{
-			Core::InputEventMouseButtonReleased event;
+			Input::InputEventMouseButtonReleased event;
 			event.mButton = button;
 			event.mMods = mods;
 			
-            GET_SYSTEM(Core::Input).clearMouseButton();
+            GET_SYSTEM(Input::Input).clearMouseButton();
 
 			SEND_INPUT_EVENT(event);
 
@@ -274,16 +274,16 @@ void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 m
 
 void Window::scrollCallback(Core::f64 xoffset, Core::f64 yoffset)
 {
-	GET_SYSTEM(Core::Input).smScroll = yoffset;
+	GET_SYSTEM(Input::Input).smScroll = yoffset;
 
-	Core::InputEventScroll event;
+	Input::InputEventScroll event;
 	event.mScroll = yoffset;
 	SEND_INPUT_EVENT(event);
 }
 
 void Window::charCallback(Core::u32 codepoint)
 {
-	Core::InputEventChar event;
+	Input::InputEventChar event;
 	event.mChar = (char)codepoint;
 	SEND_INPUT_EVENT(event);
 }
