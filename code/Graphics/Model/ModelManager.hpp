@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 
 class Model;
 
-class ModelManager: public Core::System
+class ModelManager: public System::System
 {
 public:
     virtual void init() override;

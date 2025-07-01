@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "GPU/ShapeRenderer/GPUShapeRenderer.hpp"
 
-class DebugRenderer : public Core::System
+class DebugRenderer : public System::System
 {
 public:
     virtual void init() override;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Engine/Window/Window.hpp"
 NS_BEGIN(Window)
-class WindowManager : public Core::System
+class WindowManager : public System::System
 {
 public:
     virtual void init() override;

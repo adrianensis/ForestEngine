@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Engine/Window/Window.hpp"
 
-class RenderEngine : public Core::System, public IComponentsListener, public Window::IWindowListener
+class RenderEngine : public System::System, public IComponentsListener, public Window::IWindowListener
 {
 public:
     virtual void init() override;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Std.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include <chrono>
 NS_BEGIN(Time)
 class TimeMark
@@ -49,7 +49,7 @@ public:
 	GET(IsStarted)
 };
 
-class Time: public Core::System
+class Time: public System::System
 {
 public:
 	virtual void init() override {mInternalTimeMark.init();}

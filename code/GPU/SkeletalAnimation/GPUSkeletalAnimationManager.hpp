@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 
-class GPUSkeletalAnimationManager: public Core::System
+class GPUSkeletalAnimationManager: public System::System
 {
 public:
     virtual void init() override;

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Engine/Time/Timer.hpp"
 
 NS_BEGIN(Time)
-class TimerManager: public Core::System
+class TimerManager: public System::System
 {
 public:
     virtual void init() override;

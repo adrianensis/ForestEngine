@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/HashedString/HashedString.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Engine/Command/Command.hpp"
 
 NS_BEGIN(Command)
@@ -23,7 +23,7 @@ public:
     Command mCommand;
 };
 
-class CommandLine: public Core::System
+class CommandLine: public System::System
 {
 public:
 	virtual void init() override;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIGroup.hpp"
@@ -11,7 +11,7 @@
 class GPUShader;
 class Scene;
 
-class UIManager: public Core::System
+class UIManager: public System::System
 {
 public:
     virtual void init() override;

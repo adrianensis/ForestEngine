@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
-class GPUShaderManager: public Core::System
+class GPUShaderManager: public System::System
 {
 public:
     virtual void init() override;

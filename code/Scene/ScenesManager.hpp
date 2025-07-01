@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/SceneObject.hpp"
 
 class Camera;
 
-class ScenesManager: public Core::System
+class ScenesManager: public System::System
 {
 public:	
     virtual void init() override;

@@ -4,8 +4,8 @@
 #include "Core/Memory/Singleton.hpp"
 #include "Engine/Events/Event.hpp"
 
-NS_BEGIN(Core)
-class System: public EnableWeakPtrToThis, public Event::IEventObject
+NS_BEGIN(System)
+class System: public Core::EnableWeakPtrToThis, public Event::IEventObject
 {
 public:
     virtual ~System() override = default;

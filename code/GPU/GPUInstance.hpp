@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Core/GPUContext.hpp"
 
-class GPUInstance: public Core::System
+class GPUInstance: public System::System
 {
 public:
     virtual void init() override;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core/System/System.hpp"
+#include "Engine/System/System.hpp"
 #include "Graphics/Camera/Camera.hpp"
 
-class CameraManager: public Core::System
+class CameraManager: public System::System
 {
 private:
 	TComponentPtr<Camera> mCamera;

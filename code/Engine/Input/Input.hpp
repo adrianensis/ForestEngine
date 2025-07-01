@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Core/StdMacros.hpp"
-#include "Core/System/SystemManager.hpp"
+#include "Engine/System/SystemManager.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Engine/Input/InputEvents.hpp"
 
-#define SEND_INPUT_EVENT(event) Input::Input::sendInputEvent(event);
+#define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(::Input::Input), event);
 
 NS_BEGIN(Input)
 class IWindowInputAdapter
@@ -19,7 +19,7 @@ public:
     virtual Vector2 getMousePosition() const = 0;
 };
 
-class Input: public Core::System
+class Input: public System::System
 {
 public:
     virtual void init() override;
@@ -33,12 +33,6 @@ public:
     Core::f32 getScroll();
     void clearMouseButton();
     void clearKey();
-
-    template<class E> T_EXTENDS(E, Event::Event)
-    static void sendInputEvent(E& event)
-    {
-        SEND_EVENT(nullptr, &GET_SYSTEM(Input), event);
-    }
     
 public:
 	Vector2 smMouseCoordinates;
