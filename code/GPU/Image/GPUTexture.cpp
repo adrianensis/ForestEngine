@@ -22,7 +22,7 @@ void GPUTexture::init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gp
     {
         format = VK_FORMAT_R8G8B8A8_SRGB;
         PROFILER_CPU_NAMED(load_image)
-        mImageData = ImageUtils::loadImage(gpuTextureData.mPath);
+        mImageData = Image::ImageUtils::loadImage(gpuTextureData.mPath);
         CHECK_MSG(mImageData.mData, "Error loading image " + mTextureData.mPath.get());
 
         /*
@@ -92,7 +92,7 @@ void GPUTexture::init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gp
             CHECK_MSG(false,"Could not initialize texture image");
         }
 
-        ImageUtils::freeImage(mImageData);
+        Image::ImageUtils::freeImage(mImageData);
     }
 
     mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage.getVkImage(), format, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);

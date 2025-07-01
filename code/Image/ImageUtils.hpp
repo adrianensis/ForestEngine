@@ -2,7 +2,9 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/HashedString/HashedString.hpp"
+#include "Core/StdMacros.hpp"
 
+NS_BEGIN(Image)
 class ImageData
 {
 public:
@@ -18,3 +20,4 @@ public:
 	static void freeImage(const ImageData& imageData);
 	static void flipImageVertically(const ImageData& imageData, Core::u32 bytes_per_pixel);
 };
+NS_END

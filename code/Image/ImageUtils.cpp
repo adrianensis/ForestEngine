@@ -1,9 +1,10 @@
-#include "Core/Image/ImageUtils.hpp"
+#include "Image/ImageUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+NS_BEGIN(Image)
 ImageData ImageUtils::loadImage(Core::HashedString path)
 {
     PROFILER_CPU()
@@ -36,3 +37,4 @@ void ImageUtils::flipImageVertically(const ImageData& imageData, Core::u32 bytes
     PROFILER_CPU()
     stbi__vertical_flip(imageData.mData, imageData.mWidth, imageData.mHeight, bytes_per_pixel);
 }
+NS_END

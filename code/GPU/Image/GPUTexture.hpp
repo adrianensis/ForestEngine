@@ -5,7 +5,7 @@
 
 #include "GPU/Image/GPUImage.h"
 #include "GPU/Core/GPUDefinitions.h"
-#include "Core/Image/ImageUtils.hpp"
+#include "Image/ImageUtils.hpp"
 
 enum class GPUTextureChannels
 {
@@ -31,7 +31,7 @@ public:
 private:
 	Core::u32 mGPUTextureId = 0;
     TextureHandle mGPUTextureHandle = 0;
-    ImageData mImageData;
+    Image::ImageData mImageData;
 	Core::u32 mID = 0;
 	GPUTextureData mTextureData;
     Core::Ptr<GPUContext> mGPUContext;

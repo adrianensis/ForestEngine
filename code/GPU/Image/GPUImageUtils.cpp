@@ -1,5 +1,5 @@
 #include "GPU/Image/GPUImageUtils.hpp"
-#include "Core/Image/ImageUtils.hpp"
+#include "Image/ImageUtils.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 
 bool GPUImageUtils::transitionImageLayout(Core::Ptr<GPUContext> gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, Core::u32 mipLevels)
