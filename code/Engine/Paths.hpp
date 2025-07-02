@@ -3,15 +3,15 @@
 #include "Core/Std.hpp"
 #include "Core/StdMacros.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Paths)
 
-class Paths
+class PredefinedPaths
 {
 public:
-	inline static HashedString mResources = "resources/";
-	inline static HashedString mOutput = "output/";
-	inline static HashedString mOutputLog = "output/log/";
-	inline static HashedString mOutputShaders = "output/shaders/";
+	inline static Core::HashedString mResources = "resources/";
+	inline static Core::HashedString mOutput = "output/";
+	inline static Core::HashedString mOutputLog = "output/log/";
+	inline static Core::HashedString mOutputShaders = "output/shaders/";
 };
 
 NS_END

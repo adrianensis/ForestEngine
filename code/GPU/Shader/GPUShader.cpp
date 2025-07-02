@@ -118,14 +118,14 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     }
 
     std::string stringGPUShaderVert = sbVert.getCode();
-    std::string shaderPathVert = Core::Paths::mOutputShaders.get() + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".vert";
+    std::string shaderPathVert = Paths::PredefinedPaths::mOutputShaders.get() + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".vert";
     Core::FileUtils::writeFile(shaderPathVert, [stringGPUShaderVert](std::ofstream& file)
     {
         file << stringGPUShaderVert;
     });
 
     std::string stringGPUShaderFrag = sbFrag.getCode();
-    std::string shaderPathFrag = Core::Paths::mOutputShaders.get() + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".frag";
+    std::string shaderPathFrag = Paths::PredefinedPaths::mOutputShaders.get() + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".frag";
     Core::FileUtils::writeFile(shaderPathFrag, [stringGPUShaderFrag](std::ofstream& file)
     {
         file << stringGPUShaderFrag;

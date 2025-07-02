@@ -8,7 +8,7 @@
 void UIManager::init()
 {
 	UIStyleManager::getInstance().init();
-    mDefaultFont = Core::HashedString(Core::Paths::mResources.get() + "fonts/Arial.ttf");
+    mDefaultFont = Core::HashedString(Paths::PredefinedPaths::mResources.get() + "fonts/Arial.ttf");
     mFontsManager.init();
     mFontsManager.loadFont(mDefaultFont, 12);
 
