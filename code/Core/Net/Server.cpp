@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-
+NS_BEGIN(Core)
 void Server::init(Core::u16 port)
 {
 	mStatus = ServerStatus::UNINITIALIZED;
@@ -152,3 +152,4 @@ Core::JSON Server::readSimpleJSON(Core::u32 size  /*= DEFAULT_SOCKET_READ_SIZE*/
 
 	return json;
 }
+NS_END

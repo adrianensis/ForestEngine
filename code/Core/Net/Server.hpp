@@ -2,7 +2,7 @@
 
 #include "Core/Std.hpp"
 #include <netinet/in.h>
-
+NS_BEGIN(Core)
 enum class ServerStatus
 {
 	UNINITIALIZED,
@@ -38,3 +38,4 @@ private:
 public:
 	GET(Status)
 };
+NS_END
