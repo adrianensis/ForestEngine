@@ -21,7 +21,7 @@ Vector4::Vector4(const Vector2& other, Core::f32 z, Core::f32 w) : x(other.x), y
 
 NS_END
 template<>
-Core::JSON SerializationUtils::serializeTemplated(const Maths::Vector4& value)
+Core::JSON Core::SerializationUtils::serializeTemplated(const Maths::Vector4& value)
 {
 Core::JSON json;
 SERIALIZE("x", value.x)
@@ -32,7 +32,7 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Maths::Vector4& value, const Core::JSON& json)
+void Core::SerializationUtils::deserializeTemplated(Maths::Vector4& value, const Core::JSON& json)
 {
 DESERIALIZE("x", value.x)
 DESERIALIZE("y", value.y)

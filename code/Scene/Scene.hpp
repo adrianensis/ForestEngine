@@ -5,7 +5,7 @@
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/SceneObject.hpp"
 
-class Scene: public ISerializable, public Core::EnableWeakPtrToThis
+class Scene: public Core::ISerializable, public Core::EnableWeakPtrToThis
 {
     DECLARE_SERIALIZATION()
 

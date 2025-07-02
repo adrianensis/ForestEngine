@@ -19,7 +19,7 @@ Core::f32 Vector2::angle(const Vector2& v) const
 NS_END
 
 template<>
-Core::JSON SerializationUtils::serializeTemplated(const Maths::Vector2& value)
+Core::JSON Core::SerializationUtils::serializeTemplated(const Maths::Vector2& value)
 {
 Core::JSON json;
 SERIALIZE("x", value.x)
@@ -28,7 +28,7 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Maths::Vector2& value, const Core::JSON& json)
+void Core::SerializationUtils::deserializeTemplated(Maths::Vector2& value, const Core::JSON& json)
 {
 DESERIALIZE("x", value.x)
 DESERIALIZE("y", value.y)

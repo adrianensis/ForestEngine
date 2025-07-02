@@ -6,6 +6,7 @@
 // PERF : use ordered_json only for debug and release? but json for ship version?
 // ordered_json will keep the data order, json will sort the data alphabetically
 
+NS_BEGIN(Core)
 class ISerializable
 {
 public:
@@ -85,7 +86,7 @@ private: // INFO: notice the last blank space " "
 // SERIALIZE
 
 #define SERIALIZE(Name, Var)\
-json[Name] = SerializationUtils::serializeTemplated<decltype(Var)>(Var);
+json[Name] = Core::SerializationUtils::serializeTemplated<decltype(Var)>(Var);
 
 #define SERIALIZE_IF(Condition, Name, Var)\
 if((Condition))\
@@ -94,7 +95,7 @@ if((Condition))\
 }
 
 #define SERIALIZE_LIST_ELEMENT(Name, Var)\
-json[Name].push_back(SerializationUtils::serializeTemplated<decltype(Var)>(Var));
+json[Name].push_back(Core::SerializationUtils::serializeTemplated<decltype(Var)>(Var));
 
 #define SERIALIZE_LIST(Name, Var)\
 FOR_LIST(__it, Var)\
@@ -122,7 +123,7 @@ FOR_LIST(__it, Var)\
 // DESERIALIZE
 
 #define DESERIALIZE(Name, Var)\
-SerializationUtils::deserializeTemplated<decltype(Var)>(Var, json[Name]);
+Core::SerializationUtils::deserializeTemplated<decltype(Var)>(Var, json[Name]);
 
 #define DESERIALIZE_LIST(Name, Var, ConstructionLambda)\
 if(!json.empty() && json.contains(Name))\
@@ -130,7 +131,7 @@ if(!json.empty() && json.contains(Name))\
     FOR_LIST(__it, json[Name])\
     {\
         auto object = ConstructionLambda(*__it);\
-        SerializationUtils::deserializeTemplated<decltype(object)>(object, (*__it));\
+        Core::SerializationUtils::deserializeTemplated<decltype(object)>(object, (*__it));\
         (Var).push_back(object);\
     }\
 }
@@ -151,6 +152,8 @@ if(!json.empty() && json.contains(Name))\
 
 #define TEMPLATED_SERIALIZATION(...)\
 template<>\
-Core::JSON SerializationUtils::serializeTemplated(const __VA_ARGS__& value);\
+Core::JSON Core::SerializationUtils::serializeTemplated(const __VA_ARGS__& value);\
 template<>\
-void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const Core::JSON& json);
+void Core::SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const Core::JSON& json);
+
+NS_END

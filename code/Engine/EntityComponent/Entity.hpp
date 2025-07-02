@@ -3,7 +3,7 @@
 #include "Engine/Events/Event.hpp"
 
 NS_BEGIN(EC)
-class Entity: public ISerializable, public Event::IEventObject
+class Entity: public Core::ISerializable, public Event::IEventObject
 {
     
 	DECLARE_SERIALIZATION()

@@ -362,7 +362,7 @@ void Quaternion::fromMatrix(const Matrix4& matrix)
 NS_END
 
 template<>
-Core::JSON SerializationUtils::serializeTemplated(const Maths::Quaternion& value)
+Core::JSON Core::SerializationUtils::serializeTemplated(const Maths::Quaternion& value)
 {
 Core::JSON json;
 SERIALIZE("v", value.v)
@@ -371,7 +371,7 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Maths::Quaternion& value, const Core::JSON& json)
+void Core::SerializationUtils::deserializeTemplated(Maths::Quaternion& value, const Core::JSON& json)
 {
 DESERIALIZE("v", value.v)
 DESERIALIZE("w", value.w)

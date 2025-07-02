@@ -6,7 +6,7 @@
 NS_BEGIN(EC)
 class EntityPtr;
 
-class Component: public ISerializable, public Event::IEventObject
+class Component: public Core::ISerializable, public Event::IEventObject
 {
 	DECLARE_SERIALIZATION()
 	
