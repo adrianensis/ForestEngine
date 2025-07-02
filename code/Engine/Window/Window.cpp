@@ -15,7 +15,7 @@ std::vector<const char*> Window::getRequiredExtensions() const
     return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
 }
 
-Vector2 Window::getWindowSize() const
+Maths::Vector2 Window::getWindowSize() const
 {
 	return mWindowData.mWindowSize;
 }
@@ -73,7 +73,7 @@ void Window::init(Core::i32 id, const WindowData& windowData)
 //        GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
         #endif
 
-//        GET_SYSTEM(GPUInterface).setClearColor(Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
+//        GET_SYSTEM(GPUInterface).setClearColor(Maths::Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
     }
     else
     {
@@ -288,7 +288,7 @@ void Window::charCallback(Core::u32 codepoint)
 	SEND_INPUT_EVENT(event);
 }
 
-Vector2 Window::getMousePosition() const
+Maths::Vector2 Window::getMousePosition() const
 {
 	Core::f64 mouseCoordX, mouseCoordY;
 
@@ -300,7 +300,7 @@ Vector2 Window::getMousePosition() const
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;
 
-	Vector2 newMouseCoordinates(mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY);
+	Maths::Vector2 newMouseCoordinates(mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY);
 
     return newMouseCoordinates;
 }
@@ -312,7 +312,7 @@ void Window::pollEvents() const
 
 void Window::waitUntilNotMinimized() const
 {
-	Vector2 size = getWindowSize();
+	Maths::Vector2 size = getWindowSize();
 	int width = size.x;
 	int height = size.y;
 

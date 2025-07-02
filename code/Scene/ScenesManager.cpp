@@ -42,8 +42,8 @@ void ScenesManager::init()
     mCameraSceneObject = ECManager.requestEntity<SceneObject>();
 	mCameraSceneObject->init();
 
-	// mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 10));
-	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0, 0, 0.3f));
+	// mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));
+	mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
     EC::TComponentPtr<Camera> camera = ECManager.requestComponent<Camera>();
 	camera->init();

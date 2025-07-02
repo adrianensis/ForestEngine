@@ -2,6 +2,7 @@
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/Vector4.hpp"
 
+NS_BEGIN(Maths)
 Vector3::Vector3(const Vector2& other) : x(other.x), y(other.y), z(0.0f)
 {
 }
@@ -69,9 +70,10 @@ Core::f32 Vector3::angle(const Vector3& v, const Vector3& n) const
 
 	return radians;
 }
+NS_END
 
 template<>
-Core::JSON SerializationUtils::serializeTemplated(const Vector3& value)
+Core::JSON SerializationUtils::serializeTemplated(const Maths::Vector3& value)
 {
 Core::JSON json;
 SERIALIZE("x", value.x)
@@ -81,7 +83,7 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Vector3& value, const Core::JSON& json)
+void SerializationUtils::deserializeTemplated(Maths::Vector3& value, const Core::JSON& json)
 {
 DESERIALIZE("x", value.x)
 DESERIALIZE("y", value.y)

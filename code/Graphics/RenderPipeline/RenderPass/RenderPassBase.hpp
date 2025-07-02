@@ -12,6 +12,6 @@ public:
     virtual ~RenderPassBase() = default;
 protected:
     virtual void updateGlobalData() override;
-    virtual Matrix4 calculateProjectionViewMatrix() const override;
+    virtual Maths::Matrix4 calculateProjectionViewMatrix() const override;
 };
 REGISTER_CLASS(RenderPassBase);

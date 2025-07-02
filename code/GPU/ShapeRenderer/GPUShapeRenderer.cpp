@@ -78,19 +78,19 @@ void GPUShapeRenderer::render()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
-void GPUShapeRenderer::addPosition(const Vector3& position)
+void GPUShapeRenderer::addPosition(const Maths::Vector3& position)
 {
     PROFILER_CPU()
 	mPositionBuffer.push_back(position);
 }
 
-void GPUShapeRenderer::addColor(const Vector4& color)
+void GPUShapeRenderer::addColor(const Maths::Vector4& color)
 {
     PROFILER_CPU()
 	mColorBuffer.push_back(color);
 }
 
-void GPUShapeRenderer::addLine(const Line& line, const Vector4& color)
+void GPUShapeRenderer::addLine(const Maths::Line& line, const Maths::Vector4& color)
 {
     PROFILER_CPU()
     if(mShapesCounter < mMaxShapes)

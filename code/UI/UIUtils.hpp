@@ -8,7 +8,7 @@ class UIUtils
 public:
 
     static Core::f32 correctAspectRatio(Core::f32 x);
-    static Vector3 correctAspectRatioVectorX(const Vector3& vector);
-    static Vector3 toScreenSpace(const Vector3& vector);
+    static Maths::Vector3 correctAspectRatioVectorX(const Maths::Vector3& vector);
+    static Maths::Vector3 toScreenSpace(const Maths::Vector3& vector);
 };
 

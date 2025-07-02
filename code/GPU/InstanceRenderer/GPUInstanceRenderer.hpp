@@ -24,7 +24,7 @@ private:
     bool shouldResize() const;
 
     void setMeshBuffers(Core::WeakPtr<const GPUMesh> mesh);
-    void setBonesTransformsBuffer(const std::vector<Matrix4>& transforms);
+    void setBonesTransformsBuffer(const std::vector<Maths::Matrix4>& transforms);
     void drawCall();
 
 private:

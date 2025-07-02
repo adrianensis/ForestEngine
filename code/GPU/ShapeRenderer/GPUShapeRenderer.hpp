@@ -13,16 +13,16 @@ public:
     void terminate();
     void render();
 
-	void addLine(const Line& line, const Vector4& color);
+	void addLine(const Maths::Line& line, const Maths::Vector4& color);
 
 private:
-    void addPosition(const Vector3& position);
-    void addColor(const Vector4& color);
+    void addPosition(const Maths::Vector3& position);
+    void addColor(const Maths::Vector4& color);
 private: 
 	Core::WeakPtr<GPUShader> mShader;
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
-	std::vector<Vector3> mPositionBuffer;
-	std::vector<Vector4> mColorBuffer;
+	std::vector<Maths::Vector3> mPositionBuffer;
+	std::vector<Maths::Vector4> mColorBuffer;
 	std::vector<Core::u32> mIndicesBuffer;
 
 protected:

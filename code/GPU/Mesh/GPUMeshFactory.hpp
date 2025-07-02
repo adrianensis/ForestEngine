@@ -35,6 +35,6 @@ private:
 REGISTER_CLASS(GPUMeshFactory);
 
 template <>
-Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Rectangle>() const;
+Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Maths::Rectangle>() const;
 template <>
-Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Cube>() const;
+Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Maths::Cube>() const;

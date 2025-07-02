@@ -2,6 +2,7 @@
 
 #include "Core/Std.hpp"
 
+NS_BEGIN(Maths)
 DECLARE_ENUM(GeometricSpace,
     WORLD, "WORLD",
     SCREEN, "SCREEN"
@@ -37,3 +38,4 @@ public:
     static Core::f32 det(Core::f32 a, Core::f32 b, Core::f32 c, Core::f32 d);
 };
 
+NS_END

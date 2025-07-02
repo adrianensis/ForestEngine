@@ -8,7 +8,7 @@ class GPURenderItemData
 public:
     GPUShaderStencilData mGPUShaderStencilData;
     Core::WeakPtr<const GPUMesh> mMesh;
-    Matrix4 mMeshInstanceMatrix = Matrix4::smIdentity;
+    Maths::Matrix4 mMeshInstanceMatrix = Maths::Matrix4::smIdentity;
     Core::WeakPtr<GPUShader> mShader;
     std::unordered_set<Core::ClassId> mRenderPassIDs;
 };
@@ -24,7 +24,7 @@ private:
     GPURenderItemData mGPURenderItemData;
     Core::Slot mInstanceSlot;
     Core::Slot mRenderSlot;
-    Matrix4 mRendererModelMatrix;
+    Maths::Matrix4 mRendererModelMatrix;
     Core::WeakPtr<GPUShaderPropertiesInstance> mGPUShaderPropertiesInstance;
     bool mIsStatic = false;
     bool mUpdateMatrix = false;

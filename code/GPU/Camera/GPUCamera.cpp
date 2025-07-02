@@ -12,7 +12,7 @@ void GPUCamera::init()
 	mFrustum.init(this);
 }
 
-void GPUCamera::update(const Matrix4& viewMatrix)
+void GPUCamera::update(const Maths::Matrix4& viewMatrix)
 {
 	PROFILER_CPU()
 	
@@ -66,7 +66,7 @@ void GPUCamera::setPerspective(Core::f32 near, Core::f32 far, Core::f32 aspect, 
 	mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov * mZoom);
 }
 
-void GPUCamera::onResize(const Vector2& windowSize, Core::f32 aspectRatio)
+void GPUCamera::onResize(const Maths::Vector2& windowSize, Core::f32 aspectRatio)
 {
     if (mIsOrtho)
 	{
@@ -80,26 +80,26 @@ void GPUCamera::onResize(const Vector2& windowSize, Core::f32 aspectRatio)
 	recalculateProjectionMatrix();
 }
 
-Vector3 GPUCamera::screenToWorld(const Vector2& screenPosition, Core::f32 depth)
+Maths::Vector3 GPUCamera::screenToWorld(const Maths::Vector2& screenPosition, Core::f32 depth)
 {	
 	calculateInverseMatrix();
 
-    Vector4 viewVector = mInverseProjectionMatrix.mulVector(Vector4(screenPosition.x, screenPosition.y, -1.0f, 1.0f));
-    Vector3 distanceToCameraVector = mViewMatrix.mulVector(Vector4(0,0,depth,1));
+    Maths::Vector4 viewVector = mInverseProjectionMatrix.mulVector(Maths::Vector4(screenPosition.x, screenPosition.y, -1.0f, 1.0f));
+    Maths::Vector3 distanceToCameraVector = mViewMatrix.mulVector(Maths::Vector4(0,0,depth,1));
     distanceToCameraVector = -distanceToCameraVector;
     // intersect view vector with object Z plane (in view)
-    Vector4 view_space_intersect = Vector4(Vector3(viewVector) * distanceToCameraVector.z, 1.0f);
-    Vector4 point_world = mInverseViewMatrix.mulVector(view_space_intersect);
+    Maths::Vector4 view_space_intersect = Maths::Vector4(Maths::Vector3(viewVector) * distanceToCameraVector.z, 1.0f);
+    Maths::Vector4 point_world = mInverseViewMatrix.mulVector(view_space_intersect);
 
 	return point_world;
 }
 
-Vector2 GPUCamera::worldToScreen(const Vector3& worldPosition)
+Maths::Vector2 GPUCamera::worldToScreen(const Maths::Vector3& worldPosition)
 {	
     calculateProjectionViewMatrix();
-	Vector4 v = mProjectionViewMatrix.mulVector(Vector4(worldPosition.x, worldPosition.y, worldPosition.z, 1.0));
+	Maths::Vector4 v = mProjectionViewMatrix.mulVector(Maths::Vector4(worldPosition.x, worldPosition.y, worldPosition.z, 1.0));
 
-    Vector2 result = v;
+    Maths::Vector2 result = v;
 	result = result / v.w;
 
 	return result;

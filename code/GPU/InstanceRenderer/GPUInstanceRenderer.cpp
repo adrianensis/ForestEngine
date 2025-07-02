@@ -145,7 +145,7 @@ void GPUInstanceRenderer::update(VkCommandBuffer commandBuffer)
     mResizeBuffersRequested = false;
 }
 
-void GPUInstanceRenderer::setBonesTransformsBuffer(const std::vector<Matrix4>& transforms)
+void GPUInstanceRenderer::setBonesTransformsBuffer(const std::vector<Maths::Matrix4>& transforms)
 {
 }
 

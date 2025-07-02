@@ -42,7 +42,7 @@ class GPUFramebuffer
 {
 public:
     bool init(Core::Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass);
-    Vector4 readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const;
+    Maths::Vector4 readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 

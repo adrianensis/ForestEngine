@@ -25,7 +25,7 @@ public:
 	public:
         OcTree* mTree = nullptr;
         OcTreeNode* mParent = nullptr;
-		Cube mCube;
+		Maths::Cube mCube;
     	Core::u8 mDepth = 0;
         Core::u8 mIndex = 0;
 		inline static const Core::u8 smMaxChildNumber = 8;
@@ -33,9 +33,9 @@ public:
 		std::array<OcTreeNode*, smMaxChildNumber> mChildren;
 		std::array<Core::i8, smMaxChildNumber> mActiveChildren;
 		Core::u8 mActiveChildrenIndex = 0;
-		std::array<Cube, smMaxChildNumber> mChildrenBoundingBoxes;
+		std::array<Maths::Cube, smMaxChildNumber> mChildrenBoundingBoxes;
 
-        void init(OcTree* tree, OcTreeNode* parent, Core::u8 index, const Cube& cube, Core::u8 depth);
+        void init(OcTree* tree, OcTreeNode* parent, Core::u8 index, const Maths::Cube& cube, Core::u8 depth);
 		void addOcTreeElement(Core::WeakPtr<IOcTreeElement> element);
 		void update(OcTree& tree);
 		void updateDynamicElements(OcTree& tree);
@@ -49,7 +49,7 @@ public:
 private:
 	OcTreeNode mRoot;
     Core::u8 mMaxDepth = 0;
-	Vector3 mSize;
+	Maths::Vector3 mSize;
 
 public:
 	void init(Core::f32 size);
@@ -62,13 +62,13 @@ public:
 class IOcTreeElement
 {
 public:
-    void init(const Matrix4& modelMatrix, const Vector3& AABBMin, const Vector3& AABBMax, bool isStatic);
+    void init(const Maths::Matrix4& modelMatrix, const Maths::Vector3& AABBMin, const Maths::Vector3& AABBMax, bool isStatic);
     // void addNode(Core::u32 nodeHash);
     // void removeNode(Core::u32 nodeHash);
     // bool isInNode(Core::u32 nodeHash) const;
 
 private:
-    Cube mOcTreeBoundingBox;
+    Maths::Cube mOcTreeBoundingBox;
     bool mIsStatic = false;
 
     // NEXT: CONTINUE HERE

@@ -18,14 +18,14 @@ void UISceneTree::update()
 
     UIBuilder uiBuilder;
 	uiBuilder.
-	setPosition(Vector2(0,0)).
+	setPosition(Maths::Vector2(0,0)).
 	// setPosition(startGlyph).
 	setAdjustSizeToText(true).
 	setIsAffectedByLayout(true).
 	setLayout(UILayout::VERTICAL).
     setParent(this).
 	setTextScale(0.5f).
-	setSize(Vector2(0.5, 0.05f));
+	setSize(Maths::Vector2(0.5, 0.05f));
 
     const std::list<EC::TEntityPtr<SceneObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();
     std::list<EC::TEntityPtr<SceneObject>> objectsInmutableList;

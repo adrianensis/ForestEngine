@@ -17,7 +17,7 @@ void GPUSkeletalAnimationManager::update()
 
     FOR_MAP(it, mSkeletonRenderStates)
 	{
-        const std::vector<Matrix4>& transforms = it->first->getCurrentBoneTransforms();
+        const std::vector<Maths::Matrix4>& transforms = it->first->getCurrentBoneTransforms();
         it->second.mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices).setDataArray(transforms);
 	}
 }
@@ -50,7 +50,7 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(Core::WeakPtr<const GP
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
-    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Matrix4)*GPUConstants::MAX_BONES, false);
+    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Maths::Matrix4)*GPUConstants::MAX_BONES, false);
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }

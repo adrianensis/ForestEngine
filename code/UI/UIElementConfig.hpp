@@ -19,16 +19,16 @@ class UIElementConfig
 public:
 	const UIStyle* mStyle = nullptr;
 	Core::ClassId mUIElementClassId = 0;
-	Vector2 mPosition = Vector2::smZero;
-	Vector2 mSize = Vector2::smOne;
-	Vector2 mDisplayPosition = Vector2::smZero;
-	Vector2 mDisplaySize = Vector2::smOne;
+	Maths::Vector2 mPosition = Maths::Vector2::smZero;
+	Maths::Vector2 mSize = Maths::Vector2::smOne;
+	Maths::Vector2 mDisplayPosition = Maths::Vector2::smZero;
+	Maths::Vector2 mDisplaySize = Maths::Vector2::smOne;
 	bool mIsStatic = true;
 	bool mIsStaticText = true;
 	Core::HashedString mSceneName = ScenesManager::smDefaultUISceneName;
     bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
-	// Vector2 mTextScale;
+	// Maths::Vector2 mTextScale;
 	Core::HashedString mText;
 	Core::f32 mTextScale = 1.0f;
 	bool mAdjustSizeToText = false;

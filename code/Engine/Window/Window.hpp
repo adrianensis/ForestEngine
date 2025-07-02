@@ -9,7 +9,7 @@ NS_BEGIN(Window)
 class WindowData
 {
 public:
-    Vector2 mWindowSize;
+    Maths::Vector2 mWindowSize;
     bool mFullScreen = false;
     bool mMainWindow = false;
     Core::HashedString mTitle;
@@ -30,7 +30,7 @@ public:
     GLFWwindow* getGlfwWindow() const;
     std::vector<const char*> getRequiredExtensions() const;
 
-    Vector2 getWindowSize() const;
+    Maths::Vector2 getWindowSize() const;
     Core::f32 getAspectRatio() const;
     bool isClosed() const;
     void swap();
@@ -38,7 +38,7 @@ public:
     void pollEvents() const;
     
     void setCursorVisibility(bool visible);
-    virtual Vector2 getMousePosition() const override;
+    virtual Maths::Vector2 getMousePosition() const override;
 
     void waitUntilNotMinimized() const;
     bool isIconified() const;

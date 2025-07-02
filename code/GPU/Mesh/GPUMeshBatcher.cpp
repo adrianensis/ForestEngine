@@ -58,7 +58,7 @@ void GPUMeshBatcher::generateIndicesData(Core::u32 meshesCount)
 		Core::u32 offset = (i * mMesh->mVertexCount);
 		FOR_RANGE(faceIndex, 0, mMesh->mIndices.size())
 		{
-			Face newFace = mMesh->mIndices.get<Face>(faceIndex);
+			Maths::Face newFace = mMesh->mIndices.get<Maths::Face>(faceIndex);
 			newFace.mIndex0 += offset;
 			newFace.mIndex1 += offset;
 			newFace.mIndex2 += offset;

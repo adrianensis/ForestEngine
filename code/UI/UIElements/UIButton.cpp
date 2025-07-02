@@ -46,7 +46,7 @@ void UIButton::setText(Core::HashedString text)
 			UIBuilder uiBuilder;
 
 			mText = uiBuilder.
-			setPosition(Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
+			setPosition(Maths::Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
 			setSize(mConfig.mDisplaySize).
 			setText(text).
 			setTextScale(mConfig.mTextScale).

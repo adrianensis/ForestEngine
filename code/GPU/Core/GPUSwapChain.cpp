@@ -5,7 +5,7 @@
 GPUSwapChain::GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface)
         : vulkanDevice(vulkanDevice), vkSurface(vkSurface)  {}
 
-bool GPUSwapChain::init(Vector2 windowSizeInPixels)
+bool GPUSwapChain::init(Maths::Vector2 windowSizeInPixels)
 {
     mWindowSizeInPixels = windowSizeInPixels;
     const GPUSwapChainInfo& swapChainInfo = vulkanDevice->getPhysicalDevice()->getSwapChainInfo();

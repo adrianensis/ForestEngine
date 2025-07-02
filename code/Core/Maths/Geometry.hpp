@@ -4,6 +4,8 @@
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
+
+NS_BEGIN(Maths)
 class Cube;
 class Sphere;
 class Line;
@@ -159,3 +161,4 @@ public:
     GET(Radius)
 };
 REGISTER_CLASS(Sphere)
+NS_END

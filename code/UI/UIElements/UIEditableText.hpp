@@ -9,7 +9,7 @@ class UIStyleEditableTextBackground: public UIStyle
 public:
 	UIStyleEditableTextBackground()
 	{
-		mBackgroundColor = Vector4(0, 0, 0.2f, 1);
+		mBackgroundColor = Maths::Vector4(0, 0, 0.2f, 1);
 	}
 };
 REGISTER_CLASS(UIStyleEditableTextBackground)

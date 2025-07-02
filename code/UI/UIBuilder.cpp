@@ -65,20 +65,20 @@ UILayout UIBuilder::getOppositeLayout(UILayout layout)
 	return (UILayout)(((int)mCurrentLayout + 1) % 2);
 }
 
-Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
+Maths::Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 {
-	Vector2 offset = Vector2::smZero;
+	Maths::Vector2 offset = Maths::Vector2::smZero;
 
 	switch (layout)
 	{
 		case UILayout::HORIZONTAL:
 		{
-			offset = Vector2((mLastConfig.mDisplaySize.x + UIUtils::correctAspectRatio(mConfig.mSeparatorSize)), 0);
+			offset = Maths::Vector2((mLastConfig.mDisplaySize.x + UIUtils::correctAspectRatio(mConfig.mSeparatorSize)), 0);
 			break;
 		}
 		case UILayout::VERTICAL:
 		{
-			offset = Vector2(0, -(mLastConfig.mDisplaySize.y + mConfig.mSeparatorSize));
+			offset = Maths::Vector2(0, -(mLastConfig.mDisplaySize.y + mConfig.mSeparatorSize));
 			break;
 		}
 	}
@@ -90,7 +90,7 @@ void UIBuilder::calculateConfig()
 {
 	if (mConfig.mIsAffectedByLayout && mMakeRelativeToLastConfig)
 	{
-		Vector2 offset = calculateNextElementOffset(mNewRowOrColumn ? getOppositeLayout(mCurrentLayout) : mCurrentLayout);
+		Maths::Vector2 offset = calculateNextElementOffset(mNewRowOrColumn ? getOppositeLayout(mCurrentLayout) : mCurrentLayout);
 		mConfig.mPosition = mLastConfig.mPosition + offset;
 	}
 }

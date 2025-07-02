@@ -72,16 +72,16 @@ void GPUSkeletonState::createSkeletalAnimationState(Core::WeakPtr<const GPUSkele
     }
 }
 
-void GPUSkeletonState::getBoneTransforms(std::vector<Matrix4>& Transforms) const
+void GPUSkeletonState::getBoneTransforms(std::vector<Maths::Matrix4>& Transforms) const
 {
     getBoneTransformsFromCurrentSkeletalAnimation(Transforms);
 }
 
-void GPUSkeletonState::getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const
+void GPUSkeletonState::getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Maths::Matrix4>& Transforms) const
 {
 	PROFILER_CPU()
 
-    Matrix4 Identity;
+    Maths::Matrix4 Identity;
 	Identity.identity();
 
     Core::f32 animationTime = mCurrentSkeletalAnimation->getSkeletalAnimationTime();

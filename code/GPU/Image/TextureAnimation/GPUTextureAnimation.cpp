@@ -1,7 +1,7 @@
 #include "GPU/Image/TextureAnimation/GPUTextureAnimation.hpp"
 #include "Engine/Time/TimeUtils.hpp"
 
-GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed)
+GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horizontal, bool reverse, const Maths::Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed)
 {
 	GPUTextureAnimation TextureAnimation;
 	TextureAnimation.init();
@@ -34,7 +34,7 @@ GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horiz
 
 	for (Core::i32 i = start; i != end; i += delta)
 	{
-		Vector2 pos(0, 0);
+		Maths::Vector2 pos(0, 0);
 		pos.add(startPosition);
 
 		if (horizontalDir != 0)

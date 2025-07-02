@@ -1,6 +1,6 @@
 #include "Core/Maths/MathUtils.hpp"
 
-
+NS_BEGIN(Maths)
 Core::f32 MathUtils::rad(Core::f32 deg)
 {
 	return deg * PI_180;
@@ -30,3 +30,4 @@ Core::f32 MathUtils::det(Core::f32 a, Core::f32 b, Core::f32 c, Core::f32 d)
 {
 	return a * d - b * c;
 }
+NS_END

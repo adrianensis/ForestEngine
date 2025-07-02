@@ -40,7 +40,7 @@ void UIFont::init(UIFontsManager& fontsManager, Core::HashedString fontFile, Cor
     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{mFontData.mPath});
     shaderData.mFontData = mFontData;
     GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
-    shaderPropertiesBlockUI.mColor = Vector4(1,1,1,1);
+    shaderPropertiesBlockUI.mColor = Maths::Vector4(1,1,1,1);
     mFontShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
 
     mFontData.freeGlyphsBuffers();

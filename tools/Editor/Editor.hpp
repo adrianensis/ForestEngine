@@ -15,11 +15,11 @@ public:
     virtual void terminate() override;
 
 private:
-	EC::EntityPtr createSprite(const Vector3& v, Core::f32 size);
-	EC::EntityPtr createPointLight(const Vector3& v, Core::f32 size);
-	EC::EntityPtr createDirectionalLight(const Vector3& v, const Vector3& dir);
+	EC::EntityPtr createSprite(const Maths::Vector3& v, Core::f32 size);
+	EC::EntityPtr createPointLight(const Maths::Vector3& v, Core::f32 size);
+	EC::EntityPtr createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir);
 	EC::EntityPtr mousePick();
-    EC::EntityPtr importModel(const std::string& pFile, const Vector3& v, Core::f32 size, const Vector3& rot, bool isStatic);
+    EC::EntityPtr importModel(const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic);
 	void handlePressedKeys();
 	void handleMouse();
     void createUI();
@@ -35,6 +35,6 @@ private:
 
     std::vector<EC::TEntityPtr<SceneObject>> mSceneObjectsArray;
 
-    Vector2 mLastMousePosition;
+    Maths::Vector2 mLastMousePosition;
 };
 REGISTER_CLASS(Editor)

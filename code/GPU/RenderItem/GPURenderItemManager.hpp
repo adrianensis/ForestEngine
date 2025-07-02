@@ -19,7 +19,7 @@ private:
     void processRenderer(Core::WeakPtr<GPURenderItem> renderItem);
 
 private:
-    std::vector<Matrix4> mMatrices;
+    std::vector<Maths::Matrix4> mMatrices;
     Core::SlotsManager mRenderInstancesSlotsManager;
 	std::vector<Core::WeakPtr<GPURenderItem>> mRenderers;
     std::set<Core::u32> mUsedSlots;

@@ -116,16 +116,16 @@ origin(0,0) .              * X        X*                    .               v
         _error = FT_Render_Glyph(mFreeTypeFace->glyph, FT_RENDER_MODE_NORMAL);
         CHECK_MSG(!_error, "Failed to render Glyph: " + std::to_string(c));
 
-        Vector2 bitmapSize = Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
-        Vector2 glyphSizeInAtlasSpace = bitmapSize / Vector2(mWidth, mHeight);
-        Vector2 textureOffset = Vector2((Core::f32)texPos / (Core::f32)mWidth, 0);
+        Maths::Vector2 bitmapSize = Maths::Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
+        Maths::Vector2 glyphSizeInAtlasSpace = bitmapSize / Maths::Vector2(mWidth, mHeight);
+        Maths::Vector2 textureOffset = Maths::Vector2((Core::f32)texPos / (Core::f32)mWidth, 0);
 
         FontGlyphMetricsData metrics;
-        metrics.mSize = Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
-        metrics.mBoundingBoxMin = Vector2(mFreeTypeFace->bbox.xMin >> 6, mFreeTypeFace->bbox.yMin >> 6);
-        metrics.mBoundingBoxMax = Vector2(mFreeTypeFace->bbox.xMax >> 6, mFreeTypeFace->bbox.yMax >> 6);
-        metrics.mHoriBearing = Vector2(mFreeTypeFace->glyph->metrics.horiBearingX >> 6, mFreeTypeFace->glyph->metrics.horiBearingY >> 6);
-        metrics.mVertBearing = Vector2(mFreeTypeFace->glyph->metrics.vertBearingX >> 6, mFreeTypeFace->glyph->metrics.vertBearingY >> 6);
+        metrics.mSize = Maths::Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
+        metrics.mBoundingBoxMin = Maths::Vector2(mFreeTypeFace->bbox.xMin >> 6, mFreeTypeFace->bbox.yMin >> 6);
+        metrics.mBoundingBoxMax = Maths::Vector2(mFreeTypeFace->bbox.xMax >> 6, mFreeTypeFace->bbox.yMax >> 6);
+        metrics.mHoriBearing = Maths::Vector2(mFreeTypeFace->glyph->metrics.horiBearingX >> 6, mFreeTypeFace->glyph->metrics.horiBearingY >> 6);
+        metrics.mVertBearing = Maths::Vector2(mFreeTypeFace->glyph->metrics.vertBearingX >> 6, mFreeTypeFace->glyph->metrics.vertBearingY >> 6);
 
         mGlyphs[c] = {
             // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
@@ -138,11 +138,11 @@ origin(0,0) .              * X        X*                    .               v
             // h: height offset from the top of the character to the line
             // w and h are represented in 1/64ths of a pixel so we need 
             // to convert them to accurate on-screen pixels.
-            Vector2(mFreeTypeFace->glyph->advance.x >> 6, mFreeTypeFace->glyph->advance.y >> 6),
+            Maths::Vector2(mFreeTypeFace->glyph->advance.x >> 6, mFreeTypeFace->glyph->advance.y >> 6),
             bitmapSize,
-            Vector2(mFreeTypeFace->glyph->bitmap_left, mFreeTypeFace->glyph->bitmap_top),
+            Maths::Vector2(mFreeTypeFace->glyph->bitmap_left, mFreeTypeFace->glyph->bitmap_top),
             metrics,
-            Rectangle(textureOffset, glyphSizeInAtlasSpace),
+            Maths::Cube(textureOffset, glyphSizeInAtlasSpace),
             nullptr
         };
 

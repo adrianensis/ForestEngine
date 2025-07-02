@@ -5,23 +5,23 @@
 class DirectionalLightData
 {
 public:
-    alignas(16) Vector3 mDirection = Vector3::smZero;
-    alignas(16) Vector3 mDiffuse = Vector3::smZero;
+    alignas(16) Maths::Vector3 mDirection = Maths::Vector3::smZero;
+    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
 };
 
 class PointLightData
 {
 public:
-    alignas(16) Vector3 mPosition = Vector3::smZero;
-    alignas(16) Vector3 mDiffuse = Vector3::smZero;
+    alignas(16) Maths::Vector3 mPosition = Maths::Vector3::smZero;
+    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
 };
 
 class SpotLightData
 {
 public:
-    alignas(16) Vector3 mPosition = Vector3::smZero;
-    alignas(16) Vector3 mDirection = Vector3::smZero;
-    alignas(16) Vector3 mDiffuse = Vector3::smZero;
+    alignas(16) Maths::Vector3 mPosition = Maths::Vector3::smZero;
+    alignas(16) Maths::Vector3 mDirection = Maths::Vector3::smZero;
+    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
     alignas(16) Core::f32 mInnerCutOff = 0;
     Core::f32 mOuterCutOff = 0;
 };
@@ -98,6 +98,6 @@ public:
     class ShadowMappingData
     {
     public:
-        Matrix4 mLightProjectionViewMatrix;
+        Maths::Matrix4 mLightProjectionViewMatrix;
     };
 };

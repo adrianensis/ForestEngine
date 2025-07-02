@@ -2,17 +2,17 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-Vector4 GPUFramebuffer::readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const
+Maths::Vector4 GPUFramebuffer::readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const
 {
     CHECK_MSG(mFramebufferData.mAttachments.contains(attachmentType), "Attachment not found!");
 
 //    // GET_SYSTEM(GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ, mFramebufferId);
 //    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(attachmentType);
-//    Vector4 pixelColor = GET_SYSTEM(GPUInterface).readFramebufferPixel(x, y, GPUTexturePixelFormat::RGBA);
+//    Maths::Vector4 pixelColor = GET_SYSTEM(GPUInterface).readFramebufferPixel(x, y, GPUTexturePixelFormat::RGBA);
 //    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(GPUFramebufferAttachmentType::NONE);
 //    // GET_SYSTEM(GPUInterface).disableFramebuffer(GPUFramebufferOperationType::READ);
     // return pixelColor;
-    return Vector4();
+    return Maths::Vector4();
 }
 
 void GPUFramebuffer::enable(GPUFramebufferOperationType op)

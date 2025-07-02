@@ -15,7 +15,7 @@ void RenderPipelinePBR::compile()
     GPURenderPassData renderPassUIData;
     renderPassUIData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
     renderPassUIData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    renderPassUIData.mGeometricSpace = GeometricSpace::SCREEN;
+    renderPassUIData.mGeometricSpace = Maths::GeometricSpace::SCREEN;
 
     mGPURenderGraph.initRenderPass<RenderPassUI>(renderPassUIData);
 }

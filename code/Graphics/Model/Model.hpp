@@ -24,7 +24,7 @@ class MeshInstanceData
 {
 public:
     Core::WeakPtr<const GPUMesh> mMesh;
-    Matrix4 mMatrix;
+    Maths::Matrix4 mMatrix;
 };
 
 class Model: public Core::EnableWeakPtrToThis
@@ -51,11 +51,11 @@ private:
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
     void loadGLTFSkeletalAnimationFrames(Core::WeakPtr<GPUSkeletalAnimation> animation);
     void loadGLTFSkeletalAnimations();
-    static Matrix4 calculateHierarchicalBoneTransform(Core::u32 boneId, std::vector<Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
+    static Maths::Matrix4 calculateHierarchicalBoneTransform(Core::u32 boneId, std::vector<Maths::Matrix4> originalFrameTransforms, const std::vector<GPUBoneData>& bones);
     static bool findKeyframeData(cgltf_accessor *input, Core::f32 currentTime, KeyframeData& keyframeData);
-    static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Vector3& out);
-    static void getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Vector3& out);
-    static void getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Quaternion& out);
+    static void getTranslationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Maths::Vector3& out);
+    static void getScaleAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Maths::Vector3& out);
+    static void getRotationAtTime(cgltf_accessor *input, cgltf_interpolation_type interpolation, cgltf_accessor *output, Core::f32 currentTime, Maths::Quaternion& out);
     bool isSkinned() const;
 
 private:

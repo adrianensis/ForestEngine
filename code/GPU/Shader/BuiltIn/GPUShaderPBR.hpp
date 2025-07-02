@@ -15,7 +15,7 @@ public:
 class PropertiesBlockGPUShaderPBR
 {
 public:
-    Vector4 mBaseColor = Vector4(0,0,0,1);
+    Maths::Vector4 mBaseColor = Maths::Vector4(0,0,0,1);
     alignas(16) Core::f32 mMetallic = 0;
     alignas(16) Core::f32 mRoughness = 0;
 };

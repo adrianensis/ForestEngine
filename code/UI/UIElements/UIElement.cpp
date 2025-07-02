@@ -57,24 +57,24 @@ bool UIElement::isMouseCursorInsideElement() const
         return false;
     }
 
-	Vector2 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+	Maths::Vector2 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
 
-	// if(mTransform->mGeometricSpace == GeometricSpace::WORLD)
+	// if(mTransform->mGeometricSpace == Maths::GeometricSpace::WORLD)
 	{
 		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input::Input).getMousePosition());
 	}
 
-    // GET_SYSTEM(DebugRenderer).drawRectangle(Rectangle(getLeftTopPosition(), correctedSize), 1, false);
+    // GET_SYSTEM(DebugRenderer).drawRectangle(Maths::Cube(getLeftTopPosition(), correctedSize), 1, false);
 
-	return Geometry::testCubePoint(
-		Rectangle(getLeftTopPosition(), mConfig.mDisplaySize),
+	return Maths::Geometry::testCubePoint(
+		Maths::Cube(getLeftTopPosition(), mConfig.mDisplaySize),
 		mousePosition, 0);
 }
 
-Vector3 UIElement::getLeftTopPosition() const
+Maths::Vector3 UIElement::getLeftTopPosition() const
 {
     PROFILER_CPU()
-    Vector3 position = mTransform->getWorldPosition();
+    Maths::Vector3 position = mTransform->getWorldPosition();
     position.x = position.x - (mConfig.mDisplaySize.x / 2.0f);
     position.y = position.y + (mConfig.mDisplaySize.y / 2.0f);
 

@@ -7,7 +7,7 @@ class Light: public EC::Component
 {
 public:
     Core::ClassId getComponentTypeId() const override;
-    virtual Matrix4 getLightProjectionViewMatrix() const;
+    virtual Maths::Matrix4 getLightProjectionViewMatrix() const;
 };
 REGISTER_CLASS(Light);
 

@@ -10,7 +10,7 @@ void UIVector::init()
 
     UIBuilder uiBuilder;
 	uiBuilder.
-	setPosition(Vector2(0,0)).
+	setPosition(Maths::Vector2(0,0)).
 	// setPosition(startGlyph).
 	setAdjustSizeToText(true).
 	setIsStatic(mIsStatic).
@@ -18,7 +18,7 @@ void UIVector::init()
 	setIsAffectedByLayout(true).
     setParent(this).
 	setTextScale(0.5f).
-	setSize(Vector2(0.5, 0.05f));
+	setSize(Maths::Vector2(0.5, 0.05f));
 
     mX = uiBuilder.
 	setText(Core::HashedString("000000.000")).
@@ -42,7 +42,7 @@ void UIVector::init()
 	// getUIElement<UIText>();
 }
 
-void UIVector::update(const Vector3& v)
+void UIVector::update(const Maths::Vector3& v)
 {
     mX->setText(Core::HashedString(std::to_string(v.x).substr(0, 10)));
     mY->setText(Core::HashedString(std::to_string(v.y).substr(0, 10)));

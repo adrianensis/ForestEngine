@@ -12,7 +12,7 @@ public:
 class PropertiesBlockGPUShaderDefault
 {
 public:
-    Vector4 mBaseColor = Vector4(0,0,0,1);
+    Maths::Vector4 mBaseColor = Maths::Vector4(0,0,0,1);
 };
 REGISTER_CLASS(PropertiesBlockGPUShaderDefault)
 

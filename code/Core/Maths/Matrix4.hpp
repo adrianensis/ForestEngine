@@ -21,6 +21,7 @@
 
  */
 
+ NS_BEGIN(Maths)
 class Matrix4
 {
 public:
@@ -86,3 +87,4 @@ private:
 };
 
 inline const Matrix4 Matrix4::smIdentity = Matrix4({1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1});
+NS_END

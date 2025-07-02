@@ -16,7 +16,7 @@ public:
     virtual void mouseButtonCallback(int button, int action, int mods) = 0;
     virtual void scrollCallback(double xoffset, double yoffset) = 0;
     virtual void charCallback(unsigned int codepoint) = 0;
-    virtual Vector2 getMousePosition() const = 0;
+    virtual Maths::Vector2 getMousePosition() const = 0;
 };
 
 class Input: public System::System
@@ -29,13 +29,13 @@ public:
     bool isModifierPressed(Core::i32 modifier);
     bool isMouseButtonPressedOnce(Core::i32 button);
     bool isMouseButtonPressed(Core::i32 button);
-    const Vector2& getMousePosition();
+    const Maths::Vector2& getMousePosition();
     Core::f32 getScroll();
     void clearMouseButton();
     void clearKey();
     
 public:
-	Vector2 smMouseCoordinates;
+	Maths::Vector2 smMouseCoordinates;
 	Core::i32 smLastMouseButtonPressed;
 	Core::i32 smLastKeyPressed;
 	Core::i32 smModifier;

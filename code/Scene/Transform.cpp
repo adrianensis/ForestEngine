@@ -8,9 +8,9 @@ void Transform::init()
 	mRotationMatrix.identity();
 	mScaleMatrix.identity();
 
-	mLocalPosition = Vector3(0.0f, 0.0f, 0.0f);
-	mLocalRotation = Vector3(0.0f, 0.0f, 0.0f);
-	mLocalScale = Vector3(1.0f, 1.0f, 1.0f);
+	mLocalPosition = Maths::Vector3(0.0f, 0.0f, 0.0f);
+	mLocalRotation = Maths::Vector3(0.0f, 0.0f, 0.0f);
+	mLocalScale = Maths::Vector3(1.0f, 1.0f, 1.0f);
 
 	notifyModelMatrixDirty();
 }
@@ -23,15 +23,15 @@ void Transform::onDestroy()
     }
 }
 
-Vector3 Transform::getWorldPosition() const
+Maths::Vector3 Transform::getWorldPosition() const
 {
     if(mWorldTranslationMatrixDirty)
     {
         mWorldPosition = mLocalPosition;
         if (mParent)
         {
-            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            mWorldPosition = parentModelMatrix.mulVector(Vector4(mWorldPosition, 1.0f));
+            const Maths::Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            mWorldPosition = parentModelMatrix.mulVector(Maths::Vector4(mWorldPosition, 1.0f));
         }
 
         mWorldTranslationMatrixDirty = false;
@@ -40,15 +40,15 @@ Vector3 Transform::getWorldPosition() const
 	return mWorldPosition;
 }
 
-Vector3 Transform::getWorldScale() const
+Maths::Vector3 Transform::getWorldScale() const
 {
     if(mWorldScaleMatrixDirty)
     {
         mWorldScale = mLocalScale;
         if (mParent)
         {
-            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            mWorldScale = parentModelMatrix.mulVector(Vector4(mWorldScale, 1.0f));
+            const Maths::Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            mWorldScale = parentModelMatrix.mulVector(Maths::Vector4(mWorldScale, 1.0f));
         }
 
         mWorldScaleMatrixDirty = false;
@@ -57,15 +57,15 @@ Vector3 Transform::getWorldScale() const
 	return mWorldScale;
 }
 
-Vector3 Transform::getWorldRotation() const
+Maths::Vector3 Transform::getWorldRotation() const
 {
     if(mWorldRotationMatrixDirty)
     {
         mWorldRotation = mLocalRotation;
         if (mParent)
         {
-            const Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
-            mWorldRotation = parentModelMatrix.mulVector(Vector4(mWorldRotation, 1.0f));
+            const Maths::Matrix4& parentModelMatrix = mParent->calculateModelMatrix();
+            mWorldRotation = parentModelMatrix.mulVector(Maths::Vector4(mWorldRotation, 1.0f));
         }
 
         mWorldRotationMatrixDirty = false;
@@ -74,18 +74,18 @@ Vector3 Transform::getWorldRotation() const
 	return mWorldRotation;
 }
 
-void Transform::lookAt(const Vector3& targetPosition)
+void Transform::lookAt(const Maths::Vector3& targetPosition)
 {
-    Vector3 mWorldPosition = getWorldPosition();
-    Matrix4 lookAt;
+    Maths::Vector3 mWorldPosition = getWorldPosition();
+    Maths::Matrix4 lookAt;
     lookAt.lookAt(mWorldPosition, targetPosition);
 
-	Quaternion q;
+	Maths::Quaternion q;
 	q.fromMatrix(lookAt);
 	setLocalRotation(q.toEuler());
 }
 
-const Matrix4& Transform::getLocalTranslationMatrix() const
+const Maths::Matrix4& Transform::getLocalTranslationMatrix() const
 {
     if(mLocalTranslationMatrixDirty)
     {
@@ -95,7 +95,7 @@ const Matrix4& Transform::getLocalTranslationMatrix() const
 	return mTranslationMatrix;
 }
 
-const Matrix4& Transform::getLocalRotationMatrix() const
+const Maths::Matrix4& Transform::getLocalRotationMatrix() const
 {
     if(mLocalRotationMatrixDirty)
     {
@@ -105,7 +105,7 @@ const Matrix4& Transform::getLocalRotationMatrix() const
 	return mRotationMatrix;
 }
 
-const Matrix4& Transform::getLocalScaleMatrix() const
+const Maths::Matrix4& Transform::getLocalScaleMatrix() const
 {
     if(mLocalScaleMatrixDirty)
     {
@@ -115,23 +115,23 @@ const Matrix4& Transform::getLocalScaleMatrix() const
 	return mScaleMatrix;
 }
 
-const Matrix4& Transform::calculateModelMatrix() const
+const Maths::Matrix4& Transform::calculateModelMatrix() const
 {
     PROFILER_CPU()
 
     if(mModelMatrixDirty)
     {
-        Matrix4 translationMatrix = getLocalTranslationMatrix();
-        Matrix4 rotationMatrix = getLocalRotationMatrix();
-        Matrix4 scaleMatrix = getLocalScaleMatrix();
-        mModelMatrix = Matrix4::transform(translationMatrix, rotationMatrix, scaleMatrix);
+        Maths::Matrix4 translationMatrix = getLocalTranslationMatrix();
+        Maths::Matrix4 rotationMatrix = getLocalRotationMatrix();
+        Maths::Matrix4 scaleMatrix = getLocalScaleMatrix();
+        mModelMatrix = Maths::Matrix4::transform(translationMatrix, rotationMatrix, scaleMatrix);
         mModelMatrix.mul(mBaseModelMatrix);
-        mModelMatrixNoScale = Matrix4::transform(translationMatrix, rotationMatrix, Matrix4::smIdentity);
+        mModelMatrixNoScale = Maths::Matrix4::transform(translationMatrix, rotationMatrix, Maths::Matrix4::smIdentity);
         mModelMatrixNoScale.mul(mBaseModelMatrix);
 
         if (mParent)
         {
-            Matrix4 parentModelMatrix = mParent->calculateModelMatrix();
+            Maths::Matrix4 parentModelMatrix = mParent->calculateModelMatrix();
             if(mIgnoreParentScale)
             {
                 parentModelMatrix = mParent->getModelMatrixNoScale();
@@ -139,7 +139,7 @@ const Matrix4& Transform::calculateModelMatrix() const
             parentModelMatrix.mul(mModelMatrix);
             mModelMatrix = parentModelMatrix;
             
-            Matrix4 parentModelMatrixNoScale = mParent->getModelMatrixNoScale();
+            Maths::Matrix4 parentModelMatrixNoScale = mParent->getModelMatrixNoScale();
             parentModelMatrixNoScale.mul(mModelMatrixNoScale);
             mModelMatrixNoScale = parentModelMatrixNoScale;
         }
@@ -164,29 +164,29 @@ void Transform::notifyModelMatrixDirty()
     }
 }
 
-void Transform::addLocalTranslation(const Vector3& vector)
+void Transform::addLocalTranslation(const Maths::Vector3& vector)
 {
     setLocalPosition(mLocalPosition.add(vector));
 }
 
-void Transform::addLocalRotation(const Vector3& vector)
+void Transform::addLocalRotation(const Maths::Vector3& vector)
 {
     setLocalRotation(mLocalRotation.add(vector));
 }
 
-void Transform::addLocalScale(const Vector3& vector)
+void Transform::addLocalScale(const Maths::Vector3& vector)
 {
     setLocalScale(mLocalScale.add(vector));
 }
 
-void Transform::setLocalPosition(const Vector3& vec)
+void Transform::setLocalPosition(const Maths::Vector3& vec)
 {
     mLocalPosition = vec;
     mLocalTranslationMatrixDirty = true;
     notifyModelMatrixDirty();
 }
 
-void Transform::setLocalRotation(const Vector3& vec)
+void Transform::setLocalRotation(const Maths::Vector3& vec)
 {
     mLocalRotation = vec;
     mLocalRotation.x = std::fmod(mLocalRotation.x, 360.0f);
@@ -199,25 +199,25 @@ void Transform::setLocalRotation(const Vector3& vec)
     notifyModelMatrixDirty();
 }
 
-void Transform::setLocalScale(const Vector3& vec)
+void Transform::setLocalScale(const Maths::Vector3& vec)
 {
     mLocalScale = vec;
     mLocalScaleMatrixDirty = true;
     notifyModelMatrixDirty();
 }
 
-void Transform::setBaseModelMatrix(const Matrix4& matrix)
+void Transform::setBaseModelMatrix(const Maths::Matrix4& matrix)
 {
     mBaseModelMatrix = matrix;
     notifyModelMatrixDirty();
 }
 
-const Matrix4& Transform::getViewMatrix() const
+const Maths::Matrix4& Transform::getViewMatrix() const
 {
     if(mViewMatrixDirty)
     {
-        Vector3 worldPosition = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
-        const Matrix4& rotationMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+        Maths::Vector3 worldPosition = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
+        const Maths::Matrix4& rotationMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
         mViewMatrix.view(worldPosition, rotationMatrix);
         mViewMatrixDirty = false;
     }

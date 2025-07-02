@@ -4,6 +4,7 @@
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Quaternion.hpp"
 
+NS_BEGIN(Maths)
 Matrix4::Matrix4()
 {
 	zeros();
@@ -351,3 +352,5 @@ Matrix4 Matrix4::transform(const Matrix4& translation, const Matrix4& rotation, 
     translationCopy.mul(rotationCopy);
     return translationCopy;
 }
+
+NS_END

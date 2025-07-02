@@ -3,6 +3,7 @@
 #include "Core/Std.hpp"
 #include "Core/Maths/Matrix4.hpp"
 
+NS_BEGIN(Maths)
 class Quaternion
 {
 public:
@@ -93,6 +94,6 @@ public:
 	}
 };
 
-TEMPLATED_SERIALIZATION(Quaternion)
-
+NS_END
+TEMPLATED_SERIALIZATION(Maths::Quaternion)
 

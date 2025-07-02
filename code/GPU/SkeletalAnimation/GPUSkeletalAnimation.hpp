@@ -6,7 +6,7 @@ class GPUMesh;
 class Frame
 {
 public:
-    std::vector<Matrix4> mTransforms;
+    std::vector<Maths::Matrix4> mTransforms;
 };
 
 class GPUSkeletalAnimation
@@ -54,14 +54,14 @@ public:
     Core::i32 mParentId = INVALID_INDEX;
     std::string mName;
     // offset matrix transforms vertex from model space to bone space
-	Matrix4 mBindMatrix;
+	Maths::Matrix4 mBindMatrix;
 };
 
 class GPUSkeletonStateData
 {
 public:
     std::vector<GPUBoneData> mBones;
-    std::vector<Matrix4> mInverseBindMatrices;
+    std::vector<Maths::Matrix4> mInverseBindMatrices;
     std::vector<Core::WeakPtr<const GPUMesh>> mMeshes;
 };
 
@@ -73,13 +73,13 @@ public:
     void update();
 
 private:
-    void getBoneTransforms(std::vector<Matrix4>& Transforms) const;
-    void getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Matrix4>& Transforms) const;
+    void getBoneTransforms(std::vector<Maths::Matrix4>& Transforms) const;
+    void getBoneTransformsFromCurrentSkeletalAnimation(std::vector<Maths::Matrix4>& Transforms) const;
 private:
     GPUSkeletonStateData mGPUSkeletonStateData;
     std::unordered_map<Core::u32, Core::OwnerPtr<GPUSkeletalAnimationState>> mSkeletalAnimationStates;
     Core::WeakPtr<GPUSkeletalAnimationState> mCurrentSkeletalAnimation;
-    std::vector<Matrix4> mCurrentBoneTransforms;
+    std::vector<Maths::Matrix4> mCurrentBoneTransforms;
 
 public:
     CRGET(CurrentBoneTransforms)

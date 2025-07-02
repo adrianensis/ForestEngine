@@ -27,7 +27,7 @@ void MeshRenderer::onDestroy()
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    Matrix4 rendererModelMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
+    Maths::Matrix4 rendererModelMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
     rendererModelMatrix.mul(mGPURenderItem->getGPURenderItemData().mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     mGPURenderItem->setRendererModelMatrix(rendererModelMatrix);
@@ -61,7 +61,7 @@ void MeshRenderer::updateTextureRegion()
     //     // if(mCurrentTextureAnimationUpdater.getHasFrameChanged())
     //     // {
     //     //     mGPUShaderPropertiesInstance.mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlock>().mTextureRegionLeftTop = frame.mPosition;
-    //     //     mGPUShaderPropertiesInstance.mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlock>().mTextureRegionSize = Vector2(frame.mWidth, frame.mHeight);
+    //     //     mGPUShaderPropertiesInstance.mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlock>().mTextureRegionSize = Maths::Vector2(frame.mWidth, frame.mHeight);
     //     // }
     // }
 }

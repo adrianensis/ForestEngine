@@ -6,7 +6,7 @@ class UIVector: public SceneObject
 {
 public:
     virtual void init() override;
-    void update(const Vector3& v);
+    void update(const Maths::Vector3& v);
     virtual void onDestroy() override;
 
 private:

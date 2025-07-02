@@ -12,28 +12,28 @@ public:
     void init();
     void onDestroy() override;
 
-	void addLocalTranslation(const Vector3& vector);
-	void addLocalRotation(const Vector3& vector);
-	void addLocalScale(const Vector3& vector);
-    void lookAt(const Vector3& targetPosition);
+	void addLocalTranslation(const Maths::Vector3& vector);
+	void addLocalRotation(const Maths::Vector3& vector);
+	void addLocalScale(const Maths::Vector3& vector);
+    void lookAt(const Maths::Vector3& targetPosition);
 
-    const Matrix4& calculateModelMatrix() const;
+    const Maths::Matrix4& calculateModelMatrix() const;
 
     void addChild(EC::TComponentPtr<Transform> child);
     void removeChild(EC::TComponentPtr<Transform> child);
 
-    Vector3 getWorldPosition() const;
-    Vector3 getWorldScale() const;
-    Vector3 getWorldRotation() const;
-    const Matrix4& getLocalTranslationMatrix() const;
-    const Matrix4& getLocalRotationMatrix() const;
-    const Matrix4& getLocalScaleMatrix() const;
-    void setLocalPosition(const Vector3& vec);
-	void setLocalRotation(const Vector3& vec);
-	void setLocalScale(const Vector3& vec);
-	void setBaseModelMatrix(const Matrix4& matrix);
+    Maths::Vector3 getWorldPosition() const;
+    Maths::Vector3 getWorldScale() const;
+    Maths::Vector3 getWorldRotation() const;
+    const Maths::Matrix4& getLocalTranslationMatrix() const;
+    const Maths::Matrix4& getLocalRotationMatrix() const;
+    const Maths::Matrix4& getLocalScaleMatrix() const;
+    void setLocalPosition(const Maths::Vector3& vec);
+	void setLocalRotation(const Maths::Vector3& vec);
+	void setLocalScale(const Maths::Vector3& vec);
+	void setBaseModelMatrix(const Maths::Matrix4& matrix);
 
-    const Matrix4& getViewMatrix() const;
+    const Maths::Matrix4& getViewMatrix() const;
 
 private:
     void notifyModelMatrixDirty();
@@ -51,20 +51,20 @@ private:
     mutable bool mWorldScaleMatrixDirty = true;
     mutable bool mViewMatrixDirty = true;
 
-	Vector3 mLocalPosition = Vector3::smZero;
-	Vector3 mLocalRotation = Vector3::smZero;
-	Vector3 mLocalScale = Vector3::smOne;
-	mutable Vector3 mWorldPosition = Vector3::smZero;
-	mutable Vector3 mWorldRotation = Vector3::smZero;
-	mutable Vector3 mWorldScale = Vector3::smOne;
+	Maths::Vector3 mLocalPosition = Maths::Vector3::smZero;
+	Maths::Vector3 mLocalRotation = Maths::Vector3::smZero;
+	Maths::Vector3 mLocalScale = Maths::Vector3::smOne;
+	mutable Maths::Vector3 mWorldPosition = Maths::Vector3::smZero;
+	mutable Maths::Vector3 mWorldRotation = Maths::Vector3::smZero;
+	mutable Maths::Vector3 mWorldScale = Maths::Vector3::smOne;
 
-	Matrix4 mBaseModelMatrix = Matrix4::smIdentity;
-	mutable Matrix4 mModelMatrix;
-	mutable Matrix4 mModelMatrixNoScale;
-	mutable Matrix4 mTranslationMatrix;
-	mutable Matrix4 mRotationMatrix;
-	mutable Matrix4 mScaleMatrix;
-	mutable Matrix4 mViewMatrix;
+	Maths::Matrix4 mBaseModelMatrix = Maths::Matrix4::smIdentity;
+	mutable Maths::Matrix4 mModelMatrix;
+	mutable Maths::Matrix4 mModelMatrixNoScale;
+	mutable Maths::Matrix4 mTranslationMatrix;
+	mutable Maths::Matrix4 mRotationMatrix;
+	mutable Maths::Matrix4 mScaleMatrix;
+	mutable Maths::Matrix4 mViewMatrix;
 
 public:
     bool mIgnoreParentScale = true;

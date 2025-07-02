@@ -5,14 +5,14 @@
 class UISingleAxisGizmo: public SceneObject
 {
 public:
-    void setAxis(const Line& line, const Vector4& color, Core::HashedString axisName);
+    void setAxis(const Maths::Line& line, const Maths::Vector4& color, Core::HashedString axisName);
     void renderAxisName();
     void update();
     virtual void onDestroy() override;
 
 private:
-    Line mAxis;
-    Vector4 mColor;
+    Maths::Line mAxis;
+    Maths::Vector4 mColor;
     Core::HashedString mAxisName;
     Core::HashedString mNegAxisName;
     EC::TEntityPtr<UIText> mPositive;

@@ -2,6 +2,7 @@
 #include "Core/Maths/MathUtils.hpp"
 #include "Core/Log/Log.hpp"
 
+NS_BEGIN(Maths)
 Quaternion::Quaternion()
 {
 }
@@ -358,9 +359,10 @@ void Quaternion::fromMatrix(const Matrix4& matrix)
     Vector3 euler(MathUtils::deg(x), MathUtils::deg(y), MathUtils::deg(z));
     fromEuler(euler);
 }
+NS_END
 
 template<>
-Core::JSON SerializationUtils::serializeTemplated(const Quaternion& value)
+Core::JSON SerializationUtils::serializeTemplated(const Maths::Quaternion& value)
 {
 Core::JSON json;
 SERIALIZE("v", value.v)
@@ -369,9 +371,8 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Quaternion& value, const Core::JSON& json)
+void SerializationUtils::deserializeTemplated(Maths::Quaternion& value, const Core::JSON& json)
 {
 DESERIALIZE("v", value.v)
 DESERIALIZE("w", value.w)
 }
-

@@ -54,7 +54,7 @@ public:
     GPUAttachmentData mDepthStencilAttachment;
     VkSampleCountFlagBits mSampleCountFlagBits = VK_SAMPLE_COUNT_1_BIT;
     bool mIsResolvePass = false;
-    GeometricSpace mGeometricSpace = GeometricSpace::WORLD;
+    Maths::GeometricSpace mGeometricSpace = Maths::GeometricSpace::WORLD;
     std::vector<GPURenderPassDependency> mDependencies;
     GPUFramebufferData mOutputFramebufferData;
 };
@@ -84,7 +84,7 @@ protected:
     virtual void render();
     virtual void postRender();
     virtual void updateGlobalData();
-    virtual Matrix4 calculateProjectionViewMatrix() const;
+    virtual Maths::Matrix4 calculateProjectionViewMatrix() const;
 
     bool initializeFramebuffers();
 

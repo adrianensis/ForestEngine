@@ -3,6 +3,7 @@
 #include "Core/Std.hpp"
 #include "Core/Maths/VectorDef.hpp"
 
+NS_BEGIN(Maths)
 class Vector3;
 class Vector4;
 
@@ -18,4 +19,6 @@ public:
     Core::f32 angle(const Vector2& v) const;
 };
 VECTOR_STATIC_DEFINITION(2)
-TEMPLATED_SERIALIZATION(Vector2)
+
+NS_END
+TEMPLATED_SERIALIZATION(Maths::Vector2)

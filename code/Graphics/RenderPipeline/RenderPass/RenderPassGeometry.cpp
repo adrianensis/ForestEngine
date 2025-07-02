@@ -35,7 +35,7 @@ void RenderPassGeometry::updateGlobalData()
 
     EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    Matrix4 lightProjectionViewMatrix = Matrix4::smIdentity;
+    Maths::Matrix4 lightProjectionViewMatrix = Maths::Matrix4::smIdentity;
     if(mDirectionalLight)
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();

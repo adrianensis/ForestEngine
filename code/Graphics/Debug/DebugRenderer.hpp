@@ -10,9 +10,9 @@ public:
     virtual void init() override;
     virtual void terminate() override;
 
-    void drawLine(const Line& line, Core::f32 thickness = 1, GeometricSpace geometricSpace = GeometricSpace::WORLD, Vector4 color = Vector4(1,1,1,1));
-    void drawRectangle(const Rectangle& rectangle, Core::f32 thickness= 1, GeometricSpace geometricSpace = GeometricSpace::WORLD, Vector4 color = Vector4(1,1,1,1));
-    void drawCube(const Cube& cube, Core::f32 thickness= 1, GeometricSpace geometricSpace = GeometricSpace::WORLD, Vector4 color = Vector4(1,1,1,1));
+    void drawLine(const Maths::Line& line, Core::f32 thickness = 1, Maths::GeometricSpace geometricSpace = Maths::GeometricSpace::WORLD, Maths::Vector4 color = Maths::Vector4(1,1,1,1));
+    void drawRectangle(const Maths::Rectangle& rectangle, Core::f32 thickness= 1, Maths::GeometricSpace geometricSpace = Maths::GeometricSpace::WORLD, Maths::Vector4 color = Maths::Vector4(1,1,1,1));
+    void drawCube(const Maths::Cube& cube, Core::f32 thickness= 1, Maths::GeometricSpace geometricSpace = Maths::GeometricSpace::WORLD, Maths::Vector4 color = Maths::Vector4(1,1,1,1));
 
 public:
 	GPUShapeRenderer mShapeBatchRenderer;

@@ -109,7 +109,7 @@ void GPURenderItemManager::setRendererMatrix(Core::WeakPtr<GPURenderItem> render
     PROFILER_CPU()
     if(renderItem->getUpdateMatrix())
     {
-        const Matrix4& rendererModelMatrix = renderItem->getRendererModelMatrix();
+        const Maths::Matrix4& rendererModelMatrix = renderItem->getRendererModelMatrix();
         CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderItem->getRenderSlot()), "Invalid slot!");
         mMatrices.at(renderItem->getRenderSlot().getSlot()) = rendererModelMatrix;
         renderItem->setUpdateMatrix(false);

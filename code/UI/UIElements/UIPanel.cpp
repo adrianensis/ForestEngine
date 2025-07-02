@@ -16,7 +16,7 @@ void UIArea::initFromConfig(const UIElementConfig& config)
     }
 
     mTransform->setLocalPosition(mConfig.mDisplayPosition);
-    mTransform->setLocalScale(Vector3(mConfig.mDisplaySize, 1));
+    mTransform->setLocalScale(Maths::Vector3(mConfig.mDisplaySize, 1));
     mTransform->mIgnoreParentScale = true;
 }
 
@@ -28,7 +28,7 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
 
 	if (newConfig.mAdjustSizeToText)
 	{
-        Vector2 textSize(0,0);
+        Maths::Vector2 textSize(0,0);
         Core::f32 maxAscender = 0;
         Core::f32 maxDescender = 0;
         FOR_ARRAY(i, newConfig.mText.get())
@@ -58,7 +58,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     UIArea::initFromConfig(config);
 
     GPURenderItemData rendererData;
-    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
+    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {

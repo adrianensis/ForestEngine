@@ -6,7 +6,7 @@
 class GPUTextureAnimation
 {
 public:
-    static GPUTextureAnimation create(Core::u32 frameCount, bool horizontal, bool reverse, const Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed);
+    static GPUTextureAnimation create(Core::u32 frameCount, bool horizontal, bool reverse, const Maths::Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed);
 
     void init();
     Core::u32 getNumberOfFrames() const;

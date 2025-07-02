@@ -79,7 +79,7 @@ public:
 private:
     void registerUIElement(EC::TEntityPtr<UIElement> uiElement);
     UILayout getOppositeLayout(UILayout layout);
-    Vector2 calculateNextElementOffset(UILayout layout);
+    Maths::Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
 
 private:

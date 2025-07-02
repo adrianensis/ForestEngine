@@ -3,6 +3,7 @@
 #include "Core/Std.hpp"
 #include "Core/Maths/VectorDef.hpp"
 
+NS_BEGIN(Maths)
 class Vector2;
 class Vector4;
 
@@ -30,4 +31,6 @@ VECTOR_STATIC_DEFINITION(3)
 inline const Vector3 Vector3::smRight = Vector3(1,0,0);
 inline const Vector3 Vector3::smUp = Vector3(0,1,0);
 inline const Vector3 Vector3::smForward = Vector3(0,0,1);
-TEMPLATED_SERIALIZATION(Vector3)
+
+NS_END
+TEMPLATED_SERIALIZATION(Maths::Vector3)

@@ -15,15 +15,15 @@ public:
         inline static const GPUDataType mInt{"int",sizeof(Core::i32), GPUPrimitiveDataType::INT};
         inline static const GPUDataType mUnsignedInt{"uint",sizeof(Core::u32), GPUPrimitiveDataType::UNSIGNED_INT};
         inline static const GPUDataType mFloat{"float",sizeof(Core::f32), GPUPrimitiveDataType::FLOAT};
-        inline static const GPUDataType mVector2{"vec2",sizeof(Vector2), GPUPrimitiveDataType::FLOAT};
+        inline static const GPUDataType mVector2{"vec2",sizeof(Maths::Vector2), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mVector2i{"ivec2",sizeof(Core::i32) * 2, GPUPrimitiveDataType::INT};
-        inline static const GPUDataType mVector3{"vec3",sizeof(Vector3), GPUPrimitiveDataType::FLOAT};
+        inline static const GPUDataType mVector3{"vec3",sizeof(Maths::Vector3), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mVector3i{"ivec3",sizeof(Core::i32) * 3, GPUPrimitiveDataType::INT};
         inline static const GPUDataType mFace = mVector3i;
-        inline static const GPUDataType mVector4{"vec4",sizeof(Vector4), GPUPrimitiveDataType::FLOAT};
+        inline static const GPUDataType mVector4{"vec4",sizeof(Maths::Vector4), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mVector4i{"ivec4",sizeof(Core::i32) * 4, GPUPrimitiveDataType::INT};
         inline static const GPUDataType mMatrix3{"mat3",sizeof(Core::f32) * 3 * 3, GPUPrimitiveDataType::FLOAT};
-        inline static const GPUDataType mMatrix4{"mat4",sizeof(Matrix4), GPUPrimitiveDataType::FLOAT};
+        inline static const GPUDataType mMatrix4{"mat4",sizeof(Maths::Matrix4), GPUPrimitiveDataType::FLOAT};
         inline static const GPUDataType mSampler2D{"sampler2D",0, GPUPrimitiveDataType::INT};
     };
 
@@ -62,8 +62,8 @@ public:
         class GPUGlobalData
         {
         public:
-            Matrix4 mProjectionViewMatrix;
-            Vector3 mCameraPosition;
+            Maths::Matrix4 mProjectionViewMatrix;
+            Maths::Vector3 mCameraPosition;
         };
 
         inline static const GPUUniformBufferData mGlobalData

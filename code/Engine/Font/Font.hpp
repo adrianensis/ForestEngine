@@ -19,11 +19,11 @@ public:
 class FontGlyphMetricsData
 {
 public:
-    Vector2 mSize;
-    Vector2 mBoundingBoxMin;
-    Vector2 mBoundingBoxMax;
-    Vector2 mHoriBearing;
-    Vector2 mVertBearing;
+    Maths::Vector2 mSize;
+    Maths::Vector2 mBoundingBoxMin;
+    Maths::Vector2 mBoundingBoxMax;
+    Maths::Vector2 mHoriBearing;
+    Maths::Vector2 mVertBearing;
 };
 
 class FontGlyphData
@@ -32,11 +32,11 @@ public:
     void freeBuffer();
 
 public:
-    Vector2 mAdvance;
-    Vector2 mBitmapSize;
-    Vector2 mBitmapTopLeft;
+    Maths::Vector2 mAdvance;
+    Maths::Vector2 mBitmapSize;
+    Maths::Vector2 mBitmapTopLeft;
     FontGlyphMetricsData mMetrics;
-    Rectangle mTextureRegion;
+    Maths::Cube mTextureRegion;
     Core::byte* mData = nullptr;
 };
 

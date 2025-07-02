@@ -437,7 +437,7 @@ void GPURenderPass::updateGlobalData()
 {
 }
 
-Matrix4 GPURenderPass::calculateProjectionViewMatrix() const
+Maths::Matrix4 GPURenderPass::calculateProjectionViewMatrix() const
 {
-	return Matrix4::smIdentity;
+	return Maths::Matrix4::smIdentity;
 }

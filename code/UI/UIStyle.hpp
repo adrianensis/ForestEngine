@@ -11,10 +11,10 @@ public:
 	}
 
 public:
-    Vector4 mTextColor;
-	Vector4 mBackgroundColor;
-	Vector4 mColorPressed;
-	Vector4 mColorHovered;
+    Maths::Vector4 mTextColor;
+	Maths::Vector4 mBackgroundColor;
+	Maths::Vector4 mColorPressed;
+	Maths::Vector4 mColorHovered;
 };
 REGISTER_CLASS(UIStyle)
 
@@ -23,10 +23,10 @@ class UIStyleDefault: public UIStyle
 public:
 	UIStyleDefault()
 	{
-		mTextColor = Vector4(0.0f, 0.0f, 0.0f, 1);
-		mBackgroundColor = Vector4(0.5f, 0.5f, 0.5f, 1);
-		mColorPressed = Vector4(0.3f, 0.3f, 0.3f, 1);
-		mColorHovered = Vector4(0.7f, 0.7f, 0.7f, 1);
+		mTextColor = Maths::Vector4(0.0f, 0.0f, 0.0f, 1);
+		mBackgroundColor = Maths::Vector4(0.5f, 0.5f, 0.5f, 1);
+		mColorPressed = Maths::Vector4(0.3f, 0.3f, 0.3f, 1);
+		mColorHovered = Maths::Vector4(0.7f, 0.7f, 0.7f, 1);
 	}
 };
 REGISTER_CLASS(UIStyleDefault)

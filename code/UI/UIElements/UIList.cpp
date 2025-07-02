@@ -33,10 +33,10 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	UIElement::initFromConfig(config);
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->setLocalScale(Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
+	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
-	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
+	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mGPUShaderStencilData = calculateStencilData();
@@ -44,7 +44,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	//renderer->setClipRectangle(Rectangle(Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Vector2(mConfig.mSize.x / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
+	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
 	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
@@ -80,7 +80,7 @@ void UIList::toggle()
 	// NEXT : Temporary
 	if (mButtons.empty())
 	{
-		Vector3 scale = mTransform->getLocalScale();
+		Maths::Vector3 scale = mTransform->getLocalScale();
 		scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
 
 		UIBuilder uiBuilder;
@@ -88,7 +88,7 @@ void UIList::toggle()
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
-			setPosition(Vector2((-scale.x / 2.0f) / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), scale.y/2.0f)).
+			setPosition(Maths::Vector2((-scale.x / 2.0f) / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), scale.y/2.0f)).
 			setTextScale(mConfig.mTextScale).
 			setAdjustSizeToText(true).
 			setIsStatic(false).
@@ -131,11 +131,11 @@ void UIList::setEntriesVisibility(bool visible)
 			std::string& label = it->mLabel;
 			UIElementCallback onPressedCallback = it->mCallback;
 
-			Vector3 scale = mTransform->getLocalScale();
+			Maths::Vector3 scale = mTransform->getLocalScale();
 			scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
 
 			GET_SYSTEM(UIManager).getBuilder()->saveData()->
-				setLocalPosition(Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
+				setLocalPosition(Maths::Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
 				setSize(scale)->
 				setText(label)->
 				setAdjustSizeToText(true)->
@@ -181,7 +181,7 @@ void UIList::onScroll(Core::f32 scroll)
 		{
 			FOR_LIST(it, mButtons)
 			{
-				(*it)->mTransform->addLocalTranslation(Vector2(0,0.005f * -scroll));
+				(*it)->mTransform->addLocalTranslation(Maths::Vector2(0,0.005f * -scroll));
 			}
 		}
 	}

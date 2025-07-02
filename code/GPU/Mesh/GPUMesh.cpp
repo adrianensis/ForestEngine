@@ -35,7 +35,7 @@ void GPUMesh::clear()
 	mIndices.reserve(mIndicesCount);
 }
 
-void GPUMesh::setColor(const Vector4 &color)
+void GPUMesh::setColor(const Maths::Vector4 &color)
 {
     mBuffers.at(GPUShaderDefinitions::VertexInput::mColor.mName).clear();
     mBuffers.at(GPUShaderDefinitions::VertexInput::mColor.mName).resize(mVertexCount);

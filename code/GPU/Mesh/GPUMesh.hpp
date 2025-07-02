@@ -8,7 +8,7 @@ class GPUMesh
 {
 public:
     void init(Core::u32 vertexCount, Core::u32 indicesCount, const std::vector<GPUVariableData>& gpuVertexInputBuffers);
-    void setColor(const Vector4& color);
+    void setColor(const Maths::Vector4& color);
     void clear();
     bool hasVertexInputBuffer(const GPUVariableData& data) const;
 
@@ -16,13 +16,13 @@ public:
 
     std::vector<GPUVariableData> mGPUVertexInputBuffers;
     std::unordered_map<Core::HashedString, Core::TByteBuffer> mBuffers;
-    Core::TByteBuffer mIndices = Core::TByteBuffer(sizeof(Face));
+    Core::TByteBuffer mIndices = Core::TByteBuffer(sizeof(Maths::Face));
 
 	Core::u32 mVertexCount = 0;
 	Core::u32 mIndicesCount = 0;
 
-    Vector3 mMin;
-    Vector3 mMax;
+    Maths::Vector3 mMin;
+    Maths::Vector3 mMax;
 
 	Core::u32 mMeshID = 0;
 

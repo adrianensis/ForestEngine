@@ -8,7 +8,7 @@ void GPUVertexBuffer::init(Core::Ptr<GPUContext> gpuContext, Core::u32 attribute
     mIsStatic = isStatic;
 
     // sizeInPrimitiveTypes: size of the object divided in primitive types
-    // ex: Vector3 -> 3 floats
+    // ex: Maths::Vector3 -> 3 floats
     Core::u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
 //    // GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, primitiveType, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
     // accumulative offset in bytes

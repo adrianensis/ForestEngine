@@ -15,7 +15,7 @@ private:
 
 public:
     GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface);
-    bool init(Vector2 windowSizeInPixels);
+    bool init(Maths::Vector2 windowSizeInPixels);
     void terminate();
 
 private:
@@ -30,7 +30,7 @@ private:
 
 private:
     GPUDevice* vulkanDevice;
-    Vector2 mWindowSizeInPixels;
+    Maths::Vector2 mWindowSizeInPixels;
     VkSurfaceKHR vkSurface;
     VkSurfaceFormatKHR mSurfaceFormat{};
     VkPresentModeKHR presentMode{};

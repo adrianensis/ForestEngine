@@ -17,13 +17,13 @@ void Camera::update()
 {
 	PROFILER_CPU()
 	
-	const Matrix4& viewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
+	const Maths::Matrix4& viewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
 	mGPUCamera.update(viewMatrix);
 }
 
 void Camera::onResize()
 {
-	Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
+	Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
 	Core::f32 aspectRatio = GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
     mGPUCamera.onResize(windowSize, aspectRatio);
 }

@@ -31,78 +31,78 @@ void Editor::firstUpdate()
     PROFILER_CPU();
 
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-	mCameraSceneObject->mTransform->setLocalPosition(Vector3(0,0,100));
+	mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
     EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
-    Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
+    Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
-    // createPointLight(Vector3(0,50,0), 20);
+    // createPointLight(Maths::Vector3(0,50,0), 20);
 
-    mDirectionalLight = createDirectionalLight(Vector3(0,2,0), Vector3::smForward + -Vector3::smUp);
-    createSprite(Vector3(0,0,0), 100);
-    // createSprite(Vector3(-100,0,0), 100);
-    // createSprite(Vector3(100,0,0), 100);
-    // createSprite(Vector3(0,0,-100), 10);
+    mDirectionalLight = createDirectionalLight(Maths::Vector3(0,2,0), Maths::Vector3::smForward + -Maths::Vector3::smUp);
+    createSprite(Maths::Vector3(0,0,0), 100);
+    // createSprite(Maths::Vector3(-100,0,0), 100);
+    // createSprite(Maths::Vector3(100,0,0), 100);
+    // createSprite(Maths::Vector3(0,0,-100), 10);
 
-    // importModel("bob_lamp/bob_lamp_update.fbx", Vector3(0,0,-5), 1.0f);
-	// sceneObject = importModel2("Avocado/glTF/Avocado.gltf", Vector3(150,0,0), 1000.0f, 0);
-	// importModel("Floor/Floor.gltf", Vector3(0,0,0), 1.0f, Vector3(0,0,0), true);
-	// importModel("Wall/Wall.gltf", Vector3(0,0,0), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Wall/Wall.gltf", Vector3(0,0,1000), 1.0f, Vector3(0,0,0), true);
-	// importModel("BoxTextured/glTF//BoxTextured.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,0,0), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,70), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(0,-5,-70), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avvocado.gltf", Vector3(-300,-5,0), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(150,-5,0), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Avocado/Instanced/Avocado.gltf", Vector3(-150,-5,0), 1000.0f, Vector3(0,0,0), true);
-	// importModel("Bistro/Bistro.gltf", Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/new/Sponza.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
-	// importModel("Building_1/building1.gltf", Vector3(50,0,0), 10.0f, Vector3(0,0,0), true);
-	// importModel("Building_1/building1.gltf", Vector3(-50,0,50), 10.0f, Vector3(0,0,0), true);
-	// importModel("building/building.gltf", Vector3(0,0,0), 10.0f, Vector3(0,0,0), true);
-	// importModel("building/building.gltf", Vector3(-50,0,0), 10.0f, Vector3(0,0,0), true);
-	// importModel("s5avfuixwjy8-calisma/Calisma2.gltf", Vector3(0,0,0), 100.0f, Vector3(0,0,0), true);
-	// importModel("mountain/mount.blend1.gltf", Vector3(0,0,0), 500.0f, Vector3(0,0,0), true);
-	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
-	// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(100,0,0), 100.0f, Vector3(90,0,0), false);
-	// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
+    // importModel("bob_lamp/bob_lamp_update.fbx", Maths::Vector3(0,0,-5), 1.0f);
+	// sceneObject = importModel2("Avocado/glTF/Avocado.gltf", Maths::Vector3(150,0,0), 1000.0f, 0);
+	// importModel("Floor/Floor.gltf", Maths::Vector3(0,0,0), 1.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Wall/Wall.gltf", Maths::Vector3(0,0,0), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Wall/Wall.gltf", Maths::Vector3(0,0,1000), 1.0f, Maths::Vector3(0,0,0), true);
+	// importModel("BoxTextured/glTF//BoxTextured.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(150,0,0), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(0,-5,70), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(0,-5,-70), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avvocado.gltf", Maths::Vector3(-300,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(150,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(-150,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Bistro/Bistro.gltf", Maths::Vector3(0,0,0), 1.0f, 0, true);
+	// importModel("Sponza/new/Sponza.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Building_1/building1.gltf", Maths::Vector3(50,0,0), 10.0f, Maths::Vector3(0,0,0), true);
+	// importModel("Building_1/building1.gltf", Maths::Vector3(-50,0,50), 10.0f, Maths::Vector3(0,0,0), true);
+	// importModel("building/building.gltf", Maths::Vector3(0,0,0), 10.0f, Maths::Vector3(0,0,0), true);
+	// importModel("building/building.gltf", Maths::Vector3(-50,0,0), 10.0f, Maths::Vector3(0,0,0), true);
+	// importModel("s5avfuixwjy8-calisma/Calisma2.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
+	// importModel("mountain/mount.blend1.gltf", Maths::Vector3(0,0,0), 500.0f, Maths::Vector3(0,0,0), true);
+	// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
+	// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(100,0,0), 100.0f, Maths::Vector3(90,0,0), false);
+	// importModel("BrainStem/glTF/BrainStem.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
     // mSceneObjectsArray.push_back(obj);
 	
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(0,0,0), 100.0f, Vector3(90,0,0), false);
+	importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
     Core::i32 size = 12;            
     FOR_RANGE(i, -size, size)
     {
         FOR_RANGE(j, -size, size)
         {
-			// importModel("BrainStem/glTF/BrainStem.gltf", Vector3(150*i,0,150*j), 100.0f, Vector3(0,0,0), true);
+			// importModel("BrainStem/glTF/BrainStem.gltf", Maths::Vector3(150*i,0,150*j), 100.0f, Maths::Vector3(0,0,0), true);
             // if(j % 2 == 0)
             {
-				// importModel("tower/tower.gltf", Vector3(500*i,3,500*j), 100.0f, Vector3(0,0,0), false);
-				// importModel("CesiumMan/glTF/CesiumMan.gltf", Vector3(500*i,650,500*j), 100.0f, Vector3(90,0,0), false);
+				// importModel("tower/tower.gltf", Maths::Vector3(500*i,3,500*j), 100.0f, Maths::Vector3(0,0,0), false);
+				// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(500*i,650,500*j), 100.0f, Maths::Vector3(90,0,0), false);
             }
             // else
             // {
-			// 	importModel("cottage/cottage_blender.gltf", Vector3(250*i,0,250*j), 100.0f, Vector3(0,0,0), true);
+			// 	importModel("cottage/cottage_blender.gltf", Maths::Vector3(250*i,0,250*j), 100.0f, Maths::Vector3(0,0,0), true);
             // }
         }
     }
 
 
-	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Vector3(0,270,0), 100.0f, Vector3(0,180,180), false);
+	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Maths::Vector3(0,270,0), 100.0f, Maths::Vector3(0,180,180), false);
     // mSceneObjectsArray.push_back(obj);
-	// importModel("Fox/glTF/Fox.gltf", Vector3(300,0,0), 10.0f, Vector3(0,0,0), true);
-	// importModel2("BrainStem/glTF/BrainStem.gltf", Vector3(0,0,0), 20.0f, 0);
-	// importModel("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, Vector3(0,0,0), true);
-	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,-50,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(-300,0,0), 20.0f, 0);
-	// importModel2("bob_lamp/bob_lamp_update.gltf", Vector3(0,0,0), 20.0f, 0);
+	// importModel("Fox/glTF/Fox.gltf", Maths::Vector3(300,0,0), 10.0f, Maths::Vector3(0,0,0), true);
+	// importModel2("BrainStem/glTF/BrainStem.gltf", Maths::Vector3(0,0,0), 20.0f, 0);
+	// importModel("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(0,0,0), 20.0f, Maths::Vector3(0,0,0), true);
+	// auto obj = importModel2("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(0,-50,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(-300,0,0), 20.0f, 0);
+	// importModel2("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(0,0,0), 20.0f, 0);
 
     createUI();
     // mousePick();
 
     // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISceneTree>();
-    // mUISceneTree->mTransform->setLocalPosition(Vector2(-0.9, 0.8));
+    // mUISceneTree->mTransform->setLocalPosition(Maths::Vector2(-0.9, 0.8));
     // mUISceneTree->update();
 }
 
@@ -114,61 +114,61 @@ void Editor::update()
 	EC::TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	Core::f32 speed = 400 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
 
-	Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
+	Maths::Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
 
 	if(GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_LEFT))
 	{
-        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(-speed,0,0,1)));
-        // mDirectionalLight->mTransform->addLocalRotation(Vector3(0,-speed,0));
-        // cameraTransform->addLocalTranslation(Vector3(-speed,0,0));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(-speed,0,0,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0,-speed,0));
+        // cameraTransform->addLocalTranslation(Maths::Vector3(-speed,0,0));
 	}
 	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_RIGHT))
 	{
-        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(speed,0,0,1)));
-        // mDirectionalLight->mTransform->addLocalRotation(Vector3(0,speed,0));
-        // cameraTransform->addLocalTranslation(Vector3(speed,0,0));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(speed,0,0,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0,speed,0));
+        // cameraTransform->addLocalTranslation(Maths::Vector3(speed,0,0));
 	}
 	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_UP))
 	{
-        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,-speed,1)));
-        // mDirectionalLight->mTransform->addLocalRotation(Vector4(0,0,-speed,1));
-        // cameraTransform->addLocalTranslation(Vector3(0,0,-speed));
-		// cameraTransform->addLocalTranslation(Vector3(0,speed,0));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(0,0,-speed,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector4(0,0,-speed,1));
+        // cameraTransform->addLocalTranslation(Maths::Vector3(0,0,-speed));
+		// cameraTransform->addLocalTranslation(Maths::Vector3(0,speed,0));
 	}
 	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_DOWN))
 	{
-        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Vector4(0,0,speed,1)));
-        // mDirectionalLight->mTransform->addLocalRotation(Vector4(0,0,speed,1));
-        // cameraTransform->addLocalTranslation(Vector3(0,0,speed));
-		// cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
+        cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(0,0,speed,1)));
+        // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector4(0,0,speed,1));
+        // cameraTransform->addLocalTranslation(Maths::Vector3(0,0,speed));
+		// cameraTransform->addLocalTranslation(Maths::Vector3(0,-speed,0));
 	}
 	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_PAGE_UP))
 	{
-		cameraTransform->addLocalTranslation(Vector3(0,speed,0));
+		cameraTransform->addLocalTranslation(Maths::Vector3(0,speed,0));
 	}
 	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
 	{
-		cameraTransform->addLocalTranslation(Vector3(0,-speed,0));
+		cameraTransform->addLocalTranslation(Maths::Vector3(0,-speed,0));
 	}
     else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_HOME))
 	{
-		// cameraTransform->addLocalRotation(Vector3(0,-speed,0));
-        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Vector3::smForward);
+		// cameraTransform->addLocalRotation(Maths::Vector3(0,-speed,0));
+        cameraTransform->lookAt(cameraTransform->getWorldPosition() + Maths::Vector3::smForward);
 	}
 	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_END))
 	{
-		// cameraTransform->addLocalRotation(Vector3(0,speed,0));
-        cameraTransform->lookAt(cameraTransform->getWorldPosition() + -Vector3::smForward);
+		// cameraTransform->addLocalRotation(Maths::Vector3(0,speed,0));
+        cameraTransform->lookAt(cameraTransform->getWorldPosition() + -Maths::Vector3::smForward);
 	}
 
-    Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+    Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
     // currentMousePosition.set(-1,0,0);
     // LOG_VAR(currentMousePosition.x);
     // LOG_VAR(currentMousePosition.y);
     if(mSelectedSceneObject)
     {
-        Vector3 position = camera->getGPUCamera().screenToWorld(currentMousePosition, mSelectedSceneObject->mTransform->getWorldPosition().z);
+        Maths::Vector3 position = camera->getGPUCamera().screenToWorld(currentMousePosition, mSelectedSceneObject->mTransform->getWorldPosition().z);
         // position.z = mSelectedSceneObject->mTransform->getLocalPosition().z;
         mSelectedSceneObject->mTransform->setLocalPosition(position);
         // LOG_VAR(position.x);
@@ -179,14 +179,14 @@ void Editor::update()
 	if(!mLastMousePosition.eq(currentMousePosition))
 	{
         Core::f32 camSpeed = 200 * GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
-		Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
-		Vector3 direction;
+		Maths::Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
+		Maths::Vector3 direction;
 
 		Core::f32 yaw = mouseVector.x;
 		Core::f32 pitch = mouseVector.y;
 
-		cameraTransform->addLocalRotation(Vector3(pitch, -yaw, 0));
-		// mDirectionalLight->mTransform->addLocalRotation(Vector3(0, -yaw, 0));
+		cameraTransform->addLocalRotation(Maths::Vector3(pitch, -yaw, 0));
+		// mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0, -yaw, 0));
 	}
 
 	// LOG_VAR(cameraTransform->getLocalPosition().x)
@@ -195,31 +195,31 @@ void Editor::update()
 
 	mLastMousePosition = currentMousePosition;
 
-    //mDirectionalLight->mTransform->addLocalRotation(Vector3(0,0.1f,0));
+    //mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
 
     // PROFILER_CPU_NAMED("Draw Editor Lines");
     // // -x to x
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(-1000,0,0), Vector3(1000,0,0)), 2, true, Vector4(1,0,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(-1000,0,0), Maths::Vector3(1000,0,0)), 2, true, Maths::Vector4(1,0,0,1));
 
     // // x
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(1000,0,0), Vector3(1000,100,0)), 1, true, Vector4(1,0,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(1000,0,0), Maths::Vector3(1000,100,0)), 1, true, Maths::Vector4(1,0,0,1));
     // // -x
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(-1000,0,0), Vector3(-1000,50,0)), 1, true, Vector4(1,1,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(-1000,0,0), Maths::Vector3(-1000,50,0)), 1, true, Maths::Vector4(1,1,0,1));
 
     // // -y to y
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,-1000,0), Vector3(0,1000,0)), 2, true, Vector4(0,1,0,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,-1000,0), Maths::Vector3(0,1000,0)), 2, true, Maths::Vector4(0,1,0,1));
 
     // // -z to z
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-1000), Vector3(0,0,1000)), 2, true, Vector4(0,0,1,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-1000), Maths::Vector3(0,0,1000)), 2, true, Maths::Vector4(0,0,1,1));
 
     // // z
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,1000), Vector3(0,100,1000)), 1, true, Vector4(0,0,1,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,1000), Maths::Vector3(0,100,1000)), 1, true, Maths::Vector4(0,0,1,1));
     // // -z
-	// GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(0,0,-1000), Vector3(0,50,-1000)), 1, true, Vector4(0,1,1,1));
+	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-1000), Maths::Vector3(0,50,-1000)), 1, true, Maths::Vector4(0,1,1,1));
 
 	for(Core::i32 x = -2000; x < 2000; x+=100)
 	{
-		GET_SYSTEM(DebugRenderer).drawLine(Line(Vector3(x,0,-2000), Vector3(x,0,2000)), 1, GeometricSpace::WORLD, Vector4(1,1,1,0.3f));
+		GET_SYSTEM(DebugRenderer).drawLine(Maths::Line(Maths::Vector3(x,0,-2000), Maths::Vector3(x,0,2000)), 1, Maths::GeometricSpace::WORLD, Maths::Vector4(1,1,1,0.3f));
 	}
 
     Core::f32 fps = 1000.0f/GET_SYSTEM(Time::Time).getDeltaTimeMillis();
@@ -245,15 +245,15 @@ void Editor::terminate()
 
 }
 
-EC::EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
+EC::EntityPtr Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 {
 	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	// sceneObject->mIsStatic = false;
 	// sceneObject->mTransform->setLocalPosition(v);
-	// sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
+	// sceneObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
 
     // RendererData rendererData;
-	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
+	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
 
     GPUShaderData shaderData;
     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
@@ -265,7 +265,7 @@ EC::EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
 	// sceneObject->addComponent(renderer);
 
 	GPURenderItemData rendererData;
-    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Rectangle>();
+    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
     rendererData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
@@ -278,16 +278,16 @@ EC::EntityPtr Editor::createSprite(const Vector3& v, Core::f32 size)
 	return sceneObject;
 }
 
-EC::EntityPtr Editor::createPointLight(const Vector3& v, Core::f32 size)
+EC::EntityPtr Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 {
 	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
-	sceneObject->mTransform->setLocalScale(Vector3(size,size,size));
+	sceneObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
 
     PointLightData data;
     data.mPosition = v;
-    data.mDiffuse = Vector3(1,1,1) * 250000;
+    data.mDiffuse = Maths::Vector3(1,1,1) * 250000;
 
 	EC::TComponentPtr<PointLight> pointLight = ECManager.requestComponent<PointLight>();
     pointLight->init(data);
@@ -296,7 +296,7 @@ EC::EntityPtr Editor::createPointLight(const Vector3& v, Core::f32 size)
 	return sceneObject;
 }
 
-EC::EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& dir)
+EC::EntityPtr Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
 {
 	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
     sceneObject->mIsStatic = false;
@@ -305,7 +305,7 @@ EC::EntityPtr Editor::createDirectionalLight(const Vector3& v, const Vector3& di
 
     DirectionalLightData directionalLightData;
     directionalLightData.mDirection = dir;
-    directionalLightData.mDiffuse = Vector3(0.65,0.2,0.1) * 20;
+    directionalLightData.mDiffuse = Maths::Vector3(0.65,0.2,0.1) * 20;
 
 	EC::TComponentPtr<DirectionalLight> dirLight = ECManager.requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
@@ -321,23 +321,23 @@ EC::EntityPtr Editor::mousePick()
     EC::EntityPtr obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
-        (*it)->mTransform->addLocalRotation(Vector3(0,0.1f,0));
-        // const Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
+        (*it)->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
+        // const Maths::Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
         // EC::TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
-        // Cube bboxScreenSpace(
+        // Maths::Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
         // );
 
-        // // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Vector4(0.3,0,1,1));
+        // // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Maths::Vector4(0.3,0,1,1));
 
-        // Vector3 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
-        // bool hit = Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
+        // Maths::Vector3 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+        // bool hit = Maths::Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
         // if(hit)
         // {
-        //     Cube hitMarker = Cube(mousePosition, Vector3(0.01,0.01,0.01));
-        //     GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
-        //     GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, GeometricSpace::SCREEN, Vector4(1,0,0,1));
+        //     Maths::Cube hitMarker = Maths::Cube(mousePosition, Maths::Vector3(0.01,0.01,0.01));
+        //     GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, Maths::GeometricSpace::SCREEN, Maths::Vector4(1,0,0,1));
+        //     GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, Maths::GeometricSpace::SCREEN, Maths::Vector4(1,0,0,1));
 
         //     obj = *it;
         // }
@@ -346,14 +346,14 @@ EC::EntityPtr Editor::mousePick()
     return obj;
 }
 
-EC::EntityPtr Editor::importModel( const std::string& pFile, const Vector3& v, Core::f32 size, const Vector3& rot, bool isStatic)
+EC::EntityPtr Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
     EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = isStatic;
 	sceneObject->mTransform->setLocalPosition(v);
-	sceneObject->mTransform->setLocalScale(Vector3::smOne * size);
+	sceneObject->mTransform->setLocalScale(Maths::Vector3::smOne * size);
 	sceneObject->mTransform->setLocalRotation(rot);
 
     ModelRendererData modelRendererData;
@@ -383,9 +383,9 @@ void Editor::handleMouse()
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
         // mBuildings.pop_front();
         // EC::TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
-        // Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
-        // Vector3 position = camera->screenToWorld(currentMousePosition, 0);
-        // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Vector3(0,180,180), false);
+        // Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+        // Maths::Vector3 position = camera->screenToWorld(currentMousePosition, 0);
+        // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Maths::Vector3(0,180,180), false);
         // mSceneObjectsArray.push_back(obj);
         if(!mSelectedSceneObject)
         {
@@ -399,7 +399,7 @@ void Editor::handleMouse()
     
     if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
     {
-        // mBuildings.push_back(importModel("Building_1/building1.gltf", Vector3(0,100,0), 10.0f, Vector3(0,0,0), false));
+        // mBuildings.push_back(importModel("Building_1/building1.gltf", Maths::Vector3(0,100,0), 10.0f, Maths::Vector3(0,0,0), false));
         
     }
 }
@@ -407,16 +407,16 @@ void Editor::handleMouse()
 void Editor::createUI()
 {
     mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UIAxisGizmo>();
-    mAxisViewer->mTransform->setLocalPosition(Vector2(-0.9, -0.8));
+    mAxisViewer->mTransform->setLocalPosition(Maths::Vector2(-0.9, -0.8));
     mAxisViewer->createAxis();
 
     UIBuilder uiBuilder;
 
 	uiBuilder.
-	// setPosition(Vector2(0,0)).
-	setPosition(Vector2(-1,1)).
+	// setPosition(Maths::Vector2(0,0)).
+	setPosition(Maths::Vector2(-1,1)).
 	setAdjustSizeToText(true).
-	setSize(Vector2(0.5, 0.05f)).
+	setSize(Maths::Vector2(0.5, 0.05f)).
     setTextScale(0.5f);
 
     // uiBuilder.
@@ -485,10 +485,10 @@ void Editor::createUI()
     uiBuilder.restoreAll();
 
     uiBuilder.
-	// setPosition(Vector2(0,0)).
-	setPosition(Vector2(-1,1)).
+	// setPosition(Maths::Vector2(0,0)).
+	setPosition(Maths::Vector2(-1,1)).
 	// setAdjustSizeToText(true).
-	setSize(Vector2(0.5, 0.5f));
+	setSize(Maths::Vector2(0.5, 0.5f));
 
     // uiBuilder.
 	// create<UIList>().
@@ -500,7 +500,7 @@ void Editor::createUI()
     // toggle();
 
     // mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UITransform>();
-    // mUITransform->mTransform->setLocalPosition(Vector2(-0.7, -0.8));
+    // mUITransform->mTransform->setLocalPosition(Maths::Vector2(-0.7, -0.8));
     // mUITransform->mIsStatic = true;
     // mUIVector->update();
 }

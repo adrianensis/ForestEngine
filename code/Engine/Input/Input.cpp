@@ -5,7 +5,7 @@
 NS_BEGIN(Input)
 void Input::init()
 {
-	smMouseCoordinates = Vector2();
+	smMouseCoordinates = Maths::Vector2();
 	smLastMouseButtonPressed = INVALID_INDEX;
 	smLastKeyPressed = INVALID_INDEX;
 	smModifier = INVALID_INDEX;
@@ -24,7 +24,7 @@ void Input::update()
 
 	CHECK_MSG(mWindowInputAdapter, "mWindowInputAdapter is NULL!")
 
-	Vector2 newMouseCoordinates = mWindowInputAdapter->getMousePosition();
+	Maths::Vector2 newMouseCoordinates = mWindowInputAdapter->getMousePosition();
 
 	if (!smMouseCoordinates.eq(newMouseCoordinates))
 	{
@@ -77,7 +77,7 @@ bool Input::isMouseButtonPressed(Core::i32 button)
 	return button == smLastMouseButtonPressed;
 }
 
-const Vector2& Input::getMousePosition()
+const Maths::Vector2& Input::getMousePosition()
 {
 	return smMouseCoordinates;
 }

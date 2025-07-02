@@ -42,7 +42,7 @@ public:
 
     bool hasFocus() const;
     bool isMouseCursorInsideElement() const;
-    Vector3 getLeftTopPosition() const;
+    Maths::Vector3 getLeftTopPosition() const;
 
 	virtual void setText(Core::HashedString text) { };
     virtual void setVisibility(bool visibility);

@@ -21,7 +21,7 @@ void RenderPassShadowMap::postRender()
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
 //    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
     
-    Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
+    Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
 //    GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }
 
@@ -37,7 +37,7 @@ void RenderPassShadowMap::render()
 void RenderPassShadowMap::updateGlobalData()
 {
 	PROFILER_CPU()
-    Matrix4 lightProjectionViewMatrix = Matrix4::smIdentity;
+    Maths::Matrix4 lightProjectionViewMatrix = Maths::Matrix4::smIdentity;
     if(mDirectionalLight)
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();

@@ -61,7 +61,7 @@ void RenderEngine::onComponentAdded(const EC::ComponentPtr& component)
         EC::TComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
 
-        // if(renderer->getGeometricSpace() == GeometricSpace::WORLD)
+        // if(renderer->getGeometricSpace() == Maths::GeometricSpace::WORLD)
         // {
         //     //octree.addOcTreeElement(Core::WeakPtr<IOcTreeElement>::cast(renderer));
         // }

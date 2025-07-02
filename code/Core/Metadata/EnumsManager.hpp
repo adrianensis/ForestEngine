@@ -13,9 +13,10 @@ enum class EnumName : Core::u32\
     FOR_EACH_ODD(ADD_TRAIL_COMMA, __VA_ARGS__) \
     MAX\
 };\
-template <>\
-inline const Core::HashedString& Core::EnumsManager::getEnumNameFromTemplate<EnumName>() { static Core::HashedString name = #EnumName; return name; } \
 inline static Core::EnumRegister enumRegister_##EnumName = Core::EnumRegister(#EnumName, { FOR_EACH_EVEN(ADD_TRAIL_COMMA, __VA_ARGS__) });
+/*static Core::HashedString enumName_##EnumName = #EnumName;\
+template <>\
+inline const Core::HashedString& Core::EnumsManager::getEnumNameFromTemplate<EnumName>() { return enumName_##EnumName; } \*/
 
 // --------------------------------------------------------
 // ENUMS

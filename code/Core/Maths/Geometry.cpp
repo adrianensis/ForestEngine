@@ -1,6 +1,7 @@
 #include "Core/Maths/Geometry.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
+NS_BEGIN(Maths)
 Face::Face(Core::u32 index0, Core::u32 index1, Core::u32 index2)
 {
 	mIndex0 = index0;
@@ -177,3 +178,4 @@ Vector3 Geometry::midPoint(const Line& line)
 {
     return Vector3((line.getStart().x + line.getEnd().x) / 2.0f, (line.getStart().y + line.getEnd().y) / 2.0f, (line.getStart().z + line.getEnd().z) / 2.0f);
 }
+NS_END

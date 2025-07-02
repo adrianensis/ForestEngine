@@ -3,6 +3,7 @@
 #include "Core/Std.hpp"
 #include "Core/Maths/VectorDef.hpp"
 
+NS_BEGIN(Maths)
 class Vector2;
 class Vector3;
 
@@ -18,4 +19,5 @@ public:
     Vector4(const Vector2& other, Core::f32 z, Core::f32 w);
 };
 VECTOR_STATIC_DEFINITION(4)
-TEMPLATED_SERIALIZATION(Vector4)
+NS_END
+TEMPLATED_SERIALIZATION(Maths::Vector4)

@@ -6,7 +6,7 @@ void RenderPassBase::updateGlobalData()
 {
 	PROFILER_CPU()
 
-    Matrix4 projectionViewMatrix = calculateProjectionViewMatrix();
+    Maths::Matrix4 projectionViewMatrix = calculateProjectionViewMatrix();
     EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
@@ -17,19 +17,19 @@ void RenderPassBase::updateGlobalData()
 	mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }
 
-Matrix4 RenderPassBase::calculateProjectionViewMatrix() const
+Maths::Matrix4 RenderPassBase::calculateProjectionViewMatrix() const
 {
 	PROFILER_CPU()
 
-    Matrix4 ortho;
+    Maths::Matrix4 ortho;
     ortho.ortho(-1, 1, -1, 1, -1000, 1000);
-    Matrix4 view2D;
-    view2D.view(Vector3(0,0,1000), Vector3(0,0,0));
+    Maths::Matrix4 view2D;
+    view2D.view(Maths::Vector3(0,0,1000), Maths::Vector3(0,0,0));
 
     EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
-    Matrix4 projectionViewMatrix = mGPURenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->getGPUCamera().mProjectionMatrix : ortho;
-    Matrix4 viewMatrix = mGPURenderPassData.mGeometricSpace == GeometricSpace::WORLD ? camera->getGPUCamera().mViewMatrix : view2D;
+    Maths::Matrix4 projectionViewMatrix = mGPURenderPassData.mGeometricSpace == Maths::GeometricSpace::WORLD ? camera->getGPUCamera().mProjectionMatrix : ortho;
+    Maths::Matrix4 viewMatrix = mGPURenderPassData.mGeometricSpace == Maths::GeometricSpace::WORLD ? camera->getGPUCamera().mViewMatrix : view2D;
 
     projectionViewMatrix.mul(viewMatrix);
 
