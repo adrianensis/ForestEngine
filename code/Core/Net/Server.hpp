@@ -19,11 +19,11 @@ public:
     bool checkConnectionRequest();
     void writeData(const std::string& data) const;
     std::string readData(Core::u32 size = DEFAULT_SOCKET_READ_SIZE) const;
-    JSON readJSON() const;
-    void writeJSON(JSON& json) const;
+    Core::JSON readJSON() const;
+    void writeJSON(Core::JSON& json) const;
 
 private:
-    JSON readSimpleJSON(Core::u32 size  = DEFAULT_SOCKET_READ_SIZE) const;
+    Core::JSON readSimpleJSON(Core::u32 size  = DEFAULT_SOCKET_READ_SIZE) const;
 
 private:
 	ServerStatus mStatus;

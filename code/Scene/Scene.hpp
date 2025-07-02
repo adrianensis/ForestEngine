@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Config/Config.hpp"
+#include "Engine/Config/Config.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/SceneObject.hpp"
 
@@ -44,7 +44,7 @@ private:
 	Core::f32 mSize = 0.0f;
 	std::string mPath;
 
-	Core::Config mLoadSceneConfig;
+	Config::Config mLoadSceneConfig;
 
 public:
 	CRGET(SceneObjects)

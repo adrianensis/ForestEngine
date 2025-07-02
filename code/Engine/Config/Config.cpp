@@ -1,13 +1,13 @@
-#include "Core/Config/Config.hpp"
+#include "Engine/Config/Config.hpp"
 #include "Core/File/FileUtils.hpp"
 #include "Core/StdMacros.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Config)
 
 void Config::readFromJsonFile(const std::string& path)
 {
     mJson.clear();
-	FileUtils::readFile(path, [&](std::ifstream& file)
+	Core::FileUtils::readFile(path, [&](std::ifstream& file)
 	{
 		file >> mJson;
 	});
@@ -15,7 +15,7 @@ void Config::readFromJsonFile(const std::string& path)
 
 void Config::writeToJsonFile(const std::string& path)
 {
-	FileUtils::writeFile(path, [&](std::ofstream& file)
+	Core::FileUtils::writeFile(path, [&](std::ofstream& file)
 	{
 		file << mJson.dump(4);
 	});

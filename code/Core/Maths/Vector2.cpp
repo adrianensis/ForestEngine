@@ -17,16 +17,16 @@ Core::f32 Vector2::angle(const Vector2& v) const
 }
 
 template<>
-JSON SerializationUtils::serializeTemplated(const Vector2& value)
+Core::JSON SerializationUtils::serializeTemplated(const Vector2& value)
 {
-JSON json;
+Core::JSON json;
 SERIALIZE("x", value.x)
 SERIALIZE("y", value.y)
 return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Vector2& value, const JSON& json)
+void SerializationUtils::deserializeTemplated(Vector2& value, const Core::JSON& json)
 {
 DESERIALIZE("x", value.x)
 DESERIALIZE("y", value.y)

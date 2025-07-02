@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/StdCore.hpp"
-#include "Core/Serialization/Json.hpp"
+#include "Core/JSON/JSON.hpp"
 
 // PERF : use ordered_json only for debug and release? but json for ship version?
 // ordered_json will keep the data order, json will sort the data alphabetically
@@ -9,17 +9,17 @@
 class ISerializable
 {
 public:
-	virtual void serialize(JSON& json) const {};
-	virtual void deserialize(const JSON& json) {};
+	virtual void serialize(Core::JSON& json) const {};
+	virtual void deserialize(const Core::JSON& json) {};
 };
 
 class SerializationUtils
 {
 public:
 	template<class T>
-	static JSON serializeTemplated(const T& value)
+	static Core::JSON serializeTemplated(const T& value)
 	{
-		JSON json;
+		Core::JSON json;
 		if constexpr (IS_BASE_OF(ISerializable, REMOVE_POINTER(REMOVE_REFERENCE(T))))
 		{
 			if constexpr (IS_RAW_POINTER(T))
@@ -43,7 +43,7 @@ public:
 	}
 
 	template<class T>
-	static void deserializeTemplated(T& value, const JSON& json)
+	static void deserializeTemplated(T& value, const Core::JSON& json)
 	{
 		if(!json.empty())
         {
@@ -75,12 +75,12 @@ public:
 
 #define DECLARE_SERIALIZATION() \
 public:\
-	void serialize(JSON& json) const override; \
-	void deserialize(const JSON& json) override; \
+	void serialize(Core::JSON& json) const override; \
+	void deserialize(const Core::JSON& json) override; \
 private: // INFO: notice the last blank space " "
 
-#define IMPLEMENT_SERIALIZATION(...) void __VA_ARGS__::serialize(JSON& json) const  
-#define IMPLEMENT_DESERIALIZATION(...) void __VA_ARGS__::deserialize(const JSON& json)  
+#define IMPLEMENT_SERIALIZATION(...) void __VA_ARGS__::serialize(Core::JSON& json) const  
+#define IMPLEMENT_DESERIALIZATION(...) void __VA_ARGS__::deserialize(const Core::JSON& json)  
 
 // SERIALIZE
 
@@ -112,7 +112,7 @@ FOR_LIST(__it, Var)\
 }
 
 // #define SERIALIZE_MAP(Name, Var)
-// JSON __jsonMap = JSON::object();
+// Core::JSON __jsonMap = Core::JSON::object();
 // FOR_MAP(__it, Var)
 // {
 //     __jsonMap[__it->first]  = SerializationUtils::serializeTemplated<decltype(__it->second)>(__it->second);
@@ -151,6 +151,6 @@ if(!json.empty() && json.contains(Name))\
 
 #define TEMPLATED_SERIALIZATION(...)\
 template<>\
-JSON SerializationUtils::serializeTemplated(const __VA_ARGS__& value);\
+Core::JSON SerializationUtils::serializeTemplated(const __VA_ARGS__& value);\
 template<>\
-void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const JSON& json);
+void SerializationUtils::deserializeTemplated(__VA_ARGS__& value, const Core::JSON& json);

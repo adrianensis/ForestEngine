@@ -19,9 +19,9 @@ Vector4::Vector4(const Vector2& other, Core::f32 z, Core::f32 w) : x(other.x), y
 }
 
 template<>
-JSON SerializationUtils::serializeTemplated(const Vector4& value)
+Core::JSON SerializationUtils::serializeTemplated(const Vector4& value)
 {
-JSON json;
+Core::JSON json;
 SERIALIZE("x", value.x)
 SERIALIZE("y", value.y)
 SERIALIZE("z", value.z)
@@ -30,7 +30,7 @@ return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Vector4& value, const JSON& json)
+void SerializationUtils::deserializeTemplated(Vector4& value, const Core::JSON& json)
 {
 DESERIALIZE("x", value.x)
 DESERIALIZE("y", value.y)

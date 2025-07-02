@@ -1,19 +1,20 @@
 #pragma once
 
+#include "Core/JSON/JSON.hpp"
 #include "Core/Std.hpp"
 
-NS_BEGIN(Core)
+NS_BEGIN(Config)
 
 class Config
 {
 public:
-	const JSON& at(const std::string& key) const { return mJson.at(key); }
+	const Core::JSON& at(const std::string& key) const { return mJson.at(key); }
     void readFromJsonFile(const std::string& path);
     void writeToJsonFile(const std::string& path);
     bool contains(const std::string& key) const;
 
 private:
-	JSON mJson;
+	Core::JSON mJson;
 public:
 	CRGET_SET(Json)
 };

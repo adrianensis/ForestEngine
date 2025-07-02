@@ -360,16 +360,16 @@ void Quaternion::fromMatrix(const Matrix4& matrix)
 }
 
 template<>
-JSON SerializationUtils::serializeTemplated(const Quaternion& value)
+Core::JSON SerializationUtils::serializeTemplated(const Quaternion& value)
 {
-JSON json;
+Core::JSON json;
 SERIALIZE("v", value.v)
 SERIALIZE("w", value.w)
 return json;
 }
 
 template<>
-void SerializationUtils::deserializeTemplated(Quaternion& value, const JSON& json)
+void SerializationUtils::deserializeTemplated(Quaternion& value, const Core::JSON& json)
 {
 DESERIALIZE("v", value.v)
 DESERIALIZE("w", value.w)

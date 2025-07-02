@@ -117,9 +117,9 @@ std::string Server::readData(Core::u32 size /*= DEFAULT_SOCKET_READ_SIZE*/) cons
 	return buffer;
 }
 
-JSON Server::readJSON() const
+Core::JSON Server::readJSON() const
 {
-	JSON json = readSimpleJSON();
+	Core::JSON json = readSimpleJSON();
 
 	if (json.contains("__size"))
 	{
@@ -129,20 +129,20 @@ JSON Server::readJSON() const
 	return json;
 }
 
-void Server::writeJSON(JSON& json) const
+void Server::writeJSON(Core::JSON& json) const
 {
 }
 
-JSON Server::readSimpleJSON(Core::u32 size  /*= DEFAULT_SOCKET_READ_SIZE*/) const
+Core::JSON Server::readSimpleJSON(Core::u32 size  /*= DEFAULT_SOCKET_READ_SIZE*/) const
 {
-	JSON json;
+	Core::JSON json;
 	std::string data = readData(size);
 
 	if (!data.empty())
 	{
 		LOG(data);
 
-		json = JSON::parse(data);
+		json = Core::JSON::parse(data);
 
 		if (!json.empty())
 		{

@@ -5,7 +5,7 @@
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
-#include "Core/Config/Paths.hpp"
+#include "Engine/Paths.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/System/System.hpp"
-#include "Core/Config/Config.hpp"
+#include "Engine/Config/Config.hpp"
 
 class EngineConfig: public System::System
 {
@@ -10,7 +10,7 @@ public:
     void init() override;
 
 private:
-	Core::Config mConfig;
+	Config::Config mConfig;
 
 public:
 	CRGET(Config)

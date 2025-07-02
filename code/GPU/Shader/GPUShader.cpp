@@ -5,7 +5,7 @@
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/GPUInstance.hpp"
-#include "Core/Config/Paths.hpp"
+#include "Engine/Paths.hpp"
 #include "Core/File/FileUtils.hpp"
 
 void GPUShaderPropertiesInstance::setDirty()

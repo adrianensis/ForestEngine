@@ -22,9 +22,9 @@ void Scene::saveToFile(const std::string& path)
 {
 	mPath = path;
 
-	Core::Config configMap;
+	Config::Config configMap;
 
-	JSON json;
+	Core::JSON json;
 	serialize(json);
 
 	configMap.setJson(json);
@@ -83,7 +83,7 @@ IMPLEMENT_DESERIALIZATION(Scene)
 //	if(json.contains("objects"))
 //	{
 //		std::list<SceneObject *> tmpList;
-//		DESERIALIZE_LIST("objects", tmpList, [](const JSON& json)
+//		DESERIALIZE_LIST("objects", tmpList, [](const Core::JSON& json)
 //		{
 //			SceneObject *sceneObject = nullptr;//INSTANCE_BY_NAME(json["class"], SceneObject);
 //			return sceneObject;
@@ -150,7 +150,7 @@ void Scene::update()
 
 			SceneObject *sceneObject = (SceneObject*) INSTANCE_BY_NAME(className); //Core::Memory::fromClassName<SceneObject>(className));
 			sceneObject->init();
-			sceneObject->deserialize(JSON());
+			sceneObject->deserialize(Core::JSON());
 			addSceneObject(sceneObject);
 			mSceneObjectsToLoadIndex += 1;
 		}
