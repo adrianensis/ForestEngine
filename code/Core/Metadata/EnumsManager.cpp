@@ -1,9 +1,9 @@
 #include "Core/Metadata/EnumsManager.hpp"
 
 NS_BEGIN(Core)
-EnumRegister::EnumRegister(const HashedString& name, const std::vector<HashedString>& valueNames)
+EnumRegister::EnumRegister(InternalCPPTypeId internalCPPId, const HashedString& name, const std::vector<HashedString>& valueNames)
 {
-    EnumsManager::create(name, valueNames);
+    EnumsManager::insert(internalCPPId, name, valueNames);
 }
 
 EnumDefinition::EnumDefinition(const HashedString& name, const std::vector<HashedString>& valueNames)
@@ -12,18 +12,25 @@ EnumDefinition::EnumDefinition(const HashedString& name, const std::vector<Hashe
     mValueNames = valueNames;
 }
 
-const EnumDefinition& EnumsManager::getEnumMetadata(const HashedString& name)
+const EnumDefinition& EnumsManager::getEnumMetadata(InternalCPPTypeId internalCPPId)
 {
-    return mEnumsMapByName.at(name);
+    return mEnumsMapById.at(smInternalCPPTypeIdToClassId.at(internalCPPId));
 }
 
-const EnumDefinition& EnumsManager::create(const HashedString& name, const std::vector<HashedString>& valueNames)
+const void EnumsManager::insert(InternalCPPTypeId internalCPPId, const HashedString& name, const std::vector<HashedString>& valueNames)
 {
-    if(!mEnumsMapByName.contains(name))
+    if(smInternalCPPTypeIdToClassId.contains(internalCPPId))
     {
-        mEnumsMapByName.insert_or_assign(name, EnumDefinition(name, valueNames));
+        return;
     }
 
-    return mEnumsMapByName.at(name);
+    // NOTE: Different CPP enum with SAME name are not allowed.
+    if(mEnumsMapById.contains(name.getHash()))
+    {
+        CHECK_MSG(false, "Enum already registered! {}", name.get())
+    }
+
+    smInternalCPPTypeIdToClassId.insert_or_assign(internalCPPId, name.getHash());
+    mEnumsMapById.insert_or_assign(name.getHash(), EnumDefinition(name, valueNames));
 }
 NS_END

@@ -53,10 +53,8 @@ namespace GPUShaderBuilderNodes
         {
             layoutStr = "layout(" + /* (setStr.empty() ? setStr : setStr + ",") + */ locationStr + ")";
         }
-        std::string interpolationStr = "";
-        std::string storageStr = "";
-        // std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : Core::EnumsManager::toString(mGPUInterpolation).get() + " ";
-        // std::string storageStr = Core::EnumsManager::toString(mGPUStorage).get() + " ";
+        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : Core::EnumsManager::toString(mGPUInterpolation).get() + " ";
+        std::string storageStr = Core::EnumsManager::toString(mGPUStorage).get() + " ";
         return {getIndent(indent) + layoutStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
     

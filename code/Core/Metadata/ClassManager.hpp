@@ -2,14 +2,13 @@
 
 #include "Core/StdCore.hpp"
 #include "Core/Metadata/MetadataMacros.hpp"
+#include "Core/Metadata/MetadataTypes.hpp"
 #include "Core/HashedString/HashedString.hpp"
 #include <unordered_map>
 #include <typeinfo>
 
 
 NS_BEGIN(Core)
-using ClassId = u64;
-using InternalCPPTypeId = u64;
 
 #define REGISTER_CLASS(...) \
     inline static const Core::ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
