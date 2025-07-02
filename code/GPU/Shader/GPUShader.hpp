@@ -157,7 +157,7 @@ public:
     bool mAllowInstances = true;
     Core::u32 mMaxInstances = 100;
     bool mIsFont = false;
-    FontData mFontData;
+    Font::FontData mFontData;
     GPUShaderTextureBindings mGPUShaderTextureBindings;
 
     Core::u32 getMaxInstances() const

@@ -1,6 +1,8 @@
-#include "Core/Font/Font.hpp"
+#include "Engine/Font/Font.hpp"
 #include "Image/ImageUtils.hpp"
 
+
+NS_BEGIN(Font)
 void FontsLibrary::init()
 {
     FT_Error _error;
@@ -200,3 +202,5 @@ void FontData::freeGlyphsBuffers()
 
     delete[] mGlyphAtlasData;
 }
+
+NS_END

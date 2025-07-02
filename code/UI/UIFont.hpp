@@ -15,7 +15,7 @@ public:
     Core::WeakPtr<UIFont> getFont(Core::HashedString fontFile) const;
 
 private:
-    FontsLibrary mFontsLibrary;
+    Font::FontsLibrary mFontsLibrary;
     std::unordered_map<Core::HashedString, Core::OwnerPtr<UIFont>> mFontsMap;
 public:
     RGET(FontsLibrary)
@@ -28,7 +28,7 @@ class UIFont
 public:
     void init(UIFontsManager& fontsManager, Core::HashedString fontFile, Core::u32 fontSize);
 private:
-    FontData mFontData;
+    Font::FontData mFontData;
     Core::WeakPtr<GPUShader> mFontShader;
 public:
     GET(FontShader)

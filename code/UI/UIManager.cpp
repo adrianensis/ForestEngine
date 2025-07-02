@@ -26,11 +26,11 @@ void UIManager::terminate()
     mFontsManager.terminate();
 }
 
-const FontGlyphData& UIManager::getGlyphData(char character) const
+const Font::FontGlyphData& UIManager::getGlyphData(char character) const
 {
     const auto& font = mFontsManager.getFont(mDefaultFont);
     const auto& glyphsArray = font->getFontShader()->getGPUShaderData().mFontData.mGlyphs;
-    const FontGlyphData& glyph = glyphsArray.at(character);
+    const Font::FontGlyphData& glyph = glyphsArray.at(character);
     return glyph;
 }
 

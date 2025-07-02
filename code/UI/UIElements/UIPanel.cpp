@@ -34,7 +34,7 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
         FOR_ARRAY(i, newConfig.mText.get())
         {
             char character = newConfig.mText.get().at(i);
-            const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
+            const Font::FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
 
             textSize.x += glyphData.mAdvance.x;
             maxAscender = std::max(glyphData.mMetrics.mHoriBearing.y, maxAscender);

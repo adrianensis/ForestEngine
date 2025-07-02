@@ -17,7 +17,7 @@ public:
     virtual void init() override;
     virtual void terminate() override;
 
-    const FontGlyphData& getGlyphData(char character) const;
+    const Font::FontGlyphData& getGlyphData(char character) const;
     Core::WeakPtr<GPUShader> getFontShader() const;
 
 	UIGroup& getOrCreateGroup(Core::HashedString groupName)

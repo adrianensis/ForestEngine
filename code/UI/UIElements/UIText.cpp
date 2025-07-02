@@ -81,7 +81,7 @@ void UIText::setText(Core::HashedString text)
             FOR_ARRAY(i, text.get())
             {
                 char character = text.get().at(i);
-                const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
+                const Font::FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
 
                 maxAscender = std::max(glyphData.mMetrics.mHoriBearing.y, maxAscender);
                 maxDescender = std::max(glyphData.mMetrics.mSize.y - glyphData.mMetrics.mHoriBearing.y, maxDescender);
@@ -95,7 +95,7 @@ void UIText::setText(Core::HashedString text)
 			FOR_RANGE(i, 0, textLen)
 			{
                 char character = text.get().at(i);
-                const FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
+                const Font::FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
                 Vector2 glyphSize = glyphData.mMetrics.mSize * mConfig.mTextScale;
                 Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
 

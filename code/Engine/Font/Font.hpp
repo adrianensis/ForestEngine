@@ -4,6 +4,7 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
+NS_BEGIN(Font)
 class FontsLibrary
 {
 public:
@@ -54,3 +55,4 @@ public:
     std::array<FontGlyphData, FontData::MAX_GLYPHS> mGlyphs;
     Core::byte* mGlyphAtlasData = nullptr;
 };
+NS_END

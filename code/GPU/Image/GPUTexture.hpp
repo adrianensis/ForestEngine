@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.hpp"
-#include "Core/Font/Font.hpp"
+#include "Engine/Font/Font.hpp"
 
 #include "GPU/Image/GPUImage.h"
 #include "GPU/Core/GPUDefinitions.h"
@@ -19,7 +19,7 @@ class GPUTextureData
 public:
     Core::HashedString mPath;
     bool mIsFont = false;
-    FontData mFontData;
+    Font::FontData mFontData;
 };
 
 class GPUTexture
