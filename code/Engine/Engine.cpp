@@ -4,7 +4,15 @@
 #include "Engine/Time/TimerManager.hpp"
 #include "Engine/Input/Input.hpp"
 #include "Engine/Events/EventsManager.hpp"
-#include "Graphics/Module.hpp"
+
+#include "Engine/Window/WindowManager.hpp"
+#include "Graphics/RenderEngine.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Model/ModelManager.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
+#include "Graphics/Debug/DebugRenderer.hpp"
+
 #include "Scripting/ScriptEngine.hpp"
 
 #include "Scene/ScenesManager.hpp"

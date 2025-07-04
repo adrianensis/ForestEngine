@@ -1,7 +1,6 @@
 #include "Scene/Scene.hpp"
 #include "Scene/SceneObject.hpp"
 #include "Scene/Transform.hpp"
-#include "Graphics/Module.hpp"
 #include "Engine/EngineConfig.hpp"
 
 void Scene::terminate()

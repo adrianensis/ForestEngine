@@ -1,7 +1,7 @@
 
 #include "SpacePartition/OcTree.hpp"
-#include "Graphics/Module.hpp"
 #include "Scene/Module.hpp"
+#include "Graphics/Debug/DebugRenderer.hpp"
 
 void OcTree::OcTreeNode::init(OcTree* tree, OcTreeNode* parent, Core::u8 index, const Maths::Cube& cube, Core::u8 depth)
 {
