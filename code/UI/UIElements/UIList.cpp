@@ -3,7 +3,10 @@
 #include "UI/UIBuilder.hpp"
 #include "UI/UIElements/UIText.hpp"
 #include "UI/UIElements/UIButton.hpp"
-#include "Graphics/Module.hpp"
+
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Engine/Window/WindowManager.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"

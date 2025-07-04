@@ -2,7 +2,9 @@
 #include "UI/UIManager.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIElements/UIText.hpp"
-#include "Graphics/Module.hpp"
+
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
+#include "Engine/Window/Window.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
 

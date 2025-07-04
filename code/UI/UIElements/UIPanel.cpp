@@ -1,6 +1,10 @@
 #include "UI/UIElements/UIPanel.hpp"
 
-#include "Graphics/Module.hpp"
+
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
+#include "Engine/Window/Window.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
+
 #include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIManager.hpp"

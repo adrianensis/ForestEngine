@@ -1,4 +1,6 @@
-#include "Graphics/Module.hpp"
+
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
+#include "Engine/Window/WindowManager.hpp"
 #include "UI/UIUtils.hpp"
 
 Core::f32 UIUtils::correctAspectRatio(Core::f32 x)
