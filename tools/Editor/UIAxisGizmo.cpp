@@ -1,5 +1,7 @@
 #include "UIAxisGizmo.hpp"
-#include "Graphics/Module.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
+#include "Graphics/Debug/DebugRenderer.hpp"
+
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
 #include "Engine/Input/Input.hpp"

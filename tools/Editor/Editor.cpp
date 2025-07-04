@@ -1,5 +1,12 @@
 #include "Editor.hpp"
-#include "Graphics/Module.hpp"
+#include "Graphics/Model/ModelManager.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
+#include "Graphics/Debug/DebugRenderer.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/MeshRenderer/MeshRenderer.hpp"
+#include "Graphics/Model/ModelRenderer.hpp"
+#include "Engine/Window/WindowManager.hpp"
+
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"
 #include "Engine/Input/Input.hpp"

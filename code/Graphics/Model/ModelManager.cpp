@@ -1,5 +1,4 @@
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/Model/Model.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 
 void ModelManager::init()

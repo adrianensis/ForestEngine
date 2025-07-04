@@ -4,8 +4,7 @@
 #include "Engine/System/System.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-
-class Model;
+#include "Graphics/Model/Model.hpp"
 
 class ModelManager: public System::System
 {
