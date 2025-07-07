@@ -3,7 +3,7 @@
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/MathUtils.hpp"
-#include "Core/Memory/Pointers.hpp"
+#include "Core/Metadata/ClassManager.hpp"
 
 NS_BEGIN(Maths)
 class Cube;
@@ -68,8 +68,8 @@ public:
         return toVector().len() <= MathUtils::FLOAT_EPSILON;
     }
 
-    CRGET(Start)
-    CRGET(End)
+    const Vector3& getStart() const { return mStart; }
+    const Vector3& getEnd() const { return mEnd; }
 };
 REGISTER_CLASS(Line)
 
@@ -104,8 +104,8 @@ public:
         return getSize().len() <= MathUtils::FLOAT_EPSILON;
     }
 
-    CRGET(LeftTopFront)
-    CRGET(Size)
+    const Vector3& getLeftTopFront() const { return mLeftTopFront; }
+    const Vector3& getSize() const { return mSize; }
 };
 REGISTER_CLASS(Rectangle)
 
@@ -133,8 +133,8 @@ public:
     Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
     Core::f32 getRadius() const { return mSize.max(); }
 
-    CRGET(LeftTopFront)
-    CRGET(Size)
+    const Vector3& getLeftTopFront() const { return mLeftTopFront; }
+    const Vector3& getSize() const { return mSize; }
 };
 REGISTER_CLASS(Cube)
 
@@ -157,8 +157,8 @@ private:
     Vector3 mCenter;
     Core::f32 mRadius;
 public:
-    CRGET(Center)
-    GET(Radius)
+    const Vector3& getCenter() const { return mCenter; }
+    Core::f32 getRadius() const { return mRadius; }
 };
 REGISTER_CLASS(Sphere)
 NS_END
