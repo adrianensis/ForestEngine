@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/CoreBase.hpp"
-#include "Core/Memory/Pointers.hpp"
+#include "Core/Memory/Memory.hpp"
 
 NS_BEGIN(Core)
 template <class T>
@@ -9,13 +9,17 @@ class Singleton
 {
 public:
 	Singleton() = default;
-	~Singleton() = default;
-
-	static WeakPtr<T> getInstancePtr()
+	~Singleton()
 	{
-		if (!mInstance.isValid())
+		deleteInstance();
+	};
+
+	static T* getInstancePtr()
+	{
+		if (!mInstance)
 		{
-			mInstance = OwnerPtr<T>::newObject();
+			mInstance = new T();
+			Memory::registerPointer<T>(mInstance);
 		}
 
 		return mInstance;
@@ -23,19 +27,22 @@ public:
 
 	static T& getInstance()
 	{
-		return getInstancePtr().get();
+		return *getInstancePtr();
 	}
 
 	static void deleteInstance()
 	{
 		if (mInstance)
 		{
-			mInstance.invalidate();
+			Memory::unregisterPointer(mInstance);
+			T* ptr = mInstance;
+			mInstance = nullptr;
+			delete ptr;
 		}
 	}
 	
 private:
-	inline static OwnerPtr<T> mInstance;
+	inline static T* mInstance = nullptr;
 };
 
 NS_END

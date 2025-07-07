@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Core/CoreBase.hpp"
-#include "Core/Memory/Pointers.hpp"
-#include "Core/Metadata/ClassManager.hpp"
 #include "Core/JSON/JSON.hpp"
 #include <netinet/in.h>
 NS_BEGIN(Core)
@@ -39,6 +37,6 @@ private:
 	mutable std::string buffer;
 	
 public:
-	GET(Status)
+	ServerStatus getStatus() const { return mStatus; }
 };
 NS_END

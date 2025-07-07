@@ -126,8 +126,8 @@ protected:
     std::vector<byte> mBuffer;
 
 public:
-    RGET(Buffer)
-    CRGET(Buffer)
+    std::vector<byte>& getBuffer() { return mBuffer; }
+    const std::vector<byte>& getBuffer() const { return mBuffer; }
 };
 
 class TByteBuffer : public ByteBuffer

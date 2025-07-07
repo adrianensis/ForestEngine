@@ -6,8 +6,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <functional>
-#include "Core/Memory/Pointers.hpp"
-
 
 NS_BEGIN(Core)
 class Thread
