@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Maths/Geometry.hpp"
+#include "Core/Core.hpp"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
