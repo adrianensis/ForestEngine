@@ -18,6 +18,7 @@
 #include "Core/CoreBase.hpp"
 #include "Core/Memory/Memory.hpp"
 #include "Core/Memory/Pointers.hpp"
+#include "Core/TypeMacros.hpp"
 #include "Core/Threads/ThreadPool.hpp"
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/Tag/Tag.hpp"

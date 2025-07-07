@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/CoreBase.hpp"
-#include "Core/Metadata/MetadataMacros.hpp"
 #include "Core/Metadata/MetadataTypes.hpp"
 #include "Core/HashedString/HashedString.hpp"
 #include <unordered_map>
@@ -17,6 +16,10 @@ NS_BEGIN(Core)
 #define REGISTER_MEMBER(memberName, ...) \
     inline static const Core::MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
     inline static const Core::MemberRegister memberRegister_##memberName = Core::MemberRegister(Core::ClassManager::getClassMetadata<ThisClass>().mClassDefinition.mName, smMemberDefinition_##memberName);
+
+#define P(...)          \
+    __VA_ARGS__;        \
+    REGISTER_MEMBER(__VA_ARGS__);
 
 class ClassDefinition
 {

@@ -10,11 +10,6 @@
 // MEMBERS, GETTERS AND SETTERS
 // --------------------------------------------------------
 
-#define P(...)          \
-    __VA_ARGS__;        \
-    REGISTER_MEMBER(__VA_ARGS__);
-
-
 #define GETTER_TYPE(Type)                         \
     COND_TYPE(                                    \
         IS_RAW_POINTER(Type),                     \
