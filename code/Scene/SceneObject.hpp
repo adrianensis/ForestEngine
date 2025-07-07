@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 #include "Engine/EntityComponent/Entity.hpp"
 #include "Engine/EntityComponent/Component.hpp"
 

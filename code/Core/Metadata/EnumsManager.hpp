@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/Metadata/MetadataTypes.hpp"
 #include <unordered_map>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include <csignal>
 
 NS_BEGIN(Core)

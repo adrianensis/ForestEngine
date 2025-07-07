@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
-#include "Core/StdMacros.hpp"
+#include "Core/CoreBase.hpp"
 
 NS_BEGIN(Paths)
 

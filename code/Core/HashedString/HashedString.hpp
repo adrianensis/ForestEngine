@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include "Core/Assert/Assert.hpp"
 #include <unordered_map>
 

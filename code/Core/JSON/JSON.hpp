@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdMacros.hpp"
+#include "Core/CoreMacros.hpp"
 #include "json.hpp"
 
 NS_BEGIN(Core)

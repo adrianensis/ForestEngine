@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 
 NS_BEGIN(Window)
 class Window;

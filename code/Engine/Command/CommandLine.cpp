@@ -5,7 +5,6 @@
 #include "Engine/Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
 #include "Engine/Events/EventsManager.hpp"
-#include "Core/StdMacros.hpp"
 #include "GLFW/glfw3.h"
 
 #include <cstdio>

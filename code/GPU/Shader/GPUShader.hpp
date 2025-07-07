@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 

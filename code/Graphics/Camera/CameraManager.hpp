@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Engine/System/System.hpp"
 #include "Graphics/Camera/Camera.hpp"
 
 class CameraManager: public System::System

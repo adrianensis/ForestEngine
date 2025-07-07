@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
-#include "Engine/System/System.hpp"
+#include "Engine/Core.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 
 class GPUMeshFactory: public System::System

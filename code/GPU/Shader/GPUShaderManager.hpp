@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
-#include "Engine/System/System.hpp"
+#include "Engine/Core.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
 class GPUShaderManager: public System::System

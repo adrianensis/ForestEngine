@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include <fstream>
 #include <ostream>
 #include "fmt/core.h"

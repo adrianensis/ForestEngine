@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Image/GPUImage.h"

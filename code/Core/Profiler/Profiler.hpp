@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 
 #ifdef ENGINE_ENABLE_PROFILER
 #include "tracy/Tracy.hpp"

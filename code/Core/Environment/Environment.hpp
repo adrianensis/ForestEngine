@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/StdMacros.hpp"
+#include "Core/CoreMacros.hpp"
 
 NS_BEGIN(Core)
 #if defined(_WIN64)

@@ -6,7 +6,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 
 class GPUSwapChain 
 {

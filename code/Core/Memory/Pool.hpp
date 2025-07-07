@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/HashedString/HashedString.hpp"
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include <vector>
 #include "Core/Memory/Memory.hpp"
 #include "Core/Memory/Pointers.hpp"

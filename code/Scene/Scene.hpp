@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 #include "Engine/Config/Config.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/SceneObject.hpp"

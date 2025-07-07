@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Signal/Signal.hpp"
-#include "Core/StdMacros.hpp"
 
 NS_BEGIN(Core)
 

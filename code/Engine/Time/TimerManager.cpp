@@ -1,8 +1,8 @@
 #include "Engine/Time/TimerManager.hpp"
 #include "Engine/Time/TimeUtils.hpp"
+#include "Engine/System/SystemsManager.hpp"
 #include "Core/Profiler/Profiler.hpp"
-#include "Engine/System/SystemManager.hpp"
-
+ 
 NS_BEGIN(Time)
 void TimerManager::endTimer(Timer * timer)
 {
@@ -10,9 +10,11 @@ void TimerManager::endTimer(Timer * timer)
 	Core::Memory::deleteObject(timer);
 }
 
-void TimerManager::init() {
+void TimerManager::init()
+{
 
 }
+
 void TimerManager::update()
 {
 	PROFILER_CPU()

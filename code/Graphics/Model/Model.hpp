@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "cgltf.h"

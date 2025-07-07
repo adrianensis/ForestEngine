@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Minimal.hpp"
-#include "Engine/System/System.hpp"
+#include "Engine/Core.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/Core.hpp"
 #include "Engine/System/System.hpp"
 #include <chrono>
+
 NS_BEGIN(Time)
 class TimeMark
 {

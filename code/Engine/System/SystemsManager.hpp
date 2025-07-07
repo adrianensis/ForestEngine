@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/System/System.hpp"
+#include "Core/Memory/Singleton.hpp"
 
 NS_BEGIN(System)
 

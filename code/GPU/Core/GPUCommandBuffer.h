@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.h>
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 
 class GPUContext;
 

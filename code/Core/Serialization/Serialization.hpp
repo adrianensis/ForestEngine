@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include "Core/JSON/JSON.hpp"
 
 // PERF : use ordered_json only for debug and release? but json for ship version?

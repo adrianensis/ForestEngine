@@ -3,7 +3,7 @@
 #include <vulkan/vulkan.h>
 #include "vulkan/vulkan.hpp"
 
-#include "Core/Minimal.hpp"
+#include "Engine/Core.hpp"
 
 class VulkanConfig
 {

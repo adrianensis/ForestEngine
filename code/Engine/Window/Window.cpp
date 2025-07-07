@@ -1,5 +1,6 @@
 #include "Engine/Window/Window.hpp"
 #include "Core/Profiler/Profiler.hpp"
+#include "Engine/System/SystemsManager.hpp"
 
 NS_BEGIN(Window)
 GLFWwindow* Window::getGlfwWindow() const 

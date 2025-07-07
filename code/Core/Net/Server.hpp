@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include "Core/Memory/Pointers.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/JSON/JSON.hpp"

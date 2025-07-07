@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Std.hpp"
-#include "Core/Memory/Singleton.hpp"
+#include "Core/Core.hpp"
 #include "Engine/Events/Event.hpp"
 
 NS_BEGIN(System)

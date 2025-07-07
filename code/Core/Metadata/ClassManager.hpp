@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/StdCore.hpp"
+#include "Core/CoreBase.hpp"
 #include "Core/Metadata/MetadataMacros.hpp"
 #include "Core/Metadata/MetadataTypes.hpp"
 #include "Core/HashedString/HashedString.hpp"
