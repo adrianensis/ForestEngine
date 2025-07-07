@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Maths/MathUtils.hpp"
+#include "Core/Assert/Assert.hpp"
 
 #define VECTOR_COMPONENT_1 x
 #define VECTOR_COMPONENT_2 y

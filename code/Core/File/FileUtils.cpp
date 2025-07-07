@@ -1,6 +1,7 @@
 #include "Core/File/FileUtils.hpp"
 #include "Core/Assert/Assert.hpp"
 #include <iostream>
+#include <filesystem>
 
 NS_BEGIN(Core)
 

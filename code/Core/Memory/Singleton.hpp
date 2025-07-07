@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdCore.hpp"
+#include "Core/Memory/Pointers.hpp"
 
 NS_BEGIN(Core)
 template <class T>

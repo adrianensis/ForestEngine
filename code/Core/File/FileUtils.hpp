@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdCore.hpp"
 #include <fstream>
+#include <vector>
+#include <functional>
 
 NS_BEGIN(Core)
 class FileUtils

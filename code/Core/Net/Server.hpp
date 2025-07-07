@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdCore.hpp"
+#include "Core/Memory/Pointers.hpp"
+#include "Core/Metadata/ClassManager.hpp"
+#include "Core/JSON/JSON.hpp"
 #include <netinet/in.h>
 NS_BEGIN(Core)
 enum class ServerStatus

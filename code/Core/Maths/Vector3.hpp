@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdCore.hpp"
 #include "Core/Maths/VectorDef.hpp"
+#include "Core/Serialization/Serialization.hpp"
 
 NS_BEGIN(Maths)
 class Vector2;

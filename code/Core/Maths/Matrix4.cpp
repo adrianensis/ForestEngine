@@ -3,6 +3,7 @@
 #include "Core/Maths/Vector4.hpp"
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Quaternion.hpp"
+#include "Core/Profiler/Profiler.hpp"
 
 NS_BEGIN(Maths)
 Matrix4::Matrix4()

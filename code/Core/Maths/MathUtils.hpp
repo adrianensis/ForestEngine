@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/Std.hpp"
+#include "Core/StdCore.hpp"
+#include "Core/Metadata/EnumsManager.hpp"
 
 NS_BEGIN(Maths)
 DECLARE_ENUM(GeometricSpace,
