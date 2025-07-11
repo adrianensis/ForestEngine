@@ -12,7 +12,7 @@ void UIManager::init()
 	UIStyleManager::getInstance().init();
     mDefaultFont = Core::HashedString(Paths::PredefinedPaths::mResources.get() + "fonts/Arial.ttf");
     mFontsManager.init();
-    mFontsManager.loadFont(mDefaultFont, 12);
+    mFontsManager.loadFont(mDefaultFont, 36);
 
     GPUShaderData shaderData;
     shaderData.mMaxInstances = 500;
