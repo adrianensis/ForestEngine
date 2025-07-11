@@ -50,7 +50,8 @@ void GPUShaderUI::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) cons
             GPUShaderBuilder.getMain().
             // ifBlock(textureHandle.notEq("0"s)).
                 set(outColor, call("texture", {/*textures.at(textureHandle)*/textureHandle, inTextureCoord})).
-                ifBlock(outColor.dot("r").add(outColor.dot("g").add(outColor.dot("b"))).eq({"0"})).
+                set(outColor.dot("a"), outColor.dot("r")).
+                ifBlock(outColor.dot("r").eq({"0"})).
                     line("discard").
                 end();
             // end();
