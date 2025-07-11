@@ -45,8 +45,9 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile,
     // // set size to load glyphs as
     // FT_Set_Pixel_Sizes(mFreeTypeFace, 0, 48);
 
-    _error = FT_Set_Char_Size ( mFreeTypeFace, 0, fontSize * 64, 300, 300);
-    CHECK_MSG(!_error, "Failed to set char size");
+    // _error = FT_Set_Char_Size ( mFreeTypeFace, 0, fontSize * 64, 96, 96);
+    _error = FT_Set_Pixel_Sizes ( mFreeTypeFace, 0, fontSize);
+    CHECK_MSG(!_error, "Failed to set pixel size");
 
     // _error = FT_Set_Char_Size(
     //   mFreeTypeFace,    /* handle to face object           */
