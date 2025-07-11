@@ -40,7 +40,7 @@ void Engine::init()
     Window::WindowData windowData;
     windowData.mTitle = "Vulkan Engine";
     windowData.mFullScreen = false;
-    windowData.mWindowSize.set(800, 600);
+    windowData.mWindowSize.set(1080, 720);
     windowData.mMainWindow = true;
     GET_SYSTEM(Window::WindowManager).createWindow(windowData);
     CREATE_SYSTEM(GPUInstance);
