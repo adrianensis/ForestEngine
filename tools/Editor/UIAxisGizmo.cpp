@@ -47,8 +47,7 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(this).
-	setTextScale(0.5f);
+    setParent(this);
 
     mPositive = uiBuilder.
 	setText(mAxisName).
@@ -64,8 +63,7 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(this).
-	setTextScale(0.5f);
+    setParent(this);
 
     mNegative = uiBuilder.
 	setText(mNegAxisName).

@@ -16,7 +16,6 @@ void UIVector::init()
 	setIsStaticText(false).
 	setIsAffectedByLayout(true).
     setParent(this).
-	setTextScale(0.5f).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
     mX = uiBuilder.

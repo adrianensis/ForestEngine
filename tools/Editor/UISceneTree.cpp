@@ -23,7 +23,6 @@ void UISceneTree::update()
 	setIsAffectedByLayout(true).
 	setLayout(UILayout::VERTICAL).
     setParent(this).
-	setTextScale(0.5f).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
     const std::list<EC::TEntityPtr<SceneObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();

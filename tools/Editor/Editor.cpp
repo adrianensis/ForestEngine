@@ -423,8 +423,7 @@ void Editor::createUI()
 	// setPosition(Maths::Vector2(0,0)).
 	setPosition(Maths::Vector2(-1,1)).
 	setAdjustSizeToText(true).
-	setSize(Maths::Vector2(0.5, 0.05f)).
-    setTextScale(0.5f);
+	setSize(Maths::Vector2(0.5, 0.05f));
 
     // uiBuilder.
 	// setText("cApgfy").
