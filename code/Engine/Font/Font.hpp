@@ -54,5 +54,7 @@ public:
     Core::u32 mHeight;
     std::array<FontGlyphData, FontData::MAX_GLYPHS> mGlyphs;
     Core::byte* mGlyphAtlasData = nullptr;
+    Core::f32 mMaxAscender = 0;
+    Core::f32 mMaxDescender = 0;
 };
 NS_END

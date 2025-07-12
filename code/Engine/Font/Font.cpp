@@ -120,13 +120,16 @@ origin(0,0) .              * X        X*                    .               v
         Maths::Vector2 bitmapSize = Maths::Vector2(mFreeTypeFace->glyph->bitmap.width, mFreeTypeFace->glyph->bitmap.rows);
         Maths::Vector2 glyphSizeInAtlasSpace = bitmapSize / Maths::Vector2(mWidth, mHeight);
         Maths::Vector2 textureOffset = Maths::Vector2((Core::f32)texPos / (Core::f32)mWidth, 0);
-
+        
         FontGlyphMetricsData metrics;
         metrics.mSize = Maths::Vector2(mFreeTypeFace->glyph->metrics.width >> 6, mFreeTypeFace->glyph->metrics.height >> 6);
         metrics.mBoundingBoxMin = Maths::Vector2(mFreeTypeFace->bbox.xMin >> 6, mFreeTypeFace->bbox.yMin >> 6);
         metrics.mBoundingBoxMax = Maths::Vector2(mFreeTypeFace->bbox.xMax >> 6, mFreeTypeFace->bbox.yMax >> 6);
         metrics.mHoriBearing = Maths::Vector2(mFreeTypeFace->glyph->metrics.horiBearingX >> 6, mFreeTypeFace->glyph->metrics.horiBearingY >> 6);
         metrics.mVertBearing = Maths::Vector2(mFreeTypeFace->glyph->metrics.vertBearingX >> 6, mFreeTypeFace->glyph->metrics.vertBearingY >> 6);
+        
+        mMaxAscender = std::max(metrics.mHoriBearing.y, mMaxAscender);
+        mMaxDescender = std::max(metrics.mSize.y - metrics.mHoriBearing.y, mMaxDescender);
 
         mGlyphs[c] = {
             // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
@@ -187,7 +190,6 @@ origin(0,0) .              * X        X*                    .               v
             
             bytesOffset += width;
         }
-
     }
 
     _error = FT_Done_Face(mFreeTypeFace);
