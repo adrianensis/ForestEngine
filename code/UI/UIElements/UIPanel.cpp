@@ -33,19 +33,13 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
 	if (newConfig.mAdjustSizeToText)
 	{
         Maths::Vector2 textSize(0,0);
-        Core::f32 maxAscender = 0;
-        Core::f32 maxDescender = 0;
         FOR_ARRAY(i, newConfig.mText.get())
         {
             char character = newConfig.mText.get().at(i);
             const Font::FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
-
             textSize.x += glyphData.mAdvance.x;
-            maxAscender = std::max(glyphData.mMetrics.mHoriBearing.y, maxAscender);
-            maxDescender = std::max(glyphData.mMetrics.mSize.y - glyphData.mMetrics.mHoriBearing.y, maxDescender);
         }
-        textSize.y = maxAscender + maxDescender;
-
+        textSize.y = GET_SYSTEM(UIManager).getFont()->getFontData().mMaxAscender + GET_SYSTEM(UIManager).getFont()->getFontData().mMaxDescender;
 		newConfig.mSize = textSize * newConfig.mTextScale;
 		newConfig.mDisplaySize = UIUtils::toScreenSpace(newConfig.mSize);
 	}

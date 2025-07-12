@@ -75,8 +75,8 @@ void UIText::setText(Core::HashedString text)
 
 		if (!text.get().empty())
 		{
-            Core::u32 fontHeight = GET_SYSTEM(UIManager).getFont()->getFontData().mHeight;
-            Core::f32 fontHeightScreenSpace = UIUtils::toScreenSpace(Maths::Vector2(0, fontHeight)).y;
+            Core::u32 fontMaxDescender = GET_SYSTEM(UIManager).getFont()->getFontData().mMaxDescender;
+            Core::f32 fontMaxDescenderScreenSpace = UIUtils::toScreenSpace(Maths::Vector2(0, fontMaxDescender)).y;
             Core::f32 offset = -mConfig.mDisplaySize.x/2.0f;
 
 			FOR_RANGE(i, 0, textLen)
@@ -88,7 +88,14 @@ void UIText::setText(Core::HashedString text)
 
                 Maths::Vector2 bearing(glyphData.mMetrics.mHoriBearing.x, glyphData.mMetrics.mHoriBearing.y);
                 Maths::Vector2 bearingScreenSpace = UIUtils::toScreenSpace(bearing * mConfig.mTextScale);
-                Maths::Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, glyphSizeScreenSpace.y - fontHeightScreenSpace/2.0f - (glyphSizeScreenSpace.y - bearingScreenSpace.y));
+                Maths::Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, 0);
+
+                // Move the glyph down half size
+                glyphPositionScreenSpace.y = glyphPositionScreenSpace.y - mConfig.mDisplaySize.y/2.0f;
+                // Move up bearing size so we align all glyphs bottoms
+                glyphPositionScreenSpace.y = glyphPositionScreenSpace.y + bearingScreenSpace.y;
+                // Move up equivalent to fontMaxDescenderScreenSpace (so we make room for characters like 'p' or 'g' which cross text baseline) 
+                glyphPositionScreenSpace.y = glyphPositionScreenSpace.y + fontMaxDescenderScreenSpace;
 
                 if(i < mFontRenderers.size())
                 {
