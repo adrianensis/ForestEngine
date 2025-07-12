@@ -1,8 +1,9 @@
 #pragma once
 
-#include "UI/UIElements/UIText.hpp"
+#include "UI/UIElements/UIPanel.hpp"
 #include "UI/UIStyle.hpp"
 
+class UIText;
 
 class UIStyleEditableTextBackground: public UIStyle
 {
@@ -14,12 +15,15 @@ public:
 };
 REGISTER_CLASS(UIStyleEditableTextBackground)
 
-class UIEditableText: public UIText
+class UIEditableText: public UIPanel
 {
 public:
     void init() override;
-    
-protected:
-    void setBackground(const UIElementConfig& config) override;
+	void initFromConfig(const UIElementConfig& config) override;
+    void setText(Core::HashedString text) override;
+    void setVisibility(bool visibility) override;
+
+private:
+	EC::TEntityPtr<UIText> mText;
 };
 REGISTER_CLASS(UIEditableText);

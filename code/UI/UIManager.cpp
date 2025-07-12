@@ -30,7 +30,7 @@ void UIManager::terminate()
 
 const Font::FontGlyphData& UIManager::getGlyphData(char character) const
 {
-    const auto& font = mFontsManager.getFont(mDefaultFont);
+    auto font = mFontsManager.getFont(mDefaultFont);
     const auto& glyphsArray = font->getFontShader()->getGPUShaderData().mFontData.mGlyphs;
     const Font::FontGlyphData& glyph = glyphsArray.at(character);
     return glyph;
@@ -38,8 +38,14 @@ const Font::FontGlyphData& UIManager::getGlyphData(char character) const
 
 Core::WeakPtr<GPUShader> UIManager::getFontShader() const
 {
-    const auto& f = mFontsManager.getFont(mDefaultFont);
-    return f->getFontShader();
+    auto font = mFontsManager.getFont(mDefaultFont);
+    return font->getFontShader();
+}
+
+Core::WeakPtr<const UIFont> UIManager::getFont() const
+{
+    auto font = mFontsManager.getFont(mDefaultFont);
+    return font;
 }
 
 void UIManager::setFocusedElement(EC::TEntityPtr<UIElement> focusedElement)

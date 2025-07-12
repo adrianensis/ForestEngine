@@ -9,27 +9,51 @@
 
 void UIEditableText::init() 
 {
-    UIText::init();
-    setIsEditable(true);
+    UIPanel::init();
+
+    subscribeToMouseEvents();
+    subscribeToEnterEvent();
+    subscribeToEscEvent();
+    subscribeToCharEvents();
+    mOnlyReleaseOnClickOutside = true;
 }
 
-void UIEditableText::setBackground(const UIElementConfig& config) 
+void UIEditableText::initFromConfig(const UIElementConfig& config) 
 {
-    if(mBackground)
-    {
-        mScene->removeSceneObject(mBackground);
-    }
+	UIPanel::initFromConfig(config);
 
-    UIBuilder uiBuilder;
+	setText(mConfig.mText);
+}
+void UIEditableText::setText(Core::HashedString text)
+{
+	if (text.get().length() > 0)
+	{
+		if (!mText)
+		{
+			UIBuilder uiBuilder;
 
-    mBackground = uiBuilder.
-        // setPosition(mTransform->getWorldPosition() + Maths::Vector2(-config.mTextScale.x/GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), config.mTextScale.y/2.0f)).
-        setPosition(Maths::Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
-        setSize(mConfig.mDisplaySize).
-        setLayer(mConfig.mLayer).
-        setIsAffectedByLayout(false).
-        setParent(this).
-        setStyle(&UIStyleManager::getInstance().getOrAddStyle<UIStyleEditableTextBackground>()).
-        create<UIPanel>().
-        getUIElement<UIPanel>();
+			mText = uiBuilder.
+			setPosition(Maths::Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).
+			setSize(mConfig.mDisplaySize).
+			setText(text).
+			setTextScale(mConfig.mTextScale).
+			setLayer(mConfig.mLayer + 1).
+			setIsAffectedByLayout(false).
+			setParent(this).
+			create<UIText>().
+			getUIElement<UIText>();
+		}
+
+		mText->setText(text);
+	}
+}
+
+void UIEditableText::setVisibility(bool visibility) 
+{
+	UIPanel::setVisibility(visibility);
+
+	if (mText)
+	{
+		mText->setVisibility(visibility);
+	}
 }

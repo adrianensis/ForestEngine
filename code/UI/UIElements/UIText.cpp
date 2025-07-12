@@ -41,11 +41,6 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 void UIText::initFromConfig(const UIElementConfig& config) 
 {
 	UIArea::initFromConfig(config);
-
-	setLayer(mConfig.mLayer);
-
-	setBackground(mConfig);
-
 	setText(mConfig.mText);
 }
 
@@ -80,22 +75,10 @@ void UIText::setText(Core::HashedString text)
 
 		if (!text.get().empty())
 		{
-            Core::f32 maxAscender = 0;
-            Core::f32 maxDescender = 0;
-            FOR_ARRAY(i, text.get())
-            {
-                char character = text.get().at(i);
-                const Font::FontGlyphData& glyphData = GET_SYSTEM(UIManager).getGlyphData(character);
-
-                maxAscender = std::max(glyphData.mMetrics.mHoriBearing.y, maxAscender);
-                maxDescender = std::max(glyphData.mMetrics.mSize.y - glyphData.mMetrics.mHoriBearing.y, maxDescender);
-            }
-
-            Maths::Vector2 maxDescenderVec(0, maxDescender);
-            Maths::Vector2 maxDescenderVecScreenSpace(UIUtils::toScreenSpace(maxDescenderVec * mConfig.mTextScale));
-            Core::f32 baseLineScreenSpace = mConfig.mDisplaySize.y - maxDescenderVecScreenSpace.y;
-            
+            Core::u32 fontHeight = GET_SYSTEM(UIManager).getFont()->getFontData().mHeight;
+            Core::f32 fontHeightScreenSpace = UIUtils::toScreenSpace(Maths::Vector2(0, fontHeight)).y;
             Core::f32 offset = -mConfig.mDisplaySize.x/2.0f;
+
 			FOR_RANGE(i, 0, textLen)
 			{
                 char character = text.get().at(i);
@@ -105,7 +88,7 @@ void UIText::setText(Core::HashedString text)
 
                 Maths::Vector2 bearing(glyphData.mMetrics.mHoriBearing.x, glyphData.mMetrics.mHoriBearing.y);
                 Maths::Vector2 bearingScreenSpace = UIUtils::toScreenSpace(bearing * mConfig.mTextScale);
-                Maths::Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, mConfig.mDisplaySize.y/2.0f - baseLineScreenSpace + bearingScreenSpace.y);
+                Maths::Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, glyphSizeScreenSpace.y - fontHeightScreenSpace/2.0f - (glyphSizeScreenSpace.y - bearingScreenSpace.y));
 
                 if(i < mFontRenderers.size())
                 {
@@ -159,28 +142,5 @@ void UIText::setVisibility(bool visibility)
 	if(mBackground)
 	{
 		mBackground->setVisibility(visibility);
-	}
-}
-
-void UIText::setIsEditable(bool editable)
-{
-	if(editable && !getIsEditable())
-	{
-		subscribeToMouseEvents();
-		subscribeToEnterEvent();
-		subscribeToEscEvent();
-		subscribeToCharEvents();
-		mOnlyReleaseOnClickOutside = true;
-	}
-
-	if(!editable && getIsEditable())
-	{
-		UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this);
-		UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this);
-		mOnlyReleaseOnClickOutside = true;
 	}
 }

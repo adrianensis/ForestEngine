@@ -18,6 +18,7 @@ public:
 
     const Font::FontGlyphData& getGlyphData(char character) const;
     Core::WeakPtr<GPUShader> getFontShader() const;
+    Core::WeakPtr<const UIFont> getFont() const;
 
 	UIGroup& getOrCreateGroup(Core::HashedString groupName)
 	{
