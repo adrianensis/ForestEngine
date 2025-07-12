@@ -1,5 +1,4 @@
 
-#include "Scene/Module.hpp"
 #include "GPU/Camera/GPUCamera.hpp"
 
 void GPUCamera::init()

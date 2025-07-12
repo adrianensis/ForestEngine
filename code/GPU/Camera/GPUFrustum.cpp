@@ -1,5 +1,4 @@
 #include "GPU/Camera/GPUFrustum.hpp"
-#include "Scene/Module.hpp"
 #include "GPU/Camera/GPUCamera.hpp"
 
 
