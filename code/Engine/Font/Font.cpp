@@ -46,7 +46,7 @@ void FontData::loadFont(FontsLibrary& fontsLibrary, Core::HashedString fontFile,
     // FT_Set_Pixel_Sizes(mFreeTypeFace, 0, 48);
 
     // _error = FT_Set_Char_Size ( mFreeTypeFace, 0, fontSize * 64, 96, 96);
-    _error = FT_Set_Pixel_Sizes ( mFreeTypeFace, 0, fontSize);
+    _error = FT_Set_Pixel_Sizes ( mFreeTypeFace, 0, fontSize*2 /*scaled by 2 for better visualization*/);
     CHECK_MSG(!_error, "Failed to set pixel size");
 
     // _error = FT_Set_Char_Size(
