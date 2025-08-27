@@ -98,7 +98,7 @@ public:
             CHECK_MSG(false, "getClassDefinition not specialized!");
         }
 
-        return smClassMapById.at(smInternalCPPTypeIdToClassId.at(internalCPPTypeId));
+        return *smInternalCPPTypeIdToClassId.at(internalCPPTypeId);
     }
 
     template<class T>
@@ -111,7 +111,7 @@ public:
             return smNullClassMetadata;
         }
 
-        return smClassMapById.at(smInternalCPPTypeIdToClassId.at(internalCPPTypeId));
+        return *smInternalCPPTypeIdToClassId.at(internalCPPTypeId);
     }
 
     static const ClassMetadata& getDynamicClassMetadata(const void* pointer)
@@ -138,7 +138,7 @@ private:
     static ClassMetadata& getClassMetadataByIdInternal(const ClassId classId);
     static void registerDynamicClass(u64 pointer, ClassId classId);
     static void unregisterDynamicClass(u64 pointer);
-    inline static std::unordered_map<InternalCPPTypeId, ClassId> smInternalCPPTypeIdToClassId;
+    inline static std::unordered_map<InternalCPPTypeId, ClassMetadata*> smInternalCPPTypeIdToClassId;
     inline static std::unordered_map<ClassId, ClassMetadata> smClassMapById;
     inline static std::unordered_map<u64, ClassMetadata*> smPointersToDynamicClass;
 };

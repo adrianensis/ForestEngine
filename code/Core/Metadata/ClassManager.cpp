@@ -36,8 +36,8 @@ void ClassManager::insert(InternalCPPTypeId internalCPPId, const ClassMetadata& 
     }
     
     
-    smInternalCPPTypeIdToClassId.insert_or_assign(internalCPPId, classMetadata.mClassDefinition.getId());
     smClassMapById.insert_or_assign(classMetadata.mClassDefinition.getId(), classMetadata);
+    smInternalCPPTypeIdToClassId.insert_or_assign(internalCPPId, &smClassMapById.at(classMetadata.mClassDefinition.getId()));
 }
 
 ClassMetadata& ClassManager::getClassMetadataByIdInternal(const ClassId classId)
