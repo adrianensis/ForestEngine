@@ -30,8 +30,9 @@ if(len(sys.argv) > 1):
 log.log(log.LogLabels.info, "Parsing options")
 try:
   opts, args = getopt.getopt(argv, "uilcprd", ["app=", "tool=", "sanitizer", "gpuDbg"])
-except:
-  log.log(log.LogLabels.error, "Error parsing options!")
+except Exception as e:
+  log.log(log.LogLabels.error, "Error parsing options! " + str(argv))
+  log.log(log.LogLabels.error, e)
   exit(1)
 
 buildType=BuildGlobalData.buildDebug
