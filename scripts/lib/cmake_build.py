@@ -12,13 +12,14 @@ class CMakeGeneratedData:
         self.systemBuildCommand = ""
         self.coresUsed = 0
         self.systemName = ""
+        self.projectName = ""
 
 ##########################################
 ########## FUNCTIONS ###########
 ##########################################
 
 # generate CMake data
-def generate_cmake_data():
+def generate_cmake_data(projectName):
     log.log(log.LogLabels.build, "-----------------------------------")
     log.log(log.LogLabels.build, "GENERATE CMAKE DATA")
     data = CMakeGeneratedData()
@@ -30,6 +31,7 @@ def generate_cmake_data():
 
     data.coresUsed = compilation_cores
     data.systemName = system_name
+    data.projectName = projectName
 
     log.log(log.LogLabels.build, "System Info")
     log.log(log.LogLabels.build, system_name)
@@ -49,7 +51,7 @@ def generate_cmake_data():
         # Windows...
         data.cmake_generator = '-G "Visual Studio 17 2022"'
         # Requires msbuild added to the PATH
-        data.systemBuildCommand = 'msbuild forest.sln'
+        data.systemBuildCommand = 'msbuild ' + projectName + '.sln'
     # elif ANDROID:
     #     # Windows...
     #     pass

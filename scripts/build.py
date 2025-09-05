@@ -70,7 +70,8 @@ for opt, arg in opts:
 
 buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
-cmake_generated_data = cmake_build.generate_cmake_data()
+projectName = "blasphemia"
+cmake_generated_data = cmake_build.generate_cmake_data(projectName)
 
 ##########################################
 ########## PRE BUILD ###########
@@ -83,6 +84,7 @@ cmake_generated_data = cmake_build.generate_cmake_data()
 buildCommandArgs = [
     "-DCMAKE_C_COMPILER=/usr/bin/clang",
     "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+    "-DPROJECTNAME=" + projectName,
     "-DCMAKE_BUILD_TYPE=" + buildType,
     "-DBUILD_UNIT_TESTS=" + str(buildUnitTests),
     "-DBUILD_INTEGRATION_TESTS=" + str(buildIntegrationTests),
