@@ -286,7 +286,7 @@ FOREACH(TOOL ${TOOLS_TO_BUILD})
     build_program("tools" "tool" ${TOOL})
 ENDFOREACH()
 # ----------------------------------------------------------------------------
-# GAMES
+# APPS
 # ----------------------------------------------------------------------------
 
 message("Apps to build: ${APPS_TO_BUILD}")
