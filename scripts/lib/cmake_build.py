@@ -92,6 +92,8 @@ def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, cmake_generate
     # -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++
     # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
     
+    # we build with '../..' because we are two levels under: Build/Debug for example
+    # so we have to go 2 up
     buildCommand = 'cmake -S{cmakeListFolder} -B{buildTargetDir} {cmake_generator} {buildCommandArgsString}'.format(
     buildTargetDir = buildTargetDir,
     cmakeListFolder = cmakeListFolder,
