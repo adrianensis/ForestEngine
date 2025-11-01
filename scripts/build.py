@@ -71,7 +71,7 @@ for opt, arg in opts:
 
 buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
-projectName = "blasphemia"
+projectName = "engine"
 cmake_generated_data = cmake_build.generate_cmake_data(projectName)
 
 ##########################################
