@@ -24,8 +24,6 @@ function(build_program path prefix program_name)
 
     include_directories("${PROGRAM_PATH}")
 
-#   get_filename_component(PROGRAM_NAME ${PROGRAM_PATH} NAME_WE) # NAME_WE = name with extension
-
     set(PROGRAM_FINAL_NAME "${prefix}_${program_name}" )
     add_executable( ${PROGRAM_FINAL_NAME} ${PROGRAM_SOURCES})
     target_link_libraries( ${PROGRAM_FINAL_NAME} ${PROJECTNAME})
@@ -122,10 +120,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_T
 set(DEPENDENCIES_DIR "dependencies")
 include_directories("${DEPENDENCIES_DIR}")
 
-# OpenGL
-# find_package(OpenGL REQUIRED)
-# include_directories(${OPENGL_INCLUDE_DIR})
-
 # Vulkan
 find_package(Vulkan REQUIRED)
 
@@ -139,13 +133,6 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glfw-3.4")
 add_subdirectory("${DEPENDENCIES_DIR}/glfw-3.4")
 include_directories("${DEPENDENCIES_DIR}/glfw-3.4/include")
-
-# glew
-# set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
-# check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glew-2.2.0")
-# add_subdirectory("${DEPENDENCIES_DIR}/glew-2.2.0/build/cmake")
-
-# include_directories("${DEPENDENCIES_DIR}/glew-2.2.0/include")
 
 if(ENABLE_PROFILER)
     # Tracy
@@ -232,20 +219,9 @@ target_link_options(${PROJECTNAME} PUBLIC "$<$<CONFIG:RELEASE>:${PROJECT_LINKER_
 # LINK EXTERNAL LIBRARIES
 # ----------------------------------------------------------------------------
 
-# target_include_directories(${PROJECT_NAME} PUBLIC
-#     ${Vulkan_INCLUDE_DIRS}
-# )
-
-# target_link_directories(${PROJECT_NAME} PUBLIC
-#     ${Vulkan_LIBRARIES}
-# )
-
 # link libraries with main library
-# target_link_libraries(${PROJECTNAME} ${OPENGL_gl_LIBRARY})
-# target_link_libraries(${PROJECTNAME} ${OPENGL_glu_LIBRARY})
 target_link_libraries(${PROJECTNAME} Vulkan::Vulkan)
 target_link_libraries(${PROJECTNAME} glslang glslang-default-resource-limits)
-# target_link_libraries(${PROJECTNAME} glew)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
@@ -285,6 +261,7 @@ message("Tools to build: ${TOOLS_TO_BUILD}")
 FOREACH(TOOL ${TOOLS_TO_BUILD})
     build_program("tools" "tool" ${TOOL})
 ENDFOREACH()
+
 # ----------------------------------------------------------------------------
 # APPS
 # ----------------------------------------------------------------------------
