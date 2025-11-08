@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Core/CoreMacros.hpp"
+
 // --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
-#define IS_SMART_POINTER(Class) IS_BASE_OF(Core::BasePtr, REMOVE_REFERENCE(Class))
-#define IS_OWNER_POINTER(Class) IS_BASE_OF(Core::BaseOwnerPtr, REMOVE_REFERENCE(Class))
+#define IS_SMART_POINTER(Class) Core::is_smart_ptr<REMOVE_REFERENCE(Class)>::value
+#define IS_OWNER_POINTER(Class) Core::is_owner_ptr<REMOVE_REFERENCE(Class)>::value
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS

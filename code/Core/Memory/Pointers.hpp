@@ -37,6 +37,30 @@ public:
 //     using type = T;
 // };
 
+template<typename T>
+struct is_smart_ptr
+: public std::false_type { };
+
+template<typename T>
+struct is_smart_ptr<WeakPtr<T>>
+: public std::true_type { };
+
+template<typename T>
+struct is_smart_ptr<SharedPtr<T>>
+: public std::true_type { };
+
+template<typename T>
+struct is_smart_ptr<OwnerPtr<T>>
+: public std::true_type { };
+
+template<typename T>
+struct is_owner_ptr
+: public std::false_type { };
+
+template<typename T>
+struct is_owner_ptr<OwnerPtr<T>>
+: public std::true_type { };
+
 template <typename U>
 struct get_ptr_type { using type = WeakPtr<U>; };
 template<class T>
@@ -63,13 +87,10 @@ struct get_const_ptr_type<SharedPtr<T>> { using type = WeakPtr<const T>; };
 template<class T>
 struct get_const_ptr_type<OwnerPtr<T>> { using type = WeakPtr<const T>; };
 
-template <typename V>
-struct get_ptr_type;
-
 // BASE
-// Needed in Core/MetadataMacros.h CGETTER_TYPE
+// Needed in Core/TypeMacros.h CGETTER_TYPE
 class BasePtr {};
-// Needed in Core/MetadataMacros.h SETTER_TYPE
+// Needed in Core/TypeMacros.h SETTER_TYPE
 class BaseOwnerPtr {};
 
 // PTR
