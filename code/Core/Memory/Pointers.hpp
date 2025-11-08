@@ -61,6 +61,9 @@ template<typename T>
 struct is_owner_ptr<OwnerPtr<T>>
 : public std::true_type { };
 
+#define IS_SMART_POINTER(Class) Core::is_smart_ptr<REMOVE_REFERENCE(Class)>::value
+#define IS_OWNER_POINTER(Class) Core::is_owner_ptr<REMOVE_REFERENCE(Class)>::value
+
 template <typename U>
 struct get_ptr_type { using type = WeakPtr<U>; };
 template<class T>

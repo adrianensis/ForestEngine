@@ -1,12 +1,8 @@
 #pragma once
 
+// Not real includes, just to track dependencies
 #include "Core/CoreMacros.hpp"
-
-// --------------------------------------------------------
-// TYPE TRAITS
-// --------------------------------------------------------
-#define IS_SMART_POINTER(Class) Core::is_smart_ptr<REMOVE_REFERENCE(Class)>::value
-#define IS_OWNER_POINTER(Class) Core::is_owner_ptr<REMOVE_REFERENCE(Class)>::value
+#include "Core/Memory/Pointers.hpp"
 
 // --------------------------------------------------------
 // MEMBERS, GETTERS AND SETTERS
