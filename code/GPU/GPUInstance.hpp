@@ -1,13 +1,15 @@
 #pragma once
 
+#include "Core/Memory/Singleton.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Core/GPUContext.hpp"
+#include "GPU/Window/GPUWindow.hpp"
 
-class GPUInstance: public System::System
+class GPUInstance: public Core::Singleton<GPUInstance>
 {
 public:
-    virtual void init() override;
-    virtual void terminate() override;
+    virtual void init(Core::Ptr<IGPUWindow> gpuWindow);
+    virtual void terminate();
     Core::u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
 
 private:

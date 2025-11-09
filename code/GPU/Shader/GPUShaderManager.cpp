@@ -61,7 +61,7 @@ Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(const GPUTextureData& gp
         PROFILER_CPU()
         Core::WeakPtr<GPUTexture> texture = mTextures.emplace_back(Core::OwnerPtr<GPUTexture>::newObject());
         mTexturesByPath.insert_or_assign(gpuTextureData.mPath, texture);
-        texture->init(GET_SYSTEM(GPUInstance).mGPUContext, gpuTextureData, mTextures.size() - 1);
+        texture->init(GPUInstance::getInstance().mGPUContext, gpuTextureData, mTextures.size() - 1);
 	}
 
 	return mTexturesByPath.at(gpuTextureData.mPath);

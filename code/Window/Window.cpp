@@ -1,6 +1,7 @@
-#include "Engine/Window/Window.hpp"
+#include "Window/Window.hpp"
 #include "Core/Profiler/Profiler.hpp"
 #include "Engine/System/SystemsManager.hpp"
+#include "GPU/GPUInstance.hpp"
 
 NS_BEGIN(Window)
 GLFWwindow* Window::getGlfwWindow() const 
@@ -337,4 +338,17 @@ void Window::addWindowListener(Core::Ptr<IWindowListener> windowListener)
 {
 	mWindowListeners.push_back(windowListener);
 }
+
+VkSurfaceKHR Window::createSurface(Core::Ptr<GPUContext> gpuContext) const
+{
+	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
+    VkSurfaceKHR surface = VK_NULL_HANDLE;
+    if(glfwCreateWindowSurface(gpuContext->gpuVulkanInstance->getVkInstance(), getGlfwWindow(), allocator, (VkSurfaceKHR*) &surface) != VK_SUCCESS)
+    {
+        CHECK_MSG(false, "Error creating surface!")
+    }
+
+    return surface;
+}
+
 NS_END

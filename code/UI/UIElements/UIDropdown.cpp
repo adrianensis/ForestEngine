@@ -4,7 +4,7 @@
 #include "UI/UIElements/UIText.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Engine/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
 

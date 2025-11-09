@@ -1,7 +1,7 @@
 #include "UI/UIBuilder.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Engine/Window/Window.hpp"
+#include "Window/Window.hpp"
 #include "UI/UIManager.hpp"
 
 UIBuilder::UIBuilder()

@@ -5,7 +5,7 @@
 #include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Graphics/Model/ModelRenderer.hpp"
-#include "Engine/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 
 #include "Scene/Module.hpp"
 #include "UI/Module.hpp"

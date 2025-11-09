@@ -40,7 +40,7 @@ public:
         renderPassOutputData.mColorGPUImage = &vulkanColorImage;
 
         Core::WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(GET_SYSTEM(GPUInstance).mGPUContext, mGPUInstanceRendererManager, renderPassData, renderPassOutputData);
+        renderPass->init(GPUInstance::getInstance().mGPUContext, mGPUInstanceRendererManager, renderPassData, renderPassOutputData);
 
         mRenderPassesArray.push_back(renderPass);
     }

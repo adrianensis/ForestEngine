@@ -5,13 +5,13 @@
 #include "GPU/Core/GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 
-void GPUInstance::init()
+void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
 {
 //    mMaxUniformBufferBindingPointsUniform = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::UNIFORM);
 //    mMaxUniformBufferBindingPointsStorage = GET_SYSTEM(GPUInterface).getMaxBindingPointsForUniformBuffer(GPUBufferType::STORAGE);
 
     mGPUContext = Core::OwnerPtr<GPUContext>::newObject();
-    mGPUContext->init();
+    mGPUContext->init(gpuWindow);
 }
 
 Core::u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)

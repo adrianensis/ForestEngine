@@ -107,7 +107,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
         mGPUShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
         shaderCompilationData.mGPUShaderPipelineDepthStencilData
     };
-    gpuGPUShaderPipeline->init(gpuGPUShaderPipelineData, mGPUShaderCompilationData.mRenderPass, GET_SYSTEM(GPUInstance).mGPUContext);
+    gpuGPUShaderPipeline->init(gpuGPUShaderPipelineData, mGPUShaderCompilationData.mRenderPass, GPUInstance::getInstance().mGPUContext);
 
     GPUShaderBuilder sbVert;
     GPUShaderBuilder sbFrag;

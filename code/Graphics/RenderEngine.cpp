@@ -1,7 +1,7 @@
 #include "Graphics/RenderEngine.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Engine/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/EngineConfig.hpp"
@@ -26,7 +26,7 @@ void RenderEngine::update()
     mRenderPipeline->update();
     mRenderPipeline->render(mRenderPipelineData);
 
-    GET_SYSTEM(GPUInstance).mGPUContext->currentFrame = (GET_SYSTEM(GPUInstance).mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
+    GPUInstance::getInstance().mGPUContext->currentFrame = (GPUInstance::getInstance().mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
 }
 
 void RenderEngine::preSceneChanged()
@@ -41,8 +41,8 @@ void RenderEngine::postSceneChanged()
 void RenderEngine::onResize()
 {
 //	GET_SYSTEM(GPUInterface).setViewport(0, 0, width, height);
-    GET_SYSTEM(GPUInstance).mGPUContext->setWindowResized();
-    GET_SYSTEM(GPUInstance).mGPUContext->recreateRenderingObjects();
+    GPUInstance::getInstance().mGPUContext->setWindowResized();
+    GPUInstance::getInstance().mGPUContext->recreateRenderingObjects();
     mRenderPipeline->onResize();
     EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();

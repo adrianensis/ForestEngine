@@ -1,7 +1,7 @@
 #include "UI/UIElements/UIEditableText.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Engine/Window/Window.hpp"
+#include "Window/Window.hpp"
 #include "UI/UIManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Transform.hpp"

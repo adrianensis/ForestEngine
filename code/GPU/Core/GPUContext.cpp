@@ -1,13 +1,12 @@
 #include "GPU/Core/GPUContext.hpp"
-#include "Engine/Window/WindowSurface.hpp"
-
-#include "Engine/Window/WindowManager.hpp"
+#include "GPU/Window/GPUWindow.hpp"
 #include "GPU/Core/GPULog.h"
 
-void GPUContext::init()
+void GPUContext::init(Core::Ptr<IGPUWindow> gpuWindow)
 {
+    mGPUWindow = gpuWindow;
     VulkanConfig vulkanConfig;
-    vulkanConfig.mRequiredExtensions = GET_SYSTEM(Window::WindowManager).getMainWindow()->getRequiredExtensions();
+    vulkanConfig.mRequiredExtensions = mGPUWindow->getRequiredGPUExtensions();
     if (Core::Environment::mPlatform == Core::Environment::Platform::MACOS) {
         vulkanConfig.mRequiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
     }
@@ -46,7 +45,7 @@ void GPUContext::init()
         CHECK_MSG(false, "Could not initialize Vulkan device");
     }
     vulkanSwapChain = new GPUSwapChain(vulkanDevice, surface);
-    if (!vulkanSwapChain->init(GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize()))
+    if (!vulkanSwapChain->init(mGPUWindow->getGPUWindowSize()))
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
@@ -180,7 +179,7 @@ void GPUContext::terminate()
 
 bool GPUContext::createSurface()
 {
-    surface = Window::WindowSurface::createSurface(gpuVulkanInstance->getVkInstance(), GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), ALLOCATOR);
+    surface = mGPUWindow->createSurface(this);
     return true;
 }
 
@@ -417,7 +416,7 @@ void GPUContext::recreateRenderingObjects()
     vulkanDevice->getPhysicalDevice()->updateSwapChainInfo();
 
     vulkanSwapChain->terminate();
-    if (!vulkanSwapChain->init(GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize()))
+    if (!vulkanSwapChain->init(mGPUWindow->getGPUWindowSize()))
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }

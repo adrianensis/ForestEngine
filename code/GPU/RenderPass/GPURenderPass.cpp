@@ -327,8 +327,8 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     }
 
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
-    uniformBuffers.push_back(GET_SYSTEM(GPUInstance).getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
-    // TODO: check GET_SYSTEM(GPUInstance) accesses from GPU module (?)
+    uniformBuffers.push_back(GPUInstance::getInstance().getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
+    // TODO: check GPUInstance::getInstance() accesses from GPU module (?)
 
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;

@@ -165,8 +165,8 @@ void GPUInstanceRenderer::drawCall()
         constexpr Core::u32 firstVertex = 0;
         constexpr Core::u32 vertexOffset = 0;
         constexpr Core::u32 firstInstance = 0;
-        const GPUCommandBuffer& vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
-        GET_SYSTEM(GPUInstance).mGPUContext->drawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), mGPUInstanceRendererData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
+        const GPUCommandBuffer& vulkanCommandBuffer = GPUInstance::getInstance().mGPUContext->vulkanCommandBuffers[GPUInstance::getInstance().mGPUContext->currentFrame];
+        GPUInstance::getInstance().mGPUContext->drawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), mGPUInstanceRendererData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
     }
 }
 

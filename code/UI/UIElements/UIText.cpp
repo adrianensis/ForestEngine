@@ -2,7 +2,7 @@
 #include "Engine/EntityComponent/Entity.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Engine/Window/Window.hpp"
+#include "Window/Window.hpp"
 #include "GPU/Mesh/GPUMeshFactory.hpp"
 
 #include "UI/UIManager.hpp"

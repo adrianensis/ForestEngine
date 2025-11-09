@@ -5,6 +5,7 @@
 #include "GPU/Core/GPUSwapChain.h"
 #include "GPU/Core/GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
+class IGPUWindow;
 
 #define GPU_LOAD_EXTENSION_FUNCTION(extensionFunctionName) \
 loadExtensionFunction<PFN_##extensionFunctionName>(TO_STRING(extensionFunctionName));
@@ -12,7 +13,7 @@ loadExtensionFunction<PFN_##extensionFunctionName>(TO_STRING(extensionFunctionNa
 class GPUContext
 {
 public:
-    void init();
+    void init(Core::Ptr<IGPUWindow> gpuWindow);
     void terminate();
 
     template<class T>
@@ -58,6 +59,7 @@ public:
     Core::u32 currentFrame = 0;
     Core::u32 currentSwapChainImageIndex = 0;
     bool mWindowResized = false;
+    Core::Ptr<IGPUWindow> mGPUWindow;
 
 #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;

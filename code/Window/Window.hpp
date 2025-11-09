@@ -2,7 +2,9 @@
 
 #include "Engine/Input/Input.hpp"
 #include "Engine/System/SystemsManager.hpp"
-#include "Engine/Window/WindowFramework.hpp"
+#include "Window/WindowFramework.hpp"
+#include "GPU/Window/GPUWindow.hpp"
+class GPUContext;
 
 NS_BEGIN(Window)
 
@@ -21,7 +23,7 @@ public:
     virtual void onResize() = 0;
 };
 
-class Window: public Input::IWindowInputAdapter
+class Window: public Input::IWindowInputAdapter, public IGPUWindow
 {
 public:
     void init(Core::i32 id, const WindowData& windowData);
@@ -43,6 +45,12 @@ public:
     void waitUntilNotMinimized() const;
     bool isIconified() const;
     void addWindowListener(Core::Ptr<IWindowListener> windowListener);
+
+    virtual std::vector<const char*> getRequiredGPUExtensions() const override
+    { return getRequiredExtensions(); }
+    virtual Maths::Vector2 getGPUWindowSize() const override
+    { return getWindowSize(); }
+    virtual VkSurfaceKHR createSurface(Core::Ptr<GPUContext> gpuContext) const override;
 
 private:
     void onResize(GLFWwindow *window, Core::i32 width, Core::i32 height);

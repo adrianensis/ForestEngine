@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Engine/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDepthBuffer.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 

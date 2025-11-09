@@ -4,7 +4,7 @@
 void GPUVertexBuffersContainer::enable()
 {
 //	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
-    const GPUCommandBuffer vulkanCommandBuffer = GET_SYSTEM(GPUInstance).mGPUContext->vulkanCommandBuffers[GET_SYSTEM(GPUInstance).mGPUContext->currentFrame];
+    const GPUCommandBuffer vulkanCommandBuffer = GPUInstance::getInstance().mGPUContext->vulkanCommandBuffers[GPUInstance::getInstance().mGPUContext->currentFrame];
     
     FOR_ARRAY(i, mVertexBuffers)
     {
@@ -32,7 +32,7 @@ void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data,
     }
 
     GPUVertexBuffer& gpuVertexBuffer = mVertexBuffers.emplace_back();
-    gpuVertexBuffer.init(GET_SYSTEM(GPUInstance).mGPUContext, mAttributeIndex, data, size, isStatic);
+    gpuVertexBuffer.init(GPUInstance::getInstance().mGPUContext, mAttributeIndex, data, size, isStatic);
 
     Core::u32 index = mVertexBuffers.size() - 1;
     mVertexBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);
@@ -63,7 +63,7 @@ Core::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::Ha
 void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
 {
     // mIndicesBuffer.terminate();
-    mIndicesBuffer.init(GET_SYSTEM(GPUInstance).mGPUContext, gpuDataType, size, isStatic);
+    mIndicesBuffer.init(GPUInstance::getInstance().mGPUContext, gpuDataType, size, isStatic);
 }
 
 void GPUVertexBuffersContainer::terminate()
@@ -79,9 +79,9 @@ void GPUVertexBuffersContainer::terminate()
 
 void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
 {
-    Core::u32 bindingPoint = GET_SYSTEM(GPUInstance).requestUniformBufferBindingPoint(data.mType);
+    Core::u32 bindingPoint = GPUInstance::getInstance().requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
-    gpuInstanceBuffer.init(GET_SYSTEM(GPUInstance).mGPUContext, size, bindingPoint, data, isStatic);
+    gpuInstanceBuffer.init(GPUInstance::getInstance().mGPUContext, size, bindingPoint, data, isStatic);
 
     Core::u32 index = mUniformBuffers.size() - 1;
     mUniformBuffersMap.insert_or_assign(data.mBufferName, index);

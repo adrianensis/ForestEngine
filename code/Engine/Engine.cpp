@@ -5,7 +5,7 @@
 #include "Engine/Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
 
-#include "Engine/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/Mesh/GPUMeshFactory.hpp"
@@ -43,8 +43,8 @@ void Engine::init()
     windowData.mFullScreen = false;
     windowData.mWindowSize.set(1080, 720);
     windowData.mMainWindow = true;
-    GET_SYSTEM(Window::WindowManager).createWindow(windowData);
-    CREATE_SYSTEM(GPUInstance);
+    Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
+    GPUInstance::getInstance().init(window);
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(GPUMeshFactory);
@@ -122,7 +122,9 @@ void Engine::terminate()
 	Core::MemoryTracking::log();
 	System::SystemsManager::getInstance().terminate();
 	System::SystemsManager::deleteInstance();
-    ECManager.terminate();
+	GPUInstance::getInstance().terminate();
+	GPUInstance::deleteInstance();
+	ECManager.terminate();
     EC::EntityComponentManager::deleteInstance();
 	Event::EventsManager::getInstance().terminate();
 	Event::EventsManager::deleteInstance();

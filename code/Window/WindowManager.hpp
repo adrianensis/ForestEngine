@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/System/System.hpp"
-#include "Engine/Window/Window.hpp"
+#include "Window/Window.hpp"
 NS_BEGIN(Window)
 class WindowManager : public System::System
 {

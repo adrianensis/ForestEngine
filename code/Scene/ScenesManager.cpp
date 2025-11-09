@@ -3,7 +3,7 @@
 #include "Scene/SceneObject.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Engine/Window/WindowManager.hpp"
+#include "Window/WindowManager.hpp"
 
 void ScenesManager::terminate() 
 {
