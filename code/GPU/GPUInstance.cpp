@@ -43,6 +43,5 @@ Core::u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniform
 
 void GPUInstance::terminate()
 {
-    mGPUUniformBuffersContainer.terminate();
     mGPUContext->terminate();
 }

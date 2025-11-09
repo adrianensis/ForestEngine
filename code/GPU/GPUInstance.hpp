@@ -13,7 +13,6 @@ public:
     Core::u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
 
 private:
-    GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     Core::u32 mBindingPointsIndexUniform = 0;
     Core::u32 mBindingPointsIndexStorage = 0;
     Core::i32 mMaxUniformBufferBindingPointsUniform = 0;
@@ -21,9 +20,5 @@ private:
 
 public:
     Core::OwnerPtr<GPUContext> mGPUContext;
-
-public:
-    RGET(GPUUniformBuffersContainer)
-    CRGET(GPUUniformBuffersContainer)
 };
 REGISTER_CLASS(GPUInstance)

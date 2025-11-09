@@ -16,7 +16,7 @@ public:
 class GPURenderGraph
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager);
+    void init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer);
     void update();
     void terminate();
     void render(GPURenderGraphData& renderData);
@@ -40,7 +40,7 @@ public:
         renderPassOutputData.mColorGPUImage = &vulkanColorImage;
 
         Core::WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(mGPUContext, mGPUInstanceRendererManager, renderPassData, renderPassOutputData);
+        renderPass->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassData, renderPassOutputData);
 
         mRenderPassesArray.push_back(renderPass);
     }
@@ -59,6 +59,7 @@ private:
     std::unordered_map<Core::ClassId, Core::OwnerPtr<GPURenderPass>> mRenderPassMap;
     std::vector<Core::WeakPtr<GPURenderPass>> mRenderPassesArray;
     Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
     Core::OwnerPtr<GPURenderPass> mRenderPassResolve;
     GPUImage vulkanColorImage;
 };

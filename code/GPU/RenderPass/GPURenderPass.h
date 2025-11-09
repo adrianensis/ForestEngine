@@ -67,7 +67,7 @@ private:
 public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
-    bool init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData);
+    bool init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData);
     void terminate();
     void begin();
     virtual void renderPass();
@@ -101,6 +101,7 @@ protected:
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
     Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
 public:
     CRGET(RenderPass)

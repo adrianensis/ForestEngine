@@ -7,11 +7,12 @@
 
 GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData)
+bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
+    mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
     mGPURenderPassData = gpuRenderPassData;
     mGPURenderPassOutputData = gpuRenderPassOutputData;
 
@@ -327,7 +328,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     }
 
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
-    uniformBuffers.push_back(GPUInstance::getInstance().getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
+    uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
     // TODO: check GPUInstance::getInstance() accesses from GPU module (?)
 
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
