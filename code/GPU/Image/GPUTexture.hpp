@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "Engine/Font/Font.hpp"
+#include "Image/Font/Font.hpp"
 
 #include "GPU/Image/GPUImage.h"
 #include "GPU/Core/GPUDefinitions.h"
