@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Events/Event.hpp"
+#include "Core/Event/Event.hpp"
 #include "Core/HashedString/HashedString.hpp"
 
 NS_BEGIN(EC)

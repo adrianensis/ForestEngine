@@ -2,7 +2,7 @@
 #include "Engine/EntityComponent/Component.hpp"
 #include "Engine/EntityComponent/Entity.hpp"
 #include "Scene/Transform.hpp"
-#include "Engine/Events/EventsManager.hpp"
+#include "Core/Event/EventsManager.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 
 void SceneObject::init()

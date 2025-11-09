@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Events/Event.hpp"
+#include "Core/Event/Event.hpp"
 
 NS_BEGIN(EC)
 class Entity: public Core::ISerializable, public Event::IEventObject

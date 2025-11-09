@@ -4,7 +4,7 @@
 #include "Engine/Command/DefaultCommands.hpp"
 #include "Engine/Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
-#include "Engine/Events/EventsManager.hpp"
+#include "Core/Event/EventsManager.hpp"
 #include "GLFW/glfw3.h"
 
 #include <cstdio>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
-#include "Engine/Events/Event.hpp"
+#include "Core/Event/Event.hpp"
 
 NS_BEGIN(System)
 class System: public Core::EnableWeakPtrToThis, public Event::IEventObject

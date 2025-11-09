@@ -3,7 +3,7 @@
 #include "Engine/Command/CommandLine.hpp"
 #include "Core/Time/TimerManager.hpp"
 #include "Engine/Input/Input.hpp"
-#include "Engine/Events/EventsManager.hpp"
+#include "Core/Event/EventsManager.hpp"
 
 #include "Engine/Window/WindowManager.hpp"
 #include "Graphics/RenderEngine.hpp"
@@ -126,12 +126,13 @@ void Engine::terminate()
     EC::EntityComponentManager::deleteInstance();
 	Event::EventsManager::getInstance().terminate();
 	Event::EventsManager::deleteInstance();
-	Core::Profiler::terminate();
-	Core::Memory::terminate();
-    Core::HashedStringsManager::terminate();
 	Time::Time::deleteInstance();
 	Time::TimerManager::getInstance().terminate();
 	Time::TimerManager::deleteInstance();
+	
+	Core::Profiler::terminate();
+	Core::Memory::terminate();
+    Core::HashedStringsManager::terminate();
 
     LOG("Terminated OK!")
 
