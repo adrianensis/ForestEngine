@@ -1,6 +1,5 @@
-#include "Engine/Time/TimerManager.hpp"
-#include "Engine/Time/TimeUtils.hpp"
-#include "Engine/System/SystemsManager.hpp"
+#include "Core/Time/TimerManager.hpp"
+#include "Core/Time/TimeUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
  
 NS_BEGIN(Time)
@@ -20,7 +19,7 @@ void TimerManager::update()
 	PROFILER_CPU()
 	if (!mTimers.empty())
 	{
-		Core::f32 deltaTime = GET_SYSTEM(Time).getDeltaTimeSeconds(); // seconds
+		Core::f32 deltaTime = Time::Time::getInstance().getDeltaTimeSeconds(); // seconds
 		std::list<Timer *> timers(mTimers);
 
 		for (auto itTimer = timers.begin(); itTimer != timers.end(); ++itTimer)

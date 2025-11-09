@@ -1,5 +1,5 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
-#include "Engine/Time/TimeUtils.hpp"
+#include "Core/Time/TimeUtils.hpp"
 
 void GPUSkeletalAnimation::init(Core::u32 id, Core::f32 animDurationInSeconds)
 {
@@ -26,7 +26,7 @@ void GPUSkeletalAnimationState::update()
 {
     mSkeletalAnimationTime = mSkeletalAnimation->calculateCurrentSkeletalAnimationTime(mAccumulatedTime);
 
-    Core::f32 dt = GET_SYSTEM(Time::Time).getDeltaTimeSeconds();
+    Core::f32 dt = Time::Time::getInstance().getDeltaTimeSeconds();
     mAccumulatedTime += dt;
 
     // reset accumulatedTime to avoid overflow

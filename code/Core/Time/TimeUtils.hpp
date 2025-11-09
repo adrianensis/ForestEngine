@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/Core.hpp"
-#include "Engine/System/System.hpp"
+#include "Core/Memory/Singleton.hpp"
 #include <chrono>
 
 NS_BEGIN(Time)
@@ -21,9 +20,6 @@ private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime;
 	std::chrono::time_point<std::chrono::high_resolution_clock> mLastTime;
 	bool mIsStarted = false;
-
-public:
-	GET(IsStarted)
 };
 
 class TimeMarkGPU
@@ -45,15 +41,12 @@ private:
 	Core::u64 mStartTime;
 	Core::u64 mLastTime;
 	bool mIsStarted = false;
-
-public:
-	GET(IsStarted)
 };
 
-class Time: public System::System
+class Time: public Core::Singleton<Time>
 {
 public:
-	virtual void init() override {mInternalTimeMark.init();}
+	void init() {mInternalTimeMark.init();}
 	void startFrame() { mInternalTimeMark.start(); }
 	void endFrame() { mInternalTimeMark.end(); }
 	Core::f32 getElapsedTimeMillis() { return mInternalTimeMark.getElapsedTimeMillis(); }
@@ -64,5 +57,4 @@ public:
 private:
 	TimeMark mInternalTimeMark;
 };
-REGISTER_CLASS(Time);
 NS_END
