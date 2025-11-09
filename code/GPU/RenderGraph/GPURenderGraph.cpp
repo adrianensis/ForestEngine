@@ -7,11 +7,11 @@ void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUIns
     mGPUContext = gpuContext;
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
 
-    VkFormat colorFormat = GPUInstance::getInstance().mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
+    VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
     GPUImageData colorImageConfig{};
-    colorImageConfig.Width = GPUInstance::getInstance().mGPUContext->vulkanSwapChain->getExtent().width;
-    colorImageConfig.Height = GPUInstance::getInstance().mGPUContext->vulkanSwapChain->getExtent().height;
+    colorImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
+    colorImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
     colorImageConfig.MipLevels = 1;
     colorImageConfig.SampleCount = VK_SAMPLE_COUNT_1_BIT;
     colorImageConfig.Format = colorFormat;
@@ -20,7 +20,7 @@ void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUIns
     colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     colorImageConfig.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    vulkanColorImage.init(GPUInstance::getInstance().mGPUContext, colorImageConfig);
+    vulkanColorImage.init(mGPUContext, colorImageConfig);
     
     // colorImageView = GPUImageUtils::createImageView(gpuContext, vulkanColorImage.getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, colorImageConfig.MipLevels);
     

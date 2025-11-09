@@ -66,7 +66,7 @@ void RenderPipeline::addRenderer(EC::TComponentPtr<MeshRenderer> renderer)
 
     GPUInstanceRendererData gpuInstanceRendererData;
     gpuInstanceRendererData.init(renderer->getGPURenderItem());
-    mGPUInstanceRendererManager->addInstanceRenderer(gpuInstanceRendererData);
+    mGPUInstanceRendererManager->addInstanceRenderer(GPUInstance::getInstance().mGPUContext, gpuInstanceRendererData);
     mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
     
     mGPURenderGraph.addRenderer(renderer->getGPURenderItem());
@@ -122,7 +122,7 @@ void RenderPipeline::initBuffers()
     // GPUInstance::getInstance().getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
     // GPUInstance::getInstance().getGPUUniformBuffersContainer().addUniformBuffer(GPULightBuiltIn::mLightsBufferData, sizeof(GPULightBuiltIn::LightsData), false);
     // GPUInstance::getInstance().getGPUUniformBuffersContainer().addUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData, sizeof(GPULightBuiltIn::ShadowMappingData), false);
-    GPUInstance::getInstance().getGPUUniformBuffersContainer().addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices, sizeof(Maths::Matrix4) * mGPURenderItemManager.getSize(), false);
+    GPUInstance::getInstance().getGPUUniformBuffersContainer().addUniformBuffer(GPUInstance::getInstance().mGPUContext, GPUShaderDefinitions::UniformBuffers::mModelMatrices, sizeof(Maths::Matrix4) * mGPURenderItemManager.getSize(), false);
 
     // GPUInstance::getInstance().getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).resize<GPUShaderDefinitions::UniformBuffers::GPUGlobalData>(1);
     // GPUInstance::getInstance().getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mLightsBufferData).resize<GPULightBuiltIn::LightsData>(1);

@@ -1,6 +1,7 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
+#include "GPU/GPUInstance.hpp"
 
 void GPUSkeletalAnimationManager::init()
 {
@@ -50,7 +51,7 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(Core::WeakPtr<const GP
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
-    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Maths::Matrix4)*GPUConstants::MAX_BONES, false);
+    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUInstance::getInstance().mGPUContext, GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Maths::Matrix4)*GPUConstants::MAX_BONES, false);
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }

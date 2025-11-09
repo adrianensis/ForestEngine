@@ -3,9 +3,10 @@
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/GPUInstance.hpp"
 
-void GPUInstanceRenderer::init(const GPUInstanceRendererData& gpuInstanceRendererData)
+void GPUInstanceRenderer::init(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
+    mGPUContext = gpuContext;
 	mGPUInstanceRendererData = gpuInstanceRendererData;
 
     mRendererSlotsManager.init(smInitialInstancesSize);
@@ -18,18 +19,18 @@ void GPUInstanceRenderer::init(const GPUInstanceRendererData& gpuInstanceRendere
         const GPUVariableData& gpuVariableData = mGPUInstanceRendererData.mMesh->mGPUVertexInputBuffers[i];
         GPUVertexBufferData bufferData(gpuVariableData);
         // mVertexCount * 1 = only 1 instance
-        mGPUVertexBuffersContainer.addVertexBuffer(bufferData, mGPUInstanceRendererData.mMesh->mVertexCount * 1, mGPUInstanceRendererData.mIsStatic);
+        mGPUVertexBuffersContainer.addVertexBuffer(mGPUContext, bufferData, mGPUInstanceRendererData.mMesh->mVertexCount * 1, mGPUInstanceRendererData.mIsStatic);
         mGPUVertexBuffersContainer.getVertexBuffer(bufferData).setDataArray(mGPUInstanceRendererData.mMesh->mBuffers.at(bufferData.mGPUVariableData.mName));
     }
 
     GPUVertexBufferData bufferDataInstanceIDs(GPUShaderDefinitions::VertexInput::mInstanceID, 1);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataInstanceIDs, smInitialInstancesSize, mGPUInstanceRendererData.mIsStatic);
+    mGPUVertexBuffersContainer.addVertexBuffer(mGPUContext, bufferDataInstanceIDs, smInitialInstancesSize, mGPUInstanceRendererData.mIsStatic);
     GPUVertexBufferData bufferDataObjectIDs(GPUShaderDefinitions::VertexInput::mObjectID, 1);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataObjectIDs, smInitialInstancesSize, mGPUInstanceRendererData.mIsStatic);
+    mGPUVertexBuffersContainer.addVertexBuffer(mGPUContext, bufferDataObjectIDs, smInitialInstancesSize, mGPUInstanceRendererData.mIsStatic);
     GPUVertexBufferData bufferDataGPUShaderPropertiesInstanceIDs(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID, 1);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataGPUShaderPropertiesInstanceIDs, smInitialInstancesSize, mGPUInstanceRendererData.mIsStatic);
+    mGPUVertexBuffersContainer.addVertexBuffer(mGPUContext, bufferDataGPUShaderPropertiesInstanceIDs, smInitialInstancesSize, mGPUInstanceRendererData.mIsStatic);
 
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mFace, mGPUMeshBatcher.getInternalMesh()->mIndices.size(), mGPUInstanceRendererData.mIsStatic);
+    mGPUVertexBuffersContainer.setIndicesBuffer(mGPUContext, GPUShaderDefinitions::PrimitiveTypes::mFace, mGPUMeshBatcher.getInternalMesh()->mIndices.size(), mGPUInstanceRendererData.mIsStatic);
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mGPUMeshBatcher.getInternalMesh()->mIndices);
     
     mCurrentInstancesSize = smInitialInstancesSize;
@@ -51,7 +52,7 @@ void GPUInstanceRenderer::render()
 
 void GPUInstanceRenderer::enable()
 {
-    mGPUVertexBuffersContainer.enable();
+    mGPUVertexBuffersContainer.enable(mGPUContext);
 
     if(mGPUInstanceRendererData.mGPUShaderStencilData.mUseStencil)
     {
@@ -165,8 +166,8 @@ void GPUInstanceRenderer::drawCall()
         constexpr Core::u32 firstVertex = 0;
         constexpr Core::u32 vertexOffset = 0;
         constexpr Core::u32 firstInstance = 0;
-        const GPUCommandBuffer& vulkanCommandBuffer = GPUInstance::getInstance().mGPUContext->vulkanCommandBuffers[GPUInstance::getInstance().mGPUContext->currentFrame];
-        GPUInstance::getInstance().mGPUContext->drawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), mGPUInstanceRendererData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
+        const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+        mGPUContext->drawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), mGPUInstanceRendererData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
     }
 }
 
@@ -188,7 +189,7 @@ void GPUInstanceRendererManager::update(Core::Ptr<GPUContext> gpuContext)
     gpuContext->endSingleTimeCommands(vulkanCommandBuffer, VK_NULL_HANDLE);
 }
 
-bool GPUInstanceRendererManager::addInstanceRenderer(const GPUInstanceRendererData& data)
+bool GPUInstanceRendererManager::addInstanceRenderer(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& data)
 {
     bool result = false;
     if(!mGPUInstanceRenderers.contains(data))
@@ -196,7 +197,7 @@ bool GPUInstanceRendererManager::addInstanceRenderer(const GPUInstanceRendererDa
         PROFILER_CPU_NAMED(init_instanced_mesh)
 
         mGPUInstanceRenderers.insert_or_assign(data, Core::OwnerPtr<GPUInstanceRenderer>::newObject());
-        mGPUInstanceRenderers.at(data)->init(data);
+        mGPUInstanceRenderers.at(data)->init(gpuContext, data);
         result = true;
     }
 

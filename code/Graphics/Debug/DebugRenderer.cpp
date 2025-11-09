@@ -1,9 +1,10 @@
 #include "Graphics/Debug/DebugRenderer.hpp"
+#include "GPU/GPUInstance.hpp"
 
 void DebugRenderer::init()
 {
-	mShapeBatchRenderer.init(2);
-	mShapeBatchRendererScreenSpace.init(2);
+	mShapeBatchRenderer.init(GPUInstance::getInstance().mGPUContext, 2);
+	mShapeBatchRendererScreenSpace.init(GPUInstance::getInstance().mGPUContext, 2);
 }
 
 void DebugRenderer::terminate()

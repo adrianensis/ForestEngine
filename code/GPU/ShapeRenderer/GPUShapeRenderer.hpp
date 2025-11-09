@@ -9,7 +9,7 @@ class GPUShapeRenderer
 public:
 	GPUShapeRenderer() = default;
 
-    void init(Core::u32 verticesPerShape);
+    void init(Core::Ptr<GPUContext> gpuContext, Core::u32 verticesPerShape);
     void terminate();
     void render();
 
@@ -19,6 +19,7 @@ private:
     void addPosition(const Maths::Vector3& position);
     void addColor(const Maths::Vector4& color);
 private: 
+	Core::Ptr<GPUContext> mGPUContext;
 	Core::WeakPtr<GPUShader> mShader;
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Maths::Vector3> mPositionBuffer;

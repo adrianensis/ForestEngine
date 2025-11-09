@@ -15,7 +15,7 @@ bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInst
     mGPURenderPassData = gpuRenderPassData;
     mGPURenderPassOutputData = gpuRenderPassOutputData;
 
-    mGPUUniformBuffersContainer.addUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
+    mGPUUniformBuffersContainer.addUniformBuffer(mGPUContext, GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 
     // if(mGPURenderPassData.mIsResolvePass)
     // {

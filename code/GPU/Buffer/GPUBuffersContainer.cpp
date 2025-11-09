@@ -1,10 +1,10 @@
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/GPUInstance.hpp"
 
-void GPUVertexBuffersContainer::enable()
+void GPUVertexBuffersContainer::enable(Core::Ptr<GPUContext> gpuContext)
 {
 //	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
-    const GPUCommandBuffer vulkanCommandBuffer = GPUInstance::getInstance().mGPUContext->vulkanCommandBuffers[GPUInstance::getInstance().mGPUContext->currentFrame];
+    const GPUCommandBuffer vulkanCommandBuffer = gpuContext->vulkanCommandBuffers[gpuContext->currentFrame];
     
     FOR_ARRAY(i, mVertexBuffers)
     {
@@ -24,7 +24,7 @@ void GPUVertexBuffersContainer::disable()
 
 }
 
-void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data, Core::u32 size, bool isStatic)
+void GPUVertexBuffersContainer::addVertexBuffer(Core::Ptr<GPUContext> gpuContext, const GPUVertexBufferData& data, Core::u32 size, bool isStatic)
 {
     if(mVertexBuffers.size() > 0)
     {
@@ -32,7 +32,7 @@ void GPUVertexBuffersContainer::addVertexBuffer(const GPUVertexBufferData& data,
     }
 
     GPUVertexBuffer& gpuVertexBuffer = mVertexBuffers.emplace_back();
-    gpuVertexBuffer.init(GPUInstance::getInstance().mGPUContext, mAttributeIndex, data, size, isStatic);
+    gpuVertexBuffer.init(gpuContext, mAttributeIndex, data, size, isStatic);
 
     Core::u32 index = mVertexBuffers.size() - 1;
     mVertexBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);
@@ -60,10 +60,10 @@ Core::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::Ha
     return index;
 }
 
-void GPUVertexBuffersContainer::setIndicesBuffer(const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
+void GPUVertexBuffersContainer::setIndicesBuffer(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
 {
     // mIndicesBuffer.terminate();
-    mIndicesBuffer.init(GPUInstance::getInstance().mGPUContext, gpuDataType, size, isStatic);
+    mIndicesBuffer.init(gpuContext, gpuDataType, size, isStatic);
 }
 
 void GPUVertexBuffersContainer::terminate()
@@ -77,11 +77,11 @@ void GPUVertexBuffersContainer::terminate()
 //    GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
 }
 
-void GPUUniformBuffersContainer::addUniformBuffer(const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
+void GPUUniformBuffersContainer::addUniformBuffer(Core::Ptr<GPUContext> gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
 {
     Core::u32 bindingPoint = GPUInstance::getInstance().requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
-    gpuInstanceBuffer.init(GPUInstance::getInstance().mGPUContext, size, bindingPoint, data, isStatic);
+    gpuInstanceBuffer.init(gpuContext, size, bindingPoint, data, isStatic);
 
     Core::u32 index = mUniformBuffers.size() - 1;
     mUniformBuffersMap.insert_or_assign(data.mBufferName, index);

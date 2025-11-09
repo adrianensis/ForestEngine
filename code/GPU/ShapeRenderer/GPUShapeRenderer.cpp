@@ -15,8 +15,9 @@ void GPUShapeRenderer::terminate()
 	mShapesCounter = 0;
 }
 
-void GPUShapeRenderer::init(Core::u32 verticesPerShape)
+void GPUShapeRenderer::init(Core::Ptr<GPUContext> gpuContext, Core::u32 verticesPerShape)
 {
+    mGPUContext = gpuContext;
 	mVerticesPerShape = verticesPerShape;
     mMaxVertices = mMaxShapes * mVerticesPerShape;
 
@@ -25,16 +26,16 @@ void GPUShapeRenderer::init(Core::u32 verticesPerShape)
 	mIndicesBuffer.reserve(mMaxVertices); // 1 index per vertex
 
     GPUVertexBufferData bufferDataPosition(GPUShaderDefinitions::VertexInput::mPosition);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataPosition, mMaxVertices, false);
+    mGPUVertexBuffersContainer.addVertexBuffer(mGPUContext, bufferDataPosition, mMaxVertices, false);
     GPUVertexBufferData bufferDataColor(GPUShaderDefinitions::VertexInput::mColor);
-    mGPUVertexBuffersContainer.addVertexBuffer(bufferDataColor, mMaxVertices, false);
+    mGPUVertexBuffersContainer.addVertexBuffer(mGPUContext, bufferDataColor, mMaxVertices, false);
 
     FOR_RANGE(i, 0, mMaxVertices)
     {
         mIndicesBuffer.push_back(i);
     }
     // mGPUVertexBuffersContainer.enable();
-    mGPUVertexBuffersContainer.setIndicesBuffer(GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, mIndicesBuffer.size(), false);
+    mGPUVertexBuffersContainer.setIndicesBuffer(mGPUContext, GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, mIndicesBuffer.size(), false);
     mGPUVertexBuffersContainer.getIndicesBuffer().setDataArray(mIndicesBuffer);
     // mGPUVertexBuffersContainer.disable();
 
@@ -58,7 +59,7 @@ void GPUShapeRenderer::render()
 	{
 		// mShader->getGPUShader()->enable();
 
-		mGPUVertexBuffersContainer.enable();
+		mGPUVertexBuffersContainer.enable(mGPUContext);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).resize(mPositionBuffer.size());
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).resize(mColorBuffer.size());
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).setDataArray(mPositionBuffer);

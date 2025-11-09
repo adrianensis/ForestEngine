@@ -1,7 +1,7 @@
 #include "Window/Window.hpp"
 #include "Core/Profiler/Profiler.hpp"
 #include "Engine/System/SystemsManager.hpp"
-#include "GPU/GPUInstance.hpp"
+#include "GPU/Core/GPUContext.hpp"
 
 NS_BEGIN(Window)
 GLFWwindow* Window::getGlfwWindow() const 
