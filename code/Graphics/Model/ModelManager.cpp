@@ -1,5 +1,6 @@
 #include "Graphics/Model/ModelManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
+#include "GPU/GPUInstance.hpp"
 
 void ModelManager::init()
 {
@@ -8,7 +9,7 @@ void ModelManager::init()
     PropertiesBlockGPUShaderDefault propertiesBlockGPUShaderDefault;
     // pink
     propertiesBlockGPUShaderDefault.mBaseColor = Maths::Vector4(255.0f/256.0f,20.0f/256.0f,147.0f/256.0f,1);
-    mDefaultModelShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, propertiesBlockGPUShaderDefault);
+    mDefaultModelShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShaderDefault);
 }
 
 void ModelManager::terminate()

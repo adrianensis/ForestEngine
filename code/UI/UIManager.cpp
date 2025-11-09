@@ -6,6 +6,7 @@
 #include "Window/Window.hpp"
 #include "Scene/Module.hpp"
 #include "Engine/Paths.hpp"
+#include "GPU/GPUInstance.hpp"
 
 void UIManager::init()
 {
@@ -18,7 +19,7 @@ void UIManager::init()
     shaderData.mMaxInstances = 500;
     GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Maths::Vector4(1,1,1,1);
-    mDefaultUIShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUI, GPUShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
+    mDefaultUIShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUI, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);
 }
 
 void UIManager::terminate()

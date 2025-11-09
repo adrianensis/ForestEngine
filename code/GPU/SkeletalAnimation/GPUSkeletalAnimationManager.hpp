@@ -10,12 +10,12 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     void update();
-    Core::WeakPtr<GPUSkeletonState> createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData);
+    Core::WeakPtr<GPUSkeletonState> createSkeletonState(Core::Ptr<GPUContext> gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData);
 
     const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(Core::WeakPtr<const GPUSkeletonState> skeletonState) const;
     Core::WeakPtr<GPUSkeletonState> getSkeletonStateFromMesh(Core::WeakPtr<const GPUMesh> mesh) const;
 private:
-    void initSkeletonRenderState(Core::WeakPtr<const GPUSkeletonState> skeletonState);
+    void initSkeletonRenderState(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<const GPUSkeletonState> skeletonState);
 
 private:
     std::unordered_set<Core::OwnerPtr<GPUSkeletonState>> mSkeletonStates;

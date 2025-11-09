@@ -171,7 +171,7 @@ class GPUShader
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
+    virtual void init(Core::Ptr<GPUContext> gpuContext, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
     void terminate();
 
     bool hasFramebufferBinding(Core::HashedString bindingName) const;
@@ -204,6 +204,7 @@ protected:
     }
 
 protected:
+    Core::Ptr<GPUContext> mGPUContext;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<Core::HashedString> mTextures;

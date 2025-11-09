@@ -1,5 +1,6 @@
 #include "UI/UIFont.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "UI/UIShader.hpp"
 
 void UIFontsManager::init()
@@ -41,7 +42,7 @@ void UIFont::init(UIFontsManager& fontsManager, Core::HashedString fontFile, Cor
     shaderData.mFontData = mFontData;
     GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Maths::Vector4(1,1,1,1);
-    mFontShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(shaderData, shaderPropertiesBlockUI);
+    mFontShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);
 
     mFontData.freeGlyphsBuffers();
 }

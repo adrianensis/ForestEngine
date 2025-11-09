@@ -4,7 +4,6 @@
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
-#include "GPU/GPUInstance.hpp"
 #include "Engine/Paths.hpp"
 #include "Core/File/FileUtils.hpp"
 
@@ -14,8 +13,9 @@ void GPUShaderPropertiesInstance::setDirty()
     GET_SYSTEM(GPUShaderManager).setGPUShaderPropertiesInstanceDirty(mID);
 }
 
-void GPUShader::init(const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id)
+void GPUShader::init(Core::Ptr<GPUContext> gpuContext, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id)
 {
+    mGPUContext = gpuContext; 
     mGPUShaderData = shaderData;
 	mID = id;
 
@@ -107,7 +107,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
         mGPUShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
         shaderCompilationData.mGPUShaderPipelineDepthStencilData
     };
-    gpuGPUShaderPipeline->init(gpuGPUShaderPipelineData, mGPUShaderCompilationData.mRenderPass, GPUInstance::getInstance().mGPUContext);
+    gpuGPUShaderPipeline->init(gpuGPUShaderPipelineData, mGPUShaderCompilationData.mRenderPass, mGPUContext);
 
     GPUShaderBuilder sbVert;
     GPUShaderBuilder sbFrag;

@@ -1,7 +1,6 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
-#include "GPU/GPUInstance.hpp"
 
 void GPUSkeletalAnimationManager::init()
 {
@@ -23,7 +22,7 @@ void GPUSkeletalAnimationManager::update()
 	}
 }
 
-Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(const GPUSkeletonStateData& gpuSkeletonStateData)
+Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(Core::Ptr<GPUContext> gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData)
 {
 	Core::WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(Core::OwnerPtr<GPUSkeletonState>::newObject()).first;
     skeletonState->init(gpuSkeletonStateData);
@@ -33,7 +32,7 @@ Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState
         mMeshToSkeletonState.insert({*it, skeletonState});
     }
 
-    initSkeletonRenderState(skeletonState);
+    initSkeletonRenderState(gpuContext, skeletonState);
     return skeletonState;
 }
 
@@ -46,12 +45,12 @@ void GPUSkeletalAnimationManager::terminate()
 	mSkeletonStates.clear();
 }
 
-void GPUSkeletalAnimationManager::initSkeletonRenderState(Core::WeakPtr<const GPUSkeletonState> skeletonState)
+void GPUSkeletalAnimationManager::initSkeletonRenderState(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<const GPUSkeletonState> skeletonState)
 {
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
-    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(GPUInstance::getInstance().mGPUContext, GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Maths::Matrix4)*GPUConstants::MAX_BONES, false);
+    skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(gpuContext, GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Maths::Matrix4)*GPUConstants::MAX_BONES, false);
 
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }

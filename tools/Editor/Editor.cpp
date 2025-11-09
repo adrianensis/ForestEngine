@@ -3,6 +3,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
 #include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Graphics/Model/ModelRenderer.hpp"
 #include "Window/WindowManager.hpp"
@@ -273,7 +274,7 @@ EC::EntityPtr Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 
 	GPURenderItemData rendererData;
     rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
-    rendererData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(shaderData, shaderPropertiesBlock);
+    rendererData.mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };

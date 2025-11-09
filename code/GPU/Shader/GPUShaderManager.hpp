@@ -9,17 +9,17 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     void update();
-    Core::WeakPtr<GPUTexture> loadTexture(const GPUTextureData& gpuTextureData);
+    Core::WeakPtr<GPUTexture> loadTexture(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData);
 
     template<class T, class P> T_EXTENDS(T, GPUShader)
-    Core::WeakPtr<GPUShader> createShader(const GPUShaderData& shaderData, const P& propertiesBlockDefault)
+    Core::WeakPtr<GPUShader> createShader(Core::Ptr<GPUContext> gpuContext, const GPUShaderData& shaderData, const P& propertiesBlockDefault)
     {
         Core::WeakPtr<GPUShader> shader = mShaders.emplace_back(Core::OwnerPtr<GPUShader>::moveCast(Core::OwnerPtr<T>::newObject()));
         Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
         propertiesBlockDefaultBuffer.get<P>() = propertiesBlockDefault;
-        shader->init(shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
-        postGPUShaderCreated(shader);
+        shader->init(gpuContext, shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
+        postGPUShaderCreated(gpuContext, shader);
 
         return shader;
     }
@@ -36,9 +36,9 @@ public:
     const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(Core::u32 id) const;
     
 private:
-    void postGPUShaderCreated(Core::WeakPtr<GPUShader> shader);
-    void loadGPUShaderTextures(Core::WeakPtr<GPUShader> shader);
-    void initGPUShaderPropertiesInstancePropertiesUniformBuffer(Core::WeakPtr<GPUShader> shader);
+    void postGPUShaderCreated(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader);
+    void loadGPUShaderTextures(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader);
+    void initGPUShaderPropertiesInstancePropertiesUniformBuffer(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader);
 
     class GPUShaderPropertyBlockRenderState
     {
