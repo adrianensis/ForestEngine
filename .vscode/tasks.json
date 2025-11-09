@@ -7,7 +7,7 @@
 			"command": "python3",
 			"args": [
 				"scripts/build.py",
-				"-lp",
+				"-l",
 				"--gpuDbg",
 				"--tool=Editor"
 			],
