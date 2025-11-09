@@ -47,10 +47,7 @@ void Engine::init()
     GPUInstance::getInstance().init(window);
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
-    CREATE_SYSTEM(GPUMeshFactory);
-    CREATE_SYSTEM(GPUShaderManager);
     CREATE_SYSTEM(CameraManager);
-    CREATE_SYSTEM(GPUSkeletalAnimationManager);
     CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
     CREATE_SYSTEM(DebugRenderer);

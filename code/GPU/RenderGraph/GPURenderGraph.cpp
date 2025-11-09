@@ -1,7 +1,8 @@
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer)
+void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
+    Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -38,7 +39,7 @@ void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUIns
     renderPassOutputData.mColorGPUImage = &vulkanColorImage;
     
     mRenderPassResolve = Core::OwnerPtr<GPURenderPass>::newObject();
-    mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassResolveData, renderPassOutputData);
+    mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassResolveData, renderPassOutputData, gpuSkeletalAnimationManager, gpuShaderManager);
 }
 
 void GPURenderGraph::render(GPURenderGraphData& renderData)

@@ -3,7 +3,7 @@
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "GPU/GPUInstance.hpp"
 
 #include "UI/UIManager.hpp"
 #include "UI/UIElements/UIPanel.hpp"
@@ -20,7 +20,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     mCharacter = mConfig.mText.get().at(0);
 
     GPURenderItemData rendererData;
-    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
+    rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
     rendererData.mShader = GET_SYSTEM(UIManager).getFontShader();
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {

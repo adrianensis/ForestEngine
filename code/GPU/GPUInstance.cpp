@@ -1,9 +1,4 @@
 #include "GPU/GPUInstance.hpp"
-#include "GPU/Core/GPUPhysicalDevice.h"
-#include "GPU/Core/GPUDevice.h"
-#include "GPU/Core/GPUSwapChain.h"
-#include "GPU/Core/GPUCommandPool.h"
-#include "GPU/Core/GPUCommandBuffer.h"
 
 void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
 {
@@ -12,36 +7,19 @@ void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
 
     mGPUContext = Core::OwnerPtr<GPUContext>::newObject();
     mGPUContext->init(gpuWindow);
-}
 
-Core::u32 GPUInstance::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
-{
-    Core::u32 bindingPoint = 0;
-    switch (gpuUniformBufferType)
-    {
-    case GPUBufferType::UNIFORM:
-        {
-            bindingPoint = mBindingPointsIndexUniform;
-            mBindingPointsIndexUniform++;
-            // CHECK_MSG((Core::i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
-        }
-        break;
-    case GPUBufferType::STORAGE:
-        {
-            bindingPoint = mBindingPointsIndexStorage;
-            mBindingPointsIndexStorage++;
-            // CHECK_MSG((Core::i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
-        }
-        break;
-    default:
-        CHECK_MSG(false, "Ilegal GPUBufferType!");
-        break;
-    }
-
-    return bindingPoint;
+    mGPUMeshFactory = Core::OwnerPtr<GPUMeshFactory>::newObject();
+    mGPUMeshFactory->init();
+    mGPUShaderManager = Core::OwnerPtr<GPUShaderManager>::newObject();
+    mGPUShaderManager->init();
+    mGPUSkeletalAnimationManager = Core::OwnerPtr<GPUSkeletalAnimationManager>::newObject();
+    mGPUSkeletalAnimationManager->init();
 }
 
 void GPUInstance::terminate()
 {
+    mGPUMeshFactory->terminate();
+    mGPUShaderManager->terminate();
+    mGPUSkeletalAnimationManager->terminate();
     mGPUContext->terminate();
 }

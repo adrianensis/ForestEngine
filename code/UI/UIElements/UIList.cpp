@@ -5,7 +5,7 @@
 #include "UI/UIElements/UIButton.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Window/WindowManager.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
@@ -39,7 +39,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
-	rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
+	rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mGPUShaderStencilData = calculateStencilData();

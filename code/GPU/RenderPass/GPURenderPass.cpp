@@ -1,16 +1,18 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
-#include "GPU/GPUInstance.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
 GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData)
+bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
+    Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
+    mGPUSkeletalAnimationManager = gpuSkeletalAnimationManager;
+    mGPUShaderManager = gpuShaderManager;
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
     mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
     mGPURenderPassData = gpuRenderPassData;
@@ -319,12 +321,12 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     PROFILER_CPU_NAMED(RenderPass_compileShader)
 
     std::vector<GPUUniformBuffer> uniformBuffers;
-    uniformBuffers.push_back(GET_SYSTEM(GPUShaderManager).getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
+    uniformBuffers.push_back(mGPUShaderManager->getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
 
-    Core::WeakPtr<GPUSkeletonState> skeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+    Core::WeakPtr<GPUSkeletonState> skeletonState = mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
     if(skeletonState)
     {
-        uniformBuffers.push_back(GET_SYSTEM(GPUSkeletalAnimationManager).getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+        uniformBuffers.push_back(mGPUSkeletalAnimationManager->getSkeletonRenderStateGPUUniformBuffer(skeletonState));
     }
 
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));

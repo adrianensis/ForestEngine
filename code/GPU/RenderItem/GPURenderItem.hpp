@@ -16,8 +16,8 @@ public:
 class GPURenderItem
 {
 public:
-    void init(const GPURenderItemData& data, bool isStatic);
-    void terminate();
+    void init(const GPURenderItemData& data, bool isStatic, Core::Ptr<GPUShaderManager> gpuShaderManager);
+    void terminate(Core::Ptr<GPUShaderManager> gpuShaderManager);
     bool isStatic() const { return mIsStatic; } 
 
 private:

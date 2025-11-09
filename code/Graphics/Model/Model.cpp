@@ -113,7 +113,7 @@ void Model::loadGLTFShaders()
             //     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{Core::HashedString(texturePath.string())});
             // }
 
-            newShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShaderDefault);
+            newShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShaderDefault);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {
@@ -496,7 +496,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
         gpuSkeletonStateData.mBones[i].mBindMatrix = calculateHierarchicalBoneTransform(i, originalBindMatrices, gpuSkeletonStateData.mBones);
     }
 
-    mSkeletonState = GET_SYSTEM(GPUSkeletalAnimationManager).createSkeletonState(GPUInstance::getInstance().mGPUContext, gpuSkeletonStateData);
+    mSkeletonState = GPUInstance::getInstance().mGPUSkeletalAnimationManager->createSkeletonState(GPUInstance::getInstance().mGPUContext, gpuSkeletonStateData);
 }
 
 Core::f32 Model::loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim)

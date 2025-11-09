@@ -6,6 +6,8 @@
 #include "GPU/Image/GPUImage.h"
 #include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 
+class GPUSkeletalAnimationManager;
+
 enum class GPUAttachmentLoadOp
 {
     LOAD = VK_ATTACHMENT_LOAD_OP_LOAD,
@@ -67,7 +69,9 @@ private:
 public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
-    bool init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData);
+    // TODO: refactor so many arguments
+    bool init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
+        Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager);
     void terminate();
     void begin();
     virtual void renderPass();
@@ -91,6 +95,8 @@ protected:
 public:
     Core::Ptr<GPUContext> mGPUContext;
 protected:
+    Core::Ptr<GPUSkeletalAnimationManager> mGPUSkeletalAnimationManager;
+    Core::Ptr<GPUShaderManager> mGPUShaderManager;
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     std::vector<GPUFramebuffer> framebuffers;
 

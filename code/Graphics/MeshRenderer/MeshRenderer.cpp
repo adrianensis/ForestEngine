@@ -1,6 +1,6 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
-#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/GPUInstance.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/Transform.hpp"
 
@@ -9,7 +9,7 @@ Core::ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManag
 void MeshRenderer::init(const GPURenderItemData& data) 
 {
     mGPURenderItem = Core::OwnerPtr<GPURenderItem>::newObject();
-    mGPURenderItem->init(data, false);
+    mGPURenderItem->init(data, false, GPUInstance::getInstance().mGPUShaderManager);
 }
 
 void MeshRenderer::onComponentAdded() 
@@ -20,7 +20,7 @@ void MeshRenderer::onComponentAdded()
 
 void MeshRenderer::onDestroy() 
 {
-    mGPURenderItem->terminate();
+    mGPURenderItem->terminate(GPUInstance::getInstance().mGPUShaderManager);
     mGPURenderItem.invalidate();
 }
 

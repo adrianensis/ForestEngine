@@ -13,7 +13,8 @@ void RenderPipeline::init()
     initBuffers();
 
     mGPUInstanceRendererManager = Core::OwnerPtr<GPUInstanceRendererManager>::newObject();
-    mGPURenderGraph.init(GPUInstance::getInstance().mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer);
+    mGPURenderGraph.init(GPUInstance::getInstance().mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer,
+        GPUInstance::getInstance().mGPUSkeletalAnimationManager, GPUInstance::getInstance().mGPUShaderManager);
 
     mMeshRenderers.resize(mGPURenderItemManager.getSize());
 }
@@ -43,8 +44,8 @@ void RenderPipeline::update()
     PROFILER_CPU_NAMED(updateModelMatricesBuffer);
     mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mGPURenderItemManager.getMatrices());
 
-    GET_SYSTEM(GPUShaderManager).update();
-	GET_SYSTEM(GPUSkeletalAnimationManager).update();
+    GPUInstance::getInstance().mGPUShaderManager->update();
+	GPUInstance::getInstance().mGPUSkeletalAnimationManager->update();
 }
 
 void RenderPipeline::terminate()

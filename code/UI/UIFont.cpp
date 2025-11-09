@@ -42,7 +42,7 @@ void UIFont::init(UIFontsManager& fontsManager, Core::HashedString fontFile, Cor
     shaderData.mFontData = mFontData;
     GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Maths::Vector4(1,1,1,1);
-    mFontShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);
+    mFontShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);
 
     mFontData.freeGlyphsBuffers();
 }

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Engine/Core.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 
 class GPUMesh;
+class GPUShaderManager;
 
 class FramebufferBinding
 {
@@ -168,10 +168,11 @@ public:
 
 class GPUShader
 {
+friend class GPUShaderPropertiesInstance;
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(Core::Ptr<GPUContext> gpuContext, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
+    virtual void init(Core::Ptr<GPUContext> gpuContext, Core::Ptr<GPUShaderManager> gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
     void terminate();
 
     bool hasFramebufferBinding(Core::HashedString bindingName) const;
@@ -205,6 +206,7 @@ protected:
 
 protected:
     Core::Ptr<GPUContext> mGPUContext;
+    Core::Ptr<GPUShaderManager> mGPUShaderManager;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<Core::HashedString> mTextures;

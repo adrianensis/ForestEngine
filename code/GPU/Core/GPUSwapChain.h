@@ -6,8 +6,6 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
-#include "Engine/Core.hpp"
-
 class GPUSwapChain 
 {
 private:

@@ -4,7 +4,6 @@
 // TODO: fix .h extension, should be .hpp
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/RenderItem/GPURenderItem.hpp"
-#include "GPU/GPUInstance.hpp"
 
 class GPURenderGraphData
 {
@@ -16,7 +15,8 @@ public:
 class GPURenderGraph
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer);
+    void init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
+        Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager);
     void update();
     void terminate();
     void render(GPURenderGraphData& renderData);
@@ -27,7 +27,7 @@ public:
     void updateLights(GPURenderGraphData& renderData);
 
     template<class T> T_EXTENDS(T, GPURenderPass)
-    void initRenderPass(const GPURenderPassData& renderPassData)
+    void initRenderPass(const GPURenderPassData& renderPassData, Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager)
     {
         Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
@@ -40,7 +40,7 @@ public:
         renderPassOutputData.mColorGPUImage = &vulkanColorImage;
 
         Core::WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassData, renderPassOutputData);
+        renderPass->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassData, renderPassOutputData, gpuSkeletalAnimationManager, gpuShaderManager);
 
         mRenderPassesArray.push_back(renderPass);
     }

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Engine/Core.hpp"
+#include "Core/Core.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
-class GPUShaderManager: public System::System
+class GPUShaderManager
 {
 public:
-    virtual void init() override;
-    virtual void terminate() override;
+    void init();
+    void terminate();
     void update();
     Core::WeakPtr<GPUTexture> loadTexture(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData);
 
@@ -18,7 +18,7 @@ public:
         Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
         propertiesBlockDefaultBuffer.get<P>() = propertiesBlockDefault;
-        shader->init(gpuContext, shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
+        shader->init(gpuContext, this, shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
         postGPUShaderCreated(gpuContext, shader);
 
         return shader;

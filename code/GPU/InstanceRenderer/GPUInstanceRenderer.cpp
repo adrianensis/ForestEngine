@@ -1,7 +1,6 @@
 #include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
-#include "GPU/GPUInstance.hpp"
 
 void GPUInstanceRenderer::init(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData)
 {

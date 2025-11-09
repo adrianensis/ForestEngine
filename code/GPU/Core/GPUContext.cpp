@@ -426,3 +426,30 @@ void GPUContext::setWindowResized()
 {
     mWindowResized = true;
 }
+
+Core::u32 GPUContext::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
+{
+    Core::u32 bindingPoint = 0;
+    switch (gpuUniformBufferType)
+    {
+    case GPUBufferType::UNIFORM:
+        {
+            bindingPoint = mBindingPointsIndexUniform;
+            mBindingPointsIndexUniform++;
+            // CHECK_MSG((Core::i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
+        }
+        break;
+    case GPUBufferType::STORAGE:
+        {
+            bindingPoint = mBindingPointsIndexStorage;
+            mBindingPointsIndexStorage++;
+            // CHECK_MSG((Core::i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
+        }
+        break;
+    default:
+        CHECK_MSG(false, "Ilegal GPUBufferType!");
+        break;
+    }
+
+    return bindingPoint;
+}

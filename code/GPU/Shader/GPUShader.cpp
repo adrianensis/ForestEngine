@@ -3,19 +3,18 @@
 
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
-#include "GPU/Mesh/GPUMesh.hpp"
-#include "Engine/Paths.hpp"
 #include "Core/File/FileUtils.hpp"
 
 void GPUShaderPropertiesInstance::setDirty()
 {
     PROFILER_CPU();
-    GET_SYSTEM(GPUShaderManager).setGPUShaderPropertiesInstanceDirty(mID);
+    mShader->mGPUShaderManager->setGPUShaderPropertiesInstanceDirty(mID);
 }
 
-void GPUShader::init(Core::Ptr<GPUContext> gpuContext, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id)
+void GPUShader::init(Core::Ptr<GPUContext> gpuContext, Core::Ptr<GPUShaderManager> gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id)
 {
     mGPUContext = gpuContext; 
+    mGPUShaderManager = gpuShaderManager; 
     mGPUShaderData = shaderData;
 	mID = id;
 
@@ -88,7 +87,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     mGPUShaderCompilationData = shaderCompilationData;
 
     std::vector<GPUShaderTextureBinding> gpuGPUShaderTextureBindings;
-    const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = GET_SYSTEM(GPUShaderManager).getGPUShaderTextureBindings(getID());
+    const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = mGPUShaderManager->getGPUShaderTextureBindings(getID());
     FOR_MAP(it, shaderTextures)
     {
         gpuGPUShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
@@ -117,15 +116,17 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
         createFragmentShader(sbFrag, mGPUShaderCompilationData.mInputVertexBuffersContainer, gpuGPUShaderPipeline->getGPUShaderDescriptorSets());
     }
 
+    // TODO: refactor std::string("output/shaders/")
+    
     std::string stringGPUShaderVert = sbVert.getCode();
-    std::string shaderPathVert = Paths::PredefinedPaths::mOutputShaders.get() + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".vert";
+    std::string shaderPathVert = std::string("output/shaders/") + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".vert";
     Core::FileUtils::writeFile(shaderPathVert, [stringGPUShaderVert](std::ofstream& file)
     {
         file << stringGPUShaderVert;
     });
 
     std::string stringGPUShaderFrag = sbFrag.getCode();
-    std::string shaderPathFrag = Paths::PredefinedPaths::mOutputShaders.get() + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".frag";
+    std::string shaderPathFrag = std::string("output/shaders/") + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".frag";
     Core::FileUtils::writeFile(shaderPathFrag, [stringGPUShaderFrag](std::ofstream& file)
     {
         file << stringGPUShaderFrag;

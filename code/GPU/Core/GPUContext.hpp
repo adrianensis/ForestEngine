@@ -5,6 +5,7 @@
 #include "GPU/Core/GPUSwapChain.h"
 #include "GPU/Core/GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
+#include "GPU/Core/GPUDefinitions.h"
 class IGPUWindow;
 
 #define GPU_LOAD_EXTENSION_FUNCTION(extensionFunctionName) \
@@ -35,16 +36,17 @@ public:
     void setWindowResized();
     void recreateRenderingObjects();
 
+    Core::u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
+
 private:
     void initializeSyncObjects();
     bool createSurface();
     void destroySurface() const;
     PFN_vkVoidFunction loadExtensionFunctionInternal(const char* extensionFunctionName);
-
-
+    
 public:
     inline static const Core::u32 MAX_FRAMES_IN_FLIGHT = 2;
-
+    
     GPUVulkanInstance* gpuVulkanInstance;
     GPUPhysicalDevice* vulkanPhysicalDevice;
     GPUDevice* vulkanDevice;
@@ -60,13 +62,17 @@ public:
     Core::u32 currentSwapChainImageIndex = 0;
     bool mWindowResized = false;
     Core::Ptr<IGPUWindow> mGPUWindow;
-
-#ifdef ENGINE_ENABLE_PROFILER
+    
+    #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;
     Core::OwnerPtr<GPUCommandPool> profilingCommandPool;
     GPUCommandBuffer profilingCommandBuffer_;
-#endif
-
+    #endif
+    
 private:
+    Core::u32 mBindingPointsIndexUniform = 0;
+    Core::u32 mBindingPointsIndexStorage = 0;
+    Core::i32 mMaxUniformBufferBindingPointsUniform = 0;
+    Core::i32 mMaxUniformBufferBindingPointsStorage = 0;
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core.hpp"
+#include "Core/Core.hpp"
 
 class GPUTextureAnimationFrame
 {

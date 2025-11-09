@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Engine/Core.hpp"
+#include "Core/Core.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimation.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 
-class GPUSkeletalAnimationManager: public System::System
+class GPUSkeletalAnimationManager
 {
 public:
-    virtual void init() override;
-    virtual void terminate() override;
+    void init();
+    void terminate();
     void update();
     Core::WeakPtr<GPUSkeletonState> createSkeletonState(Core::Ptr<GPUContext> gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData);
 

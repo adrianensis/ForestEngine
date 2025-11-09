@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Engine/Core.hpp"
+#include "Core/Core.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 
-class GPUMeshFactory: public System::System
+class GPUMeshFactory
 {
 public:
-    virtual void init() override;
-    virtual void terminate() override;
+    void init();
+    void terminate();
 
 	template <class T>
 	Core::WeakPtr<const GPUMesh> getPrimitive()

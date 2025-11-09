@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Engine/Core.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Image/GPUTexture.hpp"

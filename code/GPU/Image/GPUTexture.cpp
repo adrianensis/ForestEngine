@@ -1,5 +1,4 @@
 #include "GPU/Image/GPUTexture.hpp"
-#include "GPU/GPUInstance.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 

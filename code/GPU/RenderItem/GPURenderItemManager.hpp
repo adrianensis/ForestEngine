@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Engine/Core.hpp"
 #include "GPU/RenderItem/GPURenderItem.hpp"
 
 class GPURenderItemManager

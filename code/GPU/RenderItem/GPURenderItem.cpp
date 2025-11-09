@@ -1,17 +1,17 @@
 #include "GPU/RenderItem/GPURenderItem.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 
-void GPURenderItem::init(const GPURenderItemData& data, bool isStatic) 
+void GPURenderItem::init(const GPURenderItemData& data, bool isStatic, Core::Ptr<GPUShaderManager> gpuShaderManager) 
 {
     mGPURenderItemData = data;
     mIsStatic = isStatic;
-    mGPUShaderPropertiesInstance = GET_SYSTEM(GPUShaderManager).createGPUShaderPropertiesInstance(mGPURenderItemData.mShader);
+    mGPUShaderPropertiesInstance = gpuShaderManager->createGPUShaderPropertiesInstance(mGPURenderItemData.mShader);
     mGPUShaderPropertiesInstance->setDirty();
 }
 
-void GPURenderItem::terminate() 
+void GPURenderItem::terminate(Core::Ptr<GPUShaderManager> gpuShaderManager) 
 {
-    GET_SYSTEM(GPUShaderManager).freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
+    gpuShaderManager->freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
     mRenderSlot.reset();
     mInstanceSlot.reset();
 }

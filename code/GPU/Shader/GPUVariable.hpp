@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Engine/Core.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 
 /*

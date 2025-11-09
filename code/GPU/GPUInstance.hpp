@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "GPU/Buffer/GPUBuffersContainer.hpp"
 #include "GPU/Core/GPUContext.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/Window/GPUWindow.hpp"
 
 class GPUInstance: public Core::Singleton<GPUInstance>
@@ -10,15 +12,11 @@ class GPUInstance: public Core::Singleton<GPUInstance>
 public:
     virtual void init(Core::Ptr<IGPUWindow> gpuWindow);
     virtual void terminate();
-    Core::u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
-
-private:
-    Core::u32 mBindingPointsIndexUniform = 0;
-    Core::u32 mBindingPointsIndexStorage = 0;
-    Core::i32 mMaxUniformBufferBindingPointsUniform = 0;
-    Core::i32 mMaxUniformBufferBindingPointsStorage = 0;
 
 public:
     Core::OwnerPtr<GPUContext> mGPUContext;
+    Core::OwnerPtr<GPUMeshFactory> mGPUMeshFactory;
+    Core::OwnerPtr<GPUShaderManager> mGPUShaderManager;
+    Core::OwnerPtr<GPUSkeletalAnimationManager> mGPUSkeletalAnimationManager;
 };
 REGISTER_CLASS(GPUInstance)

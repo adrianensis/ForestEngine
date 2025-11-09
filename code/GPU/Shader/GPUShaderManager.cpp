@@ -1,6 +1,5 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Image/GPUTexture.hpp"
-#include "GPU/GPUInstance.hpp"
 
 void GPUShaderManager::init()
 {
@@ -94,7 +93,7 @@ void GPUShaderManager::loadGPUShaderTextures(Core::Ptr<GPUContext> gpuContext, C
                 gpuTextureData.mFontData = shader->getGPUShaderData().mFontData;
             }
 
-            mTextureBindingsByShader.at(id).insert_or_assign(it->first, GET_SYSTEM(GPUShaderManager).loadTexture(gpuContext, gpuTextureData));
+            mTextureBindingsByShader.at(id).insert_or_assign(it->first, loadTexture(gpuContext, gpuTextureData));
         }
     }
 }

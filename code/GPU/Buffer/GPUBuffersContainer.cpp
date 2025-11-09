@@ -1,5 +1,4 @@
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
-#include "GPU/GPUInstance.hpp"
 
 void GPUVertexBuffersContainer::enable(Core::Ptr<GPUContext> gpuContext)
 {
@@ -79,7 +78,7 @@ void GPUVertexBuffersContainer::terminate()
 
 void GPUUniformBuffersContainer::addUniformBuffer(Core::Ptr<GPUContext> gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
 {
-    Core::u32 bindingPoint = GPUInstance::getInstance().requestUniformBufferBindingPoint(data.mType);
+    Core::u32 bindingPoint = gpuContext->requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
     gpuInstanceBuffer.init(gpuContext, size, bindingPoint, data, isStatic);
 

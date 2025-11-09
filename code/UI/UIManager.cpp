@@ -19,7 +19,7 @@ void UIManager::init()
     shaderData.mMaxInstances = 500;
     GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Maths::Vector4(1,1,1,1);
-    mDefaultUIShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderUI, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);
+    mDefaultUIShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderUI, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);
 }
 
 void UIManager::terminate()

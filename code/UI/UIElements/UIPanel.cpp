@@ -3,7 +3,7 @@
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "GPU/GPUInstance.hpp"
 
 #include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"
@@ -56,7 +56,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     UIArea::initFromConfig(config);
 
     GPURenderItemData rendererData;
-    rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
+    rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
