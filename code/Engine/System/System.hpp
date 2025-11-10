@@ -4,7 +4,7 @@
 #include "Core/Event/Event.hpp"
 
 NS_BEGIN(System)
-class System: public Core::EnableWeakPtrToThis, public Event::IEventObject
+class System: public Core::EnableWeakPtrToThis<System>, public Event::IEventObject
 {
 public:
     virtual ~System() override = default;

@@ -1,9 +1,10 @@
 #include "Scripting/ScriptEngine.hpp"
+#include "Core/Memory/Pointers.hpp"
 #include "Scene/Module.hpp"
 
 void ScriptEngine::init()
 {
-	ECManager.addComponentListener<Script>(getPtrToThis<ScriptEngine>());
+	ECManager.addComponentListener<Script>(Core::WeakPtr<ScriptEngine>::cast(getPtrToThis()));
 }
 
 void ScriptEngine::onComponentAdded(const EC::ComponentPtr& component)

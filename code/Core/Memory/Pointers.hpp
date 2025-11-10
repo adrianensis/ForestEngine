@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/CoreMacros.hpp"
 #include "Core/Memory/Memory.hpp"
 #include "Core/Assert/Assert.hpp"
 #include <atomic>
@@ -109,6 +110,7 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class WeakPtr;
+template<class X>
 friend class EnableWeakPtrToThis;
 
 public:
@@ -269,6 +271,7 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class WeakPtr;
+template<class X>
 friend class EnableWeakPtrToThis;
 
 public:
@@ -425,32 +428,24 @@ public:
     ReferenceBlock* getReferenceBlock() const { return mReferenceBlock; };
 };
 
-class IPointedObject
-{
-public:
-    virtual ~IPointedObject() = default;
-};
-
-class EnableWeakPtrToThis: public IPointedObject
+template<class T>
+class EnableWeakPtrToThis
 {
 template<class U>
 friend class CountedPtrBase;
 
 public:
-    virtual ~EnableWeakPtrToThis() override
+    virtual ~EnableWeakPtrToThis()
     {
         // INFO: This will invalidate the WeakPtr without removing mReferenceBlock, the block will be removed by the parent OwnerPtr!
         mPtrToThis.internalInvalidate(false);
     };
 protected:
-    template<class OtherClass>
-    WeakPtr<OtherClass> getPtrToThis() { return WeakPtr<OtherClass>::cast(mPtrToThis); }
-    template<class OtherClass>
-    WeakPtr<const OtherClass> getPtrToThis() const { return WeakPtr<const OtherClass>::cast(mPtrToThis); }
+    WeakPtr<T> getPtrToThis() { return WeakPtr<T>::cast(mPtrToThis); }
+    WeakPtr<const T> getPtrToThis() const { return WeakPtr<const T>::cast(mPtrToThis); }
 private:
-    template <class OtherClass>
-    void set(const WeakPtr<OtherClass>& ptr) { mPtrToThis = WeakPtr<IPointedObject>(dynamic_cast<IPointedObject*>(const_cast<REMOVE_CONST(OtherClass)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
-    WeakPtr<IPointedObject> mPtrToThis {};
+    void set(const WeakPtr<T>& ptr) { mPtrToThis = WeakPtr<T>(dynamic_cast<T*>(const_cast<REMOVE_CONST(T)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
+    WeakPtr<T> mPtrToThis {};
 };
 
 // REF COUNTED PTR BASE
@@ -508,9 +503,9 @@ protected:
             mInternalPointer = reference;
             mReferenceBlock = referenceBlock;
             increment();
-            if constexpr (IS_BASE_OF(EnableWeakPtrToThis, T))
+            if constexpr (IS_BASE_OF(EnableWeakPtrToThis<T>, T))
             {
-                EnableWeakPtrToThis* enableWeakPtrToThis = dynamic_cast<EnableWeakPtrToThis*>(const_cast<REMOVE_CONST(T)*>(reference));
+                EnableWeakPtrToThis<T>* enableWeakPtrToThis = dynamic_cast<EnableWeakPtrToThis<T>*>(const_cast<REMOVE_CONST(T)*>(reference));
                 if(enableWeakPtrToThis)
                 {
                     enableWeakPtrToThis->set(WeakPtr<T>(*this));

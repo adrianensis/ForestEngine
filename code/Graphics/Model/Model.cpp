@@ -218,7 +218,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     mGLTFMeshes.insert_or_assign(&primitive, Core::OwnerPtr<GPUMesh>::newObject());
     Core::WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
-    GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis<Model>());
+    GET_SYSTEM(ModelManager).setMeshToModel(mesh, getPtrToThis());
 
     Core::WeakPtr<GPUShader> meshShader;
     if(primitive.material)

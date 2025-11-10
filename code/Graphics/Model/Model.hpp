@@ -27,7 +27,7 @@ public:
     Maths::Matrix4 mMatrix;
 };
 
-class Model: public Core::EnableWeakPtrToThis
+class Model: public Core::EnableWeakPtrToThis<Model>
 {
 public:
     void init(const std::string& path);

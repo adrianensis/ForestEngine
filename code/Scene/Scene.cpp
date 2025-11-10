@@ -110,7 +110,7 @@ void Scene::addSceneObject(EC::TEntityPtr<SceneObject> sceneObject)
 {
     if(sceneObject)
     {
-        sceneObject->mScene = getPtrToThis<Scene>();
+        sceneObject->mScene = getPtrToThis();
         sceneObject->onAddedToScene();
         mNewSceneObjects.emplace_back(sceneObject);
     }
