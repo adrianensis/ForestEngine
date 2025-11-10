@@ -160,6 +160,9 @@ public:
         if(isValid())
         {
             Entity* pointer = &getInternal();
+            #ifdef ENGINE_BUILD_DEBUG
+            mDebugPointer = pointer;
+            #endif
             T* castedPointer = dynamic_cast<T*>(pointer);
             if(!castedPointer)
             {
