@@ -78,12 +78,12 @@ if(UNIX)
     # NDEBUG disables standard-C assertions https://en.cppreference.com/w/c/error/assert
     # set(PROJECT_COMPILER_FLAGS_SHIP "${PROJECT_COMPILER_FLAGS_RELEASE}-DENGINE_BUILD_RELEASE;-DNDEBUG;")
     
-    set(PROJECT_LINKER_FLAGS_DEBUG "${PROJECT_LINKER_FLAGS_DEBUG}${PROJECT_LINKER_FLAGS_DEBUG}")
-    set(PROJECT_LINKER_FLAGS_RELEASE "${PROJECT_LINKER_FLAGS_RELEASE}${PROJECT_LINKER_FLAGS_RELEASE}")
+    set(PROJECT_LINKER_FLAGS_DEBUG "")
+    set(PROJECT_LINKER_FLAGS_RELEASE "")
     
     if(ENABLE_SANITIZER)
-        set(PROJECT_LINKER_FLAGS_DEBUG "${PROJECT_LINKER_FLAGS_DEBUG}${PROJECT_LINKER_FLAGS_DEBUG}-fsanitize=address;-static-libsan;")
-        set(PROJECT_LINKER_FLAGS_RELEASE "${PROJECT_LINKER_FLAGS_RELEASE}${PROJECT_LINKER_FLAGS_RELEASE}-fsanitize=address;-static-libsan;")
+        set(PROJECT_LINKER_FLAGS_DEBUG "${PROJECT_LINKER_FLAGS_DEBUG}-fsanitize=address;-static-libsan;")
+        set(PROJECT_LINKER_FLAGS_RELEASE "${PROJECT_LINKER_FLAGS_RELEASE}-fsanitize=address;-static-libsan;")
     endif(ENABLE_SANITIZER)
 endif(UNIX)
 
@@ -101,9 +101,11 @@ endif(WIN32)
 #     message("Not Using CCACHE")
 # endif()
 
-message("Compiler: " ${CMAKE_CXX_COMPILER})
-message("Release: " ${PROJECT_COMPILER_FLAGS_RELEASE})
-message("Debug: " ${PROJECT_COMPILER_FLAGS_DEBUG})
+message("Compiler: ${CMAKE_CXX_COMPILER}")
+message("Release: ${PROJECT_COMPILER_FLAGS_RELEASE}")
+message("Linker Release: ${PROJECT_LINKER_FLAGS_RELEASE}")
+message("Debug: ${PROJECT_COMPILER_FLAGS_DEBUG}")
+message("Linker Debug: ${PROJECT_LINKER_FLAGS_DEBUG}")
 message("Selected Build target: " ${CMAKE_BUILD_TYPE})
 
 # ----------------------------------------------------------------------------
