@@ -12,12 +12,12 @@ public:
     virtual void terminate() override;
 
     Core::WeakPtr<const Model> loadModel(const std::string& path);
-    void setMeshToModel(Core::WeakPtr<const GPUMesh> mesh, Core::WeakPtr<Model> model);
-    Core::WeakPtr<Model> getModelFromMesh(Core::WeakPtr<const GPUMesh> mesh) const;
+    void setMeshToModel(Core::WeakPtr<const GPUMesh> mesh, Core::Ptr<Model> model);
+    Core::Ptr<Model> getModelFromMesh(Core::WeakPtr<const GPUMesh> mesh) const;
 
 private:
     std::unordered_map<std::string, Core::OwnerPtr<Model>> mModels;
-    std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::WeakPtr<Model>> mMeshToModels;
+    std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::Ptr<Model>> mMeshToModels;
     Core::WeakPtr<GPUShader> mDefaultModelShader;
 public:
     GET(DefaultModelShader)

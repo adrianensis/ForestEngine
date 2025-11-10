@@ -28,12 +28,15 @@ void RenderPipeline::update()
         mMeshRenderers.resize(mGPURenderItemManager.getSize());
     }
 
-    FOR_RANGE(i, *mGPURenderItemManager.getUsedSlots().begin(), (*mGPURenderItemManager.getUsedSlots().rbegin())+1)
+    if(!mGPURenderItemManager.getUsedSlots().empty())
     {
-        EC::TComponentPtr<MeshRenderer> renderItem = mMeshRenderers[i];
-        if(mMeshRenderers[i].isValid())
+        FOR_RANGE(i, *mGPURenderItemManager.getUsedSlots().begin(), (*mGPURenderItemManager.getUsedSlots().rbegin())+1)
         {
-            mMeshRenderers[i]->update();
+            EC::TComponentPtr<MeshRenderer> renderItem = mMeshRenderers[i];
+            if(mMeshRenderers[i].isValid())
+            {
+                mMeshRenderers[i]->update();
+            }
         }
     }
 

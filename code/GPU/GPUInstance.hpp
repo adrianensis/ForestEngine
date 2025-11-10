@@ -2,10 +2,10 @@
 
 #include "Core/Memory/Singleton.hpp"
 #include "GPU/Core/GPUContext.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
-#include "GPU/Shader/GPUShaderManager.hpp"
-#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/Window/GPUWindow.hpp"
+class GPUSkeletalAnimationManager;
+class GPUMeshFactory;
+class GPUShaderManager;
 
 class GPUInstance: public Core::Singleton<GPUInstance>
 {

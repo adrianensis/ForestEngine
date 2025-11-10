@@ -110,8 +110,6 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class WeakPtr;
-template<class X>
-friend class EnableWeakPtrToThis;
 
 public:
     Ptr(T* reference) { set(reference); }
@@ -271,8 +269,6 @@ template<class V>
 friend class OwnerPtr;
 template<class W>
 friend class WeakPtr;
-template<class X>
-friend class EnableWeakPtrToThis;
 
 public:
     template <class U>
@@ -314,7 +310,7 @@ public:
     bool isValid() const { return mReferenceBlock != nullptr && mReferenceBlock->isReferenced() && mInternalPointer != nullptr; }
     void invalidate()
     {
-        internalInvalidate(true);
+        internalInvalidate();
     }
 
     WeakPtr<T>& operator=(const WeakPtr<T>& other)
@@ -330,7 +326,10 @@ public:
     operator bool() const { return this->isValid(); }
 
 private:
-    WeakPtr(T* reference, ReferenceBlock* referenceBlock) { set(reference, referenceBlock); }
+    WeakPtr(T* reference, ReferenceBlock* referenceBlock)
+    {
+        set(reference, referenceBlock);
+    }
 
     void assign(const WeakPtr<T>& other)
     {
@@ -397,20 +396,16 @@ private:
         }
     }
 
-    void internalInvalidate(bool shouldDeleteReferenceBlock)
+    void internalInvalidate()
     {
         if(mReferenceBlock)
         {
             CHECK_MSG(mReferenceBlock->isWeakReferenced(), "Weak references are already 0!")
             decrement();
             
-            // INFO: When a OwnerPtr is deleted, if the class is EnableWeakPtrToThis, it could first delete mReferenceBlock and crash in OwnerPtr::invalidate
-            if(shouldDeleteReferenceBlock)
+            if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
             {
-                if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
-                {
-                    Memory::deleteObject(mReferenceBlock);
-                }
+                Memory::deleteObject(mReferenceBlock);
             }
         }
         set(nullptr, nullptr);
@@ -426,26 +421,6 @@ private:
 public:
     T* getInternalPointer() const { return mInternalPointer; };
     ReferenceBlock* getReferenceBlock() const { return mReferenceBlock; };
-};
-
-template<class T>
-class EnableWeakPtrToThis
-{
-template<class U>
-friend class CountedPtrBase;
-
-public:
-    virtual ~EnableWeakPtrToThis()
-    {
-        // INFO: This will invalidate the WeakPtr without removing mReferenceBlock, the block will be removed by the parent OwnerPtr!
-        mPtrToThis.internalInvalidate(false);
-    };
-protected:
-    WeakPtr<T> getPtrToThis() { return WeakPtr<T>::cast(mPtrToThis); }
-    WeakPtr<const T> getPtrToThis() const { return WeakPtr<const T>::cast(mPtrToThis); }
-private:
-    void set(const WeakPtr<T>& ptr) { mPtrToThis = WeakPtr<T>(dynamic_cast<T*>(const_cast<REMOVE_CONST(T)*>(ptr.getInternalPointer())), ptr.getReferenceBlock()); CHECK_MSG(mPtrToThis, "Invalid PtrToThis");  }
-    WeakPtr<T> mPtrToThis {};
 };
 
 // REF COUNTED PTR BASE
@@ -475,7 +450,6 @@ public:
             
             if(mInternalPointer && !mReferenceBlock->isReferenced())
             {
-                // INFO: if class is EnableWeakPtrToThis derived, the mReferenceBlock will be removed by the parent OwnerPtr in the next if statement!
                 Memory::deleteObject(mInternalPointer);
             }
             if(!mReferenceBlock->isReferenced() && !mReferenceBlock->isWeakReferenced())
@@ -503,14 +477,6 @@ protected:
             mInternalPointer = reference;
             mReferenceBlock = referenceBlock;
             increment();
-            if constexpr (IS_BASE_OF(EnableWeakPtrToThis<T>, T))
-            {
-                EnableWeakPtrToThis<T>* enableWeakPtrToThis = dynamic_cast<EnableWeakPtrToThis<T>*>(const_cast<REMOVE_CONST(T)*>(reference));
-                if(enableWeakPtrToThis)
-                {
-                    enableWeakPtrToThis->set(WeakPtr<T>(*this));
-                }
-            }
         }
     }
     void increment() { mReferenceBlock->mReferenceCounter += 1;}
@@ -540,7 +506,10 @@ public:
         return SharedPtr<T>(dynamic_cast<T*>(other.getInternalPointer()), other.getReferenceBlock());
     }
 
-    explicit SharedPtr(T* reference) { this->init(reference, Memory::newObject<ReferenceBlock>()); }
+    explicit SharedPtr(T* reference)
+    {
+        this->init(reference, Memory::newObject<ReferenceBlock>());
+    }
     SharedPtr() = default;
     SharedPtr(const WeakPtr<T>& other) { assign(other); }
     SharedPtr(const SharedPtr<T>& other) { assign(other); }
@@ -563,7 +532,10 @@ public:
 
 private:
 
-    SharedPtr(T* reference, ReferenceBlock* referenceBlock) { this->init(reference, referenceBlock); }
+    SharedPtr(T* reference, ReferenceBlock* referenceBlock)
+    {
+        this->init(reference, referenceBlock);
+    }
 
     void assign(const SharedPtr<T>& other)
     {
@@ -626,12 +598,17 @@ public:
     template <typename ... Args>
 	static OwnerPtr<T> newObject(Args&&... args)
 	{
-        return OwnerPtr<T>(Memory::newObject<T>(args...));
+        T* newObj = Memory::newObject<T>(args...);
+        OwnerPtr<T> ownerPtr = OwnerPtr<T>(newObj);
+        return ownerPtr;
     }
 
 private:
 
-    OwnerPtr(T* reference, ReferenceBlock* referenceBlock) { this->init(reference, referenceBlock); }
+    OwnerPtr(T* reference, ReferenceBlock* referenceBlock)
+    {
+        this->init(reference, referenceBlock);
+    }
 
     void assign(OwnerPtr<T>& other)
     {

@@ -10,6 +10,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Transform.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
 
 void UITextGlyph::initFromConfig(const UIElementConfig& config) 
 {

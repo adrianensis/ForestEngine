@@ -10,6 +10,7 @@
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
 
 void UIListEntry::init(const std::string& label, UIElementCallback callback)
 {

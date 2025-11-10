@@ -5,6 +5,7 @@
 #include "Engine/Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
 
+#include "Engine/System/SystemsManager.hpp"
 #include "Window/WindowManager.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
@@ -50,11 +51,14 @@ void Engine::init()
     CREATE_SYSTEM(CameraManager);
     CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
+	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
+	ECManager.addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
     CREATE_SYSTEM(DebugRenderer);
     CREATE_SYSTEM(UIManager);
     CREATE_SYSTEM(ScenesManager);
     CREATE_SYSTEM(Command::CommandLine);
     CREATE_SYSTEM(ScriptEngine);
+	ECManager.addComponentListener<Script>(GET_SYSTEM_PTR(ScriptEngine));
 }
 
 void Engine::preSceneChanged()

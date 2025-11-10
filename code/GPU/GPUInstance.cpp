@@ -1,4 +1,7 @@
 #include "GPU/GPUInstance.hpp"
+#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "GPU/Shader/GPUShaderManager.hpp"
 
 void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
 {

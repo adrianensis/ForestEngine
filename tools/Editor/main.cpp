@@ -1,3 +1,4 @@
+#include "Core/HashedString/HashedString.hpp"
 #include "Engine/Engine.hpp"
 #include "Scene/Module.hpp"
 #include "Scripting/Module.hpp"
@@ -24,5 +25,6 @@ int main()
 
     engine.run();
     engine.terminate();
+
     return 0;
 }

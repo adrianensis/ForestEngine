@@ -4,7 +4,7 @@
 
 void ScriptEngine::init()
 {
-	ECManager.addComponentListener<Script>(Core::WeakPtr<ScriptEngine>::cast(getPtrToThis()));
+	
 }
 
 void ScriptEngine::onComponentAdded(const EC::ComponentPtr& component)

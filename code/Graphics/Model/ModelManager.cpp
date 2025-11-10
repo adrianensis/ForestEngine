@@ -16,16 +16,16 @@ void ModelManager::terminate()
 {
     mModels.clear();
 }
-void ModelManager::setMeshToModel(Core::WeakPtr<const GPUMesh> mesh, Core::WeakPtr<Model> model)
+void ModelManager::setMeshToModel(Core::WeakPtr<const GPUMesh> mesh, Core::Ptr<Model> model)
 {
     mMeshToModels.insert_or_assign(mesh, model);
 }
 
-Core::WeakPtr<Model> ModelManager::getModelFromMesh(Core::WeakPtr<const GPUMesh> mesh) const
+Core::Ptr<Model> ModelManager::getModelFromMesh(Core::WeakPtr<const GPUMesh> mesh) const
 {
     if(!mMeshToModels.contains(mesh))
     {
-        return Core::WeakPtr<Model>();
+        return Core::Ptr<Model>();
     }
 
     return mMeshToModels.at(mesh);

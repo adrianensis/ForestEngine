@@ -4,6 +4,7 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 #include "GPU/GPUInstance.hpp"
+#include "GPU/Mesh/GPUMeshFactory.hpp"
 
 #include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"

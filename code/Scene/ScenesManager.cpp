@@ -31,11 +31,16 @@ void ScenesManager::terminate()
 
 void ScenesManager::init()
 {
-    mScenes.emplace(smDefaultSceneName, Core::OwnerPtr<Scene>::newObject());
-    mScenes.emplace(smDefaultUISceneName, Core::OwnerPtr<Scene>::newObject());
+    Core::OwnerPtr<Scene> defaultSceneOwner = Core::OwnerPtr<Scene>::newObject();
+    Core::OwnerPtr<Scene> defaultUISceneOwner = Core::OwnerPtr<Scene>::newObject();
+        
+    mScenes.insert_or_assign(smDefaultSceneName, Core::OwnerPtr<Scene>::moveCast(defaultSceneOwner));
+    mScenes.insert_or_assign(smDefaultUISceneName, Core::OwnerPtr<Scene>::moveCast(defaultUISceneOwner));
 
-    mScenes.at(smDefaultSceneName)->init(smDefaultSceneName);
-    mScenes.at(smDefaultUISceneName)->init(smDefaultUISceneName);
+    Core::WeakPtr<Scene> defaultScene = mScenes.at(smDefaultSceneName);
+    Core::WeakPtr<Scene> defaultUIScene = mScenes.at(smDefaultUISceneName);
+    defaultScene->init(smDefaultSceneName);
+    defaultUIScene->init(smDefaultUISceneName);
 
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);

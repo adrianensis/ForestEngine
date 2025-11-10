@@ -8,9 +8,6 @@
 
 void RenderEngine::init()
 {
-	ECManager.addComponentListener<MeshRenderer>(Core::WeakPtr<RenderEngine>::cast(getPtrToThis()));
-	ECManager.addComponentListener<Light>(Core::WeakPtr<RenderEngine>::cast(getPtrToThis()));
-
     mRenderPipeline = Core::OwnerPtr<RenderPipelinePBR>::newObject();
     mRenderPipeline->init();
     mRenderPipeline->compile();
