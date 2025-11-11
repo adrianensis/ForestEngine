@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Engine/EntityComponent/Component.hpp"
+#include "Scene/GameComponent.hpp"
 #include "GPU/Light/GPULight.hpp"
+#include "Scene/GameObject.hpp"
 
-class Light: public EC::Component
+class Light: public GameComponent
 {
 public:
     Core::ClassId getComponentTypeId() const override;

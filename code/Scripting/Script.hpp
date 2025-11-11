@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Core/Event/Event.hpp"
-#include "Engine/EntityComponent/Component.hpp"
+#include "Scene/GameComponent.hpp"
 
 
 class GameObject;
 
-class Script: public EC::Component, public Event::IEventObject
+class Script: public GameComponent
 {
 public:
     Core::ClassId getComponentTypeId() const override;

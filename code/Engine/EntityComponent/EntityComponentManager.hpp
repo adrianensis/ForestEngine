@@ -86,12 +86,23 @@ public:
     void addComponent(const EntityPtrBase& entityPtr, const ComponentPtrBase& componentPtr)
     {
         PROFILER_CPU()
-        CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
-        CHECK_MSG(!componentPtr->getOwnerEntity().isValid(), "Component is assigned to another Entity!");
-        CHECK_MSG(componentPtr->getOwnerEntity() != entityPtr, "Component is already assigned to Entity!");
 
-        componentPtr->setOwnerEntity(entityPtr);
-        CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
+        EntityPtrBase componentOwner = EntityPtrBase(
+            componentPtr->getComponentOwner().mClassId, 
+            componentPtr->getComponentOwner().mSlot, 
+            componentPtr->getComponentOwner().mECPool);
+
+        CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
+        CHECK_MSG(!componentOwner.isValid(), "Component is assigned to another Entity!");
+        CHECK_MSG(componentOwner != entityPtr, "Component is already assigned to Entity!");
+
+        componentPtr->setComponentOwner(ComponentOwner(entityPtr.mClassId, entityPtr.mSlot, entityPtr.mECPool));
+        
+        componentOwner = EntityPtrBase(
+            componentPtr->getComponentOwner().mClassId, 
+            componentPtr->getComponentOwner().mSlot, 
+            componentPtr->getComponentOwner().mECPool);
+        CHECK_MSG(componentOwner.isValid(), "invalid Entity!");
 
         Core::ClassId id = entityPtr.mClassId;
         Core::Slot slot = entityPtr.mSlot;
@@ -115,9 +126,15 @@ public:
     void removeComponent(const EntityPtrBase& entityPtr, ComponentPtrBase componentPtr)
     {
         PROFILER_CPU()
+
+        EntityPtrBase componentOwner = EntityPtrBase(
+            componentPtr->getComponentOwner().mClassId, 
+            componentPtr->getComponentOwner().mSlot, 
+            componentPtr->getComponentOwner().mECPool);
+
         CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
-        CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "Component is not assigned to a Entity!");
-        CHECK_MSG(componentPtr->getOwnerEntity() == entityPtr, "Component is assigned to another Entity!");
+        CHECK_MSG(componentOwner.isValid(), "Component is not assigned to a Entity!");
+        CHECK_MSG(componentOwner == entityPtr, "Component is assigned to another Entity!");
 
         bool componentFound = false;
         Core::ClassId id = entityPtr.mClassId;
@@ -137,6 +154,7 @@ public:
         {
             ECManager.notifyListenersOnComponentRemoved(componentPtr);
             componentPtr->destroy();
+            componentPtr->setComponentOwner(ComponentOwner());
 
             mECPool.getComponentsPool().removeElement(componentPtr);
         }

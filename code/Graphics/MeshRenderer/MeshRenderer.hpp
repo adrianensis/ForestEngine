@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/EntityComponent/Component.hpp"
+#include "Scene/GameComponent.hpp"
 #include "SpacePartition/OcTree.hpp"
 
 #include "GPU/RenderItem/GPURenderItem.hpp"
@@ -8,7 +8,7 @@
 
 class TextureAnimation;
 
-class MeshRenderer: public EC::Component, public IOcTreeElement
+class MeshRenderer: public GameComponent, public IOcTreeElement
 {
     
 public:

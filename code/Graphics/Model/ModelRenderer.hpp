@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Engine/EntityComponent/Component.hpp"
-
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
+#include "Scene/GameComponent.hpp"
 
 class Model;
 
@@ -12,7 +11,7 @@ public:
 	Core::WeakPtr<const Model> mModel;
 };
 
-class ModelRenderer: public EC::Component
+class ModelRenderer: public GameComponent
 {
     
 public:

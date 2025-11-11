@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "Engine/EntityComponent/Component.hpp"
+#include "Scene/GameComponent.hpp"
 
-class Transform: public EC::Component
+class Transform: public GameComponent
 {
     
 public:

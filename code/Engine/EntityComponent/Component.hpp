@@ -7,6 +7,31 @@ NS_BEGIN(EC)
 class EntityComponentPool;
 class EntityPtrBase;
 
+class ComponentOwner
+{
+public:
+
+    ComponentOwner() = default;
+    ComponentOwner(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool)
+    {
+        mClassId = id;
+        mSlot = slot;
+        mECPool = ecPool;
+    }
+
+    void reset()
+    {
+        mSlot.reset();
+        mClassId = 0;
+        mECPool = nullptr;
+    }
+
+public:
+    Core::Slot mSlot;
+    Core::ClassId mClassId = 0;
+    Core::Ptr<EntityComponentPool> mECPool;
+};
+
 class Component
 {	
 public:
@@ -26,44 +51,12 @@ public:
     // This will automatically work in derived classes, no need to override this method in derived classes
     virtual Core::ClassId getComponentTypeId() const { return 0; }
 
-    EntityPtrBase getOwnerEntity() const;
-    void setOwnerEntity(const EntityPtrBase& ownerEntity);
-
-private:
-
-    class ComponentOwner
-    {
-    public:
-
-        ComponentOwner() = default;
-        ComponentOwner(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool)
-        {
-            mClassId = id;
-            mSlot = slot;
-            mECPool = ecPool;
-        }
-
-        void reset()
-        {
-            mSlot.reset();
-            mClassId = 0;
-            mECPool = nullptr;
-        }
-
-    public:
-        Core::Slot mSlot;
-        Core::ClassId mClassId = 0;
-        Core::Ptr<EntityComponentPool> mECPool;
-    };
-
-public:
-    bool mAlreadyAddedToSystem = false;
-
+protected:
+    ComponentOwner mComponentOwner;
 private:
 	bool mIsActive = true;
 	bool mIsDestroyed = false;
 	Core::Slot mSlot;
-	ComponentOwner mOwnerEntity;
 
 	Core::u64 mComponentId = 0;
     // Important: starts by 1, 0 is reserved for null
@@ -74,7 +67,7 @@ public:
     #ifdef ENGINE_BUILD_DEBUG
     Core::HashedString mDebugString;
     #endif
-
+    GET_SET(ComponentOwner)
     GET(ComponentId)
 	GET(IsDestroyed)
 	GET(Slot)
