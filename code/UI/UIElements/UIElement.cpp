@@ -18,7 +18,7 @@ void UIElement::initFromConfig(const UIElementConfig& config)
 
 void UIElement::onDestroy()
 {
-	SceneObject::onDestroy();
+	GameObject::onDestroy();
 	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this);
 	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this);
 	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this);

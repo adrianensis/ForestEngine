@@ -5,7 +5,7 @@
 
 void UITransform::init()
 {
-    SceneObject::init();
+    GameObject::init();
     mPosition = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UIVector>();
     mPosition->mIsStatic = mIsStatic;
     mTransform->addChild(mPosition->mTransform);
@@ -32,5 +32,5 @@ void UITransform::onDestroy()
     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mPosition);
     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mRotation);
     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mScale);
-    SceneObject::onDestroy();
+    GameObject::onDestroy();
 }

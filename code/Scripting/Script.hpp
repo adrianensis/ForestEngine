@@ -4,7 +4,7 @@
 #include "Engine/EntityComponent/Component.hpp"
 
 
-class SceneObject;
+class GameObject;
 
 class Script: public EC::Component, public Event::IEventObject
 {
@@ -14,9 +14,9 @@ public:
     virtual void init();
     virtual void firstUpdate();
     virtual void update();
-    virtual void onEnterCollision(SceneObject *otherSceneObject);
-    virtual void onCollision(SceneObject *otherSceneObject);
-    virtual void onExitCollision(SceneObject *otherSceneObject);
+    virtual void onEnterCollision(GameObject *otherSceneObject);
+    virtual void onCollision(GameObject *otherSceneObject);
+    virtual void onExitCollision(GameObject *otherSceneObject);
     virtual void terminate();
     void onDestroy() override;
 	

@@ -2,7 +2,7 @@
 
 #include "UI/Module.hpp"
 
-class UISingleAxisGizmo: public SceneObject
+class UISingleAxisGizmo: public GameObject
 {
 public:
     void setAxis(const Maths::Line& line, const Maths::Vector4& color, Core::HashedString axisName);
@@ -21,7 +21,7 @@ private:
 
 REGISTER_CLASS(UISingleAxisGizmo)
 
-class UIAxisGizmo: public SceneObject
+class UIAxisGizmo: public GameObject
 {
 public:
     void createAxis();

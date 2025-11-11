@@ -2,7 +2,7 @@
 
 #include "UI/Module.hpp"
 
-class UISceneTree: public SceneObject
+class UISceneTree: public GameObject
 {
 public:
     virtual void init() override;

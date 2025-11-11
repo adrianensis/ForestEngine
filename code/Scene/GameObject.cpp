@@ -1,11 +1,11 @@
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 #include "Engine/EntityComponent/Component.hpp"
 #include "Engine/EntityComponent/Entity.hpp"
 #include "Scene/Transform.hpp"
 #include "Core/Event/EventsManager.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 
-void SceneObject::init()
+void GameObject::init()
 {
     PROFILER_CPU()
     EC::Entity::init();

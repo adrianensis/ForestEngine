@@ -7,7 +7,7 @@
 class Transform;
 class Scene;
 
-class SceneObject: public EC::Entity, public Event::IEventObject
+class GameObject: public EC::Entity, public Event::IEventObject
 {
 public:
     void init() override;
@@ -18,4 +18,4 @@ public:
 	Core::Ptr<Scene> mScene;
 	EC::ComponentPtr<Transform> mTransform;
 };
-REGISTER_CLASS(SceneObject);
+REGISTER_CLASS(GameObject);

@@ -16,15 +16,15 @@ void Script::update()
 {
 }
 
-void Script::onEnterCollision(SceneObject *otherSceneObject)
+void Script::onEnterCollision(GameObject *otherSceneObject)
 {
 }
 
-void Script::onCollision(SceneObject *otherSceneObject)
+void Script::onCollision(GameObject *otherSceneObject)
 {
 }
 
-void Script::onExitCollision(SceneObject *otherSceneObject)
+void Script::onExitCollision(GameObject *otherSceneObject)
 {
 }
 

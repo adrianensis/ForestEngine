@@ -2,7 +2,7 @@
 
 #include "Engine/Core.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 
 class Camera;
 
@@ -25,8 +25,8 @@ private:
 	std::unordered_map<Core::HashedString, Core::WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<Core::HashedString> mLoadRequests;
 
-    EC::EntityPtr<SceneObject> mSceneObjectController;
-	EC::EntityPtr<SceneObject> mCameraSceneObject;
+    EC::EntityPtr<GameObject> mSceneObjectController;
+	EC::EntityPtr<GameObject> mCameraSceneObject;
 
 public:
     inline static const Core::HashedString smDefaultSceneName = Core::HashedString("Default");

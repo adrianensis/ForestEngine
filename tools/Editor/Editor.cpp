@@ -6,7 +6,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Graphics/Model/ModelRenderer.hpp"
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 #include "Window/WindowManager.hpp"
 
 #include "Scene/Module.hpp"
@@ -54,7 +54,7 @@ void Editor::firstUpdate()
     // createSprite(Maths::Vector3(0,0,-100), 10);
 
     // importModel("bob_lamp/bob_lamp_update.fbx", Maths::Vector3(0,0,-5), 1.0f);
-	// sceneObject = importModel2("Avocado/glTF/Avocado.gltf", Maths::Vector3(150,0,0), 1000.0f, 0);
+	// gameObject = importModel2("Avocado/glTF/Avocado.gltf", Maths::Vector3(150,0,0), 1000.0f, 0);
 	// importModel("Floor/Floor.gltf", Maths::Vector3(0,0,0), 1.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Maths::Vector3(0,0,0), 1000.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Wall/Wall.gltf", Maths::Vector3(0,0,1000), 1.0f, Maths::Vector3(0,0,0), true);
@@ -254,12 +254,12 @@ void Editor::terminate()
 
 }
 
-EC::EntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
+EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 {
-	EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
-	// sceneObject->mIsStatic = false;
-	// sceneObject->mTransform->setLocalPosition(v);
-	// sceneObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+	// gameObject->mIsStatic = false;
+	// gameObject->mTransform->setLocalPosition(v);
+	// gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
 
     // RendererData rendererData;
 	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
@@ -271,7 +271,7 @@ EC::EntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::f
 
 	// EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
-	// sceneObject->addComponent(renderer);
+	// gameObject->addComponent(renderer);
 
 	GPURenderItemData rendererData;
     rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
@@ -282,17 +282,17 @@ EC::EntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::f
 
 	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    ECManager.addComponent(sceneObject, renderer);
+    ECManager.addComponent(gameObject, renderer);
 
-	return sceneObject;
+	return gameObject;
 }
 
-EC::EntityPtr<SceneObject> Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
+EC::EntityPtr<GameObject> Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 {
-	EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
-	sceneObject->mIsStatic = false;
-	sceneObject->mTransform->setLocalPosition(v);
-	sceneObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+	gameObject->mIsStatic = false;
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
 
     PointLightData data;
     data.mPosition = v;
@@ -300,17 +300,17 @@ EC::EntityPtr<SceneObject> Editor::createPointLight(const Maths::Vector3& v, Cor
 
 	EC::ComponentPtr<PointLight> pointLight = ECManager.requestComponent<PointLight>();
     pointLight->init(data);
-    ECManager.addComponent(sceneObject, pointLight);
+    ECManager.addComponent(gameObject, pointLight);
 
-	return sceneObject;
+	return gameObject;
 }
 
-EC::EntityPtr<SceneObject> Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
+EC::EntityPtr<GameObject> Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
 {
-	EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
-    sceneObject->mIsStatic = false;
-	sceneObject->mTransform->setLocalPosition(v);
-	sceneObject->mTransform->lookAt(v + dir);
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+    gameObject->mIsStatic = false;
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->lookAt(v + dir);
 
     DirectionalLightData directionalLightData;
     directionalLightData.mDirection = dir;
@@ -318,16 +318,16 @@ EC::EntityPtr<SceneObject> Editor::createDirectionalLight(const Maths::Vector3& 
 
 	EC::ComponentPtr<DirectionalLight> dirLight = ECManager.requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
-    ECManager.addComponent(sceneObject, dirLight);
+    ECManager.addComponent(gameObject, dirLight);
 
-	return sceneObject;
+	return gameObject;
 }
 
-EC::EntityPtr<SceneObject> Editor::mousePick()
+EC::EntityPtr<GameObject> Editor::mousePick()
 {
 
     Core::f32 speed = 100 * Time::Time::getInstance().getDeltaTimeSeconds();
-    EC::EntityPtr<SceneObject> obj;
+    EC::EntityPtr<GameObject> obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
@@ -355,15 +355,15 @@ EC::EntityPtr<SceneObject> Editor::mousePick()
     return obj;
 }
 
-EC::EntityPtr<SceneObject> Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
+EC::EntityPtr<GameObject> Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
-	sceneObject->mIsStatic = isStatic;
-	sceneObject->mTransform->setLocalPosition(v);
-	sceneObject->mTransform->setLocalScale(Maths::Vector3::smOne * size);
-	sceneObject->mTransform->setLocalRotation(rot);
+    EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+	gameObject->mIsStatic = isStatic;
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Maths::Vector3::smOne * size);
+	gameObject->mTransform->setLocalRotation(rot);
 
     ModelRendererData modelRendererData;
     modelRendererData.mModel = model;
@@ -375,9 +375,9 @@ EC::EntityPtr<SceneObject> Editor::importModel( const std::string& pFile, const 
 
 	EC::ComponentPtr<ModelRenderer> modelRenderer = ECManager.requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
-    ECManager.addComponent(sceneObject, modelRenderer);
+    ECManager.addComponent(gameObject, modelRenderer);
 
-    return sceneObject;
+    return gameObject;
 }
 
 void Editor::handlePressedKeys()

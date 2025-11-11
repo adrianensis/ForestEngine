@@ -14,7 +14,7 @@ int main()
     Engine engine;
     engine.init();
 
-    EC::EntityPtr<SceneObject> controller = ECManager.requestEntity<SceneObject>();
+    EC::EntityPtr<GameObject> controller = ECManager.requestEntity<GameObject>();
     controller->init();
 
     EC::ComponentPtr<Editor> editor = ECManager.requestComponent<Editor>();

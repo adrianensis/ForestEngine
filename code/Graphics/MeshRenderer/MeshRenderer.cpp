@@ -4,7 +4,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 #include "Scene/Transform.hpp"
 
 Core::ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
@@ -17,7 +17,7 @@ void MeshRenderer::init(const GPURenderItemData& data)
 
 void MeshRenderer::onComponentAdded() 
 {
-    mGPURenderItem->setIsStatic(EC::EntityPtr<SceneObject>(getOwnerEntity())->mIsStatic);
+    mGPURenderItem->setIsStatic(EC::EntityPtr<GameObject>(getOwnerEntity())->mIsStatic);
     calculateRendererModelMatrix();
 }
 
@@ -41,7 +41,7 @@ void MeshRenderer::update()
 {
 	PROFILER_CPU()
 
-    if(! EC::EntityPtr<SceneObject>(getOwnerEntity())->mIsStatic)
+    if(! EC::EntityPtr<GameObject>(getOwnerEntity())->mIsStatic)
     {
         if(ECManager.getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
         {

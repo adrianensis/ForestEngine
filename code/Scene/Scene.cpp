@@ -1,6 +1,6 @@
 #include "Scene/Scene.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 #include "Scene/Transform.hpp"
 #include "Engine/EngineConfig.hpp"
 
@@ -68,9 +68,9 @@ IMPLEMENT_SERIALIZATION(Scene)
 	// 	}
 	// }
 
-//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEC::EntityPtrBase sceneObject)
+//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEC::EntityPtrBase gameObject)
 //	{
-//		return sceneObject->mShouldPersist;
+//		return gameObject->mShouldPersist;
 //	})
 
 	SERIALIZE("size", maxSize * 2.0f)
@@ -82,11 +82,11 @@ IMPLEMENT_DESERIALIZATION(Scene)
 
 //	if(json.contains("objects"))
 //	{
-//		std::list<SceneObject *> tmpList;
+//		std::list<GameObject *> tmpList;
 //		DESERIALIZE_LIST("objects", tmpList, [](const Core::JSON& json)
 //		{
-//			SceneObject *sceneObject = nullptr;//INSTANCE_BY_NAME(json["class"], SceneObject);
-//			return sceneObject;
+//			GameObject *gameObject = nullptr;//INSTANCE_BY_NAME(json["class"], GameObject);
+//			return gameObject;
 //		})
 //
 //		FOR_LIST(it, tmpList)
@@ -107,35 +107,35 @@ void Scene::unloadScene()
 	destroySceneObjects();
 }
 
-void Scene::addSceneObject(EC::EntityPtr<SceneObject> sceneObject)
+void Scene::addSceneObject(EC::EntityPtr<GameObject> gameObject)
 {
-    if(sceneObject)
+    if(gameObject)
     {
-        sceneObject->mScene = this;
-        sceneObject->onAddedToScene();
-        mNewSceneObjects.emplace_back(sceneObject);
+        gameObject->mScene = this;
+        gameObject->onAddedToScene();
+        mNewSceneObjects.emplace_back(gameObject);
     }
 }
 
-void Scene::removeSceneObject(EC::EntityPtr<SceneObject> sceneObject)
+void Scene::removeSceneObject(EC::EntityPtr<GameObject> gameObject)
 {
-	if (sceneObject && !sceneObject->getIsDestroyed() && !sceneObject->getIsPendingToBeDestroyed())
+	if (gameObject && !gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
 	{
-        ECManager.destroyEntity(sceneObject);
+        ECManager.destroyEntity(gameObject);
 
-        auto it = std::find(mSceneObjects.begin(), mSceneObjects.end(), sceneObject);
+        auto it = std::find(mSceneObjects.begin(), mSceneObjects.end(), gameObject);
         if (it != mSceneObjects.end())
         {
             mSceneObjects.erase(it);
         }
 
-        auto itNew = std::find(mNewSceneObjects.begin(), mNewSceneObjects.end(), sceneObject);
+        auto itNew = std::find(mNewSceneObjects.begin(), mNewSceneObjects.end(), gameObject);
         if (itNew != mNewSceneObjects.end())
         {
             mNewSceneObjects.erase(itNew);
         }
 
-        ECManager.removeEntity(sceneObject);
+        ECManager.removeEntity(gameObject);
     }
 }
 
@@ -145,12 +145,12 @@ void Scene::update()
 	{
 		FOR_RANGE_COND(i, 0, mMaxSceneObjectsToLoadPerFrame, mSceneObjectsToLoadIndex < mSceneObjectsToLoadTotal)
 		{
-			std::string className = "SceneObject"; //mLoadSceneConfig->at("class").get<std::string>();
+			std::string className = "GameObject"; //mLoadSceneConfig->at("class").get<std::string>();
 
-			SceneObject *sceneObject = (SceneObject*) INSTANCE_BY_NAME(className); //Core::Memory::fromClassName<SceneObject>(className));
-			sceneObject->init();
-			sceneObject->deserialize(Core::JSON());
-			addSceneObject(sceneObject);
+			GameObject *gameObject = (GameObject*) INSTANCE_BY_NAME(className); //Core::Memory::fromClassName<GameObject>(className));
+			gameObject->init();
+			gameObject->deserialize(Core::JSON());
+			addSceneObject(gameObject);
 			mSceneObjectsToLoadIndex += 1;
 		}
 	}*/
@@ -178,17 +178,17 @@ bool Scene::thereAreNewSceneObjects() const
 
 void Scene::destroySceneObjects()
 {
-	std::list<EC::EntityPtr<SceneObject>> immutableList(mSceneObjects);
+	std::list<EC::EntityPtr<GameObject>> immutableList(mSceneObjects);
 
 	FOR_LIST(it, immutableList)
 	{
-		EC::EntityPtr<SceneObject> sceneObject = *it;
-        if (sceneObject)
+		EC::EntityPtr<GameObject> gameObject = *it;
+        if (gameObject)
 		{
-            if (!sceneObject->getIsDestroyed())
+            if (!gameObject->getIsDestroyed())
             {
-                ECManager.destroyEntity(sceneObject);
-                sceneObject.reset();
+                ECManager.destroyEntity(gameObject);
+                gameObject.reset();
             }
         }
 	}

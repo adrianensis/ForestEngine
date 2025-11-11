@@ -3,7 +3,7 @@
 #include "Engine/Core.hpp"
 #include "Core/Config/Config.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 
 class Scene: public Core::ISerializable
 {
@@ -16,19 +16,19 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addSceneObject(EC::EntityPtr<SceneObject> sceneObject);
+    void addSceneObject(EC::EntityPtr<GameObject> gameObject);
 
-    template <class T> T_EXTENDS(T, SceneObject)
+    template <class T> T_EXTENDS(T, GameObject)
 	EC::EntityPtr<T> createSceneObject()
 	{
         PROFILER_CPU()
-        CHECK_MSG(IS_BASE_OF(SceneObject, T), "T class is not derived from SceneObject");
-		EC::EntityPtr<SceneObject> entityPtr = ECManager.requestEntity<T>();
+        CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
+		EC::EntityPtr<GameObject> entityPtr = ECManager.requestEntity<T>();
         entityPtr->init();
         addSceneObject(entityPtr);
         return entityPtr;
 	}
-    void removeSceneObject(EC::EntityPtr<SceneObject> sceneObject);
+    void removeSceneObject(EC::EntityPtr<GameObject> gameObject);
     void update();
     void flushNewSceneObjects();
     bool thereAreNewSceneObjects() const;
@@ -38,8 +38,8 @@ private:
 
 private:
     Core::HashedString mSceneName;
-	std::list<EC::EntityPtr<SceneObject>> mSceneObjects;
-	std::list<EC::EntityPtr<SceneObject>> mNewSceneObjects;
+	std::list<EC::EntityPtr<GameObject>> mSceneObjects;
+	std::list<EC::EntityPtr<GameObject>> mNewSceneObjects;
 
 	Core::f32 mSize = 0.0f;
 	std::string mPath;

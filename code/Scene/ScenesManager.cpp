@@ -1,6 +1,6 @@
 #include "ScenesManager.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/SceneObject.hpp"
+#include "Scene/GameObject.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Window/WindowManager.hpp"
@@ -44,7 +44,7 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraSceneObject = ECManager.requestEntity<SceneObject>();
+    mCameraSceneObject = ECManager.requestEntity<GameObject>();
 	mCameraSceneObject->init();
 
 	// mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));

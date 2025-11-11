@@ -3,7 +3,7 @@
 #include "UI/Module.hpp"
 #include "UIVector.hpp"
 
-class UITransform: public SceneObject
+class UITransform: public GameObject
 {
 public:
     virtual void init() override;

@@ -32,7 +32,7 @@ public:
 	UIElement* mUIElement = nullptr;
 };
 
-class UIElement: public SceneObject
+class UIElement: public GameObject
 {
 public:
     virtual void initFromConfig(const UIElementConfig& config);

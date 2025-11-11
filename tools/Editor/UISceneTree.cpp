@@ -5,7 +5,7 @@
 
 void UISceneTree::init()
 {
-    SceneObject::init();
+    GameObject::init();
 }
 
 void UISceneTree::update()
@@ -25,8 +25,8 @@ void UISceneTree::update()
     setParent(ECManager.getEntityPtr(this)).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
-    const std::list<EC::EntityPtr<SceneObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();
-    std::list<EC::EntityPtr<SceneObject>> objectsInmutableList;
+    const std::list<EC::EntityPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();
+    std::list<EC::EntityPtr<GameObject>> objectsInmutableList;
     FOR_LIST(it, objects)
     {
         objectsInmutableList.push_back(*it);
@@ -48,5 +48,5 @@ void UISceneTree::update()
 void UISceneTree::onDestroy()
 {
 
-    SceneObject::onDestroy();
+    GameObject::onDestroy();
 }
