@@ -11,7 +11,7 @@ void SceneObject::init()
     EC::Entity::init();
     mTransform = ECManager.requestComponent<Transform>();
     mTransform->init();
-    ECManager.addComponent(EC::TEntityPtr(this), mTransform);
+    ECManager.addComponent(ECManager.getEntityPtr(this), mTransform);
 }
 
 IMPLEMENT_SERIALIZATION(SceneObject)

@@ -1,4 +1,5 @@
 #include "UI/UIElements/UIDropdown.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIElements/UIText.hpp"
@@ -78,7 +79,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 				EC::TEntityPtr<UIDropdownButton> button = uiBuilder.getUIElement<UIDropdownButton>();
 				button->setOnPressedCallback(onPressedCallback);
 
-				button->setParentDropdown(this);
+				button->setParentDropdown(ECManager.getEntityPtr(this));
 
 				mButtons.push_back(button);
 			}

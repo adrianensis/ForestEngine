@@ -25,7 +25,7 @@ private:
 	std::unordered_map<Core::HashedString, Core::WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<Core::HashedString> mLoadRequests;
 
-    EC::EntityPtr mSceneObjectController;
+    EC::TEntityPtr<SceneObject> mSceneObjectController;
 	EC::TEntityPtr<SceneObject> mCameraSceneObject;
 
 public:

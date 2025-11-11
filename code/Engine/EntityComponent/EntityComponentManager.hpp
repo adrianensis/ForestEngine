@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Engine/EntityComponent/Component.hpp"
-#include "Engine/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/EntityComponentPool.hpp"
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include <string>
@@ -22,13 +21,13 @@ class EntityComponentManager: public Core::Singleton<EntityComponentManager>
 public:
     void init()
     {
-        mEntitiesPool.init(100000);
-        mComponentsPool.init(100000);
+        mECPool.getEntitiesPool().init(100000);
+        mECPool.getComponentsPool().init(100000);
     }
     void terminate()
     { 
-        mEntitiesPool.terminate();
-        mComponentsPool.terminate();
+        mECPool.getEntitiesPool().terminate();
+        mECPool.getComponentsPool().terminate();
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -67,22 +66,21 @@ public:
     TComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
-        Core::PoolElementPtr poolPtr = mComponentsPool.requestElement<T>();
-        ComponentPtr componentPtr = poolPtr;
-        if(componentPtr.isValid())
+        T* component = nullptr;
+        Core::PoolElementPtr poolPtr = mECPool.getComponentsPool().requestElement<T>();
+        if(poolPtr.isValid())
         {
-            T& comp = mComponentsPool.getElement<T>(componentPtr);
-            comp.onRecycle(componentPtr.mSlot);
+            component = &mECPool.getComponentsPool().getElement<T>(poolPtr);
+            component->onRecycle(poolPtr.mSlot);
             #ifdef ENGINE_BUILD_DEBUG
-            comp.mDebugString = Core::ClassManager::getClassMetadataById(componentPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(componentPtr.mSlot.getSlot());
-            componentPtr.mDebugPointer = &comp;
+            component->mDebugString = Core::ClassManager::getClassMetadataById(poolPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(poolPtr.mSlot.getSlot());
             #endif
         }
         else
         {
-            CHECK_MSG(false, "Invalid Component!");
+            CHECK_MSG(false, "Invalid Entity!");
         }
-
+        TComponentPtr<T> componentPtr(component, &mECPool);
         return componentPtr;
     }
 
@@ -94,6 +92,7 @@ public:
         CHECK_MSG(componentPtr->getOwnerEntity() != entityPtr, "Component is already assigned to Entity!");
 
         componentPtr->setOwnerEntity(entityPtr);
+        componentPtr->mIsStatic = entityPtr->mIsStatic;
         CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
 
         Core::ClassId id = entityPtr.mClassId;
@@ -141,7 +140,7 @@ public:
             ECManager.notifyListenersOnComponentRemoved(componentPtr);
             componentPtr->destroy();
 
-            mComponentsPool.removeElement(componentPtr);
+            mECPool.getComponentsPool().removeElement(componentPtr);
         }
     }
 
@@ -157,7 +156,7 @@ public:
             ECManager.notifyListenersOnComponentRemoved((*it));
             (*it)->destroy();
 
-            mComponentsPool.removeElement((*it));
+            mECPool.getComponentsPool().removeElement((*it));
         }
 
         components.clear();
@@ -194,7 +193,13 @@ public:
     template<class T> T_EXTENDS(T, Component)
     T& getComponent(ComponentPtr componentPtr) const
     {
-        return mComponentsPool.getElement<T>(componentPtr.mSlot);
+        return mECPool.getComponentsPool().getElement<T>(componentPtr.mSlot);
+    }
+
+    template<class T> T_EXTENDS(T, Component)
+    TComponentPtr<T> getComponentPtr(T* component)
+    {
+        return TComponentPtr<T>(component, &mECPool);
     }
 
     void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const
@@ -229,40 +234,40 @@ public:
     template<class T> T_EXTENDS(T, Entity)
     TEntityPtr<T> requestEntity()
     {
-        Core::PoolElementPtr poolPtr = mEntitiesPool.requestElement<T>();
-        EntityPtr entityPtr = poolPtr;
-        if(entityPtr.isValid())
+        T* entity = nullptr;
+        Core::PoolElementPtr poolPtr = mECPool.getEntitiesPool().requestElement<T>();
+        if(poolPtr.isValid())
         {
-            T& entity = mEntitiesPool.getElement<T>(poolPtr);
-            entity.onRecycle(entityPtr.mSlot);
+            entity = &mECPool.getEntitiesPool().getElement<T>(poolPtr);
+            entity->onRecycle(poolPtr.mSlot);
             #ifdef ENGINE_BUILD_DEBUG
-            entity.mDebugString = Core::ClassManager::getClassMetadataById(entityPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(entityPtr.mSlot.getSlot());
-            entityPtr.mDebugPointer = &entity;
+            entity->mDebugString = Core::ClassManager::getClassMetadataById(poolPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(poolPtr.mSlot.getSlot());
             #endif
         }
         else
         {
             CHECK_MSG(false, "Invalid Entity!");
         }
-
+        TEntityPtr<T> entityPtr(entity, &mECPool);
         return entityPtr;
     }
 
     void removeEntity(EntityPtr& entityPtr)
     {
-        mEntitiesPool.removeElement(entityPtr);
+        mECPool.getEntitiesPool().removeElement(entityPtr);
         entityPtr.reset();
     }
 
+    template<class T> T_EXTENDS(T, Entity)
+    TEntityPtr<T> getEntityPtr(T* entity)
+    {
+        return TEntityPtr<T>(entity, &mECPool);
+    }
+
 private:
-    Core::Pool<Entity> mEntitiesPool;
-    Core::Pool<Component> mComponentsPool;
+    EntityComponentPool mECPool;
     std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
     std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<ComponentPtr>>> mEntityComponents;
-
-public:
-    CRGET(EntitiesPool)
-    CRGET(ComponentsPool)
 };
 REGISTER_CLASS(EntityComponentManager);
 NS_END

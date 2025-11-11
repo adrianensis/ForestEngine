@@ -1,6 +1,7 @@
 #include "UI/UIElements/UIText.hpp"
 #include "Engine/EntityComponent/Entity.hpp"
 
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 #include "GPU/GPUInstance.hpp"
@@ -30,7 +31,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 
 	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    ECManager.addComponent(EC::TEntityPtr(this), renderer);
+    ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
 
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Maths::Cube textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;
@@ -123,7 +124,7 @@ void UIText::setText(Core::HashedString text)
                     setText(Core::HashedString(std::string() + character)).
                     setLayer(mConfig.mLayer + 1).
                     setIsAffectedByLayout(false).
-                    setParent(this).
+                    setParent(ECManager.getEntityPtr(this)).
                     create<UITextGlyph>().
                     getUIElement<UITextGlyph>();
 

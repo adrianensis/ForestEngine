@@ -1,6 +1,6 @@
 #include "Engine/EntityComponent/Entity.hpp"
 #include "Engine/EntityComponent/Component.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/EntityComponentPool.hpp"
 
 NS_BEGIN(EC)
 Entity::Entity()
@@ -20,12 +20,13 @@ void Entity::setIsActive(bool isActive)
 {
 	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
 
-    const auto& components = ECManager.getComponents(TEntityPtr(this));
-	FOR_LIST(it, components)
-	// FOR_LIST(it, mComponents)
-	{
-		(*it)->setIsActive(isActive);
-	}
+	// TODO: restore
+    // const auto& components = ECManager.getComponents(TEntityPtr(this));
+	// FOR_LIST(it, components)
+	// // FOR_LIST(it, mComponents)
+	// {
+	// 	(*it)->setIsActive(isActive);
+	// }
 }
 
 void Entity::destroy()
@@ -34,7 +35,8 @@ void Entity::destroy()
 	mIsActive = false;
 
 	onDestroy();
-    ECManager.removeComponents(TEntityPtr(this));
+	// TODO: restore
+    // ECManager.removeComponents(TEntityPtr(this));
 }
 
 void Entity::onRecycle(Core::Slot newSlot)
@@ -62,6 +64,6 @@ IMPLEMENT_DESERIALIZATION(Entity)
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return ECManager.getEntitiesPool().getElementBase(*this);
+    return mECPool->getEntitiesPool().getElementBase(*this);
 }
 NS_END

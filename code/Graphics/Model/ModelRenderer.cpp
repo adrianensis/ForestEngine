@@ -23,7 +23,7 @@ void ModelRenderer::onComponentAdded()
 		rendererData.mGPUShaderStencilData = mModelRendererData.mGPUShaderStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
-        EC::EntityPtr parent = getOwnerEntity();
+        EC::TEntityPtr<EC::Entity> parent = getOwnerEntity();
         EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
         renderer->init(rendererData);
     	ECManager.addComponent(parent, renderer);

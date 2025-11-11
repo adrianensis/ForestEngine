@@ -54,7 +54,7 @@ void UIButton::setText(Core::HashedString text)
 			setTextScale(mConfig.mTextScale).
 			setLayer(mConfig.mLayer + 1).
 			setIsAffectedByLayout(false).
-			setParent(this).
+			setParent(ECManager.getEntityPtr(this)).
 			create<UIText>().
 			getUIElement<UIText>();
 		}

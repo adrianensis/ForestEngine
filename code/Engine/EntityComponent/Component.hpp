@@ -4,6 +4,7 @@
 #include "Core/HashedString/HashedString.hpp"
 
 NS_BEGIN(EC)
+class EntityComponentPool;
 class EntityPtr;
 
 class Component: public Core::ISerializable, public Event::IEventObject
@@ -33,30 +34,34 @@ public:
 
 private:
 
-class ComponentOwner
-{
-public:
-
-    ComponentOwner() = default;
-    ComponentOwner(Core::ClassId id, Core::Slot slot)
+    class ComponentOwner
     {
-        mClassId = id;
-        mSlot = slot;
-    }
+    public:
 
-    void reset()
-    {
-        mSlot.reset();
-        mClassId = 0;
-    }
+        ComponentOwner() = default;
+        ComponentOwner(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool)
+        {
+            mClassId = id;
+            mSlot = slot;
+            mECPool = ecPool;
+        }
 
-public:
-    Core::Slot mSlot;
-    Core::ClassId mClassId = 0;
-};
+        void reset()
+        {
+            mSlot.reset();
+            mClassId = 0;
+            mECPool = nullptr;
+        }
+
+    public:
+        Core::Slot mSlot;
+        Core::ClassId mClassId = 0;
+        Core::Ptr<EntityComponentPool> mECPool;
+    };
 
 public:
     bool mAlreadyAddedToSystem = false;
+    bool mIsStatic = false;
 
 private:
 	bool mIsActive = true;
@@ -83,24 +88,24 @@ REGISTER_CLASS(Component);
 
 class ComponentPtr: public Core::PoolElementPtr
 {
+template<class T>
+friend class TComponentPtr;
 public:
     ComponentPtr(): Core::PoolElementPtr()
     {
     }
-    ComponentPtr(Core::ClassId id, Core::Slot slot): Core::PoolElementPtr(id, slot)
+    ComponentPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
     {
+        mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
         #endif
     }
-    ComponentPtr(const ComponentPtr& other): ComponentPtr(other.mClassId, other.mSlot)
+    ComponentPtr(const ComponentPtr& other): ComponentPtr(other.mClassId, other.mSlot, other.mECPool)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = other.mDebugPointer;
         #endif
-    }
-    ComponentPtr(const Core::PoolElementPtr& other): ComponentPtr(other.mClassId, other.mSlot)
-    {
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -116,7 +121,7 @@ public:
 
 protected:
     Component& getInternal() const;
-
+    Core::Ptr<EntityComponentPool> mECPool;
 public:
     #ifdef ENGINE_BUILD_DEBUG
     Component* mDebugPointer = nullptr;
@@ -128,12 +133,13 @@ class TComponentPtr : public ComponentPtr
 {
 public:
     TComponentPtr() = default;
-    TComponentPtr(const T* component)
+    TComponentPtr(const T* component, Core::Ptr<EntityComponentPool> ecPool)
     {
+        mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
-        *this = TComponentPtr(id, component->getSlot());
+        *this = TComponentPtr(id, component->getSlot(), mECPool);
     }
-    TComponentPtr(Core::ClassId id, Core::Slot slot): ComponentPtr(id, slot)
+    TComponentPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): ComponentPtr(id, slot, ecPool)
     {
         checkValid();
     }
@@ -151,6 +157,7 @@ public:
     {
         if (this != &other)
         {
+            mECPool = other.mECPool;
             mClassId = other.mClassId;
             mSlot = other.mSlot;
             #ifdef ENGINE_BUILD_DEBUG

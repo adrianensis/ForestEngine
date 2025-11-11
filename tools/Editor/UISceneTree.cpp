@@ -22,7 +22,7 @@ void UISceneTree::update()
 	setAdjustSizeToText(true).
 	setIsAffectedByLayout(true).
 	setLayout(UILayout::VERTICAL).
-    setParent(this).
+    setParent(ECManager.getEntityPtr(this)).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
     const std::list<EC::TEntityPtr<SceneObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();

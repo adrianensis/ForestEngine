@@ -6,6 +6,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Graphics/Model/ModelRenderer.hpp"
+#include "Scene/SceneObject.hpp"
 #include "Window/WindowManager.hpp"
 
 #include "Scene/Module.hpp"
@@ -253,7 +254,7 @@ void Editor::terminate()
 
 }
 
-EC::EntityPtr Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
+EC::TEntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 {
 	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	// sceneObject->mIsStatic = false;
@@ -286,7 +287,7 @@ EC::EntityPtr Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 	return sceneObject;
 }
 
-EC::EntityPtr Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
+EC::TEntityPtr<SceneObject> Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 {
 	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = false;
@@ -304,7 +305,7 @@ EC::EntityPtr Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 	return sceneObject;
 }
 
-EC::EntityPtr Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
+EC::TEntityPtr<SceneObject> Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
 {
 	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
     sceneObject->mIsStatic = false;
@@ -322,11 +323,11 @@ EC::EntityPtr Editor::createDirectionalLight(const Maths::Vector3& v, const Math
 	return sceneObject;
 }
 
-EC::EntityPtr Editor::mousePick()
+EC::TEntityPtr<SceneObject> Editor::mousePick()
 {
 
     Core::f32 speed = 100 * Time::Time::getInstance().getDeltaTimeSeconds();
-    EC::EntityPtr obj;
+    EC::TEntityPtr<SceneObject> obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
@@ -354,7 +355,7 @@ EC::EntityPtr Editor::mousePick()
     return obj;
 }
 
-EC::EntityPtr Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
+EC::TEntityPtr<SceneObject> Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 

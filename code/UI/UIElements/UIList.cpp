@@ -52,7 +52,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	
 	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    ECManager.addComponent(EC::TEntityPtr(this), renderer);
+    ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
 
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
@@ -97,7 +97,7 @@ void UIList::toggle()
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
-            setParent(this);
+            setParent(ECManager.getEntityPtr(this));
 
 		FOR_LIST(it, mEntries)
 		{

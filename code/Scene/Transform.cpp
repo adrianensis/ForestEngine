@@ -19,7 +19,7 @@ void Transform::onDestroy()
 {
     if(mParent)
     {
-        mParent->removeChild(this);
+        mParent->removeChild(ECManager.getComponentPtr(this));
     }
 }
 
@@ -227,7 +227,7 @@ const Maths::Matrix4& Transform::getViewMatrix() const
 
 void Transform::addChild(EC::TComponentPtr<Transform> child)
 {
-    child->mParent = this;
+    child->mParent = ECManager.getComponentPtr(this);
     mChildren.insert_or_assign(child->getComponentId(), child);
 }
 

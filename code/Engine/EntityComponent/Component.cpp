@@ -1,6 +1,6 @@
 #include "Engine/EntityComponent/Component.hpp"
 #include "Engine/EntityComponent/Entity.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Engine/EntityComponent/EntityComponentPool.hpp"
 
 NS_BEGIN(EC)
 Component::Component()
@@ -18,17 +18,17 @@ Component::~Component()
 
 bool Component::isStatic() const
 {
-	return getOwnerEntity()->mIsStatic;
+	return mIsStatic;
 }
 
 bool Component::isActive() const
 {
-	return (mIsDestroyed || !getOwnerEntity()) ? false : mIsActive;
+	return mIsDestroyed ? false : mIsActive;
 }
 
 void Component::setIsActive(bool isActive)
 {
-	mIsActive = (mIsDestroyed || !getOwnerEntity()) ? false : isActive;
+	mIsActive = isActive;
 }
 
 void Component::destroy()
@@ -52,13 +52,14 @@ void Component::onDestroy()
 
 EntityPtr Component::getOwnerEntity() const
 {
-    EntityPtr entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot);
+    // TODO: Component::getOwnerEntity fix nullptr
+    EntityPtr entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot, mOwnerEntity.mECPool);
     return entityPtr;
 }
 
 void Component::setOwnerEntity(const EntityPtr& ownerEntity)
 {
-    mOwnerEntity = ComponentOwner(ownerEntity.mClassId, ownerEntity.mSlot);
+    mOwnerEntity = ComponentOwner(ownerEntity.mClassId, ownerEntity.mSlot, ownerEntity.mECPool);
 }
 
 IMPLEMENT_SERIALIZATION(Component)
@@ -73,6 +74,6 @@ IMPLEMENT_DESERIALIZATION(Component)
 Component& ComponentPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return ECManager.getComponentsPool().getElementBase(*this);
+    return mECPool->getComponentsPool().getElementBase(*this);
 }
 NS_END

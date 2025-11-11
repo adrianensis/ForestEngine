@@ -1,6 +1,7 @@
 #include "UI/UIElements/UIElement.hpp"
 
 #include "Engine/EntityComponent/Entity.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 
@@ -37,7 +38,7 @@ void UIElement::onDestroy()
 
 bool UIElement::hasFocus() const
 {
-	return GET_SYSTEM(UIManager).getFocusedElement() == this;
+	return GET_SYSTEM(UIManager).getFocusedElement() == ECManager.getEntityPtr(this);
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -113,7 +114,7 @@ void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 
 void UIElement::postInit()
 {
-    mRenderer = ECManager.getFirstComponent<MeshRenderer>(EC::TEntityPtr(this));
+    mRenderer = ECManager.getFirstComponent<MeshRenderer>(ECManager.getEntityPtr(this));
 }
 
 void UIElement::subscribeToKeyEvents()
@@ -327,7 +328,7 @@ void UIElement::requestFocus()
         lastFocusedElement->releaseFocus();
     }
 
-    GET_SYSTEM(UIManager).setFocusedElement(this);
+    GET_SYSTEM(UIManager).setFocusedElement(ECManager.getEntityPtr(this));
 
     mInputString.clear();
     setText(Core::HashedString(mInputString));
