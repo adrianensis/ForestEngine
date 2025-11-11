@@ -21,7 +21,7 @@ int main()
     editor->init();
     ECManager.addComponent(controller, editor);
 
-    GET_SYSTEM(ScenesManager).setSceneObjectController(controller);
+    GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 
     engine.run();
     engine.terminate();

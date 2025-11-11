@@ -27,13 +27,13 @@ private:
     EC::EntityPtr<UIText> mFPSCounter;
     EC::EntityPtr<UITransform> mUITransform;
     EC::EntityPtr<UISceneTree> mUISceneTree;
-	EC::EntityPtr<GameObject> mCameraSceneObject;
+	EC::EntityPtr<GameObject> mCameraGameObject;
 	EC::EntityPtr<GameObject> mDirectionalLight;
-	EC::EntityPtr<GameObject> mSelectedSceneObject;
+	EC::EntityPtr<GameObject> mSelectedGameObject;
 	std::list<EC::EntityPtr<GameObject>> mBuildings;
 	EC::EntityPtr<UIAxisGizmo> mAxisViewer;
 
-    std::vector<EC::EntityPtr<GameObject>> mSceneObjectsArray;
+    std::vector<EC::EntityPtr<GameObject>> mGameObjectsArray;
 
     Maths::Vector2 mLastMousePosition;
 };

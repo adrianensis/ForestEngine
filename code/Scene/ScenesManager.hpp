@@ -25,16 +25,16 @@ private:
 	std::unordered_map<Core::HashedString, Core::WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<Core::HashedString> mLoadRequests;
 
-    EC::EntityPtr<GameObject> mSceneObjectController;
-	EC::EntityPtr<GameObject> mCameraSceneObject;
+    EC::EntityPtr<GameObject> mGameObjectController;
+	EC::EntityPtr<GameObject> mCameraGameObject;
 
 public:
     inline static const Core::HashedString smDefaultSceneName = Core::HashedString("Default");
     inline static const Core::HashedString smDefaultUISceneName = Core::HashedString("DefaultUI");
 
 public:
-	GET(SceneObjectController)
-	SET(SceneObjectController)
-	GET(CameraSceneObject)
+	GET(GameObjectController)
+	SET(GameObjectController)
+	GET(CameraGameObject)
 };
 REGISTER_CLASS(ScenesManager);

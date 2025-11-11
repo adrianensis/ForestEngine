@@ -29,7 +29,7 @@ void UIGroup::destroyUIElement(EC::EntityPtr<UIElement> uiElement)
 	if (uiElement)
 	{
 		removeUIElement(uiElement);
-		uiElement->mScene->removeSceneObject(uiElement);
+		uiElement->mScene->removeGameObject(uiElement);
 	}
 }
 
@@ -38,7 +38,7 @@ void UIGroup::destroyAllUIElements()
 	FOR_LIST(it, mUIElements)
 	{
 		EC::EntityPtr<UIElement> element = *it;
-		element->mScene->removeSceneObject(element);
+		element->mScene->removeGameObject(element);
 	}
 
 	mUIElements.clear();

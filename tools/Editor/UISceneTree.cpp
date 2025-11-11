@@ -12,7 +12,7 @@ void UISceneTree::update()
 {
     // FOR_LIST(it, mTexts)
     // {
-    //     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(it->second);
+    //     GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(it->second);
     // }
 
     UIBuilder uiBuilder;
@@ -25,7 +25,7 @@ void UISceneTree::update()
     setParent(ECManager.getEntityPtr(this)).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
-    const std::list<EC::EntityPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewSceneObjects();
+    const std::list<EC::EntityPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
     std::list<EC::EntityPtr<GameObject>> objectsInmutableList;
     FOR_LIST(it, objects)
     {

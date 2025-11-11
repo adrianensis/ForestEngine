@@ -13,29 +13,29 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
     mAxisName = axisName;
     mNegAxisName = Core::HashedString("-" + mAxisName.get());
 
-    EC::EntityPtr<GameObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraSceneObject);
+    EC::EntityPtr<GameObject> cameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
                 ), 1)
         );
     Maths::Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
                 ), 1)
         );
     GET_SYSTEM(DebugRenderer).drawLine(Maths::Line(startLine, endLine), 1, Maths::GeometricSpace::SCREEN, mColor);
 
     Maths::Vector3 startGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
             )
         , 1);
     Maths::Vector3 endGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
             )
         , 1);
     
@@ -73,32 +73,32 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 
 void UISingleAxisGizmo::update()
 {
-    EC::EntityPtr<GameObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraSceneObject);
+    EC::EntityPtr<GameObject> cameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
                 ), 1)
         );
     Maths::Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
                 ), 1)
         );
     GET_SYSTEM(DebugRenderer).drawLine(Maths::Line(startLine, endLine), 1, Maths::GeometricSpace::SCREEN, mColor);
 
-    // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mPositive);
-    // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mNegative);
+    // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mPositive);
+    // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mNegative);
 
     Maths::Vector3 startGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
             )
         , 1);
     Maths::Vector3 endGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
-                cameraSceneObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
+                cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
             )
         , 1);
 
@@ -108,8 +108,8 @@ void UISingleAxisGizmo::update()
 
 void UISingleAxisGizmo::onDestroy()
 {
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mPositive);
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mNegative);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mPositive);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mNegative);
     GameObject::onDestroy();
 }
 
@@ -120,9 +120,9 @@ void UIAxisGizmo::createAxis()
     Maths::Line axisY = Maths::Line(Maths::Vector3(0,1,0)*axisHalfSize, Maths::Vector3(0,-1,0)*axisHalfSize);
     Maths::Line axisZ = Maths::Line(Maths::Vector3(0,0,1)*axisHalfSize, Maths::Vector3(0,0,-1)*axisHalfSize);
 
-    mAxisX = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISingleAxisGizmo>();
-    mAxisY = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISingleAxisGizmo>();
-    mAxisZ = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISingleAxisGizmo>();
+    mAxisX = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISingleAxisGizmo>();
+    mAxisY = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISingleAxisGizmo>();
+    mAxisZ = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISingleAxisGizmo>();
 
     mTransform->addChild(mAxisX->mTransform);
     mTransform->addChild(mAxisY->mTransform);
@@ -142,8 +142,8 @@ void UIAxisGizmo::update()
 
 void UIAxisGizmo::onDestroy()
 {
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mAxisX);
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mAxisY);
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mAxisZ);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mAxisX);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mAxisY);
+    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mAxisZ);
     GameObject::onDestroy();
 }

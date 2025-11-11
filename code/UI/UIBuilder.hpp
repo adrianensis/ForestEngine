@@ -57,7 +57,7 @@ public:
         mConfig.mUIElementClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
-	    EC::EntityPtr<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createSceneObject<T>();
+	    EC::EntityPtr<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createGameObject<T>();
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 

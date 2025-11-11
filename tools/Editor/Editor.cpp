@@ -39,9 +39,9 @@ void Editor::firstUpdate()
 {
     PROFILER_CPU();
 
-	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-	mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
-    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
+	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
+	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
     Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -76,7 +76,7 @@ void Editor::firstUpdate()
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
 	// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(100,0,0), 100.0f, Maths::Vector3(90,0,0), false);
 	// importModel("BrainStem/glTF/BrainStem.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
-    // mSceneObjectsArray.push_back(obj);
+    // mGameObjectsArray.push_back(obj);
 	
 	importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
     Core::i32 size = 12;            
@@ -99,7 +99,7 @@ void Editor::firstUpdate()
 
 
 	// obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", Maths::Vector3(0,270,0), 100.0f, Maths::Vector3(0,180,180), false);
-    // mSceneObjectsArray.push_back(obj);
+    // mGameObjectsArray.push_back(obj);
 	// importModel("Fox/glTF/Fox.gltf", Maths::Vector3(300,0,0), 10.0f, Maths::Vector3(0,0,0), true);
 	// importModel2("BrainStem/glTF/BrainStem.gltf", Maths::Vector3(0,0,0), 20.0f, 0);
 	// importModel("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(0,0,0), 20.0f, Maths::Vector3(0,0,0), true);
@@ -110,7 +110,7 @@ void Editor::firstUpdate()
     createUI();
     // mousePick();
 
-    // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UISceneTree>();
+    // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
     // mUISceneTree->mTransform->setLocalPosition(Maths::Vector2(-0.9, 0.8));
     // mUISceneTree->update();
 }
@@ -119,11 +119,11 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
-	EC::ComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+	EC::ComponentPtr<Transform> cameraTransform = mCameraGameObject->mTransform;
 	Core::f32 speed = 400 * Time::Time::getInstance().getDeltaTimeSeconds();
 
-	Maths::Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
+	Maths::Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
 
 	if(GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_LEFT))
@@ -175,11 +175,11 @@ void Editor::update()
     // currentMousePosition.set(-1,0,0);
     // LOG_VAR(currentMousePosition.x);
     // LOG_VAR(currentMousePosition.y);
-    if(mSelectedSceneObject)
+    if(mSelectedGameObject)
     {
-        Maths::Vector3 position = camera->getGPUCamera().screenToWorld(currentMousePosition, mSelectedSceneObject->mTransform->getWorldPosition().z);
-        // position.z = mSelectedSceneObject->mTransform->getLocalPosition().z;
-        mSelectedSceneObject->mTransform->setLocalPosition(position);
+        Maths::Vector3 position = camera->getGPUCamera().screenToWorld(currentMousePosition, mSelectedGameObject->mTransform->getWorldPosition().z);
+        // position.z = mSelectedGameObject->mTransform->getLocalPosition().z;
+        mSelectedGameObject->mTransform->setLocalPosition(position);
         // LOG_VAR(position.x);
         // LOG_VAR(position.y);
         // LOG_VAR(position.z);
@@ -256,7 +256,7 @@ void Editor::terminate()
 
 EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 {
-	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	// gameObject->mIsStatic = false;
 	// gameObject->mTransform->setLocalPosition(v);
 	// gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -289,7 +289,7 @@ EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f3
 
 EC::EntityPtr<GameObject> Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 {
-	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -307,7 +307,7 @@ EC::EntityPtr<GameObject> Editor::createPointLight(const Maths::Vector3& v, Core
 
 EC::EntityPtr<GameObject> Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
 {
-	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->lookAt(v + dir);
@@ -328,11 +328,11 @@ EC::EntityPtr<GameObject> Editor::mousePick()
 
     Core::f32 speed = 100 * Time::Time::getInstance().getDeltaTimeSeconds();
     EC::EntityPtr<GameObject> obj;
-    FOR_LIST(it, mSceneObjectsArray)
+    FOR_LIST(it, mGameObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
         // const Maths::Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // EC::ComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // EC::ComponentPtr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Maths::Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -359,7 +359,7 @@ EC::EntityPtr<GameObject> Editor::importModel( const std::string& pFile, const M
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<GameObject>();
+    EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Maths::Vector3::smOne * size);
@@ -389,21 +389,21 @@ void Editor::handleMouse()
 {
 	if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
 	{
-        // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
+        // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mBuildings.front());
         // mBuildings.pop_front();
-        // EC::ComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // EC::ComponentPtr<Camera> camera = mCameraGameObject->getFirstComponent<Camera>();
         // Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
         // Maths::Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Maths::Vector3(0,180,180), false);
-        // mSceneObjectsArray.push_back(obj);
-        if(!mSelectedSceneObject)
+        // mGameObjectsArray.push_back(obj);
+        if(!mSelectedGameObject)
         {
-            mSelectedSceneObject = mousePick();
+            mSelectedGameObject = mousePick();
         }
 	}
     else
     {
-        mSelectedSceneObject.reset();
+        mSelectedGameObject.reset();
     }
     
     if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
@@ -415,7 +415,7 @@ void Editor::handleMouse()
 
 void Editor::createUI()
 {
-    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UIAxisGizmo>();
+    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
     mAxisViewer->mTransform->setLocalPosition(Maths::Vector2(-0.9, -0.8));
     mAxisViewer->createAxis();
 
@@ -507,7 +507,7 @@ void Editor::createUI()
 	// }).
     // toggle();
 
-    // mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createSceneObject<UITransform>();
+    // mUITransform = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UITransform>();
     // mUITransform->mTransform->setLocalPosition(Maths::Vector2(-0.7, -0.8));
     // mUITransform->mIsStatic = true;
     // mUIVector->update();

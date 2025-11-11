@@ -6,7 +6,7 @@
 
 void Scene::terminate()
 {
-    destroySceneObjects();
+    destroyGameObjects();
 }
 
 void Scene::init(Core::HashedString sceneName)
@@ -51,7 +51,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 {
 	Core::f32 maxSize = 0;
 
-	// FOR_LIST(it, mSceneObjects)
+	// FOR_LIST(it, mGameObjects)
 	// {
 	// 	if((*it))
 	// 	{
@@ -68,7 +68,7 @@ IMPLEMENT_SERIALIZATION(Scene)
 	// 	}
 	// }
 
-//	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEC::EntityPtrBase gameObject)
+//	SERIALIZE_LIST_IF("objects", mGameObjects, [](OwnerEC::EntityPtrBase gameObject)
 //	{
 //		return gameObject->mShouldPersist;
 //	})
@@ -92,7 +92,7 @@ IMPLEMENT_DESERIALIZATION(Scene)
 //		FOR_LIST(it, tmpList)
 //		{
 //			(*it)->init();
-//			addSceneObject(*it);
+//			addGameObject(*it);
 //		}
 //	}
 }
@@ -104,35 +104,35 @@ void Scene::loadScene()
 
 void Scene::unloadScene()
 {
-	destroySceneObjects();
+	destroyGameObjects();
 }
 
-void Scene::addSceneObject(EC::EntityPtr<GameObject> gameObject)
+void Scene::addGameObject(EC::EntityPtr<GameObject> gameObject)
 {
     if(gameObject)
     {
         gameObject->mScene = this;
         gameObject->onAddedToScene();
-        mNewSceneObjects.emplace_back(gameObject);
+        mNewGameObjects.emplace_back(gameObject);
     }
 }
 
-void Scene::removeSceneObject(EC::EntityPtr<GameObject> gameObject)
+void Scene::removeGameObject(EC::EntityPtr<GameObject> gameObject)
 {
 	if (gameObject && !gameObject->getIsDestroyed())
 	{
         ECManager.destroyEntity(gameObject);
 
-        auto it = std::find(mSceneObjects.begin(), mSceneObjects.end(), gameObject);
-        if (it != mSceneObjects.end())
+        auto it = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
+        if (it != mGameObjects.end())
         {
-            mSceneObjects.erase(it);
+            mGameObjects.erase(it);
         }
 
-        auto itNew = std::find(mNewSceneObjects.begin(), mNewSceneObjects.end(), gameObject);
-        if (itNew != mNewSceneObjects.end())
+        auto itNew = std::find(mNewGameObjects.begin(), mNewGameObjects.end(), gameObject);
+        if (itNew != mNewGameObjects.end())
         {
-            mNewSceneObjects.erase(itNew);
+            mNewGameObjects.erase(itNew);
         }
 
         ECManager.removeEntity(gameObject);
@@ -141,44 +141,44 @@ void Scene::removeSceneObject(EC::EntityPtr<GameObject> gameObject)
 
 void Scene::update()
 {
-	/*if (mSceneObjectsToLoadIndex < mSceneObjectsToLoadTotal)
+	/*if (mGameObjectsToLoadIndex < mGameObjectsToLoadTotal)
 	{
-		FOR_RANGE_COND(i, 0, mMaxSceneObjectsToLoadPerFrame, mSceneObjectsToLoadIndex < mSceneObjectsToLoadTotal)
+		FOR_RANGE_COND(i, 0, mMaxGameObjectsToLoadPerFrame, mGameObjectsToLoadIndex < mGameObjectsToLoadTotal)
 		{
 			std::string className = "GameObject"; //mLoadSceneConfig->at("class").get<std::string>();
 
 			GameObject *gameObject = (GameObject*) INSTANCE_BY_NAME(className); //Core::Memory::fromClassName<GameObject>(className));
 			gameObject->init();
 			gameObject->deserialize(Core::JSON());
-			addSceneObject(gameObject);
-			mSceneObjectsToLoadIndex += 1;
+			addGameObject(gameObject);
+			mGameObjectsToLoadIndex += 1;
 		}
 	}*/
 
-	if (thereAreNewSceneObjects())
+	if (thereAreNewGameObjects())
 	{
-		flushNewSceneObjects();
+		flushNewGameObjects();
 	}
 }
 
-void Scene::flushNewSceneObjects()
+void Scene::flushNewGameObjects()
 {
-	FOR_LIST(it, mNewSceneObjects)
+	FOR_LIST(it, mNewGameObjects)
 	{
-		mSceneObjects.emplace_back(std::move(*it));
+		mGameObjects.emplace_back(std::move(*it));
 	}
 
-	mNewSceneObjects.clear();
+	mNewGameObjects.clear();
 }
 
-bool Scene::thereAreNewSceneObjects() const
+bool Scene::thereAreNewGameObjects() const
 {
-	return mNewSceneObjects.size() > 0;
+	return mNewGameObjects.size() > 0;
 }
 
-void Scene::destroySceneObjects()
+void Scene::destroyGameObjects()
 {
-	std::list<EC::EntityPtr<GameObject>> immutableList(mSceneObjects);
+	std::list<EC::EntityPtr<GameObject>> immutableList(mGameObjects);
 
 	FOR_LIST(it, immutableList)
 	{
@@ -193,5 +193,5 @@ void Scene::destroySceneObjects()
         }
 	}
 
-    mSceneObjects.clear();
+    mGameObjects.clear();
 }

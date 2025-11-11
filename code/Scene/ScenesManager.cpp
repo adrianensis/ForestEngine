@@ -7,17 +7,17 @@
 
 void ScenesManager::terminate() 
 {
-    if(mSceneObjectController)
+    if(mGameObjectController)
     {
-        ECManager.destroyEntity(mSceneObjectController);
-        mSceneObjectController.reset();
+        ECManager.destroyEntity(mGameObjectController);
+        mGameObjectController.reset();
     }
 
-	if (mCameraSceneObject)
+	if (mCameraGameObject)
 	{
-        EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
-        ECManager.destroyEntity(mCameraSceneObject);
-        mCameraSceneObject.reset();
+        EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+        ECManager.destroyEntity(mCameraGameObject);
+        mCameraGameObject.reset();
 	}
 
     FOR_MAP(it, mScenes)
@@ -44,15 +44,15 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraSceneObject = ECManager.requestEntity<GameObject>();
-	mCameraSceneObject->init();
+    mCameraGameObject = ECManager.requestEntity<GameObject>();
+	mCameraGameObject->init();
 
-	// mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));
-	mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
+	// mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));
+	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
     EC::ComponentPtr<Camera> camera = ECManager.requestComponent<Camera>();
 	camera->init();
-    ECManager.addComponent(mCameraSceneObject, camera);
+    ECManager.addComponent(mCameraGameObject, camera);
 
 	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), 90);
 
@@ -63,7 +63,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
+    EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

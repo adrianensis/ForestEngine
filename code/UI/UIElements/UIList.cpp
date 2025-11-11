@@ -162,7 +162,7 @@ void UIList::setEntriesVisibility(bool visible)
 	else {
 		if(!mButtons->isEmpty()){
 			FOR_LIST(it, mButtons){
-				mScene->removeSceneObject(it.get());
+				mScene->removeGameObject(it.get());
 			}
 
 			mButtons->clear();

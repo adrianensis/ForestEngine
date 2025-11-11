@@ -14,9 +14,9 @@ public:
     virtual void init();
     virtual void firstUpdate();
     virtual void update();
-    virtual void onEnterCollision(GameObject *otherSceneObject);
-    virtual void onCollision(GameObject *otherSceneObject);
-    virtual void onExitCollision(GameObject *otherSceneObject);
+    virtual void onEnterCollision(GameObject *otherGameObject);
+    virtual void onCollision(GameObject *otherGameObject);
+    virtual void onExitCollision(GameObject *otherGameObject);
     virtual void terminate();
     void onDestroy() override;
 	

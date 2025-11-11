@@ -16,30 +16,30 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addSceneObject(EC::EntityPtr<GameObject> gameObject);
+    void addGameObject(EC::EntityPtr<GameObject> gameObject);
 
     template <class T> T_EXTENDS(T, GameObject)
-	EC::EntityPtr<T> createSceneObject()
+	EC::EntityPtr<T> createGameObject()
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
 		EC::EntityPtr<GameObject> entityPtr = ECManager.requestEntity<T>();
         entityPtr->init();
-        addSceneObject(entityPtr);
+        addGameObject(entityPtr);
         return entityPtr;
 	}
-    void removeSceneObject(EC::EntityPtr<GameObject> gameObject);
+    void removeGameObject(EC::EntityPtr<GameObject> gameObject);
     void update();
-    void flushNewSceneObjects();
-    bool thereAreNewSceneObjects() const;
+    void flushNewGameObjects();
+    bool thereAreNewGameObjects() const;
 
 private:
-    void destroySceneObjects();
+    void destroyGameObjects();
 
 private:
     Core::HashedString mSceneName;
-	std::list<EC::EntityPtr<GameObject>> mSceneObjects;
-	std::list<EC::EntityPtr<GameObject>> mNewSceneObjects;
+	std::list<EC::EntityPtr<GameObject>> mGameObjects;
+	std::list<EC::EntityPtr<GameObject>> mNewGameObjects;
 
 	Core::f32 mSize = 0.0f;
 	std::string mPath;
@@ -47,8 +47,8 @@ private:
 	Config::Config mLoadSceneConfig;
 
 public:
-	CRGET(SceneObjects)
-	CRGET(NewSceneObjects)
+	CRGET(GameObjects)
+	CRGET(NewGameObjects)
 	GET(Size)
 	GET(Path)
 };
