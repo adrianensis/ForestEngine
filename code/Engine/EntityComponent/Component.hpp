@@ -57,18 +57,12 @@ private:
 	bool mIsActive = true;
 	bool mIsDestroyed = false;
 	Core::Slot mSlot;
-
-	Core::u64 mComponentId = 0;
-    // Important: starts by 1, 0 is reserved for null
-	inline static Core::u64 smComponentIdCounter = 1;
-
     
 public:
     #ifdef ENGINE_BUILD_DEBUG
     Core::HashedString mDebugString;
     #endif
     GET_SET(ComponentOwner)
-    GET(ComponentId)
 	GET(IsDestroyed)
 	GET(Slot)
 };

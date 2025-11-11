@@ -5,10 +5,7 @@
 NS_BEGIN(EC)
 Entity::Entity()
 {
-    if (mEntityId == 0)
-    {
-        mEntityId = smEntityIdCounter++;
-    }
+
 }
 
 void Entity::init()
@@ -23,13 +20,11 @@ void Entity::setIsActive(bool isActive)
 
 void Entity::destroy()
 {
-	mIsPendingToBeDestroyed = true;
 	mIsActive = false;
 
 	onDestroy();
 
 	mIsDestroyed = true;
-	mIsPendingToBeDestroyed = false;
 }
 
 void Entity::onRecycle(Core::Slot newSlot)

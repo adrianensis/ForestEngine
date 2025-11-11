@@ -119,7 +119,7 @@ void Scene::addSceneObject(EC::EntityPtr<GameObject> gameObject)
 
 void Scene::removeSceneObject(EC::EntityPtr<GameObject> gameObject)
 {
-	if (gameObject && !gameObject->getIsDestroyed() && !gameObject->getIsPendingToBeDestroyed())
+	if (gameObject && !gameObject->getIsDestroyed())
 	{
         ECManager.destroyEntity(gameObject);
 

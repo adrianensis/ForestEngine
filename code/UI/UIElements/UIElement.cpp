@@ -440,7 +440,7 @@ GPUShaderStencilData UIElement::calculateStencilData() const
         }
     }
 
-    shaderStencilData.mId = this->getEntityId();
+    shaderStencilData.mId = this->getGameObjectId();
 
     return shaderStencilData;
 }

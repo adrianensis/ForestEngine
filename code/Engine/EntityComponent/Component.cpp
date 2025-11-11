@@ -5,10 +5,6 @@
 NS_BEGIN(EC)
 Component::Component()
 {
-    if (mComponentId == 0)
-    {
-        mComponentId = smComponentIdCounter++;
-    }
 }
 
 Component::~Component()

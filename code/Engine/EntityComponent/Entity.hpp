@@ -14,7 +14,7 @@ public:
 
 	bool isActive() const
 	{
-		return (mIsDestroyed || mIsPendingToBeDestroyed) ? false : mIsActive;
+		return mIsDestroyed ? false : mIsActive;
 	};
 
 	virtual void onDestroy(){};
@@ -25,14 +25,8 @@ public:
 
 private:
 	bool mIsActive = true;
-
-	bool mIsPendingToBeDestroyed = false;
 	bool mIsDestroyed = false;
     Core::Slot mSlot;
-
-	Core::u64 mEntityId = 0;
-    // Important: starts by 1, 0 is reserved for null
-	inline static Core::u64 smEntityIdCounter = 1;
 
 public:
 	Core::HashedString mTag;
@@ -41,10 +35,8 @@ public:
     Core::HashedString mDebugString;
     #endif
     
-	GET(IsPendingToBeDestroyed)
 	GET(IsDestroyed)
 	GET(Slot)
-	GET(EntityId)
 };
 REGISTER_CLASS(Entity);
 

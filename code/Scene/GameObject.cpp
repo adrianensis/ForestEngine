@@ -5,6 +5,14 @@
 #include "Core/Event/EventsManager.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
 
+GameObject::GameObject()
+{
+    if (mGameObjectId == 0)
+    {
+        mGameObjectId = smGameObjectIdCounter++;
+    }
+}
+
 void GameObject::init()
 {
     PROFILER_CPU()
