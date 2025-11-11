@@ -13,13 +13,3 @@ void SceneObject::init()
     mTransform->init();
     ECManager.addComponent(ECManager.getEntityPtr(this), mTransform);
 }
-
-IMPLEMENT_SERIALIZATION(SceneObject)
-{
-	SERIALIZE("transform", mTransform.get())
-}
-
-IMPLEMENT_DESERIALIZATION(SceneObject)
-{
-	DESERIALIZE("transform", mTransform.get())
-}

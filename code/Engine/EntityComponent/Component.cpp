@@ -16,11 +16,6 @@ Component::~Component()
 
 }
 
-bool Component::isStatic() const
-{
-	return mIsStatic;
-}
-
 bool Component::isActive() const
 {
 	return mIsDestroyed ? false : mIsActive;
@@ -60,15 +55,6 @@ EntityPtr Component::getOwnerEntity() const
 void Component::setOwnerEntity(const EntityPtr& ownerEntity)
 {
     mOwnerEntity = ComponentOwner(ownerEntity.mClassId, ownerEntity.mSlot, ownerEntity.mECPool);
-}
-
-IMPLEMENT_SERIALIZATION(Component)
-{
-}
-
-IMPLEMENT_DESERIALIZATION(Component)
-{
- 
 }
 
 Component& ComponentPtr::getInternal() const

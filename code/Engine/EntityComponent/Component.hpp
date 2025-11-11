@@ -1,23 +1,20 @@
 #pragma once
 
-#include "Core/Event/Event.hpp"
+#include "Core/Core.hpp"
 #include "Core/HashedString/HashedString.hpp"
 
 NS_BEGIN(EC)
 class EntityComponentPool;
 class EntityPtr;
 
-class Component: public Core::ISerializable, public Event::IEventObject
-{
-	DECLARE_SERIALIZATION()
-	
+class Component
+{	
 public:
     Component();
     virtual ~Component();
 
 	virtual void onComponentAdded() { }
 
-    bool isStatic() const;
     bool isActive() const;
     void setIsActive(bool isActive);
     void destroy();
@@ -61,7 +58,6 @@ private:
 
 public:
     bool mAlreadyAddedToSystem = false;
-    bool mIsStatic = false;
 
 private:
 	bool mIsActive = true;

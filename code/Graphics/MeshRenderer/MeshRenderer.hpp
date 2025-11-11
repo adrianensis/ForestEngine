@@ -11,8 +11,6 @@ class TextureAnimation;
 class MeshRenderer: public EC::Component, public IOcTreeElement
 {
     
-	DECLARE_SERIALIZATION()
-	
 public:
     Core::ClassId getComponentTypeId() const override;
 

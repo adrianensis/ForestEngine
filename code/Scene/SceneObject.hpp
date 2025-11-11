@@ -7,15 +7,14 @@
 class Transform;
 class Scene;
 
-class SceneObject: public EC::Entity
+class SceneObject: public EC::Entity, public Event::IEventObject
 {
-	DECLARE_SERIALIZATION()
-	
 public:
     void init() override;
 	virtual void onAddedToScene(){};
 
 public:
+	bool mIsStatic = false;
 	Core::Ptr<Scene> mScene;
 	EC::TComponentPtr<Transform> mTransform;
 };

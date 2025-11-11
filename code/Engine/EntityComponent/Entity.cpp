@@ -37,23 +37,6 @@ void Entity::onRecycle(Core::Slot newSlot)
     mSlot = newSlot;
 };
 
-IMPLEMENT_SERIALIZATION(Entity)
-{
-
-	SERIALIZE("is_static", mIsStatic)
-	SERIALIZE("should_persist", mShouldPersist)
-
-	// SERIALIZE("tag", mTag)
-}
-
-IMPLEMENT_DESERIALIZATION(Entity)
-{
-	DESERIALIZE("is_static", mIsStatic)
-	DESERIALIZE("should_persist", mShouldPersist)
-
-	// DESERIALIZE("tag", mTag)
-}
-
 Entity& EntityPtr::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");

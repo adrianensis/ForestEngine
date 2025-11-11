@@ -6,8 +6,6 @@
 class Transform: public EC::Component
 {
     
-	DECLARE_SERIALIZATION()
-
 public:
     void init();
     void onDestroy() override;

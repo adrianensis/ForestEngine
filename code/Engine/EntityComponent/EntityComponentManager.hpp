@@ -91,7 +91,6 @@ public:
         CHECK_MSG(componentPtr->getOwnerEntity() != entityPtr, "Component is already assigned to Entity!");
 
         componentPtr->setOwnerEntity(entityPtr);
-        componentPtr->mIsStatic = entityPtr->mIsStatic;
         CHECK_MSG(componentPtr->getOwnerEntity().isValid(), "invalid Entity!");
 
         Core::ClassId id = entityPtr.mClassId;

@@ -1,7 +1,10 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
+#include "Engine/EntityComponent/Entity.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/SceneObject.hpp"
 #include "Scene/Transform.hpp"
 
 Core::ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
@@ -14,7 +17,7 @@ void MeshRenderer::init(const GPURenderItemData& data)
 
 void MeshRenderer::onComponentAdded() 
 {
-    mGPURenderItem->setIsStatic(isStatic());
+    mGPURenderItem->setIsStatic(EC::TEntityPtr<SceneObject>(getOwnerEntity())->mIsStatic);
     calculateRendererModelMatrix();
 }
 
@@ -38,7 +41,7 @@ void MeshRenderer::update()
 {
 	PROFILER_CPU()
 
-    if(!isStatic())
+    if(! EC::TEntityPtr<SceneObject>(getOwnerEntity())->mIsStatic)
     {
         if(ECManager.getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
         {
@@ -76,14 +79,4 @@ const TextureAnimation* MeshRenderer::getCurrentTextureAnimation() const
     // }
 
     return currentTextureAnimation;
-}
-
-IMPLEMENT_SERIALIZATION(MeshRenderer)
-{
-	EC::Component::serialize(json);
-}
-
-IMPLEMENT_DESERIALIZATION(MeshRenderer)
-{
-
 }

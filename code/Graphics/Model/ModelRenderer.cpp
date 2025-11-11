@@ -34,13 +34,3 @@ void ModelRenderer::onDestroy()
 {
 
 }
-
-IMPLEMENT_SERIALIZATION(ModelRenderer)
-{
-
-}
-
-IMPLEMENT_DESERIALIZATION(ModelRenderer)
-{
-
-}

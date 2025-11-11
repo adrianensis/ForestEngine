@@ -1,15 +1,12 @@
 #pragma once
 
-#include "Core/Event/Event.hpp"
+#include "Core/Core.hpp"
 
 NS_BEGIN(EC)
 class EntityComponentPool;
 
-class Entity: public Core::ISerializable, public Event::IEventObject
+class Entity
 {
-    
-	DECLARE_SERIALIZATION()
-	
 public:
     Entity();
 
@@ -38,9 +35,7 @@ private:
 	inline static Core::u64 smEntityIdCounter = 1;
 
 public:
-	bool mIsStatic = false;
 	Core::HashedString mTag;
-	bool mShouldPersist = false;
 
     #ifdef ENGINE_BUILD_DEBUG
     Core::HashedString mDebugString;

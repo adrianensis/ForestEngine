@@ -51,22 +51,22 @@ IMPLEMENT_SERIALIZATION(Scene)
 {
 	Core::f32 maxSize = 0;
 
-	FOR_LIST(it, mSceneObjects)
-	{
-		if((*it))
-		{
-			if ((*it)->mShouldPersist)
-			{
-				Transform *t = &(*it)->mTransform.get();
-				Maths::Vector3 worldPosition = t->getWorldPosition();
-				Maths::Vector3 scale = t->getLocalScale();
+	// FOR_LIST(it, mSceneObjects)
+	// {
+	// 	if((*it))
+	// 	{
+	// 		if ((*it)->mShouldPersist)
+	// 		{
+	// 			Transform *t = &(*it)->mTransform.get();
+	// 			Maths::Vector3 worldPosition = t->getWorldPosition();
+	// 			Maths::Vector3 scale = t->getLocalScale();
 
-				Core::f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
-				maxSize = std::max(std::max(maxSize, std::abs(worldPosition.x) + maxObjectScale),
-								std::abs(worldPosition.y) + maxObjectScale);
-			}
-		}
-	}
+	// 			Core::f32 maxObjectScale = std::max(std::abs(scale.x), std::abs(scale.y));
+	// 			maxSize = std::max(std::max(maxSize, std::abs(worldPosition.x) + maxObjectScale),
+	// 							std::abs(worldPosition.y) + maxObjectScale);
+	// 		}
+	// 	}
+	// }
 
 //	SERIALIZE_LIST_IF("objects", mSceneObjects, [](OwnerEC::EntityPtr sceneObject)
 //	{

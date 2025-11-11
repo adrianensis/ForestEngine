@@ -236,21 +236,3 @@ void Transform::removeChild(EC::TComponentPtr<Transform> child)
     child->mParent.reset();
     mChildren.erase(child->getComponentId());
 }
-
-IMPLEMENT_SERIALIZATION(Transform)
-{
-	EC::Component::serialize(json);
-
-	SERIALIZE("local_position", mLocalPosition);
-	SERIALIZE("scale", mLocalScale);
-	SERIALIZE("rotation", mLocalRotation);
-}
-
-IMPLEMENT_DESERIALIZATION(Transform)
-{
-	EC::Component::deserialize(json);
-
-	DESERIALIZE("local_position", mLocalPosition);
-	DESERIALIZE("scale", mLocalScale);
-	DESERIALIZE("rotation", mLocalRotation);
-}

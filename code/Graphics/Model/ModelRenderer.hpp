@@ -15,8 +15,6 @@ public:
 class ModelRenderer: public EC::Component
 {
     
-	DECLARE_SERIALIZATION()
-	
 public:
     void init(const ModelRendererData& data);
     
