@@ -52,10 +52,6 @@ const ClassMetadata& ClassManager::getClassMetadataById(const ClassId classId)
 
 void ClassManager::registerDynamicClass(u64 pointer, ClassId classId)
 {
-    if(smPointersToDynamicClass.contains(pointer))
-    {
-        CHECK_MSG(false, "Pointer already registered")
-    }
     smPointersToDynamicClass.insert_or_assign(pointer, &smClassMapById.at(classId));
 }
 
