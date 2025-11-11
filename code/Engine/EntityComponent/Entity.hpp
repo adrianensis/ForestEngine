@@ -134,17 +134,14 @@ public:
 
     bool operator==(const T& entity) const
 	{
-        TEntityPtr other(entity, nullptr);
-		return
-            mClassId == other.mClassId &&
-            mSlot.getSlot() == entity->getSlot().getSlot();
+        return TEntityPtr<T>::operator==(&entity);
 	}
 
     bool operator==(const T* entity) const
 	{
-        TEntityPtr other(entity, nullptr);
+        Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
 		return
-            mClassId == other.mClassId &&
+            mClassId == id &&
             mSlot.getSlot() == entity->getSlot().getSlot();
 	}
 

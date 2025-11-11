@@ -38,7 +38,7 @@ void UIElement::onDestroy()
 
 bool UIElement::hasFocus() const
 {
-	return GET_SYSTEM(UIManager).getFocusedElement() == ECManager.getEntityPtr(this);
+	return GET_SYSTEM(UIManager).getFocusedElement() == this;
 }
 
 bool UIElement::isMouseCursorInsideElement() const
