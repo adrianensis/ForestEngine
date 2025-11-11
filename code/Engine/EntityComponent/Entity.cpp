@@ -37,7 +37,7 @@ void Entity::onRecycle(Core::Slot newSlot)
     mSlot = newSlot;
 };
 
-Entity& EntityPtr::getInternal() const
+Entity& EntityPtrBase::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
     return mECPool->getEntitiesPool().getElementBase(*this);

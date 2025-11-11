@@ -42,7 +42,7 @@ void RenderPassShadowMap::updateGlobalData()
     {
         lightProjectionViewMatrix = mDirectionalLight->getLightProjectionViewMatrix();
     }
-    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {

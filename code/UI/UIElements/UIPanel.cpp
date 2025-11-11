@@ -64,7 +64,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
 
-	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
     ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
 

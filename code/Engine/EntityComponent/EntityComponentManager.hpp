@@ -11,8 +11,8 @@ NS_BEGIN(EC)
 class IComponentsListener
 {
 public:
-    virtual void onComponentAdded(const ComponentPtr& componentPtr) {};
-    virtual void onComponentRemoved(const ComponentPtr& componentPtr) {};
+    virtual void onComponentAdded(const ComponentPtrBase& componentPtr) {};
+    virtual void onComponentRemoved(const ComponentPtrBase& componentPtr) {};
 };
 
 #define ECManager EC::EntityComponentManager::getInstance()
@@ -62,7 +62,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    TComponentPtr<T> requestComponent()
+    ComponentPtr<T> requestComponent()
     {
         PROFILER_CPU()
         T* component = nullptr;
@@ -79,11 +79,11 @@ public:
         {
             CHECK_MSG(false, "Invalid Entity!");
         }
-        TComponentPtr<T> componentPtr(component, &mECPool);
+        ComponentPtr<T> componentPtr(component, &mECPool);
         return componentPtr;
     }
 
-    void addComponent(const EntityPtr& entityPtr, const ComponentPtr& componentPtr)
+    void addComponent(const EntityPtrBase& entityPtr, const ComponentPtrBase& componentPtr)
     {
         PROFILER_CPU()
         CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
@@ -97,12 +97,12 @@ public:
         Core::Slot slot = entityPtr.mSlot;
         if(!mEntityComponents.contains(id))
         {
-            mEntityComponents.emplace(id, std::unordered_map<Core::u32, std::list<ComponentPtr>>());
+            mEntityComponents.emplace(id, std::unordered_map<Core::u32, std::list<ComponentPtrBase>>());
         }
 
         if(!mEntityComponents.at(id).contains((slot.getSlot())))
         {
-            mEntityComponents.at(id).emplace(slot.getSlot(), std::list<ComponentPtr>());
+            mEntityComponents.at(id).emplace(slot.getSlot(), std::list<ComponentPtrBase>());
         }
 
         mEntityComponents.at(id).at(slot.getSlot()).emplace_back(componentPtr);
@@ -112,7 +112,7 @@ public:
         ECManager.notifyListenersOnComponentAdded(componentPtr);
     }
 
-    void removeComponent(const EntityPtr& entityPtr, ComponentPtr componentPtr)
+    void removeComponent(const EntityPtrBase& entityPtr, ComponentPtrBase componentPtr)
     {
         PROFILER_CPU()
         CHECK_MSG(componentPtr.isValid(), "Invalid Component!");
@@ -142,7 +142,7 @@ public:
         }
     }
 
-    void removeComponents(const EntityPtr& entityPtr)
+    void removeComponents(const EntityPtrBase& entityPtr)
     {
         PROFILER_CPU()
 
@@ -160,7 +160,7 @@ public:
         components.clear();
     }
 
-    const std::list<ComponentPtr>& getComponents(const EntityPtr& entityPtr)
+    const std::list<ComponentPtrBase>& getComponents(const EntityPtrBase& entityPtr)
     {
         Core::ClassId id = entityPtr.mClassId;
         Core::Slot slot = entityPtr.mSlot;
@@ -168,13 +168,13 @@ public:
     }
 
 	template <class T> T_EXTENDS(T, Component)
-    TComponentPtr<T> getFirstComponent(const EntityPtr& entityPtr)
+    ComponentPtr<T> getFirstComponent(const EntityPtrBase& entityPtr)
     {
         const auto& components = getComponents(entityPtr);
-        TComponentPtr<T> componentToReturn;
+        ComponentPtr<T> componentToReturn;
         FOR_LIST(it, components)
         {
-            ComponentPtr componentPtr = (*it);
+            ComponentPtrBase componentPtr = (*it);
             if(componentPtr.isValid())
             {
                 if(dynamic_cast<const T *>(&componentPtr.get<Component>()) != nullptr)
@@ -189,18 +189,18 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    T& getComponent(ComponentPtr componentPtr) const
+    T& getComponent(ComponentPtrBase componentPtr) const
     {
         return mECPool.getComponentsPool().getElement<T>(componentPtr.mSlot);
     }
 
     template<class T> T_EXTENDS(T, Component)
-    TComponentPtr<T> getComponentPtr(T* component)
+    ComponentPtr<T> getComponentPtr(T* component)
     {
-        return TComponentPtr<T>(component, &mECPool);
+        return ComponentPtr<T>(component, &mECPool);
     }
 
-    void notifyListenersOnComponentAdded(const ComponentPtr& componentPtr) const
+    void notifyListenersOnComponentAdded(const ComponentPtrBase& componentPtr) const
     {
         Core::ClassId id = componentPtr->getComponentTypeId();
         if(mComponentListeners.contains(id))
@@ -215,7 +215,7 @@ public:
         }
     }
 
-    void notifyListenersOnComponentRemoved(const ComponentPtr& componentPtr) const
+    void notifyListenersOnComponentRemoved(const ComponentPtrBase& componentPtr) const
     {
         Core::ClassId id = componentPtr->getComponentTypeId();
         if(mComponentListeners.contains(id))
@@ -230,7 +230,7 @@ public:
         }
     }
     template<class T> T_EXTENDS(T, Entity)
-    TEntityPtr<T> requestEntity()
+    EntityPtr<T> requestEntity()
     {
         T* entity = nullptr;
         Core::PoolElementPtr poolPtr = mECPool.getEntitiesPool().requestElement<T>();
@@ -246,17 +246,17 @@ public:
         {
             CHECK_MSG(false, "Invalid Entity!");
         }
-        TEntityPtr<T> entityPtr(entity, &mECPool);
+        EntityPtr<T> entityPtr(entity, &mECPool);
         return entityPtr;
     }
 
-    void removeEntity(EntityPtr& entityPtr)
+    void removeEntity(EntityPtrBase& entityPtr)
     {
         mECPool.getEntitiesPool().removeElement(entityPtr);
         entityPtr.reset();
     }
 
-    void setEntityActive(const EntityPtr& entityPtr, bool isActive)
+    void setEntityActive(const EntityPtrBase& entityPtr, bool isActive)
     {
         entityPtr->setIsActive(isActive);
         const auto& components = ECManager.getComponents(entityPtr);
@@ -266,22 +266,22 @@ public:
         }
     }
 
-    void destroyEntity(const EntityPtr& entityPtr)
+    void destroyEntity(const EntityPtrBase& entityPtr)
     {
         entityPtr->destroy();
         ECManager.removeComponents(entityPtr);
     }
 
     template<class T> T_EXTENDS(T, Entity)
-    TEntityPtr<T> getEntityPtr(T* entity)
+    EntityPtr<T> getEntityPtr(T* entity)
     {
-        return TEntityPtr<T>(entity, &mECPool);
+        return EntityPtr<T>(entity, &mECPool);
     }
 
 private:
     EntityComponentPool mECPool;
     std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
-    std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<ComponentPtr>>> mEntityComponents;
+    std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<ComponentPtrBase>>> mEntityComponents;
 };
 REGISTER_CLASS(EntityComponentManager);
 NS_END

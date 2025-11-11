@@ -13,8 +13,8 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
     mAxisName = axisName;
     mNegAxisName = Core::HashedString("-" + mAxisName.get());
 
-    EC::TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraSceneObject);
+    EC::EntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraSceneObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
@@ -73,8 +73,8 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 
 void UISingleAxisGizmo::update()
 {
-    EC::TEntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
-    EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraSceneObject);
+    EC::EntityPtr<SceneObject> cameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraSceneObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(

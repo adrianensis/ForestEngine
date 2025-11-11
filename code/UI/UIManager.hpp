@@ -34,12 +34,12 @@ public:
 	}
 
 
-    EC::TEntityPtr<UIElement> getFocusedElement() const { return mFocusedElement; };
-    void setFocusedElement(EC::TEntityPtr<UIElement> focusedElement);
+    EC::EntityPtr<UIElement> getFocusedElement() const { return mFocusedElement; };
+    void setFocusedElement(EC::EntityPtr<UIElement> focusedElement);
 
 private:
 	std::unordered_map<Core::HashedString, Core::OwnerPtr<UIGroup>> mGroups;
-	EC::TEntityPtr<UIElement> mFocusedElement;
+	EC::EntityPtr<UIElement> mFocusedElement;
     UIFontsManager mFontsManager;
     Core::HashedString mDefaultFont;
     Core::WeakPtr<GPUShader> mDefaultUIShader;

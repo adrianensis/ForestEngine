@@ -32,7 +32,7 @@ void RenderPipeline::update()
     {
         FOR_RANGE(i, *mGPURenderItemManager.getUsedSlots().begin(), (*mGPURenderItemManager.getUsedSlots().rbegin())+1)
         {
-            EC::TComponentPtr<MeshRenderer> renderItem = mMeshRenderers[i];
+            EC::ComponentPtr<MeshRenderer> renderItem = mMeshRenderers[i];
             if(mMeshRenderers[i].isValid())
             {
                 mMeshRenderers[i]->update();
@@ -66,7 +66,7 @@ void RenderPipeline::onResize()
     mGPURenderGraph.onResize();
 }
 
-void RenderPipeline::addRenderer(EC::TComponentPtr<MeshRenderer> renderer)
+void RenderPipeline::addRenderer(EC::ComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
     mGPURenderItemManager.addRenderer(renderer->getGPURenderItem());
@@ -81,7 +81,7 @@ void RenderPipeline::addRenderer(EC::TComponentPtr<MeshRenderer> renderer)
     mMeshRenderers[renderer->getGPURenderItem()->getRenderSlot().getSlot()] = renderer;
 }
 
-void RenderPipeline::removeRenderer(EC::TComponentPtr<MeshRenderer> renderer)
+void RenderPipeline::removeRenderer(EC::ComponentPtr<MeshRenderer> renderer)
 {
     PROFILER_CPU()
 

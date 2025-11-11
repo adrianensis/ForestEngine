@@ -14,10 +14,10 @@ int main()
     Engine engine;
     engine.init();
 
-    EC::TEntityPtr<SceneObject> controller = ECManager.requestEntity<SceneObject>();
+    EC::EntityPtr<SceneObject> controller = ECManager.requestEntity<SceneObject>();
     controller->init();
 
-    EC::TComponentPtr<Editor> editor = ECManager.requestComponent<Editor>();
+    EC::ComponentPtr<Editor> editor = ECManager.requestComponent<Editor>();
     editor->init();
     ECManager.addComponent(controller, editor);
 

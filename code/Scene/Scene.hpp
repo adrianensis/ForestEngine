@@ -16,19 +16,19 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addSceneObject(EC::TEntityPtr<SceneObject> sceneObject);
+    void addSceneObject(EC::EntityPtr<SceneObject> sceneObject);
 
     template <class T> T_EXTENDS(T, SceneObject)
-	EC::TEntityPtr<T> createSceneObject()
+	EC::EntityPtr<T> createSceneObject()
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(SceneObject, T), "T class is not derived from SceneObject");
-		EC::TEntityPtr<SceneObject> entityPtr = ECManager.requestEntity<T>();
+		EC::EntityPtr<SceneObject> entityPtr = ECManager.requestEntity<T>();
         entityPtr->init();
         addSceneObject(entityPtr);
         return entityPtr;
 	}
-    void removeSceneObject(EC::TEntityPtr<SceneObject> sceneObject);
+    void removeSceneObject(EC::EntityPtr<SceneObject> sceneObject);
     void update();
     void flushNewSceneObjects();
     bool thereAreNewSceneObjects() const;
@@ -38,8 +38,8 @@ private:
 
 private:
     Core::HashedString mSceneName;
-	std::list<EC::TEntityPtr<SceneObject>> mSceneObjects;
-	std::list<EC::TEntityPtr<SceneObject>> mNewSceneObjects;
+	std::list<EC::EntityPtr<SceneObject>> mSceneObjects;
+	std::list<EC::EntityPtr<SceneObject>> mNewSceneObjects;
 
 	Core::f32 mSize = 0.0f;
 	std::string mPath;

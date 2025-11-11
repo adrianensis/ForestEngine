@@ -41,7 +41,7 @@ void Editor::firstUpdate()
 
 	mCameraSceneObject = GET_SYSTEM(ScenesManager).getCameraSceneObject();
 	mCameraSceneObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
-    EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
     Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -119,8 +119,8 @@ void Editor::update()
 {
 	PROFILER_CPU()
 
-    EC::TComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
-	EC::TComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
+    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
+	EC::ComponentPtr<Transform> cameraTransform = mCameraSceneObject->mTransform;
 	Core::f32 speed = 400 * Time::Time::getInstance().getDeltaTimeSeconds();
 
 	Maths::Matrix4 cameraRotationMatrix = mCameraSceneObject->mTransform->getLocalRotationMatrix();
@@ -254,9 +254,9 @@ void Editor::terminate()
 
 }
 
-EC::TEntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
+EC::EntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 {
-	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	// sceneObject->mIsStatic = false;
 	// sceneObject->mTransform->setLocalPosition(v);
 	// sceneObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -269,7 +269,7 @@ EC::TEntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	// EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// sceneObject->addComponent(renderer);
 
@@ -280,16 +280,16 @@ EC::TEntityPtr<SceneObject> Editor::createSprite(const Maths::Vector3& v, Core::
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
     ECManager.addComponent(sceneObject, renderer);
 
 	return sceneObject;
 }
 
-EC::TEntityPtr<SceneObject> Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
+EC::EntityPtr<SceneObject> Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 {
-	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -298,16 +298,16 @@ EC::TEntityPtr<SceneObject> Editor::createPointLight(const Maths::Vector3& v, Co
     data.mPosition = v;
     data.mDiffuse = Maths::Vector3(1,1,1) * 250000;
 
-	EC::TComponentPtr<PointLight> pointLight = ECManager.requestComponent<PointLight>();
+	EC::ComponentPtr<PointLight> pointLight = ECManager.requestComponent<PointLight>();
     pointLight->init(data);
     ECManager.addComponent(sceneObject, pointLight);
 
 	return sceneObject;
 }
 
-EC::TEntityPtr<SceneObject> Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
+EC::EntityPtr<SceneObject> Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
 {
-	EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+	EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
     sceneObject->mIsStatic = false;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->lookAt(v + dir);
@@ -316,23 +316,23 @@ EC::TEntityPtr<SceneObject> Editor::createDirectionalLight(const Maths::Vector3&
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Maths::Vector3(0.65,0.2,0.1) * 20;
 
-	EC::TComponentPtr<DirectionalLight> dirLight = ECManager.requestComponent<DirectionalLight>();
+	EC::ComponentPtr<DirectionalLight> dirLight = ECManager.requestComponent<DirectionalLight>();
     dirLight->init(directionalLightData);
     ECManager.addComponent(sceneObject, dirLight);
 
 	return sceneObject;
 }
 
-EC::TEntityPtr<SceneObject> Editor::mousePick()
+EC::EntityPtr<SceneObject> Editor::mousePick()
 {
 
     Core::f32 speed = 100 * Time::Time::getInstance().getDeltaTimeSeconds();
-    EC::TEntityPtr<SceneObject> obj;
+    EC::EntityPtr<SceneObject> obj;
     FOR_LIST(it, mSceneObjectsArray)
     {
         (*it)->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
         // const Maths::Cube& bbox = (*it)->getFirstComponent<MeshRenderer>()->getOcTreeBoundingBox();
-        // EC::TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // EC::ComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Maths::Cube bboxScreenSpace(
         //     camera->worldToScreen(bbox.getLeftTopFront()),
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
@@ -355,11 +355,11 @@ EC::TEntityPtr<SceneObject> Editor::mousePick()
     return obj;
 }
 
-EC::TEntityPtr<SceneObject> Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
+EC::EntityPtr<SceneObject> Editor::importModel( const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic)
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    EC::TEntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
+    EC::EntityPtr<SceneObject> sceneObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createSceneObject<SceneObject>();
 	sceneObject->mIsStatic = isStatic;
 	sceneObject->mTransform->setLocalPosition(v);
 	sceneObject->mTransform->setLocalScale(Maths::Vector3::smOne * size);
@@ -373,7 +373,7 @@ EC::TEntityPtr<SceneObject> Editor::importModel( const std::string& pFile, const
         Core::ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	EC::TComponentPtr<ModelRenderer> modelRenderer = ECManager.requestComponent<ModelRenderer>();
+	EC::ComponentPtr<ModelRenderer> modelRenderer = ECManager.requestComponent<ModelRenderer>();
     modelRenderer->init(modelRendererData);
     ECManager.addComponent(sceneObject, modelRenderer);
 
@@ -391,7 +391,7 @@ void Editor::handleMouse()
 	{
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeSceneObject(mBuildings.front());
         // mBuildings.pop_front();
-        // EC::TComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
+        // EC::ComponentPtr<Camera> camera = mCameraSceneObject->getFirstComponent<Camera>();
         // Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
         // Maths::Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Maths::Vector3(0,180,180), false);

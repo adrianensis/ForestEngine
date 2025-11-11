@@ -20,7 +20,7 @@ void UITransform::init()
     mScale->mTransform->setLocalPosition(Maths::Vector3(0,-0.05 * 2,0));
 }
 
-void UITransform::update(EC::TComponentPtr<const Transform> transform)
+void UITransform::update(EC::ComponentPtr<const Transform> transform)
 {
     mPosition->update(transform->getWorldPosition());
     mRotation->update(transform->getWorldRotation());

@@ -7,7 +7,7 @@ void RenderPassBase::updateGlobalData()
 	PROFILER_CPU()
 
     Maths::Matrix4 projectionViewMatrix = calculateProjectionViewMatrix();
-    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
@@ -26,7 +26,7 @@ Maths::Matrix4 RenderPassBase::calculateProjectionViewMatrix() const
     Maths::Matrix4 view2D;
     view2D.view(Maths::Vector3(0,0,1000), Maths::Vector3(0,0,0));
 
-    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Maths::Matrix4 projectionViewMatrix = mGPURenderPassData.mGeometricSpace == Maths::GeometricSpace::WORLD ? camera->getGPUCamera().mProjectionMatrix : ortho;
     Maths::Matrix4 viewMatrix = mGPURenderPassData.mGeometricSpace == Maths::GeometricSpace::WORLD ? camera->getGPUCamera().mViewMatrix : view2D;

@@ -16,8 +16,8 @@ public:
     void postSceneChanged();
     void onResize() override;
     
-    virtual void onComponentAdded(const EC::ComponentPtr& component) override;
-    virtual void onComponentRemoved(const EC::ComponentPtr& component) override;
+    virtual void onComponentAdded(const EC::ComponentPtrBase& component) override;
+    virtual void onComponentRemoved(const EC::ComponentPtrBase& component) override;
 
 private:
     RenderPipelineData mRenderPipelineData;

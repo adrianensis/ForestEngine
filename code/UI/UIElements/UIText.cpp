@@ -29,7 +29,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
     ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
 
@@ -101,14 +101,14 @@ void UIText::setText(Core::HashedString text)
 
                 if(i < mFontRenderers.size())
                 {
-                    EC::TEntityPtr<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
+                    EC::EntityPtr<UITextGlyph> sceneObjectGlyph = mFontRenderers[i];
                     UIElementConfig glyphConfig = sceneObjectGlyph->getConfig();
                     glyphConfig.mPosition = glyphPositionScreenSpace;
                     glyphConfig.mSize = glyphSizeScreenSpace;
                     glyphConfig = sceneObjectGlyph->calculateConfig(glyphConfig);
                     sceneObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     sceneObjectGlyph->mTransform->setLocalScale(Maths::Vector3(glyphConfig.mDisplaySize, 1));
-                    EC::TComponentPtr<MeshRenderer> renderer = ECManager.getFirstComponent<MeshRenderer>(sceneObjectGlyph);
+                    EC::ComponentPtr<MeshRenderer> renderer = ECManager.getFirstComponent<MeshRenderer>(sceneObjectGlyph);
                     Maths::Cube textureRegion = GET_SYSTEM(UIManager).getGlyphData(character).mTextureRegion;
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
@@ -117,7 +117,7 @@ void UIText::setText(Core::HashedString text)
                 else
                 {
                     UIBuilder uiBuilder;
-                    EC::TEntityPtr<UITextGlyph> sceneObjectGlyph = uiBuilder.
+                    EC::EntityPtr<UITextGlyph> sceneObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
                     setSize(glyphSizeScreenSpace).

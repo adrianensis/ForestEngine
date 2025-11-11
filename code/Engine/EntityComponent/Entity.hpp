@@ -48,23 +48,23 @@ public:
 };
 REGISTER_CLASS(Entity);
 
-class EntityPtr: public Core::PoolElementPtr
+class EntityPtrBase: public Core::PoolElementPtr
 {
 template<class T>
-friend class TEntityPtr;
+friend class EntityPtr;
 public:
 
-    EntityPtr(): Core::PoolElementPtr()
+    EntityPtrBase(): Core::PoolElementPtr()
     {
     }
-    EntityPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
+    EntityPtrBase(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
     {
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
         #endif
     }
-    EntityPtr(const EntityPtr& other): EntityPtr(other.mClassId, other.mSlot, other.mECPool)
+    EntityPtrBase(const EntityPtrBase& other): EntityPtrBase(other.mClassId, other.mSlot, other.mECPool)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = other.mDebugPointer;
@@ -92,32 +92,32 @@ public:
 };
 
 template<class T>// T_EXTENDS(T, Entity)
-class TEntityPtr : public EntityPtr
+class EntityPtr : public EntityPtrBase
 {
 public:
-    TEntityPtr() = default;
-    TEntityPtr(const T* entity, Core::Ptr<EntityComponentPool> ecPool)
+    EntityPtr() = default;
+    EntityPtr(const T* entity, Core::Ptr<EntityComponentPool> ecPool)
     {
         mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
-        *this = TEntityPtr(id, entity->getSlot(), mECPool);
+        *this = EntityPtr(id, entity->getSlot(), mECPool);
     }
-    TEntityPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): EntityPtr(id, slot, ecPool)
+    EntityPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): EntityPtrBase(id, slot, ecPool)
     {
         checkValid();
     }
 
-    TEntityPtr(const EntityPtr& other): EntityPtr(other)
+    EntityPtr(const EntityPtrBase& other): EntityPtrBase(other)
     {
         checkValid();
     }
 
     T& get() const
     {
-        return EntityPtr::get<T>();
+        return EntityPtrBase::get<T>();
     }
 
-    TEntityPtr& operator=(const EntityPtr& other)
+    EntityPtr& operator=(const EntityPtrBase& other)
     {
         if (this != &other)
         {
@@ -134,7 +134,7 @@ public:
 
     bool operator==(const T& entity) const
 	{
-        return TEntityPtr<T>::operator==(&entity);
+        return EntityPtr<T>::operator==(&entity);
 	}
 
     bool operator==(const T* entity) const
@@ -162,8 +162,8 @@ public:
     }
     
     T* operator->() const { return &get(); }
-    operator TEntityPtr<const T>() const { return TEntityPtr<const T>(mClassId, mSlot, mECPool); }
+    operator EntityPtr<const T>() const { return EntityPtr<const T>(mClassId, mSlot, mECPool); }
     template<class U> T_EXTENDS(T, U)
-    operator TEntityPtr<U>() const { return TEntityPtr<U>(mClassId, mSlot, mECPool); }
+    operator EntityPtr<U>() const { return EntityPtr<U>(mClassId, mSlot, mECPool); }
 };
 NS_END

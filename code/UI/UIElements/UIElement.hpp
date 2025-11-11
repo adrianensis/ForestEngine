@@ -104,7 +104,7 @@ protected:
 	FunctorUIElement mOnTextChangedFunctor;
 	FunctorUIElement mOnFocusLostFunctor;
 
-	EC::TComponentPtr<MeshRenderer> mRenderer;
+	EC::ComponentPtr<MeshRenderer> mRenderer;
 	std::string mInputString;
 	bool mConsumeInput = true;
 	UIElementState mState = UIElementState::RELEASED;

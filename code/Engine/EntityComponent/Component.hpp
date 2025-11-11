@@ -5,7 +5,7 @@
 
 NS_BEGIN(EC)
 class EntityComponentPool;
-class EntityPtr;
+class EntityPtrBase;
 
 class Component
 {	
@@ -26,8 +26,8 @@ public:
     // This will automatically work in derived classes, no need to override this method in derived classes
     virtual Core::ClassId getComponentTypeId() const { return 0; }
 
-    EntityPtr getOwnerEntity() const;
-    void setOwnerEntity(const EntityPtr& ownerEntity);
+    EntityPtrBase getOwnerEntity() const;
+    void setOwnerEntity(const EntityPtrBase& ownerEntity);
 
 private:
 
@@ -81,23 +81,22 @@ public:
 };
 REGISTER_CLASS(Component);
 
-
-class ComponentPtr: public Core::PoolElementPtr
+class ComponentPtrBase: public Core::PoolElementPtr
 {
 template<class T>
-friend class TComponentPtr;
+friend class ComponentPtr;
 public:
-    ComponentPtr(): Core::PoolElementPtr()
+    ComponentPtrBase(): Core::PoolElementPtr()
     {
     }
-    ComponentPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
+    ComponentPtrBase(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
     {
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
         #endif
     }
-    ComponentPtr(const ComponentPtr& other): ComponentPtr(other.mClassId, other.mSlot, other.mECPool)
+    ComponentPtrBase(const ComponentPtrBase& other): ComponentPtrBase(other.mClassId, other.mSlot, other.mECPool)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = other.mDebugPointer;
@@ -125,31 +124,31 @@ public:
 };
 
 template<class T>// T_EXTENDS(T, Component)
-class TComponentPtr : public ComponentPtr
+class ComponentPtr : public ComponentPtrBase
 {
 public:
-    TComponentPtr() = default;
-    TComponentPtr(const T* component, Core::Ptr<EntityComponentPool> ecPool)
+    ComponentPtr() = default;
+    ComponentPtr(const T* component, Core::Ptr<EntityComponentPool> ecPool)
     {
         mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
-        *this = TComponentPtr(id, component->getSlot(), mECPool);
+        *this = ComponentPtr(id, component->getSlot(), mECPool);
     }
-    TComponentPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): ComponentPtr(id, slot, ecPool)
+    ComponentPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): ComponentPtrBase(id, slot, ecPool)
     {
         checkValid();
     }
 
-    TComponentPtr(const ComponentPtr& other): ComponentPtr(other)
+    ComponentPtr(const ComponentPtrBase& other): ComponentPtrBase(other)
     {
         checkValid();
     }
     T& get() const
     {
-        return ComponentPtr::get<T>();
+        return ComponentPtrBase::get<T>();
     }
     
-    TComponentPtr& operator=(const ComponentPtr& other)
+    ComponentPtr& operator=(const ComponentPtrBase& other)
     {
         if (this != &other)
         {
@@ -178,8 +177,8 @@ public:
     }
 
     T* operator->() const { return &get(); }
-    operator TComponentPtr<const T>() const { return TComponentPtr<const T>(mClassId, mSlot); }
+    operator ComponentPtr<const T>() const { return ComponentPtr<const T>(mClassId, mSlot); }
     template<class U> T_EXTENDS(T, U)
-    operator TComponentPtr<U>() const { return TComponentPtr<U>(*this); }
+    operator ComponentPtr<U>() const { return ComponentPtr<U>(*this); }
 };
 NS_END

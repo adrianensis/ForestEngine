@@ -16,6 +16,6 @@ public:
 public:
 	bool mIsStatic = false;
 	Core::Ptr<Scene> mScene;
-	EC::TComponentPtr<Transform> mTransform;
+	EC::ComponentPtr<Transform> mTransform;
 };
 REGISTER_CLASS(SceneObject);

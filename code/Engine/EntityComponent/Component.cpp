@@ -45,19 +45,19 @@ void Component::onDestroy()
 {
 }
 
-EntityPtr Component::getOwnerEntity() const
+EntityPtrBase Component::getOwnerEntity() const
 {
     // TODO: Component::getOwnerEntity fix nullptr
-    EntityPtr entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot, mOwnerEntity.mECPool);
+    EntityPtrBase entityPtr(mOwnerEntity.mClassId, mOwnerEntity.mSlot, mOwnerEntity.mECPool);
     return entityPtr;
 }
 
-void Component::setOwnerEntity(const EntityPtr& ownerEntity)
+void Component::setOwnerEntity(const EntityPtrBase& ownerEntity)
 {
     mOwnerEntity = ComponentOwner(ownerEntity.mClassId, ownerEntity.mSlot, ownerEntity.mECPool);
 }
 
-Component& ComponentPtr::getInternal() const
+Component& ComponentPtrBase::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
     return mECPool->getComponentsPool().getElementBase(*this);

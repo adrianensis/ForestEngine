@@ -10,6 +10,6 @@ public:
     virtual void onDestroy() override;
 
 private:
-    // std::unordered_map<, EC::TEntityPtr<UIButton>> mTexts;
+    // std::unordered_map<, EC::EntityPtr<UIButton>> mTexts;
 };
 REGISTER_CLASS(UISceneTree)

@@ -41,7 +41,7 @@ void RenderEngine::onResize()
     GPUInstance::getInstance().mGPUContext->setWindowResized();
     GPUInstance::getInstance().mGPUContext->recreateRenderingObjects();
     mRenderPipeline->onResize();
-    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }
 
@@ -51,11 +51,11 @@ void RenderEngine::terminate()
     mRenderPipeline->terminate();
 }
 
-void RenderEngine::onComponentAdded(const EC::ComponentPtr& component)
+void RenderEngine::onComponentAdded(const EC::ComponentPtrBase& component)
 {
     if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        EC::TComponentPtr<MeshRenderer> renderer = component;
+        EC::ComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
 
         // if(renderer->getGeometricSpace() == Maths::GeometricSpace::WORLD)
@@ -67,20 +67,20 @@ void RenderEngine::onComponentAdded(const EC::ComponentPtr& component)
     {
         // if(component.getComponent(). <PointLight>())
         // {
-        //     mRenderPipelineData.mPointLights.push_back(EC::TComponentPtr<PointLight>(component));
+        //     mRenderPipelineData.mPointLights.push_back(EC::ComponentPtr<PointLight>(component));
         // }
         // else if(component.getComponent(). <DirectionalLight>())
         // {
-        //     mRenderPipelineData.mDirectionalLight = EC::TComponentPtr<DirectionalLight>(component);
+        //     mRenderPipelineData.mDirectionalLight = EC::ComponentPtr<DirectionalLight>(component);
         // }
     }
 }
 
-void RenderEngine::onComponentRemoved(const EC::ComponentPtr& component)
+void RenderEngine::onComponentRemoved(const EC::ComponentPtrBase& component)
 {
     if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
     {
-        EC::TComponentPtr<MeshRenderer> renderer = component;
+        EC::ComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->removeRenderer(renderer);
     }
     else if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId())

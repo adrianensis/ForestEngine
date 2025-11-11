@@ -24,10 +24,10 @@ public:
     
 private:
 	Core::HashedString mString;
-	std::vector<EC::TEntityPtr<UITextGlyph>> mFontRenderers;
+	std::vector<EC::EntityPtr<UITextGlyph>> mFontRenderers;
 
 protected:
-    EC::TEntityPtr<UIPanel> mBackground;
+    EC::EntityPtr<UIPanel> mBackground;
 
 public:
 	CRGET(String)

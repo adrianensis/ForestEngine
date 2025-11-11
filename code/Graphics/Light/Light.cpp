@@ -7,7 +7,7 @@ Core::ClassId Light::getComponentTypeId() const { return Core::ClassManager::get
 
 Maths::Matrix4 Light::getLightProjectionViewMatrix() const
 {
-    EC::TComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
 
     Maths::Matrix4 lightViewMatrix;
     lightViewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();

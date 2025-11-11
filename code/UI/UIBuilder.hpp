@@ -57,7 +57,7 @@ public:
         mConfig.mUIElementClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
         calculateConfig();
-	    EC::TEntityPtr<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createSceneObject<T>();
+	    EC::EntityPtr<T> uiElement = GET_SYSTEM(ScenesManager).getScene(mConfig.mSceneName)->createSceneObject<T>();
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 
@@ -65,19 +65,19 @@ public:
 		return *this;
 	}
 
-    EC::TEntityPtr<UIElement> getUIElement() const
+    EC::EntityPtr<UIElement> getUIElement() const
 	{
 		return mCurrentUIElement;
 	}
 
 	template<class T> T_EXTENDS(T, UIElement)
-    EC::TEntityPtr<T> getUIElement() const
+    EC::EntityPtr<T> getUIElement() const
 	{
 		return getUIElement();
 	}
 
 private:
-    void registerUIElement(EC::TEntityPtr<UIElement> uiElement);
+    void registerUIElement(EC::EntityPtr<UIElement> uiElement);
     UILayout getOppositeLayout(UILayout layout);
     Maths::Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
@@ -91,7 +91,7 @@ private:
 	bool mMakeRelativeToLastConfig = false; // used for layouts
 	UIElementConfig mLayoutFirstUIElementConfig;
 	bool mNewRowOrColumn = false;
-	EC::TEntityPtr<UIElement> mCurrentUIElement;
+	EC::EntityPtr<UIElement> mCurrentUIElement;
 
 public:
 

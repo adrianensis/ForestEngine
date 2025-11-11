@@ -50,7 +50,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
-	EC::TComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
     ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
 
@@ -109,7 +109,7 @@ void UIList::toggle()
 			create<UIButton>();
 
 
-			EC::TEntityPtr<UIButton> button = uiBuilder.getUIElement<UIButton>();
+			EC::EntityPtr<UIButton> button = uiBuilder.getUIElement<UIButton>();
 			button->setOnPressedCallback(onPressedCallback);
 
 			mButtons.push_back(button);

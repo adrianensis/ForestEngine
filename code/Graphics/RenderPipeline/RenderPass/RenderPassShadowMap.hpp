@@ -12,6 +12,6 @@ protected:
     virtual void postRender() override;
     virtual void updateGlobalData() override;
 public:
-    EC::TComponentPtr<DirectionalLight> mDirectionalLight;
+    EC::ComponentPtr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassShadowMap);

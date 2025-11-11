@@ -225,13 +225,13 @@ const Maths::Matrix4& Transform::getViewMatrix() const
     return mViewMatrix;
 }
 
-void Transform::addChild(EC::TComponentPtr<Transform> child)
+void Transform::addChild(EC::ComponentPtr<Transform> child)
 {
     child->mParent = ECManager.getComponentPtr(this);
     mChildren.insert_or_assign(child->getComponentId(), child);
 }
 
-void Transform::removeChild(EC::TComponentPtr<Transform> child)
+void Transform::removeChild(EC::ComponentPtr<Transform> child)
 {
     child->mParent.reset();
     mChildren.erase(child->getComponentId());

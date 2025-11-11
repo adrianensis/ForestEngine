@@ -11,6 +11,6 @@ protected:
     virtual void render() override;
     virtual void postRender() override;
 public:
-    EC::TComponentPtr<DirectionalLight> mDirectionalLight;
+    EC::ComponentPtr<DirectionalLight> mDirectionalLight;
 };
 REGISTER_CLASS(RenderPassGeometry);

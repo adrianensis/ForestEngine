@@ -17,8 +17,8 @@ public:
 
     const Maths::Matrix4& calculateModelMatrix() const;
 
-    void addChild(EC::TComponentPtr<Transform> child);
-    void removeChild(EC::TComponentPtr<Transform> child);
+    void addChild(EC::ComponentPtr<Transform> child);
+    void removeChild(EC::ComponentPtr<Transform> child);
 
     Maths::Vector3 getWorldPosition() const;
     Maths::Vector3 getWorldScale() const;
@@ -37,8 +37,8 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<Core::ObjectId, EC::TComponentPtr<Transform>> mChildren;
-    EC::TComponentPtr<Transform> mParent;
+    std::unordered_map<Core::ObjectId, EC::ComponentPtr<Transform>> mChildren;
+    EC::ComponentPtr<Transform> mParent;
 	
     mutable bool mModelMatrixDirty = true;
     mutable bool mLocalTranslationMatrixDirty = true;
