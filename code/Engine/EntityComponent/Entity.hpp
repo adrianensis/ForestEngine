@@ -20,12 +20,6 @@ public:
 		return (mIsDestroyed || mIsPendingToBeDestroyed) ? false : mIsActive;
 	};
 
-	void finallyDestroy()
-	{
-		mIsDestroyed = true;
-		mIsPendingToBeDestroyed = false;
-	};
-
 	virtual void onDestroy(){};
     virtual void onRecycle(Core::Slot newSlot);
     

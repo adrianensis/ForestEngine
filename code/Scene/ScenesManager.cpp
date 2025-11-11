@@ -9,15 +9,14 @@ void ScenesManager::terminate()
 {
     if(mSceneObjectController)
     {
-	    mSceneObjectController->destroy();
+        ECManager.destroyEntity(mSceneObjectController);
+        mSceneObjectController.reset();
     }
-    mSceneObjectController.reset();
 
 	if (mCameraSceneObject)
 	{
         EC::TComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraSceneObject);
-        ECManager.removeComponent(mCameraSceneObject, cameraComponent);
-		mCameraSceneObject->destroy();
+        ECManager.destroyEntity(mCameraSceneObject);
         mCameraSceneObject.reset();
 	}
 

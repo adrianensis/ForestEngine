@@ -86,7 +86,7 @@ Maths::Vector3 UIElement::getLeftTopPosition() const
 void UIElement::setVisibility(bool visibility)
 {
     releaseFocus();
-	setIsActive(visibility);
+	ECManager.setEntityActive(ECManager.getEntityPtr(this), visibility);
 }
 
 bool UIElement::isVisible()

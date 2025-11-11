@@ -18,15 +18,7 @@ void Entity::init()
 
 void Entity::setIsActive(bool isActive)
 {
-	mIsActive = mIsDestroyed || mIsPendingToBeDestroyed ? false : isActive;
-
-	// TODO: restore
-    // const auto& components = ECManager.getComponents(TEntityPtr(this));
-	// FOR_LIST(it, components)
-	// // FOR_LIST(it, mComponents)
-	// {
-	// 	(*it)->setIsActive(isActive);
-	// }
+	mIsActive = isActive;
 }
 
 void Entity::destroy()
@@ -35,8 +27,9 @@ void Entity::destroy()
 	mIsActive = false;
 
 	onDestroy();
-	// TODO: restore
-    // ECManager.removeComponents(TEntityPtr(this));
+
+	mIsDestroyed = true;
+	mIsPendingToBeDestroyed = false;
 }
 
 void Entity::onRecycle(Core::Slot newSlot)

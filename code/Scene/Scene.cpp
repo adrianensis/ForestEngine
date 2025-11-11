@@ -1,4 +1,5 @@
 #include "Scene/Scene.hpp"
+#include "Engine/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/SceneObject.hpp"
 #include "Scene/Transform.hpp"
 #include "Engine/EngineConfig.hpp"
@@ -120,8 +121,7 @@ void Scene::removeSceneObject(EC::TEntityPtr<SceneObject> sceneObject)
 {
 	if (sceneObject && !sceneObject->getIsDestroyed() && !sceneObject->getIsPendingToBeDestroyed())
 	{
-        sceneObject->destroy();
-        sceneObject->finallyDestroy();
+        ECManager.destroyEntity(sceneObject);
 
         auto it = std::find(mSceneObjects.begin(), mSceneObjects.end(), sceneObject);
         if (it != mSceneObjects.end())
@@ -187,7 +187,7 @@ void Scene::destroySceneObjects()
 		{
             if (!sceneObject->getIsDestroyed())
             {
-                sceneObject->destroy();
+                ECManager.destroyEntity(sceneObject);
                 sceneObject.reset();
             }
         }

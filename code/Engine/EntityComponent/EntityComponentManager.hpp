@@ -5,6 +5,7 @@
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include <string>
+#include <vector>
 
 NS_BEGIN(EC)
 class IComponentsListener
@@ -21,13 +22,11 @@ class EntityComponentManager: public Core::Singleton<EntityComponentManager>
 public:
     void init()
     {
-        mECPool.getEntitiesPool().init(100000);
-        mECPool.getComponentsPool().init(100000);
+        mECPool.init();
     }
     void terminate()
     { 
-        mECPool.getEntitiesPool().terminate();
-        mECPool.getComponentsPool().terminate();
+        mECPool.terminate();
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -256,6 +255,22 @@ public:
     {
         mECPool.getEntitiesPool().removeElement(entityPtr);
         entityPtr.reset();
+    }
+
+    void setEntityActive(const EntityPtr& entityPtr, bool isActive)
+    {
+        entityPtr->setIsActive(isActive);
+        const auto& components = ECManager.getComponents(entityPtr);
+        FOR_LIST(it, components)
+        {
+        	(*it)->setIsActive(isActive);
+        }
+    }
+
+    void destroyEntity(const EntityPtr& entityPtr)
+    {
+        entityPtr->destroy();
+        ECManager.removeComponents(entityPtr);
     }
 
     template<class T> T_EXTENDS(T, Entity)
