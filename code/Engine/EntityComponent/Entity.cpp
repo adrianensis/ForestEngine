@@ -13,15 +13,8 @@ void Entity::init()
 	
 }
 
-void Entity::setIsActive(bool isActive)
-{
-	mIsActive = isActive;
-}
-
 void Entity::destroy()
 {
-	mIsActive = false;
-
 	onDestroy();
 
 	mIsDestroyed = true;

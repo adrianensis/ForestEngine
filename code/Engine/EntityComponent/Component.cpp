@@ -12,21 +12,11 @@ Component::~Component()
 
 }
 
-bool Component::isActive() const
-{
-	return mIsDestroyed ? false : mIsActive;
-}
-
-void Component::setIsActive(bool isActive)
-{
-	mIsActive = isActive;
-}
-
 void Component::destroy()
 {
 	CHECK_MSG(!getIsDestroyed(), "Component already destroyed");
     mIsDestroyed = true;
-    mIsActive = false;
+    // mIsActive = false;
     onDestroy();
 }
 

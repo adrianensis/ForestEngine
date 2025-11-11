@@ -40,8 +40,6 @@ public:
 
 	virtual void onComponentAdded() { }
 
-    bool isActive() const;
-    void setIsActive(bool isActive);
     void destroy();
     virtual void onDestroy();
     virtual void onRecycle(Core::Slot newSlot);
@@ -53,8 +51,6 @@ public:
 
 protected:
     ComponentOwner mComponentOwner;
-private:
-	bool mIsActive = true;
 	bool mIsDestroyed = false;
 	Core::Slot mSlot;
     

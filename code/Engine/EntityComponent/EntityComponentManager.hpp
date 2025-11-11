@@ -274,16 +274,6 @@ public:
         entityPtr.reset();
     }
 
-    void setEntityActive(const EntityPtrBase& entityPtr, bool isActive)
-    {
-        entityPtr->setIsActive(isActive);
-        const auto& components = ECManager.getComponents(entityPtr);
-        FOR_LIST(it, components)
-        {
-        	(*it)->setIsActive(isActive);
-        }
-    }
-
     void destroyEntity(const EntityPtrBase& entityPtr)
     {
         entityPtr->destroy();

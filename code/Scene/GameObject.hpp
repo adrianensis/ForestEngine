@@ -13,7 +13,11 @@ public:
 	GameObject();
     void init() override;
 	virtual void onAddedToScene(){};
-
+	bool isActive() const
+	{
+		return mIsDestroyed ? false : mIsActive;
+	};
+    void setIsActive(bool isActive);
 public:
 	bool mIsStatic = false;
 	Core::Ptr<Scene> mScene;
@@ -21,6 +25,7 @@ public:
 
 private:
 	Core::HashedString mTag;
+	bool mIsActive = true;
 
 	Core::u64 mGameObjectId = 0;
     // Important: starts by 1, 0 is reserved for null

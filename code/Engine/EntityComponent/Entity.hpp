@@ -12,19 +12,12 @@ public:
 
     virtual void init();
 
-	bool isActive() const
-	{
-		return mIsDestroyed ? false : mIsActive;
-	};
-
 	virtual void onDestroy(){};
     virtual void onRecycle(Core::Slot newSlot);
     
-    void setIsActive(bool isActive);
     void destroy();
 
-private:
-	bool mIsActive = true;
+protected:
 	bool mIsDestroyed = false;
     Core::Slot mSlot;
 
