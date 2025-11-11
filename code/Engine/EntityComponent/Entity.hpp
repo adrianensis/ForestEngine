@@ -29,7 +29,6 @@ private:
     Core::Slot mSlot;
 
 public:
-	Core::HashedString mTag;
 
     #ifdef ENGINE_BUILD_DEBUG
     Core::HashedString mDebugString;

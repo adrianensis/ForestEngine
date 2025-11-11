@@ -20,6 +20,8 @@ public:
 	EC::ComponentPtr<Transform> mTransform;
 
 private:
+	Core::HashedString mTag;
+
 	Core::u64 mGameObjectId = 0;
     // Important: starts by 1, 0 is reserved for null
 	inline static Core::u64 smGameObjectIdCounter = 1;
