@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/EntityComponent/Component.hpp"
-#include "Engine/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 #include "Core/Memory/Pool.hpp"
 
 NS_BEGIN(EC)

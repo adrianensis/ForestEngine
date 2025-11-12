@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "Engine/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 
 class UIElement;
 

@@ -9,14 +9,14 @@ void ScenesManager::terminate()
 {
     if(mGameObjectController)
     {
-        ECManager.destroyEntity(mGameObjectController);
+        mGameObjectController->destroy();
         mGameObjectController.reset();
     }
 
 	if (mCameraGameObject)
 	{
         EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
-        ECManager.destroyEntity(mCameraGameObject);
+        mCameraGameObject->destroy();
         mCameraGameObject.reset();
 	}
 

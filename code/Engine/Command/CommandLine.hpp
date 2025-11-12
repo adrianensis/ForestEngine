@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/HashedString/HashedString.hpp"
-#include "Engine/System/System.hpp"
+#include "Core/System/System.hpp"
 #include "Engine/Command/Command.hpp"
 
 NS_BEGIN(Command)

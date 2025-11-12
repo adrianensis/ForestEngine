@@ -1,5 +1,5 @@
 #include "Scene/Scene.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/GameObject.hpp"
 #include "Scene/Transform.hpp"
 #include "Engine/EngineConfig.hpp"
@@ -121,8 +121,6 @@ void Scene::removeGameObject(EC::EntityPtr<GameObject> gameObject)
 {
 	if (gameObject && !gameObject->getIsDestroyed())
 	{
-        ECManager.destroyEntity(gameObject);
-
         auto it = std::find(mGameObjects.begin(), mGameObjects.end(), gameObject);
         if (it != mGameObjects.end())
         {
@@ -135,7 +133,7 @@ void Scene::removeGameObject(EC::EntityPtr<GameObject> gameObject)
             mNewGameObjects.erase(itNew);
         }
 
-        ECManager.removeEntity(gameObject);
+        gameObject->destroy();
     }
 }
 
@@ -187,7 +185,7 @@ void Scene::destroyGameObjects()
 		{
             if (!gameObject->getIsDestroyed())
             {
-                ECManager.destroyEntity(gameObject);
+                gameObject->destroy();
                 gameObject.reset();
             }
         }

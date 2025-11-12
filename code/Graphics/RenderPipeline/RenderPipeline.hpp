@@ -4,7 +4,7 @@
 #include "Graphics/Light/Light.hpp"
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Engine/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "GPU/RenderItem/GPURenderItemManager.hpp"
 #include "GPU/GPUInstance.hpp"
 

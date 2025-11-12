@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
-#include "Engine/EntityComponent/EntityComponentPool.hpp"
+#include "Core/EntityComponent/EntityComponentPool.hpp"
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
-#include <string>
-#include <vector>
 
 NS_BEGIN(EC)
 class IComponentsListener
@@ -120,6 +118,10 @@ public:
         
         componentPtr->onComponentAdded();
 
+        // TODO: Continue here:
+        // Move this outside
+        // create removeComponent, removeComponents and addComponent in GameObject again
+        // call notify from there
         ECManager.notifyListenersOnComponentAdded(componentPtr);
     }
 
@@ -152,10 +154,6 @@ public:
 
         if(componentFound)
         {
-            ECManager.notifyListenersOnComponentRemoved(componentPtr);
-            componentPtr->destroy();
-            componentPtr->setComponentOwner(ComponentOwner());
-
             mECPool.getComponentsPool().removeElement(componentPtr);
         }
     }
@@ -169,9 +167,6 @@ public:
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
-            ECManager.notifyListenersOnComponentRemoved((*it));
-            (*it)->destroy();
-
             mECPool.getComponentsPool().removeElement((*it));
         }
 
@@ -268,16 +263,10 @@ public:
         return entityPtr;
     }
 
-    void removeEntity(EntityPtrBase& entityPtr)
+    void removeEntity(const EntityPtrBase& entityPtr)
     {
-        mECPool.getEntitiesPool().removeElement(entityPtr);
-        entityPtr.reset();
-    }
-
-    void destroyEntity(const EntityPtrBase& entityPtr)
-    {
-        entityPtr->destroy();
         ECManager.removeComponents(entityPtr);
+        mECPool.getEntitiesPool().removeElement(entityPtr);
     }
 
     template<class T> T_EXTENDS(T, Entity)

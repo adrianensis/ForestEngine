@@ -9,16 +9,10 @@ class Entity
 {
 public:
     Entity();
-
     virtual void init();
-
-	virtual void onDestroy(){};
     virtual void onRecycle(Core::Slot newSlot);
     
-    void destroy();
-
 protected:
-	bool mIsDestroyed = false;
     Core::Slot mSlot;
 
 public:
@@ -27,7 +21,6 @@ public:
     Core::HashedString mDebugString;
     #endif
     
-	GET(IsDestroyed)
 	GET(Slot)
 };
 REGISTER_CLASS(Entity);

@@ -1,8 +1,8 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
-#include "Engine/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 #include "GPU/GPUInstance.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 #include "Scene/Transform.hpp"

@@ -1,7 +1,7 @@
 #include "UI/UIElements/UIElement.hpp"
 
-#include "Engine/EntityComponent/Entity.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 

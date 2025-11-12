@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "Engine/EntityComponent/Entity.hpp"
-#include "Engine/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Component.hpp"
 
 class Transform;
 class Scene;
@@ -18,20 +18,24 @@ public:
 		return mIsDestroyed ? false : mIsActive;
 	};
     void setIsActive(bool isActive);
+	virtual void onDestroy(){};
+    void destroy();
 public:
 	bool mIsStatic = false;
 	Core::Ptr<Scene> mScene;
 	EC::ComponentPtr<Transform> mTransform;
-
+	
 private:
+	bool mIsDestroyed = false;
 	Core::HashedString mTag;
 	bool mIsActive = true;
-
+	
 	Core::u64 mGameObjectId = 0;
     // Important: starts by 1, 0 is reserved for null
 	inline static Core::u64 smGameObjectIdCounter = 1;
-
+	
 public:
+	GET(IsDestroyed)
 	GET(GameObjectId)
 
 };

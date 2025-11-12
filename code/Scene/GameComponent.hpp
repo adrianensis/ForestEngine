@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "Engine/EntityComponent/Entity.hpp"
-#include "Engine/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Component.hpp"
 
 class Transform;
 class Scene;
@@ -15,15 +15,19 @@ public:
     bool isActive() const;
     void setIsActive(bool isActive);
     EC::EntityPtrBase getOwnerEntity() const;
+    void destroy();
+    virtual void onDestroy();
 
 private:
 	bool mIsActive = true;
+	bool mIsDestroyed = false;
 
 	Core::u64 mComponentId = 0;
     // Important: starts by 1, 0 is reserved for null
 	inline static Core::u64 smComponentIdCounter = 1;
 
 public:
+	GET(IsDestroyed)
     GET(ComponentId)
 };
 REGISTER_CLASS(GameComponent);

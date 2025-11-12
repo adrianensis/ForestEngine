@@ -1,6 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 void RenderPassBase::updateGlobalData()
 {

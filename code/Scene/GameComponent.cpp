@@ -23,3 +23,16 @@ void GameComponent::setIsActive(bool isActive)
 {
 	mIsActive = isActive;
 }
+
+void GameComponent::destroy()
+{
+	CHECK_MSG(!getIsDestroyed(), "Component already destroyed");
+    mIsDestroyed = true;
+    // mIsActive = false;
+    onDestroy();
+    mComponentOwner.reset();
+}
+
+void GameComponent::onDestroy()
+{
+}

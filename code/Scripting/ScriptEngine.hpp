@@ -2,8 +2,8 @@
 
 #include "Engine/Core.hpp"
 #include "Scripting/Script.hpp"
-#include "Engine/EntityComponent/Component.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 class ScriptEngine: public System::System, public EC::IComponentsListener
 {

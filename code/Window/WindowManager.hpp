@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/System/System.hpp"
+#include "Core/System/System.hpp"
 #include "Window/Window.hpp"
 NS_BEGIN(Window)
 class WindowManager : public System::System

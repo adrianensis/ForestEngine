@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
-#include "Engine/System/System.hpp"
+#include "Core/System/System.hpp"
 #include "Engine/Input/InputEvents.hpp"
 
 #define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(::Input::Input), event);

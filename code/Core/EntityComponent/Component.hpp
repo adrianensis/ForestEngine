@@ -40,8 +40,6 @@ public:
 
 	virtual void onComponentAdded() { }
 
-    void destroy();
-    virtual void onDestroy();
     virtual void onRecycle(Core::Slot newSlot);
 
     // Important: Override this in ONLY those component classes allowed to be injected into engine systems
@@ -51,7 +49,6 @@ public:
 
 protected:
     ComponentOwner mComponentOwner;
-	bool mIsDestroyed = false;
 	Core::Slot mSlot;
     
 public:
@@ -59,7 +56,6 @@ public:
     Core::HashedString mDebugString;
     #endif
     GET_SET(ComponentOwner)
-	GET(IsDestroyed)
 	GET(Slot)
 };
 REGISTER_CLASS(Component);

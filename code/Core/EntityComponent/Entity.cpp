@@ -1,6 +1,6 @@
-#include "Engine/EntityComponent/Entity.hpp"
-#include "Engine/EntityComponent/Component.hpp"
-#include "Engine/EntityComponent/EntityComponentPool.hpp"
+#include "Core/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/EntityComponentPool.hpp"
 
 NS_BEGIN(EC)
 Entity::Entity()
@@ -11,13 +11,6 @@ Entity::Entity()
 void Entity::init()
 {
 	
-}
-
-void Entity::destroy()
-{
-	onDestroy();
-
-	mIsDestroyed = true;
 }
 
 void Entity::onRecycle(Core::Slot newSlot)

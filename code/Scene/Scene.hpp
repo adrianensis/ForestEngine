@@ -2,7 +2,7 @@
 
 #include "Engine/Core.hpp"
 #include "Core/Config/Config.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/GameObject.hpp"
 
 class Scene: public Core::ISerializable

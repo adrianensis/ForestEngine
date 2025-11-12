@@ -2,7 +2,7 @@
 
 #include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Light/Light.hpp"
-#include "Engine/EntityComponent/Component.hpp"
+#include "Core/EntityComponent/Component.hpp"
 class RenderPassGeometry: public RenderPassBase
 {
 protected:

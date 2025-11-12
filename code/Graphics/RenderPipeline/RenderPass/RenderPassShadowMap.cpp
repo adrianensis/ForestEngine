@@ -2,7 +2,7 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Window/WindowManager.hpp"
 #include "GPU/Shader/BuiltIn/GPUShaderDepthBuffer.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 void RenderPassShadowMap::preRender()
 {

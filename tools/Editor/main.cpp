@@ -2,7 +2,7 @@
 #include "Engine/Engine.hpp"
 #include "Scene/Module.hpp"
 #include "Scripting/Module.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 
 #include "Editor.hpp"
 

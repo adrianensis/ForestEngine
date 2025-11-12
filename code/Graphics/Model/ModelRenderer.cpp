@@ -3,8 +3,8 @@
 #include "Graphics/Model/Model.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
-#include "Engine/EntityComponent/EntityComponentManager.hpp"
-#include "Engine/EntityComponent/Entity.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Core/EntityComponent/Entity.hpp"
 
 void ModelRenderer::init(const ModelRendererData& data) 
 {
