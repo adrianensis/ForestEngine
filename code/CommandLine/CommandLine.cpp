@@ -1,8 +1,8 @@
-#include "Engine/Command/CommandLine.hpp"
+#include "CommandLine/CommandLine.hpp"
 
 #include "Core/Assert/Assert.hpp"
-#include "Engine/Command/DefaultCommands.hpp"
-#include "Engine/Input/InputEvents.hpp"
+#include "CommandLine/DefaultCommands.hpp"
+#include "Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Event/EventsManager.hpp"
 #include "GLFW/glfw3.h"

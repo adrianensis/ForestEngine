@@ -1,8 +1,8 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Engine/Command/CommandLine.hpp"
+#include "CommandLine/CommandLine.hpp"
 #include "Core/Time/TimerManager.hpp"
-#include "Engine/Input/Input.hpp"
+#include "Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
 
 #include "Core/System/SystemsManager.hpp"

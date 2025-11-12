@@ -1,5 +1,5 @@
-#include "Engine/Command/DefaultCommands.hpp"
-#include "Engine/Command/CommandLine.hpp"
+#include "CommandLine/DefaultCommands.hpp"
+#include "CommandLine/CommandLine.hpp"
 #include "Core/System/SystemsManager.hpp"
 
 NS_BEGIN(Command)

@@ -2,7 +2,7 @@
 
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/System/System.hpp"
-#include "Engine/Command/Command.hpp"
+#include "CommandLine/Command.hpp"
 
 NS_BEGIN(Command)
 
