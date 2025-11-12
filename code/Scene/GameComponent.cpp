@@ -26,6 +26,8 @@ void GameComponent::setIsActive(bool isActive)
 
 void GameComponent::destroy()
 {
+    EC::Component::destroy();
+    
 	CHECK_MSG(!getIsDestroyed(), "Component already destroyed");
     mIsDestroyed = true;
     // mIsActive = false;

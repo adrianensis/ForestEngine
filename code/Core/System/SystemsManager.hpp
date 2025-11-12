@@ -2,7 +2,6 @@
 
 #include "Core/System/System.hpp"
 #include "Core/Memory/Singleton.hpp"
-#include "Core/EntityComponent/Component.hpp"
 
 NS_BEGIN(System)
 

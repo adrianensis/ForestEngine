@@ -15,11 +15,12 @@ public:
     bool isActive() const;
     void setIsActive(bool isActive);
     EC::EntityPtrBase getOwnerEntity() const;
-    void destroy();
     virtual void onDestroy();
-
+    
 private:
-	bool mIsActive = true;
+    virtual void destroy();
+	
+    bool mIsActive = true;
 	bool mIsDestroyed = false;
 
 	Core::u64 mComponentId = 0;

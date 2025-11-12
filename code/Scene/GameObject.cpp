@@ -40,14 +40,6 @@ void GameObject::destroy()
 {
     CHECK_MSG(mIsDestroyed == false, "Object already destroyed!");
 	onDestroy();
-    const auto& components = ECManager.getComponents(ECManager.getEntityPtr(this));
-    FOR_LIST(it, components)
-    {
-        EC::ComponentPtr<GameComponent> gameComp = *it;
-        ECManager.notifyListenersOnComponentRemoved((*it));
-        gameComp->destroy();
-    }
-
 	mIsDestroyed = true;
 
     ECManager.removeEntity(ECManager.getEntityPtr(this));

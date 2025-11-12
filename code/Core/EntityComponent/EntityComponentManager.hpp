@@ -118,10 +118,6 @@ public:
         
         componentPtr->onComponentAdded();
 
-        // TODO: Continue here:
-        // Move this outside
-        // create removeComponent, removeComponents and addComponent in GameObject again
-        // call notify from there
         ECManager.notifyListenersOnComponentAdded(componentPtr);
     }
 
@@ -154,6 +150,8 @@ public:
 
         if(componentFound)
         {
+            ECManager.notifyListenersOnComponentRemoved(componentPtr);
+            componentPtr->destroy();
             mECPool.getComponentsPool().removeElement(componentPtr);
         }
     }
@@ -167,6 +165,8 @@ public:
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
+            ECManager.notifyListenersOnComponentRemoved((*it));
+            (*it)->destroy();
             mECPool.getComponentsPool().removeElement((*it));
         }
 
