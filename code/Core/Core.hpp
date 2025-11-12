@@ -24,8 +24,6 @@
 #include "Core/Tag/Tag.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/Serialization/Serialization.hpp"
-#include "Core/Memory/ByteBuffer.hpp"
-#include "Core/Memory/GenericObject.hpp"
 #include "Core/Functor/Functor.hpp"
 #include "Core/Metadata/ClassManager.hpp"
 #include "Core/Metadata/EnumsManager.hpp"

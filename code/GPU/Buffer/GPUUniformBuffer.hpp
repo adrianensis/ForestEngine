@@ -2,6 +2,7 @@
 
 #include "GPU/Shader/GPUVariable.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
+#include "Core/Memory/ByteBuffer.hpp"
 
 class GPUUniformBufferData
 {

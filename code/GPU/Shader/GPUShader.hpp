@@ -2,6 +2,8 @@
 
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
+#include "Core/Memory/ByteBuffer.hpp"
+#include "Core/Memory/GenericObject.hpp"
 
 class GPUMesh;
 class GPUShaderManager;

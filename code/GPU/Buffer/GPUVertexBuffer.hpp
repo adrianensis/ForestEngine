@@ -6,6 +6,7 @@
 #include "GPU/Core/GPUDevice.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Buffer/GPUBuffer.h"
+#include "Core/Memory/ByteBuffer.hpp"
 
 class GPUVertexBufferData
 {
