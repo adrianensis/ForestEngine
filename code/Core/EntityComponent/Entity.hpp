@@ -77,7 +77,13 @@ public:
     {
         mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
-        *this = EntityPtr(id, entity->getSlot(), mECPool);
+        mClassId = id;
+        mSlot = entity->getSlot();
+        mECPool = ecPool;
+        #ifdef ENGINE_BUILD_DEBUG
+        mDebugPointer = const_cast<T*>(entity);
+        #endif
+        checkValid();
     }
     EntityPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): EntityPtrBase(id, slot, ecPool)
     {

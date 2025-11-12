@@ -111,7 +111,13 @@ public:
     {
         mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
-        *this = ComponentPtr(id, component->getSlot(), mECPool);
+        mClassId = id;
+        mSlot = component->getSlot();
+        mECPool = ecPool;
+        #ifdef ENGINE_BUILD_DEBUG
+        mDebugPointer = const_cast<T*>(component);
+        #endif
+        checkValid();
     }
     ComponentPtr(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): ComponentPtrBase(id, slot, ecPool)
     {
