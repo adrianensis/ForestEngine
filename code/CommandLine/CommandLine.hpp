@@ -68,5 +68,5 @@ public:
 	CRGET(Buffer)
 	GET_SET(PrintToConsole)
 };
-REGISTER_CLASS(CommandLine);
+REGISTER_CLASS(CommandLine, System);
 NS_END

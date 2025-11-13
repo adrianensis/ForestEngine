@@ -37,4 +37,4 @@ public:
 	SET(GameObjectController)
 	GET(CameraGameObject)
 };
-REGISTER_CLASS(ScenesManager);
+REGISTER_CLASS(ScenesManager, System);

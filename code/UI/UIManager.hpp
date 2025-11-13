@@ -47,4 +47,4 @@ private:
 public:
     GET(DefaultUIShader)
 };
-REGISTER_CLASS(UIManager);
+REGISTER_CLASS(UIManager, System);

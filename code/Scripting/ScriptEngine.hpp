@@ -18,4 +18,4 @@ public:
 private:
 	std::vector<EC::ComponentPtr<Script>> mScripts;
 };
-REGISTER_CLASS(ScriptEngine);
+REGISTER_CLASS(ScriptEngine, System);

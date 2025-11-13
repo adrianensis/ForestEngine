@@ -18,5 +18,5 @@ private:
 public:
     GET(MainWindow)
 };
-REGISTER_CLASS(WindowManager);
+REGISTER_CLASS(WindowManager, System);
 NS_END

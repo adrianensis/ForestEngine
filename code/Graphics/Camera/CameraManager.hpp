@@ -10,4 +10,4 @@ private:
 public:
     GET_SET(Camera)
 };
-REGISTER_CLASS(CameraManager);
+REGISTER_CLASS(CameraManager, System);

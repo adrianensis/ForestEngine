@@ -24,4 +24,4 @@ public:
     CRGET(Models)
     CRGET(MeshToModels)
 };
-REGISTER_CLASS(ModelManager);
+REGISTER_CLASS(ModelManager, System);

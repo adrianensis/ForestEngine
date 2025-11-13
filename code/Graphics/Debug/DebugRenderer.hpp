@@ -17,4 +17,4 @@ public:
 	GPUShapeRenderer mShapeBatchRenderer;
 	GPUShapeRenderer mShapeBatchRendererScreenSpace;
 };
-REGISTER_CLASS(DebugRenderer);
+REGISTER_CLASS(DebugRenderer, System);

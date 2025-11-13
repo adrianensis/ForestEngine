@@ -26,4 +26,4 @@ private:
 public:
 	OcTree octree;
 };
-REGISTER_CLASS(RenderEngine);
+REGISTER_CLASS(RenderEngine, System);

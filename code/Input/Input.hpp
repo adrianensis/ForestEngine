@@ -48,5 +48,5 @@ private:
 public:
     GET_SET(WindowInputAdapter);
 };
-REGISTER_CLASS(Input);
+REGISTER_CLASS(Input, System);
 NS_END

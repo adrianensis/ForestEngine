@@ -29,4 +29,4 @@ private:
 public:
 	GET(FirstUpdateDone)
 };
-REGISTER_CLASS(Script);
+REGISTER_CLASS(Script, GameComponent);

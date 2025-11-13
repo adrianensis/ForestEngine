@@ -15,4 +15,4 @@ private:
 public:
 	CRGET(Config)
 };
-REGISTER_CLASS(EngineConfig);
+REGISTER_CLASS(EngineConfig, System);
