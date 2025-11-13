@@ -77,5 +77,4 @@ public:
     CGET(GLTFWindow);
     CRGET(WindowData);
 };
-REGISTER_CLASS(Window);
 NS_END
