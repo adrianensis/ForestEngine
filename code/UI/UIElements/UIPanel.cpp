@@ -1,10 +1,10 @@
 #include "UI/UIElements/UIPanel.hpp"
 
 
+#include "Core/Maths/Geometry.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
-#include "GPU/GPUInstance.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 
 #include "Scene/Transform.hpp"
 #include "UI/UIElementConfig.hpp"
@@ -57,7 +57,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
     UIArea::initFromConfig(config);
 
     GPURenderItemData rendererData;
-    rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
+    rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {

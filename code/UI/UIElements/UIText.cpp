@@ -4,14 +4,13 @@
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
-#include "GPU/GPUInstance.hpp"
 
 #include "UI/UIManager.hpp"
 #include "UI/UIElements/UIPanel.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Transform.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 
 void UITextGlyph::initFromConfig(const UIElementConfig& config) 
 {
@@ -22,7 +21,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     mCharacter = mConfig.mText.get().at(0);
 
     GPURenderItemData rendererData;
-    rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
+    rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
     rendererData.mShader = GET_SYSTEM(UIManager).getFontShader();
     rendererData.mGPUShaderStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {

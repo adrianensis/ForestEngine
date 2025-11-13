@@ -1,18 +1,19 @@
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
-void GPUMeshFactory::init()
-{
-
+template <>
+Core::HashValue MeshFactory::getPrimitiveId<Maths::Rectangle>() const
+{ 
+	return Core::Hash::hashString("Rectangle");
 }
-
-void GPUMeshFactory::terminate()
+template <>
+Core::HashValue MeshFactory::getPrimitiveId<Maths::Cube>() const
 {
-	mPrimitivesMap.clear();
+	return Core::Hash::hashString("Cube");
 }
 
 template <>
-Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Maths::Rectangle>() const
+Core::OwnerPtr<GPUMesh> MeshFactory::createPrimitive<Maths::Rectangle>() const
 {
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     gpuVertexInputBuffers.push_back(GPUShaderDefinitions::VertexInput::mPosition);
@@ -47,7 +48,7 @@ Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Maths::Rectangle>() cons
 }
 
 template <>
-Core::OwnerPtr<GPUMesh> GPUMeshFactory::createPrimitive<Maths::Cube>() const
+Core::OwnerPtr<GPUMesh> MeshFactory::createPrimitive<Maths::Cube>() const
 {
     std::vector<GPUVariableData> gpuVertexInputBuffers;
     gpuVertexInputBuffers.push_back(GPUShaderDefinitions::VertexInput::mPosition);

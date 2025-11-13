@@ -288,5 +288,4 @@ private:
     std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
     std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<ComponentPtrBase>>> mEntityComponents;
 };
-REGISTER_CLASS(EntityComponentManager);
 NS_END

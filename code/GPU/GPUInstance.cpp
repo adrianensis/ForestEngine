@@ -1,6 +1,5 @@
 #include "GPU/GPUInstance.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 
 void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
@@ -11,8 +10,6 @@ void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
     mGPUContext = Core::OwnerPtr<GPUContext>::newObject();
     mGPUContext->init(gpuWindow);
 
-    mGPUMeshFactory = Core::OwnerPtr<GPUMeshFactory>::newObject();
-    mGPUMeshFactory->init();
     mGPUShaderManager = Core::OwnerPtr<GPUShaderManager>::newObject();
     mGPUShaderManager->init();
     mGPUSkeletalAnimationManager = Core::OwnerPtr<GPUSkeletalAnimationManager>::newObject();
@@ -21,7 +18,6 @@ void GPUInstance::init(Core::Ptr<IGPUWindow> gpuWindow)
 
 void GPUInstance::terminate()
 {
-    mGPUMeshFactory->terminate();
     mGPUShaderManager->terminate();
     mGPUSkeletalAnimationManager->terminate();
     mGPUContext->terminate();

@@ -2,7 +2,7 @@
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Graphics/Model/ModelRenderer.hpp"
@@ -262,7 +262,7 @@ EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f3
 	// gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
 
     // RendererData rendererData;
-	// rendererData.mMesh = GET_SYSTEM(GPUMeshFactory).getPrimitive<Maths::Cube>();
+	// rendererData.mMesh = GET_SYSTEM(MeshFactory).getPrimitive<Maths::Cube>();
 
     GPUShaderData shaderData;
     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
@@ -274,7 +274,7 @@ EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f3
 	// gameObject->addComponent(renderer);
 
 	GPURenderItemData rendererData;
-    rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
+    rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Cube>();
     rendererData.mShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),

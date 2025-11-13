@@ -4,7 +4,6 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Window/GPUWindow.hpp"
 class GPUSkeletalAnimationManager;
-class GPUMeshFactory;
 class GPUShaderManager;
 
 class GPUInstance: public Core::Singleton<GPUInstance>
@@ -15,7 +14,6 @@ public:
 
 public:
     Core::OwnerPtr<GPUContext> mGPUContext;
-    Core::OwnerPtr<GPUMeshFactory> mGPUMeshFactory;
     Core::OwnerPtr<GPUShaderManager> mGPUShaderManager;
     Core::OwnerPtr<GPUSkeletalAnimationManager> mGPUSkeletalAnimationManager;
 };

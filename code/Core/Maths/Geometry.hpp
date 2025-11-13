@@ -71,7 +71,6 @@ public:
     const Vector3& getStart() const { return mStart; }
     const Vector3& getEnd() const { return mEnd; }
 };
-REGISTER_CLASS(Line)
 
 class Cube;
 
@@ -107,7 +106,6 @@ public:
     const Vector3& getLeftTopFront() const { return mLeftTopFront; }
     const Vector3& getSize() const { return mSize; }
 };
-REGISTER_CLASS(Rectangle)
 
 class Cube
 {
@@ -136,7 +134,6 @@ public:
     const Vector3& getLeftTopFront() const { return mLeftTopFront; }
     const Vector3& getSize() const { return mSize; }
 };
-REGISTER_CLASS(Cube)
 
 class Sphere
 {
@@ -160,5 +157,4 @@ public:
     const Vector3& getCenter() const { return mCenter; }
     Core::f32 getRadius() const { return mRadius; }
 };
-REGISTER_CLASS(Sphere)
 NS_END

@@ -1,16 +1,16 @@
 #include "UI/UIElements/UIList.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIBuilder.hpp"
 #include "UI/UIElements/UIText.hpp"
 #include "UI/UIElements/UIButton.hpp"
 
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "GPU/GPUInstance.hpp"
 #include "Window/WindowManager.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Scene.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 
 void UIListEntry::init(const std::string& label, UIElementCallback callback)
 {
@@ -40,7 +40,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
-	rendererData.mMesh = GPUInstance::getInstance().mGPUMeshFactory->getPrimitive<Maths::Cube>();
+	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mGPUShaderStencilData = calculateStencilData();

@@ -11,5 +11,4 @@ public:
     virtual void init() { };
     virtual void terminate() { };
 };
-REGISTER_CLASS(System);
 NS_END

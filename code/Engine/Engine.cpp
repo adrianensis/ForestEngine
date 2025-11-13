@@ -9,7 +9,7 @@
 #include "Window/WindowManager.hpp"
 #include "Graphics/RenderEngine.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "GPU/Mesh/GPUMeshFactory.hpp"
+#include "Graphics/Mesh/MeshFactory.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
