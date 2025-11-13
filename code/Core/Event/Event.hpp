@@ -15,7 +15,6 @@ public:
 	IEventObject* mInstigator = nullptr;
 	
 };
-REGISTER_CLASS(Event);
 
 using EventCallback = std::function<void(const Event *)>;
 
