@@ -1,6 +1,44 @@
 #include "Core/Metadata/ClassManager.hpp"
 
 NS_BEGIN(Core)
+
+ClassDefinition::ClassDefinition(HashedString name, u32 typeSize): mName(name), mTypeSize(typeSize)
+{
+
+}
+
+ClassDefinition::ClassDefinition(HashedString name, u32 typeSize, const std::array<HashedString, MAX_CLASS_BASES>& bases):
+ClassDefinition(name, typeSize)
+{
+    FOR_ARRAY(i, bases)
+    {
+        mBases[i] = bases[i].getHash();
+    }
+}
+
+ClassId ClassDefinition::getId() const
+{
+    return mName.getHash();
+};
+
+bool ClassDefinition::isA(ClassId classId) const
+{
+    ClassId thisId = getId();
+    if(thisId == classId)
+    {
+        return true;
+    }
+    FOR_ARRAY(i, mBases)
+    {
+        if(mBases[i] == classId)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 ClassRegisterHelper::ClassRegisterHelper(InternalCPPTypeId internalCPPId, const ClassDefinition& classDefinition)
 {
     ClassManager::insert(internalCPPId, ClassMetadata(classDefinition));

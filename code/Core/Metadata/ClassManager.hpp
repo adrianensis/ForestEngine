@@ -9,9 +9,10 @@
 
 NS_BEGIN(Core)
 
-#define REGISTER_CLASS(...) \
-    inline static const Core::ClassDefinition smClassDefinition_##__VA_ARGS__ {#__VA_ARGS__##sv, sizeof(__VA_ARGS__)}; \
-    inline static const Core::ClassRegisterHelper classRegisterHelper_##__VA_ARGS__ = Core::ClassRegisterHelper(typeid(__VA_ARGS__).hash_code(), smClassDefinition_##__VA_ARGS__);
+// Class, Bases...
+#define REGISTER_CLASS(Class, ...) \
+    inline static const Core::ClassDefinition smClassDefinition_##Class(#Class##sv, sizeof(Class) __VA_OPT__(,) __VA_OPT__({) FOR_EACH(TO_STRING_AND_ADD_TRAIL_COMMA, __VA_ARGS__) __VA_OPT__(})); \
+    inline static const Core::ClassRegisterHelper classRegisterHelper_##Class = Core::ClassRegisterHelper(typeid(Class).hash_code(), smClassDefinition_##Class);
 
 #define REGISTER_MEMBER(memberName, ...) \
     inline static const Core::MemberDefinition smMemberDefinition_##memberName {#memberName##sv, #__VA_ARGS__##sv, offsetof(ThisClass, memberName)}; \
@@ -21,13 +22,21 @@ NS_BEGIN(Core)
     __VA_ARGS__;        \
     REGISTER_MEMBER(__VA_ARGS__);
 
+#define MAX_CLASS_BASES 32
+
 class ClassDefinition
 {
 public:
-    ClassId getId() const { return mName.getHash(); };
+    ClassDefinition() = default;
+    ClassDefinition(HashedString name, u32 typeSize);
+    ClassDefinition(HashedString name, u32 typeSize, const std::array<HashedString, MAX_CLASS_BASES>& bases);
+    ClassId getId() const;
+    bool isA(ClassId classId) const;
+
 public:
     HashedString mName;
     u32 mTypeSize = 0;
+    std::array<ClassId, MAX_CLASS_BASES> mBases;
 };
 
 class MemberDefinition
