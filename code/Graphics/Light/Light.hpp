@@ -7,7 +7,6 @@
 class Light: public GameComponent
 {
 public:
-    Core::ClassId getComponentTypeId() const override;
     virtual Maths::Matrix4 getLightProjectionViewMatrix() const;
 };
 REGISTER_CLASS(Light);

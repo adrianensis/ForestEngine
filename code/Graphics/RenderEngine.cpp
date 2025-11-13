@@ -1,4 +1,5 @@
 #include "Graphics/RenderEngine.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Window/WindowManager.hpp"
@@ -53,7 +54,8 @@ void RenderEngine::terminate()
 
 void RenderEngine::onComponentAdded(const EC::ComponentPtrBase& component)
 {
-    if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
+    const Core::ClassMetadata& classMetadata = Core::ClassManager::getDynamicClassMetadata(&component.get<EC::Component>());
+    if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId()))
     {
         EC::ComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->addRenderer(renderer);
@@ -63,7 +65,7 @@ void RenderEngine::onComponentAdded(const EC::ComponentPtrBase& component)
         //     //octree.addOcTreeElement(Core::WeakPtr<IOcTreeElement>::cast(renderer));
         // }
     }
-    else if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
+    else if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId()))
     {
         // if(component.getComponent(). <PointLight>())
         // {
@@ -78,12 +80,13 @@ void RenderEngine::onComponentAdded(const EC::ComponentPtrBase& component)
 
 void RenderEngine::onComponentRemoved(const EC::ComponentPtrBase& component)
 {
-    if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId())
+    const Core::ClassMetadata& classMetadata = Core::ClassManager::getDynamicClassMetadata(&component.get<EC::Component>());
+    if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId()))
     {
         EC::ComponentPtr<MeshRenderer> renderer = component;
         mRenderPipeline->removeRenderer(renderer);
     }
-    else if(component->getComponentTypeId() == Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId())
+    else if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId()))
     {
     }
 }

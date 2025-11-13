@@ -37,4 +37,4 @@ private:
 
     Maths::Vector2 mLastMousePosition;
 };
-REGISTER_CLASS(Editor)
+REGISTER_CLASS(Editor, Script)

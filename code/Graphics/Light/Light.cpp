@@ -3,8 +3,6 @@
 #include "Window/WindowManager.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 
-Core::ClassId Light::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId(); }
-
 Maths::Matrix4 Light::getLightProjectionViewMatrix() const
 {
     EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();

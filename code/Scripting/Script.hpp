@@ -9,8 +9,6 @@ class GameObject;
 class Script: public GameComponent
 {
 public:
-    Core::ClassId getComponentTypeId() const override;
-
     virtual void init();
     virtual void firstUpdate();
     virtual void update();

@@ -12,8 +12,6 @@ class MeshRenderer: public GameComponent, public IOcTreeElement
 {
     
 public:
-    Core::ClassId getComponentTypeId() const override;
-
     void init(const GPURenderItemData& data);
     void onECComponentAdded() override;
     void onDestroy() override;

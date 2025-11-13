@@ -7,8 +7,6 @@
 #include "Scene/GameObject.hpp"
 #include "Scene/Transform.hpp"
 
-Core::ClassId MeshRenderer::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId(); }
-
 void MeshRenderer::init(const GPURenderItemData& data) 
 {
     mGPURenderItem = Core::OwnerPtr<GPURenderItem>::newObject();

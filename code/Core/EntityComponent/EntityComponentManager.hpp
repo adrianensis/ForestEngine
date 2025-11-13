@@ -215,14 +215,18 @@ public:
 
     void notifyListenersOnComponentAdded(const ComponentPtrBase& componentPtr) const
     {
-        Core::ClassId id = componentPtr->getComponentTypeId();
-        if(mComponentListeners.contains(id))
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getDynamicClassMetadata(&componentPtr.get<Component>());
+        FOR_MAP(it, mComponentListeners)
         {
-            FOR_LIST(it, mComponentListeners.at(id))
+            bool classFound = classMetaData.mClassDefinition.isA(it->first);
+            if(classFound)
             {
-                if((*it).isValid())
+                FOR_LIST(itListener, it->second)
                 {
-                    (*it)->onComponentAdded(componentPtr);
+                    if((*itListener).isValid())
+                    {
+                        (*itListener)->onComponentAdded(componentPtr);
+                    }
                 }
             }
         }
@@ -230,14 +234,18 @@ public:
 
     void notifyListenersOnComponentRemoved(const ComponentPtrBase& componentPtr) const
     {
-        Core::ClassId id = componentPtr->getComponentTypeId();
-        if(mComponentListeners.contains(id))
+        const Core::ClassMetadata& classMetaData = Core::ClassManager::getDynamicClassMetadata(&componentPtr.get<Component>());
+        FOR_MAP(it, mComponentListeners)
         {
-            FOR_LIST(it, mComponentListeners.at(id))
+            bool classFound = classMetaData.mClassDefinition.isA(it->first);
+            if(classFound)
             {
-                if((*it).isValid())
+                FOR_LIST(itListener, it->second)
                 {
-                    (*it)->onComponentRemoved(componentPtr);
+                    if((*itListener).isValid())
+                    {
+                        (*itListener)->onComponentRemoved(componentPtr);
+                    }
                 }
             }
         }

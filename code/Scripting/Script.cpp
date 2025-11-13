@@ -1,8 +1,6 @@
 #include "Scripting/Script.hpp"
 #include "Scene/Module.hpp"
 
-Core::ClassId Script::getComponentTypeId() const { return Core::ClassManager::getClassMetadata<Script>().mClassDefinition.getId(); }
-
 void Script::init()
 {
 	mFirstUpdateDone = false;
