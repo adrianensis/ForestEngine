@@ -18,7 +18,6 @@ GameObject::GameObject()
 void GameObject::init()
 {
     PROFILER_CPU()
-    EC::Entity::init();
     mTransform = ECManager.requestComponent<Transform>();
     mTransform->init();
     ECManager.addComponent(ECManager.getEntityPtr(this), mTransform);

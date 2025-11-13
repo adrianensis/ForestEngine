@@ -11,7 +11,7 @@ class GameObject: public EC::Entity, public Event::IEventObject
 {
 public:
 	GameObject();
-    void init() override;
+    virtual void init();
 	virtual void onAddedToScene(){};
 	bool isActive() const
 	{

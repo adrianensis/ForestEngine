@@ -8,11 +8,6 @@ Entity::Entity()
 
 }
 
-void Entity::init()
-{
-	
-}
-
 void Entity::onRecycle(Core::Slot newSlot)
 {
     mSlot = newSlot;

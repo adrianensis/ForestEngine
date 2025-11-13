@@ -9,7 +9,6 @@ class Entity
 {
 public:
     Entity();
-    virtual void init();
     virtual void onRecycle(Core::Slot newSlot);
     
 protected:
