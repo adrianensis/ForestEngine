@@ -9,7 +9,7 @@ class Entity
 {
 public:
     Entity();
-    virtual void onRecycle(Core::Slot newSlot);
+    virtual void onECComponentRecycle(Core::Slot newSlot);
     
 protected:
     Core::Slot mSlot;

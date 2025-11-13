@@ -8,7 +8,7 @@ void Camera::init()
 	mGPUCamera.init();
 }
 
-void Camera::onComponentAdded()
+void Camera::onECComponentAdded()
 {
     mGPUCamera.recalculateProjectionMatrix();
 }

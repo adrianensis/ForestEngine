@@ -8,7 +8,7 @@ class Camera: public GameComponent
 {
 public:
     void init();
-    void onComponentAdded();
+    void onECComponentAdded() override;
     void update();
 	void onResize();
 private:

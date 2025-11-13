@@ -15,7 +15,7 @@ void MeshRenderer::init(const GPURenderItemData& data)
     mGPURenderItem->init(data, false, GPUInstance::getInstance().mGPUShaderManager);
 }
 
-void MeshRenderer::onComponentAdded() 
+void MeshRenderer::onECComponentAdded() 
 {
     mGPURenderItem->setIsStatic(EC::EntityPtr<GameObject>(getOwnerEntity())->mIsStatic);
     calculateRendererModelMatrix();

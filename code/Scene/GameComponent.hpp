@@ -18,7 +18,7 @@ public:
     virtual void onDestroy();
     
 private:
-    virtual void destroy();
+    virtual void onECComponentDestroyed();
 	
     bool mIsActive = true;
 	bool mIsDestroyed = false;

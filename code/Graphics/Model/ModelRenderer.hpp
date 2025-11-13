@@ -17,7 +17,7 @@ class ModelRenderer: public GameComponent
 public:
     void init(const ModelRendererData& data);
     
-    void onComponentAdded() override;
+    void onECComponentAdded() override;
     void onDestroy() override;
 
 private:

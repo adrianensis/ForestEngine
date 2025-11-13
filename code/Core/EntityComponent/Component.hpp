@@ -38,9 +38,9 @@ public:
     Component();
     virtual ~Component();
 
-	virtual void onComponentAdded() { }
-    virtual void destroy() { };
-    virtual void onRecycle(Core::Slot newSlot);
+	virtual void onECComponentAdded() { }
+    virtual void onECComponentDestroyed() { };
+    virtual void onECComponentRecycle(Core::Slot newSlot);
 
     // Important: Override this in ONLY those component classes allowed to be injected into engine systems
     // MeshRenderer for RenderEngine, Script for RenderEngine, ...

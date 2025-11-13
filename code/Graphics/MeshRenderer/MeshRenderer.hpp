@@ -15,7 +15,7 @@ public:
     Core::ClassId getComponentTypeId() const override;
 
     void init(const GPURenderItemData& data);
-    void onComponentAdded() override;
+    void onECComponentAdded() override;
     void onDestroy() override;
     void update();
 

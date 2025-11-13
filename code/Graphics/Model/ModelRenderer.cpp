@@ -11,7 +11,7 @@ void ModelRenderer::init(const ModelRendererData& data)
     mModelRendererData = data;
 }
 
-void ModelRenderer::onComponentAdded() 
+void ModelRenderer::onECComponentAdded() 
 {
 	const auto& meshes = mModelRendererData.mModel->getMeshInstances();
     FOR_LIST(it, meshes)

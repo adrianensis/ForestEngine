@@ -12,7 +12,7 @@ Component::~Component()
 
 }
 
-void Component::onRecycle(Core::Slot newSlot)
+void Component::onECComponentRecycle(Core::Slot newSlot)
 {
     mSlot = newSlot;
 }

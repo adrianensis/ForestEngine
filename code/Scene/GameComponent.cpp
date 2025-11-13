@@ -24,10 +24,10 @@ void GameComponent::setIsActive(bool isActive)
 	mIsActive = isActive;
 }
 
-void GameComponent::destroy()
+void GameComponent::onECComponentDestroyed()
 {
-    EC::Component::destroy();
-    
+    EC::Component::onECComponentDestroyed();
+
 	CHECK_MSG(!getIsDestroyed(), "Component already destroyed");
     mIsDestroyed = true;
     // mIsActive = false;

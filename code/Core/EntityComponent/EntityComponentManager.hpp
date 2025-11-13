@@ -68,7 +68,7 @@ public:
         if(poolPtr.isValid())
         {
             component = &mECPool.getComponentsPool().getElement<T>(poolPtr);
-            component->onRecycle(poolPtr.mSlot);
+            component->onECComponentRecycle(poolPtr.mSlot);
             #ifdef ENGINE_BUILD_DEBUG
             component->mDebugString = Core::ClassManager::getClassMetadataById(poolPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(poolPtr.mSlot.getSlot());
             #endif
@@ -116,9 +116,9 @@ public:
 
         mEntityComponents.at(id).at(slot.getSlot()).emplace_back(componentPtr);
         
-        componentPtr->onComponentAdded();
+        componentPtr->onECComponentAdded();
 
-        ECManager.notifyListenersOnComponentAdded(componentPtr);
+        notifyListenersOnComponentAdded(componentPtr);
     }
 
     void removeComponent(const EntityPtrBase& entityPtr, ComponentPtrBase componentPtr)
@@ -150,8 +150,8 @@ public:
 
         if(componentFound)
         {
-            ECManager.notifyListenersOnComponentRemoved(componentPtr);
-            componentPtr->destroy();
+            notifyListenersOnComponentRemoved(componentPtr);
+            componentPtr->onECComponentDestroyed();
             mECPool.getComponentsPool().removeElement(componentPtr);
         }
     }
@@ -165,8 +165,8 @@ public:
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
-            ECManager.notifyListenersOnComponentRemoved((*it));
-            (*it)->destroy();
+            notifyListenersOnComponentRemoved((*it));
+            (*it)->onECComponentDestroyed();
             mECPool.getComponentsPool().removeElement((*it));
         }
 
@@ -250,7 +250,7 @@ public:
         if(poolPtr.isValid())
         {
             entity = &mECPool.getEntitiesPool().getElement<T>(poolPtr);
-            entity->onRecycle(poolPtr.mSlot);
+            entity->onECComponentRecycle(poolPtr.mSlot);
             #ifdef ENGINE_BUILD_DEBUG
             entity->mDebugString = Core::ClassManager::getClassMetadataById(poolPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(poolPtr.mSlot.getSlot());
             #endif
@@ -265,7 +265,7 @@ public:
 
     void removeEntity(const EntityPtrBase& entityPtr)
     {
-        ECManager.removeComponents(entityPtr);
+        removeComponents(entityPtr);
         mECPool.getEntitiesPool().removeElement(entityPtr);
     }
 

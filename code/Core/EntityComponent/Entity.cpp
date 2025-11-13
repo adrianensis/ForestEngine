@@ -8,7 +8,7 @@ Entity::Entity()
 
 }
 
-void Entity::onRecycle(Core::Slot newSlot)
+void Entity::onECComponentRecycle(Core::Slot newSlot)
 {
     mSlot = newSlot;
 };
