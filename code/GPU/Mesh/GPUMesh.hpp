@@ -29,4 +29,4 @@ protected:
     // Important: starts by 1, 0 is reserved for null
 	inline static Core::u32 smMeshIdCounter = 1;
 };
-REGISTER_CLASS(GPUMesh);
+

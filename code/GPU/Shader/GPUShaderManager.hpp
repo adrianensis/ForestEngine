@@ -60,4 +60,4 @@ private:
     inline static const Core::u32 mInitialInstances = 20000;
     inline static const Core::u32 mInitialTextures = 300;
 };
-REGISTER_CLASS(GPUShaderManager);
+

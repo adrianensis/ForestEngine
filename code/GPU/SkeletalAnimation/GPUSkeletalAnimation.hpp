@@ -27,7 +27,7 @@ public:
     Core::f32 mDurationInSeconds = 0;
     Core::u32 mID = 0;
 };
-REGISTER_CLASS(GPUSkeletalAnimation);
+
 
 class GPUSkeletalAnimationState
 {
@@ -44,7 +44,7 @@ public:
     CGET(SkeletalAnimation)
     GET(SkeletalAnimationTime)
 };
-REGISTER_CLASS(GPUSkeletalAnimationState);
+
 
 class GPUBoneData
 {
@@ -85,4 +85,4 @@ public:
     CRGET(CurrentBoneTransforms)
     CRGET(GPUSkeletonStateData)
 };
-REGISTER_CLASS(GPUSkeletonState);
+

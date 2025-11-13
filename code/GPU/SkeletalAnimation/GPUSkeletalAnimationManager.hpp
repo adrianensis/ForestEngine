@@ -32,4 +32,4 @@ private:
 public:
     CRGET(SkeletonStates)
 };
-REGISTER_CLASS(GPUSkeletalAnimationManager);
+

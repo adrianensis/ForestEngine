@@ -63,4 +63,4 @@ private:
     Core::OwnerPtr<GPURenderPass> mRenderPassResolve;
     GPUImage vulkanColorImage;
 };
-REGISTER_CLASS(GPURenderGraph);
+

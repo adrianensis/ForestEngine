@@ -48,7 +48,7 @@ public:
     CRGET(GPUInstanceRendererData)
     CRGET(GPUVertexBuffersContainer)
 };
-REGISTER_CLASS(GPUInstanceRenderer);
+
 
 class GPUInstanceRendererManager
 {

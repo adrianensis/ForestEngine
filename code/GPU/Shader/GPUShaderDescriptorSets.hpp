@@ -44,4 +44,4 @@ public:
     GPUShaderDescriptorSetsData mGPUDescriptorData;
     Core::u32 mSamplersBindingIndexOffset = 0;
 };
-REGISTER_CLASS(GPUShaderDescriptorSets);
+

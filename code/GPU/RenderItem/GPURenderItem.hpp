@@ -38,4 +38,4 @@ public:
     SET(IsStatic)
     GET_SET(UpdateMatrix)
 };
-REGISTER_CLASS(GPURenderItem);
+

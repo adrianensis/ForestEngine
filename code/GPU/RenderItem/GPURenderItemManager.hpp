@@ -29,4 +29,4 @@ public:
     CRGET(Matrices)
     CRGET(UsedSlots)
 };
-REGISTER_CLASS(GPURenderItemManager);
+

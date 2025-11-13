@@ -45,4 +45,4 @@ public:
     GET(ID)
     GET(GPUTextureHandle)
 };
-REGISTER_CLASS(GPUTexture);
+

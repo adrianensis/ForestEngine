@@ -150,7 +150,7 @@ public:
     Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
 };
-REGISTER_CLASS(GPUShaderPropertiesInstance);
+
 
 class GPUShaderData
 {
