@@ -1,4 +1,6 @@
 #include "Scene/Transform.hpp"
+#include "Core/CoreBase.hpp"
+#include "Core/CoreMacros.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 
 void Transform::init() 
@@ -158,9 +160,9 @@ void Transform::notifyModelMatrixDirty()
     mWorldTranslationMatrixDirty = true;
     mWorldRotationMatrixDirty = true;
     mWorldScaleMatrixDirty = true;
-    FOR_MAP(it, mChildren)
+    FOR_ARRAY(i, mChildren)
     {
-        it->second->notifyModelMatrixDirty();
+        mChildren[i]->notifyModelMatrixDirty();
     }
 }
 
@@ -228,11 +230,30 @@ const Maths::Matrix4& Transform::getViewMatrix() const
 void Transform::addChild(EC::ComponentPtr<Transform> child)
 {
     child->mParent = ECManager.getComponentPtr(this);
-    mChildren.insert_or_assign(child->getComponentId(), child);
+    Core::i32 freeSlot = -1;
+    FOR_ARRAY(i, mChildren)
+    {
+        if(!mChildren[i].isValid())
+        {
+            freeSlot = i;
+            break;
+        }
+    }
+
+    if(freeSlot > -1)
+    {
+        child->mChildrenSlot.set(freeSlot);
+        mChildren[freeSlot] = child;
+    }
+    else
+    {
+        child->mChildrenSlot.set(mChildren.size());
+        mChildren.push_back(child);
+    }
 }
 
 void Transform::removeChild(EC::ComponentPtr<Transform> child)
 {
     child->mParent.reset();
-    mChildren.erase(child->getComponentId());
+    mChildren[child->mChildrenSlot.getSlot()].reset();
 }

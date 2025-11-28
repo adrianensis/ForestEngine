@@ -2,6 +2,7 @@
 
 #include "Engine/Core.hpp"
 #include "Scene/GameComponent.hpp"
+#include <vector>
 
 class Transform: public GameComponent
 {
@@ -37,8 +38,9 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::unordered_map<Core::ObjectId, EC::ComponentPtr<Transform>> mChildren;
+    std::vector<EC::ComponentPtr<Transform>> mChildren;
     EC::ComponentPtr<Transform> mParent;
+    Core::Slot mChildrenSlot;
 	
     mutable bool mModelMatrixDirty = true;
     mutable bool mLocalTranslationMatrixDirty = true;
