@@ -5,6 +5,8 @@
 #include "Core/Maths/Quaternion.hpp"
 #include "Core/Profiler/Profiler.hpp"
 
+// #include <immintrin.h>
+
 NS_BEGIN(Maths)
 Matrix4::Matrix4()
 {
@@ -179,28 +181,56 @@ void Matrix4::invert()
 void Matrix4::mul(const Matrix4& other)
 {
     PROFILER_CPU()
+
 	Matrix4 copy;
 	copy.init((*this));
 
 	this->init(0);
 
-    // static const std::array<Core::u32, smColumnSize> indexes = {0,1,2,3};
-
-    // std::for_each(
-    //     std::execution::par,
-    //     indexes.begin(),
-    //     indexes.end(),
-    //     [&](Core::u32 i)
-    //     {
-    //         FOR_RANGE(j, 0, smColumnSize)
-    //         FOR_RANGE(k, 0, smColumnSize)
-    //         this->set(i, j, get(i, j) + copy.get(i, k) * other.get(k, j));
-    //     });
-
 	FOR_RANGE(i, 0, smColumnSize)
 	FOR_RANGE(j, 0, smColumnSize)
 	FOR_RANGE(k, 0, smColumnSize)
 	this->set(i, j, get(i, j) + copy.get(i, k) * other.get(k, j));
+
+	// const float* A = copy.getData();
+    // const float* B = other.getData();
+    // float* C = this->getData(); // Result C
+
+	// // Load the four columns of A into SSE registers.
+    // // Since they are contiguous, we can use aligned loads.
+    // __m128 colA0 = _mm_load_ps(&A[0]);
+    // __m128 colA1 = _mm_load_ps(&A[4]);
+    // __m128 colA2 = _mm_load_ps(&A[8]);
+    // __m128 colA3 = _mm_load_ps(&A[12]);
+
+    // // Calculate each column of C (C_j = A_0*B_0j + A_1*B_1j + A_2*B_2j + A_3*B_3j)
+    // for (int j = 0; j < 4; ++j) 
+    // {
+    //     // Broadcast the scalar elements B_kj for the j-th column of C
+    //     // Note: B is column-major. B[k * 4 + j] is the element B_jk.
+    //     // We need B[j * 4 + k] for the element B_kj.
+        
+    //     // B_0j is B[j*4 + 0], B_1j is B[j*4 + 1], etc.
+        
+    //     // 1. Calculate A_0 * B_0j
+    //     __m128 B0j = _mm_set1_ps(B[j * 4 + 0]);
+    //     __m128 temp0 = _mm_mul_ps(colA0, B0j);
+
+    //     // 2. Calculate A_1 * B_1j and add
+    //     __m128 B1j = _mm_set1_ps(B[j * 4 + 1]);
+    //     __m128 colCj = _mm_add_ps(temp0, _mm_mul_ps(colA1, B1j));
+
+    //     // 3. Calculate A_2 * B_2j and add
+    //     __m128 B2j = _mm_set1_ps(B[j * 4 + 2]);
+    //     colCj = _mm_add_ps(colCj, _mm_mul_ps(colA2, B2j));
+
+    //     // 4. Calculate A_3 * B_3j and add
+    //     __m128 B3j = _mm_set1_ps(B[j * 4 + 3]);
+    //     colCj = _mm_add_ps(colCj, _mm_mul_ps(colA3, B3j));
+
+    //     // Store the resulting column of C back into memory
+    //     _mm_store_ps(&C[j * 4], colCj);
+    // }
 }
 
 Vector4 Matrix4::mulVector(const Vector4& vector) const

@@ -22,7 +22,7 @@
  */
 
  NS_BEGIN(Maths)
-class Matrix4
+class alignas(16) Matrix4
 {
 public:
 
@@ -78,6 +78,12 @@ public:
         }
         return *this;
     }
+
+private:
+    Core::f32 *getData()
+	{
+		return mData;
+	}
 
 public:
 	static const Matrix4 smIdentity;
