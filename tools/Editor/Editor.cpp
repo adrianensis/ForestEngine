@@ -1,4 +1,5 @@
 #include "Editor.hpp"
+#include "Core/Maths/Geometry.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
@@ -48,6 +49,7 @@ void Editor::firstUpdate()
     // createPointLight(Maths::Vector3(0,50,0), 20);
 
     mDirectionalLight = createDirectionalLight(Maths::Vector3(0,2,0), Maths::Vector3::smForward + -Maths::Vector3::smUp);
+    createCube(Maths::Vector3(0,0,300), 100);
     createSprite(Maths::Vector3(0,0,0), 100);
     // createSprite(Maths::Vector3(-100,0,0), 100);
     // createSprite(Maths::Vector3(100,0,0), 100);
@@ -254,12 +256,12 @@ void Editor::terminate()
 
 }
 
-EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
+EC::EntityPtr<GameObject> Editor::createCube(const Maths::Vector3& v, Core::f32 size)
 {
 	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	// gameObject->mIsStatic = false;
-	// gameObject->mTransform->setLocalPosition(v);
-	// gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
 
     // RendererData rendererData;
 	// rendererData.mMesh = GET_SYSTEM(MeshFactory).getPrimitive<Maths::Cube>();
@@ -275,6 +277,39 @@ EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f3
 
 	GPURenderItemData rendererData;
     rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Cube>();
+    rendererData.mShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlock);
+    rendererData.mRenderPassIDs = {
+        Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+    };
+
+	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	renderer->init(rendererData);
+    ECManager.addComponent(gameObject, renderer);
+
+	return gameObject;
+}
+
+EC::EntityPtr<GameObject> Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
+{
+	EC::EntityPtr<GameObject> gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	// gameObject->mIsStatic = false;
+	gameObject->mTransform->setLocalPosition(v);
+	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
+
+    // RendererData rendererData;
+	// rendererData.mMesh = GET_SYSTEM(MeshFactory).getPrimitive<Maths::Cube>();
+
+    GPUShaderData shaderData;
+    shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{"resources/snorlax-fill.png"});
+	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
+	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
+
+	// EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+    // renderer->init(rendererData);
+	// gameObject->addComponent(renderer);
+
+	GPURenderItemData rendererData;
+    rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
     rendererData.mShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),

@@ -15,6 +15,7 @@ public:
     virtual void terminate() override;
 
 private:
+	EC::EntityPtr<GameObject> createCube(const Maths::Vector3& v, Core::f32 size);
 	EC::EntityPtr<GameObject> createSprite(const Maths::Vector3& v, Core::f32 size);
 	EC::EntityPtr<GameObject> createPointLight(const Maths::Vector3& v, Core::f32 size);
 	EC::EntityPtr<GameObject> createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir);
