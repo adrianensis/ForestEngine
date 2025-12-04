@@ -11,8 +11,8 @@
 class RenderPipelineData
 {
 public:
-    std::vector<EC::ComponentPtr<PointLight>> mPointLights;
-    EC::ComponentPtr<DirectionalLight> mDirectionalLight;
+    std::vector<PointLight*> mPointLights;
+    DirectionalLight* mDirectionalLight = nullptr;
 };
 
 class RenderPipeline
@@ -22,8 +22,8 @@ public:
     virtual ~RenderPipeline() = default;
     void update();
     virtual void terminate();
-    void addRenderer(EC::ComponentPtr<MeshRenderer> renderer);
-    void removeRenderer(EC::ComponentPtr<MeshRenderer> renderer);
+    void addRenderer(MeshRenderer* renderer);
+    void removeRenderer(MeshRenderer* renderer);
     void render(RenderPipelineData& renderData);
     virtual void compile();
     void onResize();
@@ -36,7 +36,7 @@ protected:
     GPURenderItemManager mGPURenderItemManager;
     Core::OwnerPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     GPURenderGraph mGPURenderGraph;
-    std::vector<EC::ComponentPtr<MeshRenderer>> mMeshRenderers;
+    std::vector<MeshRenderer*> mMeshRenderers;
     Core::OwnerPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
 };
 REGISTER_CLASS(RenderPipeline);

@@ -15,7 +15,7 @@ void MeshRenderer::init(const GPURenderItemData& data)
 
 void MeshRenderer::onECComponentAdded() 
 {
-    mGPURenderItem->setIsStatic(EC::EntityPtr<GameObject>(getOwnerEntity())->mIsStatic);
+    mGPURenderItem->setIsStatic(CAST(GameObject,getOwnerEntity())->mIsStatic);
     calculateRendererModelMatrix();
 }
 
@@ -39,7 +39,7 @@ void MeshRenderer::update()
 {
 	PROFILER_CPU()
 
-    if(! EC::EntityPtr<GameObject>(getOwnerEntity())->mIsStatic)
+    if(! CAST(GameObject, getOwnerEntity())->mIsStatic)
     {
         if(ECManager.getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
         {

@@ -21,7 +21,7 @@ void Transform::onDestroy()
 {
     if(mParent)
     {
-        mParent->removeChild(ECManager.getComponentPtr(this));
+        mParent->removeChild(this);
     }
 }
 
@@ -227,13 +227,13 @@ const Maths::Matrix4& Transform::getViewMatrix() const
     return mViewMatrix;
 }
 
-void Transform::addChild(EC::ComponentPtr<Transform> child)
+void Transform::addChild(Transform* child)
 {
-    child->mParent = ECManager.getComponentPtr(this);
+    child->mParent = this;
     Core::i32 freeSlot = -1;
     FOR_ARRAY(i, mChildren)
     {
-        if(!mChildren[i].isValid())
+        if(!mChildren[i])
         {
             freeSlot = i;
             break;
@@ -252,8 +252,8 @@ void Transform::addChild(EC::ComponentPtr<Transform> child)
     }
 }
 
-void Transform::removeChild(EC::ComponentPtr<Transform> child)
+void Transform::removeChild(Transform* child)
 {
-    child->mParent.reset();
-    mChildren[child->mChildrenSlot.getSlot()].reset();
+    child->mParent = nullptr;
+    mChildren[child->mChildrenSlot.getSlot()] = nullptr;
 }

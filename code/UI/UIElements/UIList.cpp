@@ -50,9 +50,9 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
-	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
+    ECManager.addComponent(this, renderer);
 
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
@@ -97,7 +97,7 @@ void UIList::toggle()
 			setAdjustSizeToText(true).
 			setIsStatic(false).
 			setLayer(mConfig.mLayer + 1).
-            setParent(ECManager.getEntityPtr(this));
+            setParent(this);
 
 		FOR_LIST(it, mEntries)
 		{
@@ -109,7 +109,7 @@ void UIList::toggle()
 			create<UIButton>();
 
 
-			EC::EntityPtr<UIButton> button = uiBuilder.getUIElement<UIButton>();
+			UIButton* button = uiBuilder.getUIElement<UIButton>();
 			button->setOnPressedCallback(onPressedCallback);
 
 			mButtons.push_back(button);

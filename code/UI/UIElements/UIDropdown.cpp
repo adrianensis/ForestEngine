@@ -76,10 +76,10 @@ void UIDropdown::setEntriesVisibility(bool visible)
 				setText(label).
 				create<UIDropdownButton>();
 
-				EC::EntityPtr<UIDropdownButton> button = uiBuilder.getUIElement<UIDropdownButton>();
+				UIDropdownButton* button = uiBuilder.getUIElement<UIDropdownButton>();
 				button->setOnPressedCallback(onPressedCallback);
 
-				button->setParentDropdown(ECManager.getEntityPtr(this));
+				button->setParentDropdown(this);
 
 				mButtons.push_back(button);
 			}

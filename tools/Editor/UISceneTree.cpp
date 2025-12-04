@@ -22,20 +22,20 @@ void UISceneTree::update()
 	setAdjustSizeToText(true).
 	setIsAffectedByLayout(true).
 	setLayout(UILayout::VERTICAL).
-    setParent(ECManager.getEntityPtr(this)).
+    setParent(this).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
-    const std::list<EC::EntityPtr<GameObject>>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
-    std::list<EC::EntityPtr<GameObject>> objectsInmutableList;
+    const std::list<GameObject*>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
+    std::list<GameObject*> objectsInmutableList;
     FOR_LIST(it, objects)
     {
         objectsInmutableList.push_back(*it);
     }
     FOR_LIST(it, objectsInmutableList)
     {
-        Core::HashedString className = Core::ClassManager::getDynamicClassMetadata(&(*it).get()).mClassDefinition.mName;
+        Core::HashedString className = Core::ClassManager::getDynamicClassMetadata((*it)).mClassDefinition.mName;
         Core::HashedString inspectorName(className.get() /*+ std::to_string(id)*/);
-        EC::EntityPtr<UIButton> uiText = uiBuilder.
+        UIButton* uiText = uiBuilder.
         setText(inspectorName).
         // setIsStatic(false).
         create<UIButton>().

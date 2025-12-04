@@ -39,7 +39,7 @@ void UIEditableText::setText(Core::HashedString text)
 			setTextScale(mConfig.mTextScale).
 			setLayer(mConfig.mLayer + 1).
 			setIsAffectedByLayout(false).
-			setParent(ECManager.getEntityPtr(this)).
+			setParent(this).
 			create<UIText>().
 			getUIElement<UIText>();
 		}

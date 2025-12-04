@@ -16,6 +16,9 @@
 // --------------------------------------------------------
 // TYPE TRAITS
 // --------------------------------------------------------
+
+#define CAST(Class, Ptr) dynamic_cast<Class*>(Ptr)
+
 #define IS_BASE_OF(BaseClass, DerivedClass) std::is_base_of<BaseClass, DerivedClass>::value
 
 #define COND_TYPE(Bool, T1, T2) typename std::conditional<Bool, T1, T2>::type

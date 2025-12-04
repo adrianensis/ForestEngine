@@ -20,17 +20,17 @@ void GameObject::init()
     PROFILER_CPU()
     mTransform = ECManager.requestComponent<Transform>();
     mTransform->init();
-    ECManager.addComponent(ECManager.getEntityPtr(this), mTransform);
+    ECManager.addComponent(this, mTransform);
 }
 
 void GameObject::setIsActive(bool isActive)
 {
 	mIsActive = isActive;
 
-    const auto& components = ECManager.getComponents(ECManager.getEntityPtr(this));
+    auto& components = ECManager.getComponents(this);
     FOR_LIST(it, components)
     {
-        EC::ComponentPtr<GameComponent> gameComp = *it;
+        GameComponent* gameComp = CAST(GameComponent, *it);
         gameComp->setIsActive(isActive);
     }
 }
@@ -41,5 +41,5 @@ void GameObject::destroy()
 	onDestroy();
 	mIsDestroyed = true;
 
-    ECManager.removeEntity(ECManager.getEntityPtr(this));
+    ECManager.removeEntity(this);
 }

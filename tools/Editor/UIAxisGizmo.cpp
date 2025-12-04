@@ -13,8 +13,8 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
     mAxisName = axisName;
     mNegAxisName = Core::HashedString("-" + mAxisName.get());
 
-    EC::EntityPtr<GameObject> cameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
-    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
+    GameObject* cameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
+    Camera* camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
@@ -47,7 +47,7 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(ECManager.getEntityPtr(this));
+    setParent(this);
 
     mPositive = uiBuilder.
 	setText(mAxisName).
@@ -63,7 +63,7 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 	setAdjustSizeToText(true).
     setIsStaticText(false).
 	setIsAffectedByLayout(false).
-    setParent(ECManager.getEntityPtr(this));
+    setParent(this);
 
     mNegative = uiBuilder.
 	setText(mNegAxisName).
@@ -73,8 +73,8 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
 
 void UISingleAxisGizmo::update()
 {
-    EC::EntityPtr<GameObject> cameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
-    EC::ComponentPtr<Camera> camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
+    GameObject* cameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
+    Camera* camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(

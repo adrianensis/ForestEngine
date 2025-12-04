@@ -64,9 +64,9 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
 
-	EC::ComponentPtr<MeshRenderer> renderer = ECManager.requestComponent<MeshRenderer>();
+	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
 	renderer->init(rendererData);
-    ECManager.addComponent(ECManager.getEntityPtr(this), renderer);
+    ECManager.addComponent(this, renderer);
 
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;

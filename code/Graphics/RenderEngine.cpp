@@ -42,7 +42,7 @@ void RenderEngine::onResize()
     GPUInstance::getInstance().mGPUContext->setWindowResized();
     GPUInstance::getInstance().mGPUContext->recreateRenderingObjects();
     mRenderPipeline->onResize();
-    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    Camera* camera = GET_SYSTEM(CameraManager).getCamera();
     camera->onResize();
 }
 
@@ -52,12 +52,12 @@ void RenderEngine::terminate()
     mRenderPipeline->terminate();
 }
 
-void RenderEngine::onComponentAdded(const EC::ComponentPtrBase& component)
+void RenderEngine::onComponentAdded(EC::Component* component)
 {
-    const Core::ClassMetadata& classMetadata = Core::ClassManager::getDynamicClassMetadata(&component.get<EC::Component>());
+    const Core::ClassMetadata& classMetadata = Core::ClassManager::getDynamicClassMetadata(component);
     if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId()))
     {
-        EC::ComponentPtr<MeshRenderer> renderer = component;
+        MeshRenderer* renderer = CAST(MeshRenderer, component);
         mRenderPipeline->addRenderer(renderer);
 
         // if(renderer->getGeometricSpace() == Maths::GeometricSpace::WORLD)
@@ -69,21 +69,21 @@ void RenderEngine::onComponentAdded(const EC::ComponentPtrBase& component)
     {
         // if(component.getComponent(). <PointLight>())
         // {
-        //     mRenderPipelineData.mPointLights.push_back(EC::ComponentPtr<PointLight>(component));
+        //     mRenderPipelineData.mPointLights.push_back(PointLight*(component));
         // }
         // else if(component.getComponent(). <DirectionalLight>())
         // {
-        //     mRenderPipelineData.mDirectionalLight = EC::ComponentPtr<DirectionalLight>(component);
+        //     mRenderPipelineData.mDirectionalLight = DirectionalLight*(component);
         // }
     }
 }
 
-void RenderEngine::onComponentRemoved(const EC::ComponentPtrBase& component)
+void RenderEngine::onComponentRemoved(EC::Component* component)
 {
-    const Core::ClassMetadata& classMetadata = Core::ClassManager::getDynamicClassMetadata(&component.get<EC::Component>());
+    const Core::ClassMetadata& classMetadata = Core::ClassManager::getDynamicClassMetadata(component);
     if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<MeshRenderer>().mClassDefinition.getId()))
     {
-        EC::ComponentPtr<MeshRenderer> renderer = component;
+        MeshRenderer* renderer = CAST(MeshRenderer, component);
         mRenderPipeline->removeRenderer(renderer);
     }
     else if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId()))

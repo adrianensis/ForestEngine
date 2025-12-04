@@ -11,7 +11,7 @@ public:
     void onPostPressed() override;
 
 private:
-    EC::EntityPtr<UIDropdown> mParentDropdown;
+    UIDropdown* mParentDropdown = nullptr;
 public:
 	GET_SET(ParentDropdown)
 };
@@ -43,7 +43,7 @@ private:
     void setEntriesVisibility(bool visible);
 
 private:
-	std::list<EC::EntityPtr<UIDropdownButton>> mButtons;
+	std::list<UIDropdownButton*> mButtons;
 	std::list<UIDropdownEntry> mEntries;
 
 };

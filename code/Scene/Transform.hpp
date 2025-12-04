@@ -18,8 +18,8 @@ public:
 
     const Maths::Matrix4& calculateModelMatrix() const;
 
-    void addChild(EC::ComponentPtr<Transform> child);
-    void removeChild(EC::ComponentPtr<Transform> child);
+    void addChild(Transform* child);
+    void removeChild(Transform* child);
 
     Maths::Vector3 getWorldPosition() const;
     Maths::Vector3 getWorldScale() const;
@@ -38,8 +38,8 @@ private:
     void notifyModelMatrixDirty();
     
 private:
-    std::vector<EC::ComponentPtr<Transform>> mChildren;
-    EC::ComponentPtr<Transform> mParent;
+    std::vector<Transform*> mChildren;
+    Transform* mParent = nullptr;
     Core::Slot mChildrenSlot;
 	
     mutable bool mModelMatrixDirty = true;

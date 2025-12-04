@@ -32,8 +32,8 @@ void RenderPipeline::update()
     {
         FOR_RANGE(i, *mGPURenderItemManager.getUsedSlots().begin(), (*mGPURenderItemManager.getUsedSlots().rbegin())+1)
         {
-            EC::ComponentPtr<MeshRenderer> renderItem = mMeshRenderers[i];
-            if(mMeshRenderers[i].isValid())
+            MeshRenderer* renderItem = mMeshRenderers[i];
+            if(mMeshRenderers[i])
             {
                 mMeshRenderers[i]->update();
             }
@@ -66,7 +66,7 @@ void RenderPipeline::onResize()
     mGPURenderGraph.onResize();
 }
 
-void RenderPipeline::addRenderer(EC::ComponentPtr<MeshRenderer> renderer)
+void RenderPipeline::addRenderer(MeshRenderer* renderer)
 {
     PROFILER_CPU()
     mGPURenderItemManager.addRenderer(renderer->getGPURenderItem());
@@ -81,7 +81,7 @@ void RenderPipeline::addRenderer(EC::ComponentPtr<MeshRenderer> renderer)
     mMeshRenderers[renderer->getGPURenderItem()->getRenderSlot().getSlot()] = renderer;
 }
 
-void RenderPipeline::removeRenderer(EC::ComponentPtr<MeshRenderer> renderer)
+void RenderPipeline::removeRenderer(MeshRenderer* renderer)
 {
     PROFILER_CPU()
 
@@ -93,7 +93,7 @@ void RenderPipeline::removeRenderer(EC::ComponentPtr<MeshRenderer> renderer)
     mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem());
     mGPURenderGraph.removeRenderer(renderer->getGPURenderItem());
     
-    mMeshRenderers[slot].reset();
+    mMeshRenderers[slot] = nullptr;
 }
 
 void RenderPipeline::render(RenderPipelineData& renderData)

@@ -7,12 +7,12 @@ class UITransform: public GameObject
 {
 public:
     virtual void init() override;
-    void update(EC::ComponentPtr<const Transform> transform);
+    void update(const Transform* transform);
     virtual void onDestroy() override;
 
 private:
-    EC::EntityPtr<UIVector> mPosition;
-    EC::EntityPtr<UIVector> mRotation;
-    EC::EntityPtr<UIVector> mScale;
+    UIVector* mPosition = nullptr;
+    UIVector* mRotation = nullptr;
+    UIVector* mScale = nullptr;
 };
 REGISTER_CLASS(UITransform)

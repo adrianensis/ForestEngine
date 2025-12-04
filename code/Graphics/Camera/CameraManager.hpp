@@ -5,7 +5,7 @@
 class CameraManager: public System::System
 {
 private:
-	EC::ComponentPtr<Camera> mCamera;
+	Camera* mCamera = nullptr;
 
 public:
     GET_SET(Camera)

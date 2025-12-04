@@ -15,8 +15,8 @@ private:
     Maths::Vector4 mColor;
     Core::HashedString mAxisName;
     Core::HashedString mNegAxisName;
-    EC::EntityPtr<UIText> mPositive;
-    EC::EntityPtr<UIText> mNegative;
+    UIText* mPositive = nullptr;
+    UIText* mNegative = nullptr;
 };
 
 REGISTER_CLASS(UISingleAxisGizmo)
@@ -29,8 +29,8 @@ public:
     virtual void onDestroy() override;
 
 private:
-    EC::EntityPtr<UISingleAxisGizmo> mAxisX;
-    EC::EntityPtr<UISingleAxisGizmo> mAxisY;
-    EC::EntityPtr<UISingleAxisGizmo> mAxisZ;
+    UISingleAxisGizmo* mAxisX = nullptr;
+    UISingleAxisGizmo* mAxisY = nullptr;
+    UISingleAxisGizmo* mAxisZ = nullptr;
 };
 REGISTER_CLASS(UIAxisGizmo)

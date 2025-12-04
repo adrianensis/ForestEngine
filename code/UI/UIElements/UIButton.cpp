@@ -28,7 +28,7 @@ void UIButton::onDestroy()
 	if (mText)
 	{
 		mScene->removeGameObject(mText);
-		mText.reset();
+		mText = nullptr;
 	}
 
 	UIPanel::onDestroy();
@@ -36,7 +36,7 @@ void UIButton::onDestroy()
 
 void UIButton::onLabelDestroy()
 {
-	mText.reset();
+	mText = nullptr;
 }
 
 void UIButton::setText(Core::HashedString text)
@@ -54,7 +54,7 @@ void UIButton::setText(Core::HashedString text)
 			setTextScale(mConfig.mTextScale).
 			setLayer(mConfig.mLayer + 1).
 			setIsAffectedByLayout(false).
-			setParent(ECManager.getEntityPtr(this)).
+			setParent(this).
 			create<UIText>().
 			getUIElement<UIText>();
 		}

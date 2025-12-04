@@ -23,7 +23,7 @@ public:
 public:
 	bool mIsStatic = false;
 	Core::Ptr<Scene> mScene;
-	EC::ComponentPtr<Transform> mTransform;
+	Transform* mTransform = nullptr;
 	
 private:
 	bool mIsDestroyed = false;

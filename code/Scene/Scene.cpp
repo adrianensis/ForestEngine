@@ -107,7 +107,7 @@ void Scene::unloadScene()
 	destroyGameObjects();
 }
 
-void Scene::addGameObject(EC::EntityPtr<GameObject> gameObject)
+void Scene::addGameObject(GameObject* gameObject)
 {
     if(gameObject)
     {
@@ -117,7 +117,7 @@ void Scene::addGameObject(EC::EntityPtr<GameObject> gameObject)
     }
 }
 
-void Scene::removeGameObject(EC::EntityPtr<GameObject> gameObject)
+void Scene::removeGameObject(GameObject* gameObject)
 {
 	if (gameObject && !gameObject->getIsDestroyed())
 	{
@@ -176,17 +176,16 @@ bool Scene::thereAreNewGameObjects() const
 
 void Scene::destroyGameObjects()
 {
-	std::list<EC::EntityPtr<GameObject>> immutableList(mGameObjects);
+	std::list<GameObject*> immutableList(mGameObjects);
 
 	FOR_LIST(it, immutableList)
 	{
-		EC::EntityPtr<GameObject> gameObject = *it;
+		GameObject* gameObject = *it;
         if (gameObject)
 		{
             if (!gameObject->getIsDestroyed())
             {
                 gameObject->destroy();
-                gameObject.reset();
             }
         }
 	}

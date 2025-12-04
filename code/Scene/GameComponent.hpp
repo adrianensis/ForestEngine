@@ -14,7 +14,7 @@ public:
 
     bool isActive() const;
     void setIsActive(bool isActive);
-    EC::EntityPtrBase getOwnerEntity() const;
+    EC::Entity* getOwnerEntity() const;
     virtual void onDestroy();
     
 private:

@@ -15,26 +15,26 @@ public:
     virtual void terminate() override;
 
 private:
-	EC::EntityPtr<GameObject> createCube(const Maths::Vector3& v, Core::f32 size);
-	EC::EntityPtr<GameObject> createSprite(const Maths::Vector3& v, Core::f32 size);
-	EC::EntityPtr<GameObject> createPointLight(const Maths::Vector3& v, Core::f32 size);
-	EC::EntityPtr<GameObject> createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir);
-	EC::EntityPtr<GameObject> mousePick();
-    EC::EntityPtr<GameObject> importModel(const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic);
+	GameObject* createCube(const Maths::Vector3& v, Core::f32 size);
+	GameObject* createSprite(const Maths::Vector3& v, Core::f32 size);
+	GameObject* createPointLight(const Maths::Vector3& v, Core::f32 size);
+	GameObject* createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir);
+	GameObject* mousePick();
+    GameObject* importModel(const std::string& pFile, const Maths::Vector3& v, Core::f32 size, const Maths::Vector3& rot, bool isStatic);
 	void handlePressedKeys();
 	void handleMouse();
     void createUI();
 private:
-    EC::EntityPtr<UIText> mFPSCounter;
-    EC::EntityPtr<UITransform> mUITransform;
-    EC::EntityPtr<UISceneTree> mUISceneTree;
-	EC::EntityPtr<GameObject> mCameraGameObject;
-	EC::EntityPtr<GameObject> mDirectionalLight;
-	EC::EntityPtr<GameObject> mSelectedGameObject;
-	std::list<EC::EntityPtr<GameObject>> mBuildings;
-	EC::EntityPtr<UIAxisGizmo> mAxisViewer;
+    UIText* mFPSCounter = nullptr;
+    UITransform* mUITransform = nullptr;
+    UISceneTree* mUISceneTree = nullptr;
+	GameObject* mCameraGameObject = nullptr;
+	GameObject* mDirectionalLight = nullptr;
+	GameObject* mSelectedGameObject = nullptr;
+	std::list<GameObject*> mBuildings;
+	UIAxisGizmo* mAxisViewer = nullptr;
 
-    std::vector<EC::EntityPtr<GameObject>> mGameObjectsArray;
+    std::vector<GameObject*> mGameObjectsArray;
 
     Maths::Vector2 mLastMousePosition;
 };

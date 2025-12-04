@@ -24,6 +24,6 @@ public:
     void setVisibility(bool visibility) override;
 
 private:
-	EC::EntityPtr<UIText> mText;
+	UIText* mText = nullptr;
 };
 REGISTER_CLASS(UIEditableText);

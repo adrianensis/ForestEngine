@@ -12,14 +12,9 @@ Component::~Component()
 
 }
 
-void Component::onECComponentRecycle(Core::Slot newSlot)
+void Component::onECComponentRecycle(Core::PoolElementPtr poolElementPtr)
 {
-    mSlot = newSlot;
+    mPoolElementPtr = poolElementPtr;
 }
 
-Component& ComponentPtrBase::getInternal() const
-{
-    CHECK_MSG(isValid(), "Invalid handle!");
-    return mECPool->getComponentsPool().getElementBase(this->mPoolElement);
-}
 NS_END

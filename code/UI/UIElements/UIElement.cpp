@@ -32,7 +32,7 @@ void UIElement::onDestroy()
 
 	if (hasFocus())
 	{
-		GET_SYSTEM(UIManager).setFocusedElement(EC::EntityPtr<UIElement>());
+		GET_SYSTEM(UIManager).setFocusedElement(nullptr);
 	}
 }
 
@@ -48,7 +48,8 @@ bool UIElement::isMouseCursorInsideElement() const
     bool parentCheck = true;
     if(mConfig.mParent)
     {
-        if(EC::EntityPtr<UIElement> parentUIElement = mConfig.mParent)
+        UIElement* parentUIElement = CAST(UIElement, mConfig.mParent);
+        if(parentUIElement)
         {
             parentCheck = parentUIElement->isMouseCursorInsideElement();
         }
@@ -114,7 +115,7 @@ void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 
 void UIElement::postInit()
 {
-    mRenderer = ECManager.getFirstComponent<MeshRenderer>(ECManager.getEntityPtr(this));
+    mRenderer = ECManager.getFirstComponent<MeshRenderer>(this);
 }
 
 void UIElement::subscribeToKeyEvents()
@@ -313,7 +314,7 @@ void UIElement::releaseFocus()
 {
     if (!hasFocus()) { return; }
 
-    GET_SYSTEM(UIManager).setFocusedElement(EC::EntityPtr<UIElement>());
+    GET_SYSTEM(UIManager).setFocusedElement(nullptr);
     mOnFocusLostFunctor.execute();
     onFocusLost();
 }
@@ -322,13 +323,13 @@ void UIElement::requestFocus()
 {
     if (hasFocus()) { return; }
 
-    EC::EntityPtr<UIElement> lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
+    UIElement* lastFocusedElement = GET_SYSTEM(UIManager).getFocusedElement();
     if (lastFocusedElement)
     {
         lastFocusedElement->releaseFocus();
     }
 
-    GET_SYSTEM(UIManager).setFocusedElement(ECManager.getEntityPtr(this));
+    GET_SYSTEM(UIManager).setFocusedElement(this);
 
     mInputString.clear();
     setText(Core::HashedString(mInputString));
@@ -346,7 +347,7 @@ void UIElement::scroll(Core::f32 scrollValue)
 // 	const UIGroup& group = GET_SYSTEM(UIManager).getOrCreateGroup(mConfig.mGroup);
 // 	FOR_LIST(it, group.getUIElements())
 // 	{
-// 		EC::EntityPtr<UIElement> other = *it;
+// 		UIElement* other = *it;
 // 		if(other != getPtrToThis<UIElement>())
 // 		{
 // 			if(other->getConfig().mToggleEnabled and
@@ -399,7 +400,7 @@ GPUShaderStencilData UIElement::calculateStencilData() const
 
         if(mConfig.mParent)
         {
-            EC::EntityPtr<UIElement> parentUIElement = mConfig.mParent;
+            UIElement* parentUIElement = CAST(UIElement, mConfig.mParent);
             if(parentUIElement)
             {
                 GPUShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
@@ -420,7 +421,7 @@ GPUShaderStencilData UIElement::calculateStencilData() const
     {
         if(mConfig.mParent)
         {
-            EC::EntityPtr<UIElement> parentUIElement = mConfig.mParent;
+            UIElement* parentUIElement = CAST(UIElement, mConfig.mParent);
             if(parentUIElement)
             {
                 GPUShaderStencilData parentStencilData = parentUIElement->calculateStencilData();

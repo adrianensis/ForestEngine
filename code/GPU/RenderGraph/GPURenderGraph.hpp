@@ -8,8 +8,8 @@
 class GPURenderGraphData
 {
 public:
-    // std::vector<EC::ComponentPtr<PointLight>> mPointLights;
-    // EC::ComponentPtr<DirectionalLight> mDirectionalLight;
+    // std::vector<PointLight*> mPointLights;
+    // DirectionalLight* mDirectionalLight;
 };
 
 class GPURenderGraph

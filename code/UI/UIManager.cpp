@@ -49,7 +49,7 @@ Core::WeakPtr<const UIFont> UIManager::getFont() const
     return font;
 }
 
-void UIManager::setFocusedElement(EC::EntityPtr<UIElement> focusedElement)
+void UIManager::setFocusedElement(UIElement* focusedElement)
 {
 	mFocusedElement = focusedElement;
 }

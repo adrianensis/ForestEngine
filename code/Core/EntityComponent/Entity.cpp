@@ -8,14 +8,8 @@ Entity::Entity()
 
 }
 
-void Entity::onECComponentRecycle(Core::Slot newSlot)
+void Entity::onECComponentRecycle(Core::PoolElementPtr poolElementPtr)
 {
-    mSlot = newSlot;
+    mPoolElementPtr = poolElementPtr;
 };
-
-Entity& EntityPtrBase::getInternal() const
-{
-    CHECK_MSG(isValid(), "Invalid handle!");
-    return mECPool->getEntitiesPool().getElementBase(this->mPoolElement);
-}
 NS_END

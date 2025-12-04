@@ -16,19 +16,19 @@ public:
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addGameObject(EC::EntityPtr<GameObject> gameObject);
+    void addGameObject(GameObject* gameObject);
 
     template <class T> T_EXTENDS(T, GameObject)
-	EC::EntityPtr<T> createGameObject()
+	T* createGameObject()
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
-		EC::EntityPtr<GameObject> entityPtr = ECManager.requestEntity<T>();
+		T* entityPtr = ECManager.requestEntity<T>();
         entityPtr->init();
         addGameObject(entityPtr);
         return entityPtr;
 	}
-    void removeGameObject(EC::EntityPtr<GameObject> gameObject);
+    void removeGameObject(GameObject* gameObject);
     void update();
     void flushNewGameObjects();
     bool thereAreNewGameObjects() const;
@@ -38,8 +38,8 @@ private:
 
 private:
     Core::HashedString mSceneName;
-	std::list<EC::EntityPtr<GameObject>> mGameObjects;
-	std::list<EC::EntityPtr<GameObject>> mNewGameObjects;
+	std::list<GameObject*> mGameObjects;
+	std::list<GameObject*> mNewGameObjects;
 
 	Core::f32 mSize = 0.0f;
 	std::string mPath;

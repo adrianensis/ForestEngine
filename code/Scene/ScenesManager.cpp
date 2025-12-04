@@ -10,14 +10,12 @@ void ScenesManager::terminate()
     if(mGameObjectController)
     {
         mGameObjectController->destroy();
-        mGameObjectController.reset();
     }
 
 	if (mCameraGameObject)
 	{
-        EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+        Camera* cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
         mCameraGameObject->destroy();
-        mCameraGameObject.reset();
 	}
 
     FOR_MAP(it, mScenes)
@@ -50,7 +48,7 @@ void ScenesManager::init()
 	// mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
-    EC::ComponentPtr<Camera> camera = ECManager.requestComponent<Camera>();
+    Camera* camera = ECManager.requestComponent<Camera>();
 	camera->init();
     ECManager.addComponent(mCameraGameObject, camera);
 
@@ -63,7 +61,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    EC::ComponentPtr<Camera> cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+    Camera* cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)

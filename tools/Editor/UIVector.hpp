@@ -10,9 +10,9 @@ public:
     virtual void onDestroy() override;
 
 private:
-    EC::EntityPtr<UIText> mX;
-    EC::EntityPtr<UIText> mY;
-    EC::EntityPtr<UIText> mZ;
-    EC::EntityPtr<UIText> mW;
+    UIText* mX = nullptr;
+    UIText* mY = nullptr;
+    UIText* mZ = nullptr;
+    UIText* mW = nullptr;
 };
 REGISTER_CLASS(UIVector)

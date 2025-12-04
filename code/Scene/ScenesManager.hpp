@@ -25,8 +25,8 @@ private:
 	std::unordered_map<Core::HashedString, Core::WeakPtr<Scene>> mLoadedScenes;
 	std::unordered_set<Core::HashedString> mLoadRequests;
 
-    EC::EntityPtr<GameObject> mGameObjectController;
-	EC::EntityPtr<GameObject> mCameraGameObject;
+    GameObject* mGameObjectController = nullptr;
+	GameObject* mCameraGameObject = nullptr;
 
 public:
     inline static const Core::HashedString smDefaultSceneName = Core::HashedString("Default");

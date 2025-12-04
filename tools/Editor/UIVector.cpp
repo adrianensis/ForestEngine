@@ -15,7 +15,7 @@ void UIVector::init()
 	setIsStatic(mIsStatic).
 	setIsStaticText(false).
 	setIsAffectedByLayout(true).
-    setParent(ECManager.getEntityPtr(this)).
+    setParent(this).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
     mX = uiBuilder.

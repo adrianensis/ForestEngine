@@ -5,7 +5,7 @@
 
 Maths::Matrix4 Light::getLightProjectionViewMatrix() const
 {
-    EC::ComponentPtr<Camera> camera = GET_SYSTEM(CameraManager).getCamera();
+    Camera* camera = GET_SYSTEM(CameraManager).getCamera();
 
     Maths::Matrix4 lightViewMatrix;
     lightViewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();

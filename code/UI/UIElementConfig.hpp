@@ -36,6 +36,6 @@ public:
 	bool mIsAffectedByLayout = true;
 	Core::WeakPtr<GPUShader> mShader;
 	Core::HashedString mGroup;
-	EC::EntityPtr<GameObject> mParent;
+	GameObject* mParent = nullptr;
 	Core::f32 mSeparatorSize = 0.01f;
 };

@@ -18,7 +18,7 @@ public:
     void setVisibility(bool visibility) override;
 
 private:
-	EC::EntityPtr<UIText> mText;
+	UIText* mText = nullptr;
 
 public:
 	GET(Text)

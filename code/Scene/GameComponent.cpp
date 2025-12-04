@@ -8,10 +8,9 @@ GameComponent::GameComponent()
     }
 }
 
-EC::EntityPtrBase GameComponent::getOwnerEntity() const
+EC::Entity* GameComponent::getOwnerEntity() const
 {
-    EC::EntityPtrBase entityPtr(mComponentOwner.mClassId, mComponentOwner.mSlot, mComponentOwner.mECPool);
-    return entityPtr;
+    return mComponentOwner;
 }
 
 bool GameComponent::isActive() const
@@ -32,7 +31,7 @@ void GameComponent::onECComponentDestroyed()
     mIsDestroyed = true;
     // mIsActive = false;
     onDestroy();
-    mComponentOwner.reset();
+    mComponentOwner = nullptr;
 }
 
 void GameComponent::onDestroy()
