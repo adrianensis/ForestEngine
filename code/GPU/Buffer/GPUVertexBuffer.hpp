@@ -23,7 +23,7 @@ public:
 class GPUVertexBuffer
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, Core::u32 attributeLocation, const GPUVertexBufferData& data, Core::u32 size, bool isStatic);
+    void init(GPUContext* gpuContext, Core::u32 attributeLocation, const GPUVertexBufferData& data, Core::u32 size, bool isStatic);
     void resize(Core::u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data, VkCommandBuffer commandBuffer)
@@ -63,7 +63,7 @@ private:
     Core::u32 mPreviousOffsetInBytes = 0;
     bool mIsStatic = false;
 
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
     GPUBuffer mBuffer;
     GPUBuffer stagingBuffer;
 };

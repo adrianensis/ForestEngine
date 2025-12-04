@@ -2,7 +2,7 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
-void GPUInstanceRenderer::init(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData)
+void GPUInstanceRenderer::init(GPUContext* gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -178,7 +178,7 @@ void GPUInstanceRendererManager::terminate()
 	}
 }
 
-void GPUInstanceRendererManager::update(Core::Ptr<GPUContext> gpuContext)
+void GPUInstanceRendererManager::update(GPUContext* gpuContext)
 {
     VkCommandBuffer vulkanCommandBuffer = gpuContext->beginSingleTimeCommands();
     FOR_MAP(it, mGPUInstanceRenderers)
@@ -188,7 +188,7 @@ void GPUInstanceRendererManager::update(Core::Ptr<GPUContext> gpuContext)
     gpuContext->endSingleTimeCommands(vulkanCommandBuffer, VK_NULL_HANDLE);
 }
 
-bool GPUInstanceRendererManager::addInstanceRenderer(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& data)
+bool GPUInstanceRendererManager::addInstanceRenderer(GPUContext* gpuContext, const GPUInstanceRendererData& data)
 {
     bool result = false;
     if(!mGPUInstanceRenderers.contains(data))

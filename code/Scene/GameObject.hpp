@@ -22,7 +22,7 @@ public:
     void destroy();
 public:
 	bool mIsStatic = false;
-	Core::Ptr<Scene> mScene;
+	Scene* mScene = nullptr;
 	Transform* mTransform = nullptr;
 	
 private:

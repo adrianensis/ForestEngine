@@ -9,10 +9,10 @@ public:
     void init();
     void terminate();
     void update();
-    Core::WeakPtr<GPUTexture> loadTexture(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData);
+    Core::WeakPtr<GPUTexture> loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
 
     template<class T, class P> T_EXTENDS(T, GPUShader)
-    Core::WeakPtr<GPUShader> createShader(Core::Ptr<GPUContext> gpuContext, const GPUShaderData& shaderData, const P& propertiesBlockDefault)
+    Core::WeakPtr<GPUShader> createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlockDefault)
     {
         Core::WeakPtr<GPUShader> shader = mShaders.emplace_back(Core::OwnerPtr<GPUShader>::moveCast(Core::OwnerPtr<T>::newObject()));
         Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
@@ -36,9 +36,9 @@ public:
     const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>& getGPUShaderTextureBindings(Core::u32 id) const;
     
 private:
-    void postGPUShaderCreated(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader);
-    void loadGPUShaderTextures(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader);
-    void initGPUShaderPropertiesInstancePropertiesUniformBuffer(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader);
+    void postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
+    void loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
+    void initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
 
     class GPUShaderPropertyBlockRenderState
     {

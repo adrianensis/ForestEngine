@@ -23,7 +23,7 @@ public:
 class GPUUniformBuffer
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
+    void init(GPUContext* gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
     void resize(Core::u32 size);
     template <class T>
     void setData(const T& data)
@@ -47,7 +47,7 @@ private:
     bool mIsStatic = false;
     void* mGPUPointer = nullptr;
 
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
     GPUBuffer mBuffer;
     Core::u32 mSize = 0;
 

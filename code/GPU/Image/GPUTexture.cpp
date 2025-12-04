@@ -2,7 +2,7 @@
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPUTexture::init(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id)
+void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id)
 {
     PROFILER_CPU_NAMED(init_texture)
     mGPUContext = gpuContext;

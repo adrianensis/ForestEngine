@@ -7,7 +7,7 @@
 class GPUIndicesBuffer
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic);
+    void init(GPUContext* gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic);
     void resize(Core::u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data)
@@ -34,6 +34,6 @@ private:
     bool mIsStatic = false;
 
     
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
     GPUBuffer mBuffer;
 };

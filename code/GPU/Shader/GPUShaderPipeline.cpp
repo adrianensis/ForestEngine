@@ -2,7 +2,7 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Core/GPULog.h"
 
-void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, Core::Ptr<GPURenderPass> renderPass, Core::Ptr<GPUContext> gpuContext)
+void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPURenderPass* renderPass, GPUContext* gpuContext)
 {
     mGPUShaderPipelineData = gpuGPUShaderPipelineData;
     mRenderPass = renderPass;

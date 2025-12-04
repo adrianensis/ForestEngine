@@ -1,6 +1,6 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-bool GPUShaderModule::init(Core::Ptr<GPUContext> gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData)
+bool GPUShaderModule::init(GPUContext* gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData)
 {
     mGPUContext = gpuContext;
 

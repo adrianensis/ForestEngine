@@ -30,12 +30,12 @@ public:
 class GPUShaderDescriptorSets
 {    
 public:
-    void init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, Core::Ptr<GPUContext> gpuContext);
+    void init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, GPUContext* gpuContext);
     void updateBuffers();
     void updateSamplers();
     void terminate();
 private:
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
 public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;

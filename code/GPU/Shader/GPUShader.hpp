@@ -70,7 +70,7 @@ class GPUShaderCompilationData
 {
 public:
     Core::WeakPtr<const GPUMesh> mMesh;
-    Core::Ptr<GPURenderPass> mRenderPass;
+    GPURenderPass* mRenderPass = nullptr;
     Core::HashedString label;
     Core::HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
@@ -174,7 +174,7 @@ friend class GPUShaderPropertiesInstance;
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(Core::Ptr<GPUContext> gpuContext, Core::Ptr<GPUShaderManager> gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
+    virtual void init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
     void terminate();
 
     bool hasFramebufferBinding(Core::HashedString bindingName) const;
@@ -207,8 +207,8 @@ protected:
     }
 
 protected:
-    Core::Ptr<GPUContext> mGPUContext;
-    Core::Ptr<GPUShaderManager> mGPUShaderManager;
+    GPUContext* mGPUContext = nullptr;
+    GPUShaderManager* mGPUShaderManager = nullptr;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<Core::HashedString> mTextures;

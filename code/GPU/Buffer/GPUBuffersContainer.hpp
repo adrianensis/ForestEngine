@@ -9,14 +9,14 @@ class GPUVertexBuffersContainer
 public:
 	GPUVertexBuffersContainer() = default;
 
-    void enable(Core::Ptr<GPUContext> gpuContext);
+    void enable(GPUContext* gpuContext);
     void disable();
     void terminate();
-    void addVertexBuffer(Core::Ptr<GPUContext> gpuContext, const GPUVertexBufferData& data, Core::u32 size, bool isStatic);
+    void addVertexBuffer(GPUContext* gpuContext, const GPUVertexBufferData& data, Core::u32 size, bool isStatic);
     GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data);
     const GPUVertexBuffer& getVertexBuffer(const GPUVertexBufferData& data) const;
     bool containsVertexBuffer(const GPUVertexBufferData& data) const;
-    void setIndicesBuffer(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic);
+    void setIndicesBuffer(GPUContext* gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic);
 
 private:
     static Core::u32 findIndex(const std::unordered_map<Core::HashedString, Core::u32>& indexMap, const Core::HashedString& name);
@@ -39,7 +39,7 @@ public:
 	GPUUniformBuffersContainer() = default;
 
     void terminate();
-    void addUniformBuffer(Core::Ptr<GPUContext> gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic);
+    void addUniformBuffer(GPUContext* gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic);
     GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data);
     const GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data) const;
     GPUUniformBuffer& getUniformBuffer(Core::HashedString bufferName);

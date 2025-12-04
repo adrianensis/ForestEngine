@@ -1,7 +1,7 @@
 #include "GPU/RenderItem/GPURenderItem.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 
-void GPURenderItem::init(const GPURenderItemData& data, bool isStatic, Core::Ptr<GPUShaderManager> gpuShaderManager) 
+void GPURenderItem::init(const GPURenderItemData& data, bool isStatic, GPUShaderManager* gpuShaderManager) 
 {
     mGPURenderItemData = data;
     mIsStatic = isStatic;
@@ -9,7 +9,7 @@ void GPURenderItem::init(const GPURenderItemData& data, bool isStatic, Core::Ptr
     mGPUShaderPropertiesInstance->setDirty();
 }
 
-void GPURenderItem::terminate(Core::Ptr<GPUShaderManager> gpuShaderManager) 
+void GPURenderItem::terminate(GPUShaderManager* gpuShaderManager) 
 {
     gpuShaderManager->freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
     mRenderSlot.reset();

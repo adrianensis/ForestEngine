@@ -7,7 +7,7 @@ GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(Core::u32 i) cons
     return data;
 }
 
-void GPUUniformBuffer::init(Core::Ptr<GPUContext> gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
+void GPUUniformBuffer::init(GPUContext* gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mGPUUniformBufferData = gpuUniformBufferData;

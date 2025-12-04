@@ -6,8 +6,8 @@
 
 GPURenderPass::GPURenderPass(){}
 
-bool GPURenderPass::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
-    Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager)
+bool GPURenderPass::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
+    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;

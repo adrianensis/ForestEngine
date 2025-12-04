@@ -53,7 +53,7 @@ void GPUShaderManager::update()
     }
 }
 
-Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(Core::Ptr<GPUContext> gpuContext, const GPUTextureData& gpuTextureData)
+Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
 {
 	if (!mTexturesByPath.contains(gpuTextureData.mPath))
 	{
@@ -66,13 +66,13 @@ Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(Core::Ptr<GPUContext> gp
 	return mTexturesByPath.at(gpuTextureData.mPath);
 }
 
-void GPUShaderManager::postGPUShaderCreated(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader)
+void GPUShaderManager::postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
 {
     loadGPUShaderTextures(gpuContext, shader);
     initGPUShaderPropertiesInstancePropertiesUniformBuffer(gpuContext, shader);
 }
 
-void GPUShaderManager::loadGPUShaderTextures(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader)
+void GPUShaderManager::loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
 {
     Core::u32 id = shader->getID();
     if(!mTextureBindingsByShader.contains(id))
@@ -129,7 +129,7 @@ void GPUShaderManager::freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPr
     }  
 }
 
-void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUShader> shader)
+void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
     Core::u32 shaderID = shader->getID();

@@ -1,8 +1,8 @@
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPURenderGraph::init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
-    Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager)
+void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
+    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -107,7 +107,7 @@ void GPURenderGraph::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
     {
         if(mRenderPassMap.contains(*it))
         {
-            Core::Ptr<GPURenderPass> renderPass = mRenderPassMap.at(*it);
+            Core::WeakPtr<GPURenderPass> renderPass = mRenderPassMap.at(*it);
             renderPass->addInstanceRendererData(gpuInstanceRendererData);
         }
     }

@@ -15,8 +15,8 @@ public:
 class GPURenderGraph
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
-        Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager);
+    void init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
+        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager);
     void update();
     void terminate();
     void render(GPURenderGraphData& renderData);
@@ -27,7 +27,7 @@ public:
     void updateLights(GPURenderGraphData& renderData);
 
     template<class T> T_EXTENDS(T, GPURenderPass)
-    void initRenderPass(const GPURenderPassData& renderPassData, Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager)
+    void initRenderPass(const GPURenderPassData& renderPassData, GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)
     {
         Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
@@ -55,7 +55,7 @@ public:
     void initBuffers();
 
 private:
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
     std::unordered_map<Core::ClassId, Core::OwnerPtr<GPURenderPass>> mRenderPassMap;
     std::vector<Core::WeakPtr<GPURenderPass>> mRenderPassesArray;
     Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;

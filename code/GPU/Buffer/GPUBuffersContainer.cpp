@@ -1,6 +1,6 @@
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
 
-void GPUVertexBuffersContainer::enable(Core::Ptr<GPUContext> gpuContext)
+void GPUVertexBuffersContainer::enable(GPUContext* gpuContext)
 {
 //	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
     const GPUCommandBuffer vulkanCommandBuffer = gpuContext->vulkanCommandBuffers[gpuContext->currentFrame];
@@ -23,7 +23,7 @@ void GPUVertexBuffersContainer::disable()
 
 }
 
-void GPUVertexBuffersContainer::addVertexBuffer(Core::Ptr<GPUContext> gpuContext, const GPUVertexBufferData& data, Core::u32 size, bool isStatic)
+void GPUVertexBuffersContainer::addVertexBuffer(GPUContext* gpuContext, const GPUVertexBufferData& data, Core::u32 size, bool isStatic)
 {
     if(mVertexBuffers.size() > 0)
     {
@@ -59,7 +59,7 @@ Core::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::Ha
     return index;
 }
 
-void GPUVertexBuffersContainer::setIndicesBuffer(Core::Ptr<GPUContext> gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
+void GPUVertexBuffersContainer::setIndicesBuffer(GPUContext* gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
 {
     // mIndicesBuffer.terminate();
     mIndicesBuffer.init(gpuContext, gpuDataType, size, isStatic);
@@ -76,7 +76,7 @@ void GPUVertexBuffersContainer::terminate()
 //    GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
 }
 
-void GPUUniformBuffersContainer::addUniformBuffer(Core::Ptr<GPUContext> gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
+void GPUUniformBuffersContainer::addUniformBuffer(GPUContext* gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
 {
     Core::u32 bindingPoint = gpuContext->requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();

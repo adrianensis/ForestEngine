@@ -14,7 +14,7 @@ void GPUShapeRenderer::terminate()
 	mShapesCounter = 0;
 }
 
-void GPUShapeRenderer::init(Core::Ptr<GPUContext> gpuContext, Core::u32 verticesPerShape)
+void GPUShapeRenderer::init(GPUContext* gpuContext, Core::u32 verticesPerShape)
 {
     mGPUContext = gpuContext;
 	mVerticesPerShape = verticesPerShape;

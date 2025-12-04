@@ -22,7 +22,7 @@ void GPUSkeletalAnimationManager::update()
 	}
 }
 
-Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(Core::Ptr<GPUContext> gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData)
+Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(GPUContext* gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData)
 {
 	Core::WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(Core::OwnerPtr<GPUSkeletonState>::newObject()).first;
     skeletonState->init(gpuSkeletonStateData);
@@ -45,7 +45,7 @@ void GPUSkeletalAnimationManager::terminate()
 	mSkeletonStates.clear();
 }
 
-void GPUSkeletalAnimationManager::initSkeletonRenderState(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<const GPUSkeletonState> skeletonState)
+void GPUSkeletalAnimationManager::initSkeletonRenderState(GPUContext* gpuContext, Core::WeakPtr<const GPUSkeletonState> skeletonState)
 {
     CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
 

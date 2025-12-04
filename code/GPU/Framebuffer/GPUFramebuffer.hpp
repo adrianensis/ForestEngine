@@ -25,7 +25,7 @@ public:
     VkSampleCountFlagBits mSampleCountFlagBits = VK_SAMPLE_COUNT_1_BIT;
     bool mIsResolveFramebuffer = false;
     Core::u32 mSwapchainIndex = 0;
-    Core::Ptr<GPUImage> mColorImage;
+    GPUImage* mColorImage = nullptr;
     
 private:
     bool mIsValid = false;
@@ -41,7 +41,7 @@ public:
 class GPUFramebuffer
 {
 public:
-    bool init(Core::Ptr<GPUContext> gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass);
+    bool init(GPUContext* gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass);
     Maths::Vector4 readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
@@ -62,7 +62,7 @@ private:
 
     GPURenderPass* mRenderPass = nullptr;
     VkFramebuffer framebuffer = VK_NULL_HANDLE;
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
 
     GPUImage vulkanDepthImage;
     VkImageView depthImageView = VK_NULL_HANDLE;

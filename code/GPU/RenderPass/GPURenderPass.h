@@ -29,15 +29,15 @@ class GPUAttachmentData
 public:
     GPUAttachmentLoadOp mGPUAttachmentLoadOp = GPUAttachmentLoadOp::CLEAR;
     GPUAttachmentStoreOp mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
-    Core::Ptr<GPUImage> mOutputGPUImage;
+    GPUImage* mOutputGPUImage = nullptr;
     bool mUseDefaultOutput = true;
 };
 
 class GPURenderPassOutputData
 {
 public:
-    Core::Ptr<GPUImage> mColorGPUImage;
-    Core::Ptr<GPUImage> mDepthGPUImage;
+    GPUImage* mColorGPUImage = nullptr;
+    GPUImage* mDepthGPUImage = nullptr;
 };
 
 class GPURenderPass;
@@ -70,8 +70,8 @@ public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
     // TODO: refactor so many arguments
-    bool init(Core::Ptr<GPUContext> gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
-        Core::Ptr<GPUSkeletalAnimationManager> gpuSkeletalAnimationManager, Core::Ptr<GPUShaderManager> gpuShaderManager);
+    bool init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
+        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager);
     void terminate();
     void begin();
     virtual void renderPass();
@@ -93,10 +93,10 @@ protected:
     bool initializeFramebuffers();
 
 public:
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
 protected:
-    Core::Ptr<GPUSkeletalAnimationManager> mGPUSkeletalAnimationManager;
-    Core::Ptr<GPUShaderManager> mGPUShaderManager;
+    GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
+    GPUShaderManager* mGPUShaderManager = nullptr;
     VkRenderPass mRenderPass = VK_NULL_HANDLE;
     std::vector<GPUFramebuffer> framebuffers;
 

@@ -1,7 +1,7 @@
 #include "GPUImage.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-bool GPUImage::init(Core::Ptr<GPUContext> gpuContext, const GPUImageData& gpuImageData)
+bool GPUImage::init(GPUContext* gpuContext, const GPUImageData& gpuImageData)
 {
     mGPUContext = gpuContext;
     mGPUImageData = gpuImageData;

@@ -2,7 +2,7 @@
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Core/GPULog.h"
 
-bool GPUBuffer::init(Core::Ptr<GPUContext> gpuContext, const GPUBufferData& gpuBufferData)
+bool GPUBuffer::init(GPUContext* gpuContext, const GPUBufferData& gpuBufferData)
 {
     PROFILER_CPU_NAMED(buffer_init)
     mGPUContext = gpuContext;
@@ -87,7 +87,7 @@ void GPUBuffer::setData(const void* data, Core::u32 size) const
     vkUnmapMemory(mGPUContext->vulkanDevice->getDevice(), mVkDeviceMemory);
 }
 
-void GPUBuffer::copy(Core::Ptr<GPUContext> gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer)
+void GPUBuffer::copy(GPUContext* gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer)
 {   
     PROFILER_CPU_NAMED(buffer_copy)
     CHECK_MSG(sourceBuffer.mGPUBufferData.Size <= destinationBuffer.mGPUBufferData.Size, "sourceBuffer size <= destinationBuffer size: " + std::to_string(sourceBuffer.mGPUBufferData.Size) +" "+ std::to_string(destinationBuffer.mGPUBufferData.Size));

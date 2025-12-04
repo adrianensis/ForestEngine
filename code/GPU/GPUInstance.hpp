@@ -9,12 +9,12 @@ class GPUShaderManager;
 class GPUInstance: public Core::Singleton<GPUInstance>
 {
 public:
-    virtual void init(Core::Ptr<IGPUWindow> gpuWindow);
+    virtual void init(IGPUWindow* gpuWindow);
     virtual void terminate();
 
 public:
-    Core::OwnerPtr<GPUContext> mGPUContext;
-    Core::OwnerPtr<GPUShaderManager> mGPUShaderManager;
-    Core::OwnerPtr<GPUSkeletalAnimationManager> mGPUSkeletalAnimationManager;
+    GPUContext* mGPUContext = nullptr;
+    GPUShaderManager* mGPUShaderManager = nullptr;
+    GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
 };
 REGISTER_CLASS(GPUInstance)

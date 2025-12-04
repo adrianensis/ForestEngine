@@ -45,7 +45,7 @@ void Engine::init()
     windowData.mWindowSize.set(1080, 720);
     windowData.mMainWindow = true;
     Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
-    GPUInstance::getInstance().init(window);
+    GPUInstance::getInstance().init(window.getInternalPointer());
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(CameraManager);

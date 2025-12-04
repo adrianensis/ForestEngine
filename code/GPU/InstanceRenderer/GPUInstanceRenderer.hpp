@@ -8,7 +8,7 @@
 class GPUInstanceRenderer
 {
 public:
-    void init(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData);
+    void init(GPUContext* gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData);
     void terminate();
 
     void render();
@@ -28,7 +28,7 @@ private:
     void drawCall();
 
 private:
-    Core::Ptr<GPUContext> mGPUContext;
+    GPUContext* mGPUContext = nullptr;
     Core::SlotsManager mRendererSlotsManager;
 	std::vector<Core::WeakPtr<GPURenderItem>> mRenderers;
     Core::u32 mRenderersCount = 0;
@@ -54,8 +54,8 @@ class GPUInstanceRendererManager
 {
 public:
     void terminate();
-    void update(Core::Ptr<GPUContext> gpuContext);
-    bool addInstanceRenderer(Core::Ptr<GPUContext> gpuContext, const GPUInstanceRendererData& data);
+    void update(GPUContext* gpuContext);
+    bool addInstanceRenderer(GPUContext* gpuContext, const GPUInstanceRendererData& data);
     bool removeInstanceRenderer(const GPUInstanceRendererData& data);
     const Core::WeakPtr<GPUInstanceRenderer> getInstanceRenderer(const GPUInstanceRendererData& data) const;
 private:

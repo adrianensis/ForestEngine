@@ -44,13 +44,13 @@ public:
 
     void waitUntilNotMinimized() const;
     bool isIconified() const;
-    void addWindowListener(Core::Ptr<IWindowListener> windowListener);
+    void addWindowListener(IWindowListener* windowListener);
 
     virtual std::vector<const char*> getRequiredGPUExtensions() const override
     { return getRequiredExtensions(); }
     virtual Maths::Vector2 getGPUWindowSize() const override
     { return getWindowSize(); }
-    virtual VkSurfaceKHR createSurface(Core::Ptr<GPUContext> gpuContext) const override;
+    virtual VkSurfaceKHR createSurface(GPUContext* gpuContext) const override;
 
 private:
     void onResize(GLFWwindow *window, Core::i32 width, Core::i32 height);
@@ -71,7 +71,7 @@ private:
 	WindowData mWindowData;
     Core::i32 mID = -1;
 
-    std::vector<Core::Ptr<IWindowListener>> mWindowListeners;
+    std::vector<IWindowListener*> mWindowListeners;
 
 public:
     CGET(GLTFWindow);

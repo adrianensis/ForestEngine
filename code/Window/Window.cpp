@@ -334,12 +334,12 @@ bool Window::isIconified() const
 	return glfwGetWindowAttrib(mGLTFWindow, GLFW_ICONIFIED) == 1;
 }
 
-void Window::addWindowListener(Core::Ptr<IWindowListener> windowListener)
+void Window::addWindowListener(IWindowListener* windowListener)
 {
 	mWindowListeners.push_back(windowListener);
 }
 
-VkSurfaceKHR Window::createSurface(Core::Ptr<GPUContext> gpuContext) const
+VkSurfaceKHR Window::createSurface(GPUContext* gpuContext) const
 {
 	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
     VkSurfaceKHR surface = VK_NULL_HANDLE;

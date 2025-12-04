@@ -2,7 +2,7 @@
 #include "GPU/Window/GPUWindow.hpp"
 #include "GPU/Core/GPULog.h"
 
-void GPUContext::init(Core::Ptr<IGPUWindow> gpuWindow)
+void GPUContext::init(IGPUWindow* gpuWindow)
 {
     mGPUWindow = gpuWindow;
     VulkanConfig vulkanConfig;
