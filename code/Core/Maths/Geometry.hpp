@@ -3,7 +3,6 @@
 #include "Core/Maths/Vector3.hpp"
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/MathUtils.hpp"
-#include "Core/Metadata/ClassManager.hpp"
 
 NS_BEGIN(Maths)
 class Cube;
