@@ -38,13 +38,19 @@ public:
     {
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
-        mDebugPointer = nullptr;
+        if(isValid())
+        {
+            mDebugPointer = &getInternal();
+        }
         #endif
     }
     EntityPtrBase(const EntityPtrBase& other): EntityPtrBase(other.mPoolElement.mClassId, other.mPoolElement.mSlot, other.mECPool)
     {
         #ifdef ENGINE_BUILD_DEBUG
-        mDebugPointer = other.mDebugPointer;
+        if(isValid())
+        {
+            mDebugPointer = &getInternal();
+        }
         #endif
     }
 
@@ -154,9 +160,6 @@ public:
         if(isValid())
         {
             Entity* pointer = &getInternal();
-            #ifdef ENGINE_BUILD_DEBUG
-            mDebugPointer = pointer;
-            #endif
             T* castedPointer = dynamic_cast<T*>(pointer);
             if(!castedPointer)
             {
