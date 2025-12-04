@@ -94,7 +94,7 @@ public:
         CHECK_MSG(!componentOwner.isValid(), "Component is assigned to another Entity!");
         CHECK_MSG(componentOwner != entityPtr, "Component is already assigned to Entity!");
 
-        componentPtr->setComponentOwner(ComponentOwner(entityPtr.mClassId, entityPtr.mSlot, entityPtr.mECPool));
+        componentPtr->setComponentOwner(ComponentOwner(entityPtr.getPoolElement().mClassId, entityPtr.getPoolElement().mSlot, entityPtr.getECPool()));
         
         componentOwner = EntityPtrBase(
             componentPtr->getComponentOwner().mClassId, 
@@ -102,8 +102,8 @@ public:
             componentPtr->getComponentOwner().mECPool);
         CHECK_MSG(componentOwner.isValid(), "invalid Entity!");
 
-        Core::ClassId id = entityPtr.mClassId;
-        Core::Slot slot = entityPtr.mSlot;
+        Core::ClassId id = entityPtr.getPoolElement().mClassId;
+        Core::Slot slot = entityPtr.getPoolElement().mSlot;
         if(!mEntityComponents.contains(id))
         {
             mEntityComponents.emplace(id, std::unordered_map<Core::u32, std::list<ComponentPtrBase>>());
@@ -135,8 +135,8 @@ public:
         CHECK_MSG(componentOwner == entityPtr, "Component is assigned to another Entity!");
 
         bool componentFound = false;
-        Core::ClassId id = entityPtr.mClassId;
-        Core::Slot slot = entityPtr.mSlot;
+        Core::ClassId id = entityPtr.getPoolElement().mClassId;
+        Core::Slot slot = entityPtr.getPoolElement().mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
@@ -152,7 +152,7 @@ public:
         {
             notifyListenersOnComponentRemoved(componentPtr);
             componentPtr->onECComponentDestroyed();
-            mECPool.getComponentsPool().removeElement(componentPtr);
+            mECPool.getComponentsPool().removeElement(componentPtr.getPoolElement());
         }
     }
 
@@ -160,14 +160,14 @@ public:
     {
         PROFILER_CPU()
 
-        Core::ClassId id = entityPtr.mClassId;
-        Core::Slot slot = entityPtr.mSlot;
+        Core::ClassId id = entityPtr.getPoolElement().mClassId;
+        Core::Slot slot = entityPtr.getPoolElement().mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
         FOR_LIST(it, components)
         {
             notifyListenersOnComponentRemoved((*it));
             (*it)->onECComponentDestroyed();
-            mECPool.getComponentsPool().removeElement((*it));
+            mECPool.getComponentsPool().removeElement((*it).getPoolElement());
         }
 
         components.clear();
@@ -175,8 +175,8 @@ public:
 
     const std::list<ComponentPtrBase>& getComponents(const EntityPtrBase& entityPtr)
     {
-        Core::ClassId id = entityPtr.mClassId;
-        Core::Slot slot = entityPtr.mSlot;
+        Core::ClassId id = entityPtr.getPoolElement().mClassId;
+        Core::Slot slot = entityPtr.getPoolElement().mSlot;
         return mEntityComponents.at(id).at(slot.getSlot());
     }
 
@@ -204,7 +204,7 @@ public:
     template<class T> T_EXTENDS(T, Component)
     T& getComponent(ComponentPtrBase componentPtr) const
     {
-        return mECPool.getComponentsPool().getElement<T>(componentPtr.mSlot);
+        return mECPool.getComponentsPool().getElement<T>(componentPtr.getPoolElement());
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -274,7 +274,7 @@ public:
     void removeEntity(const EntityPtrBase& entityPtr)
     {
         removeComponents(entityPtr);
-        mECPool.getEntitiesPool().removeElement(entityPtr);
+        mECPool.getEntitiesPool().removeElement(entityPtr.getPoolElement());
     }
 
     template<class T> T_EXTENDS(T, Entity)

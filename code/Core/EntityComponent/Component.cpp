@@ -20,6 +20,6 @@ void Component::onECComponentRecycle(Core::Slot newSlot)
 Component& ComponentPtrBase::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return mECPool->getComponentsPool().getElementBase(*this);
+    return mECPool->getComponentsPool().getElementBase(this->mPoolElement);
 }
 NS_END

@@ -16,6 +16,6 @@ void Entity::onECComponentRecycle(Core::Slot newSlot)
 Entity& EntityPtrBase::getInternal() const
 {
     CHECK_MSG(isValid(), "Invalid handle!");
-    return mECPool->getEntitiesPool().getElementBase(*this);
+    return mECPool->getEntitiesPool().getElementBase(this->mPoolElement);
 }
 NS_END

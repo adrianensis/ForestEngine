@@ -55,22 +55,22 @@ public:
 };
 REGISTER_CLASS(Component);
 
-class ComponentPtrBase: public Core::PoolElementPtr
+class ComponentPtrBase
 {
 template<class T>
 friend class ComponentPtr;
 public:
-    ComponentPtrBase(): Core::PoolElementPtr()
+    ComponentPtrBase()
     {
     }
-    ComponentPtrBase(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
+    ComponentPtrBase(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): mPoolElement(id, slot)
     {
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
         #endif
     }
-    ComponentPtrBase(const ComponentPtrBase& other): ComponentPtrBase(other.mClassId, other.mSlot, other.mECPool)
+    ComponentPtrBase(const ComponentPtrBase& other): ComponentPtrBase(other.mPoolElement.mClassId, other.mPoolElement.mSlot, other.mECPool)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = other.mDebugPointer;
@@ -88,9 +88,32 @@ public:
 
     Component* operator->() const { return &getInternal(); }
 
+    bool isValid() const { return mPoolElement.isValid(); }
+    operator bool() const { return this->isValid(); }
+    bool operator==(const ComponentPtrBase& other) const
+	{
+		return
+         mPoolElement == other.mPoolElement;
+	}
+
+    void reset()
+    {
+        mPoolElement.reset();
+    }
+
+    const Core::PoolElementPtr& getPoolElement() const
+    {
+        return mPoolElement;
+    }
+
+    Core::Ptr<EntityComponentPool> getECPool() const
+    {
+        return mECPool;
+    }
 protected:
     Component& getInternal() const;
     Core::Ptr<EntityComponentPool> mECPool;
+    Core::PoolElementPtr mPoolElement;
 public:
     #ifdef ENGINE_BUILD_DEBUG
     Component* mDebugPointer = nullptr;
@@ -106,8 +129,7 @@ public:
     {
         mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(component).mClassDefinition.getId();
-        mClassId = id;
-        mSlot = component->getSlot();
+        mPoolElement = Core::PoolElementPtr(id, component->getSlot());
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = const_cast<T*>(component);
@@ -133,8 +155,7 @@ public:
         if (this != &other)
         {
             mECPool = other.mECPool;
-            mClassId = other.mClassId;
-            mSlot = other.mSlot;
+            mPoolElement = other.mPoolElement;
             #ifdef ENGINE_BUILD_DEBUG
             mDebugPointer = other.mDebugPointer;
             #endif
@@ -157,7 +178,7 @@ public:
     }
 
     T* operator->() const { return &get(); }
-    operator ComponentPtr<const T>() const { return ComponentPtr<const T>(mClassId, mSlot); }
+    operator ComponentPtr<const T>() const { return ComponentPtr<const T>(mPoolElement.mClassId, mPoolElement.mSlot, mECPool); }
     template<class U> T_EXTENDS(T, U)
     operator ComponentPtr<U>() const { return ComponentPtr<U>(*this); }
 };

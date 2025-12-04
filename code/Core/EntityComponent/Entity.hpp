@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
+#include "Core/Memory/Pool.hpp"
 
 NS_BEGIN(EC)
 class EntityComponentPool;
@@ -24,23 +25,23 @@ public:
 };
 REGISTER_CLASS(Entity);
 
-class EntityPtrBase: public Core::PoolElementPtr
+class EntityPtrBase
 {
 template<class T>
 friend class EntityPtr;
 public:
 
-    EntityPtrBase(): Core::PoolElementPtr()
+    EntityPtrBase()
     {
     }
-    EntityPtrBase(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): Core::PoolElementPtr(id, slot)
+    EntityPtrBase(Core::ClassId id, Core::Slot slot, Core::Ptr<EntityComponentPool> ecPool): mPoolElement(id, slot)
     {
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = nullptr;
         #endif
     }
-    EntityPtrBase(const EntityPtrBase& other): EntityPtrBase(other.mClassId, other.mSlot, other.mECPool)
+    EntityPtrBase(const EntityPtrBase& other): EntityPtrBase(other.mPoolElement.mClassId, other.mPoolElement.mSlot, other.mECPool)
     {
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = other.mDebugPointer;
@@ -58,10 +59,34 @@ public:
 
     Entity* operator->() const { return &getInternal(); }
 
+    bool isValid() const { return mPoolElement.isValid(); }
+    operator bool() const { return this->isValid(); }
+    bool operator==(const EntityPtrBase& other) const
+	{
+		return
+         mPoolElement == other.mPoolElement;
+	}
+
+    void reset()
+    {
+        mPoolElement.reset();
+    }
+
+    const Core::PoolElementPtr& getPoolElement() const
+    {
+        return mPoolElement;
+    }
+
+    Core::Ptr<EntityComponentPool> getECPool() const
+    {
+        return mECPool;
+    }
+
 protected:
     Entity& getInternal() const;
-public:
     Core::Ptr<EntityComponentPool> mECPool;
+    Core::PoolElementPtr mPoolElement;
+public:
     #ifdef ENGINE_BUILD_DEBUG
     Entity* mDebugPointer = nullptr;
     #endif
@@ -76,8 +101,7 @@ public:
     {
         mECPool = ecPool;
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
-        mClassId = id;
-        mSlot = entity->getSlot();
+        mPoolElement = Core::PoolElementPtr(id, entity->getSlot());
         mECPool = ecPool;
         #ifdef ENGINE_BUILD_DEBUG
         mDebugPointer = const_cast<T*>(entity);
@@ -104,8 +128,7 @@ public:
         if (this != &other)
         {
             mECPool = other.mECPool;
-            mClassId = other.mClassId;
-            mSlot = other.mSlot;
+            mPoolElement = other.mPoolElement;
             #ifdef ENGINE_BUILD_DEBUG
             mDebugPointer = other.mDebugPointer;
             #endif
@@ -123,8 +146,7 @@ public:
 	{
         Core::ClassId id = Core::ClassManager::getDynamicClassMetadata(entity).mClassDefinition.getId();
 		return
-            mClassId == id &&
-            mSlot.getSlot() == entity->getSlot().getSlot();
+            mPoolElement == Core::PoolElementPtr(id, entity->getSlot());
 	}
 
     void checkValid()
@@ -144,8 +166,8 @@ public:
     }
     
     T* operator->() const { return &get(); }
-    operator EntityPtr<const T>() const { return EntityPtr<const T>(mClassId, mSlot, mECPool); }
+    operator EntityPtr<const T>() const { return EntityPtr<const T>(mPoolElement.mClassId, mPoolElement.mSlot, mECPool); }
     template<class U> T_EXTENDS(T, U)
-    operator EntityPtr<U>() const { return EntityPtr<U>(mClassId, mSlot, mECPool); }
+    operator EntityPtr<U>() const { return EntityPtr<U>(mPoolElement.mClassId, mPoolElement.mSlot, mECPool); }
 };
 NS_END
