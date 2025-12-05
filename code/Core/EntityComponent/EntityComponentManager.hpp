@@ -1,9 +1,14 @@
 #pragma once
 
+#include "Core/Assert/Assert.hpp"
+#include "Core/CoreBase.hpp"
+#include "Core/CoreMacros.hpp"
+#include "Core/EntityComponent/Component.hpp"
 #include "Core/Memory/Singleton.hpp"
 #include "Core/EntityComponent/EntityComponentPool.hpp"
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
+#include <span>
 #include <vector>
 
 NS_BEGIN(EC)
@@ -15,6 +20,75 @@ public:
 };
 
 #define ECManager EC::EntityComponentManager::getInstance()
+
+class ComponentsArray
+{
+public:
+    ComponentsArray()
+    {
+        
+    }
+
+    void resize(Core::u32 size)
+    {
+        mComponents.resize(size);
+    }
+
+    void insert(Component* component)
+    {
+        Core::u32 index = 0;
+        if(mEmpty)
+        {
+            mEmpty = false;
+            index = mLastIndex;
+        }
+        else
+        {
+            CHECK_MSG((mLastIndex + 1) < mComponents.size(), "No space for more components!");
+
+            mLastIndex++;
+            index = mLastIndex;
+        }
+
+        mComponents[index] = component;
+    }
+
+    void remove(Core::u32 index)
+    {
+        if(mComponents[index] != nullptr)
+        {
+            mComponents[index] = mComponents[mLastIndex];
+            mComponents[mLastIndex] = nullptr;
+
+            mLastIndex--;
+        }
+    }
+
+    void clear()
+    {
+        mEmpty = true;
+        mLastIndex = 0;
+    }
+
+    Core::u32 size() const
+    {
+        return mLastIndex + 1;
+    }
+
+    Core::u32 capacity() const
+    {
+        return mComponents.size();
+    }
+
+    bool empty() const
+    {
+        return mComponents.empty();
+    }
+
+    std::vector<Component*> mComponents;
+    Core::u32 mLastIndex = 0;
+    bool mEmpty = true;
+};
 
 class EntityComponentManager: public Core::Singleton<EntityComponentManager>
 {
@@ -61,7 +135,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    T* requestComponent()
+    T* requestComponent(Entity *entityPtr, std::function<void(T* component)> initializer)
     {
         PROFILER_CPU()
         T* component = nullptr;
@@ -78,8 +152,12 @@ public:
         {
             CHECK_MSG(false, "Invalid Entity!");
         }
-        T* componentPtr(component);
-        return componentPtr;
+
+        initializer(component);
+
+        addComponent(entityPtr, component);
+
+        return component;
     }
 
     void addComponent(Entity* entityPtr, Component* componentPtr)
@@ -98,11 +176,17 @@ public:
         Core::Slot slot = entityPtr->getPoolElementPtr().mSlot;
         if(!mEntityComponents.contains(id))
         {
-            mEntityComponents.emplace(id, std::vector<std::list<Component*>>());
+            mEntityComponents.emplace(id, std::vector<ComponentsArray>());
             mEntityComponents.at(id).resize(smMaxSize);
         }
 
-        mEntityComponents.at(id).at(slot.getSlot()).emplace_back(componentPtr);
+        ComponentsArray& componentsArray= mEntityComponents.at(id).at(slot.getSlot());
+        if(componentsArray.empty())
+        {
+            componentsArray.resize(smMaxComponentsPerEntity);
+        }
+
+        mEntityComponents.at(id).at(slot.getSlot()).insert(componentPtr);
         
         componentPtr->onECComponentAdded();
 
@@ -119,13 +203,13 @@ public:
         bool componentFound = false;
         Core::ClassId id = entityPtr->getPoolElementPtr().mClassId;
         Core::Slot slot = entityPtr->getPoolElementPtr().mSlot;
-        auto& components = mEntityComponents.at(id).at(slot.getSlot());
-        FOR_LIST(it, components)
+        auto& components =  mEntityComponents.at(id).at(slot.getSlot());
+        FOR_ARRAY(i, components.mComponents)
         {
-            if((*it) == componentPtr)
+            if(components.mComponents[i] == componentPtr)
             {
                 componentFound = true;
-                components.erase(it);
+                components.remove(i);
                 break;
             }
         }
@@ -145,31 +229,34 @@ public:
         Core::ClassId id = entityPtr->getPoolElementPtr().mClassId;
         Core::Slot slot = entityPtr->getPoolElementPtr().mSlot;
         auto& components = mEntityComponents.at(id).at(slot.getSlot());
-        FOR_LIST(it, components)
+        FOR_RANGE(i, 0, components.size())
         {
-            notifyListenersOnComponentRemoved((*it));
-            (*it)->onECComponentDestroyed();
-            mECPool.getComponentsPool().removeElement((*it)->getPoolElementPtr());
+            notifyListenersOnComponentRemoved(components.mComponents[i]);
+            components.mComponents[i]->onECComponentDestroyed();
+            mECPool.getComponentsPool().removeElement(components.mComponents[i]->getPoolElementPtr());
         }
 
         components.clear();
     }
 
-    const std::list<Component*>& getComponents(const Entity* entityPtr)
+    std::span<Component*> getComponents(const Entity* entityPtr) const
     {
         Core::ClassId id = entityPtr->getPoolElementPtr().mClassId;
         Core::Slot slot = entityPtr->getPoolElementPtr().mSlot;
-        return mEntityComponents.at(id).at(slot.getSlot());
+        const ComponentsArray& componentsArray = mEntityComponents.at(id).at(slot.getSlot());
+
+        std::span<Component*> span(const_cast<ComponentsArray&>(componentsArray).mComponents.begin(), componentsArray.size());
+        return span;
     }
 
 	template <class T> T_EXTENDS(T, Component)
-    T* getFirstComponent(const Entity* entityPtr)
+    T* getFirstComponent(const Entity* entityPtr) const
     {
-        const auto& components = getComponents(entityPtr);
-        T* componentToReturn;
-        FOR_LIST(it, components)
+        std::span<Component*> components = getComponents(entityPtr);
+        T* componentToReturn = nullptr;
+        FOR_RANGE(i, 0, components.size())
         {
-            Component* componentPtr = (*it);
+            Component* componentPtr = components[i];
             if(componentPtr)
             {
                 componentToReturn = dynamic_cast<T *>(componentPtr);
@@ -233,7 +320,7 @@ public:
         }
     }
     template<class T> T_EXTENDS(T, Entity)
-    T* requestEntity()
+    T* requestEntity(std::function<void(T* entity)> initializer)
     {
         T* entity = nullptr;
         Core::PoolElementPtr poolPtr = mECPool.getEntitiesPool().requestElement<T>();
@@ -249,6 +336,9 @@ public:
         {
             CHECK_MSG(false, "Invalid Entity!");
         }
+
+        initializer(entity);
+
         return entity;
     }
 
@@ -260,8 +350,9 @@ public:
     
 private:
     inline static Core::u32 smMaxSize = 100000;
+    inline static Core::u32 smMaxComponentsPerEntity = 50;
     EntityComponentPool mECPool;
     std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
-    std::unordered_map<Core::ClassId, std::vector<std::list<Component*>>> mEntityComponents;
+    std::unordered_map<Core::ClassId, std::vector<ComponentsArray>> mEntityComponents;
 };
 NS_END

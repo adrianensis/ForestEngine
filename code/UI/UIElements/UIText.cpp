@@ -28,9 +28,10 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
-	renderer->init(rendererData);
-    ECManager.addComponent(this, renderer);
+	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>(this, [&](auto* component)
+    {
+        component->init(rendererData);
+    });
 
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
     Maths::Cube textureRegion = GET_SYSTEM(UIManager).getGlyphData(mCharacter).mTextureRegion;

@@ -1,5 +1,6 @@
 #include "Scene/GameObject.hpp"
 #include "Core/Assert/Assert.hpp"
+#include "Core/CoreMacros.hpp"
 #include "Core/EntityComponent/Component.hpp"
 #include "Core/EntityComponent/Entity.hpp"
 #include "Scene/GameComponent.hpp"
@@ -18,19 +19,20 @@ GameObject::GameObject()
 void GameObject::init()
 {
     PROFILER_CPU()
-    mTransform = ECManager.requestComponent<Transform>();
-    mTransform->init();
-    ECManager.addComponent(this, mTransform);
+    mTransform = ECManager.requestComponent<Transform>(this, [&](auto* component)
+    {
+        component->init();
+    });
 }
 
 void GameObject::setIsActive(bool isActive)
 {
 	mIsActive = isActive;
 
-    auto& components = ECManager.getComponents(this);
-    FOR_LIST(it, components)
+    std::span<EC::Component*> components = ECManager.getComponents(this);
+    FOR_RANGE(i, 0, components.size())
     {
-        GameComponent* gameComp = CAST(GameComponent, *it);
+        GameComponent* gameComp = CAST(GameComponent, components[i]);
         gameComp->setIsActive(isActive);
     }
 }

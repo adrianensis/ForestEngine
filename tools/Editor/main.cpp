@@ -14,12 +14,15 @@ int main()
     Engine engine;
     engine.init();
 
-    GameObject* controller = ECManager.requestEntity<GameObject>();
-    controller->init();
+    GameObject* controller = ECManager.requestEntity<GameObject>([&](GameObject* entity)
+    {
+        entity->init(); 
+    });
 
-    Editor* editor = ECManager.requestComponent<Editor>();
-    editor->init();
-    ECManager.addComponent(controller, editor);
+    ECManager.requestComponent<Editor>(controller, [&](auto* component)
+    {
+        component->init();
+    });
 
     GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 

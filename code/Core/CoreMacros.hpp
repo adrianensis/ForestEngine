@@ -18,6 +18,7 @@
 // --------------------------------------------------------
 
 #define CAST(Class, Ptr) dynamic_cast<Class*>(Ptr)
+#define STATIC_CAST(Class, Ptr) static_cast<Class*>(Ptr)
 
 #define IS_BASE_OF(BaseClass, DerivedClass) std::is_base_of<BaseClass, DerivedClass>::value
 

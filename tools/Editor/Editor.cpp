@@ -282,9 +282,10 @@ GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
-	renderer->init(rendererData);
-    ECManager.addComponent(gameObject, renderer);
+	ECManager.requestComponent<MeshRenderer>(gameObject, [&](auto* component)
+	{
+		component->init(rendererData);
+	});
 
 	return gameObject;
 }
@@ -315,9 +316,10 @@ GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
-	renderer->init(rendererData);
-    ECManager.addComponent(gameObject, renderer);
+	ECManager.requestComponent<MeshRenderer>(gameObject, [&](auto* component)
+	{
+		component->init(rendererData);
+	});
 
 	return gameObject;
 }
@@ -333,9 +335,10 @@ GameObject* Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
     data.mPosition = v;
     data.mDiffuse = Maths::Vector3(1,1,1) * 250000;
 
-	PointLight* pointLight = ECManager.requestComponent<PointLight>();
-    pointLight->init(data);
-    ECManager.addComponent(gameObject, pointLight);
+	ECManager.requestComponent<PointLight>(gameObject, [&](auto* component)
+	{
+		component->init(data);
+	});
 
 	return gameObject;
 }
@@ -351,9 +354,10 @@ GameObject* Editor::createDirectionalLight(const Maths::Vector3& v, const Maths:
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Maths::Vector3(0.65,0.2,0.1) * 20;
 
-	DirectionalLight* dirLight = ECManager.requestComponent<DirectionalLight>();
-    dirLight->init(directionalLightData);
-    ECManager.addComponent(gameObject, dirLight);
+	ECManager.requestComponent<DirectionalLight>(gameObject, [&](auto* component)
+	{
+		component->init(directionalLightData);
+	});
 
 	return gameObject;
 }
@@ -408,9 +412,10 @@ GameObject* Editor::importModel( const std::string& pFile, const Maths::Vector3&
         Core::ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	ModelRenderer* modelRenderer = ECManager.requestComponent<ModelRenderer>();
-    modelRenderer->init(modelRendererData);
-    ECManager.addComponent(gameObject, modelRenderer);
+	ECManager.requestComponent<ModelRenderer>(gameObject, [&](auto* component)
+	{
+		component->init(modelRendererData);
+	});
 
     return gameObject;
 }

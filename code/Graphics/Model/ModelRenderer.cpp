@@ -24,9 +24,10 @@ void ModelRenderer::onECComponentAdded()
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         EC::Entity* parent = getOwnerEntity();
-        MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
-        renderer->init(rendererData);
-    	ECManager.addComponent(parent, renderer);
+        ECManager.requestComponent<MeshRenderer>(parent, [&](auto* component)
+		{
+			component->init(rendererData);
+		});
 	}
 }
 

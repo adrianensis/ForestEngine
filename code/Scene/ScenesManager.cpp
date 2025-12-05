@@ -42,15 +42,18 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraGameObject = ECManager.requestEntity<GameObject>();
-	mCameraGameObject->init();
+    mCameraGameObject = ECManager.requestEntity<GameObject>([&](GameObject* entity)
+    {
+        entity->init(); 
+    });
 
 	// mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
-    Camera* camera = ECManager.requestComponent<Camera>();
-	camera->init();
-    ECManager.addComponent(mCameraGameObject, camera);
+    Camera* camera = ECManager.requestComponent<Camera>(mCameraGameObject, [&](auto* component)
+    {
+        component->init();
+    });
 
 	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), 90);
 

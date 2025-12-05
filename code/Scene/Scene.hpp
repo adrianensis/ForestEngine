@@ -23,8 +23,11 @@ public:
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
-		T* entityPtr = ECManager.requestEntity<T>();
-        entityPtr->init();
+		T* entityPtr = ECManager.requestEntity<T>([&](T* entity)
+        {
+           entity->init(); 
+        });
+        
         addGameObject(entityPtr);
         return entityPtr;
 	}

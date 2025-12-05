@@ -50,9 +50,10 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
-	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
-	renderer->init(rendererData);
-    ECManager.addComponent(this, renderer);
+	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>(this, [&](auto* component)
+		{
+			component->init(rendererData);
+		});
 
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
 	renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mColor = mConfig.mStyle->mBackgroundColor;
