@@ -4,6 +4,7 @@
 #include "Core/EntityComponent/EntityComponentPool.hpp"
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
+#include <vector>
 
 NS_BEGIN(EC)
 class IComponentsListener
@@ -20,7 +21,7 @@ class EntityComponentManager: public Core::Singleton<EntityComponentManager>
 public:
     void init()
     {
-        mECPool.init();
+        mECPool.init(smMaxSize);
     }
     void terminate()
     { 
@@ -97,12 +98,8 @@ public:
         Core::Slot slot = entityPtr->getPoolElementPtr().mSlot;
         if(!mEntityComponents.contains(id))
         {
-            mEntityComponents.emplace(id, std::unordered_map<Core::u32, std::list<Component*>>());
-        }
-
-        if(!mEntityComponents.at(id).contains((slot.getSlot())))
-        {
-            mEntityComponents.at(id).emplace(slot.getSlot(), std::list<Component*>());
+            mEntityComponents.emplace(id, std::vector<std::list<Component*>>());
+            mEntityComponents.at(id).resize(smMaxSize);
         }
 
         mEntityComponents.at(id).at(slot.getSlot()).emplace_back(componentPtr);
@@ -262,8 +259,9 @@ public:
     }
     
 private:
+    inline static Core::u32 smMaxSize = 100000;
     EntityComponentPool mECPool;
     std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
-    std::unordered_map<Core::ClassId, std::unordered_map<Core::u32, std::list<Component*>>> mEntityComponents;
+    std::unordered_map<Core::ClassId, std::vector<std::list<Component*>>> mEntityComponents;
 };
 NS_END

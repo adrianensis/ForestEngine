@@ -9,10 +9,10 @@ NS_BEGIN(EC)
 class EntityComponentPool
 {
 public:
-    void init()
+    void init(Core::u32 size)
     {
-        mEntitiesPool.init(100000);
-        mComponentsPool.init(100000);
+        mEntitiesPool.init(size);
+        mComponentsPool.init(size);
     }
     void terminate()
     { 
