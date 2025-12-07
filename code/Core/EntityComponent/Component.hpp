@@ -6,28 +6,6 @@
 NS_BEGIN(EC)
 class Entity;
 
-class ComponentOwner
-{
-public:
-
-    ComponentOwner() = default;
-    ComponentOwner(Core::ClassId id, Core::Slot slot)
-    {
-        mClassId = id;
-        mSlot = slot;
-    }
-
-    void reset()
-    {
-        mSlot.reset();
-        mClassId = 0;
-    }
-
-public:
-    Core::Slot mSlot;
-    Core::ClassId mClassId = 0;
-};
-
 class Component
 {	
 public:
