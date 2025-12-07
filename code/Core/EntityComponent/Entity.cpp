@@ -8,7 +8,7 @@ Entity::Entity()
 
 }
 
-void Entity::onECComponentRecycle(Core::PoolElementPtr poolElementPtr)
+void Entity::onECEntityRecycle(Core::PoolElementPtr poolElementPtr)
 {
     mPoolElementPtr = poolElementPtr;
 };

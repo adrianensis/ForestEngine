@@ -9,7 +9,7 @@ class Entity
 {
 public:
     Entity();
-    virtual void onECComponentRecycle(Core::PoolElementPtr poolElementPtr);
+    virtual void onECEntityRecycle(Core::PoolElementPtr poolElementPtr);
     
 protected:
     Core::PoolElementPtr mPoolElementPtr;

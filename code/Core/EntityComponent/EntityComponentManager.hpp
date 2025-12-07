@@ -327,7 +327,7 @@ public:
         if(poolPtr.isValid())
         {
             entity = &mECPool.getEntitiesPool().getElement<T>(poolPtr);
-            entity->onECComponentRecycle(poolPtr);
+            entity->onECEntityRecycle(poolPtr);
             #ifdef ENGINE_BUILD_DEBUG
             entity->mDebugString = Core::ClassManager::getClassMetadataById(poolPtr.mClassId).mClassDefinition.mName.getDebugString() + std::to_string(poolPtr.mSlot.getSlot());
             #endif
