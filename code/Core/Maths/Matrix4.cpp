@@ -304,7 +304,7 @@ void Matrix4::perspective(Core::f32 near, Core::f32 far, Core::f32 aspect, Core:
     PROFILER_CPU()
 	// INFO: Right-Handed (+Z going out screen), NDC Z Zero-To-One clamped
 
-	Core::f32 tanHalfFovy = tanf(fovy / 2.0f);
+	Core::f32 tanHalfFovy = tanf(MathUtils::rad(fovy) / 2.0f);
 
 	this->zeros();
 	this->set(0, 0, 1.0f/(aspect * tanHalfFovy));
