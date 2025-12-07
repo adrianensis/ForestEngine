@@ -270,18 +270,6 @@ public:
         return componentToReturn;
     }
 
-    template<class T> T_EXTENDS(T, Component)
-    T* getComponent(Component* componentPtr) const
-    {
-        if(componentPtr)
-        {
-            T* comp = &mECPool.getComponentsPool().getElement<T>(componentPtr);
-            return comp;
-        }
-
-        return nullptr;
-    }
-
     void notifyListenersOnComponentAdded(Component* componentPtr) const
     {
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getDynamicClassMetadata(componentPtr);
