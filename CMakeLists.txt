@@ -50,7 +50,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "") #-O3 -DNDEBUG
 # )
 
 set(PROJECT_COMPILER_FLAGS "")
-set(PROJECT_COMPILER_FLAGS "-DENGINE_GPU_VULKAN;")
+set(PROJECT_COMPILER_FLAGS "-fdiagnostics-color=always;")
+set(PROJECT_COMPILER_FLAGS "${PROJECT_COMPILER_FLAGS}-DENGINE_GPU_VULKAN;")
 
 if(ENABLE_LOGS)
 set(PROJECT_COMPILER_FLAGS "${PROJECT_COMPILER_FLAGS}-DENGINE_ENABLE_LOGS;")
@@ -92,14 +93,22 @@ if(WIN32)
     # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -D ENGINE_BUILD_RELEASE")
 endif(WIN32)
 
-# find_program(CCACHE_PROGRAM ccache)
-# if(CCACHE_PROGRAM)
-#     set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-#     set(CMAKE_CUDA_COMPILER_LAUNCHER "${CCACHE_PROGRAM}") # CMake 3.9+
-#     message("Using CCACHE")
-# else()
-#     message("Not Using CCACHE")
-# endif()
+find_program(MOLD_PROGRAM mold)
+if (MOLD_PROGRAM)
+    set(CMAKE_LINKER_TYPE MOLD)
+    message(STATUS "Using MOLD: ${MOLD_PROGRAM}")
+else ()
+    message(STATUS "Not Using MOLD")
+endif ()
+
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    message("Using CCACHE ${CCACHE_PROGRAM}")
+    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+    set(CMAKE_C_COMPILER_LAUNCHER ccache)
+else()
+    message("Not Using CCACHE")
+endif()
 
 message("Compiler: ${CMAKE_CXX_COMPILER}")
 message("Release: ${PROJECT_COMPILER_FLAGS_RELEASE}")
@@ -171,9 +180,6 @@ check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/fmt-11.1.2")
 include_directories("${DEPENDENCIES_DIR}/fmt-11.1.2/include")
 add_subdirectory("${DEPENDENCIES_DIR}/fmt-11.1.2")
 
-# TBB
-find_package(TBB REQUIRED)
-
 # ----------------------------------------------------------------------------
 # PROJECT PACKAGES
 # ----------------------------------------------------------------------------
@@ -234,8 +240,17 @@ target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
 target_link_libraries(${PROJECTNAME} freetype)
 target_link_libraries(${PROJECTNAME} fmt)
-# Link against the dependency of Intel TBB (for parallel C++17 algorithms)
-target_link_libraries(${PROJECTNAME} TBB::tbb)
+
+# TBB
+find_package(TBB QUIET)
+if(TBB_FOUND)
+    message("Using TBB ${TBB}")
+    # Link against the dependency of Intel TBB (for parallel C++17 algorithms)
+    target_link_libraries(${PROJECTNAME} TBB::tbb)
+else()
+    message("Not using TBB ${TBB}")
+endif()
+
 if(ENABLE_PROFILER)
     target_link_libraries(${PROJECTNAME} Tracy::TracyClient)
 endif(ENABLE_PROFILER)

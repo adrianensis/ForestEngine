@@ -19,6 +19,7 @@ enableLogs=False
 enableProfiler=False
 enableSanitizer=False
 enableGPUDebug=False
+enableNinja=False
 
 appsToBuild = []
 toolsToBuild = []
@@ -29,7 +30,7 @@ if(len(sys.argv) > 1):
 
 log.log(log.LogLabels.info, "Parsing options")
 try:
-  opts, args = getopt.getopt(argv, "uilcprd", ["app=", "tool=", "sanitizer", "gpuDbg"])
+  opts, args = getopt.getopt(argv, "uilcprd", ["app=", "tool=", "ninja", "sanitizer", "gpuDbg"])
 except Exception as e:
   log.log(log.LogLabels.error, "Error parsing options! " + str(argv))
   log.log(log.LogLabels.error, e)
@@ -64,6 +65,8 @@ for opt, arg in opts:
       enableSanitizer=True
     elif opt in ['--gpuDbg']:
       enableGPUDebug=True
+    elif opt in ['--ninja']:
+      enableNinja=True
     else:
       log.log(log.LogLabels.error, "Unkown option! ->" + opt)
       exit(1)
@@ -72,7 +75,12 @@ for opt, arg in opts:
 buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
 projectName = "FlopEngine"
-cmake_generated_data = cmake_build.generate_cmake_data(projectName)
+
+cmake_generator = cmake_build.CMakeGenerator.DEFAULT
+if enableNinja:
+  cmake_generator = cmake_build.CMakeGenerator.NINJA
+
+cmake_generated_data = cmake_build.generate_cmake_data(projectName, cmake_generator)
 
 ##########################################
 ########## PRE BUILD ###########

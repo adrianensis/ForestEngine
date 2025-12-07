@@ -29,13 +29,14 @@ def download_dependency(url, filename, extraDependencyFolder=""):
 ##########################################
 
 installSystemDepencencies=False
+enableNinja=False
 
 argv = []
 if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, "s")
+  opts, args = getopt.getopt(argv, "s", ["ninja"])
 except:
   log.log(log.LogLabels.error, "Error parsing options!")
   exit(1)
@@ -45,6 +46,8 @@ for opt, arg in opts:
 
     if opt in ['-s']:
       installSystemDepencencies = True
+    elif opt in ['--ninja']:
+      enableNinja=True
 
 if not os.path.isdir(BuildGlobalData.dependenciesDir):
     os.mkdir(BuildGlobalData.dependenciesDir)
@@ -74,9 +77,9 @@ if installSystemDepencencies:
             #update
             os.system("sudo apt-get -y update")
             #install packages
-            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang clangd lldb liblldb-dev")
+            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang clangd ninja-build lldb liblldb-dev")
             os.system("sudo apt-get -y install mesa-common-dev")
-            os.system("sudo apt-get -y install libtbb-dev") # needed by GDD in order to use c++ parallel for_each
+            os.system("sudo apt-get -y install libtbb-dev") # needed by the compiler/linker to use oneTBB's parallel algorithms (or as a backend for C++ standard parallel algorithms)
             os.system("sudo apt-get -y install xorg-dev libxkbcommon-dev") # glfw3 dependency
             os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
             os.system("sudo apt-get -y install ccache") # compilation cache
@@ -150,7 +153,11 @@ lldbmiDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, lldbmiDir)
 # glewDir = "glew-2.2.0"
 # glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
 
-cmake_generated_data = cmake_build.generate_cmake_data()
+cmake_generator = cmake_build.CMakeGenerator.DEFAULT
+if enableNinja:
+  cmake_generator = cmake_build.CMakeGenerator.NINJA
+
+cmake_generated_data = cmake_build.generate_cmake_data("dependencies", cmake_generator)
 
 # lldb-mi
 buildCommandArgs = [

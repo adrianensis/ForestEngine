@@ -1,10 +1,16 @@
 import os
 import platform
 import lib.log as log
-        
+
+from enum import Enum, auto
+
 ##########################################
 ########## DATA ###########
 ##########################################
+
+class CMakeGenerator(Enum):
+    DEFAULT = auto()
+    NINJA = auto()
 
 class CMakeGeneratedData:
     def __init__(self):
@@ -19,7 +25,7 @@ class CMakeGeneratedData:
 ##########################################
 
 # generate CMake data
-def generate_cmake_data(projectName):
+def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
     log.log(log.LogLabels.build, "-----------------------------------")
     log.log(log.LogLabels.build, "GENERATE CMAKE DATA")
     data = CMakeGeneratedData()
@@ -43,15 +49,15 @@ def generate_cmake_data(projectName):
     if system_name == "Linux" or system_name == "Linux2":
         # linux
         data.cmake_generator = '-G "Unix Makefiles"'
-        data.systemBuildCommand = 'make -j{compilation_cores}'.format(compilation_cores = data.coresUsed)
+        if cmakeGenerator == CMakeGenerator.NINJA:
+            data.cmake_generator = '-G "Ninja"'
+
     elif system_name == "Darwin":
         # OS X
         pass
     elif system_name == "Windows":
         # Windows...
         data.cmake_generator = '-G "Visual Studio 17 2022"'
-        # Requires msbuild added to the PATH
-        data.systemBuildCommand = 'msbuild ' + projectName + '.sln'
     # elif ANDROID:
     #     # Windows...
     #     pass
@@ -88,22 +94,15 @@ def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, cmake_generate
     if not os.path.isdir(buildTargetDir):
         os.mkdir(buildTargetDir)
 
-
-    # -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++
-    # -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++
-    
-    buildCommand = 'cmake -S{cmakeListFolder} -B{buildTargetDir} {cmake_generator} {buildCommandArgsString}'.format(
-    buildTargetDir = buildTargetDir,
-    cmakeListFolder = cmakeListFolder,
-    cmake_generator = cmake_generated_data.cmake_generator,
-    buildCommandArgsString = buildCommandArgsString)
+    configCommand = f'cmake -S{cmakeListFolder} -B{buildTargetDir} {cmake_generated_data.cmake_generator} {buildCommandArgsString}'
+    buildCommand = f'cmake --build {buildTargetDir} --config {buildType} --parallel {cmake_generated_data.coresUsed}'
+    log.log(log.LogLabels.build, "Build Command: " + configCommand)
     log.log(log.LogLabels.build, "Build Command: " + buildCommand)
+    log.log(log.LogLabels.build, "Executing Config Command")
+    os.system(configCommand)
     log.log(log.LogLabels.build, "Executing Build Command")
     os.system(buildCommand)
 
-    log.log(log.LogLabels.build, "Moving to: " + projectDir)
-    os.chdir(os.path.join(os.path.join(cwd, projectDir), buildTargetDir))
-    os.system(cmake_generated_data.systemBuildCommand)
     # go back
     log.log(log.LogLabels.build, "Going back to: " + cwd)
     os.chdir(cwd)
