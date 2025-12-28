@@ -75,7 +75,7 @@ def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
     return data
 
 # build a CMake project
-def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, cmake_generated_data: CMakeGeneratedData, buildCommandArgs):
+def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, cmake_generated_data: CMakeGeneratedData, buildCommandArgs):
     log.log(log.LogLabels.build, "-----------------------------------")
     log.log(log.LogLabels.build, "BUILD CMAKE")
     log.log(log.LogLabels.build, "Project Dir: " + projectDir)
@@ -95,7 +95,13 @@ def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, cmake_generate
         os.mkdir(buildTargetDir)
 
     configCommand = f'cmake -S{cmakeListFolder} -B{buildTargetDir} {cmake_generated_data.cmake_generator} {buildCommandArgsString}'
-    buildCommand = f'cmake --build {buildTargetDir} --config {buildType} --parallel {cmake_generated_data.coresUsed}'
+
+    targetStr = ''
+    if target:
+        targetStr = f'--target {target}'
+
+    buildCommand = f'cmake --build {buildTargetDir} --config {buildType} {targetStr} --parallel {cmake_generated_data.coresUsed}'
+	
     log.log(log.LogLabels.build, "Build Command: " + configCommand)
     log.log(log.LogLabels.build, "Build Command: " + buildCommand)
     log.log(log.LogLabels.build, "Executing Config Command")

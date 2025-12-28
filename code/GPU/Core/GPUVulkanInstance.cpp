@@ -47,7 +47,7 @@ bool GPUVulkanInstance::isValidationLayersEnabled() const {
 bool GPUVulkanInstance::init()
 {
 #ifdef ENGINE_PLATFORM_LINUX
-    setenv("VK_DRIVER_FILES", "/usr/share/vulkan/icd.d/radeon_icd.x86_64.json", true);
+    setenv("VK_DRIVER_FILES", "/usr/share/vulkan/icd.d/radeon_icd.json", true);
 #endif
 
     if (config.ValidationLayersEnabled) {

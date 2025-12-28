@@ -72,29 +72,20 @@ if installSystemDepencencies:
         distro_id = distro.id()
         if distro_id == "ubuntu":
             #vulkan repository
-            os.system("wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc")
-            os.system("sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-noble.list http://packages.lunarg.com/vulkan/lunarg-vulkan-noble.list")
+            #os.system("wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc")
+            #os.system("sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-noble.list http://packages.lunarg.com/vulkan/lunarg-vulkan-noble.list")
             #update
             os.system("sudo apt-get -y update")
             #install packages
-            os.system("sudo apt-get -y install build-essential wget zlib1g-dev unzip cmake clang clangd ninja-build lldb liblldb-dev")
+            os.system("sudo apt-get -y install git build-essential wget zlib1g-dev unzip cmake clang clangd ninja-build lldb liblldb-dev")
             os.system("sudo apt-get -y install mesa-common-dev")
             os.system("sudo apt-get -y install libtbb-dev") # needed by the compiler/linker to use oneTBB's parallel algorithms (or as a backend for C++ standard parallel algorithms)
             os.system("sudo apt-get -y install xorg-dev libxkbcommon-dev") # glfw3 dependency
             os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
             os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
-            os.system("sudo apt install -y vulkan-sdk")
-            os.system("sudo apt install -y libvulkan1-dbgsym")
-            os.system("sudo apt install -y vulkan-tools")
-            os.system("sudo apt install -y vulkan-tools-dbgsym")
-            os.system("sudo apt install -y vulkan-validationlayers")
-            os.system("sudo apt install -y vulkan-validationlayers-dbgsym")
-            os.system("sudo apt install -y glslang-tools")
-            os.system("sudo apt install -y shaderc")
-            os.system("sudo apt install -y shaderc-dbgsym")
-            os.system("sudo apt install -y spirv-tools")
-            os.system("sudo apt install -y spirv-tools-dbgsym")
+            os.system("sudo apt install -y libx11-xcb-dev libxcb-dri3-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-util-dev libwayland-dev") # vulkan dependencies
+            os.system("sudo apt install -y libxcb-xinput0 libxcb-xinerama0 libxcb-cursor-dev") # vulkan dependencies
             os.system("sudo apt-get -y install doxygen graphviz")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
@@ -122,6 +113,7 @@ if installSystemDepencencies:
 log.log(log.LogLabels.build, "-----------------------------------")
 log.log(log.LogLabels.build, "EXTRACTING FILES")
 # lldb-mi mi engine for vscode launch.json
+download_dependency("https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-1.4.335.0.tar.xz", "vulkansdk-1.4.335.0.tar.xz")
 download_dependency("https://github.com/lldb-tools/lldb-mi/archive/refs/heads/main.zip", "lldb-mi.zip")
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
 # download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
@@ -166,7 +158,7 @@ buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType
 ]
 
-cmake_build.build_cmake(lldbmiDepencencyDir, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+cmake_build.build_cmake(lldbmiDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
 
 # freetype
 buildCommandArgs = [
@@ -175,7 +167,7 @@ buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType
 ]
 
-cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
 
 # profiler GUI
 buildCommandArgs = [
@@ -189,7 +181,7 @@ buildCommandArgs = [
     # "-DCMAKE_CXX_FLAGS_RELEASE=" + "-flto=auto"
 ]
 
-cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, cmake_generated_data, buildCommandArgs)
+cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
 
 log.log(log.LogLabels.build, "-----------------------------------")
 
@@ -210,11 +202,11 @@ bin_gui_path_destiny = os.path.join(bin_dependencies_path_destiny, "tracy-profil
 tracy_profiler_bin_path_source = os.path.join(cwd, os.path.join(tracyProfilerDepencencyDir, buildTargetDir), "tracy-profiler")
 if os.path.isfile(bin_gui_path_destiny):
     os.remove(bin_gui_path_destiny)
-os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
+#os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
 log.log(log.LogLabels.build, "tracy profiler gui: " + bin_gui_path_destiny)
 # lldb-mi mi engine for vscode launch.json
 bin_lldb_mi_path_destiny = os.path.join(bin_dependencies_path_destiny, "lldb-mi")
 lldb_mi_bin_path_source = os.path.join(cwd, os.path.join(lldbmiDepencencyDir, buildTargetDir), "src/lldb-mi")
-os.symlink(lldb_mi_bin_path_source, bin_lldb_mi_path_destiny)
+#os.symlink(lldb_mi_bin_path_source, bin_lldb_mi_path_destiny)
 log.log(log.LogLabels.build, "lldb-mi: " + bin_lldb_mi_path_destiny)
 log.log(log.LogLabels.build, "-----------------------------------")

@@ -132,15 +132,26 @@ set(DEPENDENCIES_DIR "dependencies")
 include_directories("${DEPENDENCIES_DIR}")
 
 # Vulkan
-find_package(Vulkan REQUIRED)
+include_directories("${DEPENDENCIES_DIR}/1.4.335.0/x86_64/include")
+
+find_library(VULKAN_LIB vulkan
+    PATHS "${DEPENDENCIES_DIR}/1.4.335.0/x86_64/lib/"
+    NO_DEFAULT_PATH)
 
 # glslang (glsl runtime compiler)
-find_package(glslang REQUIRED)
+find_library(GLSLANG_LIB glslang
+    PATHS "${DEPENDENCIES_DIR}/1.4.335.0/x86_64/lib/"
+    NO_DEFAULT_PATH)
+find_library(GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB glslang-default-resource-limits
+    PATHS "${DEPENDENCIES_DIR}/1.4.335.0/x86_64/lib/"
+    NO_DEFAULT_PATH)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
+set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/glfw-3.4")
 add_subdirectory("${DEPENDENCIES_DIR}/glfw-3.4")
 include_directories("${DEPENDENCIES_DIR}/glfw-3.4/include")
@@ -233,8 +244,8 @@ target_link_options(${PROJECTNAME} PUBLIC "$<$<CONFIG:RELEASE>:${PROJECT_LINKER_
 # ----------------------------------------------------------------------------
 
 # link libraries with main library
-target_link_libraries(${PROJECTNAME} Vulkan::Vulkan)
-target_link_libraries(${PROJECTNAME} glslang glslang-default-resource-limits)
+target_link_libraries(${PROJECTNAME} ${VULKAN_LIB})
+target_link_libraries(${PROJECTNAME} ${GLSLANG_LIB} ${GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB})
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} libpng.so)
