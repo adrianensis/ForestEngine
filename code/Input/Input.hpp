@@ -18,7 +18,7 @@ public:
     virtual Maths::Vector2 getMousePosition() const = 0;
 };
 
-class Input: public System::System
+class Input: public System::System, public Event::IEventObject
 {
 public:
     virtual void init() override;

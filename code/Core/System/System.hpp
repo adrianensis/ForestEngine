@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Core/Core.hpp"
-#include "Core/Event/Event.hpp"
 
 NS_BEGIN(System)
-class System: public Event::IEventObject
+class System
 {
 public:
     virtual ~System() = default;

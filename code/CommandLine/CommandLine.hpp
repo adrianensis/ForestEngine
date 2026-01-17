@@ -3,6 +3,7 @@
 #include "Core/HashedString/HashedString.hpp"
 #include "Core/System/System.hpp"
 #include "CommandLine/Command.hpp"
+#include "Core/Event/Event.hpp"
 
 NS_BEGIN(Command)
 
@@ -23,7 +24,7 @@ public:
     Command mCommand;
 };
 
-class CommandLine: public System::System
+class CommandLine: public System::System, public Event::IEventObject
 {
 public:
 	virtual void init() override;

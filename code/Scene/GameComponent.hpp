@@ -3,6 +3,7 @@
 #include "Engine/Core.hpp"
 #include "Core/EntityComponent/Entity.hpp"
 #include "Core/EntityComponent/Component.hpp"
+#include "Core/Event/Event.hpp"
 
 class Transform;
 class Scene;
