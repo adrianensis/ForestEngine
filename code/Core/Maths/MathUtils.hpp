@@ -37,6 +37,7 @@ public:
     static bool eqf(Core::f32 a, Core::f32 b);
     static Core::f32 clamp(Core::f32 n, Core::f32 lower, Core::f32 upper);
     static Core::f32 det(Core::f32 a, Core::f32 b, Core::f32 c, Core::f32 d);
+	static Core::f32 lerp(Core::f32 start, Core::f32 end, Core::f32 t) ;
 };
 
 NS_END
