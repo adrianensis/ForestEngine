@@ -1,5 +1,6 @@
 #include "Editor.hpp"
 #include "Core/Maths/Geometry.hpp"
+#include "Core/Maths/Vector3.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
@@ -45,6 +46,10 @@ void Editor::firstUpdate()
     Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
     Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
+
+	Transform* cameraTransform = mCameraGameObject->mTransform;
+	mCurrentRotation = cameraTransform->getLocalRotation();
+	mTargetRotation = mCurrentRotation;
 
     // createPointLight(Maths::Vector3(0,50,0), 20);
 
@@ -187,24 +192,21 @@ void Editor::update()
         // LOG_VAR(position.z);
     }
 
-	if(!mLastMousePosition.eq(currentMousePosition))
-	{
-        Core::f32 camSpeed = 200 * Time::Time::getInstance().getDeltaTimeSeconds();
-		Maths::Vector2 mouseVector = (currentMousePosition - mLastMousePosition).nor() * camSpeed;
-		Maths::Vector3 direction;
+	Maths::Vector2 mouseDelta = (currentMousePosition - mLastMousePosition);
+	mLastMousePosition = currentMousePosition;
+	
+	Core::f32 sensitivity = 100.0f;
+	mTargetRotation.add(Maths::Vector3(mouseDelta.y * sensitivity, -mouseDelta.x * sensitivity, 0));
+	
+	Core::f32 dt = Time::Time::getInstance().getDeltaTimeSeconds();
+	Core::f32 lerpStep = 15.0f;
+	mCurrentRotation.lerp(mTargetRotation, lerpStep * dt);
 
-		Core::f32 yaw = mouseVector.x;
-		Core::f32 pitch = mouseVector.y;
-
-		cameraTransform->addLocalRotation(Maths::Vector3(pitch, -yaw, 0));
-		// mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0, -yaw, 0));
-	}
+	cameraTransform->setLocalRotation(mTargetRotation);
 
 	// LOG_VAR(cameraTransform->getLocalPosition().x)
 	// LOG_VAR(cameraTransform->getLocalPosition().y)
 	// LOG_VAR(cameraTransform->getLocalPosition().z)
-
-	mLastMousePosition = currentMousePosition;
 
     //mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0,0.1f,0));
 

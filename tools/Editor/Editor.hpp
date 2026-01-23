@@ -37,5 +37,7 @@ private:
     std::vector<GameObject*> mGameObjectsArray;
 
     Maths::Vector2 mLastMousePosition;
+	Maths::Vector3 mCurrentRotation;
+	Maths::Vector3 mTargetRotation;
 };
 REGISTER_CLASS(Editor, Script)
