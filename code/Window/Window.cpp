@@ -81,7 +81,10 @@ void Window::init(Core::i32 id, const WindowData& windowData)
     {
         LOG("Failed to create GLFW window");
         glfwTerminate();
+		return;
     }
+
+	glfwSetCursorPos(mGLTFWindow, mWindowData.mWindowSize.x / 2.0f, mWindowData.mWindowSize.y / 2.0f);
 
     glfwSetKeyCallback(mGLTFWindow, keyCallbackGLFW);
 	glfwSetMouseButtonCallback(mGLTFWindow, mouseButtonCallbackGLFW);
