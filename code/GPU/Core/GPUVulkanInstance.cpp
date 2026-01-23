@@ -13,13 +13,16 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityF
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
         GPU_LOG_TAG("DEBUG ERROR", pCallbackData->pMessage);
         CHECK_MSG(false, "VULKAN ASSERT");
-    break;    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+    break;    
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
         GPU_LOG_TAG("DEBUG WARNING", pCallbackData->pMessage);
         CHECK_MSG(false, "VULKAN ASSERT");
-    break;    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+    break;    
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
         GPU_LOG_TAG("DEBUG INFO", pCallbackData->pMessage);
-    break;    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-        GPU_LOG_TAG("DEBUG INFO", pCallbackData->pMessage);
+    break;    
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+        GPU_LOG_TAG("DEBUG VERBOSE", pCallbackData->pMessage);
     break;
     default:
         GPU_LOG_TAG("DEBUG UNKNOWN", pCallbackData->pMessage);
