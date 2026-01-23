@@ -104,7 +104,7 @@ public:\
     Core::f32 dst(const ThisVectorClass& v) const { return sqrtf(this->sqrdst(v)); } \
     bool eq(const ThisVectorClass& v, Core::f32 e) const { return VECTOR_EQ_E(n,v,e); } \
     bool eq(const ThisVectorClass& v) const { return VECTOR_EQ(n,v); } \
-    ThisVectorClass& lerp(const ThisVectorClass& target, Core::f32 t) { (*this) += ((ThisVectorClass(target) - (*this)) * t); return *this; } \
+    ThisVectorClass& lerp(const ThisVectorClass& target, Core::f32 t) { (*this) += ((target - (*this)) * t); return *this; } \
     ThisVectorClass& clamp(Core::f32 maxLength)\
     {\
         if (this->sqrlen() > (maxLength * maxLength))\
