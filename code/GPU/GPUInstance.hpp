@@ -17,4 +17,3 @@ public:
     GPUShaderManager* mGPUShaderManager = nullptr;
     GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
 };
-REGISTER_CLASS(GPUInstance)
