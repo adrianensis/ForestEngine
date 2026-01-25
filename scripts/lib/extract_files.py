@@ -11,16 +11,28 @@ if not platform.python_version().startswith('3'):
 ########## FUNCTIONS ###########
 ##########################################
 
-def extract_files(file_path, destinty_path):
+def extract_files(file_path, destiny_path):
     log.log(log.LogLabels.info, "Extracting: " + file_path)
     if file_path.endswith("zip"):
-        with ZipFile(file_path) as zipObj:
-            zipObj.extractall(destinty_path)
+        with ZipFile(file_path) as zip_obj:
+            members = zip_obj.namelist()
+            total = len(members)
+            for i, member in enumerate(members, 1):
+                zip_obj.extract(member, destiny_path)
+                log.print_progress(log.LogLabels.info, i, total)
 
     if file_path.endswith("tar.xz"):
-        with tarfile.open(name=file_path, mode='r:xz') as tarObj:
-            tarObj.extractall(destinty_path)
+        with tarfile.open(name=file_path, mode='r:xz') as tar_obj:
+            members = tar_obj.getmembers()
+            total = len(members)
+            for i, member in enumerate(members, 1):
+                tar_obj.extract(member, destiny_path)
+                log.print_progress(log.LogLabels.info, i, total)
 
     if file_path.endswith("tar.gz"):
-        with tarfile.open(name=file_path, mode='r:gz') as tarObj:
-            tarObj.extractall(destinty_path)
+        with tarfile.open(name=file_path, mode='r:gz') as tar_obj:
+            members = tar_obj.getmembers()
+            total = len(members)
+            for i, member in enumerate(members, 1):
+                tar_obj.extract(member, destiny_path)
+                log.print_progress(log.LogLabels.info, i, total)
