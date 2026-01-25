@@ -10,24 +10,13 @@
             "request": "launch",
             "program": "${workspaceFolder}/binaries/Debug/tool_Editor",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "env": {
-                "VULKAN_SDK": "${workspaceFolder}/dependencies/1.4.335.0/x86_64",
-                "PATH": "${workspaceFolder}/dependencies/1.4.335.0/x86_64/bin",
-                "LD_LIBRARY_PATH": "${workspaceFolder}/dependencies/1.4.335.0/x86_64/lib",
-                "VK_LAYER_PATH": "${workspaceFolder}/dependencies/1.4.335.0/x86_64/share/vulkan/explicit_layer.d"
+                "VULKAN_SDK": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64",
+                "PATH": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64/bin",
+                "LD_LIBRARY_PATH": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64/lib",
+                "VK_LAYER_PATH": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64/share/vulkan/explicit_layer.d"
             },
-            "externalConsole": false,
-            "MIMode": "lldb",
-            "miDebuggerPath": "${workspaceFolder}/dependencies/binaries/Release/lldb-mi",
-            // "setupCommands": [
-            //     {
-            //         "description": "Enable pretty-printing for gdb",
-            //         "text": "-enable-pretty-printing",
-            //         "ignoreFailures": true
-            //     }
-            // ],
             "preLaunchTask": "build debug"
         },
         {
@@ -36,19 +25,13 @@
             "request": "launch",
             "program": "${workspaceFolder}/binaries/Release/tool_Editor",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "lldb",
-            "miDebuggerPath": "${workspaceFolder}/dependencies/binaries/Release/lldb-mi",
-            // "setupCommands": [
-            //     {
-            //         "description": "Enable pretty-printing for gdb",
-            //         "text": "-enable-pretty-printing",
-            //         "ignoreFailures": true
-            //     }
-            // ],
+            "env": {
+                "VULKAN_SDK": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64",
+                "PATH": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64/bin",
+                "LD_LIBRARY_PATH": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64/lib",
+                "VK_LAYER_PATH": "${workspaceFolder}/dependencies/vulkansdk-1.4.335.0/x86_64/share/vulkan/explicit_layer.d"
+            },
             "preLaunchTask": "build release"
         }
     ]
