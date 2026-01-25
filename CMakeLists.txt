@@ -132,18 +132,18 @@ set(DEPENDENCIES_DIR "dependencies")
 include_directories("${DEPENDENCIES_DIR}")
 
 # Vulkan
-include_directories("${DEPENDENCIES_DIR}/vulkansdk-1.4.335.0/x86_64/include")
+include_directories("${DEPENDENCIES_DIR}/vulkansdk/x86_64/include")
 
 find_library(VULKAN_LIB vulkan
-    PATHS "${DEPENDENCIES_DIR}/vulkansdk-1.4.335.0/x86_64/lib/"
+    PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
     NO_DEFAULT_PATH)
 
 # glslang (glsl runtime compiler)
 find_library(GLSLANG_LIB glslang
-    PATHS "${DEPENDENCIES_DIR}/vulkansdk-1.4.335.0/x86_64/lib/"
+    PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
     NO_DEFAULT_PATH)
 find_library(GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB glslang-default-resource-limits
-    PATHS "${DEPENDENCIES_DIR}/vulkansdk-1.4.335.0/x86_64/lib/"
+    PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
     NO_DEFAULT_PATH)
 
 # GLFW

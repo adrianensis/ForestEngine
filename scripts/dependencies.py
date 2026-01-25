@@ -110,13 +110,13 @@ if installSystemDepencencies:
 ##########################################
 
 log.log(log.LogLabels.build, "-----------------------------------")
-log.log(log.LogLabels.build, "EXTRACTING FILES")
+log.log(log.LogLabels.build, "DOWNLOADING DEPENDENCIES")
 
 vulkansdk_version = '1.4.335.0'
 
-download_dependency(f"https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz")
+download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz")
 vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
-vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk-{vulkansdk_version}')
+vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk')
 
 if not os.path.exists(vulkansdk_path):
     if os.path.exists(vulkansdk_tmp_path):
