@@ -112,8 +112,20 @@ if installSystemDepencencies:
 
 log.log(log.LogLabels.build, "-----------------------------------")
 log.log(log.LogLabels.build, "EXTRACTING FILES")
+
+vulkansdk_version = '1.4.335.0'
+
+download_dependency(f"https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz")
+vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
+vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk-{vulkansdk_version}')
+
+if not os.path.exists(vulkansdk_path):
+    # If the versioned folder exists but hasn't been renamed yet
+    if os.path.exists(vulkansdk_tmp_path):
+        os.rename(vulkansdk_tmp_path, vulkansdk_path)
+        log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
+
 # lldb-mi mi engine for vscode launch.json
-download_dependency("https://sdk.lunarg.com/sdk/download/1.4.335.0/linux/vulkansdk-linux-x86_64-1.4.335.0.tar.xz", "vulkansdk-1.4.335.0.tar.xz")
 download_dependency("https://github.com/lldb-tools/lldb-mi/archive/refs/heads/main.zip", "lldb-mi.zip")
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
 # download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
