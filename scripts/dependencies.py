@@ -85,7 +85,6 @@ if installSystemDepencencies:
             os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
             os.system("sudo apt install -y libx11-xcb-dev libxcb-dri3-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-util-dev libwayland-dev") # vulkan dependencies
-            os.system("sudo apt install -y libxcb-xinput0 libxcb-xinerama0 libxcb-cursor-dev") # vulkan dependencies
             os.system("sudo apt-get -y install doxygen graphviz")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
@@ -120,22 +119,17 @@ vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_ver
 vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk-{vulkansdk_version}')
 
 if not os.path.exists(vulkansdk_path):
-    # If the versioned folder exists but hasn't been renamed yet
     if os.path.exists(vulkansdk_tmp_path):
         os.rename(vulkansdk_tmp_path, vulkansdk_path)
         log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
 
-# lldb-mi mi engine for vscode launch.json
-download_dependency("https://github.com/lldb-tools/lldb-mi/archive/refs/heads/main.zip", "lldb-mi.zip")
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
-# download_dependency("https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip", "glew-2.2.0.zip")
 download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip")
 download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.1.zip", "tracy-0.11.1.zip")
 download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip")
 download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip")
 download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz", "freetype-2.13.2.tar.xz")
 download_dependency("https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.zip", "fmt-11.1.2.zip")
-# download_dependency("https://sdk.lunarg.com/sdk/download/1.3.290.0/linux/vulkansdk-linux-x86_64-1.3.290.0.tar.xz", "vulkansdk-linux-x86_64-1.3.290.0.tar.xz", "vulkan")
 log.log(log.LogLabels.build, "-----------------------------------")
 
 ##########################################
@@ -152,25 +146,12 @@ tracyProfiler = "tracy-0.11.1/profiler"
 tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
 freetypeDir = "freetype-2.13.2"
 freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)
-lldbmiDir = "lldb-mi-main"
-lldbmiDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, lldbmiDir)
-# glewDir = "glew-2.2.0"
-# glewDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, glewDir)
 
 cmake_generator = cmake_build.CMakeGenerator.DEFAULT
 if enableNinja:
   cmake_generator = cmake_build.CMakeGenerator.NINJA
 
 cmake_generated_data = cmake_build.generate_cmake_data("dependencies", cmake_generator)
-
-# lldb-mi
-buildCommandArgs = [
-    "-DCMAKE_C_COMPILER=/usr/bin/clang",
-    "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
-    "-DCMAKE_BUILD_TYPE=" + buildType
-]
-
-cmake_build.build_cmake(lldbmiDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
 
 # freetype
 buildCommandArgs = [
@@ -214,11 +195,6 @@ bin_gui_path_destiny = os.path.join(bin_dependencies_path_destiny, "tracy-profil
 tracy_profiler_bin_path_source = os.path.join(cwd, os.path.join(tracyProfilerDepencencyDir, buildTargetDir), "tracy-profiler")
 if os.path.isfile(bin_gui_path_destiny):
     os.remove(bin_gui_path_destiny)
-#os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
+os.symlink(tracy_profiler_bin_path_source, bin_gui_path_destiny)
 log.log(log.LogLabels.build, "tracy profiler gui: " + bin_gui_path_destiny)
-# lldb-mi mi engine for vscode launch.json
-bin_lldb_mi_path_destiny = os.path.join(bin_dependencies_path_destiny, "lldb-mi")
-lldb_mi_bin_path_source = os.path.join(cwd, os.path.join(lldbmiDepencencyDir, buildTargetDir), "src/lldb-mi")
-#os.symlink(lldb_mi_bin_path_source, bin_lldb_mi_path_destiny)
-log.log(log.LogLabels.build, "lldb-mi: " + bin_lldb_mi_path_destiny)
 log.log(log.LogLabels.build, "-----------------------------------")
