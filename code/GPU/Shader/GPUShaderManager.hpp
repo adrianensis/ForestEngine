@@ -12,12 +12,12 @@ public:
     Core::WeakPtr<GPUTexture> loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
 
     template<class T, class P> T_EXTENDS(T, GPUShader)
-    Core::WeakPtr<GPUShader> createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlockDefault)
+    Core::WeakPtr<GPUShader> createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
     {
         Core::WeakPtr<GPUShader> shader = mShaders.emplace_back(Core::OwnerPtr<GPUShader>::moveCast(Core::OwnerPtr<T>::newObject()));
         Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
-        propertiesBlockDefaultBuffer.get<P>() = propertiesBlockDefault;
+        propertiesBlockDefaultBuffer.get<P>() = propertiesBlock;
         shader->init(gpuContext, this, shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
         postGPUShaderCreated(gpuContext, shader);
 
