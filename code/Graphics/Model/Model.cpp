@@ -81,7 +81,8 @@ void Model::loadGLTFShaders()
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
             // shaderData.setSharedGPUShaderPropertiesBlock<PropertiesBlockGPUShaderDefault>();
-            PropertiesBlockGPUShaderDefault propertiesBlockGPUShaderDefault;
+            // PropertiesBlockGPUShaderDefault propertiesBlockGPUShader;
+            PropertiesBlockGPUShaderPBR propertiesBlockGPUShader;
 
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
@@ -92,28 +93,29 @@ void Model::loadGLTFShaders()
             else
             {
                 cgltf_float* baseColor = cgltfMaterial.pbr_metallic_roughness.base_color_factor;
-                propertiesBlockGPUShaderDefault.mBaseColor = Maths::Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+                propertiesBlockGPUShader.mBaseColor = Maths::Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 // shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderDefault>().mBaseColor = Maths::Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
                 // shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderPBR>().mBaseColor = Maths::Vector4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
             }
-            // if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
-            // {
-            //     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-            //     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{Core::HashedString(texturePath.string())});
-            // }
-            // else
-            // {
-            //     shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderPBR>().mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
-            //     shaderData.mSharedGPUShaderPropertiesBlockBuffer.get<PropertiesBlockGPUShaderPBR>().mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
-            // }
+            if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
+            {
+                std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
+                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{Core::HashedString(texturePath.string())});
+            }
+            else
+            {
+                propertiesBlockGPUShader.mMetallic = cgltfMaterial.pbr_metallic_roughness.metallic_factor;
+                propertiesBlockGPUShader.mRoughness = cgltfMaterial.pbr_metallic_roughness.roughness_factor;
+            }
 
-            // if(cgltfMaterial.normal_texture.texture)
-            // {
-            //     std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
-            //     shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{Core::HashedString(texturePath.string())});
-            // }
+            if(cgltfMaterial.normal_texture.texture)
+            {
+                std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
+                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{Core::HashedString(texturePath.string())});
+            }
 
-            newShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShaderDefault);
+            // newShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShader);
+            newShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderPBR, PropertiesBlockGPUShaderPBR>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShader);
 
             // if(cgltfMaterial.has_pbr_specular_glossiness)
             // {

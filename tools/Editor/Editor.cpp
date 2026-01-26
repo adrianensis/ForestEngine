@@ -73,7 +73,7 @@ void Editor::firstUpdate()
 	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(150,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(-150,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Maths::Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/new/Sponza.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
+	importModel("Sponza/new/Sponza.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Maths::Vector3(50,0,0), 10.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Maths::Vector3(-50,0,50), 10.0f, Maths::Vector3(0,0,0), true);
 	// importModel("building/building.gltf", Maths::Vector3(0,0,0), 10.0f, Maths::Vector3(0,0,0), true);
@@ -85,7 +85,7 @@ void Editor::firstUpdate()
 	// importModel("BrainStem/glTF/BrainStem.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
     // mGameObjectsArray.push_back(obj);
 	
-	importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
+	// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(90,0,0), false);
     Core::i32 size = 12;            
     FOR_RANGE(i, -size, size)
     {

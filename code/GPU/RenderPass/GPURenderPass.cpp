@@ -1,6 +1,7 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
+#include "GPU/Light/GPULight.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
@@ -331,7 +332,15 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
 
     uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
     uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
-    // TODO: check GPUInstance::getInstance() accesses from GPU module (?)
+    
+    if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mLightsBufferData))
+    {
+        uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mLightsBufferData));
+    }  
+    if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData))
+    {
+        uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData));
+    }
 
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;

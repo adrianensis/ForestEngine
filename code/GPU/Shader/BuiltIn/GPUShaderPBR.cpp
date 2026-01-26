@@ -131,10 +131,14 @@ void GPUShaderPBR::registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShader
             auto& textureHandle = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNamesPBR::smNormal).mName);
             // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
             // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
-            funcGetNormalFromMap.body().
-            // ifBlock(textureHandle.notEq("0"s)).
-                set(normalFromTexture, call("texture", {/*textures.at(textureHandle)*/textureHandle, inTextureCoord}));
-            // end();
+            
+            if(textureHandle.isValid())
+            {
+                funcGetNormalFromMap.body().
+                // ifBlock(textureHandle.notEq("0"s)).
+                    set(normalFromTexture, call("texture", {/*textures.at(textureHandle)*/textureHandle, inTextureCoord}));
+                // end();
+            }
 
             funcGetNormalFromMap.body().
             variable(tangentNormal, GPUShaderDefinitions::PrimitiveTypes::mVector3, "tangentNormal",
@@ -444,16 +448,19 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mTextureCoords.at(0));
 
-        if(inTextureCoord.isValid())
+        if(textureHandleMetallicRoughness.isValid())
         {
-            Variable metallicRoughnessPack;
-            funcCalculatePBR.body().
-            // ifBlock(textureHandleMetallicRoughness.notEq("0"s)).
-                variable(metallicRoughnessPack, GPUShaderDefinitions::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {/*textures.at(textureHandleMetallicRoughness)*/textureHandleMetallicRoughness, inTextureCoord})).
-                set(roughness, metallicRoughnessPack.dot("g")).
-                set(metallic, metallicRoughnessPack.dot("b"));
-            // end();
-        }
+            if(inTextureCoord.isValid())
+            {
+                Variable metallicRoughnessPack;
+                funcCalculatePBR.body().
+                // ifBlock(textureHandleMetallicRoughness.notEq("0"s)).
+                    variable(metallicRoughnessPack, GPUShaderDefinitions::PrimitiveTypes::mVector4, "metallicRoughnessPack", call("texture", {/*textures.at(textureHandleMetallicRoughness)*/textureHandleMetallicRoughness, inTextureCoord})).
+                    set(roughness, metallicRoughnessPack.dot("g")).
+                    set(metallic, metallicRoughnessPack.dot("b"));
+                // end();
+            }
+        } 
 
         // base color gamma correct
         Variable albedo;
