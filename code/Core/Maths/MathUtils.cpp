@@ -33,6 +33,6 @@ Core::f32 MathUtils::det(Core::f32 a, Core::f32 b, Core::f32 c, Core::f32 d)
 
 Core::f32 MathUtils::lerp(Core::f32 start, Core::f32 end, Core::f32 t)
 {
-    return (1 - t) * start + t * end;
+    return (1.0f - t) * start + t * end;
 }
 NS_END
