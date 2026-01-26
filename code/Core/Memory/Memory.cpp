@@ -1,6 +1,4 @@
 #include "Core/Memory/Memory.hpp"
-#include "Core/Log/Log.hpp"
-#include "Core/Assert/Assert.hpp"
 
 NS_BEGIN(Core)
 void Memory::init()
