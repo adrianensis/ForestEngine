@@ -11,7 +11,7 @@ void GPUShaderPropertiesInstance::setDirty()
     mShader->mGPUShaderManager->setGPUShaderPropertiesInstanceDirty(mID);
 }
 
-void GPUShader::init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id)
+void GPUShader::init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShader, Core::u32 id)
 {
     mGPUContext = gpuContext; 
     mGPUShaderManager = gpuShaderManager; 
@@ -48,7 +48,7 @@ void GPUShader::init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager,
 
     registerTextures();
     setSharedGPUShaderPropertiesBlock();
-    mSharedGPUShaderPropertiesBlockBuffer = propertiesBlockGPUShaderDefault;
+    mSharedGPUShaderPropertiesBlockBuffer = propertiesBlockGPUShader;
 }
 
 void GPUShader::terminate()
