@@ -5,13 +5,6 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/RenderItem/GPURenderItem.hpp"
 
-class GPURenderGraphData
-{
-public:
-    // std::vector<PointLight*> mPointLights;
-    // DirectionalLight* mDirectionalLight;
-};
-
 class GPURenderGraph
 {
 public:
@@ -19,12 +12,10 @@ public:
         GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager);
     void update();
     void terminate();
-    void render(GPURenderGraphData& renderData);
+    void render();
     void addRenderer(Core::WeakPtr<GPURenderItem> renderItem);
     void removeRenderer(Core::WeakPtr<GPURenderItem> renderItem);
     void onResize();
-
-    void updateLights(GPURenderGraphData& renderData);
 
     template<class T> T_EXTENDS(T, GPURenderPass)
     void initRenderPass(const GPURenderPassData& renderPassData, GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)

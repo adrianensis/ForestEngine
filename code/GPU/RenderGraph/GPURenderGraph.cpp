@@ -42,7 +42,7 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
     mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassResolveData, renderPassOutputData, gpuSkeletalAnimationManager, gpuShaderManager);
 }
 
-void GPURenderGraph::render(GPURenderGraphData& renderData)
+void GPURenderGraph::render()
 {
     Core::u32 swapChainImageIndex = mGPUContext->frameAcquisition();
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
@@ -127,22 +127,4 @@ void GPURenderGraph::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
             // renderPass->getGPUInstanceRendererRegistry().removeInstanceRendererData(gpuInstanceRendererData);
         }
     }
-}
-
-void GPURenderGraph::updateLights(GPURenderGraphData& renderData)
-{
-	PROFILER_CPU()
-
-    // GPULightBuiltIn::LightsData lightsData;
-    // FOR_ARRAY(i, renderData.mPointLights)
-    // {
-    //     lightsData.mPointLights[i] = renderData.mPointLights[i]->calculateLightData();
-    // }
-
-    // if(renderData.mDirectionalLight)
-    // {
-    //     lightsData.mDirectionalLight = renderData.mDirectionalLight->calculateLightData();
-    // }
-
-    // getGPUUniformBuffersContainer().getUniformBuffer(GPULightBuiltIn::mLightsBufferData).setData(lightsData);
 }
