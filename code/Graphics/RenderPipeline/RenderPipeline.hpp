@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core.hpp"
+#include "GPU/Light/GPULight.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
@@ -8,11 +9,12 @@
 #include "GPU/RenderItem/GPURenderItemManager.hpp"
 #include "GPU/GPUInstance.hpp"
 
-class RenderPipelineData
+class RenderPipelineUpdateData
 {
 public:
-    std::vector<PointLight*> mPointLights;
-    DirectionalLight* mDirectionalLight = nullptr;
+    std::vector<PointLightData> mPointLightsData;
+    DirectionalLightData mDirectionalLightData;
+    AmbientLightData mAmbientLightData;
 };
 
 class RenderPipeline
@@ -20,16 +22,16 @@ class RenderPipeline
 public:
     virtual void init();
     virtual ~RenderPipeline() = default;
-    void update();
+    void update(RenderPipelineUpdateData& renderPipelineUpdateData);
     virtual void terminate();
     void addRenderer(MeshRenderer* renderer);
     void removeRenderer(MeshRenderer* renderer);
-    void render(RenderPipelineData& renderData);
+    void render();
     virtual void compile();
     void onResize();
 
 protected:
-    void updateLights(RenderPipelineData& renderData);
+    void updateLights(RenderPipelineUpdateData& renderData);
     void initBuffers();
 
 protected:

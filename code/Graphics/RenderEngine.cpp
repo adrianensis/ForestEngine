@@ -16,13 +16,17 @@ void RenderEngine::init()
 	// octree.init(5000);
 
     GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(this);
+
+    // TODO: put in a better place?
+    // Set default ambient light.
+    mRenderPipelineUpdateData.mAmbientLightData.mDiffuse.set(0.1,0.1,0.1);
 }
 
 void RenderEngine::update()
 {
     PROFILER_CPU()
-    mRenderPipeline->update();
-    mRenderPipeline->render(mRenderPipelineData);
+    mRenderPipeline->update(mRenderPipelineUpdateData);
+    mRenderPipeline->render();
 
     GPUInstance::getInstance().mGPUContext->currentFrame = (GPUInstance::getInstance().mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
 }
@@ -67,14 +71,16 @@ void RenderEngine::onComponentAdded(EC::Component* component)
     }
     else if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<Light>().mClassDefinition.getId()))
     {
-        // if(component.getComponent(). <PointLight>())
-        // {
-        //     mRenderPipelineData.mPointLights.push_back(PointLight*(component));
-        // }
-        // else if(component.getComponent(). <DirectionalLight>())
-        // {
-        //     mRenderPipelineData.mDirectionalLight = DirectionalLight*(component);
-        // }
+        if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<PointLight>().mClassDefinition.getId()))
+        {
+            PointLight* pointLight = CAST(PointLight, component);
+            mRenderPipelineUpdateData.mPointLightsData.push_back(pointLight->calculateLightData());
+        }
+        else if(classMetadata.mClassDefinition.isA(Core::ClassManager::getClassMetadata<DirectionalLight>().mClassDefinition.getId()))
+        {
+            DirectionalLight* directionalLight = CAST(DirectionalLight, component);
+            mRenderPipelineUpdateData.mDirectionalLightData = directionalLight->calculateLightData();
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 #include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Image/GPUImageUtils.hpp"
+#include "vulkan/vulkan_core.h"
 
 void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id)
 {
@@ -9,17 +10,25 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
     mTextureData = gpuTextureData;
     mID = id;
 
-    VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
-
     if(gpuTextureData.mIsFont)
     {
-        format = VK_FORMAT_R8_SRGB;
+        mFormat = VK_FORMAT_R8_SRGB;
         mImageData.mWidth = mTextureData.mFontData.mWidth;
         mImageData.mHeight = mTextureData.mFontData.mHeight;
     }
     else
     {
-        format = VK_FORMAT_R8G8B8A8_SRGB;
+        if(gpuTextureData.mIsLinearData)
+        {
+            // Use UNORM for Normal maps, Roughness, Metallic, AO
+            mFormat = VK_FORMAT_R8G8B8A8_UNORM;
+        }
+        else
+        {
+            // Use SRGB for Base Color / Albedo / Emissive
+            mFormat = VK_FORMAT_R8G8B8A8_SRGB;
+        }
+
         PROFILER_CPU_NAMED(load_image)
         mImageData = Image::ImageUtils::loadImage(gpuTextureData.mPath);
         CHECK_MSG(mImageData.mData, "Error loading image " + mTextureData.mPath.get());
@@ -44,7 +53,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
         textureImageData.Width = mImageData.mWidth;
         textureImageData.Height = mImageData.mHeight;
         textureImageData.Usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-        textureImageData.Format = format;
+        textureImageData.Format = mFormat;
         textureImageData.Tiling = VK_IMAGE_TILING_LINEAR;
         textureImageData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         textureImageData.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -52,7 +61,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
         textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
         textureImageData.mOffsetX = 0;
         textureImageData.mOffsetY = 0;
-        textureImageData.mChannels = TO_U32(GPUTextureChannels::SINGLE);
+        textureImageData.mChannels = TO_U32(GPUTextureChannels::ONE);
         if (!mVulkanTextureImage.init(mGPUContext, textureImageData)) {
             CHECK_MSG(false,"Could not initialize texture image");
         }
@@ -64,7 +73,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
     }
     else
     {
-        PROFILER_CPU_NAMED(init_texture_normal)
+        PROFILER_CPU_NAMED(init_texture_common)
 
         // ImageUtils::freeImage(imageData);
 
@@ -72,7 +81,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
         textureImageData.Width = mImageData.mWidth;
         textureImageData.Height = mImageData.mHeight;
         textureImageData.Usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-        textureImageData.Format = format;
+        textureImageData.Format = mFormat;
         textureImageData.Tiling = VK_IMAGE_TILING_OPTIMAL;
         textureImageData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         textureImageData.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -80,7 +89,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
         textureImageData.SampleCount = VK_SAMPLE_COUNT_1_BIT;
         textureImageData.mOffsetX = 0;
         textureImageData.mOffsetY = 0;
-        textureImageData.mChannels = TO_U32(GPUTextureChannels::RGBA);
+        textureImageData.mChannels = TO_U32(GPUTextureChannels::FOUR);
 
         if (!mVulkanTextureImage.init(mGPUContext, textureImageData)) {
             CHECK_MSG(false,"Could not initialize texture image");
@@ -94,7 +103,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
         Image::ImageUtils::freeImage(mImageData);
     }
 
-    mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage.getVkImage(), format, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);
+    mTextureImageView = GPUImageUtils::createImageView(mGPUContext, mVulkanTextureImage.getVkImage(), mFormat, VK_IMAGE_ASPECT_COLOR_BIT, mMipMapLevels);
     if (!mTextureImageView)
     {
         CHECK_MSG(false,"Could not create Vulkan texture image view");

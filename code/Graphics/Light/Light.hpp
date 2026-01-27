@@ -23,7 +23,7 @@ private:
 public:
     CRGET(LightData)
 };
-REGISTER_CLASS(PointLight);
+REGISTER_CLASS(PointLight, Light);
 
 class DirectionalLight: public Light
 {
@@ -37,4 +37,4 @@ private:
 public:
     CRGET(LightData)
 };
-REGISTER_CLASS(DirectionalLight);
+REGISTER_CLASS(DirectionalLight, Light);

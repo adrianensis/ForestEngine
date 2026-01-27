@@ -95,7 +95,7 @@ void Editor::firstUpdate()
             // if(j % 2 == 0)
             {
 				// importModel("tower/tower.gltf", Maths::Vector3(500*i,3,500*j), 100.0f, Maths::Vector3(0,0,0), false);
-				// importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(500*i,650,500*j), 100.0f, Maths::Vector3(90,0,0), false);
+				importModel("CesiumMan/glTF/CesiumMan.gltf", Maths::Vector3(200*i,100,200*j), 100.0f, Maths::Vector3(90,0,0), false);
             }
             // else
             // {

@@ -16,8 +16,8 @@ class PropertiesBlockGPUShaderPBR
 {
 public:
     Maths::Vector4 mBaseColor = Maths::Vector4(0,0,0,1);
-    alignas(16) Core::f32 mMetallic = 0;
-    alignas(16) Core::f32 mRoughness = 0;
+    Core::f32 mMetallic = 0;
+    Core::f32 mRoughness = 0;
 };
 REGISTER_CLASS(PropertiesBlockGPUShaderPBR)
 
@@ -28,7 +28,7 @@ public:
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateGPUShaderPropertiesBlock() override;
     virtual void registerTextures() override;
-    virtual void vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const;
+    virtual void vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
     virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 
     virtual void registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUShaderDescriptorSets> gpuGPUShaderDescriptorSets) const override;

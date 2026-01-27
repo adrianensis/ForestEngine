@@ -63,7 +63,7 @@ public:
         {
         public:
             Maths::Matrix4 mProjectionViewMatrix;
-            Maths::Vector3 mCameraPosition;
+            alignas(Maths::Vector4) Maths::Vector3 mCameraPosition;
         };
 
         inline static const GPUUniformBufferData mGlobalData
@@ -71,7 +71,7 @@ public:
             GPUBufferType::UNIFORM,
             {
                 {GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "projectionViewMatrix"},
-                {GPUStorage::UNIFORM, PrimitiveTypes::mVector3, "cameraPosition"}
+                {GPUStorage::UNIFORM, PrimitiveTypes::mVector4, "cameraPosition"}
             },
             "GlobalData",
             "globalData"

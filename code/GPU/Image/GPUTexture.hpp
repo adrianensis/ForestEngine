@@ -8,9 +8,9 @@
 
 enum class GPUTextureChannels
 {
-    SINGLE = 1,
-    RGB = 3,
-    RGBA = 4
+    ONE = 1,
+    THREE = 3,
+    FOUR = 4
 };
 
 class GPUTextureData
@@ -18,6 +18,7 @@ class GPUTextureData
 public:
     Core::HashedString mPath;
     bool mIsFont = false;
+    bool mIsLinearData = false;
     Font::FontData mFontData;
 };
 
@@ -36,6 +37,7 @@ private:
     GPUContext* mGPUContext = nullptr;
     GPUImage mVulkanTextureImage;
     Core::u32 mMipMapLevels = 1;
+    VkFormat mFormat = VK_FORMAT_R8G8B8A8_SRGB;
 
 public:
     VkImageView mTextureImageView = VK_NULL_HANDLE;

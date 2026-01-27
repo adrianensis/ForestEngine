@@ -85,6 +85,7 @@ void GPUShaderManager::loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakP
             CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
             GPUTextureData gpuTextureData;
             gpuTextureData.mPath = it->second.mPath;
+            gpuTextureData.mIsLinearData = it->second.mIsLinearData;
 
             if(shader->getGPUShaderData().mIsFont)
             {

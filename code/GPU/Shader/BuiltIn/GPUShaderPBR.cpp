@@ -77,6 +77,7 @@ void GPUShaderPBR::generateGPUShaderGenerationData(GPUShaderGenerationData& shad
     GPUShaderDefault::generateGPUShaderGenerationData(shaderGenerationData, gpuVertexBuffersContainer);
     
     shaderGenerationData.mCommonVariables.mUniformBuffers.push_back(GPULightBuiltIn::mLightsBufferData);
+    shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mAmbientLightStructDefinition);
     shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mDirectionalLightStructDefinition);
     shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mPointLightStructDefinition);
     shaderGenerationData.mCommonVariables.mStructDefinitions.push_back(GPULightBuiltIn::mSpotLightStructDefinition);
@@ -232,7 +233,7 @@ void GPUShaderPBR::registerFunctionsPBRHelpers(GPUShaderBuilder& GPUShaderBuilde
         Variable denom;
 
         funcDistributionGGX.body().
-        variable(a, GPUShaderDefinitions::PrimitiveTypes::mFloat, "a", call("dFdx", {roughness.mul(roughness)})).
+        variable(a, GPUShaderDefinitions::PrimitiveTypes::mFloat, "a", roughness.mul(roughness)).
         variable(a2, GPUShaderDefinitions::PrimitiveTypes::mFloat, "a2", a.mul(a)).
         variable(NdotH, GPUShaderDefinitions::PrimitiveTypes::mFloat, "NdotH", call("max", {call("dot", {N, H}), {"0.0"}})).
         variable(NdotH2, GPUShaderDefinitions::PrimitiveTypes::mFloat, "NdotH2", NdotH.mul(NdotH)).
@@ -318,16 +319,16 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable V = funcCalculatePBRSingleLight.mParameters[3];
         Variable N = funcCalculatePBRSingleLight.mParameters[4];
         Variable F0 = funcCalculatePBRSingleLight.mParameters[5];
-        Variable lightDirection = funcCalculatePBRSingleLight.mParameters[6];
-        Variable lightColor = funcCalculatePBRSingleLight.mParameters[7];
+        Variable L = funcCalculatePBRSingleLight.mParameters[6];
+        Variable radiance = funcCalculatePBRSingleLight.mParameters[7];
+        // Variable lightDirection = funcCalculatePBRSingleLight.mParameters[6];
+        // Variable lightColor = funcCalculatePBRSingleLight.mParameters[7];
 
         Variable Lo;
 
-        Variable L;
         Variable H;
         Variable distance;
         Variable attenuation;
-        Variable radiance;
 
         Variable NDF;
         Variable G;
@@ -350,11 +351,11 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
             vec3 radiance = lightColors[i] * attenuation;
         */
         funcCalculatePBRSingleLight.body().
-        variable(L, GPUShaderDefinitions::PrimitiveTypes::mVector3, "L", call("normalize", {lightDirection})).
+        // variable(L, GPUShaderDefinitions::PrimitiveTypes::mVector3, "L", call("normalize", {lightDirection})).
         variable(H, GPUShaderDefinitions::PrimitiveTypes::mVector3, "H", call("normalize", {V.add(L)})).
-        variable(distance, GPUShaderDefinitions::PrimitiveTypes::mFloat, "distance", call("length", {lightDirection})).
-        variable(attenuation, GPUShaderDefinitions::PrimitiveTypes::mFloat, "attenuation", Variable("1.0").div(paren(distance.mul(distance)))).
-        variable(radiance, GPUShaderDefinitions::PrimitiveTypes::mVector3, "radiance", lightColor.mul(attenuation)).
+        // variable(distance, GPUShaderDefinitions::PrimitiveTypes::mFloat, "distance", call("length", {lightDirection})).
+        // variable(attenuation, GPUShaderDefinitions::PrimitiveTypes::mFloat, "attenuation", Variable("1.0").div(paren(distance.mul(distance)))).
+        // variable(radiance, GPUShaderDefinitions::PrimitiveTypes::mVector3, "radiance", lightColor.mul(attenuation)).
         
         /*
             // Cook-Torrance BRDF
@@ -431,6 +432,9 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable directionalLightDirection = {GPULightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[0]};
         Variable directionalLightDiffuse = {GPULightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[1]};
 
+        Variable ambientLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(3));
+        Variable ambientLightDiffuse = {GPULightBuiltIn::mAmbientLightStructDefinition.mPrimitiveVariables[0]};
+
         Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
         Variable shaderBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
         Variable shaderMetallic = {mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
@@ -465,7 +469,7 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         // base color gamma correct
         Variable albedo;
         funcCalculatePBR.body().
-        variable(albedo, GPUShaderDefinitions::PrimitiveTypes::mVector3, "albedo", call("pow", {baseColor, "vec3(2.2)"s}));
+        variable(albedo, GPUShaderDefinitions::PrimitiveTypes::mVector3, "albedo", baseColor);
 
         /*
             vec3 N = normalize(Normal);
@@ -481,14 +485,17 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         funcCalculatePBR.body().
         variable(N, GPUShaderDefinitions::PrimitiveTypes::mVector3, "N", call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {{"0.0"}, {"0.0"}, {"0.0"}}));
 
-        auto& textureHandle = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNamesPBR::smNormal).mName);
-        funcCalculatePBR.body().
-        // ifBlock(textureHandle.notEq("0"s)).
-        //     set(N, call(mGetNormalFromMap, {})).
-        // end().
-        // elseBlock().
+        auto& textureHandleNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNamesPBR::smNormal).mName);
+        if(textureHandleNormal.isValid())
+        {
+            funcCalculatePBR.body().
+            set(N, call(mGetNormalFromMap, {}));
+        }
+        else
+        {
+            funcCalculatePBR.body().
             set(N, inNormal);
-        // end();
+        }
 
         funcCalculatePBR.body().
         set(N, call("normalize", {N}));
@@ -496,7 +503,7 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable V;
         Variable F0;
         funcCalculatePBR.body().
-        variable(V, GPUShaderDefinitions::PrimitiveTypes::mVector3, "V", call("normalize", {cameraPosition.sub(fragPosition)})).
+        variable(V, GPUShaderDefinitions::PrimitiveTypes::mVector3, "V", call("normalize", {cameraPosition.dot("xyz").sub(fragPosition)})).
         variable(F0, GPUShaderDefinitions::PrimitiveTypes::mVector3, "F0", call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {"0.04"s})).
         set(F0, call("mix", {F0, albedo, metallic}));
 
@@ -522,14 +529,14 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable lightDirection;
         Variable lightDiffuse;
         funcCalculatePBR.body().
-        variable(lightDirection, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightDirection", directionalLight.dot(directionalLightDirection)).
-        variable(lightDiffuse, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightDiffuse", directionalLight.dot(directionalLightDiffuse));
+        variable(lightDirection, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightDirection", directionalLight.dot(directionalLightDirection).dot("xyz")).
+        variable(lightDiffuse, GPUShaderDefinitions::PrimitiveTypes::mVector3, "lightDiffuse", directionalLight.dot(directionalLightDiffuse).dot("xyz"));
         
         funcCalculatePBR.body().
         set(Lo, Lo.add(call(mCalculatePBRSingleLight, 
         {
             albedo, metallic, roughness, V, N, F0,
-            lightDirection,
+            call("normalize", {lightDirection.neg()}),
             lightDiffuse
         })));
 
@@ -541,7 +548,7 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
 
         Variable ambient;
         funcCalculatePBR.body().
-        variable(ambient, GPUShaderDefinitions::PrimitiveTypes::mVector3, "ambient", call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {"0.03"s}).mul(albedo)/*.mul(ao)*/);
+        variable(ambient, GPUShaderDefinitions::PrimitiveTypes::mVector3, "ambient", ambientLight.dot(ambientLightDiffuse).dot("xyz").mul(albedo)/*.mul(ao)*/);
 
         /*
             vec3 color = ambient + Lo;
@@ -555,8 +562,8 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         Variable PBRFinalColor;
         funcCalculatePBR.body().
         variable(PBRFinalColor, GPUShaderDefinitions::PrimitiveTypes::mVector3, "PBRFinalColor", ambient.add(Lo)).
-        set(PBRFinalColor, PBRFinalColor.div(paren(PBRFinalColor.add(call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {"1.0"s}))))).
-        set(PBRFinalColor, call("pow", {PBRFinalColor, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {"1.0/2.2"s})}));
+        set(PBRFinalColor, PBRFinalColor.div(paren(PBRFinalColor.add(call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {"1.0"s})))));
+        // set(PBRFinalColor, call("pow", {PBRFinalColor, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {"1.0/2.2"s})}));
 
         Variable sampler = GPUShaderDefinitions::Uniforms::getSampler(TextureBindingNamesPBR::smShadowMap);
         if(mFramebufferBindings.contains(TextureBindingNamesPBR::smShadowMap))

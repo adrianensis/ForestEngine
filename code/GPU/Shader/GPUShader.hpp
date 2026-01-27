@@ -19,6 +19,7 @@ class TextureBinding
 {
 public:
     Core::HashedString mPath;
+    bool mIsLinearData = false;
     bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
 

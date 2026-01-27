@@ -2,6 +2,12 @@
 
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
+class AmbientLightData
+{
+public:
+    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
+};
+
 class DirectionalLightData
 {
 public:
@@ -30,12 +36,20 @@ class GPULightBuiltIn
 {
 public:
 
+    inline static const GPUStructDefinition mAmbientLightStructDefinition
+    {
+        "ambientLight",
+        {
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "diffuse"}
+        }
+    };
+
     inline static const GPUStructDefinition mDirectionalLightStructDefinition
     {
         "directionalLight",
         {
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "direction"},
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "diffuse"}
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "direction"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "diffuse"}
         }
     };
 
@@ -43,8 +57,8 @@ public:
     {
         "pointLight",
         {
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "position"},
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "diffuse"}
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "position"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "diffuse"}
         }
     };
 
@@ -52,9 +66,9 @@ public:
     {
         "spotLight",
         {
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "position"},
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "direction"},
-            {GPUShaderDefinitions::PrimitiveTypes::mVector3, "diffuse"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "position"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "direction"},
+            {GPUShaderDefinitions::PrimitiveTypes::mVector4, "diffuse"},
             {GPUShaderDefinitions::PrimitiveTypes::mFloat, "innerCutOff"},
             {GPUShaderDefinitions::PrimitiveTypes::mFloat, "outerCutOff"}
         }
@@ -63,6 +77,7 @@ public:
     inline static const GPUDataType mPointLightStructDataType{mPointLightStructDefinition.mName, mPointLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
     inline static const GPUDataType mSpotLightStructDataType{mSpotLightStructDefinition.mName, mSpotLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
     inline static const GPUDataType mDirectionalLightStructDataType{mDirectionalLightStructDefinition.mName, mDirectionalLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
+    inline static const GPUDataType mAmbientLightStructDataType{mAmbientLightStructDefinition.mName, mAmbientLightStructDefinition.getTypeSizeInBytes(), GPUPrimitiveDataType::STRUCT};
 
     inline static const GPUUniformBufferData mLightsBufferData
     {
@@ -71,6 +86,7 @@ public:
             {{GPUStorage::UNIFORM, mPointLightStructDataType, "pointLights"}, "", std::to_string(5)},
             {{GPUStorage::UNIFORM, mSpotLightStructDataType, "spotLights"}, "", std::to_string(5)},
             {{GPUStorage::UNIFORM, mDirectionalLightStructDataType, "directional"}},
+            {{GPUStorage::UNIFORM, mAmbientLightStructDataType, "ambient"}},
             // {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambientIntensity"},
         },
         "LightsData",
@@ -83,6 +99,7 @@ public:
         PointLightData mPointLights[5];
         SpotLightData mSpotLights[5];
         DirectionalLightData mDirectionalLight;
+        AmbientLightData mAmbientLight;
     };
 
     inline static const GPUUniformBufferData mShadowMappingBufferData

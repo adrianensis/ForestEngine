@@ -20,7 +20,7 @@ public:
     virtual void onComponentRemoved(EC::Component* component) override;
 
 private:
-    RenderPipelineData mRenderPipelineData;
+    RenderPipelineUpdateData mRenderPipelineUpdateData;
     Core::OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;
 public:

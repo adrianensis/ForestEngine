@@ -19,7 +19,7 @@ void RenderPipeline::init()
     mMeshRenderers.resize(mGPURenderItemManager.getSize());
 }
 
-void RenderPipeline::update()
+void RenderPipeline::update(RenderPipelineUpdateData& renderPipelineUpdateData)
 {
 	PROFILER_CPU()
 
@@ -43,6 +43,8 @@ void RenderPipeline::update()
     mGPURenderItemManager.update();
     mGPUInstanceRendererManager->update(GPUInstance::getInstance().mGPUContext);
     mGPURenderGraph.update();
+
+    updateLights(renderPipelineUpdateData);
 
     PROFILER_CPU_NAMED(updateModelMatricesBuffer);
     mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mGPURenderItemManager.getMatrices());
@@ -96,30 +98,27 @@ void RenderPipeline::removeRenderer(MeshRenderer* renderer)
     mMeshRenderers[slot] = nullptr;
 }
 
-void RenderPipeline::render(RenderPipelineData& renderData)
+void RenderPipeline::render()
 {
-    GPURenderGraphData data;
-    mGPURenderGraph.render(data);
+    mGPURenderGraph.render();
 }
 
 void RenderPipeline::compile()
 {
 }
 
-void RenderPipeline::updateLights(RenderPipelineData& renderData)
+void RenderPipeline::updateLights(RenderPipelineUpdateData& renderPipelineUpdateData)
 {
 	PROFILER_CPU()
 
     GPULightBuiltIn::LightsData lightsData;
-    FOR_ARRAY(i, renderData.mPointLights)
+    FOR_ARRAY(i, renderPipelineUpdateData.mPointLightsData)
     {
-        lightsData.mPointLights[i] = renderData.mPointLights[i]->calculateLightData();
+        lightsData.mPointLights[i] = renderPipelineUpdateData.mPointLightsData[i];
     }
 
-    if(renderData.mDirectionalLight)
-    {
-        lightsData.mDirectionalLight = renderData.mDirectionalLight->calculateLightData();
-    }
+    lightsData.mDirectionalLight = renderPipelineUpdateData.mDirectionalLightData;
+    lightsData.mAmbientLight = renderPipelineUpdateData.mAmbientLightData;
 
     mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mLightsBufferData).setData(lightsData);
 }

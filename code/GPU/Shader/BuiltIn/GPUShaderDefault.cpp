@@ -70,8 +70,8 @@ void GPUShaderDefault::vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& 
     GPUShaderBuilder.getMain().
     set(GPUShaderDefinitions::VertexOutput::mPosition, projectionViewMatrix.mul(finalPositon));
 
-    // auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
-    // GPUShaderBuilder.getMain().set(fragPosition, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {finalPositon}));
+    auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mFragPosition);
+    GPUShaderBuilder.getMain().set(fragPosition, call(GPUShaderDefinitions::PrimitiveTypes::mVector3, {finalPositon}));
 }
 
 void GPUShaderDefault::vertexGPUShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const
