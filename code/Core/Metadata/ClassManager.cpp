@@ -1,4 +1,5 @@
 #include "Core/Metadata/ClassManager.hpp"
+#include "Core/Assert/Assert.hpp"
 
 NS_BEGIN(Core)
 
@@ -28,6 +29,7 @@ bool ClassDefinition::isA(ClassId classId) const
     {
         return true;
     }
+    CHECK_MSG(mBases.empty() == false, "Error. No base classes registered for {}", this->mName.get());
     FOR_ARRAY(i, mBases)
     {
         if(mBases[i] == classId)
