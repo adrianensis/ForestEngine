@@ -38,6 +38,7 @@ class GPURenderPassOutputData
 public:
     GPUImage* mColorGPUImage = nullptr;
     GPUImage* mDepthGPUImage = nullptr;
+    Core::u32 mResolveSwapchainImageIndex = 0;
 };
 
 class GPURenderPass;
@@ -70,11 +71,11 @@ public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
     // TODO: refactor so many arguments
-    bool init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData, const GPURenderPassOutputData& gpuRenderPassOutputData,
+    void init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData,
         GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager);
     void terminate();
-    void begin();
-    virtual void renderPass();
+    void begin(const GPURenderPassOutputData& gpuRenderPassOutputData);
+    virtual void renderPass(const GPURenderPassOutputData& gpuRenderPassOutputData);
     void end();
     void onResize();
     void addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData);
@@ -90,19 +91,13 @@ protected:
     virtual void updateGlobalData();
     virtual Maths::Matrix4 calculateProjectionViewMatrix() const;
 
-    bool initializeFramebuffers();
-
 public:
     GPUContext* mGPUContext = nullptr;
 protected:
     GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
     GPUShaderManager* mGPUShaderManager = nullptr;
-    VkRenderPass mRenderPass = VK_NULL_HANDLE;
-    std::vector<GPUFramebuffer> framebuffers;
 
     GPURenderPassData mGPURenderPassData;
-    GPURenderPassOutputData mGPURenderPassOutputData;
-    GPUFramebuffer mOutputGPUFramebuffer;
 
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
@@ -110,9 +105,7 @@ protected:
     Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
 public:
-    CRGET(RenderPass)
     CRGET(GPURenderPassData)
-    RGET(OutputGPUFramebuffer)
 };
 
 

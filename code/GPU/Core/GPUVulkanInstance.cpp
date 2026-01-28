@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 #include "GPU/Core/GPULog.h"
+#include "vulkan/vulkan_core.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 {  
@@ -98,7 +99,7 @@ bool GPUVulkanInstance::createInstance() {
     appInfo.applicationVersion = 0;//VK_MAKE_VERSION(config.MajorVersion, config.MinorVersion, config.PatchVersion);
     appInfo.pEngineName = config.Name.c_str();
     appInfo.engineVersion = 0;//VK_MAKE_VERSION(config.MajorVersion, config.MinorVersion, config.PatchVersion);
-    appInfo.apiVersion = VK_API_VERSION_1_1;
+    appInfo.apiVersion = VK_API_VERSION_1_3;
     appInfo.pNext = nullptr;
 
     VkInstanceCreateInfo createInfo{};

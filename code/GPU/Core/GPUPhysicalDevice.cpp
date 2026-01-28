@@ -1,5 +1,7 @@
 #include "GPUPhysicalDevice.h"
+#include "Core/CoreMacros.hpp"
 #include "GPU/Core/GPULog.h"
+#include "vulkan/vulkan_core.h"
 
 GPUPhysicalDevice::GPUPhysicalDevice(GPUVulkanInstance* mGPUVulkanInstance, GPUPhysicalDeviceData gpuPhysicalDeviceData) : mGPUVulkanInstance(mGPUVulkanInstance), mGPUPhysicalDeviceData(gpuPhysicalDeviceData) {
 }
@@ -8,11 +10,15 @@ VkPhysicalDevice GPUPhysicalDevice::getPhysicalDevice() const {
     return deviceInfo.mPhysicalDevice;
 }
 
-const VkPhysicalDeviceProperties& GPUPhysicalDevice::getProperties() const {
+const GPUDeviceInfo& GPUPhysicalDevice::getDeviceInfo() const {
+    return deviceInfo;
+}
+
+const VkPhysicalDeviceProperties2& GPUPhysicalDevice::getProperties() const {
     return deviceInfo.mProperties;
 }
 
-const VkPhysicalDeviceFeatures& GPUPhysicalDevice::getFeatures() const {
+const VkPhysicalDeviceFeatures2& GPUPhysicalDevice::getFeatures() const {
     return deviceInfo.mFeatures;
 }
 
@@ -34,13 +40,14 @@ VkSampleCountFlagBits GPUPhysicalDevice::getSampleCount() const {
 
 bool GPUPhysicalDevice::init()
 {
-    std::vector<GPUDeviceInfo> availableDevices = findAvailableDevices();
-    if (availableDevices.empty())
+    findAvailableDevices(mAvailableDevices);
+
+    if (mAvailableDevices.empty())
     {
         CHECK_MSG(false,"Could not get any available devices");
         return false;
     }
-    this->deviceInfo = findMostSuitableDevice(availableDevices);
+    this->deviceInfo = findMostSuitableDevice(mAvailableDevices);
     if (this->deviceInfo.mPhysicalDevice == nullptr)
     {
         CHECK_MSG(false,"Could not get any suitable device");
@@ -102,7 +109,7 @@ VkFormat GPUPhysicalDevice::findSupportedFormat(const std::vector<VkFormat>& can
     return VK_FORMAT_UNDEFINED;
 }
 
-std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
+void GPUPhysicalDevice::findAvailableDevices(std::vector<GPUDeviceInfo>& outDevices) const
 {
     Core::u32 deviceCount = 0;
     vkEnumeratePhysicalDevices(mGPUVulkanInstance->getVkInstance(), &deviceCount, nullptr);
@@ -110,15 +117,29 @@ std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
     std::vector<VkPhysicalDevice> vkPhysicalDevices(deviceCount);
     vkEnumeratePhysicalDevices(mGPUVulkanInstance->getVkInstance(), &deviceCount, vkPhysicalDevices.data());
 
-    std::vector<GPUDeviceInfo> devices;
-    for (VkPhysicalDevice vkPhysicalDevice : vkPhysicalDevices)
+    FOR_ARRAY(i, vkPhysicalDevices)
     {
+        VkPhysicalDevice vkPhysicalDevice = vkPhysicalDevices[i];
+        GPUDeviceInfo& device = outDevices.emplace_back(GPUDeviceInfo{});
+        device.mPhysicalDevice = vkPhysicalDevice;
+        
+        device.mSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
+        device.mSubgroupProperties.pNext = nullptr; // End of chain for now
 
-        VkPhysicalDeviceProperties vkPhysicalDeviceProperties;
-        vkGetPhysicalDeviceProperties(vkPhysicalDevice, &vkPhysicalDeviceProperties);
+        // Link the extension structure into the pNext chain
+        device.mProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+        device.mProperties.pNext = &device.mSubgroupProperties;
+        vkGetPhysicalDeviceProperties2(vkPhysicalDevice, &device.mProperties);
 
-        VkPhysicalDeviceFeatures vkPhysicalDeviceFeatures;
-        vkGetPhysicalDeviceFeatures(vkPhysicalDevice, &vkPhysicalDeviceFeatures);
+        // Define the specific 1.3 features (contains dynamicRendering)
+        device.m13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+        device.m13Features.dynamicRendering = VK_TRUE; 
+        device.m13Features.pNext = nullptr; 
+        
+        // Define the top-level Features2 structure
+        device.mFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        device.mFeatures.pNext = &device.m13Features;
+        vkGetPhysicalDeviceFeatures2(vkPhysicalDevice, &device.mFeatures);
 
         /*
             * There are certain limitations of our current MSAA implementation which may impact the quality of the output image in more detailed scenes.
@@ -128,22 +149,15 @@ std::vector<GPUDeviceInfo> GPUPhysicalDevice::findAvailableDevices() const
             */
         //vkPhysicalDeviceFeatures.sampleRateShading = VK_TRUE; // enable sample shading feature for the device
 
-        GPUDeviceInfo device{};
-        device.mPhysicalDevice = vkPhysicalDevice;
-        device.mProperties = vkPhysicalDeviceProperties;
-        device.mFeatures = vkPhysicalDeviceFeatures;
         device.mExtensions = findExtensions(vkPhysicalDevice);
         device.mQueueFamilyIndices = findQueueFamilyIndices(vkPhysicalDevice);
         device.mSwapChainInfo = findSwapChainInfo(vkPhysicalDevice);
-        device.mSampleCount = getSampleCount(vkPhysicalDeviceProperties);
-
-        devices.push_back(device);
+        device.mSampleCount = getSampleCount(device.mProperties);
     }
     GPU_LOG("Available physical devices: " + std::to_string(deviceCount));
-    for (const GPUDeviceInfo& device : devices) {
-        GPU_LOG(device.mProperties.deviceName + " : "s + getDeviceTypeAsString(device.mProperties.deviceType));
+    for (const GPUDeviceInfo& device : outDevices) {
+        GPU_LOG(device.mProperties.properties.deviceName + " : "s + getDeviceTypeAsString(device.mProperties.properties.deviceType));
     }
-    return devices;
 }
 
 std::vector<VkExtensionProperties> GPUPhysicalDevice::findExtensions(VkPhysicalDevice device) const
@@ -175,7 +189,9 @@ std::vector<const char*>& GPUPhysicalDevice::getRequiredExtensions() const
 {
     static std::vector<const char*> extensions =
     {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+            // VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME is included in 1.3, but this help us to detect missing device support.
+            VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME
     };
     return extensions;
 }
@@ -184,7 +200,9 @@ const std::vector<const char*>& GPUPhysicalDevice::getOptionalExtensions() const
 {
     static std::vector<const char*> extensions =
     {
-            "VK_KHR_portability_subset"
+        #ifdef VK_ENABLE_BETA_EXTENSIONS
+            VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
+        #endif
     };
     return extensions;
 }
@@ -238,9 +256,9 @@ GPUSwapChainInfo GPUPhysicalDevice::findSwapChainInfo(VkPhysicalDevice device) c
     return swapChainInfo;
 }
 
-VkSampleCountFlagBits GPUPhysicalDevice::getSampleCount(const VkPhysicalDeviceProperties& deviceProperties) const
+VkSampleCountFlagBits GPUPhysicalDevice::getSampleCount(const VkPhysicalDeviceProperties2& deviceProperties) const
 {
-    VkSampleCountFlags counts = deviceProperties.limits.framebufferColorSampleCounts & deviceProperties.limits.framebufferDepthSampleCounts;
+    VkSampleCountFlags counts = deviceProperties.properties.limits.framebufferColorSampleCounts & deviceProperties.properties.limits.framebufferDepthSampleCounts;
     if (counts & VK_SAMPLE_COUNT_64_BIT) { return VK_SAMPLE_COUNT_64_BIT; }
     if (counts & VK_SAMPLE_COUNT_32_BIT) { return VK_SAMPLE_COUNT_32_BIT; }
     if (counts & VK_SAMPLE_COUNT_16_BIT) { return VK_SAMPLE_COUNT_16_BIT; }
@@ -275,7 +293,7 @@ GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDev
     for (const GPUDeviceInfo& device : availableDevices)
     {
         Core::u32 suitabilityRating = getSuitabilityRating(device);
-        GPU_LOG(device.mProperties.deviceName + " : "s + std::to_string(suitabilityRating));
+        GPU_LOG(device.mProperties.properties.deviceName + " : "s + std::to_string(suitabilityRating));
         devicesByRating.insert(std::make_pair(suitabilityRating, device));
     }
     Core::u32 highestRating = devicesByRating.rbegin()->first;
@@ -285,7 +303,7 @@ GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDev
     }
     GPU_LOG("Most suitable device");
     const GPUDeviceInfo& device = devicesByRating.rbegin()->second;
-    GPU_LOG(device.mProperties.deviceName);
+    GPU_LOG(device.mProperties.properties.deviceName);
     return device;
 }
 
@@ -293,39 +311,43 @@ Core::u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInf
 {
     if (!hasRequiredFeatures(deviceInfo.mFeatures))
     {
-        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required device features"s);
+        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required device features"s);
         return 0;
     }
     if (!hasRequiredExtensions(deviceInfo.mExtensions))
     {
-        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required device extensions"s);
+        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required device extensions"s);
         return 0;
     }
     if (!hasRequiredSwapChainSupport(deviceInfo.mSwapChainInfo))
     {
-        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required swap chain info"s);
+        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required swap chain info"s);
         return 0;
     }
     if (!hasRequiredQueueFamilyIndices(deviceInfo.mQueueFamilyIndices))
     {
-        GPU_LOG(deviceInfo.mProperties.deviceName + " does not have required queue family indices"s);
+        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required queue family indices"s);
         return 0;
     }
     Core::u32 score = 0;
     // Discrete GPUs have a significant performance advantage
-    if (deviceInfo.mProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+    if (deviceInfo.mProperties.properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
     {
         score += 1000;
     }
-    score += (Core::u32) deviceInfo.mProperties.limits.maxImageDimension2D;
-    score += (Core::u32) deviceInfo.mProperties.limits.framebufferColorSampleCounts;
-    score += (Core::u32) deviceInfo.mProperties.limits.framebufferDepthSampleCounts;
+    score += (Core::u32) deviceInfo.mProperties.properties.limits.maxImageDimension2D;
+    score += (Core::u32) deviceInfo.mProperties.properties.limits.framebufferColorSampleCounts;
+    score += (Core::u32) deviceInfo.mProperties.properties.limits.framebufferDepthSampleCounts;
     return score;
 }
 
-bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures& availableDeviceFeatures) const
+bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures2& availableDeviceFeatures) const
 {
-    return availableDeviceFeatures.samplerAnisotropy && availableDeviceFeatures.shaderSampledImageArrayDynamicIndexing;
+    VkPhysicalDeviceVulkan13Features* features13 = static_cast<VkPhysicalDeviceVulkan13Features*>(availableDeviceFeatures.pNext);
+    return availableDeviceFeatures.features.samplerAnisotropy && 
+    availableDeviceFeatures.features.shaderSampledImageArrayDynamicIndexing
+    && features13 != nullptr
+    && features13->dynamicRendering;
 }
 
 bool GPUPhysicalDevice::hasRequiredExtensions(const std::vector<VkExtensionProperties>& availableDeviceExtensions) const

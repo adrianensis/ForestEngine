@@ -34,11 +34,13 @@ public:
 private:
     GPUContext* mGPUContext = nullptr;
     VkImage mVkImage = VK_NULL_HANDLE;
+    VkImageView mVkImageView = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
     GPUImageData mGPUImageData;
     VkImageLayout mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 public:
     CRGET(VkImage)
+    CRGET(VkImageView)
     CRGET(GPUImageData)
     GET(CurrentLayout)
 };

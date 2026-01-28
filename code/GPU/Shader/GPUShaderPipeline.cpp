@@ -1,6 +1,8 @@
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Core/GPULog.h"
+#include "vulkan/vulkan_core.h"
+#include "GPU/Image/GPUImageUtils.hpp"
 
 void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPURenderPass* renderPass, GPUContext* gpuContext)
 {
@@ -209,7 +211,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
 
     VkPipelineMultisampleStateCreateInfo multisampleState{};
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleState.rasterizationSamples = mRenderPass->getGPURenderPassData().mSampleCountFlagBits;
+    multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_4_BIT; //mRenderPass->getGPURenderPassData().mSampleCountFlagBits;
     // multisampleState.pSampleMask = nullptr;
     // multisampleState.alphaToCoverageEnable = VK_FALSE;
     // multisampleState.alphaToOneEnable = VK_FALSE;
@@ -220,8 +222,8 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
         * This may lead to a situation when you get a smooth polygon rendered on screen but the applied texture will still look aliased if it contains high contrasting colors.
         * One way to approach this problem is to enable Sample Shading which will improve the image quality even further, though at an additional performance cost:
         */
-    multisampleState.sampleShadingEnable = VK_FALSE;
-    //multisampleState.sampleShadingEnable = VK_TRUE; // enable sample shading in the pipeline
+    // multisampleState.sampleShadingEnable = VK_FALSE;
+    multisampleState.sampleShadingEnable = VK_TRUE; // enable sample shading in the pipeline
     multisampleState.minSampleShading = 1.0f;
     //multisampleState.minSampleShading = .2f; // min fraction for sample shading; closer to one is smoother
 
@@ -280,8 +282,19 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     dynamicState.pDynamicStates = dynamicStateEnables;
     dynamicState.dynamicStateCount = 2;
 
+    VkPipelineRenderingCreateInfo renderingInfo;
+    renderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+    renderingInfo.pNext = NULL;
+    renderingInfo.viewMask = 0;
+    renderingInfo.colorAttachmentCount = 1;
+    VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
+    renderingInfo.pColorAttachmentFormats = &colorFormat;
+    renderingInfo.depthAttachmentFormat = GPUImageUtils::findDepthFormat(mGPUContext);;
+    renderingInfo.stencilAttachmentFormat = VK_FORMAT_UNDEFINED;
+
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineInfo.pNext = &renderingInfo;
     pipelineInfo.stageCount = 2;
     pipelineInfo.pStages = shaderStages;
     pipelineInfo.pVertexInputState = &vertexInputState;
@@ -293,7 +306,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     pipelineInfo.pColorBlendState = &colorBlendState;
     pipelineInfo.pDynamicState = &dynamicState;
     pipelineInfo.layout = mPipelineLayout;
-    pipelineInfo.renderPass = mRenderPass->getRenderPass();
+    pipelineInfo.renderPass = VK_NULL_HANDLE; //mRenderPass->getRenderPass();
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
     pipelineInfo.basePipelineIndex = -1;

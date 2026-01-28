@@ -27,11 +27,8 @@ public:
             Core::OwnerPtr<GPURenderPass>::moveCast(Core::OwnerPtr<T>::newObject())
         );
 
-        GPURenderPassOutputData renderPassOutputData;
-        renderPassOutputData.mColorGPUImage = &vulkanColorImage;
-
         Core::WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassData, renderPassOutputData, gpuSkeletalAnimationManager, gpuShaderManager);
+        renderPass->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassData, gpuSkeletalAnimationManager, gpuShaderManager);
 
         mRenderPassesArray.push_back(renderPass);
     }
@@ -52,6 +49,7 @@ private:
     Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
     Core::OwnerPtr<GPURenderPass> mRenderPassResolve;
-    GPUImage vulkanColorImage;
+    GPUImage mColorBufferImage;
+    GPUImage mDepthBufferImage;
 };
 

@@ -24,8 +24,10 @@ class GPUDeviceInfo
 {
 public:
     VkPhysicalDevice mPhysicalDevice = nullptr;
-    VkPhysicalDeviceProperties mProperties{};
-    VkPhysicalDeviceFeatures mFeatures{};
+    VkPhysicalDeviceSubgroupProperties mSubgroupProperties{};
+    VkPhysicalDeviceProperties2 mProperties{};
+    VkPhysicalDeviceVulkan13Features m13Features{};
+    VkPhysicalDeviceFeatures2 mFeatures{};
     std::vector<VkExtensionProperties> mExtensions{};
     GPUQueueFamilyIndices mQueueFamilyIndices{};
     GPUSwapChainInfo mSwapChainInfo{};
@@ -44,12 +46,13 @@ private:
     GPUVulkanInstance* mGPUVulkanInstance;
     GPUDeviceInfo deviceInfo{};
     GPUPhysicalDeviceData mGPUPhysicalDeviceData;
-
+    std::vector<GPUDeviceInfo> mAvailableDevices;
 public:
     explicit GPUPhysicalDevice(GPUVulkanInstance* gpuVulkanInstance, GPUPhysicalDeviceData gpuPhysicalDeviceData);
     VkPhysicalDevice getPhysicalDevice() const;
-    const VkPhysicalDeviceProperties& getProperties() const;
-    const VkPhysicalDeviceFeatures& getFeatures() const;
+    const GPUDeviceInfo& getDeviceInfo() const;
+    const VkPhysicalDeviceProperties2& getProperties() const;
+    const VkPhysicalDeviceFeatures2& getFeatures() const;
     const GPUQueueFamilyIndices& getQueueFamilyIndices() const;
     const GPUSwapChainInfo& getSwapChainInfo() const;
     VkSampleCountFlagBits getSampleCount() const;
@@ -60,17 +63,17 @@ public:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
 private:
-    std::vector<GPUDeviceInfo> findAvailableDevices() const;
+    void findAvailableDevices(std::vector<GPUDeviceInfo>& outDevices) const;
     std::vector<VkExtensionProperties> findExtensions(VkPhysicalDevice device) const;
     std::vector<const char*>& getRequiredExtensions() const;
     const std::vector<const char*>& getOptionalExtensions() const;
     GPUQueueFamilyIndices findQueueFamilyIndices(VkPhysicalDevice device) const;
     GPUSwapChainInfo findSwapChainInfo(VkPhysicalDevice device) const;
-    VkSampleCountFlagBits getSampleCount(const VkPhysicalDeviceProperties& deviceProperties) const;
+    VkSampleCountFlagBits getSampleCount(const VkPhysicalDeviceProperties2& deviceProperties) const;
     std::string getDeviceTypeAsString(VkPhysicalDeviceType deviceType) const;
     GPUDeviceInfo findMostSuitableDevice(const std::vector<GPUDeviceInfo>& availableDevices) const;
     Core::u32 getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const;
-    bool hasRequiredFeatures(const VkPhysicalDeviceFeatures& availableDeviceFeatures) const;
+    bool hasRequiredFeatures(const VkPhysicalDeviceFeatures2& availableDeviceFeatures) const;
     bool hasRequiredExtensions(const std::vector<VkExtensionProperties>& availableDeviceExtensions) const;
     bool hasRequiredSwapChainSupport(const GPUSwapChainInfo& swapChainInfo) const;
     bool hasRequiredQueueFamilyIndices(const GPUQueueFamilyIndices& queueFamilyIndices) const;

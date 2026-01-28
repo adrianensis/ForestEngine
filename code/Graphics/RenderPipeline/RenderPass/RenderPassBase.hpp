@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "GPU/Framebuffer/GPUFramebuffer.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 
 class RenderPass;

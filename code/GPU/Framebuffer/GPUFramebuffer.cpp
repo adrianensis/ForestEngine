@@ -17,22 +17,19 @@ Maths::Vector4 GPUFramebuffer::readPixel(Core::u32 x, Core::u32 y, GPUFramebuffe
 
 void GPUFramebuffer::enable(GPUFramebufferOperationType op)
 {
-//    GET_SYSTEM(GPUInterface).enableFramebuffer(op, mFramebufferId);
 }
 
 void GPUFramebuffer::disable(GPUFramebufferOperationType op)
 {
-//    GET_SYSTEM(GPUInterface).disableFramebuffer(op);
 }
 
 const VkFramebuffer GPUFramebuffer::getFramebuffer() const {
     return framebuffer;
 }
 
-bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass)
+bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& framebufferData)
 {
     mGPUContext = gpuContext;
-    mRenderPass = renderPass;
     mFramebufferData = framebufferData;
 
     if (!initializeColorResources())
@@ -59,23 +56,6 @@ bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& fram
         colorImageView,
         depthImageView
     };
-    // if(mGPURenderPassData.mSampleCountFlagBits == VK_SAMPLE_COUNT_1_BIT)
-    // {
-    //     attachments =
-    //     {
-    //         colorImageView,
-    //         depthImageView
-    //     };
-    // }
-    // else
-    // {
-    //     attachments =
-    //     {
-    //         colorImageView,
-    //         depthImageView,
-    //         swapChainImageView
-    //     };
-    // }
 
     if(mFramebufferData.mIsResolveFramebuffer)
     {
@@ -89,19 +69,6 @@ bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& fram
         }
     }
 
-    VkFramebufferCreateInfo framebufferInfo{};
-    framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebufferInfo.renderPass = mRenderPass->getRenderPass();
-    framebufferInfo.attachmentCount = (Core::u32) attachments.size();
-    framebufferInfo.pAttachments = attachments.data();
-    framebufferInfo.width = mGPUContext->vulkanSwapChain->getExtent().width;
-    framebufferInfo.height = mGPUContext->vulkanSwapChain->getExtent().height;
-    framebufferInfo.layers = 1;
-
-    if (vkCreateFramebuffer(mGPUContext->vulkanDevice->getDevice(), &framebufferInfo, ALLOCATOR, &framebuffer) != VK_SUCCESS) {
-        CHECK_MSG(false,"Could not create Vulkan framebuffer");
-        return false;
-    }
     return true;
 }
 
@@ -109,7 +76,6 @@ void GPUFramebuffer::terminate()
 {
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), colorImageView, allocationCallbacks);
-    // vulkanColorImage.terminate();
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), depthImageView, allocationCallbacks);
     vulkanDepthImage.terminate();
 
@@ -126,28 +92,8 @@ bool GPUFramebuffer::initializeColorResources()
     }
 
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
-
-    // GPUImageData colorImageConfig{};
-    // colorImageConfig.Width = mGPUContext->vulkanSwapChain->getExtent().width;
-    // colorImageConfig.Height = mGPUContext->vulkanSwapChain->getExtent().height;
-    // colorImageConfig.MipLevels = 1;
-    // colorImageConfig.SampleCount = mFramebufferData.mSampleCountFlagBits;
-    // colorImageConfig.Format = colorFormat;
-    // colorImageConfig.Tiling = VK_IMAGE_TILING_OPTIMAL;
-    // colorImageConfig.Usage = VK_IMAGE_USAGE_SAMPLED_BIT|/*VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT |*/ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT /*| VK_IMAGE_USAGE_TRANSFER_DST_BIT*/;
-    // colorImageConfig.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    // colorImageConfig.InitialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-    // if (!vulkanColorImage.init(mGPUContext, colorImageConfig)) {
-    //     CHECK_MSG(false,"Could not initialize color image");
-    //     return false;
-    // }
     colorImageView = GPUImageUtils::createImageView(mGPUContext, mFramebufferData.mColorImage->getVkImage(), colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, mFramebufferData.mColorImage->getGPUImageData().MipLevels);
-    
-    // if(!mFramebufferData.mIsResolveFramebuffer)
-    // {
-    //     vulkanColorImage.transition(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-    // }
+
     return true;
 }
 
@@ -173,6 +119,5 @@ bool GPUFramebuffer::initializeDepthResources()
         return false;
     }
     depthImageView = GPUImageUtils::createImageView(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageConfig.MipLevels);
-    // GPUImageUtils::transitionImageLayout(mGPUContext, vulkanDepthImage.getVkImage(), depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, depthImageConfig.MipLevels);
     return true;
 }

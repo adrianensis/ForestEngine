@@ -41,7 +41,7 @@ public:
 class GPUFramebuffer
 {
 public:
-    bool init(GPUContext* gpuContext, const GPUFramebufferData& framebufferData, GPURenderPass* renderPass);
+    bool init(GPUContext* gpuContext, const GPUFramebufferData& framebufferData);
     Maths::Vector4 readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
@@ -60,7 +60,6 @@ private:
 
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
-    GPURenderPass* mRenderPass = nullptr;
     VkFramebuffer framebuffer = VK_NULL_HANDLE;
     GPUContext* mGPUContext = nullptr;
 

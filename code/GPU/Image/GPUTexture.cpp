@@ -120,7 +120,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
         samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.anisotropyEnable = VK_TRUE;
-        samplerInfo.maxAnisotropy = mGPUContext->vulkanPhysicalDevice->getProperties().limits.maxSamplerAnisotropy;
+        samplerInfo.maxAnisotropy = mGPUContext->vulkanPhysicalDevice->getProperties().properties.limits.maxSamplerAnisotropy;
         samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
         samplerInfo.unnormalizedCoordinates = VK_FALSE;
         samplerInfo.compareEnable = VK_FALSE;

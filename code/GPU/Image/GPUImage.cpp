@@ -1,5 +1,6 @@
 #include "GPUImage.h"
 #include "GPU/Image/GPUImageUtils.hpp"
+#include "vulkan/vulkan_core.h"
 
 bool GPUImage::init(GPUContext* gpuContext, const GPUImageData& gpuImageData)
 {
@@ -49,12 +50,33 @@ bool GPUImage::init(GPUContext* gpuContext, const GPUImageData& gpuImageData)
     vkBindImageMemory(mGPUContext->vulkanDevice->getDevice(), mVkImage, vkDeviceMemory, memoryOffset);
 
     // LOG("Initialized image");
+
+    VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
+
+    // Check if this image is intended for Depth/Stencil usage
+    if (mGPUImageData.Usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) 
+    {
+        aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
+        
+        // If the format has a stencil component, you might need the stencil bit too
+        if (GPUImageUtils::hasStencilComponent(mGPUImageData.Format)) {
+            aspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+    }
+    
+    mVkImageView = GPUImageUtils::createImageView(mGPUContext, mVkImage, mGPUImageData.Format, aspectFlags, mGPUImageData.MipLevels);
+    if (!mVkImageView)
+    {
+        CHECK_MSG(false,"Could not create Vulkan image view");
+    }
+
     return true;
 }
 
 void GPUImage::terminate()
 {
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), mVkImageView, allocationCallbacks);
     vkDestroyImage(mGPUContext->vulkanDevice->getDevice(), mVkImage, allocationCallbacks);
     vkFreeMemory(mGPUContext->vulkanDevice->getDevice(), vkDeviceMemory, allocationCallbacks);
     LOG("Terminated image");

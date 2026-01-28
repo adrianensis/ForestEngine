@@ -64,7 +64,9 @@ bool GPUDevice::createDevice(const std::vector<VkDeviceQueueCreateInfo>& deviceQ
 {
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.pEnabledFeatures = &mPhysicalDevice->getFeatures();
+    createInfo.pNext = &mPhysicalDevice->getFeatures();
+    // createInfo.pEnabledFeatures = &mPhysicalDevice->getFeatures();
+    createInfo.pEnabledFeatures = nullptr;
     createInfo.enabledExtensionCount = mPhysicalDevice->getExtensions().size();
     createInfo.ppEnabledExtensionNames = mPhysicalDevice->getExtensions().data();
     createInfo.queueCreateInfoCount = deviceQueueCreateInfos.size();
