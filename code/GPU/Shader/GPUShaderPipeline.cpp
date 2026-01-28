@@ -4,10 +4,9 @@
 #include "vulkan/vulkan_core.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPURenderPass* renderPass, GPUContext* gpuContext)
+void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPUContext* gpuContext)
 {
     mGPUShaderPipelineData = gpuGPUShaderPipelineData;
-    mRenderPass = renderPass;
     mGPUContext = gpuContext;
 
     mGPUShaderDescriptorSets = Core::OwnerPtr<GPUShaderDescriptorSets>::newObject();

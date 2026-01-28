@@ -168,8 +168,6 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     gpuGPUShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
     GPUShaderCompilationData shaderCompilationData
     {
-        gpuInstanceRendererData.mMesh,
-        this,
         Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
         Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
         uniformBuffers,
