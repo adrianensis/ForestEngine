@@ -124,17 +124,21 @@ void GPUPhysicalDevice::findAvailableDevices(std::vector<GPUDeviceInfo>& outDevi
         device.mPhysicalDevice = vkPhysicalDevice;
         
         device.mSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
-        device.mSubgroupProperties.pNext = nullptr; // End of chain for now
+        device.mSubgroupProperties.pNext = nullptr;
 
         // Link the extension structure into the pNext chain
         device.mProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
         device.mProperties.pNext = &device.mSubgroupProperties;
         vkGetPhysicalDeviceProperties2(vkPhysicalDevice, &device.mProperties);
 
+        // indexing features for bindless
+        device.mIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+        device.mIndexingFeatures.pNext = nullptr;
+        
         // Define the specific 1.3 features (contains dynamicRendering)
         device.m13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
         device.m13Features.dynamicRendering = VK_TRUE; 
-        device.m13Features.pNext = nullptr; 
+        device.m13Features.pNext = &device.mIndexingFeatures; 
         
         // Define the top-level Features2 structure
         device.mFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -344,10 +348,14 @@ Core::u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInf
 bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures2& availableDeviceFeatures) const
 {
     VkPhysicalDeviceVulkan13Features* features13 = static_cast<VkPhysicalDeviceVulkan13Features*>(availableDeviceFeatures.pNext);
+    VkPhysicalDeviceDescriptorIndexingFeatures* indexingFeatures = static_cast<VkPhysicalDeviceDescriptorIndexingFeatures*>(features13->pNext);
     return availableDeviceFeatures.features.samplerAnisotropy && 
     availableDeviceFeatures.features.shaderSampledImageArrayDynamicIndexing
     && features13 != nullptr
-    && features13->dynamicRendering;
+    && features13->dynamicRendering
+    && indexingFeatures
+    && indexingFeatures->descriptorBindingPartiallyBound
+    && indexingFeatures->runtimeDescriptorArray;
 }
 
 bool GPUPhysicalDevice::hasRequiredExtensions(const std::vector<VkExtensionProperties>& availableDeviceExtensions) const

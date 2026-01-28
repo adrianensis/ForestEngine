@@ -27,6 +27,7 @@ public:
     VkPhysicalDeviceSubgroupProperties mSubgroupProperties{};
     VkPhysicalDeviceProperties2 mProperties{};
     VkPhysicalDeviceVulkan13Features m13Features{};
+    VkPhysicalDeviceDescriptorIndexingFeatures mIndexingFeatures{};
     VkPhysicalDeviceFeatures2 mFeatures{};
     std::vector<VkExtensionProperties> mExtensions{};
     GPUQueueFamilyIndices mQueueFamilyIndices{};
