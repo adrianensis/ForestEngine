@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/CoreBase.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
@@ -44,20 +45,33 @@ public:
     {
         if(this == &other) {return true;}
         return
-        mStencilEnable == other.mStencilEnable and
-        mStencilValue == other.mStencilValue and
-        mParentId == other.mParentId and
+        mStencilEnable == other.mStencilEnable &&
+        mDepthTestEnable == other.mDepthTestEnable &&
+        mDepthWriteEnable == other.mDepthWriteEnable &&
+        mDepthCompareOp == other.mDepthCompareOp &&
+        mStencilValue == other.mStencilValue &&
+        mStencilFunction == other.mStencilFunction&&
+        mStencilPassOp == other.mStencilPassOp &&
+        mStencilFailOp == other.mStencilFailOp &&
+        mDepthFailOp == other.mDepthFailOp &&
+        mParentId == other.mParentId;
         //mId == other.mId && 
-        mStencilFunction == other.mStencilFunction;
     }
 
     Core::u64 hash() const
     {
         Core::u32 shift = 0;
-        Core::u64 result = (Core::u64)mStencilEnable << (shift++);
-        result = result ^ (Core::u64)mStencilValue << (shift++);
+        Core::u64 result = 0;
+        result = result ^ static_cast<Core::u64>(mStencilEnable) << (shift++);
+        result = result ^ static_cast<Core::u64>(mDepthTestEnable) << (shift++);
+        result = result ^ static_cast<Core::u64>(mDepthWriteEnable) << (shift++);
+        result = result ^ static_cast<Core::u64>(mDepthCompareOp) << (shift++);
+        result = result ^ static_cast<Core::u64>(mStencilValue) << (shift++);
         result = result ^ static_cast<Core::u64>(mStencilFunction) << (shift++);
-        result = result ^ (Core::u64)mParentId << (shift++); /*^ (Core::u64)mId*/;
+        result = result ^ static_cast<Core::u64>(mStencilPassOp) << (shift++);
+        result = result ^ static_cast<Core::u64>(mStencilFailOp) << (shift++);
+        result = result ^ static_cast<Core::u64>(mDepthFailOp) << (shift++);
+        result = result ^ static_cast<Core::u64>(mParentId) << (shift++);
         return result;
     }
 };
