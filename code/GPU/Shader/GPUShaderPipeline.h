@@ -2,7 +2,7 @@
 
 #include "GPU/Shader/GPUShaderModule.h"
 #include "GPU/Core/GPUContext.hpp"
-#include "GPU/Shader/GPUShaderDescriptorSets.hpp"
+#include "GPU/Descriptors/GPUDescriptorsSet.hpp"
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 #include "vulkan/vulkan_core.h"
 
@@ -32,7 +32,7 @@ public:
 class GPUShaderPipelineData
 {
 public:
-    GPUShaderDescriptorSetsData mGPUShaderDescriptorSetsData;
+    GPUDescriptorsSetData mGPUDescriptorsSetData;
     std::vector<GPUVertexBuffer> mVertexInputBuffers;
 };
 
@@ -42,14 +42,14 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 public:
-    void init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPUContext* gpuContext);
+    void init(const GPUShaderPipelineData& gpuShaderPipelineData, GPUContext* gpuContext);
     void terminate();
     void bind(const GPUCommandBuffer& vulkanCommandBuffer) const;
     void compile(const GPUShaderModuleData& vertex, const GPUShaderModuleData& fragment);
     void enable() const;
     void disable() const;
 private:
-    Core::OwnerPtr<GPUShaderDescriptorSets> mGPUShaderDescriptorSets;
+    Core::OwnerPtr<GPUDescriptorsSet> mGPUDescriptorsSet;
     GPUShaderModule vertexShader;
     GPUShaderModule fragmentShader;
     GPUVertexInputData mGPUVertexInputData;
@@ -58,7 +58,7 @@ private:
     VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUShaderPipelineData mGPUShaderPipelineData;
 public:
-    CGET(GPUShaderDescriptorSets)
+    CGET(GPUDescriptorsSet)
     CRGET(PipelineLayout)
     CRGET(Pipeline)
 };

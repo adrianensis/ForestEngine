@@ -1,10 +1,10 @@
 #include "GPU/Shader/GPUShaderModule.h"
 
-bool GPUShaderModule::init(GPUContext* gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData)
+bool GPUShaderModule::init(GPUContext* gpuContext, const GPUShaderModuleData& gpuShaderModuleData)
 {
     mGPUContext = gpuContext;
 
-    SPIRVBinary spirvBinary = GPUShaderCompiler::compileGPUShaderToSPIRV(gpuGPUShaderModuleData.mStage, gpuGPUShaderModuleData.mModuleContent.data(), gpuGPUShaderModuleData.id.get().data());
+    SPIRVBinary spirvBinary = GPUShaderCompiler::compileGPUShaderToSPIRV(gpuShaderModuleData.mStage, gpuShaderModuleData.mModuleContent.data(), gpuShaderModuleData.id.get().data());
 
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

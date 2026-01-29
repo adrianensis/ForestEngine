@@ -1,9 +1,9 @@
-#include "GPU/Shader/GPUShaderDescriptorSets.hpp"
+#include "GPU/Descriptors/GPUDescriptorsSet.hpp"
 
-void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, GPUContext* gpuContext)
+void GPUDescriptorsSet::init(const GPUDescriptorsSetData& gpuDescriptorsSetData, GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
-    mGPUDescriptorData = gpuGPUShaderDescriptorSetsData;
+    mGPUDescriptorData = gpuDescriptorsSetData;
     // LAYOUT
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
@@ -136,7 +136,7 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
     updateSamplers();
 }
 
-void GPUShaderDescriptorSets::updateBuffers()
+void GPUDescriptorsSet::updateBuffers()
 {
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -167,8 +167,8 @@ void GPUShaderDescriptorSets::updateBuffers()
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-            mGPUShaderDescriptorSetsBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrites[0].dstBinding);
-            mGPUShaderDescriptorSetsBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
+            mGPUDescriptorsSetBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrites[0].dstBinding);
+            mGPUDescriptorsSetBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
 
             auto descriptorWriteCount = (Core::u32) descriptorWrites.size();
             constexpr Core::u32 descriptorCopyCount = 0;
@@ -177,7 +177,7 @@ void GPUShaderDescriptorSets::updateBuffers()
         }
     }
 }
-void GPUShaderDescriptorSets::updateSamplers()
+void GPUDescriptorsSet::updateSamplers()
 {
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -200,8 +200,8 @@ void GPUShaderDescriptorSets::updateSamplers()
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pImageInfo = &imageInfo;
 
-            mGPUShaderDescriptorSetsBindings.mBindings.emplace(textureBinding.mName, descriptorWrites[0].dstBinding);
-            mGPUShaderDescriptorSetsBindings.mSets.emplace(textureBinding.mName,i);
+            mGPUDescriptorsSetBindings.mBindings.emplace(textureBinding.mName, descriptorWrites[0].dstBinding);
+            mGPUDescriptorsSetBindings.mSets.emplace(textureBinding.mName,i);
 
             auto descriptorWriteCount = (Core::u32) descriptorWrites.size();
             constexpr Core::u32 descriptorCopyCount = 0;
@@ -211,7 +211,7 @@ void GPUShaderDescriptorSets::updateSamplers()
     }
 }
 
-void GPUShaderDescriptorSets::terminate()
+void GPUDescriptorsSet::terminate()
 {
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);

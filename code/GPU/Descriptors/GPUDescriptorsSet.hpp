@@ -6,6 +6,7 @@
 
 class GPURenderPass;
 
+// TODO: rename
 class GPUShaderTextureBinding
 {
 public:
@@ -13,24 +14,24 @@ public:
     Core::WeakPtr<GPUTexture> mGPUTexture;
 };
 
-class GPUShaderDescriptorSetsData
+class GPUDescriptorsSetData
 {
 public:
     std::vector<GPUUniformBuffer> mUniformBuffers;
     std::vector<GPUShaderTextureBinding> mTextureBindings;
 };
 
-class GPUShaderDescriptorSetsBindings
+class GPUDescriptorsSetBindings
 {
 public:
     std::unordered_map<Core::HashedString, Core::u32> mBindings;
     std::unordered_map<Core::HashedString, Core::u32> mSets;
 };
 
-class GPUShaderDescriptorSets
+class GPUDescriptorsSet
 {    
 public:
-    void init(const GPUShaderDescriptorSetsData& gpuGPUShaderDescriptorSetsData, GPUContext* gpuContext);
+    void init(const GPUDescriptorsSetData& gpuDescriptorsSetData, GPUContext* gpuContext);
     void updateBuffers();
     void updateSamplers();
     void terminate();
@@ -40,8 +41,8 @@ public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
-    GPUShaderDescriptorSetsBindings mGPUShaderDescriptorSetsBindings;
-    GPUShaderDescriptorSetsData mGPUDescriptorData;
+    GPUDescriptorsSetBindings mGPUDescriptorsSetBindings;
+    GPUDescriptorsSetData mGPUDescriptorData;
     Core::u32 mSamplersBindingIndexOffset = 0;
 };
 

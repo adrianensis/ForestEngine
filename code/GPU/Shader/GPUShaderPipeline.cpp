@@ -4,13 +4,13 @@
 #include "vulkan/vulkan_core.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuGPUShaderPipelineData, GPUContext* gpuContext)
+void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData, GPUContext* gpuContext)
 {
-    mGPUShaderPipelineData = gpuGPUShaderPipelineData;
+    mGPUShaderPipelineData = gpuShaderPipelineData;
     mGPUContext = gpuContext;
 
-    mGPUShaderDescriptorSets = Core::OwnerPtr<GPUShaderDescriptorSets>::newObject();
-    mGPUShaderDescriptorSets->init(mGPUShaderPipelineData.mGPUShaderDescriptorSetsData, mGPUContext);
+    mGPUDescriptorsSet = Core::OwnerPtr<GPUDescriptorsSet>::newObject();
+    mGPUDescriptorsSet->init(mGPUShaderPipelineData.mGPUDescriptorsSetData, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
     mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
@@ -107,8 +107,8 @@ void GPUShaderPipeline::terminate()
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
     GPU_LOG("Destroyed Vulkan graphics pipeline layout");
 
-    mGPUShaderDescriptorSets->terminate();
-    mGPUShaderDescriptorSets.invalidate();
+    mGPUDescriptorsSet->terminate();
+    mGPUDescriptorsSet.invalidate();
 }
 
 void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const
@@ -121,7 +121,7 @@ void GPUShaderPipeline::enable() const
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     bind(vulkanCommandBuffer);
 
-    VkDescriptorSet descriptorSet = mGPUShaderDescriptorSets->descriptorSets[mGPUContext->currentFrame];
+    VkDescriptorSet descriptorSet = mGPUDescriptorsSet->descriptorSets[mGPUContext->currentFrame];
     VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     VkPipelineLayout pipelineLayout = mPipelineLayout;
     constexpr Core::u32 firstSet = 0;
@@ -266,7 +266,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &mGPUShaderDescriptorSets->descriptorSetLayout;
+    pipelineLayoutInfo.pSetLayouts = &mGPUDescriptorsSet->descriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 

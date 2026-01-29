@@ -192,7 +192,7 @@ void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpu
 {
     PROFILER_CPU()
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
-    Core::WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
+    Core::WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     const GPUInstanceRendererData& gpuRenderInstanceData = gpuInstanceRenderer->getGPUInstanceRendererData();
@@ -219,9 +219,9 @@ void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpu
         );
     }
 
-    gpuGPUShaderPipeline->enable();
+    gpuShaderPipeline->enable();
     gpuInstanceRenderer->render();
-    gpuGPUShaderPipeline->disable();
+    gpuShaderPipeline->disable();
 }
 
 void GPURenderPass::renderPass(const GPURenderPassOutputData& gpuRenderPassOutputData)

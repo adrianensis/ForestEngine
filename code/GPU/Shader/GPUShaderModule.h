@@ -15,7 +15,7 @@ public:
 class GPUShaderModule
 {
 public:
-    bool init(GPUContext* gpuContext, const GPUShaderModuleData& gpuGPUShaderModuleData);
+    bool init(GPUContext* gpuContext, const GPUShaderModuleData& gpuShaderModuleData);
     void terminate();
 private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
