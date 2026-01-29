@@ -25,57 +25,6 @@ public:
     bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
 
-class GPUDepthStencilData
-{
-public:
-    bool mStencilEnable = false;
-    bool mDepthTestEnable = true;
-    bool mDepthWriteEnable = true;
-    GPUCompareOp mDepthCompareOp = GPUCompareOp::LESS;
-    // aka ref
-    Core::u32 mStencilValue = 0;
-    GPUStencilFunction mStencilFunction = GPUStencilFunction::NOTEQUAL;
-    GPUStencilOp mStencilPassOp = GPUStencilOp::KEEP;
-    GPUStencilOp mStencilFailOp = GPUStencilOp::KEEP;
-    GPUStencilOp mDepthFailOp = GPUStencilOp::KEEP;
-    Core::u64 mParentId = 0;
-    Core::u64 mId = 0;
-
-    bool operator==(const GPUDepthStencilData& other) const
-    {
-        if(this == &other) {return true;}
-        return
-        mStencilEnable == other.mStencilEnable &&
-        mDepthTestEnable == other.mDepthTestEnable &&
-        mDepthWriteEnable == other.mDepthWriteEnable &&
-        mDepthCompareOp == other.mDepthCompareOp &&
-        mStencilValue == other.mStencilValue &&
-        mStencilFunction == other.mStencilFunction&&
-        mStencilPassOp == other.mStencilPassOp &&
-        mStencilFailOp == other.mStencilFailOp &&
-        mDepthFailOp == other.mDepthFailOp &&
-        mParentId == other.mParentId;
-        //mId == other.mId && 
-    }
-
-    Core::u64 hash() const
-    {
-        Core::u32 shift = 0;
-        Core::u64 result = 0;
-        result = result ^ static_cast<Core::u64>(mStencilEnable) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthTestEnable) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthWriteEnable) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthCompareOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilValue) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilFunction) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilPassOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilFailOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthFailOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mParentId) << (shift++);
-        return result;
-    }
-};
-
 class GPUShaderPropertiesBlockNames
 {
 public:
