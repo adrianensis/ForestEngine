@@ -20,7 +20,7 @@ void ModelRenderer::onECComponentAdded()
 		rendererData.mMesh = (*it).mMesh;
 		rendererData.mMeshInstanceMatrix = (*it).mMatrix;
 		rendererData.mShader = mModelRendererData.mModel->getMeshShaders().at((*it).mMesh);
-		rendererData.mGPUShaderStencilData = mModelRendererData.mGPUShaderStencilData;
+		rendererData.mGPUDepthStencilData = mModelRendererData.mGPUDepthStencilData;
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         EC::Entity* parent = getOwnerEntity();

@@ -104,7 +104,6 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     {
         gpuGPUShaderDescriptorSetsData,
         mGPUShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
-        shaderCompilationData.mGPUShaderPipelineDepthStencilData
     };
     gpuGPUShaderPipeline->init(gpuGPUShaderPipelineData, mGPUContext);
 

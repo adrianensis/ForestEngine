@@ -1,5 +1,6 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Image/GPUImageUtils.hpp"
+#include "GPU/InstanceRenderer/GPUInstanceRendererData.hpp"
 #include "GPU/Light/GPULight.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
@@ -146,33 +147,13 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     }
 
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
-    GPUShaderPipelineDepthStencilData gpuGPUShaderPipelineDepthStencilData;
-    gpuGPUShaderPipelineDepthStencilData.mDepthTestEnable = VK_TRUE; //bool
-    gpuGPUShaderPipelineDepthStencilData.mDepthWriteEnable = VK_TRUE; //bool
-    gpuGPUShaderPipelineDepthStencilData.mDepthCompareOp = VK_COMPARE_OP_LESS; //VkCompareOp
-    gpuGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable = VK_FALSE; //bool
-    gpuGPUShaderPipelineDepthStencilData.mStencilTestEnable = gpuInstanceRendererData.mGPUShaderStencilData.mUseStencil; //bool
-    
-    VkStencilOpState vkStencilOpState;
-    vkStencilOpState.failOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFailOp;
-    vkStencilOpState.passOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilPassOp;
-    vkStencilOpState.depthFailOp = (VkStencilOp) gpuInstanceRendererData.mGPUShaderStencilData.mDepthFailOp;
-    vkStencilOpState.compareOp = (VkCompareOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFunction;
-    vkStencilOpState.compareMask = 0xFF;
-    vkStencilOpState.writeMask = 0xFF;
-    vkStencilOpState.reference = 0;
 
-    gpuGPUShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
-    gpuGPUShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
-    gpuGPUShaderPipelineDepthStencilData.mMinDepthBounds = 0; //float
-    gpuGPUShaderPipelineDepthStencilData.mMaxDepthBounds = 0; //float
     GPUShaderCompilationData shaderCompilationData
     {
         Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
         Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
         uniformBuffers,
-        gpuInstanceRenderer->getGPUVertexBuffersContainer(),
-        gpuGPUShaderPipelineDepthStencilData
+        gpuInstanceRenderer->getGPUVertexBuffersContainer()
     };
 
     if(!mGPUShaderPipelines.contains(gpuInstanceRendererData))
@@ -213,25 +194,31 @@ void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpu
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     Core::WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     
-    auto& stencil = gpuInstanceRendererData.mGPUShaderStencilData;
-    VkCommandBuffer cmd = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame].getVkCommandBuffer();
+    const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
+    const GPUInstanceRendererData& gpuRenderInstanceData = gpuInstanceRenderer->getGPUInstanceRendererData();
 
-    if (stencil.mUseStencil) {
-        // Apply the dynamic states from the data object
-        vkCmdSetStencilReference(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, stencil.mStencilValue);
-        vkCmdSetStencilCompareMask(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
-        vkCmdSetStencilWriteMask(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
+    mGPUContext->function_vkCmdSetStencilTestEnableEXT(vulkanCommandBuffer.getVkCommandBuffer(), gpuRenderInstanceData.mGPUDepthStencilData.mStencilEnable);
+
+    vkCmdSetDepthTestEnable(vulkanCommandBuffer.getVkCommandBuffer(), gpuRenderInstanceData.mGPUDepthStencilData.mDepthTestEnable);
+    vkCmdSetDepthWriteEnable(vulkanCommandBuffer.getVkCommandBuffer(), gpuRenderInstanceData.mGPUDepthStencilData.mDepthWriteEnable);
+    vkCmdSetDepthCompareOp(vulkanCommandBuffer.getVkCommandBuffer(), (VkCompareOp)gpuRenderInstanceData.mGPUDepthStencilData.mDepthCompareOp);
+
+    if (gpuRenderInstanceData.mGPUDepthStencilData.mStencilEnable)
+    {
+        vkCmdSetStencilReference(vulkanCommandBuffer.getVkCommandBuffer(), VK_STENCIL_FACE_FRONT_AND_BACK, gpuRenderInstanceData.mGPUDepthStencilData.mStencilValue);
+        vkCmdSetStencilCompareMask(vulkanCommandBuffer.getVkCommandBuffer(), VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
+        vkCmdSetStencilWriteMask(vulkanCommandBuffer.getVkCommandBuffer(), VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
 
         mGPUContext->function_vkCmdSetStencilOpEXT(
-            cmd, 
-            VK_STENCIL_FACE_FRONT_AND_BACK, 
-            (VkStencilOp)stencil.mStencilFailOp, 
-            (VkStencilOp)stencil.mStencilPassOp, 
-            (VkStencilOp)stencil.mDepthFailOp, 
-            (VkCompareOp)stencil.mStencilFunction
+        vulkanCommandBuffer.getVkCommandBuffer(), 
+        VK_STENCIL_FACE_FRONT_AND_BACK, 
+        (VkStencilOp)gpuRenderInstanceData.mGPUDepthStencilData.mStencilFailOp, 
+        (VkStencilOp)gpuRenderInstanceData.mGPUDepthStencilData.mStencilPassOp, 
+        (VkStencilOp)gpuRenderInstanceData.mGPUDepthStencilData.mDepthFailOp, 
+        (VkCompareOp)gpuRenderInstanceData.mGPUDepthStencilData.mStencilFunction
         );
     }
-    
+
     gpuGPUShaderPipeline->enable();
     gpuInstanceRenderer->render();
     gpuGPUShaderPipeline->disable();

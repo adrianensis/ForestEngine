@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "Core/Memory/ByteBuffer.hpp"
@@ -23,10 +24,13 @@ public:
     bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
 
-class GPUShaderStencilData
+class GPUDepthStencilData
 {
 public:
-    bool mUseStencil = false;
+    bool mStencilEnable = false;
+    bool mDepthTestEnable = true;
+    bool mDepthWriteEnable = true;
+    GPUCompareOp mDepthCompareOp = GPUCompareOp::LESS;
     // aka ref
     Core::u32 mStencilValue = 0;
     GPUStencilFunction mStencilFunction = GPUStencilFunction::NOTEQUAL;
@@ -36,11 +40,11 @@ public:
     Core::u64 mParentId = 0;
     Core::u64 mId = 0;
 
-    bool operator==(const GPUShaderStencilData& other) const
+    bool operator==(const GPUDepthStencilData& other) const
     {
         if(this == &other) {return true;}
         return
-        mUseStencil == other.mUseStencil and
+        mStencilEnable == other.mStencilEnable and
         mStencilValue == other.mStencilValue and
         mParentId == other.mParentId and
         //mId == other.mId && 
@@ -50,7 +54,7 @@ public:
     Core::u64 hash() const
     {
         Core::u32 shift = 0;
-        Core::u64 result = (Core::u64)mUseStencil << (shift++);
+        Core::u64 result = (Core::u64)mStencilEnable << (shift++);
         result = result ^ (Core::u64)mStencilValue << (shift++);
         result = result ^ static_cast<Core::u64>(mStencilFunction) << (shift++);
         result = result ^ (Core::u64)mParentId << (shift++); /*^ (Core::u64)mId*/;
@@ -74,7 +78,6 @@ public:
     Core::HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
-    GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
 };
 
 class GPUShaderGenerationDataCommon

@@ -388,12 +388,12 @@ void UIElement::setColorHover()
     mRenderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();
 }
 
-GPUShaderStencilData UIElement::calculateStencilData() const
+GPUDepthStencilData UIElement::calculateStencilData() const
 {
-    GPUShaderStencilData shaderStencilData;
+    GPUDepthStencilData shaderStencilData;
     if(mClipChildren)
     {
-        shaderStencilData.mUseStencil = true;
+        shaderStencilData.mStencilEnable = true;
         shaderStencilData.mStencilValue = 0;
         shaderStencilData.mStencilFunction = GPUStencilFunction::EQUAL;
         shaderStencilData.mStencilPassOp = GPUStencilOp::INCR;
@@ -403,8 +403,8 @@ GPUShaderStencilData UIElement::calculateStencilData() const
             UIElement* parentUIElement = CAST(UIElement, mConfig.mParent);
             if(parentUIElement)
             {
-                GPUShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
-                if(parentStencilData.mUseStencil)
+                GPUDepthStencilData parentStencilData = parentUIElement->calculateStencilData();
+                if(parentStencilData.mStencilEnable)
                 {
                     shaderStencilData = parentStencilData;
                     // if direct parent is clipping shape, then increment mask
@@ -424,8 +424,8 @@ GPUShaderStencilData UIElement::calculateStencilData() const
             UIElement* parentUIElement = CAST(UIElement, mConfig.mParent);
             if(parentUIElement)
             {
-                GPUShaderStencilData parentStencilData = parentUIElement->calculateStencilData();
-                if(parentStencilData.mUseStencil)
+                GPUDepthStencilData parentStencilData = parentUIElement->calculateStencilData();
+                if(parentStencilData.mStencilEnable)
                 {
                     shaderStencilData = parentStencilData;
                     // if direct parent is clipping shape, then increment mask

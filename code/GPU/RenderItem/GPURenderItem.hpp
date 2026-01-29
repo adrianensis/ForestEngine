@@ -6,7 +6,7 @@
 class GPURenderItemData
 {
 public:
-    GPUShaderStencilData mGPUShaderStencilData;
+    GPUDepthStencilData mGPUDepthStencilData;
     Core::WeakPtr<const GPUMesh> mMesh;
     Maths::Matrix4 mMeshInstanceMatrix = Maths::Matrix4::smIdentity;
     Core::WeakPtr<GPUShader> mShader;

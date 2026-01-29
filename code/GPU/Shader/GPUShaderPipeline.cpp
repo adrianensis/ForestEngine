@@ -250,16 +250,16 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     // depth
-    depthStencil.depthTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthTestEnable;
-    depthStencil.depthWriteEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthWriteEnable;
-    depthStencil.depthCompareOp = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthCompareOp;
-    depthStencil.depthBoundsTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable;
-    depthStencil.maxDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMaxDepthBounds;
-    depthStencil.minDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMinDepthBounds;
+    depthStencil.depthTestEnable = VK_FALSE;
+    depthStencil.depthWriteEnable = VK_FALSE;
+    depthStencil.depthCompareOp = VkCompareOp::VK_COMPARE_OP_LESS;
+    depthStencil.depthBoundsTestEnable = VK_FALSE;
+    depthStencil.maxDepthBounds = 0;
+    depthStencil.minDepthBounds = 0;
     // stencil
-    depthStencil.stencilTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilTestEnable;
-    depthStencil.front = VkStencilOpState{}; // default
-    depthStencil.back = VkStencilOpState{}; // default
+    depthStencil.stencilTestEnable = VK_FALSE;
+    depthStencil.front = VkStencilOpState{};
+    depthStencil.back = VkStencilOpState{};
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -279,6 +279,11 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
         VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK,
         VK_DYNAMIC_STATE_STENCIL_WRITE_MASK,
         VK_DYNAMIC_STATE_STENCIL_REFERENCE,
+        VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE,        
+        VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE,            
+        VK_DYNAMIC_STATE_DEPTH_COMPARE_OP,            
+        VK_DYNAMIC_STATE_DEPTH_BIAS,            
+        VK_DYNAMIC_STATE_DEPTH_BOUNDS,        
         VK_DYNAMIC_STATE_STENCIL_OP_EXT
     };
     VkPipelineDynamicStateCreateInfo dynamicState = {};

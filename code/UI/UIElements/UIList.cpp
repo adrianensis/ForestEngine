@@ -43,7 +43,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
-    rendererData.mGPUShaderStencilData = calculateStencilData();
+    rendererData.mGPUDepthStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };

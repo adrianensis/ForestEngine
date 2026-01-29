@@ -72,6 +72,7 @@ public:
     #endif
     
     GPU_EXTENSION_FUNCTION_TYPE(vkCmdSetStencilOpEXT) function_vkCmdSetStencilOpEXT;
+    GPU_EXTENSION_FUNCTION_TYPE(vkCmdSetStencilTestEnableEXT) function_vkCmdSetStencilTestEnableEXT;
     
 private:
     Core::u32 mBindingPointsIndexUniform = 0;

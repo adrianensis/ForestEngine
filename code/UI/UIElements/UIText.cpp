@@ -23,7 +23,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
     GPURenderItemData rendererData;
     rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
     rendererData.mShader = GET_SYSTEM(UIManager).getFontShader();
-    rendererData.mGPUShaderStencilData = calculateStencilData();
+    rendererData.mGPUDepthStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };

@@ -52,21 +52,11 @@ void GPUInstanceRenderer::render()
 void GPUInstanceRenderer::enable()
 {
     mGPUVertexBuffersContainer.enable(mGPUContext);
-
-    if(mGPUInstanceRendererData.mGPUShaderStencilData.mUseStencil)
-    {
-//        GET_SYSTEM(GPUInterface).enableStencil(mGPUInstanceRendererData.mGPUShaderStencilData.mStencilValue, mGPUInstanceRendererData.mGPUShaderStencilData.mStencilFunction, mGPUInstanceRendererData.mGPUShaderStencilData.mStencilPassOp);
-    }
 }
 
 void GPUInstanceRenderer::disable()
 {
-    if(mGPUInstanceRendererData.mGPUShaderStencilData.mUseStencil)
-    {
-//        GET_SYSTEM(GPUInterface).disableStencil();
-    }
 
-    // mGPUVertexBuffersContainer.disable();
 }
 
 void GPUInstanceRenderer::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)

@@ -65,6 +65,7 @@ void GPUContext::init(IGPUWindow* gpuWindow)
         CHECK_MSG(false, "Could not initialize Vulkan command buffers");
     }
     function_vkCmdSetStencilOpEXT = GPU_LOAD_EXTENSION_FUNCTION(vkCmdSetStencilOpEXT);
+    function_vkCmdSetStencilTestEnableEXT = GPU_LOAD_EXTENSION_FUNCTION(vkCmdSetStencilTestEnableEXT);
 
 #ifdef ENGINE_ENABLE_PROFILER
     profilingCommandPool = Core::OwnerPtr<GPUCommandPool>::newObject();

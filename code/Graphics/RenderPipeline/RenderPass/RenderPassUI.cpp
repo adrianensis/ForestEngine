@@ -22,16 +22,16 @@ void RenderPassUI::renderStencilCascade(Core::u64 id)
     FOR_LIST(it, mGPUInstanceRendererRegistry.getGPUInstanceRendererDataSet())
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
-		if(id == gpuInstanceRendererData.mGPUShaderStencilData.mId)
+		if(id == gpuInstanceRendererData.mGPUDepthStencilData.mId)
 		{
-            if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
+            if(gpuInstanceRendererData.mGPUDepthStencilData.mParentId > 0)
             {
-                renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mParentId);
+                renderStencilCascade(gpuInstanceRendererData.mGPUDepthStencilData.mParentId);
             }
 
-            if(!mStencilsRendered.contains(gpuInstanceRendererData.mGPUShaderStencilData.mId))
+            if(!mStencilsRendered.contains(gpuInstanceRendererData.mGPUDepthStencilData.mId))
             {
-                mStencilsRendered.insert(gpuInstanceRendererData.mGPUShaderStencilData.mId);
+                mStencilsRendered.insert(gpuInstanceRendererData.mGPUDepthStencilData.mId);
                 renderGPUInstanceRenderer(gpuInstanceRendererData);
             }
 
@@ -52,9 +52,9 @@ void RenderPassUI::render()
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
         Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
-        if(gpuInstanceRendererData.mGPUShaderStencilData.mUseStencil)
+        if(gpuInstanceRendererData.mGPUDepthStencilData.mStencilEnable)
         {
-            if(gpuInstanceRendererData.mGPUShaderStencilData.mParentId > 0)
+            if(gpuInstanceRendererData.mGPUDepthStencilData.mParentId > 0)
             {
                 stencilGPUInstanceRendererRenderers.push_back(gpuInstanceRendererData);
             }
@@ -67,8 +67,8 @@ void RenderPassUI::render()
 
     auto compareStencilBatch = [](GPUInstanceRendererData b1, GPUInstanceRendererData b2)
     {
-        Core::u64 o1 = b1.mGPUShaderStencilData.mParentId;
-        Core::u64 o2 = b2.mGPUShaderStencilData.mParentId;
+        Core::u64 o1 = b1.mGPUDepthStencilData.mParentId;
+        Core::u64 o2 = b2.mGPUDepthStencilData.mParentId;
         return (o1 < o2);
     };
   
@@ -78,14 +78,14 @@ void RenderPassUI::render()
     FOR_LIST(it, stencilGPUInstanceRendererRenderers)
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
-        if(currentId != gpuInstanceRendererData.mGPUShaderStencilData.mParentId)
+        if(currentId != gpuInstanceRendererData.mGPUDepthStencilData.mParentId)
         {
 //            GET_SYSTEM(GPUInterface).clearStencil();
         }
 
-        currentId = gpuInstanceRendererData.mGPUShaderStencilData.mParentId;
+        currentId = gpuInstanceRendererData.mGPUDepthStencilData.mParentId;
 
-        renderStencilCascade(gpuInstanceRendererData.mGPUShaderStencilData.mId);
+        renderStencilCascade(gpuInstanceRendererData.mGPUDepthStencilData.mId);
 	}
 
 //    GET_SYSTEM(GPUInterface).clearStencil();

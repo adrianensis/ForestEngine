@@ -10,14 +10,14 @@ public:
 	Core::WeakPtr<GPUShader> mShader;
 	Core::WeakPtr<const GPUMesh> mMesh;
 	bool mIsStatic = true;
-    GPUShaderStencilData mGPUShaderStencilData;
+    GPUDepthStencilData mGPUDepthStencilData;
 
 	void init(Core::WeakPtr<GPURenderItem> renderItem)
     {
         mShader = renderItem->getGPURenderItemData().mShader;
         mMesh = renderItem->getGPURenderItemData().mMesh;
         mIsStatic = renderItem->isStatic();
-        mGPUShaderStencilData = renderItem->getGPURenderItemData().mGPUShaderStencilData;
+        mGPUDepthStencilData = renderItem->getGPURenderItemData().mGPUDepthStencilData;
     }
 
 	bool operator==(const GPUInstanceRendererData& otherGPUInstanceRendererData) const
@@ -25,7 +25,7 @@ public:
         bool result = mShader == otherGPUInstanceRendererData.mShader and
         mMesh == otherGPUInstanceRendererData.mMesh and
         mIsStatic == otherGPUInstanceRendererData.mIsStatic and
-        mGPUShaderStencilData == otherGPUInstanceRendererData.mGPUShaderStencilData;
+        mGPUDepthStencilData == otherGPUInstanceRendererData.mGPUDepthStencilData;
         return result;
 	}
 
@@ -38,9 +38,9 @@ public:
             Core::u64 result = key.mShader->getID() << (shift++);
             result = result ^ key.mMesh->mMeshID << (shift++);
 			result = result ^ static_cast<Core::u64>(key.mIsStatic) << (shift++);
-            if(key.mGPUShaderStencilData.mUseStencil)
+            if(key.mGPUDepthStencilData.mStencilEnable)
             {
-                result = result ^ (key.mGPUShaderStencilData.hash() << (shift++));
+                result = result ^ (key.mGPUDepthStencilData.hash() << (shift++));
             }
             
             return result;

@@ -4,6 +4,7 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Shader/GPUShaderDescriptorSets.hpp"
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
+#include "vulkan/vulkan_core.h"
 
 class GPURenderPass;
 
@@ -33,15 +34,6 @@ class GPUShaderPipelineData
 public:
     GPUShaderDescriptorSetsData mGPUShaderDescriptorSetsData;
     std::vector<GPUVertexBuffer> mVertexInputBuffers;
-    GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
-};
-
-class GPUShaderCompile
-{
-public:
-    GPUShaderDescriptorSetsData mGPUShaderDescriptorSetsData;
-    std::vector<GPUVertexBuffer> mVertexInputBuffers;
-    GPUShaderPipelineDepthStencilData mGPUShaderPipelineDepthStencilData;
 };
 
 class GPUShaderPipeline
