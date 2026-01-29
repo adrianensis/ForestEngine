@@ -160,7 +160,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     vkStencilOpState.compareOp = (VkCompareOp) gpuInstanceRendererData.mGPUShaderStencilData.mStencilFunction;
     vkStencilOpState.compareMask = 0xFF;
     vkStencilOpState.writeMask = 0xFF;
-    vkStencilOpState.reference = gpuInstanceRendererData.mGPUShaderStencilData.mStencilValue;
+    vkStencilOpState.reference = 0;
 
     gpuGPUShaderPipelineDepthStencilData.mStencilFront = vkStencilOpState;
     gpuGPUShaderPipelineDepthStencilData.mStencilBack = vkStencilOpState;
@@ -212,6 +212,17 @@ void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpu
     PROFILER_CPU()
     Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     Core::WeakPtr<GPUShaderPipeline> gpuGPUShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
+    
+    auto& stencil = gpuInstanceRendererData.mGPUShaderStencilData;
+    VkCommandBuffer cmd = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame].getVkCommandBuffer();
+
+    if (stencil.mUseStencil) {
+        // Apply the dynamic states from the data object
+        vkCmdSetStencilReference(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, stencil.mStencilValue);
+        vkCmdSetStencilCompareMask(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
+        vkCmdSetStencilWriteMask(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
+    }
+    
     gpuGPUShaderPipeline->enable();
     gpuInstanceRenderer->render();
     gpuGPUShaderPipeline->disable();
