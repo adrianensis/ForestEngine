@@ -133,85 +133,84 @@ void GPUDescriptorsSet::init(const GPUDescriptorsSetData& gpuDescriptorsSetData,
         CHECK_MSG(false, "Could not allocate [{}] descriptor sets", allocInfo.descriptorSetCount);
     }
 
-    updateBuffers();
-    updateSamplers();
+    update();
 }
 
-void GPUDescriptorsSet::updateBuffers()
+void GPUDescriptorsSet::update()
 {
+    std::vector<VkWriteDescriptorSet> writes;
+
+    std::vector<VkDescriptorBufferInfo> bufferInfos;
+    std::vector<VkDescriptorImageInfo> imageInfos;
+
+    size_t numBuffers = mGPUDescriptorData.mUniformBuffers.size() * GPUContext::MAX_FRAMES_IN_FLIGHT;
+    size_t numImages = mGPUDescriptorData.mTextureBindings.size() * GPUContext::MAX_FRAMES_IN_FLIGHT;
+    
+    writes.reserve(numBuffers + numImages);
+    bufferInfos.reserve(numBuffers);
+    imageInfos.reserve(numImages);
+
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
         FOR_ARRAY(j, mGPUDescriptorData.mUniformBuffers)
         {
             const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[j];
 
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // PERF: make double buffered!!
+            VkDescriptorBufferInfo& bufferInfo = bufferInfos.emplace_back();
+            bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // TODO: make double buffered!!
             bufferInfo.offset = 0;
             bufferInfo.range = uniformBuffer.getSize();
 
-            std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
-
-            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = descriptorSets[i];
-            descriptorWrites[0].dstBinding = j;
-            descriptorWrites[0].dstArrayElement = 0;
+            VkWriteDescriptorSet& descriptorWrite = writes.emplace_back();
+            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite.dstSet = descriptorSets[i];
+            descriptorWrite.dstBinding = j;
+            descriptorWrite.dstArrayElement = 0;
             switch (uniformBuffer.getGPUUniformBufferData().mType)
             {
             case GPUBufferType::UNIFORM:
-                descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                 break;
             case GPUBufferType::STORAGE:
-                descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                 break;
             default:
                 CHECK_MSG(false, "Not supported buffer type!")
             }
-            descriptorWrites[0].descriptorCount = 1;
-            descriptorWrites[0].pBufferInfo = &bufferInfo;
+            descriptorWrite.descriptorCount = 1;
+            descriptorWrite.pBufferInfo = &bufferInfo;
 
-            mGPUDescriptorsSetBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrites[0].dstBinding);
+            mGPUDescriptorsSetBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrite.dstBinding);
             mGPUDescriptorsSetBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
-
-            auto descriptorWriteCount = (Core::u32) descriptorWrites.size();
-            constexpr Core::u32 descriptorCopyCount = 0;
-            constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
-            vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
-    }
-}
-void GPUDescriptorsSet::updateSamplers()
-{
-    for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
-    {
+
         FOR_ARRAY(j, mGPUDescriptorData.mTextureBindings)
         {
             const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[j];
 
-            VkDescriptorImageInfo imageInfo{};
+            VkDescriptorImageInfo& imageInfo = imageInfos.emplace_back();
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             imageInfo.imageView = textureBinding.mGPUTexture->mTextureImageView;
             imageInfo.sampler = textureBinding.mGPUTexture->mTextureSampler;
 
-            std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
+            VkWriteDescriptorSet& descriptorWrite = writes.emplace_back();
+            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite.dstSet = descriptorSets[i];
+            descriptorWrite.dstBinding = j + mSamplersBindingIndexOffset;
+            descriptorWrite.dstArrayElement = 0;
+            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrite.descriptorCount = 1;
+            descriptorWrite.pImageInfo = &imageInfo;
 
-            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = descriptorSets[i];
-            descriptorWrites[0].dstBinding = j + mSamplersBindingIndexOffset;
-            descriptorWrites[0].dstArrayElement = 0;
-            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrites[0].descriptorCount = 1;
-            descriptorWrites[0].pImageInfo = &imageInfo;
-
-            mGPUDescriptorsSetBindings.mBindings.emplace(textureBinding.mName, descriptorWrites[0].dstBinding);
+            mGPUDescriptorsSetBindings.mBindings.emplace(textureBinding.mName, descriptorWrite.dstBinding);
             mGPUDescriptorsSetBindings.mSets.emplace(textureBinding.mName,i);
-
-            auto descriptorWriteCount = (Core::u32) descriptorWrites.size();
-            constexpr Core::u32 descriptorCopyCount = 0;
-            constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
-            vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, descriptorWrites.data(), descriptorCopyCount, descriptorCopies);
         }
     }
+
+    auto descriptorWriteCount = (Core::u32) writes.size();
+    constexpr Core::u32 descriptorCopyCount = 0;
+    constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
+    vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, writes.data(), descriptorCopyCount, descriptorCopies);
 }
 
 void GPUDescriptorsSet::terminate()

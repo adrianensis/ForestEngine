@@ -32,8 +32,7 @@ class GPUDescriptorsSet
 {    
 public:
     void init(const GPUDescriptorsSetData& gpuDescriptorsSetData, GPUContext* gpuContext);
-    void updateBuffers();
-    void updateSamplers();
+    void update();
     void terminate();
 private:
     GPUContext* mGPUContext = nullptr;
