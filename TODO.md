@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Optimize Graphics/Module.hpp
+- [ ] Improving load times with a pipeline cache, VkPipelineCache
 - [ ] Change WeakPtr by Ref non-ownership dependant references (for example: pointers to GPUContext)
 - [ ] Review virtual destructors (clean + build to see all the warnings)
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
@@ -22,6 +22,8 @@
 - [ ] Texture Arrays
 - [ ] Sparse Textures
 - [ ] Compress textures? Why/When?
+- [ ] parallel vulkan queues (multithreading) (from Mastering programming graphics with Vulkan, Chapter 3)
+- [ ] timeline semaphore to synchronize execution across the graphics and compute queue (from Mastering programming graphics with Vulkan, Chapter 5)
 
 - Use Octree to calculate visibility? (frustum culling with octree?). Don't put model matrix in UBO if occluded.
 - Threads - split render and logic in different threads
