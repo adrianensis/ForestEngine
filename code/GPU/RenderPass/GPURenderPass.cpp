@@ -125,39 +125,39 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
 {
     PROFILER_CPU_NAMED(RenderPass_compileShader)
 
-    std::vector<GPUUniformBuffer> uniformBuffers;
-    uniformBuffers.push_back(mGPUShaderManager->getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
-
-    Core::WeakPtr<GPUSkeletonState> skeletonState = mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
-    if(skeletonState)
-    {
-        uniformBuffers.push_back(mGPUSkeletalAnimationManager->getSkeletonRenderStateGPUUniformBuffer(skeletonState));
-    }
-
-    uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
-    uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
-    
-    if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mLightsBufferData))
-    {
-        uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mLightsBufferData));
-    }  
-    if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData))
-    {
-        uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData));
-    }
-
-    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
-
-    GPUShaderCompilationData shaderCompilationData
-    {
-        Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-        Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
-        uniformBuffers,
-        gpuInstanceRenderer->getGPUVertexBuffersContainer()
-    };
-
     if(!mGPUShaderPipelines.contains(gpuInstanceRendererData))
     {
+        std::vector<GPUUniformBuffer> uniformBuffers;
+        uniformBuffers.push_back(mGPUShaderManager->getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
+
+        Core::WeakPtr<GPUSkeletonState> skeletonState = mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+        if(skeletonState)
+        {
+            uniformBuffers.push_back(mGPUSkeletalAnimationManager->getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+        }
+
+        uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
+        uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
+        
+        if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mLightsBufferData))
+        {
+            uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mLightsBufferData));
+        }  
+        if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData))
+        {
+            uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData));
+        }
+
+        Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+
+        GPUShaderCompilationData shaderCompilationData
+        {
+            Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
+            Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
+            uniformBuffers,
+            gpuInstanceRenderer->getGPUVertexBuffersContainer()
+        };
+
         mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));
     }
 }
