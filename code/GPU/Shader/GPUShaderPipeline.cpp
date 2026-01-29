@@ -250,6 +250,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     // depth
+    // NOTE: default values, overwritten by dynamic state
     depthStencil.depthTestEnable = VK_FALSE;
     depthStencil.depthWriteEnable = VK_FALSE;
     depthStencil.depthCompareOp = VkCompareOp::VK_COMPARE_OP_LESS;
@@ -257,6 +258,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     depthStencil.maxDepthBounds = 0;
     depthStencil.minDepthBounds = 0;
     // stencil
+    // NOTE: default values, overwritten by dynamic state
     depthStencil.stencilTestEnable = VK_FALSE;
     depthStencil.front = VkStencilOpState{};
     depthStencil.back = VkStencilOpState{};
