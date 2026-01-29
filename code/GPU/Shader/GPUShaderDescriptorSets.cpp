@@ -24,6 +24,8 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
         case GPUBufferType::STORAGE:
             layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
             break;
+        default:
+            CHECK_MSG(false, "Not supported buffer type!")
         }
 
         bindings.push_back(layoutBinding);
@@ -44,10 +46,21 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
         bindings.push_back(layoutBinding);
     }
 
+    VkDescriptorBindingFlags bindingFlags = 
+    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | 
+    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
+
+    VkDescriptorSetLayoutBindingFlagsCreateInfo vkDescriptorSetLayoutBindingFlagsCreateInfo{};
+    vkDescriptorSetLayoutBindingFlagsCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+    vkDescriptorSetLayoutBindingFlagsCreateInfo.pBindingFlags = &bindingFlags;
+    vkDescriptorSetLayoutBindingFlagsCreateInfo.pNext = nullptr;
+
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     layoutInfo.bindingCount = static_cast<Core::u32>(bindings.size());
     layoutInfo.pBindings = bindings.data();
+    layoutInfo.pNext = &vkDescriptorSetLayoutBindingFlagsCreateInfo;
+    layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
 
     constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     if (vkCreateDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &descriptorSetLayout) != VK_SUCCESS)
@@ -55,18 +68,27 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
         CHECK_MSG(false, "Could not create descrptor set layout");
     }
 
+    VkPhysicalDeviceDescriptorIndexingProperties indexingProps{};
+    indexingProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES;
+
+    VkPhysicalDeviceProperties2 deviceProps{};
+    deviceProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+    deviceProps.pNext = &indexingProps;
+
+    vkGetPhysicalDeviceProperties2(mGPUContext->vulkanPhysicalDevice->getPhysicalDevice(), &deviceProps);
+
     // POOL
-    // TODO: select a correct poolSizes[0].descriptorCount number
     std::array<VkDescriptorPoolSize, 3> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    poolSizes[0].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mUniformBuffers.size();
+    poolSizes[0].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindStorageBuffers;
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[1].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mUniformBuffers.size();
+    poolSizes[1].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindUniformBuffers;
     poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[2].descriptorCount = 8;//GPUContext::MAX_FRAMES_IN_FLIGHT * mGPUDescriptorData.mTextureBindings.size();
+    poolSizes[2].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindSamplers;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
     poolInfo.poolSizeCount = (Core::u32) poolSizes.size();
     poolInfo.pPoolSizes = poolSizes.data();
     // TODO: select a correct poolInfo.maxSets number
@@ -90,8 +112,16 @@ void GPUShaderDescriptorSets::init(const GPUShaderDescriptorSetsData& gpuGPUShad
     // SETS
     std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 
+    VkDescriptorSetVariableDescriptorCountAllocateInfoEXT count_info;
+    count_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
+    count_info.pNext = nullptr;
+    Core::u32 max_binding = indexingProps.maxDescriptorSetUpdateAfterBindSampledImages - 1;
+    count_info.descriptorSetCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
+    count_info.pDescriptorCounts = &max_binding;
+
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.pNext = &count_info;
     allocInfo.descriptorPool = descriptorPool;
     allocInfo.descriptorSetCount = GPUContext::MAX_FRAMES_IN_FLIGHT;
     allocInfo.pSetLayouts = layouts.data();
