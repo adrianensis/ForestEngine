@@ -163,6 +163,8 @@ void GPUDescriptorsSet::updateBuffers()
             case GPUBufferType::STORAGE:
                 descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                 break;
+            default:
+                CHECK_MSG(false, "Not supported buffer type!")
             }
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
