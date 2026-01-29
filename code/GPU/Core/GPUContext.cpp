@@ -64,6 +64,7 @@ void GPUContext::init(IGPUWindow* gpuWindow)
     {
         CHECK_MSG(false, "Could not initialize Vulkan command buffers");
     }
+    function_vkCmdSetStencilOpEXT = GPU_LOAD_EXTENSION_FUNCTION(vkCmdSetStencilOpEXT);
 
 #ifdef ENGINE_ENABLE_PROFILER
     profilingCommandPool = Core::OwnerPtr<GPUCommandPool>::newObject();
@@ -401,7 +402,7 @@ PFN_vkVoidFunction GPUContext::loadExtensionFunctionInternal(const char* extensi
 {
     GPU_LOG("Loading Extension Function: ")
     GPU_LOG(extensionFunctionName)
-    const char* functionName = TO_STRING(extensionFunctionName);\
+    const char* functionName = extensionFunctionName;
     auto function = vkGetInstanceProcAddr(gpuVulkanInstance->getVkInstance(), functionName);
     if (function == nullptr)
     {

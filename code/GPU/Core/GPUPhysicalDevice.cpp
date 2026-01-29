@@ -131,14 +131,22 @@ void GPUPhysicalDevice::findAvailableDevices(std::vector<GPUDeviceInfo>& outDevi
         device.mProperties.pNext = &device.mSubgroupProperties;
         vkGetPhysicalDeviceProperties2(vkPhysicalDevice, &device.mProperties);
 
+        // extended features (for stencil dynamic op)
+        device.mExtendedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
+        device.mExtendedFeatures.pNext = nullptr;
+        device.mExtendedFeatures.extendedDynamicState = VK_TRUE;
+
         // indexing features for bindless
         device.mIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
-        device.mIndexingFeatures.pNext = nullptr;
+        device.mIndexingFeatures.pNext = &device.mExtendedFeatures;
+        device.mIndexingFeatures.descriptorBindingPartiallyBound = VK_TRUE;
+        device.mIndexingFeatures.runtimeDescriptorArray = VK_TRUE;
         
         // Define the specific 1.3 features (contains dynamicRendering)
         device.m13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
         device.m13Features.dynamicRendering = VK_TRUE; 
         device.m13Features.pNext = &device.mIndexingFeatures; 
+        device.m13Features.dynamicRendering = VK_TRUE;
         
         // Define the top-level Features2 structure
         device.mFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -195,7 +203,8 @@ std::vector<const char*>& GPUPhysicalDevice::getRequiredExtensions() const
     {
             VK_KHR_SWAPCHAIN_EXTENSION_NAME,
             // VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME is included in 1.3, but this help us to detect missing device support.
-            VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME
+            VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
+            VK_EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME
     };
     return extensions;
 }
@@ -349,13 +358,16 @@ bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures2& ava
 {
     VkPhysicalDeviceVulkan13Features* features13 = static_cast<VkPhysicalDeviceVulkan13Features*>(availableDeviceFeatures.pNext);
     VkPhysicalDeviceDescriptorIndexingFeatures* indexingFeatures = static_cast<VkPhysicalDeviceDescriptorIndexingFeatures*>(features13->pNext);
+    VkPhysicalDeviceExtendedDynamicStateFeaturesEXT* extendedDynamicStateFeaturesEXT = static_cast<VkPhysicalDeviceExtendedDynamicStateFeaturesEXT*>(indexingFeatures->pNext);
     return availableDeviceFeatures.features.samplerAnisotropy && 
     availableDeviceFeatures.features.shaderSampledImageArrayDynamicIndexing
     && features13 != nullptr
     && features13->dynamicRendering
     && indexingFeatures
     && indexingFeatures->descriptorBindingPartiallyBound
-    && indexingFeatures->runtimeDescriptorArray;
+    && indexingFeatures->runtimeDescriptorArray
+    && extendedDynamicStateFeaturesEXT
+    && extendedDynamicStateFeaturesEXT->extendedDynamicState;
 }
 
 bool GPUPhysicalDevice::hasRequiredExtensions(const std::vector<VkExtensionProperties>& availableDeviceExtensions) const

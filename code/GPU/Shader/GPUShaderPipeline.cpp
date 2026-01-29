@@ -249,15 +249,17 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
 
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    // depth
     depthStencil.depthTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthTestEnable;
     depthStencil.depthWriteEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthWriteEnable;
     depthStencil.depthCompareOp = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthCompareOp;
     depthStencil.depthBoundsTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mDepthBoundsTestEnable;
-    depthStencil.stencilTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilTestEnable;
-    depthStencil.front = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilFront;
-    depthStencil.back = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilBack;
-    depthStencil.minDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMinDepthBounds;
     depthStencil.maxDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMaxDepthBounds;
+    depthStencil.minDepthBounds = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mMinDepthBounds;
+    // stencil
+    depthStencil.stencilTestEnable = mGPUShaderPipelineData.mGPUShaderPipelineDepthStencilData.mStencilTestEnable;
+    depthStencil.front = VkStencilOpState{}; // default
+    depthStencil.back = VkStencilOpState{}; // default
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -276,7 +278,8 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
         VK_DYNAMIC_STATE_SCISSOR,
         VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK,
         VK_DYNAMIC_STATE_STENCIL_WRITE_MASK,
-        VK_DYNAMIC_STATE_STENCIL_REFERENCE
+        VK_DYNAMIC_STATE_STENCIL_REFERENCE,
+        VK_DYNAMIC_STATE_STENCIL_OP_EXT
     };
     VkPipelineDynamicStateCreateInfo dynamicState = {};
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;

@@ -221,6 +221,15 @@ void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpu
         vkCmdSetStencilReference(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, stencil.mStencilValue);
         vkCmdSetStencilCompareMask(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
         vkCmdSetStencilWriteMask(cmd, VK_STENCIL_FACE_FRONT_AND_BACK, 0xFF);
+
+        mGPUContext->function_vkCmdSetStencilOpEXT(
+            cmd, 
+            VK_STENCIL_FACE_FRONT_AND_BACK, 
+            (VkStencilOp)stencil.mStencilFailOp, 
+            (VkStencilOp)stencil.mStencilPassOp, 
+            (VkStencilOp)stencil.mDepthFailOp, 
+            (VkCompareOp)stencil.mStencilFunction
+        );
     }
     
     gpuGPUShaderPipeline->enable();

@@ -26,6 +26,7 @@ public:
     VkPhysicalDevice mPhysicalDevice = nullptr;
     VkPhysicalDeviceSubgroupProperties mSubgroupProperties{};
     VkPhysicalDeviceProperties2 mProperties{};
+    VkPhysicalDeviceExtendedDynamicStateFeaturesEXT mExtendedFeatures{};
     VkPhysicalDeviceVulkan13Features m13Features{};
     VkPhysicalDeviceDescriptorIndexingFeatures mIndexingFeatures{};
     VkPhysicalDeviceFeatures2 mFeatures{};

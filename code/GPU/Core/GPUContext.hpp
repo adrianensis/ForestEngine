@@ -8,8 +8,10 @@
 #include "GPU/Core/GPUDefinitions.h"
 class IGPUWindow;
 
+#define GPU_EXTENSION_FUNCTION_TYPE(extensionFunctionName) PFN_##extensionFunctionName
+
 #define GPU_LOAD_EXTENSION_FUNCTION(extensionFunctionName) \
-loadExtensionFunction<PFN_##extensionFunctionName>(TO_STRING(extensionFunctionName));
+loadExtensionFunction<GPU_EXTENSION_FUNCTION_TYPE(extensionFunctionName)>(TO_STRING(extensionFunctionName));
 
 class GPUContext
 {
@@ -69,10 +71,13 @@ public:
     GPUCommandBuffer profilingCommandBuffer_;
     #endif
     
+    GPU_EXTENSION_FUNCTION_TYPE(vkCmdSetStencilOpEXT) function_vkCmdSetStencilOpEXT;
+    
 private:
     Core::u32 mBindingPointsIndexUniform = 0;
     Core::u32 mBindingPointsIndexStorage = 0;
     Core::i32 mMaxUniformBufferBindingPointsUniform = 0;
     Core::i32 mMaxUniformBufferBindingPointsStorage = 0;
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
+
 };
