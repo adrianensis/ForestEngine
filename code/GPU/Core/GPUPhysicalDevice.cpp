@@ -363,9 +363,17 @@ bool GPUPhysicalDevice::hasRequiredFeatures(const VkPhysicalDeviceFeatures2& ava
     availableDeviceFeatures.features.shaderSampledImageArrayDynamicIndexing
     && features13 != nullptr
     && features13->dynamicRendering
+    // bindless features
     && indexingFeatures
     && indexingFeatures->descriptorBindingPartiallyBound
     && indexingFeatures->runtimeDescriptorArray
+    && indexingFeatures->shaderSampledImageArrayNonUniformIndexing
+    && indexingFeatures->descriptorBindingSampledImageUpdateAfterBind
+    && indexingFeatures->shaderUniformBufferArrayNonUniformIndexing
+    && indexingFeatures->descriptorBindingUniformBufferUpdateAfterBind
+    && indexingFeatures->shaderStorageBufferArrayNonUniformIndexing
+    && indexingFeatures->descriptorBindingStorageBufferUpdateAfterBind
+    // stencil and depth dynamic states
     && extendedDynamicStateFeaturesEXT
     && extendedDynamicStateFeaturesEXT->extendedDynamicState;
 }
