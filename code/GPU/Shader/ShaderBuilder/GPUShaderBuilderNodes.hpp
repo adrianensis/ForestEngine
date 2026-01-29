@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 
@@ -146,14 +147,14 @@ namespace GPUShaderBuilderNodes
     public:
         Attribute(const GPUVariableDefinitionData& gpuVariableData) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage) {};
         Attribute(const GPUVariableDefinitionData& gpuVariableData, Core::u32 locationOrBinding) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding) {};
-        Attribute(const GPUVariableDefinitionData& gpuVariableData, Core::u32 locationOrBinding, Core::u32 set) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding), mSet(set) {};
+        Attribute(const GPUVariableDefinitionData& gpuVariableData, Core::u32 locationOrBinding, GPUDescriptorSetScope set) : Variable(gpuVariableData), mGPUInterpolation(gpuVariableData.mGPUInterpolation), mGPUStorage(gpuVariableData.mGPUStorage), mLocationOrBinding(locationOrBinding), mSet(set) {};
 
         std::vector<std::string> toLines(Core::u16 indent) const override;
 
         GPUInterpolation mGPUInterpolation = GPUInterpolation::NONE;
         GPUStorage mGPUStorage = GPUStorage::NONE;
         Core::i32 mLocationOrBinding = INVALID_INDEX;
-        Core::i32 mSet = INVALID_INDEX;
+        GPUDescriptorSetScope mSet = GPUDescriptorSetScope::LOCAL;
     };
 
     class UniformBuffer : public Statement

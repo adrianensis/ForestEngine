@@ -78,7 +78,8 @@ void GPUDescriptorsSet::init(const GPUDescriptorsSetData& gpuDescriptorsSetData,
     vkGetPhysicalDeviceProperties2(mGPUContext->vulkanPhysicalDevice->getPhysicalDevice(), &deviceProps);
 
     // POOL
-    std::array<VkDescriptorPoolSize, 3> poolSizes{};
+    constexpr Core::u32 poolTypesCount = 3;
+    std::array<VkDescriptorPoolSize, poolTypesCount> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     poolSizes[0].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindStorageBuffers;
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -89,10 +90,10 @@ void GPUDescriptorsSet::init(const GPUDescriptorsSetData& gpuDescriptorsSetData,
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
-    poolInfo.poolSizeCount = (Core::u32) poolSizes.size();
+    poolInfo.poolSizeCount = poolTypesCount;
     poolInfo.pPoolSizes = poolSizes.data();
     // TODO: select a correct poolInfo.maxSets number
-    poolInfo.maxSets = 64;//GPUContext::MAX_FRAMES_IN_FLIGHT * mUniformBuffers.size();
+    poolInfo.maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT;
 
     /*
         * Inadequate descriptor pools are a good example of a problem that the validation layers will not catch:

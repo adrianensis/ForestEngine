@@ -74,7 +74,8 @@ public:
                 {GPUStorage::UNIFORM, PrimitiveTypes::mVector4, "cameraPosition"}
             },
             "GlobalData",
-            "globalData"
+            "globalData",
+            GPUDescriptorSetScope::LOCAL
         };
 
         inline static const GPUUniformBufferData mTextures
@@ -84,7 +85,8 @@ public:
                 {{GPUStorage::UNIFORM, /*PrimitiveTypes::mSampler2D*/PrimitiveTypes::mUnsignedInt, "textures"}, "", " "},
             },
             "Textures",
-            "textures"
+            "textures",
+            GPUDescriptorSetScope::LOCAL
         };
         
         inline static const GPUUniformBufferData mModelMatrices
@@ -94,7 +96,8 @@ public:
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "modelMatrices"}, "", " "},
             },
             "ModelMatrices",
-            "modelMatrices"
+            "modelMatrices",
+            GPUDescriptorSetScope::LOCAL
         };
 
         inline static const GPUUniformBufferData mBonesMatrices
@@ -104,7 +107,8 @@ public:
                 {{GPUStorage::UNIFORM, PrimitiveTypes::mMatrix4, "bonesMatrices"}, "", std::to_string(GPUConstants::MAX_BONES)},
             },
             "BonesMatrices",
-            "bonesMatrices"
+            "bonesMatrices",
+            GPUDescriptorSetScope::LOCAL
         };
     };
 

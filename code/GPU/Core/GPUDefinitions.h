@@ -285,3 +285,10 @@ public:
         return result;
     }
 };
+
+enum class GPUDescriptorSetScope : Core::u32
+{
+    // GLOBAL = 0,
+    // LOCAL = 1
+    LOCAL = 0
+};

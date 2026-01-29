@@ -1,3 +1,4 @@
+#include "Core/CoreMacros.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 
 namespace GPUShaderBuilderNodes
@@ -46,12 +47,11 @@ namespace GPUShaderBuilderNodes
         std::string locationStr = mLocationOrBinding < 0 ? "" : "location=" + std::to_string(mLocationOrBinding);
         if(mGPUStorage == GPUStorage::UNIFORM)
         {
-            locationStr = mLocationOrBinding < 0 ? "" : "binding=" + std::to_string(mLocationOrBinding);
+            locationStr = mLocationOrBinding < 0 ? "" : ("set=" + std::to_string(TO_U32(mSet)) + ", ") + "binding=" + std::to_string(mLocationOrBinding);
         }
-        // std::string setStr = mSet < 0 ? "" : "set=" + std::to_string(mSet);
         if(mGPUStorage == GPUStorage::UNIFORM || mGPUStorage == GPUStorage::IN || mGPUStorage == GPUStorage::OUT)
         {
-            layoutStr = "layout(" + /* (setStr.empty() ? setStr : setStr + ",") + */ locationStr + ")";
+            layoutStr = "layout(" + locationStr + ")";
         }
         std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : Core::EnumsManager::toString(mGPUInterpolation).get() + " ";
         std::string storageStr = Core::EnumsManager::toString(mGPUStorage).get() + " ";
@@ -62,17 +62,17 @@ namespace GPUShaderBuilderNodes
     {
         std::vector<std::string> code;
 
-        std::string bindingStr = mBinding < 0 ? "" : ", binding=" + std::to_string(mBinding);
+        std::string bindingStr = mBinding < 0 ? "" : ("set=" + std::to_string(TO_U32(mGPUUniformBufferData.mDescriptorSetScope)) + ", ") + "binding=" + std::to_string(mBinding);
 
         std::string layoutStr;
         switch (mGPUUniformBufferData.mType)
         {
         case GPUBufferType::UNIFORM:
-            layoutStr = "layout (std140"+ bindingStr +") uniform";
+            layoutStr = "layout (std140, "+ bindingStr +") uniform";
             break;
         case GPUBufferType::STORAGE:
             // layoutStr = "layout (std430"+ bindingStr +") readonly buffer";
-            layoutStr = "layout (std430"+ bindingStr +") buffer";
+            layoutStr = "layout (std430, "+ bindingStr +") buffer";
             break;
         default:
             CHECK_MSG(false, "Ilegal GPUBufferType!");

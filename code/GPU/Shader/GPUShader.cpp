@@ -1,4 +1,5 @@
 #include "GPU/Shader/GPUShader.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/GPUShaderManager.hpp"
 
 #include "GPU/Image/GPUTexture.hpp"
@@ -40,7 +41,8 @@ void GPUShader::init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager,
             {{GPUStorage::UNIFORM, propertiesBlockStructDataType, GPUShaderPropertiesBlockNames::smPropertiesBlockArrayName}, "", " "}
         },
         GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName,
-        GPUShaderPropertiesBlockNames::smPropertiesBlockInstanceName
+        GPUShaderPropertiesBlockNames::smPropertiesBlockInstanceName,
+        GPUDescriptorSetScope::LOCAL
     };
 
     mPropertiesBlockStructDefinition = propertiesBlockStructDefinition;

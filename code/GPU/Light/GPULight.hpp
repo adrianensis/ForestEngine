@@ -90,7 +90,8 @@ public:
             // {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambientIntensity"},
         },
         "LightsData",
-        "lightsData"
+        "lightsData",
+        GPUDescriptorSetScope::LOCAL
     };
 
     class LightsData
@@ -109,7 +110,8 @@ public:
             {{GPUStorage::UNIFORM, GPUShaderDefinitions::PrimitiveTypes::mMatrix4, "lightProjectionViewMatrix"}}
         },
         "ShadowMapping",
-        "shadowMapping"
+        "shadowMapping",
+        GPUDescriptorSetScope::LOCAL
     };
 
     class ShadowMappingData

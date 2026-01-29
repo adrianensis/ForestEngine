@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/GPUVariable.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 #include "Core/Memory/ByteBuffer.hpp"
@@ -8,8 +9,13 @@ class GPUUniformBufferData
 {
 public:
 	GPUUniformBufferData() = default;
-	GPUUniformBufferData(GPUBufferType gpuUniformBufferType, const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray, Core::HashedString blockName, Core::HashedString instanceName):
-        mType(gpuUniformBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray), mBufferName(blockName), mInstanceName(instanceName) {}
+	GPUUniformBufferData(GPUBufferType gpuUniformBufferType,
+        const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray,
+        Core::HashedString blockName, Core::HashedString instanceName,
+        GPUDescriptorSetScope descriptorSetScope):
+        mType(gpuUniformBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray),
+        mBufferName(blockName), mInstanceName(instanceName),
+        mDescriptorSetScope(descriptorSetScope) {}
 
     GPUVariableData getScopedGPUVariableData(Core::u32 i) const;
 
@@ -18,6 +24,7 @@ public:
     std::vector<GPUVariableDefinitionData> mGPUVariableDefinitionDataArray;
     Core::HashedString mBufferName;
     Core::HashedString mInstanceName;
+    GPUDescriptorSetScope mDescriptorSetScope = GPUDescriptorSetScope::LOCAL;
 };
 
 class GPUUniformBuffer
