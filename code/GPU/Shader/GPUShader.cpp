@@ -95,7 +95,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
         gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
     }
     
-    GPUDescriptorsSetData gpuDescriptorsSetData
+    GPUDescriptorSetData gpuDescriptorSetData
     {
         mGPUShaderCompilationData.mUniformBuffers,
         gpuShaderTextureBindings
@@ -104,7 +104,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     Core::OwnerPtr<GPUShaderPipeline> gpuShaderPipeline = Core::OwnerPtr<GPUShaderPipeline>::newObject();
     GPUShaderPipelineData gpuShaderPipelineData
     {
-        gpuDescriptorsSetData,
+        gpuDescriptorSetData,
         mGPUShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
     };
     gpuShaderPipeline->init(gpuShaderPipelineData, mGPUContext);
@@ -113,8 +113,8 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     GPUShaderBuilder sbFrag;
     {
         PROFILER_CPU_NAMED(create_vertex_and_fragment)
-        createVertexShader(sbVert, mGPUShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUDescriptorsSet());
-        createFragmentShader(sbFrag, mGPUShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUDescriptorsSet());
+        createVertexShader(sbVert, mGPUShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUDescriptorSet());
+        createFragmentShader(sbFrag, mGPUShaderCompilationData.mInputVertexBuffersContainer, gpuShaderPipeline->getGPUDescriptorSet());
     }
 
     // TODO: refactor std::string("output/shaders/")

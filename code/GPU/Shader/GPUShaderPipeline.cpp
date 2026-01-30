@@ -9,8 +9,8 @@ void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData,
     mGPUShaderPipelineData = gpuShaderPipelineData;
     mGPUContext = gpuContext;
 
-    mGPUDescriptorsSet = Core::OwnerPtr<GPUDescriptorsSet>::newObject();
-    mGPUDescriptorsSet->init(mGPUShaderPipelineData.mGPUDescriptorsSetData, mGPUContext);
+    mGPUDescriptorSet = Core::OwnerPtr<GPUDescriptorSet>::newObject();
+    mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorSetData, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
     mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
@@ -107,8 +107,8 @@ void GPUShaderPipeline::terminate()
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
     GPU_LOG("Destroyed Vulkan graphics pipeline layout");
 
-    mGPUDescriptorsSet->terminate();
-    mGPUDescriptorsSet.invalidate();
+    mGPUDescriptorSet->terminate();
+    mGPUDescriptorSet.invalidate();
 }
 
 void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const
@@ -121,7 +121,7 @@ void GPUShaderPipeline::enable() const
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     bind(vulkanCommandBuffer);
 
-    VkDescriptorSet descriptorSet = mGPUDescriptorsSet->descriptorSets[mGPUContext->currentFrame];
+    VkDescriptorSet descriptorSet = mGPUDescriptorSet->descriptorSets[mGPUContext->currentFrame];
     VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     VkPipelineLayout pipelineLayout = mPipelineLayout;
     constexpr Core::u32 firstSet = 0;
@@ -266,7 +266,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &mGPUDescriptorsSet->descriptorSetLayout;
+    pipelineLayoutInfo.pSetLayouts = &mGPUDescriptorSet->descriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 

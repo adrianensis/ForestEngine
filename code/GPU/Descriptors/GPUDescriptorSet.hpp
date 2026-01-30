@@ -14,14 +14,14 @@ public:
     Core::WeakPtr<GPUTexture> mGPUTexture;
 };
 
-class GPUDescriptorsSetData
+class GPUDescriptorSetData
 {
 public:
     std::vector<GPUUniformBuffer> mUniformBuffers;
     std::vector<GPUShaderTextureBinding> mTextureBindings;
 };
 
-class GPUDescriptorsSetBindings
+class GPUDescriptorSetBindings
 {
 public:
     std::unordered_map<Core::HashedString, Core::u32> mBindings;
@@ -29,10 +29,10 @@ public:
 };
 
 // TODO: Refactor, separate Layout and Pool, for bindless architecture
-class GPUDescriptorsSet
+class GPUDescriptorSet
 {    
 public:
-    void init(const GPUDescriptorsSetData& gpuDescriptorsSetData, GPUContext* gpuContext);
+    void init(const GPUDescriptorSetData& gpuDescriptorSetData, GPUContext* gpuContext);
     void update();
     void terminate();
 private:
@@ -41,8 +41,8 @@ public:
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
     VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
-    GPUDescriptorsSetBindings mGPUDescriptorsSetBindings;
-    GPUDescriptorsSetData mGPUDescriptorData;
+    GPUDescriptorSetBindings mGPUDescriptorSetBindings;
+    GPUDescriptorSetData mGPUDescriptorData;
     Core::u32 mSamplersBindingIndexOffset = 0;
 };
 

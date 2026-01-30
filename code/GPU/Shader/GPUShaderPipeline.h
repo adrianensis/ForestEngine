@@ -2,7 +2,7 @@
 
 #include "GPU/Shader/GPUShaderModule.h"
 #include "GPU/Core/GPUContext.hpp"
-#include "GPU/Descriptors/GPUDescriptorsSet.hpp"
+#include "GPU/Descriptors/GPUDescriptorSet.hpp"
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 #include "vulkan/vulkan_core.h"
 
@@ -32,7 +32,7 @@ public:
 class GPUShaderPipelineData
 {
 public:
-    GPUDescriptorsSetData mGPUDescriptorsSetData;
+    GPUDescriptorSetData mGPUDescriptorSetData;
     std::vector<GPUVertexBuffer> mVertexInputBuffers;
 };
 
@@ -49,7 +49,7 @@ public:
     void enable() const;
     void disable() const;
 private:
-    Core::OwnerPtr<GPUDescriptorsSet> mGPUDescriptorsSet;
+    Core::OwnerPtr<GPUDescriptorSet> mGPUDescriptorSet;
     GPUShaderModule vertexShader;
     GPUShaderModule fragmentShader;
     GPUVertexInputData mGPUVertexInputData;
@@ -58,7 +58,7 @@ private:
     VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUShaderPipelineData mGPUShaderPipelineData;
 public:
-    CGET(GPUDescriptorsSet)
+    CGET(GPUDescriptorSet)
     CRGET(PipelineLayout)
     CRGET(Pipeline)
 };

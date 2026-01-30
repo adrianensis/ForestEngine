@@ -1,9 +1,9 @@
-#include "GPU/Descriptors/GPUDescriptorsSet.hpp"
+#include "GPU/Descriptors/GPUDescriptorSet.hpp"
 
-void GPUDescriptorsSet::init(const GPUDescriptorsSetData& gpuDescriptorsSetData, GPUContext* gpuContext)
+void GPUDescriptorSet::init(const GPUDescriptorSetData& gpuDescriptorSetData, GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
-    mGPUDescriptorData = gpuDescriptorsSetData;
+    mGPUDescriptorData = gpuDescriptorSetData;
     // LAYOUT
 
     std::vector<VkDescriptorSetLayoutBinding> bindings;
@@ -136,7 +136,7 @@ void GPUDescriptorsSet::init(const GPUDescriptorsSetData& gpuDescriptorsSetData,
     update();
 }
 
-void GPUDescriptorsSet::update()
+void GPUDescriptorSet::update()
 {
     std::vector<VkWriteDescriptorSet> writes;
 
@@ -180,8 +180,8 @@ void GPUDescriptorsSet::update()
             descriptorWrite.descriptorCount = 1;
             descriptorWrite.pBufferInfo = &bufferInfo;
 
-            mGPUDescriptorsSetBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrite.dstBinding);
-            mGPUDescriptorsSetBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
+            mGPUDescriptorSetBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrite.dstBinding);
+            mGPUDescriptorSetBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
         }
 
         FOR_ARRAY(j, mGPUDescriptorData.mTextureBindings)
@@ -202,8 +202,8 @@ void GPUDescriptorsSet::update()
             descriptorWrite.descriptorCount = 1;
             descriptorWrite.pImageInfo = &imageInfo;
 
-            mGPUDescriptorsSetBindings.mBindings.emplace(textureBinding.mName, descriptorWrite.dstBinding);
-            mGPUDescriptorsSetBindings.mSets.emplace(textureBinding.mName,i);
+            mGPUDescriptorSetBindings.mBindings.emplace(textureBinding.mName, descriptorWrite.dstBinding);
+            mGPUDescriptorSetBindings.mSets.emplace(textureBinding.mName,i);
         }
     }
 
@@ -213,7 +213,7 @@ void GPUDescriptorsSet::update()
     vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, writes.data(), descriptorCopyCount, descriptorCopies);
 }
 
-void GPUDescriptorsSet::terminate()
+void GPUDescriptorSet::terminate()
 {
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
