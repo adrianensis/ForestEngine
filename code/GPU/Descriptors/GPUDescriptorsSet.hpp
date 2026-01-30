@@ -28,6 +28,7 @@ public:
     std::unordered_map<Core::HashedString, Core::u32> mSets;
 };
 
+// TODO: Refactor, separate Layout and Pool, for bindless architecture
 class GPUDescriptorsSet
 {    
 public:

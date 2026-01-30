@@ -1,5 +1,6 @@
 # TODO
 
+- [ ] Refactor GPUDescriptorPool, separate Layout and Pool, for bindless architecture
 - [ ] Improving load times with a pipeline cache, VkPipelineCache
 - [ ] Change WeakPtr by Ref non-ownership dependant references (for example: pointers to GPUContext)
 - [ ] Review virtual destructors (clean + build to see all the warnings)
