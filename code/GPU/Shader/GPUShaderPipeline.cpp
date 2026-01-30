@@ -1,4 +1,5 @@
 #include "GPU/Shader/GPUShaderPipeline.h"
+#include "GPU/Descriptors/GPUDescriptorPool.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Core/GPULog.h"
 #include "vulkan/vulkan_core.h"
@@ -9,8 +10,12 @@ void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData,
     mGPUShaderPipelineData = gpuShaderPipelineData;
     mGPUContext = gpuContext;
 
+    GPUDescriptorPool gpuDescriptorPool;
+    // TODO: call terminate somewhere.
+    gpuDescriptorPool.init(mGPUContext);
+
     mGPUDescriptorSet = Core::OwnerPtr<GPUDescriptorSet>::newObject();
-    mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorLayoutData, mGPUContext);
+    mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorLayoutData, gpuDescriptorPool, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
     mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());

@@ -2,6 +2,7 @@
 
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
+#include "GPU/Descriptors/GPUDescriptorPool.hpp"
 
 class GPUDescriptorSetBindings
 {
@@ -14,16 +15,14 @@ public:
 class GPUDescriptorSet
 {    
 public:
-    void init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, GPUContext* gpuContext);
+    void init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext);
     void update();
     void terminate();
 private:
     GPUContext* mGPUContext = nullptr;
 public:
-    VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     std::vector<VkDescriptorSet> descriptorSets;
     GPUDescriptorLayout mGPUDescriptorLayout;
     GPUDescriptorSetBindings mGPUDescriptorSetBindings;
-    Core::u32 mSamplersBindingIndexOffset = 0;
 };
 
