@@ -32,7 +32,7 @@ public:
 class GPUShaderPipelineData
 {
 public:
-    GPUDescriptorSetData mGPUDescriptorSetData;
+    GPUDescriptorLayoutData mGPUDescriptorLayoutData;
     std::vector<GPUVertexBuffer> mVertexInputBuffers;
 };
 

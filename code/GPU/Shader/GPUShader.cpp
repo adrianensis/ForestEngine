@@ -95,7 +95,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
         gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
     }
     
-    GPUDescriptorSetData gpuDescriptorSetData
+    GPUDescriptorLayoutData gpuDescriptorLayoutData
     {
         mGPUShaderCompilationData.mUniformBuffers,
         gpuShaderTextureBindings
@@ -104,7 +104,7 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     Core::OwnerPtr<GPUShaderPipeline> gpuShaderPipeline = Core::OwnerPtr<GPUShaderPipeline>::newObject();
     GPUShaderPipelineData gpuShaderPipelineData
     {
-        gpuDescriptorSetData,
+        gpuDescriptorLayoutData,
         mGPUShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
     };
     gpuShaderPipeline->init(gpuShaderPipelineData, mGPUContext);

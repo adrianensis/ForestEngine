@@ -1,72 +1,10 @@
 #include "GPU/Descriptors/GPUDescriptorSet.hpp"
 
-void GPUDescriptorSet::init(const GPUDescriptorSetData& gpuDescriptorSetData, GPUContext* gpuContext)
+void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
-    mGPUDescriptorData = gpuDescriptorSetData;
-    // LAYOUT
-
-    std::vector<VkDescriptorSetLayoutBinding> bindings;
-    mSamplersBindingIndexOffset = mGPUDescriptorData.mUniformBuffers.size();
-    FOR_ARRAY(i, mGPUDescriptorData.mUniformBuffers)
-    {
-        const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[i];
-
-        VkDescriptorSetLayoutBinding layoutBinding{};
-        layoutBinding.binding = i;
-        layoutBinding.descriptorCount = 1;
-        layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-        switch (uniformBuffer.getGPUUniformBufferData().mType)
-        {
-        case GPUBufferType::UNIFORM:
-            layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            break;
-        case GPUBufferType::STORAGE:
-            layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-            break;
-        default:
-            CHECK_MSG(false, "Not supported buffer type!")
-        }
-
-        bindings.push_back(layoutBinding);
-    }
-
-    FOR_ARRAY(i, mGPUDescriptorData.mTextureBindings)
-    {
-        // const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[i];
-
-        VkDescriptorSetLayoutBinding layoutBinding{};
-        layoutBinding.binding = i + mSamplersBindingIndexOffset;
-        layoutBinding.descriptorCount = 1;
-        layoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
-        layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        layoutBinding.pImmutableSamplers = nullptr;
-
-        bindings.push_back(layoutBinding);
-    }
-
-    VkDescriptorBindingFlags bindingFlags = 
-    VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | 
-    VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
-
-    VkDescriptorSetLayoutBindingFlagsCreateInfo vkDescriptorSetLayoutBindingFlagsCreateInfo{};
-    vkDescriptorSetLayoutBindingFlagsCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
-    vkDescriptorSetLayoutBindingFlagsCreateInfo.pBindingFlags = &bindingFlags;
-    vkDescriptorSetLayoutBindingFlagsCreateInfo.pNext = nullptr;
-
-    VkDescriptorSetLayoutCreateInfo layoutInfo{};
-    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<Core::u32>(bindings.size());
-    layoutInfo.pBindings = bindings.data();
-    layoutInfo.pNext = &vkDescriptorSetLayoutBindingFlagsCreateInfo;
-    layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
-
-    constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
-    if (vkCreateDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), &layoutInfo, allocationCallbacks, &descriptorSetLayout) != VK_SUCCESS)
-    {
-        CHECK_MSG(false, "Could not create descrptor set layout");
-    }
+    mGPUDescriptorLayout.init(gpuDescriptorLayoutData, mGPUContext);
+    mSamplersBindingIndexOffset = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers.size();
 
     VkPhysicalDeviceDescriptorIndexingProperties indexingProps{};
     indexingProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES;
@@ -105,13 +43,14 @@ void GPUDescriptorSet::init(const GPUDescriptorSetData& gpuDescriptorSetData, GP
         *
         * This can be particularly frustrating if the allocation succeeds on some machines, but fails on others.
         */
+    constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     if (vkCreateDescriptorPool(mGPUContext->vulkanDevice->getDevice(), &poolInfo, allocationCallbacks, &descriptorPool) != VK_SUCCESS)
     {
         CHECK_MSG(false, "Could not create descriptor pool");
     }
 
     // SETS
-    std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
+    std::vector<VkDescriptorSetLayout> layouts(GPUContext::MAX_FRAMES_IN_FLIGHT, mGPUDescriptorLayout.descriptorSetLayout);
 
     VkDescriptorSetVariableDescriptorCountAllocateInfoEXT count_info;
     count_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
@@ -143,8 +82,8 @@ void GPUDescriptorSet::update()
     std::vector<VkDescriptorBufferInfo> bufferInfos;
     std::vector<VkDescriptorImageInfo> imageInfos;
 
-    size_t numBuffers = mGPUDescriptorData.mUniformBuffers.size() * GPUContext::MAX_FRAMES_IN_FLIGHT;
-    size_t numImages = mGPUDescriptorData.mTextureBindings.size() * GPUContext::MAX_FRAMES_IN_FLIGHT;
+    size_t numBuffers = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers.size() * GPUContext::MAX_FRAMES_IN_FLIGHT;
+    size_t numImages = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings.size() * GPUContext::MAX_FRAMES_IN_FLIGHT;
     
     writes.reserve(numBuffers + numImages);
     bufferInfos.reserve(numBuffers);
@@ -152,9 +91,9 @@ void GPUDescriptorSet::update()
 
     for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
     {
-        FOR_ARRAY(j, mGPUDescriptorData.mUniformBuffers)
+        FOR_ARRAY(j, mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers)
         {
-            const GPUUniformBuffer& uniformBuffer = mGPUDescriptorData.mUniformBuffers[j];
+            const GPUUniformBuffer& uniformBuffer = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers[j];
 
             VkDescriptorBufferInfo& bufferInfo = bufferInfos.emplace_back();
             bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // TODO: make double buffered!!
@@ -184,9 +123,9 @@ void GPUDescriptorSet::update()
             mGPUDescriptorSetBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
         }
 
-        FOR_ARRAY(j, mGPUDescriptorData.mTextureBindings)
+        FOR_ARRAY(j, mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings)
         {
-            const GPUShaderTextureBinding& textureBinding = mGPUDescriptorData.mTextureBindings[j];
+            const GPUShaderTextureBinding& textureBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings[j];
 
             VkDescriptorImageInfo& imageInfo = imageInfos.emplace_back();
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -217,5 +156,5 @@ void GPUDescriptorSet::terminate()
 {
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroyDescriptorPool(mGPUContext->vulkanDevice->getDevice(), descriptorPool, allocationCallbacks);
-    vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), descriptorSetLayout, allocationCallbacks);
+    vkDestroyDescriptorSetLayout(mGPUContext->vulkanDevice->getDevice(), mGPUDescriptorLayout.descriptorSetLayout, allocationCallbacks);
 }

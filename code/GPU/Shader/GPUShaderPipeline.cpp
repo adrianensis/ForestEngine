@@ -10,7 +10,7 @@ void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData,
     mGPUContext = gpuContext;
 
     mGPUDescriptorSet = Core::OwnerPtr<GPUDescriptorSet>::newObject();
-    mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorSetData, mGPUContext);
+    mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorLayoutData, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
     mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
@@ -266,7 +266,7 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &mGPUDescriptorSet->descriptorSetLayout;
+    pipelineLayoutInfo.pSetLayouts = &mGPUDescriptorSet->mGPUDescriptorLayout.descriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
