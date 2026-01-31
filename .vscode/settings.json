@@ -105,7 +105,6 @@
         "REF",
         "BUG",
         "WARN",
-        "INFO",
         "[ ]",
         "[x]"
     ],
@@ -134,10 +133,6 @@
             "icon": "alert",
             "iconColour": "orange",
         },
-        "INFO": {
-            "icon": "info",
-            "iconColour": "rgb(251, 248, 138)",
-        },
         "PERF": {
             "icon": "zap",
             "iconColour": "yellow",
@@ -147,7 +142,7 @@
             "iconColour": "rgb(150, 150, 255)",
         },
         "[ ]": {
-            "icon": "issue-draft",
+            "icon": "checklist",
             "iconColour": "rgb(13, 228, 107)"
         },
         "[x]": {
@@ -155,5 +150,5 @@
             "iconColour": "rgb(13, 228, 107)"
         }
     },
-    "todo-tree.filtering.excludeGlobs":["README.md"]
+    "todo-tree.filtering.excludeGlobs":["README.md", "Doxyfile"],
 }
