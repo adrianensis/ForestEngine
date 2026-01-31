@@ -21,6 +21,9 @@ void GPURenderPass::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRender
     mGPURenderPassData = gpuRenderPassData;
     mGPUDescriptorManager = &gpuDescriptorManager;
 
+    // TODO: this key should be something like addPool((u32) GPUPoolScope::RENDER_PASS/GLOBAL/...)
+    mGPUDescriptorManager->addPool(0);
+
     mGPUUniformBuffersContainer.addUniformBuffer(mGPUContext, GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 }
 
@@ -152,12 +155,34 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
 
         Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
 
+        // TODO: unify <Core::HashedString, Core::WeakPtr<GPUTexture> with GPUShaderTextureBinding
+        // TODO: rename GPUShaderTextureBinding to just GPUTextureBinding (?)
+        std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
+        const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = mGPUShaderManager->getGPUShaderTextureBindings(gpuInstanceRendererData.mShader->getID());
+        FOR_MAP(it, shaderTextures)
+        {
+            gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
+        }
+    
+
+        GPUDescriptorLayoutData gpuDescriptorLayoutData
+        {
+            uniformBuffers,
+            gpuShaderTextureBindings
+        };
+
+        const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(0);
+        GPUInstanceRendererData::GPUInstanceRendererDataFunctor hashGPUInstanceRendererDataFunctor;
+        mGPUDescriptorManager->addSet(hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
+
+
         GPUShaderCompilationData shaderCompilationData
         {
             Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
             uniformBuffers,
-            gpuInstanceRenderer->getGPUVertexBuffersContainer()
+            gpuInstanceRenderer->getGPUVertexBuffersContainer(),
+            &mGPUDescriptorManager->getSet(hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
         };
 
         mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));

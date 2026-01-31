@@ -17,11 +17,11 @@ void GPUDescriptorPool::init(GPUContext* gpuContext)
     constexpr Core::u32 poolTypesCount = 3;
     std::array<VkDescriptorPoolSize, poolTypesCount> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    poolSizes[0].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindStorageBuffers;
+    poolSizes[0].descriptorCount = 200; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindStorageBuffers;
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[1].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindUniformBuffers;
+    poolSizes[1].descriptorCount = 200; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindUniformBuffers;
     poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[2].descriptorCount = 20; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindSamplers;
+    poolSizes[2].descriptorCount = 200; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindSamplers;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -29,7 +29,7 @@ void GPUDescriptorPool::init(GPUContext* gpuContext)
     poolInfo.poolSizeCount = poolTypesCount;
     poolInfo.pPoolSizes = poolSizes.data();
     // TODO: select a correct poolInfo.maxSets number
-    poolInfo.maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT;
+    poolInfo.maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT * 1000;
 
     /*
         * Inadequate descriptor pools are a good example of a problem that the validation layers will not catch:

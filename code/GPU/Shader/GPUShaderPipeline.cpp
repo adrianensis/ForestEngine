@@ -10,12 +10,8 @@ void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData,
     mGPUShaderPipelineData = gpuShaderPipelineData;
     mGPUContext = gpuContext;
 
-    GPUDescriptorPool gpuDescriptorPool;
-    // TODO: call terminate somewhere.
-    gpuDescriptorPool.init(mGPUContext);
-
-    mGPUDescriptorSet = Core::OwnerPtr<GPUDescriptorSet>::newObject();
-    mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorLayoutData, gpuDescriptorPool, mGPUContext);
+    mGPUDescriptorSet = gpuShaderPipelineData.mGPUDescriptorSet;
+    // mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorLayoutData, gpuDescriptorPool, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
     mGPUVertexInputData.mVertexInputAttributeDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
@@ -112,8 +108,8 @@ void GPUShaderPipeline::terminate()
     vkDestroyPipelineLayout(mGPUContext->vulkanDevice->getDevice(), mPipelineLayout, ALLOCATOR);
     GPU_LOG("Destroyed Vulkan graphics pipeline layout");
 
-    mGPUDescriptorSet->terminate();
-    mGPUDescriptorSet.invalidate();
+    // mGPUDescriptorSet->terminate();
+    // mGPUDescriptorSet.invalidate();
 }
 
 void GPUShaderPipeline::bind(const GPUCommandBuffer& vulkanCommandBuffer) const

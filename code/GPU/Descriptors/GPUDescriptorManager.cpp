@@ -6,8 +6,6 @@
 void GPUDescriptorManager::init(GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
-
-
 }
 
 void GPUDescriptorManager::terminate()
@@ -16,12 +14,12 @@ void GPUDescriptorManager::terminate()
 
 bool GPUDescriptorManager::containsLayout(Core::u64 key) const
 {
-    return mLayout.contains(key);
+    return mLayouts.contains(key);
 }
 
 const GPUDescriptorLayout& GPUDescriptorManager::getLayout(Core::u64 key) const
 {
-    return mLayout.at(key);
+    return mLayouts.at(key);
 }
 
 const GPUDescriptorLayout& GPUDescriptorManager::addLayout(Core::u64 key, GPUDescriptorLayoutData& gpuDescriptorLayoutData)
@@ -30,9 +28,9 @@ const GPUDescriptorLayout& GPUDescriptorManager::addLayout(Core::u64 key, GPUDes
     {
         return getLayout(key);
     }
-    mLayout.insert(std::make_pair(key, GPUDescriptorLayout{}));
+    mLayouts.insert(std::make_pair(key, GPUDescriptorLayout{}));
 
-    GPUDescriptorLayout& gpuDescriptorLayout = mLayout[key];
+    GPUDescriptorLayout& gpuDescriptorLayout = mLayouts[key];
     gpuDescriptorLayout.init(gpuDescriptorLayoutData, mGPUContext);
     return gpuDescriptorLayout;
 }
@@ -54,7 +52,10 @@ const GPUDescriptorPool& GPUDescriptorManager::addPool(Core::u64 key)
         return getPool(key);
     }
     mPools.insert(std::make_pair(key, GPUDescriptorPool{}));
-    return getPool(key);
+
+    GPUDescriptorPool& gpuDescriptorPool = mPools[key];
+    gpuDescriptorPool.init(mGPUContext);
+    return gpuDescriptorPool;
 }
 
 bool GPUDescriptorManager::containsSet(Core::u64 key) const
@@ -67,12 +68,15 @@ const GPUDescriptorSet& GPUDescriptorManager::getSet(Core::u64 key) const
     return mSets.at(key);
 }
 
-const GPUDescriptorSet& GPUDescriptorManager::addSet(Core::u64 key)
+const GPUDescriptorSet& GPUDescriptorManager::addSet(Core::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData)
 {
     if(containsSet(key))
     {
         return getSet(key);
     }
     mSets.insert(std::make_pair(key, GPUDescriptorSet{}));
-    return getSet(key);
+
+    GPUDescriptorSet& gpuDescriptorSet = mSets[key];
+    gpuDescriptorSet.init(gpuDescriptorLayoutData, gpuDescriptorPool, mGPUContext);
+    return gpuDescriptorSet;
 }

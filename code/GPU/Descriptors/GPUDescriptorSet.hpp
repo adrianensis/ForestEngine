@@ -15,7 +15,7 @@ public:
 class GPUDescriptorSet
 {    
 public:
-    void init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext);
+    void init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext);
     void update();
     void terminate();
 private:

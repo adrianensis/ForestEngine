@@ -41,6 +41,7 @@ public:
     Core::HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
+    const GPUDescriptorSet* mGPUDescriptorSet = nullptr;
 };
 
 class GPUShaderGenerationDataCommon
@@ -147,10 +148,10 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUDescriptorSet> gpuDescriptorSet) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const
         {};
     virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUDescriptorSet> gpuDescriptorSet) const
+        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const
         {};
 
     virtual void generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;

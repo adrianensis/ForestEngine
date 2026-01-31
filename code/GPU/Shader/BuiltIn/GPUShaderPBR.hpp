@@ -31,7 +31,7 @@ protected:
     virtual void vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
     virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 
-    virtual void registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, Core::WeakPtr<const GPUDescriptorSet> gpuDescriptorSet) const override;
+    virtual void registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const override;
 
     void registerFunctionsGetNormalFromMap(GPUShaderBuilder& GPUShaderBuilder) const;
     void registerFunctionsShadowCalculation(GPUShaderBuilder& GPUShaderBuilder) const;

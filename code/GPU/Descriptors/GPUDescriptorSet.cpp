@@ -1,6 +1,6 @@
 #include "GPU/Descriptors/GPUDescriptorSet.hpp"
 
-void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext)
+void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
     mGPUDescriptorLayout.init(gpuDescriptorLayoutData, mGPUContext);
