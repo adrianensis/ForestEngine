@@ -14,7 +14,7 @@ void RenderPipeline::init()
 
     mGPUInstanceRendererManager = Core::OwnerPtr<GPUInstanceRendererManager>::newObject();
     mGPURenderGraph.init(GPUInstance::getInstance().mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer,
-        GPUInstance::getInstance().mGPUSkeletalAnimationManager, GPUInstance::getInstance().mGPUShaderManager);
+        GPUInstance::getInstance().mGPUSkeletalAnimationManager, GPUInstance::getInstance().mGPUShaderManager, GPUInstance::getInstance().mGPUDescriptorManager);
 
     mMeshRenderers.resize(mGPURenderItemManager.getSize());
 }

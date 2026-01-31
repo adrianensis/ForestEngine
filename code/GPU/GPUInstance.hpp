@@ -3,6 +3,7 @@
 #include "Core/Memory/Singleton.hpp"
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Window/GPUWindow.hpp"
+#include "GPU/Descriptors/GPUDescriptorManager.hpp"
 class GPUSkeletalAnimationManager;
 class GPUShaderManager;
 
@@ -16,4 +17,5 @@ public:
     GPUContext* mGPUContext = nullptr;
     GPUShaderManager* mGPUShaderManager = nullptr;
     GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
+    GPUDescriptorManager mGPUDescriptorManager;
 };

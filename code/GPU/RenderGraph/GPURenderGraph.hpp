@@ -2,6 +2,7 @@
 
 #include "GPU/Core/GPUContext.hpp"
 // TODO: fix .h extension, should be .hpp
+#include "GPU/Descriptors/GPUDescriptorManager.hpp"
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/RenderItem/GPURenderItem.hpp"
 
@@ -9,7 +10,7 @@ class GPURenderGraph
 {
 public:
     void init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
-        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager);
+        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager);
     void update();
     void terminate();
     void render();
@@ -18,7 +19,7 @@ public:
     void onResize();
 
     template<class T> T_EXTENDS(T, GPURenderPass)
-    void initRenderPass(const GPURenderPassData& renderPassData, GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)
+    void initRenderPass(const GPURenderPassData& renderPassData, GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager)
     {
         Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
@@ -28,7 +29,13 @@ public:
         );
 
         Core::WeakPtr<T> renderPass = getRenderPass<T>();
-        renderPass->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassData, gpuSkeletalAnimationManager, gpuShaderManager);
+        renderPass->init(mGPUContext,
+            mGPUInstanceRendererManager,
+            mGlobalGPUUniformBuffersContainer,
+            renderPassData,
+            gpuSkeletalAnimationManager,
+            gpuShaderManager,
+            gpuDescriptorManager);
 
         mRenderPassesArray.push_back(renderPass);
     }

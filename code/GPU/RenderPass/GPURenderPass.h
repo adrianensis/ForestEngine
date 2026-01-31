@@ -7,6 +7,7 @@
 #include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
 
 class GPUSkeletalAnimationManager;
+class GPUDescriptorManager;
 
 enum class GPUAttachmentLoadOp
 {
@@ -72,7 +73,7 @@ public:
     virtual ~GPURenderPass() = default;
     // TODO: refactor so many arguments
     void init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData,
-        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager);
+        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager);
     void terminate();
     void begin(const GPURenderPassOutputData& gpuRenderPassOutputData);
     virtual void renderPass(const GPURenderPassOutputData& gpuRenderPassOutputData);
@@ -98,6 +99,8 @@ protected:
     GPUShaderManager* mGPUShaderManager = nullptr;
 
     GPURenderPassData mGPURenderPassData;
+
+    GPUDescriptorManager* mGPUDescriptorManager = nullptr;
 
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;

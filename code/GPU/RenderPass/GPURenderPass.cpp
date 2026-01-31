@@ -1,4 +1,5 @@
 #include "GPU/RenderPass/GPURenderPass.h"
+#include "GPU/Descriptors/GPUDescriptorManager.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "GPU/InstanceRenderer/GPUInstanceRendererData.hpp"
 #include "GPU/Light/GPULight.hpp"
@@ -9,7 +10,7 @@
 GPURenderPass::GPURenderPass(){}
 
 void GPURenderPass::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData,
-    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)
+    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -18,6 +19,7 @@ void GPURenderPass::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRender
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
     mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
     mGPURenderPassData = gpuRenderPassData;
+    mGPUDescriptorManager = &gpuDescriptorManager;
 
     mGPUUniformBuffersContainer.addUniformBuffer(mGPUContext, GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 }

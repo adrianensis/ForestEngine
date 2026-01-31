@@ -3,7 +3,7 @@
 #include "vulkan/vulkan_core.h"
 
 void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
-    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager)
+    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
@@ -46,7 +46,12 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
     renderPassResolveData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
 
     mRenderPassResolve = Core::OwnerPtr<GPURenderPass>::newObject();
-    mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer, renderPassResolveData, gpuSkeletalAnimationManager, gpuShaderManager);
+    mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, 
+        mGlobalGPUUniformBuffersContainer, 
+        renderPassResolveData, 
+        gpuSkeletalAnimationManager, 
+        gpuShaderManager, 
+        gpuDescriptorManager);
 }
 
 void GPURenderGraph::render()

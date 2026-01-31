@@ -10,6 +10,7 @@ void GPUInstance::init(IGPUWindow* gpuWindow)
     mGPUContext = Core::Memory::newObject<GPUContext>();
     mGPUContext->init(gpuWindow);
 
+    mGPUDescriptorManager.init(mGPUContext);
     mGPUShaderManager = Core::Memory::newObject<GPUShaderManager>();
     mGPUShaderManager->init();
     mGPUSkeletalAnimationManager = Core::Memory::newObject<GPUSkeletalAnimationManager>();
@@ -20,6 +21,7 @@ void GPUInstance::terminate()
 {
     mGPUShaderManager->terminate();
     mGPUSkeletalAnimationManager->terminate();
+    mGPUDescriptorManager.terminate();
     mGPUContext->terminate();
     Core::Memory::deleteObject(mGPUContext);
     Core::Memory::deleteObject(mGPUShaderManager);

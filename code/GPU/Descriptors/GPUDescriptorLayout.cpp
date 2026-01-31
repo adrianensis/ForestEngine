@@ -45,6 +45,14 @@ void GPUDescriptorLayout::init(const GPUDescriptorLayoutData& gpuDescriptorLayou
         bindings.push_back(layoutBinding);
     }
 
+    // VkDescriptorSetLayoutBinding globalTextureBinding{};
+    // globalTextureBinding.binding = mGPUDescriptorLayoutData.mTextureBindings.size() + samplersBindingIndexOffset;
+    // globalTextureBinding.descriptorCount = 1024; // Or indexingProps.maxDescriptorSetUpdateAfterBindSampledImages
+    // globalTextureBinding.stageFlags = VK_SHADER_STAGE_ALL;
+    // globalTextureBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+
+    // bindings.push_back(globalTextureBinding);
+
     VkDescriptorBindingFlags bindingFlags = 
     VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | 
     VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
