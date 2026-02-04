@@ -9,6 +9,9 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
     mGPUContext = gpuContext;
     mGPUInstanceRendererManager = gpuInstanceRendererManager;
     mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
+    mGPUDescriptorManager = &gpuDescriptorManager;
+
+    mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
 
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
@@ -51,7 +54,7 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
         renderPassResolveData, 
         gpuSkeletalAnimationManager, 
         gpuShaderManager, 
-        gpuDescriptorManager);
+        *mGPUDescriptorManager);
 }
 
 void GPURenderGraph::render()

@@ -56,6 +56,7 @@ private:
     Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
     Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
     Core::OwnerPtr<GPURenderPass> mRenderPassResolve;
+    GPUDescriptorManager* mGPUDescriptorManager = nullptr;
     // Core::OwnerPtr<GPUDescriptorSet> mGPUDescriptorSet;
     GPUImage mColorBufferImage;
     GPUImage mDepthBufferImage;

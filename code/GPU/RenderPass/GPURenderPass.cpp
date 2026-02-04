@@ -21,9 +21,6 @@ void GPURenderPass::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRender
     mGPURenderPassData = gpuRenderPassData;
     mGPUDescriptorManager = &gpuDescriptorManager;
 
-    // TODO: this key should be something like addPool((u32) GPUPoolScope::RENDER_PASS/GLOBAL/...)
-    mGPUDescriptorManager->addPool(0);
-
     mGPUUniformBuffersContainer.addUniformBuffer(mGPUContext, GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 }
 
@@ -163,7 +160,6 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
         {
             gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
         }
-    
 
         GPUDescriptorLayoutData gpuDescriptorLayoutData
         {
@@ -171,7 +167,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             gpuShaderTextureBindings
         };
 
-        const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(0);
+        const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
         GPUInstanceRendererData::GPUInstanceRendererDataFunctor hashGPUInstanceRendererDataFunctor;
         mGPUDescriptorManager->addSet(hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
 
