@@ -15,6 +15,7 @@ public:
 class GPUDescriptorLayoutData
 {
 public:
+    // TODO: Stop copying GPUUniformBuffers everywhere! Just pass data around!
     std::vector<GPUUniformBuffer> mUniformBuffers;
     std::vector<GPUShaderTextureBinding> mTextureBindings;
 };

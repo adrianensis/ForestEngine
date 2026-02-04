@@ -85,9 +85,6 @@ void GPUDescriptorSet::update()
             }
             descriptorWrite.descriptorCount = 1;
             descriptorWrite.pBufferInfo = &bufferInfo;
-
-            mGPUDescriptorSetBindings.mBindings.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,descriptorWrite.dstBinding);
-            mGPUDescriptorSetBindings.mSets.emplace(uniformBuffer.getGPUUniformBufferData().mBufferName,i);
         }
 
         FOR_ARRAY(j, mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings)
@@ -107,9 +104,6 @@ void GPUDescriptorSet::update()
             descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrite.descriptorCount = 1;
             descriptorWrite.pImageInfo = &imageInfo;
-
-            mGPUDescriptorSetBindings.mBindings.emplace(textureBinding.mName, descriptorWrite.dstBinding);
-            mGPUDescriptorSetBindings.mSets.emplace(textureBinding.mName,i);
         }
     }
 

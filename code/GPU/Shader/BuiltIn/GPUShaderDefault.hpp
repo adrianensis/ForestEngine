@@ -20,9 +20,9 @@ class GPUShaderDefault : public GPUShader
 {
 public:
     virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const override;
+        const GPUShaderCompilationData& shaderCompilationData) const override;
     virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, 
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const override;
+        const GPUShaderCompilationData& shaderCompilationData) const override;
     virtual void generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
 
 protected:
@@ -39,8 +39,8 @@ protected:
 
     virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const;
 
-    virtual void registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const;
-    virtual void registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const;
+    virtual void registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUShaderCompilationData& shaderCompilationData) const;
+    virtual void registerFragmentGPUShaderData(GPUShaderBuilder& GPUShaderBuilder, const GPUShaderCompilationData& shaderCompilationData) const;
 
     void registerFunctionCalculateBoneTransform(GPUShaderBuilder& GPUShaderBuilder) const;
 };

@@ -86,13 +86,11 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
 {
     PROFILER_CPU_NAMED(compileShader)
 
-    mGPUShaderCompilationData = shaderCompilationData;
-
     Core::OwnerPtr<GPUShaderPipeline> gpuShaderPipeline = Core::OwnerPtr<GPUShaderPipeline>::newObject();
     GPUShaderPipelineData gpuShaderPipelineData
     {
-        shaderCompilationData.mGPUDescriptorSet,
-        mGPUShaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
+        shaderCompilationData.mGPUDescriptorSetLocal,
+        shaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
     };
     gpuShaderPipeline->init(gpuShaderPipelineData, mGPUContext);
 
@@ -100,21 +98,21 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
     GPUShaderBuilder sbFrag;
     {
         PROFILER_CPU_NAMED(create_vertex_and_fragment)
-        createVertexShader(sbVert, mGPUShaderCompilationData.mInputVertexBuffersContainer, *gpuShaderPipelineData.mGPUDescriptorSet);
-        createFragmentShader(sbFrag, mGPUShaderCompilationData.mInputVertexBuffersContainer, *gpuShaderPipelineData.mGPUDescriptorSet);
+        createVertexShader(sbVert, shaderCompilationData);
+        createFragmentShader(sbFrag, shaderCompilationData);
     }
 
     // TODO: refactor std::string("output/shaders/")
     
     std::string stringGPUShaderVert = sbVert.getCode();
-    std::string shaderPathVert = std::string("output/shaders/") + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".vert";
+    std::string shaderPathVert = std::string("output/shaders/") + shaderCompilationData.id.get() + "_" + shaderCompilationData.label.get() + ".vert";
     Core::FileUtils::writeFile(shaderPathVert, [stringGPUShaderVert](std::ofstream& file)
     {
         file << stringGPUShaderVert;
     });
 
     std::string stringGPUShaderFrag = sbFrag.getCode();
-    std::string shaderPathFrag = std::string("output/shaders/") + mGPUShaderCompilationData.id.get() + "_" + mGPUShaderCompilationData.label.get() + ".frag";
+    std::string shaderPathFrag = std::string("output/shaders/") + shaderCompilationData.id.get() + "_" + shaderCompilationData.label.get() + ".frag";
     Core::FileUtils::writeFile(shaderPathFrag, [stringGPUShaderFrag](std::ofstream& file)
     {
         file << stringGPUShaderFrag;

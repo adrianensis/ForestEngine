@@ -2,6 +2,7 @@
 
 #include "Core/CoreBase.hpp"
 #include "GPU/Core/GPUDefinitions.h"
+#include "GPU/Descriptors/GPUDescriptorLayout.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "Core/Memory/ByteBuffer.hpp"
@@ -10,6 +11,7 @@
 class GPUMesh;
 class GPUShaderManager;
 
+// TODO: is it even used?
 class FramebufferBinding
 {
 public:
@@ -17,6 +19,7 @@ public:
     Core::u32 mTextureID = 0;
 };
 
+// TODO: rename or relocate?
 class TextureBinding
 {
 public:
@@ -41,7 +44,8 @@ public:
     Core::HashedString id;
     std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
-    const GPUDescriptorSet* mGPUDescriptorSet = nullptr;
+    const GPUDescriptorSet* mGPUDescriptorSetGlobal = nullptr;
+    const GPUDescriptorSet* mGPUDescriptorSetLocal = nullptr;
 };
 
 class GPUShaderGenerationDataCommon
@@ -148,10 +152,10 @@ public:
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
     virtual void createVertexShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const
+        const GPUShaderCompilationData& shaderCompilationData) const
         {};
     virtual void createFragmentShader(GPUShaderBuilder& GPUShaderBuilder,
-        const GPUVertexBuffersContainer& gpuVertexBuffersContainer, const GPUDescriptorSet& gpuDescriptorSet) const
+        const GPUShaderCompilationData& shaderCompilationData) const
         {};
 
     virtual void generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
@@ -179,7 +183,6 @@ protected:
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
     std::unordered_set<Core::HashedString> mTextures;
     std::unordered_map<Core::HashedString, FramebufferBinding> mFramebufferBindings;
-    GPUShaderCompilationData mGPUShaderCompilationData;
     GPUShaderData mGPUShaderData;
     Core::u32 mID = 0;
     Core::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
