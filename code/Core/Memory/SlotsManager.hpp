@@ -95,6 +95,7 @@ public:
     bool isEmpty() const { return mAvailableSlots.empty(); }
 
 private:
+    // TODO: improve with bool array
     std::set<u32> mAvailableSlots;
     u32 mSize = 0;
 public:
