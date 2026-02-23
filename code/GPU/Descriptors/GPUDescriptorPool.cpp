@@ -21,15 +21,15 @@ void GPUDescriptorPool::init(GPUContext* gpuContext)
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[1].descriptorCount = 200; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindUniformBuffers;
     poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[2].descriptorCount = 200; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindSamplers;
+    poolSizes[2].descriptorCount = 4096; // TODO: Set value to indexingProps.maxDescriptorSetUpdateAfterBindSamplers;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
     poolInfo.poolSizeCount = poolTypesCount;
     poolInfo.pPoolSizes = poolSizes.data();
-    // TODO: select a correct poolInfo.maxSets number
-    poolInfo.maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT * 1000;
+    // TODO: select a correct poolInfo.maxSets number, GPUContext::MAX_FRAMES_IN_FLIGHT should be enough for the Pool used for GLOBAL DescriptorSet
+    poolInfo.maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT * 100;
 
     /*
         * Inadequate descriptor pools are a good example of a problem that the validation layers will not catch:

@@ -11,17 +11,19 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
     mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
     mGPUDescriptorManager = &gpuDescriptorManager;
 
+    mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
     mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
 
-    // std::vector<GPUUniformBuffer> uniformBuffers;
-    // GPUDescriptorLayoutData gpuDescriptorLayoutData
-    // {
-    //     uniformBuffers,
-    //     {}
-    // };
+    std::vector<GPUUniformBuffer> uniformBuffers;
+    GPUDescriptorLayoutData gpuDescriptorLayoutData
+    {
+        uniformBuffers,
+        {},
+        true
+    };
 
-    // const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
-    // mGPUDescriptorManager->addSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), gpuDescriptorPool, gpuDescriptorLayoutData);
+    const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
+    mGPUDescriptorManager->addSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), gpuDescriptorPool, gpuDescriptorLayoutData);
 
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 

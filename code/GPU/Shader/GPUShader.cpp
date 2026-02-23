@@ -86,9 +86,12 @@ Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompil
 {
     PROFILER_CPU_NAMED(compileShader)
 
+    // TODO: Refactor this method to external ShaderUtils?
+
     Core::OwnerPtr<GPUShaderPipeline> gpuShaderPipeline = Core::OwnerPtr<GPUShaderPipeline>::newObject();
     GPUShaderPipelineData gpuShaderPipelineData
     {
+        shaderCompilationData.mGPUDescriptorSetGlobal,
         shaderCompilationData.mGPUDescriptorSetLocal,
         shaderCompilationData.mInputVertexBuffersContainer.getVertexBuffers(),
     };

@@ -9,9 +9,10 @@ class GPUDescriptorSet
 {    
 public:
     void init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext);
-    void update();
     void terminate();
+    void updateBindlessSlot(Core::Slot slot, Core::WeakPtr<GPUTexture> texture);
 private:
+    void update();
     GPUContext* mGPUContext = nullptr;
 public:
     std::vector<VkDescriptorSet> descriptorSets;

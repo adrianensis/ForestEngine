@@ -142,12 +142,6 @@ void GPUTexture::terminate()
 {
     PROFILER_CPU_NAMED(terminate_texture)
 
-    if(mGPUTextureId > 0)
-    {
-        mGPUTextureId = 0;
-        mGPUTextureHandle = 0;
-    }
-
     VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
     vkDestroySampler(mGPUContext->vulkanDevice->getDevice(), mTextureSampler, allocationCallbacks);
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), mTextureImageView, allocationCallbacks);

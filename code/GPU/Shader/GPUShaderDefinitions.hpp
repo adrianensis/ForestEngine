@@ -53,6 +53,11 @@ public:
             namedTextureHandle.mName = Core::HashedString(namedTextureHandle.mName.get() + "_" + name.get());
             return namedTextureHandle;
         }
+
+        inline static const GPUVariableDefinitionData mTextures
+        {
+            {GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "textures"}, "", " "
+        };
     };
 
     class UniformBuffers
@@ -78,16 +83,16 @@ public:
             GPUDescriptorSetScope::LOCAL
         };
 
-        inline static const GPUUniformBufferData mTextures
-        {
-            GPUBufferType::STORAGE,
-            {
-                {{GPUStorage::UNIFORM, /*PrimitiveTypes::mSampler2D*/PrimitiveTypes::mUnsignedInt, "textures"}, "", " "},
-            },
-            "Textures",
-            "textures",
-            GPUDescriptorSetScope::LOCAL
-        };
+        // inline static const GPUUniformBufferData mTextures
+        // {
+        //     GPUBufferType::STORAGE,
+        //     {
+        //         {{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "textures"}, "", " "},
+        //     },
+        //     "Textures",
+        //     "textures",
+        //     GPUDescriptorSetScope::GLOBAL // TODO: this scope should be decided by user
+        // };
         
         inline static const GPUUniformBufferData mModelMatrices
         {

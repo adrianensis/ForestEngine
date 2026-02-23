@@ -32,7 +32,8 @@ public:
 class GPUShaderPipelineData
 {
 public:
-    const GPUDescriptorSet* mGPUDescriptorSet = nullptr;
+    const GPUDescriptorSet* mGPUDescriptorSetGlobal = nullptr;
+    const GPUDescriptorSet* mGPUDescriptorSetLocal = nullptr;
     std::vector<GPUVertexBuffer> mVertexInputBuffers;
 };
 
@@ -49,7 +50,6 @@ public:
     void enable() const;
     void disable() const;
 private:
-    const GPUDescriptorSet* mGPUDescriptorSet = nullptr;
     GPUShaderModule vertexShader;
     GPUShaderModule fragmentShader;
     GPUVertexInputData mGPUVertexInputData;
@@ -58,7 +58,6 @@ private:
     VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUShaderPipelineData mGPUShaderPipelineData;
 public:
-    GET(GPUDescriptorSet)
     CRGET(PipelineLayout)
     CRGET(Pipeline)
 };

@@ -29,7 +29,6 @@ public:
     void terminate();
     
 private:
-	Core::u32 mGPUTextureId = 0;
     TextureHandle mGPUTextureHandle = 0;
     Image::ImageData mImageData;
 	Core::u32 mID = 0;

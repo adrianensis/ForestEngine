@@ -1,7 +1,9 @@
 #include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 #include "Core/CoreMacros.hpp"
 #include "Core/HashedString/HashedString.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
+#include "GPU/Shader/ShaderBuilder/GPUShaderBuilderNodes.hpp"
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
@@ -367,16 +369,21 @@ void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBu
     {
         // TODO: refactor into a function
         Core::u32 bindingPoint = 0;
+        bool found = false;
         FOR_ARRAY(b, shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers)
         {
             bindingPoint = b;
             const GPUUniformBuffer& gpuUniformBuffer = shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers[bindingPoint];
             if(gpuUniformBuffer.getGPUUniformBufferData().mBufferName == (*it).mBufferName)
             {
+                found = true;
                 break;
             }
         }
-        GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, bindingPoint));
+        if(found)
+        {
+            GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, bindingPoint));
+        }
     }
     Core::u32 vertexOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs)
@@ -411,18 +418,24 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
     {
         // TODO: refactor into a function
         Core::u32 bindingPoint = 0;
+        bool found = false;
         FOR_ARRAY(b, shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers)
         {
             bindingPoint = b;
             const GPUUniformBuffer& gpuUniformBuffer = shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers[bindingPoint];
             if(gpuUniformBuffer.getGPUUniformBufferData().mBufferName == (*it).mBufferName)
             {
+                found = true;
                 break;
             }
         }
-
-        GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, bindingPoint));
+        if(found)
+        {
+            GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, bindingPoint));
+        }
     }
+
+    GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::mTextures, 0, GPUDescriptorSetScope::GLOBAL));
 
     FOR_MAP(it, mTextures)
     {

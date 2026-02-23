@@ -4,13 +4,13 @@
 #include "GPU/Core/GPULog.h"
 #include "vulkan/vulkan_core.h"
 #include "GPU/Image/GPUImageUtils.hpp"
+#include <cstddef>
 
 void GPUShaderPipeline::init(const GPUShaderPipelineData& gpuShaderPipelineData, GPUContext* gpuContext)
 {
     mGPUShaderPipelineData = gpuShaderPipelineData;
     mGPUContext = gpuContext;
 
-    mGPUDescriptorSet = gpuShaderPipelineData.mGPUDescriptorSet;
     // mGPUDescriptorSet->init(mGPUShaderPipelineData.mGPUDescriptorLayoutData, gpuDescriptorPool, mGPUContext);
 
     mGPUVertexInputData.mVertexInputBindingDescriptions.resize(mGPUShaderPipelineData.mVertexInputBuffers.size());
@@ -122,14 +122,17 @@ void GPUShaderPipeline::enable() const
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     bind(vulkanCommandBuffer);
 
-    VkDescriptorSet descriptorSet = mGPUDescriptorSet->descriptorSets[mGPUContext->currentFrame];
+    VkDescriptorSet descriptorSets[2] = {};
+    descriptorSets[0] = mGPUShaderPipelineData.mGPUDescriptorSetGlobal->descriptorSets[mGPUContext->currentFrame];
+    descriptorSets[1] = mGPUShaderPipelineData.mGPUDescriptorSetLocal->descriptorSets[mGPUContext->currentFrame];
     VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     VkPipelineLayout pipelineLayout = mPipelineLayout;
     constexpr Core::u32 firstSet = 0;
-    constexpr Core::u32 descriptorSetCount = 1;
+    constexpr Core::u32 descriptorSetCount = std::size(descriptorSets);
     constexpr Core::u32 dynamicOffsetCount = 0;
     constexpr Core::u32* dynamicOffsets = nullptr;
-    vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, &descriptorSet, dynamicOffsetCount, dynamicOffsets);
+    // TODO: OPT: Bind local only? bind global in outer scope?
+    vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, descriptorSets, dynamicOffsetCount, dynamicOffsets);
 }
 
 void GPUShaderPipeline::disable() const
@@ -266,8 +269,12 @@ void GPUShaderPipeline::compile(const GPUShaderModuleData& vertex, const GPUShad
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &mGPUDescriptorSet->mGPUDescriptorLayout.descriptorSetLayout;
+    pipelineLayoutInfo.setLayoutCount = 2;
+    VkDescriptorSetLayout setLayouts[] = {
+        mGPUShaderPipelineData.mGPUDescriptorSetGlobal->mGPUDescriptorLayout.descriptorSetLayout,
+        mGPUShaderPipelineData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.descriptorSetLayout
+    };
+    pipelineLayoutInfo.pSetLayouts = setLayouts;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 

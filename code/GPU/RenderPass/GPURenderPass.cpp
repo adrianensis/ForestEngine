@@ -1,4 +1,5 @@
 #include "GPU/RenderPass/GPURenderPass.h"
+#include "Core/CoreBase.hpp"
 #include "GPU/Descriptors/GPUDescriptorManager.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "GPU/InstanceRenderer/GPUInstanceRendererData.hpp"
@@ -164,12 +165,16 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
         GPUDescriptorLayoutData gpuDescriptorLayoutData
         {
             uniformBuffers,
-            gpuShaderTextureBindings
+            gpuShaderTextureBindings,
+            false
         };
 
         const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
         GPUInstanceRendererData::GPUInstanceRendererDataFunctor hashGPUInstanceRendererDataFunctor;
-        mGPUDescriptorManager->addSet(hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
+        
+        // TODO: Fix and Refactor this offset, GPUDescriptorSetScope::LOCAL == 1 but gpuInstanceRendererData hash can also be 1 !!!
+        Core::u64 descriptorHashOffset = (Core::u64)GPUDescriptorSetScope::MAX;
+        mGPUDescriptorManager->addSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
 
 
         GPUShaderCompilationData shaderCompilationData
@@ -178,8 +183,8 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
             uniformBuffers,
             gpuInstanceRenderer->getGPUVertexBuffersContainer(),
-            nullptr,
-            &mGPUDescriptorManager->getSet(hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
+            &mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL)),
+            &mGPUDescriptorManager->getSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
         };
 
         mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));
