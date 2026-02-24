@@ -35,11 +35,6 @@ void GPUShaderManager::update()
     }
 }
 
-Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
-{
-	return mGPUTextureManager->loadTexture(gpuContext, gpuTextureData);
-}
-
 void GPUShaderManager::postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
 {
     loadGPUShaderTextures(gpuContext, shader);
@@ -68,7 +63,7 @@ void GPUShaderManager::loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakP
                 gpuTextureData.mFontData = shader->getGPUShaderData().mFontData;
             }
 
-            mTextureBindingsByShader.at(id).insert_or_assign(it->first, loadTexture(gpuContext, gpuTextureData));
+            mTextureBindingsByShader.at(id).insert_or_assign(it->first, mGPUTextureManager->loadTexture(gpuContext, gpuTextureData));
         }
     }
 }
