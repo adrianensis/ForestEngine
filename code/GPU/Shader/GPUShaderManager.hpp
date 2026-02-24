@@ -51,7 +51,6 @@ private:
 	std::unordered_map<Core::ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
 	
     std::vector<Core::OwnerPtr<GPUTexture>> mTextures;
-    std::vector<TextureHandle> mTextureHandles;
     std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> mTexturesByPath;
 	std::unordered_map<Core::u32, std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>> mTextureBindingsByShader;
     std::vector<Core::OwnerPtr<GPUShader>> mShaders;

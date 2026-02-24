@@ -3,10 +3,8 @@
 
 void GPUShaderManager::init()
 {
-    mTextureHandles.reserve(mInitialTextures);
     mTextures.reserve(mInitialTextures);
     // INFO: We reserve position 0 to represent NULL
-    mTextureHandles.emplace_back();
     mTextures.emplace_back();
 }
 

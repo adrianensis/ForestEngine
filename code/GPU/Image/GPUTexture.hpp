@@ -29,7 +29,6 @@ public:
     void terminate();
     
 private:
-    TextureHandle mGPUTextureHandle = 0;
     Image::ImageData mImageData;
 	Core::u32 mID = 0;
 	GPUTextureData mTextureData;
@@ -44,6 +43,5 @@ public:
 
 public:
     GET(ID)
-    GET(GPUTextureHandle)
 };
 

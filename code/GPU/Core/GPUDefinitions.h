@@ -226,7 +226,6 @@ DECLARE_ENUM(GPUCullFaceType,
     FRONT_AND_BACK, "FRONT_AND_BACK"
 );
 
-using TextureHandle = Core::u64;
 
 class GPUConstants
 {
