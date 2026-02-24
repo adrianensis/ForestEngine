@@ -1,11 +1,10 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/Image/GPUTexture.hpp"
+#include "GPU/Image/GPUTextureManager.hpp"
 
-void GPUShaderManager::init()
+void GPUShaderManager::init(GPUTextureManager* gpuTextureManager)
 {
-    mTextures.reserve(mInitialTextures);
-    // INFO: We reserve position 0 to represent NULL
-    mTextures.emplace_back();
+    mGPUTextureManager = gpuTextureManager;
 }
 
 void GPUShaderManager::terminate()
@@ -16,21 +15,6 @@ void GPUShaderManager::terminate()
     }
 
     mGPUShaderPropertyBlockRenderStates.clear();
-
-    FOR_LIST(it, mTextures)
-    {
-        if(*it)
-        {
-            (*it)->terminate();
-        }
-    }
-    FOR_LIST(it, mShaders)
-    {
-        if(*it)
-        {
-            (*it)->terminate();
-        }
-    }
 }
 
 void GPUShaderManager::update()
@@ -53,15 +37,7 @@ void GPUShaderManager::update()
 
 Core::WeakPtr<GPUTexture> GPUShaderManager::loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
 {
-	if (!mTexturesByPath.contains(gpuTextureData.mPath))
-	{
-        PROFILER_CPU()
-        Core::WeakPtr<GPUTexture> texture = mTextures.emplace_back(Core::OwnerPtr<GPUTexture>::newObject());
-        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, texture);
-        texture->init(gpuContext, gpuTextureData, mTextures.size() - 1);
-	}
-
-	return mTexturesByPath.at(gpuTextureData.mPath);
+	return mGPUTextureManager->loadTexture(gpuContext, gpuTextureData);
 }
 
 void GPUShaderManager::postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)

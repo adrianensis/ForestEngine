@@ -1,6 +1,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
+#include "GPU/Image/GPUTextureManager.hpp"
 
 void GPUInstance::init(IGPUWindow* gpuWindow)
 {
@@ -11,19 +12,23 @@ void GPUInstance::init(IGPUWindow* gpuWindow)
     mGPUContext->init(gpuWindow);
 
     mGPUDescriptorManager.init(mGPUContext);
+    mGPUTextureManager = Core::Memory::newObject<GPUTextureManager>();
+    mGPUTextureManager->init();
     mGPUShaderManager = Core::Memory::newObject<GPUShaderManager>();
-    mGPUShaderManager->init();
+    mGPUShaderManager->init(mGPUTextureManager);
     mGPUSkeletalAnimationManager = Core::Memory::newObject<GPUSkeletalAnimationManager>();
     mGPUSkeletalAnimationManager->init();
 }
 
 void GPUInstance::terminate()
 {
+    mGPUTextureManager->terminate();
     mGPUShaderManager->terminate();
     mGPUSkeletalAnimationManager->terminate();
     mGPUDescriptorManager.terminate();
     mGPUContext->terminate();
     Core::Memory::deleteObject(mGPUContext);
+    Core::Memory::deleteObject(mGPUTextureManager);
     Core::Memory::deleteObject(mGPUShaderManager);
     Core::Memory::deleteObject(mGPUSkeletalAnimationManager);
 }

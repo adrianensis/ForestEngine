@@ -3,10 +3,12 @@
 #include "Core/Core.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
+class GPUTextureManager;
+
 class GPUShaderManager
 {
 public:
-    void init();
+    void init(GPUTextureManager* gpuTextureManager);
     void terminate();
     void update();
     Core::WeakPtr<GPUTexture> loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
@@ -50,13 +52,12 @@ private:
 
 	std::unordered_map<Core::ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
 	
-    std::vector<Core::OwnerPtr<GPUTexture>> mTextures;
     std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> mTexturesByPath;
 	std::unordered_map<Core::u32, std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>>> mTextureBindingsByShader;
     std::vector<Core::OwnerPtr<GPUShader>> mShaders;
     std::vector<Core::OwnerPtr<GPUShaderPropertiesInstance>> mGPUShaderPropertiesInstances;
     std::unordered_set<Core::u32> mDirtyGPUShaderPropertiesInstances;
     inline static const Core::u32 mInitialInstances = 20000;
-    inline static const Core::u32 mInitialTextures = 300;
+    GPUTextureManager* mGPUTextureManager = nullptr;
 };
 
