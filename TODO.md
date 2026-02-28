@@ -1,7 +1,7 @@
 # TODO
 
-- [ ] Refactor GPUDescriptorPool, separate Layout and Pool, for bindless architecture
-- [ ] Improving load times with a pipeline cache, VkPipelineCache
+- [ ] Refactor GPU module, before completing Bindless Textures!
+
 - [ ] Change WeakPtr by Ref non-ownership dependant references (for example: pointers to GPUContext)
 - [ ] Review virtual destructors (clean + build to see all the warnings)
 - [ ] Shadow Mapping - Border clamp : https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
@@ -10,7 +10,6 @@
 - [ ] UI - Fix scale on resize
 - [ ] Hide backface for 2D sprites (optional, since some sprites could rotate?)
 - [ ] Test frustum culling, enable back
-- [ ] Add Option for SSBO to be readonly
 
 ## Vulkan Port
 - [ ] The VK_EXT_graphics_pipeline_library extensions allows separate compilation of different parts of the graphics pipeline. With this it’s now possible to split up the monolithic pipeline creation into different steps and re-use common parts shared across different pipelines. [Optimize Graphics Pipeline](https://docs.vulkan.org/samples/latest/samples/extensions/graphics_pipeline_library/README.html)
@@ -18,6 +17,7 @@
 
 ## Interesting / Nice To Have / Optimizations
 
+- [ ] Improving load times with a pipeline cache, VkPipelineCache
 - [ ] Animation Blending
 - [ ] persistent buffers -> this allows multithreading buffer update
 - [ ] Texture Arrays
