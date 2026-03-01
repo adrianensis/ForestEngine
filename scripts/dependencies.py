@@ -85,10 +85,9 @@ if installSystemDepencencies:
             os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
             os.system("sudo apt install -y libx11-xcb-dev libxcb-dri3-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-util-dev libwayland-dev") # vulkan dependencies
-            os.system("sudo apt-get -y install doxygen graphviz")
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
-            # os.system("sudo pacman -Sy base-devel wget unzip cmake clang doxygen graphviz")
+            # os.system("sudo pacman -Sy base-devel wget unzip cmake clang")
             pass
     elif system_name == "Darwin":
         # OS X
