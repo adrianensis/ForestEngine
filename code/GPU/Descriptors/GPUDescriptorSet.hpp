@@ -4,7 +4,6 @@
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
 #include "GPU/Descriptors/GPUDescriptorPool.hpp"
 
-// TODO: Refactor, separate Layout and Pool, for bindless architecture
 class GPUDescriptorSet
 {    
 public:
