@@ -74,7 +74,7 @@ for opt, arg in opts:
 
 buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
-projectName = "FlopEngine"
+projectName = "ForestEngine"
 
 cmake_generator = cmake_build.CMakeGenerator.DEFAULT
 if enableNinja:
