@@ -45,7 +45,7 @@ void GPUDescriptorLayout::init(const GPUDescriptorLayoutData& gpuDescriptorLayou
     
         FOR_ARRAY(i, mGPUDescriptorLayoutData.mTextureBindings)
         {
-            // const GPUShaderTextureBinding& textureBinding = mGPUDescriptorLayoutData.mTextureBindings[i];
+            // const GPUTextureBinding& textureBinding = mGPUDescriptorLayoutData.mTextureBindings[i];
     
             VkDescriptorSetLayoutBinding layoutBinding{};
             layoutBinding.binding = i + samplersBindingIndexOffset;

@@ -104,7 +104,7 @@ void GPUDescriptorSet::update()
 
         FOR_ARRAY(j, mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings)
         {
-            const GPUShaderTextureBinding& textureBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings[j];
+            const GPUTextureBinding& textureBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings[j];
 
             VkDescriptorImageInfo& imageInfo = imageInfos.emplace_back();
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

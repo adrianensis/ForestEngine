@@ -446,7 +446,7 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
         FOR_ARRAY(b, shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings)
         {
             bindingPoint = b;
-            const GPUShaderTextureBinding& textureBinding = shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings[bindingPoint];
+            const GPUTextureBinding& textureBinding = shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings[bindingPoint];
             if(textureBinding.mName == textureName)
             {
                 found = true;

@@ -148,14 +148,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
 
         Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
 
-        // TODO: unify <Core::HashedString, Core::WeakPtr<GPUTexture> with GPUShaderTextureBinding
-        // TODO: rename GPUShaderTextureBinding to just GPUTextureBinding (?)
-        std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
-        const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = mGPURenderPassSubsystems.mGPUShaderManager->getGPUShaderTextureBindings(gpuInstanceRendererData.mShader->getID());
-        FOR_MAP(it, shaderTextures)
-        {
-            gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
-        }
+        const std::vector<GPUTextureBinding> &gpuShaderTextureBindings = mGPURenderPassSubsystems.mGPUShaderManager->getGPUShaderTextureBindings(gpuInstanceRendererData.mShader->getID());
 
         GPUDescriptorLayoutData gpuDescriptorLayoutData
         {

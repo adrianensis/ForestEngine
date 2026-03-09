@@ -4,8 +4,8 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Image/GPUTexture.hpp"
 
-// TODO: rename GPUShaderTextureBinding to just GPUTextureBinding (?)
-class GPUShaderTextureBinding
+// TODO: rename GPUTextureBinding to just GPUTextureBinding (?)
+class GPUTextureBinding
 {
 public:
     Core::HashedString mName;
@@ -17,7 +17,7 @@ class GPUDescriptorLayoutData
 public:
     // TODO: Stop copying GPUUniformBuffers everywhere! Just pass data around!
     std::vector<GPUUniformBuffer> mUniformBuffers;
-    std::vector<GPUShaderTextureBinding> mTextureBindings;
+    std::vector<GPUTextureBinding> mTextureBindings;
     bool mIsBindless = false;
 };
 
