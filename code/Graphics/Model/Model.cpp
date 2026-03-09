@@ -87,7 +87,7 @@ void Model::loadGLTFShaders()
             if(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
-                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, TextureBinding{Core::HashedString(texturePath.string())});
+                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, GPUTextureData{Core::HashedString(texturePath.string())});
                 // shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{Core::HashedString(texturePath.string())});
             }
             else
@@ -100,7 +100,7 @@ void Model::loadGLTFShaders()
             if(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
-                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, TextureBinding{Core::HashedString(texturePath.string()), true});
+                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smMetallicRoughness, GPUTextureData{Core::HashedString(texturePath.string()), true});
             }
             else
             {
@@ -111,7 +111,7 @@ void Model::loadGLTFShaders()
             if(cgltfMaterial.normal_texture.texture)
             {
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
-                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, TextureBinding{Core::HashedString(texturePath.string()), true});
+                shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smNormal, GPUTextureData{Core::HashedString(texturePath.string()), true});
             }
 
             // newShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShader);

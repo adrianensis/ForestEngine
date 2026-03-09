@@ -3,6 +3,7 @@
 #include "Core/CoreBase.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
+#include "GPU/Image/GPUTexture.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "Core/Memory/ByteBuffer.hpp"
@@ -17,15 +18,6 @@ class FramebufferBinding
 public:
     Core::HashedString mSamplerName;
     Core::u32 mTextureID = 0;
-};
-
-// TODO: rename or relocate?
-class TextureBinding
-{
-public:
-    Core::HashedString mPath;
-    bool mIsLinearData = false;
-    bool operator==(const TextureBinding& other) const { return this->mPath == other.mPath; }
 };
 
 class GPUShaderPropertiesBlockNames
@@ -87,7 +79,7 @@ public:
 class GPUShaderTextureBindings
 {
 public:
-    std::unordered_map<Core::HashedString, TextureBinding> mTextureBindings;
+    std::unordered_map<Core::HashedString, GPUTextureData> mTextureBindings;
 
     bool operator==(const GPUShaderTextureBindings& other) const
     {
@@ -128,8 +120,6 @@ public:
     // GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     Core::u32 mMaxInstances = 100;
-    bool mIsFont = false;
-    Font::FontData mFontData;
     GPUShaderTextureBindings mGPUShaderTextureBindings;
 
     Core::u32 getMaxInstances() const

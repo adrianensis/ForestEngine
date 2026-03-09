@@ -32,7 +32,7 @@ void UIManager::terminate()
 const Font::FontGlyphData& UIManager::getGlyphData(char character) const
 {
     auto font = mFontsManager.getFont(mDefaultFont);
-    const auto& glyphsArray = font->getFontShader()->getGPUShaderData().mFontData.mGlyphs;
+    const auto& glyphsArray = font->getFontData().mGlyphs;
     const Font::FontGlyphData& glyph = glyphsArray.at(character);
     return glyph;
 }

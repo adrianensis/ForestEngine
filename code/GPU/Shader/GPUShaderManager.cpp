@@ -51,16 +51,11 @@ void GPUShaderManager::loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakP
 
         FOR_MAP(it, shader->getGPUShaderData().mGPUShaderTextureBindings.mTextureBindings)
         {
-            CHECK_MSG(!it->second.mPath.get().empty(), "texture mPath cannot be empty!");
-            GPUTextureData gpuTextureData;
-            gpuTextureData.mPath = it->second.mPath;
-            gpuTextureData.mIsLinearData = it->second.mIsLinearData;
-
-            if(shader->getGPUShaderData().mIsFont)
+            const GPUTextureData& gpuTextureData = it->second;
+            CHECK_MSG(!gpuTextureData.mPath.get().empty(), "texture mPath cannot be empty!");
+            if(gpuTextureData.mIsFont)
             {
-                CHECK_MSG(!shader->getGPUShaderData().mFontData.mPath.get().empty(), "mGPUShaderData.mFontData.mPath cannot be empty!");
-                gpuTextureData.mIsFont = true;
-                gpuTextureData.mFontData = shader->getGPUShaderData().mFontData;
+                CHECK_MSG(!gpuTextureData.mFontData.mPath.get().empty(), "mGPUShaderData.mFontData.mPath cannot be empty!");
             }
 
             mTextureBindingsByShader.at(id).insert_or_assign(it->first, mGPUTextureManager->loadTexture(gpuContext, gpuTextureData));

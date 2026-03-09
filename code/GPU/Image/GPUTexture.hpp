@@ -17,9 +17,10 @@ class GPUTextureData
 {
 public:
     Core::HashedString mPath;
-    bool mIsFont = false;
     bool mIsLinearData = false;
+    bool mIsFont = false;
     Font::FontData mFontData;
+    bool operator==(const GPUTextureData& other) const { return this->mPath == other.mPath; }
 };
 
 class GPUTexture
