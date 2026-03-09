@@ -43,5 +43,6 @@ public:
 
 public:
     GET(ID)
+    GET(TextureData)
 };
 
