@@ -10,17 +10,12 @@
 
 GPURenderPass::GPURenderPass(){}
 
-void GPURenderPass::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData,
-    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager)
+void GPURenderPass::init(GPUContext* gpuContext, const GPURenderPassData& gpuRenderPassData, GPURenderPassSubsystems& gpuRenderPassSubsystems)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
-    mGPUSkeletalAnimationManager = gpuSkeletalAnimationManager;
-    mGPUShaderManager = gpuShaderManager;
-    mGPUInstanceRendererManager = gpuInstanceRendererManager;
-    mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
+    mGPURenderPassSubsystems = gpuRenderPassSubsystems;
     mGPURenderPassData = gpuRenderPassData;
-    mGPUDescriptorManager = &gpuDescriptorManager;
 
     mGPUUniformBuffersContainer.addUniformBuffer(mGPUContext, GPUShaderDefinitions::UniformBuffers::mGlobalData, sizeof(GPUShaderDefinitions::UniformBuffers::GPUGlobalData), false);
 }
@@ -131,32 +126,32 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
     if(!mGPUShaderPipelines.contains(gpuInstanceRendererData))
     {
         std::vector<GPUUniformBuffer> uniformBuffers;
-        uniformBuffers.push_back(mGPUShaderManager->getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
+        uniformBuffers.push_back(mGPURenderPassSubsystems.mGPUShaderManager->getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
 
-        Core::WeakPtr<GPUSkeletonState> skeletonState = mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+        Core::WeakPtr<GPUSkeletonState> skeletonState = mGPURenderPassSubsystems.mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
         if(skeletonState)
         {
-            uniformBuffers.push_back(mGPUSkeletalAnimationManager->getSkeletonRenderStateGPUUniformBuffer(skeletonState));
+            uniformBuffers.push_back(mGPURenderPassSubsystems.mGPUSkeletalAnimationManager->getSkeletonRenderStateGPUUniformBuffer(skeletonState));
         }
 
         uniformBuffers.push_back(mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));
-        uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
+        uniformBuffers.push_back(mGPURenderPassSubsystems.mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices));
         
-        if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mLightsBufferData))
+        if(mGPURenderPassSubsystems.mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mLightsBufferData))
         {
-            uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mLightsBufferData));
+            uniformBuffers.push_back(mGPURenderPassSubsystems.mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mLightsBufferData));
         }  
-        if(mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData))
+        if(mGPURenderPassSubsystems.mGlobalGPUUniformBuffersContainer->containsUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData))
         {
-            uniformBuffers.push_back(mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData));
+            uniformBuffers.push_back(mGPURenderPassSubsystems.mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData));
         }
 
-        Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+        Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
 
         // TODO: unify <Core::HashedString, Core::WeakPtr<GPUTexture> with GPUShaderTextureBinding
         // TODO: rename GPUShaderTextureBinding to just GPUTextureBinding (?)
         std::vector<GPUShaderTextureBinding> gpuShaderTextureBindings;
-        const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = mGPUShaderManager->getGPUShaderTextureBindings(gpuInstanceRendererData.mShader->getID());
+        const std::unordered_map<Core::HashedString, Core::WeakPtr<GPUTexture>> &shaderTextures = mGPURenderPassSubsystems.mGPUShaderManager->getGPUShaderTextureBindings(gpuInstanceRendererData.mShader->getID());
         FOR_MAP(it, shaderTextures)
         {
             gpuShaderTextureBindings.emplace_back(GPUShaderTextureBinding{it->first, it->second});
@@ -169,12 +164,12 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             false
         };
 
-        const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
+        const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
         GPUInstanceRendererData::GPUInstanceRendererDataFunctor hashGPUInstanceRendererDataFunctor;
         
         // TODO: Fix and Refactor this offset, GPUDescriptorSetScope::LOCAL == 1 but gpuInstanceRendererData hash can also be 1 !!!
         Core::u64 descriptorHashOffset = (Core::u64)GPUDescriptorSetScope::MAX;
-        mGPUDescriptorManager->addSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
+        mGPURenderPassSubsystems.mGPUDescriptorManager->addSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
 
 
         GPUShaderCompilationData shaderCompilationData
@@ -183,8 +178,8 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
             uniformBuffers,
             gpuInstanceRenderer->getGPUVertexBuffersContainer(),
-            &mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL)),
-            &mGPUDescriptorManager->getSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
+            &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL)),
+            &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
         };
 
         mGPUShaderPipelines.emplace(gpuInstanceRendererData, gpuInstanceRendererData.mShader->compileShader(shaderCompilationData));
@@ -220,7 +215,7 @@ void GPURenderPass::render()
 void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
-    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
     Core::WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];

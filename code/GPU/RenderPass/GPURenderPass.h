@@ -63,6 +63,16 @@ public:
     GPUFramebufferData mOutputFramebufferData;
 };
 
+class GPURenderPassSubsystems
+{
+public:
+    Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
+    Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
+    GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
+    GPUShaderManager* mGPUShaderManager = nullptr;
+    GPUDescriptorManager* mGPUDescriptorManager = nullptr;
+};
+
 class GPURenderPass
 {
 private:
@@ -72,8 +82,7 @@ public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
     // TODO: refactor so many arguments
-    void init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer, const GPURenderPassData& gpuRenderPassData,
-        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager);
+    void init(GPUContext* gpuContext, const GPURenderPassData& gpuRenderPassData, GPURenderPassSubsystems& gpuRenderPassSubsystems);
     void terminate();
     void begin(const GPURenderPassOutputData& gpuRenderPassOutputData);
     virtual void renderPass(const GPURenderPassOutputData& gpuRenderPassOutputData);
@@ -95,18 +104,11 @@ protected:
 public:
     GPUContext* mGPUContext = nullptr;
 protected:
-    GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
-    GPUShaderManager* mGPUShaderManager = nullptr;
-
     GPURenderPassData mGPURenderPassData;
-
-    GPUDescriptorManager* mGPUDescriptorManager = nullptr;
-
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
-    Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
-    Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
+    GPURenderPassSubsystems mGPURenderPassSubsystems;
 public:
     CRGET(GPURenderPassData)
 };

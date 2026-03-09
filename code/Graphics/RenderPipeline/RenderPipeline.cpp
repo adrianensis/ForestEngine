@@ -1,5 +1,6 @@
 #include "Graphics/RenderPipeline/RenderPipeline.hpp"
 #include "GPU/GPUInstance.hpp"
+#include "GPU/RenderPass/GPURenderPass.h"
 #include "Scene/Module.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
@@ -13,8 +14,16 @@ void RenderPipeline::init()
     initBuffers();
 
     mGPUInstanceRendererManager = Core::OwnerPtr<GPUInstanceRendererManager>::newObject();
-    mGPURenderGraph.init(GPUInstance::getInstance().mGPUContext, mGPUInstanceRendererManager, mGlobalGPUUniformBuffersContainer,
-        GPUInstance::getInstance().mGPUSkeletalAnimationManager, GPUInstance::getInstance().mGPUShaderManager, GPUInstance::getInstance().mGPUDescriptorManager);
+    GPURenderPassSubsystems gpuRenderPassSubsystems
+    {
+        mGPUInstanceRendererManager,
+        mGlobalGPUUniformBuffersContainer,
+        GPUInstance::getInstance().mGPUSkeletalAnimationManager,
+        GPUInstance::getInstance().mGPUShaderManager,
+        &GPUInstance::getInstance().mGPUDescriptorManager
+    };
+
+    mGPURenderGraph.init(GPUInstance::getInstance().mGPUContext, gpuRenderPassSubsystems);
 
     mMeshRenderers.resize(mGPURenderItemManager.getSize());
 }

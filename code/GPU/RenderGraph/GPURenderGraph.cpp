@@ -2,17 +2,14 @@
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "vulkan/vulkan_core.h"
 
-void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
-    GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager)
+void GPURenderGraph::init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRenderPassSubsystems)
 {
     PROFILER_CPU()
     mGPUContext = gpuContext;
-    mGPUInstanceRendererManager = gpuInstanceRendererManager;
-    mGlobalGPUUniformBuffersContainer = globalGPUUniformBuffersContainer;
-    mGPUDescriptorManager = &gpuDescriptorManager;
+    mGPURenderPassSubsystems = gpuRenderPassSubsystems;
 
-    mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
-    mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
 
     std::vector<GPUUniformBuffer> uniformBuffers;
     GPUDescriptorLayoutData gpuDescriptorLayoutData
@@ -22,8 +19,8 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
         true
     };
 
-    const GPUDescriptorPool& gpuDescriptorPool = mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
-    mGPUDescriptorManager->addSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), gpuDescriptorPool, gpuDescriptorLayoutData);
+    const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), gpuDescriptorPool, gpuDescriptorLayoutData);
 
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
@@ -61,12 +58,7 @@ void GPURenderGraph::init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRende
     renderPassResolveData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
 
     mRenderPassResolve = Core::OwnerPtr<GPURenderPass>::newObject();
-    mRenderPassResolve->init(mGPUContext, mGPUInstanceRendererManager, 
-        mGlobalGPUUniformBuffersContainer, 
-        renderPassResolveData, 
-        gpuSkeletalAnimationManager, 
-        gpuShaderManager, 
-        *mGPUDescriptorManager);
+    mRenderPassResolve->init(mGPUContext, renderPassResolveData, mGPURenderPassSubsystems);
 }
 
 void GPURenderGraph::render()

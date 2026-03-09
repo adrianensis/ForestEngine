@@ -9,8 +9,7 @@
 class GPURenderGraph
 {
 public:
-    void init(GPUContext* gpuContext, Core::WeakPtr<GPUInstanceRendererManager> gpuInstanceRendererManager, Core::WeakPtr<GPUUniformBuffersContainer> globalGPUUniformBuffersContainer,
-        GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager);
+    void init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRenderPassSubsystems);
     void update();
     void terminate();
     void render();
@@ -19,7 +18,7 @@ public:
     void onResize();
 
     template<class T> T_EXTENDS(T, GPURenderPass)
-    void initRenderPass(const GPURenderPassData& renderPassData, GPUSkeletalAnimationManager* gpuSkeletalAnimationManager, GPUShaderManager* gpuShaderManager, GPUDescriptorManager& gpuDescriptorManager)
+    void initRenderPass(const GPURenderPassData& renderPassData)
     {
         Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
 
@@ -30,12 +29,8 @@ public:
 
         Core::WeakPtr<T> renderPass = getRenderPass<T>();
         renderPass->init(mGPUContext,
-            mGPUInstanceRendererManager,
-            mGlobalGPUUniformBuffersContainer,
             renderPassData,
-            gpuSkeletalAnimationManager,
-            gpuShaderManager,
-            gpuDescriptorManager);
+            mGPURenderPassSubsystems);
 
         mRenderPassesArray.push_back(renderPass);
     }
@@ -53,10 +48,8 @@ private:
     GPUContext* mGPUContext = nullptr;
     std::unordered_map<Core::ClassId, Core::OwnerPtr<GPURenderPass>> mRenderPassMap;
     std::vector<Core::WeakPtr<GPURenderPass>> mRenderPassesArray;
-    Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
-    Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
+    GPURenderPassSubsystems mGPURenderPassSubsystems;
     Core::OwnerPtr<GPURenderPass> mRenderPassResolve;
-    GPUDescriptorManager* mGPUDescriptorManager = nullptr;
     // Core::OwnerPtr<GPUDescriptorSet> mGPUDescriptorSet;
     GPUImage mColorBufferImage;
     GPUImage mDepthBufferImage;
