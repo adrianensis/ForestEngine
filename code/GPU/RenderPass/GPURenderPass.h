@@ -81,7 +81,6 @@ private:
 public:
     GPURenderPass();
     virtual ~GPURenderPass() = default;
-    // TODO: refactor so many arguments
     void init(GPUContext* gpuContext, const GPURenderPassData& gpuRenderPassData, GPURenderPassSubsystems& gpuRenderPassSubsystems);
     void terminate();
     void begin(const GPURenderPassOutputData& gpuRenderPassOutputData);
