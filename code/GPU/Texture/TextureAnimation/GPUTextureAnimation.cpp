@@ -1,4 +1,4 @@
-#include "GPU/Image/TextureAnimation/GPUTextureAnimation.hpp"
+#include "GPU/Texture/TextureAnimation/GPUTextureAnimation.hpp"
 #include "Core/Time/TimeUtils.hpp"
 
 GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horizontal, bool reverse, const Maths::Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed)

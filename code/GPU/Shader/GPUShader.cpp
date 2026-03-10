@@ -2,7 +2,7 @@
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/GPUShaderManager.hpp"
 
-#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/Texture/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 #include "Core/File/FileUtils.hpp"
 

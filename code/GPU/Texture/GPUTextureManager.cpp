@@ -1,4 +1,4 @@
-#include "GPU/Image/GPUTextureManager.hpp"
+#include "GPU/Texture/GPUTextureManager.hpp"
 
 void GPUTextureManager::init()
 {

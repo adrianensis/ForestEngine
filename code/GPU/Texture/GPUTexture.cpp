@@ -1,4 +1,4 @@
-#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/Texture/GPUTexture.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "vulkan/vulkan_core.h"

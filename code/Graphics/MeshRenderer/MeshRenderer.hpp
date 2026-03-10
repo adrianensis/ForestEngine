@@ -4,7 +4,7 @@
 #include "SpacePartition/OcTree.hpp"
 
 #include "GPU/RenderItem/GPURenderItem.hpp"
-#include "GPU/Image/TextureAnimation/GPUTextureAnimation.hpp"
+#include "GPU/Texture/TextureAnimation/GPUTextureAnimation.hpp"
 
 class TextureAnimation;
 

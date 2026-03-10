@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GPU/Image/TextureAnimation/GPUTextureAnimationFrame.hpp"
+#include "GPU/Texture/TextureAnimation/GPUTextureAnimationFrame.hpp"
 
 class GPUTextureAnimation
 {

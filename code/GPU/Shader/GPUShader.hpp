@@ -3,7 +3,7 @@
 #include "Core/CoreBase.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
-#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/Texture/GPUTexture.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
 #include "Core/Memory/ByteBuffer.hpp"

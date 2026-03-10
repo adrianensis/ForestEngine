@@ -2,7 +2,7 @@
 
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 #include "GPU/Core/GPUContext.hpp"
-#include "GPU/Image/GPUTexture.hpp"
+#include "GPU/Texture/GPUTexture.hpp"
 
 // TODO: rename GPUTextureBinding to just GPUTextureBinding (?)
 class GPUTextureBinding

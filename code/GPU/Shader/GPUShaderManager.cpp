@@ -1,6 +1,6 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
-#include "GPU/Image/GPUTexture.hpp"
-#include "GPU/Image/GPUTextureManager.hpp"
+#include "GPU/Texture/GPUTexture.hpp"
+#include "GPU/Texture/GPUTextureManager.hpp"
 
 void GPUShaderManager::init(GPUTextureManager* gpuTextureManager)
 {
