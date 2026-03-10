@@ -26,12 +26,12 @@ public:
 class GPUTexture
 {
 public:
-    void init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id);
+    void init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::Slot slot);
     void terminate();
     
 private:
     Image::ImageData mImageData;
-	Core::u32 mID = 0;
+	Core::Slot mSlot;
 	GPUTextureData mTextureData;
     GPUContext* mGPUContext = nullptr;
     GPUImage mVulkanTextureImage;
@@ -43,7 +43,7 @@ public:
     VkSampler mTextureSampler = VK_NULL_HANDLE;
 
 public:
-    GET(ID)
+    GET(Slot)
     GET(TextureData)
 };
 

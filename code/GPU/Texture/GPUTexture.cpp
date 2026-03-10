@@ -3,12 +3,12 @@
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "vulkan/vulkan_core.h"
 
-void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::u32 id)
+void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::Slot slot)
 {
     PROFILER_CPU_NAMED(init_texture)
     mGPUContext = gpuContext;
     mTextureData = gpuTextureData;
-    mID = id;
+    mSlot = slot;
 
     if(gpuTextureData.mIsFont)
     {
