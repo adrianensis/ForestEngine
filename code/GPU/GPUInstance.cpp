@@ -11,9 +11,9 @@ void GPUInstance::init(IGPUWindow* gpuWindow)
     mGPUContext = Core::Memory::newObject<GPUContext>();
     mGPUContext->init(gpuWindow);
 
-    mGPUDescriptorManager.init(mGPUContext);
     mGPUTextureManager = Core::Memory::newObject<GPUTextureManager>();
     mGPUTextureManager->init();
+    mGPUDescriptorManager.init(mGPUContext, mGPUTextureManager);
     mGPUShaderManager = Core::Memory::newObject<GPUShaderManager>();
     mGPUShaderManager->init(mGPUTextureManager);
     mGPUSkeletalAnimationManager = Core::Memory::newObject<GPUSkeletalAnimationManager>();

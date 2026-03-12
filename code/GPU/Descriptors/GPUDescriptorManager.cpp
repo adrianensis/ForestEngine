@@ -3,9 +3,10 @@
 #include "GPU/Descriptors/GPUDescriptorPool.hpp"
 #include <utility>
 
-void GPUDescriptorManager::init(GPUContext* gpuContext)
+void GPUDescriptorManager::init(GPUContext* gpuContext, GPUTextureManager* gpuTextureManager)
 {
     mGPUContext = gpuContext;
+    mGPUTextureManager = gpuTextureManager;
 }
 
 void GPUDescriptorManager::terminate()
@@ -77,6 +78,6 @@ const GPUDescriptorSet& GPUDescriptorManager::addSet(Core::u64 key, const GPUDes
     mSets.insert(std::make_pair(key, GPUDescriptorSet{}));
 
     GPUDescriptorSet& gpuDescriptorSet = mSets[key];
-    gpuDescriptorSet.init(gpuDescriptorLayoutData, gpuDescriptorPool, mGPUContext);
+    gpuDescriptorSet.init(gpuDescriptorLayoutData, gpuDescriptorPool, mGPUTextureManager, mGPUContext);
     return gpuDescriptorSet;
 }

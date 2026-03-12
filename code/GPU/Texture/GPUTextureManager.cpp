@@ -11,26 +11,38 @@ void GPUTextureManager::terminate()
 {
     FOR_LIST(it, mTextures)
     {
-        if(*it)
+        if((*it).isValid())
         {
-            (*it)->terminate();
+            (*it).terminate();
         }
     }
 }
 
-Core::WeakPtr<GPUTexture> GPUTextureManager::loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
+GPUTextureHandle GPUTextureManager::loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
 {
-	if (!mTexturesByPath.contains(gpuTextureData.mPath))
+    PROFILER_CPU()
+    GPUTextureHandle handle;
+	if (mTexturesByPath.contains(gpuTextureData.mPath))
 	{
-        PROFILER_CPU()
-        Core::Slot slot = mTextureSlotManager.requestSlot();
-        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, slot);
-        mTextures[slot.getSlot()] = Core::OwnerPtr<GPUTexture>::newObject();
-        Core::WeakPtr<GPUTexture> texture = mTextures[slot.getSlot()];
+        handle.mSlot = mTexturesByPath.at(gpuTextureData.mPath);
+    }
+    else
+    {
+        handle.mSlot = mTextureSlotManager.requestSlot();
+        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, handle.mSlot);
+        GPUTexture& texture = mTextures[handle.mSlot.getSlot()];
 
-        texture->init(gpuContext, gpuTextureData, slot);
+        texture.init(gpuContext, gpuTextureData, handle.mSlot);
 	}
 
-    Core::Slot slot = mTexturesByPath.at(gpuTextureData.mPath);
-	return mTextures[slot.getSlot()];
+#ifdef ENGINE_BUILD_DEBUG
+    handle.mDebugGPUTexture = &mTextures[handle.mSlot.getSlot()];
+#endif
+
+	return handle;
+}
+
+const GPUTexture& GPUTextureManager::getTexture(const GPUTextureHandle& handle) const
+{
+    return mTextures[handle.mSlot.getSlot()];
 }

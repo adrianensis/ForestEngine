@@ -9,10 +9,11 @@ class GPUTextureManager
 public:
     void init();
     void terminate();
-    Core::WeakPtr<GPUTexture> loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
+    GPUTextureHandle loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
+    const GPUTexture& getTexture(const GPUTextureHandle& handle) const;
 
 private:
-    std::vector<Core::OwnerPtr<GPUTexture>> mTextures;
+    std::vector<GPUTexture> mTextures;
     Core::SlotsManager mTextureSlotManager;
     std::unordered_map<Core::HashedString, Core::Slot> mTexturesByPath;
     inline static const Core::u32 mInitialTextures = 300;

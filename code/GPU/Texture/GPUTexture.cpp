@@ -147,4 +147,5 @@ void GPUTexture::terminate()
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), mTextureImageView, allocationCallbacks);
     mVulkanTextureImage.terminate();
 
+    mSlot.reset();
 }

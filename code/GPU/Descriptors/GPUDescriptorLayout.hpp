@@ -9,7 +9,7 @@ class GPUTextureBinding
 {
 public:
     Core::HashedString mName;
-    Core::WeakPtr<GPUTexture> mGPUTexture;
+    GPUTextureHandle mGPUTextureHandle;
 };
 
 class GPUDescriptorLayoutData

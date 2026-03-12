@@ -4,12 +4,13 @@
 #include "GPU/Descriptors/GPUDescriptorPool.hpp"
 #include "GPU/Descriptors/GPUDescriptorSet.hpp"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
+#include "GPU/Texture/GPUTextureManager.hpp"
 
 // TODO: Improve mapping, remove unordered map, use Slots manager
 class GPUDescriptorManager
 {    
 public:
-    void init(GPUContext* gpuContext);
+    void init(GPUContext* gpuContext, GPUTextureManager* gpuTextureManager);
     void terminate();
 
     bool containsLayout(Core::u64 key) const;
@@ -25,6 +26,7 @@ public:
     const GPUDescriptorSet& addSet(Core::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData);
 private:
     GPUContext* mGPUContext = nullptr;
+    GPUTextureManager* mGPUTextureManager = nullptr;
     std::unordered_map<Core::u64, GPUDescriptorLayout> mLayouts;
     std::unordered_map<Core::u64, GPUDescriptorPool> mPools;
     std::unordered_map<Core::u64, GPUDescriptorSet> mSets;

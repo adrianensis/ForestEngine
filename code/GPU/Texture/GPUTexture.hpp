@@ -23,11 +23,25 @@ public:
     bool operator==(const GPUTextureData& other) const { return this->mPath == other.mPath; }
 };
 
+
+class GPUTexture;
+class GPUTextureHandle
+{
+public:
+    GPUTextureHandle(){};
+    GPUTextureHandle(const Core::Slot& slot) : mSlot(slot){};
+    Core::Slot mSlot;
+#ifdef ENGINE_BUILD_DEBUG
+    GPUTexture* mDebugGPUTexture = nullptr;
+#endif
+};
+
 class GPUTexture
 {
 public:
     void init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::Slot slot);
     void terminate();
+    bool isValid() const { return mSlot.isValid(); }
     
 private:
     Image::ImageData mImageData;

@@ -1,9 +1,11 @@
 #include "GPU/Descriptors/GPUDescriptorSet.hpp"
 #include "Core/CoreBase.hpp"
+#include "GPU/Texture/GPUTexture.hpp"
 
-void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUContext* gpuContext)
+void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUTextureManager* gpuTextureManager, GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
+    mGPUTextureManager = gpuTextureManager;
     mGPUDescriptorLayout.init(gpuDescriptorLayoutData, mGPUContext);
 
     VkPhysicalDeviceDescriptorIndexingProperties indexingProps{};
@@ -106,10 +108,12 @@ void GPUDescriptorSet::update()
         {
             const GPUTextureBinding& textureBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings[j];
 
+            const GPUTexture& texture = mGPUTextureManager->getTexture(textureBinding.mGPUTextureHandle);
+
             VkDescriptorImageInfo& imageInfo = imageInfos.emplace_back();
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = textureBinding.mGPUTexture->mTextureImageView;
-            imageInfo.sampler = textureBinding.mGPUTexture->mTextureSampler;
+            imageInfo.imageView = texture.mTextureImageView;
+            imageInfo.sampler = texture.mTextureSampler;
 
             VkWriteDescriptorSet& descriptorWrite = writes.emplace_back();
             descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -128,7 +132,7 @@ void GPUDescriptorSet::update()
     vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, writes.data(), descriptorCopyCount, descriptorCopies);
 }
 
-void GPUDescriptorSet::updateBindlessSlot(Core::Slot slot, Core::WeakPtr<GPUTexture> texture)
+void GPUDescriptorSet::updateBindlessSlot(Core::Slot slot, const GPUTexture& texture)
 {
     if (mGPUDescriptorLayout.mGPUDescriptorLayoutData.mIsBindless) 
     {
@@ -139,8 +143,8 @@ void GPUDescriptorSet::updateBindlessSlot(Core::Slot slot, Core::WeakPtr<GPUText
         {
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = texture->mTextureImageView;
-            imageInfo.sampler = texture->mTextureSampler;
+            imageInfo.imageView = texture.mTextureImageView;
+            imageInfo.sampler = texture.mTextureSampler;
 
             VkWriteDescriptorSet descriptorWrite{};
             descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
