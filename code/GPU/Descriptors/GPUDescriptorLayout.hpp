@@ -4,7 +4,6 @@
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Texture/GPUTexture.hpp"
 
-// TODO: rename GPUTextureBinding to just GPUTextureBinding (?)
 class GPUTextureBinding
 {
 public:

@@ -7,12 +7,13 @@
 class GPUTextureManager
 {
 public:
-    void init();
+    void init(GPUContext* gpuContext);
     void terminate();
-    GPUTextureHandle loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
+    GPUTextureHandle loadTexture(const GPUTextureData& gpuTextureData);
     const GPUTexture& getTexture(const GPUTextureHandle& handle) const;
 
 private:
+    GPUContext* mGPUContext = nullptr;
     std::vector<GPUTexture> mTextures;
     Core::SlotsManager mTextureSlotManager;
     std::unordered_map<Core::HashedString, Core::Slot> mTexturesByPath;

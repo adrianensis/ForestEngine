@@ -1,6 +1,7 @@
 #include "Editor.hpp"
 #include "Core/Maths/Geometry.hpp"
 #include "Core/Maths/Vector3.hpp"
+#include "GPU/Descriptors/GPUDescriptorLayout.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
@@ -269,7 +270,8 @@ GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
 	// rendererData.mMesh = GET_SYSTEM(MeshFactory).getPrimitive<Maths::Cube>();
 
     GPUShaderData shaderData;
-    shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, GPUTextureData{"resources/snorlax-fill.png"});
+    GPUTextureHandle textureHandle = GPUInstance::getInstance().mGPUTextureManager->loadTexture(GPUTextureData{"resources/snorlax-fill.png"});
+    shaderData.mTextureBindings.push_back(GPUTextureBinding{TextureBindingNames::smBaseColor, textureHandle});
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
@@ -303,7 +305,8 @@ GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 	// rendererData.mMesh = GET_SYSTEM(MeshFactory).getPrimitive<Maths::Cube>();
 
     GPUShaderData shaderData;
-    shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, GPUTextureData{"resources/snorlax-fill.png"});
+    GPUTextureHandle textureHandle = GPUInstance::getInstance().mGPUTextureManager->loadTexture(GPUTextureData{"resources/snorlax-fill.png"});
+    shaderData.mTextureBindings.push_back(GPUTextureBinding{TextureBindingNames::smBaseColor, textureHandle});
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 

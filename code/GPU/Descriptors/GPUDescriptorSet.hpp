@@ -10,7 +10,7 @@ class GPUDescriptorSet
 public:
     void init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUTextureManager* gpuTextureManager, GPUContext* gpuContext);
     void terminate();
-    void updateBindlessSlot(Core::Slot slot, const GPUTexture& texture);
+    void updateBindlessSlot(const GPUTextureHandle& textureHandle);
 private:
     void update();
     GPUContext* mGPUContext = nullptr;

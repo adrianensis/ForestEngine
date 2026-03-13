@@ -3,8 +3,6 @@
 #include "Core/Core.hpp"
 #include "GPU/Shader/GPUShader.hpp"
 
-class GPUTextureManager;
-
 class GPUShaderManager
 {
 public:
@@ -13,7 +11,6 @@ public:
     void update();
 
     void setGPUShaderPropertiesInstanceDirty(Core::u32 id);
-    const std::vector<GPUTextureBinding>& getGPUShaderTextureBindings(Core::u32 id) const;
 
     template<class T, class P> T_EXTENDS(T, GPUShader)
     Core::WeakPtr<GPUShader> createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
@@ -38,7 +35,6 @@ public:
     
 private:
     void postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
-    void loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
     void initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
 
     class GPUShaderPropertyBlockRenderState
@@ -51,7 +47,6 @@ private:
 
 	std::unordered_map<Core::ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
 	
-	std::unordered_map<Core::u32, std::vector<GPUTextureBinding>> mTextureBindingsByShader;
     std::vector<Core::OwnerPtr<GPUShader>> mShaders;
     std::vector<Core::OwnerPtr<GPUShaderPropertiesInstance>> mGPUShaderPropertiesInstances;
     std::unordered_set<Core::u32> mDirtyGPUShaderPropertiesInstances;

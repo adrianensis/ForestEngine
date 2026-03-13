@@ -37,7 +37,8 @@ void UIFont::init(UIFontsManager& fontsManager, Core::HashedString fontFile, Cor
 
     GPUShaderData shaderData;
     shaderData.mMaxInstances = 500;
-    shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNames::smBaseColor, GPUTextureData{mFontData.mPath, false, true, mFontData});
+    GPUTextureHandle textureHandle = GPUInstance::getInstance().mGPUTextureManager->loadTexture(GPUTextureData{mFontData.mPath, false, true, mFontData});
+    shaderData.mTextureBindings.push_back(GPUTextureBinding{TextureBindingNames::smBaseColor, textureHandle});
     GPUShaderPropertiesBlockUI shaderPropertiesBlockUI;
     shaderPropertiesBlockUI.mColor = Maths::Vector4(1,1,1,1);
     mFontShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderUIFont, GPUShaderPropertiesBlockUI>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlockUI);

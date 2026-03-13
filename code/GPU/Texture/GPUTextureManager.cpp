@@ -1,8 +1,9 @@
 #include "GPU/Texture/GPUTextureManager.hpp"
 #include "Core/Memory/SlotsManager.hpp"
 
-void GPUTextureManager::init()
+void GPUTextureManager::init(GPUContext* gpuContext)
 {
+    mGPUContext = gpuContext;
     mTextures.resize(mInitialTextures);
     mTextureSlotManager.init(mInitialTextures);
 }
@@ -18,7 +19,7 @@ void GPUTextureManager::terminate()
     }
 }
 
-GPUTextureHandle GPUTextureManager::loadTexture(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
+GPUTextureHandle GPUTextureManager::loadTexture(const GPUTextureData& gpuTextureData)
 {
     PROFILER_CPU()
     GPUTextureHandle handle;
@@ -32,7 +33,7 @@ GPUTextureHandle GPUTextureManager::loadTexture(GPUContext* gpuContext, const GP
         mTexturesByPath.insert_or_assign(gpuTextureData.mPath, handle.mSlot);
         GPUTexture& texture = mTextures[handle.mSlot.getSlot()];
 
-        texture.init(gpuContext, gpuTextureData, handle.mSlot);
+        texture.init(mGPUContext, gpuTextureData, handle.mSlot);
 	}
 
 #ifdef ENGINE_BUILD_DEBUG

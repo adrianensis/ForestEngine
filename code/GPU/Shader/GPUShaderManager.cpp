@@ -37,36 +37,7 @@ void GPUShaderManager::update()
 
 void GPUShaderManager::postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
 {
-    loadGPUShaderTextures(gpuContext, shader);
     initGPUShaderPropertiesInstancePropertiesUniformBuffer(gpuContext, shader);
-}
-
-void GPUShaderManager::loadGPUShaderTextures(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
-{
-    Core::u32 id = shader->getID();
-    if(!mTextureBindingsByShader.contains(id))
-    {
-        PROFILER_CPU()
-        mTextureBindingsByShader.emplace(id, std::vector<GPUTextureBinding>());
-        mTextureBindingsByShader.at(id).reserve(shader->getGPUShaderData().mGPUShaderTextureBindings.mTextureBindings.size());
-
-        FOR_MAP(it, shader->getGPUShaderData().mGPUShaderTextureBindings.mTextureBindings)
-        {
-            const GPUTextureData& gpuTextureData = it->second;
-            CHECK_MSG(!gpuTextureData.mPath.get().empty(), "texture mPath cannot be empty!");
-            if(gpuTextureData.mIsFont)
-            {
-                CHECK_MSG(!gpuTextureData.mFontData.mPath.get().empty(), "mGPUShaderData.mFontData.mPath cannot be empty!");
-            }
-
-            mTextureBindingsByShader.at(id).push_back(GPUTextureBinding{it->first, mGPUTextureManager->loadTexture(gpuContext, gpuTextureData)});
-        }
-    }
-}
-
-const std::vector<GPUTextureBinding>& GPUShaderManager::getGPUShaderTextureBindings(Core::u32 id) const
-{
-    return mTextureBindingsByShader.at(id);
 }
 
 Core::WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderPropertiesInstance(Core::WeakPtr<GPUShader> shader)

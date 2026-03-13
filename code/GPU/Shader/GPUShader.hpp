@@ -79,27 +79,27 @@ public:
 class GPUShaderTextureBindings
 {
 public:
-    std::unordered_map<Core::HashedString, GPUTextureData> mTextureBindings;
+    std::unordered_map<Core::HashedString, GPUTextureHandle> mTextureBindings;
 
-    bool operator==(const GPUShaderTextureBindings& other) const
-    {
-        if(this == &other) {return true;}
-        return mTextureBindings == other.mTextureBindings;
-    }
+    // bool operator==(const GPUShaderTextureBindings& other) const
+    // {
+    //     if(this == &other) {return true;}
+    //     return mTextureBindings == other.mTextureBindings;
+    // }
 
-    Core::u64 hash() const
-    {
-        Core::u32 shift = 0;
-        Core::u64 result = 0;
+    // Core::u64 hash() const
+    // {
+    //     Core::u32 shift = 0;
+    //     Core::u64 result = 0;
         
-        FOR_MAP(it, mTextureBindings)
-        {
-            result = result ^ (Core::u64)it->first.getHash() << (shift++);
-            result = result ^ (Core::u64)it->second.mPath.getHash() << (shift++);
-        }
+    //     FOR_MAP(it, mTextureBindings)
+    //     {
+    //         result = result ^ (Core::u64)it->first.getHash() << (shift++);
+    //         result = result ^ (Core::u64)it->second.mPath.getHash() << (shift++);
+    //     }
 
-        return result;
-    }
+    //     return result;
+    // }
 };
 
 class GPUShader;
@@ -120,7 +120,7 @@ public:
     // GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
     Core::u32 mMaxInstances = 100;
-    GPUShaderTextureBindings mGPUShaderTextureBindings;
+    std::vector<GPUTextureBinding> mTextureBindings;
 
     Core::u32 getMaxInstances() const
     {

@@ -132,7 +132,7 @@ void GPUDescriptorSet::update()
     vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, writes.data(), descriptorCopyCount, descriptorCopies);
 }
 
-void GPUDescriptorSet::updateBindlessSlot(Core::Slot slot, const GPUTexture& texture)
+void GPUDescriptorSet::updateBindlessSlot(const GPUTextureHandle& textureHandle)
 {
     if (mGPUDescriptorLayout.mGPUDescriptorLayoutData.mIsBindless) 
     {
@@ -141,6 +141,8 @@ void GPUDescriptorSet::updateBindlessSlot(Core::Slot slot, const GPUTexture& tex
         // in the array even if the GPU is currently drawing other things from that same set.
         for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
         {
+            const GPUTexture& texture = mGPUTextureManager->getTexture(textureHandle);
+
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             imageInfo.imageView = texture.mTextureImageView;
@@ -152,7 +154,7 @@ void GPUDescriptorSet::updateBindlessSlot(Core::Slot slot, const GPUTexture& tex
             descriptorWrite.dstSet = descriptorSets[mGPUContext->currentFrame]; 
             // This is the binding index (e.g., the one you set to 1024 count)
             descriptorWrite.dstBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings.size(); 
-            descriptorWrite.dstArrayElement = slot.getSlot();
+            descriptorWrite.dstArrayElement = textureHandle.mSlot.getSlot();
             descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrite.descriptorCount = 1;
             descriptorWrite.pImageInfo = &imageInfo;

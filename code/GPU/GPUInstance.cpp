@@ -12,7 +12,7 @@ void GPUInstance::init(IGPUWindow* gpuWindow)
     mGPUContext->init(gpuWindow);
 
     mGPUTextureManager = Core::Memory::newObject<GPUTextureManager>();
-    mGPUTextureManager->init();
+    mGPUTextureManager->init(mGPUContext);
     mGPUDescriptorManager.init(mGPUContext, mGPUTextureManager);
     mGPUShaderManager = Core::Memory::newObject<GPUShaderManager>();
     mGPUShaderManager->init(mGPUTextureManager);

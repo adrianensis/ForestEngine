@@ -1,5 +1,6 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "Core/CoreBase.hpp"
+#include "Core/CoreMacros.hpp"
 #include "GPU/Descriptors/GPUDescriptorManager.hpp"
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "GPU/InstanceRenderer/GPUInstanceRendererData.hpp"
@@ -148,12 +149,10 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
 
         Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
 
-        const std::vector<GPUTextureBinding> &gpuShaderTextureBindings = mGPURenderPassSubsystems.mGPUShaderManager->getGPUShaderTextureBindings(gpuInstanceRendererData.mShader->getID());
-
         GPUDescriptorLayoutData gpuDescriptorLayoutData
         {
             uniformBuffers,
-            gpuShaderTextureBindings,
+            gpuInstanceRendererData.mShader->getGPUShaderData().mTextureBindings,
             false
         };
 
