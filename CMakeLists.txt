@@ -202,18 +202,22 @@ file(GLOB PACKAGES_PATHS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/*")
 set(PACKAGES "")
 set(OBJECTS "")
 
+set(FIRST_PACKAGE "")
 foreach(PACKAGE_PATH ${PACKAGES_PATHS})
     # message("PACKAGE " ${PACKAGE_PATH})
     get_filename_component(PACKAGE ${PACKAGE_PATH} NAME_WE) # NAME_WE = name with extension
 
     file(GLOB_RECURSE PACKAGE_SOURCES_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/${PACKAGE}/*.cpp")
 
-    foreach(PACKAGE_SOURCE ${PACKAGE_SOURCES_LIST})
-        get_filename_component(PACKAGE_SOURCE_WE ${PACKAGE_SOURCE} NAME_WE) # NAME_WE = name with extension
-        # message("OBJECT " ${PACKAGE_SOURCE_WE})
-    endforeach()
-
     add_library(${PACKAGE} OBJECT ${PACKAGE_SOURCES_LIST})
+
+    if(FIRST_PACKAGE STREQUAL "")
+        target_precompile_headers(${PACKAGE} PRIVATE "pch/pch.h")
+        set(FIRST_PACKAGE ${PACKAGE})
+    else()
+        # Reuse the already compiled PCH from the first package
+        target_precompile_headers(${PACKAGE} REUSE_FROM ${FIRST_PACKAGE})
+    endif()
 
     target_compile_options(${PACKAGE} PUBLIC "$<$<CONFIG:DEBUG>:${PROJECT_COMPILER_FLAGS_DEBUG}>")
     target_compile_options(${PACKAGE} PUBLIC "$<$<CONFIG:RELEASE>:${PROJECT_COMPILER_FLAGS_RELEASE}>")
@@ -229,6 +233,8 @@ endforeach()
 
 # single library
 add_library(${PROJECTNAME} STATIC ${OBJECTS})
+
+target_precompile_headers(${PROJECTNAME} REUSE_FROM ${FIRST_PACKAGE})
 
 set_property(TARGET ${PROJECTNAME} PROPERTY CXX_STANDARD 20) # Use C++20
 set_property(TARGET ${PROJECTNAME} PROPERTY CXX_STANDARD_REQUIRED TRUE) # C++20 is mandatory
@@ -248,7 +254,6 @@ target_link_libraries(${PROJECTNAME} ${VULKAN_LIB})
 target_link_libraries(${PROJECTNAME} ${GLSLANG_LIB} ${GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB})
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
-target_link_libraries(${PROJECTNAME} libpng.so)
 target_link_libraries(${PROJECTNAME} freetype)
 target_link_libraries(${PROJECTNAME} fmt)
 

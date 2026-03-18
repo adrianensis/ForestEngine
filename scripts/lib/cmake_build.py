@@ -102,7 +102,7 @@ def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, cmake_
 
     buildCommand = f'cmake --build {buildTargetDir} --config {buildType} {targetStr} --parallel {cmake_generated_data.coresUsed}'
 	
-    log.log(log.LogLabels.build, "Build Command: " + configCommand)
+    log.log(log.LogLabels.build, "Config Command: " + configCommand)
     log.log(log.LogLabels.build, "Build Command: " + buildCommand)
     log.log(log.LogLabels.build, "Executing Config Command")
     os.system(configCommand)
