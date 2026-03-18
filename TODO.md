@@ -21,6 +21,9 @@
 - [ ] Animation Blending
 - [ ] persistent buffers -> this allows multithreading buffer update
 - [ ] Texture Arrays
+- [ ] Specialization Constants (Use compile-time specialization constants for all control flow, this allows compilation to completely remove unused code blocks and statically unroll loops.)
+  - https://docs.vulkan.org/samples/latest/samples/performance/specialization_constants/README.html
+  - Use specialization constants to have a single uber graph and then specialize it (?)
 - [ ] Sparse Textures
 - [ ] Compress textures? Why/When?
 - [ ] parallel vulkan queues (multithreading) (from Mastering programming graphics with Vulkan, Chapter 3)
