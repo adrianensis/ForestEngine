@@ -3,7 +3,6 @@
 #include "Core/CoreMacros.hpp"
 #include "Core/Memory/Memory.hpp"
 #include "Core/Assert/Assert.hpp"
-#include <atomic>
 
 NS_BEGIN(Core)
 
