@@ -75,13 +75,14 @@ def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
     return data
 
 # build a CMake project
-def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, cmake_generated_data: CMakeGeneratedData, buildCommandArgs):
+def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, runFullBuild, cmake_generated_data: CMakeGeneratedData, buildCommandArgs):
     log.log(log.LogLabels.build, "-----------------------------------")
     log.log(log.LogLabels.build, "BUILD CMAKE")
     log.log(log.LogLabels.build, "Project Dir: " + projectDir)
     log.log(log.LogLabels.build, "CMakeLists Folder: " + cmakeListFolder)
     log.log(log.LogLabels.build, "Build Dir: " + buildDir)
     log.log(log.LogLabels.build, "Build Type: " + buildType)
+    log.log(log.LogLabels.build, "Full Build (Config + Build): " + str(runFullBuild))
     buildCommandArgsString =" ".join(buildCommandArgs)
     log.log(log.LogLabels.build, "Build Command Args: " + buildCommandArgsString)
     cwd = os.getcwd()
@@ -104,8 +105,9 @@ def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, cmake_
 	
     log.log(log.LogLabels.build, "Config Command: " + configCommand)
     log.log(log.LogLabels.build, "Build Command: " + buildCommand)
-    log.log(log.LogLabels.build, "Executing Config Command")
-    os.system(configCommand)
+    if runFullBuild:
+        log.log(log.LogLabels.build, "Executing Config Command")
+        os.system(configCommand)
     log.log(log.LogLabels.build, "Executing Build Command")
     os.system(buildCommand)
 

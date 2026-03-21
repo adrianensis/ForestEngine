@@ -5,13 +5,33 @@ import shutil
 import lib.cmake_build as cmake_build
 from lib.build_global_data import BuildGlobalData
 import lib.log as log
+from pathlib import Path
 
 cwd = os.getcwd()
 print(cwd)
 
+def get_current_files(directory):
+    path = Path(directory)
+    return {str(f.relative_to(path)) for f in path.rglob('*') if f.is_file() and f.suffix in EXTENSIONS}
+
+def load_previous_files(state_file):
+    if not os.path.exists(state_file):
+        return set()
+    with open(state_file, 'r') as f:
+        return {line.strip() for line in f if line.strip()}
+
+def save_current_files(state_file, files):
+    with open(state_file, 'w') as f:
+        for file in sorted(files):
+            f.write(f"{file}\n")
+
 ##########################################
 ########## DATA ###########
 ##########################################
+
+TARGET_DIRS = ["./code", "./tools", "./test"]
+STATE_FILE = os.path.join(BuildGlobalData.buildDir, "build_file_list.txt")
+EXTENSIONS = {".cpp", ".h", ".hpp", ".c"}
 
 buildUnitTests=False
 buildIntegrationTests=False
@@ -107,7 +127,28 @@ buildCommandArgs = [
     # "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold",
 ]
 
-cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
+current_files_list = []
+for target_dir in TARGET_DIRS:
+  if os.path.exists(target_dir):
+    current_files_list.extend(get_current_files(target_dir))
+
+current_files = set(current_files_list)
+
+previous_files = load_previous_files(STATE_FILE)
+
+added = current_files - previous_files
+removed = previous_files - current_files
+
+runFullBuild = False
+
+if not previous_files:
+    runFullBuild = True
+elif added or removed:
+    runFullBuild = True
+
+save_current_files(STATE_FILE, current_files)
+
+cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
 
 ##########################################
 ########## POST BUILD ###########
