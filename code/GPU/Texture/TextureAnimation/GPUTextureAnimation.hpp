@@ -20,7 +20,7 @@ class GPUTextureAnimationUpdater
 {
 public:
     void setTextureAnimation(const GPUTextureAnimation& textureAnimation);
-    const GPUTextureAnimationFrame& nextFrame();
+    const GPUTextureAnimationFrame& nextFrame(Core::f32 dt);
     const GPUTextureAnimationFrame& getCurrentFrame() const;
 private:
 	Core::u32 mCurrentFrameNumber = 0;

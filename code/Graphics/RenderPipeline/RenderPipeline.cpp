@@ -28,7 +28,7 @@ void RenderPipeline::init()
     mMeshRenderers.resize(mGPURenderItemManager.getSize());
 }
 
-void RenderPipeline::update(RenderPipelineUpdateData& renderPipelineUpdateData)
+void RenderPipeline::update(Core::f32 dt, RenderPipelineUpdateData& renderPipelineUpdateData)
 {
 	PROFILER_CPU()
 
@@ -59,7 +59,7 @@ void RenderPipeline::update(RenderPipelineUpdateData& renderPipelineUpdateData)
     mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mModelMatrices).setDataArray(mGPURenderItemManager.getMatrices());
 
     GPUInstance::getInstance().mGPUShaderManager->update();
-	GPUInstance::getInstance().mGPUSkeletalAnimationManager->update();
+	GPUInstance::getInstance().mGPUSkeletalAnimationManager->update(dt);
 }
 
 void RenderPipeline::terminate()

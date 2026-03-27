@@ -102,7 +102,7 @@ void Engine::run()
 		GET_SYSTEM(ScenesManager).update();
 		Time::TimerManager::getInstance().update();
 		GET_SYSTEM(ScriptEngine).update();
-		GET_SYSTEM(RenderEngine).update();
+		GET_SYSTEM(RenderEngine).update(Time::Time::getInstance().getDeltaTimeMillis());
 
 		Core::f32 dtMillis = Time::Time::getInstance().getElapsedTimeMillis();
 		

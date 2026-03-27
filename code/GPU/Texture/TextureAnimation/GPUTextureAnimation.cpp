@@ -1,5 +1,4 @@
 #include "GPU/Texture/TextureAnimation/GPUTextureAnimation.hpp"
-#include "Core/Time/TimeUtils.hpp"
 
 GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horizontal, bool reverse, const Maths::Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed)
 {
@@ -61,10 +60,10 @@ Core::u32 GPUTextureAnimation::getNumberOfFrames() const
 	return mFrames.size();
 }
 
-const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::nextFrame()
+const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::nextFrame(Core::f32 dt)
 {
 	Core::f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
-	mTimeAccumulator += Time::Time::getInstance().getDeltaTimeMillis();
+	mTimeAccumulator += dt;
     mHasFrameChanged = false;
 	if (mTimeAccumulator >= time)
 	{

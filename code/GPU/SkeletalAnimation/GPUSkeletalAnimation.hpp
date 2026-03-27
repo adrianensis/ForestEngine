@@ -33,7 +33,7 @@ class GPUSkeletalAnimationState
 {
 public:
     void init(Core::WeakPtr<const GPUSkeletalAnimation> animation);
-    void update();
+    void update(Core::f32 dt);
 
 private:
     Core::WeakPtr<const GPUSkeletalAnimation> mSkeletalAnimation;
@@ -70,7 +70,7 @@ class GPUSkeletonState
 public:
     void init(const GPUSkeletonStateData& gpuSkeletonStateData);
     void createSkeletalAnimationState(Core::WeakPtr<const GPUSkeletalAnimation> animation);
-    void update();
+    void update(Core::f32 dt);
 
 private:
     void getBoneTransforms(std::vector<Maths::Matrix4>& Transforms) const;

@@ -22,10 +22,10 @@ void RenderEngine::init()
     mRenderPipelineUpdateData.mAmbientLightData.mDiffuse.set(0.1,0.1,0.1, 0);
 }
 
-void RenderEngine::update()
+void RenderEngine::update(Core::f32 dt)
 {
     PROFILER_CPU()
-    mRenderPipeline->update(mRenderPipelineUpdateData);
+    mRenderPipeline->update(dt, mRenderPipelineUpdateData);
     mRenderPipeline->render();
 
     GPUInstance::getInstance().mGPUContext->currentFrame = (GPUInstance::getInstance().mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;

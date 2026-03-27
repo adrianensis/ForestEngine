@@ -11,7 +11,7 @@ class RenderEngine : public System::System, public EC::IComponentsListener, publ
 public:
     virtual void init() override;
     virtual void terminate() override;
-    void update();
+    void update(Core::f32 dt);
     void preSceneChanged();
     void postSceneChanged();
     void onResize() override;

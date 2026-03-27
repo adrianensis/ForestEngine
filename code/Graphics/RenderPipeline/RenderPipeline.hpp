@@ -22,7 +22,7 @@ class RenderPipeline
 public:
     virtual void init();
     virtual ~RenderPipeline() = default;
-    void update(RenderPipelineUpdateData& renderPipelineUpdateData);
+    void update(Core::f32 dt, RenderPipelineUpdateData& renderPipelineUpdateData);
     virtual void terminate();
     void addRenderer(MeshRenderer* renderer);
     void removeRenderer(MeshRenderer* renderer);

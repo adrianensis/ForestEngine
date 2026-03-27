@@ -6,13 +6,13 @@ void GPUSkeletalAnimationManager::init()
 {
 }
 
-void GPUSkeletalAnimationManager::update()
+void GPUSkeletalAnimationManager::update(Core::f32 dt)
 {
 	PROFILER_CPU()
 
 	FOR_MAP(it, mSkeletonStates)
 	{
-		(*it)->update();
+		(*it)->update(dt);
 	}
 
     FOR_MAP(it, mSkeletonRenderStates)
