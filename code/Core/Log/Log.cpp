@@ -1,9 +1,9 @@
 #include "Core/Log/Log.hpp"
 
 NS_BEGIN(Core)
-void Log::init()
+void Log::init(const std::string& logDirectory)
 {
-	logFile.open("log.txt");
+	logFile.open(logDirectory+smLogFile);
 }
 
 void Log::terminate()

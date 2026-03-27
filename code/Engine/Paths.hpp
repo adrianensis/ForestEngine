@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/CoreBase.hpp"
+#include "Core/HashedString/HashedString.hpp"
 
 NS_BEGIN(Paths)
 

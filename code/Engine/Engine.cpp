@@ -2,6 +2,7 @@
 #include "Engine/EngineConfig.hpp"
 #include "CommandLine/CommandLine.hpp"
 #include "Core/Time/TimerManager.hpp"
+#include "Engine/Paths.hpp"
 #include "Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
 
@@ -26,7 +27,7 @@ void Engine::init()
 {
 	mFPS = 60;
 
-	Core::Log::init();
+	Core::Log::init(Paths::PredefinedPaths::mOutput.get());
 
 	Core::Memory::init();
 	Core::Profiler::init();

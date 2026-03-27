@@ -58,7 +58,7 @@ public:
 		log(Prefixes::smLog, true, valueStr);
 	};
 
-    static void init();
+    static void init(const std::string& logPath);
     static void terminate();
     static void brline()
 	{
@@ -90,6 +90,9 @@ public:
 	}
 
 private:
+	inline static const std::string smLogDirectory = "Logs";
+	inline static const std::string smLogFile = "Log.txt";
+
 	template <typename... T>
 	static void writeLine(const std::string_view& fmt, T&&... args)
 	{

@@ -5,7 +5,6 @@ compiledLibs/
 binaries/
 dependencies
 output/
-log.txt
 cmake-build-*
 .idea
 .cache
