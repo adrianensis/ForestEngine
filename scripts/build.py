@@ -12,7 +12,7 @@ print(cwd)
 
 def get_current_files(directory):
     path = Path(directory)
-    return {str(f.relative_to(path)) for f in path.rglob('*') if f.is_file() and f.suffix in EXTENSIONS}
+    return {str(f) for f in path.rglob('*') if f.is_file() and f.suffix in EXTENSIONS}
 
 def load_previous_files(state_file):
     if not os.path.exists(state_file):
