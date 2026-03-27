@@ -34,7 +34,6 @@ class GPUShaderCompilationData
 public:
     Core::HashedString label;
     Core::HashedString id;
-    std::vector<GPUUniformBuffer> mUniformBuffers;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
     const GPUDescriptorSet* mGPUDescriptorSetGlobal = nullptr;
     const GPUDescriptorSet* mGPUDescriptorSetLocal = nullptr;

@@ -175,7 +175,6 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
         {
             Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
-            uniformBuffers,
             gpuInstanceRenderer->getGPUVertexBuffersContainer(),
             &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL)),
             &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
