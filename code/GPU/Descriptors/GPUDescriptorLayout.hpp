@@ -20,7 +20,6 @@ public:
     bool mIsBindless = false;
 };
 
-// TODO: Refactor, separate Layout and Pool, for bindless architecture
 class GPUDescriptorLayout
 {    
 public:
