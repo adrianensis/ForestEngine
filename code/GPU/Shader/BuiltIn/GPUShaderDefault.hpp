@@ -13,6 +13,7 @@ class PropertiesBlockGPUShaderDefault
 {
 public:
     Maths::Vector4 mBaseColor = Maths::Vector4(0,0,0,1);
+    alignas(16) Core::u32 mBaseColorTextureHandle = 0;
 };
 REGISTER_CLASS(PropertiesBlockGPUShaderDefault)
 

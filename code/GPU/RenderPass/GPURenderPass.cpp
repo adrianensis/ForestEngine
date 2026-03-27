@@ -156,13 +156,20 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             false
         };
 
+        GPUDescriptorSet& globalSet = mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
+        
+        FOR_ARRAY(j, gpuInstanceRendererData.mShader->getGPUShaderData().mTextureBindings)
+        {
+            const GPUTextureBinding& textureBinding = gpuInstanceRendererData.mShader->getGPUShaderData().mTextureBindings[j];
+            globalSet.updateBindlessSlot(textureBinding.mGPUTextureHandle);
+        }
+
         const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
         GPUInstanceRendererData::GPUInstanceRendererDataFunctor hashGPUInstanceRendererDataFunctor;
         
         // TODO: Fix and Refactor this offset, GPUDescriptorSetScope::LOCAL == 1 but gpuInstanceRendererData hash can also be 1 !!!
         Core::u64 descriptorHashOffset = (Core::u64)GPUDescriptorSetScope::MAX;
         mGPURenderPassSubsystems.mGPUDescriptorManager->addSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
-
 
         GPUShaderCompilationData shaderCompilationData
         {

@@ -68,7 +68,7 @@ public:
         {
         public:
             Maths::Matrix4 mProjectionViewMatrix;
-            alignas(Maths::Vector4) Maths::Vector3 mCameraPosition;
+            Maths::Vector4 mCameraPosition;
         };
 
         inline static const GPUUniformBufferData mGlobalData

@@ -64,6 +64,11 @@ bool GPUDescriptorManager::containsSet(Core::u64 key) const
     return mSets.contains(key);
 }
 
+GPUDescriptorSet& GPUDescriptorManager::getSet(Core::u64 key)
+{
+    return mSets.at(key);
+}
+
 const GPUDescriptorSet& GPUDescriptorManager::getSet(Core::u64 key) const
 {
     return mSets.at(key);

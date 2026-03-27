@@ -1,5 +1,6 @@
 #include "GPU/Descriptors/GPUDescriptorSet.hpp"
 #include "Core/CoreBase.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Texture/GPUTexture.hpp"
 
 void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutData, const GPUDescriptorPool& gpuDescriptorPool, GPUTextureManager* gpuTextureManager, GPUContext* gpuContext)
@@ -134,8 +135,11 @@ void GPUDescriptorSet::update()
 
 void GPUDescriptorSet::updateBindlessSlot(const GPUTextureHandle& textureHandle)
 {
+    // OPT: Optimize function, receive array of texture handles, so we call vkUpdateDescriptorSets only once
     if (mGPUDescriptorLayout.mGPUDescriptorLayoutData.mIsBindless) 
     {
+        Core::u32 globalDescriptorSetBinding = static_cast<Core::u32>(GPUDescriptorSetScope::GLOBAL);
+
         // TODO: No need double buffering for bindless textures descriptor,
         // Because of the UPDATE_AFTER_BIND flag, you can safely write a new texture into an empty slot
         // in the array even if the GPU is currently drawing other things from that same set.
@@ -151,9 +155,9 @@ void GPUDescriptorSet::updateBindlessSlot(const GPUTextureHandle& textureHandle)
             VkWriteDescriptorSet descriptorWrite{};
             descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             // This is your Global Bindless Set
-            descriptorWrite.dstSet = descriptorSets[mGPUContext->currentFrame]; 
+            descriptorWrite.dstSet = descriptorSets[i]; 
             // This is the binding index (e.g., the one you set to 1024 count)
-            descriptorWrite.dstBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings.size(); 
+            descriptorWrite.dstBinding = globalDescriptorSetBinding; // TODO: This should come from data (Layout data?)
             descriptorWrite.dstArrayElement = textureHandle.mSlot.getSlot();
             descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrite.descriptorCount = 1;

@@ -345,7 +345,7 @@ namespace GPUShaderBuilderNodes
 
         FOR_LIST(it, mExtensions)
         {
-            code.push_back("#extension " + it->get() + " : require");
+            code.push_back("#extension " + it->get() + " : enable");
         }
 
         FOR_LIST(it, mStructs)

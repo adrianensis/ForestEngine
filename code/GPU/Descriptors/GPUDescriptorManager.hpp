@@ -23,6 +23,7 @@ public:
 
     bool containsSet(Core::u64 key) const;
     const GPUDescriptorSet& getSet(Core::u64 key) const;
+    GPUDescriptorSet& getSet(Core::u64 key);
     const GPUDescriptorSet& addSet(Core::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData);
 private:
     GPUContext* mGPUContext = nullptr;

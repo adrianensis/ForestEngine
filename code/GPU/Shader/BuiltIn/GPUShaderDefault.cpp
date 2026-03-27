@@ -20,10 +20,9 @@ void GPUShaderDefault::setSharedGPUShaderPropertiesBlock()
 
 std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderDefault::generateGPUShaderPropertiesBlock()
 {
-    std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
-    {
-        {GPUShaderDefinitions::PrimitiveTypes::mVector4, "BaseColor"},
-    };
+    std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock;
+    propertiesBlock.push_back({GPUShaderDefinitions::PrimitiveTypes::mVector4, "BaseColor"});
+    propertiesBlock.push_back({GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, "mBaseColorTextureHandle"});
 
     return propertiesBlock;
 }
@@ -505,7 +504,7 @@ void GPUShaderDefault::createFragmentShader(GPUShaderBuilder& GPUShaderBuilder, 
 {
     registerFragmentGPUShaderData(GPUShaderBuilder, shaderCompilationData);
     
-    // GPUShaderBuilder.get().extension("GL_ARB_bindless_texture");
+    GPUShaderBuilder.get().extension("GL_EXT_nonuniform_qualifier");
 
     fragmentGPUShaderCode(GPUShaderBuilder);
 }

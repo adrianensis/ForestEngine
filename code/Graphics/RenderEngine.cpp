@@ -19,7 +19,7 @@ void RenderEngine::init()
 
     // TODO: put in a better place?
     // Set default ambient light.
-    mRenderPipelineUpdateData.mAmbientLightData.mDiffuse.set(0.1,0.1,0.1);
+    mRenderPipelineUpdateData.mAmbientLightData.mDiffuse.set(0.1,0.1,0.1, 0);
 }
 
 void RenderEngine::update()

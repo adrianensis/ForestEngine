@@ -123,6 +123,7 @@ void GPUShaderPipeline::enable() const
     bind(vulkanCommandBuffer);
 
     VkDescriptorSet descriptorSets[2] = {};
+    // TODO: OPT: Bind local only? bind global in outer scope?
     descriptorSets[0] = mGPUShaderPipelineData.mGPUDescriptorSetGlobal->descriptorSets[mGPUContext->currentFrame];
     descriptorSets[1] = mGPUShaderPipelineData.mGPUDescriptorSetLocal->descriptorSets[mGPUContext->currentFrame];
     VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -131,7 +132,6 @@ void GPUShaderPipeline::enable() const
     constexpr Core::u32 descriptorSetCount = std::size(descriptorSets);
     constexpr Core::u32 dynamicOffsetCount = 0;
     constexpr Core::u32* dynamicOffsets = nullptr;
-    // TODO: OPT: Bind local only? bind global in outer scope?
     vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, descriptorSets, dynamicOffsetCount, dynamicOffsets);
 }
 

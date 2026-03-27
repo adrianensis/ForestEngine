@@ -123,7 +123,7 @@ void RenderPipeline::updateLights(RenderPipelineUpdateData& renderPipelineUpdate
     GPULightBuiltIn::LightsData lightsData;
     FOR_ARRAY(i, renderPipelineUpdateData.mPointLightsData)
     {
-        lightsData.mPointLights[i] = renderPipelineUpdateData.mPointLightsData[i];
+        // lightsData.mPointLights[i] = renderPipelineUpdateData.mPointLightsData[i];
     }
 
     lightsData.mDirectionalLight = renderPipelineUpdateData.mDirectionalLightData;

@@ -5,29 +5,29 @@
 class AmbientLightData
 {
 public:
-    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
+    Maths::Vector4 mDiffuse = Maths::Vector4::smZero;
 };
 
 class DirectionalLightData
 {
 public:
-    alignas(16) Maths::Vector3 mDirection = Maths::Vector3::smZero;
-    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
+    Maths::Vector4 mDirection = Maths::Vector4::smZero;
+    Maths::Vector4 mDiffuse = Maths::Vector4::smZero;
 };
 
 class PointLightData
 {
 public:
-    alignas(16) Maths::Vector3 mPosition = Maths::Vector3::smZero;
-    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
+    Maths::Vector4 mPosition = Maths::Vector4::smZero;
+    Maths::Vector4 mDiffuse = Maths::Vector4::smZero;
 };
 
 class SpotLightData
 {
 public:
-    alignas(16) Maths::Vector3 mPosition = Maths::Vector3::smZero;
-    alignas(16) Maths::Vector3 mDirection = Maths::Vector3::smZero;
-    alignas(16) Maths::Vector3 mDiffuse = Maths::Vector3::smZero;
+    Maths::Vector4 mPosition = Maths::Vector4::smZero;
+    Maths::Vector4 mDirection = Maths::Vector4::smZero;
+    Maths::Vector4 mDiffuse = Maths::Vector4::smZero;
     alignas(16) Core::f32 mInnerCutOff = 0;
     Core::f32 mOuterCutOff = 0;
 };
@@ -83,10 +83,10 @@ public:
     {
         GPUBufferType::UNIFORM,
         {
-            {{GPUStorage::UNIFORM, mPointLightStructDataType, "pointLights"}, "", std::to_string(5)},
-            {{GPUStorage::UNIFORM, mSpotLightStructDataType, "spotLights"}, "", std::to_string(5)},
             {{GPUStorage::UNIFORM, mDirectionalLightStructDataType, "directional"}},
             {{GPUStorage::UNIFORM, mAmbientLightStructDataType, "ambient"}},
+            {{GPUStorage::UNIFORM, mPointLightStructDataType, "pointLights"}, "", std::to_string(5)},
+            {{GPUStorage::UNIFORM, mSpotLightStructDataType, "spotLights"}, "", std::to_string(5)},
             // {GPUStorage::UNIFORM, PrimitiveTypes::mFloat, "ambientIntensity"},
         },
         "LightsData",
@@ -97,10 +97,10 @@ public:
     class LightsData
     {
     public:
-        PointLightData mPointLights[5];
-        SpotLightData mSpotLights[5];
         DirectionalLightData mDirectionalLight;
         AmbientLightData mAmbientLight;
+        PointLightData mPointLights[5];
+        SpotLightData mSpotLights[5];
     };
 
     inline static const GPUUniformBufferData mShadowMappingBufferData

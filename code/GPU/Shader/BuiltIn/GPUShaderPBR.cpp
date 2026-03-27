@@ -1,5 +1,6 @@
 #include "GPU/Shader/BuiltIn/GPUShaderPBR.hpp"
 #include "GPU/Light/GPULight.hpp"
+#include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 using namespace GPUShaderBuilderNodes;
 using namespace GPUShaderBuilderNodes::Expressions;
 
@@ -7,12 +8,12 @@ using namespace GPUShaderBuilderNodes::Expressions;
 
 std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderPBR::generateGPUShaderPropertiesBlock()
 {
-    std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = 
-    {
-        {GPUShaderDefinitions::PrimitiveTypes::mVector4, "BaseColor"},
-        {GPUShaderDefinitions::PrimitiveTypes::mFloat, "Metallic"},
-        {GPUShaderDefinitions::PrimitiveTypes::mFloat, "Roughness"}
-    };
+    std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = GPUShaderDefault::generateGPUShaderPropertiesBlock();
+
+    propertiesBlock.push_back({GPUShaderDefinitions::PrimitiveTypes::mFloat, "Metallic"});
+    propertiesBlock.push_back({GPUShaderDefinitions::PrimitiveTypes::mFloat, "Roughness"});
+    propertiesBlock.push_back({GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, "mMetallicRoughnessTextureHandle"});
+    propertiesBlock.push_back({GPUShaderDefinitions::PrimitiveTypes::mUnsignedInt, "mNormalTextureHandle"});
 
     return propertiesBlock;
 }
@@ -46,7 +47,8 @@ void GPUShaderPBR::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) con
     Variable lightingModel = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
     Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
     Variable instanceBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
-    
+    Variable shaderBaseColorTextureHandle = {mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
+
     Variable baseColor;
     GPUShaderBuilder.getMain().
     variable(baseColor, GPUShaderDefinitions::PrimitiveTypes::mVector4, "baseColor", propertiesBlock.at(shaderPropertiesInstanceId).dot(instanceBaseColor));
@@ -55,14 +57,17 @@ void GPUShaderPBR::fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) con
     set(outColor, baseColor);
 
     auto& inTextureCoord = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::VertexOutput::mTextureCoords.at(0));
-    auto& textureHandle = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNamesPBR::smBaseColor));
-    // auto& texturesBuffer = GPUShaderBuilder.get().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mTextures.mInstanceName);    
+
+    Variable textureBaseColorIndex = propertiesBlock.at(shaderPropertiesInstanceId).dot(shaderBaseColorTextureHandle);
+
+    // auto& textureHandle = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::getTextureHandle(TextureBindingNamesPBR::smBaseColor));
+    auto& texturesBuffer = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::Uniforms::mTextures.mName);    
     // Variable textures(texturesBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
     if(inTextureCoord.isValid())
     {
         GPUShaderBuilder.getMain().
         // ifBlock(textureHandle.notEq("0"s)).
-            set(outColor, call("texture", {/*textures.at(textureHandle)*/textureHandle, inTextureCoord}));
+            set(outColor, call("texture", {/*textures.at(textureHandle)*/texturesBuffer.at(textureBaseColorIndex), inTextureCoord}));
         // end();
     }
 
@@ -418,27 +423,27 @@ void GPUShaderPBR::registerFunctionCalculatePBR(GPUShaderBuilder& GPUShaderBuild
         auto& inNormal = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mNormal);
         auto& fragPosition = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mFragPosition);
         auto& ligthsDataBuffer = GPUShaderBuilder.get().getUniformBuffer(GPULightBuiltIn::mLightsBufferData.mInstanceName);    
-        Variable pointLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
+        Variable pointLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(2));
         Variable pointLightPos = {GPULightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[0]};
         Variable pointLightDiffuse = {GPULightBuiltIn::mPointLightStructDefinition.mPrimitiveVariables[1]};
 
-        Variable spotLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
+        Variable spotLights(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(3));
         Variable spotLightPos = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[0]};
         Variable spotLightDiffuse = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[1]};
         Variable spotLightInnerCutOff = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[2]};
         Variable spotLightOuterCutOff = {GPULightBuiltIn::mSpotLightStructDefinition.mPrimitiveVariables[3]};
 
-        Variable directionalLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(2));
+        Variable directionalLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(0));
         Variable directionalLightDirection = {GPULightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[0]};
         Variable directionalLightDiffuse = {GPULightBuiltIn::mDirectionalLightStructDefinition.mPrimitiveVariables[1]};
 
-        Variable ambientLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(3));
+        Variable ambientLight(ligthsDataBuffer.mGPUUniformBufferData.getScopedGPUVariableData(1));
         Variable ambientLightDiffuse = {GPULightBuiltIn::mAmbientLightStructDefinition.mPrimitiveVariables[0]};
 
         Variable propertiesBlock(mPropertiesBlockUniformBufferData.getScopedGPUVariableData(0));
         Variable shaderBaseColor = {mPropertiesBlockStructDefinition.mPrimitiveVariables[0]};
-        Variable shaderMetallic = {mPropertiesBlockStructDefinition.mPrimitiveVariables[1]};
-        Variable shaderRoughness = {mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
+        Variable shaderMetallic = {mPropertiesBlockStructDefinition.mPrimitiveVariables[2]};
+        Variable shaderRoughness = {mPropertiesBlockStructDefinition.mPrimitiveVariables[3]};
         auto& shaderPropertiesInstanceId = GPUShaderBuilder.get().getAttribute(GPUShaderDefinitions::FragmentInput::mGPUShaderPropertiesInstanceID);
 
         Variable roughness;

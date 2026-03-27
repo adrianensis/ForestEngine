@@ -9,8 +9,10 @@ void GPUDescriptorLayout::init(const GPUDescriptorLayoutData& gpuDescriptorLayou
 
     if(gpuDescriptorLayoutData.mIsBindless)
     {
+        Core::u32 globalDescriptorSetBinding = static_cast<Core::u32>(GPUDescriptorSetScope::GLOBAL);
+
         VkDescriptorSetLayoutBinding globalTextureBinding{};
-        globalTextureBinding.binding = mGPUDescriptorLayoutData.mTextureBindings.size();
+        globalTextureBinding.binding = globalDescriptorSetBinding; // TODO: This should come from data
         globalTextureBinding.descriptorCount = 1024; // Or indexingProps.maxDescriptorSetUpdateAfterBindSampledImages
         globalTextureBinding.stageFlags = VK_SHADER_STAGE_ALL;
         globalTextureBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
