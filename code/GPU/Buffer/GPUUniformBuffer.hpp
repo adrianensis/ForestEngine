@@ -52,7 +52,6 @@ private:
 	Core::u32 mBindingPoint = 0;
     GPUUniformBufferData mGPUUniformBufferData;
     bool mIsStatic = false;
-    void* mGPUPointer = nullptr;
 
     GPUContext* mGPUContext = nullptr;
     GPUBuffer mBuffer;
