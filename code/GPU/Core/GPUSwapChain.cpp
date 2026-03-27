@@ -50,6 +50,8 @@ void GPUSwapChain::terminate()
     GPU_LOG("Destroyed Vulkan swap chain image views");
     vkDestroySwapchainKHR(vulkanDevice->getDevice(), mSwapChain, ALLOCATOR);
     GPU_LOG("Destroyed Vulkan swap chain");
+
+    mSwapChain = VK_NULL_HANDLE;
 }
 
 VkSurfaceFormatKHR GPUSwapChain::chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const
@@ -152,8 +154,7 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     createInfo.presentMode = presentMode;
     createInfo.clipped = VK_TRUE;
 
-    // TODO: provide old swapchain in recreation
-    createInfo.oldSwapchain = VK_NULL_HANDLE;
+    createInfo.oldSwapchain = mSwapChain;
 
     return vkCreateSwapchainKHR(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mSwapChain) == VK_SUCCESS;
 }
