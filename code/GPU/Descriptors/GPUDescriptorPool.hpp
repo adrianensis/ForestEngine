@@ -2,7 +2,6 @@
 
 #include "GPU/Core/GPUContext.hpp"
 
-// TODO: Refactor, separate Layout and Pool, for bindless architecture
 class GPUDescriptorPool
 {    
 public:
