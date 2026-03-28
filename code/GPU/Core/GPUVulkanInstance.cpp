@@ -67,6 +67,8 @@ bool GPUVulkanInstance::init()
         return false;
     }
     GPU_LOG("Created Vulkan instance");
+
+    #ifdef ENGINE_ENABLE_GPU_DEBUG
     if (config.ValidationLayersEnabled) {
         if (!createDebugMessenger()) {
             CHECK_MSG(false,"Could not create debug messenger");
@@ -74,6 +76,8 @@ bool GPUVulkanInstance::init()
         }
         GPU_LOG("Created Vulkan debug messenger");
     }
+    #endif
+
     GPU_LOG("Initialized Vulkan");
     return true;
 }

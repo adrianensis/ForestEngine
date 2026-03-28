@@ -66,16 +66,7 @@ void Window::init(Core::i32 id, const WindowData& windowData)
     if (mGLTFWindow)
     {
         glfwMakeContextCurrent(mGLTFWindow);
-
-//        GET_SYSTEM(GPUInterface).loadAPI();
-        
         glfwSwapInterval(0);
-
-        #ifdef ENGINE_ENABLE_GPU_DEBUG
-//        GET_SYSTEM(GPUInterface).setupGPUErrorHandling();
-        #endif
-
-//        GET_SYSTEM(GPUInterface).setClearColor(Maths::Vector3(28.0/256.0, 28.0/256.0, 28.0/256.0));
     }
     else
     {
