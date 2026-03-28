@@ -4,10 +4,7 @@
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Window/Window.hpp"
-#include "Window/WindowManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
-#include "Scene/Module.hpp"
-#include "Engine/EngineConfig.hpp"
 
 void RenderEngine::init()
 {
