@@ -11,7 +11,7 @@
 #define CGLTF_IMPLEMENTATION
 #include "cgltf.h"
 
-void Model::init(const std::string& path)
+void Model::init(const std::string& path, ModelManager* modelManager)
 {
     PROFILER_CPU()
     mPath = Paths::PredefinedPaths::mResources.get() + path;
@@ -41,7 +41,7 @@ void Model::init(const std::string& path)
 
         if(mCGLTFData->meshes_count > 0)
         {
-            loadGLTFMeshes();
+            loadGLTFMeshes(modelManager);
 
             if (isSkinned())
             {
@@ -160,7 +160,7 @@ void Model::loadGLTFShaders()
     }
 }
 
-void Model::loadGLTFMeshes()
+void Model::loadGLTFMeshes(ModelManager* modelManager)
 {
     PROFILER_CPU()
 
@@ -199,7 +199,7 @@ void Model::loadGLTFMeshes()
                 const cgltf_primitive& primitive = cgltfMesh.primitives[primitiveIt];
                 if(!mGLTFMeshes.contains(&primitive))
                 {
-                    loadGLTFPrimitive(primitive);
+                    loadGLTFPrimitive(primitive, modelManager);
                 }
 
                 mMeshInstances.push_back(MeshInstanceData{mGLTFMeshes.at(&primitive), nodeMatrix});
@@ -218,7 +218,7 @@ void Model::loadGLTFMeshes()
     // }
 }
 
-void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
+void Model::loadGLTFPrimitive(const cgltf_primitive& primitive, ModelManager* modelManager)
 {
     PROFILER_CPU()
 
@@ -226,7 +226,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
 
     mGLTFMeshes.insert_or_assign(&primitive, Core::OwnerPtr<GPUMesh>::newObject());
     Core::WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
-    GET_SYSTEM(ModelManager).setMeshToModel(mesh, this);
+    modelManager->setMeshToModel(mesh, this);
 
     Core::WeakPtr<GPUShader> meshShader;
     if(primitive.material)
@@ -235,7 +235,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive)
     }
     else
     {
-        meshShader = GET_SYSTEM(ModelManager).getDefaultModelShader();
+        meshShader = modelManager->getDefaultModelShader();
     }
 
     mMeshShaders[mesh] = meshShader;

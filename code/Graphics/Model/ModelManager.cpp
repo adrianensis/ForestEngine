@@ -37,7 +37,7 @@ Core::WeakPtr<const Model> ModelManager::loadModel(const std::string& path)
 	{
         PROFILER_CPU()
 		mModels.insert_or_assign(path, Core::OwnerPtr<Model>::newObject());
-		mModels.at(path)->init(path);
+		mModels.at(path)->init(path, this);
 	}
 
 	return mModels.at(path);

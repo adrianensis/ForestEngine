@@ -27,10 +27,12 @@ public:
     Maths::Matrix4 mMatrix;
 };
 
+class ModelManager;
+
 class Model
 {
 public:
-    void init(const std::string& path);
+    void init(const std::string& path, ModelManager* modelManager);
     bool isAnimated() const { return mBonesIndexCount > 0 && !mSkeletalAnimations.empty(); }
 
     class KeyframeData
@@ -44,8 +46,8 @@ public:
 
 private:
     void loadGLTFShaders();
-    void loadGLTFMeshes();
-    void loadGLTFPrimitive(const cgltf_primitive& primitive);
+    void loadGLTFMeshes(ModelManager* modelManager);
+    void loadGLTFPrimitive(const cgltf_primitive& primitive, ModelManager* modelManager);
     void loadGLTFBones(const cgltf_skin& skin);
     Core::f32 loadGLTFSkeletalAnimationDuration(const cgltf_animation& gltfAnim);
     void loadGLTFChannels(const cgltf_animation& gltfAnim);
