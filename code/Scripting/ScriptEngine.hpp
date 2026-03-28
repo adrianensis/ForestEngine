@@ -11,7 +11,7 @@ public:
     virtual void init() override;
     virtual void terminate() override;
     virtual void onComponentAdded(EC::Component* component) override;
-    void update();
+    void update(Core::f32 dt);
     void preSceneChanged();
     void postSceneChanged();
 

@@ -10,8 +10,8 @@ class Editor: public Script
 {
 public:
     virtual void init() override;
-    virtual void firstUpdate() override;
-    virtual void update() override;
+    virtual void firstUpdate(Core::f32 dt) override;
+    virtual void update(Core::f32 dt) override;
     virtual void terminate() override;
 
 private:

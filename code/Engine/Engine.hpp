@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Engine/Core.hpp"
+#include "Core/Time/TimeUtils.hpp"
+#include "Core/Time/TimerManager.hpp"
 
 class Engine
 {
@@ -14,4 +16,6 @@ public:
 
 private:
 	Core::f32 mFPS = 0.0f;
+    Time::Time mTime;
+    Time::TimerManager mTimerManager;
 };

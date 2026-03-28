@@ -43,7 +43,7 @@ private:
 	bool mIsStarted = false;
 };
 
-class Time: public Core::Singleton<Time>
+class Time
 {
 public:
 	void init() {mInternalTimeMark.init();}

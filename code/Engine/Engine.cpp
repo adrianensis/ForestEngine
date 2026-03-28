@@ -1,7 +1,6 @@
 #include "Engine/Engine.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "CommandLine/CommandLine.hpp"
-#include "Core/Time/TimerManager.hpp"
 #include "Engine/Paths.hpp"
 #include "Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
@@ -19,7 +18,6 @@
 
 #include "Scene/ScenesManager.hpp"
 #include "UI/UIManager.hpp"
-#include "Core/Time/TimeUtils.hpp"
 
 using namespace std::chrono_literals;
 
@@ -31,8 +29,8 @@ void Engine::init()
 
 	Core::Memory::init();
 	Core::Profiler::init();
-    Time::Time::getInstance().init();
-    Time::TimerManager::getInstance().init();
+    mTime.init();
+    mTimerManager.init();
 	Event::EventsManager::getInstance().init();
     ECManager.init();
     System::SystemsManager::getInstance().init();
@@ -66,7 +64,7 @@ void Engine::preSceneChanged()
 {
 	GET_SYSTEM(ScriptEngine).preSceneChanged();
 	GET_SYSTEM(RenderEngine).preSceneChanged();
-	Time::TimerManager::getInstance().terminate();
+	mTimerManager.terminate();
 }
 
 void Engine::postSceneChanged()
@@ -85,7 +83,7 @@ void Engine::run()
 	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{
         //FrameMarkStart("frame");
-		Time::Time::getInstance().startFrame();
+		mTime.startFrame();
 
 		if (GET_SYSTEM(ScenesManager).pendingLoadRequests())
 		{
@@ -100,11 +98,11 @@ void Engine::run()
 		GET_SYSTEM(Command::CommandLine).update();
 
 		GET_SYSTEM(ScenesManager).update();
-		Time::TimerManager::getInstance().update();
-		GET_SYSTEM(ScriptEngine).update();
-		GET_SYSTEM(RenderEngine).update(Time::Time::getInstance().getDeltaTimeMillis());
+		mTimerManager.update(mTime.getDeltaTimeMillis());
+		GET_SYSTEM(ScriptEngine).update(mTime.getDeltaTimeMillis());
+		GET_SYSTEM(RenderEngine).update(mTime.getDeltaTimeMillis());
 
-		Core::f32 dtMillis = Time::Time::getInstance().getElapsedTimeMillis();
+		Core::f32 dtMillis = mTime.getElapsedTimeMillis();
 		
 		if (inverseFPSMillis >= dtMillis)
 		{
@@ -113,7 +111,7 @@ void Engine::run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
 		}
 		
-		Time::Time::getInstance().endFrame();
+		mTime.endFrame();
         //FrameMarkEnd("frame");
 	}
 }
@@ -130,9 +128,7 @@ void Engine::terminate()
     EC::EntityComponentManager::deleteInstance();
 	Event::EventsManager::getInstance().terminate();
 	Event::EventsManager::deleteInstance();
-	Time::Time::deleteInstance();
-	Time::TimerManager::getInstance().terminate();
-	Time::TimerManager::deleteInstance();
+	mTimerManager.terminate();
 	
 	Core::Profiler::terminate();
 	Core::Memory::terminate();

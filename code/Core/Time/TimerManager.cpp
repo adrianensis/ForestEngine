@@ -1,5 +1,4 @@
 #include "Core/Time/TimerManager.hpp"
-#include "Core/Time/TimeUtils.hpp"
 #include "Core/Profiler/Profiler.hpp"
  
 NS_BEGIN(Time)
@@ -14,12 +13,12 @@ void TimerManager::init()
 
 }
 
-void TimerManager::update()
+void TimerManager::update(Core::f32 dt)
 {
 	PROFILER_CPU()
 	if (!mTimers.empty())
 	{
-		Core::f32 deltaTime = Time::Time::getInstance().getDeltaTimeSeconds(); // seconds
+		Core::f32 deltaTime = dt/1000.f; // seconds
 		std::list<Timer *> timers(mTimers);
 
 		for (auto itTimer = timers.begin(); itTimer != timers.end(); ++itTimer)

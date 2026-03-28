@@ -10,8 +10,8 @@ class Script: public GameComponent
 {
 public:
     virtual void init();
-    virtual void firstUpdate();
-    virtual void update();
+    virtual void firstUpdate(Core::f32 dt);
+    virtual void update(Core::f32 dt);
     virtual void onEnterCollision(GameObject *otherGameObject);
     virtual void onCollision(GameObject *otherGameObject);
     virtual void onExitCollision(GameObject *otherGameObject);

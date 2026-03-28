@@ -14,7 +14,7 @@ void ScriptEngine::onComponentAdded(EC::Component* component)
     mScripts.push_back(script);
 }
 
-void ScriptEngine::update()
+void ScriptEngine::update(Core::f32 dt)
 {
 	PROFILER_CPU()
 
@@ -40,11 +40,11 @@ void ScriptEngine::update()
         {
             if (!script->getFirstUpdateDone())
             {
-                script->firstUpdate();
+                script->firstUpdate(dt);
                 script->firstUpdateDone();
             }
 
-            script->update();
+            script->update(dt);
         }
 	}
 }

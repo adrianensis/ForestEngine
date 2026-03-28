@@ -6,11 +6,11 @@ void Script::init()
 	mFirstUpdateDone = false;
 }
 
-void Script::firstUpdate()
+void Script::firstUpdate(Core::f32 dt)
 {
 }
 
-void Script::update()
+void Script::update(Core::f32 dt)
 {
 }
 

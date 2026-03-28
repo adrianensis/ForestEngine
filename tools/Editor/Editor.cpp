@@ -17,7 +17,6 @@
 #include "Input/Input.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassGeometry.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassShadowMap.hpp"
-#include "Core/Time/TimeUtils.hpp"
 
 void Editor::init()
 {
@@ -38,7 +37,7 @@ void Editor::init()
 	});
 }
 
-void Editor::firstUpdate()
+void Editor::firstUpdate(Core::f32 dt)
 {
     PROFILER_CPU();
 
@@ -123,13 +122,13 @@ void Editor::firstUpdate()
     // mUISceneTree->update();
 }
 
-void Editor::update()
+void Editor::update(Core::f32 dt)
 {
 	PROFILER_CPU()
 
     Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
 	Transform* cameraTransform = mCameraGameObject->mTransform;
-	Core::f32 speed = 400 * Time::Time::getInstance().getDeltaTimeSeconds();
+	Core::f32 speed = 400 * (dt/1000.0f);
 
 	Maths::Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
@@ -199,9 +198,8 @@ void Editor::update()
 	Core::f32 sensitivity = 100.0f;
 	mTargetRotation.add(Maths::Vector3(mouseDelta.y * sensitivity, -mouseDelta.x * sensitivity, 0));
 	
-	Core::f32 dt = Time::Time::getInstance().getDeltaTimeSeconds();
 	Core::f32 lerpStep = 15.0f;
-	mCurrentRotation.lerp(mTargetRotation, lerpStep * dt);
+	mCurrentRotation.lerp(mTargetRotation, lerpStep * (dt / 1000.0f));
 
 	cameraTransform->setLocalRotation(mTargetRotation);
 
@@ -236,7 +234,7 @@ void Editor::update()
 		GET_SYSTEM(DebugRenderer).drawLine(Maths::Line(Maths::Vector3(x,0,-2000), Maths::Vector3(x,0,2000)), 1, Maths::GeometricSpace::WORLD, Maths::Vector4(1,1,1,0.3f));
 	}
 
-    Core::f32 fps = 1000.0f/Time::Time::getInstance().getDeltaTimeMillis();
+    Core::f32 fps = 1000.0f/dt;
     // LOG_VAR(fps)
     if(mFPSCounter)
     {
@@ -370,7 +368,7 @@ GameObject* Editor::createDirectionalLight(const Maths::Vector3& v, const Maths:
 GameObject* Editor::mousePick()
 {
 
-    Core::f32 speed = 100 * Time::Time::getInstance().getDeltaTimeSeconds();
+    // Core::f32 speed = 100 * dt;
     GameObject* obj;
     FOR_LIST(it, mGameObjectsArray)
     {

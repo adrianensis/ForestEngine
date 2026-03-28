@@ -1,15 +1,14 @@
 #pragma once
 
-#include "Core/Memory/Singleton.hpp"
 #include "Core/Time/Timer.hpp"
 
 NS_BEGIN(Time)
-class TimerManager: public Core::Singleton<TimerManager>
+class TimerManager
 {
 public:
     void init();
     void terminate();
-    void update();
+    void update(Core::f32 dt);
     TimerHandle setTimer(Core::f32 duration, TimerDurationType durationType, std::function<void()> callback);
     void cancelTimer(const TimerHandle& timerHandle);
 
