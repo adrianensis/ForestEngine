@@ -37,7 +37,7 @@ private:
     std::vector<VkImage> mImages;
     std::vector<VkImageView> mImageViews;
 public:
-    CRGET(SwapChain);
+    GET(SwapChain);
     CRGET(SurfaceFormat);
     CRGET(Extent);
     CRGET(ImageViews);
