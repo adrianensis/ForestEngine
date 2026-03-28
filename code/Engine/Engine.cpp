@@ -2,6 +2,7 @@
 #include "Engine/EngineConfig.hpp"
 #include "CommandLine/CommandLine.hpp"
 #include "Engine/Paths.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
 #include "Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
 
@@ -45,6 +46,7 @@ void Engine::init()
     Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
     GPUInstance::getInstance().init(window.getInternalPointer());
     CREATE_SYSTEM(Input::Input);
+    CREATE_SYSTEM(CameraManager);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(RenderEngine);
 	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine).getInternalPointer());
@@ -79,7 +81,8 @@ void Engine::run()
 
 	Core::f32 diff = 0;
 
-	GET_SYSTEM(ScenesManager).initCamera(GET_SYSTEM(RenderEngine).getCameraManager(), GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio());
+	GET_SYSTEM(RenderEngine).initCameraManager(GET_SYSTEM_PTR(CameraManager));
+	GET_SYSTEM(ScenesManager).initCameraManager(GET_SYSTEM_PTR(CameraManager), GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio());
 
 	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{

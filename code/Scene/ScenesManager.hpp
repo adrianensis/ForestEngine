@@ -16,7 +16,7 @@ public:
     void loadPendingScenes();
     bool pendingLoadRequests() const;
     void requestLoadScene(Core::HashedString sceneName);
-    void initCamera(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio);
+    void initCameraManager(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio);
     Core::WeakPtr<Scene> getScene(Core::HashedString sceneName) const;
 
 private:

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Core.hpp"
-#include "Graphics/Camera/CameraManager.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
@@ -12,6 +11,7 @@ class RenderEngine : public System::System, public EC::IComponentsListener, publ
 public:
     virtual void init() override;
     virtual void terminate() override;
+    void initCameraManager(Core::WeakPtr<CameraManager> cameraManager);
     void update(Core::f32 dt);
     void preSceneChanged();
     void postSceneChanged();
@@ -24,9 +24,8 @@ private:
     RenderPipelineUpdateData mRenderPipelineUpdateData;
     Core::OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;
-    Core::OwnerPtr<CameraManager> mCameraManager;
+    Core::WeakPtr<CameraManager> mCameraManager;
 public:
 	OcTree octree;
-	GET(CameraManager);
 };
 REGISTER_CLASS(RenderEngine, System);

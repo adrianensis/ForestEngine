@@ -2,7 +2,7 @@
 
 #include "Graphics/Camera/Camera.hpp"
 
-class CameraManager
+class CameraManager: public System::System
 {
 private:
 	Camera* mCamera = nullptr;

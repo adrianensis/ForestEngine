@@ -8,17 +8,20 @@
 
 void RenderEngine::init()
 {
-    mCameraManager = Core::OwnerPtr<CameraManager>::newObject();
-
-    mRenderPipeline = Core::OwnerPtr<RenderPipelinePBR>::newObject();
-    mRenderPipeline->init(mCameraManager);
-    mRenderPipeline->compile();
-
 	// octree.init(5000);
 
     // TODO: put in a better place?
     // Set default ambient light.
     mRenderPipelineUpdateData.mAmbientLightData.mDiffuse.set(0.1,0.1,0.1, 0);
+}
+
+void RenderEngine::initCameraManager(Core::WeakPtr<CameraManager> cameraManager)
+{
+    mCameraManager = cameraManager;
+
+    mRenderPipeline = Core::OwnerPtr<RenderPipelinePBR>::newObject();
+    mRenderPipeline->init(mCameraManager);
+    mRenderPipeline->compile();
 }
 
 void RenderEngine::update(Core::f32 dt)

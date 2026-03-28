@@ -53,7 +53,7 @@ void ScenesManager::init()
     });
 }
 
-void ScenesManager::initCamera(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio)
+void ScenesManager::initCameraManager(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio)
 {
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
