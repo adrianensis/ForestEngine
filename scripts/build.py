@@ -146,6 +146,7 @@ if not previous_files:
 elif added or removed:
     runFullBuild = True
 
+os.makedirs(BuildGlobalData.buildDir, exist_ok=True)
 save_current_files(STATE_FILE, current_files)
 
 cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
