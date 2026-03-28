@@ -81,7 +81,7 @@ void GPUDescriptorSet::update()
             const GPUUniformBuffer& uniformBuffer = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers[j];
 
             VkDescriptorBufferInfo& bufferInfo = bufferInfos.emplace_back();
-            bufferInfo.buffer = uniformBuffer.getBuffer().getVkBuffer(); // TODO: make double buffered!!
+            bufferInfo.buffer = uniformBuffer.getBuffers()[i].getVkBuffer();
             bufferInfo.offset = 0;
             bufferInfo.range = uniformBuffer.getSize();
 
@@ -113,6 +113,9 @@ void GPUDescriptorSet::update()
 
             VkDescriptorImageInfo& imageInfo = imageInfos.emplace_back();
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            // TODO: For Render-To-Texture images, Post processing images or 
+            // any image that stores data and changes per frame, we'll need double buffering too, like Uniform Buffers.
+            // For static texture single buffer is ok.
             imageInfo.imageView = texture.mTextureImageView;
             imageInfo.sampler = texture.mTextureSampler;
 
@@ -138,9 +141,7 @@ void GPUDescriptorSet::updateBindlessSlot(const GPUTextureHandle& textureHandle)
     // OPT: Optimize function, receive array of texture handles, so we call vkUpdateDescriptorSets only once
     if (mGPUDescriptorLayout.mGPUDescriptorLayoutData.mIsBindless) 
     {
-        Core::u32 globalDescriptorSetBinding = static_cast<Core::u32>(GPUDescriptorSetScope::GLOBAL);
-
-        // TODO: No need double buffering for bindless textures descriptor,
+        // NOTE: No need double buffering for bindless textures descriptor,
         // Because of the UPDATE_AFTER_BIND flag, you can safely write a new texture into an empty slot
         // in the array even if the GPU is currently drawing other things from that same set.
         for (size_t i = 0; i < GPUContext::MAX_FRAMES_IN_FLIGHT; i++)
@@ -154,10 +155,8 @@ void GPUDescriptorSet::updateBindlessSlot(const GPUTextureHandle& textureHandle)
 
             VkWriteDescriptorSet descriptorWrite{};
             descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            // This is your Global Bindless Set
             descriptorWrite.dstSet = descriptorSets[i]; 
-            // This is the binding index (e.g., the one you set to 1024 count)
-            descriptorWrite.dstBinding = globalDescriptorSetBinding; // TODO: This should come from data (Layout data?)
+            descriptorWrite.dstBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mBindlessTexturesArrayBinding;
             descriptorWrite.dstArrayElement = textureHandle.mSlot.getSlot();
             descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrite.descriptorCount = 1;

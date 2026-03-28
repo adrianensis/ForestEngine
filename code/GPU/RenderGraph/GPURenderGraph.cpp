@@ -8,8 +8,10 @@ void GPURenderGraph::init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRe
     mGPUContext = gpuContext;
     mGPURenderPassSubsystems = gpuRenderPassSubsystems;
 
-    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
-    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
+    GPUDescriptorPoolData globalGPUDescriptorPoolData;
+    globalGPUDescriptorPoolData.mUseBindlessTextures = true;
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), globalGPUDescriptorPoolData);
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL), GPUDescriptorPoolData{});
 
     std::vector<GPUUniformBuffer> uniformBuffers;
     GPUDescriptorLayoutData gpuDescriptorLayoutData

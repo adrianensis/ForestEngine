@@ -89,7 +89,6 @@ bool GPUImageUtils::transitionImageLayout(GPUContext* gpuContext, VkImage image,
             case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
             {
                 sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-                // TODO: read needed? we just want to protect against Writes right?
                 imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
             }
             break;
@@ -165,7 +164,6 @@ bool GPUImageUtils::transitionImageLayout(GPUContext* gpuContext, VkImage image,
             case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
             {
                 destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-                // TODO: read needed? we just want to protect against Writes right?
                 imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
             }
             break;

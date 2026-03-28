@@ -11,6 +11,19 @@ void GPUDescriptorManager::init(GPUContext* gpuContext, GPUTextureManager* gpuTe
 
 void GPUDescriptorManager::terminate()
 {
+    FOR_MAP(it, mSets)
+    {
+        it->second.terminate();
+    }
+
+    FOR_MAP(it, mPools)
+    {
+        it->second.terminate();
+    }
+
+    mLayouts.clear();
+    mSets.clear();
+    mPools.clear();
 }
 
 bool GPUDescriptorManager::containsLayout(Core::u64 key) const
@@ -46,7 +59,7 @@ const GPUDescriptorPool& GPUDescriptorManager::getPool(Core::u64 key) const
     return mPools.at(key);
 }
 
-const GPUDescriptorPool& GPUDescriptorManager::addPool(Core::u64 key)
+const GPUDescriptorPool& GPUDescriptorManager::addPool(Core::u64 key, const GPUDescriptorPoolData& gpuDescriptorPoolData)
 {
     if(containsPool(key))
     {
@@ -55,7 +68,7 @@ const GPUDescriptorPool& GPUDescriptorManager::addPool(Core::u64 key)
     mPools.insert(std::make_pair(key, GPUDescriptorPool{}));
 
     GPUDescriptorPool& gpuDescriptorPool = mPools[key];
-    gpuDescriptorPool.init(mGPUContext);
+    gpuDescriptorPool.init(mGPUContext, gpuDescriptorPoolData);
     return gpuDescriptorPool;
 }
 

@@ -19,7 +19,7 @@ public:
 
     bool containsPool(Core::u64 key) const;
     const GPUDescriptorPool& getPool(Core::u64 key) const;
-    const GPUDescriptorPool& addPool(Core::u64 key);
+    const GPUDescriptorPool& addPool(Core::u64 key, const GPUDescriptorPoolData& gpuDescriptorPoolData);
 
     bool containsSet(Core::u64 key) const;
     const GPUDescriptorSet& getSet(Core::u64 key) const;

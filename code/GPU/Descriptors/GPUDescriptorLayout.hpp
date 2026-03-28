@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/CoreBase.hpp"
 #include "GPU/Buffer/GPUUniformBuffer.hpp"
 #include "GPU/Core/GPUContext.hpp"
 #include "GPU/Texture/GPUTexture.hpp"
@@ -18,6 +19,8 @@ public:
     std::vector<GPUUniformBuffer> mUniformBuffers;
     std::vector<GPUTextureBinding> mTextureBindings;
     bool mIsBindless = false;
+    Core::u32 mMaxBindlessTextures = 1024;
+    Core::u32 mBindlessTexturesArrayBinding = 0;
 };
 
 class GPUDescriptorLayout

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/CoreBase.hpp"
+#include "GPU/Core/GPUContext.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/GPUVariable.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
@@ -35,18 +37,42 @@ public:
     template <class T>
     void setData(const T& data)
     {
-        mBuffer.setData((const void*) &data, sizeof(T));
+        mBuffers[mGPUContext->currentFrame].setData((const void*) &data, sizeof(T));
+        onUpdate(mGPUContext->currentFrame);
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        mBuffer.setData((const void*) data.data(), sizeof(T) * data.size());
+        mBuffers[mGPUContext->currentFrame].setData((const void*) data.data(), sizeof(T) * data.size());
+        onUpdate(mGPUContext->currentFrame);
     }
     void setDataArray(const Core::ByteBuffer& data)
     {
-        mBuffer.setData((const void*) data.getBuffer().data(), data.sizeInBytes());
+        mBuffers[mGPUContext->currentFrame].setData((const void*) data.getBuffer().data(), data.sizeInBytes());
+        onUpdate(mGPUContext->currentFrame);
     }
     void terminate();
+
+    bool needUpdate() const
+    {
+        return needUpdateFrame(mGPUContext->currentFrame);
+    }
+
+    bool needUpdateFrame(Core::u32 frame) const
+    {
+        return mBuffersUpdateRequest[frame];
+    }
+
+private:
+    void onUpdate(Core::u32 frame)
+    {
+        mBuffersUpdateRequest[frame] = false;
+        if((frame + 1) < GPUContext::MAX_FRAMES_IN_FLIGHT) // (frame + 1) because arrays start at 0!
+        {
+            // request update next buffer in next frame
+            mBuffersUpdateRequest[(frame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT] = true;
+        }
+    }
 
 private:
 	Core::u32 mBindingPoint = 0;
@@ -54,12 +80,13 @@ private:
     bool mIsStatic = false;
 
     GPUContext* mGPUContext = nullptr;
-    GPUBuffer mBuffer;
+    GPUBuffer mBuffers[GPUContext::MAX_FRAMES_IN_FLIGHT] = {};
+    bool mBuffersUpdateRequest[GPUContext::MAX_FRAMES_IN_FLIGHT] = {};
     Core::u32 mSize = 0;
 
 public:
     GET(BindingPoint)
     GET(Size)
     CRGET(GPUUniformBufferData)
-    CRGET(Buffer)
+    CRGET(Buffers)
 };
