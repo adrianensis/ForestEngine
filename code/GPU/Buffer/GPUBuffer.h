@@ -31,5 +31,4 @@ private:
 public:
     CRGET(GPUBufferData)
     CRGET(VkBuffer)
-    CRGET(VkDeviceMemory)
 };
