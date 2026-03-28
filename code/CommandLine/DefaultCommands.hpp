@@ -4,10 +4,11 @@
 
 NS_BEGIN(Command)
 
+class CommandLine;
 class DefaultCommands
 {
     public:
-    static void registerDefaultCommands();
+    static void registerDefaultCommands(CommandLine& cmd);
 };
 
 NS_END

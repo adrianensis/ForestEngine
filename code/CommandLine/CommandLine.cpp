@@ -66,7 +66,7 @@ void CommandLine::init()
     //     }
     // });
 
-    DefaultCommands::registerDefaultCommands();
+    DefaultCommands::registerDefaultCommands(*this);
 }
 
 void CommandLine::writeLine(const std::string& line, bool newLine /*= true*/) const
