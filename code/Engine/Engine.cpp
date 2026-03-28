@@ -46,11 +46,12 @@ void Engine::init()
     GPUInstance::getInstance().init(window.getInternalPointer());
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
-    CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
+	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine).getInternalPointer());
 	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
 	ECManager.addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
     CREATE_SYSTEM(DebugRenderer);
+    CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(UIManager);
     CREATE_SYSTEM(ScenesManager);
     CREATE_SYSTEM(Command::CommandLine);

@@ -17,10 +17,11 @@ public:
     Core::HashedString mTitle;
 };
 
+class Window;
 class IWindowListener
 {
 public:
-    virtual void onResize() = 0;
+    virtual void onResize(Window* window) = 0;
 };
 
 class Window: public Input::IWindowInputAdapter, public IGPUWindow

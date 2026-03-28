@@ -11,7 +11,7 @@ public:
     void init();
     void onECComponentAdded() override;
     void update();
-	void onResize(Core::WeakPtr<Window::Window> window);
+	void onResize(Window::Window* window);
 private:
 	GPUCamera mGPUCamera;
 public:

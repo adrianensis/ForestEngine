@@ -15,7 +15,7 @@ public:
     void update(Core::f32 dt);
     void preSceneChanged();
     void postSceneChanged();
-    void onResize() override;
+    void onResize(Window::Window* window) override;
     
     virtual void onComponentAdded(EC::Component* component) override;
     virtual void onComponentRemoved(EC::Component* component) override;

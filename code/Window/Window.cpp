@@ -116,7 +116,7 @@ void Window::onResize(GLFWwindow *window, Core::i32 width, Core::i32 height)
 
 	FOR_ARRAY(i, mWindowListeners)
 	{
-		mWindowListeners[i]->onResize();
+		mWindowListeners[i]->onResize(this);
 	}
 }
 

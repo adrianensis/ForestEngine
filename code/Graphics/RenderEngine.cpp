@@ -1,9 +1,9 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Core/EntityComponent/Component.hpp"
 #include "Core/Memory/Pointers.hpp"
-#include "Core/System/SystemsManager.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
+#include "Window/Window.hpp"
 #include "Window/WindowManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Module.hpp"
@@ -18,8 +18,6 @@ void RenderEngine::init()
     mRenderPipeline->compile();
 
 	// octree.init(5000);
-
-    GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(this);
 
     // TODO: put in a better place?
     // Set default ambient light.
@@ -44,12 +42,12 @@ void RenderEngine::postSceneChanged()
 {
 }
 
-void RenderEngine::onResize()
+void RenderEngine::onResize(Window::Window* window)
 {
     GPUInstance::getInstance().mGPUContext->setWindowResized();
     GPUInstance::getInstance().mGPUContext->recreateRenderingObjects();
     Camera* camera = mCameraManager->getCamera();
-    camera->onResize(GET_SYSTEM(Window::WindowManager).getMainWindow());
+    camera->onResize(window);
     mRenderPipeline->onResize();
 }
 
