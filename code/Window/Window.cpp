@@ -112,7 +112,6 @@ void Window::onResize(GLFWwindow *window, Core::i32 width, Core::i32 height)
 {
 	mWindowData.mWindowSize.set(width, height);
 	waitUntilNotMinimized();
-	// GET_SYSTEM(RenderEngine).onResize(width, height);
 
 	FOR_ARRAY(i, mWindowListeners)
 	{
