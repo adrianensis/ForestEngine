@@ -3,6 +3,7 @@
 #include "Scene/GameComponent.hpp"
 #include "Scene/Transform.hpp"
 #include "GPU/Camera/GPUCamera.hpp"
+#include "Window/Window.hpp"
 
 class Camera: public GameComponent
 {
@@ -10,7 +11,7 @@ public:
     void init();
     void onECComponentAdded() override;
     void update();
-	void onResize();
+	void onResize(Core::WeakPtr<Window::Window> window);
 private:
 	GPUCamera mGPUCamera;
 public:

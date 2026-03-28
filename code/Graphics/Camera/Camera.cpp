@@ -1,7 +1,6 @@
 
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Camera.hpp"
-#include "Window/WindowManager.hpp"
 
 void Camera::init()
 {
@@ -21,9 +20,9 @@ void Camera::update()
 	mGPUCamera.update(viewMatrix);
 }
 
-void Camera::onResize()
+void Camera::onResize(Core::WeakPtr<Window::Window> window)
 {
-	Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
-	Core::f32 aspectRatio = GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
+	Maths::Vector2 windowSize = window->getWindowSize();
+	Core::f32 aspectRatio = window->getAspectRatio();
     mGPUCamera.onResize(windowSize, aspectRatio);
 }

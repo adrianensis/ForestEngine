@@ -2,7 +2,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 #include "Engine/EngineConfig.hpp"
-#include "Graphics/Camera/CameraManager.hpp"
+#include "Graphics/Camera/Camera.hpp"
 #include "Window/WindowManager.hpp"
 
 void ScenesManager::terminate() 
@@ -47,17 +47,21 @@ void ScenesManager::init()
         entity->init(); 
     });
 
-	// mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 10));
-	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
-
     Camera* camera = ECManager.requestComponent<Camera>(mCameraGameObject, [&](auto* component)
     {
         component->init();
     });
+}
 
-	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), 90);
+void ScenesManager::initCamera(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio)
+{
+	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
-    GET_SYSTEM(CameraManager).setCamera(camera);
+    Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+
+	camera->getGPUCamera().setPerspective(0.1, 10000, aspectRatio, 90);
+
+    cameraManager->setCamera(camera);
 }
 
 void ScenesManager::update()

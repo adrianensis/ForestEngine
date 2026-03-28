@@ -5,8 +5,6 @@
 
 Maths::Matrix4 Light::getLightProjectionViewMatrix() const
 {
-    Camera* camera = GET_SYSTEM(CameraManager).getCamera();
-
     Maths::Matrix4 lightViewMatrix;
     lightViewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
     lightViewMatrix.invert();

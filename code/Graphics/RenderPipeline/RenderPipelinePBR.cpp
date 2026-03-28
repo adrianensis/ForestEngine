@@ -12,10 +12,13 @@ void RenderPipelinePBR::compile()
     renderPassGeometryData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::STORE;
     mGPURenderGraph.initRenderPass<RenderPassGeometry>(renderPassGeometryData);
 
+    mGPURenderGraph.getRenderPass<RenderPassGeometry>()->setCameraManager(mCameraManager);
+    
     GPURenderPassData renderPassUIData;
     renderPassUIData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
     renderPassUIData.mColorAttachment.mGPUAttachmentStoreOp = GPUAttachmentStoreOp::DONT_CARE;
     renderPassUIData.mGeometricSpace = Maths::GeometricSpace::SCREEN;
-
+    
     mGPURenderGraph.initRenderPass<RenderPassUI>(renderPassUIData);
+    mGPURenderGraph.getRenderPass<RenderPassUI>()->setCameraManager(mCameraManager);
 }

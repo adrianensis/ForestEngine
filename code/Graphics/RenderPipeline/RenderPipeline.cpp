@@ -5,13 +5,15 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
-void RenderPipeline::init()
+void RenderPipeline::init(Core::WeakPtr<CameraManager> cameraManager)
 {
     PROFILER_CPU()
 
     mGPURenderItemManager.init();
     mGlobalGPUUniformBuffersContainer = Core::OwnerPtr<GPUUniformBuffersContainer>::newObject();
     initBuffers();
+
+    mCameraManager = cameraManager;
 
     mGPUInstanceRendererManager = Core::OwnerPtr<GPUInstanceRendererManager>::newObject();
     GPURenderPassSubsystems gpuRenderPassSubsystems

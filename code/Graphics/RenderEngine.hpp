@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
 #include "SpacePartition/OcTree.hpp"
 #include "Graphics/RenderPipeline/RenderPipelinePBR.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
@@ -23,7 +24,9 @@ private:
     RenderPipelineUpdateData mRenderPipelineUpdateData;
     Core::OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;
+    Core::OwnerPtr<CameraManager> mCameraManager;
 public:
 	OcTree octree;
+	GET(CameraManager);
 };
 REGISTER_CLASS(RenderEngine, System);

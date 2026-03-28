@@ -2,6 +2,7 @@
 
 #include "Engine/Core.hpp"
 #include "GPU/Light/GPULight.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "GPU/RenderGraph/GPURenderGraph.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
@@ -20,7 +21,7 @@ public:
 class RenderPipeline
 {
 public:
-    virtual void init();
+    virtual void init(Core::WeakPtr<CameraManager> cameraManager);
     virtual ~RenderPipeline() = default;
     void update(Core::f32 dt, RenderPipelineUpdateData& renderPipelineUpdateData);
     virtual void terminate();
@@ -40,5 +41,6 @@ protected:
     GPURenderGraph mGPURenderGraph;
     std::vector<MeshRenderer*> mMeshRenderers;
     Core::OwnerPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
+    Core::WeakPtr<CameraManager> mCameraManager;
 };
 REGISTER_CLASS(RenderPipeline);

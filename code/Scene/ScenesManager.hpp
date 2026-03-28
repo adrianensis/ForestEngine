@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 
@@ -15,6 +16,7 @@ public:
     void loadPendingScenes();
     bool pendingLoadRequests() const;
     void requestLoadScene(Core::HashedString sceneName);
+    void initCamera(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio);
     Core::WeakPtr<Scene> getScene(Core::HashedString sceneName) const;
 
 private:

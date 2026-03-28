@@ -33,7 +33,7 @@ void RenderPassGeometry::updateGlobalData()
 	PROFILER_CPU()
     RenderPassBase::updateGlobalData();
 
-    Camera* camera = GET_SYSTEM(CameraManager).getCamera();
+    Camera* camera = mCameraManager->getCamera();
 
     Maths::Matrix4 lightProjectionViewMatrix = Maths::Matrix4::smIdentity;
     if(mDirectionalLight)

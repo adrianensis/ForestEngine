@@ -11,7 +11,6 @@
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 #include "Graphics/Mesh/MeshFactory.hpp"
 #include "Graphics/Model/ModelManager.hpp"
-#include "Graphics/Camera/CameraManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
 
 #include "Scripting/ScriptEngine.hpp"
@@ -47,7 +46,6 @@ void Engine::init()
     GPUInstance::getInstance().init(window.getInternalPointer());
     CREATE_SYSTEM(Input::Input);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
-    CREATE_SYSTEM(CameraManager);
     CREATE_SYSTEM(ModelManager);
     CREATE_SYSTEM(RenderEngine);
 	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
@@ -79,6 +77,8 @@ void Engine::run()
 	Core::f32 inverseFPSMillis = inverseFPS * 1000.0f;
 
 	Core::f32 diff = 0;
+
+	GET_SYSTEM(ScenesManager).initCamera(GET_SYSTEM(RenderEngine).getCameraManager(), GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio());
 
 	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{

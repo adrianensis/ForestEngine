@@ -1,5 +1,7 @@
 #include "Graphics/RenderEngine.hpp"
 #include "Core/EntityComponent/Component.hpp"
+#include "Core/Memory/Pointers.hpp"
+#include "Core/System/SystemsManager.hpp"
 #include "GPU/GPUInstance.hpp"
 #include "Graphics/Light/Light.hpp"
 #include "Window/WindowManager.hpp"
@@ -9,8 +11,10 @@
 
 void RenderEngine::init()
 {
+    mCameraManager = Core::OwnerPtr<CameraManager>::newObject();
+
     mRenderPipeline = Core::OwnerPtr<RenderPipelinePBR>::newObject();
-    mRenderPipeline->init();
+    mRenderPipeline->init(mCameraManager);
     mRenderPipeline->compile();
 
 	// octree.init(5000);
@@ -44,9 +48,9 @@ void RenderEngine::onResize()
 {
     GPUInstance::getInstance().mGPUContext->setWindowResized();
     GPUInstance::getInstance().mGPUContext->recreateRenderingObjects();
+    Camera* camera = mCameraManager->getCamera();
+    camera->onResize(GET_SYSTEM(Window::WindowManager).getMainWindow());
     mRenderPipeline->onResize();
-    Camera* camera = GET_SYSTEM(CameraManager).getCamera();
-    camera->onResize();
 }
 
 void RenderEngine::terminate()
