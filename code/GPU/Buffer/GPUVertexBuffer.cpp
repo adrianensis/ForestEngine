@@ -10,7 +10,6 @@ void GPUVertexBuffer::init(GPUContext* gpuContext, Core::u32 attributeLocation, 
     // sizeInPrimitiveTypes: size of the object divided in primitive types
     // ex: Maths::Vector3 -> 3 floats
     Core::u32 sizeInPrimitiveTypes = mData.mGPUVariableData.mGPUDataType.getSizePrimitiveType();
-//    // GET_SYSTEM(GPUInterface).attribute(getAttributeLocationWithOffset(), sizeInPrimitiveTypes, primitiveType, mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes, mPreviousOffsetInBytes, mData.mInstanceDivisor);
     // accumulative offset in bytes
     Core::u32 primitiveTypeSizeInBytes = mData.mGPUVariableData.mGPUDataType.getPrimitiveTypeSizeInBytes();
     mPreviousOffsetInBytes = mPreviousOffsetInBytes + sizeInPrimitiveTypes * primitiveTypeSizeInBytes;

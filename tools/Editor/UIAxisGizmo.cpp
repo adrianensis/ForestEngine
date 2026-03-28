@@ -88,9 +88,6 @@ void UISingleAxisGizmo::update()
         );
     GET_SYSTEM(DebugRenderer).drawLine(Maths::Line(startLine, endLine), 1, Maths::GeometricSpace::SCREEN, mColor);
 
-    // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mPositive);
-    // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mNegative);
-
     Maths::Vector3 startGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))

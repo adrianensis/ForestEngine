@@ -2,7 +2,6 @@
 
 void GPUVertexBuffersContainer::enable(GPUContext* gpuContext)
 {
-//	GET_SYSTEM(GPUInterface).enableVertexBufferLayout(mVertexBufferLayoutId);
     const GPUCommandBuffer vulkanCommandBuffer = gpuContext->vulkanCommandBuffers[gpuContext->currentFrame];
     
     FOR_ARRAY(i, mVertexBuffers)
@@ -72,8 +71,6 @@ void GPUVertexBuffersContainer::terminate()
     {
         it->terminate();
     }
-
-//    GET_SYSTEM(GPUInterface).deleteVertexBufferLayout(mVertexBufferLayoutId);
 }
 
 void GPUUniformBuffersContainer::addUniformBuffer(GPUContext* gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic)

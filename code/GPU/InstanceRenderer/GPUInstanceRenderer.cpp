@@ -149,7 +149,6 @@ void GPUInstanceRenderer::drawCall()
     PROFILER_CPU()
     if(!mRenderers.empty())
     {
-//        GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::TRIANGLES, mGPUInstanceRendererData.mMesh->mIndices.size() * 3, mRenderersCount, true);
         Core::u32 instanceCount = mRenderersCount;
         constexpr Core::u32 firstVertex = 0;
         constexpr Core::u32 vertexOffset = 0;
