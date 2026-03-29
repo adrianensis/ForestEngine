@@ -6,6 +6,7 @@
 #include "UI/UIGroup.hpp"
 #include "UI/UIFont.hpp"
 #include "UI/UIShader.hpp"
+#include "UI/UIBuilder.hpp"
 
 class GPUShader;
 class Scene;
@@ -36,6 +37,11 @@ public:
 
     UIElement* getFocusedElement() const { return mFocusedElement; };
     void setFocusedElement(UIElement* focusedElement);
+
+    UIBuilder createUIBuilder()
+    {
+        return UIBuilder(this);
+    }
 
 private:
 	std::unordered_map<Core::HashedString, Core::OwnerPtr<UIGroup>> mGroups;

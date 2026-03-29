@@ -32,9 +32,9 @@ void UIList::init()
 	subscribeToScrollEvents();
 }
 
-void UIList::initFromConfig(const UIElementConfig& config)
+void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
 {
-	UIElement::initFromConfig(config);
+	UIElement::initFromConfig(uiManager, config);
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
 	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
@@ -88,7 +88,7 @@ void UIList::toggle()
 		Maths::Vector3 scale = mTransform->getLocalScale();
 		scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
 
-		UIBuilder uiBuilder;
+		UIBuilder uiBuilder = mUIManager->createUIBuilder();
 
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
@@ -139,7 +139,7 @@ void UIList::setEntriesVisibility(bool visible)
 			Maths::Vector3 scale = mTransform->getLocalScale();
 			scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
 
-			GET_SYSTEM(UIManager).getBuilder()->saveData()->
+			mUIManager->getBuilder()->saveData()->
 				setLocalPosition(Maths::Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
 				setSize(scale)->
 				setText(label)->
@@ -148,14 +148,14 @@ void UIList::setEntriesVisibility(bool visible)
 				setIsAffectedByLayout(false)->
 				create<UIButton>();
 
-			UIButton* button = (UIButton*) GET_SYSTEM(UIManager).getBuilder()->getUIElement();
+			UIButton* button = (UIButton*) mUIManager->getBuilder()->getUIElement();
 			button->setOnPressedCallback(onPressedCallback);
 			//button->setVisibility(false);
 
 			Transform* t = button->mTransform;
 			t->setParent(mTransform);
 
-			GET_SYSTEM(UIManager).getBuilder()->restoreData();
+			mUIManager->getBuilder()->restoreData();
 
 			mButtons->pushBack(button);
 		}

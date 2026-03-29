@@ -59,6 +59,7 @@ void Engine::init()
     GET_SYSTEM(ModelManager).init();
     CREATE_SYSTEM(UIManager);
     GET_SYSTEM(UIManager).init();
+    mUIManager = GET_SYSTEM_PTR(UIManager).getInternalPointer();
     CREATE_SYSTEM(ScenesManager);
     mScenesManager = GET_SYSTEM_PTR(ScenesManager).getInternalPointer();
     GET_SYSTEM(ScenesManager).init(ScenesManagerData

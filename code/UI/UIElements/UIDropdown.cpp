@@ -58,7 +58,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 			Maths::Vector3 scale = mTransform->getLocalScale();
 			scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
 			
-			UIBuilder uiBuilder;
+			UIBuilder uiBuilder = mUIManager->createUIBuilder();
 
 			uiBuilder.
 				setLayout(UILayout::VERTICAL).

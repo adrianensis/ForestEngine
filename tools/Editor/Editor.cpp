@@ -460,9 +460,9 @@ void Editor::createUI()
 {
     mAxisViewer = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
     mAxisViewer->mTransform->setLocalPosition(Maths::Vector2(-0.9, -0.8));
-    mAxisViewer->createAxis();
+    mAxisViewer->createAxis(mUIManager);
 
-    UIBuilder uiBuilder;
+    UIBuilder uiBuilder = mUIManager->createUIBuilder();
 
 	uiBuilder.
 	// setPosition(Maths::Vector2(0,0)).

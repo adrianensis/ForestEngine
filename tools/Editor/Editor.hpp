@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Core/TypeMacros.hpp"
 #include "Scripting/Script.hpp"
 #include "UI/Module.hpp"
+#include "UI/UIManager.hpp"
 #include "UIAxisGizmo.hpp"
 #include "UITransform.hpp"
 #include "UISceneTree.hpp"
@@ -39,5 +41,9 @@ private:
     Maths::Vector2 mLastMousePosition;
 	Maths::Vector3 mCurrentRotation;
 	Maths::Vector3 mTargetRotation;
+
+	UIManager* mUIManager = nullptr;
+public:
+	SET(UIManager)
 };
 REGISTER_CLASS(Editor, Script)

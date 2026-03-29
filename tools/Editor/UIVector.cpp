@@ -7,37 +7,37 @@ void UIVector::init()
 {
     GameObject::init();
 
-    UIBuilder uiBuilder;
-	uiBuilder.
-	setPosition(Maths::Vector2(0,0)).
-	// setPosition(startGlyph).
-	setAdjustSizeToText(true).
-	setIsStatic(mIsStatic).
-	setIsStaticText(false).
-	setIsAffectedByLayout(true).
-    setParent(this).
-	setSize(Maths::Vector2(0.5, 0.05f));
+    // UIBuilder uiBuilder;
+	// uiBuilder.
+	// setPosition(Maths::Vector2(0,0)).
+	// // setPosition(startGlyph).
+	// setAdjustSizeToText(true).
+	// setIsStatic(mIsStatic).
+	// setIsStaticText(false).
+	// setIsAffectedByLayout(true).
+    // setParent(this).
+	// setSize(Maths::Vector2(0.5, 0.05f));
 
-    mX = uiBuilder.
-	setText(Core::HashedString("000000.000")).
-    // setIsStatic(false).
-	create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
-	getUIElement<UIText>();
-    mY = uiBuilder.
-	setText(Core::HashedString("000000.000")).
-    // setIsStatic(false).
-	create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
-	getUIElement<UIText>();
-    mZ = uiBuilder.
-	setText(Core::HashedString("000000.000")).
-    // setIsStatic(false).
-	create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
-	getUIElement<UIText>();
-    // mW = uiBuilder.
-	// setText(Core::HashedString(std::to_string(v.x))).
-    // setIsStatic(false).
-	// create<UIText>().
+    // mX = uiBuilder.
+	// setText(Core::HashedString("000000.000")).
+    // // setIsStatic(false).
+	// create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	// getUIElement<UIText>();
+    // mY = uiBuilder.
+	// setText(Core::HashedString("000000.000")).
+    // // setIsStatic(false).
+	// create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
+	// getUIElement<UIText>();
+    // mZ = uiBuilder.
+	// setText(Core::HashedString("000000.000")).
+    // // setIsStatic(false).
+	// create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
+	// getUIElement<UIText>();
+    // // mW = uiBuilder.
+	// // setText(Core::HashedString(std::to_string(v.x))).
+    // // setIsStatic(false).
+	// // create<UIText>().
+	// // getUIElement<UIText>();
 }
 
 void UIVector::update(const Maths::Vector3& v)

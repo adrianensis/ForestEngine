@@ -4,6 +4,7 @@
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Time/TimerManager.hpp"
 #include "Scene/ScenesManager.hpp"
+#include "UI/UIManager.hpp"
 
 class Engine
 {
@@ -20,7 +21,9 @@ private:
     Time::Time mTime;
     Time::TimerManager mTimerManager;
     ScenesManager* mScenesManager = nullptr;
+    UIManager* mUIManager = nullptr;
 
 public:
     GET(ScenesManager)
+    GET(UIManager)
 };

@@ -4,12 +4,18 @@
 #include "Window/Window.hpp"
 #include "UI/UIManager.hpp"
 
-UIBuilder::UIBuilder()
+UIBuilder::UIBuilder(UIManager* uiManager)
+{
+	mUIManager = uiManager;
+	restoreAll();
+}
+
+void UIBuilder::restoreAll()
 {
 	mCurrentLayout = UILayout::HORIZONTAL;
 	mMakeRelativeToLastConfig = false;
 
-    mDefaultConfig.mShader = GET_SYSTEM(UIManager).getDefaultUIShader();
+    mDefaultConfig.mShader = mUIManager->getDefaultUIShader();
     mDefaultConfig.mStyle = &UIStyleManager::getInstance().getDefaultStyle();
 	mConfig = mDefaultConfig;
 }
@@ -45,7 +51,7 @@ void UIBuilder::registerUIElement(UIElement* uiElement)
 
 	if (mConfig.mGroup.get().length() > 0)
 	{
-		GET_SYSTEM(UIManager).getOrCreateGroup(mConfig.mGroup).addUIElement(mCurrentUIElement);
+		mUIManager->getOrCreateGroup(mConfig.mGroup).addUIElement(mCurrentUIElement);
 	}
 
 	if (mConfig.mIsAffectedByLayout)

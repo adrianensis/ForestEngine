@@ -30,12 +30,14 @@
 	UI_BUILDER_CONFIG_RESTORE(Name)\
 	UI_BUILDER_CONFIG_SETTER(Name)
 
+class UIManager;
+
 class UIBuilder
 {
 public:
-    UIBuilder();
+    UIBuilder(UIManager* uiManager);
 
-	void restoreAll() { mConfig = mDefaultConfig; }
+	void restoreAll();
 
 	UIBuilder& setLayout(UILayout layout)
 	{
@@ -58,7 +60,7 @@ public:
 
         calculateConfig();
 	    T* uiElement = uiScene->createGameObject<T>();
-        uiElement->initFromConfig(mConfig);
+        uiElement->initFromConfig(mUIManager, mConfig);
         uiElement->postInit();
 
         registerUIElement(uiElement);
@@ -83,6 +85,7 @@ private:
     void calculateConfig();
 
 private:
+	UIManager* mUIManager = nullptr;
 	UILayout mCurrentLayout;
 	UIElementConfig mConfig;
 	UIElementConfig mDefaultConfig;

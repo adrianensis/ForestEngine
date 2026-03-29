@@ -17,10 +17,12 @@ int main()
 
     GameObject* controller = engine.getScenesManager()->getScene(ScenesManager::smGlobalSceneName)->createGameObject<GameObject>();
 
-    ECManager.requestComponent<Editor>(controller, [&](auto* component)
+    Editor* editor = ECManager.requestComponent<Editor>(controller, [&](auto* component)
     {
         component->init();
     });
+
+    editor->setUIManager(engine.getUIManager());
 
     engine.run();
     engine.terminate();

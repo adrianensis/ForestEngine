@@ -6,7 +6,7 @@
 #include "UI/Module.hpp"
 #include "Input/Input.hpp"
 
-void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& color, Core::HashedString axisName)
+void UISingleAxisGizmo::setAxis(UIManager* uiManager, const Maths::Line& line, const Maths::Vector4& color, Core::HashedString axisName)
 {
     mAxis = line;
     mColor = color;
@@ -39,7 +39,7 @@ void UISingleAxisGizmo::setAxis(const Maths::Line& line, const Maths::Vector4& c
             )
         , 1);
     
-    UIBuilder uiBuilder;
+    UIBuilder uiBuilder = uiManager->createUIBuilder();
 	uiBuilder.
 	// setPosition(Maths::Vector2(0,0)).
 	setPosition(startGlyph).
@@ -110,7 +110,7 @@ void UISingleAxisGizmo::onDestroy()
     GameObject::onDestroy();
 }
 
-void UIAxisGizmo::createAxis()
+void UIAxisGizmo::createAxis(UIManager* uiManager)
 {
     Maths::Vector3 axisHalfSize(0.065, 0.065, 0.065);
     Maths::Line axisX = Maths::Line(Maths::Vector3(1,0,0)*axisHalfSize, Maths::Vector3(-1,0,0)*axisHalfSize);
@@ -125,9 +125,9 @@ void UIAxisGizmo::createAxis()
     mTransform->addChild(mAxisY->mTransform);
     mTransform->addChild(mAxisZ->mTransform);
 
-    mAxisX->setAxis(axisX, Maths::Vector4(1,0,0,1), "X");
-    mAxisY->setAxis(axisY, Maths::Vector4(0,1,0,1), "Y");
-    mAxisZ->setAxis(axisZ, Maths::Vector4(0,0,1,1), "Z");
+    mAxisX->setAxis(uiManager, axisX, Maths::Vector4(1,0,0,1), "X");
+    mAxisY->setAxis(uiManager, axisY, Maths::Vector4(0,1,0,1), "Y");
+    mAxisZ->setAxis(uiManager, axisZ, Maths::Vector4(0,0,1,1), "Z");
 }
 
 void UIAxisGizmo::update()
