@@ -115,7 +115,7 @@ void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 
 void UIElement::postInit()
 {
-    mRenderer = ECManager.getFirstComponent<MeshRenderer>(this);
+    mRenderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<MeshRenderer>(this);
 }
 
 void UIElement::subscribeToKeyEvents()

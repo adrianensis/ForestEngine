@@ -17,5 +17,7 @@ public:
 
 protected:
     SystemsDependencyInjection mSystemsDI;
+public:
+    RGET(SystemsDI)
 };
 NS_END

@@ -28,7 +28,7 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>(this, [&](auto* component)
+	MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(this, [&](auto* component)
     {
         component->init(rendererData);
     });
@@ -108,7 +108,7 @@ void UIText::setText(Core::HashedString text)
                     glyphConfig = gameObjectGlyph->calculateConfig(glyphConfig);
                     gameObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     gameObjectGlyph->mTransform->setLocalScale(Maths::Vector3(glyphConfig.mDisplaySize, 1));
-                    MeshRenderer* renderer = ECManager.getFirstComponent<MeshRenderer>(gameObjectGlyph);
+                    MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<MeshRenderer>(gameObjectGlyph);
                     Maths::Cube textureRegion = mSystemsDI.getSystem<UIManager>()->getGlyphData(character).mTextureRegion;
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();

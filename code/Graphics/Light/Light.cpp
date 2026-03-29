@@ -6,7 +6,7 @@
 Maths::Matrix4 Light::getLightProjectionViewMatrix() const
 {
     Maths::Matrix4 lightViewMatrix;
-    lightViewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
+    lightViewMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
     lightViewMatrix.invert();
 
     Maths::Matrix4 lightProjectionViewMatrix;
@@ -39,7 +39,7 @@ void DirectionalLight::init(const DirectionalLightData& data)
 DirectionalLightData DirectionalLight::calculateLightData() const
 {
     DirectionalLightData data = mLightData;
-    const Maths::Matrix4& rotationMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+    const Maths::Matrix4& rotationMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
     data.mDirection = rotationMatrix.mulVector(Maths::Vector4(-Maths::Vector3::smForward, 1));
     // data.mDirection += getOwnerEntity()->getFirstComponent<Transform>()->getWorldPosition();
     data.mDirection.mul(-1);

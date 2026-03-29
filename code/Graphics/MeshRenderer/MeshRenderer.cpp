@@ -28,7 +28,7 @@ void MeshRenderer::onDestroy()
 void MeshRenderer::calculateRendererModelMatrix()
 {
     PROFILER_CPU()
-    Maths::Matrix4 rendererModelMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
+    Maths::Matrix4 rendererModelMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->calculateModelMatrix();
     rendererModelMatrix.mul(mGPURenderItem->getGPURenderItemData().mMeshInstanceMatrix);
     // IOcTreeElement::init(mRendererModelMatrix, mRendererData.mMesh->mMin, mRendererData.mMesh->mMax, getIsStatic());
     mGPURenderItem->setRendererModelMatrix(rendererModelMatrix);
@@ -41,7 +41,7 @@ void MeshRenderer::update()
 
     if(! CAST(GameObject, getOwnerEntity())->mIsStatic)
     {
-        if(ECManager.getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
+        if(getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getModelMatrixDirty())
         {
             calculateRendererModelMatrix();
         }

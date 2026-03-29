@@ -4,8 +4,6 @@
 #include "Core/Config/Config.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/GameObject.hpp"
-#include "Scene/ScenesManager.hpp"
-#include <cstddef>
 
 class ScenesManager;
 class Scene: public Core::ISerializable
@@ -13,7 +11,7 @@ class Scene: public Core::ISerializable
     DECLARE_SERIALIZATION()
 
 public:
-    void init(Core::HashedString sceneName, ScenesManager* scenesManager);
+    void init(Core::HashedString sceneName, ScenesManager* scenesManager, EC::EntityComponentManager* ecManager);
     void loadScene();
     void unloadScene();
     void terminate();
@@ -25,9 +23,10 @@ public:
 	{
         PROFILER_CPU()
         CHECK_MSG(IS_BASE_OF(GameObject, T), "T class is not derived from GameObject");
-		T* entityPtr = ECManager.requestEntity<T>([&](T* entity)
+		T* entityPtr = mECManager->requestEntity<T>([&, this](T* entity)
         {
-           entity->init(); 
+            entity->getSystemsDI().addSystem(mECManager);
+            entity->init(); 
         });
         
         addGameObject(entityPtr);
@@ -44,6 +43,7 @@ private:
 
 private:
     ScenesManager* mScenesManager = nullptr;
+    EC::EntityComponentManager* mECManager = nullptr;
     Core::HashedString mSceneName;
 	std::list<GameObject*> mGameObjects;
 	std::list<GameObject*> mNewGameObjects;

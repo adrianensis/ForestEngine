@@ -1,6 +1,7 @@
 #include "Graphics/Model/ModelRenderer.hpp"
 
 #include "Graphics/Model/Model.hpp"
+#include "Scene/GameObject.hpp"
 #include "GPU/Mesh/GPUMesh.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
@@ -24,7 +25,7 @@ void ModelRenderer::onECComponentAdded()
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         EC::Entity* parent = getOwnerEntity();
-        ECManager.requestComponent<MeshRenderer>(parent, [&](auto* component)
+        getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(parent, [&](auto* component)
 		{
 			component->init(rendererData);
 		});

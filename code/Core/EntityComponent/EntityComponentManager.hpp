@@ -4,10 +4,10 @@
 #include "Core/CoreBase.hpp"
 #include "Core/CoreMacros.hpp"
 #include "Core/EntityComponent/Component.hpp"
-#include "Core/Memory/Singleton.hpp"
 #include "Core/EntityComponent/EntityComponentPool.hpp"
 #include "Core/Memory/Pool.hpp"
 #include "Core/Metadata/ClassManager.hpp"
+#include "Core/System/System.hpp"
 #include <span>
 #include <vector>
 
@@ -18,8 +18,6 @@ public:
     virtual void onComponentAdded(Component* componentPtr) {};
     virtual void onComponentRemoved(Component* componentPtr) {};
 };
-
-#define ECManager EC::EntityComponentManager::getInstance()
 
 class ComponentsArray
 {
@@ -90,14 +88,14 @@ public:
     bool mEmpty = true;
 };
 
-class EntityComponentManager: public Core::Singleton<EntityComponentManager>
+class EntityComponentManager: public System::System
 {
 public:
     void init()
     {
         mECPool.init(smMaxSize);
     }
-    void terminate()
+    virtual void terminate() override
     {
         mECPool.terminate();
     }
@@ -348,4 +346,5 @@ private:
     std::unordered_map<Core::ClassId, std::unordered_set<EC::IComponentsListener*>> mComponentListeners;
     std::unordered_map<Core::ClassId, std::vector<ComponentsArray>> mEntityComponents;
 };
+REGISTER_CLASS(EntityComponentManager)
 NS_END

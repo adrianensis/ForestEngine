@@ -1,5 +1,6 @@
 #include "ScenesManager.hpp"
 #include "Core/Assert/Assert.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
@@ -41,12 +42,13 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraGameObject = ECManager.requestEntity<GameObject>([&](GameObject* entity)
+    mCameraGameObject = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestEntity<GameObject>([&](GameObject* entity)
     {
+        entity->getSystemsDI().addSystem(getSystemsDI().getSystem<EC::EntityComponentManager>());
         entity->init(); 
     });
 
-    Camera* camera = ECManager.requestComponent<Camera>(mCameraGameObject, [&](auto* component)
+    Camera* camera = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<Camera>(mCameraGameObject, [&](auto* component)
     {
         component->init();
     });
@@ -62,7 +64,7 @@ void ScenesManager::update()
 {
 	PROFILER_CPU()
     
-    Camera* cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+    Camera* cameraComponent = getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Camera>(mCameraGameObject);
     cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)
@@ -81,7 +83,7 @@ Core::WeakPtr<Scene> ScenesManager::createScene(Core::HashedString sceneName)
 
     mScenes.insert_or_assign(sceneName, Core::OwnerPtr<Scene>::newObject());
     Core::WeakPtr<Scene> scene = mScenes.at(sceneName);
-    scene->init(sceneName, this);
+    scene->init(sceneName, this, mSystemsDI.getSystem<EC::EntityComponentManager>());
     return scene;
 }
 

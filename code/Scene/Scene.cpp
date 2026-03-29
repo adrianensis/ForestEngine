@@ -9,8 +9,9 @@ void Scene::terminate()
     destroyGameObjects();
 }
 
-void Scene::init(Core::HashedString sceneName, ScenesManager* scenesManager)
+void Scene::init(Core::HashedString sceneName, ScenesManager* scenesManager, EC::EntityComponentManager* ecManager)
 {
+    mECManager = ecManager;
     mScenesManager = scenesManager;
     mSceneName = sceneName;
 	mSize = 0;

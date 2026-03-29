@@ -1,4 +1,5 @@
 #include "Scene/Transform.hpp"
+#include "Scene/GameObject.hpp"
 #include "Core/CoreBase.hpp"
 #include "Core/CoreMacros.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
@@ -218,8 +219,8 @@ const Maths::Matrix4& Transform::getViewMatrix() const
 {
     if(mViewMatrixDirty)
     {
-        Maths::Vector3 worldPosition = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
-        const Maths::Matrix4& rotationMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+        Maths::Vector3 worldPosition = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
+        const Maths::Matrix4& rotationMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
         mViewMatrix.view(worldPosition, rotationMatrix);
         mViewMatrixDirty = false;
     }

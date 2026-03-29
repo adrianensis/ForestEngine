@@ -1,6 +1,7 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassBase.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Scene/GameObject.hpp"
 
 void RenderPassBase::updateGlobalData()
 {
@@ -12,7 +13,7 @@ void RenderPassBase::updateGlobalData()
     GPUShaderDefinitions::UniformBuffers::GPUGlobalData gpuGlobalData =
     {
         projectionViewMatrix,
-        ECManager.getFirstComponent<Transform>(camera->getOwnerEntity())->getWorldPosition()
+        camera->getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(camera->getOwnerEntity())->getWorldPosition()
     };
 	mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData).setData(gpuGlobalData);
 }

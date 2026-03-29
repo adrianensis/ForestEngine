@@ -1,4 +1,5 @@
 
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/Module.hpp"
 #include "Graphics/Camera/Camera.hpp"
 
@@ -16,7 +17,7 @@ void Camera::update()
 {
 	PROFILER_CPU()
 	
-	const Maths::Matrix4& viewMatrix = ECManager.getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
+	const Maths::Matrix4& viewMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
 	mGPUCamera.update(viewMatrix);
 }
 

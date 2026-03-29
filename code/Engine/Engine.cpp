@@ -1,4 +1,5 @@
 #include "Engine/Engine.hpp"
+#include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Core/System/SystemsDependencyInjection.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "CommandLine/CommandLine.hpp"
@@ -34,9 +35,13 @@ void Engine::init()
     GET_SYSTEM(Time::Time).init();
     CREATE_SYSTEM(Time::TimerManager);
     GET_SYSTEM(Time::TimerManager).init();
+    CREATE_SYSTEM(EC::EntityComponentManager);
+    GET_SYSTEM(EC::EntityComponentManager).init();
 	Event::EventsManager::getInstance().init();
-    ECManager.init();
     System::SystemsManager::getInstance().init();
+
+	System::SystemsDependencyInjection engineBaseSystemsDI;
+	engineBaseSystemsDI.addSystem(GET_SYSTEM_PTR(EC::EntityComponentManager));
 
     CREATE_SYSTEM(EngineConfig);
     GET_SYSTEM(EngineConfig).init();
@@ -56,14 +61,15 @@ void Engine::init()
 	
     CREATE_SYSTEM(RenderEngine);
 	System::SystemsDependencyInjection renderEngineDI;
+	renderEngineDI.addFrom(engineBaseSystemsDI);
 	renderEngineDI.addSystem(GET_SYSTEM_PTR(CameraManager));
 	renderEngineDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(RenderEngine).injectSystemDependencies(renderEngineDI);
     GET_SYSTEM(RenderEngine).init();
 	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine));
 
-	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
-	ECManager.addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
+	GET_SYSTEM(EC::EntityComponentManager).addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
+	GET_SYSTEM(EC::EntityComponentManager).addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
     CREATE_SYSTEM(DebugRenderer);
     GET_SYSTEM(DebugRenderer).init();
     CREATE_SYSTEM(ModelManager);
@@ -71,12 +77,14 @@ void Engine::init()
 
     CREATE_SYSTEM(UIManager);
 	System::SystemsDependencyInjection uiManagerDI;
+	uiManagerDI.addFrom(engineBaseSystemsDI);
 	uiManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(UIManager).injectSystemDependencies(uiManagerDI);
     GET_SYSTEM(UIManager).init();
 
     CREATE_SYSTEM(ScenesManager);
 	System::SystemsDependencyInjection scenesManagerDI;
+	scenesManagerDI.addFrom(engineBaseSystemsDI);
 	scenesManagerDI.addSystem(GET_SYSTEM_PTR(CameraManager));
 	scenesManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(ScenesManager).injectSystemDependencies(scenesManagerDI);
@@ -86,6 +94,7 @@ void Engine::init()
     GET_SYSTEM(Command::CommandLine).init();
     CREATE_SYSTEM(ScriptEngine);
 	System::SystemsDependencyInjection scriptEngineDI;
+	scriptEngineDI.addFrom(engineBaseSystemsDI);
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(CameraManager));
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(ScenesManager));
@@ -97,7 +106,7 @@ void Engine::init()
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Time::Time));
     GET_SYSTEM(ScriptEngine).injectSystemDependencies(scriptEngineDI);
     GET_SYSTEM(ScriptEngine).init();
-	ECManager.addComponentListener<Script>(GET_SYSTEM_PTR(ScriptEngine));
+	GET_SYSTEM(EC::EntityComponentManager).addComponentListener<Script>(GET_SYSTEM_PTR(ScriptEngine));
 }
 
 void Engine::preSceneChanged()
@@ -159,13 +168,11 @@ void Engine::run()
 void Engine::terminate()
 {
 	Core::MemoryTracking::log();
-	ECManager.removeAllListeners();
+	GET_SYSTEM(EC::EntityComponentManager).removeAllListeners();
 	System::SystemsManager::getInstance().terminate();
 	System::SystemsManager::deleteInstance();
 	GPUInstance::getInstance().terminate();
 	GPUInstance::deleteInstance();
-	ECManager.terminate();
-    EC::EntityComponentManager::deleteInstance();
 	Event::EventsManager::getInstance().terminate();
 	Event::EventsManager::deleteInstance();
 	

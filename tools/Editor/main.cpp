@@ -18,7 +18,7 @@ int main()
 
     GameObject* controller = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smGlobalSceneName)->createGameObject<GameObject>();
 
-    Editor* editor = ECManager.requestComponent<Editor>(controller, [&](auto* component)
+    Editor* editor = GET_SYSTEM(EC::EntityComponentManager).requestComponent<Editor>(controller, [&](auto* component)
     {
         component->init();
     });

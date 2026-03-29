@@ -44,7 +44,7 @@ void Editor::firstUpdate(Core::f32 dt)
 
 	mCameraGameObject = getOwnerGameObject()->mScene->getScenesManager()->getCameraGameObject();
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
-    Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+    Camera* camera = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Camera>(mCameraGameObject);
     // Maths::Vector2 windowSize = (Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
@@ -127,7 +127,7 @@ void Editor::update(Core::f32 dt)
 {
 	PROFILER_CPU()
 
-    Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+    Camera* camera = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Camera>(mCameraGameObject);
 	Transform* cameraTransform = mCameraGameObject->mTransform;
 	Core::f32 speed = 400 * (dt/1000.0f);
 
@@ -274,7 +274,7 @@ GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
+	// MeshRenderer* renderer = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// gameObject->addComponent(renderer);
 
@@ -285,7 +285,7 @@ GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	ECManager.requestComponent<MeshRenderer>(gameObject, [&](auto* component)
+	getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(gameObject, [&](auto* component)
 	{
 		component->init(rendererData);
 	});
@@ -309,7 +309,7 @@ GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 	PropertiesBlockGPUShaderDefault shaderPropertiesBlock;
 	// rendererData.mShader = (GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData));
 
-	// MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>();
+	// MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>();
     // renderer->init(rendererData);
 	// gameObject->addComponent(renderer);
 
@@ -320,7 +320,7 @@ GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
         Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
     };
 
-	ECManager.requestComponent<MeshRenderer>(gameObject, [&](auto* component)
+	getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(gameObject, [&](auto* component)
 	{
 		component->init(rendererData);
 	});
@@ -339,7 +339,7 @@ GameObject* Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
     data.mPosition = v;
     data.mDiffuse = Maths::Vector3(1,1,1) * 250000;
 
-	ECManager.requestComponent<PointLight>(gameObject, [&](auto* component)
+	getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<PointLight>(gameObject, [&](auto* component)
 	{
 		component->init(data);
 	});
@@ -358,7 +358,7 @@ GameObject* Editor::createDirectionalLight(const Maths::Vector3& v, const Maths:
     directionalLightData.mDirection = dir;
     directionalLightData.mDiffuse = Maths::Vector3(0.65,0.2,0.1) * 20;
 
-	ECManager.requestComponent<DirectionalLight>(gameObject, [&](auto* component)
+	getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<DirectionalLight>(gameObject, [&](auto* component)
 	{
 		component->init(directionalLightData);
 	});
@@ -416,7 +416,7 @@ GameObject* Editor::importModel( const std::string& pFile, const Maths::Vector3&
         Core::ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
     };
 
-	ECManager.requestComponent<ModelRenderer>(gameObject, [&](auto* component)
+	getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<ModelRenderer>(gameObject, [&](auto* component)
 	{
 		component->init(modelRendererData);
 	});
