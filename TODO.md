@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Refactor GPU module, before completing Bindless Textures!
+- [ ] Refactor getSystemsDI()->getSystem<>() calls into shorter functions
 
 - [ ] Change WeakPtr by Ref non-ownership dependant references (for example: pointers to GPUContext)
 - [ ] Review virtual destructors (clean + build to see all the warnings)
