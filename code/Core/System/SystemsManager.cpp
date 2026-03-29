@@ -5,11 +5,13 @@
 NS_BEGIN(System)
 void SystemsManager::init()
 {
-
+    LOG_TAG("SYSTEM", "Init SystemsManager");
 }
 
 void SystemsManager::terminate()
 {
+    LOG_TAG("SYSTEM", "Terminate SystemsManager");
+
     for (auto it = mSystemsInOrder.rbegin(); it != mSystemsInOrder.rend(); ++it)
     {
         const Core::ClassDefinition& classDef = Core::ClassManager::getDynamicClassMetadata(

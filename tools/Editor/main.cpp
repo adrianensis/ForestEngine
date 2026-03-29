@@ -22,7 +22,7 @@ int main()
         component->init();
     });
 
-    editor->setUIManager(engine.getUIManager());
+    editor->getSystemsDI().addSystem(engine.getUIManager());
 
     engine.run();
     engine.terminate();

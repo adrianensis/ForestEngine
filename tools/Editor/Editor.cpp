@@ -10,6 +10,7 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Graphics/Model/ModelRenderer.hpp"
 #include "Scene/GameObject.hpp"
+#include "UI/UIManager.hpp"
 #include "Window/WindowManager.hpp"
 
 #include "Scene/Module.hpp"
@@ -40,6 +41,8 @@ void Editor::init()
 void Editor::firstUpdate(Core::f32 dt)
 {
     PROFILER_CPU();
+
+	mUIManager = mSystemsDI.getSystem<UIManager>();
 
 	mCameraGameObject = getOwnerGameObject()->mScene->getScenesManager()->getCameraGameObject();
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
