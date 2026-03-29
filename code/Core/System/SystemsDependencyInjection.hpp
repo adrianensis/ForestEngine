@@ -2,6 +2,8 @@
 
 #include "Core/Core.hpp"
 #include "Core/CoreMacros.hpp"
+#include <typeindex>
+#include <typeinfo>
 
 NS_BEGIN(System)
 
@@ -29,13 +31,22 @@ public:
     template<typename T> T_EXTENDS(T, System)
     T* getSystem() const
     {
-        Core::ClassId classId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-        CHECK_MSG(mSystems.contains(classId), "System not found!");
-        return static_cast<T*>(mSystems.at(classId));
+        if(typeid(T).hash_code() != mCacheTypeId)
+        {
+            Core::ClassId classId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+            CHECK_MSG(mSystems.contains(classId), "System not found!");
+
+            mCacheSystem = mSystems.at(classId);
+            mCacheTypeId = typeid(T).hash_code();
+        }
+
+        return static_cast<T*>(mCacheSystem);
     }
 
 private:
     std::unordered_map<Core::ClassId, System*> mSystems;
+    mutable Core::InternalCPPTypeId mCacheTypeId = 0;
+    mutable System* mCacheSystem = nullptr;
 public:
     CRGET(Systems)
 };
