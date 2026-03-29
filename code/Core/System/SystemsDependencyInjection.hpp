@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
+#include "Core/CoreMacros.hpp"
 
 NS_BEGIN(System)
 
@@ -8,6 +9,14 @@ class System;
 class SystemsDependencyInjection
 {
 public:
+    void addFrom(const SystemsDependencyInjection& other)
+    {
+        FOR_MAP(it, other.mSystems)
+        {
+            mSystems.emplace(it->first, it->second);
+        }
+    }
+
     template<typename T> T_EXTENDS(T, System)
     void addSystem(T* system)
     {
@@ -27,6 +36,8 @@ public:
 
 private:
     std::unordered_map<Core::ClassId, System*> mSystems;
+public:
+    CRGET(Systems)
 };
 
 NS_END

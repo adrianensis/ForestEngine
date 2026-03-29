@@ -6,6 +6,8 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Input/Input.hpp"
 #include "Core/Event/EventsManager.hpp"
+#include "Core/Time/TimeUtils.hpp"
+#include "Core/Time/TimerManager.hpp"
 
 #include "Core/System/SystemsManager.hpp"
 #include "Window/WindowManager.hpp"
@@ -28,8 +30,10 @@ void Engine::init()
 
 	Core::Memory::init();
 	Core::Profiler::init();
-    mTime.init();
-    mTimerManager.init();
+    CREATE_SYSTEM(Time::Time);
+    GET_SYSTEM(Time::Time).init();
+    CREATE_SYSTEM(Time::TimerManager);
+    GET_SYSTEM(Time::TimerManager).init();
 	Event::EventsManager::getInstance().init();
     ECManager.init();
     System::SystemsManager::getInstance().init();
@@ -66,14 +70,12 @@ void Engine::init()
     GET_SYSTEM(ModelManager).init();
 
     CREATE_SYSTEM(UIManager);
-    mUIManager = GET_SYSTEM_PTR(UIManager);
 	System::SystemsDependencyInjection uiManagerDI;
 	uiManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(UIManager).injectSystemDependencies(uiManagerDI);
     GET_SYSTEM(UIManager).init();
 
     CREATE_SYSTEM(ScenesManager);
-    mScenesManager = GET_SYSTEM_PTR(ScenesManager);
 	System::SystemsDependencyInjection scenesManagerDI;
 	scenesManagerDI.addSystem(GET_SYSTEM_PTR(CameraManager));
 	scenesManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
@@ -83,6 +85,17 @@ void Engine::init()
     CREATE_SYSTEM(Command::CommandLine);
     GET_SYSTEM(Command::CommandLine).init();
     CREATE_SYSTEM(ScriptEngine);
+	System::SystemsDependencyInjection scriptEngineDI;
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(CameraManager));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(ScenesManager));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(UIManager));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(DebugRenderer));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Input::Input));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(EngineConfig));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Time::TimerManager));
+	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Time::Time));
+    GET_SYSTEM(ScriptEngine).injectSystemDependencies(scriptEngineDI);
     GET_SYSTEM(ScriptEngine).init();
 	ECManager.addComponentListener<Script>(GET_SYSTEM_PTR(ScriptEngine));
 }
@@ -91,7 +104,7 @@ void Engine::preSceneChanged()
 {
 	GET_SYSTEM(ScriptEngine).preSceneChanged();
 	GET_SYSTEM(RenderEngine).preSceneChanged();
-	mTimerManager.terminate();
+	GET_SYSTEM(Time::TimerManager).terminate();
 }
 
 void Engine::postSceneChanged()
@@ -110,7 +123,7 @@ void Engine::run()
 	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{
         //FrameMarkStart("frame");
-		mTime.startFrame();
+		GET_SYSTEM(Time::Time).startFrame();
 
 		if (GET_SYSTEM(ScenesManager).pendingLoadRequests())
 		{
@@ -125,11 +138,11 @@ void Engine::run()
 		GET_SYSTEM(Command::CommandLine).update();
 
 		GET_SYSTEM(ScenesManager).update();
-		mTimerManager.update(mTime.getDeltaTimeMillis());
-		GET_SYSTEM(ScriptEngine).update(mTime.getDeltaTimeMillis());
-		GET_SYSTEM(RenderEngine).update(mTime.getDeltaTimeMillis());
+		GET_SYSTEM(Time::TimerManager).update(GET_SYSTEM(Time::Time).getDeltaTimeMillis());
+		GET_SYSTEM(ScriptEngine).update(GET_SYSTEM(Time::Time).getDeltaTimeMillis());
+		GET_SYSTEM(RenderEngine).update(GET_SYSTEM(Time::Time).getDeltaTimeMillis());
 
-		Core::f32 dtMillis = mTime.getElapsedTimeMillis();
+		Core::f32 dtMillis = GET_SYSTEM(Time::Time).getElapsedTimeMillis();
 		
 		if (inverseFPSMillis >= dtMillis)
 		{
@@ -138,7 +151,7 @@ void Engine::run()
 			std::this_thread::sleep_for(std::chrono::milliseconds(diff_duration.count()));
 		}
 		
-		mTime.endFrame();
+		GET_SYSTEM(Time::Time).endFrame();
         //FrameMarkEnd("frame");
 	}
 }
@@ -155,7 +168,6 @@ void Engine::terminate()
     EC::EntityComponentManager::deleteInstance();
 	Event::EventsManager::getInstance().terminate();
 	Event::EventsManager::deleteInstance();
-	mTimerManager.terminate();
 	
 	Core::Profiler::terminate();
 	Core::Memory::terminate();

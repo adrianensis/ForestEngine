@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Memory/Singleton.hpp"
+#include "Core/Metadata/ClassManager.hpp"
+#include "Core/System/System.hpp"
 #include <chrono>
 
 NS_BEGIN(Time)
@@ -43,7 +45,7 @@ private:
 	bool mIsStarted = false;
 };
 
-class Time
+class Time: public System::System
 {
 public:
 	void init() {mInternalTimeMark.init();}
@@ -57,4 +59,5 @@ public:
 private:
 	TimeMark mInternalTimeMark;
 };
+REGISTER_CLASS(Time)
 NS_END

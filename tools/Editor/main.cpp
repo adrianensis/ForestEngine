@@ -1,4 +1,5 @@
 #include "Core/HashedString/HashedString.hpp"
+#include "Core/System/SystemsManager.hpp"
 #include "Engine/Engine.hpp"
 #include "Scene/Module.hpp"
 #include "Scene/ScenesManager.hpp"
@@ -15,14 +16,12 @@ int main()
     Engine engine;
     engine.init();
 
-    GameObject* controller = engine.getScenesManager()->getScene(ScenesManager::smGlobalSceneName)->createGameObject<GameObject>();
+    GameObject* controller = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smGlobalSceneName)->createGameObject<GameObject>();
 
     Editor* editor = ECManager.requestComponent<Editor>(controller, [&](auto* component)
     {
         component->init();
     });
-
-    editor->getSystemsDI().addSystem(engine.getUIManager());
 
     engine.run();
     engine.terminate();
