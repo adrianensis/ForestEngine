@@ -52,11 +52,11 @@ void Engine::init()
 	
     CREATE_SYSTEM(RenderEngine);
 	System::SystemsDependencyInjection renderEngineDI;
-	renderEngineDI.addSystem(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
-	renderEngineDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
+	renderEngineDI.addSystem(GET_SYSTEM_PTR(CameraManager));
+	renderEngineDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(RenderEngine).injectSystemDependencies(renderEngineDI);
     GET_SYSTEM(RenderEngine).init();
-	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine).getInternalPointer());
+	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine));
 
 	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
 	ECManager.addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
@@ -66,17 +66,17 @@ void Engine::init()
     GET_SYSTEM(ModelManager).init();
 
     CREATE_SYSTEM(UIManager);
-    mUIManager = GET_SYSTEM_PTR(UIManager).getInternalPointer();
+    mUIManager = GET_SYSTEM_PTR(UIManager);
 	System::SystemsDependencyInjection uiManagerDI;
-	uiManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
+	uiManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(UIManager).injectSystemDependencies(uiManagerDI);
     GET_SYSTEM(UIManager).init();
 
     CREATE_SYSTEM(ScenesManager);
-    mScenesManager = GET_SYSTEM_PTR(ScenesManager).getInternalPointer();
+    mScenesManager = GET_SYSTEM_PTR(ScenesManager);
 	System::SystemsDependencyInjection scenesManagerDI;
-	scenesManagerDI.addSystem(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
-	scenesManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
+	scenesManagerDI.addSystem(GET_SYSTEM_PTR(CameraManager));
+	scenesManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager));
     GET_SYSTEM(ScenesManager).injectSystemDependencies(scenesManagerDI);
     GET_SYSTEM(ScenesManager).init();
 
@@ -146,6 +146,7 @@ void Engine::run()
 void Engine::terminate()
 {
 	Core::MemoryTracking::log();
+	ECManager.removeAllListeners();
 	System::SystemsManager::getInstance().terminate();
 	System::SystemsManager::deleteInstance();
 	GPUInstance::getInstance().terminate();

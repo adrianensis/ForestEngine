@@ -98,19 +98,19 @@ public:
         mECPool.init(smMaxSize);
     }
     void terminate()
-    { 
+    {
         mECPool.terminate();
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void addComponentListener(Core::WeakPtr<EC::IComponentsListener> listener)
+    void addComponentListener(EC::IComponentsListener* listener)
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
         Core::ClassId id = classMetaData.mClassDefinition.getId();
         if(!mComponentListeners.contains(id))
         {
-            mComponentListeners.emplace(id, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>());
+            mComponentListeners.emplace(id, std::unordered_set<EC::IComponentsListener*>());
         }
 
         if(!mComponentListeners.at(id).contains(listener))
@@ -120,7 +120,7 @@ public:
     }
 
     template<class T> T_EXTENDS(T, Component)
-    void removeComponentListener(Core::WeakPtr<EC::IComponentsListener> listener)
+    void removeComponentListener(EC::IComponentsListener* listener)
     {
         PROFILER_CPU()
         const Core::ClassMetadata& classMetaData = Core::ClassManager::getClassMetadata<T>();
@@ -132,6 +132,11 @@ public:
                 mComponentListeners.at(id).erase(listener);
             }
         }
+    }
+
+    void removeAllListeners()
+    {
+        mComponentListeners.clear();
     }
 
     template<class T> T_EXTENDS(T, Component)
@@ -280,7 +285,7 @@ public:
             {
                 FOR_LIST(itListener, it->second)
                 {
-                    if((*itListener).isValid())
+                    if((*itListener))
                     {
                         (*itListener)->onComponentAdded(componentPtr);
                     }
@@ -299,7 +304,7 @@ public:
             {
                 FOR_LIST(itListener, it->second)
                 {
-                    if((*itListener).isValid())
+                    if((*itListener))
                     {
                         (*itListener)->onComponentRemoved(componentPtr);
                     }
@@ -340,7 +345,7 @@ private:
     inline static Core::u32 smMaxSize = 100000;
     inline static Core::u32 smMaxComponentsPerEntity = 50;
     EntityComponentPool mECPool;
-    std::unordered_map<Core::ClassId, std::unordered_set<Core::WeakPtr<EC::IComponentsListener>>> mComponentListeners;
+    std::unordered_map<Core::ClassId, std::unordered_set<EC::IComponentsListener*>> mComponentListeners;
     std::unordered_map<Core::ClassId, std::vector<ComponentsArray>> mEntityComponents;
 };
 NS_END
