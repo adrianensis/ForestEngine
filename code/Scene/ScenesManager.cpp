@@ -14,16 +14,19 @@ void ScenesManager::terminate()
         mCameraGameObject->destroy();
 	}
 
-    FOR_MAP(it, mScenes)
+    if(!mScenes.empty())
     {
-        // skip global scene, must be terminated last
-        if(it->second->getSceneName() != smGlobalSceneName)
+        FOR_MAP(it, mScenes)
         {
-            it->second->terminate();
+            // skip global scene, must be terminated last
+            if(it->second->getSceneName() != smGlobalSceneName)
+            {
+                it->second->terminate();
+            }
         }
+    
+        mScenes.at(smGlobalSceneName)->terminate();
     }
-
-    mScenes.at(smGlobalSceneName)->terminate();
 
     mScenes.clear();
 }
