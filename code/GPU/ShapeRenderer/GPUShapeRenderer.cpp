@@ -47,11 +47,11 @@ void GPUShapeRenderer::init(GPUContext* gpuContext, Core::u32 verticesPerShape)
 
 void GPUShapeRenderer::render()
 {
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
-//    GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
+//    (GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
+//    (GPUInterface).enableFlag(GPUFlags::BLEND);
+//    (GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
 
     PROFILER_CPU()
 	if (mShapesCounter > 0)
@@ -63,7 +63,7 @@ void GPUShapeRenderer::render()
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).resize(mColorBuffer.size());
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).setDataArray(mPositionBuffer);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).setDataArray(mColorBuffer);
-//		GET_SYSTEM(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
+//		(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);
         mGPUVertexBuffersContainer.disable();
 
         // mShader->getGPUShader()->disable();
@@ -73,9 +73,9 @@ void GPUShapeRenderer::render()
 		mShapesCounter = 0;
 	}
 
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).disableFlag(GPUFlags::BLEND);
+//    (GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
 void GPUShapeRenderer::addPosition(const Maths::Vector3& position)

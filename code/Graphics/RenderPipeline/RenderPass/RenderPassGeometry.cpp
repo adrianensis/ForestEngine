@@ -3,20 +3,20 @@
 
 void RenderPassGeometry::preRender()
 {
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
-//    GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::BACK);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
-//    GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
+//    (GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
+//    (GPUInterface).setFaceMode(GPUCullFaceType::BACK);
+//    (GPUInterface).enableFlag(GPUFlags::BLEND);
+//    (GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
 }
 
 void RenderPassGeometry::postRender()
 {
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
-//    GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::NONE);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).disableFlag(GPUFlags::BLEND);
+//    (GPUInterface).setFaceMode(GPUCullFaceType::NONE);
+//    (GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
 void RenderPassGeometry::render()

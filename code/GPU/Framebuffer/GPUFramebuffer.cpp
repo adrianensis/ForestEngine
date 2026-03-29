@@ -6,11 +6,11 @@ Maths::Vector4 GPUFramebuffer::readPixel(Core::u32 x, Core::u32 y, GPUFramebuffe
 {
     CHECK_MSG(mFramebufferData.mAttachments.contains(attachmentType), "Attachment not found!");
 
-//    // GET_SYSTEM(GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ, mFramebufferId);
-//    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(attachmentType);
-//    Maths::Vector4 pixelColor = GET_SYSTEM(GPUInterface).readFramebufferPixel(x, y, GPUTexturePixelFormat::RGBA);
-//    GET_SYSTEM(GPUInterface).setFramebufferAttachmentToRead(GPUFramebufferAttachmentType::NONE);
-//    // GET_SYSTEM(GPUInterface).disableFramebuffer(GPUFramebufferOperationType::READ);
+//    // (GPUInterface).enableFramebuffer(GPUFramebufferOperationType::READ, mFramebufferId);
+//    (GPUInterface).setFramebufferAttachmentToRead(attachmentType);
+//    Maths::Vector4 pixelColor = (GPUInterface).readFramebufferPixel(x, y, GPUTexturePixelFormat::RGBA);
+//    (GPUInterface).setFramebufferAttachmentToRead(GPUFramebufferAttachmentType::NONE);
+//    // (GPUInterface).disableFramebuffer(GPUFramebufferOperationType::READ);
     // return pixelColor;
     return Maths::Vector4();
 }
@@ -41,15 +41,15 @@ bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& fram
         CHECK_MSG(false, "Could not initialize depth resources");
     }
 
-//    mFramebufferId = GET_SYSTEM(GPUInterface).createFramebuffer(mFramebufferData.mWidth, mFramebufferData.mHeight);
+//    mFramebufferId = (GPUInterface).createFramebuffer(mFramebufferData.mWidth, mFramebufferData.mHeight);
     FOR_LIST(it, mFramebufferData.mAttachments)
     {
         const GPUFramebufferAttachmentType& attachmentType = *it;
-//        Core::u32 attachmentID = GET_SYSTEM(GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
+//        Core::u32 attachmentID = (GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
         // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
     }
 
-//    GET_SYSTEM(GPUInterface).checkFramebufferErrors();
+//    (GPUInterface).checkFramebufferErrors();
 
     std::vector<VkImageView> attachments =
     {

@@ -6,23 +6,23 @@
 
 void RenderPassShadowMap::preRender()
 {
-//    GET_SYSTEM(GPUInterface).clearDepth();
-//    GET_SYSTEM(GPUInterface).setViewport(0, 0, mRenderPassData.mOutputFramebufferData.mWidth, mRenderPassData.mOutputFramebufferData.mHeight);
+//    (GPUInterface).clearDepth();
+//    (GPUInterface).setViewport(0, 0, mRenderPassData.mOutputFramebufferData.mWidth, mRenderPassData.mOutputFramebufferData.mHeight);
 
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
-//	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::FRONT);
+//    (GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
+//	(GPUInterface).setFaceMode(GPUCullFaceType::FRONT);
 }
 
 void RenderPassShadowMap::postRender()
 {
-//	GET_SYSTEM(GPUInterface).setFaceMode(GPUCullFaceType::NONE);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
+//	(GPUInterface).setFaceMode(GPUCullFaceType::NONE);
+//    (GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
     
     // Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
-//    GET_SYSTEM(GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
+//    (GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }
 
 void RenderPassShadowMap::render()

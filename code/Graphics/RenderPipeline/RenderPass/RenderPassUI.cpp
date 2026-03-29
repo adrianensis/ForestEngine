@@ -3,18 +3,18 @@
 
 void RenderPassUI::preRender()
 {
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
-//    GET_SYSTEM(GPUInterface).enableFlag(GPUFlags::BLEND);
-//    GET_SYSTEM(GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
+//    (GPUInterface).enableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).enableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).setDepthFunc(GPUDepthFunc::LEQUAL);
+//    (GPUInterface).enableFlag(GPUFlags::BLEND);
+//    (GPUInterface).setBlendFunc(GPUBlendFactor::SRC_ALPHA, GPUBlendFactor::ONE_MINUS_SRC_ALPHA);
 }
 
 void RenderPassUI::postRender()
 {
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::BLEND);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
-//    GET_SYSTEM(GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
+//    (GPUInterface).disableFlag(GPUFlags::BLEND);
+//    (GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
+//    (GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
 }
 
 void RenderPassUI::renderStencilCascade(Core::u64 id)
@@ -80,7 +80,7 @@ void RenderPassUI::render()
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
         if(currentId != gpuInstanceRendererData.mGPUDepthStencilData.mParentId)
         {
-//            GET_SYSTEM(GPUInterface).clearStencil();
+//            (GPUInterface).clearStencil();
         }
 
         currentId = gpuInstanceRendererData.mGPUDepthStencilData.mParentId;
@@ -88,7 +88,7 @@ void RenderPassUI::render()
         renderStencilCascade(gpuInstanceRendererData.mGPUDepthStencilData.mId);
 	}
 
-//    GET_SYSTEM(GPUInterface).clearStencil();
+//    (GPUInterface).clearStencil();
 
     FOR_LIST(it, noStencilGPUInstanceRendererRenderers)
 	{
