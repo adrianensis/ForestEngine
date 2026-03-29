@@ -42,8 +42,6 @@ void Editor::firstUpdate(Core::f32 dt)
 {
     PROFILER_CPU();
 
-	mUIManager = mSystemsDI.getSystem<UIManager>();
-
 	mCameraGameObject = getOwnerGameObject()->mScene->getScenesManager()->getCameraGameObject();
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
     Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
@@ -462,10 +460,11 @@ void Editor::handleMouse()
 void Editor::createUI()
 {
     mAxisViewer = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
+    mAxisViewer->getSystemsDI().addSystem(mSystemsDI.getSystem<UIManager>());
     mAxisViewer->mTransform->setLocalPosition(Maths::Vector2(-0.9, -0.8));
-    mAxisViewer->createAxis(mUIManager);
+    mAxisViewer->createAxis();
 
-    UIBuilder uiBuilder = mUIManager->createUIBuilder();
+    UIBuilder uiBuilder = mSystemsDI.getSystem<UIManager>()->createUIBuilder();
 
 	uiBuilder.
 	// setPosition(Maths::Vector2(0,0)).

@@ -6,7 +6,7 @@
 class UISingleAxisGizmo: public GameObject
 {
 public:
-    void setAxis(UIManager* uiManager, const Maths::Line& line, const Maths::Vector4& color, Core::HashedString axisName);
+    void setAxis(const Maths::Line& line, const Maths::Vector4& color, Core::HashedString axisName);
     void renderAxisName();
     void update();
     virtual void onDestroy() override;
@@ -18,7 +18,6 @@ private:
     Core::HashedString mNegAxisName;
     UIText* mPositive = nullptr;
     UIText* mNegative = nullptr;
-    UIManager* mUIManager = nullptr;
 };
 
 REGISTER_CLASS(UISingleAxisGizmo)
@@ -26,7 +25,7 @@ REGISTER_CLASS(UISingleAxisGizmo)
 class UIAxisGizmo: public GameObject
 {
 public:
-    void createAxis(UIManager* uiManager);
+    void createAxis();
     void update();
     virtual void onDestroy() override;
 

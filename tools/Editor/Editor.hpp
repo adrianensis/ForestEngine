@@ -41,9 +41,5 @@ private:
     Maths::Vector2 mLastMousePosition;
 	Maths::Vector3 mCurrentRotation;
 	Maths::Vector3 mTargetRotation;
-
-	UIManager* mUIManager = nullptr;
-public:
-	SET(UIManager)
 };
 REGISTER_CLASS(Editor, Script)
