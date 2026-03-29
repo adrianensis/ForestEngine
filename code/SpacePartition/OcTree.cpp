@@ -257,10 +257,10 @@ void OcTree::OcTreeNode::drawDebug()
 {
     PROFILER_CPU()
 
-    GET_SYSTEM(DebugRenderer).drawCube(mCube,1,Maths::GeometricSpace::WORLD,Maths::Vector4(1,1,1,0.5f));
-    // GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(mCube.getLeftTopFront(), mCube.getLeftTopFront() + Maths::Vector3(0,10,0)),1,true,Maths::Vector4(0,1,0,1));
-    // GET_SYSTEM(DebugRenderer).drawCube(Maths::Cube(Maths::Vector3(0,0,-100), Maths::Vector3(100,100,100)),1,true,Maths::Vector4(1,0,1,1));
-    // GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-100), Maths::Vector3(0,0,-100) + Maths::Vector3(0,10,0)),1,true,Maths::Vector4(0,1,0,1));
+    // (DebugRenderer).drawCube(mCube,1,Maths::GeometricSpace::WORLD,Maths::Vector4(1,1,1,0.5f));
+    // (DebugRenderer).drawLine(Maths::Cube(mCube.getLeftTopFront(), mCube.getLeftTopFront() + Maths::Vector3(0,10,0)),1,true,Maths::Vector4(0,1,0,1));
+    // (DebugRenderer).drawCube(Maths::Cube(Maths::Vector3(0,0,-100), Maths::Vector3(100,100,100)),1,true,Maths::Vector4(1,0,1,1));
+    // (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-100), Maths::Vector3(0,0,-100) + Maths::Vector3(0,10,0)),1,true,Maths::Vector4(0,1,0,1));
     if (isDivisible())
 	{
 	}
@@ -269,17 +269,17 @@ void OcTree::OcTreeNode::drawDebug()
         // DEBUG DRAW
         if(mOcTreeElementsStatic.size() > 0 || mOcTreeElementsDynamic.size() > 0)
         {
-		    GET_SYSTEM(DebugRenderer).drawCube(mCube,1,Maths::GeometricSpace::WORLD,Maths::Vector4(1,1,0,1));
+		    // (DebugRenderer).drawCube(mCube,1,Maths::GeometricSpace::WORLD,Maths::Vector4(1,1,0,1));
 
             // FOR_RANGE(i,0,mOcTreeElementsStatic.size())
             // {
             //     Core::WeakPtr<IOcTreeElement> element = mOcTreeElementsStatic[i];
-            //     GET_SYSTEM(DebugRenderer).drawCube(element->getOcTreeBoundingBox(),1,true,Maths::Vector4(0,0.8,0.8,1));
+            //     (DebugRenderer).drawCube(element->getOcTreeBoundingBox(),1,true,Maths::Vector4(0,0.8,0.8,1));
             // }
             // FOR_RANGE(i,0,mOcTreeElementsDynamic.size())
             // {
             //     Core::WeakPtr<IOcTreeElement> element = mOcTreeElementsDynamic[i];
-            //     GET_SYSTEM(DebugRenderer).drawCube(element->getOcTreeBoundingBox(),1,true,Maths::Vector4(1,0,0,1));
+            //     (DebugRenderer).drawCube(element->getOcTreeBoundingBox(),1,true,Maths::Vector4(1,0,0,1));
             // }
         }
     }

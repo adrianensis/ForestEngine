@@ -12,17 +12,19 @@ void UISingleAxisGizmo::setAxis(UIManager* uiManager, const Maths::Line& line, c
     mColor = color;
     mAxisName = axisName;
     mNegAxisName = Core::HashedString("-" + mAxisName.get());
+    mUIManager = uiManager;
 
     GameObject* cameraGameObject = mScene->getScenesManager()->getCameraGameObject();
-    Camera* camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
+                    mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
                 ), 1)
         );
     Maths::Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
+                    mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
                 ), 1)
         );
@@ -30,11 +32,13 @@ void UISingleAxisGizmo::setAxis(UIManager* uiManager, const Maths::Line& line, c
 
     Maths::Vector3 startGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
+                mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
             )
         , 1);
     Maths::Vector3 endGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
+                mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
             )
         , 1);
@@ -74,15 +78,16 @@ void UISingleAxisGizmo::setAxis(UIManager* uiManager, const Maths::Line& line, c
 void UISingleAxisGizmo::update()
 {
     GameObject* cameraGameObject = mScene->getScenesManager()->getCameraGameObject();
-    Camera* camera = ECManager.getFirstComponent<Camera>(cameraGameObject);
 
     Maths::Vector3 startLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
+                    mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
                 ), 1)
         );
     Maths::Vector3 endLine = mTransform->getModelMatrixNoScale().mulVector(
             Maths::Vector4(UIUtils::correctAspectRatioVectorX(
+                    mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
                 ), 1)
         );
@@ -90,11 +95,13 @@ void UISingleAxisGizmo::update()
 
     Maths::Vector3 startGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
+                mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getStart(), 1))
             )
         , 1);
     Maths::Vector3 endGlyph = Maths::Vector4(
         UIUtils::correctAspectRatioVectorX(
+                mUIManager->getWindow(), 
                 cameraGameObject->mTransform->getLocalRotationMatrix().mulVector(Maths::Vector4(mAxis.getEnd(), 1))
             )
         , 1);

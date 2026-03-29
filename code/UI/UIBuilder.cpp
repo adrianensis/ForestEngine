@@ -81,7 +81,7 @@ Maths::Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 	{
 		case UILayout::HORIZONTAL:
 		{
-			offset = Maths::Vector2((mLastConfig.mDisplaySize.x + UIUtils::correctAspectRatio(mConfig.mSeparatorSize)), 0);
+			offset = Maths::Vector2((mLastConfig.mDisplaySize.x + UIUtils::correctAspectRatio(mUIManager->getWindow(), mConfig.mSeparatorSize)), 0);
 			break;
 		}
 		case UILayout::VERTICAL:

@@ -9,7 +9,7 @@
 class RenderEngine : public System::System, public EC::IComponentsListener, public Window::IWindowListener
 {
 public:
-    void init(CameraManager* cameraManager);
+    void init();
     virtual void terminate() override;
     void update(Core::f32 dt);
     void preSceneChanged();
@@ -23,7 +23,6 @@ private:
     RenderPipelineUpdateData mRenderPipelineUpdateData;
     Core::OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;
-    CameraManager* mCameraManager = nullptr;
 public:
 	OcTree octree;
 };

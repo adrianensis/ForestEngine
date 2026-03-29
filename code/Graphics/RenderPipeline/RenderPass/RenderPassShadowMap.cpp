@@ -21,7 +21,7 @@ void RenderPassShadowMap::postRender()
 //    (GPUInterface).disableFlag(GPUFlags::DEPTH_TEST);
 //    (GPUInterface).disableFlag(GPUFlags::MULTISAMPLE);
     
-    // Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
+    // Maths::Vector2 windowSize = (Window::WindowManager).getMainWindow()->getWindowSize();
 //    (GPUInterface).setViewport(0, 0, windowSize.x, windowSize.y);
 }
 

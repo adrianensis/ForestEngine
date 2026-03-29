@@ -6,19 +6,10 @@
 #include "Scene/GameObject.hpp"
 
 class Camera;
-
-
-class ScenesManagerData
-{
-public:
-    CameraManager* mCameraManager = nullptr;
-    Core::f32 mAspectRatio = 0;
-};
-
 class ScenesManager: public System::System
 {
 public:	
-    void init(const ScenesManagerData& scenesManagerData);
+    void init();
     virtual void terminate() override;
     void update();
     Core::WeakPtr<Scene> createScene(Core::HashedString sceneName);

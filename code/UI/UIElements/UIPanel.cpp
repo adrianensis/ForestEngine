@@ -42,7 +42,7 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
         }
         textSize.y = mUIManager->getFont()->getFontData().mMaxAscender + mUIManager->getFont()->getFontData().mMaxDescender;
 		newConfig.mSize = textSize * newConfig.mTextScale;
-		newConfig.mDisplaySize = UIUtils::toScreenSpace(newConfig.mSize);
+		newConfig.mDisplaySize = UIUtils::toScreenSpace(mUIManager->getWindow(), newConfig.mSize);
 	}
 
     // translate to top left corner

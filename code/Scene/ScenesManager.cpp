@@ -1,5 +1,6 @@
 #include "ScenesManager.hpp"
 #include "Core/Assert/Assert.hpp"
+#include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 #include "Engine/EngineConfig.hpp"
@@ -27,7 +28,7 @@ void ScenesManager::terminate()
     mScenes.clear();
 }
 
-void ScenesManager::init(const ScenesManagerData& scenesManagerData)
+void ScenesManager::init()
 {
     createScene(smGlobalSceneName);
     createScene(smDefaultSceneName);
@@ -49,9 +50,9 @@ void ScenesManager::init(const ScenesManagerData& scenesManagerData)
 
     mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
-	camera->getGPUCamera().setPerspective(0.1, 10000, scenesManagerData.mAspectRatio, 90);
+	camera->getGPUCamera().setPerspective(0.1, 10000, mSystemsDI.getSystem<Window::WindowManager>()->getMainWindow()->getAspectRatio(), 90);
 
-    scenesManagerData.mCameraManager->setCamera(camera);
+    mSystemsDI.getSystem<CameraManager>()->setCamera(camera);
 }
 
 void ScenesManager::update()

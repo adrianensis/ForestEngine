@@ -39,7 +39,7 @@ void GPUShapeRenderer::init(GPUContext* gpuContext, Core::u32 verticesPerShape)
     // mGPUVertexBuffersContainer.disable();
 
     GPUShaderData shaderData;
-    // mShader = GET_SYSTEM(GPUShaderManager).createShader<GPUShaderDefault>(shaderData);
+    // mShader = (GPUShaderManager).createShader<GPUShaderDefault>(shaderData);
     // mShader->compileShader("Shape", Core::HashedString(std::to_string(lineShader->getID())), mGPUVertexBuffersContainer);
 
     // mShader->getGPUShader()->bindUniformBuffer(GPUInstance::getInstance().getGPUUniformBuffersContainer().getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mGlobalData));

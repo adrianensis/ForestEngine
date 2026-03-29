@@ -37,7 +37,7 @@ void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
 	UIElement::initFromConfig(uiManager, config);
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mConfig.mSize), 1));
+	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mUIManager->getWindow(), mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
 	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
@@ -48,7 +48,7 @@ void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
+	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / (Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
 	MeshRenderer* renderer = ECManager.requestComponent<MeshRenderer>(this, [&](auto* component)
 		{
@@ -86,14 +86,14 @@ void UIList::toggle()
 	if (mButtons.empty())
 	{
 		Maths::Vector3 scale = mTransform->getLocalScale();
-		scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
+		scale.x = scale.x * mUIManager->getWindow()->getAspectRatio();
 
 		UIBuilder uiBuilder = mUIManager->createUIBuilder();
 
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
-			setPosition(Maths::Vector2((-scale.x / 2.0f) / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), scale.y/2.0f)).
+			setPosition(Maths::Vector2((-scale.x / 2.0f) / mUIManager->getWindow()->getAspectRatio(), scale.y/2.0f)).
 			setTextScale(mConfig.mTextScale).
 			setAdjustSizeToText(true).
 			setIsStatic(false).
@@ -137,7 +137,7 @@ void UIList::setEntriesVisibility(bool visible)
 			UIElementCallback onPressedCallback = it->mCallback;
 
 			Maths::Vector3 scale = mTransform->getLocalScale();
-			scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
+			scale.x = scale.x * (Window::WindowManager).getMainWindow()->getAspectRatio();
 
 			mUIManager->getBuilder()->saveData()->
 				setLocalPosition(Maths::Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->

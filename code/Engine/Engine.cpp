@@ -1,4 +1,5 @@
 #include "Engine/Engine.hpp"
+#include "Core/System/SystemsDependencyInjection.hpp"
 #include "Engine/EngineConfig.hpp"
 #include "CommandLine/CommandLine.hpp"
 #include "Engine/Paths.hpp"
@@ -48,24 +49,37 @@ void Engine::init()
     GET_SYSTEM(Input::Input).init();
     CREATE_SYSTEM(CameraManager);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
+	
     CREATE_SYSTEM(RenderEngine);
-    GET_SYSTEM(RenderEngine).init(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
+	System::SystemsDependencyInjection renderEngineDI;
+	renderEngineDI.addSystem(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
+	renderEngineDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
+    GET_SYSTEM(RenderEngine).injectSystemDependencies(renderEngineDI);
+    GET_SYSTEM(RenderEngine).init();
 	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine).getInternalPointer());
+
 	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
 	ECManager.addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
     CREATE_SYSTEM(DebugRenderer);
     GET_SYSTEM(DebugRenderer).init();
     CREATE_SYSTEM(ModelManager);
     GET_SYSTEM(ModelManager).init();
+
     CREATE_SYSTEM(UIManager);
-    GET_SYSTEM(UIManager).init();
     mUIManager = GET_SYSTEM_PTR(UIManager).getInternalPointer();
+	System::SystemsDependencyInjection uiManagerDI;
+	uiManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
+    GET_SYSTEM(UIManager).injectSystemDependencies(uiManagerDI);
+    GET_SYSTEM(UIManager).init();
+
     CREATE_SYSTEM(ScenesManager);
     mScenesManager = GET_SYSTEM_PTR(ScenesManager).getInternalPointer();
-    GET_SYSTEM(ScenesManager).init(ScenesManagerData
-		{
-			GET_SYSTEM_PTR(CameraManager).getInternalPointer(), GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio()
-		});
+	System::SystemsDependencyInjection scenesManagerDI;
+	scenesManagerDI.addSystem(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
+	scenesManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
+    GET_SYSTEM(UIManager).injectSystemDependencies(scenesManagerDI);
+    GET_SYSTEM(ScenesManager).init();
+
     CREATE_SYSTEM(Command::CommandLine);
     GET_SYSTEM(Command::CommandLine).init();
     CREATE_SYSTEM(ScriptEngine);

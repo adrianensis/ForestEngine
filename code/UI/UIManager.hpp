@@ -7,6 +7,7 @@
 #include "UI/UIFont.hpp"
 #include "UI/UIShader.hpp"
 #include "UI/UIBuilder.hpp"
+#include "Window/Window.hpp"
 
 class GPUShader;
 class Scene;
@@ -34,7 +35,6 @@ public:
 		return mGroups.at(groupName).get();
 	}
 
-
     UIElement* getFocusedElement() const { return mFocusedElement; };
     void setFocusedElement(UIElement* focusedElement);
 
@@ -49,8 +49,10 @@ private:
     UIFontsManager mFontsManager;
     Core::HashedString mDefaultFont;
     Core::WeakPtr<GPUShader> mDefaultUIShader;
+    Window::Window* mWindow;
 
 public:
     GET(DefaultUIShader)
+    GET(Window)
 };
 REGISTER_CLASS(UIManager, System);

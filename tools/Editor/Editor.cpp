@@ -47,7 +47,7 @@ void Editor::firstUpdate(Core::f32 dt)
 	mCameraGameObject = getOwnerGameObject()->mScene->getScenesManager()->getCameraGameObject();
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
     Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
-    Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
+    // Maths::Vector2 windowSize = (Window::WindowManager).getMainWindow()->getWindowSize();
     // camera->setOrtho(-windowSize.x, windowSize.x, -windowSize.y, windowSize.y, -1000, 1000);
 
 	Transform* cameraTransform = mCameraGameObject->mTransform;
@@ -214,27 +214,27 @@ void Editor::update(Core::f32 dt)
 
     // PROFILER_CPU_NAMED("Draw Editor Lines");
     // // -x to x
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(-1000,0,0), Maths::Vector3(1000,0,0)), 2, true, Maths::Vector4(1,0,0,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(-1000,0,0), Maths::Vector3(1000,0,0)), 2, true, Maths::Vector4(1,0,0,1));
 
     // // x
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(1000,0,0), Maths::Vector3(1000,100,0)), 1, true, Maths::Vector4(1,0,0,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(1000,0,0), Maths::Vector3(1000,100,0)), 1, true, Maths::Vector4(1,0,0,1));
     // // -x
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(-1000,0,0), Maths::Vector3(-1000,50,0)), 1, true, Maths::Vector4(1,1,0,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(-1000,0,0), Maths::Vector3(-1000,50,0)), 1, true, Maths::Vector4(1,1,0,1));
 
     // // -y to y
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,-1000,0), Maths::Vector3(0,1000,0)), 2, true, Maths::Vector4(0,1,0,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,-1000,0), Maths::Vector3(0,1000,0)), 2, true, Maths::Vector4(0,1,0,1));
 
     // // -z to z
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-1000), Maths::Vector3(0,0,1000)), 2, true, Maths::Vector4(0,0,1,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-1000), Maths::Vector3(0,0,1000)), 2, true, Maths::Vector4(0,0,1,1));
 
     // // z
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,1000), Maths::Vector3(0,100,1000)), 1, true, Maths::Vector4(0,0,1,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,1000), Maths::Vector3(0,100,1000)), 1, true, Maths::Vector4(0,0,1,1));
     // // -z
-	// GET_SYSTEM(DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-1000), Maths::Vector3(0,50,-1000)), 1, true, Maths::Vector4(0,1,1,1));
+	// (DebugRenderer).drawLine(Maths::Cube(Maths::Vector3(0,0,-1000), Maths::Vector3(0,50,-1000)), 1, true, Maths::Vector4(0,1,1,1));
 
 	for(Core::i32 x = -2000; x < 2000; x+=100)
 	{
-		GET_SYSTEM(DebugRenderer).drawLine(Maths::Line(Maths::Vector3(x,0,-2000), Maths::Vector3(x,0,2000)), 1, Maths::GeometricSpace::WORLD, Maths::Vector4(1,1,1,0.3f));
+		// (DebugRenderer).drawLine(Maths::Line(Maths::Vector3(x,0,-2000), Maths::Vector3(x,0,2000)), 1, Maths::GeometricSpace::WORLD, Maths::Vector4(1,1,1,0.3f));
 	}
 
     Core::f32 fps = 1000.0f/dt;
@@ -383,15 +383,15 @@ GameObject* Editor::mousePick()
         //     camera->worldToScreen(bbox.getLeftTopFront() + bbox.getSize()) - camera->worldToScreen(bbox.getLeftTopFront())
         // );
 
-        // // GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, false, Maths::Vector4(0.3,0,1,1));
+        // // (DebugRenderer).drawCube(bboxScreenSpace, 1, false, Maths::Vector4(0.3,0,1,1));
 
         // Maths::Vector3 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
         // bool hit = Maths::Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
         // if(hit)
         // {
         //     Maths::Cube hitMarker = Maths::Cube(mousePosition, Maths::Vector3(0.01,0.01,0.01));
-        //     GET_SYSTEM(DebugRenderer).drawCube(hitMarker, 1, Maths::GeometricSpace::SCREEN, Maths::Vector4(1,0,0,1));
-        //     GET_SYSTEM(DebugRenderer).drawCube(bboxScreenSpace, 1, Maths::GeometricSpace::SCREEN, Maths::Vector4(1,0,0,1));
+        //     (DebugRenderer).drawCube(hitMarker, 1, Maths::GeometricSpace::SCREEN, Maths::Vector4(1,0,0,1));
+        //     (DebugRenderer).drawCube(bboxScreenSpace, 1, Maths::GeometricSpace::SCREEN, Maths::Vector4(1,0,0,1));
 
         //     obj = *it;
         // }

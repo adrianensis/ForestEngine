@@ -16,7 +16,7 @@ void Scene::init(Core::HashedString sceneName, ScenesManager* scenesManager)
 	mSize = 0;
 
 	mPath = "config/sceneTmp.json";
-	mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<Core::f32>();
+	// mSize = (EngineConfig).getConfig().at("scene").at("defaultSize").get<Core::f32>();
 }
 
 void Scene::saveToFile(const std::string& path)
@@ -39,11 +39,11 @@ void Scene::loadToFile(const std::string& path)
 
 	mLoadSceneConfig.readFromJsonFile(mPath); // PERF: do async / in other thread.
 
-    mSize = GET_SYSTEM(EngineConfig).getConfig().at("scene").at("defaultSize").get<Core::f32>();
-	if (mLoadSceneConfig.contains("size"))
-	{
-		mSize = mLoadSceneConfig.at("size").get<Core::f32>();
-	}
+    // mSize = (EngineConfig).getConfig().at("scene").at("defaultSize").get<Core::f32>();
+	// if (mLoadSceneConfig.contains("size"))
+	// {
+	// 	mSize = mLoadSceneConfig.at("size").get<Core::f32>();
+	// }
 
 	deserialize(mLoadSceneConfig.getJson());
 }

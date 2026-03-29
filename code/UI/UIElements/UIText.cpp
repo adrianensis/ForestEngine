@@ -78,7 +78,7 @@ void UIText::setText(Core::HashedString text)
 		if (!text.get().empty())
 		{
             Core::u32 fontMaxDescender = mUIManager->getFont()->getFontData().mMaxDescender;
-            Core::f32 fontMaxDescenderScreenSpace = UIUtils::toScreenSpace(Maths::Vector2(0, fontMaxDescender)).y;
+            Core::f32 fontMaxDescenderScreenSpace = UIUtils::toScreenSpace(mUIManager->getWindow(), Maths::Vector2(0, fontMaxDescender)).y;
             Core::f32 offset = -mConfig.mDisplaySize.x/2.0f;
 
 			FOR_RANGE(i, 0, textLen)
@@ -86,10 +86,10 @@ void UIText::setText(Core::HashedString text)
                 char character = text.get().at(i);
                 const Font::FontGlyphData& glyphData = mUIManager->getGlyphData(character);
                 Maths::Vector2 glyphSize = glyphData.mMetrics.mSize * mConfig.mTextScale;
-                Maths::Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(glyphSize);
+                Maths::Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(mUIManager->getWindow(), glyphSize);
 
                 Maths::Vector2 bearing(glyphData.mMetrics.mHoriBearing.x, glyphData.mMetrics.mHoriBearing.y);
-                Maths::Vector2 bearingScreenSpace = UIUtils::toScreenSpace(bearing * mConfig.mTextScale);
+                Maths::Vector2 bearingScreenSpace = UIUtils::toScreenSpace(mUIManager->getWindow(), bearing * mConfig.mTextScale);
                 Maths::Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, 0);
 
                 // Move the glyph down half size
@@ -131,7 +131,7 @@ void UIText::setText(Core::HashedString text)
                     mFontRenderers.push_back(gameObjectGlyph);
                 }
 
-                offset += UIUtils::toScreenSpace(Maths::Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;
+                offset += UIUtils::toScreenSpace(mUIManager->getWindow(), Maths::Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;
 			}
 		}
 

@@ -18,6 +18,7 @@ private:
     Core::HashedString mNegAxisName;
     UIText* mPositive = nullptr;
     UIText* mNegative = nullptr;
+    UIManager* mUIManager = nullptr;
 };
 
 REGISTER_CLASS(UISingleAxisGizmo)
