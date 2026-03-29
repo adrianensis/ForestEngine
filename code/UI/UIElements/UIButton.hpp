@@ -11,7 +11,7 @@ class UIButton: public UIPanel
 	
 public:
     void init() override;
-    void initFromConfig(UIManager* uiManager, const UIElementConfig& config) override;
+    void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
     void onLabelDestroy();
     void setText(Core::HashedString text) override;

@@ -7,7 +7,7 @@ class UIPanel;
 class UITextGlyph: public UIArea
 {
 public:
-    void initFromConfig(UIManager* uiManager, const UIElementConfig& config) override;
+    void initFromConfig(const UIElementConfig& config) override;
 
 private:
     char mCharacter = 0;
@@ -17,7 +17,7 @@ REGISTER_CLASS(UITextGlyph);
 class UIText: public UIArea
 {
 public:
-    void initFromConfig(UIManager* uiManager, const UIElementConfig& config) override;
+    void initFromConfig(const UIElementConfig& config) override;
     void onDestroy() override;
     void setText(Core::HashedString text) override;
     void setVisibility(bool visibility) override;

@@ -77,7 +77,7 @@ void Engine::init()
 	System::SystemsDependencyInjection scenesManagerDI;
 	scenesManagerDI.addSystem(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
 	scenesManagerDI.addSystem(GET_SYSTEM_PTR(Window::WindowManager).getInternalPointer());
-    GET_SYSTEM(UIManager).injectSystemDependencies(scenesManagerDI);
+    GET_SYSTEM(ScenesManager).injectSystemDependencies(scenesManagerDI);
     GET_SYSTEM(ScenesManager).init();
 
     CREATE_SYSTEM(Command::CommandLine);

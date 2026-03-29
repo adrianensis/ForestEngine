@@ -8,9 +8,8 @@
 #include "UI/UIManager.hpp"
 #include "UI/UIGroup.hpp"
 
-void UIElement::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
+void UIElement::initFromConfig(const UIElementConfig& config)
 {
-    mUIManager = uiManager;
 	mConfig = config;
     mIsStatic = mConfig.mIsStatic;
 
@@ -33,13 +32,13 @@ void UIElement::onDestroy()
 
 	if (hasFocus())
 	{
-		mUIManager->setFocusedElement(nullptr);
+		mSystemsDI.getSystem<UIManager>()->setFocusedElement(nullptr);
 	}
 }
 
 bool UIElement::hasFocus() const
 {
-	return mUIManager->getFocusedElement() == this;
+	return mSystemsDI.getSystem<UIManager>()->getFocusedElement() == this;
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -315,7 +314,7 @@ void UIElement::releaseFocus()
 {
     if (!hasFocus()) { return; }
 
-    mUIManager->setFocusedElement(nullptr);
+    mSystemsDI.getSystem<UIManager>()->setFocusedElement(nullptr);
     mOnFocusLostFunctor.execute();
     onFocusLost();
 }
@@ -324,13 +323,13 @@ void UIElement::requestFocus()
 {
     if (hasFocus()) { return; }
 
-    UIElement* lastFocusedElement = mUIManager->getFocusedElement();
+    UIElement* lastFocusedElement = mSystemsDI.getSystem<UIManager>()->getFocusedElement();
     if (lastFocusedElement)
     {
         lastFocusedElement->releaseFocus();
     }
 
-    mUIManager->setFocusedElement(this);
+    mSystemsDI.getSystem<UIManager>()->setFocusedElement(this);
 
     mInputString.clear();
     setText(Core::HashedString(mInputString));
@@ -345,7 +344,7 @@ void UIElement::scroll(Core::f32 scrollValue)
 
 // void UIElement::releaseOtherToggleElements()
 // {
-// 	const UIGroup& group = mUIManager->getOrCreateGroup(mConfig.mGroup);
+// 	const UIGroup& group = mSystemsDI.getSystem<UIManager>()->getOrCreateGroup(mConfig.mGroup);
 // 	FOR_LIST(it, group.getUIElements())
 // 	{
 // 		UIElement* other = *it;

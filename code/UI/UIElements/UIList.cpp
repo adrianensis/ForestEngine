@@ -32,12 +32,12 @@ void UIList::init()
 	subscribeToScrollEvents();
 }
 
-void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
+void UIList::initFromConfig(const UIElementConfig& config)
 {
-	UIElement::initFromConfig(uiManager, config);
+	UIElement::initFromConfig(config);
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mUIManager->getWindow(), mConfig.mSize), 1));
+	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mSystemsDI.getSystem<UIManager>()->getWindow(), mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
 	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
@@ -86,14 +86,14 @@ void UIList::toggle()
 	if (mButtons.empty())
 	{
 		Maths::Vector3 scale = mTransform->getLocalScale();
-		scale.x = scale.x * mUIManager->getWindow()->getAspectRatio();
+		scale.x = scale.x * mSystemsDI.getSystem<UIManager>()->getWindow()->getAspectRatio();
 
-		UIBuilder uiBuilder = mUIManager->createUIBuilder();
+		UIBuilder uiBuilder = mSystemsDI.getSystem<UIManager>()->createUIBuilder();
 
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
-			setPosition(Maths::Vector2((-scale.x / 2.0f) / mUIManager->getWindow()->getAspectRatio(), scale.y/2.0f)).
+			setPosition(Maths::Vector2((-scale.x / 2.0f) / mSystemsDI.getSystem<UIManager>()->getWindow()->getAspectRatio(), scale.y/2.0f)).
 			setTextScale(mConfig.mTextScale).
 			setAdjustSizeToText(true).
 			setIsStatic(false).
@@ -139,7 +139,7 @@ void UIList::setEntriesVisibility(bool visible)
 			Maths::Vector3 scale = mTransform->getLocalScale();
 			scale.x = scale.x * (Window::WindowManager).getMainWindow()->getAspectRatio();
 
-			mUIManager->getBuilder()->saveData()->
+			mSystemsDI.getSystem<UIManager>()->getBuilder()->saveData()->
 				setLocalPosition(Maths::Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
 				setSize(scale)->
 				setText(label)->
@@ -148,14 +148,14 @@ void UIList::setEntriesVisibility(bool visible)
 				setIsAffectedByLayout(false)->
 				create<UIButton>();
 
-			UIButton* button = (UIButton*) mUIManager->getBuilder()->getUIElement();
+			UIButton* button = (UIButton*) mSystemsDI.getSystem<UIManager>()->getBuilder()->getUIElement();
 			button->setOnPressedCallback(onPressedCallback);
 			//button->setVisibility(false);
 
 			Transform* t = button->mTransform;
 			t->setParent(mTransform);
 
-			mUIManager->getBuilder()->restoreData();
+			mSystemsDI.getSystem<UIManager>()->getBuilder()->restoreData();
 
 			mButtons->pushBack(button);
 		}

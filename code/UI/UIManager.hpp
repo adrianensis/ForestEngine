@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/System/SystemsDependencyInjection.hpp"
 #include "Engine/Core.hpp"
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIBuilder.hpp"
@@ -7,7 +8,7 @@
 #include "UI/UIFont.hpp"
 #include "UI/UIShader.hpp"
 #include "UI/UIBuilder.hpp"
-#include "Window/Window.hpp"
+#include "Window/WindowManager.hpp"
 
 class GPUShader;
 class Scene;
@@ -40,7 +41,10 @@ public:
 
     UIBuilder createUIBuilder()
     {
-        return UIBuilder(this);
+        ::System::SystemsDependencyInjection systemsDI;
+        systemsDI.addSystem(this);
+        systemsDI.addSystem(mSystemsDI.getSystem<Window::WindowManager>());
+        return UIBuilder(systemsDI);
     }
 
 private:
@@ -49,7 +53,7 @@ private:
     UIFontsManager mFontsManager;
     Core::HashedString mDefaultFont;
     Core::WeakPtr<GPUShader> mDefaultUIShader;
-    Window::Window* mWindow;
+    Window::Window* mWindow = nullptr;
 
 public:
     GET(DefaultUIShader)

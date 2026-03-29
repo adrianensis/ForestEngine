@@ -3,10 +3,12 @@
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 #include "UI/UIManager.hpp"
+#include "Window/WindowManager.hpp"
 
-UIBuilder::UIBuilder(UIManager* uiManager)
+UIBuilder::UIBuilder(System::SystemsDependencyInjection& systemsDI)
 {
-	mUIManager = uiManager;
+	mUIManager = systemsDI.getSystem<UIManager>();
+	mWindowManager = systemsDI.getSystem<Window::WindowManager>();
 	restoreAll();
 }
 

@@ -18,9 +18,9 @@ void UIEditableText::init()
     mOnlyReleaseOnClickOutside = true;
 }
 
-void UIEditableText::initFromConfig(UIManager* uiManager, const UIElementConfig& config) 
+void UIEditableText::initFromConfig(const UIElementConfig& config) 
 {
-	UIPanel::initFromConfig(uiManager, config);
+	UIPanel::initFromConfig(config);
 
 	setText(mConfig.mText);
 }
@@ -30,7 +30,7 @@ void UIEditableText::setText(Core::HashedString text)
 	{
 		if (!mText)
 		{
-			UIBuilder uiBuilder = mUIManager->createUIBuilder();
+			UIBuilder uiBuilder = mSystemsDI.getSystem<UIManager>()->createUIBuilder();
 
 			mText = uiBuilder.
 			setPosition(Maths::Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).

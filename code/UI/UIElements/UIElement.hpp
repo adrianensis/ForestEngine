@@ -36,7 +36,7 @@ public:
 class UIElement: public GameObject
 {
 public:
-    virtual void initFromConfig(UIManager* uiManager, const UIElementConfig& config);
+    virtual void initFromConfig(const UIElementConfig& config);
     void postInit();
     virtual UIElementConfig calculateConfig(const UIElementConfig& config) { return config; };
     virtual void onDestroy();
@@ -98,7 +98,6 @@ protected:
     GPUDepthStencilData calculateStencilData() const;
 
 protected:
-    UIManager* mUIManager = nullptr;
 	UIElementConfig mConfig;
 
 	FunctorUIElement mOnPressedFunctor;
@@ -118,7 +117,6 @@ public:
 	CRGET_SET(Config)
 	GET(InputString)
 	GET(State)
-	GET(UIManager)
 	GET(OnlyReleaseOnClickOutside)
 };
 REGISTER_CLASS(UIElement);

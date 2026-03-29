@@ -10,6 +10,7 @@
 #include "UI/UIElementConfig.hpp"
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "Scene/Module.hpp"
+#include "Window/WindowManager.hpp"
 
 
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
@@ -35,7 +36,7 @@ class UIManager;
 class UIBuilder
 {
 public:
-    UIBuilder(UIManager* uiManager);
+    UIBuilder(System::SystemsDependencyInjection& systemsDI);
 
 	void restoreAll();
 
@@ -60,7 +61,9 @@ public:
 
         calculateConfig();
 	    T* uiElement = uiScene->createGameObject<T>();
-        uiElement->initFromConfig(mUIManager, mConfig);
+        uiElement->getSystemsDI().addSystem(mUIManager);
+        uiElement->getSystemsDI().addSystem(mWindowManager);
+        uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 
         registerUIElement(uiElement);
@@ -86,6 +89,7 @@ private:
 
 private:
 	UIManager* mUIManager = nullptr;
+	Window::WindowManager* mWindowManager = nullptr;
 	UILayout mCurrentLayout;
 	UIElementConfig mConfig;
 	UIElementConfig mDefaultConfig;
