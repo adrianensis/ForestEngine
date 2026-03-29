@@ -24,8 +24,10 @@ public:
     {
         Core::ClassId classId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
         CHECK_MSG(classId > 0, "System has no metadata!");
-        CHECK_MSG(!mSystems.contains(classId), "System already added");
-        mSystems.emplace(classId, system);
+        if(!mSystems.contains(classId))
+        {
+            mSystems.emplace(classId, system);
+        }
     }
 
     template<typename T> T_EXTENDS(T, System)

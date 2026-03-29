@@ -41,10 +41,7 @@ public:
 
     UIBuilder createUIBuilder()
     {
-        ::System::SystemsDependencyInjection systemsDI;
-        systemsDI.addSystem(this);
-        systemsDI.addSystem(mSystemsDI.getSystem<Window::WindowManager>());
-        return UIBuilder(systemsDI);
+        return UIBuilder(this);
     }
 
 private:

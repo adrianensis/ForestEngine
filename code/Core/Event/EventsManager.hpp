@@ -2,21 +2,16 @@
 
 #include "Core/Memory/Singleton.hpp"
 #include "Core/Event/Event.hpp"
+#include "Core/Metadata/ClassManager.hpp"
+#include "Core/System/System.hpp"
 
 NS_BEGIN(Event)
-/*
-  Macros for (un)susbscribing and sending events.
-*/
 
-#define SUBSCRIBE_TO_EVENT(EventClassName, owner, receiver, eventCallback) Event::EventsManager::getInstance().subscribe<EventClassName>(owner, receiver, eventCallback);
-#define UNSUBSCRIBE_TO_EVENT(EventClassName, owner, receiver) Event::EventsManager::getInstance().unsubscribe<EventClassName>(owner, receiver);
-#define SEND_EVENT(owner, instigator, event) Event::EventsManager::getInstance().send<REMOVE_REFERENCE(decltype(event))>(owner, instigator, &event);
-
-class EventsManager: public Core::Singleton<EventsManager>
+class EventsManager: public System::System
 {
 public:
     void init();
-    void terminate();
+    virtual void terminate() override;
 
 	template <class E> T_EXTENDS(E, Event)
 	void subscribe(IEventObject * eventOwner, IEventObject * eventReceiver, EventCallback eventCallback)
@@ -55,4 +50,5 @@ private:
     void unsubscribe(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver);
     void send(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventInstigator, Event *event);
 };
+REGISTER_CLASS(EventsManager)
 NS_END

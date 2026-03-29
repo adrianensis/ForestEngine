@@ -1,4 +1,5 @@
 #include "Input/Input.hpp"
+#include "Core/Event/EventsManager.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/System/SystemsManager.hpp"
 #include "Core/Profiler/Profiler.hpp"
@@ -13,6 +14,12 @@ void Input::init()
 	smKeyJustPressed = false;
 	smButtonJustPressed = false;
 	smScroll = 0;
+}
+
+void Input::setWindowInputAdapter(IWindowInputAdapter* windowInputAdapter)
+{
+	mWindowInputAdapter = windowInputAdapter;
+	windowInputAdapter->setInput(this);
 }
 
 void Input::update()
@@ -32,8 +39,7 @@ void Input::update()
 		smMouseCoordinates.set(newMouseCoordinates);
 
 		InputEventMouseMoved event;
-		
-        SEND_INPUT_EVENT(event);
+		mSystemsDI.getSystem<Event::EventsManager>()->send<InputEventMouseMoved>(nullptr, this, &event);
 	}
 
 	if(smLastMouseButtonPressed != -1)
@@ -41,7 +47,7 @@ void Input::update()
 		InputEventMouseButtonHold event;
 		event.mButton = smLastMouseButtonPressed;
 		event.mMods = smModifier;
-		SEND_INPUT_EVENT(event);
+		mSystemsDI.getSystem<Event::EventsManager>()->send<InputEventMouseButtonHold>(nullptr, this, &event);
 	}
 
 	if(smLastKeyPressed != -1)
@@ -49,7 +55,7 @@ void Input::update()
 		InputEventKeyHold event;
 		event.mKey = smLastKeyPressed;
 		event.mMods = smModifier;
-		SEND_INPUT_EVENT(event);
+		mSystemsDI.getSystem<Event::EventsManager>()->send<InputEventKeyHold>(nullptr, this, &event);
 	}
 }
 

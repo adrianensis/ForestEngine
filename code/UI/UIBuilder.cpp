@@ -1,14 +1,14 @@
 #include "UI/UIBuilder.hpp"
 
+#include "Core/Event/EventsManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 #include "UI/UIManager.hpp"
 #include "Window/WindowManager.hpp"
 
-UIBuilder::UIBuilder(System::SystemsDependencyInjection& systemsDI)
+UIBuilder::UIBuilder(UIManager* uiManager)
 {
-	mUIManager = systemsDI.getSystem<UIManager>();
-	mWindowManager = systemsDI.getSystem<Window::WindowManager>();
+	mUIManager = uiManager;
 	restoreAll();
 }
 
@@ -45,6 +45,13 @@ UIBuilder& UIBuilder::restoreData()
 	mConfig = mConfigStack.front();
 	mConfigStack.pop_front();
 	return *this;
+}
+
+void UIBuilder::injectDependencies(UIElement* uiElement)
+{
+	uiElement->getSystemsDI().addSystem(mUIManager);
+	uiElement->getSystemsDI().addSystem(mUIManager->getSystemsDI().getSystem<Window::WindowManager>());
+	uiElement->getSystemsDI().addSystem(mUIManager->getSystemsDI().getSystem<Event::EventsManager>());
 }
 
 void UIBuilder::registerUIElement(UIElement* uiElement)

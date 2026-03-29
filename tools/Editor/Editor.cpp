@@ -22,25 +22,26 @@
 void Editor::init()
 {
     PROFILER_CPU();
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [&](const Event::Event *event)
-	{
-		handlePressedKeys();
-	});
-
-    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonHold, nullptr, this, [&](const Event::Event *event)
-	{
-		handleMouse();
-	});
-
-    SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [&](const Event::Event *event)
-	{
-		handleMouse();
-	});
 }
 
 void Editor::firstUpdate(Core::f32 dt)
 {
     PROFILER_CPU();
+
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyPressed>(nullptr, this, [&](const Event::Event *event)
+	{
+		handlePressedKeys();
+	});
+
+    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseButtonHold>(nullptr, this, [&](const Event::Event *event)
+	{
+		handleMouse();
+	});
+
+    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseButtonReleased>(nullptr, this, [&](const Event::Event *event)
+	{
+		handleMouse();
+	});
 
 	mCameraGameObject = getOwnerGameObject()->mScene->getScenesManager()->getCameraGameObject();
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));

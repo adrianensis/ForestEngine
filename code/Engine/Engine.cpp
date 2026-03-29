@@ -31,16 +31,22 @@ void Engine::init()
 
 	Core::Memory::init();
 	Core::Profiler::init();
-    CREATE_SYSTEM(Time::Time);
+
+	System::SystemsManager::getInstance().init();
+	
+	CREATE_SYSTEM(Time::Time);
     GET_SYSTEM(Time::Time).init();
     CREATE_SYSTEM(Time::TimerManager);
     GET_SYSTEM(Time::TimerManager).init();
+    CREATE_SYSTEM(Event::EventsManager);
+    GET_SYSTEM(Event::EventsManager).init();
     CREATE_SYSTEM(EC::EntityComponentManager);
     GET_SYSTEM(EC::EntityComponentManager).init();
-	Event::EventsManager::getInstance().init();
-    System::SystemsManager::getInstance().init();
 
 	System::SystemsDependencyInjection engineBaseSystemsDI;
+	engineBaseSystemsDI.addSystem(GET_SYSTEM_PTR(Time::Time));
+	engineBaseSystemsDI.addSystem(GET_SYSTEM_PTR(Time::TimerManager));
+	engineBaseSystemsDI.addSystem(GET_SYSTEM_PTR(Event::EventsManager));
 	engineBaseSystemsDI.addSystem(GET_SYSTEM_PTR(EC::EntityComponentManager));
 
     CREATE_SYSTEM(EngineConfig);
@@ -53,11 +59,17 @@ void Engine::init()
     windowData.mWindowSize.set(1080, 720);
     windowData.mMainWindow = true;
     Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
+
+	// TODO: GPUInstance should be propagated, not singleton
     GPUInstance::getInstance().init(window.getInternalPointer());
+
     CREATE_SYSTEM(Input::Input);
+	System::SystemsDependencyInjection inputDI;
+	inputDI.addFrom(engineBaseSystemsDI);
+    GET_SYSTEM(Input::Input).injectSystemDependencies(inputDI);
     GET_SYSTEM(Input::Input).init();
+    GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer());
     CREATE_SYSTEM(CameraManager);
-    GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
 	
     CREATE_SYSTEM(RenderEngine);
 	System::SystemsDependencyInjection renderEngineDI;
@@ -91,6 +103,9 @@ void Engine::init()
     GET_SYSTEM(ScenesManager).init();
 
     CREATE_SYSTEM(Command::CommandLine);
+	System::SystemsDependencyInjection commandLineDI;
+	commandLineDI.addFrom(engineBaseSystemsDI);
+    GET_SYSTEM(Command::CommandLine).injectSystemDependencies(commandLineDI);
     GET_SYSTEM(Command::CommandLine).init();
     CREATE_SYSTEM(ScriptEngine);
 	System::SystemsDependencyInjection scriptEngineDI;
@@ -102,8 +117,6 @@ void Engine::init()
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(DebugRenderer));
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Input::Input));
 	scriptEngineDI.addSystem(GET_SYSTEM_PTR(EngineConfig));
-	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Time::TimerManager));
-	scriptEngineDI.addSystem(GET_SYSTEM_PTR(Time::Time));
     GET_SYSTEM(ScriptEngine).injectSystemDependencies(scriptEngineDI);
     GET_SYSTEM(ScriptEngine).init();
 	GET_SYSTEM(EC::EntityComponentManager).addComponentListener<Script>(GET_SYSTEM_PTR(ScriptEngine));
@@ -173,8 +186,6 @@ void Engine::terminate()
 	System::SystemsManager::deleteInstance();
 	GPUInstance::getInstance().terminate();
 	GPUInstance::deleteInstance();
-	Event::EventsManager::getInstance().terminate();
-	Event::EventsManager::deleteInstance();
 	
 	Core::Profiler::terminate();
 	Core::Memory::terminate();

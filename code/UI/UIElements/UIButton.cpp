@@ -12,13 +12,12 @@
 void UIButton::init() 
 {
 	UIPanel::init();
-
-	subscribeToMouseEvents();
 }
 
 void UIButton::initFromConfig(const UIElementConfig& config) 
 {
 	UIPanel::initFromConfig(config);
+	subscribeToMouseEvents();
 
 	setText(mConfig.mText);
 }

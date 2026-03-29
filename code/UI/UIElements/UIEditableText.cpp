@@ -11,16 +11,16 @@ void UIEditableText::init()
 {
     UIPanel::init();
 
-    subscribeToMouseEvents();
-    subscribeToEnterEvent();
-    subscribeToEscEvent();
-    subscribeToCharEvents();
     mOnlyReleaseOnClickOutside = true;
 }
 
 void UIEditableText::initFromConfig(const UIElementConfig& config) 
 {
 	UIPanel::initFromConfig(config);
+    subscribeToMouseEvents();
+    subscribeToEnterEvent();
+    subscribeToEscEvent();
+    subscribeToCharEvents();
 
 	setText(mConfig.mText);
 }

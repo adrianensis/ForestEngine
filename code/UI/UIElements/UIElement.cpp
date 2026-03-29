@@ -19,16 +19,16 @@ void UIElement::initFromConfig(const UIElementConfig& config)
 void UIElement::onDestroy()
 {
 	GameObject::onDestroy();
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventScroll, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this);
-	UNSUBSCRIBE_TO_EVENT(Input::InputEventMouseMoved, nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyPressed>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyReleased>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventMouseButtonPressed>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventMouseButtonReleased>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventScroll>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventChar>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyBackspace>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyEnter>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyEsc>(nullptr, this);
+	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventMouseMoved>(nullptr, this);
 
 	if (hasFocus())
 	{
@@ -120,13 +120,13 @@ void UIElement::postInit()
 
 void UIElement::subscribeToKeyEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyPressed, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyPressed>(nullptr, this, [this](const Event::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyReleased, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -135,14 +135,14 @@ void UIElement::subscribeToKeyEvents()
 
 void UIElement::subscribeToCharEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventChar, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventChar>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onCharEventReceived(((const Input::InputEventChar *)event)->mChar);
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyBackspace, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyBackspace>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -152,7 +152,7 @@ void UIElement::subscribeToCharEvents()
 
 void UIElement::subscribeToMouseEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonPressed, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseButtonPressed>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -164,7 +164,7 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventMouseButtonReleased, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseButtonReleased>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -175,7 +175,7 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	SUBSCRIBE_TO_EVENT(Input::InputEventMouseMoved, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseMoved>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -185,7 +185,7 @@ void UIElement::subscribeToMouseEvents()
 
 void UIElement::subscribeToScrollEvents()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventScroll, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventScroll>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -196,7 +196,7 @@ void UIElement::subscribeToScrollEvents()
 
 void UIElement::subscribeToEnterEvent()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEnter, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyEnter>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -206,7 +206,7 @@ void UIElement::subscribeToEnterEvent()
 
 void UIElement::subscribeToEscEvent()
 {
-	SUBSCRIBE_TO_EVENT(Input::InputEventKeyEsc, nullptr, this, [this](const Event::Event *event)
+	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyEsc>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }

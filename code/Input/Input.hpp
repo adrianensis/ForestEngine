@@ -4,9 +4,8 @@
 #include "Core/System/System.hpp"
 #include "Input/InputEvents.hpp"
 
-#define SEND_INPUT_EVENT(event) SEND_EVENT(nullptr, &GET_SYSTEM(::Input::Input), event);
-
 NS_BEGIN(Input)
+class Input;
 class IWindowInputAdapter
 {
 public:
@@ -16,6 +15,10 @@ public:
     virtual void scrollCallback(double xoffset, double yoffset) = 0;
     virtual void charCallback(unsigned int codepoint) = 0;
     virtual Maths::Vector2 getMousePosition() const = 0;
+
+    void setInput(Input* input) { mInput = input; }
+protected:
+    Input* mInput = nullptr;
 };
 
 class Input: public System::System, public Event::IEventObject
@@ -32,6 +35,8 @@ public:
     Core::f32 getScroll();
     void clearMouseButton();
     void clearKey();
+
+    void setWindowInputAdapter(IWindowInputAdapter* windowInputAdapter);
     
 public:
 	Maths::Vector2 smMouseCoordinates;
@@ -43,10 +48,10 @@ public:
 	Core::f32 smScroll;
 
 private:
-    Core::WeakPtr<IWindowInputAdapter> mWindowInputAdapter;
+    IWindowInputAdapter* mWindowInputAdapter = nullptr;
 
 public:
-    GET_SET(WindowInputAdapter);
+    GET(WindowInputAdapter);
 };
 REGISTER_CLASS(Input, System);
 NS_END

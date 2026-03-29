@@ -12,7 +12,6 @@
 #include "Scene/Module.hpp"
 #include "Window/WindowManager.hpp"
 
-
 #define UI_BUILDER_CONFIG_SETTER(Name)   \
 	UIBuilder& set##Name(SETTER_TYPE_FROM_VAR(mConfig.m##Name) new##Name) \
 	{                                              \
@@ -36,7 +35,7 @@ class UIManager;
 class UIBuilder
 {
 public:
-    UIBuilder(System::SystemsDependencyInjection& systemsDI);
+    UIBuilder(UIManager* uiManager);
 
 	void restoreAll();
 
@@ -61,8 +60,7 @@ public:
 
         calculateConfig();
 	    T* uiElement = uiScene->createGameObject<T>();
-        uiElement->getSystemsDI().addSystem(mUIManager);
-        uiElement->getSystemsDI().addSystem(mWindowManager);
+        injectDependencies(uiElement);
         uiElement->initFromConfig(mConfig);
         uiElement->postInit();
 
@@ -83,13 +81,13 @@ public:
 
 private:
     void registerUIElement(UIElement* uiElement);
+    void injectDependencies(UIElement* uiElement);
     UILayout getOppositeLayout(UILayout layout);
     Maths::Vector2 calculateNextElementOffset(UILayout layout);
     void calculateConfig();
 
 private:
 	UIManager* mUIManager = nullptr;
-	Window::WindowManager* mWindowManager = nullptr;
 	UILayout mCurrentLayout;
 	UIElementConfig mConfig;
 	UIElementConfig mDefaultConfig;
