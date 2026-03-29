@@ -13,7 +13,7 @@ class Scene;
 class UIManager: public System::System
 {
 public:
-    virtual void init() override;
+    void init();
     virtual void terminate() override;
 
     const Font::FontGlyphData& getGlyphData(char character) const;

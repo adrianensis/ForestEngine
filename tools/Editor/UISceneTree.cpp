@@ -25,7 +25,7 @@ void UISceneTree::update()
     setParent(this).
 	setSize(Maths::Vector2(0.5, 0.05f));
 
-    const std::list<GameObject*>& objects = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
+    const std::list<GameObject*>& objects = mScene->getScenesManager()->getScene(ScenesManager::smDefaultSceneName)->getNewGameObjects();
     std::list<GameObject*> objectsInmutableList;
     FOR_LIST(it, objects)
     {
@@ -38,7 +38,7 @@ void UISceneTree::update()
         UIButton* uiText = uiBuilder.
         setText(inspectorName).
         // setIsStatic(false).
-        create<UIButton>().
+        create<UIButton>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
         getUIElement<UIButton>();
 
         // mTexts.emplace(id, uiText);

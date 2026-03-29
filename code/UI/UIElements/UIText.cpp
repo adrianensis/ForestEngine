@@ -125,7 +125,7 @@ void UIText::setText(Core::HashedString text)
                     setLayer(mConfig.mLayer + 1).
                     setIsAffectedByLayout(false).
                     setParent(this).
-                    create<UITextGlyph>().
+                    create<UITextGlyph>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
                     getUIElement<UITextGlyph>();
 
                     mFontRenderers.push_back(gameObjectGlyph);

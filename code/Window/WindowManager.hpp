@@ -6,7 +6,7 @@ NS_BEGIN(Window)
 class WindowManager : public System::System
 {
 public:
-    virtual void init() override;
+    void init();
     virtual void terminate() override;
     void update();
 

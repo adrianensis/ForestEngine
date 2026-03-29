@@ -8,7 +8,7 @@
 class ModelManager: public System::System
 {
 public:
-    virtual void init() override;
+    void init();
     virtual void terminate() override;
 
     Core::WeakPtr<const Model> loadModel(const std::string& path);

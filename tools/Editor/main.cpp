@@ -1,6 +1,7 @@
 #include "Core/HashedString/HashedString.hpp"
 #include "Engine/Engine.hpp"
 #include "Scene/Module.hpp"
+#include "Scene/ScenesManager.hpp"
 #include "Scripting/Module.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 
@@ -14,17 +15,12 @@ int main()
     Engine engine;
     engine.init();
 
-    GameObject* controller = ECManager.requestEntity<GameObject>([&](GameObject* entity)
-    {
-        entity->init(); 
-    });
+    GameObject* controller = engine.getScenesManager()->getScene(ScenesManager::smGlobalSceneName)->createGameObject<GameObject>();
 
     ECManager.requestComponent<Editor>(controller, [&](auto* component)
     {
         component->init();
     });
-
-    GET_SYSTEM(ScenesManager).setGameObjectController(controller);
 
     engine.run();
     engine.terminate();

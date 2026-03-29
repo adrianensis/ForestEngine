@@ -8,7 +8,7 @@
 class ScriptEngine: public System::System, public EC::IComponentsListener
 {
 public:
-    virtual void init() override;
+    void init();
     virtual void terminate() override;
     virtual void onComponentAdded(EC::Component* component) override;
     void update(Core::f32 dt);

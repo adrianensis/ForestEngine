@@ -1,4 +1,5 @@
 #include "ScenesManager.hpp"
+#include "Core/Assert/Assert.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
 #include "Engine/EngineConfig.hpp"
@@ -7,38 +8,32 @@
 
 void ScenesManager::terminate() 
 {
-    if(mGameObjectController)
-    {
-        mGameObjectController->destroy();
-    }
-
 	if (mCameraGameObject)
 	{
-        Camera* cameraComponent = ECManager.getFirstComponent<Camera>(mCameraGameObject);
         mCameraGameObject->destroy();
 	}
 
     FOR_MAP(it, mScenes)
     {
-        it->second->terminate();
+        // skip global scene, must be terminated last
+        if(it->second->getSceneName() != smGlobalSceneName)
+        {
+            it->second->terminate();
+        }
     }
+
+    mScenes.at(smGlobalSceneName)->terminate();
 
     mScenes.clear();
 }
 
-void ScenesManager::init()
+void ScenesManager::init(const ScenesManagerData& scenesManagerData)
 {
-    Core::OwnerPtr<Scene> defaultSceneOwner = Core::OwnerPtr<Scene>::newObject();
-    Core::OwnerPtr<Scene> defaultUISceneOwner = Core::OwnerPtr<Scene>::newObject();
-        
-    mScenes.insert_or_assign(smDefaultSceneName, Core::OwnerPtr<Scene>::moveCast(defaultSceneOwner));
-    mScenes.insert_or_assign(smDefaultUISceneName, Core::OwnerPtr<Scene>::moveCast(defaultUISceneOwner));
+    createScene(smGlobalSceneName);
+    createScene(smDefaultSceneName);
+    createScene(smDefaultUISceneName);
 
-    Core::WeakPtr<Scene> defaultScene = mScenes.at(smDefaultSceneName);
-    Core::WeakPtr<Scene> defaultUIScene = mScenes.at(smDefaultUISceneName);
-    defaultScene->init(smDefaultSceneName);
-    defaultUIScene->init(smDefaultUISceneName);
-
+    requestLoadScene(smGlobalSceneName);
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
@@ -51,17 +46,12 @@ void ScenesManager::init()
     {
         component->init();
     });
-}
 
-void ScenesManager::initCameraManager(Core::WeakPtr<CameraManager> cameraManager, Core::f32 aspectRatio)
-{
-	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
+    mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
-    Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
+	camera->getGPUCamera().setPerspective(0.1, 10000, scenesManagerData.mAspectRatio, 90);
 
-	camera->getGPUCamera().setPerspective(0.1, 10000, aspectRatio, 90);
-
-    cameraManager->setCamera(camera);
+    scenesManagerData.mCameraManager->setCamera(camera);
 }
 
 void ScenesManager::update()
@@ -75,6 +65,20 @@ void ScenesManager::update()
     {
         it->second->update();
     }
+}
+
+Core::WeakPtr<Scene> ScenesManager::createScene(Core::HashedString sceneName)
+{
+    if(mScenes.contains(sceneName))
+    {
+        CHECK_MSG(false, "{} already exists!", sceneName.get());
+        return mScenes.at(sceneName);
+    }
+
+    mScenes.insert_or_assign(sceneName, Core::OwnerPtr<Scene>::newObject());
+    Core::WeakPtr<Scene> scene = mScenes.at(sceneName);
+    scene->init(sceneName, this);
+    return scene;
 }
 
 void ScenesManager::loadPendingScenes()

@@ -1,4 +1,5 @@
 #include "Scene/GameComponent.hpp"
+#include "Scene/GameObject.hpp"
 
 GameComponent::GameComponent()
 {
@@ -11,6 +12,11 @@ GameComponent::GameComponent()
 EC::Entity* GameComponent::getOwnerEntity() const
 {
     return mComponentOwner;
+}
+
+GameObject* GameComponent::getOwnerGameObject() const
+{
+    return static_cast<GameObject*>(mComponentOwner);
 }
 
 bool GameComponent::isActive() const

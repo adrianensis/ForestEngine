@@ -21,7 +21,7 @@ public:
 class RenderPipeline
 {
 public:
-    virtual void init(Core::WeakPtr<CameraManager> cameraManager);
+    virtual void init(CameraManager* cameraManager);
     virtual ~RenderPipeline() = default;
     void update(Core::f32 dt, RenderPipelineUpdateData& renderPipelineUpdateData);
     virtual void terminate();
@@ -41,6 +41,6 @@ protected:
     GPURenderGraph mGPURenderGraph;
     std::vector<MeshRenderer*> mMeshRenderers;
     Core::OwnerPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
-    Core::WeakPtr<CameraManager> mCameraManager;
+    CameraManager* mCameraManager = nullptr;
 };
 REGISTER_CLASS(RenderPipeline);

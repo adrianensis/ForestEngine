@@ -21,7 +21,7 @@ public:
 class Input: public System::System, public Event::IEventObject
 {
 public:
-    virtual void init() override;
+    void init();
     void update();
     bool isKeyPressedOnce(Core::i32 key);
     bool isKeyPressed(Core::i32 key);

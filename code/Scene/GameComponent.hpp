@@ -7,6 +7,7 @@
 
 class Transform;
 class Scene;
+class GameObject;
 
 class GameComponent: public EC::Component, public Event::IEventObject
 {
@@ -16,6 +17,7 @@ public:
     bool isActive() const;
     void setIsActive(bool isActive);
     EC::Entity* getOwnerEntity() const;
+    GameObject* getOwnerGameObject() const;
     virtual void onDestroy();
     
 private:

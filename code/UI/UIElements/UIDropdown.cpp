@@ -74,7 +74,7 @@ void UIDropdown::setEntriesVisibility(bool visible)
 
 				uiBuilder.
 				setText(label).
-				create<UIDropdownButton>();
+				create<UIDropdownButton>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer());
 
 				UIDropdownButton* button = uiBuilder.getUIElement<UIDropdownButton>();
 				button->setOnPressedCallback(onPressedCallback);

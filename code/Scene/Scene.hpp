@@ -4,19 +4,21 @@
 #include "Core/Config/Config.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Scene/GameObject.hpp"
+#include "Scene/ScenesManager.hpp"
+#include <cstddef>
 
+class ScenesManager;
 class Scene: public Core::ISerializable
 {
     DECLARE_SERIALIZATION()
 
 public:
-    void init(Core::HashedString sceneName);
+    void init(Core::HashedString sceneName, ScenesManager* scenesManager);
     void loadScene();
     void unloadScene();
     void terminate();
     void saveToFile(const std::string& path);
     void loadToFile(const std::string& path);
-    void addGameObject(GameObject* gameObject);
 
     template <class T> T_EXTENDS(T, GameObject)
 	T* createGameObject()
@@ -37,9 +39,11 @@ public:
     bool thereAreNewGameObjects() const;
 
 private:
+    void addGameObject(GameObject* gameObject);
     void destroyGameObjects();
 
 private:
+    ScenesManager* mScenesManager = nullptr;
     Core::HashedString mSceneName;
 	std::list<GameObject*> mGameObjects;
 	std::list<GameObject*> mNewGameObjects;
@@ -50,9 +54,11 @@ private:
 	Config::Config mLoadSceneConfig;
 
 public:
+	GET(ScenesManager)
 	CRGET(GameObjects)
 	CRGET(NewGameObjects)
 	GET(Size)
+	GET(SceneName)
 	GET(Path)
 };
 REGISTER_CLASS(Scene);

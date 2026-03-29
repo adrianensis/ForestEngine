@@ -9,9 +9,8 @@
 class RenderEngine : public System::System, public EC::IComponentsListener, public Window::IWindowListener
 {
 public:
-    virtual void init() override;
+    void init(CameraManager* cameraManager);
     virtual void terminate() override;
-    void initCameraManager(Core::WeakPtr<CameraManager> cameraManager);
     void update(Core::f32 dt);
     void preSceneChanged();
     void postSceneChanged();
@@ -24,7 +23,7 @@ private:
     RenderPipelineUpdateData mRenderPipelineUpdateData;
     Core::OwnerPtr<RenderPipelinePBR> mRenderPipeline;
     bool mCompileRequest = true;
-    Core::WeakPtr<CameraManager> mCameraManager;
+    CameraManager* mCameraManager = nullptr;
 public:
 	OcTree octree;
 };

@@ -107,7 +107,7 @@ void UIList::toggle()
 
 			uiBuilder.
 			setText(label).
-			create<UIButton>();
+			create<UIButton>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer());
 
 
 			UIButton* button = uiBuilder.getUIElement<UIButton>();

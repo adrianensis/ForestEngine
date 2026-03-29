@@ -7,7 +7,7 @@ class EngineConfig: public System::System
 {
 	
 public:
-    void init() override;
+    void init();
 
 private:
 	Config::Config mConfig;

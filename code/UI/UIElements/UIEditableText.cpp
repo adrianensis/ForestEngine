@@ -40,7 +40,7 @@ void UIEditableText::setText(Core::HashedString text)
 			setLayer(mConfig.mLayer + 1).
 			setIsAffectedByLayout(false).
 			setParent(this).
-			create<UIText>().
+			create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 			getUIElement<UIText>();
 		}
 

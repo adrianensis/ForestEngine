@@ -27,7 +27,7 @@ public:
 class CommandLine: public System::System, public Event::IEventObject
 {
 public:
-	virtual void init() override;
+	void init();
 	virtual void terminate() override;
 	void update();
 

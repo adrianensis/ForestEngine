@@ -25,7 +25,6 @@ public:
 	Maths::Vector2 mDisplaySize = Maths::Vector2::smOne;
 	bool mIsStatic = true;
 	bool mIsStaticText = true;
-	Core::HashedString mSceneName = ScenesManager::smDefaultUISceneName;
     bool mToggleEnabled = false;
 	bool mReleaseOnSameGroupPressed = false;
 	// Maths::Vector2 mTextScale;

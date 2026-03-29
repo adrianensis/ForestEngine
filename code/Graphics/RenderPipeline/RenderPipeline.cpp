@@ -5,7 +5,7 @@
 #include "GPU/Shader/GPUShaderManager.hpp"
 #include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
 
-void RenderPipeline::init(Core::WeakPtr<CameraManager> cameraManager)
+void RenderPipeline::init(CameraManager* cameraManager)
 {
     PROFILER_CPU()
 

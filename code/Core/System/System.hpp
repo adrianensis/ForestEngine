@@ -7,7 +7,6 @@ class System
 {
 public:
     virtual ~System() = default;
-    virtual void init() { };
     virtual void terminate() { };
 };
 NS_END

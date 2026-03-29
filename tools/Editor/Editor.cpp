@@ -41,7 +41,7 @@ void Editor::firstUpdate(Core::f32 dt)
 {
     PROFILER_CPU();
 
-	mCameraGameObject = GET_SYSTEM(ScenesManager).getCameraGameObject();
+	mCameraGameObject = getOwnerGameObject()->mScene->getScenesManager()->getCameraGameObject();
 	mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0,0,100));
     Camera* camera = ECManager.getFirstComponent<Camera>(mCameraGameObject);
     Maths::Vector2 windowSize = GET_SYSTEM(Window::WindowManager).getMainWindow()->getWindowSize();
@@ -259,7 +259,7 @@ void Editor::terminate()
 
 GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
 {
-	GameObject* gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	GameObject* gameObject = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	// gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -294,7 +294,7 @@ GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
 
 GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 {
-	GameObject* gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	GameObject* gameObject = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	// gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -329,7 +329,7 @@ GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
 
 GameObject* Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 {
-	GameObject* gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	GameObject* gameObject = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Maths::Vector3(size,size,size));
@@ -348,7 +348,7 @@ GameObject* Editor::createPointLight(const Maths::Vector3& v, Core::f32 size)
 
 GameObject* Editor::createDirectionalLight(const Maths::Vector3& v, const Maths::Vector3& dir)
 {
-	GameObject* gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+	GameObject* gameObject = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
     gameObject->mIsStatic = false;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->lookAt(v + dir);
@@ -401,7 +401,7 @@ GameObject* Editor::importModel( const std::string& pFile, const Maths::Vector3&
 {
 	Core::WeakPtr<const Model> model = GET_SYSTEM(ModelManager).loadModel(pFile);
 
-    GameObject* gameObject = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
+    GameObject* gameObject = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultSceneName)->createGameObject<GameObject>();
 	gameObject->mIsStatic = isStatic;
 	gameObject->mTransform->setLocalPosition(v);
 	gameObject->mTransform->setLocalScale(Maths::Vector3::smOne * size);
@@ -458,7 +458,7 @@ void Editor::handleMouse()
 
 void Editor::createUI()
 {
-    mAxisViewer = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
+    mAxisViewer = getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UIAxisGizmo>();
     mAxisViewer->mTransform->setLocalPosition(Maths::Vector2(-0.9, -0.8));
     mAxisViewer->createAxis();
 
@@ -485,12 +485,12 @@ void Editor::createUI()
 
     mFPSCounter = uiBuilder.
 	setText("000").
-	create<UIText>().
+	create<UIText>(getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
     getUIElement<UIText>();
 
 	uiBuilder.
 	setText("File").
-	create<UIDropdown>().
+	create<UIDropdown>(getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIDropdown>()->
 	addOption("New", [&](UIElement *uiElement)
 	{
@@ -505,21 +505,21 @@ void Editor::createUI()
 
 	uiBuilder.
 	setText("Sprites").
-	create<UIButton>().
+	create<UIButton>(getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIButton>()->
 	setOnPressedCallback([&, this](UIElement *uiElement){
 	});
 
 	uiBuilder.
 	setText("Edit").
-	create<UIButton>().
+	create<UIButton>(getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIButton>()->
 	setOnPressedCallback([&, this](UIElement *uiElement){
 	});
 
 	uiBuilder.
 	setText("View").
-	create<UIDropdown>().
+	create<UIDropdown>(getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIDropdown>()->
 	addOption("Grid", [&](UIElement *uiElement)
 	{
@@ -531,7 +531,7 @@ void Editor::createUI()
 
     uiBuilder.
 	setText("a").
-	create<UIEditableText>();
+	create<UIEditableText>(getOwnerGameObject()->mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer());
 
     uiBuilder.restoreAll();
 

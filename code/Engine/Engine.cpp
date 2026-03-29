@@ -9,8 +9,6 @@
 #include "Core/System/SystemsManager.hpp"
 #include "Window/WindowManager.hpp"
 #include "Graphics/RenderEngine.hpp"
-#include "GPU/SkeletalAnimation/GPUSkeletalAnimationManager.hpp"
-#include "Graphics/Mesh/MeshFactory.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
 
@@ -36,8 +34,9 @@ void Engine::init()
     System::SystemsManager::getInstance().init();
 
     CREATE_SYSTEM(EngineConfig);
-    // CREATE_SYSTEM(GPUInterface);
+    GET_SYSTEM(EngineConfig).init();
     CREATE_SYSTEM(Window::WindowManager);
+    GET_SYSTEM(Window::WindowManager).init();
     Window::WindowData windowData;
     windowData.mTitle = "Vulkan Engine";
     windowData.mFullScreen = false;
@@ -46,18 +45,30 @@ void Engine::init()
     Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
     GPUInstance::getInstance().init(window.getInternalPointer());
     CREATE_SYSTEM(Input::Input);
+    GET_SYSTEM(Input::Input).init();
     CREATE_SYSTEM(CameraManager);
     GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow());
     CREATE_SYSTEM(RenderEngine);
+    GET_SYSTEM(RenderEngine).init(GET_SYSTEM_PTR(CameraManager).getInternalPointer());
 	GET_SYSTEM(Window::WindowManager).getMainWindow()->addWindowListener(GET_SYSTEM_PTR(RenderEngine).getInternalPointer());
 	ECManager.addComponentListener<MeshRenderer>(GET_SYSTEM_PTR(RenderEngine));
 	ECManager.addComponentListener<Light>(GET_SYSTEM_PTR(RenderEngine));
     CREATE_SYSTEM(DebugRenderer);
+    GET_SYSTEM(DebugRenderer).init();
     CREATE_SYSTEM(ModelManager);
+    GET_SYSTEM(ModelManager).init();
     CREATE_SYSTEM(UIManager);
+    GET_SYSTEM(UIManager).init();
     CREATE_SYSTEM(ScenesManager);
+    mScenesManager = GET_SYSTEM_PTR(ScenesManager).getInternalPointer();
+    GET_SYSTEM(ScenesManager).init(ScenesManagerData
+		{
+			GET_SYSTEM_PTR(CameraManager).getInternalPointer(), GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio()
+		});
     CREATE_SYSTEM(Command::CommandLine);
+    GET_SYSTEM(Command::CommandLine).init();
     CREATE_SYSTEM(ScriptEngine);
+    GET_SYSTEM(ScriptEngine).init();
 	ECManager.addComponentListener<Script>(GET_SYSTEM_PTR(ScriptEngine));
 }
 
@@ -80,9 +91,6 @@ void Engine::run()
 	Core::f32 inverseFPSMillis = inverseFPS * 1000.0f;
 
 	Core::f32 diff = 0;
-
-	GET_SYSTEM(RenderEngine).initCameraManager(GET_SYSTEM_PTR(CameraManager));
-	GET_SYSTEM(ScenesManager).initCameraManager(GET_SYSTEM_PTR(CameraManager), GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio());
 
 	while (!GET_SYSTEM(Window::WindowManager).getMainWindow()->isClosed())
 	{
@@ -122,7 +130,6 @@ void Engine::run()
 
 void Engine::terminate()
 {
-
 	Core::MemoryTracking::log();
 	System::SystemsManager::getInstance().terminate();
 	System::SystemsManager::deleteInstance();

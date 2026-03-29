@@ -7,6 +7,7 @@
 
 class MeshRenderer;
 class UIGroup;
+class UIManager;
 
 enum class UIElementState
 {

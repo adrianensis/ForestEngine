@@ -16,7 +16,7 @@ protected:
     virtual Maths::Matrix4 calculateProjectionViewMatrix() const override;
 
 protected:
-    Core::WeakPtr<CameraManager> mCameraManager;
+    CameraManager* mCameraManager = nullptr;
 
 public:
     SET(CameraManager)

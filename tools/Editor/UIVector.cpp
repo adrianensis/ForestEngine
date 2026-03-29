@@ -21,17 +21,17 @@ void UIVector::init()
     mX = uiBuilder.
 	setText(Core::HashedString("000000.000")).
     // setIsStatic(false).
-	create<UIText>().
+	create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIText>();
     mY = uiBuilder.
 	setText(Core::HashedString("000000.000")).
     // setIsStatic(false).
-	create<UIText>().
+	create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIText>();
     mZ = uiBuilder.
 	setText(Core::HashedString("000000.000")).
     // setIsStatic(false).
-	create<UIText>().
+	create<UIText>(mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName).getInternalPointer()).
 	getUIElement<UIText>();
     // mW = uiBuilder.
 	// setText(Core::HashedString(std::to_string(v.x))).
@@ -49,9 +49,9 @@ void UIVector::update(const Maths::Vector3& v)
 
 void UIVector::onDestroy()
 {
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mX);
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mY);
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mZ);
-    GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mW);
+    mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mX);
+    mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mY);
+    mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mZ);
+    mScene->getScenesManager()->getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mW);
     GameObject::onDestroy();
 }

@@ -29,7 +29,6 @@ public:
         mSystems.emplace(classId, Core::OwnerPtr<System>::moveCast(Core::OwnerPtr<T>::newObject()));
         mSystemsInOrder.emplace_back(mSystems.at(classId));
         Core::WeakPtr<T> systemPtr = Core::WeakPtr<T>::cast(mSystems.at(classId));
-        systemPtr->init();
         return systemPtr;
     }
 
