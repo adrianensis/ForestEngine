@@ -25,6 +25,9 @@ def save_current_files(state_file, files):
         for file in sorted(files):
             f.write(f"{file}\n")
 
+def to_cmake_bool(val):
+    return "ON" if val else "OFF"
+
 ##########################################
 ########## DATA ###########
 ##########################################
@@ -119,10 +122,10 @@ buildCommandArgs = [
     "-DBUILD_INTEGRATION_TESTS=" + str(buildIntegrationTests),
     "-DTOOLS_TO_BUILD=" + str(";".join(toolsToBuild)),
     "-DAPPS_TO_BUILD=" + str(";".join(appsToBuild)),
-    "-DENABLE_LOGS=" + str(enableLogs),
-    "-DENABLE_PROFILER=" + str(enableProfiler),
-    "-DENABLE_SANITIZER=" + str(enableSanitizer),
-    "-DENABLE_GPU_DEBUG=" + str(enableGPUDebug),
+    "-DENABLE_LOGS=" + to_cmake_bool(enableLogs),
+    "-DENABLE_PROFILER=" + to_cmake_bool(enableProfiler),
+    "-DENABLE_SANITIZER=" + to_cmake_bool(enableSanitizer),
+    "-DENABLE_GPU_DEBUG=" + to_cmake_bool(enableGPUDebug),
     # "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold",
     # "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold",
 ]
