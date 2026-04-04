@@ -19,7 +19,7 @@ class UIEditableText: public UIPanel
 {
 public:
     void init() override;
-	void initFromConfig(const UIElementConfig& config) override;
+	void initFromConfig(UIManager* uiManager, const UIElementConfig& config) override;
     void setText(Core::HashedString text) override;
     void setVisibility(bool visibility) override;
 

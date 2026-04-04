@@ -17,7 +17,7 @@ void Camera::update()
 {
 	PROFILER_CPU()
 	
-	const Maths::Matrix4& viewMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
+	const Maths::Matrix4& viewMatrix = GET_SYSTEM(EC::EntityComponentManager).getFirstComponent<Transform>(getOwnerEntity())->getViewMatrix();
 	mGPUCamera.update(viewMatrix);
 }
 

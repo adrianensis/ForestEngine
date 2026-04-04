@@ -39,7 +39,7 @@ void Input::update()
 		smMouseCoordinates.set(newMouseCoordinates);
 
 		InputEventMouseMoved event;
-		mSystemsDI.getSystem<Event::EventsManager>()->send<InputEventMouseMoved>(nullptr, this, &event);
+		GET_SYSTEM(Event::EventsManager).send<InputEventMouseMoved>(nullptr, this, &event);
 	}
 
 	if(smLastMouseButtonPressed != -1)
@@ -47,7 +47,7 @@ void Input::update()
 		InputEventMouseButtonHold event;
 		event.mButton = smLastMouseButtonPressed;
 		event.mMods = smModifier;
-		mSystemsDI.getSystem<Event::EventsManager>()->send<InputEventMouseButtonHold>(nullptr, this, &event);
+		GET_SYSTEM(Event::EventsManager).send<InputEventMouseButtonHold>(nullptr, this, &event);
 	}
 
 	if(smLastKeyPressed != -1)
@@ -55,7 +55,7 @@ void Input::update()
 		InputEventKeyHold event;
 		event.mKey = smLastKeyPressed;
 		event.mMods = smModifier;
-		mSystemsDI.getSystem<Event::EventsManager>()->send<InputEventKeyHold>(nullptr, this, &event);
+		GET_SYSTEM(Event::EventsManager).send<InputEventKeyHold>(nullptr, this, &event);
 	}
 }
 

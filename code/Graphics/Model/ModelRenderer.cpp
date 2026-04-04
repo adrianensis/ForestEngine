@@ -25,7 +25,7 @@ void ModelRenderer::onECComponentAdded()
 		rendererData.mRenderPassIDs = mModelRendererData.mRenderPassIDs;
 
         EC::Entity* parent = getOwnerEntity();
-        getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(parent, [&](auto* component)
+        GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(parent, [&](auto* component)
 		{
 			component->init(rendererData);
 		});

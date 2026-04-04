@@ -1,6 +1,7 @@
 #include "ScenesManager.hpp"
 #include "Core/Assert/Assert.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
+#include "Core/System/SystemsManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/GameObject.hpp"
@@ -10,11 +11,6 @@
 
 void ScenesManager::terminate() 
 {
-	if (mCameraGameObject)
-	{
-        mCameraGameObject->destroy();
-	}
-
     if(!mScenes.empty())
     {
         FOR_MAP(it, mScenes)
@@ -42,30 +38,23 @@ void ScenesManager::init()
     requestLoadScene(smDefaultSceneName);
     requestLoadScene(smDefaultUISceneName);
 
-    mCameraGameObject = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestEntity<GameObject>([&](GameObject* entity)
-    {
-        entity->getSystemsDI().addSystem(getSystemsDI().getSystem<EC::EntityComponentManager>());
-        entity->init(); 
-    });
+    mCameraGameObject = getScene(smGlobalSceneName)->createGameObject<GameObject>();
 
-    Camera* camera = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<Camera>(mCameraGameObject, [&](auto* component)
+    Camera* camera = GET_SYSTEM(EC::EntityComponentManager).requestComponent<Camera>(mCameraGameObject, [&](auto* component)
     {
         component->init();
     });
 
     mCameraGameObject->mTransform->setLocalPosition(Maths::Vector3(0, 0, 0.3f));
 
-	camera->getGPUCamera().setPerspective(0.1, 10000, mSystemsDI.getSystem<Window::WindowManager>()->getMainWindow()->getAspectRatio(), 90);
+	camera->getGPUCamera().setPerspective(0.1, 10000, GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), 90);
 
-    mSystemsDI.getSystem<CameraManager>()->setCamera(camera);
+    GET_SYSTEM(CameraManager).setCamera(camera);
 }
 
 void ScenesManager::update()
 {
 	PROFILER_CPU()
-    
-    Camera* cameraComponent = getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Camera>(mCameraGameObject);
-    cameraComponent->update();
 
     FOR_MAP(it, mLoadedScenes)
     {
@@ -83,7 +72,7 @@ Core::WeakPtr<Scene> ScenesManager::createScene(Core::HashedString sceneName)
 
     mScenes.insert_or_assign(sceneName, Core::OwnerPtr<Scene>::newObject());
     Core::WeakPtr<Scene> scene = mScenes.at(sceneName);
-    scene->init(sceneName, this, mSystemsDI.getSystem<EC::EntityComponentManager>());
+    scene->init(sceneName, this);
     return scene;
 }
 

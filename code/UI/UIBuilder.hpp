@@ -60,8 +60,7 @@ public:
 
         calculateConfig();
 	    T* uiElement = uiScene->createGameObject<T>();
-        injectDependencies(uiElement);
-        uiElement->initFromConfig(mConfig);
+        uiElement->initFromConfig(mUIManager, mConfig);
         uiElement->postInit();
 
         registerUIElement(uiElement);

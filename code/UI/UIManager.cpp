@@ -10,9 +10,7 @@
 #include "Window/WindowManager.hpp"
 
 void UIManager::init()
-{
-    mWindow = mSystemsDI.getSystem<Window::WindowManager>()->getMainWindow().getInternalPointer();
-    
+{    
 	UIStyleManager::getInstance().init();
     mDefaultFont = Core::HashedString(Paths::PredefinedPaths::mResources.get() + "fonts/DejaVuSansMono.ttf");
     mFontsManager.init();

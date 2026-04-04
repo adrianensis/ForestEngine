@@ -11,9 +11,9 @@
 #include "UI/UIManager.hpp"
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 
-void UIArea::initFromConfig(const UIElementConfig& config) 
+void UIArea::initFromConfig(UIManager* uiManager, const UIElementConfig& config) 
 {
-    UIElement::initFromConfig(config);
+    UIElement::initFromConfig(uiManager, config);
 
     if(mConfig.mParent)
     {
@@ -37,12 +37,12 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
         FOR_ARRAY(i, newConfig.mText.get())
         {
             char character = newConfig.mText.get().at(i);
-            const Font::FontGlyphData& glyphData = mSystemsDI.getSystem<UIManager>()->getGlyphData(character);
+            const Font::FontGlyphData& glyphData = mUIManager->getGlyphData(character);
             textSize.x += glyphData.mAdvance.x;
         }
-        textSize.y = mSystemsDI.getSystem<UIManager>()->getFont()->getFontData().mMaxAscender + mSystemsDI.getSystem<UIManager>()->getFont()->getFontData().mMaxDescender;
+        textSize.y = mUIManager->getFont()->getFontData().mMaxAscender + mUIManager->getFont()->getFontData().mMaxDescender;
 		newConfig.mSize = textSize * newConfig.mTextScale;
-		newConfig.mDisplaySize = UIUtils::toScreenSpace(mSystemsDI.getSystem<UIManager>()->getWindow(), newConfig.mSize);
+		newConfig.mDisplaySize = UIUtils::toScreenSpace(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), newConfig.mSize);
 	}
 
     // translate to top left corner
@@ -52,9 +52,9 @@ UIElementConfig UIArea::calculateConfig(const UIElementConfig& config)
     return newConfig;
 }
 
-void UIPanel::initFromConfig(const UIElementConfig& config) 
+void UIPanel::initFromConfig(UIManager* uiManager, const UIElementConfig& config) 
 {
-    UIArea::initFromConfig(config);
+    UIArea::initFromConfig(uiManager, config);
 
     GPURenderItemData rendererData;
     rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
@@ -64,7 +64,7 @@ void UIPanel::initFromConfig(const UIElementConfig& config)
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
     };
 
-	MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(this, [&](auto* component)
+	MeshRenderer* renderer = GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(this, [&](auto* component)
     {
         component->init(rendererData);
     });

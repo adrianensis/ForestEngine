@@ -165,31 +165,31 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 				case GLFW_KEY_ENTER:
 				{
 					Input::InputEventKeyEnter event;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyEnter>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEnter>(nullptr, mInput, &event);
 					break;
 				}
 				case GLFW_KEY_ESCAPE:
 				{
 					Input::InputEventKeyEsc event;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyEsc>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEsc>(nullptr, mInput, &event);
 					break;
 				}
 				case GLFW_KEY_DELETE:
 				{
 					Input::InputEventKeyDelete event;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyDelete>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyDelete>(nullptr, mInput, &event);
 					break;
 				}
 				case GLFW_KEY_BACKSPACE:
 				{
 					Input::InputEventKeyBackspace event;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyBackspace>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyBackspace>(nullptr, mInput, &event);
 					break;
 				}
 				case GLFW_KEY_TAB:
 				{
 					Input::InputEventKeyTab event;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyTab>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyTab>(nullptr, mInput, &event);
 					break;
 				}
 				case GLFW_KEY_UP:
@@ -199,7 +199,7 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 				{
 					Input::InputEventKeyArrow event;
 					event.mArrowButton = key;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyArrow>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyArrow>(nullptr, mInput, &event);
 					break;
 				}
 				default:
@@ -207,7 +207,7 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 					Input::InputEventKeyPressed event;
 					event.mKey = key;
 					event.mMods = mods;
-					mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyPressed>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyPressed>(nullptr, mInput, &event);
 					break;
 				}
 			}
@@ -218,7 +218,7 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 			Input::InputEventKeyReleased event;
 			event.mKey = key;
 			event.mMods = mods;
-			mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyReleased>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyReleased>(nullptr, mInput, &event);
 
 			mInput->clearKey();
 			break;
@@ -228,7 +228,7 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 			Input::InputEventKeyHold event;
 			event.mKey = key;
 			event.mMods = mods;
-			mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventKeyHold>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyHold>(nullptr, mInput, &event);
 
 			break;
 		}
@@ -249,7 +249,7 @@ void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 m
 			Input::InputEventMouseButtonPressed event;
 			event.mButton = button;
 			event.mMods = mods;
-			mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventMouseButtonPressed>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonPressed>(nullptr, mInput, &event);
 			
 			break;
 		}
@@ -261,7 +261,7 @@ void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 m
 			
             mInput->clearMouseButton();
 
-			mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventMouseButtonReleased>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonReleased>(nullptr, mInput, &event);
 
 			break;
 		}
@@ -274,14 +274,14 @@ void Window::scrollCallback(Core::f64 xoffset, Core::f64 yoffset)
 
 	Input::InputEventScroll event;
 	event.mScroll = yoffset;
-	mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventScroll>(nullptr, mInput, &event);
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventScroll>(nullptr, mInput, &event);
 }
 
 void Window::charCallback(Core::u32 codepoint)
 {
 	Input::InputEventChar event;
 	event.mChar = (char)codepoint;
-	mInput->getSystemsDI().getSystem<Event::EventsManager>()->send<Input::InputEventChar>(nullptr, mInput, &event);
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventChar>(nullptr, mInput, &event);
 }
 
 Maths::Vector2 Window::getMousePosition() const

@@ -346,5 +346,5 @@ private:
     std::unordered_map<Core::ClassId, std::unordered_set<EC::IComponentsListener*>> mComponentListeners;
     std::unordered_map<Core::ClassId, std::vector<ComponentsArray>> mEntityComponents;
 };
-REGISTER_CLASS(EntityComponentManager)
+REGISTER_CLASS(EntityComponentManager, System)
 NS_END

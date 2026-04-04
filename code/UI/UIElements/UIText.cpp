@@ -12,9 +12,9 @@
 #include "Graphics/RenderPipeline/RenderPass/RenderPassUI.hpp"
 #include "Graphics/Mesh/MeshFactory.hpp"
 
-void UITextGlyph::initFromConfig(const UIElementConfig& config) 
+void UITextGlyph::initFromConfig(UIManager* uiManager, const UIElementConfig& config) 
 {
-	UIArea::initFromConfig(config);
+	UIArea::initFromConfig(uiManager, config);
 
     CHECK_MSG(mConfig.mText.get().size() == 1, "UITextGlyph mConfig.mText must be 1 character only");
 
@@ -22,27 +22,27 @@ void UITextGlyph::initFromConfig(const UIElementConfig& config)
 
     GPURenderItemData rendererData;
     rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
-    rendererData.mShader = mSystemsDI.getSystem<UIManager>()->getFontShader();
+    rendererData.mShader = mUIManager->getFontShader();
     rendererData.mGPUDepthStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
         Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
     };
 
-	MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(this, [&](auto* component)
+	MeshRenderer* renderer = GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(this, [&](auto* component)
     {
         component->init(rendererData);
     });
 
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mDepth = mConfig.mLayer;
-    Maths::Cube textureRegion = mSystemsDI.getSystem<UIManager>()->getGlyphData(mCharacter).mTextureRegion;
+    Maths::Cube textureRegion = mUIManager->getGlyphData(mCharacter).mTextureRegion;
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();
 }
 
-void UIText::initFromConfig(const UIElementConfig& config) 
+void UIText::initFromConfig(UIManager* uiManager, const UIElementConfig& config) 
 {
-	UIArea::initFromConfig(config);
+	UIArea::initFromConfig(uiManager, config);
 	setText(mConfig.mText);
 }
 
@@ -77,19 +77,19 @@ void UIText::setText(Core::HashedString text)
 
 		if (!text.get().empty())
 		{
-            Core::u32 fontMaxDescender = mSystemsDI.getSystem<UIManager>()->getFont()->getFontData().mMaxDescender;
-            Core::f32 fontMaxDescenderScreenSpace = UIUtils::toScreenSpace(mSystemsDI.getSystem<UIManager>()->getWindow(), Maths::Vector2(0, fontMaxDescender)).y;
+            Core::u32 fontMaxDescender = mUIManager->getFont()->getFontData().mMaxDescender;
+            Core::f32 fontMaxDescenderScreenSpace = UIUtils::toScreenSpace(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), Maths::Vector2(0, fontMaxDescender)).y;
             Core::f32 offset = -mConfig.mDisplaySize.x/2.0f;
 
 			FOR_RANGE(i, 0, textLen)
 			{
                 char character = text.get().at(i);
-                const Font::FontGlyphData& glyphData = mSystemsDI.getSystem<UIManager>()->getGlyphData(character);
+                const Font::FontGlyphData& glyphData = mUIManager->getGlyphData(character);
                 Maths::Vector2 glyphSize = glyphData.mMetrics.mSize * mConfig.mTextScale;
-                Maths::Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(mSystemsDI.getSystem<UIManager>()->getWindow(), glyphSize);
+                Maths::Vector2 glyphSizeScreenSpace = UIUtils::toScreenSpace(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), glyphSize);
 
                 Maths::Vector2 bearing(glyphData.mMetrics.mHoriBearing.x, glyphData.mMetrics.mHoriBearing.y);
-                Maths::Vector2 bearingScreenSpace = UIUtils::toScreenSpace(mSystemsDI.getSystem<UIManager>()->getWindow(), bearing * mConfig.mTextScale);
+                Maths::Vector2 bearingScreenSpace = UIUtils::toScreenSpace(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), bearing * mConfig.mTextScale);
                 Maths::Vector2 glyphPositionScreenSpace(offset + bearingScreenSpace.x, 0);
 
                 // Move the glyph down half size
@@ -108,15 +108,15 @@ void UIText::setText(Core::HashedString text)
                     glyphConfig = gameObjectGlyph->calculateConfig(glyphConfig);
                     gameObjectGlyph->mTransform->setLocalPosition(glyphConfig.mDisplayPosition);
                     gameObjectGlyph->mTransform->setLocalScale(Maths::Vector3(glyphConfig.mDisplaySize, 1));
-                    MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<MeshRenderer>(gameObjectGlyph);
-                    Maths::Cube textureRegion = mSystemsDI.getSystem<UIManager>()->getGlyphData(character).mTextureRegion;
+                    MeshRenderer* renderer = GET_SYSTEM(EC::EntityComponentManager).getFirstComponent<MeshRenderer>(gameObjectGlyph);
+                    Maths::Cube textureRegion = mUIManager->getGlyphData(character).mTextureRegion;
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionLeftTop = textureRegion.getLeftTopFront();
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->mGPUShaderPropertiesBlockBuffer.get<GPUShaderPropertiesBlockUI>().mTextureRegionSize = textureRegion.getSize();
                     renderer->getGPURenderItem()->getGPUShaderPropertiesInstance()->setDirty();
                 }
                 else
                 {
-                    UIBuilder uiBuilder = mSystemsDI.getSystem<UIManager>()->createUIBuilder();
+                    UIBuilder uiBuilder = mUIManager->createUIBuilder();
                     UITextGlyph* gameObjectGlyph = uiBuilder.
                     setPosition(glyphPositionScreenSpace).
                     setIsStatic(mConfig.mIsStaticText).
@@ -131,7 +131,7 @@ void UIText::setText(Core::HashedString text)
                     mFontRenderers.push_back(gameObjectGlyph);
                 }
 
-                offset += UIUtils::toScreenSpace(mSystemsDI.getSystem<UIManager>()->getWindow(), Maths::Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;
+                offset += UIUtils::toScreenSpace(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), Maths::Vector2(glyphData.mAdvance.x * mConfig.mTextScale,0)).x;
 			}
 		}
 

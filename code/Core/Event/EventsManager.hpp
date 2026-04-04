@@ -50,5 +50,5 @@ private:
     void unsubscribe(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventReceiver);
     void send(Core::ClassId eventClassId, IEventObject *eventOwner, IEventObject *eventInstigator, Event *event);
 };
-REGISTER_CLASS(EventsManager)
+REGISTER_CLASS(EventsManager, System)
 NS_END

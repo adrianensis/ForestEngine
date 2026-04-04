@@ -4,6 +4,8 @@
 
 class CameraManager: public System::System
 {
+public:
+    void update();
 private:
 	Camera* mCamera = nullptr;
 

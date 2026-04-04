@@ -47,13 +47,6 @@ UIBuilder& UIBuilder::restoreData()
 	return *this;
 }
 
-void UIBuilder::injectDependencies(UIElement* uiElement)
-{
-	uiElement->getSystemsDI().addSystem(mUIManager);
-	uiElement->getSystemsDI().addSystem(mUIManager->getSystemsDI().getSystem<Window::WindowManager>());
-	uiElement->getSystemsDI().addSystem(mUIManager->getSystemsDI().getSystem<Event::EventsManager>());
-}
-
 void UIBuilder::registerUIElement(UIElement* uiElement)
 {
 	mCurrentUIElement = uiElement;
@@ -90,7 +83,7 @@ Maths::Vector2 UIBuilder::calculateNextElementOffset(UILayout layout)
 	{
 		case UILayout::HORIZONTAL:
 		{
-			offset = Maths::Vector2((mLastConfig.mDisplaySize.x + UIUtils::correctAspectRatio(mUIManager->getWindow(), mConfig.mSeparatorSize)), 0);
+			offset = Maths::Vector2((mLastConfig.mDisplaySize.x + UIUtils::correctAspectRatio(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), mConfig.mSeparatorSize)), 0);
 			break;
 		}
 		case UILayout::VERTICAL:

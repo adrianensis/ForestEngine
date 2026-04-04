@@ -5,6 +5,8 @@
 
 NS_BEGIN(EC)
 
+class EntityComponentManager;
+
 class Entity
 {
 public:
@@ -13,7 +15,6 @@ public:
     
 protected:
     Core::PoolElementPtr mPoolElementPtr;
-
 public:
 
     #ifdef ENGINE_BUILD_DEBUG

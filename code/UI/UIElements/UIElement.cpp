@@ -3,13 +3,13 @@
 #include "Core/EntityComponent/Entity.hpp"
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
-#include "Window/Window.hpp"
 
 #include "UI/UIManager.hpp"
 #include "UI/UIGroup.hpp"
 
-void UIElement::initFromConfig(const UIElementConfig& config)
+void UIElement::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
 {
+    mUIManager = uiManager;
 	mConfig = config;
     mIsStatic = mConfig.mIsStatic;
 
@@ -19,26 +19,26 @@ void UIElement::initFromConfig(const UIElementConfig& config)
 void UIElement::onDestroy()
 {
 	GameObject::onDestroy();
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyPressed>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyReleased>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventMouseButtonPressed>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventMouseButtonReleased>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventScroll>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventChar>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyBackspace>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyEnter>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyEsc>(nullptr, this);
-	mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventMouseMoved>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyPressed>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyReleased>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventMouseButtonPressed>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventMouseButtonReleased>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventScroll>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventChar>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyBackspace>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyEnter>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyEsc>(nullptr, this);
+	GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventMouseMoved>(nullptr, this);
 
 	if (hasFocus())
 	{
-		mSystemsDI.getSystem<UIManager>()->setFocusedElement(nullptr);
+		mUIManager->setFocusedElement(nullptr);
 	}
 }
 
 bool UIElement::hasFocus() const
 {
-	return mSystemsDI.getSystem<UIManager>()->getFocusedElement() == this;
+	return mUIManager->getFocusedElement() == this;
 }
 
 bool UIElement::isMouseCursorInsideElement() const
@@ -115,18 +115,18 @@ void UIElement::setOnFocusLostCallback(UIElementCallback callback)
 
 void UIElement::postInit()
 {
-    mRenderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<MeshRenderer>(this);
+    mRenderer = GET_SYSTEM(EC::EntityComponentManager).getFirstComponent<MeshRenderer>(this);
 }
 
 void UIElement::subscribeToKeyEvents()
 {
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyPressed>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyPressed>(nullptr, this, [this](const Event::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
 	});
 
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
 	{
     	PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -135,14 +135,14 @@ void UIElement::subscribeToKeyEvents()
 
 void UIElement::subscribeToCharEvents()
 {
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventChar>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventChar>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
         onCharEventReceived(((const Input::InputEventChar *)event)->mChar);
 	});
 
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyBackspace>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyBackspace>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -152,7 +152,7 @@ void UIElement::subscribeToCharEvents()
 
 void UIElement::subscribeToMouseEvents()
 {
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseButtonPressed>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventMouseButtonPressed>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -164,7 +164,7 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseButtonReleased>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventMouseButtonReleased>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -175,7 +175,7 @@ void UIElement::subscribeToMouseEvents()
         }
 	});
 
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventMouseMoved>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventMouseMoved>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -185,7 +185,7 @@ void UIElement::subscribeToMouseEvents()
 
 void UIElement::subscribeToScrollEvents()
 {
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventScroll>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventScroll>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -196,7 +196,7 @@ void UIElement::subscribeToScrollEvents()
 
 void UIElement::subscribeToEnterEvent()
 {
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyEnter>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyEnter>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -206,7 +206,7 @@ void UIElement::subscribeToEnterEvent()
 
 void UIElement::subscribeToEscEvent()
 {
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyEsc>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyEsc>(nullptr, this, [this](const Event::Event *event)
 	{
 	    PROFILER_CPU()
 		if (!isVisible()) { return; }
@@ -314,7 +314,7 @@ void UIElement::releaseFocus()
 {
     if (!hasFocus()) { return; }
 
-    mSystemsDI.getSystem<UIManager>()->setFocusedElement(nullptr);
+    mUIManager->setFocusedElement(nullptr);
     mOnFocusLostFunctor.execute();
     onFocusLost();
 }
@@ -323,13 +323,13 @@ void UIElement::requestFocus()
 {
     if (hasFocus()) { return; }
 
-    UIElement* lastFocusedElement = mSystemsDI.getSystem<UIManager>()->getFocusedElement();
+    UIElement* lastFocusedElement = mUIManager->getFocusedElement();
     if (lastFocusedElement)
     {
         lastFocusedElement->releaseFocus();
     }
 
-    mSystemsDI.getSystem<UIManager>()->setFocusedElement(this);
+    mUIManager->setFocusedElement(this);
 
     mInputString.clear();
     setText(Core::HashedString(mInputString));
@@ -344,7 +344,7 @@ void UIElement::scroll(Core::f32 scrollValue)
 
 // void UIElement::releaseOtherToggleElements()
 // {
-// 	const UIGroup& group = mSystemsDI.getSystem<UIManager>()->getOrCreateGroup(mConfig.mGroup);
+// 	const UIGroup& group = mUIManager->getOrCreateGroup(mConfig.mGroup);
 // 	FOR_LIST(it, group.getUIElements())
 // 	{
 // 		UIElement* other = *it;

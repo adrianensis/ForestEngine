@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/System/SystemsDependencyInjection.hpp"
 #include "Engine/Core.hpp"
 #include "UI/UIElements/UIElement.hpp"
 #include "UI/UIBuilder.hpp"
@@ -50,10 +49,8 @@ private:
     UIFontsManager mFontsManager;
     Core::HashedString mDefaultFont;
     Core::WeakPtr<GPUShader> mDefaultUIShader;
-    Window::Window* mWindow = nullptr;
 
 public:
     GET(DefaultUIShader)
-    GET(Window)
 };
 REGISTER_CLASS(UIManager, System);

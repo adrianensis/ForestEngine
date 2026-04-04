@@ -59,5 +59,5 @@ public:
 private:
 	TimeMark mInternalTimeMark;
 };
-REGISTER_CLASS(Time)
+REGISTER_CLASS(Time, System)
 NS_END

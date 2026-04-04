@@ -14,9 +14,9 @@ void UIButton::init()
 	UIPanel::init();
 }
 
-void UIButton::initFromConfig(const UIElementConfig& config) 
+void UIButton::initFromConfig(UIManager* uiManager, const UIElementConfig& config) 
 {
-	UIPanel::initFromConfig(config);
+	UIPanel::initFromConfig(uiManager, config);
 	subscribeToMouseEvents();
 
 	setText(mConfig.mText);
@@ -44,7 +44,7 @@ void UIButton::setText(Core::HashedString text)
 	{
 		if (!mText)
 		{
-			UIBuilder uiBuilder = mSystemsDI.getSystem<UIManager>()->createUIBuilder();
+			UIBuilder uiBuilder = mUIManager->createUIBuilder();
 
 			mText = uiBuilder.
 			setPosition(Maths::Vector2(-mConfig.mDisplaySize.x/2.0f, mConfig.mDisplaySize.y/2.0f)).

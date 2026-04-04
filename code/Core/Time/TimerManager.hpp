@@ -19,5 +19,5 @@ private:
 private:
 	std::list<Timer *> mTimers;
 };
-REGISTER_CLASS(TimerManager)
+REGISTER_CLASS(TimerManager, System)
 NS_END

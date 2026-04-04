@@ -35,13 +35,8 @@ private:
     // Important: starts by 1, 0 is reserved for null
 	inline static Core::u64 smGameObjectIdCounter = 1;
 
-protected:
-    System::SystemsDependencyInjection mSystemsDI;
-
 public:
 	GET(IsDestroyed)
 	GET(GameObjectId)
-	RGET(SystemsDI)
-
 };
 REGISTER_CLASS(GameObject);

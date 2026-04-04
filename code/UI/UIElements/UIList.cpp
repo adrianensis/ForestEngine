@@ -32,12 +32,12 @@ void UIList::init()
 	subscribeToScrollEvents();
 }
 
-void UIList::initFromConfig(const UIElementConfig& config)
+void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
 {
-	UIElement::initFromConfig(config);
+	UIElement::initFromConfig(uiManager, config);
 
 	mTransform->setLocalPosition(mConfig.mDisplayPosition);
-	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(mSystemsDI.getSystem<UIManager>()->getWindow(), mConfig.mSize), 1));
+	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
 	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
@@ -50,7 +50,7 @@ void UIList::initFromConfig(const UIElementConfig& config)
 
 	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / (Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));
 	
-	MeshRenderer* renderer = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<MeshRenderer>(this, [&](auto* component)
+	MeshRenderer* renderer = GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(this, [&](auto* component)
 		{
 			component->init(rendererData);
 		});
@@ -86,14 +86,14 @@ void UIList::toggle()
 	if (mButtons.empty())
 	{
 		Maths::Vector3 scale = mTransform->getLocalScale();
-		scale.x = scale.x * mSystemsDI.getSystem<UIManager>()->getWindow()->getAspectRatio();
+		scale.x = scale.x * GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio();
 
-		UIBuilder uiBuilder = mSystemsDI.getSystem<UIManager>()->createUIBuilder();
+		UIBuilder uiBuilder = mUIManager->createUIBuilder();
 
 		uiBuilder.
 			setLayout(UILayout::VERTICAL).
 			//setSize(scale).
-			setPosition(Maths::Vector2((-scale.x / 2.0f) / mSystemsDI.getSystem<UIManager>()->getWindow()->getAspectRatio(), scale.y/2.0f)).
+			setPosition(Maths::Vector2((-scale.x / 2.0f) / GET_SYSTEM(Window::WindowManager).getMainWindow()->getAspectRatio(), scale.y/2.0f)).
 			setTextScale(mConfig.mTextScale).
 			setAdjustSizeToText(true).
 			setIsStatic(false).
@@ -139,7 +139,7 @@ void UIList::setEntriesVisibility(bool visible)
 			Maths::Vector3 scale = mTransform->getLocalScale();
 			scale.x = scale.x * (Window::WindowManager).getMainWindow()->getAspectRatio();
 
-			mSystemsDI.getSystem<UIManager>()->getBuilder()->saveData()->
+			mUIManager->getBuilder()->saveData()->
 				setLocalPosition(Maths::Vector2(-scale.x/2.0f,-scale.y* mButtons->getLength() - scale.y/2.0f))->
 				setSize(scale)->
 				setText(label)->
@@ -148,14 +148,14 @@ void UIList::setEntriesVisibility(bool visible)
 				setIsAffectedByLayout(false)->
 				create<UIButton>();
 
-			UIButton* button = (UIButton*) mSystemsDI.getSystem<UIManager>()->getBuilder()->getUIElement();
+			UIButton* button = (UIButton*) mUIManager->getBuilder()->getUIElement();
 			button->setOnPressedCallback(onPressedCallback);
 			//button->setVisibility(false);
 
 			Transform* t = button->mTransform;
 			t->setParent(mTransform);
 
-			mSystemsDI.getSystem<UIManager>()->getBuilder()->restoreData();
+			mUIManager->getBuilder()->restoreData();
 
 			mButtons->pushBack(button);
 		}

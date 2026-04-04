@@ -219,8 +219,8 @@ const Maths::Matrix4& Transform::getViewMatrix() const
 {
     if(mViewMatrixDirty)
     {
-        Maths::Vector3 worldPosition = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
-        const Maths::Matrix4& rotationMatrix = getOwnerGameObject()->getSystemsDI().getSystem<EC::EntityComponentManager>()->getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
+        Maths::Vector3 worldPosition = GET_SYSTEM(EC::EntityComponentManager).getFirstComponent<Transform>(getOwnerEntity())->getWorldPosition();
+        const Maths::Matrix4& rotationMatrix = GET_SYSTEM(EC::EntityComponentManager).getFirstComponent<Transform>(getOwnerEntity())->getLocalRotationMatrix();
         mViewMatrix.view(worldPosition, rotationMatrix);
         mViewMatrixDirty = false;
     }

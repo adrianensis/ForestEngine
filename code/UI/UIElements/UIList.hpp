@@ -19,7 +19,7 @@ class UIList: public UIElement
     
 public:
 	void init() override;
-	void initFromConfig(const UIElementConfig& config) override;
+	void initFromConfig(UIManager* uiManager, const UIElementConfig& config) override;
 	void onDestroy() override;
 
 	UIList& addOption(const std::string & label, UIElementCallback onPressedCallback);

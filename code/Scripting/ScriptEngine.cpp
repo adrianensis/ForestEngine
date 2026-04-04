@@ -12,8 +12,6 @@ void ScriptEngine::onComponentAdded(EC::Component* component)
     Script* script = CAST(Script, component);
     CHECK_MSG(script, "Trying to add a not valid Script derived component.");
     mScripts.push_back(script);
-
-    script->getSystemsDI().addFrom(mSystemsDI);
 }
 
 void ScriptEngine::update(Core::f32 dt)

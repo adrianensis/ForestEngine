@@ -19,7 +19,7 @@ GameObject::GameObject()
 void GameObject::init()
 {
     PROFILER_CPU()
-    mTransform = getSystemsDI().getSystem<EC::EntityComponentManager>()->requestComponent<Transform>(this, [&](auto* component)
+    mTransform = GET_SYSTEM(EC::EntityComponentManager).requestComponent<Transform>(this, [&](auto* component)
     {
         component->init();
     });
@@ -29,7 +29,7 @@ void GameObject::setIsActive(bool isActive)
 {
 	mIsActive = isActive;
 
-    std::span<EC::Component*> components = getSystemsDI().getSystem<EC::EntityComponentManager>()->getComponents(this);
+    std::span<EC::Component*> components = GET_SYSTEM(EC::EntityComponentManager).getComponents(this);
     FOR_RANGE(i, 0, components.size())
     {
         GameComponent* gameComp = CAST(GameComponent, components[i]);
@@ -43,5 +43,5 @@ void GameObject::destroy()
 	onDestroy();
 	mIsDestroyed = true;
 
-    getSystemsDI().getSystem<EC::EntityComponentManager>()->removeEntity(this);
+    GET_SYSTEM(EC::EntityComponentManager).removeEntity(this);
 }

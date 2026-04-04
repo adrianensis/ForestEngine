@@ -5,6 +5,7 @@
 #include "Input/InputEvents.hpp"
 #include "Core/Log/Log.hpp"
 #include "Core/Event/EventsManager.hpp"
+#include "Core/System/SystemsManager.hpp"
 #include "GLFW/glfw3.h"
 
 #include <cstdio>
@@ -18,7 +19,7 @@ void CommandLine::init()
     mBuffer.reserve(smBufferSize);
     mIsOpen = false;
 
-    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
+    GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
 	{
         const Input::InputEventKeyReleased *e = (const Input::InputEventKeyReleased *)event;
         if(e->mKey == GLFW_KEY_GRAVE_ACCENT)
@@ -27,7 +28,7 @@ void CommandLine::init()
         }
 	});
 
-	mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
+	GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyReleased>(nullptr, this, [this](const Event::Event *event)
 	{
         const Input::InputEventKeyReleased *e = (const Input::InputEventKeyReleased *)event;
         if(e->mKey == GLFW_KEY_GRAVE_ACCENT)
@@ -296,7 +297,7 @@ void CommandLine::toggle()
 
 void CommandLine::subscribeToEvents()
 {
-    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventChar>(nullptr, this, [this](const Event::Event *event)
+    GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventChar>(nullptr, this, [this](const Event::Event *event)
     {
         
         if(mIsOpen)
@@ -313,7 +314,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyEnter>(nullptr, this, [this](const Event::Event *event)
+    GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyEnter>(nullptr, this, [this](const Event::Event *event)
     {
         if(mIsOpen)
         {
@@ -323,7 +324,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyTab>(nullptr, this, [this](const Event::Event *event)
+    GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyTab>(nullptr, this, [this](const Event::Event *event)
     {
         if(mIsOpen)
         {
@@ -331,7 +332,7 @@ void CommandLine::subscribeToEvents()
         }
     });
 
-    mSystemsDI.getSystem<Event::EventsManager>()->subscribe<Input::InputEventKeyBackspace>(nullptr, this, [this](const Event::Event *event)
+    GET_SYSTEM(Event::EventsManager).subscribe<Input::InputEventKeyBackspace>(nullptr, this, [this](const Event::Event *event)
     {
         if(mIsOpen)
         {
@@ -347,9 +348,9 @@ void CommandLine::subscribeToEvents()
 
 void CommandLine::unsubscribeToEvents()
 {
-    mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventChar>(nullptr, this);
-    mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyEnter>(nullptr, this);
-    mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyTab>(nullptr, this);
-    mSystemsDI.getSystem<Event::EventsManager>()->unsubscribe<Input::InputEventKeyBackspace>(nullptr, this);
+    GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventChar>(nullptr, this);
+    GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyEnter>(nullptr, this);
+    GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyTab>(nullptr, this);
+    GET_SYSTEM(Event::EventsManager).unsubscribe<Input::InputEventKeyBackspace>(nullptr, this);
 }
 NS_END
