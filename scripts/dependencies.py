@@ -159,7 +159,8 @@ buildCommandArgs = [
     "-DCMAKE_BUILD_TYPE=" + buildType
 ]
 
-cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
+runFullBuild = True
+cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
 
 # profiler GUI
 buildCommandArgs = [
@@ -173,7 +174,8 @@ buildCommandArgs = [
     # "-DCMAKE_CXX_FLAGS_RELEASE=" + "-flto=auto"
 ]
 
-cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, cmake_generated_data, buildCommandArgs)
+runFullBuild = True
+cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
 
 log.log(log.LogLabels.build, "-----------------------------------")
 
