@@ -152,11 +152,13 @@ elif added or removed:
 os.makedirs(BuildGlobalData.buildDir, exist_ok=True)
 save_current_files(STATE_FILE, current_files)
 
-cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
+install = False
+cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, install, cmake_generated_data, buildCommandArgs)
 
 ##########################################
 ########## POST BUILD ###########
 ##########################################
 
 compileCommandsJson = "compile_commands.json"
-shutil.copy(os.path.join(buildTargetDir, compileCommandsJson), compileCommandsJson)
+if os.path.isfile(os.path.join(buildTargetDir, compileCommandsJson)):
+  shutil.copy(os.path.join(buildTargetDir, compileCommandsJson), compileCommandsJson)
