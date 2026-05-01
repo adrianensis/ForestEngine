@@ -1,4 +1,5 @@
 import os
+import subprocess
 import platform
 import lib.log as log
 
@@ -15,7 +16,6 @@ class CMakeGenerator(Enum):
 class CMakeGeneratedData:
     def __init__(self):
         self.cmake_generator = ""
-        self.systemBuildCommand = ""
         self.coresUsed = 0
         self.systemName = ""
         self.projectName = ""
@@ -24,6 +24,27 @@ class CMakeGeneratedData:
 ########## FUNCTIONS ###########
 ##########################################
 
+def get_physical_cores():
+    system = platform.system()
+    
+    try:
+        if system == "Windows":
+            cmd = "wmic cpu get NumberOfCores"
+            output = subprocess.check_output(cmd, shell=True).decode().split()
+            return sum(int(x) for x in output if x.isdigit())
+
+        elif system == "Darwin":
+            cmd = ["sysctl", "-n", "hw.physicalcpu"]
+            return int(subprocess.check_output(cmd).decode().strip())
+
+        elif system == "Linux":
+            cmd = "grep -P '^core id' /proc/cpuinfo | sort -u | wc -l"
+            output = subprocess.check_output(cmd, shell=True).decode().strip()
+            return int(output)
+            
+    except Exception:
+        return 0
+
 # generate CMake data
 def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
     log.log(log.LogLabels.build, "-----------------------------------")
@@ -31,9 +52,16 @@ def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
     data = CMakeGeneratedData()
     system_name = platform.system()
     system_info = str(platform.uname())
-    max_cpu_cores = os.cpu_count()
-    system_reserved_cores = 4
-    compilation_cores = max(max_cpu_cores - system_reserved_cores, 2)
+    logical_cpu_cores = os.cpu_count()
+    physical_cpu_cores = get_physical_cores()
+    extra_logical_cores = 2
+    compilation_cores = physical_cpu_cores + extra_logical_cores
+
+    # fall back to logical cores
+    system_reserved_logical_cores = 2
+    if physical_cpu_cores == 0:
+        log.log(log.LogLabels.build, "Couldn't find Physical cores count, fallback to Logical cores count.")
+        compilation_cores = logical_cpu_cores - system_reserved_logical_cores
 
     data.coresUsed = compilation_cores
     data.systemName = system_name
@@ -41,9 +69,10 @@ def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
 
     log.log(log.LogLabels.build, "System Info")
     log.log(log.LogLabels.build, system_name)
-    log.log(log.LogLabels.build, data.systemName)
-    log.log(log.LogLabels.build, "max_cpu_cores: " + str(max_cpu_cores))
-    log.log(log.LogLabels.build, "system_reserved_cores: " + str(system_reserved_cores))
+    log.log(log.LogLabels.build, "physical_cpu_cores: " + str(physical_cpu_cores))
+    log.log(log.LogLabels.build, "extra_logical_cores (physical only): " + str(extra_logical_cores))
+    log.log(log.LogLabels.build, "logical_cpu_cores: " + str(logical_cpu_cores))
+    log.log(log.LogLabels.build, "system_reserved_logical_cores (logical only): " + str(system_reserved_logical_cores))
     log.log(log.LogLabels.build, "compilation_cores: " + str(data.coresUsed))
 
     if system_name == "Linux" or system_name == "Linux2":
@@ -68,14 +97,13 @@ def generate_cmake_data(projectName, cmakeGenerator=CMakeGenerator.DEFAULT):
     log.log(log.LogLabels.build, "CMake data generated:")
     log.log(log.LogLabels.build, data.systemName)
     log.log(log.LogLabels.build, data.cmake_generator)
-    log.log(log.LogLabels.build, data.systemBuildCommand)
-    log.log(log.LogLabels.build, str(data.coresUsed))
+    log.log(log.LogLabels.build, "cores used: " + str(data.coresUsed))
     log.log(log.LogLabels.build, "-----------------------------------")
 
     return data
 
 # build a CMake project
-def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, runFullBuild, cmake_generated_data: CMakeGeneratedData, buildCommandArgs):
+def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, runFullBuild, install, cmake_generated_data: CMakeGeneratedData, buildCommandArgs):
     log.log(log.LogLabels.build, "-----------------------------------")
     log.log(log.LogLabels.build, "BUILD CMAKE")
     log.log(log.LogLabels.build, "Project Dir: " + projectDir)
@@ -110,6 +138,12 @@ def build_cmake(projectDir, cmakeListFolder, buildDir, buildType, target, runFul
         os.system(configCommand)
     log.log(log.LogLabels.build, "Executing Build Command")
     os.system(buildCommand)
+
+    if install == True:
+        installCommand = f"cmake --install {buildTargetDir}"
+        log.log(log.LogLabels.build, "Install Command: " + installCommand)
+        log.log(log.LogLabels.build, "Executing Install Command")
+        os.system(installCommand)
 
     # go back
     log.log(log.LogLabels.build, "Going back to: " + cwd)
