@@ -14,4 +14,6 @@ def remove_folder(folder):
 remove_folder(BuildGlobalData.binariesDir)
 remove_folder(BuildGlobalData.buildDir)
 remove_folder(BuildGlobalData.outputDir)
-os.remove("compile_commands.json")
+
+if os.path.isfile("compile_commands.json"):
+    os.remove("compile_commands.json")
