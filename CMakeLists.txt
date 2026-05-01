@@ -179,8 +179,8 @@ check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/stb-master")
 include_directories("${DEPENDENCIES_DIR}/stb-master")
 
 # freetype
-check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/freetype-2.13.2")
-include_directories("${DEPENDENCIES_DIR}/freetype-2.13.2/include")
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/freetype-2.14.3")
+include_directories("${DEPENDENCIES_DIR}/freetype-2.14.3/include")
 
 # cgltf
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/cgltf-1.14")

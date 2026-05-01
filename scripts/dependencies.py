@@ -20,8 +20,9 @@ print(cwd)
 ########## FUNCTIONS ###########
 ##########################################
 
-def download_dependency(url, filename, extraDependencyFolder=""):
-    download_file.download_file(url, BuildGlobalData.dependenciesDownloadDir, filename)
+def download_dependency(url, filename, download, extraDependencyFolder=""):
+    if download:
+        download_file.download_file(url, BuildGlobalData.dependenciesDownloadDir, filename)
     extract_files.extract_files(os.path.join(BuildGlobalData.dependenciesDownloadDir, filename), os.path.join(BuildGlobalData.dependenciesDir, extraDependencyFolder))
 
 ##########################################
@@ -29,6 +30,7 @@ def download_dependency(url, filename, extraDependencyFolder=""):
 ##########################################
 
 installSystemDepencencies=False
+downloadDependencies=False
 enableNinja=False
 
 argv = []
@@ -36,7 +38,7 @@ if(len(sys.argv) > 1):
     argv = sys.argv[1:]
 
 try:
-  opts, args = getopt.getopt(argv, "s", ["ninja"])
+  opts, args = getopt.getopt(argv, "sd", ["ninja"])
 except:
   log.log(log.LogLabels.error, "Error parsing options!")
   exit(1)
@@ -46,6 +48,8 @@ for opt, arg in opts:
 
     if opt in ['-s']:
       installSystemDepencencies = True
+    if opt in ['-d']:
+      downloadDependencies = True
     elif opt in ['--ninja']:
       enableNinja=True
 
@@ -113,7 +117,7 @@ log.log(log.LogLabels.build, "DOWNLOADING DEPENDENCIES")
 
 vulkansdk_version = '1.4.335.0'
 
-download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz")
+download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz", downloadDependencies)
 vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
 vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk')
 
@@ -122,13 +126,13 @@ if not os.path.exists(vulkansdk_path):
         os.rename(vulkansdk_tmp_path, vulkansdk_path)
         log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
 
-download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip")
-download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip")
-download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.1.zip", "tracy-0.11.1.zip")
-download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip")
-download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip")
-download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz", "freetype-2.13.2.tar.xz")
-download_dependency("https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.zip", "fmt-11.1.2.zip")
+download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip", downloadDependencies)
+download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip", downloadDependencies)
+download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.1.zip", "tracy-0.11.1.zip", downloadDependencies)
+download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip", downloadDependencies)
+download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip", downloadDependencies)
+download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.14.3.tar.xz", "freetype-2.14.3.tar.xz", downloadDependencies)
+download_dependency("https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.zip", "fmt-11.1.2.zip", downloadDependencies)
 log.log(log.LogLabels.build, "-----------------------------------")
 
 ##########################################
@@ -143,24 +147,12 @@ buildTargetDir=os.path.join(BuildGlobalData.buildDir, buildType)
 
 tracyProfiler = "tracy-0.11.1/profiler"
 tracyProfilerDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, tracyProfiler)
-freetypeDir = "freetype-2.13.2"
-freetypeDepencencyDir = os.path.join(BuildGlobalData.dependenciesDir, freetypeDir)
 
 cmake_generator = cmake_build.CMakeGenerator.DEFAULT
 if enableNinja:
   cmake_generator = cmake_build.CMakeGenerator.NINJA
 
 cmake_generated_data = cmake_build.generate_cmake_data("dependencies", cmake_generator)
-
-# freetype
-buildCommandArgs = [
-    "-DCMAKE_C_COMPILER=/usr/bin/clang",
-    "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
-    "-DCMAKE_BUILD_TYPE=" + buildType
-]
-
-runFullBuild = True
-cmake_build.build_cmake(freetypeDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
 
 # profiler GUI
 buildCommandArgs = [
@@ -175,7 +167,8 @@ buildCommandArgs = [
 ]
 
 runFullBuild = True
-cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, cmake_generated_data, buildCommandArgs)
+install = False
+cmake_build.build_cmake(tracyProfilerDepencencyDir, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, install, cmake_generated_data, buildCommandArgs)
 
 log.log(log.LogLabels.build, "-----------------------------------")
 
