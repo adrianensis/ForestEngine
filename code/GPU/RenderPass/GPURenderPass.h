@@ -108,6 +108,8 @@ protected:
     std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
     GPURenderPassSubsystems mGPURenderPassSubsystems;
+    VkRenderingAttachmentInfo depthAttachment{};
+
 public:
     CRGET(GPURenderPassData)
 };

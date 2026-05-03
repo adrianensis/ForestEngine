@@ -72,7 +72,7 @@ void GPURenderPass::begin(const GPURenderPassOutputData& gpuRenderPassOutputData
     if(gpuRenderPassOutputData.mDepthGPUImage)
     {
         // Depth Attachment Setup
-        VkRenderingAttachmentInfo depthAttachment{};
+        // VkRenderingAttachmentInfo depthAttachment{};
         depthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
         depthAttachment.imageView = gpuRenderPassOutputData.mDepthGPUImage->getVkImageView(); 
         depthAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
