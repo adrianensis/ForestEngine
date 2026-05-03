@@ -1,6 +1,7 @@
 import sys
 import os
 import getopt
+import ast
 import shutil
 import lib.cmake_build as cmake_build
 from lib.build_global_data import BuildGlobalData
@@ -25,6 +26,16 @@ def save_current_files(state_file, files):
         for file in sorted(files):
             f.write(f"{file}\n")
 
+def load_previous_command_args(command_file):
+    if not os.path.exists(command_file):
+        return []
+    with open(command_file, 'r') as f:
+        return ast.literal_eval(f.read())
+
+def save_current_command_args(command_file, command):
+  with open(command_file, 'w') as f:
+      f.write(f"{command}\n")
+
 def to_cmake_bool(val):
     return "ON" if val else "OFF"
 
@@ -34,6 +45,7 @@ def to_cmake_bool(val):
 
 TARGET_DIRS = ["./code", "./tools", "./test"]
 STATE_FILE = os.path.join(BuildGlobalData.buildDir, "build_file_list.txt")
+COMMAND_FILE = os.path.join(BuildGlobalData.buildDir, "build_command.txt")
 EXTENSIONS = {".cpp", ".h", ".hpp", ".c"}
 
 buildUnitTests=False
@@ -142,18 +154,20 @@ previous_files = load_previous_files(STATE_FILE)
 added = current_files - previous_files
 removed = previous_files - current_files
 
-runFullBuild = False
+previous_command = load_previous_command_args(COMMAND_FILE)
 
-if not previous_files:
-    runFullBuild = True
-elif added or removed:
-    runFullBuild = True
+log.log(log.LogLabels.build, "files added or removed: " + str(added or removed))
+log.log(log.LogLabels.build, "previous command != buildCommandArgs: " + str(previous_command != buildCommandArgs))
 
-os.makedirs(BuildGlobalData.buildDir, exist_ok=True)
-save_current_files(STATE_FILE, current_files)
+runFullBuild = (not previous_files) or (not previous_command) or (added or removed) or (previous_command != buildCommandArgs)
+log.log(log.LogLabels.build, "runFullBuild: " + str(runFullBuild))
 
 install = False
 cmake_build.build_cmake(cwd, ".", BuildGlobalData.buildDir, buildType, None, runFullBuild, install, cmake_generated_data, buildCommandArgs)
+
+os.makedirs(BuildGlobalData.buildDir, exist_ok=True)
+save_current_files(STATE_FILE, current_files)
+save_current_command_args(COMMAND_FILE, buildCommandArgs)
 
 ##########################################
 ########## POST BUILD ###########
