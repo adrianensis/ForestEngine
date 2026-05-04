@@ -132,19 +132,22 @@ set(DEPENDENCIES_DIR "dependencies")
 include_directories("${DEPENDENCIES_DIR}")
 
 # Vulkan
-include_directories("${DEPENDENCIES_DIR}/vulkansdk/x86_64/include")
+# include_directories("${DEPENDENCIES_DIR}/vulkansdk/x86_64/include")
 
-find_library(VULKAN_LIB vulkan
-    PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
-    NO_DEFAULT_PATH)
+# find_library(VULKAN_LIB vulkan
+#     PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
+#     NO_DEFAULT_PATH)
 
-# glslang (glsl runtime compiler)
-find_library(GLSLANG_LIB glslang
-    PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
-    NO_DEFAULT_PATH)
-find_library(GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB glslang-default-resource-limits
-    PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
-    NO_DEFAULT_PATH)
+# # glslang (glsl runtime compiler)
+# find_library(GLSLANG_LIB glslang
+#     PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
+#     NO_DEFAULT_PATH)
+# find_library(GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB glslang-default-resource-limits
+#     PATHS "${DEPENDENCIES_DIR}/vulkansdk/x86_64/lib/"
+#     NO_DEFAULT_PATH)
+
+find_package(Vulkan REQUIRED)
+find_package(glslang REQUIRED)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE) # see : http://www.glfw.org/docs/latest/build_guide.html
@@ -180,6 +183,7 @@ include_directories("${DEPENDENCIES_DIR}/stb-master")
 
 # freetype
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/freetype-2.14.3")
+add_subdirectory("${DEPENDENCIES_DIR}/freetype-2.14.3")
 include_directories("${DEPENDENCIES_DIR}/freetype-2.14.3/include")
 
 # cgltf
@@ -250,22 +254,14 @@ target_link_options(${PROJECTNAME} PUBLIC "$<$<CONFIG:RELEASE>:${PROJECT_LINKER_
 # ----------------------------------------------------------------------------
 
 # link libraries with main library
-target_link_libraries(${PROJECTNAME} ${VULKAN_LIB})
-target_link_libraries(${PROJECTNAME} ${GLSLANG_LIB} ${GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB})
+# target_link_libraries(${PROJECTNAME} ${VULKAN_LIB})
+# target_link_libraries(${PROJECTNAME} ${GLSLANG_LIB} ${GLSLANG_DEFAULT_RESOURCE_LIMIT_LIB})
+target_link_libraries(${PROJECTNAME} Vulkan::Vulkan)
+target_link_libraries(${PROJECTNAME} glslang::glslang glslang::SPIRV glslang::glslang-default-resource-limits)
 target_link_libraries(${PROJECTNAME} glfw)
 target_link_libraries(${PROJECTNAME} nlohmann_json)
 target_link_libraries(${PROJECTNAME} freetype)
 target_link_libraries(${PROJECTNAME} fmt)
-
-# TBB
-find_package(TBB QUIET)
-if(TBB_FOUND)
-    message("Using TBB ${TBB}")
-    # Link against the dependency of Intel TBB (for parallel C++17 algorithms)
-    target_link_libraries(${PROJECTNAME} TBB::tbb)
-else()
-    message("Not using TBB ${TBB}")
-endif()
 
 if(ENABLE_PROFILER)
     target_link_libraries(${PROJECTNAME} Tracy::TracyClient)

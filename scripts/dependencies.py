@@ -83,12 +83,12 @@ if installSystemDepencencies:
             #install packages
             os.system("sudo apt-get -y install git build-essential wget zlib1g-dev unzip cmake clang clangd ninja-build lldb liblldb-dev")
             os.system("sudo apt-get -y install mesa-common-dev")
-            os.system("sudo apt-get -y install libtbb-dev") # needed by the compiler/linker to use oneTBB's parallel algorithms (or as a backend for C++ standard parallel algorithms)
             os.system("sudo apt-get -y install xorg-dev libxkbcommon-dev") # glfw3 dependency
-            os.system("sudo apt-get -y install libharfbuzz-dev bzip2") # freetype dependency
             os.system("sudo apt-get -y install ccache") # compilation cache
             os.system("sudo apt-get -y install libdbus-glib-1-dev libcapstone-dev libtbb-dev libxkbcommon0 libwayland-dev wayland-protocols libglvnd0 libglfw3-dev libdbus-1-dev") # tracy dependencies
-            os.system("sudo apt install -y libx11-xcb-dev libxcb-dri3-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-util-dev libwayland-dev") # vulkan dependencies
+            os.system("sudo apt install -y libvulkan-dev vulkan-validationlayers vulkan-tools") # vulkan
+            os.system("sudo apt install -y glslang-dev glslang-tools") # glsl
+            # os.system("sudo apt install -y libx11-xcb-dev libxcb-dri3-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-util-dev libwayland-dev") # vulkan dependencies
         elif distro_id == "manjaro":
             # os.system("sudo pacman -Syy")
             # os.system("sudo pacman -Sy base-devel wget unzip cmake clang")
@@ -115,16 +115,16 @@ if installSystemDepencencies:
 log.log(log.LogLabels.build, "-----------------------------------")
 log.log(log.LogLabels.build, "DOWNLOADING DEPENDENCIES")
 
-vulkansdk_version = '1.4.335.0'
+# vulkansdk_version = '1.4.335.0'
 
-download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz", downloadDependencies)
-vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
-vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk')
+# download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz", downloadDependencies)
+# vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
+# vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk')
 
-if not os.path.exists(vulkansdk_path):
-    if os.path.exists(vulkansdk_tmp_path):
-        os.rename(vulkansdk_tmp_path, vulkansdk_path)
-        log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
+# if not os.path.exists(vulkansdk_path):
+#     if os.path.exists(vulkansdk_tmp_path):
+#         os.rename(vulkansdk_tmp_path, vulkansdk_path)
+#         log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
 
 download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip", downloadDependencies)
 download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip", downloadDependencies)
