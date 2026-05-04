@@ -77,7 +77,7 @@ void GPUInstanceRenderer::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 void GPUInstanceRenderer::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
 {
 	mResizeBuffersRequested = true;
-    // mRenderers.at(renderer->getInstanceSlot().getSlot()).reset();
+    mRenderers.at(renderItem->getInstanceSlot().getSlot()).invalidate();
     mUsedSlots.erase(renderItem->getInstanceSlot().getSlot());
     mRendererSlotsManager.freeSlot(renderItem->getInstanceSlot());
     mRenderersCount--;
