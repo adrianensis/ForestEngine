@@ -16,7 +16,7 @@ endfunction()
 function(build_program path prefix program_name)
 
     set(PROGRAM_PATH "${path}/${program_name}")
-    message("BUILD PROGRAM ${PROGRAM_PATH}")
+    message(NOTICE "BUILD PROGRAM ${PROGRAM_PATH}")
 
     file(GLOB_RECURSE PROGRAM_SOURCES_CXX RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.cpp")
     file(GLOB_RECURSE PROGRAM_SOURCES_C RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${PROGRAM_PATH}/*.c")
@@ -34,6 +34,8 @@ endfunction()
 # ----------------------------------------------------------------------------
 # CPP CONFIG
 # ----------------------------------------------------------------------------
+
+set(CMAKE_MESSAGE_INDENT "[CMAKE]> ")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -96,26 +98,26 @@ endif(WIN32)
 find_program(MOLD_PROGRAM mold)
 if (MOLD_PROGRAM)
     set(CMAKE_LINKER_TYPE MOLD)
-    message(STATUS "Using MOLD: ${MOLD_PROGRAM}")
+    message(NOTICE "Using MOLD: ${MOLD_PROGRAM}")
 else ()
-    message(STATUS "Not Using MOLD")
+    message(NOTICE "Not Using MOLD")
 endif ()
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
-    message("Using CCACHE ${CCACHE_PROGRAM}")
+    message(NOTICE "Using CCACHE ${CCACHE_PROGRAM}")
     set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
     set(CMAKE_C_COMPILER_LAUNCHER ccache)
 else()
-    message("Not Using CCACHE")
+    message(NOTICE "Not Using CCACHE")
 endif()
 
-message("Compiler: ${CMAKE_CXX_COMPILER}")
-message("Release: ${PROJECT_COMPILER_FLAGS_RELEASE}")
-message("Linker Release: ${PROJECT_LINKER_FLAGS_RELEASE}")
-message("Debug: ${PROJECT_COMPILER_FLAGS_DEBUG}")
-message("Linker Debug: ${PROJECT_LINKER_FLAGS_DEBUG}")
-message("Selected Build target: " ${CMAKE_BUILD_TYPE})
+message(NOTICE "Compiler: ${CMAKE_CXX_COMPILER}")
+message(NOTICE "Release: ${PROJECT_COMPILER_FLAGS_RELEASE}")
+message(NOTICE "Linker Release: ${PROJECT_LINKER_FLAGS_RELEASE}")
+message(NOTICE "Debug: ${PROJECT_COMPILER_FLAGS_DEBUG}")
+message(NOTICE "Linker Debug: ${PROJECT_LINKER_FLAGS_DEBUG}")
+message(NOTICE "Selected Build target: " ${CMAKE_BUILD_TYPE})
 
 # ----------------------------------------------------------------------------
 # OUTPUT DIRECTORIES
@@ -208,7 +210,7 @@ set(OBJECTS "")
 
 set(FIRST_PACKAGE "")
 foreach(PACKAGE_PATH ${PACKAGES_PATHS})
-    # message("PACKAGE " ${PACKAGE_PATH})
+    # message(NOTICE "PACKAGE " ${PACKAGE_PATH})
     get_filename_component(PACKAGE ${PACKAGE_PATH} NAME_WE) # NAME_WE = name with extension
 
     file(GLOB_RECURSE PACKAGE_SOURCES_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "code/${PACKAGE}/*.cpp")
@@ -291,7 +293,7 @@ endif(BUILD_INTEGRATION_TESTS)
 # TOOLS
 # ----------------------------------------------------------------------------
 
-message("Tools to build: ${TOOLS_TO_BUILD}")
+message(NOTICE "Tools to build: ${TOOLS_TO_BUILD}")
 FOREACH(TOOL ${TOOLS_TO_BUILD})
     build_program("tools" "tool" ${TOOL})
 ENDFOREACH()
@@ -300,7 +302,7 @@ ENDFOREACH()
 # APPS
 # ----------------------------------------------------------------------------
 
-message("Apps to build: ${APPS_TO_BUILD}")
+message(NOTICE "Apps to build: ${APPS_TO_BUILD}")
 FOREACH(APP ${APPS_TO_BUILD})
     build_program("apps" "app" ${APP})
 ENDFOREACH()
