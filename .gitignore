@@ -3,7 +3,6 @@ doc/
 generated-code/
 compiledLibs/
 binaries/
-dependencies
 output/
 cmake-build-*
 .idea
