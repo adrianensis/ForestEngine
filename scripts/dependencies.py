@@ -112,28 +112,28 @@ if installSystemDepencencies:
 ########## DOWNLOAD ###########
 ##########################################
 
-log.log(log.LogLabels.build, "-----------------------------------")
-log.log(log.LogLabels.build, "DOWNLOADING DEPENDENCIES")
+# log.log(log.LogLabels.build, "-----------------------------------")
+# log.log(log.LogLabels.build, "DOWNLOADING DEPENDENCIES")
 
-# vulkansdk_version = '1.4.335.0'
+# # vulkansdk_version = '1.4.335.0'
 
-# download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz", downloadDependencies)
-# vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
-# vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk')
+# # download_dependency(f"https://sdk.lunarg.com/sdk/download/{vulkansdk_version}/linux/vulkansdk-linux-x86_64-{vulkansdk_version}.tar.xz", f"vulkansdk-{vulkansdk_version}.tar.xz", downloadDependencies)
+# # vulkansdk_tmp_path = os.path.join(BuildGlobalData.dependenciesDir, vulkansdk_version)
+# # vulkansdk_path = os.path.join(BuildGlobalData.dependenciesDir, f'vulkansdk')
 
-# if not os.path.exists(vulkansdk_path):
-#     if os.path.exists(vulkansdk_tmp_path):
-#         os.rename(vulkansdk_tmp_path, vulkansdk_path)
-#         log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
+# # if not os.path.exists(vulkansdk_path):
+# #     if os.path.exists(vulkansdk_tmp_path):
+# #         os.rename(vulkansdk_tmp_path, vulkansdk_path)
+# #         log.log(log.LogLabels.build, f"Renamed folder {vulkansdk_tmp_path} to {vulkansdk_path}")
 
-download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip", downloadDependencies)
-download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip", downloadDependencies)
-download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.1.zip", "tracy-0.11.1.zip", downloadDependencies)
-download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip", downloadDependencies)
-download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip", downloadDependencies)
-download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.14.3.tar.xz", "freetype-2.14.3.tar.xz", downloadDependencies)
-download_dependency("https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.zip", "fmt-11.1.2.zip", downloadDependencies)
-log.log(log.LogLabels.build, "-----------------------------------")
+# download_dependency("https://github.com/glfw/glfw/archive/refs/tags/3.4.zip", "glfw-3.4.zip", downloadDependencies)
+# download_dependency("https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.zip", "json-3.11.3.zip", downloadDependencies)
+# download_dependency("https://github.com/wolfpld/tracy/archive/refs/tags/v0.11.1.zip", "tracy-0.11.1.zip", downloadDependencies)
+# download_dependency("https://github.com/nothings/stb/archive/refs/heads/master.zip", "stb.zip", downloadDependencies)
+# download_dependency("https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.14.zip", "cgltf-1.14.zip", downloadDependencies)
+# download_dependency("https://download.savannah.gnu.org/releases/freetype/freetype-2.14.3.tar.xz", "freetype-2.14.3.tar.xz", downloadDependencies)
+# download_dependency("https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.zip", "fmt-11.1.2.zip", downloadDependencies)
+# log.log(log.LogLabels.build, "-----------------------------------")
 
 ##########################################
 ########## BUILD ###########
