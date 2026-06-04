@@ -56,8 +56,8 @@ void Editor::firstUpdate(Core::f32 dt)
     // createPointLight(Maths::Vector3(0,50,0), 20);
 
     mDirectionalLight = createDirectionalLight(Maths::Vector3(0,2,0), Maths::Vector3::smForward + -Maths::Vector3::smUp);
-    // createCube(Maths::Vector3(0,0,300), 100);
-    // createSprite(Maths::Vector3(0,0,0), 100);
+    createCube(Maths::Vector3(0,0,300), 100);
+    createSprite(Maths::Vector3(0,0,0), 100);
     // createSprite(Maths::Vector3(-100,0,0), 100);
     // createSprite(Maths::Vector3(100,0,0), 100);
     // createSprite(Maths::Vector3(0,0,-100), 10);
@@ -75,7 +75,7 @@ void Editor::firstUpdate(Core::f32 dt)
 	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(150,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Avocado/Instanced/Avocado.gltf", Maths::Vector3(-150,-5,0), 1000.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Bistro/Bistro.gltf", Maths::Vector3(0,0,0), 1.0f, 0, true);
-	// importModel("Sponza/new/Sponza.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
+	importModel("Sponza/new/Sponza.gltf", Maths::Vector3(0,0,0), 100.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Maths::Vector3(50,0,0), 10.0f, Maths::Vector3(0,0,0), true);
 	// importModel("Building_1/building1.gltf", Maths::Vector3(-50,0,50), 10.0f, Maths::Vector3(0,0,0), true);
 	// importModel("building/building.gltf", Maths::Vector3(0,0,0), 10.0f, Maths::Vector3(0,0,0), true);
@@ -116,7 +116,7 @@ void Editor::firstUpdate(Core::f32 dt)
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(-300,0,0), 20.0f, 0);
 	// importModel2("bob_lamp/bob_lamp_update.gltf", Maths::Vector3(0,0,0), 20.0f, 0);
 
-    // createUI();
+    createUI();
     // mousePick();
 
     // mUISceneTree = GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->createGameObject<UISceneTree>();
