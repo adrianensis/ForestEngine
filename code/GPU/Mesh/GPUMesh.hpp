@@ -14,7 +14,7 @@ public:
 public:
 
     std::vector<GPUVariableData> mGPUVertexInputBuffers;
-    std::unordered_map<Core::HashedString, Core::TByteBuffer> mBuffers;
+    std::unordered_map<std::string, Core::TByteBuffer> mBuffers;
     Core::TByteBuffer mIndices = Core::TByteBuffer(sizeof(Maths::Face));
 
 	GPU::u32 mVertexCount = 0;

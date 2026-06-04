@@ -51,9 +51,9 @@ bool GPUVertexBuffersContainer::containsVertexBuffer(const GPUVertexBufferData& 
     return mVertexBuffersMap.contains(data.mGPUVariableData.mName);
 }
 
-GPU::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, GPU::u32>& indexMap, const Core::HashedString& name)
+GPU::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<std::string, GPU::u32>& indexMap, const std::string& name)
 {
-    CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUVertexBuffersContainer!");
+    CHECK_MSG(indexMap.contains(name), name + " not found in GPUVertexBuffersContainer!");
     GPU::u32 index = indexMap.at(name);
     return index;
 }
@@ -93,12 +93,12 @@ const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(const GPUUn
     return mUniformBuffers.at(findIndex(mUniformBuffersMap, data.mBufferName));
 }
 
-GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(Core::HashedString bufferName)
+GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(std::string bufferName)
 {
     return mUniformBuffers.at(findIndex(mUniformBuffersMap, bufferName));
 }
 
-const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(Core::HashedString bufferName) const
+const GPUUniformBuffer& GPUUniformBuffersContainer::getUniformBuffer(std::string bufferName) const
 {
     return mUniformBuffers.at(findIndex(mUniformBuffersMap, bufferName));
 }
@@ -108,9 +108,9 @@ bool GPUUniformBuffersContainer::containsUniformBuffer(const GPUUniformBufferDat
     return mUniformBuffersMap.contains(data.mBufferName);
 }
 
-GPU::u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, GPU::u32>& indexMap, const Core::HashedString& name)
+GPU::u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<std::string, GPU::u32>& indexMap, const std::string& name)
 {
-    CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUUniformBuffersContainer!");
+    CHECK_MSG(indexMap.contains(name), name + " not found in GPUUniformBuffersContainer!");
     GPU::u32 index = indexMap.at(name);
     return index;
 }

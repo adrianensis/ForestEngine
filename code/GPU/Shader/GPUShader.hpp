@@ -16,24 +16,24 @@ class GPUShaderManager;
 class FramebufferBinding
 {
 public:
-    Core::HashedString mSamplerName;
+    std::string mSamplerName;
     GPU::u32 mTextureID = 0;
 };
 
 class GPUShaderPropertiesBlockNames
 {
 public:
-    inline static const Core::HashedString smPropertiesBlockStructName = "propertiesBlockStruct";
-    inline static const Core::HashedString smPropertiesBlockBufferName = "PropertiesBlock";
-    inline static const Core::HashedString smPropertiesBlockInstanceName = "propertiesBlock";
-    inline static const Core::HashedString smPropertiesBlockArrayName = "propertiesBlockArray";
+    inline static const std::string smPropertiesBlockStructName = "propertiesBlockStruct";
+    inline static const std::string smPropertiesBlockBufferName = "PropertiesBlock";
+    inline static const std::string smPropertiesBlockInstanceName = "propertiesBlock";
+    inline static const std::string smPropertiesBlockArrayName = "propertiesBlockArray";
 };
 
 class GPUShaderCompilationData
 {
 public:
-    Core::HashedString label;
-    Core::HashedString id;
+    std::string label;
+    std::string id;
     GPUVertexBuffersContainer mInputVertexBuffersContainer;
     const GPUDescriptorSet* mGPUDescriptorSetGlobal = nullptr;
     const GPUDescriptorSet* mGPUDescriptorSetLocal = nullptr;
@@ -78,7 +78,7 @@ public:
 class GPUShaderTextureBindings
 {
 public:
-    std::unordered_map<Core::HashedString, GPUTextureHandle> mTextureBindings;
+    std::unordered_map<std::string, GPUTextureHandle> mTextureBindings;
 
     // bool operator==(const GPUShaderTextureBindings& other) const
     // {
@@ -136,7 +136,7 @@ public:
     virtual void init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, GPU::u32 id);
     void terminate();
 
-    bool hasFramebufferBinding(Core::HashedString bindingName) const;
+    bool hasFramebufferBinding(std::string bindingName) const;
 
     void addFramebufferBinding(const FramebufferBinding& framebufferBinding);
 
@@ -170,8 +170,8 @@ protected:
     GPUShaderManager* mGPUShaderManager = nullptr;
     GPUStructDefinition mPropertiesBlockStructDefinition;
     GPUUniformBufferData mPropertiesBlockUniformBufferData;
-    std::unordered_set<Core::HashedString> mTextures;
-    std::unordered_map<Core::HashedString, FramebufferBinding> mFramebufferBindings;
+    std::unordered_set<std::string> mTextures;
+    std::unordered_map<std::string, FramebufferBinding> mFramebufferBindings;
     GPUShaderData mGPUShaderData;
     GPU::u32 mID = 0;
     Core::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;

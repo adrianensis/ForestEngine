@@ -1,6 +1,5 @@
 #include "GPU/Shader/BuiltIn/GPUShaderDefault.hpp"
 #include "Core/CoreMacros.hpp"
-#include "Core/HashedString/HashedString.hpp"
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilderNodes.hpp"
@@ -438,7 +437,7 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
 
     FOR_MAP(it, mTextures)
     {
-        Core::HashedString textureName = (*it);
+        const std::string& textureName = (*it);
         // TODO: refactor into a function
         GPU::u32 bindingPoint = 0;
         bool found = false;

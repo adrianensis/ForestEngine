@@ -9,7 +9,7 @@ class GPUShaderModuleData
 public:
     GPUPipelineStage mStage;
     std::string mModuleContent;
-    Core::HashedString id;
+    std::string id;
 };
 
 class GPUShaderModule
@@ -21,7 +21,7 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
     GPUContext* mGPUContext = nullptr;
     VkShaderModule mGPUShaderModule = VK_NULL_HANDLE;
-    Core::HashedString mID;
+    std::string mID;
 public:
     CRGET(GPUShaderModule)
 };

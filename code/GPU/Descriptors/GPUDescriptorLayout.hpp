@@ -8,7 +8,7 @@
 class GPUTextureBinding
 {
 public:
-    Core::HashedString mName;
+    std::string mName;
     GPUTextureHandle mGPUTextureHandle;
 };
 

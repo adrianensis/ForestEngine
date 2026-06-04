@@ -7,9 +7,9 @@
 class TextureBindingNamesPBR : public TextureBindingNames
 {
 public:
-    inline static const Core::HashedString smNormal = "Normal";
-    inline static const Core::HashedString smMetallicRoughness = "MetallicRoughness";
-    inline static const Core::HashedString smShadowMap = "ShadowMap";
+    inline static const std::string smNormal = "Normal";
+    inline static const std::string smMetallicRoughness = "MetallicRoughness";
+    inline static const std::string smShadowMap = "ShadowMap";
 };
 
 class PropertiesBlockGPUShaderPBR

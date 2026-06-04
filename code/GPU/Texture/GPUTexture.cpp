@@ -31,7 +31,7 @@ void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureDa
 
         PROFILER_CPU_NAMED(load_image)
         mImageData = Image::ImageUtils::loadImage(gpuTextureData.mPath);
-        CHECK_MSG(mImageData.mData, "Error loading image " + mTextureData.mPath.get());
+        CHECK_MSG(mImageData.mData, "Error loading image " + mTextureData.mPath);
 
         /*
         * This calculates the number of levels in the mip chain.

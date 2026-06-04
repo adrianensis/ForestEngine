@@ -173,8 +173,8 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
 
         GPUShaderCompilationData shaderCompilationData
         {
-            Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
-            Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
+            "TEMP_NAME",
+            std::to_string(gpuInstanceRendererData.mShader->getID()),
             gpuInstanceRenderer->getGPUVertexBuffersContainer(),
             &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<GPU::u64>(GPUDescriptorSetScope::GLOBAL)),
             &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))

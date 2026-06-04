@@ -40,17 +40,17 @@ public:
     {
     public:
         inline static const GPUVariableDefinitionData mSampler{GPUStorage::UNIFORM, PrimitiveTypes::mSampler2D, "uSampler"};
-        static GPUVariableDefinitionData getSampler(const Core::HashedString& name)
+        static GPUVariableDefinitionData getSampler(const std::string& name)
         {
             GPUVariableDefinitionData namedSampler = mSampler;
-            namedSampler.mName = Core::HashedString(namedSampler.mName.get() + "_" + name.get());
+            namedSampler.mName = std::string(namedSampler.mName + "_" + name);
             return namedSampler;
         }
         inline static const GPUVariableDefinitionData mTextureHandle{GPUStorage::UNIFORM, /*PrimitiveTypes::mUnsignedInt*/PrimitiveTypes::mSampler2D, "textureHandle"};
-        static GPUVariableDefinitionData getTextureHandle(const Core::HashedString& name)
+        static GPUVariableDefinitionData getTextureHandle(const std::string& name)
         {
             GPUVariableDefinitionData namedTextureHandle = mTextureHandle;
-            namedTextureHandle.mName = Core::HashedString(namedTextureHandle.mName.get() + "_" + name.get());
+            namedTextureHandle.mName = std::string(namedTextureHandle.mName + "_" + name);
             return namedTextureHandle;
         }
 

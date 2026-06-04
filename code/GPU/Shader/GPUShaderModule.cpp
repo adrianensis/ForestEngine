@@ -4,7 +4,7 @@ bool GPUShaderModule::init(GPUContext* gpuContext, const GPUShaderModuleData& gp
 {
     mGPUContext = gpuContext;
 
-    SPIRVBinary spirvBinary = GPUShaderCompiler::compileGPUShaderToSPIRV(gpuShaderModuleData.mStage, gpuShaderModuleData.mModuleContent.data(), gpuShaderModuleData.id.get().data());
+    SPIRVBinary spirvBinary = GPUShaderCompiler::compileGPUShaderToSPIRV(gpuShaderModuleData.mStage, gpuShaderModuleData.mModuleContent.data(), gpuShaderModuleData.id.data());
 
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

@@ -18,7 +18,7 @@ namespace GPUShaderBuilderNodes
     {
         std::vector<std::string> code;
 
-        code.push_back(getIndent(indent) + "struct " + mStructDefinition.mName.get() + "{");
+        code.push_back(getIndent(indent) + "struct " + mStructDefinition.mName + "{");
 
         FOR_LIST(it, mStructDefinition.mPrimitiveVariables)
         {
@@ -36,7 +36,7 @@ namespace GPUShaderBuilderNodes
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
-        return {getIndent(indent) + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + mType.mName + " " + mName + arrayStr + valueStr + ";"};
     }
 
     std::vector<std::string> Attribute::toLines(GPU::u16 indent) const
@@ -55,7 +55,7 @@ namespace GPUShaderBuilderNodes
         }
         std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : Core::EnumsManager::toString(mGPUInterpolation).get() + " ";
         std::string storageStr = Core::EnumsManager::toString(mGPUStorage).get() + " ";
-        return {getIndent(indent) + layoutStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
+        return {getIndent(indent) + layoutStr + interpolationStr + storageStr + mType.mName + " " + mName + arrayStr + valueStr + ";"};
     }
     
     std::vector<std::string> UniformBuffer::toLines(GPU::u16 indent) const
@@ -79,7 +79,7 @@ namespace GPUShaderBuilderNodes
             break;
         }
 
-        code.push_back(getIndent(indent) + layoutStr + " " + mGPUUniformBufferData.mBufferName.get() + " {");
+        code.push_back(getIndent(indent) + layoutStr + " " + mGPUUniformBufferData.mBufferName + " {");
 
         const auto& variableDefinitionDataArray = mGPUUniformBufferData.mGPUVariableDefinitionDataArray;
         FOR_LIST(it, variableDefinitionDataArray)
@@ -90,7 +90,7 @@ namespace GPUShaderBuilderNodes
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        code.push_back(getIndent(indent) + "} " + mGPUUniformBufferData.mInstanceName.get() + ";");
+        code.push_back(getIndent(indent) + "} " + mGPUUniformBufferData.mInstanceName + ";");
 
         return code;
     }
@@ -101,22 +101,22 @@ namespace GPUShaderBuilderNodes
         {
             if(mFront)
             {
-                return {getIndent(indent) + mOp.get() + mVariable.getNameOrValue()};
+                return {getIndent(indent) + mOp + mVariable.getNameOrValue()};
             }
             else
             {
-                return {getIndent(indent) + mVariable.getNameOrValue() + mOp.get()};
+                return {getIndent(indent) + mVariable.getNameOrValue() + mOp};
             }
         }
 
         std::vector<std::string> Binary::toLines(GPU::u16 indent) const
         {
-            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp.get() + mVariableB.getNameOrValue()};
+            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp + mVariableB.getNameOrValue()};
         }
 
         std::vector<std::string> Assign::toLines(GPU::u16 indent) const
         {
-            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp.get() + mVariableB.getNameOrValue() + ";"};
+            return {getIndent(indent) + mVariableA.getNameOrValue() + mOp + mVariableB.getNameOrValue() + ";"};
         }
     }
 
@@ -140,7 +140,7 @@ namespace GPUShaderBuilderNodes
     {
         return set(a, Variable(value));
     }
-    BlockStatement& BlockStatement::ifBlock(const Variable& a, const Core::HashedString& op , const Variable& b)
+    BlockStatement& BlockStatement::ifBlock(const Variable& a, const std::string& op , const Variable& b)
     {
         BlockStatement* newStatement = new IfStatement(a, op, b);
         newStatement->mParent = this;
@@ -231,7 +231,7 @@ namespace GPUShaderBuilderNodes
         
         FOR_ARRAY(i, mParameters)
         {
-            paramsStr += "in " + mParameters[i].mType.mName.get() + " " + mParameters[i].mName.get();
+            paramsStr += "in " + mParameters[i].mType.mName + " " + mParameters[i].mName;
 
             if(i < (GPU::i32)mParameters.size() - 1)
             {
@@ -239,7 +239,7 @@ namespace GPUShaderBuilderNodes
             }
         }
 
-        code.push_back(getIndent(indent) + mType.mName.get() + " " + mName.get() + "(" + paramsStr + ")");
+        code.push_back(getIndent(indent) + mType.mName + " " + mName + "(" + paramsStr + ")");
         auto statementCode = mBlockStatement.toLines(indent);
         code.insert(code.end(), statementCode.begin(), statementCode.end());
         return code;
@@ -265,7 +265,7 @@ namespace GPUShaderBuilderNodes
         return mUniformBuffers.emplace_back(uniformBuffer);
     }
     
-    const Struct& Program::getStruct(const Core::HashedString& structName) const
+    const Struct& Program::getStruct(const std::string& structName) const
     {
         FOR_LIST(it, mStructs)
         {
@@ -278,7 +278,7 @@ namespace GPUShaderBuilderNodes
         return mNullStructDefinition;
     }
 
-    const Attribute& Program::getAttribute(const Core::HashedString& attributeName) const
+    const Attribute& Program::getAttribute(const std::string& attributeName) const
     {
         FOR_LIST(it, mAttributes)
         {
@@ -291,7 +291,7 @@ namespace GPUShaderBuilderNodes
         return mNullAttribute;
     }
 
-    const UniformBuffer& Program::getUniformBuffer(const Core::HashedString& uniformBufferName) const
+    const UniformBuffer& Program::getUniformBuffer(const std::string& uniformBufferName) const
     {
         FOR_LIST(it, mUniformBuffers)
         {
@@ -304,7 +304,7 @@ namespace GPUShaderBuilderNodes
         return mNullUniformBuffer;
     }
 
-    FunctionDefinition& Program::getFunctionDefinition(const Core::HashedString& functionDefinitionName)
+    FunctionDefinition& Program::getFunctionDefinition(const std::string& functionDefinitionName)
     {
         FOR_LIST(it, mFunctionDefinitions)
         {
@@ -345,7 +345,7 @@ namespace GPUShaderBuilderNodes
 
         FOR_LIST(it, mExtensions)
         {
-            code.push_back("#extension " + it->get() + " : enable");
+            code.push_back("#extension " + *it + " : enable");
         }
 
         FOR_LIST(it, mStructs)

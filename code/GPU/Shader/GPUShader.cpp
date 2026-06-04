@@ -68,7 +68,7 @@ std::vector<GPUStructDefinition::GPUStructVariable> GPUShader::generateGPUShader
     return propertiesBlock;
 }
 
-bool GPUShader::hasFramebufferBinding(Core::HashedString bindingName) const
+bool GPUShader::hasFramebufferBinding(std::string bindingName) const
 {
     return mFramebufferBindings.contains(bindingName);
 }
@@ -108,14 +108,14 @@ GPUShaderPipeline* GPUShader::compileShader(const GPUShaderCompilationData& shad
     // TODO: refactor std::string("output/shaders/")
     
     std::string stringGPUShaderVert = sbVert.getCode();
-    std::string shaderPathVert = std::string("output/shaders/") + shaderCompilationData.id.get() + "_" + shaderCompilationData.label.get() + ".vert";
+    std::string shaderPathVert = std::string("output/shaders/") + shaderCompilationData.id + "_" + shaderCompilationData.label + ".vert";
     Core::FileUtils::writeFile(shaderPathVert, [stringGPUShaderVert](std::ofstream& file)
     {
         file << stringGPUShaderVert;
     });
 
     std::string stringGPUShaderFrag = sbFrag.getCode();
-    std::string shaderPathFrag = std::string("output/shaders/") + shaderCompilationData.id.get() + "_" + shaderCompilationData.label.get() + ".frag";
+    std::string shaderPathFrag = std::string("output/shaders/") + shaderCompilationData.id + "_" + shaderCompilationData.label + ".frag";
     Core::FileUtils::writeFile(shaderPathFrag, [stringGPUShaderFrag](std::ofstream& file)
     {
         file << stringGPUShaderFrag;

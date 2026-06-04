@@ -5,7 +5,7 @@
 GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(GPU::u32 i) const
 {
     GPUVariableData data = mGPUVariableDefinitionDataArray[i];
-    data.mName = Core::HashedString(mInstanceName.get() + "." + data.mName.get());
+    data.mName = std::string(mInstanceName + "." + data.mName);
     return data;
 }
 

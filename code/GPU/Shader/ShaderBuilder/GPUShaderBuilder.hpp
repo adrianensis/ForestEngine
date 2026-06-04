@@ -10,7 +10,7 @@ class GPUShaderBuilder
 public:
     GPUShaderBuilder();
     ~GPUShaderBuilder();
-    GPUShaderBuilderNodes::Program& get() { return mProgram; }
+    GPUShaderBuilderNodes::Program& get(){ return mProgram; }
     GPUShaderBuilderNodes::BlockStatement& getMain();
     std::string getCode() const;
 

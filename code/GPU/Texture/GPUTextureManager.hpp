@@ -16,7 +16,7 @@ private:
     GPUContext* mGPUContext = nullptr;
     std::vector<GPUTexture> mTextures;
     Core::SlotsManager mTextureSlotManager;
-    std::unordered_map<Core::HashedString, Core::Slot> mTexturesByPath;
+    std::unordered_map<std::string, Core::Slot> mTexturesByPath;
     inline static const GPU::u32 mInitialTextures = 300;
 };
 

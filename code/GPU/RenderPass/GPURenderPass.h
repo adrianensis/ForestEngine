@@ -46,7 +46,7 @@ class GPURenderPass;
 class GPURenderPassDependency
 {
 public:
-    Core::HashedString mSamplerName;
+    std::string mSamplerName;
     GPUFramebufferAttachmentType mAttachmentType;
     GPURenderPass* mRenderPass = nullptr;
 };

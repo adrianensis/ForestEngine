@@ -13,7 +13,7 @@ public:
 	GPUUniformBufferData() = default;
 	GPUUniformBufferData(GPUBufferType gpuUniformBufferType,
         const std::vector<GPUVariableDefinitionData>& gpuVariableDefinitionDataArray,
-        Core::HashedString blockName, Core::HashedString instanceName,
+        std::string blockName, std::string instanceName,
         GPUDescriptorSetScope descriptorSetScope):
         mType(gpuUniformBufferType), mGPUVariableDefinitionDataArray(gpuVariableDefinitionDataArray),
         mBufferName(blockName), mInstanceName(instanceName),
@@ -24,8 +24,8 @@ public:
 public:
     GPUBufferType mType = GPUBufferType::UNIFORM;
     std::vector<GPUVariableDefinitionData> mGPUVariableDefinitionDataArray;
-    Core::HashedString mBufferName;
-    Core::HashedString mInstanceName;
+    std::string mBufferName;
+    std::string mInstanceName;
     GPUDescriptorSetScope mDescriptorSetScope = GPUDescriptorSetScope::LOCAL;
 };
 

@@ -33,24 +33,24 @@ namespace GPUShaderBuilderNodes
     {
     public:
         VariableData() = default;
-        VariableData(GPUDataType gpuDataType, Core::HashedString name, std::string value, std::string arraySize):
+        VariableData(GPUDataType gpuDataType, std::string name, std::string value, std::string arraySize):
         mGPUDataType(gpuDataType),
         mName(name),
         mValue(value),
         mArraySize(arraySize)
         {}
-        VariableData(GPUDataType gpuDataType, Core::HashedString name, std::string value):
+        VariableData(GPUDataType gpuDataType, std::string name, std::string value):
         mGPUDataType(gpuDataType),
         mName(name),
         mValue(value)
         {}
-        VariableData(GPUDataType gpuDataType, Core::HashedString name):
+        VariableData(GPUDataType gpuDataType, std::string name):
         mGPUDataType(gpuDataType),
         mName(name)
         {}
 
         GPUDataType mGPUDataType;
-        Core::HashedString mName;
+        std::string mName;
         std::string mValue;
         std::string mArraySize;
     };
@@ -72,27 +72,27 @@ namespace GPUShaderBuilderNodes
         Variable(const VariableData& VariableData, const std::string& value) : mType(VariableData.mGPUDataType), mName(VariableData.mName), mValue(value), mArraySize(VariableData.mArraySize) {};
         Variable(const VariableData& VariableData, const Variable& value) : mType(VariableData.mGPUDataType), mName(VariableData.mName), mValue(value.getNameOrValue()), mArraySize(VariableData.mArraySize) {};
         Variable(const std::string& value) : mValue(value) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name) : mType(type), mName(name) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name, const Variable& value) : Variable(type, name, value.getNameOrValue()) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name, const std::string& value, const std::string& arraySize) : mType(type), mName(name), mValue(value), mArraySize(arraySize) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name, const Variable& value, const Variable& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize.getNameOrValue()) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
-        Variable(const GPUDataType& type, const Core::HashedString& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
+        Variable(const GPUDataType& type, const std::string& name) : mType(type), mName(name) {};
+        Variable(const GPUDataType& type, const std::string& name, const std::string& value) : mType(type), mName(name), mValue(value) {};
+        Variable(const GPUDataType& type, const std::string& name, const Variable& value) : Variable(type, name, value.getNameOrValue()) {};
+        Variable(const GPUDataType& type, const std::string& name, const std::string& value, const std::string& arraySize) : mType(type), mName(name), mValue(value), mArraySize(arraySize) {};
+        Variable(const GPUDataType& type, const std::string& name, const Variable& value, const Variable& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize.getNameOrValue()) {};
+        Variable(const GPUDataType& type, const std::string& name, const std::string& value, const Variable& arraySize) : Variable(type, name, value, arraySize.getNameOrValue()) {};
+        Variable(const GPUDataType& type, const std::string& name, const Variable& value, const std::string& arraySize) : Variable(type, name, value.getNameOrValue(), arraySize) {};
         Variable(const GPUVariableDefinitionData& gpuVariableData) : mType(gpuVariableData.mGPUDataType), mName(gpuVariableData.mName), mValue(gpuVariableData.mValue), mArraySize(gpuVariableData.mArraySize){};
         Variable(const GPUStructDefinition::GPUStructVariable& gpuStructVariableData) : mType(gpuStructVariableData.mGPUDataType), mName(gpuStructVariableData.mName) {};
         std::vector<std::string> toLines(GPU::u16 indent) const override;
 
-        const std::string& getNameOrValue() const { return mName.isValid() ? mName.get() : mValue; }
+        const std::string& getNameOrValue() const { return mName.empty() ? mValue : mName; }
         bool isEmpty() const {return getNameOrValue().empty(); };
         bool isValid() const {return !isEmpty(); };
-        Variable dot(const Core::HashedString& other) const { return Variable(getNameOrValue() + "." + other.get()); }
+        Variable dot(const std::string& other) const { return Variable(getNameOrValue() + "." + other); }
         Variable dot(const Variable& other) const { return Variable(getNameOrValue() + "." + other.getNameOrValue()); }
 
-        Variable at(const Core::HashedString& i) const { return Variable(getNameOrValue() + "[" + i.get() + "]"); }
+        Variable at(const std::string& i) const { return Variable(getNameOrValue() + "[" + i + "]"); }
         Variable at(const Variable& i) const { return Variable(getNameOrValue() + "[" + i.getNameOrValue() + "]"); }
 
-        Variable binOp(const Variable& other, const Core::HashedString& op) const { return Variable(getNameOrValue() + op.get() + other.getNameOrValue()); }
+        Variable binOp(const Variable& other, const std::string& op) const { return Variable(getNameOrValue() + op + other.getNameOrValue()); }
         Variable mul(const Variable& other) const { return binOp(other, "*"); }
         Variable div(const Variable& other) const { return binOp(other, "/"); }
         Variable add(const Variable& other) const { return binOp(other, "+"); }
@@ -107,15 +107,15 @@ namespace GPUShaderBuilderNodes
         Variable ternary(const Variable& other1, const Variable& other2) const { return Variable(getNameOrValue()+"?" + other1.binOp(other2, ":").getNameOrValue()); }
 
         GPUDataType mType;
-        Core::HashedString mName;
+        std::string mName;
         std::string mValue = "";
         std::string mArraySize = "";
     };
 
     inline static Variable literal(const std::string& value) { return Variable(value); }
-    inline static Variable call(const Core::HashedString& funcName, const std::vector<Variable>& params)
+    inline static Variable call(const std::string& funcName, const std::vector<Variable>& params)
     {
-        std::string callStr = funcName.get();
+        std::string callStr = funcName;
         callStr += "(";
         FOR_ARRAY(i, params)
         {
@@ -164,7 +164,7 @@ namespace GPUShaderBuilderNodes
         UniformBuffer(const GPUUniformBufferData& gpuBlockData, GPU::u32 binding) : mGPUUniformBufferData(gpuBlockData), mBinding(binding) {};
 
         std::vector<std::string> toLines(GPU::u16 indent) const override;
-        bool isValid() const { return mGPUUniformBufferData.mInstanceName.isValid(); }
+        bool isValid() const { return !mGPUUniformBufferData.mInstanceName.empty(); }
 
         GPUUniformBufferData mGPUUniformBufferData;
         GPU::i32 mBinding = INVALID_INDEX;
@@ -181,11 +181,11 @@ namespace GPUShaderBuilderNodes
         class Unary: public ExpressionStatement
         {
         public:
-            Unary(const Core::HashedString& op, const Variable& var) : mOp(op), mVariable(var) {};
-            Unary(const Variable& var, const Core::HashedString& op) : mOp(op), mVariable(var), mFront(false) {};
+            Unary(const std::string& op, const Variable& var) : mOp(op), mVariable(var) {};
+            Unary(const Variable& var, const std::string& op) : mOp(op), mVariable(var), mFront(false) {};
             std::vector<std::string> toLines(GPU::u16 indent) const override;
 
-            Core::HashedString mOp;
+            std::string mOp;
             Variable mVariable;
             bool mFront = true;
         };
@@ -193,10 +193,10 @@ namespace GPUShaderBuilderNodes
         class Binary: public ExpressionStatement
         {
         public:
-            Binary(const Variable& a, const Core::HashedString& op, const Variable& b) : mOp(op), mVariableA(a), mVariableB(b) {};
+            Binary(const Variable& a, const std::string& op, const Variable& b) : mOp(op), mVariableA(a), mVariableB(b) {};
             std::vector<std::string> toLines(GPU::u16 indent) const override;
 
-            Core::HashedString mOp;
+            std::string mOp;
             Variable mVariableA;
             Variable mVariableB;
         };
@@ -233,7 +233,7 @@ namespace GPUShaderBuilderNodes
         }
         BlockStatement& set(const Variable& a, const Variable& b);
         BlockStatement& set(const Variable& a, const std::string& value);
-        BlockStatement& ifBlock(const Variable& a, const Core::HashedString& op , const Variable& b);
+        BlockStatement& ifBlock(const Variable& a, const std::string& op , const Variable& b);
         BlockStatement& ifBlock(const Variable& boolean);
         BlockStatement& elseBlock();
         BlockStatement& forBlock(auto&& ...args);
@@ -251,7 +251,7 @@ namespace GPUShaderBuilderNodes
     class IfStatement : public BlockStatement
     {
     public:
-        IfStatement(const Variable& a, const Core::HashedString& op , const Variable& b) : mExpression(a, op, b) {};
+        IfStatement(const Variable& a, const std::string& op , const Variable& b) : mExpression(a, op, b) {};
         IfStatement(const Variable& boolean) : mExpression(boolean, "", {}) {};
 
         std::vector<std::string> toLines(GPU::u16 indent) const override;
@@ -270,7 +270,7 @@ namespace GPUShaderBuilderNodes
     class ForStatement : public BlockStatement
     {
     public:
-        ForStatement(const Core::HashedString& varName, const Core::HashedString& op, const Variable& conditionVar, const Core::HashedString& advanceOp) :
+        ForStatement(const std::string& varName, const std::string& op, const Variable& conditionVar, const std::string& advanceOp) :
         mVariable(GPUShaderDefinitions::PrimitiveTypes::mInt, varName, "0"), mConditionVariable(conditionVar), mContinueExpression(mVariable, op, mConditionVariable),
         mAdvanceExpression(mVariable, advanceOp) {};
 
@@ -307,7 +307,7 @@ namespace GPUShaderBuilderNodes
         std::vector<std::string> toLines(GPU::u16 indent) const override;
 
         GPUDataType mType;
-        Core::HashedString mName;
+        std::string mName;
         std::vector<Variable> mParameters;
         BlockStatement mBlockStatement;
     };
@@ -336,18 +336,18 @@ namespace GPUShaderBuilderNodes
             return mFunctionDefinitions.emplace_back(args...);
         }
 
-        void extension(Core::HashedString ext)
+        void extension(std::string ext)
         {
             mExtensions.push_back(ext);
         }
 
-        const Struct& getStruct(const Core::HashedString& structName) const;
+        const Struct& getStruct(const std::string& structName) const;
         const Struct& getStruct(const Struct& structType) const;
-        const Attribute& getAttribute(const Core::HashedString& attributeName) const;
+        const Attribute& getAttribute(const std::string& attributeName) const;
         const Attribute& getAttribute(const Attribute& attribute) const;
-        const UniformBuffer& getUniformBuffer(const Core::HashedString& uniformBufferName) const;
+        const UniformBuffer& getUniformBuffer(const std::string& uniformBufferName) const;
         const UniformBuffer& getUniformBuffer(const UniformBuffer& uniformBuffer) const;
-        FunctionDefinition& getFunctionDefinition(const Core::HashedString& functionDefinitionName);
+        FunctionDefinition& getFunctionDefinition(const std::string& functionDefinitionName);
         FunctionDefinition& getFunctionDefinition(const GPUFunctionDefinition& functionDefinition);
         FunctionDefinition& getMainFunctionDefinition()
         {
@@ -361,7 +361,7 @@ namespace GPUShaderBuilderNodes
         std::vector<Attribute> mAttributes;
         std::vector<UniformBuffer> mUniformBuffers;
         std::vector<FunctionDefinition> mFunctionDefinitions;
-        std::vector<Core::HashedString> mExtensions;
+        std::vector<std::string> mExtensions;
         FunctionDefinition mMainFunctionDefinition = GPUFunctionDefinition{};
         GPU::u16 mVersion = 460;
     private:

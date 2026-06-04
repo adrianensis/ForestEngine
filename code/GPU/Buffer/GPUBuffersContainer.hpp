@@ -19,14 +19,14 @@ public:
     void setIndicesBuffer(GPUContext* gpuContext, const GPUDataType& gpuDataType, GPU::u32 size, bool isStatic);
 
 private:
-    static GPU::u32 findIndex(const std::unordered_map<Core::HashedString, GPU::u32>& indexMap, const Core::HashedString& name);
+    static GPU::u32 findIndex(const std::unordered_map<std::string, GPU::u32>& indexMap, const std::string& name);
 
 private:
     GPU::u32 mVertexBufferLayoutId = 0;
     GPUIndicesBuffer mIndicesBuffer;
     GPU::u32 mAttributeIndex = 0;
     std::vector<GPUVertexBuffer> mVertexBuffers;
-    std::unordered_map<Core::HashedString, GPU::u32> mVertexBuffersMap;
+    std::unordered_map<std::string, GPU::u32> mVertexBuffersMap;
 
 public:
     CRGET(VertexBuffers)
@@ -42,16 +42,16 @@ public:
     void addUniformBuffer(GPUContext* gpuContext, const GPUUniformBufferData& data, GPU::u32 size, bool isStatic);
     GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data);
     const GPUUniformBuffer& getUniformBuffer(const GPUUniformBufferData& data) const;
-    GPUUniformBuffer& getUniformBuffer(Core::HashedString bufferName);
-    const GPUUniformBuffer& getUniformBuffer(Core::HashedString bufferName) const;
+    GPUUniformBuffer& getUniformBuffer(std::string bufferName);
+    const GPUUniformBuffer& getUniformBuffer(std::string bufferName) const;
     bool containsUniformBuffer(const GPUUniformBufferData& data) const;
 
 private:
-    static GPU::u32 findIndex(const std::unordered_map<Core::HashedString, GPU::u32>& indexMap, const Core::HashedString& name);
+    static GPU::u32 findIndex(const std::unordered_map<std::string, GPU::u32>& indexMap, const std::string& name);
 
 private:
     std::vector<GPUUniformBuffer> mUniformBuffers;
-    std::unordered_map<Core::HashedString, GPU::u32> mUniformBuffersMap;
+    std::unordered_map<std::string, GPU::u32> mUniformBuffersMap;
 public:
     CRGET(UniformBuffers)
 };
