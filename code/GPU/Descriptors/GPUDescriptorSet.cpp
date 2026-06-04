@@ -60,7 +60,7 @@ void GPUDescriptorSet::init(const GPUDescriptorLayoutData& gpuDescriptorLayoutDa
 
 void GPUDescriptorSet::update()
 {
-    Core::u32 samplersBindingIndexOffset = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers.size();
+    GPU::u32 samplersBindingIndexOffset = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers.size();
 
     std::vector<VkWriteDescriptorSet> writes;
 
@@ -130,8 +130,8 @@ void GPUDescriptorSet::update()
         }
     }
 
-    auto descriptorWriteCount = (Core::u32) writes.size();
-    constexpr Core::u32 descriptorCopyCount = 0;
+    auto descriptorWriteCount = (GPU::u32) writes.size();
+    constexpr GPU::u32 descriptorCopyCount = 0;
     constexpr VkCopyDescriptorSet* descriptorCopies = nullptr;
     vkUpdateDescriptorSets(mGPUContext->vulkanDevice->getDevice(), descriptorWriteCount, writes.data(), descriptorCopyCount, descriptorCopies);
 }

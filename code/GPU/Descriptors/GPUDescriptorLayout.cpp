@@ -19,7 +19,7 @@ void GPUDescriptorLayout::init(const GPUDescriptorLayoutData& gpuDescriptorLayou
     }
     else
     {
-        Core::u32 samplersBindingIndexOffset = mGPUDescriptorLayoutData.mUniformBuffers.size();
+        GPU::u32 samplersBindingIndexOffset = mGPUDescriptorLayoutData.mUniformBuffers.size();
         FOR_ARRAY(i, mGPUDescriptorLayoutData.mUniformBuffers)
         {
             const GPUUniformBuffer& uniformBuffer = mGPUDescriptorLayoutData.mUniformBuffers[i];
@@ -75,11 +75,11 @@ void GPUDescriptorLayout::init(const GPUDescriptorLayoutData& gpuDescriptorLayou
     vkDescriptorSetLayoutBindingFlagsCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
     vkDescriptorSetLayoutBindingFlagsCreateInfo.pBindingFlags = allBindingFlags.data();
     vkDescriptorSetLayoutBindingFlagsCreateInfo.pNext = nullptr;
-    vkDescriptorSetLayoutBindingFlagsCreateInfo.bindingCount = static_cast<Core::u32>(bindings.size());
+    vkDescriptorSetLayoutBindingFlagsCreateInfo.bindingCount = static_cast<GPU::u32>(bindings.size());
     
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<Core::u32>(bindings.size());
+    layoutInfo.bindingCount = static_cast<GPU::u32>(bindings.size());
     layoutInfo.pBindings = bindings.data();
     layoutInfo.pNext = &vkDescriptorSetLayoutBindingFlagsCreateInfo;
     layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;

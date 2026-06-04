@@ -17,6 +17,6 @@ private:
     std::vector<GPUTexture> mTextures;
     Core::SlotsManager mTextureSlotManager;
     std::unordered_map<Core::HashedString, Core::Slot> mTexturesByPath;
-    inline static const Core::u32 mInitialTextures = 300;
+    inline static const GPU::u32 mInitialTextures = 300;
 };
 

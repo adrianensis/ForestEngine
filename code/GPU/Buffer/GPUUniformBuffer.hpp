@@ -19,7 +19,7 @@ public:
         mBufferName(blockName), mInstanceName(instanceName),
         mDescriptorSetScope(descriptorSetScope) {}
 
-    GPUVariableData getScopedGPUVariableData(Core::u32 i) const;
+    GPUVariableData getScopedGPUVariableData(GPU::u32 i) const;
 
 public:
     GPUBufferType mType = GPUBufferType::UNIFORM;
@@ -32,8 +32,8 @@ public:
 class GPUUniformBuffer
 {
 public:
-    void init(GPUContext* gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
-    void resize(Core::u32 size);
+    void init(GPUContext* gpuContext, GPU::u32 size, GPU::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
+    void resize(GPU::u32 size);
     template <class T>
     void setData(const T& data)
     {
@@ -58,13 +58,13 @@ public:
         return needUpdateFrame(mGPUContext->currentFrame);
     }
 
-    bool needUpdateFrame(Core::u32 frame) const
+    bool needUpdateFrame(GPU::u32 frame) const
     {
         return mBuffersUpdateRequest[frame];
     }
 
 private:
-    void onUpdate(Core::u32 frame)
+    void onUpdate(GPU::u32 frame)
     {
         mBuffersUpdateRequest[frame] = false;
         if((frame + 1) < GPUContext::MAX_FRAMES_IN_FLIGHT) // (frame + 1) because arrays start at 0!
@@ -75,14 +75,14 @@ private:
     }
 
 private:
-	Core::u32 mBindingPoint = 0;
+	GPU::u32 mBindingPoint = 0;
     GPUUniformBufferData mGPUUniformBufferData;
     bool mIsStatic = false;
 
     GPUContext* mGPUContext = nullptr;
     GPUBuffer mBuffers[GPUContext::MAX_FRAMES_IN_FLIGHT] = {};
     bool mBuffersUpdateRequest[GPUContext::MAX_FRAMES_IN_FLIGHT] = {};
-    Core::u32 mSize = 0;
+    GPU::u32 mSize = 0;
 
 public:
     GET(BindingPoint)

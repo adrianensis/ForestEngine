@@ -2,14 +2,14 @@
 #include "Core/CoreMacros.hpp"
 #include "GPU/Core/GPUContext.hpp"
 
-GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(Core::u32 i) const
+GPUVariableData GPUUniformBufferData::getScopedGPUVariableData(GPU::u32 i) const
 {
     GPUVariableData data = mGPUVariableDefinitionDataArray[i];
     data.mName = Core::HashedString(mInstanceName.get() + "." + data.mName.get());
     return data;
 }
 
-void GPUUniformBuffer::init(GPUContext* gpuContext, Core::u32 size, Core::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
+void GPUUniformBuffer::init(GPUContext* gpuContext, GPU::u32 size, GPU::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic)
 {
     mGPUContext = gpuContext;
 	mGPUUniformBufferData = gpuUniformBufferData;
@@ -42,7 +42,7 @@ void GPUUniformBuffer::init(GPUContext* gpuContext, Core::u32 size, Core::u32 bi
     // LOG("Initialized uniform buffer");
 }
 
-void GPUUniformBuffer::resize(Core::u32 size)
+void GPUUniformBuffer::resize(GPU::u32 size)
 {
     FOR_RANGE(i, 0, GPUContext::MAX_FRAMES_IN_FLIGHT)
     {

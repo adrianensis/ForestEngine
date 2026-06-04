@@ -28,17 +28,17 @@ public:
     VkCommandBuffer beginSingleTimeCommands();
     void endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fence);
 
-    void drawIndexed(VkCommandBuffer commandBuffer, Core::u32 indexCount, Core::u32 instanceCount, Core::u32 firstIndex, Core::i32 vertexOffset, Core::u32 firstInstance);
+    void drawIndexed(VkCommandBuffer commandBuffer, GPU::u32 indexCount, GPU::u32 instanceCount, GPU::u32 firstIndex, GPU::i32 vertexOffset, GPU::u32 firstInstance);
 
-    Core::u32 frameAcquisition();
-    void waitForFence(Core::u32 frameIndex);
+    GPU::u32 frameAcquisition();
+    void waitForFence(GPU::u32 frameIndex);
     void commandSubmission();
-    void framePresentation(const std::vector<Core::u32>& imageIndices);
+    void framePresentation(const std::vector<GPU::u32>& imageIndices);
 
     void setWindowResized();
     void recreateRenderingObjects();
 
-    Core::u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
+    GPU::u32 requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType);
 
 private:
     void initializeSyncObjects();
@@ -47,7 +47,7 @@ private:
     PFN_vkVoidFunction loadExtensionFunctionInternal(const char* extensionFunctionName);
     
 public:
-    inline static const Core::u32 MAX_FRAMES_IN_FLIGHT = 2;
+    inline static const GPU::u32 MAX_FRAMES_IN_FLIGHT = 2;
     
     GPUVulkanInstance* gpuVulkanInstance;
     GPUPhysicalDevice* vulkanPhysicalDevice;
@@ -60,8 +60,8 @@ public:
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
-    Core::u32 currentFrame = 0;
-    Core::u32 currentSwapChainImageIndex = 0;
+    GPU::u32 currentFrame = 0;
+    GPU::u32 currentSwapChainImageIndex = 0;
     bool mWindowResized = false;
     IGPUWindow* mGPUWindow = nullptr;
     
@@ -75,10 +75,10 @@ public:
     GPU_EXTENSION_FUNCTION_TYPE(vkCmdSetStencilTestEnableEXT) function_vkCmdSetStencilTestEnableEXT;
     
 private:
-    Core::u32 mBindingPointsIndexUniform = 0;
-    Core::u32 mBindingPointsIndexStorage = 0;
-    Core::i32 mMaxUniformBufferBindingPointsUniform = 0;
-    Core::i32 mMaxUniformBufferBindingPointsStorage = 0;
+    GPU::u32 mBindingPointsIndexUniform = 0;
+    GPU::u32 mBindingPointsIndexStorage = 0;
+    GPU::i32 mMaxUniformBufferBindingPointsUniform = 0;
+    GPU::i32 mMaxUniformBufferBindingPointsStorage = 0;
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 };

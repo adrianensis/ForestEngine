@@ -2,7 +2,7 @@
 #include "Image/ImageUtils.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
 
-bool GPUImageUtils::transitionImageLayout(GPUContext* gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, Core::u32 mipLevels)
+bool GPUImageUtils::transitionImageLayout(GPUContext* gpuContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, GPU::u32 mipLevels)
 {
     VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     
@@ -202,11 +202,11 @@ bool GPUImageUtils::transitionImageLayout(GPUContext* gpuContext, VkImage image,
         }
 
         constexpr VkDependencyFlags dependencyFlags = 0;
-        constexpr Core::u32 memoryBarrierCount = 0;
+        constexpr GPU::u32 memoryBarrierCount = 0;
         constexpr VkMemoryBarrier* memoryBarriers = VK_NULL_HANDLE;
-        constexpr Core::u32 bufferMemoryBarrierCount = 0;
+        constexpr GPU::u32 bufferMemoryBarrierCount = 0;
         constexpr VkBufferMemoryBarrier* bufferMemoryBarriers = VK_NULL_HANDLE;
-        constexpr Core::u32 imageMemoryBarrierCount = 1;
+        constexpr GPU::u32 imageMemoryBarrierCount = 1;
         vkCmdPipelineBarrier(
                 commandBuffer,
                 sourceStage,
@@ -224,7 +224,7 @@ bool GPUImageUtils::transitionImageLayout(GPUContext* gpuContext, VkImage image,
     return true;
 }
 
-VkImageView GPUImageUtils::createImageView(GPUContext* gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, Core::u32 mipLevels) {
+VkImageView GPUImageUtils::createImageView(GPUContext* gpuContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, GPU::u32 mipLevels) {
     
     PROFILER_CPU_NAMED(createImageView);
 
@@ -247,7 +247,7 @@ VkImageView GPUImageUtils::createImageView(GPUContext* gpuContext, VkImage image
     return imageView;
 }
 
-void GPUImageUtils::copyBufferToImage(GPUContext* gpuContext, VkBuffer buffer, VkImage image, Core::u32 width, Core::u32 height, Core::i32 offsetX, Core::i32 offsetY)
+void GPUImageUtils::copyBufferToImage(GPUContext* gpuContext, VkBuffer buffer, VkImage image, GPU::u32 width, GPU::u32 height, GPU::i32 offsetX, GPU::i32 offsetY)
 {
     VkCommandBuffer commandBuffer = gpuContext->beginSingleTimeCommands();
     {
@@ -265,11 +265,11 @@ void GPUImageUtils::copyBufferToImage(GPUContext* gpuContext, VkBuffer buffer, V
 
         bufferImageCopy.imageOffset = {0, 0, 0};
 
-        constexpr Core::u32 depth = 1;
+        constexpr GPU::u32 depth = 1;
         bufferImageCopy.imageExtent = {width, height, depth };
         bufferImageCopy.imageOffset = {offsetX, offsetY, 0 };
 
-        constexpr Core::u32 regionCount = 1;
+        constexpr GPU::u32 regionCount = 1;
         constexpr VkImageLayout imageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         vkCmdCopyBufferToImage(
                 commandBuffer,
@@ -284,7 +284,7 @@ void GPUImageUtils::copyBufferToImage(GPUContext* gpuContext, VkBuffer buffer, V
 }
 
 
-bool GPUImageUtils::generateMipmaps(GPUContext* gpuContext, Core::u32 width, Core::u32 height, VkImage image, VkFormat imageFormat, Core::u32 mipMapLevels)
+bool GPUImageUtils::generateMipmaps(GPUContext* gpuContext, GPU::u32 width, GPU::u32 height, VkImage image, VkFormat imageFormat, GPU::u32 mipMapLevels)
 {
     // Check if image format supports linear blitting
     VkFormatProperties formatProperties;
@@ -308,17 +308,17 @@ bool GPUImageUtils::generateMipmaps(GPUContext* gpuContext, Core::u32 width, Cor
         imageMemoryBarrier.subresourceRange.layerCount = 1;
         imageMemoryBarrier.subresourceRange.levelCount = 1;
 
-        Core::i32 mipWidth = width;
-        Core::i32 mipHeight = height;
+        GPU::i32 mipWidth = width;
+        GPU::i32 mipHeight = height;
 
         constexpr VkDependencyFlags dependencyFlags = 0;
-        constexpr Core::u32 memoryBarrierCount = 0;
+        constexpr GPU::u32 memoryBarrierCount = 0;
         constexpr VkMemoryBarrier* memoryBarriers = VK_NULL_HANDLE;
-        constexpr Core::u32 bufferMemoryBarrierCount = 0;
+        constexpr GPU::u32 bufferMemoryBarrierCount = 0;
         constexpr VkBufferMemoryBarrier* bufferMemoryBarriers = VK_NULL_HANDLE;
-        constexpr Core::u32 imageMemoryBarrierCount = 1;
+        constexpr GPU::u32 imageMemoryBarrierCount = 1;
 
-        for (Core::u32 i = 1; i < mipMapLevels; i++) {
+        for (GPU::u32 i = 1; i < mipMapLevels; i++) {
             imageMemoryBarrier.subresourceRange.baseMipLevel = i - 1;
             imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
             imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
@@ -357,7 +357,7 @@ bool GPUImageUtils::generateMipmaps(GPUContext* gpuContext, Core::u32 width, Cor
             VkImageLayout srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
             VkImageLayout dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
             VkFilter filter = VK_FILTER_LINEAR;
-            constexpr Core::u32 regionCount = 1;
+            constexpr GPU::u32 regionCount = 1;
             vkCmdBlitImage(
                     commandBuffer,
                     image,
@@ -422,7 +422,7 @@ bool GPUImageUtils::generateMipmaps(GPUContext* gpuContext, Core::u32 width, Cor
     return true;
 }
 
-void GPUImageUtils::copyImageToImage(GPUContext* gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, Core::u32 width, Core::u32 height, Core::i32 offsetX, Core::i32 offsetY, Core::u32 mipLevels)
+void GPUImageUtils::copyImageToImage(GPUContext* gpuContext, VkImage sourceImage, VkImageLayout sourceLayout, VkImage destinationImage, VkImageLayout destinationLayout, GPU::u32 width, GPU::u32 height, GPU::i32 offsetX, GPU::i32 offsetY, GPU::u32 mipLevels)
     // VkCommandBuffer commandBuffer,
     // VkImage sourceImage,
     // VkExtent2D sourceExtent,
@@ -489,7 +489,7 @@ void GPUImageUtils::copyImageToImage(GPUContext* gpuContext, VkImage sourceImage
     gpuContext->endSingleTimeCommands(commandBuffer, VK_NULL_HANDLE);
 }
 
-bool GPUImageUtils::createTextureImage(GPUContext* gpuContext, VkImage textureImage, const GPUImageData& textureImageData, Core::byte* data) 
+bool GPUImageUtils::createTextureImage(GPUContext* gpuContext, VkImage textureImage, const GPUImageData& textureImageData, GPU::byte* data) 
 {
     PROFILER_CPU_NAMED(createTextureImage)
 

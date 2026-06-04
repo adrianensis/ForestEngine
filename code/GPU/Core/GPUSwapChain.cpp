@@ -14,7 +14,7 @@ bool GPUSwapChain::init(Maths::Vector2 windowSizeInPixels)
     presentMode = choosePresentMode(swapChainInfo.PresentModes);
     mExtent = chooseExtent(swapChainInfo.SurfaceCapabilities);
 
-    Core::u32 imageCount = getImageCount(swapChainInfo.SurfaceCapabilities);
+    GPU::u32 imageCount = getImageCount(swapChainInfo.SurfaceCapabilities);
 
     if (!createSwapChain(swapChainInfo.SurfaceCapabilities, imageCount))
     {
@@ -90,7 +90,7 @@ VkPresentModeKHR GPUSwapChain::choosePresentMode(const std::vector<VkPresentMode
 
 VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const
 {
-    bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<Core::u32>::max();
+    bool extentSizeCanDifferFromWindowResolution = surfaceCapabilities.currentExtent.width == std::numeric_limits<GPU::u32>::max();
     if (!extentSizeCanDifferFromWindowResolution)
     {
         GPU_LOG("Extent should match window resolution so using the surface capabilities extent");
@@ -99,19 +99,19 @@ VkExtent2D GPUSwapChain::chooseExtent(const VkSurfaceCapabilitiesKHR& surfaceCap
     GPU_LOG("Extent can differ from window resolution so picking the resolution that best matches the window within the minImageExtent and maxImageExtent bounds");
     VkExtent2D extent =
     {
-            (Core::u32) mWindowSizeInPixels.x,
-            (Core::u32) mWindowSizeInPixels.y
+            (GPU::u32) mWindowSizeInPixels.x,
+            (GPU::u32) mWindowSizeInPixels.y
     };
     extent.width = std::clamp(extent.width, surfaceCapabilities.minImageExtent.width, surfaceCapabilities.maxImageExtent.width);
     extent.height = std::clamp(extent.height, surfaceCapabilities.minImageExtent.height, surfaceCapabilities.maxImageExtent.height);
     return extent;
 }
 
-Core::u32 GPUSwapChain::getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const
+GPU::u32 GPUSwapChain::getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCapabilities) const
 {
-    Core::u32 minImageCount = surfaceCapabilities.minImageCount;
-    Core::u32 maxImageCount = surfaceCapabilities.maxImageCount;
-    Core::u32 imageCount = minImageCount + 1;
+    GPU::u32 minImageCount = surfaceCapabilities.minImageCount;
+    GPU::u32 maxImageCount = surfaceCapabilities.maxImageCount;
+    GPU::u32 imageCount = minImageCount + 1;
     if (maxImageCount > 0 && imageCount > maxImageCount)
     {
         imageCount = maxImageCount;
@@ -119,7 +119,7 @@ Core::u32 GPUSwapChain::getImageCount(const VkSurfaceCapabilitiesKHR& surfaceCap
     return imageCount;
 }
 
-bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, Core::u32 imageCount)
+bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabilities, GPU::u32 imageCount)
 {
     VkSwapchainCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -134,7 +134,7 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     const GPUQueueFamilyIndices& queueFamilyIndices = vulkanDevice->getPhysicalDevice()->getQueueFamilyIndices();
     if (queueFamilyIndices.GraphicsFamily != queueFamilyIndices.PresentationFamily)
     {
-        Core::u32 queueFamilyIndexValues[] = {
+        GPU::u32 queueFamilyIndexValues[] = {
                 queueFamilyIndices.GraphicsFamily.value(),
                 queueFamilyIndices.PresentationFamily.value()
         };
@@ -159,7 +159,7 @@ bool GPUSwapChain::createSwapChain(const VkSurfaceCapabilitiesKHR& surfaceCapabi
     return vkCreateSwapchainKHR(vulkanDevice->getDevice(), &createInfo, ALLOCATOR, &mSwapChain) == VK_SUCCESS;
 }
 
-bool GPUSwapChain::findSwapChainImages(Core::u32 imageCount)
+bool GPUSwapChain::findSwapChainImages(GPU::u32 imageCount)
 {
     vkGetSwapchainImagesKHR(vulkanDevice->getDevice(), mSwapChain, &imageCount, nullptr);
     mImages.resize(imageCount);

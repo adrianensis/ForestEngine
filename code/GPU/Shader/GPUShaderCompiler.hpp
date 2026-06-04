@@ -6,9 +6,9 @@ class SPIRVBinary
 {
 public:
     // SPIR-V words
-    Core::u32* mWords = nullptr;
+    GPU::u32* mWords = nullptr;
     // number of words in SPIR-V binary
-    Core::u32 mSize = 0;
+    GPU::u32 mSize = 0;
 };
 
 class GPUShaderCompiler

@@ -1,13 +1,13 @@
 #include "GPU/Texture/TextureAnimation/GPUTextureAnimation.hpp"
 
-GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horizontal, bool reverse, const Maths::Vector2& startPosition, Core::f32 width, Core::f32 height, Core::f32 speed)
+GPUTextureAnimation GPUTextureAnimation::create(GPU::u32 frameCount, bool horizontal, bool reverse, const Maths::Vector2& startPosition, GPU::f32 width, GPU::f32 height, GPU::f32 speed)
 {
 	GPUTextureAnimation TextureAnimation;
 	TextureAnimation.init();
 	TextureAnimation.mSpeed = speed;
 
-	Core::i32 horizontalDir = 0;
-	Core::i32 verticalDir = 0;
+	GPU::i32 horizontalDir = 0;
+	GPU::i32 verticalDir = 0;
 
 	if (horizontal)
 		horizontalDir = 1;
@@ -20,9 +20,9 @@ GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horiz
 		verticalDir *= -1;
 	}
 
-	Core::i32 start = 0;
-	Core::i32 end = frameCount;
-	Core::i32 delta = 1;
+	GPU::i32 start = 0;
+	GPU::i32 end = frameCount;
+	GPU::i32 delta = 1;
 
 	if (reverse)
 	{
@@ -31,7 +31,7 @@ GPUTextureAnimation GPUTextureAnimation::create(Core::u32 frameCount, bool horiz
 		delta = INVALID_INDEX;
 	}
 
-	for (Core::i32 i = start; i != end; i += delta)
+	for (GPU::i32 i = start; i != end; i += delta)
 	{
 		Maths::Vector2 pos(0, 0);
 		pos.add(startPosition);
@@ -55,14 +55,14 @@ void GPUTextureAnimation::init()
 	mFrames.clear();
 }
 
-Core::u32 GPUTextureAnimation::getNumberOfFrames() const
+GPU::u32 GPUTextureAnimation::getNumberOfFrames() const
 {
 	return mFrames.size();
 }
 
-const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::nextFrame(Core::f32 dt)
+const GPUTextureAnimationFrame& GPUTextureAnimationUpdater::nextFrame(GPU::f32 dt)
 {
-	Core::f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
+	GPU::f32 time = (1.0 / (mTextureAnimation->mSpeed)) * 1000.0f; // in milliseconds !
 	mTimeAccumulator += dt;
     mHasFrameChanged = false;
 	if (mTimeAccumulator >= time)

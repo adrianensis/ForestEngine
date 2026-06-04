@@ -2,7 +2,7 @@
 #include "GPU/RenderPass/GPURenderPass.h"
 #include "GPU/Image/GPUImageUtils.hpp"
 
-Maths::Vector4 GPUFramebuffer::readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const
+Maths::Vector4 GPUFramebuffer::readPixel(GPU::u32 x, GPU::u32 y, GPUFramebufferAttachmentType attachmentType) const
 {
     CHECK_MSG(mFramebufferData.mAttachments.contains(attachmentType), "Attachment not found!");
 
@@ -45,7 +45,7 @@ bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& fram
     FOR_LIST(it, mFramebufferData.mAttachments)
     {
         const GPUFramebufferAttachmentType& attachmentType = *it;
-//        Core::u32 attachmentID = (GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
+//        GPU::u32 attachmentID = (GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
         // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
     }
 

@@ -128,10 +128,10 @@ void GPUShaderPipeline::enable() const
     descriptorSets[1] = mGPUShaderPipelineData.mGPUDescriptorSetLocal->descriptorSets[mGPUContext->currentFrame];
     VkPipelineBindPoint pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     VkPipelineLayout pipelineLayout = mPipelineLayout;
-    constexpr Core::u32 firstSet = 0;
-    constexpr Core::u32 descriptorSetCount = std::size(descriptorSets);
-    constexpr Core::u32 dynamicOffsetCount = 0;
-    constexpr Core::u32* dynamicOffsets = nullptr;
+    constexpr GPU::u32 firstSet = 0;
+    constexpr GPU::u32 descriptorSetCount = std::size(descriptorSets);
+    constexpr GPU::u32 dynamicOffsetCount = 0;
+    constexpr GPU::u32* dynamicOffsets = nullptr;
     vkCmdBindDescriptorSets(vulkanCommandBuffer.getVkCommandBuffer(), pipelineBindPoint, pipelineLayout, firstSet, descriptorSetCount, descriptorSets, dynamicOffsetCount, dynamicOffsets);
 }
 

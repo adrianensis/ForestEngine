@@ -9,14 +9,14 @@ public:
     void init();
     void update(const Maths::Matrix4& viewMatrix);
     void recalculateProjectionMatrix();
-    void setOrtho(Core::f32 left, Core::f32 right, Core::f32 bottom, Core::f32 top, Core::f32 near, Core::f32 far);
-    void setPerspective(Core::f32 near, Core::f32 far, Core::f32 aspect, Core::f32 fov);
-	void onResize(const Maths::Vector2& windowSize, Core::f32 aspectRatio);
-    Maths::Vector3 screenToWorld(const Maths::Vector2& screenPosition, Core::f32 depth);
+    void setOrtho(GPU::f32 left, GPU::f32 right, GPU::f32 bottom, GPU::f32 top, GPU::f32 near, GPU::f32 far);
+    void setPerspective(GPU::f32 near, GPU::f32 far, GPU::f32 aspect, GPU::f32 fov);
+	void onResize(const Maths::Vector2& windowSize, GPU::f32 aspectRatio);
+    Maths::Vector3 screenToWorld(const Maths::Vector2& screenPosition, GPU::f32 depth);
     Maths::Vector2 worldToScreen(const Maths::Vector3& worldPosition);
-    void setZoom(Core::f32 zoom);
-    void zoomIn(Core::f32 zoomDelta);
-    void zoomOut(Core::f32 zoomDelta);
+    void setZoom(GPU::f32 zoom);
+    void zoomIn(GPU::f32 zoomDelta);
+    void zoomOut(GPU::f32 zoomDelta);
     void resetZoom();
 
 private:
@@ -32,20 +32,20 @@ private:
 	bool mInversePVMatrixNeedsUpdate = true;
 	
 public:
-	Core::f32 mLeft = 0.0f;
-	Core::f32 mRight = 0.0f;
-	Core::f32 mBottom = 0.0f;
-	Core::f32 mTop = 0.0f;
-	Core::f32 mNear = 0.0f;
-	Core::f32 mFar = 0.0f;
+	GPU::f32 mLeft = 0.0f;
+	GPU::f32 mRight = 0.0f;
+	GPU::f32 mBottom = 0.0f;
+	GPU::f32 mTop = 0.0f;
+	GPU::f32 mNear = 0.0f;
+	GPU::f32 mFar = 0.0f;
 	
-	Core::f32 mAspect = 0.0f;
-	Core::f32 mFov = 0.0f;
+	GPU::f32 mAspect = 0.0f;
+	GPU::f32 mFov = 0.0f;
 	
 	Maths::Matrix4 mProjectionMatrix;
 	mutable Maths::Matrix4 mViewMatrix;
 	mutable Maths::Matrix4 mProjectionViewMatrix;
 	bool mIsOrtho = false;
 	GPUFrustum mFrustum;
-	Core::f32 mZoom = 1.0f;
+	GPU::f32 mZoom = 1.0f;
 };

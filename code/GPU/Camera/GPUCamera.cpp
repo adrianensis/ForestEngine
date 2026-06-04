@@ -38,7 +38,7 @@ void GPUCamera::recalculateProjectionMatrix()
 	mFrustum.build();
 }
 
-void GPUCamera::setOrtho(Core::f32 left, Core::f32 right, Core::f32 bottom, Core::f32 top, Core::f32 near, Core::f32 far)
+void GPUCamera::setOrtho(GPU::f32 left, GPU::f32 right, GPU::f32 bottom, GPU::f32 top, GPU::f32 near, GPU::f32 far)
 {
 	mIsOrtho = true;
 	
@@ -53,7 +53,7 @@ void GPUCamera::setOrtho(Core::f32 left, Core::f32 right, Core::f32 bottom, Core
 							mTop* mZoom, mNear, mFar);
 }
 
-void GPUCamera::setPerspective(Core::f32 near, Core::f32 far, Core::f32 aspect, Core::f32 fov)
+void GPUCamera::setPerspective(GPU::f32 near, GPU::f32 far, GPU::f32 aspect, GPU::f32 fov)
 {
 	mIsOrtho = false;
 
@@ -65,7 +65,7 @@ void GPUCamera::setPerspective(Core::f32 near, Core::f32 far, Core::f32 aspect, 
 	mProjectionMatrix.perspective(mNear, mFar, mAspect, mFov * mZoom);
 }
 
-void GPUCamera::onResize(const Maths::Vector2& windowSize, Core::f32 aspectRatio)
+void GPUCamera::onResize(const Maths::Vector2& windowSize, GPU::f32 aspectRatio)
 {
     if (mIsOrtho)
 	{
@@ -79,7 +79,7 @@ void GPUCamera::onResize(const Maths::Vector2& windowSize, Core::f32 aspectRatio
 	recalculateProjectionMatrix();
 }
 
-Maths::Vector3 GPUCamera::screenToWorld(const Maths::Vector2& screenPosition, Core::f32 depth)
+Maths::Vector3 GPUCamera::screenToWorld(const Maths::Vector2& screenPosition, GPU::f32 depth)
 {	
 	calculateInverseMatrix();
 
@@ -104,15 +104,15 @@ Maths::Vector2 GPUCamera::worldToScreen(const Maths::Vector3& worldPosition)
 	return result;
 }
 
-void GPUCamera::setZoom(Core::f32 zoom)
+void GPUCamera::setZoom(GPU::f32 zoom)
 {
 	mZoom = zoom;
 	recalculateProjectionMatrix();
 }
 
-void GPUCamera::zoomIn(Core::f32 zoomDelta)
+void GPUCamera::zoomIn(GPU::f32 zoomDelta)
 {
-	Core::f32 newZoom = mZoom - zoomDelta;
+	GPU::f32 newZoom = mZoom - zoomDelta;
 
 	if(newZoom < 0)
 	{
@@ -122,9 +122,9 @@ void GPUCamera::zoomIn(Core::f32 zoomDelta)
 	setZoom(newZoom);
 }
 
-void GPUCamera::zoomOut(Core::f32 zoomDelta)
+void GPUCamera::zoomOut(GPU::f32 zoomDelta)
 {
-	Core::f32 newZoom = mZoom + zoomDelta;
+	GPU::f32 newZoom = mZoom + zoomDelta;
 	setZoom(newZoom);
 }
 

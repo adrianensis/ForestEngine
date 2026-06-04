@@ -28,8 +28,8 @@ public:
     Maths::Vector4 mPosition = Maths::Vector4::smZero;
     Maths::Vector4 mDirection = Maths::Vector4::smZero;
     Maths::Vector4 mDiffuse = Maths::Vector4::smZero;
-    alignas(16) Core::f32 mInnerCutOff = 0;
-    Core::f32 mOuterCutOff = 0;
+    alignas(16) GPU::f32 mInnerCutOff = 0;
+    GPU::f32 mOuterCutOff = 0;
 };
 
 class GPULightBuiltIn

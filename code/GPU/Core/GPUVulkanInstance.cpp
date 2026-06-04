@@ -191,7 +191,7 @@ std::vector<const char*> GPUVulkanInstance::findExtensions() const
 }
 
 std::vector<VkExtensionProperties> GPUVulkanInstance::findAvailableExtensions() const {
-    Core::u32 extensionCount = 0;
+    GPU::u32 extensionCount = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
     std::vector<VkExtensionProperties> extensions(extensionCount);
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
@@ -247,7 +247,7 @@ std::vector<const char*> GPUVulkanInstance::findValidationLayers() const {
 }
 
 std::vector<VkLayerProperties> GPUVulkanInstance::findAvailableValidationLayers() const {
-    Core::u32 validationLayerCount;
+    GPU::u32 validationLayerCount;
     vkEnumerateInstanceLayerProperties(&validationLayerCount, nullptr);
     std::vector<VkLayerProperties> validationLayers(validationLayerCount);
     vkEnumerateInstanceLayerProperties(&validationLayerCount, validationLayers.data());

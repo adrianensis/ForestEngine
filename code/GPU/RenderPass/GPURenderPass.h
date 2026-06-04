@@ -39,7 +39,7 @@ class GPURenderPassOutputData
 public:
     GPUImage* mColorGPUImage = nullptr;
     GPUImage* mDepthGPUImage = nullptr;
-    Core::u32 mResolveSwapchainImageIndex = 0;
+    GPU::u32 mResolveSwapchainImageIndex = 0;
 };
 
 class GPURenderPass;

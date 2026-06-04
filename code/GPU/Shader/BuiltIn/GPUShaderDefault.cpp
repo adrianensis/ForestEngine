@@ -367,7 +367,7 @@ void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBu
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers)
     {
         // TODO: refactor into a function
-        Core::u32 bindingPoint = 0;
+        GPU::u32 bindingPoint = 0;
         bool found = false;
         FOR_ARRAY(b, shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers)
         {
@@ -384,7 +384,7 @@ void GPUShaderDefault::registerVertexGPUShaderData(GPUShaderBuilder& GPUShaderBu
             GPUShaderBuilder.get().uniformBuffer(UniformBuffer(*it, bindingPoint));
         }
     }
-    Core::u32 vertexOutputIndex = 0;
+    GPU::u32 vertexOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mVertexVariables.mVertexOutputs)
     {
         GPUShaderBuilder.get().attribute(Attribute(*it, vertexOutputIndex)); vertexOutputIndex++;
@@ -416,7 +416,7 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
     FOR_LIST(it, shaderGenerationData.mCommonVariables.mUniformBuffers)
     {
         // TODO: refactor into a function
-        Core::u32 bindingPoint = 0;
+        GPU::u32 bindingPoint = 0;
         bool found = false;
         FOR_ARRAY(b, shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers)
         {
@@ -440,7 +440,7 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
     {
         Core::HashedString textureName = (*it);
         // TODO: refactor into a function
-        Core::u32 bindingPoint = 0;
+        GPU::u32 bindingPoint = 0;
         bool found = false;
         FOR_ARRAY(b, shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mTextureBindings)
         {
@@ -454,18 +454,18 @@ void GPUShaderDefault::registerFragmentGPUShaderData(GPUShaderBuilder& GPUShader
         }
         if(found)
         {
-            Core::u32 bindingPointOffset = shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers.size();
+            GPU::u32 bindingPointOffset = shaderCompilationData.mGPUDescriptorSetLocal->mGPUDescriptorLayout.mGPUDescriptorLayoutData.mUniformBuffers.size();
             shaderGenerationData.mFragmentVariables.mSamplers.push_back(GPUShaderDefinitions::Uniforms::getTextureHandle(*it));
             GPUShaderBuilder.get().attribute(Attribute(GPUShaderDefinitions::Uniforms::getTextureHandle(*it),bindingPoint + bindingPointOffset));
         }
     }
 
-    Core::u32 fragmentInputIndex = 0;
+    GPU::u32 fragmentInputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentInputs)
     {
         GPUShaderBuilder.get().attribute(Attribute(*it, fragmentInputIndex)); fragmentInputIndex++;
     }
-    Core::u32 fragmentOutputIndex = 0;
+    GPU::u32 fragmentOutputIndex = 0;
     FOR_LIST(it, shaderGenerationData.mFragmentVariables.mFragmentOutputs)
     {
         GPUShaderBuilder.get().attribute(Attribute(*it, fragmentOutputIndex)); fragmentOutputIndex++;

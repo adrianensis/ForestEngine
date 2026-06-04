@@ -9,7 +9,7 @@ class GPUSkeletalAnimationManager
 public:
     void init();
     void terminate();
-    void update(Core::f32 dt);
+    void update(GPU::f32 dt);
     Core::WeakPtr<GPUSkeletonState> createSkeletonState(GPUContext* gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData);
 
     const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(Core::WeakPtr<const GPUSkeletonState> skeletonState) const;

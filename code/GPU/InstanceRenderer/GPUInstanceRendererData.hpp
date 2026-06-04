@@ -34,10 +34,10 @@ public:
 	public:
 		size_t operator()(const GPUInstanceRendererData& key) const
 		{
-            Core::u32 shift = 0;
-            Core::u64 result = key.mShader->getID() << (shift++);
+            GPU::u32 shift = 0;
+            GPU::u64 result = key.mShader->getID() << (shift++);
             result = result ^ key.mMesh->mMeshID << (shift++);
-			result = result ^ static_cast<Core::u64>(key.mIsStatic) << (shift++);
+			result = result ^ static_cast<GPU::u64>(key.mIsStatic) << (shift++);
             if(key.mGPUDepthStencilData.mStencilEnable)
             {
                 result = result ^ (key.mGPUDepthStencilData.hash() << (shift++));

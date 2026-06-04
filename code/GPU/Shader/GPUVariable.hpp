@@ -41,22 +41,22 @@ class GPUDataType
 {
 public:
     Core::HashedString mName;
-    Core::u32 mTypeSizeInBytes = 0;
+    GPU::u32 mTypeSizeInBytes = 0;
     GPUPrimitiveDataType mPrimitiveDataType = GPUPrimitiveDataType::FLOAT;
 
-    Core::u32 getPrimitiveTypeSizeInBytes() const
+    GPU::u32 getPrimitiveTypeSizeInBytes() const
     {
-        Core::u32 primitiveTypeSizeInBytes = 0;
+        GPU::u32 primitiveTypeSizeInBytes = 0;
         switch (mPrimitiveDataType)
         {
             case GPUPrimitiveDataType::FLOAT:
-                primitiveTypeSizeInBytes = sizeof(Core::f32);
+                primitiveTypeSizeInBytes = sizeof(GPU::f32);
             break;
             case GPUPrimitiveDataType::INT:
-                primitiveTypeSizeInBytes = sizeof(Core::i32);
+                primitiveTypeSizeInBytes = sizeof(GPU::i32);
             break;
             case GPUPrimitiveDataType::UNSIGNED_INT:
-                primitiveTypeSizeInBytes = sizeof(Core::u32);
+                primitiveTypeSizeInBytes = sizeof(GPU::u32);
             break;
             case GPUPrimitiveDataType::BOOL:
                 primitiveTypeSizeInBytes = sizeof(bool);
@@ -75,10 +75,10 @@ public:
         return primitiveTypeSizeInBytes;
     }
 
-    Core::u32 getSizePrimitiveType() const
+    GPU::u32 getSizePrimitiveType() const
     {
-        Core::u32 primitiveTypeSizeInBytes = getPrimitiveTypeSizeInBytes();
-        Core::u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
+        GPU::u32 primitiveTypeSizeInBytes = getPrimitiveTypeSizeInBytes();
+        GPU::u32 sizeInPrimitiveTypes = mTypeSizeInBytes/primitiveTypeSizeInBytes;
         return sizeInPrimitiveTypes;
     }
 };
@@ -150,9 +150,9 @@ public:
     GPUStructDefinition(const Core::HashedString& name, const std::vector<GPUStructVariable>& primitiveVariables):
         mName(name), mPrimitiveVariables(primitiveVariables){}
 
-    Core::u32 getTypeSizeInBytes() const
+    GPU::u32 getTypeSizeInBytes() const
     {
-        Core::u32 typeSizeInBytes = 0;
+        GPU::u32 typeSizeInBytes = 0;
         FOR_ARRAY(i, mPrimitiveVariables)
         {
             typeSizeInBytes += mPrimitiveVariables[i].mGPUDataType.mTypeSizeInBytes;

@@ -6,7 +6,7 @@ void GPUSkeletalAnimationManager::init()
 {
 }
 
-void GPUSkeletalAnimationManager::update(Core::f32 dt)
+void GPUSkeletalAnimationManager::update(GPU::f32 dt)
 {
 	PROFILER_CPU()
 

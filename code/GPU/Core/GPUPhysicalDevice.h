@@ -8,8 +8,8 @@
 class GPUQueueFamilyIndices
 {
 public:
-    std::optional<Core::u32> GraphicsFamily;
-    std::optional<Core::u32> PresentationFamily;
+    std::optional<GPU::u32> GraphicsFamily;
+    std::optional<GPU::u32> PresentationFamily;
 };
 
 class GPUSwapChainInfo
@@ -61,7 +61,7 @@ public:
     const std::vector<const char*>& getExtensions() const;
     bool init();
     void updateSwapChainInfo();
-    Core::u32 findMemoryType(Core::u32 memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const;
+    GPU::u32 findMemoryType(GPU::u32 memoryTypeBits, VkMemoryPropertyFlags memoryPropertyFlags) const;
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
 private:
@@ -74,7 +74,7 @@ private:
     VkSampleCountFlagBits getSampleCount(const VkPhysicalDeviceProperties2& deviceProperties) const;
     std::string getDeviceTypeAsString(VkPhysicalDeviceType deviceType) const;
     GPUDeviceInfo findMostSuitableDevice(const std::vector<GPUDeviceInfo>& availableDevices) const;
-    Core::u32 getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const;
+    GPU::u32 getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const;
     bool hasRequiredFeatures(const VkPhysicalDeviceFeatures2& availableDeviceFeatures) const;
     bool hasRequiredExtensions(const std::vector<VkExtensionProperties>& availableDeviceExtensions) const;
     bool hasRequiredSwapChainSupport(const GPUSwapChainInfo& swapChainInfo) const;

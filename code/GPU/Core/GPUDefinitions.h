@@ -1,9 +1,27 @@
 #pragma once
 
 #include "Core/Core.hpp"
+#include <cstdint>
 #include <vulkan/vulkan.h>
 
-enum class GPUBufferType : Core::u32
+namespace GPU
+{
+    using f32 = float;
+    using f64 = double;
+
+    using i8 = std::int8_t;
+    using i16 = std::int16_t;
+    using i32 = std::int32_t;
+    using i64 = std::int64_t;
+
+    using byte = std::uint8_t;
+    using u8 = std::uint8_t;
+    using u16 = std::uint16_t;
+    using u32 = std::uint32_t;
+    using u64 = std::uint64_t;
+};
+
+enum class GPUBufferType : GPU::u32
 {
     VERTEX,
     INDEX,
@@ -11,13 +29,13 @@ enum class GPUBufferType : Core::u32
     STORAGE
 };
 
-enum class GPUDrawPrimitive: Core::u32
+enum class GPUDrawPrimitive: GPU::u32
 {
     LINES,
     TRIANGLES
 };
 
-enum class GPUFramebufferAttachmentType: Core::u32
+enum class GPUFramebufferAttachmentType: GPU::u32
 {
     NONE,
     COLOR0,
@@ -41,7 +59,7 @@ enum class GPUFramebufferAttachmentType: Core::u32
     DEPTH_STENCIL
 };
 
-enum class GPUFramebufferOperationType: Core::u32
+enum class GPUFramebufferOperationType: GPU::u32
 {
     READ,
     DRAW,
@@ -49,7 +67,7 @@ enum class GPUFramebufferOperationType: Core::u32
 };
 
 // aka internal format in OpenGL
-enum class GPUTextureFormat: Core::u32
+enum class GPUTextureFormat: GPU::u32
 {
     // Sized
     DEPTH_COMPONENT32F,
@@ -108,7 +126,7 @@ enum class GPUTextureFormat: Core::u32
     RGBA32UI
 };
 
-enum class GPUTexturePixelFormat: Core::u32
+enum class GPUTexturePixelFormat: GPU::u32
 {
     RED,
     RGB,
@@ -118,7 +136,7 @@ enum class GPUTexturePixelFormat: Core::u32
     STENCIL_INDEX
 };
 
-enum class GPUPipelineStage: Core::u32
+enum class GPUPipelineStage: GPU::u32
 {
     NONE,
     VERTEX,
@@ -129,7 +147,7 @@ enum class GPUPipelineStage: Core::u32
     COMPUTE
 };
 
-enum class GPUPrimitiveDataType : Core::u32
+enum class GPUPrimitiveDataType : GPU::u32
 {
     VOID,
     STRUCT,
@@ -145,7 +163,7 @@ enum class GPUPrimitiveDataType : Core::u32
     BOOL
 };
 
-enum class GPUStencilFunction : Core::u32
+enum class GPUStencilFunction : GPU::u32
 {
     NEVER = VK_COMPARE_OP_NEVER,
     ALWAYS = VK_COMPARE_OP_ALWAYS,
@@ -157,7 +175,7 @@ enum class GPUStencilFunction : Core::u32
     NOTEQUAL = VK_COMPARE_OP_NOT_EQUAL
 };
 
-enum class GPUStencilOp : Core::u32
+enum class GPUStencilOp : GPU::u32
 {
     KEEP = VK_STENCIL_OP_KEEP,
     INVERT = VK_STENCIL_OP_INVERT,
@@ -169,7 +187,7 @@ enum class GPUStencilOp : Core::u32
     DECR_WRAP = VK_STENCIL_OP_DECREMENT_AND_WRAP 
 };
 
-enum class GPUCompareOp : Core::u32
+enum class GPUCompareOp : GPU::u32
 {
     NEVER = VK_COMPARE_OP_NEVER,
     LESS = VK_COMPARE_OP_LESS,
@@ -181,7 +199,7 @@ enum class GPUCompareOp : Core::u32
     ALWAYS = VK_COMPARE_OP_ALWAYS
 };
 
-enum class GPUBlendFactor : Core::u32
+enum class GPUBlendFactor : GPU::u32
 {
     ZERO,
     ONE,
@@ -199,7 +217,7 @@ enum class GPUBlendFactor : Core::u32
     ONE_MINUS_CONSTANT_ALPHA
 };
 
-enum class GPUDepthFunc : Core::u32
+enum class GPUDepthFunc : GPU::u32
 {
     NEVER,
     LESS,
@@ -211,7 +229,7 @@ enum class GPUDepthFunc : Core::u32
     ALWAYS
 };
 
-enum class GPUFlags : Core::u32
+enum class GPUFlags : GPU::u32
 {
     MULTISAMPLE,
     DEPTH_TEST,
@@ -230,8 +248,8 @@ DECLARE_ENUM(GPUCullFaceType,
 class GPUConstants
 {
 public:
-    inline static const Core::u32 MAX_BONE_INFLUENCE = 4;
-    inline static const Core::u32 MAX_BONES = 65;
+    inline static const GPU::u32 MAX_BONE_INFLUENCE = 4;
+    inline static const GPU::u32 MAX_BONES = 65;
 };
 
 class GPUDepthStencilData
@@ -242,13 +260,13 @@ public:
     bool mDepthWriteEnable = true;
     GPUCompareOp mDepthCompareOp = GPUCompareOp::LESS;
     // aka ref
-    Core::u32 mStencilValue = 0;
+    GPU::u32 mStencilValue = 0;
     GPUStencilFunction mStencilFunction = GPUStencilFunction::NOTEQUAL;
     GPUStencilOp mStencilPassOp = GPUStencilOp::KEEP;
     GPUStencilOp mStencilFailOp = GPUStencilOp::KEEP;
     GPUStencilOp mDepthFailOp = GPUStencilOp::KEEP;
-    Core::u64 mParentId = 0;
-    Core::u64 mId = 0;
+    GPU::u64 mParentId = 0;
+    GPU::u64 mId = 0;
 
     bool operator==(const GPUDepthStencilData& other) const
     {
@@ -267,25 +285,25 @@ public:
         //mId == other.mId && 
     }
 
-    Core::u64 hash() const
+    GPU::u64 hash() const
     {
-        Core::u32 shift = 0;
-        Core::u64 result = 0;
-        result = result ^ static_cast<Core::u64>(mStencilEnable) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthTestEnable) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthWriteEnable) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthCompareOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilValue) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilFunction) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilPassOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mStencilFailOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mDepthFailOp) << (shift++);
-        result = result ^ static_cast<Core::u64>(mParentId) << (shift++);
+        GPU::u32 shift = 0;
+        GPU::u64 result = 0;
+        result = result ^ static_cast<GPU::u64>(mStencilEnable) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mDepthTestEnable) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mDepthWriteEnable) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mDepthCompareOp) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mStencilValue) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mStencilFunction) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mStencilPassOp) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mStencilFailOp) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mDepthFailOp) << (shift++);
+        result = result ^ static_cast<GPU::u64>(mParentId) << (shift++);
         return result;
     }
 };
 
-enum class GPUDescriptorSetScope : Core::u32
+enum class GPUDescriptorSetScope : GPU::u32
 {
     GLOBAL = 0,
     LOCAL = 1,

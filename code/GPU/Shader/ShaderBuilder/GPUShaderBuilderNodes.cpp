@@ -3,7 +3,7 @@
 
 namespace GPUShaderBuilderNodes
 {
-    std::string Statement::getIndent(Core::u16 indent)
+    std::string Statement::getIndent(GPU::u16 indent)
     {
         std::string str = "";
         FOR_RANGE(i, 0, indent)
@@ -14,7 +14,7 @@ namespace GPUShaderBuilderNodes
         return str;
     };
 
-    std::vector<std::string> Struct::toLines(Core::u16 indent) const
+    std::vector<std::string> Struct::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -32,14 +32,14 @@ namespace GPUShaderBuilderNodes
         return code;
     }
 
-    std::vector<std::string> Variable::toLines(Core::u16 indent) const
+    std::vector<std::string> Variable::toLines(GPU::u16 indent) const
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
         return {getIndent(indent) + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
 
-    std::vector<std::string> Attribute::toLines(Core::u16 indent) const
+    std::vector<std::string> Attribute::toLines(GPU::u16 indent) const
     {
         std::string valueStr = mValue.empty() ? "" : " = " + mValue;
         std::string arrayStr = mArraySize.empty() ? "" : "[" + mArraySize + "]";
@@ -58,7 +58,7 @@ namespace GPUShaderBuilderNodes
         return {getIndent(indent) + layoutStr + interpolationStr + storageStr + mType.mName.get() + " " + mName.get() + arrayStr + valueStr + ";"};
     }
     
-    std::vector<std::string> UniformBuffer::toLines(Core::u16 indent) const
+    std::vector<std::string> UniformBuffer::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -97,7 +97,7 @@ namespace GPUShaderBuilderNodes
     
     namespace Expressions
     {
-        std::vector<std::string> Unary::toLines(Core::u16 indent) const
+        std::vector<std::string> Unary::toLines(GPU::u16 indent) const
         {
             if(mFront)
             {
@@ -109,12 +109,12 @@ namespace GPUShaderBuilderNodes
             }
         }
 
-        std::vector<std::string> Binary::toLines(Core::u16 indent) const
+        std::vector<std::string> Binary::toLines(GPU::u16 indent) const
         {
             return {getIndent(indent) + mVariableA.getNameOrValue() + mOp.get() + mVariableB.getNameOrValue()};
         }
 
-        std::vector<std::string> Assign::toLines(Core::u16 indent) const
+        std::vector<std::string> Assign::toLines(GPU::u16 indent) const
         {
             return {getIndent(indent) + mVariableA.getNameOrValue() + mOp.get() + mVariableB.getNameOrValue() + ";"};
         }
@@ -176,7 +176,7 @@ namespace GPUShaderBuilderNodes
         return *mParent;
     }
 
-    std::vector<std::string> BlockStatement::toLines(Core::u16 indent) const
+    std::vector<std::string> BlockStatement::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -193,7 +193,7 @@ namespace GPUShaderBuilderNodes
         return code;
     }
 
-    std::vector<std::string> IfStatement::toLines(Core::u16 indent) const
+    std::vector<std::string> IfStatement::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -203,7 +203,7 @@ namespace GPUShaderBuilderNodes
         return code;
     }
 
-    std::vector<std::string> ElseStatement::toLines(Core::u16 indent) const
+    std::vector<std::string> ElseStatement::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -213,7 +213,7 @@ namespace GPUShaderBuilderNodes
         return code;
     }
 
-    std::vector<std::string> ForStatement::toLines(Core::u16 indent) const
+    std::vector<std::string> ForStatement::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -223,7 +223,7 @@ namespace GPUShaderBuilderNodes
         return code;
     }
 
-    std::vector<std::string> FunctionDefinition::toLines(Core::u16 indent) const
+    std::vector<std::string> FunctionDefinition::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 
@@ -233,7 +233,7 @@ namespace GPUShaderBuilderNodes
         {
             paramsStr += "in " + mParameters[i].mType.mName.get() + " " + mParameters[i].mName.get();
 
-            if(i < (Core::i32)mParameters.size() - 1)
+            if(i < (GPU::i32)mParameters.size() - 1)
             {
                 paramsStr += ",";
             }
@@ -337,7 +337,7 @@ namespace GPUShaderBuilderNodes
         return getFunctionDefinition(functionDefinition.mName);
     }
 
-    std::vector<std::string> Program::toLines(Core::u16 indent) const
+    std::vector<std::string> Program::toLines(GPU::u16 indent) const
     {
         std::vector<std::string> code;
 

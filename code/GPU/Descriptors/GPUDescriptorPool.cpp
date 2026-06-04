@@ -14,14 +14,14 @@ void GPUDescriptorPool::init(GPUContext* gpuContext, const GPUDescriptorPoolData
 
     vkGetPhysicalDeviceProperties2(mGPUContext->vulkanPhysicalDevice->getPhysicalDevice(), &deviceProps);
 
-    Core::u32 maxSets = gpuDescriptorPoolData.mMaxSets;
+    GPU::u32 maxSets = gpuDescriptorPoolData.mMaxSets;
     if(gpuDescriptorPoolData.mUseBindlessTextures)
     {
         // GPUContext::MAX_FRAMES_IN_FLIGHT should be enough for the Pool used for GLOBAL DescriptorSet
         maxSets = GPUContext::MAX_FRAMES_IN_FLIGHT;
     }
 
-    constexpr Core::u32 poolTypesCount = 3;
+    constexpr GPU::u32 poolTypesCount = 3;
     std::array<VkDescriptorPoolSize, poolTypesCount> poolSizes{};
 
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;

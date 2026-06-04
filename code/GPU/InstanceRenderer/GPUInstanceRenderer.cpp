@@ -98,7 +98,7 @@ void GPUInstanceRenderer::update(VkCommandBuffer commandBuffer)
         return;
     }
 	PROFILER_CPU()
-    Core::u32 newSize = mRenderersCount;
+    GPU::u32 newSize = mRenderersCount;
     if (newSize > mCurrentInstancesSize)
     {
         PROFILER_CPU_NAMED(InstancedBuffers_Resize)
@@ -113,7 +113,7 @@ void GPUInstanceRenderer::update(VkCommandBuffer commandBuffer)
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID).resize(mCurrentInstancesSize);
     }
 
-    Core::u32 rendererIndex = 0;
+    GPU::u32 rendererIndex = 0;
     FOR_RANGE(i, 0, (*mUsedSlots.rbegin())+1)
     {
         Core::WeakPtr<GPURenderItem> renderer = mRenderers[i];
@@ -149,10 +149,10 @@ void GPUInstanceRenderer::drawCall()
     PROFILER_CPU()
     if(!mRenderers.empty())
     {
-        Core::u32 instanceCount = mRenderersCount;
-        constexpr Core::u32 firstVertex = 0;
-        constexpr Core::u32 vertexOffset = 0;
-        constexpr Core::u32 firstInstance = 0;
+        GPU::u32 instanceCount = mRenderersCount;
+        constexpr GPU::u32 firstVertex = 0;
+        constexpr GPU::u32 vertexOffset = 0;
+        constexpr GPU::u32 firstInstance = 0;
         const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
         mGPUContext->drawIndexed(vulkanCommandBuffer.getVkCommandBuffer(), mGPUInstanceRendererData.mMesh->mIndices.size() * 3, instanceCount, firstVertex, vertexOffset, firstInstance);
     }

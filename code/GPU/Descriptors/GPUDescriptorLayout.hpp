@@ -19,8 +19,8 @@ public:
     std::vector<GPUUniformBuffer> mUniformBuffers;
     std::vector<GPUTextureBinding> mTextureBindings;
     bool mIsBindless = false;
-    Core::u32 mMaxBindlessTextures = 1024;
-    Core::u32 mBindlessTexturesArrayBinding = 0;
+    GPU::u32 mMaxBindlessTextures = 1024;
+    GPU::u32 mBindlessTexturesArrayBinding = 0;
 };
 
 class GPUDescriptorLayout

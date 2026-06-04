@@ -10,8 +10,8 @@ void GPURenderGraph::init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRe
 
     GPUDescriptorPoolData globalGPUDescriptorPoolData;
     globalGPUDescriptorPoolData.mUseBindlessTextures = true;
-    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), globalGPUDescriptorPoolData);
-    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL), GPUDescriptorPoolData{});
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<GPU::u64>(GPUDescriptorSetScope::GLOBAL), globalGPUDescriptorPoolData);
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addPool(static_cast<GPU::u64>(GPUDescriptorSetScope::LOCAL), GPUDescriptorPoolData{});
 
     std::vector<GPUUniformBuffer> uniformBuffers;
     GPUDescriptorLayoutData gpuDescriptorLayoutData
@@ -21,8 +21,8 @@ void GPURenderGraph::init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRe
         true
     };
 
-    const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
-    mGPURenderPassSubsystems.mGPUDescriptorManager->addSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL), gpuDescriptorPool, gpuDescriptorLayoutData);
+    const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<GPU::u64>(GPUDescriptorSetScope::GLOBAL));
+    mGPURenderPassSubsystems.mGPUDescriptorManager->addSet(static_cast<GPU::u64>(GPUDescriptorSetScope::GLOBAL), gpuDescriptorPool, gpuDescriptorLayoutData);
 
     VkFormat colorFormat = mGPUContext->vulkanSwapChain->getSurfaceFormat().format;
 
@@ -65,7 +65,7 @@ void GPURenderGraph::init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRe
 
 void GPURenderGraph::render()
 {
-    Core::u32 swapChainImageIndex = mGPUContext->frameAcquisition();
+    GPU::u32 swapChainImageIndex = mGPUContext->frameAcquisition();
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
 
     vulkanCommandBuffer.reset();

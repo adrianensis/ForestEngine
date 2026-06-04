@@ -69,20 +69,20 @@ void GPUShaderManager::freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPr
 void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
 {
     CHECK_MSG(shader.isValid(), "Invalid shader!");
-    Core::u32 shaderID = shader->getID();
+    GPU::u32 shaderID = shader->getID();
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
     
     if(!mGPUShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
     {
         if(shader->allowInstances())
         {
-            Core::u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
+            GPU::u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
             if(propertiesBlockSizeBytes > 0)
             {
                 PROFILER_CPU()
                 mGPUShaderPropertyBlockRenderStates.emplace(propertiesBlockClassId, GPUShaderPropertyBlockRenderState());
 
-                // Core::u32 size = shader->getGPUShaderData().getMaxInstances();
+                // GPU::u32 size = shader->getGPUShaderData().getMaxInstances();
                 mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.init(mInitialInstances);
                 mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUShaderPropertiesBlockArray.resize(mInitialInstances * propertiesBlockSizeBytes);
 
@@ -103,7 +103,7 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(Core::WeakPtr<GP
 
     Core::WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
-    Core::u32 shaderID = shader->getID();
+    GPU::u32 shaderID = shader->getID();
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
 
     if(shader->allowInstances())
@@ -113,14 +113,14 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(Core::WeakPtr<GP
         {
             PROFILER_CPU()
             CHECK_MSG(mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.checkSlot(shaderPropertiesInstance->mSlot), "Invalid slot!");
-            Core::u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
+            GPU::u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
             PROFILER_CPU_NAMED(CopyBuffer)
             mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUShaderPropertiesBlockArray.copyBufferAt(shaderPropertiesInstance->mGPUShaderPropertiesBlockBuffer.getByteBuffer(), shaderPropertiesInstance->mSlot.getSlot() * propertiesBlockSizeBytes);
         }
     }
 }
 
-void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(Core::u32 id)
+void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(GPU::u32 id)
 {
     PROFILER_CPU()
 
@@ -128,7 +128,7 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(Core::u32 id)
     CHECK_MSG(shaderPropertiesInstance.isValid(), "Invalid shader Instance!");
     Core::WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
     CHECK_MSG(shader.isValid(), "Invalid shader!");
-    Core::u32 shaderID = shader->getID();
+    GPU::u32 shaderID = shader->getID();
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
 
     if(shader->allowInstances())
@@ -165,7 +165,7 @@ Core::Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(Core::WeakPt
             {
                 CHECK_MSG(false, "mGPUShaderPropertyBlockRenderStates propertiesBlockClassId mSlotsManager.isEmpty!");
 
-                Core::u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
+                GPU::u32 propertiesBlockSizeBytes = shader->getSharedGPUShaderPropertiesBlockBuffer().getByteBuffer().size();
                 mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.increaseSize(mInitialInstances);
                 mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUShaderPropertiesBlockArray.resize(mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize() * propertiesBlockSizeBytes);
                 // mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName).resizeBytes(propertiesBlockSizeBytes * mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mSlotsManager.getSize());

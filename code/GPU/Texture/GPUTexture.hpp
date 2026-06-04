@@ -49,7 +49,7 @@ private:
 	GPUTextureData mTextureData;
     GPUContext* mGPUContext = nullptr;
     GPUImage mVulkanTextureImage;
-    Core::u32 mMipMapLevels = 1;
+    GPU::u32 mMipMapLevels = 1;
     VkFormat mFormat = VK_FORMAT_R8G8B8A8_SRGB;
 
 public:

@@ -17,7 +17,7 @@ class FramebufferBinding
 {
 public:
     Core::HashedString mSamplerName;
-    Core::u32 mTextureID = 0;
+    GPU::u32 mTextureID = 0;
 };
 
 class GPUShaderPropertiesBlockNames
@@ -86,15 +86,15 @@ public:
     //     return mTextureBindings == other.mTextureBindings;
     // }
 
-    // Core::u64 hash() const
+    // GPU::u64 hash() const
     // {
-    //     Core::u32 shift = 0;
-    //     Core::u64 result = 0;
+    //     GPU::u32 shift = 0;
+    //     GPU::u64 result = 0;
         
     //     FOR_MAP(it, mTextureBindings)
     //     {
-    //         result = result ^ (Core::u64)it->first.getHash() << (shift++);
-    //         result = result ^ (Core::u64)it->second.mPath.getHash() << (shift++);
+    //         result = result ^ (GPU::u64)it->first.getHash() << (shift++);
+    //         result = result ^ (GPU::u64)it->second.mPath.getHash() << (shift++);
     //     }
 
     //     return result;
@@ -106,7 +106,7 @@ class GPUShaderPropertiesInstance
 {
 public:
     Core::Slot mSlot;
-    Core::u32 mID = 0;
+    GPU::u32 mID = 0;
     Core::WeakPtr<GPUShader> mShader;
     Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
@@ -118,10 +118,10 @@ class GPUShaderData
 public:
     // GPUCullFaceType mCullFaceType = GPUCullFaceType::BACK;
     bool mAllowInstances = true;
-    Core::u32 mMaxInstances = 100;
+    GPU::u32 mMaxInstances = 100;
     std::vector<GPUTextureBinding> mTextureBindings;
 
-    Core::u32 getMaxInstances() const
+    GPU::u32 getMaxInstances() const
     {
         return mAllowInstances ? mMaxInstances : 1;
     }
@@ -133,7 +133,7 @@ friend class GPUShaderPropertiesInstance;
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, Core::u32 id);
+    virtual void init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, GPU::u32 id);
     void terminate();
 
     bool hasFramebufferBinding(Core::HashedString bindingName) const;
@@ -173,7 +173,7 @@ protected:
     std::unordered_set<Core::HashedString> mTextures;
     std::unordered_map<Core::HashedString, FramebufferBinding> mFramebufferBindings;
     GPUShaderData mGPUShaderData;
-    Core::u32 mID = 0;
+    GPU::u32 mID = 0;
     Core::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
     Core::ClassDefinition mSharedGPUShaderPropertiesBlockClass;
 

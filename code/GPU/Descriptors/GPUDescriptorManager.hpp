@@ -13,23 +13,23 @@ public:
     void init(GPUContext* gpuContext, GPUTextureManager* gpuTextureManager);
     void terminate();
 
-    bool containsLayout(Core::u64 key) const;
-    const GPUDescriptorLayout& getLayout(Core::u64 key) const;
-    const GPUDescriptorLayout& addLayout(Core::u64 key, GPUDescriptorLayoutData& gpuDescriptorLayoutData);
+    bool containsLayout(GPU::u64 key) const;
+    const GPUDescriptorLayout& getLayout(GPU::u64 key) const;
+    const GPUDescriptorLayout& addLayout(GPU::u64 key, GPUDescriptorLayoutData& gpuDescriptorLayoutData);
 
-    bool containsPool(Core::u64 key) const;
-    const GPUDescriptorPool& getPool(Core::u64 key) const;
-    const GPUDescriptorPool& addPool(Core::u64 key, const GPUDescriptorPoolData& gpuDescriptorPoolData);
+    bool containsPool(GPU::u64 key) const;
+    const GPUDescriptorPool& getPool(GPU::u64 key) const;
+    const GPUDescriptorPool& addPool(GPU::u64 key, const GPUDescriptorPoolData& gpuDescriptorPoolData);
 
-    bool containsSet(Core::u64 key) const;
-    const GPUDescriptorSet& getSet(Core::u64 key) const;
-    GPUDescriptorSet& getSet(Core::u64 key);
-    const GPUDescriptorSet& addSet(Core::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData);
+    bool containsSet(GPU::u64 key) const;
+    const GPUDescriptorSet& getSet(GPU::u64 key) const;
+    GPUDescriptorSet& getSet(GPU::u64 key);
+    const GPUDescriptorSet& addSet(GPU::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData);
 private:
     GPUContext* mGPUContext = nullptr;
     GPUTextureManager* mGPUTextureManager = nullptr;
-    std::unordered_map<Core::u64, GPUDescriptorLayout> mLayouts;
-    std::unordered_map<Core::u64, GPUDescriptorPool> mPools;
-    std::unordered_map<Core::u64, GPUDescriptorSet> mSets;
+    std::unordered_map<GPU::u64, GPUDescriptorLayout> mLayouts;
+    std::unordered_map<GPU::u64, GPUDescriptorPool> mPools;
+    std::unordered_map<GPU::u64, GPUDescriptorSet> mSets;
 };
 

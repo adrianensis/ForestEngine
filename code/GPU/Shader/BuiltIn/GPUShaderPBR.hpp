@@ -16,11 +16,11 @@ class PropertiesBlockGPUShaderPBR
 {
 public:
     Maths::Vector4 mBaseColor = Maths::Vector4(0,0,0,1);
-    Core::u32 mBaseColorTextureHandle = 0;
-    Core::f32 mMetallic = 0;
-    Core::f32 mRoughness = 0;
-    Core::u32 mMetallicRoughnessTextureHandle = 0;
-    alignas(16) Core::u32 mNormalTextureHandle = 0;
+    GPU::u32 mBaseColorTextureHandle = 0;
+    GPU::f32 mMetallic = 0;
+    GPU::f32 mRoughness = 0;
+    GPU::u32 mMetallicRoughnessTextureHandle = 0;
+    alignas(16) GPU::u32 mNormalTextureHandle = 0;
 };
 REGISTER_CLASS(PropertiesBlockGPUShaderPBR)
 

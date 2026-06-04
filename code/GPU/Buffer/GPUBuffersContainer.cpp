@@ -8,7 +8,7 @@ void GPUVertexBuffersContainer::enable(GPUContext* gpuContext)
     {
         VkBuffer vertexBuffers[] = {mVertexBuffers[i].getGPUBuffer().getVkBuffer()};
         VkDeviceSize vertexBufferOffsets[] = {0};
-        constexpr Core::u32 bindingCount = 1;
+        constexpr GPU::u32 bindingCount = 1;
         vkCmdBindVertexBuffers(vulkanCommandBuffer.getVkCommandBuffer(), i, bindingCount, vertexBuffers, vertexBufferOffsets);
     }
 
@@ -22,7 +22,7 @@ void GPUVertexBuffersContainer::disable()
 
 }
 
-void GPUVertexBuffersContainer::addVertexBuffer(GPUContext* gpuContext, const GPUVertexBufferData& data, Core::u32 size, bool isStatic)
+void GPUVertexBuffersContainer::addVertexBuffer(GPUContext* gpuContext, const GPUVertexBufferData& data, GPU::u32 size, bool isStatic)
 {
     if(mVertexBuffers.size() > 0)
     {
@@ -32,7 +32,7 @@ void GPUVertexBuffersContainer::addVertexBuffer(GPUContext* gpuContext, const GP
     GPUVertexBuffer& gpuVertexBuffer = mVertexBuffers.emplace_back();
     gpuVertexBuffer.init(gpuContext, mAttributeIndex, data, size, isStatic);
 
-    Core::u32 index = mVertexBuffers.size() - 1;
+    GPU::u32 index = mVertexBuffers.size() - 1;
     mVertexBuffersMap.insert_or_assign(data.mGPUVariableData.mName, index);
 }
 
@@ -51,14 +51,14 @@ bool GPUVertexBuffersContainer::containsVertexBuffer(const GPUVertexBufferData& 
     return mVertexBuffersMap.contains(data.mGPUVariableData.mName);
 }
 
-Core::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, Core::u32>& indexMap, const Core::HashedString& name)
+GPU::u32 GPUVertexBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, GPU::u32>& indexMap, const Core::HashedString& name)
 {
     CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUVertexBuffersContainer!");
-    Core::u32 index = indexMap.at(name);
+    GPU::u32 index = indexMap.at(name);
     return index;
 }
 
-void GPUVertexBuffersContainer::setIndicesBuffer(GPUContext* gpuContext, const GPUDataType& gpuDataType, Core::u32 size, bool isStatic)
+void GPUVertexBuffersContainer::setIndicesBuffer(GPUContext* gpuContext, const GPUDataType& gpuDataType, GPU::u32 size, bool isStatic)
 {
     // mIndicesBuffer.terminate();
     mIndicesBuffer.init(gpuContext, gpuDataType, size, isStatic);
@@ -73,13 +73,13 @@ void GPUVertexBuffersContainer::terminate()
     }
 }
 
-void GPUUniformBuffersContainer::addUniformBuffer(GPUContext* gpuContext, const GPUUniformBufferData& data, Core::u32 size, bool isStatic)
+void GPUUniformBuffersContainer::addUniformBuffer(GPUContext* gpuContext, const GPUUniformBufferData& data, GPU::u32 size, bool isStatic)
 {
-    Core::u32 bindingPoint = gpuContext->requestUniformBufferBindingPoint(data.mType);
+    GPU::u32 bindingPoint = gpuContext->requestUniformBufferBindingPoint(data.mType);
     GPUUniformBuffer& gpuInstanceBuffer = mUniformBuffers.emplace_back();
     gpuInstanceBuffer.init(gpuContext, size, bindingPoint, data, isStatic);
 
-    Core::u32 index = mUniformBuffers.size() - 1;
+    GPU::u32 index = mUniformBuffers.size() - 1;
     mUniformBuffersMap.insert_or_assign(data.mBufferName, index);
 }
 
@@ -108,10 +108,10 @@ bool GPUUniformBuffersContainer::containsUniformBuffer(const GPUUniformBufferDat
     return mUniformBuffersMap.contains(data.mBufferName);
 }
 
-Core::u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, Core::u32>& indexMap, const Core::HashedString& name)
+GPU::u32 GPUUniformBuffersContainer::findIndex(const std::unordered_map<Core::HashedString, GPU::u32>& indexMap, const Core::HashedString& name)
 {
     CHECK_MSG(indexMap.contains(name), name.get() + " not found in GPUUniformBuffersContainer!");
-    Core::u32 index = indexMap.at(name);
+    GPU::u32 index = indexMap.at(name);
     return index;
 }
 

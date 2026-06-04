@@ -156,7 +156,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             false
         };
 
-        GPUDescriptorSet& globalSet = mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL));
+        GPUDescriptorSet& globalSet = mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<GPU::u64>(GPUDescriptorSetScope::GLOBAL));
         
         FOR_ARRAY(j, gpuInstanceRendererData.mShader->getGPUShaderData().mTextureBindings)
         {
@@ -164,11 +164,11 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             globalSet.updateBindlessSlot(textureBinding.mGPUTextureHandle);
         }
 
-        const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<Core::u64>(GPUDescriptorSetScope::LOCAL));
+        const GPUDescriptorPool& gpuDescriptorPool = mGPURenderPassSubsystems.mGPUDescriptorManager->getPool(static_cast<GPU::u64>(GPUDescriptorSetScope::LOCAL));
         GPUInstanceRendererData::GPUInstanceRendererDataFunctor hashGPUInstanceRendererDataFunctor;
         
         // TODO: Fix and Refactor this offset, GPUDescriptorSetScope::LOCAL == 1 but gpuInstanceRendererData hash can also be 1 !!!
-        Core::u64 descriptorHashOffset = (Core::u64)GPUDescriptorSetScope::MAX;
+        GPU::u64 descriptorHashOffset = (GPU::u64)GPUDescriptorSetScope::MAX;
         mGPURenderPassSubsystems.mGPUDescriptorManager->addSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData), gpuDescriptorPool, gpuDescriptorLayoutData);
 
         GPUShaderCompilationData shaderCompilationData
@@ -176,7 +176,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             Core::ClassManager::getDynamicClassMetadata(this).mClassDefinition.mName,
             Core::HashedString(std::to_string(gpuInstanceRendererData.mShader->getID())),
             gpuInstanceRenderer->getGPUVertexBuffersContainer(),
-            &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<Core::u64>(GPUDescriptorSetScope::GLOBAL)),
+            &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(static_cast<GPU::u64>(GPUDescriptorSetScope::GLOBAL)),
             &mGPURenderPassSubsystems.mGPUDescriptorManager->getSet(descriptorHashOffset + hashGPUInstanceRendererDataFunctor(gpuInstanceRendererData))
         };
 

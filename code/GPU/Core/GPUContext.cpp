@@ -241,13 +241,13 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     if(fence != VK_NULL_HANDLE)
     {
         // After waiting, we need to manually reset the fence to the unsignaled state
-        constexpr Core::u32 fenceCount = 1;
+        constexpr GPU::u32 fenceCount = 1;
         vkResetFences(vulkanDevice->getDevice(), fenceCount, &fence);
     }
 
     {
         PROFILER_CPU_NAMED(queue_submit)
-        constexpr Core::u32 submitCount = 1;
+        constexpr GPU::u32 submitCount = 1;
         vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, fence);
     }
 
@@ -260,7 +260,7 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     else
     {
             // Wait until the previous frame has finished
-        constexpr Core::u32 fenceCount = 1;
+        constexpr GPU::u32 fenceCount = 1;
         constexpr VkBool32 waitForAllFences = VK_TRUE;
         constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
         VkResult waitResult = vkWaitForFences(vulkanDevice->getDevice(), fenceCount, &fence, waitForAllFences, waitForFenceTimeout);
@@ -269,16 +269,16 @@ void GPUContext::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkFence fe
     vkFreeCommandBuffers(vulkanDevice->getDevice(), vulkanCommandPoolSingleUse->getVkCommandPool(), submitInfo.commandBufferCount, &commandBuffer);
 }
 
-void GPUContext::drawIndexed(VkCommandBuffer commandBuffer, Core::u32 indexCount, Core::u32 instanceCount, Core::u32 firstIndex, Core::i32 vertexOffset, Core::u32 firstInstance)
+void GPUContext::drawIndexed(VkCommandBuffer commandBuffer, GPU::u32 indexCount, GPU::u32 instanceCount, GPU::u32 firstIndex, GPU::i32 vertexOffset, GPU::u32 firstInstance)
 {
     vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
 
-Core::u32 GPUContext::frameAcquisition()
+GPU::u32 GPUContext::frameAcquisition()
 {
     PROFILER_CPU()
 
-    Core::u32 swapChainImageIndex = 0;
+    GPU::u32 swapChainImageIndex = 0;
 
     waitForFence(currentFrame);
 
@@ -310,17 +310,17 @@ Core::u32 GPUContext::frameAcquisition()
     }
 
     // After waiting, we need to manually reset the fence to the unsignaled state
-    constexpr Core::u32 fenceCount = 1;
+    constexpr GPU::u32 fenceCount = 1;
     VkFence inFlightFence = inFlightFences[currentFrame];
     vkResetFences(vulkanDevice->getDevice(), fenceCount, &inFlightFence);
 
     return swapChainImageIndex;
 }
 
-void GPUContext::waitForFence(Core::u32 frameIndex)
+void GPUContext::waitForFence(GPU::u32 frameIndex)
 {
     // Wait until the previous frame has finished
-    constexpr Core::u32 fenceCount = 1;
+    constexpr GPU::u32 fenceCount = 1;
     constexpr VkBool32 waitForAllFences = VK_TRUE;
     constexpr uint64_t waitForFenceTimeout = UINT64_MAX;
     VkFence inFlightFence = inFlightFences[frameIndex % GPUContext::MAX_FRAMES_IN_FLIGHT];
@@ -353,7 +353,7 @@ void GPUContext::commandSubmission()
     submitInfo.signalSemaphoreCount = 1;
 
     // Submit recorded graphics commands
-    constexpr Core::u32 submitCount = 1;
+    constexpr GPU::u32 submitCount = 1;
     VkFence inFlightFence = inFlightFences[currentFrame];
     if (vkQueueSubmit(vulkanDevice->getGraphicsQueue(), submitCount, &submitInfo, inFlightFence) != VK_SUCCESS) {
         GPU_LOG_ERROR("Could not submit to graphics queue")
@@ -361,7 +361,7 @@ void GPUContext::commandSubmission()
     }
 }
 
-void GPUContext::framePresentation(const std::vector<Core::u32>& imageIndices)
+void GPUContext::framePresentation(const std::vector<GPU::u32>& imageIndices)
 {
     PROFILER_CPU()
     VkPresentInfoKHR presentInfo{};
@@ -429,23 +429,23 @@ void GPUContext::setWindowResized()
     mWindowResized = true;
 }
 
-Core::u32 GPUContext::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
+GPU::u32 GPUContext::requestUniformBufferBindingPoint(GPUBufferType gpuUniformBufferType)
 {
-    Core::u32 bindingPoint = 0;
+    GPU::u32 bindingPoint = 0;
     switch (gpuUniformBufferType)
     {
     case GPUBufferType::UNIFORM:
         {
             bindingPoint = mBindingPointsIndexUniform;
             mBindingPointsIndexUniform++;
-            // CHECK_MSG((Core::i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
+            // CHECK_MSG((GPU::i32)mBindingPointsIndexUniform <= mMaxUniformBufferBindingPointsUniform, "Max Uniform Binding Points reached!");
         }
         break;
     case GPUBufferType::STORAGE:
         {
             bindingPoint = mBindingPointsIndexStorage;
             mBindingPointsIndexStorage++;
-            // CHECK_MSG((Core::i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
+            // CHECK_MSG((GPU::i32)mBindingPointsIndexStorage <= mMaxUniformBufferBindingPointsStorage, "Max Storage Binding Points reached!");
         }
         break;
     default:

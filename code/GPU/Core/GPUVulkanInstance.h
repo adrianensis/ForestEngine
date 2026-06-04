@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.h>
 #include "vulkan/vulkan.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 
 #include "Core/Core.hpp"
 
@@ -9,9 +10,9 @@ class VulkanConfig
 {
 public:
     std::string Name;
-    Core::u32 MajorVersion = 1;
-    Core::u32 MinorVersion = 0;
-    Core::u32 PatchVersion = 0;
+    GPU::u32 MajorVersion = 1;
+    GPU::u32 MinorVersion = 0;
+    GPU::u32 PatchVersion = 0;
     bool ValidationLayersEnabled = true;
     std::vector<const char*> mRequiredExtensions;
     std::vector<const char*> mOptionalExtensions;

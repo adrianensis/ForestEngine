@@ -10,7 +10,7 @@ class GPURenderPass;
 class GPUFramebufferData
 {
 public:
-    void set(const std::unordered_set<GPUFramebufferAttachmentType>& attachments, Core::u32 width, Core::u32 height)
+    void set(const std::unordered_set<GPUFramebufferAttachmentType>& attachments, GPU::u32 width, GPU::u32 height)
     {
         mAttachments = attachments;
         mWidth = width;
@@ -20,11 +20,11 @@ public:
     bool isValid() const { return mIsValid; }
 
     std::unordered_set<GPUFramebufferAttachmentType> mAttachments;
-    Core::u32 mWidth = 0;
-    Core::u32 mHeight = 0;
+    GPU::u32 mWidth = 0;
+    GPU::u32 mHeight = 0;
     VkSampleCountFlagBits mSampleCountFlagBits = VK_SAMPLE_COUNT_1_BIT;
     bool mIsResolveFramebuffer = false;
-    Core::u32 mSwapchainIndex = 0;
+    GPU::u32 mSwapchainIndex = 0;
     GPUImage* mColorImage = nullptr;
     
 private:
@@ -35,14 +35,14 @@ class GPUFramebufferAttachment
 {
 public:
     GPUFramebufferAttachmentType mGPUFramebufferAttachmentType = GPUFramebufferAttachmentType::NONE;
-    Core::u32 mAttachmentID = 0;
+    GPU::u32 mAttachmentID = 0;
 };
 
 class GPUFramebuffer
 {
 public:
     bool init(GPUContext* gpuContext, const GPUFramebufferData& framebufferData);
-    Maths::Vector4 readPixel(Core::u32 x, Core::u32 y, GPUFramebufferAttachmentType attachmentType) const;
+    Maths::Vector4 readPixel(GPU::u32 x, GPU::u32 y, GPUFramebufferAttachmentType attachmentType) const;
     void enable(GPUFramebufferOperationType op);
     void disable(GPUFramebufferOperationType op);
 
@@ -54,7 +54,7 @@ private:
     bool initializeDepthResources();
 
 private:
-    Core::u32 mFramebufferId = 0;
+    GPU::u32 mFramebufferId = 0;
     std::unordered_map<GPUFramebufferAttachmentType, GPUFramebufferAttachment> mAttachments;
     GPUFramebufferData mFramebufferData;
 

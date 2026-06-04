@@ -10,7 +10,7 @@ public:
     void terminate();
     void update();
 
-    void setGPUShaderPropertiesInstanceDirty(Core::u32 id);
+    void setGPUShaderPropertiesInstanceDirty(GPU::u32 id);
 
     template<class T, class P> T_EXTENDS(T, GPUShader)
     Core::WeakPtr<GPUShader> createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
@@ -49,8 +49,8 @@ private:
 	
     std::vector<Core::OwnerPtr<GPUShader>> mShaders;
     std::vector<Core::OwnerPtr<GPUShaderPropertiesInstance>> mGPUShaderPropertiesInstances;
-    std::unordered_set<Core::u32> mDirtyGPUShaderPropertiesInstances;
-    inline static const Core::u32 mInitialInstances = 20000;
+    std::unordered_set<GPU::u32> mDirtyGPUShaderPropertiesInstances;
+    inline static const GPU::u32 mInitialInstances = 20000;
     GPUTextureManager* mGPUTextureManager = nullptr;
 };
 

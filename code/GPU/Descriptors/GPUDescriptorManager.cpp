@@ -26,17 +26,17 @@ void GPUDescriptorManager::terminate()
     mPools.clear();
 }
 
-bool GPUDescriptorManager::containsLayout(Core::u64 key) const
+bool GPUDescriptorManager::containsLayout(GPU::u64 key) const
 {
     return mLayouts.contains(key);
 }
 
-const GPUDescriptorLayout& GPUDescriptorManager::getLayout(Core::u64 key) const
+const GPUDescriptorLayout& GPUDescriptorManager::getLayout(GPU::u64 key) const
 {
     return mLayouts.at(key);
 }
 
-const GPUDescriptorLayout& GPUDescriptorManager::addLayout(Core::u64 key, GPUDescriptorLayoutData& gpuDescriptorLayoutData)
+const GPUDescriptorLayout& GPUDescriptorManager::addLayout(GPU::u64 key, GPUDescriptorLayoutData& gpuDescriptorLayoutData)
 {
     if(containsLayout(key))
     {
@@ -49,17 +49,17 @@ const GPUDescriptorLayout& GPUDescriptorManager::addLayout(Core::u64 key, GPUDes
     return gpuDescriptorLayout;
 }
 
-bool GPUDescriptorManager::containsPool(Core::u64 key) const
+bool GPUDescriptorManager::containsPool(GPU::u64 key) const
 {
     return mPools.contains(key);
 }
 
-const GPUDescriptorPool& GPUDescriptorManager::getPool(Core::u64 key) const
+const GPUDescriptorPool& GPUDescriptorManager::getPool(GPU::u64 key) const
 {
     return mPools.at(key);
 }
 
-const GPUDescriptorPool& GPUDescriptorManager::addPool(Core::u64 key, const GPUDescriptorPoolData& gpuDescriptorPoolData)
+const GPUDescriptorPool& GPUDescriptorManager::addPool(GPU::u64 key, const GPUDescriptorPoolData& gpuDescriptorPoolData)
 {
     if(containsPool(key))
     {
@@ -72,22 +72,22 @@ const GPUDescriptorPool& GPUDescriptorManager::addPool(Core::u64 key, const GPUD
     return gpuDescriptorPool;
 }
 
-bool GPUDescriptorManager::containsSet(Core::u64 key) const
+bool GPUDescriptorManager::containsSet(GPU::u64 key) const
 {
     return mSets.contains(key);
 }
 
-GPUDescriptorSet& GPUDescriptorManager::getSet(Core::u64 key)
+GPUDescriptorSet& GPUDescriptorManager::getSet(GPU::u64 key)
 {
     return mSets.at(key);
 }
 
-const GPUDescriptorSet& GPUDescriptorManager::getSet(Core::u64 key) const
+const GPUDescriptorSet& GPUDescriptorManager::getSet(GPU::u64 key) const
 {
     return mSets.at(key);
 }
 
-const GPUDescriptorSet& GPUDescriptorManager::addSet(Core::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData)
+const GPUDescriptorSet& GPUDescriptorManager::addSet(GPU::u64 key, const GPUDescriptorPool& gpuDescriptorPool, GPUDescriptorLayoutData& gpuDescriptorLayoutData)
 {
     if(containsSet(key))
     {
