@@ -12,6 +12,7 @@ public:
     HashedString(const std::string_view& str);
     HashedString(const std::string& str);
     HashedString(const char* str);
+    HashedString(const char* str, u32 size);
     const std::string& get() const;
     bool isValid() const;
     HashValue getHash() const { return mHash; }
@@ -32,6 +33,7 @@ public:
 
 private:
     void set(const char* str);
+    void set(const char* str, u32 size);
 
 private:
     HashValue mHash = 0;

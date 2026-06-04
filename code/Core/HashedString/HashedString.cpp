@@ -5,16 +5,20 @@ HashedString::HashedString(const char* str)
 {
     set(str);
 }
-HashedString::HashedString(const std::string& str) : HashedString(str.data())
+HashedString::HashedString(const char* str, u32 size)
+{
+    set(str, size);
+}
+HashedString::HashedString(const std::string& str) : HashedString(str.data(), str.size())
 {
 }
-HashedString::HashedString(const std::string_view& str) : HashedString(str.data())
+HashedString::HashedString(const std::string_view& str) : HashedString(str.data(), str.size())
 {
 }
 
-void HashedString::set(const char* str)
+void HashedString::set(const char* str, u32 size)
 {
-    if(std::strlen(str) == 0)
+    if(size == 0)
     {
         return;
     }
@@ -28,6 +32,11 @@ void HashedString::set(const char* str)
     #ifdef ENGINE_BUILD_DEBUG
     mDebugString = &get();
     #endif
+}
+
+void HashedString::set(const char* str)
+{
+    set(str, std::strlen(str));
 }
 
 const std::string& HashedString::get() const

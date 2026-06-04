@@ -30,32 +30,25 @@ using HashValue = Core::u64;
 
 namespace Hash
 {
-    constexpr inline static HashValue hashString(const char *str)
+    constexpr inline static HashValue hashString(std::string_view str)
     {
         HashValue hashResult = 5381;
-        // NOTE: std::strlen is not constexpr
-        // so we need to use std::char_traits<char>::length()
-        Core::u32 strSize = std::char_traits<char>::length(str);
-        // Other alternatives:
-        // std::string_view(str).size()
-        // constexpr std::size_t f(const char*)
-        FOR_RANGE(i, 0, strSize)
+        for (char c : str)
         {
-            hashResult = ((hashResult << 5) + hashResult) + str[i]; /* hash * 33 + c */
+            hashResult = ((hashResult << 5) + hashResult) + c; /* hash * 33 + c */
         }
-
         return hashResult;
     }
 
-    constexpr inline static HashValue hashString(const std::string& str)
-	{
-		return hashString(str.c_str());
-	}
+    constexpr inline static HashValue hashString(const char* str) 
+    { 
+        return hashString(std::string_view(str)); 
+    }
     
-    constexpr inline static HashValue hashString(const std::string_view& str)
-	{
-		return hashString(str.data());
-	}
+    constexpr inline static HashValue hashString(const std::string& str) 
+    { 
+        return hashString(std::string_view(str)); 
+    }
 }
 NS_END
 
