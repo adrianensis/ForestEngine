@@ -19,7 +19,7 @@ public:
     virtual void terminate() override;
 
     const Font::FontGlyphData& getGlyphData(char character) const;
-    Core::WeakPtr<GPUShader> getFontShader() const;
+    GPUShader* getFontShader() const;
     Core::WeakPtr<const UIFont> getFont() const;
 
 	UIGroup& getOrCreateGroup(Core::HashedString groupName)
@@ -48,7 +48,7 @@ private:
 	UIElement* mFocusedElement  = nullptr;
     UIFontsManager mFontsManager;
     Core::HashedString mDefaultFont;
-    Core::WeakPtr<GPUShader> mDefaultUIShader;
+    GPUShader* mDefaultUIShader = nullptr;
 
 public:
     GET(DefaultUIShader)

@@ -57,7 +57,7 @@ void UIPanel::initFromConfig(UIManager* uiManager, const UIElementConfig& config
     UIArea::initFromConfig(uiManager, config);
 
     GPURenderItemData rendererData;
-    rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
+    rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>().getInternalPointer();
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUDepthStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {

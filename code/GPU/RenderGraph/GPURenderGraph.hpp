@@ -13,8 +13,8 @@ public:
     void update();
     void terminate();
     void render();
-    void addRenderer(Core::WeakPtr<GPURenderItem> renderItem);
-    void removeRenderer(Core::WeakPtr<GPURenderItem> renderItem);
+    void addRenderer(GPURenderItem* renderItem);
+    void removeRenderer(GPURenderItem* renderItem);
     void onResize();
 
     template<class T> T_EXTENDS(T, GPURenderPass)
@@ -24,10 +24,10 @@ public:
 
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
-            Core::OwnerPtr<GPURenderPass>::moveCast(Core::OwnerPtr<T>::newObject())
+            new T()
         );
 
-        Core::WeakPtr<T> renderPass = getRenderPass<T>();
+        T* renderPass = getRenderPass<T>();
         renderPass->init(mGPUContext,
             renderPassData,
             mGPURenderPassSubsystems);
@@ -36,21 +36,21 @@ public:
     }
 
     template<class T> T_EXTENDS(T, GPURenderPass)
-    Core::WeakPtr<T> getRenderPass()
+    T* getRenderPass()
     {
         Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
-        return Core::WeakPtr<T>::cast(mRenderPassMap.at(renderPassClassId));
+        return static_cast<T*>(mRenderPassMap.at(renderPassClassId));
     }
 
     void initBuffers();
 
 private:
     GPUContext* mGPUContext = nullptr;
-    std::unordered_map<Core::ClassId, Core::OwnerPtr<GPURenderPass>> mRenderPassMap;
-    std::vector<Core::WeakPtr<GPURenderPass>> mRenderPassesArray;
+    std::unordered_map<Core::ClassId, GPURenderPass*> mRenderPassMap;
+    std::vector<GPURenderPass*> mRenderPassesArray;
     GPURenderPassSubsystems mGPURenderPassSubsystems;
-    Core::OwnerPtr<GPURenderPass> mRenderPassResolve;
-    // Core::OwnerPtr<GPUDescriptorSet> mGPUDescriptorSet;
+    GPURenderPass* mRenderPassResolve = nullptr;
+    // GPUDescriptorSet* mGPUDescriptorSet = nullptr;
     GPUImage mColorBufferImage;
     GPUImage mDepthBufferImage;
 };

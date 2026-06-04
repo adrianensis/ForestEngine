@@ -18,8 +18,8 @@ void RenderPipeline::init(CameraManager* cameraManager)
     mGPUInstanceRendererManager = Core::OwnerPtr<GPUInstanceRendererManager>::newObject();
     GPURenderPassSubsystems gpuRenderPassSubsystems
     {
-        mGPUInstanceRendererManager,
-        mGlobalGPUUniformBuffersContainer,
+        mGPUInstanceRendererManager.getInternalPointer(),
+        mGlobalGPUUniformBuffersContainer.getInternalPointer(),
         GPUInstance::getInstance().mGPUSkeletalAnimationManager,
         GPUInstance::getInstance().mGPUShaderManager,
         &GPUInstance::getInstance().mGPUDescriptorManager
@@ -82,14 +82,14 @@ void RenderPipeline::onResize()
 void RenderPipeline::addRenderer(MeshRenderer* renderer)
 {
     PROFILER_CPU()
-    mGPURenderItemManager.addRenderer(renderer->getGPURenderItem());
+    mGPURenderItemManager.addRenderer(renderer->getGPURenderItem().getInternalPointer());
 
     GPUInstanceRendererData gpuInstanceRendererData;
-    gpuInstanceRendererData.init(renderer->getGPURenderItem());
+    gpuInstanceRendererData.init(renderer->getGPURenderItem().getInternalPointer());
     mGPUInstanceRendererManager->addInstanceRenderer(GPUInstance::getInstance().mGPUContext, gpuInstanceRendererData);
-    mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem());
+    mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->addRenderer(renderer->getGPURenderItem().getInternalPointer());
     
-    mGPURenderGraph.addRenderer(renderer->getGPURenderItem());
+    mGPURenderGraph.addRenderer(renderer->getGPURenderItem().getInternalPointer());
 
     mMeshRenderers[renderer->getGPURenderItem()->getRenderSlot().getSlot()] = renderer;
 }
@@ -100,11 +100,11 @@ void RenderPipeline::removeRenderer(MeshRenderer* renderer)
 
     Core::u32 slot = renderer->getGPURenderItem()->getRenderSlot().getSlot();
     
-    mGPURenderItemManager.removeRenderer(renderer->getGPURenderItem());
+    mGPURenderItemManager.removeRenderer(renderer->getGPURenderItem().getInternalPointer());
     GPUInstanceRendererData gpuInstanceRendererData;
-    gpuInstanceRendererData.init(renderer->getGPURenderItem());
-    mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem());
-    mGPURenderGraph.removeRenderer(renderer->getGPURenderItem());
+    gpuInstanceRendererData.init(renderer->getGPURenderItem().getInternalPointer());
+    mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData)->removeRenderer(renderer->getGPURenderItem().getInternalPointer());
+    mGPURenderGraph.removeRenderer(renderer->getGPURenderItem().getInternalPointer());
     
     mMeshRenderers[slot] = nullptr;
 }

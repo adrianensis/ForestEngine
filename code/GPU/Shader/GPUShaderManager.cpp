@@ -23,7 +23,7 @@ void GPUShaderManager::update()
 
     FOR_LIST(it, mDirtyGPUShaderPropertiesInstances)
     {
-        Core::WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.at(*it);
+        GPUShaderPropertiesInstance* instance = mGPUShaderPropertiesInstances.at(*it);
         setGPUShaderPropertiesInstanceProperties(instance);
     }
     mDirtyGPUShaderPropertiesInstances.clear();
@@ -35,15 +35,15 @@ void GPUShaderManager::update()
     }
 }
 
-void GPUShaderManager::postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
+void GPUShaderManager::postGPUShaderCreated(GPUContext* gpuContext, GPUShader* shader)
 {
     initGPUShaderPropertiesInstancePropertiesUniformBuffer(gpuContext, shader);
 }
 
-Core::WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderPropertiesInstance(Core::WeakPtr<GPUShader> shader)
+GPUShaderPropertiesInstance* GPUShaderManager::createGPUShaderPropertiesInstance(GPUShader* shader)
 {
     PROFILER_CPU()
-    Core::WeakPtr<GPUShaderPropertiesInstance> instance = mGPUShaderPropertiesInstances.emplace_back(Core::OwnerPtr<GPUShaderPropertiesInstance>::newObject());
+    GPUShaderPropertiesInstance* instance = mGPUShaderPropertiesInstances.emplace_back( new GPUShaderPropertiesInstance());
     instance->mShader = shader;
     instance->mID = mGPUShaderPropertiesInstances.size() - 1;
     instance->mGPUShaderPropertiesBlockBuffer = shader->getSharedGPUShaderPropertiesBlockBuffer();
@@ -51,10 +51,10 @@ Core::WeakPtr<GPUShaderPropertiesInstance> GPUShaderManager::createGPUShaderProp
 
     return instance;
 }
-void GPUShaderManager::freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
+void GPUShaderManager::freeGPUShaderPropertiesInstance(GPUShaderPropertiesInstance* shaderPropertiesInstance)
 {
     PROFILER_CPU()
-    CHECK_MSG(shaderPropertiesInstance->mShader.isValid(), "Invalid shader!");
+    CHECK_MSG(shaderPropertiesInstance->mShader, "Invalid shader!");
     Core::ClassId propertiesBlockClassId = shaderPropertiesInstance->mShader->getSharedGPUShaderPropertiesBlockClass().getId();
 
     if(mGPUShaderPropertyBlockRenderStates.contains(propertiesBlockClassId))
@@ -66,9 +66,9 @@ void GPUShaderManager::freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPr
     }  
 }
 
-void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader)
+void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, GPUShader* shader)
 {
-    CHECK_MSG(shader.isValid(), "Invalid shader!");
+    CHECK_MSG(shader, "Invalid shader!");
     GPU::u32 shaderID = shader->getID();
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
     
@@ -97,12 +97,12 @@ void GPUShaderManager::initGPUShaderPropertiesInstancePropertiesUniformBuffer(GP
     }
 }
 
-void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance)
+void GPUShaderManager::setGPUShaderPropertiesInstanceProperties(const GPUShaderPropertiesInstance* shaderPropertiesInstance)
 {
     PROFILER_CPU()
 
-    Core::WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
-    CHECK_MSG(shader.isValid(), "Invalid shader!");
+    GPUShader* shader = shaderPropertiesInstance->mShader;
+    CHECK_MSG(shader, "Invalid shader!");
     GPU::u32 shaderID = shader->getID();
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
 
@@ -124,10 +124,10 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(GPU::u32 id)
 {
     PROFILER_CPU()
 
-    Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance = mGPUShaderPropertiesInstances.at(id);
-    CHECK_MSG(shaderPropertiesInstance.isValid(), "Invalid shader Instance!");
-    Core::WeakPtr<GPUShader> shader = shaderPropertiesInstance->mShader;
-    CHECK_MSG(shader.isValid(), "Invalid shader!");
+    GPUShaderPropertiesInstance* shaderPropertiesInstance = mGPUShaderPropertiesInstances.at(id);
+    CHECK_MSG(shaderPropertiesInstance, "Invalid shader Instance!");
+    GPUShader* shader = shaderPropertiesInstance->mShader;
+    CHECK_MSG(shader, "Invalid shader!");
     GPU::u32 shaderID = shader->getID();
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
 
@@ -141,19 +141,19 @@ void GPUShaderManager::setGPUShaderPropertiesInstanceDirty(GPU::u32 id)
     }
 }
 
-const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer(Core::WeakPtr<GPUShader> shader) const
+const GPUUniformBuffer& GPUShaderManager::getGPUShaderPropertiesGPUUniformBuffer(GPUShader* shader) const
 {
-    CHECK_MSG(shader.isValid(), "Invalid shader!");
+    CHECK_MSG(shader, "Invalid shader!");
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
     CHECK_MSG(mGPUShaderPropertyBlockRenderStates.contains(propertiesBlockClassId), "GPUShader Property Block not found!");
     return mGPUShaderPropertyBlockRenderStates.at(propertiesBlockClassId).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName);
 }
 
-Core::Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(Core::WeakPtr<GPUShader> shader)
+Core::Slot GPUShaderManager::requestGPUShaderPropertiesInstanceSlot(GPUShader* shader)
 {
     PROFILER_CPU()
 
-    CHECK_MSG(shader.isValid(), "Invalid shader!");
+    CHECK_MSG(shader, "Invalid shader!");
     Core::ClassId propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockClass().getId();
     
     Core::Slot slot;

@@ -51,7 +51,7 @@ void RenderPassUI::render()
     FOR_LIST(it, mGPUInstanceRendererRegistry.getGPUInstanceRendererDataSet())
 	{
         const GPUInstanceRendererData& gpuInstanceRendererData = *it;
-        Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+        const GPUInstanceRenderer* gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
         if(gpuInstanceRendererData.mGPUDepthStencilData.mStencilEnable)
         {
             if(gpuInstanceRendererData.mGPUDepthStencilData.mParentId > 0)

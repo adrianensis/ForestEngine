@@ -129,7 +129,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
         std::vector<GPUUniformBuffer> uniformBuffers;
         uniformBuffers.push_back(mGPURenderPassSubsystems.mGPUShaderManager->getGPUShaderPropertiesGPUUniformBuffer(gpuInstanceRendererData.mShader));
 
-        Core::WeakPtr<GPUSkeletonState> skeletonState = mGPURenderPassSubsystems.mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
+        GPUSkeletonState* skeletonState = mGPURenderPassSubsystems.mGPUSkeletalAnimationManager->getSkeletonStateFromMesh(gpuInstanceRendererData.mMesh);
         if(skeletonState)
         {
             uniformBuffers.push_back(mGPURenderPassSubsystems.mGPUSkeletalAnimationManager->getSkeletonRenderStateGPUUniformBuffer(skeletonState));
@@ -147,7 +147,7 @@ void GPURenderPass::compileShader(const GPUInstanceRendererData& gpuInstanceRend
             uniformBuffers.push_back(mGPURenderPassSubsystems.mGlobalGPUUniformBuffersContainer->getUniformBuffer(GPULightBuiltIn::mShadowMappingBufferData));
         }
 
-        Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+        const GPUInstanceRenderer* gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
 
         GPUDescriptorLayoutData gpuDescriptorLayoutData
         {
@@ -213,8 +213,8 @@ void GPURenderPass::render()
 void GPURenderPass::renderGPUInstanceRenderer(const GPUInstanceRendererData& gpuInstanceRendererData)
 {
     PROFILER_CPU()
-    Core::WeakPtr<GPUInstanceRenderer> gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
-    Core::WeakPtr<GPUShaderPipeline> gpuShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
+    GPUInstanceRenderer* gpuInstanceRenderer = mGPURenderPassSubsystems.mGPUInstanceRendererManager->getInstanceRenderer(gpuInstanceRendererData);
+    GPUShaderPipeline* gpuShaderPipeline = mGPUShaderPipelines.at(gpuInstanceRendererData);
     
     const GPUCommandBuffer& vulkanCommandBuffer = mGPUContext->vulkanCommandBuffers[mGPUContext->currentFrame];
     const GPUInstanceRendererData& gpuRenderInstanceData = gpuInstanceRenderer->getGPUInstanceRendererData();

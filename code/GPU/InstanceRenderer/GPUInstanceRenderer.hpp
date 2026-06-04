@@ -12,8 +12,8 @@ public:
     void terminate();
 
     void render();
-    void addRenderer(Core::WeakPtr<GPURenderItem> renderItem);
-    void removeRenderer(Core::WeakPtr<GPURenderItem> renderItem);
+    void addRenderer(GPURenderItem* renderItem);
+    void removeRenderer(GPURenderItem* renderItem);
 
     bool isEmpty() const { return mRenderersCount == 0; }
     void enable();
@@ -23,14 +23,14 @@ public:
 private:
     bool shouldResize() const;
 
-    void setMeshBuffers(Core::WeakPtr<const GPUMesh> mesh);
+    void setMeshBuffers(const GPUMesh* mesh);
     void setBonesTransformsBuffer(const std::vector<Maths::Matrix4>& transforms);
     void drawCall();
 
 private:
     GPUContext* mGPUContext = nullptr;
     Core::SlotsManager mRendererSlotsManager;
-	std::vector<Core::WeakPtr<GPURenderItem>> mRenderers;
+	std::vector<GPURenderItem*> mRenderers;
     GPU::u32 mRenderersCount = 0;
     std::set<GPU::u32> mUsedSlots;
     inline static const GPU::u32 smInitialInstancesSize = 100;
@@ -57,9 +57,9 @@ public:
     void update(GPUContext* gpuContext);
     bool addInstanceRenderer(GPUContext* gpuContext, const GPUInstanceRendererData& data);
     bool removeInstanceRenderer(const GPUInstanceRendererData& data);
-    const Core::WeakPtr<GPUInstanceRenderer> getInstanceRenderer(const GPUInstanceRendererData& data) const;
+    GPUInstanceRenderer* getInstanceRenderer(const GPUInstanceRendererData& data) const;
 private:
-    std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUInstanceRenderer>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRenderers;
+    std::unordered_map<GPUInstanceRendererData, GPUInstanceRenderer*, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRenderers;
     using AA = std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>;
 };
 

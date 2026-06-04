@@ -18,7 +18,7 @@ void ModelRenderer::onECComponentAdded()
     FOR_LIST(it, meshes)
 	{
         GPURenderItemData rendererData;
-		rendererData.mMesh = (*it).mMesh;
+		rendererData.mMesh = (*it).mMesh.getInternalPointer();
 		rendererData.mMeshInstanceMatrix = (*it).mMatrix;
 		rendererData.mShader = mModelRendererData.mModel->getMeshShaders().at((*it).mMesh);
 		rendererData.mGPUDepthStencilData = mModelRendererData.mGPUDepthStencilData;

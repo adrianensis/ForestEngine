@@ -18,7 +18,7 @@ public:
 private:
     std::unordered_map<std::string, Core::OwnerPtr<Model>> mModels;
     std::unordered_map<Core::WeakPtr<const GPUMesh>, Model*> mMeshToModels;
-    Core::WeakPtr<GPUShader> mDefaultModelShader;
+    GPUShader* mDefaultModelShader = nullptr;
 public:
     GET(DefaultModelShader)
     CRGET(Models)

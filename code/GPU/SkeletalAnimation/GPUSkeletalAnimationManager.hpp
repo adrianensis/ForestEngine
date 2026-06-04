@@ -10,15 +10,15 @@ public:
     void init();
     void terminate();
     void update(GPU::f32 dt);
-    Core::WeakPtr<GPUSkeletonState> createSkeletonState(GPUContext* gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData);
+    GPUSkeletonState* createSkeletonState(GPUContext* gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData);
 
-    const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(Core::WeakPtr<const GPUSkeletonState> skeletonState) const;
-    Core::WeakPtr<GPUSkeletonState> getSkeletonStateFromMesh(Core::WeakPtr<const GPUMesh> mesh) const;
+    const GPUUniformBuffer& getSkeletonRenderStateGPUUniformBuffer(const GPUSkeletonState* skeletonState) const;
+    GPUSkeletonState* getSkeletonStateFromMesh(const GPUMesh* mesh) const;
 private:
-    void initSkeletonRenderState(GPUContext* gpuContext, Core::WeakPtr<const GPUSkeletonState> skeletonState);
+    void initSkeletonRenderState(GPUContext* gpuContext, const GPUSkeletonState* skeletonState);
 
 private:
-    std::unordered_set<Core::OwnerPtr<GPUSkeletonState>> mSkeletonStates;
+    std::unordered_set<GPUSkeletonState*> mSkeletonStates;
 
     class SkeletonRenderState
     {
@@ -26,8 +26,8 @@ private:
         GPUUniformBuffersContainer mGPUUniformBuffersContainer;
     };
 
-	std::unordered_map<Core::WeakPtr<const GPUSkeletonState>, SkeletonRenderState> mSkeletonRenderStates;
-    std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::WeakPtr<GPUSkeletonState>> mMeshToSkeletonState;
+	std::unordered_map<const GPUSkeletonState*, SkeletonRenderState> mSkeletonRenderStates;
+    std::unordered_map<const GPUMesh*, GPUSkeletonState*> mMeshToSkeletonState;
 
 public:
     CRGET(SkeletonStates)

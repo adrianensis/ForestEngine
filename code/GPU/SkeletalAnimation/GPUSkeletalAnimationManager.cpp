@@ -22,9 +22,9 @@ void GPUSkeletalAnimationManager::update(GPU::f32 dt)
 	}
 }
 
-Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::createSkeletonState(GPUContext* gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData)
+GPUSkeletonState* GPUSkeletalAnimationManager::createSkeletonState(GPUContext* gpuContext, const GPUSkeletonStateData& gpuSkeletonStateData)
 {
-	Core::WeakPtr<GPUSkeletonState> skeletonState = *mSkeletonStates.emplace(Core::OwnerPtr<GPUSkeletonState>::newObject()).first;
+	GPUSkeletonState* skeletonState = *mSkeletonStates.emplace( new GPUSkeletonState()).first;
     skeletonState->init(gpuSkeletonStateData);
 
     FOR_LIST(it, gpuSkeletonStateData.mMeshes)
@@ -45,9 +45,9 @@ void GPUSkeletalAnimationManager::terminate()
 	mSkeletonStates.clear();
 }
 
-void GPUSkeletalAnimationManager::initSkeletonRenderState(GPUContext* gpuContext, Core::WeakPtr<const GPUSkeletonState> skeletonState)
+void GPUSkeletalAnimationManager::initSkeletonRenderState(GPUContext* gpuContext, const GPUSkeletonState* skeletonState)
 {
-    CHECK_MSG(skeletonState.isValid(), "Invalid skeleton state!");
+    CHECK_MSG(skeletonState, "Invalid skeleton state!");
 
     SkeletonRenderState skeletonRenderState;
     skeletonRenderState.mGPUUniformBuffersContainer.addUniformBuffer(gpuContext, GPUShaderDefinitions::UniformBuffers::mBonesMatrices, sizeof(Maths::Matrix4)*GPUConstants::MAX_BONES, false);
@@ -55,15 +55,15 @@ void GPUSkeletalAnimationManager::initSkeletonRenderState(GPUContext* gpuContext
     mSkeletonRenderStates.insert_or_assign(skeletonState, skeletonRenderState);
 }
 
-const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(Core::WeakPtr<const GPUSkeletonState> skeletonState) const
+const GPUUniformBuffer& GPUSkeletalAnimationManager::getSkeletonRenderStateGPUUniformBuffer(const GPUSkeletonState* skeletonState) const
 {
     CHECK_MSG(mSkeletonRenderStates.contains(skeletonState), "skeleton state not found!");
     return mSkeletonRenderStates.at(skeletonState).mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderDefinitions::UniformBuffers::mBonesMatrices);
 }
 
-Core::WeakPtr<GPUSkeletonState> GPUSkeletalAnimationManager::getSkeletonStateFromMesh(Core::WeakPtr<const GPUMesh> mesh) const
+GPUSkeletonState* GPUSkeletalAnimationManager::getSkeletonStateFromMesh(const GPUMesh* mesh) const
 {
-    Core::WeakPtr<GPUSkeletonState> result;
+    GPUSkeletonState* result = nullptr;
     if(mMeshToSkeletonState.contains(mesh))
     {
         result = mMeshToSkeletonState.at(mesh);

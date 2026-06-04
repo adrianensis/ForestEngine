@@ -48,7 +48,7 @@ class GPURenderPassDependency
 public:
     Core::HashedString mSamplerName;
     GPUFramebufferAttachmentType mAttachmentType;
-    Core::WeakPtr<GPURenderPass> mRenderPass;
+    GPURenderPass* mRenderPass = nullptr;
 };
 
 class GPURenderPassData
@@ -66,8 +66,8 @@ public:
 class GPURenderPassSubsystems
 {
 public:
-    Core::WeakPtr<GPUInstanceRendererManager> mGPUInstanceRendererManager;
-    Core::WeakPtr<GPUUniformBuffersContainer> mGlobalGPUUniformBuffersContainer;
+    GPUInstanceRendererManager* mGPUInstanceRendererManager = nullptr;
+    GPUUniformBuffersContainer* mGlobalGPUUniformBuffersContainer = nullptr;
     GPUSkeletalAnimationManager* mGPUSkeletalAnimationManager = nullptr;
     GPUShaderManager* mGPUShaderManager = nullptr;
     GPUDescriptorManager* mGPUDescriptorManager = nullptr;
@@ -105,7 +105,7 @@ public:
 protected:
     GPURenderPassData mGPURenderPassData;
     GPUUniformBuffersContainer mGPUUniformBuffersContainer;
-    std::unordered_map<GPUInstanceRendererData, Core::OwnerPtr<GPUShaderPipeline>, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
+    std::unordered_map<GPUInstanceRendererData, GPUShaderPipeline*, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUShaderPipelines;
     GPUInstanceRendererRegistry mGPUInstanceRendererRegistry;
     GPURenderPassSubsystems mGPURenderPassSubsystems;
     VkRenderingAttachmentInfo depthAttachment{};

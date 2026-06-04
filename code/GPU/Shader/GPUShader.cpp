@@ -82,13 +82,13 @@ void GPUShader::generateGPUShaderGenerationData(GPUShaderGenerationData& shaderG
 {
 }
 
-Core::OwnerPtr<GPUShaderPipeline> GPUShader::compileShader(const GPUShaderCompilationData& shaderCompilationData)
+GPUShaderPipeline* GPUShader::compileShader(const GPUShaderCompilationData& shaderCompilationData)
 {
     PROFILER_CPU_NAMED(compileShader)
 
     // TODO: Refactor this method to external ShaderUtils?
 
-    Core::OwnerPtr<GPUShaderPipeline> gpuShaderPipeline = Core::OwnerPtr<GPUShaderPipeline>::newObject();
+    GPUShaderPipeline* gpuShaderPipeline = new  GPUShaderPipeline();
     GPUShaderPipelineData gpuShaderPipelineData
     {
         shaderCompilationData.mGPUDescriptorSetGlobal,

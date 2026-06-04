@@ -96,12 +96,12 @@ private:
     std::vector<Core::OwnerPtr<GPUSkeletalAnimation>> mSkeletalAnimations;
     std::vector<MeshInstanceData> mMeshInstances;
     std::unordered_map<const cgltf_primitive*, Core::OwnerPtr<GPUMesh>> mGLTFMeshes;
-    std::unordered_map<const cgltf_material*, Core::WeakPtr<GPUShader>> mGLTFShaders;
-    std::unordered_map<Core::WeakPtr<const GPUMesh>, Core::WeakPtr<GPUShader>> mMeshShaders;
+    std::unordered_map<const cgltf_material*, GPUShader*> mGLTFShaders;
+    std::unordered_map<Core::WeakPtr<const GPUMesh>, GPUShader*> mMeshShaders;
     std::unordered_map<const cgltf_node*, Core::u32> mNodeToBoneId;
     std::vector<GLTFChannels> mChannels;
     Core::u32 mBonesIndexCount = 0;
-    Core::WeakPtr<GPUSkeletonState> mSkeletonState;
+    GPUSkeletonState* mSkeletonState = nullptr;
 
 public:
     CRGET(MeshInstances)

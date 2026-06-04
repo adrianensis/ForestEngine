@@ -76,7 +76,7 @@ void Model::loadGLTFShaders()
             GPUShaderData shaderData;
             // shaderData.mAllowInstances = false;
             // shaderData.mCullFaceType = cgltfMaterial.double_sided ? GPUCullFaceType::BACK : GPUCullFaceType::NONE;
-            Core::WeakPtr<GPUShader> newShader;
+            GPUShader* newShader = nullptr;
 
             CHECK_MSG(cgltfMaterial.has_pbr_metallic_roughness, "Only PBR materials are supported")
 
@@ -228,7 +228,7 @@ void Model::loadGLTFPrimitive(const cgltf_primitive& primitive, ModelManager* mo
     Core::WeakPtr<GPUMesh> mesh = mGLTFMeshes.at(&primitive);
     modelManager->setMeshToModel(mesh, this);
 
-    Core::WeakPtr<GPUShader> meshShader;
+    GPUShader* meshShader = nullptr;
     if(primitive.material)
     {
         meshShader = mGLTFShaders[primitive.material];
@@ -414,7 +414,7 @@ void Model::loadGLTFBones(const cgltf_skin& skin)
 
     FOR_MAP(it, mGLTFMeshes)
     {
-        gpuSkeletonStateData.mMeshes.push_back(it->second);
+        gpuSkeletonStateData.mMeshes.push_back(it->second.getInternalPointer());
     }
 
     gpuSkeletonStateData.mBones.reserve(mBonesIndexCount);
@@ -642,7 +642,7 @@ void Model::loadGLTFSkeletalAnimations()
 
         loadGLTFSkeletalAnimationFrames(animation);
 
-        mSkeletonState->createSkeletalAnimationState(animation);
+        mSkeletonState->createSkeletalAnimationState(animation.getInternalPointer());
     }
 }
 

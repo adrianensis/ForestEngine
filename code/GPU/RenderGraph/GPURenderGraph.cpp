@@ -59,7 +59,7 @@ void GPURenderGraph::init(GPUContext* gpuContext, GPURenderPassSubsystems& gpuRe
     renderPassResolveData.mIsResolvePass = true;
     renderPassResolveData.mColorAttachment.mGPUAttachmentLoadOp = GPUAttachmentLoadOp::LOAD;
 
-    mRenderPassResolve = Core::OwnerPtr<GPURenderPass>::newObject();
+    mRenderPassResolve = new  GPURenderPass();
     mRenderPassResolve->init(mGPUContext, renderPassResolveData, mGPURenderPassSubsystems);
 }
 
@@ -87,7 +87,7 @@ void GPURenderGraph::render()
             renderPassOutputData.mColorGPUImage = &mColorBufferImage;
             renderPassOutputData.mDepthGPUImage = &mDepthBufferImage;
 
-            Core::WeakPtr<GPURenderPass> renderPass = mRenderPassesArray[i];
+            GPURenderPass* renderPass = mRenderPassesArray[i];
             renderPass->renderPass(renderPassOutputData);
         }
 
@@ -138,7 +138,7 @@ void GPURenderGraph::onResize()
 	}
 }
 
-void GPURenderGraph::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
+void GPURenderGraph::addRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
     GPUInstanceRendererData gpuInstanceRendererData;
@@ -148,13 +148,13 @@ void GPURenderGraph::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
     {
         if(mRenderPassMap.contains(*it))
         {
-            Core::WeakPtr<GPURenderPass> renderPass = mRenderPassMap.at(*it);
+            GPURenderPass* renderPass = mRenderPassMap.at(*it);
             renderPass->addInstanceRendererData(gpuInstanceRendererData);
         }
     }
 }
 
-void GPURenderGraph::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
+void GPURenderGraph::removeRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
     GPUInstanceRendererData gpuInstanceRendererData;

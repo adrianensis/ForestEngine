@@ -27,7 +27,7 @@ private:
     std::string getPresentationModeAsString(VkPresentModeKHR presentMode) const;
 
 private:
-    GPUDevice* vulkanDevice;
+    GPUDevice* vulkanDevice = nullptr;
     Maths::Vector2 mWindowSizeInPixels;
     VkSurfaceKHR vkSurface;
     VkSurfaceFormatKHR mSurfaceFormat{};

@@ -8,8 +8,8 @@ private:
     inline static const VkAllocationCallbacks* ALLOCATOR = VK_NULL_HANDLE;
 
 private:
-    GPUVulkanInstance* mGPUVulkanInstance;
-    GPUPhysicalDevice* mPhysicalDevice;
+    GPUVulkanInstance* mGPUVulkanInstance = nullptr;
+    GPUPhysicalDevice* mPhysicalDevice = nullptr;
     VkDevice mDevice = VK_NULL_HANDLE;
     VkQueue mGraphicsQueue = VK_NULL_HANDLE;
     VkQueue mPresentQueue = VK_NULL_HANDLE;

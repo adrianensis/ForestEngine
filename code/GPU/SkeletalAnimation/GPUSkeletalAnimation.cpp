@@ -16,7 +16,7 @@ GPU::f32 GPUSkeletalAnimation::calculateCurrentSkeletalAnimationTime(GPU::f32 ac
     return animationTime;
 }
 
-void GPUSkeletalAnimationState::init(Core::WeakPtr<const GPUSkeletalAnimation> animation)
+void GPUSkeletalAnimationState::init(const GPUSkeletalAnimation* animation)
 {
     mSkeletalAnimation = animation;
 }
@@ -52,13 +52,13 @@ void GPUSkeletonState::update(GPU::f32 dt)
     }
 }
 
-void GPUSkeletonState::createSkeletalAnimationState(Core::WeakPtr<const GPUSkeletalAnimation> animation)
+void GPUSkeletonState::createSkeletalAnimationState(const GPUSkeletalAnimation* animation)
 {
     GPU::u32 animationId = animation->mID;
 
 	if(!mSkeletalAnimationStates.contains(animationId))
 	{
-		mSkeletalAnimationStates.insert_or_assign(animationId, Core::OwnerPtr<GPUSkeletalAnimationState>::newObject());
+		mSkeletalAnimationStates.insert_or_assign(animationId, new  GPUSkeletalAnimationState());
 		mSkeletalAnimationStates.at(animationId)->init(animation);
 	}
 

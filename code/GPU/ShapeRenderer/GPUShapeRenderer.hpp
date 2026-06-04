@@ -19,7 +19,7 @@ private:
     void addColor(const Maths::Vector4& color);
 private: 
 	GPUContext* mGPUContext = nullptr;
-	Core::WeakPtr<GPUShader> mShader;
+	GPUShader* mShader = nullptr;
     GPUVertexBuffersContainer mGPUVertexBuffersContainer;
 	std::vector<Maths::Vector3> mPositionBuffer;
 	std::vector<Maths::Vector4> mColorBuffer;

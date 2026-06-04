@@ -33,7 +33,7 @@ public:
 	bool mAdjustSizeToText = false;
 	Core::i32 mLayer = 0;
 	bool mIsAffectedByLayout = true;
-	Core::WeakPtr<GPUShader> mShader;
+	GPUShader* mShader = nullptr;
 	Core::HashedString mGroup;
 	GameObject* mParent = nullptr;
 	Core::f32 mSeparatorSize = 0.01f;

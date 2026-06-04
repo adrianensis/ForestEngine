@@ -40,7 +40,7 @@ void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
 	mTransform->setLocalScale(Maths::Vector3(UIUtils::correctAspectRatioVectorX(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer(), mConfig.mSize), 1));
 
     GPURenderItemData rendererData;
-	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>();
+	rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>().getInternalPointer();
 	rendererData.mShader = mConfig.mShader;
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mGPUDepthStencilData = calculateStencilData();

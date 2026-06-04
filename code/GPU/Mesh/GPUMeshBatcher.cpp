@@ -1,17 +1,17 @@
 #include "GPU/Mesh/GPUMeshBatcher.hpp"
 
-void GPUMeshBatcher::init(Core::WeakPtr<const GPUMesh> mesh, GPU::u32 size)
+void GPUMeshBatcher::init(const GPUMesh* mesh, GPU::u32 size)
 {
 	PROFILER_CPU()
     mMesh = mesh;
-    mInternalMesh = Core::OwnerPtr<GPUMesh>::newObject();
+    mInternalMesh = new  GPUMesh();
 
     allocateInstances(1);
     appendMeshData(mMesh);
 	resize(size);
 }
 
-void GPUMeshBatcher::appendMeshData(Core::WeakPtr<const GPUMesh> mesh)
+void GPUMeshBatcher::appendMeshData(const GPUMesh* mesh)
 {
     PROFILER_CPU()
 

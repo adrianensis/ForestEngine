@@ -49,13 +49,13 @@ private:
 public:
     inline static const GPU::u32 MAX_FRAMES_IN_FLIGHT = 2;
     
-    GPUVulkanInstance* gpuVulkanInstance;
-    GPUPhysicalDevice* vulkanPhysicalDevice;
-    GPUDevice* vulkanDevice;
+    GPUVulkanInstance* gpuVulkanInstance = nullptr;
+    GPUPhysicalDevice* vulkanPhysicalDevice = nullptr;
+    GPUDevice* vulkanDevice = nullptr;
     VkSurfaceKHR surface = VK_NULL_HANDLE;
-    GPUSwapChain* vulkanSwapChain;
-    Core::OwnerPtr<GPUCommandPool> vulkanCommandPool;
-    Core::OwnerPtr<GPUCommandPool> vulkanCommandPoolSingleUse;
+    GPUSwapChain* vulkanSwapChain = nullptr;
+    GPUCommandPool* vulkanCommandPool = nullptr;
+    GPUCommandPool* vulkanCommandPoolSingleUse = nullptr;
     std::vector<GPUCommandBuffer> vulkanCommandBuffers;
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -67,7 +67,7 @@ public:
     
     #ifdef ENGINE_ENABLE_PROFILER
     TracyVkCtx mTracyContext = nullptr;
-    Core::OwnerPtr<GPUCommandPool> profilingCommandPool;
+    GPUCommandPool* profilingCommandPool = nullptr;
     GPUCommandBuffer profilingCommandBuffer_;
     #endif
     

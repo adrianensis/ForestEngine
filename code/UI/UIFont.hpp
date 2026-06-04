@@ -29,7 +29,7 @@ public:
     void init(UIFontsManager& fontsManager, Core::HashedString fontFile, Core::u32 fontSize);
 private:
     Font::FontData mFontData;
-    Core::WeakPtr<GPUShader> mFontShader;
+    GPUShader* mFontShader = nullptr;
 public:
     GET(FontShader)
     CRGET(FontData)

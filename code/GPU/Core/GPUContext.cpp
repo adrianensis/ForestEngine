@@ -49,12 +49,12 @@ void GPUContext::init(IGPUWindow* gpuWindow)
     {
         CHECK_MSG(false, "Could not initialize Vulkan swap chain");
     }
-    vulkanCommandPool = Core::OwnerPtr<GPUCommandPool>::newObject();
+    vulkanCommandPool = new  GPUCommandPool();
     if (!vulkanCommandPool->init(this, 0)) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool");
     }
-    vulkanCommandPoolSingleUse = Core::OwnerPtr<GPUCommandPool>::newObject();
+    vulkanCommandPoolSingleUse = new  GPUCommandPool();
     if (!vulkanCommandPoolSingleUse->init(this, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT)) 
     {
         CHECK_MSG(false, "Could not initialize Vulkan command pool Single Use");
@@ -68,7 +68,7 @@ void GPUContext::init(IGPUWindow* gpuWindow)
     function_vkCmdSetStencilTestEnableEXT = GPU_LOAD_EXTENSION_FUNCTION(vkCmdSetStencilTestEnableEXT);
 
 #ifdef ENGINE_ENABLE_PROFILER
-    profilingCommandPool = Core::OwnerPtr<GPUCommandPool>::newObject();
+    profilingCommandPool = new  GPUCommandPool();
     profilingCommandPool->init(this, 0);
     profilingCommandBuffer_ = profilingCommandPool->allocateCommandBuffers(1)[0];
 
@@ -145,7 +145,7 @@ void GPUContext::terminate()
         TracyVkDestroy(mTracyContext);
         profilingCommandPool->freeCommandBuffer(profilingCommandBuffer_);
         profilingCommandPool->terminate();
-        profilingCommandPool.invalidate();
+        delete profilingCommandPool;
     }
 #endif
 
@@ -169,9 +169,9 @@ void GPUContext::terminate()
         vulkanCommandPool->freeCommandBuffer(vulkanCommandBuffers[i]);
     }
     vulkanCommandPool->terminate();
-    vulkanCommandPool.invalidate();
+    delete vulkanCommandPool;
     vulkanCommandPoolSingleUse->terminate();
-    vulkanCommandPoolSingleUse.invalidate();
+    delete vulkanCommandPoolSingleUse;
     vulkanDevice->terminate();
     delete vulkanDevice;
     delete vulkanPhysicalDevice;

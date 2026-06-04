@@ -13,9 +13,9 @@ public:
     void setGPUShaderPropertiesInstanceDirty(GPU::u32 id);
 
     template<class T, class P> T_EXTENDS(T, GPUShader)
-    Core::WeakPtr<GPUShader> createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
+    GPUShader* createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
     {
-        Core::WeakPtr<GPUShader> shader = mShaders.emplace_back(Core::OwnerPtr<GPUShader>::moveCast(Core::OwnerPtr<T>::newObject()));
+        GPUShader* shader = mShaders.emplace_back(new T());
         Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
         propertiesBlockDefaultBuffer.get<P>() = propertiesBlock;
@@ -25,17 +25,17 @@ public:
         return shader;
     }
     
-    const GPUUniformBuffer& getGPUShaderPropertiesGPUUniformBuffer(Core::WeakPtr<GPUShader> shader) const;
-    Core::WeakPtr<GPUShaderPropertiesInstance> createGPUShaderPropertiesInstance(Core::WeakPtr<GPUShader> shader);
-    void freeGPUShaderPropertiesInstance(Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance);
+    const GPUUniformBuffer& getGPUShaderPropertiesGPUUniformBuffer(GPUShader* shader) const;
+    GPUShaderPropertiesInstance* createGPUShaderPropertiesInstance(GPUShader* shader);
+    void freeGPUShaderPropertiesInstance(GPUShaderPropertiesInstance* shaderPropertiesInstance);
     
-    void setGPUShaderPropertiesInstanceProperties(const Core::WeakPtr<GPUShaderPropertiesInstance> shaderPropertiesInstance);
+    void setGPUShaderPropertiesInstanceProperties(const GPUShaderPropertiesInstance* shaderPropertiesInstance);
     
-    Core::Slot requestGPUShaderPropertiesInstanceSlot(Core::WeakPtr<GPUShader> shader);
+    Core::Slot requestGPUShaderPropertiesInstanceSlot(GPUShader* shader);
     
 private:
-    void postGPUShaderCreated(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
-    void initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, Core::WeakPtr<GPUShader> shader);
+    void postGPUShaderCreated(GPUContext* gpuContext, GPUShader* shader);
+    void initGPUShaderPropertiesInstancePropertiesUniformBuffer(GPUContext* gpuContext, GPUShader* shader);
 
     class GPUShaderPropertyBlockRenderState
     {
@@ -47,8 +47,8 @@ private:
 
 	std::unordered_map<Core::ClassId, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
 	
-    std::vector<Core::OwnerPtr<GPUShader>> mShaders;
-    std::vector<Core::OwnerPtr<GPUShaderPropertiesInstance>> mGPUShaderPropertiesInstances;
+    std::vector<GPUShader*> mShaders;
+    std::vector<GPUShaderPropertiesInstance*> mGPUShaderPropertiesInstances;
     std::unordered_set<GPU::u32> mDirtyGPUShaderPropertiesInstances;
     inline static const GPU::u32 mInitialInstances = 20000;
     GPUTextureManager* mGPUTextureManager = nullptr;

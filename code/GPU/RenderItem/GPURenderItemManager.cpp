@@ -18,8 +18,8 @@ void GPURenderItemManager::update()
     {
         FOR_RANGE(i, *mUsedSlots.begin(), (*mUsedSlots.rbegin())+1)
         {
-            Core::WeakPtr<GPURenderItem> renderItem = mRenderers[i];
-            if(renderItem.isValid())
+            GPURenderItem* renderItem = mRenderers[i];
+            if(renderItem)
             {
                 processRenderer(renderItem);
             }
@@ -32,7 +32,7 @@ void GPURenderItemManager::update()
     //     mUsedSlots.end(),
     //     [this](GPU::u32 i)
     //     {
-    //         Core::WeakPtr<GPURenderItem> renderItem = mRenderers[i];
+    //         GPURenderItem* renderItem = mRenderers[i];
     //         if(renderItem.isValid())
     //         {
     //             processRenderer(renderItem);
@@ -41,7 +41,7 @@ void GPURenderItemManager::update()
     // );
 }
 
-void GPURenderItemManager::processRenderer(Core::WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::processRenderer(GPURenderItem* renderItem)
 {
 	PROFILER_CPU()
     if(!renderItem->isStatic())
@@ -56,7 +56,7 @@ void GPURenderItemManager::terminate()
     mRenderInstancesSlotsManager.reset();
 }
 
-void GPURenderItemManager::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::addRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
     if(mRenderInstancesSlotsManager.isEmpty())
@@ -68,29 +68,32 @@ void GPURenderItemManager::addRenderer(Core::WeakPtr<GPURenderItem> renderItem)
     }
 
     renderItem->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
+    GPU::u32 slot = renderItem->getRenderSlot().getSlot();
     if(renderItem->isStatic())
     {
         setRendererMatrix(renderItem);
-        mRenderersStatic.at(renderItem->getRenderSlot().getSlot()) = renderItem;
+        mRenderersStatic[slot] = renderItem;
     }
     else
     {
-        mUsedSlots.insert(renderItem->getRenderSlot().getSlot());
-        mRenderers.at(renderItem->getRenderSlot().getSlot()) = renderItem;
+        mUsedSlots.insert(slot);
+        mRenderers[slot] = renderItem;
     }
 }
 
-void GPURenderItemManager::removeRenderer(Core::WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::removeRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
+    GPU::u32 slot = renderItem->getRenderSlot().getSlot();
     if(renderItem->isStatic())
     {
-        mRenderersStatic.at(renderItem->getRenderSlot().getSlot()).invalidate();
+        
+        mRenderersStatic[slot] = nullptr;
     }
     else
     {
-        mUsedSlots.erase(renderItem->getRenderSlot().getSlot());
-        mRenderers.at(renderItem->getRenderSlot().getSlot()).invalidate();
+        mUsedSlots.erase(slot);
+        mRenderers[slot] = nullptr;
     }
 
     mRenderInstancesSlotsManager.freeSlot(renderItem->getRenderSlot());
@@ -104,7 +107,7 @@ void GPURenderItemManager::removeRenderer(Core::WeakPtr<GPURenderItem> renderIte
     // }
 }
 
-void GPURenderItemManager::setRendererMatrix(Core::WeakPtr<GPURenderItem> renderItem)
+void GPURenderItemManager::setRendererMatrix(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
     if(renderItem->getUpdateMatrix())

@@ -45,7 +45,7 @@ public:
 class GPUPhysicalDevice
 {
 private:
-    GPUVulkanInstance* mGPUVulkanInstance;
+    GPUVulkanInstance* mGPUVulkanInstance = nullptr;
     GPUDeviceInfo deviceInfo{};
     GPUPhysicalDeviceData mGPUPhysicalDeviceData;
     std::vector<GPUDeviceInfo> mAvailableDevices;

@@ -107,7 +107,7 @@ class GPUShaderPropertiesInstance
 public:
     Core::Slot mSlot;
     GPU::u32 mID = 0;
-    Core::WeakPtr<GPUShader> mShader;
+    GPUShader* mShader = nullptr;
     Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
 };
@@ -148,7 +148,7 @@ public:
         {};
 
     virtual void generateGPUShaderGenerationData(GPUShaderGenerationData& shaderGenerationData, const GPUVertexBuffersContainer& gpuVertexBuffersContainer) const;
-    Core::OwnerPtr<GPUShaderPipeline> compileShader(const GPUShaderCompilationData& shaderCompilationData);
+    GPUShaderPipeline* compileShader(const GPUShaderCompilationData& shaderCompilationData);
 
     bool allowInstances() const
     {
