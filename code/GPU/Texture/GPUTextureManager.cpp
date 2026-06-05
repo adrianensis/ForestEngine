@@ -1,11 +1,11 @@
 #include "GPU/Texture/GPUTextureManager.hpp"
+#include "Core/CoreMacros.hpp"
 #include "Core/Memory/SlotsManager.hpp"
 
 void GPUTextureManager::init(GPUContext* gpuContext)
 {
     mGPUContext = gpuContext;
     mTextures.resize(mInitialTextures);
-    mTextureSlotManager.init(mInitialTextures);
 }
 
 void GPUTextureManager::terminate()
@@ -26,24 +26,38 @@ GPUTextureHandle GPUTextureManager::loadTexture(const GPUTextureData& gpuTexture
 	if (mTexturesByPath.contains(gpuTextureData.mPath))
 	{
         handle.mSlot = mTexturesByPath.at(gpuTextureData.mPath);
+        handle.mIsValid = true;
     }
     else
     {
-        handle.mSlot = mTextureSlotManager.requestSlot();
-        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, handle.mSlot);
-        GPUTexture& texture = mTextures[handle.mSlot.getSlot()];
 
-        texture.init(mGPUContext, gpuTextureData, handle.mSlot);
+        FOR_RANGE(i, 0, mTextures.size())
+        {
+            if(!mTextures[i].isValid())
+            {
+                handle.mSlot = i;
+                handle.mIsValid = true;
+                break;
+            }
+        }
+
+        mTexturesByPath.insert_or_assign(gpuTextureData.mPath, handle.mSlot);
+        GPUTexture& texture = mTextures[handle.mSlot];
+
+        texture.init(mGPUContext, gpuTextureData);
 	}
 
-#ifdef ENGINE_BUILD_DEBUG
-    handle.mDebugGPUTexture = &mTextures[handle.mSlot.getSlot()];
-#endif
+    if(handle.mIsValid)
+    {
+        #ifdef ENGINE_BUILD_DEBUG
+            handle.mDebugGPUTexture = &mTextures[handle.mSlot];
+        #endif
+    }
 
 	return handle;
 }
 
 const GPUTexture& GPUTextureManager::getTexture(const GPUTextureHandle& handle) const
 {
-    return mTextures[handle.mSlot.getSlot()];
+    return mTextures[handle.mSlot];
 }

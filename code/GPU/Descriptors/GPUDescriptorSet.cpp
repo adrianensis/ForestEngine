@@ -157,7 +157,7 @@ void GPUDescriptorSet::updateBindlessSlot(const GPUTextureHandle& textureHandle)
             descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrite.dstSet = descriptorSets[i]; 
             descriptorWrite.dstBinding = mGPUDescriptorLayout.mGPUDescriptorLayoutData.mBindlessTexturesArrayBinding;
-            descriptorWrite.dstArrayElement = textureHandle.mSlot.getSlot();
+            descriptorWrite.dstArrayElement = textureHandle.mSlot;
             descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrite.descriptorCount = 1;
             descriptorWrite.pImageInfo = &imageInfo;

@@ -29,8 +29,8 @@ class GPUTextureHandle
 {
 public:
     GPUTextureHandle(){};
-    GPUTextureHandle(const Core::Slot& slot) : mSlot(slot){};
-    Core::Slot mSlot;
+    GPU::u32 mSlot = 0;
+    bool mIsValid = false;
 #ifdef ENGINE_BUILD_DEBUG
     GPUTexture* mDebugGPUTexture = nullptr;
 #endif
@@ -39,25 +39,24 @@ public:
 class GPUTexture
 {
 public:
-    void init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::Slot slot);
+    void init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData);
     void terminate();
-    bool isValid() const { return mSlot.isValid(); }
+    bool isValid() const { return mValid; }
     
 private:
     Image::ImageData mImageData;
-	Core::Slot mSlot;
 	GPUTextureData mTextureData;
     GPUContext* mGPUContext = nullptr;
     GPUImage mVulkanTextureImage;
     GPU::u32 mMipMapLevels = 1;
     VkFormat mFormat = VK_FORMAT_R8G8B8A8_SRGB;
+    bool mValid = false;
 
 public:
     VkImageView mTextureImageView = VK_NULL_HANDLE;
     VkSampler mTextureSampler = VK_NULL_HANDLE;
 
 public:
-    GET(Slot)
     GET(TextureData)
 };
 

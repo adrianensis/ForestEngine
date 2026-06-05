@@ -89,7 +89,7 @@ void Model::loadGLTFShaders()
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.base_color_texture.texture->image->uri);
                 GPUTextureHandle textureHandle = GPUInstance::getInstance().mGPUTextureManager->loadTexture(GPUTextureData{texturePath.string()});
                 shaderData.mTextureBindings.push_back(GPUTextureBinding{TextureBindingNames::smBaseColor, textureHandle});
-                propertiesBlockGPUShader.mBaseColorTextureHandle = textureHandle.mSlot.getSlot();
+                propertiesBlockGPUShader.mBaseColorTextureHandle = textureHandle.mSlot;
                 // shaderData.mGPUShaderTextureBindings.mTextureBindings.insert_or_assign(TextureBindingNamesPBR::smBaseColor, TextureBinding{Core::HashedString(texturePath.string())});
             }
             else
@@ -104,7 +104,7 @@ void Model::loadGLTFShaders()
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.pbr_metallic_roughness.metallic_roughness_texture.texture->image->uri);
                 GPUTextureHandle textureHandle = GPUInstance::getInstance().mGPUTextureManager->loadTexture(GPUTextureData{texturePath.string(), true});
                 shaderData.mTextureBindings.push_back(GPUTextureBinding{TextureBindingNamesPBR::smMetallicRoughness, textureHandle});
-                propertiesBlockGPUShader.mMetallicRoughnessTextureHandle = textureHandle.mSlot.getSlot();
+                propertiesBlockGPUShader.mMetallicRoughnessTextureHandle = textureHandle.mSlot;
             }
             else
             {
@@ -117,7 +117,7 @@ void Model::loadGLTFShaders()
                 std::filesystem::path texturePath = mPath.parent_path().append(cgltfMaterial.normal_texture.texture->image->uri);
                 GPUTextureHandle textureHandle = GPUInstance::getInstance().mGPUTextureManager->loadTexture(GPUTextureData{texturePath.string(), true});
                 shaderData.mTextureBindings.push_back(GPUTextureBinding{TextureBindingNamesPBR::smNormal, textureHandle});
-                propertiesBlockGPUShader.mNormalTextureHandle = textureHandle.mSlot.getSlot();
+                propertiesBlockGPUShader.mNormalTextureHandle = textureHandle.mSlot;
             }
 
             // newShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, propertiesBlockGPUShader);

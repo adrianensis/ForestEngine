@@ -3,12 +3,12 @@
 #include "GPU/Image/GPUImageUtils.hpp"
 #include "vulkan/vulkan_core.h"
 
-void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData, Core::Slot slot)
+void GPUTexture::init(GPUContext* gpuContext, const GPUTextureData& gpuTextureData)
 {
     PROFILER_CPU_NAMED(init_texture)
     mGPUContext = gpuContext;
     mTextureData = gpuTextureData;
-    mSlot = slot;
+    mValid = true;
 
     if(gpuTextureData.mIsFont)
     {
@@ -146,6 +146,6 @@ void GPUTexture::terminate()
     vkDestroySampler(mGPUContext->vulkanDevice->getDevice(), mTextureSampler, allocationCallbacks);
     vkDestroyImageView(mGPUContext->vulkanDevice->getDevice(), mTextureImageView, allocationCallbacks);
     mVulkanTextureImage.terminate();
-
-    mSlot.reset();
+    
+    mValid = false;
 }
