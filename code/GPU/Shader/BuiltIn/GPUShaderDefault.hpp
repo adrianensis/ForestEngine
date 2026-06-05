@@ -15,7 +15,6 @@ public:
     Maths::Vector4 mBaseColor = Maths::Vector4(0,0,0,1);
     alignas(16) GPU::u32 mBaseColorTextureHandle = 0;
 };
-REGISTER_CLASS(PropertiesBlockGPUShaderDefault)
 
 class GPUShaderDefault : public GPUShader
 {

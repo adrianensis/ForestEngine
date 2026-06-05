@@ -22,7 +22,6 @@ public:
     GPU::u32 mMetallicRoughnessTextureHandle = 0;
     alignas(16) GPU::u32 mNormalTextureHandle = 0;
 };
-REGISTER_CLASS(PropertiesBlockGPUShaderPBR)
 
 class GPUShaderPBR : public GPUShaderDefault
 {

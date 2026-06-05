@@ -14,7 +14,7 @@ void GPUShaderDefault::registerTextures()
 void GPUShaderDefault::setSharedGPUShaderPropertiesBlock()
 {
     mSharedGPUShaderPropertiesBlockBuffer.set<PropertiesBlockGPUShaderDefault>();
-    mSharedGPUShaderPropertiesBlockClass = Core::ClassManager::getClassMetadata<PropertiesBlockGPUShaderDefault>().mClassDefinition;
+    mSharedGPUShaderPropertiesBlockId = typeid(PropertiesBlockGPUShaderDefault).hash_code();
 }
 
 std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderDefault::generateGPUShaderPropertiesBlock()

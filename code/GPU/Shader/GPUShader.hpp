@@ -100,6 +100,8 @@ public:
     // }
 };
 
+using GPUShaderPropertiesBlockID = size_t;
+
 class GPUShader;
 class GPUShaderPropertiesInstance
 {
@@ -161,7 +163,7 @@ protected:
     {
         CHECK_MSG(false, "Implement!")
         // mSharedGPUShaderPropertiesBlockBuffer.set<T>();
-        // mSharedGPUShaderPropertiesBlockClass = Core::ClassManager::getClassMetadata<T>().mClassDefinition;
+        // mSharedGPUShaderPropertiesBlockId = Core::ClassManager::getClassMetadata<T>().mClassDefinition;
     }
 
 protected:
@@ -174,14 +176,13 @@ protected:
     GPUShaderData mGPUShaderData;
     GPU::u32 mID = 0;
     GPU::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
-    Core::ClassDefinition mSharedGPUShaderPropertiesBlockClass;
+    GPUShaderPropertiesBlockID mSharedGPUShaderPropertiesBlockId = 0;
 
 public:
     CRGET(GPUShaderData)
     CRGET(SharedGPUShaderPropertiesBlockBuffer)
-    CRGET(SharedGPUShaderPropertiesBlockClass)
+    CRGET(SharedGPUShaderPropertiesBlockId)
     CRGET(PropertiesBlockStructDefinition)
     CRGET(PropertiesBlockUniformBufferData)
     GET(ID)
 };
-REGISTER_CLASS(GPUShader)
