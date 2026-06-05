@@ -29,7 +29,6 @@ private:
 
 private:
     GPUContext* mGPUContext = nullptr;
-    // Core::SlotsManager mRendererSlotsManager;
 	std::vector<GPURenderItem*> mRenderers;
     GPU::u32 mRenderersCount = 0;
     std::set<GPU::u32> mUsedSlots;
