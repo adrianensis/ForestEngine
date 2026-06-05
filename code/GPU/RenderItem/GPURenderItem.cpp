@@ -13,5 +13,5 @@ void GPURenderItem::terminate(GPUShaderManager* gpuShaderManager)
 {
     gpuShaderManager->freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
     mRenderSlot.reset();
-    mInstanceSlot.reset();
+    // mInstanceSlot.reset();
 }

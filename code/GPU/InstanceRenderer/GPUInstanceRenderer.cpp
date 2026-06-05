@@ -1,4 +1,6 @@
 #include "GPU/InstanceRenderer/GPUInstanceRenderer.hpp"
+#include "Core/Assert/Assert.hpp"
+#include "Core/CoreMacros.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
 
 void GPUInstanceRenderer::init(GPUContext* gpuContext, const GPUInstanceRendererData& gpuInstanceRendererData)
@@ -7,8 +9,8 @@ void GPUInstanceRenderer::init(GPUContext* gpuContext, const GPUInstanceRenderer
     mGPUContext = gpuContext;
 	mGPUInstanceRendererData = gpuInstanceRendererData;
 
-    mRendererSlotsManager.init(smInitialInstancesSize);
-    mRenderers.resize(mRendererSlotsManager.getSize());
+    // mRendererSlotsManager.init(smInitialInstancesSize);
+    mRenderers.resize(smInitialInstancesSize);
 
 	mGPUMeshBatcher.init(mGPUInstanceRendererData.mMesh, smInitialInstancesSize);
 
@@ -61,15 +63,29 @@ void GPUInstanceRenderer::disable()
 void GPUInstanceRenderer::addRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU_NAMED(add_renderer)
-    if(mRendererSlotsManager.isEmpty())
+    // if(mRendererSlotsManager.isEmpty())
+    if(mRenderersCount == mRenderers.size())
     {
-        mRendererSlotsManager.increaseSize(smInitialInstancesSize);
-        mRenderers.resize(mRendererSlotsManager.getSize());
+        // mRendererSlotsManager.increaseSize(smInitialInstancesSize);
+        mRenderers.resize(mRenderers.size() + smInitialInstancesSize);
     }
 
-    renderItem->setInstanceSlot(mRendererSlotsManager.requestSlot());
-    GPU::u32 slot = renderItem->getInstanceSlot().getSlot();
-    mRenderers.at(slot) = renderItem;
+    GPU::u32 slot = 0;
+    bool found = false;
+    FOR_RANGE(i, 0, mRenderers.size())
+    {
+        if(mRenderers[i] == nullptr)
+        {
+            slot = i;
+            found = true;
+            break;
+        }
+    }
+
+    CHECK_MSG(found, "Error! Free slot not found");
+
+    renderItem->setInstanceSlot(slot);
+    mRenderers[slot] = renderItem;
     mUsedSlots.insert(slot);
 	mResizeBuffersRequested = true;
     mRenderersCount++;
@@ -78,10 +94,9 @@ void GPUInstanceRenderer::addRenderer(GPURenderItem* renderItem)
 void GPUInstanceRenderer::removeRenderer(GPURenderItem* renderItem)
 {
 	mResizeBuffersRequested = true;
-    GPU::u32 slot = renderItem->getInstanceSlot().getSlot();
+    GPU::u32 slot = renderItem->getInstanceSlot();
     mRenderers[slot] = nullptr;
     mUsedSlots.erase(slot);
-    mRendererSlotsManager.freeSlot(renderItem->getInstanceSlot());
     mRenderersCount--;
 }
 

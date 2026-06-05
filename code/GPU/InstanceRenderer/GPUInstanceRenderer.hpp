@@ -29,7 +29,7 @@ private:
 
 private:
     GPUContext* mGPUContext = nullptr;
-    Core::SlotsManager mRendererSlotsManager;
+    // Core::SlotsManager mRendererSlotsManager;
 	std::vector<GPURenderItem*> mRenderers;
     GPU::u32 mRenderersCount = 0;
     std::set<GPU::u32> mUsedSlots;
@@ -60,7 +60,6 @@ public:
     GPUInstanceRenderer* getInstanceRenderer(const GPUInstanceRendererData& data) const;
 private:
     std::unordered_map<GPUInstanceRendererData, GPUInstanceRenderer*, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRenderers;
-    using AA = std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor>;
 };
 
 class GPUInstanceRendererRegistry

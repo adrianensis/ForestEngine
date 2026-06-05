@@ -22,7 +22,7 @@ public:
 
 private:
     GPURenderItemData mGPURenderItemData;
-    Core::Slot mInstanceSlot;
+    GPU::u32 mInstanceSlot = 0;
     Core::Slot mRenderSlot;
     Maths::Matrix4 mRendererModelMatrix;
     GPUShaderPropertiesInstance* mGPUShaderPropertiesInstance = nullptr;
@@ -34,7 +34,7 @@ public:
     CRGET(GPURenderItemData)
     RGET(GPUShaderPropertiesInstance)
     CRGET_SET(RenderSlot)
-    CRGET_SET(InstanceSlot)
+    GET_SET(InstanceSlot)
     SET(IsStatic)
     GET_SET(UpdateMatrix)
 };
