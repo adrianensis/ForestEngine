@@ -5,7 +5,7 @@
 #include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/GPUVariable.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
-#include "Core/Memory/ByteBuffer.hpp"
+#include "GPU/Core/GPUByteBuffer.hpp"
 
 class GPUUniformBufferData
 {
@@ -46,7 +46,7 @@ public:
         mBuffers[mGPUContext->currentFrame].setData((const void*) data.data(), sizeof(T) * data.size());
         onUpdate(mGPUContext->currentFrame);
     }
-    void setDataArray(const Core::ByteBuffer& data)
+    void setDataArray(const GPU::ByteBuffer& data)
     {
         mBuffers[mGPUContext->currentFrame].setData((const void*) data.getBuffer().data(), data.sizeInBytes());
         onUpdate(mGPUContext->currentFrame);

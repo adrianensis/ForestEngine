@@ -2,6 +2,8 @@
 
 #include "Core/Core.hpp"
 #include "GPU/Shader/GPUShader.hpp"
+#include "GPU/Core/GPUByteBuffer.hpp"
+#include "GPU/Core/GPUGenericObject.hpp"
 
 class GPUShaderManager
 {
@@ -16,7 +18,7 @@ public:
     GPUShader* createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
     {
         GPUShader* shader = mShaders.emplace_back(new T());
-        Core::GenericObjectBuffer propertiesBlockDefaultBuffer;
+        GPU::GenericObjectBuffer propertiesBlockDefaultBuffer;
         propertiesBlockDefaultBuffer.set<P>();
         propertiesBlockDefaultBuffer.get<P>() = propertiesBlock;
         shader->init(gpuContext, this, shaderData, propertiesBlockDefaultBuffer, mShaders.size() - 1);
@@ -40,7 +42,7 @@ private:
     class GPUShaderPropertyBlockRenderState
     {
     public:
-        Core::ByteBuffer mGPUShaderPropertiesBlockArray;
+        GPU::ByteBuffer mGPUShaderPropertiesBlockArray;
         GPUUniformBuffersContainer mGPUUniformBuffersContainer;
         Core::SlotsManager mSlotsManager;
     };

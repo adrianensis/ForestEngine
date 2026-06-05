@@ -2,9 +2,11 @@
 
 #include "Core/CoreBase.hpp"
 #include "Core/Assert/Assert.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 #include <vector>
 
-NS_BEGIN(Core)
+namespace GPU
+{
 class ByteBuffer
 {
 public:
@@ -222,4 +224,4 @@ private:
 private:
     u32 mElementSizeInBytes = 0;
 };
-NS_END
+}

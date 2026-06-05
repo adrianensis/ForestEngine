@@ -2,6 +2,7 @@
 
 #include "GPU/Buffer/GPUVertexBuffer.hpp"
 #include "GPU/Buffer/GPUBuffersContainer.hpp"
+#include "GPU/Core/GPUByteBuffer.hpp"
 
 class GPUMesh
 {
@@ -14,8 +15,8 @@ public:
 public:
 
     std::vector<GPUVariableData> mGPUVertexInputBuffers;
-    std::unordered_map<std::string, Core::TByteBuffer> mBuffers;
-    Core::TByteBuffer mIndices = Core::TByteBuffer(sizeof(Maths::Face));
+    std::unordered_map<std::string, GPU::TByteBuffer> mBuffers;
+    GPU::TByteBuffer mIndices = GPU::TByteBuffer(sizeof(Maths::Face));
 
 	GPU::u32 mVertexCount = 0;
 	GPU::u32 mIndicesCount = 0;

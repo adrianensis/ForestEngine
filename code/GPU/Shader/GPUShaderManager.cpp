@@ -30,7 +30,7 @@ void GPUShaderManager::update()
 
     FOR_MAP(it, mGPUShaderPropertyBlockRenderStates)
     {
-        Core::ByteBuffer& shaderPropertiesBlockArray = it->second.mGPUShaderPropertiesBlockArray;
+        GPU::ByteBuffer& shaderPropertiesBlockArray = it->second.mGPUShaderPropertiesBlockArray;
         it->second.mGPUUniformBuffersContainer.getUniformBuffer(GPUShaderPropertiesBlockNames::smPropertiesBlockBufferName).setDataArray(shaderPropertiesBlockArray);
     }
 }

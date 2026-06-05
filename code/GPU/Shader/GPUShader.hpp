@@ -6,8 +6,7 @@
 #include "GPU/Texture/GPUTexture.hpp"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
 #include "GPU/Shader/GPUShaderPipeline.h"
-#include "Core/Memory/ByteBuffer.hpp"
-#include "Core/Memory/GenericObject.hpp"
+#include "GPU/Core/GPUGenericObject.hpp"
 
 class GPUMesh;
 class GPUShaderManager;
@@ -108,7 +107,7 @@ public:
     Core::Slot mSlot;
     GPU::u32 mID = 0;
     GPUShader* mShader = nullptr;
-    Core::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
+    GPU::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;
     void setDirty();
 };
 
@@ -133,7 +132,7 @@ friend class GPUShaderPropertiesInstance;
 public:
     GPUShader() = default;
     virtual ~GPUShader() = default;
-    virtual void init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShaderDefault, GPU::u32 id);
+    virtual void init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const GPU::GenericObjectBuffer& propertiesBlockGPUShaderDefault, GPU::u32 id);
     void terminate();
 
     bool hasFramebufferBinding(std::string bindingName) const;
@@ -174,7 +173,7 @@ protected:
     std::unordered_map<std::string, FramebufferBinding> mFramebufferBindings;
     GPUShaderData mGPUShaderData;
     GPU::u32 mID = 0;
-    Core::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
+    GPU::GenericObjectBuffer mSharedGPUShaderPropertiesBlockBuffer;
     Core::ClassDefinition mSharedGPUShaderPropertiesBlockClass;
 
 public:

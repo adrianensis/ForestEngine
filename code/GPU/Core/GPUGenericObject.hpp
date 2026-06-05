@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Core/Memory/ByteBuffer.hpp"
+#include "GPU/Core/GPUByteBuffer.hpp"
 
-NS_BEGIN(Core)
+namespace GPU
+{
 class GenericObjectBuffer
 {
 public:
@@ -38,4 +39,4 @@ private:
 public:
     const ByteBuffer& getByteBuffer() const { return mByteBuffer; }
 };
-NS_END
+}

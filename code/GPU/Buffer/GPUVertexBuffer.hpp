@@ -6,7 +6,7 @@
 #include "GPU/Core/GPUDevice.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Buffer/GPUBuffer.h"
-#include "Core/Memory/ByteBuffer.hpp"
+#include "GPU/Core/GPUByteBuffer.hpp"
 
 class GPUVertexBufferData
 {
@@ -41,7 +41,7 @@ public:
             CHECK_MSG(false, "Could not initialize Vulkan vertex buffer");
         }
     }
-    void setDataArray(const Core::ByteBuffer& data)
+    void setDataArray(const GPU::ByteBuffer& data)
     {
         if (!setData((const void*)data.getBuffer().data(), data.getBuffer().size(), nullptr))
         {

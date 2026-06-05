@@ -12,7 +12,7 @@ void GPUShaderPropertiesInstance::setDirty()
     mShader->mGPUShaderManager->setGPUShaderPropertiesInstanceDirty(mID);
 }
 
-void GPUShader::init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const Core::GenericObjectBuffer& propertiesBlockGPUShader, GPU::u32 id)
+void GPUShader::init(GPUContext* gpuContext, GPUShaderManager* gpuShaderManager, const GPUShaderData& shaderData, const GPU::GenericObjectBuffer& propertiesBlockGPUShader, GPU::u32 id)
 {
     mGPUContext = gpuContext; 
     mGPUShaderManager = gpuShaderManager; 

@@ -2,7 +2,7 @@
 
 #include "GPU/Shader/GPUVariable.hpp"
 #include "GPU/Buffer/GPUBuffer.h"
-#include "Core/Memory/ByteBuffer.hpp"
+#include "GPU/Core/GPUByteBuffer.hpp"
 
 class GPUIndicesBuffer
 {
@@ -17,7 +17,7 @@ public:
             CHECK_MSG(false, "Could not initialize Vulkan indices buffer");
         }
     }
-    void setDataArray(const Core::ByteBuffer& data)
+    void setDataArray(const GPU::ByteBuffer& data)
     {
         if (!setData((const void*)data.getBuffer().data(), data.getBuffer().size()))
         {
