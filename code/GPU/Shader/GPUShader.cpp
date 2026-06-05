@@ -4,7 +4,6 @@
 
 #include "GPU/Texture/GPUTexture.hpp"
 #include "GPU/Shader/GPUShaderDefinitions.hpp"
-#include "Core/File/FileUtils.hpp"
 
 void GPUShaderPropertiesInstance::setDirty()
 {
@@ -109,17 +108,11 @@ GPUShaderPipeline* GPUShader::compileShader(const GPUShaderCompilationData& shad
     
     std::string stringGPUShaderVert = sbVert.getCode();
     std::string shaderPathVert = std::string("output/shaders/") + shaderCompilationData.id + "_" + shaderCompilationData.label + ".vert";
-    Core::FileUtils::writeFile(shaderPathVert, [stringGPUShaderVert](std::ofstream& file)
-    {
-        file << stringGPUShaderVert;
-    });
+    writeShader(shaderPathVert, stringGPUShaderVert);
 
     std::string stringGPUShaderFrag = sbFrag.getCode();
     std::string shaderPathFrag = std::string("output/shaders/") + shaderCompilationData.id + "_" + shaderCompilationData.label + ".frag";
-    Core::FileUtils::writeFile(shaderPathFrag, [stringGPUShaderFrag](std::ofstream& file)
-    {
-        file << stringGPUShaderFrag;
-    });
+    writeShader(shaderPathFrag, stringGPUShaderFrag);
 
     GPUShaderModuleData vertexGPUShaderModuleData
     {
@@ -138,4 +131,23 @@ GPUShaderPipeline* GPUShader::compileShader(const GPUShaderCompilationData& shad
     gpuShaderPipeline->compile(vertexGPUShaderModuleData, fragmentGPUShaderModuleData);
 
     return gpuShaderPipeline;
+}
+
+void GPUShader::writeShader(const std::string& path, const std::string& shaderContent)
+{
+    const std::filesystem::path fsPath{path};
+    const std::filesystem::path fileName = fsPath.filename();
+    CHECK_MSG(fsPath.has_filename(), "No filename found in " + path);
+
+    if(!std::filesystem::exists(fsPath.parent_path()))
+    {
+        std::filesystem::create_directories(fsPath.parent_path());
+    }
+
+    std::ofstream file;
+    file.open(path);
+    CHECK_MSG(file.good() && !file.fail(), "Couldn't open " + path);
+
+    file << shaderContent;
+    file.close();
 }

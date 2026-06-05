@@ -162,9 +162,9 @@ protected:
     virtual void setSharedGPUShaderPropertiesBlock()
     {
         CHECK_MSG(false, "Implement!")
-        // mSharedGPUShaderPropertiesBlockBuffer.set<T>();
-        // mSharedGPUShaderPropertiesBlockId = Core::ClassManager::getClassMetadata<T>().mClassDefinition;
     }
+
+    void writeShader(const std::string& path, const std::string& shaderContent);
 
 protected:
     GPUContext* mGPUContext = nullptr;
