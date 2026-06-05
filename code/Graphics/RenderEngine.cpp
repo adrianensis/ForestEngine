@@ -24,8 +24,6 @@ void RenderEngine::update(Core::f32 dt)
     PROFILER_CPU()
     mRenderPipeline->update(dt, mRenderPipelineUpdateData);
     mRenderPipeline->render();
-
-    GPUInstance::getInstance().mGPUContext->currentFrame = (GPUInstance::getInstance().mGPUContext->currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
 }
 
 void RenderEngine::preSceneChanged()

@@ -296,7 +296,6 @@ GPU::u32 GPUContext::frameAcquisition()
     );
 
     currentSwapChainImageIndex = swapChainImageIndex;
-    
     // VK_ERROR_OUT_OF_DATE_KHR: The swap chain has become incompatible with the surface and can no longer be used for rendering. Usually happens after a window resize.
     if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR)
     {
@@ -397,6 +396,8 @@ void GPUContext::framePresentation(const std::vector<GPU::u32>& imageIndices)
             CHECK_MSG(false, "Could not present image to swap chain")
         }
     }
+
+    currentFrame = (currentFrame + 1) % GPUContext::MAX_FRAMES_IN_FLIGHT;
 }
 
 PFN_vkVoidFunction GPUContext::loadExtensionFunctionInternal(const char* extensionFunctionName)
