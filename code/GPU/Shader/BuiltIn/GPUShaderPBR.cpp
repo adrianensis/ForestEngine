@@ -6,6 +6,12 @@ using namespace GPUShaderBuilderNodes::Expressions;
 
 // PBR METALLIC
 
+void GPUShaderPBR::setSharedGPUShaderPropertiesBlock()
+{
+    mSharedGPUShaderPropertiesBlockBuffer.set<PropertiesBlockGPUShaderPBR>();
+    mSharedGPUShaderPropertiesBlockId = typeid(PropertiesBlockGPUShaderPBR).hash_code();
+}
+
 std::vector<GPUStructDefinition::GPUStructVariable> GPUShaderPBR::generateGPUShaderPropertiesBlock()
 {
     std::vector<GPUStructDefinition::GPUStructVariable> propertiesBlock = GPUShaderDefault::generateGPUShaderPropertiesBlock();

@@ -30,6 +30,7 @@ public:
 protected:
     virtual std::vector<GPUStructDefinition::GPUStructVariable> generateGPUShaderPropertiesBlock() override;
     virtual void registerTextures() override;
+    virtual void setSharedGPUShaderPropertiesBlock() override;
     virtual void vertexGPUShaderCalculatePositionOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
     virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 
