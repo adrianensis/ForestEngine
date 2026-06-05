@@ -23,7 +23,7 @@ public:
 private:
     GPURenderItemData mGPURenderItemData;
     GPU::u32 mInstanceSlot = 0;
-    Core::Slot mRenderSlot;
+    GPU::u32 mRenderSlot = 0;
     Maths::Matrix4 mRendererModelMatrix;
     GPUShaderPropertiesInstance* mGPUShaderPropertiesInstance = nullptr;
     bool mIsStatic = false;

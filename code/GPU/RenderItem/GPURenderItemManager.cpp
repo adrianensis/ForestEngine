@@ -1,13 +1,14 @@
 #include "GPU/RenderItem/GPURenderItemManager.hpp"
+#include "Core/Assert/Assert.hpp"
+#include "Core/CoreMacros.hpp"
 
 void GPURenderItemManager::init()
 {
     PROFILER_CPU()
 
-    mRenderInstancesSlotsManager.init(mInitialInstances * 100);
-    mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-    mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
-    mMatrices.resize(mRenderInstancesSlotsManager.getSize());
+    mSize = mInitialInstances * 100;
+    mRenderers.resize(mSize);
+    mMatrices.resize(mSize);
 }
 
 void GPURenderItemManager::update()
@@ -53,50 +54,61 @@ void GPURenderItemManager::processRenderer(GPURenderItem* renderItem)
 
 void GPURenderItemManager::terminate()
 {
-    mRenderInstancesSlotsManager.reset();
 }
 
 void GPURenderItemManager::addRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
-    if(mRenderInstancesSlotsManager.isEmpty())
+    if(mRenderItemsCount == mSize)
     {
-        mRenderInstancesSlotsManager.increaseSize(mInitialInstances);
-        mRenderersStatic.resize(mRenderInstancesSlotsManager.getSize());
-        mRenderers.resize(mRenderInstancesSlotsManager.getSize());
-        mMatrices.resize(mRenderInstancesSlotsManager.getSize());
+        mSize += mInitialInstances;
+        mRenderers.resize(mSize);
+        mMatrices.resize(mSize);
     }
 
-    renderItem->setRenderSlot(mRenderInstancesSlotsManager.requestSlot());
-    GPU::u32 slot = renderItem->getRenderSlot().getSlot();
+    GPU::u32 slot = 0;
+    bool found = false;
+    FOR_RANGE(i, 0, mSize)
+    {
+        if(mRenderers[i] == nullptr)
+        {
+            slot = i;
+            found = true;
+        }
+    }
+
+    CHECK_MSG(found, "No slot avaliable for renderer.")
+
+    renderItem->setRenderSlot(slot);
+    
+    mRenderers[slot] = renderItem;
+    
     if(renderItem->isStatic())
     {
         setRendererMatrix(renderItem);
-        mRenderersStatic[slot] = renderItem;
     }
     else
     {
         mUsedSlots.insert(slot);
-        mRenderers[slot] = renderItem;
     }
+
+    mRenderItemsCount++;
 }
 
 void GPURenderItemManager::removeRenderer(GPURenderItem* renderItem)
 {
     PROFILER_CPU()
-    GPU::u32 slot = renderItem->getRenderSlot().getSlot();
+    GPU::u32 slot = renderItem->getRenderSlot();
     if(renderItem->isStatic())
     {
         
-        mRenderersStatic[slot] = nullptr;
     }
     else
     {
         mUsedSlots.erase(slot);
-        mRenderers[slot] = nullptr;
     }
 
-    mRenderInstancesSlotsManager.freeSlot(renderItem->getRenderSlot());
+    mRenderers[slot] = nullptr;
 
     // FOR_LIST(it, renderer->getGPURenderItemData().mRenderPassIDs)
     // {
@@ -105,6 +117,7 @@ void GPURenderItemManager::removeRenderer(GPURenderItem* renderItem)
     //         mRenderPassMap.at(*it)->removeRenderer(renderer);
     //     }
     // }
+    mRenderItemsCount--;
 }
 
 void GPURenderItemManager::setRendererMatrix(GPURenderItem* renderItem)
@@ -113,8 +126,8 @@ void GPURenderItemManager::setRendererMatrix(GPURenderItem* renderItem)
     if(renderItem->getUpdateMatrix())
     {
         const Maths::Matrix4& rendererModelMatrix = renderItem->getRendererModelMatrix();
-        CHECK_MSG(mRenderInstancesSlotsManager.checkSlot(renderItem->getRenderSlot()), "Invalid slot!");
-        mMatrices.at(renderItem->getRenderSlot().getSlot()) = rendererModelMatrix;
+        CHECK_MSG(mRenderers.at(renderItem->getRenderSlot()), "Invalid slot!");
+        mMatrices.at(renderItem->getRenderSlot()) = rendererModelMatrix;
         renderItem->setUpdateMatrix(false);
     }
 }

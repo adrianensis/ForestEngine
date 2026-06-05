@@ -136,7 +136,7 @@ void GPUInstanceRenderer::update(VkCommandBuffer commandBuffer)
         GPURenderItem* renderer = mRenderers[i];
         if(renderer)
         {
-            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot().getSlot(), renderer->getGPUShaderPropertiesInstance()->mSlot.getSlot());
+            mGPUMeshBatcher.setInstanceData(rendererIndex, renderer->getRenderSlot(), renderer->getGPUShaderPropertiesInstance()->mSlot.getSlot());
             rendererIndex++;
         }
     }

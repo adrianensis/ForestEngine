@@ -12,6 +12,5 @@ void GPURenderItem::init(const GPURenderItemData& data, bool isStatic, GPUShader
 void GPURenderItem::terminate(GPUShaderManager* gpuShaderManager) 
 {
     gpuShaderManager->freeGPUShaderPropertiesInstance(mGPUShaderPropertiesInstance);
-    mRenderSlot.reset();
     // mInstanceSlot.reset();
 }

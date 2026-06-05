@@ -11,18 +11,19 @@ public:
     void addRenderer(GPURenderItem* renderItem);
     void removeRenderer(GPURenderItem* renderItem);
 
-    GPU::u32 getSize() { return mRenderInstancesSlotsManager.getSize(); }
+    GPU::u32 getSize() { return mSize; }
 
 private:
     void setRendererMatrix(GPURenderItem* renderItem);
     void processRenderer(GPURenderItem* renderItem);
 
 private:
+    GPU::u32 mSize = 0;
+    GPU::u32 mRenderItemsCount = 0;
     std::vector<Maths::Matrix4> mMatrices;
-    Core::SlotsManager mRenderInstancesSlotsManager;
+    // TODO: can I make this not-pointers?
 	std::vector<GPURenderItem*> mRenderers;
     std::set<GPU::u32> mUsedSlots;
-	std::vector<GPURenderItem*> mRenderersStatic;
     inline static const GPU::u32 mInitialInstances = 1000;
 
 public:

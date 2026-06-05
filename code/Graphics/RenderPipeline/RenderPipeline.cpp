@@ -91,14 +91,14 @@ void RenderPipeline::addRenderer(MeshRenderer* renderer)
     
     mGPURenderGraph.addRenderer(renderer->getGPURenderItem().getInternalPointer());
 
-    mMeshRenderers[renderer->getGPURenderItem()->getRenderSlot().getSlot()] = renderer;
+    mMeshRenderers[renderer->getGPURenderItem()->getRenderSlot()] = renderer;
 }
 
 void RenderPipeline::removeRenderer(MeshRenderer* renderer)
 {
     PROFILER_CPU()
 
-    Core::u32 slot = renderer->getGPURenderItem()->getRenderSlot().getSlot();
+    Core::u32 slot = renderer->getGPURenderItem()->getRenderSlot();
     
     mGPURenderItemManager.removeRenderer(renderer->getGPURenderItem().getInternalPointer());
     GPUInstanceRendererData gpuInstanceRendererData;
