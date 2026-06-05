@@ -30,10 +30,10 @@ void GPUVertexBuffer::terminate()
     mBuffer.terminate();
 }
 
-void GPUVertexBuffer::resize(GPU::u32 size)
-{
-    mBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
-}
+// void GPUVertexBuffer::resize(GPU::u32 size)
+// {
+//     mBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
+// }
 
 GPU::u32 GPUVertexBuffer::getAttributeLocation() const
 {

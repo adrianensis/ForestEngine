@@ -34,7 +34,7 @@ class GPUUniformBuffer
 {
 public:
     void init(GPUContext* gpuContext, GPU::u32 size, GPU::u32 bindingPoint, const GPUUniformBufferData& gpuUniformBufferData, bool isStatic);
-    void resize(GPU::u32 size);
+    // void resize(GPU::u32 size);
     template <class T>
     void setData(const T& data)
     {

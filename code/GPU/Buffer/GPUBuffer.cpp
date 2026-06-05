@@ -59,17 +59,17 @@ void GPUBuffer::terminate()
     }
 }
 
-void GPUBuffer::resize(GPU::u32 size)
-{
-    terminate();
+// void GPUBuffer::resize(GPU::u32 size)
+// {
+//     terminate();
 
-    GPUBufferData gpuBufferData = mGPUBufferData;
-    gpuBufferData.Size = size;
-    if(!init(mGPUContext, gpuBufferData))
-    {
-        CHECK_MSG(false,"Could not resize vertex buffer");
-    }
-}
+//     GPUBufferData gpuBufferData = mGPUBufferData;
+//     gpuBufferData.Size = size;
+//     if(!init(mGPUContext, gpuBufferData))
+//     {
+//         CHECK_MSG(false,"Could not resize vertex buffer");
+//     }
+// }
 
 void GPUBuffer::setData(const void* data, GPU::u32 size)
 {

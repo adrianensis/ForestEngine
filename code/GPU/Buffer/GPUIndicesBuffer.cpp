@@ -15,10 +15,10 @@ void GPUIndicesBuffer::init(GPUContext* gpuContext, const GPUDataType& gpuDataTy
     }
 }
 
-void GPUIndicesBuffer::resize(GPU::u32 size)
-{
-    mBuffer.resize(size * mGPUDataType.mTypeSizeInBytes);
-}
+// void GPUIndicesBuffer::resize(GPU::u32 size)
+// {
+//     mBuffer.resize(size * mGPUDataType.mTypeSizeInBytes);
+// }
 
 const GPUBuffer& GPUIndicesBuffer::getGPUBuffer() const {
     return mBuffer;

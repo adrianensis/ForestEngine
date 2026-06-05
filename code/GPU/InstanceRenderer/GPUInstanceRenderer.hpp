@@ -33,7 +33,7 @@ private:
 	std::vector<GPURenderItem*> mRenderers;
     GPU::u32 mRenderersCount = 0;
     std::set<GPU::u32> mUsedSlots;
-    inline static const GPU::u32 smInitialInstancesSize = 100;
+    inline static const GPU::u32 smInitialInstancesSize = 1000;
     GPU::u32 mCurrentInstancesSize = 0;
 
 	GPUMeshBatcher mGPUMeshBatcher;

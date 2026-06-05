@@ -8,7 +8,7 @@ class GPUIndicesBuffer
 {
 public:
     void init(GPUContext* gpuContext, const GPUDataType& gpuDataType, GPU::u32 size, bool isStatic);
-    void resize(GPU::u32 size);
+    // void resize(GPU::u32 size);
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {

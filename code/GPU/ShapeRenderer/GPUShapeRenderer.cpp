@@ -59,8 +59,8 @@ void GPUShapeRenderer::render()
 		// mShader->getGPUShader()->enable();
 
 		mGPUVertexBuffersContainer.enable(mGPUContext);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).resize(mPositionBuffer.size());
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).resize(mColorBuffer.size());
+        // mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).resize(mPositionBuffer.size());
+        // mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).resize(mColorBuffer.size());
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mPosition).setDataArray(mPositionBuffer);
         mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mColor).setDataArray(mColorBuffer);
 //		(GPUInterface).drawElements(GPUDrawPrimitive::LINES, mIndicesBuffer.size(), mShapesCounter, false);

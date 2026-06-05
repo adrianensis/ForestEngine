@@ -125,9 +125,9 @@ void GPUInstanceRenderer::update(VkCommandBuffer commandBuffer)
 
         mGPUMeshBatcher.resize(mCurrentInstancesSize);
         
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(mCurrentInstancesSize);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(mCurrentInstancesSize);
-        mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID).resize(mCurrentInstancesSize);
+        // mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mInstanceID).resize(mCurrentInstancesSize);
+        // mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mObjectID).resize(mCurrentInstancesSize);
+        // mGPUVertexBuffersContainer.getVertexBuffer(GPUShaderDefinitions::VertexInput::mGPUShaderPropertiesInstanceID).resize(mCurrentInstancesSize);
     }
 
     GPU::u32 rendererIndex = 0;
