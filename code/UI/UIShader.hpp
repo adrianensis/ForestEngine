@@ -22,12 +22,9 @@ protected:
     virtual void vertexGPUShaderCalculateTextureCoordinateOutput(GPUShaderBuilder& GPUShaderBuilder) const override;
     virtual void vertexGPUShaderCalculatePositionOutputCustom(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
-REGISTER_CLASS(GPUShaderUI)
-
 
 class GPUShaderUIFont : public GPUShaderUI
 {
 protected:
     virtual void fragmentGPUShaderCode(GPUShaderBuilder& GPUShaderBuilder) const override;
 };
-REGISTER_CLASS(GPUShaderUIFont)

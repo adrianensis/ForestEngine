@@ -14,7 +14,8 @@ public:
 
     void setGPUShaderPropertiesInstanceDirty(GPU::u32 id);
 
-    template<class T, class P> T_EXTENDS(T, GPUShader)
+    template<class T, class P>
+    requires std::derived_from<T, GPUShader>
     GPUShader* createShader(GPUContext* gpuContext, const GPUShaderData& shaderData, const P& propertiesBlock)
     {
         GPUShader* shader = mShaders.emplace_back(new T());

@@ -283,7 +283,7 @@ GameObject* Editor::createCube(const Maths::Vector3& v, Core::f32 size)
     rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Cube>().getInternalPointer();
     rendererData.mShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
-        Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+		GPURenderPass::getID<RenderPassGeometry>()
     };
 
 	GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(gameObject, [&](auto* component)
@@ -318,7 +318,7 @@ GameObject* Editor::createSprite(const Maths::Vector3& v, Core::f32 size)
     rendererData.mMesh = MeshFactory::getInstance().getPrimitive<Maths::Rectangle>().getInternalPointer();
     rendererData.mShader = GPUInstance::getInstance().mGPUShaderManager->createShader<GPUShaderDefault, PropertiesBlockGPUShaderDefault>(GPUInstance::getInstance().mGPUContext, shaderData, shaderPropertiesBlock);
     rendererData.mRenderPassIDs = {
-        Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
+		GPURenderPass::getID<RenderPassGeometry>()
     };
 
 	GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(gameObject, [&](auto* component)
@@ -413,8 +413,8 @@ GameObject* Editor::importModel( const std::string& pFile, const Maths::Vector3&
     modelRendererData.mModel = model;
     modelRendererData.mRenderPassIDs =
     {
-        Core::ClassManager::getClassMetadata<RenderPassGeometry>().mClassDefinition.getId(),
-        Core::ClassManager::getClassMetadata<RenderPassShadowMap>().mClassDefinition.getId()
+		GPURenderPass::getID<RenderPassGeometry>(),
+		GPURenderPass::getID<RenderPassShadowMap>()
     };
 
 	GET_SYSTEM(EC::EntityComponentManager).requestComponent<ModelRenderer>(gameObject, [&](auto* component)

@@ -10,7 +10,7 @@ public:
     const GPUMesh* mMesh = nullptr;
     Maths::Matrix4 mMeshInstanceMatrix = Maths::Matrix4::smIdentity;
     GPUShader* mShader = nullptr;
-    std::unordered_set<Core::ClassId> mRenderPassIDs;
+    std::unordered_set<GPURenderPassID> mRenderPassIDs;
 };
 
 class GPURenderItem

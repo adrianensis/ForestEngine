@@ -89,6 +89,13 @@ public:
     void onResize();
     void addInstanceRendererData(const GPUInstanceRendererData& gpuInstanceRendererData);
 
+    template<class T>
+    requires std::derived_from<T, GPURenderPass>
+    inline static GPURenderPassID getID()
+    {
+        return typeid(T).hash_code();
+    } 
+
 protected:
     void compileShader(const GPUInstanceRendererData& gpuInstanceRendererData);
     virtual void preFramebufferEnabled();

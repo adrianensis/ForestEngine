@@ -309,3 +309,5 @@ enum class GPUDescriptorSetScope : GPU::u32
     LOCAL = 1,
     MAX = 2
 };
+
+using GPURenderPassID = size_t;

@@ -61,7 +61,7 @@ void UIPanel::initFromConfig(UIManager* uiManager, const UIElementConfig& config
     rendererData.mShader = mConfig.mShader;
     rendererData.mGPUDepthStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId(),
+        GPURenderPass::getID<RenderPassUI>()
     };
 
 	MeshRenderer* renderer = GET_SYSTEM(EC::EntityComponentManager).requestComponent<MeshRenderer>(this, [&](auto* component)

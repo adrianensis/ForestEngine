@@ -45,4 +45,3 @@ protected:
 
     void registerFunctionCalculateBoneTransform(GPUShaderBuilder& GPUShaderBuilder) const;
 };
-REGISTER_CLASS(GPUShaderDefault)

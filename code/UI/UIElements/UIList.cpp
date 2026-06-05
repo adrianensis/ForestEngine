@@ -1,4 +1,5 @@
 #include "UI/UIElements/UIList.hpp"
+#include "GPU/RenderPass/GPURenderPass.h"
 #include "Graphics/Mesh/MeshFactory.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIBuilder.hpp"
@@ -45,7 +46,7 @@ void UIList::initFromConfig(UIManager* uiManager, const UIElementConfig& config)
 	// rendererData.setColor(mConfig.mStyle->mBackgroundColor);
     rendererData.mGPUDepthStencilData = calculateStencilData();
     rendererData.mRenderPassIDs = {
-        Core::ClassManager::getClassMetadata<RenderPassUI>().mClassDefinition.getId()
+        GPURenderPass::getID<RenderPassUI>()
     };
 
 	//renderer->setClipRectangle(Maths::Cube(Maths::Vector2(mConfig.mPosition.x, mConfig.mPosition.y), Maths::Vector2(mConfig.mSize.x / (Window::WindowManager).getMainWindow()->getAspectRatio(), mConfig.mSize.y)));

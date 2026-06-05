@@ -17,10 +17,11 @@ public:
     void removeRenderer(GPURenderItem* renderItem);
     void onResize();
 
-    template<class T> T_EXTENDS(T, GPURenderPass)
+    template<class T>
+    requires std::derived_from<T, GPURenderPass>
     void initRenderPass(const GPURenderPassData& renderPassData)
     {
-        Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        GPURenderPassID renderPassClassId = GPURenderPass::getID<T>();
 
         mRenderPassMap.insert_or_assign(
             renderPassClassId,
@@ -35,10 +36,11 @@ public:
         mRenderPassesArray.push_back(renderPass);
     }
 
-    template<class T> T_EXTENDS(T, GPURenderPass)
+    template<class T>
+    requires std::derived_from<T, GPURenderPass>
     T* getRenderPass()
     {
-        Core::ClassId renderPassClassId = Core::ClassManager::getClassMetadata<T>().mClassDefinition.getId();
+        GPURenderPassID renderPassClassId = GPURenderPass::getID<T>();
         return static_cast<T*>(mRenderPassMap.at(renderPassClassId));
     }
 
@@ -46,7 +48,7 @@ public:
 
 private:
     GPUContext* mGPUContext = nullptr;
-    std::unordered_map<Core::ClassId, GPURenderPass*> mRenderPassMap;
+    std::unordered_map<GPURenderPassID, GPURenderPass*> mRenderPassMap;
     std::vector<GPURenderPass*> mRenderPassesArray;
     GPURenderPassSubsystems mGPURenderPassSubsystems;
     GPURenderPass* mRenderPassResolve = nullptr;
