@@ -17,8 +17,6 @@ void GPUUniformBuffer::init(GPUContext* gpuContext, GPU::u32 size, GPU::u32 bind
     mIsStatic = isStatic;
     mSize = size;
 
-    std::fill(std::begin(mBuffersUpdateRequest), std::end(mBuffersUpdateRequest), true);
-
     GPUBufferData gpuBufferData{};
     gpuBufferData.Size = mSize;
     switch (mGPUUniformBufferData.mType)

@@ -23,27 +23,16 @@ void GPUVertexBuffer::init(GPUContext* gpuContext, GPU::u32 attributeLocation, c
     if (!mBuffer.init(mGPUContext, gpuBufferData)) {
         CHECK_MSG(false,"Could not initialize vertex buffer");
     }
-
-    GPUBufferData stagingBufferConfig{};
-    stagingBufferConfig.Size = gpuBufferData.Size;
-    stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-    if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {
-        CHECK_MSG(false,"Could not initialize staging buffer for vertex buffer");
-    }
 }
 
 void GPUVertexBuffer::terminate()
 {
     mBuffer.terminate();
-    stagingBuffer.terminate();
 }
 
 void GPUVertexBuffer::resize(GPU::u32 size)
 {
     mBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
-    stagingBuffer.resize(mData.mGPUVariableData.mGPUDataType.mTypeSizeInBytes * size);
 }
 
 GPU::u32 GPUVertexBuffer::getAttributeLocation() const
@@ -64,8 +53,22 @@ bool GPUVertexBuffer::setData(const void* data, GPU::u32 size, VkCommandBuffer* 
 {
     PROFILER_CPU_NAMED(vertex_buffer_set_data)
 
+    VkDeviceSize bufferSize = size;
+
+    GPUBufferData stagingBufferConfig{};
+    stagingBufferConfig.Size = bufferSize;
+    stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+    GPUBuffer stagingBuffer;
+    if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {
+        CHECK_MSG(false,"Could not initialize staging buffer for vertex mBuffer");
+        return false;
+    }
+
     stagingBuffer.setData(data, size);
-    GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer, commandBuffer);
-    // LOG("Copied vertices to vertex buffer");
+    GPUBuffer::copy(mGPUContext, stagingBuffer, mBuffer, nullptr);
+    stagingBuffer.terminate();
+
     return true;
 }

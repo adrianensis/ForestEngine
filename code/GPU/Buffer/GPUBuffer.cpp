@@ -47,7 +47,7 @@ void GPUBuffer::terminate()
     PROFILER_CPU_NAMED(buffer_terminate)
     if(mInit)
     {
-        mGPUContext->waitForFence(mGPUContext->currentFrame - 1);
+        mGPUContext->vulkanDevice->waitUntilIdle();
 
         VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
         vkDestroyBuffer(mGPUContext->vulkanDevice->getDevice(), mVkBuffer, allocator);
@@ -61,8 +61,6 @@ void GPUBuffer::terminate()
 
 void GPUBuffer::resize(GPU::u32 size)
 {
-    mGPUContext->waitForFence(mGPUContext->currentFrame - 1);
-
     terminate();
 
     GPUBufferData gpuBufferData = mGPUBufferData;

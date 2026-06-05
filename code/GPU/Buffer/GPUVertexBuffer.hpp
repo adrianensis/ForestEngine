@@ -65,5 +65,4 @@ private:
 
     GPUContext* mGPUContext = nullptr;
     GPUBuffer mBuffer;
-    GPUBuffer stagingBuffer;
 };
