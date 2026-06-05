@@ -19,7 +19,7 @@ public:
     bool init(GPUContext* gpuContext, const GPUBufferData& gpuBufferData);
     void resize(GPU::u32 size);
     void terminate();
-    void setData(const void* data, GPU::u32 size) const;
+    void setData(const void* data, GPU::u32 size);
     static void copy(GPUContext* gpuContext, const GPUBuffer& sourceBuffer, const GPUBuffer& destinationBuffer, VkCommandBuffer* vkCommandBuffer);
 
 private:

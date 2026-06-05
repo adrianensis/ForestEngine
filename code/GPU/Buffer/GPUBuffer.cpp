@@ -71,7 +71,7 @@ void GPUBuffer::resize(GPU::u32 size)
     }
 }
 
-void GPUBuffer::setData(const void* data, GPU::u32 size) const
+void GPUBuffer::setData(const void* data, GPU::u32 size)
 {
     PROFILER_CPU_NAMED(buffer_set_data)
     CHECK_MSG(size > 0, "size > 0")
