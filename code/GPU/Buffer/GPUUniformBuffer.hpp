@@ -38,15 +38,19 @@ public:
     template <class T>
     void setData(const T& data)
     {
+        CHECK_MSG(sizeof(T) <= mSize, "Data size {} exceeds Uniform Buffer capacity {}!", sizeof(T), mSize);
         mBuffers[mGPUContext->currentFrame].setData((const void*) &data, sizeof(T));
     }
     template <class T>
     void setDataArray(const std::vector<T>& data)
     {
-        mBuffers[mGPUContext->currentFrame].setData((const void*) data.data(), sizeof(T) * data.size());
+        size_t totalSize = sizeof(T) * data.size();
+        CHECK_MSG(totalSize <= mSize, "Data array size {} exceeds Uniform Buffer capacity {}!", totalSize, mSize);
+        mBuffers[mGPUContext->currentFrame].setData((const void*) data.data(), totalSize);
     }
     void setDataArray(const GPU::ByteBuffer& data)
     {
+        CHECK_MSG(data.sizeInBytes() <= mSize, "Byte buffer size {} exceeds Uniform Buffer capacity {}!", data.sizeInBytes(), mSize);
         mBuffers[mGPUContext->currentFrame].setData((const void*) data.getBuffer().data(), data.sizeInBytes());
     }
     void terminate();

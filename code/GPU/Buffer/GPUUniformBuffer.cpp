@@ -42,6 +42,7 @@ void GPUUniformBuffer::init(GPUContext* gpuContext, GPU::u32 size, GPU::u32 bind
 
 void GPUUniformBuffer::resize(GPU::u32 size)
 {
+    mSize = size;
     FOR_RANGE(i, 0, GPUContext::MAX_FRAMES_IN_FLIGHT)
     {
         mBuffers[i].resize(size);
