@@ -106,7 +106,7 @@ class GPUShader;
 class GPUShaderPropertiesInstance
 {
 public:
-    Core::Slot mSlot;
+    GPU::u32 mSlot = 0;
     GPU::u32 mID = 0;
     GPUShader* mShader = nullptr;
     GPU::GenericObjectBuffer mGPUShaderPropertiesBlockBuffer;

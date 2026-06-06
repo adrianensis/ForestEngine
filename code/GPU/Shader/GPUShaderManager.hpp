@@ -32,9 +32,7 @@ public:
     GPUShaderPropertiesInstance* createGPUShaderPropertiesInstance(GPUShader* shader);
     void freeGPUShaderPropertiesInstance(GPUShaderPropertiesInstance* shaderPropertiesInstance);
     
-    void setGPUShaderPropertiesInstanceProperties(const GPUShaderPropertiesInstance* shaderPropertiesInstance);
-    
-    Core::Slot requestGPUShaderPropertiesInstanceSlot(GPUShader* shader);
+    GPU::u32 requestGPUShaderPropertiesInstanceSlot(GPUShader* shader);
     
 private:
     void postGPUShaderCreated(GPUContext* gpuContext, GPUShader* shader);
@@ -45,7 +43,41 @@ private:
     public:
         GPU::ByteBuffer mGPUShaderPropertiesBlockArray;
         GPUUniformBuffersContainer mGPUUniformBuffersContainer;
-        Core::SlotsManager mSlotsManager;
+        std::vector<bool> mSlots;
+        GPU::u32 mUsedSlots = 0;
+
+        GPU::u32 requestSlot()
+        {   GPU::u32 slot = 0;
+
+            bool found = false;
+            FOR_RANGE(i, 0, mSlots.size())
+            {
+                if(!mSlots[i])
+                {
+                    slot = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            CHECK_MSG(found, "No slot avaliable for renderer.")
+
+            mSlots[slot] = true;
+            mUsedSlots++;
+            return slot;
+        }
+        void freeSlot(GPU::u32 slot)
+        {
+            if(mSlots[slot])
+            {
+                mSlots[slot] = false;
+                mUsedSlots--;
+            }
+        }
+        bool isEmpty()
+        {
+            return mUsedSlots == mSlots.size();
+        }
     };
 
 	std::unordered_map<GPUShaderPropertiesBlockID, GPUShaderPropertyBlockRenderState> mGPUShaderPropertyBlockRenderStates;
