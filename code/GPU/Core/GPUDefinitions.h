@@ -253,13 +253,13 @@ enum class GPUFlags : GPU::u32
     CULL_FACE
 };
 
-DECLARE_ENUM(GPUCullFaceType,
-    NONE = 0, "NONE",
-    FRONT, "FRONT",
-    BACK, "BACK",
-    FRONT_AND_BACK, "FRONT_AND_BACK"
-);
-
+enum class GPUCullFaceType : GPU::u32
+{
+    NONE,
+    FRONT,
+    BACK,
+    FRONT_AND_BACK
+};
 
 class GPUConstants
 {
