@@ -7,9 +7,9 @@ void GPUContext::init(IGPUWindow* gpuWindow)
     mGPUWindow = gpuWindow;
     VulkanConfig vulkanConfig;
     vulkanConfig.mRequiredExtensions = mGPUWindow->getRequiredGPUExtensions();
-    if (Core::Environment::mPlatform == Core::Environment::Platform::MACOS) {
-        vulkanConfig.mRequiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-    }
+    #ifdef GPU_PLATFORM_MACOS
+    vulkanConfig.mRequiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+    #endif
     if (vulkanConfig.ValidationLayersEnabled) {
         vulkanConfig.mRequiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     }

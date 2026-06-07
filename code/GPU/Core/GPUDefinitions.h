@@ -4,6 +4,22 @@
 #include <cstdint>
 #include <vulkan/vulkan.h>
 
+#if defined(_WIN64)
+	#define GPU_PLATFORM_WINDOWS
+#elif defined(__APPLE__)
+    #define GPU_PLATFORM_MACOS
+/* check for __android__ before __linux__
+ * since android is based on the linux kernel
+ * it has __linux__ defined
+ */
+#elif defined(__ANDROID__)
+    #define GPU_PLATFORM_ANDROID
+#elif defined(__linux__)
+    #define GPU_PLATFORM_LINUX
+#else
+	#error "Unsupported platform"
+#endif
+
 namespace GPU
 {
     using f32 = float;

@@ -112,10 +112,9 @@ bool GPUVulkanInstance::createInstance() {
     createInfo.enabledExtensionCount = extensions.size();
     createInfo.ppEnabledExtensionNames = extensions.data();
     createInfo.flags = 0;
-    if (Core::Environment::mPlatform == Core::Environment::Platform::MACOS)
-    {
-        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-    }
+    #ifdef GPU_PLATFORM_MACOS
+    createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    #endif
 
     createInfo.enabledLayerCount = 0;
     createInfo.ppEnabledLayerNames = nullptr;
