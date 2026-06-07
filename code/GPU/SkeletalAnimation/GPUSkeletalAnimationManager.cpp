@@ -27,9 +27,9 @@ GPUSkeletonState* GPUSkeletalAnimationManager::createSkeletonState(GPUContext* g
 	GPUSkeletonState* skeletonState = *mSkeletonStates.emplace( new GPUSkeletonState()).first;
     skeletonState->init(gpuSkeletonStateData);
 
-    FOR_LIST(it, gpuSkeletonStateData.mMeshes)
+    for(auto* it: gpuSkeletonStateData.mMeshes)
     {
-        mMeshToSkeletonState.insert({*it, skeletonState});
+        mMeshToSkeletonState.insert({it, skeletonState});
     }
 
     initSkeletonRenderState(gpuContext, skeletonState);

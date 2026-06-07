@@ -22,9 +22,9 @@ namespace GPUShaderBuilderNodes
 
         code.push_back(getIndent(indent) + "struct " + mStructDefinition.mName + "{");
 
-        FOR_LIST(it, mStructDefinition.mPrimitiveVariables)
+        for(auto& it: mStructDefinition.mPrimitiveVariables)
         {
-            Variable var(it->mGPUDataType, it->mName);
+            Variable var(it.mGPUDataType, it.mName);
             auto varCode = var.toLines(indent + 1);
             code.insert(code.end(), varCode.begin(), varCode.end());
         }
@@ -84,9 +84,8 @@ namespace GPUShaderBuilderNodes
         code.push_back(getIndent(indent) + layoutStr + " " + mGPUUniformBufferData.mBufferName + " {");
 
         const auto& variableDefinitionDataArray = mGPUUniformBufferData.mGPUVariableDefinitionDataArray;
-        FOR_LIST(it, variableDefinitionDataArray)
+        for(auto& variableDefinitionData: variableDefinitionDataArray)
         {
-            const GPUVariableDefinitionData& variableDefinitionData = *it;
             const Variable variable(variableDefinitionData);
             auto statementCode = variable.toLines(indent + 1);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
@@ -124,10 +123,10 @@ namespace GPUShaderBuilderNodes
 
     void BlockStatement::terminate()
     {
-        FOR_LIST(it, mStatements)
+        for(auto* it: mStatements)
         {
-            (*it)->terminate();
-            delete *it;
+            it->terminate();
+            delete it;
         }
         mStatements.clear();
     }
@@ -184,9 +183,9 @@ namespace GPUShaderBuilderNodes
 
         code.push_back(getIndent(indent) + "{");
 
-        FOR_LIST(it, mStatements)
+        for(auto* it: mStatements)
         {
-            auto statementCode = (*it)->toLines(indent + 1);
+            auto statementCode = it->toLines(indent + 1);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
@@ -269,11 +268,11 @@ namespace GPUShaderBuilderNodes
     
     const Struct& Program::getStruct(const std::string& structName) const
     {
-        FOR_LIST(it, mStructs)
+        for(auto& it: mStructs)
         {
-            if(it->mStructDefinition.mName == structName)
+            if(it.mStructDefinition.mName == structName)
             {
-                return *it;
+                return it;
             }
         }
 
@@ -282,11 +281,11 @@ namespace GPUShaderBuilderNodes
 
     const Attribute& Program::getAttribute(const std::string& attributeName) const
     {
-        FOR_LIST(it, mAttributes)
+        for(auto& it: mAttributes)
         {
-            if(it->mName == attributeName)
+            if(it.mName == attributeName)
             {
-                return *it;
+                return it;
             }
         }
 
@@ -295,11 +294,11 @@ namespace GPUShaderBuilderNodes
 
     const UniformBuffer& Program::getUniformBuffer(const std::string& uniformBufferName) const
     {
-        FOR_LIST(it, mUniformBuffers)
+        for(auto& it: mUniformBuffers)
         {
-            if(it->mGPUUniformBufferData.mInstanceName == uniformBufferName)
+            if(it.mGPUUniformBufferData.mInstanceName == uniformBufferName)
             {
-                return *it;
+                return it;
             }
         }
 
@@ -308,11 +307,11 @@ namespace GPUShaderBuilderNodes
 
     FunctionDefinition& Program::getFunctionDefinition(const std::string& functionDefinitionName)
     {
-        FOR_LIST(it, mFunctionDefinitions)
+        for(auto& it: mFunctionDefinitions)
         {
-            if(it->mName == functionDefinitionName)
+            if(it.mName == functionDefinitionName)
             {
-                return *it;
+                return it;
             }
         }
 
@@ -345,32 +344,32 @@ namespace GPUShaderBuilderNodes
 
         code.push_back("#version " + std::to_string(mVersion));
 
-        FOR_LIST(it, mExtensions)
+        for(auto& it: mExtensions)
         {
-            code.push_back("#extension " + *it + " : enable");
+            code.push_back("#extension " + it + " : enable");
         }
 
-        FOR_LIST(it, mStructs)
+        for(auto& it: mStructs)
         {
-            auto statementCode = it->toLines(indent);
+            auto statementCode = it.toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        FOR_LIST(it, mAttributes)
+        for(auto& it: mAttributes)
         {
-            auto statementCode = it->toLines(indent);
+            auto statementCode = it.toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        FOR_LIST(it, mUniformBuffers)
+        for(auto& it: mUniformBuffers)
         {
-            auto statementCode = it->toLines(indent);
+            auto statementCode = it.toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
-        FOR_LIST(it, mFunctionDefinitions)
+        for(auto& it: mFunctionDefinitions)
         {
-            auto statementCode = it->toLines(indent);
+            auto statementCode = it.toLines(indent);
             code.insert(code.end(), statementCode.begin(), statementCode.end());
         }
 
@@ -382,10 +381,10 @@ namespace GPUShaderBuilderNodes
 
     void Program::terminate()
     {
-        FOR_LIST(it, mStructs) { it->terminate(); }
-        FOR_LIST(it, mAttributes) { it->terminate(); }
-        FOR_LIST(it, mUniformBuffers) { it->terminate(); }
-        FOR_LIST(it, mFunctionDefinitions) { it->terminate(); }
+        for(auto& it: mStructs) { it.terminate(); }
+        for(auto& it: mAttributes) { it.terminate(); }
+        for(auto& it: mUniformBuffers) { it.terminate(); }
+        for(auto& it: mFunctionDefinitions) { it.terminate(); }
         mMainFunctionDefinition.terminate();
     }
 

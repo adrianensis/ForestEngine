@@ -67,9 +67,9 @@ void GPUVertexBuffersContainer::setIndicesBuffer(GPUContext* gpuContext, const G
 void GPUVertexBuffersContainer::terminate()
 {   
     mIndicesBuffer.terminate();
-    FOR_LIST(it, mVertexBuffers)
+    for(auto& it: mVertexBuffers)
     {
-        it->terminate();
+        it.terminate();
     }
 }
 

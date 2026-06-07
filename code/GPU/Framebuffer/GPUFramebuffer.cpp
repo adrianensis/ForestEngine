@@ -42,9 +42,8 @@ bool GPUFramebuffer::init(GPUContext* gpuContext, const GPUFramebufferData& fram
     }
 
 //    mFramebufferId = (GPUInterface).createFramebuffer(mFramebufferData.mWidth, mFramebufferData.mHeight);
-    FOR_LIST(it, mFramebufferData.mAttachments)
+    for(auto& attachmentType: mFramebufferData.mAttachments)
     {
-        const GPUFramebufferAttachmentType& attachmentType = *it;
 //        GPU::u32 attachmentID = (GPUInterface).createFramebufferAttachment(mFramebufferId, attachmentType, mFramebufferData.mWidth, mFramebufferData.mHeight);
         // mAttachments.insert_or_assign(attachmentType, GPUFramebufferAttachment{attachmentType, attachmentID});
     }

@@ -22,10 +22,10 @@ void GPUShaderManager::update()
 {
     PROFILER_CPU();
 
-    FOR_LIST(it, mDirtyGPUShaderPropertiesInstances)
+    for(auto& it: mDirtyGPUShaderPropertiesInstances)
     {
         PROFILER_CPU()
-        GPUShaderPropertiesInstance* shaderPropertiesInstance = mGPUShaderPropertiesInstances.at(*it);
+        GPUShaderPropertiesInstance* shaderPropertiesInstance = mGPUShaderPropertiesInstances.at(it);
         GPUShader* shader = shaderPropertiesInstance->mShader;
         CHECK_MSG(shader, "Invalid shader!");
         GPUShaderPropertiesBlockID propertiesBlockClassId = shader->getSharedGPUShaderPropertiesBlockId();

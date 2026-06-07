@@ -38,9 +38,9 @@ std::string GPUShaderBuilder::getCode() const
 {
     std::string code = "";
     auto codeLines = mProgram.toLines(0);
-    FOR_LIST(it, codeLines)
+    for(auto& it: codeLines)
     {
-        code.append((*it) + "\n");
+        code.append(it + "\n");
     }
 
     return code;

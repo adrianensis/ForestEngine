@@ -10,11 +10,11 @@ void GPUTextureManager::init(GPUContext* gpuContext)
 
 void GPUTextureManager::terminate()
 {
-    FOR_LIST(it, mTextures)
+    for(auto& it: mTextures)
     {
-        if((*it).isValid())
+        if(it.isValid())
         {
-            (*it).terminate();
+            it.terminate();
         }
     }
 }

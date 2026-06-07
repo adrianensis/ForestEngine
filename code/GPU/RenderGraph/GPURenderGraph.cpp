@@ -144,11 +144,11 @@ void GPURenderGraph::addRenderer(GPURenderItem* renderItem)
     GPUInstanceRendererData gpuInstanceRendererData;
     gpuInstanceRendererData.init(renderItem);
 
-    FOR_LIST(it, renderItem->getGPURenderItemData().mRenderPassIDs)
+    for(auto& it: renderItem->getGPURenderItemData().mRenderPassIDs)
     {
-        if(mRenderPassMap.contains(*it))
+        if(mRenderPassMap.contains(it))
         {
-            GPURenderPass* renderPass = mRenderPassMap.at(*it);
+            GPURenderPass* renderPass = mRenderPassMap.at(it);
             renderPass->addInstanceRendererData(gpuInstanceRendererData);
         }
     }
@@ -160,9 +160,9 @@ void GPURenderGraph::removeRenderer(GPURenderItem* renderItem)
     GPUInstanceRendererData gpuInstanceRendererData;
     gpuInstanceRendererData.init(renderItem);
 
-    FOR_LIST(it, renderItem->getGPURenderItemData().mRenderPassIDs)
+    for(auto& it: renderItem->getGPURenderItemData().mRenderPassIDs)
     {
-        if(mRenderPassMap.contains(*it))
+        if(mRenderPassMap.contains(it))
         {
             // TODO: Only remove if renderers count == 0
             // renderPass->getGPUInstanceRendererRegistry().removeInstanceRendererData(gpuInstanceRendererData);

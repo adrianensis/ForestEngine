@@ -110,7 +110,7 @@ void GPURenderItemManager::removeRenderer(GPURenderItem* renderItem)
 
     mRenderers[slot] = nullptr;
 
-    // FOR_LIST(it, renderer->getGPURenderItemData().mRenderPassIDs)
+    // for(auto& it: renderer->getGPURenderItemData().mRenderPassIDs)
     // {
     //     if(mRenderPassMap.contains(*it))
     //     {
