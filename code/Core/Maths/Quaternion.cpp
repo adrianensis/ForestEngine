@@ -237,36 +237,41 @@ Quaternion& Quaternion::slerp(const Quaternion& target, Core::f32 t)
 
 Vector3 Quaternion::toEuler() const
 {
-    // if the input quaternion is normalized, this is exactly one. Otherwise, this acts as a correction factor for the quaternion's not-normalizedness
+    // Total squared magnitude to handle unnormalized quaternions
     Core::f32 unit = (v.x * v.x) + (v.y * v.y) + (v.z * v.z) + (w * w);
 
-    // this will have a magnitude of 0.5 or greater if and only if this is a singularity case
-    Core::f32 test = v.x * w - v.y * v.z;
+    // This represents sin(pitch) * 0.5. 
+    // Max value is 0.5 for normalized quaternions.
+    Core::f32 test = w * v.x - v.y * v.z;
 
-    Core::f32 x, z, y;
-    if (test > 0.4995f * unit) // singularity at north pole
+    Core::f32 x, y, z;
+
+    if (test > 0.4995f * unit) // Singularity at North Pole (Pitch = 90 degrees)
     {
-        x = MathUtils::PI/2.0f;
-        y = 2.0f * std::atan2(v.y, v.x);
-        z = 0;
+        x = MathUtils::PI / 2.0f;
+        y = 2.0f * std::atan2(v.y, w);
+        z = 0.0f;
     }
-    else if (test < -0.4995f * unit) // singularity at south pole
+    else if (test < -0.4995f * unit) // Singularity at South Pole (Pitch = -90 degrees)
     {
-        x = -MathUtils::PI/2.0f;
-        y = -2.0f * std::atan2(v.y, v.x);
-        z = 0;
+        x = -MathUtils::PI / 2.0f;
+        y = -2.0f * std::atan2(v.y, w);
+        z = 0.0f;
     }
-    else // no singularity - this is the majority of cases
+    else // No singularity
     {
-        x = std::asin(2.0f * (w * v.x - v.y * v.z));
-        y = std::atan2(2.0f * w * v.y + 2.0f * v.z * v.x, 1 - 2.0f * (v.x * v.x + v.y * v.y)); // I don't even fucking know, man. Fuck you quaternions.
-        z = std::atan2(2.0f * w * v.z + 2.0f * v.x * v.y, 1 - 2.0f * (v.z * v.z + v.x * v.x));
+        // We have to divide by unit to normalize the argument for asin
+        x = std::asin(2.0f * test / unit);
+        
+        // y (Yaw) - uses unit instead of literal 1.0f
+        y = std::atan2(2.0f * (w * v.y + v.z * v.x), unit - 2.0f * (v.x * v.x + v.y * v.y));
+        
+        // z (Roll) - uses unit instead of literal 1.0f
+        z = std::atan2(2.0f * (w * v.z + v.x * v.y), unit - 2.0f * (v.z * v.z + v.x * v.x));
     }
 
-    // all the math so far has been done in radians. Before returning, we convert to degrees...
-    Vector3 euler(MathUtils::deg(x), MathUtils::deg(y), MathUtils::deg(z));
-
-    return euler;
+    // Convert everything to degrees and return
+    return Vector3(MathUtils::deg(x), MathUtils::deg(y), MathUtils::deg(z));
 }
 
 void Quaternion::fromEuler(Core::f32 roll, Core::f32 pitch, Core::f32 yaw)
