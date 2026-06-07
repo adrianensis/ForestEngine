@@ -1,7 +1,6 @@
 #include "UI/UIElements/UIPanel.hpp"
 
 
-#include "Core/Maths/Geometry.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 #include "Window/Window.hpp"
 #include "Graphics/Mesh/MeshFactory.hpp"

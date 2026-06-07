@@ -1,8 +1,9 @@
 #include "Core/Maths/Geometry.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
-NS_BEGIN(Maths)
-Face::Face(Core::u32 index0, Core::u32 index1, Core::u32 index2)
+namespace Maths
+{
+Face::Face(u32 index0, u32 index1, u32 index2)
 {
 	mIndex0 = index0;
     mIndex1 = index1;
@@ -19,7 +20,7 @@ Cube::Cube(const Rectangle& rectangle)
     set(rectangle.getLeftTopFront(), rectangle.getSize());
 }
 
-bool Geometry::testCubeSphere(const Cube& cube, const Sphere& sphere, Core::f32 eps)
+bool Geometry::testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps)
 {
     bool xA = (cube.getLeftTopFront().x - sphere.getRadius() - eps) <= sphere.getCenter().x;
     bool xB = (cube.getLeftTopFront().x + cube.getSize().x + sphere.getRadius() + eps) >= sphere.getCenter().x;
@@ -41,18 +42,18 @@ bool Geometry::testSphereInsideCube(const Cube& cube, const Sphere& sphere)
     return xA && xB && yA && yB && zA && zB;
 }
 
-bool Geometry::testCubePoint(const Cube& cube, const Vector3& point, Core::f32 eps)
+bool Geometry::testCubePoint(const Cube& cube, const Vector3& point, f32 eps)
 {
     return testCubeSphere(cube, Sphere(point, 0.0f), eps);
 }
 
-bool Geometry::testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, Core::f32 eps)
+bool Geometry::testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps)
 {
-    Core::f32 distance = sphereA.getCenter().dst(sphereB.getCenter());
+    f32 distance = sphereA.getCenter().dst(sphereB.getCenter());
     return (distance < (sphereA.getRadius() + sphereB.getRadius() + eps));
 }
 
-bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, Core::f32 eps)
+bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps)
 {
     // https://gist.github.com/hanigamal/6556506
     Vector3 da = lineA.getEnd() - lineA.getStart(); 
@@ -67,7 +68,7 @@ bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& inter
         return false;
     }
 
-    Core::f32 s = Vector3(dc).cross(db).dot(Vector3(da).cross(db)) / Vector3(da).cross(db).sqrlen();
+    f32 s = Vector3(dc).cross(db).dot(Vector3(da).cross(db)) / Vector3(da).cross(db).sqrlen();
 
     if (s >= 0.0 && s <= 1.0)
     {
@@ -78,7 +79,7 @@ bool Geometry::testLineLine(const Line& lineA, const Line& lineB, Vector3& inter
     return false;
 }
 
-bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, Core::f32 eps)
+bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps)
 {
     bool lineIntersectsSphere = false;
 
@@ -96,28 +97,28 @@ bool Geometry::testLineSphereSimple(const Line& line, const Sphere& sphere, Core
     return lineIntersectsSphere;
 }
 
-Core::u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, Core::f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
+u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2)
 {
-    Core::f32 radiusEps = sphere.getRadius() + eps;
+    f32 radiusEps = sphere.getRadius() + eps;
     Vector3 dVector = line.toVector();
     Vector3 startToCenter = line.getStart() - sphere.getCenter();
-    Core::f32 A = dVector.sqrlen();
-    Core::f32 B = 2.0f * dVector.dot(startToCenter);
-    Core::f32 C = startToCenter.sqrlen() - radiusEps * radiusEps;
+    f32 A = dVector.sqrlen();
+    f32 B = 2.0f * dVector.dot(startToCenter);
+    f32 C = startToCenter.sqrlen() - radiusEps * radiusEps;
 
     // discriminant
-    Core::f32 delta = B * B - 4.0f * A * C;
+    f32 delta = B * B - 4.0f * A * C;
 
     if(delta > 0.0f)
     {
         if (delta > MathUtils::FLOAT_EPSILON)
         {
-            Core::f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
+            f32 t1 = (-B + std::sqrt( (B*B) - 4.0f*A*C )) / (2.0f*A);
             intersectionResult1.x = line.getStart().x + t1*(dVector.x);
             intersectionResult1.y = line.getStart().y + t1*(dVector.y);
             intersectionResult1.z = line.getStart().z + t1*(dVector.z);
             
-            Core::f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
+            f32 t2 = (-B - std::sqrt((B*B) - 4.0f*A*C )) / (2.0f*A);
             intersectionResult2.x = line.getStart().x + t2*(dVector.x);
             intersectionResult2.y = line.getStart().y + t2*(dVector.y);
             intersectionResult2.z = line.getStart().z + t2*(dVector.z);
@@ -126,7 +127,7 @@ Core::u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, Core::
         }
         else if (delta < MathUtils::FLOAT_EPSILON)
         {
-            Core::f32 t = -B/(2*A);
+            f32 t = -B/(2*A);
             intersectionResult1.x = line.getStart().x + t*(dVector.x);
             intersectionResult1.y = line.getStart().y + t*(dVector.y);
             intersectionResult1.z = line.getStart().z + t*(dVector.z);
@@ -139,17 +140,17 @@ Core::u8 Geometry::testLineSphere(const Line& line, const Sphere& sphere, Core::
     return 0;
 }
 
-bool Geometry::testSpherePoint(const Vector3& point, const Sphere& sphere, Core::f32 eps)
+bool Geometry::testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps)
 {
     return sphere.getCenter().dst(point) <= (sphere.getRadius() + eps);
 }
 
-bool Geometry::testLinePoint(const Line& line, const Vector3& point, Core::f32 eps)
+bool Geometry::testLinePoint(const Line& line, const Vector3& point, f32 eps)
 {
-    Core::f32 d1 = line.getStart().dst(point);
-    Core::f32 d2 = line.getEnd().dst(point);
+    f32 d1 = line.getStart().dst(point);
+    f32 d2 = line.getEnd().dst(point);
 
-    Core::f32 lineLen = line.getStart().dst(line.getEnd());
+    f32 lineLen = line.getStart().dst(line.getEnd());
 
     bool pointIsInLine = false;
 
@@ -166,7 +167,7 @@ Vector3 Geometry::closestPointInLine(const Line& line, const Vector3& point)
     Vector3 pointStartVector = (point - line.getStart()) /*.nor()*/;
     Vector3 lineVector = (line.getEnd() - line.getStart()) /*.nor()*/;
 
-    Core::f32 t = pointStartVector.dot(lineVector) / lineVector.dot(lineVector);
+    f32 t = pointStartVector.dot(lineVector) / lineVector.dot(lineVector);
 
     t = std::fmaxf(t, 0.0f); // clamp to 0
     t = std::fminf(t, 1.0f); // clampt to 1
@@ -178,4 +179,4 @@ Vector3 Geometry::midPoint(const Line& line)
 {
     return Vector3((line.getStart().x + line.getEnd().x) / 2.0f, (line.getStart().y + line.getEnd().y) / 2.0f, (line.getStart().z + line.getEnd().z) / 2.0f);
 }
-NS_END
+};

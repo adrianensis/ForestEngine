@@ -4,7 +4,8 @@
 #include "Core/Maths/Vector2.hpp"
 #include "Core/Maths/MathUtils.hpp"
 
-NS_BEGIN(Maths)
+namespace Maths
+{
 class Cube;
 class Sphere;
 class Line;
@@ -13,15 +14,15 @@ class Geometry
 {
 public:
 
-    static bool testCubeSphere(const Cube& cube, const Sphere& sphere, Core::f32 eps);
+    static bool testCubeSphere(const Cube& cube, const Sphere& sphere, f32 eps);
     static bool testSphereInsideCube(const Cube& cube, const Sphere& sphere);
-    static bool testCubePoint(const Cube& cube, const Vector3& point, Core::f32 eps);
-    static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, Core::f32 eps);
-    static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, Core::f32 eps);
-    static bool testLineSphereSimple(const Line& line, const Sphere& sphere, Core::f32 eps);
-    static Core::u8 testLineSphere(const Line& line, const Sphere& sphere, Core::f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2);
-    static bool testSpherePoint(const Vector3& point, const Sphere& sphere, Core::f32 eps);
-    static bool testLinePoint(const Line& line, const Vector3& point, Core::f32 eps);
+    static bool testCubePoint(const Cube& cube, const Vector3& point, f32 eps);
+    static bool testSphereSphere(const Sphere& sphereA, const Sphere& sphereB, f32 eps);
+    static bool testLineLine(const Line& lineA, const Line& lineB, Vector3& intersectionResult, f32 eps);
+    static bool testLineSphereSimple(const Line& line, const Sphere& sphere, f32 eps);
+    static u8 testLineSphere(const Line& line, const Sphere& sphere, f32 eps, Vector3& intersectionResult1, Vector3& intersectionResult2);
+    static bool testSpherePoint(const Vector3& point, const Sphere& sphere, f32 eps);
+    static bool testLinePoint(const Line& line, const Vector3& point, f32 eps);
     static Vector3 closestPointInLine(const Line& line, const Vector3& point);
     static Vector3 midPoint(const Line& line);
 };
@@ -29,12 +30,12 @@ public:
 class Face
 {
 public:
-    Face(Core::u32 index0, Core::u32 index1, Core::u32 index2);
+    Face(u32 index0, u32 index1, u32 index2);
 
 public:
-	Core::u32 mIndex0 = 0;
-    Core::u32 mIndex1 = 0;
-    Core::u32 mIndex2 = 0;
+	u32 mIndex0 = 0;
+    u32 mIndex1 = 0;
+    u32 mIndex2 = 0;
 };
 
 class Line
@@ -45,7 +46,7 @@ private:
 
 public:
     Line() = default;
-    Line(Core::f32 xStart, Core::f32 yStart, Core::f32 xEnd, Core::f32 yEnd)
+    Line(f32 xStart, f32 yStart, f32 xEnd, f32 yEnd)
     {
         mStart.set(xStart,yStart, 0);
         mEnd.set(xEnd, yEnd, 0);
@@ -95,7 +96,7 @@ public:
     }
 
     Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
-    Core::f32 getRadius() const { return mSize.max(); }
+    f32 getRadius() const { return mSize.max(); }
 
     bool isZero() const
     {
@@ -128,7 +129,7 @@ public:
     }
 
     Vector3 getCenter() const { return mLeftTopFront - (Vector3(-mSize.x, mSize.y, mSize.z)/2.0f); }
-    Core::f32 getRadius() const { return mSize.max(); }
+    f32 getRadius() const { return mSize.max(); }
 
     const Vector3& getLeftTopFront() const { return mLeftTopFront; }
     const Vector3& getSize() const { return mSize; }
@@ -138,7 +139,7 @@ class Sphere
 {
 public:
     Sphere() = default;
-    Sphere(const Vector3& center, Core::f32 radius)
+    Sphere(const Vector3& center, f32 radius)
     {
         mCenter.set(center);
         mRadius = radius;
@@ -151,9 +152,9 @@ public:
 
 private:
     Vector3 mCenter;
-    Core::f32 mRadius;
+    f32 mRadius;
 public:
     const Vector3& getCenter() const { return mCenter; }
-    Core::f32 getRadius() const { return mRadius; }
+    f32 getRadius() const { return mRadius; }
 };
-NS_END
+};
