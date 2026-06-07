@@ -2,41 +2,6 @@
 
 #include "GPU/Core/GPUDefinitions.h"
 
-/*
-    - none: (default) local read/write memory,
-    or input parameter
-
-    - const: global compile-time constant, or
-    read-only function parameter,
-    or read-only local variable
-
-    - in: linkage into shader from previous stage
-
-    - out: linkage out of a shader to next stage
-
-    - attribute: same as in for vertex shader
-
-    - uniform: linkage between a shader, OpenGL,
-    and the application
-
-    - varying: same as in for vertex shader, same as
-    out for fragment shader
-*/
-DECLARE_ENUM(GPUStorage,
-    NONE, "none",
-    IN, "in",
-    OUT, "out",
-    CONST, "const",
-    UNIFORM, "uniform",
-);
-
-DECLARE_ENUM(GPUInterpolation,
-    NONE, "",
-    FLAT, "flat",
-    NOPERSPECTIVE, "noperspective",
-    SMOOTH, "smooth"
-);
-
 class GPUDataType
 {
 public:

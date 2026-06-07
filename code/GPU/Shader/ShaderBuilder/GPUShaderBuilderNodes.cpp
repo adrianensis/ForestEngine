@@ -1,5 +1,7 @@
 #include "Core/CoreMacros.hpp"
+#include "GPU/Core/GPUDefinitions.h"
 #include "GPU/Shader/ShaderBuilder/GPUShaderBuilder.hpp"
+#include <string>
 
 namespace GPUShaderBuilderNodes
 {
@@ -53,8 +55,8 @@ namespace GPUShaderBuilderNodes
         {
             layoutStr = "layout(" + locationStr + ")";
         }
-        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : Core::EnumsManager::toString(mGPUInterpolation).get() + " ";
-        std::string storageStr = Core::EnumsManager::toString(mGPUStorage).get() + " ";
+        std::string interpolationStr = mGPUInterpolation == GPUInterpolation::NONE ? "" : std::string(GPU::smGPUInterpolationNames[(GPU::u32)mGPUInterpolation]) + " ";
+        std::string storageStr = std::string(GPU::smGPUStorageNames[(GPU::u32)mGPUStorage]) + " ";
         return {getIndent(indent) + layoutStr + interpolationStr + storageStr + mType.mName + " " + mName + arrayStr + valueStr + ";"};
     }
     

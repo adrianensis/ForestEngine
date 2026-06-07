@@ -261,6 +261,62 @@ enum class GPUCullFaceType : GPU::u32
     FRONT_AND_BACK
 };
 
+/*
+    - none: (default) local read/write memory,
+    or input parameter
+
+    - const: global compile-time constant, or
+    read-only function parameter,
+    or read-only local variable
+
+    - in: linkage into shader from previous stage
+
+    - out: linkage out of a shader to next stage
+
+    - attribute: same as in for vertex shader
+
+    - uniform: linkage between a shader, OpenGL,
+    and the application
+
+    - varying: same as in for vertex shader, same as
+    out for fragment shader
+*/
+enum class GPUStorage : GPU::u32
+{
+    NONE,
+    IN,
+    OUT,
+    CONST,
+    UNIFORM,
+    MAX
+};
+
+enum class GPUInterpolation : GPU::u32
+{
+    NONE,
+    FLAT,
+    NOPERSPECTIVE,
+    SMOOTH,
+    MAX
+};
+
+namespace GPU
+{
+    inline static const char* smGPUInterpolationNames[(GPU::u32)GPUInterpolation::MAX] = {
+    "",
+    "flat",
+    "noperspective",
+    "smooth",
+    };
+    inline static const char* smGPUStorageNames[(GPU::u32)GPUStorage::MAX] = {
+    "none",
+    "in",
+    "out",
+    "const",
+    "uniform",
+    };
+}
+
 class GPUConstants
 {
 public:
