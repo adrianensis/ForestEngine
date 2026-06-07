@@ -1,6 +1,6 @@
 #include "Editor.hpp"
-#include "Core/Maths/Geometry.hpp"
-#include "Core/Maths/Vector3.hpp"
+#include "Maths/Geometry.hpp"
+#include "Maths/Vector3.hpp"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Camera/CameraManager.hpp"

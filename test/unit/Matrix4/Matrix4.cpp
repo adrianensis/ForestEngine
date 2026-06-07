@@ -1,5 +1,5 @@
 #include "Test/Test.hpp"
-#include "Core/Maths/Matrix4.hpp"
+#include "Maths/Matrix4.hpp"
 
 int main()
 {

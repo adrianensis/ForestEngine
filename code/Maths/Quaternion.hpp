@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/CoreBase.hpp"
-#include "Core/Maths/Matrix4.hpp"
+#include "Maths/Matrix4.hpp"
 
 namespace Maths
 {
@@ -80,7 +79,7 @@ public:
 
 	f32& operator[](size_t index)
 	{
-		CHECK_MSG(index >= 0 && index < 4, "Index out of bounds.");
+		assert(index >= 0 && index < 4 && "Index out of bounds.");
 		if (index == 3)
 			return w;
 		return v[index];
@@ -88,7 +87,7 @@ public:
 
 	f32 operator[](size_t index) const
 	{
-		CHECK_MSG(index >= 0 && index < 4, "Index out of bounds.");
+		assert(index >= 0 && index < 4 && "Index out of bounds.");
 		if (index == 3)
 			return w;
 		return v[index];

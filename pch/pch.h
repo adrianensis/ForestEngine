@@ -4,6 +4,7 @@
 #include <ostream>
 #include <cmath> /* ceil, max */
 #include <limits>
+#include <cassert>
 #include <filesystem>
 #include <cstdint>
 #include <cstring>

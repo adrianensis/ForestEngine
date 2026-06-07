@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Maths/MathUtils.hpp"
-#include "Core/Assert/Assert.hpp"
+#include "Maths/MathUtils.hpp"
+#include <cassert>
 
 #define VECTOR_COMPONENT_1 x
 #define VECTOR_COMPONENT_2 y
@@ -67,7 +67,7 @@ inline const Vector##n Vector##n::smOne = Vector##n(VECTOR_PARAMS(n, 1)) ; \
 
 #define VECTOR_BASE_DEFINITION(n) \
 private:\
-    void checkBoundaries(u32 index) const { CHECK_MSG(index >= 0 && index < n, "Index out of bounds."); } \
+    void checkBoundaries(u32 index) const { assert(index >= 0 && index < n && "Index out of bounds."); } \
     using ThisVectorClass = Vector##n;\
 public:\
     VECTOR_FOR_EACH(n, VECTOR_DEFINE_COMPONENT); \

@@ -1,4 +1,4 @@
-#include "Core/Maths/MathUtils.hpp"
+#include "Maths/MathUtils.hpp"
 
 namespace Maths
 {

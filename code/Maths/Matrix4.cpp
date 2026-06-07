@@ -1,9 +1,8 @@
-#include "Core/Maths/Matrix4.hpp"
-#include "Core/Maths/MathUtils.hpp"
-#include "Core/Maths/Vector4.hpp"
-#include "Core/Maths/Vector3.hpp"
-#include "Core/Maths/Quaternion.hpp"
-#include "Core/Profiler/Profiler.hpp"
+#include "Maths/Matrix4.hpp"
+#include "Maths/MathUtils.hpp"
+#include "Maths/Vector4.hpp"
+#include "Maths/Vector3.hpp"
+#include "Maths/Quaternion.hpp"
 
 // #include <immintrin.h>
 
@@ -26,56 +25,49 @@ Matrix4::Matrix4(const std::array<f32, smColumnSize> &row0, const std::array<f32
 
 void Matrix4::init(f32 n)
 {
-    PROFILER_CPU()
 	std::memset(mData, n, sizeof(mData));
 }
 
 void Matrix4::init(const Matrix4& other)
 {
-    PROFILER_CPU()
     std::memcpy(mData, other.mData, sizeof(mData));
 }
 
 void Matrix4::init(const std::array<f32, smMatrixSize> &data)
 {
-    PROFILER_CPU()
     std::memcpy(mData, data.data(), sizeof(mData));
 }
 
 void Matrix4::init(const std::array<f32, smColumnSize> &row0, const std::array<f32, smColumnSize> &row1, const std::array<f32, smColumnSize> &row2, const std::array<f32, smColumnSize> &row3)
 {
-    PROFILER_CPU()
 	const std::array<const std::array<f32, smColumnSize>*, smColumnSize> rows = {&row0, &row1, &row2, &row3};
 
-	FOR_RANGE(row, 0, smColumnSize)
-	FOR_RANGE(col, 0, smColumnSize)
+	for(Maths::u32 row = 0; row < smColumnSize; ++row)
+	for(Maths::u32 col = 0; col < smColumnSize; ++col)
 	set(row, col, (*(rows[row]))[col]);
 }
 
 void Matrix4::init(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3)
 {
-    PROFILER_CPU()
 	const std::array<const Vector4*,smColumnSize> rows = {&row0, &row1, &row2, &row3};
 
-	FOR_RANGE(row, 0, smColumnSize)
-	FOR_RANGE(col, 0, smColumnSize)
+	for(Maths::u32 row = 0; row < smColumnSize; ++row)
+	for(Maths::u32 col = 0; col < smColumnSize; ++col)
 	set(row, col, (*(rows[row]))[col]);
 }
 
 void Matrix4::transpose()
 {
-    PROFILER_CPU()
 	Matrix4 copy;
 	copy.init((*this));
 
-	FOR_RANGE(row, 0, smColumnSize)
-	FOR_RANGE(col, 0, smColumnSize)
+	for(Maths::u32 row = 0; row < smColumnSize; ++row)
+	for(Maths::u32 col = 0; col < smColumnSize; ++col)
 	this->set(col, row, copy.get(row, col));
 }
 
 void Matrix4::invert()
 {
-    PROFILER_CPU()
     f32 n11 = (*this).get(0,0), n12 = (*this).get(1,0), n13 = (*this).get(2,0), n14 = (*this).get(3,0);
     f32 n21 = (*this).get(0,1), n22 = (*this).get(1,1), n23 = (*this).get(2,1), n24 = (*this).get(3,1);
     f32 n31 = (*this).get(0,2), n32 = (*this).get(1,2), n33 = (*this).get(2,2), n34 = (*this).get(3,2);
@@ -181,16 +173,15 @@ void Matrix4::invert()
 
 void Matrix4::mul(const Matrix4& other)
 {
-    PROFILER_CPU()
 
 	Matrix4 copy;
 	copy.init((*this));
 
 	this->init(0);
 
-	FOR_RANGE(i, 0, smColumnSize)
-	FOR_RANGE(j, 0, smColumnSize)
-	FOR_RANGE(k, 0, smColumnSize)
+	for(Maths::u32 i = 0; i < smColumnSize; ++i)
+	for(Maths::u32 j = 0; j < smColumnSize; ++j)
+	for(Maths::u32 k = 0; k < smColumnSize; ++k)
 	this->set(i, j, get(i, j) + copy.get(i, k) * other.get(k, j));
 
 	// const float* A = copy.getData();
@@ -236,10 +227,9 @@ void Matrix4::mul(const Matrix4& other)
 
 Vector4 Matrix4::mulVector(const Vector4& vector) const
 {
-    PROFILER_CPU()
 	Vector4 result(0, 0, 0, 0);
 
-	FOR_RANGE(row, 0, smColumnSize)
+	for(Maths::u32 row = 0; row < smColumnSize; ++row)
 	{
 		const f32 a = get(row, 0) * vector[0];
         const f32 b = get(row, 1) * vector[1];
@@ -263,7 +253,6 @@ void Matrix4::identity()
 
 void Matrix4::translation(const Vector3& vector)
 {
-    PROFILER_CPU()
 	this->identity();
 	this->set(0, 3, vector.x);
 	this->set(1, 3, vector.y);
@@ -272,14 +261,12 @@ void Matrix4::translation(const Vector3& vector)
 
 void Matrix4::rotation(const Vector3& vector)
 {
-    PROFILER_CPU()
 	Quaternion q(vector);
 	q.toMatrix(*this);
 }
 
 void Matrix4::scale(const Vector3& vector)
 {
-    PROFILER_CPU()
 	this->identity();
 	this->set(0, 0, vector.x);
 	this->set(1, 1, vector.y);
@@ -288,7 +275,6 @@ void Matrix4::scale(const Vector3& vector)
 
 void Matrix4::ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far)
 {
-    PROFILER_CPU()
 	// INFO: Right-Handed (+Z going out screen), NDC Z Zero-To-One clamped
 
 	this->identity();
@@ -302,7 +288,6 @@ void Matrix4::ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far)
 
 void Matrix4::perspective(f32 near, f32 far, f32 aspect, f32 fovy)
 {
-    PROFILER_CPU()
 	// INFO: Right-Handed (+Z going out screen), NDC Z Zero-To-One clamped
 
 	f32 tanHalfFovy = tanf(MathUtils::rad(fovy) / 2.0f);
@@ -317,7 +302,6 @@ void Matrix4::perspective(f32 near, f32 far, f32 aspect, f32 fovy)
 
 void Matrix4::view(const Vector3& worldPosition, const Vector3& localRotation)
 {
-    PROFILER_CPU()
 	Matrix4 rotationMatrix;
     rotationMatrix.rotation(localRotation);
     
@@ -326,7 +310,6 @@ void Matrix4::view(const Vector3& worldPosition, const Vector3& localRotation)
 
 void Matrix4::view(const Vector3& worldPosition, const Matrix4& localRotationMatrix)
 {
-    PROFILER_CPU()
 	this->identity();
 
     Matrix4 viewTranslationMatrix;
@@ -338,7 +321,6 @@ void Matrix4::view(const Vector3& worldPosition, const Matrix4& localRotationMat
 
 void Matrix4::lookAt(const Vector3& worldPosition, const Vector3& targetPosition)
 {
-    PROFILER_CPU()
 	Vector3 target(targetPosition);
 
 	Vector3 forward(target.sub(worldPosition).nor());
@@ -377,7 +359,6 @@ void Matrix4::lookAt(const Vector3& worldPosition, const Vector3& targetPosition
 
 Matrix4 Matrix4::transform(const Matrix4& translation, const Matrix4& rotation, const Matrix4& scale)
 {
-    PROFILER_CPU()
     Matrix4 translationCopy = translation;
     Matrix4 rotationCopy = rotation;
     rotationCopy.mul(scale);

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Maths/Vector3.hpp"
-#include "Core/Maths/Vector2.hpp"
-#include "Core/Maths/MathUtils.hpp"
+#include "Maths/Vector3.hpp"
+#include "Maths/Vector2.hpp"
+#include "Maths/MathUtils.hpp"
 
 namespace Maths
 {

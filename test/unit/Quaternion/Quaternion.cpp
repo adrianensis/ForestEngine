@@ -1,5 +1,5 @@
 #include "Test/Test.hpp"
-#include "Core/Maths/Quaternion.hpp"
+#include "Maths/Quaternion.hpp"
 
 Quaternion mul(Quaternion q1, Quaternion q2)
 {

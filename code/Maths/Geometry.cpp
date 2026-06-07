@@ -1,5 +1,5 @@
-#include "Core/Maths/Geometry.hpp"
-#include "Core/Maths/MathUtils.hpp"
+#include "Maths/Geometry.hpp"
+#include "Maths/MathUtils.hpp"
 
 namespace Maths
 {

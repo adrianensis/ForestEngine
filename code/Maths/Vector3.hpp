@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/CoreBase.hpp"
-#include "Core/Maths/VectorDef.hpp"
+#include "Maths/VectorDef.hpp"
 
 namespace Maths
 {

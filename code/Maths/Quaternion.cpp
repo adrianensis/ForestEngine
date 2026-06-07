@@ -1,6 +1,5 @@
-#include "Core/Maths/Quaternion.hpp"
-#include "Core/Maths/MathUtils.hpp"
-#include "Core/Log/Log.hpp"
+#include "Maths/Quaternion.hpp"
+#include "Maths/MathUtils.hpp"
 
 namespace Maths
 {
@@ -133,7 +132,7 @@ Quaternion& Quaternion::nor()
 {
 	f32 len = this->len();
 
-	CHECK_MSG(len > 0, "Length is zero.");
+	assert(len > 0 && "Length is zero.");
 	this->div(len);
 
 	return *this;

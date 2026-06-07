@@ -1,5 +1,5 @@
 #include "Test/Test.hpp"
-#include "Core/Maths/Vector4.hpp"
+#include "Maths/Vector4.hpp"
 
 int main()
 {
