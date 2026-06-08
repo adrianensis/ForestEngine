@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Maths
 {
     using f32 = float;
