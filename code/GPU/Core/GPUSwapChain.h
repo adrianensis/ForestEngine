@@ -37,11 +37,11 @@ private:
     std::vector<VkImage> mImages;
     std::vector<VkImageView> mImageViews;
 public:
-    GET(SwapChain);
-    CRGET(SurfaceFormat);
-    CRGET(Extent);
-    CRGET(ImageViews);
-    CRGET(Images);
+    auto getSwapChain() const { return mSwapChain; };
+    auto getSurfaceFormat() const { return mSurfaceFormat; };
+    const auto& getExtent() const { return mExtent; };
+    const auto& getImageViews() const { return mImageViews; };
+    const auto& getImages() const { return mImages; };
 };
 
 

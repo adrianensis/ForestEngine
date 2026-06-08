@@ -39,8 +39,8 @@ private:
     GPUImageData mGPUImageData;
     VkImageLayout mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 public:
-    CRGET(VkImage)
-    CRGET(VkImageView)
-    CRGET(GPUImageData)
-    GET(CurrentLayout)
+    auto getVkImage() const { return mVkImage; }
+    auto getVkImageView() const { return mVkImageView; }
+    const auto& getGPUImageData() const { return mGPUImageData; }
+    auto getCurrentLayout() const { return mCurrentLayout; }
 };

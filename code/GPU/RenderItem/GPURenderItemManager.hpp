@@ -27,7 +27,7 @@ private:
     inline static const GPU::u32 mInitialInstances = 1000;
 
 public:
-    CRGET(Matrices)
-    CRGET(UsedSlots)
+    const auto& getMatrices() const { return mMatrices; }
+    const auto& getUsedSlots() const { return mUsedSlots; }
 };
 

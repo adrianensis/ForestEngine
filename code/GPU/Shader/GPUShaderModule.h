@@ -23,5 +23,5 @@ private:
     VkShaderModule mGPUShaderModule = VK_NULL_HANDLE;
     std::string mID;
 public:
-    CRGET(GPUShaderModule)
+    const auto& getGPUShaderModule() const { return mGPUShaderModule; }
 };

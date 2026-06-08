@@ -24,8 +24,8 @@ private:
     std::vector<GPU::u32> mGPUShaderPropertiesInstanceIDs;
 
 public:
-    GET(InternalMesh)
-    CRGET(InstanceIDs)
-    CRGET(ObjectIDs)
-    CRGET(GPUShaderPropertiesInstanceIDs)
+    auto getInternalMesh() const { return mInternalMesh; }
+    const auto& getInstanceIDs() const { return mInstanceIDs; }
+    const auto& getObjectIDs() const { return mObjectIDs; }
+    const auto& getGPUShaderPropertiesInstanceIDs() const { return mGPUShaderPropertiesInstanceIDs; }
 };

@@ -18,5 +18,5 @@ private:
     VkCommandPool mVkCommandPool = VK_NULL_HANDLE;
     GPUContext* mGPUContext = nullptr;
 public:
-    CRGET(VkCommandPool)
+    auto getVkCommandPool() const { return mVkCommandPool; }
 };

@@ -28,9 +28,9 @@ private:
     VkQueue findDeviceQueue(GPU::u32 queueFamilyIndex) const;
 
 public:
-    GET(GPUVulkanInstance)
-    GET(PhysicalDevice)
-    CRGET(Device)
-    CRGET(GraphicsQueue)
-    CRGET(PresentQueue)
+    auto getGPUVulkanInstance() const { return mGPUVulkanInstance; }
+    auto getPhysicalDevice() const { return mPhysicalDevice; }
+    auto getDevice() const { return mDevice; }
+    auto getGraphicsQueue() const { return mGraphicsQueue; }
+    auto getPresentQueue() const { return mPresentQueue; }
 };

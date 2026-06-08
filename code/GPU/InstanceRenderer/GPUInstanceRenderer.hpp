@@ -44,8 +44,8 @@ private:
 	bool mResizeBuffersRequested = false;
 
 public:
-    CRGET(GPUInstanceRendererData)
-    CRGET(GPUVertexBuffersContainer)
+    const auto& getGPUInstanceRendererData() const { return mGPUInstanceRendererData; }
+    const auto& getGPUVertexBuffersContainer() const { return mGPUVertexBuffersContainer; }
 };
 
 
@@ -70,5 +70,5 @@ public:
 private:
     std::unordered_set<GPUInstanceRendererData, GPUInstanceRendererData::GPUInstanceRendererDataFunctor> mGPUInstanceRendererDataSet;
 public:
-    CRGET(GPUInstanceRendererDataSet)
+    const auto& getGPUInstanceRendererDataSet() const { return mGPUInstanceRendererDataSet; }
 };

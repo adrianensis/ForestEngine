@@ -58,6 +58,6 @@ private:
     VkPipeline mPipeline = VK_NULL_HANDLE;
     GPUShaderPipelineData mGPUShaderPipelineData;
 public:
-    CRGET(PipelineLayout)
-    CRGET(Pipeline)
+    const auto& getPipelineLayout() const { return mPipelineLayout; }
+    const auto& getPipeline() const { return mPipeline; }
 };

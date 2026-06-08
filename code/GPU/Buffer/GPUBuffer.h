@@ -29,6 +29,6 @@ private:
     VkDeviceMemory mVkDeviceMemory = VK_NULL_HANDLE;
     bool mInit = false;
 public:
-    CRGET(GPUBufferData)
-    CRGET(VkBuffer)
+    const auto& getGPUBufferData() const { return mGPUBufferData; }
+    auto getVkBuffer() const { return mVkBuffer; }
 };

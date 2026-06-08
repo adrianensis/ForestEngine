@@ -21,5 +21,5 @@ private:
     VkCommandBuffer mVkCommandBuffer = VK_NULL_HANDLE;
     GPUContext* mGPUContext = nullptr;
 public:
-    CRGET(VkCommandBuffer)
+    auto getVkCommandBuffer() const { return mVkCommandBuffer; }
 };

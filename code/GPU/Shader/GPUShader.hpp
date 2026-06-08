@@ -179,10 +179,10 @@ protected:
     GPUShaderPropertiesBlockID mSharedGPUShaderPropertiesBlockId = 0;
 
 public:
-    CRGET(GPUShaderData)
-    CRGET(SharedGPUShaderPropertiesBlockBuffer)
-    CRGET(SharedGPUShaderPropertiesBlockId)
-    CRGET(PropertiesBlockStructDefinition)
-    CRGET(PropertiesBlockUniformBufferData)
-    GET(ID)
+    const auto& getGPUShaderData() const { return mGPUShaderData; }
+    const GPU::GenericObjectBuffer& getSharedGPUShaderPropertiesBlockBuffer() const { return mSharedGPUShaderPropertiesBlockBuffer; }
+    const auto& getSharedGPUShaderPropertiesBlockId() const { return mSharedGPUShaderPropertiesBlockId; }
+    const auto& getPropertiesBlockStructDefinition() const { return mPropertiesBlockStructDefinition; }
+    const auto& getPropertiesBlockUniformBufferData() const { return mPropertiesBlockUniformBufferData; }
+    auto getID() const { return mID; }
 };

@@ -118,7 +118,7 @@ protected:
     VkRenderingAttachmentInfo depthAttachment{};
 
 public:
-    CRGET(GPURenderPassData)
+    const auto& getGPURenderPassData() const { return mGPURenderPassData; }
 };
 
 

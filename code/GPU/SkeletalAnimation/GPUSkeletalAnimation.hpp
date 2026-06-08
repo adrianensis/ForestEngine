@@ -42,8 +42,8 @@ private:
     GPU::f32 mSkeletalAnimationTime = 0;
 
 public:
-    CGET(SkeletalAnimation)
-    GET(SkeletalAnimationTime)
+    const auto getSkeletalAnimation() const { return mSkeletalAnimation; }
+    auto getSkeletalAnimationTime() const { return mSkeletalAnimationTime; }
 };
 
 
@@ -83,7 +83,7 @@ private:
     std::vector<Maths::Matrix4> mCurrentBoneTransforms;
 
 public:
-    CRGET(CurrentBoneTransforms)
-    CRGET(GPUSkeletonStateData)
+    const auto& getCurrentBoneTransforms() const { return mCurrentBoneTransforms; }
+    const auto& getGPUSkeletonStateData() const { return mGPUSkeletonStateData; }
 };
 

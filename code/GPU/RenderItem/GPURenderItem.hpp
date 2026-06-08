@@ -31,8 +31,8 @@ private:
 
 public:
     CRGET_SET(RendererModelMatrix)
-    CRGET(GPURenderItemData)
-    RGET(GPUShaderPropertiesInstance)
+    const auto& getGPURenderItemData() const { return mGPURenderItemData; }
+    auto& getGPUShaderPropertiesInstance() const { return mGPUShaderPropertiesInstance; }
     CRGET_SET(RenderSlot)
     GET_SET(InstanceSlot)
     SET(IsStatic)

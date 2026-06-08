@@ -30,6 +30,6 @@ private:
     std::unordered_map<const GPUMesh*, GPUSkeletonState*> mMeshToSkeletonState;
 
 public:
-    CRGET(SkeletonStates)
+    const auto& getSkeletonStates() const { return mSkeletonStates; }
 };
 

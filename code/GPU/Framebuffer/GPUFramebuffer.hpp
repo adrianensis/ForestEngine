@@ -68,7 +68,7 @@ private:
     VkImageView colorImageView = VK_NULL_HANDLE;
 public:
     GPUImage vulkanColorImage;
-    GET(FramebufferId)
-    CRGET(FramebufferData)
-    CRGET(Attachments)
+    auto getFramebufferId() const { return mFramebufferId; }
+    const auto& getFramebufferData() const { return mFramebufferData; }
+    const auto& getAttachments() const { return mAttachments; }
 };

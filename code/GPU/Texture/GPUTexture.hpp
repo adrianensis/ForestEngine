@@ -57,6 +57,6 @@ public:
     VkSampler mTextureSampler = VK_NULL_HANDLE;
 
 public:
-    GET(TextureData)
+    auto getTextureData() const { return mTextureData; }
 };
 

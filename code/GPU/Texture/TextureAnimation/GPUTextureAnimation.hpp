@@ -28,5 +28,5 @@ private:
     const GPUTextureAnimation* mTextureAnimation = nullptr;
     bool mHasFrameChanged = false;
 public:
-    GET(HasFrameChanged)
+    auto getHasFrameChanged() const { return mHasFrameChanged; }
 };

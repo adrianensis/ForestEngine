@@ -29,8 +29,8 @@ private:
     std::unordered_map<std::string, GPU::u32> mVertexBuffersMap;
 
 public:
-    CRGET(VertexBuffers)
-    RGET(IndicesBuffer)
+    const auto& getVertexBuffers() const { return mVertexBuffers; }
+    auto& getIndicesBuffer() { return mIndicesBuffer; }
 };
 
 class GPUUniformBuffersContainer
@@ -53,5 +53,5 @@ private:
     std::vector<GPUUniformBuffer> mUniformBuffers;
     std::unordered_map<std::string, GPU::u32> mUniformBuffersMap;
 public:
-    CRGET(UniformBuffers)
+    const auto& getUniformBuffers() const { return mUniformBuffers; }
 };

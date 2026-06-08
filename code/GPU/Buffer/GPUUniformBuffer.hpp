@@ -68,8 +68,8 @@ private:
     GPU::u32 mSize = 0;
 
 public:
-    GET(BindingPoint)
-    GET(Size)
-    CRGET(GPUUniformBufferData)
-    CRGET(Buffers)
+    auto getBindingPoint() const { return mBindingPoint; }
+    auto getSize() const { return mSize; }
+    const auto& getGPUUniformBufferData() const { return mGPUUniformBufferData; }
+    const auto& getBuffers() const { return mBuffers; }
 };
