@@ -30,12 +30,17 @@ private:
     bool mUpdateMatrix = false;
 
 public:
-    CRGET_SET(RendererModelMatrix)
+    void setRendererModelMatrix(Maths::Matrix4 modelMatrix) { mRendererModelMatrix = modelMatrix; }
+    const Maths::Matrix4& getRendererModelMatrix() const { return mRendererModelMatrix; }
+
     const auto& getGPURenderItemData() const { return mGPURenderItemData; }
     auto& getGPUShaderPropertiesInstance() const { return mGPUShaderPropertiesInstance; }
-    CRGET_SET(RenderSlot)
-    GET_SET(InstanceSlot)
-    SET(IsStatic)
-    GET_SET(UpdateMatrix)
+    GPU::u32 getRenderSlot() const { return mRenderSlot; }
+    GPU::u32 getInstanceSlot() const { return mInstanceSlot; }
+    void setRenderSlot(GPU::u32 renderSlot) { mRenderSlot = renderSlot; }
+    void setInstanceSlot(GPU::u32 instanceSlot) { mInstanceSlot = instanceSlot; }
+    void setIsStatic(bool isStatic) { mIsStatic = isStatic; }
+    void setUpdateMatrix(bool updateMatrix) { mUpdateMatrix = updateMatrix; }
+    bool getUpdateMatrix() const { return mUpdateMatrix; }
 };
 
