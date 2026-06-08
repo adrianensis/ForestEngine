@@ -121,7 +121,7 @@ void GPUPhysicalDevice::findAvailableDevices(std::vector<GPUDeviceInfo>& outDevi
     FOR_ARRAY(i, vkPhysicalDevices)
     {
         VkPhysicalDevice vkPhysicalDevice = vkPhysicalDevices[i];
-        GPUDeviceInfo& device = outDevices.emplace_back(GPUDeviceInfo{});
+        GPUDeviceInfo& device = outDevices[i];
         device.mPhysicalDevice = vkPhysicalDevice;
         
         device.mSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
@@ -321,37 +321,37 @@ GPUDeviceInfo GPUPhysicalDevice::findMostSuitableDevice(const std::vector<GPUDev
     return device;
 }
 
-GPU::u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& deviceInfo) const
+GPU::u32 GPUPhysicalDevice::getSuitabilityRating(const GPUDeviceInfo& device) const
 {
-    if (!hasRequiredFeatures(deviceInfo.mFeatures))
+    if (!hasRequiredFeatures(device.mFeatures))
     {
-        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required device features"s);
+        GPU_LOG(device.mProperties.properties.deviceName + " does not have required device features"s);
         return 0;
     }
-    if (!hasRequiredExtensions(deviceInfo.mExtensions))
+    if (!hasRequiredExtensions(device.mExtensions))
     {
-        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required device extensions"s);
+        GPU_LOG(device.mProperties.properties.deviceName + " does not have required device extensions"s);
         return 0;
     }
-    if (!hasRequiredSwapChainSupport(deviceInfo.mSwapChainInfo))
+    if (!hasRequiredSwapChainSupport(device.mSwapChainInfo))
     {
-        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required swap chain info"s);
+        GPU_LOG(device.mProperties.properties.deviceName + " does not have required swap chain info"s);
         return 0;
     }
-    if (!hasRequiredQueueFamilyIndices(deviceInfo.mQueueFamilyIndices))
+    if (!hasRequiredQueueFamilyIndices(device.mQueueFamilyIndices))
     {
-        GPU_LOG(deviceInfo.mProperties.properties.deviceName + " does not have required queue family indices"s);
+        GPU_LOG(device.mProperties.properties.deviceName + " does not have required queue family indices"s);
         return 0;
     }
     GPU::u32 score = 0;
     // Discrete GPUs have a significant performance advantage
-    if (deviceInfo.mProperties.properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+    if (device.mProperties.properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
     {
         score += 1000;
     }
-    score += (GPU::u32) deviceInfo.mProperties.properties.limits.maxImageDimension2D;
-    score += (GPU::u32) deviceInfo.mProperties.properties.limits.framebufferColorSampleCounts;
-    score += (GPU::u32) deviceInfo.mProperties.properties.limits.framebufferDepthSampleCounts;
+    score += (GPU::u32) device.mProperties.properties.limits.maxImageDimension2D;
+    score += (GPU::u32) device.mProperties.properties.limits.framebufferColorSampleCounts;
+    score += (GPU::u32) device.mProperties.properties.limits.framebufferDepthSampleCounts;
     return score;
 }
 
