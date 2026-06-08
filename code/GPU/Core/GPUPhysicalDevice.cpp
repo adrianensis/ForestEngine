@@ -117,6 +117,7 @@ void GPUPhysicalDevice::findAvailableDevices(std::vector<GPUDeviceInfo>& outDevi
     std::vector<VkPhysicalDevice> vkPhysicalDevices(deviceCount);
     vkEnumeratePhysicalDevices(mGPUVulkanInstance->getVkInstance(), &deviceCount, vkPhysicalDevices.data());
 
+    outDevices.resize(vkPhysicalDevices.size());
     FOR_ARRAY(i, vkPhysicalDevices)
     {
         VkPhysicalDevice vkPhysicalDevice = vkPhysicalDevices[i];
